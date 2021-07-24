@@ -48,9 +48,9 @@
                     query("#tradeAmt").attr("auto", "true");
                 }
             }
-    
+
             if(query("#tradeAmt").attr("auto") === "false") return;
-    
+
             if(query("#tradeAmt").attr("auto") === "true") {
                 if(query("#tradeAmt").attr("auto") === "") query("#tradeAmt").attr("auto", "true");
                 var datas = table.getAllRows();
@@ -69,6 +69,18 @@
         },
         // 左下行情联动
         leftHqReload:function () {
+            var portfolioIds = [];
+            var datas = table.getAllRows();
+            for (var i in datas) {
+                portfolioIds.push(datas[i].portfolioId);
+            }
+            //左下行情信息联动
+            var chlFinprodId = query("#chlFinprodId").val();
+            var finprodIdhid = query("#finprodIdhid").val();
+            var sysDateT1 = query('#vdate').val();
+            parent.EtrIbBondinfoHq.queryAmountInfoMuti(finprodIdhid,portfolioIds,chlFinprodId,query('#ccy').val(),sysDateT1, query('#calendarId').val());
+            parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,query('#ccy').val(),query('#vdate').val(),query('#price').val());
+
             let ccy = query('#ccy').val();
             let vdate = query('#vdate').val();
             let calId = query('#calendarId').val();
@@ -131,16 +143,18 @@
             return exerYield;
         }
     };
-    
+
     // 封装js方法，包含change事件、disabled赋值
     let doChange = {
         // 选中组合事件
-        portfolio : function (value, data){ 
+        portfolio : function (value, data){
             // 多组合单行添加 显示同行持仓信息
             this.portfolioSingleChange(value, data);
             // 左边持仓现金信息联动
             doOther.leftHqReload();
         },
+        // 计算结算金额
+        calSettleAmt : calSettleAmt,
         // 组合单行数据添加
         portfolioSingleChange:function (value, data) {
             var rowData = {};
@@ -332,8 +346,8 @@
             // 画星星
             doOther.star();
         }
-    }; 
-    
+    };
+
     /**
      * 对外公开的接口
      */
@@ -388,6 +402,7 @@
             editOption: {
                 type: 'select',
                 id: 'portfolioId',
+                parentIds:'portfolioSeries',
                 /*childrenIds : 'portfolioId',*/
                 multiple: false,
                 showField: 'text',
@@ -395,19 +410,6 @@
                 url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true')
             }
         }
-        /* ,{
-              组合代码 
-             field: 'portfolioId', width: 100, title: 'EtribBondInfo003.portfolioIdChild', edit: true, sortable: false,
-             editOption: {
-                 type: 'select',
-                 parentIds:'parentPortfolioId',
-                 id: 'portfolioId',
-                 multiple: false,
-                 showField: 'text',
-                 searchable: true,
-                 url: JoyinUtil.getRealPath('/business/common/CommonSelect/qryPortfolioIdChildByRequestParam')
-             }
-         }*/
         , {
             /*劵面总额*/
             field: 'entrustNum',
@@ -417,7 +419,25 @@
             sortable: false,
             type: 'number',
             digit: 2
-        }, {/*投资目的*/
+        }, {
+            /*结算金额*/
+            field: 'settleAmt',
+            width: 50,
+            title: 'EtribBondInfo003.settleAmt',
+            edit: true,
+            sortable: false,
+            type: 'number',
+            digit: 2
+        }, {/*证券账户*/
+            field: 'secAcct',
+            width: 100,
+            title: 'EtribBondInfo003.secAcct',
+            edit:true,
+            sortable: false,
+            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId', multiple: false, showField:'text',searchable: true,
+                url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
+            }
+        },  {/*投资目的*/
             field: 'invAim',
             width: 100,
             title: 'EtrIbBondinfo002.invAim',
@@ -508,9 +528,11 @@
         editCell: function (value, data, field, cell, column) {
             if (field == "entrustNum") {
                 doOther.refreshTradAmt();
+                doChange.calSettleAmt(value, data);
             }
             if (field == "portfolioId") {
                 doChange.portfolio(value, data);
+                doChange.calSettleAmt(value, data);
             }
         }
     });
@@ -1139,6 +1161,24 @@
     //         }
     //     }
     // });
+    /**
+     * 净值偏离度
+     */
+    function calDeviationDegree() {
+        if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
+            return;
+        }
+        Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/calDeviationDegree",
+            {
+                price: query("#price").val(),
+                finprodId: query("#finprodId").val(),
+                vdate:query('#vdate').val()
+            }, function (result) {
+                if (result ) {
+                    document.getElementById('deviationDegree').innerHTML = JoyinUtil.formatNumber(result, 4, null, 2) + '%';
+                }
+            });
+    }
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
@@ -1163,6 +1203,8 @@
             if (!query("#finprodId").val()) {
                 return;
             }
+            // 根据净价计算净价偏离度
+            calDeviationDegree();
             //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 start
             var calculateField =  query("input[name=calculateField]:checked").val();
             if(calflag != calculateField){
@@ -1208,7 +1250,7 @@
                     var data = result.data;
                     if (data.price) {
                         query("#price").val(data.price).trigger("blur");
-                        query("#fpriceAmt").val(data.unitFprice).trigger("blur");
+                        query("#fpriceAmt").val(data.unitFprice).trigger("change");
                     } else {
                         query("#price").val("");
                         query("#fpriceAmt").val("");
@@ -1254,5 +1296,35 @@
     query("#tradeAmt").change(function () {
         doChange.tradeAmt();
     });
+
+    /**
+     * 全价change
+     */
+    query("#fpriceAmt").change(function () {
+        var fpriceAmt = query('#fpriceAmt').val();
+        if(!fpriceAmt){
+            return;
+        }
+        var datas = table.getAllRows();
+        for (var i in datas) {
+            if(query('#fpriceAmt').val()&&datas[i].entrustNum){
+                datas[i].settleAmt = JoyinMath.doMul(JoyinMath.doDiv(fpriceAmt,100,6),JoyinMath.doMul(10000,datas[i].entrustNum,2),2);
+            }
+            table.renderRow(i, datas[i]);
+        }
+    });
+
+    /**
+     * 计算结算金额
+     * @param value
+     * @param data
+     */
+    function calSettleAmt (value, data) {
+        var rowData = {};
+        if(query('#fpriceAmt').val()&&data.entrustNum){
+            rowData.settleAmt = JoyinMath.doMul(JoyinMath.doDiv(query('#fpriceAmt').val(),100,6),JoyinMath.doMul(10000,data.entrustNum,2),2);
+        }
+        table.renderRow(data.LAY_TABLE_INDEX, rowData);
+    }
 
 }());

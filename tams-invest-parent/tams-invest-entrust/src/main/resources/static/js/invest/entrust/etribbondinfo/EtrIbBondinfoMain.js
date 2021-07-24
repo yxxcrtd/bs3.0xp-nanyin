@@ -364,13 +364,15 @@ function importEtr() {
                         Joyin.dialog(JoyinUtil.getLabel("EtrInvestBondInfo004"),
                             JoyinUtil.getRealPath("/invest/entrust/etribbondinfo/EtrIbBondInfo004/init"),
                             "98%", "95%", result,
-                            function(){table.reload();});
+                            function(){
+                            // table.reload();
+                        });
                     });
                 },1000);
             }
         });
     },function() {
-        table.reload();
+        // table.reload();
     });
 }
 

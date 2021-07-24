@@ -195,6 +195,8 @@
                 object.entrustNum = 100;
             }
             // 根据净价计算可买数量
+            var portfolioIds = [];
+            portfolioIds.push(query("#portfolioId").val());
             parent.EtrIbBondinfoHq.calCanBuyAmount(query("#portfolioId").val(),query('#ccy').val(),query('#vdate').val(),query('#price').val());
             // 根据净价计算净价偏离度
             calDeviationDegree();

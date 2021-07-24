@@ -2,7 +2,9 @@
  * 行情（左上）
  */
 (function(){
-    
+
+    var finprodAbbr = '';
+    var secId = '';
     /**根据市场代码，查询行情信息，展示出来*/
     var queryJJHQXX = function(seccode) {
         $.ajax({
@@ -201,8 +203,6 @@
             }, false);
         }
         if (finprodId != null && finprodId != '') {
-            var secId = '';
-            var finprodAbbr = '';
             
             // document.getElementById('secName').innerHTML = '';
             // document.getElementById('secType').innerHTML = '';
@@ -289,11 +289,13 @@
 
             queryJJHQXX(secId);
             window.EtrInitAmount.queryAmountInfo(secId,finprodAbbr,finprodId,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
-            
             return rs;
         }
     }
 
+    var queryAmountInfoMuti = function(finprodId,portfolioIds,chlFinprodId,ccy,sysDateT1,calId) {
+        window.EtrInitAmount.queryAmountInfoMuti(secId,finprodAbbr,finprodId,portfolioIds,chlFinprodId,ccy,sysDateT1,calId);
+    }
 
     var calCanBuyAmount = function(portfolioId,ccy,sysDate,price) {
         window.EtrInitAmount.calCanBuyAmount(portfolioId,ccy,sysDate,price);
@@ -307,6 +309,7 @@
         queryPositionInfo:queryPositionInfo,
         viewPositionInfo:viewPositionInfo,
         calCanBuyAmount:calCanBuyAmount,
+        queryAmountInfoMuti:queryAmountInfoMuti,
         zhkyxj_t: zhkyxj_t
     }
     

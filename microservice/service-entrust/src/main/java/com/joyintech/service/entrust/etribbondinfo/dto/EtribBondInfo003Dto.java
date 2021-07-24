@@ -134,6 +134,11 @@ public class EtribBondInfo003Dto extends EtrEntrust implements ProcessEntity {
      */
     private String assetType1;
 
+    /**
+     * 组合系列
+     */
+    private String portfolioSeries;
+
 
     public String getBusinessId() {
         return businessId;
@@ -389,6 +394,12 @@ public class EtribBondInfo003Dto extends EtrEntrust implements ProcessEntity {
 	public void setCalculateField(String calculateField) {
 		this.calculateField = calculateField;
 	}
-    
-    
+
+    public String getPortfolioSeries() {
+        return portfolioSeries;
+    }
+
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries;
+    }
 }

@@ -207,10 +207,10 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
 //                }
 //            }
             // 通道
-            if (StringUtil.isNotBlank(rowData.get(15).toString())) {
-                etrInvestBondInfoDto.setChlId(rowData.get(15).toString());
+            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
+                etrInvestBondInfoDto.setChlId(rowData.get(16).toString());
                 param = new HashMap<>();
-                param.put("initValue", rowData.get(15).toString());
+                param.put("initValue", rowData.get(16).toString());
                 param.put("page", 1);
                 param.put("length", 20);
                 selectOptionDtoPage = restTemplate.postForPage(
@@ -238,14 +238,14 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
 //                etrInvestBondInfoDto.setTradePlat(rowData.get(17).toString().split(":")[0]);
 //            }
             // 交易对手
-            etrInvestBondInfoDto.setCounterId(rowData.get(16).toString());
+            etrInvestBondInfoDto.setCounterId(rowData.get(17).toString());
             // 交易对手名称
-            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
-                String counterName = getCounterName(rowData.get(16).toString());
+            if (StringUtil.isNotBlank(rowData.get(17).toString())) {
+                String counterName = getCounterName(rowData.get(17).toString());
                 etrInvestBondInfoDto.setCounterIdName(counterName);
             }
             // 备注
-            etrInvestBondInfoDto.setRemark(rowData.get(17).toString());
+            etrInvestBondInfoDto.setRemark(rowData.get(18).toString());
             etrInvestBondInfoDto.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
             etrInvestBondInfoDto.setInvManagerId(LoginUserUtil.getUserName());
             param = new HashMap<>();
@@ -368,7 +368,7 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                 rowData.get(3).toString(), "EtrInvestBondInfo004.portfolioId", lineNo));
             // 组合代码check
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                etrCommonService.checkPortfolioIdExist(rowData.get(4).toString(),
+                etrCommonService.checkPortfolioIdExist(rowData.get(3).toString(),
                     "EtrInvestBondInfo004.portfolioId", lineNo));
             // 资产代码(市场代码)
             String finprodMarketId = rowData.get(4).toString();
@@ -473,9 +473,9 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
                     rowData.get(14).toString(), "EtrInvestBondInfo004.tradeMarket", lineNo));
             // 通道存在
-            if (StringUtil.isNotBlank(rowData.get(15).toString())) {
+            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
                 Map<String, Object> param = new HashMap<>();
-                param.put("initValue", rowData.get(15).toString());
+                param.put("initValue", rowData.get(16).toString());
                 param.put("page", 1);
                 param.put("length", 20);
                 Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
@@ -487,9 +487,9 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                 }
             }
             // 交易对手存在时check对手存在
-            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
+            if (StringUtil.isNotBlank(rowData.get(17).toString())) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("initValue", rowData.get(16).toString());
+                map.put("initValue", rowData.get(17).toString());
                 map.put("page", 1);
                 map.put("length", 20);
                 map.put("innerTrade", false);
