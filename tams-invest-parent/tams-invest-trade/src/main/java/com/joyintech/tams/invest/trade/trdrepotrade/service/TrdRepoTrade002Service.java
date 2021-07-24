@@ -2678,14 +2678,19 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                 if (StringUtil.equals(trdRepoTradeCSTPDto.getMarket(),
                         BussinessDictCodeList.交易场所_银行间.getValue())) {
                     market = BussinessDictCodeList.wind交易场所_银行间.getValue();
+                    trdRepoTradeCSTPDto.setCalendarId("03");
                 }
                 else if (StringUtil.equals(trdRepoTradeCSTPDto.getMarket(),
                         BussinessDictCodeList.交易场所_上海证券交易所.getValue())) {
                     market = BussinessDictCodeList.wind交易场所_上交所.getValue();
+                    trdRepoTradeCSTPDto.setCalendarId("04");
                 }
                 else if (StringUtil.equals(trdRepoTradeCSTPDto.getMarket(),
                         BussinessDictCodeList.交易场所_深圳证券交易所.getValue())) {
                     market = BussinessDictCodeList.wind交易场所_深交所.getValue();
+                    trdRepoTradeCSTPDto.setCalendarId("05");
+                }else{
+                    trdRepoTradeCSTPDto.setCalendarId("03");
                 }
                 Map<String,Object> map = new HashMap<>();
                 List<String> finprodMarketIdList = new ArrayList<>();

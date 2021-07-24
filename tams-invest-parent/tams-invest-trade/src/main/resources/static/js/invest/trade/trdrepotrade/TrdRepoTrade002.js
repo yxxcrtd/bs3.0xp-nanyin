@@ -1553,7 +1553,7 @@
                             $('#tradeMarket').attr('disabled', true);
                         }
 
-                        $('#calendarId').textSelect('setValue', result.market);//交易日历
+                        $('#calendarId').textSelect('setValue', result.calendarId);//交易日历
                         if($('#calendarId').val()){
                             $('#calendarId').attr('disabled', true);
                         }
