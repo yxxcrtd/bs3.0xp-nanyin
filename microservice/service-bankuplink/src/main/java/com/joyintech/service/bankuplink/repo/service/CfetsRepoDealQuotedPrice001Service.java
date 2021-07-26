@@ -1078,4 +1078,8 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
     public List<CfetsRepoDealQuotedPrice001Dto> getQualifiedByentrustIds(Map<String,Object> map){
         return cfetsRepoDealQuotedPrice001Mapper.getQualifiedByentrustIds(map);
     }
+
+    public CfetsRepoDealQuotedPrice003Dto queryPledgeBondElementForImport(Map<String, Object> param){
+        return cfetsRepoDealQuotedPrice001Mapper.queryPledgeBondElementForImport(param);
+    }
 }
