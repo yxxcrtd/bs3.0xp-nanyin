@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,21 +61,64 @@ public class TrdBondToStock002Controller extends BaseController {
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String entrustId = getParam("entrustId");
         String busiCode = getParam("busiCode");
+        //配置单位 add by yeming 20210726 start
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+        model.addAttribute("entrustAmtUnit", entrustAmtUnit);
+        //配置单位 add by yeming 20210726 end
         TrdBondToStock001Dto entity;
 //        流程中数据
         if(StringUtil.isNotEmpty(workflowId)){
             entity = trdBondToStock002Service.getBussinessEntityByWorkflowId(workflowId);
+            //配置单位 add by yeming 20210726 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(entity.getShareAmt()!= null) {
+                    entity.setShareAmt(entity.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if (entity.getConetrPriceTotal() != null){
+                    entity.setConetrPriceTotal(entity.getConetrPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if (entity.getHoldetrPriceTotal() != null){
+                    entity.setHoldetrPriceTotal(entity.getHoldetrPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }
+            //配置单位 add by yeming 20210726 end
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(entity.getRiskTrialRetDto()));
         }
         //        有效交易数据
         else if(StringUtil.isNotEmpty(busiCode)){
             entity = trdBondToStock002Service.findEffectData(busiCode);
+            //配置单位 add by yeming 20210726 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(entity.getShareAmt()!= null) {
+                    entity.setShareAmt(entity.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if (entity.getConetrPriceTotal() != null){
+                    entity.setConetrPriceTotal(entity.getConetrPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if (entity.getHoldetrPriceTotal() != null){
+                    entity.setHoldetrPriceTotal(entity.getHoldetrPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }
+            //配置单位 add by yeming 20210726 end
         }
 //        委托来源数据
         else if(StringUtil.isNotEmpty(entrustId)){
 //            获取委托信息
             entity = trdBondToStock002Service.getEntrustInfo(entrustId);
             entity.setTradeDate(DateUtil.platDateFromCache());
+            //配置单位 add by yeming 20210726 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(entity.getShareAmt()!= null) {
+                    entity.setShareAmt(entity.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if (entity.getConetrPriceTotal() != null){
+                    entity.setConetrPriceTotal(entity.getConetrPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if (entity.getHoldetrPriceTotal() != null){
+                    entity.setHoldetrPriceTotal(entity.getHoldetrPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }
+            //配置单位 add by yeming 20210726 end
             if(StringUtil.isNotBlank(entity.getRemark())&&StringUtil.contains(entity.getRemark(),"退回原因")){
                 entity.setRemark("");
             }
@@ -81,6 +126,19 @@ public class TrdBondToStock002Controller extends BaseController {
         else{
             entity = new TrdBondToStock001Dto();
             entity.setTradeDate(DateUtil.platDateFromCache());
+            //配置单位 add by yeming 20210726 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(entity.getShareAmt()!= null) {
+                    entity.setShareAmt(entity.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if (entity.getConetrPriceTotal() != null){
+                    entity.setConetrPriceTotal(entity.getConetrPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if (entity.getHoldetrPriceTotal() != null){
+                    entity.setHoldetrPriceTotal(entity.getHoldetrPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }
+            //配置单位 add by yeming 20210726 end
         }
         //---add by zxjjpei 风险试算结果需要工作流编号 20200325 start---
         if(StringUtil.isNotEmpty(workflowId)){

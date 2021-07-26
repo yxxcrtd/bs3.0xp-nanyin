@@ -2,8 +2,8 @@
 /**
  * 债券投资委托新建
  */
-let unitNum;
 (function () {
+    var unitNum;
     var initFlag = true;
     var isautobond = false;
     var getriskdata = function () {
