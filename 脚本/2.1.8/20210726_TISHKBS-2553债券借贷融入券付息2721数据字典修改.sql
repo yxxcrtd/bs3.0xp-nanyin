@@ -1,0 +1,1 @@
+update sys_datadict_list set item_value ='资金收款-融入债券还本派息' where dict_code='TABLE_ID' and item_code ='2721';
