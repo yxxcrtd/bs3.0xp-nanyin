@@ -21,4 +21,4 @@ values ('FinProjectTargetAsset002','projectInvestAdviser','investAdviser','投�
 
 DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='FinProjectTargetAsset002'and ELEMENT_ID = 'projectSettleDays';
 insert into SYS_ELEMENT_CONTROL (PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
-alues ('FinProjectTargetAsset002','projectSettleDays','settleDays','清算时效（工作日）','02','02','02',null);
+values ('FinProjectTargetAsset002','projectSettleDays','settleDays','清算时效（工作日）','02','02','02',null);
