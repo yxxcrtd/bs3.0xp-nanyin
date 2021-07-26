@@ -13,6 +13,7 @@ import com.joyintech.tams.common.base.dao.RskValtblPrtBotassetMapMapper;
 import com.joyintech.tams.common.base.dao.RskValtblPrtImpMapMapper;
 import com.joyintech.tams.common.base.dao.RskValtblSumAssetSubMapper;
 import com.joyintech.tams.common.base.dao.RskValtblSumsubMapMapper;
+import com.joyintech.tams.common.base.dao.ValtblImportHisTraceMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
 import com.joyintech.tams.common.base.entity.RskOutValtblImportHisKey;
@@ -92,6 +93,9 @@ public class ValBatchImportService {
 
     @Autowired
     private RskOutValtblImportHisMapper rskOutValtblImportHisMapper;
+
+    @Autowired
+    private ValtblImportHisTraceMapper valtblImportHisTraceMapper;
 
     @Autowired
     private RskValtblAssetSubMapper rskValtblAssetSubMapper;
@@ -1401,6 +1405,7 @@ public class ValBatchImportService {
         }else{
             rskOutValtblImportHisMapper.insertSelective(dto);
         }
+        valtblImportHisTraceMapper.insert(dto);
     }
 
     /**

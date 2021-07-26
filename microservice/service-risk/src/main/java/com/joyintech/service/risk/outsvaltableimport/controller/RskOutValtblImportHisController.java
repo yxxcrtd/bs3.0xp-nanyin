@@ -8,6 +8,7 @@ import com.joyintech.tams.common.base.entity.RskValtblPrtImpMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -91,4 +92,16 @@ public class RskOutValtblImportHisController {
         return rskOutValtblImportHisService.selectInfoById(param);
     }
 
+    /**
+     *
+     * 根据估值表导入信息记录表主键获取历史记录
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/selectTraceByKey")
+    public List<RskOutValtblImportHisDto> selectTraceByKey(@RequestBody RskOutValtblImportHisDto dto){
+        return rskOutValtblImportHisService.selectTraceByKey(dto);
+    }
 }

@@ -21,6 +21,13 @@ $(function() {
                 return getSearchParams();
             }
         },
+        dblclick:function(table, data) {
+            data.pageModel=PAGE_MODEL_REFERENCE;
+            Joyin.dialog(JoyinUtil.getLabel("RskOutValtblImportHis002.reference"),
+                JoyinUtil.getRealPath("invest/risk/outsvaltableimporthis/RskOutValtblImportHis002/init"),
+                "99%", "99%", data/*,
+                    function(){table.reload();}*/);
+        },
         cols:[
             {field:'fileName',sortable: false, width:300 , title: 'RskOutValtblImportHis001.fileName'}
             ,{field:'filePath',sortable: false, width:200 , title: 'RskOutValtblImportHis001.filePath'}
@@ -38,6 +45,7 @@ $(function() {
                     return  '<a  href="javascript:;" style="cursor: pointer;"><span style="color: red">'+data+'</span></a>';
             }}
             ,{field:'valdate',  visible : false}
+            ,{field:'valdateStr',  visible : false}
             ,{field:'impdate',  visible : false}
             ,{field:'portfolioId',  visible : false}
             ,{field:'portfolioName',  visible : false}
@@ -107,6 +115,10 @@ $(function() {
     $(function() {
         //查询
         $('#RskOutValtblImportHis001_btn_search').click(function() {
+            if ($('#searchDate').val() == '' || $('#searchDate').val() == null){
+                Joyin.error("请选择查询日期");
+                return;
+            }
             table.load();
         });
         $('#RskOutValtblImportHis001_btn_export').click(function() {

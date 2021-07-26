@@ -29,4 +29,5 @@ public interface RskOutsValTableImportHisMapper {
 
     List<String> selectAssetSubMapId();
 
+    List<RskOutValtblImportHisDto> selectTraceByKey(RskOutValtblImportHisDto dto);
 }
