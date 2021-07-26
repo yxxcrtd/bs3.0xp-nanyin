@@ -60,6 +60,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -118,22 +119,47 @@ public class TrdBondLendInvestTrade002Controller extends BaseController {
         String tradeId = this.getParam("tradeId");
         String workflowStatus = this.getParam("workflowStatus");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        //配置单位 add by yeming 20210726 start
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+        model.addAttribute("entrustAmtUnit", entrustAmtUnit );
+        //配置单位 add by yeming 20210726 end
 
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdBondLendInvestTrade002Service.getBussinessEntityByWorkflowId(
                 workflowId);
+            //配置单位 edit by yeming 20210726 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(dto.getShareAmt() != null) {
+                    dto.setShareAmt(dto.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }
+            //配置单位 edit by yeming 20210726 end
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
             model.addAttribute("workflowId",workflowId);
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdBondLendInvestTrade002Service.getTrdBondLendInvestTradeDto(tradeId);
+            //配置单位 edit by yeming 20210726 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(dto.getShareAmt() != null) {
+                    dto.setShareAmt(dto.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }
+            //配置单位 edit by yeming 20210726 end
         }
         else {
             String entrustId = this.getParam("entrustId");
             if (StringUtil.isNotEmpty(entrustId)) {
                 model.addAttribute("entrustId", entrustId);
                 dto.setEntrustId(entrustId);
+                //配置单位 edit by yeming 20210726 start
+                if(StringUtil.equals(entrustAmtUnit,"02")){
+                    if(dto.getShareAmt() != null) {
+                        dto.setShareAmt(dto.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                    }
+                }
+                //配置单位 edit by yeming 20210726 end
                 //add by wangpeng 20190901 交易录单带出不出质押券信息 
                 BaseEtrInvestInfoDto baseEtrDto =trdBondLendInvestTrade002Service.getEntrustInfo(dto.getEntrustId());
                 BeanUtil.copyPropertiesIgnoreNull(dto, baseEtrDto.getEtrEntrust());

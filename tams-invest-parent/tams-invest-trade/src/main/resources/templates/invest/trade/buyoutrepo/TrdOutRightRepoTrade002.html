@@ -350,10 +350,10 @@
 												th:text="#{TrdOutRightRepoTrade002.amtInfo.bondTotalAmt}">券面总额</label>
 											<div class="layui-input-inline input-inline">
 												<input required type="text" id="TrdOutRightRepoTrade002_secTotalPrin" name="secTotalPrin"
-													maxlength="16" class="layui-input form-input text-number"
+													maxlength="16" class="layui-input form-input text-number" data-textrange="4"
 													placeholder="请输入内容" data-th-value='${entity?.secTotalPrin}'
 													th:placeholder="#{SysCommon.placeholder}">
-												<span class="input-right-show">万元</span>
+												<span class="input-right-show unitNum">万元</span>
 											</div>
 										</div>
 										<div class="form-inline-wrap">
@@ -732,6 +732,9 @@
 			var CALC_MODEL_03 = /*[[${CALC_MODEL_03}]]*/'';
 			var GEN_PAY_ORDERS_AUTO= /*[[${GEN_PAY_ORDERS_AUTO}]]*/; // 系统参数_是否显示划款指令
 			var PINAN_ASSET_TYPE_F10 = /*[[${PINAN_ASSET_TYPE_F10}]]*/'';
+			//配置单位 add by yeming 20210726 end
+			var entrustAmtUnit = /*[[${entrustAmtUnit}]]*/'';
+			//配置单位 add by yeming 20210726 end
 		</script>
 		<script
 			data-th-src="@{/js/invest/trade/buyoutrepo/TrdOutRightRepoTrade002.js}"

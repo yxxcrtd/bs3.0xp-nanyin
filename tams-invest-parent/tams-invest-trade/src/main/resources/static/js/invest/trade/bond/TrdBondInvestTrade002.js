@@ -1,7 +1,7 @@
 //@ sourceURL=TrdBondInvestTrade002.js
 var table;
-var unitNum;
 (function () {
+    var unitNum;
 	var initFlag = true;
     var entrustNum; // 委托时的券面总额
     var entrustPrice; // 委托时的净价
