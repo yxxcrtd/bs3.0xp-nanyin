@@ -897,4 +897,18 @@ implements BaseProcessService<FinBondTargetAssetDto>{
                 ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/getFinPlanList?finprodId="+finprodId,
                 FinBondTargetAssetDto.class);
     }
+
+
+
+    /**
+     * 根据产品代码得到起息日和到期日
+     * @param oFinprodId 产品代码
+     * @return
+     */
+    public FinBondTargetAssetDto getMdateAndVdate(String oFinprodId){
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/getMdateAndVdate?oFinprodId="+oFinprodId,
+                FinBondTargetAssetDto.class);
+    }
+
 }
