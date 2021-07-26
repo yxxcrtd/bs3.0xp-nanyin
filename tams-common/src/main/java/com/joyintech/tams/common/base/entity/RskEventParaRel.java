@@ -29,6 +29,11 @@ public class RskEventParaRel extends RskEventParaRelKey {
     private BigDecimal customVal;
 
     /**
+     * 公式
+     */
+    private String formulaVal;
+
+    /**
      * 取得 关系类型（加减乘除等）
      * @return 关系类型（加减乘除等）
      */
@@ -90,5 +95,21 @@ public class RskEventParaRel extends RskEventParaRelKey {
      */
     public void setCustomVal(BigDecimal customVal) {
         this.customVal = customVal;
+    }
+
+    /**
+     * 取得 公式
+     * @return 公式
+     */
+    public String getFormulaVal() {
+        return formulaVal;
+    }
+
+    /**
+     * 设置 公式
+     * @param formulaVal 公式
+     */
+    public void setFormulaVal(String formulaVal) {
+        this.formulaVal = formulaVal == null ? null : formulaVal.trim();
     }
 }

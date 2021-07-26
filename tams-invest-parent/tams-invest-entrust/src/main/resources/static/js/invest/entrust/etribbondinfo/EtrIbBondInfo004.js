@@ -75,22 +75,21 @@
         , {field: 'priceModelStr', title: 'EtrInvestBondInfo004.priceModel', width: 150, sortable: false}
         , {field: 'price', title: 'EtrInvestBondInfo004.price', type: 'number', width: 150, sortable: false, digit:4}
         , {field: 'unitFprice', title: 'EtrInvestBondInfo004.fpriceAmt', type: 'number', width: 150, sortable: false, digit:4}
-        , {field: 'exerYield', title: 'EtrInvestBondInfo004.exerYield', type: 'number', width: 150, sortable: false, digit:12}
+        , {field: 'exerYield', title: 'EtrInvestBondInfo004.exerYield', type: 'number', width: 150, sortable: false, digit:12, visible: false}
         , {field: 'matureYield', title: 'EtrInvestBondInfo004.matureYield', type: 'number', width: 150, sortable: false, digit:12}
         , {field: 'minAmt', title: 'EtrInvestBondInfo004.minAmt', type: 'number', width: 150, sortable: false, visible: false}
         , {field: 'settleSpreed', width: 150, visible: false}
         , {field: 'settleSpreedName', title: 'EtrInvestBondInfo004.settleSpreed', width: 150, sortable: false}
-        , {field: 'invAimName', title: 'EtrInvestBondInfo004.invAim', width: 150, sortable: false, visible: false}
-        , {field: 'tradeMarketName', title: 'EtrInvestBondInfo004.tradeMarket', width: 150, sortable: false}
+        , {field: 'invAimName', title: 'EtrInvestBondInfo004.invAim', width: 150, sortable: false}
+        , {field: 'tradeMarketName', title: 'EtrInvestBondInfo004.tradeMarket', width: 150, sortable: false, visible: false}
         , {field: 'tradePlatName', title: 'EtrInvestBondInfo004.tradePlat', width: 150, sortable: false, visible: false}
-        , {field: 'secManageAcctIdName', title: 'EtrInvestBondInfo004.secManageAcctId', width: 150, sortable: false, visible: false}
-        , {field: 'chlIdName', title: 'invest.channelId', width: 150, sortable: false}
+        , {field: 'secManageAcctIdName', title: 'EtrInvestBondInfo004.secManageAcctId', width: 150, sortable: false}
+        , {field: 'chlIdName', title: 'invest.channelId', width: 150, sortable: false, visible: false}
+        , {field: 'counterIdName', title: 'EtrInvestBondInfo004.counterId', width: 150, sortable: false}
         , {field: 'proAvailableCash', title: 'EtrInvestBondInfo004.proAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'assetAvailablePosition', title: 'EtrInvestBondInfo004.assetAvailablePosition', type: 'number', width: 150, sortable: false}
 //        , {field: 'SecManageAvailableCash', title: 'EtrInvestBondInfo004.SecManageAvailableCash', type: 'number', width: 150, sortable: false}
 //        , {field: 'channelAvailableCash', title: 'invest.channelId', type: 'number', width: 150, sortable: false}
-        , {field: 'counterIdName', title: 'EtrInvestBondInfo004.counterId', width: 150, sortable: false}
-        , {field: 'remark', title: 'EtrInvestBondInfo004.remark', width: 150, sortable: false}
         , {field: 'fileArray', width: 150, visible: false}
         , {field: 'businessId', width: 150, visible: false}
         , {field: 'fileArrayName', title: 'EtrInvestBondInfo004.fileArray', type: 'text', width: 150, sortable: false}
@@ -99,6 +98,7 @@
                 return '<a class="pro-link uploadFile">选择文件</a> ';
             }, width: 150, sortable: false
         }
+        , {field: 'remark', title: 'EtrInvestBondInfo004.remark', width: 150, sortable: false}
     ];
     var table = $("#dataTable").joyintable({
         data: etrInvestBondInfoList == null || etrInvestBondInfoList == '' ? null : JSON.parse(etrInvestBondInfoList),

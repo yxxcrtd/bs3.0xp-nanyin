@@ -1,14 +1,19 @@
 package com.joyintech.tams.invest.riskredis.quota.interlog.controller;
 
 
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.tams.invest.riskredis.quota.interlog.dto.RepInterLogDto;
-import com.joyintech.tams.invest.riskredis.quota.interlog.service.RepInterLogService;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.tams.invest.riskredis.quota.interlog.dto.RepInterLogDto;
+import com.joyintech.tams.invest.riskredis.quota.interlog.service.RepInterLogService;
 
 /**
  * 接口日志管理
@@ -42,6 +47,13 @@ public class RepInterLog002Controller extends BaseController {
          
          String uuid = this.getParam("uuid");
          RepInterLogDto repInterLogDto = repInterLogService.selectInfo(uuid);
+        // SNSTZJY-1002 modify by zhangrui1 start
+        if (!StringUtil.isEmpty(repInterLogDto.getResponseData())) {
+            Decoder decoder = Base64.getDecoder();
+            repInterLogDto.setResponseData(
+                new String(decoder.decode(repInterLogDto.getResponseData())));
+        }
+        // SNSTZJY-1002 modify by zhangrui1 end
          repInterLogDto.setPageModel(this.getParam("pageModel"));;
          model.addAttribute("entity", repInterLogDto);
          return super.init(model);

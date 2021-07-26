@@ -324,4 +324,19 @@
         TEMP.UPDATE_USER,TEMP.UPDATE_TIME,TEMP.CREATE_DEPT
         )
     </insert>
+
+
+	<select id="selectNewValuationPriceByKey" resultType="java.math.BigDecimal">
+		select max(netprice) netprice from
+		(SELECT bond.*,row_number() over (partition by bond.sec_id order by bond.value_date desc) rn
+		FROM MST_BOND_VALUATION_INFO BOND
+		WHERE
+		BOND.SEC_ID=#{finprodId,jdbcType=VARCHAR}
+		AND
+		BOND.VALUE_DATE &lt;=to_date(#{vdate},'yyyy-mm-dd')
+		AND
+		BOND.VALUE_SOURCE in (#{VALUE_SOURCE_CSD,jdbcType=VARCHAR},#{VALUE_SOURCE_CBC,jdbcType=VARCHAR})
+		) where rn = 1
+	</select>
+
 </mapper>

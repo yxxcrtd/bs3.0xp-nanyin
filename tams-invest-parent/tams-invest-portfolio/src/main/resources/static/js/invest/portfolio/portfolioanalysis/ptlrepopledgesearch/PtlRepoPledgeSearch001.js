@@ -11,6 +11,10 @@ $(function() {
         var type4 = $('#type4').val();
         var type5 = $('#type5').val();
         var prodManager = $('#prodManager').val();
+        // add by swwan 【重庆银行】 增加 业务类型，交易对手  2021年7月22日 start
+        var busiType = $('#busiType').val();
+        var counter = $('#counter').val();
+        // add by swwan 【重庆银行】 增加 业务类型，交易对手  2021年7月22日 end
         return {
             counterId : counterId ? counterId.join(','):'',
     		// add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start
@@ -18,7 +22,11 @@ $(function() {
 			// add by wangyang1 【吉林银行】 增加 产品经理  end
             finprodMarketId : finprodMarketId,
             type4 : type4,
-            type5 : type5
+            type5 : type5,
+			// add by swwan 【重庆银行】 增加 业务类型，交易对手  2021年7月22日 start
+			busiType : busiType ? busiType.join(','):'',
+            counter : counter ? counter.join(','):''
+			// add by swwan 【重庆银行】 增加 业务类型，交易对手  2021年7月22日 end
         }
     };
     /**
@@ -86,6 +94,7 @@ $(function() {
             ,{field:'pledgeFaceValue',width:150,type:'money',title: 'PtlRepoPledgeSearch001.pledgeFaceValue'}
             ,{field:'gradeResult',width:150,title: 'PtlRepoPledgeSearch001.gradeResult',sortField:'GRADE_RESULT'}
             ,{field:'registOrgAbbr',width:150,title: 'PtlRepoPledgeSearch001.registOrg',sortField:'REGIST_ORG'}
+            ,{field:'counter',width:150,title: 'PtlRepoPledgeSearch001.counter',sortField:'REGIST_ORG'} //交易对手
         ]
     });
 

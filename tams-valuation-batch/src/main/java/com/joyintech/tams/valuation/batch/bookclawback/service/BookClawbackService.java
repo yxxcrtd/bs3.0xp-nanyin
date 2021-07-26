@@ -416,7 +416,7 @@ public class BookClawbackService {
 
             // 回补利率计算
             BigDecimal 回补利率 = calculationCommonService.clawbackBenchMarkCalc(targetFinClawbackCalcRule, clawbackDateStart,
-                clawbackDateEnd);
+                clawbackDateEnd, targetFinClawbackCalcRuleList);
 
             if (回补区间年化收益率.compareTo(回补利率) < 0) {
                 // 计费基数计算

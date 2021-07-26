@@ -292,7 +292,18 @@ public class ValAssetBook001Controller extends BaseController {
                                                      @PathVariable("page") int page, @PathVariable("length") int length) {
         return valAssetBook001Service.findBooksetIdByPage(page,length,pageParam);
     }
-    
+
+    /**
+     * 检索账套代码列表(分页下拉框)
+     * @param param
+     * @return
+     */
+    @PostMapping("/findBooksetIds/{page}/{length}")
+    public Page<SelectOptionDto> findBooksetIds(@RequestBody Map<String, Object> pageParam,
+                                                     @PathVariable("page") int page, @PathVariable("length") int length) {
+        return valAssetBook001Service.findBooksetIds(page,length,pageParam);
+    }
+
     /**
      * 检索账套代码列表(分页下拉框)
      * @param param

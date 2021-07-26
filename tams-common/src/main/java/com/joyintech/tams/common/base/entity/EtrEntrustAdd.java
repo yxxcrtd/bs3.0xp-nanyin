@@ -494,6 +494,11 @@ public class EtrEntrustAdd extends BaseEntity {
     private String calculateField;
 
     /**
+     * 组合系列
+     */
+    private String portfolioSeries;
+
+    /**
      * 取得 委托代码
      * @return 委托代码
      */
@@ -1958,5 +1963,21 @@ public class EtrEntrustAdd extends BaseEntity {
      */
     public void setCalculateField(String calculateField) {
         this.calculateField = calculateField == null ? null : calculateField.trim();
+    }
+
+    /**
+     * 取得 组合系列
+     * @return 组合系列
+     */
+    public String getPortfolioSeries() {
+        return portfolioSeries;
+    }
+
+    /**
+     * 设置 组合系列
+     * @param portfolioSeries 组合系列
+     */
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries == null ? null : portfolioSeries.trim();
     }
 }

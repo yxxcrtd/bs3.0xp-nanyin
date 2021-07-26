@@ -3,9 +3,14 @@ package com.joyintech.tams.invest.riskredis.quota.interlog.controller;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.riskredis.quota.interlog.dto.RepInterLogDto;
 import com.joyintech.tams.invest.riskredis.quota.interlog.service.RepInterLogService;
+
+import java.util.Base64;
+import java.util.Base64.Decoder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +39,13 @@ public class RepInterLog003Controller extends BaseController{
          RepInterLogDto responseData = repInterLogService.selectInfo(uuid);
          //repInterLogDto.setPageModel(this.getParam("pageModel"));;
          //model.addAttribute("entity", repInterLogDto);
+        // SNSTZJY-1002 modify by zhangrui1 start
+        if (!StringUtil.isEmpty(responseData.getResponseData())) {
+            Decoder decoder = Base64.getDecoder();
+            responseData.setResponseData(
+                new String(decoder.decode(responseData.getResponseData())));
+        }
+        // SNSTZJY-1002 modify by zhangrui1 end
          model.addAttribute("responseData", responseData.getResponseData());
          model.addAttribute("uuid", uuid);
          return super.init(model);

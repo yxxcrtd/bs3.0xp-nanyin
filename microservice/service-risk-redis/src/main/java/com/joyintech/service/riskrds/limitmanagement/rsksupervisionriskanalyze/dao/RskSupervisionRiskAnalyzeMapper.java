@@ -1,6 +1,7 @@
 package com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto;
 import org.springframework.stereotype.Repository;
 
@@ -38,4 +39,8 @@ public interface RskSupervisionRiskAnalyzeMapper {
     List<RskSupervisionRiskAnalyzeDto> selectInit(Map<String, Object> pageParam);
 
     List<SelectOptionDto> selectByUserName(Map<String, Object> param);
+
+    List<SuggestDto> selectIndName(Map<String, Object> params);
+
+    List<SuggestDto> selectGroupName(Map<String, Object> params);
 }

@@ -63,28 +63,6 @@ $(function() {
 			if(!value||value==''){
 				return;
 			}
-			if (column.field == 'institutionCode') { 
-				if (msInstitutionCode != "ALL" && value != InstitutionCode) {
-					JoyinUtil.showMessage(JoyinUtil.getMessage("只能选择本机构"), 'error', function() {
-              			table.deleteRow(row.LAY_TABLE_INDEX);
-        			});
-        			return;
-				}
-				var selArr = table.getAllRows();
-            	if(selArr && selArr.length>0){
-            		for(var i=0;i<selArr.length;i++){
-            			var validDate = new Date(selArr[i].validDate);
-            			var institutionCode = selArr[i].institutionCode; 
-            			var validDate2 = new Date(row.validDate);
-                		if(institutionCode==value && validDate.format("yyyy-MM-dd")==validDate2.format("yyyy-MM-dd")&&i!=row.LAY_TABLE_INDEX){
-                			JoyinUtil.showMessage(JoyinUtil.getMessage('RSKRDS_W_0034',"相同机构下生效日期"), 'error', function() {
-                      			table.deleteRow(row.LAY_TABLE_INDEX);
-                			});
-                			return;
-                		}
-            		}
-            	}
-			}
             if (column.field == 'validDate'||column.field == 'notifyDate') {
             	/*var sysDate = new Date(SYS_DATE);
             	sysDate = sysDate.format('yyyy-mm-dd');*/
@@ -106,10 +84,8 @@ $(function() {
             	if(selArr && selArr.length>0){
             		for(var i=0;i<selArr.length;i++){
             			var validDate = new Date(selArr[i].validDate);
-            			var institutionCode = selArr[i].institutionCode; 
-            			var institutionCode2 = row.institutionCode;
-                		if(institutionCode==institutionCode2 && validDate.format("yyyy-MM-dd")==value&&i!=row.LAY_TABLE_INDEX){
-                			JoyinUtil.showMessage(JoyinUtil.getMessage('RSKRDS_W_0034',"相同机构下生效日期"), 'error', function() {
+                		if(validDate.format("yyyy-MM-dd")==value&&i!=row.LAY_TABLE_INDEX){
+                			JoyinUtil.showMessage(JoyinUtil.getMessage('RSKRDS_W_0034',"生效日期"), 'error', function() {
                       			table.deleteRow(row.LAY_TABLE_INDEX);
                 			});
                 			return;
@@ -118,26 +94,13 @@ $(function() {
             	}
             } 
         },
-        beforeEditCell : function(preVal, field,data){ 
+        beforeEditCell : function(preVal, field,data){
       	if((field == 'content'||field == 'validDate')&&data.updateFlag =="02"){
     		return false;
     	}
-      	if(field == 'institutionCode'){
-          if(isEnabled == '01'){
-        	  if (!data.institutionCode||data.institutionCode==''){ 
-        		 return true; 
-        	  } 
-        	  if (msInstitutionCode == "ALL") {
-        		return true;
-	  		  } 
-  		  }else{
-  		  	return false;
-  		  }
-          return false;
-      	} 
       	if(field == 'notifyDate'){
         	var selArr = table.getAllRows();
-        	var maxValDate; 
+        	var maxValDate;
         	if(selArr&&selArr.length>1){
         		for(var i=0;i<selArr.length;i++){
         			for(var j=i+1;j<selArr.length;j++){
@@ -162,19 +125,13 @@ $(function() {
        	return true;
        	},
     	cols:[
-			  //{field:'updateFlag' ,visible: false}  
-    	     {field:'content' ,width:"150",title: 'RskSupervisionIndicatorParam006.content', edit:true,type:'abc'
+			  //{field:'updateFlag' ,visible: false}
+             {field:'content' ,width:"150",title: 'RskSupervisionIndicatorParam006.content', edit:true,type:'number'
              }//参数值
-             ,{field:'validDate' ,width:"100",title: 'RskSupervisionIndicatorParam006.validDate', edit:true,type:'date'
+             ,{field:'validDate' ,width:"150",title: 'RskSupervisionIndicatorParam006.validDate', edit:true,type:'date'
              }//有效日期
-             ,{field:'notifyDate',width:"100",title: 'RskSupervisionIndicatorParam006.notifyDate', edit:true,type:'date'
-             }//连接符 
-             ,{field:'institutionCode' ,width:"150",title: 'RskSupervisionIndicatorParam006.institutionName', 
-            	 visible:isEnabled=='01'?true:false,
-	        	 edit:true,sortable:false, 
-				 editOption:{type:'select',showField:'text',id:'institutionCode',formatoption:true,initValue:InstitutionCode,
-			     url:JoyinUtil.getRealPath('/invest/riskredis/quota/rsksupervisionindicatorparam/RskSupervisionIndicatorParam003/getInstitutionId')} 
-             }//机构名称
+             ,{field:'notifyDate',width:"150",title: 'RskSupervisionIndicatorParam006.notifyDate', edit:true,type:'date'
+             }//连接符
              ,{field:'operation',title: 'SysCommon.operation', type:'action',
             	 render:function(data,type,row,meta){
             		 if(row&&row.updateFlag =="02"){

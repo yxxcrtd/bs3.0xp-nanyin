@@ -12,6 +12,7 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.risk.service.RiskNamListCommonValidatorService;
+import com.joyintech.tams.invest.entrust.common.dto.EtrFinProductCommonDto;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrbondtostock.dto.EtrBondToStockDto;
 import com.joyintech.tams.invest.entrust.etrbondtostock.service.EtrBondToStockService;
@@ -37,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -540,5 +542,61 @@ public class EtrCommonController extends BaseController {
         map.put("userName",LoginUserUtil.getUserName());
         return etrCommonService.updateByParam(map);
     }
-    
+
+    /***
+     * 持仓数量，可买数量，可买数量，成本价
+     * @return
+     */
+    @RequestMapping(value = "/initAmount")
+    public String initAmount(Model model){
+        return "invest/entrust/common/EtrInitAmount";
+    }
+
+    /***
+     * 托管户可用现金，证券户可用现金，T+1日可用现金
+     * @return
+     */
+    @RequestMapping(value = "/initCash")
+    public String initCash(Model model){
+        return "invest/entrust/common/EtrInitCash";
+    }
+
+    /**
+     * 查询持仓信息
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("findSecAmountInfo")
+    public EtrFinProductCommonDto findSecAmountInfo(@RequestBody Map<String, Object> param){
+        return etrCommonService.findSecAmountInfo(param);
+    }
+
+
+    /**
+     * 查询现金数据
+     * @param param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("findCashAmountInfo")
+    public EtrFinProductCommonDto findCashAmountInfo(@RequestBody Map<String, Object> param){
+        return etrCommonService.findCashAmountInfo(param);
+    }
+
+    /**
+     * 计算可买数量
+     * @param param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("calCanBuyAmount")
+    public EtrFinProductCommonDto calCanBuyAmount(@RequestBody Map<String, Object> param){
+        return etrCommonService.calCanBuyAmount(param);
+    }
+
+
+
 }

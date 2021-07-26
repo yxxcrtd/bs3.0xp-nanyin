@@ -102,7 +102,7 @@ public class RedisBaseService<V extends IBusiness> {
     }
 
     public List<String> allHKeys(String key, String field) {
-        return allHKeys(key, RedisConstant.STAR + field);
+        return reader.allHKeys(key, RedisConstant.STAR + field + RedisConstant.STAR);
     }
 
     /**

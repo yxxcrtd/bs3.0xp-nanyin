@@ -58,10 +58,7 @@
 	T1.SUP_TYPE supType,
 	T1.WARN_COND warnCond,
 	T1.FOUL_COND foulCond,
-	T1.APPROVE_COND approveCond,
-	<!-- wangyang1 风险二级法人改造 start -->
-	T1.INSTITUTION_CODE institutionCode
-	<!-- wangyang1 风险二级法人改造 end -->
+	T1.APPROVE_COND approveCond
 	FROM RSK_ISUP_INDICATOR T1
 	<where>
 	T1.IND_ID NOT IN (SELECT IND_ID FROM RSK_RULE_INDICATOR WHERE RULE_ID = #{ruleId,jdbcType=VARCHAR})

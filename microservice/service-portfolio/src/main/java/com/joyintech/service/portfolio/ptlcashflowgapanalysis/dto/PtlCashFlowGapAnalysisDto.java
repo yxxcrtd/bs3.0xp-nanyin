@@ -93,6 +93,11 @@ public class PtlCashFlowGapAnalysisDto extends BaseEntity {
 	private boolean paType;
 
 	/**
+	 * 组合系列
+	 */
+	private String portfolioSeries;
+
+	/**
 	 * 获取 paType
 	 *
 	 * @return paType
@@ -240,5 +245,13 @@ public class PtlCashFlowGapAnalysisDto extends BaseEntity {
 
 	public void setFeetype(String feetype) {
 		this.feetype = feetype;
+	}
+
+	public String getPortfolioSeries() {
+		return portfolioSeries;
+	}
+
+	public void setPortfolioSeries(String portfolioSeries) {
+		this.portfolioSeries = portfolioSeries;
 	}
 }

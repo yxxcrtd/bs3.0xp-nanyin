@@ -13,6 +13,7 @@
             <Cell order="9" name="交易可用持仓">tradePositionAmount</Cell>
             <Cell order="10" name="预减持仓">pledgeAmount</Cell>
             <Cell order="11" name="质押持仓">preReductionAmount</Cell>
+            <Cell order="12" name="市值">marketValue</Cell>
         </Row>
     </Worksheet>
 </Workbook>

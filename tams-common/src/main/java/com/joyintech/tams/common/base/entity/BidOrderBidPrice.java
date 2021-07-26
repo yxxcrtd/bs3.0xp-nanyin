@@ -134,4 +134,16 @@ public class BidOrderBidPrice extends BidOrderBidPriceKey {
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId == null ? null : tradeId.trim();
     }
+
+    /**add by sunhui 20210719 重庆银行：中标结果维护，对应明细中，增加【是否头寸冻结】字段   start**/
+    private String isFrozenPosition;
+
+    public String getIsFrozenPosition() {
+        return isFrozenPosition;
+    }
+
+    public void setIsFrozenPosition(String isFrozenPosition) {
+        this.isFrozenPosition = isFrozenPosition;
+    }
+    /**add by sunhui 20210719 重庆银行：中标结果维护，对应明细中，增加【是否头寸冻结】字段   end**/
 }

@@ -56,6 +56,11 @@ public class TrdRepoTradeCSTPDto extends InterfOpicsTradRepo {
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 6419698209427700925L;
+
+    /**
+     * 交易日历
+     */
+    private String calendarId;
     
     /**
      * {@linkplain}
@@ -169,6 +174,12 @@ public class TrdRepoTradeCSTPDto extends InterfOpicsTradRepo {
 	public void setIsOfferFlag(String isOfferFlag) {
 		this.isOfferFlag = isOfferFlag;
 	}
-    
-    
+
+    public String getCalendarId() {
+        return calendarId;
+    }
+
+    public void setCalendarId(String calendarId) {
+        this.calendarId = calendarId;
+    }
 }

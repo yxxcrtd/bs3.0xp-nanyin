@@ -25,13 +25,21 @@
     <div class="joyin-form-wrap joyin-filter-form condition-area">
         <form class="layui-form" id="searchForm">
             <div class="layui-form-item">
+                <div class="layui-inline layui-col-md6">
+                    <label class="layui-form-label form-lable">账套类别</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="booksetType" name="booksetType"
+                               class="layui-input form-input input-checkbox" data-th-data-result="${BOOKSET_TYPE}"
+                               data-th-initValue='${defaultType}'>
+                    </div>
+                </div>
                 <div class="layui-inline layui-col-md5">
                     <label class="layui-form-label form-lable">所属账套</label>
                     <div class="layui-input-inline input-inline">
 
                         <select id="ValAssetBook001_name" name="ValAssetBook001_name"
-                                class="layui-input form-input input-select"
-                                data-th-data-url="@{/valuation/accounadjustmanage/assetbook/ValAssetBook001/getBooksetId}"
+                                class="layui-input form-input input-select" parentIds = 'booksetType'
+                                data-th-data-url="@{/valuation/accounadjustmanage/assetbook/ValAssetBook001/findBooksetIds}"
                                 multiple="multiple" allowClear="true" placeholder="请输入内容">
                         </select>
 
@@ -46,14 +54,7 @@
 
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md6">
-                    <label class="layui-form-label form-lable">账套类别</label>
-                    <div class="layui-input-inline input-inline">
-                        <input type="text" id="ValAssetBook001_type" name="status"
-                               class="layui-input form-input input-checkbox" data-th-data-result="${BOOKSET_TYPE}"
-                               data-th-initValue='${defaultType}'>
-                    </div>
-                </div>
+
             </div>
         </form>
     </div>

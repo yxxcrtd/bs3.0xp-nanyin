@@ -4174,6 +4174,8 @@ public enum BussinessDictCodeListRds implements BaseDictCodeList {
             BussinessDictCodeRds.共通业务类型, "RSK28", "固定值参数管理"
     ), 共通业务类型_自定义参数管理(
             BussinessDictCodeRds.共通业务类型, "RSK33", "自定义参数管理"
+    ), 共通业务类型_REDIS功能参数配置(
+            BussinessDictCodeRds.共通业务类型, "RSK36", "REDIS功能参数配置"
     ), 共通业务类型_报表规则定义管理(
             BussinessDictCodeRds.共通业务类型, "S01", "报表规则定义管理"
     ), 共通业务类型_用户管理(

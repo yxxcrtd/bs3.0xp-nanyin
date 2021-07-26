@@ -283,6 +283,9 @@
             <if test="portType != null and portType != ''">
             	AND A.PORTFOLIO_TYPE IN (#{portType}, #{portType1})
             </if>
+            <if test="portfolioSeries != null and portfolioSeries != ''">
+                AND B.PORTFOLIO_SERIES = #{portfolioSeries}
+            </if>
         </where>
     </select>
     <select id="getMarketValuationId" resultType="com.joyintech.framework.select.SuggestDto">

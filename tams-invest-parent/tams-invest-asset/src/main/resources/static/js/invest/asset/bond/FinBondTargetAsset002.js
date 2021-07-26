@@ -121,14 +121,21 @@ $(function() {
         }
         // 若系统参数ASSET_INFO_CHB_HIDE为隐藏中债信息，则不进行赋值
         if(ASSET_INFO_CHB_HIDE != '02'){
-        	//登记托管机构
-	        object.bussFinBondRepInfoDto.repRegistOrg = $("#registOrg").val();
-	        //权益类中债报送
-	        object.bussRepEquityInfoDto.repAssetType = repAssetType;
-	        //债券报送信息
-	        object.bussFinBondRepInfoDto.finprodType2 = FINPROD_TYPE_TG_F01;
-	        object.bussFinBondRepInfoDto.repAssetType = repAssetType;
-	        object.bussFinBondRepInfoDto.tradeMarket = $('#tradeMarket').val();
+
+            if (object.bussFinBondRepInfoDto){
+                //登记托管机构
+                object.bussFinBondRepInfoDto.repRegistOrg = $("#registOrg").val();
+                //债券报送信息
+                object.bussFinBondRepInfoDto.finprodType2 = FINPROD_TYPE_TG_F01;
+                object.bussFinBondRepInfoDto.repAssetType = repAssetType;
+                object.bussFinBondRepInfoDto.tradeMarket = $('#tradeMarket').val();
+            }
+	        if (object.bussRepEquityInfoDto){
+                //权益类中债报送
+                object.bussRepEquityInfoDto.repAssetType = repAssetType;
+
+            }
+
 	        
         }
         if (object.finPayInterestStdInfoDto){

@@ -146,3 +146,10 @@ comment on column CREDIT_LINES.HOLD_MATURITY is '是否持有至到期';
 
 
 
+
+
+-- ----------------------------
+-- Table structure for CREDIT_LINES
+-- ----------------------------
+DELETE FROM CREDIT_LINES WHERE SEQNO = 'CEORG202107080303';
+DELETE FROM CREDIT_LINES WHERE SEQNO = 'CEORG202107080307';

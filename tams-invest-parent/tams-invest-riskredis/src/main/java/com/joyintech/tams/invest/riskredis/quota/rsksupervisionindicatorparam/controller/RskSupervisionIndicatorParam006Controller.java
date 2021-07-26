@@ -9,12 +9,8 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam001Service;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParam003Dto;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParam006Dto;
-import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParamDto;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam003Service;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam006Service;
-import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,10 +28,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -57,8 +49,6 @@ public class RskSupervisionIndicatorParam006Controller extends BaseController{
 	
 	@Autowired
 	private RskSupervisionIndicatorParam001Service rskSupervisionIndicatorParamService;
-	 
-    
 	@Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
@@ -72,19 +62,8 @@ public class RskSupervisionIndicatorParam006Controller extends BaseController{
 				List<RskSupervisionIndicatorParam003Dto> list = rskSupervisionIndicatorParam003Service.selectFixRecode(paraCode);
 	            if(!StringUtil.isEmptyList(list)){
 	            	model.addAttribute("entity",list.get(0));
-	            }else {
-	                list = rskSupervisionIndicatorParam003Service.selectFixRecode2(paraCode); 
-	                model.addAttribute("entity",list.get(0));
 	            }
 	        }
-		if (MultilevelDataAuthorityUtil.isEnabled()) {
-		   String InstitutionCode = CommonUtil.getInstitutionTypeByLoginUser_ms();
-	       model.addAttribute("msInstitutionCode", InstitutionCode);
-	       model.addAttribute("isEnabled", "01");
-	       model.addAttribute("InstitutionCode", MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
-        }else {
-           model.addAttribute("isEnabled", "02");
-        } 
 		model.addAttribute("SYS_DATE", DateUtil.format(DateUtil.platDateFromCache()));
 		return super.init(model);
 	}
@@ -103,7 +82,6 @@ public class RskSupervisionIndicatorParam006Controller extends BaseController{
         throws Exception {
     	return rskSupervisionIndicatorParam006Service.findPage(RequestUtil.getPageParam());
     }
-     
     /**
      * 保存按钮点击时的check
      *

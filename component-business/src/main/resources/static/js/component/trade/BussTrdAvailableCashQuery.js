@@ -45,6 +45,13 @@
         if(params.portfolioId && params.portfolioId.trim() 
                 && params.calendarId && params.ccy && params.tradeDate){
             params.acctTypeList = ACCT_TYPE_A01 + "," + ACCT_TYPE_A07;
+            debugger;
+            if(bondFirstSign){
+                params.bondFirstSign = bondFirstSign;
+            }
+            if(entrustId){
+                params.entrustId = entrustId;
+            }
             Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (data) {
                 getElementById("avalibleCash").val(data.T_0).trigger("change").trigger('blur');
                 getElementById("avalibleCashT1").val(data.T_1).trigger("change").trigger('blur');

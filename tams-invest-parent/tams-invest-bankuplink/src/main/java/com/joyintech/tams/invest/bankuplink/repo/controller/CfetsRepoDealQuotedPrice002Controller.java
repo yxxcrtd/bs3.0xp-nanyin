@@ -270,6 +270,8 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
         if (StringUtil.equals(operation, "CfetsRepoDealQuotedPrice001.copy")
             && StringUtil.isNotEmpty(quoteId)) {
             cfetsRepoDealQuotedPrice001Dto.setQuoteId(null);
+            cfetsRepoDealQuotedPrice001Dto.setVersion(-1L);
+            cfetsRepoDealQuotedPrice001Dto.setCfetsQuoteId(null);
         }
         if (StringUtil.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getEntrustId())) {
             CfetsRepoDealQuotedPrice001Dto dto = cfetsRepoDealQuotedPrice002Service.queryEntrustInfoByEntrustId(

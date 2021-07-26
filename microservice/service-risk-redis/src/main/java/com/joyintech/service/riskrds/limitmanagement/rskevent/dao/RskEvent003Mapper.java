@@ -1,7 +1,11 @@
 package com.joyintech.service.riskrds.limitmanagement.rskevent.dao;
 
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.riskrds.limitmanagement.rskevent.dto.RskEvent003Dto;
+
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 /**
@@ -18,4 +22,12 @@ public interface RskEvent003Mapper {
      */
 	RskEvent003Dto selectEventRelParaByCode(String eventCode);
 
+    // add by zhangrui1 公式配置 start
+    /**
+     * 查询所有参数值相对不变的参数信息作为下拉选项（当天值不受交易影响或固定值）
+     * 
+     * @return 下拉选项列表
+     */
+    List<SelectOptionDto> selectParamList();
+    // add by zhangrui1 公式配置 end
 }

@@ -1,0 +1,1 @@
+UPDATE sys_para SET PARAM_VALUE = '02' where PARA_CODE = 'is_show_myhome';

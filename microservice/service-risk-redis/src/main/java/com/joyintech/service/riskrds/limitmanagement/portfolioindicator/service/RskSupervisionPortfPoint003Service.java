@@ -1,10 +1,7 @@
 package com.joyintech.service.riskrds.limitmanagement.portfolioindicator.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dao.RskSupervisionPortfPoint003Mapper;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPortfolioPackage003Dto;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPortfolioPackageDtlDto;
@@ -24,8 +20,6 @@ import com.joyintech.tams.common.base.dao.RskPortfolioPackageDtlMapper;
 import com.joyintech.tams.common.base.dao.RskPortfolioPackageMapper;
 import com.joyintech.tams.common.base.entity.PtlParamPoolConfig;
 import com.joyintech.tams.common.base.entity.RskPortfolioPackageDtl;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tools.collectors.JoyinCollectors;
 
 /**
  * 监控指标
@@ -78,13 +72,6 @@ public class RskSupervisionPortfPoint003Service extends BaseService {
         if (null == entity) {
             return;
         }
-        //wangyang1  风险二级法人改造 start  
-        Map<String, Object> param = new HashMap<>(); 
-        CommonUtil.setInstitutionMapByType_ms(param);
-        if (StringUtil.isNotEmpty(param.get("institution"))) {
-            entity.setInstitutionCode(param.get("institution").toString());
-        }
-        //wangyang1  风险二级法人改造 end 
         // 组合包
         rskPortfolioPackageMapper.insert(entity);
         if (null != entity.getRskPortfolioPackageDtlDto()) {
@@ -169,22 +156,6 @@ public class RskSupervisionPortfPoint003Service extends BaseService {
         rskPortfolioPackage003Dto.setRskPortfolioPackageDtlDto(rskPortfolioPackageDtlDto);
         rskPortfolioPackage003Dto.setRskPortfolioPoolConfigDto(rskPortfolioPoolConfigDto);
         return rskPortfolioPackage003Dto;
-    }
-    
-    /**
-     * 查询组合包组合明细
-     * 
-     * @param entity
-     * @return
-     */
-    public List<String> queryPortfolioPackageDtlByBagId(String bagId) { 
-        List<RskPortfolioPackageDtlImp> portfDtlList = rskSupervisionPortfPoint003Mapper.selectPortfBagDtlByBagId(
-            bagId); 
-        List<String> list= new ArrayList<>();
-        if (StringUtil.isNotEmpty(portfDtlList)) {
-           list= portfDtlList.stream().map(item->item.getPortfolioId()).collect(Collectors.toList());
-        } 
-        return list;
     }
 
     /**

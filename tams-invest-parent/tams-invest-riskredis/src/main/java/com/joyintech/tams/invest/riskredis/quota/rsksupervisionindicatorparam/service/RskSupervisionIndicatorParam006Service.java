@@ -7,11 +7,11 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -29,7 +29,8 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 
 @Service
 public class RskSupervisionIndicatorParam006Service extends CommonExportService<RskSupervisionIndicatorParam006Dto> implements BaseProcessService<RskSupervisionIndicatorParam006Dto> {
-	/**
+
+    /**
      * 日志
      */
     private static Logger logger = LoggerFactory.getLogger(RskSupervisionIndicatorParam006Service.class);
@@ -42,6 +43,9 @@ public class RskSupervisionIndicatorParam006Service extends CommonExportService<
      */
     @Autowired
     private RiskRedisInitService<ImplCond> redisRriter;
+
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     public void doComplete(RskSupervisionIndicatorParam006Dto entity, OperationType type) {
@@ -74,23 +78,25 @@ public class RskSupervisionIndicatorParam006Service extends CommonExportService<
         }
         String pageRedisFlag = CacheUtil.getSysParam("pageRedisFlag");
         if (CommonUtil.isType(pageRedisFlag, BussinessDictCodeListRds.是否_是)) {
-            try {
-                logger.info("===========指标固定值参数进入redis开始=============");
-                Thread.sleep(2000);
-                // 更新Redis
-                ImplCond cond = new ImplCond();
-                cond.setParamCodeArray(entity.getParaCode());
-                cond.setDel(StringUtil.equals(action, "delete"));
-                cond.setIsUpdParVal(false);
-                cond.setPlateDate(DateUtil.parse(DateUtil.getSysDate()));
-                redisRriter.dealRiskIndParam(cond);
-                logger.info("===========指标固定值参数进入redis结束=============");
-            } catch (InterruptedException e) {
-                logger.error("===========指标固定值参数进入redis异常=============",e);
-            }
+            final String actionRedis=action;
+            threadPoolTaskExecutor.execute(()->{
+                try {
+                    logger.info("===========指标固定值参数进入redis开始=============");
+                    Thread.sleep(6000);
+                    // 更新Redis
+                    ImplCond cond = new ImplCond();
+                    cond.setParamCodeArray(entity.getParaCode());
+                    cond.setDel(StringUtil.equals(actionRedis, "delete"));
+                    cond.setIsUpdParVal(false);
+                    cond.setPlateDate(DateUtil.parse(DateUtil.getSysDate()));
+                    redisRriter.dealRiskIndParam(cond);
+                    logger.info("===========指标固定值参数进入redis结束=============");
+                } catch (InterruptedException e) {
+                    logger.error("===========指标固定值参数进入redis异常=============");
+                }
+
+            });
         }
-        
-        
     }
 
     public Page<RskSupervisionIndicatorParam006Dto> findPage(Map<String, Object> pageParam) {
@@ -135,5 +141,6 @@ public class RskSupervisionIndicatorParam006Service extends CommonExportService<
             page.setRecords(pageList.size());
         }
         return page;
-    } 
+    }
+
 }

@@ -2,12 +2,14 @@ package com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto;
 import com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.service.RskSupervisionRiskAnalyzeService;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,5 +77,15 @@ public class RskSupervisionRiskAnalyzeController {
                                              @PathVariable("length") int length) {
         param.put("roleName", DictCodeListExt2.角色岗位_产品设计岗.getValue());
         return rskSupervisionRiskAnalyzeService.selectUserName(param,page,length);
+    }
+
+    @PostMapping("selectIndName")
+    public List<SuggestDto> selectIndName(@RequestBody Map<String, Object> map){
+        return rskSupervisionRiskAnalyzeService.selectIndName(map);
+    }
+
+    @PostMapping("selectGroupName")
+    public List<SuggestDto> selectGroupName(@RequestBody Map<String, Object> map){
+        return rskSupervisionRiskAnalyzeService.selectGroupName(map);
     }
 }

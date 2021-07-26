@@ -5,7 +5,7 @@
             <Cell order="1" name="组合/组合包名称">groupName</Cell>
             <Cell order="2" name="监控类型">supTypeAbbr</Cell>
             <Cell order="3" name="监控日期">supDate</Cell>
-             <Cell order="4" name="指标名称">indName</Cell>
+            <Cell order="4" name="指标名称">indName</Cell>
             <Cell order="5" name="预警线">warnCond</Cell>
             <Cell order="6" name="审批线">approveCond</Cell>
             <Cell order="7" name="禁止线">foulCond</Cell>

@@ -3,7 +3,15 @@ var table;
 
 (function () {
     var getriskdata = function () {
-        var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#purchDate').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#tradeAmt').val(),assetType:FINPROD_TYPE_F01,isEnabled:'01',assetCode:$('#finprodId').val(),tradeDirection:$('#ps').val()}
+        //配置单位 edit by yeming 20210723 start
+        var tradeAmt=$('#tradeAmt').val();
+        if (tradeAmt) {
+            if(entrustAmtUnit == '02' ){
+                tradeAmt=JoyinMath.doMul(tradeAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            }
+        }
+        //配置单位 edit by yeming 20210723 end
+        var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#purchDate').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:tradeAmt,assetType:FINPROD_TYPE_F01,isEnabled:'01',assetCode:$('#finprodId').val(),tradeDirection:$('#ps').val()}
         if($('#windtypeone').val() && $('#windtypeone').val() != ''){
             obj.assetSecType = $('#windtypeone').val();
         }
@@ -237,7 +245,9 @@ var table;
         	$("#secManageAcctId").attr("disabled", true);
         	$("#chlId").attr("disabled", true);
          }
-        
+        if(entrustAmtUnit == '01' ){
+            $(".unitNum").text('元');
+        }
     	purchModelAndPurchTypeChange()
     };
     
@@ -261,7 +271,13 @@ var table;
                 //优先配售  使用申购券面总额
                 //普通配售  有保证金 使用保证金
                 if ($("#purchType").val()==PURCH_TYPE_01) {
-                    data.tradeAmt = $("#tradeAmt").val();
+                    //配置单位 edit by yeming 20210723 start
+                    if(entrustAmtUnit == '02' ){
+                        data.tradeAmt = JoyinMath.doMul($("#tradeAmt").val(), 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                    }else {
+                        data.tradeAmt = $("#tradeAmt").val();
+                    }
+                    //配置单位 edit by yeming 20210723 end
                 }
                 else if($("#depositAmt").val()){
                     data.tradeAmt = $("#depositAmt").val();

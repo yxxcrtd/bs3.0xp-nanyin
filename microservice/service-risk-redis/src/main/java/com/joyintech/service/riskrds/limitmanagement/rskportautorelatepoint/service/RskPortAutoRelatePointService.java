@@ -15,13 +15,10 @@ import com.joyintech.tams.common.base.entity.RskRuleIndicator;
 import com.joyintech.tams.common.base.entity.RskRuleIndicatorKey;
 import com.joyintech.tams.common.base.entity.RskRuleInfo;
 import com.joyintech.tams.common.base.entity.RskRulePoolConfig;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,13 +60,6 @@ public class RskPortAutoRelatePointService extends BaseService {
         RskRuleInfo rskRuleInfo = new RskRuleInfo();
         BeanUtil.copyPropertiesIgnoreNull(rskRuleInfo, dto);
         // 插入规则
-        //wangyang1  风险二级法人改造 start  
-        Map<String, Object> param = new HashMap<>(); 
-        CommonUtil.setInstitutionMapByType_ms(param);
-        if (StringUtil.isNotEmpty(param.get("institution"))) {
-            rskRuleInfo.setInstitutionCode(param.get("institution").toString());
-        }
-        //wangyang1  风险二级法人改造 end 
         rskRuleInfoMapper.insert(rskRuleInfo);
         RskRulePoolConfig rskRulePoolConfig = new RskRulePoolConfig();
         // 循环插入规则入池

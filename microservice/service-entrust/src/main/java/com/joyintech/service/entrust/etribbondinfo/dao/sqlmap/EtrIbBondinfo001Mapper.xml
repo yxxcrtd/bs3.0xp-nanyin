@@ -385,6 +385,7 @@
     <select id="getEtrFinProductInfo" resultType="com.joyintech.service.entrust.etribbondinfo.dto.EtrFinProductDto">
 select
     t1.FINPROD_MARKET_ID secId,
+    t1.FINPROD_ABBR finprodAbbr,
     t1.FINPROD_NAME secName,
     t2.TYPE_9 secType,
     t1.issuer issuer,
@@ -473,5 +474,31 @@ from
       <if test="finprodId != null and finprodId != ''">
             AND t1.FINPROD_ID = #{finprodId}
       </if>
+    </select>
+
+
+    <select id="getAllTradeListByFinprodId" resultType="com.joyintech.service.entrust.etribbondinfo.dto.EtrTrdProductDealDto">
+        select t.finprod_id finprodId,t.share_amt shareAmt,t.yield,t.ps,t.UNIT_CPRICE unitCprice,
+        pt.PORTFOLIO_ID
+        from trd_product_deal t
+        inner JOIN trd_product_deal_add tpda on t.TRADE_ID=tpda.TRADE_ID
+        inner JOIN FIN_PRODUCT T3 ON t.FINPROD_ID = T3.FINPROD_ID
+        inner JOIN  fin_product_type fpt
+        on t.finprod_id=fpt.finprod_id
+        and t.branch=fpt.branch
+        inner join ptl_trade pt on pt.BUSI_NO = t.TRADE_ID
+        where 1=1
+        <if test="finprodId != null">
+            AND T3.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+        <if test="portfolioId != null ">
+            AND tpda.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        </if>
+        and to_date(#{sysDate},'yyyy-MM-dd') >= t.SETTLE_DATE
+        and fpt.type_8='F01'
+        and t.trade_status='01'
+        and t.is_cancel='N'
+        and t.ps in('T01','T02')
+        order by t.UPDATE_TIME asc
     </select>
 </mapper>

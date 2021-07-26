@@ -196,7 +196,7 @@
     <div class="layui-tab-item layui-show">
         <div  class="leftTopHide" style="height: 300px;">
             <div class="level2-panel">
-                <div class="price-boundary" style="clear: both;">
+                <div class="price-boundary" style="clear: both;display: none" >
                     <div class="typical-price">
                         <label>组合T日可用现金:</label>
                         <label id="zhkyxj_t">0.00元</label>
@@ -229,6 +229,10 @@
                         <label>资产可用券面总额:</label>
                         <label id="zcky_qmze">0.00万元</label>
                     </div>
+                </div>
+                <div class="price-boundary" id = "hq002_dev">
+                    <iframe id = "hq002" th:src="@{'/invest/entrust/EtrCommonController/initAmount'}" width="100%"
+                            height="100%"  frameborder="0"  style="border:none;"></iframe>
                 </div>
                 <div>
                     <h3 style="line-height: 41px;float: left;">债券信息：</h3>

@@ -904,6 +904,14 @@
                 <if test="windtypeone != null and windtypeone != ''">
                     AND B.TYPE_4 = #{windtypeone}
                 </if>
+                <!-- add by sunhui 20210721 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND A.TRADE_MARKET in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by sunhui 20210721 银行间场内场外拆分 end -->
                 AND (Q.IS_ISSUE_ASSET IS NULL OR Q.IS_ISSUE_ASSET = 'N')
             </where>
         <if test="isautobond != null and isautobond == 'true'">
@@ -948,6 +956,14 @@
 	   <if test="initValue != null and initValue != ''">
            AND interf.SECID = #{initValue}
        </if>
+        <!-- add by sunhui 20210721 银行间场内场外拆分 start -->
+        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+            AND interf.MARKET in
+            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                #{currTradeMarket}
+            </foreach>
+        </if>
+        <!-- add by sunhui 20210721 银行间场内场外拆分 end -->
 	   <if test="search != null and search != ''">
 	    and 
 	     ( interf.SECID LIKE CONCAT('%', CONCAT(#{search}, '%'))

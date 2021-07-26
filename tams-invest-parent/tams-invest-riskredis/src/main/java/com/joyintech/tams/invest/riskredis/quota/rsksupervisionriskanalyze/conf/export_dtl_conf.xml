@@ -2,7 +2,7 @@
 <Workbook filePath="RskSupervisionRiskAnalyzeDtl.xlsx" name="事后监控值明细信息">
     <Worksheet javaBean="com.joyintech.tams.invest.riskredis.quota.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto">
         <Row>
-             <Cell order="1" name="指标名称">indName</Cell>
+            <Cell order="1" name="指标名称">indName</Cell>
             <Cell order="2" name="资产代码">assetCode</Cell>
             <Cell order="3" name="资产名称">assetName</Cell>
             <Cell order="4" name="预警条件">warnCond</Cell>

@@ -68,6 +68,7 @@
            ,t.PORTFOLIO_NAME portfolioName
            ,s.BID_PRIN_AMT bidPrinAmt
            ,n.INV_MANAGER_ID invManagerId
+           ,IS_FROZEN_POSITION isFrozenPosition
         FROM
 	        BID_ORDER_BID_PRICE m
         inner join ETR_ENTRUST n on m.ENTRUST_ID=n.ENTRUST_ID

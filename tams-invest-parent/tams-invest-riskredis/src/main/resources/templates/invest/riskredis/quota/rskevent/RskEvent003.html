@@ -69,7 +69,10 @@
 			var PARA_GRAIN = /*[[${PARA_GRAIN}]]*/'[]'; // 参数粒度
     	    var EVENT_REL_ITEM = /*[[${EVENT_REL_ITEM}]]*/'[]'; // 风险事项运算关系对象
     	    var SUP_CONNECTOR = /*[[${SUP_CONNECTOR}]]*/'[]'; // 操作符
-    	    var entity=/*[[${entity}]]*/;
+    	    var entity=/*[[${entity}]]*/'';
+    	    // add by zhangrui1 公式配置 start
+    	    var EVENT_REL_ITEM_FORMULA = /*[[${EVENT_REL_ITEM_FORMULA}]]*/'formula';
+    	    // add by zhangrui1 公式配置 end
         </script>
 		<script
 			data-th-src="@{/js/invest/riskredis/quota/rskevent/RskEvent003.js}"

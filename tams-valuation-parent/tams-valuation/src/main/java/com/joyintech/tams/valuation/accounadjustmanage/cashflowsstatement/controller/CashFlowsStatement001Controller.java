@@ -10,17 +10,27 @@
  
 package com.joyintech.tams.valuation.accounadjustmanage.cashflowsstatement.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
+import com.google.common.collect.Maps;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.dto.Product;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
+import com.joyintech.tams.valuation.accounadjustmanage.cashflowsstatement.dto.CashFlowsStatement001Dto;
+import com.joyintech.tams.valuation.accounadjustmanage.cashflowsstatement.service.CashFlowsStatement001Service;
+import com.joyintech.tams.valuation.common.service.BooksetCommonService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,26 +41,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Maps;
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.dto.Product;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
-import com.joyintech.tams.valuation.accounadjustmanage.cashflowsstatement.dto.CashFlowsStatement001Dto;
-import com.joyintech.tams.valuation.accounadjustmanage.cashflowsstatement.service.CashFlowsStatement001Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.service.BooksetCommonService;
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 现金流量表Controller
@@ -142,6 +139,32 @@ public class CashFlowsStatement001Controller  extends BaseController {
     public List<SuggestDto> getBooksetId2()
         throws Exception {
         return valAssetBook001Service.getBooksetId2(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 查询账套组
+     * @return 套账日期
+     * @throws Exception
+     * @see
+     */
+    @RequestMapping("findBooksetGroup")
+    @ResponseBody
+    public Page<SelectOptionDto> findBooksetGroup() throws Exception {
+        return valAssetBook001Service.findBooksetGroup(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 所属账套下拉框获取
+     *
+     * @return 返回的数据
+     * @exception Exception
+     *                异常
+     * @since 1.0
+     */
+    @RequestMapping("/findBooksetId")
+    @ResponseBody
+    public Page<SelectOptionDto> findBooksetId(){
+        return valAssetBook001Service.findBooksetIdByPage(RequestUtil.getPageParam());
     }
     
     /**

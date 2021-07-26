@@ -170,23 +170,24 @@ $(
             
             var res = EtrIbBondinfo003.getSubmitParam(operateType);
             if(res == null) return;
+
             Joyin.ajaxJson(basePath + "invest/entrust/EtrCommonController/check", res.param, function (result1) {
                 if (res.objects.length > 0) {
-                    Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/check", res.objects, function (result) {
-                        Joyin.confirm(result.data, function () {
-                            if (operateType === "save") {
-                                WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_save", "EtribBondInfo003"
-                                ,function(){
-                                    window.location.reload();
+                    if (operateType === "save") {
+                        WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_save", "EtribBondInfo003"
+                            ,function(){
+                                window.location.reload();
+                            });
+                    }else{
+                                Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/check", res.objects, function (result) {
+                                    Joyin.confirm(result.data, function () {
+                                        WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_submit", "EtribBondInfo003"
+                                            ,function(){
+                                                window.location.reload();
+                                            });
+                                    });
                                 });
-                            } else {
-                                WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_submit", "EtribBondInfo003"
-                                ,function(){
-                                    window.location.reload();
-                                });
-                            }
-                        });
-                    });
+                    }
                 } else {
                     Joyin.warn("请添加组合分配！");
                     return;
@@ -285,6 +286,12 @@ $(
 
         var defaultStyle = "";
         $("#enlarge").click(function () {
+            enlarge_narrow("enlarge");
+        });
+        $("#narrow").click(function () {
+            enlarge_narrow("narrow");
+        });
+        function enlarge_narrow(flag) {
             let rightDiv = $("#right_bottom_panel_dev");
             if(!rightDiv.attr("flag") || rightDiv.attr("flag") === "1"){
                 defaultStyle = rightDiv.attr("style");
@@ -294,7 +301,14 @@ $(
                 rightDiv.attr("style", defaultStyle);
                 rightDiv.attr("flag","1");
             }
-        });
+            if(flag === "narrow"){
+                $("#enlarge").show();
+                $("#narrow").hide();
+            }else{
+                $("#enlarge").hide();
+                $("#narrow").show();
+            }
+        }
         /**
          * 绑定事件
          */
@@ -350,13 +364,15 @@ function importEtr() {
                         Joyin.dialog(JoyinUtil.getLabel("EtrInvestBondInfo004"),
                             JoyinUtil.getRealPath("/invest/entrust/etribbondinfo/EtrIbBondInfo004/init"),
                             "98%", "95%", result,
-                            function(){table.reload();});
+                            function(){
+                            // table.reload();
+                        });
                     });
                 },1000);
             }
         });
     },function() {
-        table.reload();
+        // table.reload();
     });
 }
 

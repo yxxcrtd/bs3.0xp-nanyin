@@ -72,7 +72,12 @@ public class PtlCashFlowGapAnalysisService extends BaseService<PtlCashFlowGapAna
             }else {
                 pageParam.put("prodManager1", null);
             }
-            // add by wangyang1 【吉林银行】 增加 产品经理  end 
+            // add by wangyang1 【吉林银行】 增加 产品经理  end
+            // add by swwan 【重庆银行】 增加 组合系列  2021年7月22日 start
+            if(StringUtil.isNotEmpty(pageParam.get("portfolioSeries1"))){
+                pageParam.put("portfolioSeriesList1", StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("portfolioSeries1").toString()));
+            }
+            // add by swwan 【重庆银行】 增加 组合系列  2021年7月22日 end
             int displayAccuracy1 = 0;
             if(StringUtil.isNotEmpty(pageParam.get("displayAccuracy1"))){
             	switch(pageParam.get("displayAccuracy1").toString()){
@@ -115,7 +120,12 @@ public class PtlCashFlowGapAnalysisService extends BaseService<PtlCashFlowGapAna
             } else {
                 pageParam.put("prodManager", null);
             }
-            // add by wangyang1 【吉林银行】 增加 产品经理  end 
+            // add by wangyang1 【吉林银行】 增加 产品经理  end
+            // add by swwan 【重庆银行】 增加 组合系列  2021年7月22日 start
+            if(StringUtil.isNotEmpty(pageParam.get("portfolioSeries"))){
+                pageParam.put("portfolioSeriesList", StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("portfolioSeries").toString()));
+            }
+            // add by swwan 【重庆银行】 增加 组合系列  2021年7月22日 end
             if(StringUtil.isNotEmpty(pageParam.get("fundAccount"))){
                 pageParam.put("fundAccountList",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("fundAccount")));
             }

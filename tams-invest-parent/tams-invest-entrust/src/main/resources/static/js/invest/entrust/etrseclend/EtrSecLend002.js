@@ -5,7 +5,15 @@
     var initFlag = true;
     //---add by jjpei 20190718----start---获取风险试算画面要素与Label提示文本
     var getRiskData = function () {
-        var obj = {tradeDirection:$('#busiPs').val(),timePoint:MY_SUP_TIME_TYPE_01,valDate:sysDate,assetCode:$('#finprodId').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#totalAmt').val()?$('#totalAmt').val()*10000:null,isEnabled:USE_STATUS_01}
+        //配置单位 edit by yeming 20210723 start
+        var totalAmt=$('#totalAmt').val();
+        if (totalAmt) {
+            if(entrustAmtUnit == '02' ){
+                totalAmt=JoyinMath.doMul(totalAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            }
+        }
+        //配置单位 edit by yeming 20210723 end
+        var obj = {tradeDirection:$('#busiPs').val(),timePoint:MY_SUP_TIME_TYPE_01,valDate:sysDate,assetCode:$('#finprodId').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#totalAmt').val()?totalAmt:null,isEnabled:USE_STATUS_01}
         if ($("#busiPs").val() == BACK_LEND_DIRECTION_INTO ) {
             obj.assetType=FINPROD_TYPE_TG_F29;
         }
@@ -130,6 +138,9 @@
     };
     //初始化页面
     var init= function(){
+        if(entrustAmtUnit == '01' ){
+            $(".unitNum").text('元');
+        }
         $("#avaStandardBondPositionDiv").hide();
         $("#pledgeStamps_div").hide();
         $('#busiPs').change();
@@ -157,7 +168,15 @@
         $('#EtrSecLend002_btn_riskcal').click(function(){
             // window.BaseRiskMathComm.initBaseRiskMathCommPage(getRiskData());
             var object = $.serializeToObject('#searchForm');
-            object.entrustAmt=$('#totalAmt').val()?$('#totalAmt').val()*10000:null;
+            //配置单位 edit by yeming 20210723 start
+            var totalAmt=$('#totalAmt').val();
+            if (totalAmt) {
+                if(entrustAmtUnit == '02' ){
+                    totalAmt=JoyinMath.doMul(totalAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                }
+            }
+            //配置单位 edit by yeming 20210723 end
+            object.entrustAmt=$('#totalAmt').val()?totalAmt:null;
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F12',object,getRiskData());
         });
         /**

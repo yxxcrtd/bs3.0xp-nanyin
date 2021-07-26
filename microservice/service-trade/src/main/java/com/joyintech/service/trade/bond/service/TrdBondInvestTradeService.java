@@ -865,9 +865,16 @@ public class TrdBondInvestTradeService extends BaseService {
 
     public Boolean isAllTradeAmtByFTradeId(Map<String, Object> map){
         String fTradeId = (String) map.get("fTradeId");
-        String tradeAmtStr =  (String) map.get("tradeAmt");
+
+        BigDecimal tradeAmt = null;
+        if(map.get("tradeAmt") instanceof Integer){
+            tradeAmt =  new BigDecimal((int)map.get("tradeAmt"));
+        }else if(map.get("tradeAmt") instanceof Double){
+            tradeAmt =  new BigDecimal((Double) map.get("tradeAmt"));
+        }else{
+            tradeAmt = new BigDecimal((String) map.get("tradeAmt"));
+        }
         String workflowId = (String) map.get("workflowId");
-        BigDecimal tradeAmt = new BigDecimal(Double.valueOf(tradeAmtStr));
         tradeAmt = com.joyintech.calculation.util.ArithmeticUtil.doAdd(2, RoundingMode.HALF_UP,tradeAmt, new BigDecimal(0));
         BigDecimal all = new BigDecimal(0);
         if(StringUtils.isNotBlank(fTradeId)){

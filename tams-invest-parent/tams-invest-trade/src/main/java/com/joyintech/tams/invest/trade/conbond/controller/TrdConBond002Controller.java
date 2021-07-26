@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.trade.conbond.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -100,6 +101,10 @@ public class TrdConBond002Controller extends BaseController {
         String tradeId = this.getParam("busiCode");
         String workflowStatus = this.getParam("workflowStatus");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        //配置单位 add by yeming 20210723 start
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+        model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
+        //配置单位 add by yeming 20210723 end
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdConBond002Service.getBussinessEntityByWorkflowId(
@@ -122,6 +127,13 @@ public class TrdConBond002Controller extends BaseController {
             dto.setPurchDate(CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class));
         }
         dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        //配置单位 edit by yeming 20210723 start
+        if(StringUtil.equals(entrustAmtUnit,"02")){
+            if (dto.getTradeAmt() != null){
+                dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+        }
+        //配置单位 edit by yeming 20210723 end
         if (StringUtil.isNotBlank(tradeId)) {
             model.addAttribute("tradeId", tradeId);
         }

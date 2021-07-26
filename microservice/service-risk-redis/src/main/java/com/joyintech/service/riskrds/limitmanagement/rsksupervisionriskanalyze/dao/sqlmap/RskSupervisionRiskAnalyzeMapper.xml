@@ -11,6 +11,10 @@
     </resultMap>
 
 	<select id="selectInit" resultType="com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto" >
+        with isupMx as (
+            select IND_ID,PORTFOLIO_ID,SUP_FREQUENCY,SUP_DATE,count(1) as mxCount from RSK_ISUP_POINT_DET_VAL
+            group by IND_ID,PORTFOLIO_ID,SUP_FREQUENCY,SUP_DATE
+        )
         SELECT
         	A.UPDATE_TIME  AS updateTime,
 	        A.SUP_FREQUENCY as supFrequency,
@@ -35,8 +39,7 @@
 	        THEN (SELECT D.PORTFOLIO_NAME FROM PTL_PORTFOLIO D WHERE D.PORTFOLIO_ID = A.PORTFOLIO_ID)
 	        ELSE (SELECT E.PTL_BAG_NAME FROM RSK_PORTFOLIO_PACKAGE E WHERE E.PTL_BAG_ID = A.PORTFOLIO_ID)
 	        END ) groupName,
-        (SELECT count(1) FROM RSK_ISUP_POINT_DET_VAL t WHERE t.IND_ID=A.IND_ID AND T.PORTFOLIO_ID=A.PORTFOLIO_ID AND T.SUP_FREQUENCY=A.SUP_FREQUENCY AND T.SUP_DATE=A.SUP_DATE)
-        AS mxCount
+        H.mxCount
         FROM
         RSK_ISUP_POINT_VAL A
         INNER JOIN RSK_PORTFOLIO_INDICATOR C
@@ -59,18 +62,25 @@
         SELECT
         	A.PORTFOLIO_ID,
         	A.IND_ID,
+        	A.SUP_DATE,
         	MAX(A.UPDATE_TIME) AS updateTime
         FROM
         	RSK_ISUP_POINT_VAL A
         GROUP BY
         	A.PORTFOLIO_ID,
-        	A.IND_ID) M
+        	A.IND_ID, A.SUP_DATE) M
         ON A.UPDATE_TIME = M.updateTime
         AND M.PORTFOLIO_ID = A.PORTFOLIO_ID
         AND M.IND_ID = A.IND_ID
+        left join isupMx H on H.IND_ID=A.IND_ID AND H.PORTFOLIO_ID=A.PORTFOLIO_ID
+         AND H.SUP_FREQUENCY=A.SUP_FREQUENCY AND H.SUP_DATE=A.SUP_DATE
     </select>
 
     <select id="select" resultType="com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto" >
+        with isupMx as (
+        select IND_ID,PORTFOLIO_ID,SUP_FREQUENCY,SUP_DATE,count(1) as mxCount from RSK_ISUP_POINT_DET_VAL
+        group by IND_ID,PORTFOLIO_ID,SUP_FREQUENCY,SUP_DATE
+        )
         SELECT
         A.SUP_FREQUENCY as supFrequency,
         W.FREQUENCY as frequency,
@@ -94,8 +104,7 @@
         THEN (SELECT D.PORTFOLIO_NAME FROM PTL_PORTFOLIO D WHERE D.PORTFOLIO_ID = A.PORTFOLIO_ID)
         ELSE (SELECT E.PTL_BAG_NAME FROM RSK_PORTFOLIO_PACKAGE E WHERE E.PTL_BAG_ID = A.PORTFOLIO_ID)
         END ) groupName,
-        (SELECT count(1) FROM RSK_ISUP_POINT_DET_VAL t WHERE t.IND_ID=A.IND_ID AND T.PORTFOLIO_ID=A.PORTFOLIO_ID AND T.SUP_FREQUENCY=A.SUP_FREQUENCY AND T.SUP_DATE=A.SUP_DATE)
-        AS mxCount
+        H.mxCount
         FROM
         RSK_ISUP_POINT_VAL A
         INNER JOIN RSK_PORTFOLIO_INDICATOR C
@@ -121,6 +130,8 @@
         </where>
         	group by A.PORTFOLIO_ID) W
         ON W.ID = A.PORTFOLIO_ID
+         left join isupMx H on H.IND_ID=A.IND_ID AND H.PORTFOLIO_ID=A.PORTFOLIO_ID
+        AND H.SUP_FREQUENCY=A.SUP_FREQUENCY AND H.SUP_DATE=A.SUP_DATE
         INNER JOIN
         (
         SELECT
@@ -201,7 +212,7 @@
         D.APPROVE_COND  approveCond,
         D.FOUL_COND    foulCond,
         B.IND_TYPE indType,
-        NVL(A.ASSET_NAME,E.FINPROD_NAME)   assetName
+        NVL(NVL(A.ASSET_NAME, E.FINPROD_NAME),F.CUSTOMER_NAME) assetName
         FROM
         RSK_ISUP_POINT_DET_VAL A
         INNER JOIN RSK_PORTFOLIO_INDICATOR C
@@ -211,6 +222,7 @@
         INNER JOIN RSK_ISUP_POINT_VAL D
         ON D.IND_ID = A.IND_ID and D.PORTFOLIO_ID=A.PORTFOLIO_ID and D.SUP_DATE=A.SUP_DATE
         LEFT JOIN FIN_PRODUCT E ON A .ASSET_CODE = E.FINPROD_ID
+        LEFT JOIN MST_CUSTOMER_INFO F ON A.ASSET_CODE = F.CUSTOMER_ID
         <where>
             <if test="indId !=null and indId !=''">
                  A.IND_ID =#{indId}
@@ -228,67 +240,60 @@
     </select>  
     
      <select id="selectFu" resultType="com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto" >
-      select * from (  SELECT
-         A.PORTFOLIO_ID       portfolioId,
-         A.IND_ID             indId,
-         B.IND_NAME           indName,
-         B.SUP_TYPE           supType,
-         A.SUP_DATE           supDate,
-         A.SUP_VAL            supVal,
-         A.SUP_STAT           supStat,
-         A.WARN_COND          warnCond,
-         A.APPROVE_COND       approveCond,
-         A.FOUL_COND          foulCond,
-         B.IND_TYPE           indType
-        FROM
-          RSK_ISUP_POINT_VAL A
-        INNER JOIN
-          RSK_ISUP_INDICATOR B
-        ON
-          A.IND_ID = B.IND_ID   
-        <where>
-            <if test="indId !=null and indId !=''">
-               AND  A.IND_ID =#{indId}
-            </if>
-            <if test="portfId !=null and portfId !=''">
-               AND  A.PORTFOLIO_ID =#{portfId}
-            </if>
-             <if test="supDate !=null and supDate !=''">
-            <![CDATA[   AND  A.SUP_DATE <=to_date(#{supDate},'yyyy-MM-dd') ]]>
-            </if>
-            <if test="supFrequency !=null and supFrequency !=''">
-              AND   A.SUP_FREQUENCY =#{supFrequency}
-            </if>
-         </where>
-         AND A.SUP_STAT='VIOLATION'
-        ORDER BY  A.SUP_DATE DESC  
-        <!-- modify by wj 此语法只支持12以上版本  -->
-        <!-- fetch FIRST ${foulDays} rows only --> 
-        ) where rownum &lt;= ${foulDays}
+        SELECT * FROM
+        (SELECT
+	         A.PORTFOLIO_ID       portfolioId,
+	         A.IND_ID             indId,
+	         B.IND_NAME           indName,
+	         B.SUP_TYPE           supType,
+	         A.SUP_DATE           supDate,
+	         A.SUP_VAL            supVal,
+	         A.SUP_STAT           supStat,
+	         A.WARN_COND          warnCond,
+	         A.APPROVE_COND       approveCond,
+	         A.FOUL_COND          foulCond,
+	         B.IND_TYPE           indType
+	        FROM
+	          RSK_ISUP_POINT_VAL A
+	        INNER JOIN
+	          RSK_ISUP_INDICATOR B
+	        ON
+	          A.IND_ID = B.IND_ID   
+	        <where>
+	            <if test="indId !=null and indId !=''">
+	               AND  A.IND_ID =#{indId}
+	            </if>
+	            <if test="portfId !=null and portfId !=''">
+	               AND  A.PORTFOLIO_ID =#{portfId}
+	            </if>
+	            <if test="supDate !=null and supDate !=''">
+	            <![CDATA[   AND  A.SUP_DATE <=to_date(#{supDate},'yyyy-MM-dd') ]]>
+	            </if>
+	            <if test="supFrequency !=null and supFrequency !=''">
+	              AND   A.SUP_FREQUENCY =#{supFrequency}
+	            </if>
+	         </where>
+	         AND A.SUP_STAT='VIOLATION'
+	        ORDER BY  A.SUP_DATE DESC
+        )  WHERE rownum &lt;= ${foulDays}
     </select>  
     
      <select id="selectNx" resultMap="astValCommonMap" >
         SELECT DISTINCT
         A.PORTFOLIO_ID             portfolioId,
-        (nvl(A.MARKET_VALUE,0)+nvl(A.TDY_INTINCEXP,0))                 shareAmt,
+        (nvl(A.TDY_FLOAT_INGPL, 0) + nvl(A.DSC_COST_AMT, 0)+ nvl(A.TDY_INTINCEXP, 0)+ nvl(A.DELAY_PAY_AMT, 0))                 shareAmt,
 		B.PORTFOLIO_NAME           portfolioName,
 		NVL(E.FINPROD_ID,F.ASSET_CODE)     assetCode,
         G.PROD_MANAGER invManagerId,
 		NVL(E.FINPROD_NAME,F.ASSET_NAME)   assetName
 		FROM (
-         SELECT * FROM PTL_SEC_PIERCE_VALUTION
+         SELECT * FROM PTL_SEC_VALUTION
          <where>
          <if test="assetCode !=null and assetCode !=''">
            AND FINPROD_ID=#{assetCode}
          </if>
          <if test="supDate !=null and supDate !=''">
              AND  CDATE = to_date(#{supDate},'yyyy-MM-dd')
-         </if>
-         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-            AND PORTFOLIO_ID in 
-            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-               #{item}
-            </foreach>
          </if>
          </where>
          )  A
@@ -333,6 +338,50 @@
         <if test="initValue != null and initValue != ''">
             and SYS_USER.USER_NAME = #{initValue}
         </if>
+    </select>
+
+
+    <select id="selectIndName" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        rii.IND_ID,
+        rii.IND_NAME code,
+        rii.IND_NAME name
+        FROM RSK_ISUP_INDICATOR rii
+        <where>
+            <if test="indId != null and indId != ''">
+                 (rii.IND_ID like concat('%',concat(#{indId,jdbcType=VARCHAR},'%'))
+                OR rii.IND_NAME  like concat('%',concat(#{indId,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
+    </select>
+
+    <select id="selectGroupName" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        pp.PORTFOLIO_ID,
+        pp.PORTFOLIO_NAME code,
+        pp.PORTFOLIO_NAME name
+        FROM PTL_PORTFOLIO pp
+        <where>
+            <if test="groupName != null and groupName != ''">
+                (pp.PORTFOLIO_ID like concat('%',concat(#{groupName,jdbcType=VARCHAR},'%'))
+                OR pp.PORTFOLIO_NAME  like concat('%',concat(#{groupName,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
+
+        union all
+
+        SELECT
+        rpp.PTL_BAG_ID,
+        rpp.PTL_BAG_NAME code,
+        rpp.PTL_BAG_NAME name
+        FROM RSK_PORTFOLIO_PACKAGE rpp
+        <where>
+            <if test="groupName != null and groupName != ''">
+                (rpp.PTL_BAG_ID like concat('%',concat(#{groupName,jdbcType=VARCHAR},'%'))
+                OR rpp.PTL_BAG_NAME  like concat('%',concat(#{groupName,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
+
     </select>
     
 </mapper>

@@ -50,6 +50,11 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
@@ -303,6 +308,18 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Autowired
     private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
+
+    @Autowired
+    private EtrCommonCashPositionDealService etrCommonCashPositionDealService;
+
+    @Autowired
+    private BasePtlCashPositionInfoMapper basePtlCashPositionInfoMapper;
+
+    @Autowired
+    private EtrCashPositionFlowMapper etrCashPositionFlowMapper;
+
+    @Autowired
+    private PtlCashPositionFlowMapper ptlCashPositionFlowMapper;
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。 {@inheritDoc}
      */
@@ -1688,6 +1705,45 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 investInterfCommDto.setTradeFeeDetaillist(trdTradeFeeDetails);
                 investInterfCommService.doInvestInterf(investInterfCommDto);
                 // 调用投管接口 add by renping 20190205 end
+                /**add by sunhui 20210719 重庆银行：一级债缴款后释放中标维护占用的头寸   start**/
+                if(StringUtil.isNotEmpty(entity.getBondFirstSign()) && StringUtil.equals("01",entity.getBondFirstSign())){
+                    //1.组合可用现金
+                    //释放组合可用现金开始（删除记录）
+                    String entrustId = entity.getEntrustId();//委托id
+                    EntrustCommonDto entrustCommonDto = etrCommonCashPositionDealService.findEntrust(entrustId);
+                    String acctId = etrCommonCashPositionDealService.select组合托管户(entrustCommonDto.getEtrEntrust().getPortfolioId(),
+                            entrustCommonDto.getEtrEntrust().getCcy(),
+                            DictCodeListExt2.资金账户类型_托管户.getValue());
+                    PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+                    ptlCashPositionFlowDto.setPortfolioId(entrustCommonDto.getEtrEntrust().getPortfolioId());
+                    ptlCashPositionFlowDto.setCcy(entrustCommonDto.getEtrEntrust().getCcy());
+                    ptlCashPositionFlowDto.setCdate(entrustCommonDto.getEtrEntrust().getVdate());
+                    ptlCashPositionFlowDto.setAcctId(acctId);
+                    ptlCashPositionFlowDto.setOrderId(entrustCommonDto.getEtrEntrust().getEntrustId());
+                    ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());//冻结的现金
+                    //根据ptlCashPositionFlowDto查询出冻结的持仓，用于后面指令持仓反增
+                    List<String> acctTypeList2 = new ArrayList<String>();
+                    acctTypeList2.add(DictCodeListExt2.资金账户类型_托管户.getValue());
+                    ptlCashPositionFlowDto.setAcctType(acctTypeList2);
+                    ptlCashPositionFlowDto.setIsFrozenPositionFlag(BussinessDictCodeList.是否_是.getValue());
+                    BigDecimal isFrozenPosition = basePtlCashPositionInfoMapper.selectCashPositionFlow(ptlCashPositionFlowDto);
+                    //判断是否已释放头寸
+                    if(isFrozenPosition != null && isFrozenPosition.compareTo(BigDecimal.ZERO) != 0){
+                        basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
+                        //释放组合可用现金结束
+                        //2.指令可用现金
+                        //释放指令可用现金开始（反塞入）
+                        EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
+                        BeanUtil.copyPropertiesIgnoreNull(dto, ptlCashPositionFlowDto);
+                        dto.setSeqno(IDGenerator.generate());
+                        dto.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
+                        dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                        dto.setAmount(ArithmeticUtil.multiply(isFrozenPosition,new BigDecimal("-1")));
+                        etrCashPositionFlowMapper.insertSelective(dto);
+                        //释放指令可用现金结束
+                    }
+                }
+                /**add by sunhui 20210721 重庆银行：一级债缴款后释放中标维护占用的头寸   end**/
             }
 
             // 反向交易生成汇总表数据
@@ -1786,6 +1842,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             Map<String, Object> map = new HashMap<>();
             map.put("totleTradeId", entity.getTotleTradeId());
             map.put("entrustId", entity.getEntrustId());
+            /**add by sunhui 20210721 重庆银行：一级债缴款后撤销重新占用中标维护占用的头寸:查出投标指令标位信息用于后面设置金额   start**/
+            BigDecimal isFrozenPosition = restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/getisFrozenPosition", map,
+                    BigDecimal.class);
+            /**add by sunhui 20210721 重庆银行：一级债缴款后撤销重新占用中标维护占用的头寸:查出投标指令标位信息用于后面设置金额   end**/
             restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/deleteTradeId", map,
                     Integer.class);
 
@@ -1795,12 +1855,42 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
             // 发送Murex接口处理
             // this.sendMurex(entity, true);
+            /**add by sunhui 20210721 重庆银行：一级债缴款后撤销重新占用中标维护占用的头寸   start**/
+            if (//StringUtil.isNotEmpty(entity.getBondFirstSign()) && StringUtil.equals("01",entity.getBondFirstSign()) &&
+                isFrozenPosition != null && isFrozenPosition.compareTo(BigDecimal.ZERO) != 0) {
+                //重新占用组合可用现金开始
+                String entrustId = entity.getEntrustId();//委托id
+                EntrustCommonDto entrustCommonDto = etrCommonCashPositionDealService.findEntrust(entrustId);
+                String acctId = etrCommonCashPositionDealService.select组合托管户(entrustCommonDto.getEtrEntrust().getPortfolioId(),
+                        entrustCommonDto.getEtrEntrust().getCcy(),
+                        DictCodeListExt2.资金账户类型_托管户.getValue());
+                PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+                ptlCashPositionFlowDto.setPortfolioId(entrustCommonDto.getEtrEntrust().getPortfolioId());
+                ptlCashPositionFlowDto.setCcy(entrustCommonDto.getEtrEntrust().getCcy());
+                ptlCashPositionFlowDto.setCdate(entrustCommonDto.getEtrEntrust().getVdate());
+                ptlCashPositionFlowDto.setAcctId(acctId);
+                ptlCashPositionFlowDto.setOrderId(entrustCommonDto.getEtrEntrust().getEntrustId());
+                ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());//冻结的现金
+                ptlCashPositionFlowDto.setSeqno(IDGenerator.generate());
+                ptlCashPositionFlowDto.setAmount(isFrozenPosition);
+                ptlCashPositionFlowMapper.insertSelective(ptlCashPositionFlowDto);
+                //重新占用指令可用现金开始
+                EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(dto, ptlCashPositionFlowDto);
+                dto.setSeqno(IDGenerator.generate());
+                dto.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
+                dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                etrCashPositionFlowMapper.insertSelective(dto);
+            }
+            /**add by sunhui 20210721 重庆银行：一级债缴款后撤销重新占用中标维护占用的头寸   end**/
+
         }
         // 如果中标结果进来 add by gejiaao 2019年8月6日 start
         if (StringUtil.isNotEmpty(entity.getBondFirstSign())) {
             Map<String, Object> map = new HashMap<>();
             map.put("tradeId", tradeId);
             map.put("winPrice", entity.getYield());
+            map.put("winCprice",entity.getUnitCprice());
             map.put("entrustId", entity.getEntrustId());
             restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/updateTradeId", map,
                 Integer.class);

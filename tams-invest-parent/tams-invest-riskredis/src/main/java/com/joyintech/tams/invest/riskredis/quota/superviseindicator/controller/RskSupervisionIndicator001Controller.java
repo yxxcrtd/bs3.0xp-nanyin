@@ -59,7 +59,7 @@ public class RskSupervisionIndicator001Controller extends BaseController {
     public String init(Model model) {
         setSelectOptionToModel(model, DICT_CODES);
         model.addAttribute("USE_STATUS_01", BussinessDictCodeListRds.使用状态_启用.getValue());
-        model.addAttribute("NONE", BussinessDictCodeListRds.单位_无.getValue()); 
+        model.addAttribute("NONE", BussinessDictCodeListRds.单位_无.getValue());
         return super.init(model);
     }
   

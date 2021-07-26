@@ -8,6 +8,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -170,7 +172,7 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
         if(("supDate".equals(propName)) && value != null){
-            cell.setCellValue(DateUtil.format((Date)value));
+			cell.setCellValue(DateUtil.format((Date)value));
         }
     }
 
@@ -288,6 +290,21 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
 	public Page<SelectOptionDto> getUserName(Map<String, Object> map) {
 		return restTemplate.postForPage(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionRiskAnalyze/getUserName", map,
 				SelectOptionDto.class);
+	}
+
+
+	public List<SuggestDto>  selectIndName(Map<String, Object> map) {
+		return restTemplate.postForList(
+				ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionRiskAnalyze/selectIndName", map,
+				SuggestDto.class);
+
+	}
+
+	public List<SuggestDto>  selectGroupName(Map<String, Object> map) {
+		return restTemplate.postForList(
+				ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionRiskAnalyze/selectGroupName", map,
+				SuggestDto.class);
+
 	}
 
 }

@@ -46,6 +46,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.*;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 货币型TA浮动费用计提入账批处理 - Service
@@ -266,7 +267,7 @@ public class MoneyTaFloadFeeBookService {
 
         // 浮动管理费率 = 调用算法：计算浮动管理费率（业绩报酬计算规则，年化收益率，本次计提日+1，上次计提日）
         BigDecimal 浮动管理费率 = calFloatManageFee(targetPerfRewardCalRule, varNhsyl,
-            DateUtil.addDay(varScjtDate, 1), varBcjtDate);
+            DateUtil.addDay(varScjtDate, 1), varBcjtDate, targetPerfRewardCalRuleList);
 
         // 浮动管理费计提金额 = 浮动管理费率 * 计费基数 * 区间天数 / 计费基础
         BigDecimal 浮动管理费计提金额 = ArithmeticUtil.divide(
@@ -367,7 +368,7 @@ public class MoneyTaFloadFeeBookService {
      */
     private BigDecimal calFloatManageFee(TargetPerfRewardCalRule targetPerfRewardCalRule,
                                          BigDecimal nhsyl, Date lastAccrualDate,
-                                         Date accrualDate) {
+                                         Date accrualDate, List<TargetPerfRewardCalRule> targetPerfRewardCalRuleList) {
         // 基准利率生效日
         Date cdate = null;
         if (DictCodeList.生效规则_期初.getValue().equals(targetPerfRewardCalRule.getActRule())) {
@@ -383,44 +384,66 @@ public class MoneyTaFloadFeeBookService {
         Map<String, MstIntRateInfo> mapIntRateInfo = finProductCommonService.getValIntRateInfo(
             cdate, null);
 
-        List<TargetPerfRewardCalRuleDetail> targetPerfRewardRuleDetailList = targetPerfRewardCalRule.getTargetPerfRewardCalRuleDetailList();
-        // 集合需要按照层级进行排序
-        Collections.sort(targetPerfRewardRuleDetailList,
-            new Comparator<TargetPerfRewardCalRuleDetail>() {
-
-                @Override
-                public int compare(TargetPerfRewardCalRuleDetail o1,
-                                   TargetPerfRewardCalRuleDetail o2) {
-                    return o1.getLevel() - o2.getLevel();
+        // modify by weipeng ：此处改造为一体化版本与单估值版本的生效规则影响逻辑不同，做改造处理，若利率行情信息为空，则添加单估值逻辑 start
+        // 定义 变量.计提规则 = 参数.业绩报酬计提规则 ---默认初始化值
+        TargetPerfRewardCalRule calRule = targetPerfRewardCalRule;
+        if(mapIntRateInfo == null || mapIntRateInfo.isEmpty()){
+            // 变量.回补计提规则  = 初始化对象，防止期初业绩基准不存在的情况
+            calRule = new TargetPerfRewardCalRule();
+            // 业绩报酬计提规则明细与业绩报酬计提规则为一一对应，故此处根据生效日取对应的业绩报酬计提规则即可
+            for(TargetPerfRewardCalRule item : targetPerfRewardCalRuleList){
+                // 取生效日对应的业绩报酬计提规则，下面计算时取生效规则对应生效日的业绩报酬计提明细
+                if(DateUtil.compareDate(cdate, item.getEffDate()) == 0){
+                    calRule = item;
+                    break;
                 }
-            });
-        List<TargetPerfRewardCalRuleDetail> targetPerfRewardRuleDetailListTmp = new ArrayList<>();
-        for (TargetPerfRewardCalRuleDetail targetPerfRewardRuleDetail : targetPerfRewardRuleDetailList) {
-            // 调整系数 = 业绩报酬规则明细.调整系数
-            BigDecimal coefficient = targetPerfRewardRuleDetail.getCoefficient();
-            // 利差 = 业绩报酬规则明细.利差
-            BigDecimal spreadRate = targetPerfRewardRuleDetail.getSpreadRate();
-            BigDecimal basicRate = BigDecimal.ZERO;
-            if (!StringUtil.isEmpty(targetPerfRewardRuleDetail.getBasicRate())
-                && mapIntRateInfo != null && mapIntRateInfo.size() > 0) {
-                /**增加为空判定 add by yanya on 20191210**/
-                if(mapIntRateInfo.get(targetPerfRewardRuleDetail.getBasicRate()) != null) {
-                    basicRate = mapIntRateInfo.get(
-                            targetPerfRewardRuleDetail.getBasicRate()).getIntRate();
-                }
-            }
-            // 业绩比较基准 = 基准利率 * 调整系数 + 利差
-            BigDecimal 业绩比较基准 = ArithmeticUtil.doAdd(
-                ArithmeticUtil.multiply(basicRate, coefficient), spreadRate);
-            // 业绩报酬规则明细.业绩比较基准 = 业绩比较基准
-            targetPerfRewardRuleDetail.setCompareBasis(业绩比较基准);
-            if (业绩比较基准.compareTo(nhsyl) < 0) {
-                targetPerfRewardRuleDetailListTmp.add(targetPerfRewardRuleDetail);
-            }
-            else {
-                break;
             }
         }
+        // modify by weipeng ：此处改造为一体化版本与单估值版本的生效规则影响逻辑不同，做改造处理，若利率行情信息为空，则添加单估值逻辑 end
+
+        List<TargetPerfRewardCalRuleDetail> targetPerfRewardRuleDetailList = calRule.getTargetPerfRewardCalRuleDetailList();
+        List<TargetPerfRewardCalRuleDetail> targetPerfRewardRuleDetailListTmp = new ArrayList<>();
+        // 防止期初基准利率为空，加判空处理
+        if(!CollectionUtils.isEmpty(targetPerfRewardRuleDetailList)){
+            // 集合需要按照层级进行排序
+            Collections.sort(targetPerfRewardRuleDetailList,
+                new Comparator<TargetPerfRewardCalRuleDetail>() {
+
+                    @Override
+                    public int compare(TargetPerfRewardCalRuleDetail o1,
+                                       TargetPerfRewardCalRuleDetail o2) {
+                        return o1.getLevel() - o2.getLevel();
+                    }
+                });
+
+            for (TargetPerfRewardCalRuleDetail targetPerfRewardRuleDetail : targetPerfRewardRuleDetailList) {
+                // 调整系数 = 业绩报酬规则明细.调整系数
+                BigDecimal coefficient = targetPerfRewardRuleDetail.getCoefficient();
+                // 利差 = 业绩报酬规则明细.利差
+                BigDecimal spreadRate = targetPerfRewardRuleDetail.getSpreadRate();
+                BigDecimal basicRate = BigDecimal.ZERO;
+                if (!StringUtil.isEmpty(targetPerfRewardRuleDetail.getBasicRate())
+                    && mapIntRateInfo != null && mapIntRateInfo.size() > 0) {
+                    /**增加为空判定 add by yanya on 20191210**/
+                    if(mapIntRateInfo.get(targetPerfRewardRuleDetail.getBasicRate()) != null) {
+                        basicRate = mapIntRateInfo.get(
+                            targetPerfRewardRuleDetail.getBasicRate()).getIntRate();
+                    }
+                }
+                // 业绩比较基准 = 基准利率 * 调整系数 + 利差
+                BigDecimal 业绩比较基准 = ArithmeticUtil.doAdd(
+                    ArithmeticUtil.multiply(basicRate, coefficient), spreadRate);
+                // 业绩报酬规则明细.业绩比较基准 = 业绩比较基准
+                targetPerfRewardRuleDetail.setCompareBasis(业绩比较基准);
+                if (业绩比较基准.compareTo(nhsyl) < 0) {
+                    targetPerfRewardRuleDetailListTmp.add(targetPerfRewardRuleDetail);
+                }
+                else {
+                    break;
+                }
+            }
+        }
+
         BigDecimal 浮动管理费率 = BigDecimal.ZERO;
 
         for (int i = 0; i < targetPerfRewardRuleDetailListTmp.size() - 1; i++ ) {

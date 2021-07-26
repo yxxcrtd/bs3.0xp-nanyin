@@ -51,10 +51,10 @@ public class RepInterLog001Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
-        this.setSelectOptionToModel(model, BussinessDictCodeRds.处理状态,BussinessDictCodeRds.接口系统ID,BussinessDictCodeRds.消费系统);
-        model.addAttribute("platDate", DateUtil.getCurrentDate()+" - "+DateUtil.getCurrentDate());
-        return super.init(model);
-   }
+         this.setSelectOptionToModel(model, BussinessDictCodeRds.处理状态,BussinessDictCodeRds.接口系统ID,BussinessDictCodeRds.消费系统);
+         model.addAttribute("platDate", DateUtil.getCurrentDate()+" - "+DateUtil.getCurrentDate());
+         return super.init(model);
+    }
 
     /**
      * 画面查询方法

@@ -6,7 +6,7 @@
             <Cell order="2" name="参数代码">paraCode</Cell>
             <Cell order="3" name="参数类型">paraTypeStr</Cell>
             <Cell order="4" name="参数值">content</Cell>
-            <Cell order="5" name="更新日期">updateTime</Cell>
+            <Cell order="5" name="更新日期">updateTimeStr</Cell>
         </Row>
     </Worksheet>
 </Workbook>

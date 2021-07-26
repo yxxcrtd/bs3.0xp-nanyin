@@ -132,6 +132,9 @@ public class BussRepoSecController extends BaseController {
                 CacheUtil.getSysParam("ibuFlag_repoOverAvaCanContinue"));
         model.addAttribute("isDzh",isDzh);
         model.addAttribute("quoteId",quoteId);
+        //配置单位 add by yeming 20210721 start
+        model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
+        //配置单位 add by yeming 20210721 end
         return "component/trade/BussRepoSec";
     }
 

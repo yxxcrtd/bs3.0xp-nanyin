@@ -15,19 +15,24 @@ import com.joyintech.system.base.entity.SysPageDictlist;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductConvertible;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.entrust.common.dto.EtrFinProductCommonDto;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTradeDto;
 import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import com.joyintech.tams.invest.entrust.etrboutrepo.dto.EtrBoutRepoDto;
@@ -94,6 +99,12 @@ public class EtrCommonService extends BaseService<ITableRow> {
     private IPlatformDate iPlatformDate;
     @Autowired(required = false)
     private FinProductConvertibleMapper finProductConvertibleMapper;
+
+    @Autowired
+    private PtlPortfolioMapper ptlPortfolioMapper;
+
+    @Autowired
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
     /**
      * 组合指令可用现金查询
      *
@@ -1269,4 +1280,182 @@ public class EtrCommonService extends BaseService<ITableRow> {
         String url = ServiceApplication.COMMON_SERVICE_NAME + "/dynamicConfig/updateByParam";
         return restTemplate.postForObject(url, param, Integer.class);
     }
+
+
+    /**
+     * 银行间债券持仓信息
+     * @param paramMap
+     * @return
+     */
+    public EtrFinProductCommonDto findSecAmountInfo(Map<String, Object> paramMap) {
+        EtrFinProductCommonDto dto = new EtrFinProductCommonDto();
+        //银行间日历
+        paramMap.put("calId", "03");
+
+        // 获取平台日
+        Date tradeDate = DateUtil.platDateFromCache();
+        paramMap.put("sysDate",DateUtil.format(tradeDate));
+        Map<String, Object> result = new HashMap<>();
+
+        if(!StringUtil.isNotEmpty(paramMap.get("finprodId"))){
+            /**
+             * 当单选组合时，使用组合的币种
+             */
+            PtlPortfolio ptlPortfolio = ptlPortfolioMapper.selectByPrimaryKey(paramMap.get("portfolioId") + "");
+            if(ptlPortfolio != null && StringUtil.isNotEmpty(ptlPortfolio.getCcy())){
+                paramMap.put("ccy", ptlPortfolio.getCcy());
+            }
+        }
+        // 可用现金
+        Map<String, Object> cash = this.getProAvailableCash(paramMap);
+        // 组合T日可用现金
+        BigDecimal proAvailableCash = cash.get("cashT")==null?BigDecimal.ZERO: (BigDecimal)cash.get("cashT");
+        // 净价
+        BigDecimal cprice = paramMap.get("cprice")==null?new BigDecimal(100): (BigDecimal)cash.get("cprice");
+
+        // 可买数量
+        BigDecimal canBuyAmount = null;
+        if(cprice!=null&&BigDecimal.ZERO.compareTo(cprice)!=0){
+            canBuyAmount = ArithmeticUtil.divide(proAvailableCash,cprice,2,RoundingMode.HALF_UP);
+        }
+
+        // 成本价
+        BigDecimal costPrice = this.getCostPrice(paramMap);
+
+        if (StringUtil.isNotEmpty((String)paramMap.get("finprodId"))) {
+            // 资产可用券面总额
+            EtrSecPositionDto etrSecPositionDto= new EtrSecPositionDto();
+            etrSecPositionDto.setCdate(tradeDate);
+            etrSecPositionDto.setFinprodId((String)paramMap.get("finprodId"));
+            etrSecPositionDto.setPortfolioId((String)paramMap.get("portfolioId"));
+
+            etrSecPositionDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+
+            etrSecPositionDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+            result.put("canSellAmount", this.getAssetAvailablePosition(etrSecPositionDto).divide(new BigDecimal(100)));
+            // 资产持仓券面总额
+            PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
+            ptlSecPositionFlowDto.setCdate(tradeDate);
+            ptlSecPositionFlowDto.setPortfolioId((String)paramMap.get("portfolioId"));
+
+            ptlSecPositionFlowDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+            ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+            ptlSecPositionFlowDto.setFinprodId((String)paramMap.get("finprodId"));
+            ptlSecPositionFlowDto.setEntrust(true);
+            BigDecimal amount03 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto).divide(new BigDecimal(100));
+            ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_融入.getValue());
+            BigDecimal amount05 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto).divide(new BigDecimal(100));
+            ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_融出.getValue());
+            BigDecimal amount06 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto).divide(new BigDecimal(100));
+            BigDecimal assetPositionEntrustAmt = ArithmeticUtil.doAdd(amount03, amount05);
+            assetPositionEntrustAmt = ArithmeticUtil.subtract(assetPositionEntrustAmt, amount06);
+            result.put("positionAmount", assetPositionEntrustAmt);
+        } else {
+            result.put("canSellAmount", BigDecimal.ZERO);
+            result.put("positionAmount", BigDecimal.ZERO);
+        }
+
+        dto.setCanBuyAmount(canBuyAmount);
+        dto.setCostPrice(costPrice);
+        dto.setPositionAmount(result.get("positionAmount") == null ? BigDecimal.ZERO : (BigDecimal) result.get("positionAmount"));
+        dto.setCanSellAmount(result.get("canSellAmount") == null ? BigDecimal.ZERO : (BigDecimal) result.get("canSellAmount"));
+        return dto;
+    }
+
+
+    /**
+     * 组合现金信息
+     * @param paramMap
+     * @return
+     */
+    public EtrFinProductCommonDto findCashAmountInfo(Map<String, Object> paramMap) {
+        EtrFinProductCommonDto dto = new EtrFinProductCommonDto();
+
+        Map<String, Object> result = new HashMap<>();
+        /**
+         * 当单选组合时，使用组合的币种
+         */
+        PtlPortfolio ptlPortfolio = ptlPortfolioMapper.selectByPrimaryKey(paramMap.get("portfolioId") + "");
+        if(ptlPortfolio != null && StringUtil.isNotEmpty(ptlPortfolio.getCcy())){
+            paramMap.put("ccy", ptlPortfolio.getCcy());
+        }
+        // 可用现金
+        Map<String, Object> cash = this.getProAvailableCash(paramMap);
+        //组合T日可用现金
+        result.put("proAvailableCash",cash.get("cashT"));
+        //组合T+1日可用现金
+        result.put("proAvailableCashT1", cash.get("cashT1"));
+        //托管户T日可用现金
+        result.put("secManageAvailablePosition",cash.get("cashT3"));
+        //托管户T+1日可用现金
+        result.put("secManageAvailablePositionT1", cash.get("cashTT1"));
+
+        //通道可用现金
+        if (StringUtil.isNotEmpty(paramMap.get("chlId"))) {
+            //通道T日可用现金
+            result.put("channelAvailable", cash.get("cashT2"));
+            //通道T+1日可用现金
+            result.put("channelAvailableT1",cash.get("cashT21"));
+        }
+        dto.setT1Cash(result.get("proAvailableCashT1") == null ? BigDecimal.ZERO : (BigDecimal) result.get("proAvailableCashT1"));
+        dto.setTgAcctCash(result.get("secManageAvailablePosition") == null ? BigDecimal.ZERO : (BigDecimal) result.get("secManageAvailablePosition"));
+        dto.setSecAcctCash(cash.get("cashT4") == null ? BigDecimal.ZERO : (BigDecimal) cash.get("cashT4"));
+        return dto;
+    }
+
+
+    /**
+     * 根据资产代码 组合代码 日期 获取债券成本价
+     * @param paramMap
+     * @return
+     */
+    public  BigDecimal getCostPrice(Map<String, Object> paramMap){
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo001/getCostPrice", paramMap,
+                BigDecimal.class);
+    }
+
+
+
+    /**
+     * 组合现金信息
+     * @param paramMap
+     * @return
+     */
+    public EtrFinProductCommonDto calCanBuyAmount(Map<String, Object> paramMap) {
+        EtrFinProductCommonDto dto = new EtrFinProductCommonDto();
+        //银行间日历
+        paramMap.put("calId", "03");
+
+        // 获取平台日
+        Date tradeDate = DateUtil.platDateFromCache();
+        paramMap.put("sysDate",DateUtil.format(tradeDate));
+
+        if(!StringUtil.isNotEmpty(paramMap.get("finprodId"))){
+            /**
+             * 当单选组合时，使用组合的币种
+             */
+            PtlPortfolio ptlPortfolio = ptlPortfolioMapper.selectByPrimaryKey(paramMap.get("portfolioId") + "");
+            if(ptlPortfolio != null && StringUtil.isNotEmpty(ptlPortfolio.getCcy())){
+                paramMap.put("ccy", ptlPortfolio.getCcy());
+            }
+        }
+        // 可用现金
+        Map<String, Object> cash = this.getProAvailableCash(paramMap);
+        // 组合T日可用现金
+        BigDecimal proAvailableCash = cash.get("cashT")==null?BigDecimal.ZERO: (BigDecimal)cash.get("cashT");
+        // 净价
+        BigDecimal cprice = paramMap.get("price")==null?new BigDecimal(100): new BigDecimal(paramMap.get("price").toString());
+
+        // 可买数量
+        BigDecimal canBuyAmount = null;
+        if(cprice!=null&&BigDecimal.ZERO.compareTo(cprice)!=0){
+            canBuyAmount = ArithmeticUtil.divide(proAvailableCash,cprice,2,RoundingMode.HALF_UP);
+        }
+
+        dto.setCanBuyAmount(canBuyAmount);
+        return dto;
+    }
+
+
 }

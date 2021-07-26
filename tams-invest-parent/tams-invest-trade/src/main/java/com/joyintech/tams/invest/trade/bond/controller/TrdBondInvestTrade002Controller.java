@@ -137,6 +137,10 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         String bondFirstSign = this.getParam("bondFirstSign");
         String isCstp = this.getParam("isCstp");
         String isCstpSure = this.getParam("isCstpSure");
+        //配置单位 add by yeming 20210723 start
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+        model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
+        //配置单位 add by yeming 20210723 end
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdBondInvestTrade002Service.getBussinessEntityByWorkflowId(
@@ -189,13 +193,15 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             dto.setPayType(payType);
             BigDecimal winPrinAmtBig = BigDecimal.ZERO;
             if(StringUtil.isNotEmpty(winPrinAmt)){
-            	winPrinAmtBig = ArithmeticUtil.divide(new BigDecimal(winPrinAmt), new BigDecimal(10000), 2);
+                //modify by sunhui 20210723 重庆银行：分销缴款进来时已经是万元了，不需要再除以10000---产品bug   start
+            	//winPrinAmtBig = ArithmeticUtil.divide(new BigDecimal(winPrinAmt), new BigDecimal(10000), 2);
+                winPrinAmtBig = new BigDecimal(winPrinAmt);
+                //modify by sunhui 20210723 重庆银行：分销缴款进来时已经是万元了，不需要再除以10000---产品bug   end
             }
             dto.setTradeAmt(winPrinAmtBig);
             dto.setYield(BigDecimal.valueOf(Double.valueOf(yield == null ? "0" : yield)));
             model.addAttribute("bondFirstSign",bondFirstSign);
             model.addAttribute("winPrinAmt",winPrinAmtBig);
-            model.addAttribute("yield",yield);
         }
         // 从"债券中标结果查询"进来，准备进行缴款 add by gejiaao 2019/07/26 End
         if (StringUtil.isNotBlank(tradeId)) {
@@ -228,15 +234,19 @@ public class TrdBondInvestTrade002Controller extends BaseController {
 //                dto.setTurnInvAim(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue());
 //            }
 //        }
-        if (dto.getTradeAmt() != null){
-            dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-            if(StringUtil.isNotEmpty(dto.getOwnTradeAmt())){
-            	dto.setOwnTradeAmt(dto.getOwnTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-            }
-            if(StringUtil.isNotEmpty(dto.getIntegrateTradeAmt())){
-            	dto.setIntegrateTradeAmt(dto.getIntegrateTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+        //配置单位 edit by yeming 20210723 start
+        if(StringUtil.equals(entrustAmtUnit,"02")){
+            if (dto.getTradeAmt() != null){
+                dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                if(StringUtil.isNotEmpty(dto.getOwnTradeAmt())){
+                    dto.setOwnTradeAmt(dto.getOwnTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if(StringUtil.isNotEmpty(dto.getIntegrateTradeAmt())){
+                    dto.setIntegrateTradeAmt(dto.getIntegrateTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
             }
         }
+        //配置单位 edit by yeming 20210723 end
         Date sysDate = DateUtil.platDateFromCache();
         String formatDate = DateUtil.format(sysDate);
         model.addAttribute("formatDate",formatDate);

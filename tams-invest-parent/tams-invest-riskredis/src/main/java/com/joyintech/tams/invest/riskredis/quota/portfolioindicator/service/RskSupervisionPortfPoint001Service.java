@@ -1,13 +1,15 @@
 package com.joyintech.tams.invest.riskredis.quota.portfolioindicator.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Date;
+
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,8 +77,17 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
 	 * @since 1.0
 	 */
 	public Page<RskPortfolioIndicator002Dto> selectForPage(Map<String, Object> parameters) {
-		return restTemplate.postForPage(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionPortfPoint/selectForPage",
+		Page<RskPortfolioIndicator002Dto> page =  restTemplate.postForPage(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionPortfPoint/selectForPage",
 				parameters, RskPortfolioIndicator002Dto.class);
+		for (RskPortfolioIndicator002Dto dto : page.getRoot())
+		{
+			if(StringUtil.isNotEmpty(dto.getEndDate())){
+				dto.setEffDateRange(DateUtil.format(dto.getStartDate())+"-"+DateUtil.format(dto.getEndDate()));
+			}else{
+				dto.setEffDateRange(DateUtil.format(dto.getStartDate())+"-");
+			}
+		}
+		return page;
 	}
 
 	/**
@@ -88,8 +99,17 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
 	 * @since 1.0
 	 */
 	public Page<RskPortfolioIndicator002Dto> selectTableIndForPage(Map<String, Object> parameters) {
-		return restTemplate.postForPage(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionPortfPoint/selectTableIndForPage",
+		Page<RskPortfolioIndicator002Dto> page =  restTemplate.postForPage(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionPortfPoint/selectTableIndForPage",
 				parameters, RskPortfolioIndicator002Dto.class);
+		for (RskPortfolioIndicator002Dto dto : page.getRoot())
+		{
+			if(StringUtil.isNotEmpty(dto.getEndDate())){
+				dto.setEffDateRange(DateUtil.format(dto.getStartDate())+"-"+DateUtil.format(dto.getEndDate()));
+			}else{
+				dto.setEffDateRange(DateUtil.format(dto.getStartDate())+"-");
+			}
+		}
+		return page;
 	}
 	/**
 	 * 导出
@@ -97,16 +117,16 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
 	@Override
 	protected void buildExportParam(ExportParam exportParam) {
 		Map<String,Object> selectParam=exportParam.getSelectParam();
-		if(null!=selectParam.get("portfolioLevel")&& BussinessDictCodeListRds.组合层次_组合包.getValue().equals(selectParam.get("portfolioLevel"))){
-			exportParam.config("/com/joyintech/tams/invest/riskredis/quota/portfolioindicator/conf/export_conf.xml")
-			.dataSource(DataSourceType.MASERT);
-			
-		}else{
+		if(null!=selectParam.get("indexTab")&&"A".equals(selectParam.get("indexTab"))){
 			exportParam.config("/com/joyintech/tams/invest/riskredis/quota/portfolioindicator/conf/export_conf2.xml")
-			.dataSource(DataSourceType.MASERT);
+					.dataSource(DataSourceType.MASERT);
+		}else {
+			exportParam.config("/com/joyintech/tams/invest/riskredis/quota/portfolioindicator/conf/export_conf.xml")
+					.dataSource(DataSourceType.MASERT);
 		}
 		
 	}
+
 	 /**
      * {@inheritDoc}
      */
@@ -208,21 +228,21 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
 		restTemplate.postForObject(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionPortfPoint/playPortfolio",
 				parameters, Integer.class);
 		String pageRedisFlag = CacheUtil.getSysParam("pageRedisFlag");
-		 if (CommonUtil.isType(pageRedisFlag, BussinessDictCodeListRds.是否_是)) {
-				try {
-					logger.info("===========组合启动风险进入redis开始=============");
-					Thread.sleep(2000);
-					// 更新Redis
-					ImplCond cond = new ImplCond();
-					cond.setPortfIdArray((String)parameters.get("portfolioId"));
-					cond.setPlateDate(platformDateService.getSysDate());
-					redisRriter.dealPortData(cond);
-	                logger.info("===========组合启动风险进入redis结束=============");
-				} catch (InterruptedException e) {
-					logger.error("===========组合启动风险进入redis异常=============",e);
-				}
-	        }
-		}
+        if (CommonUtil.isType(pageRedisFlag, BussinessDictCodeListRds.是否_是)) {
+			try {
+				logger.info("===========组合启动风险进入redis开始=============");
+				Thread.sleep(2000);
+				// 更新Redis
+				ImplCond cond = new ImplCond();
+				cond.setPortfIdArray((String)parameters.get("portfolioId"));
+				cond.setPlateDate(platformDateService.getSysDate());
+				redisRriter.dealPortData(cond);
+                logger.info("===========组合启动风险进入redis结束=============");
+			} catch (InterruptedException e) {
+				logger.error("===========组合启动风险进入redis异常=============",e);
+			}
+        }
+	}
 	// add by zhuzhen 20191128 组合关联指标删除时校验联合设置 start
 	/**
 	 * 根据组合代码，指标代码，查询个性化联合设置数据是否存在

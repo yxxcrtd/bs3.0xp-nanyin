@@ -1,5 +1,6 @@
 package com.joyintech.service.riskrds.limitmanagement.rskevent.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -239,4 +240,11 @@ public class RskEventController {
     public boolean isExistEventCode(String eventCode){
     	return rskEventService.isExistEventCode(eventCode);
     }
+
+    // add by zhangrui1 公式配置 start
+    @GetMapping("selectParamList")
+    public List<SelectOptionDto> selectParamList() {
+        return rskEventService.selectParamList();
+    }
+    // add by zhangrui1 公式配置 end
 }

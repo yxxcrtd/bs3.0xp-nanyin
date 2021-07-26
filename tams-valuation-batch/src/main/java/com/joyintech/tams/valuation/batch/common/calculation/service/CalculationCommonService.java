@@ -50,6 +50,7 @@ import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -2034,7 +2035,8 @@ public class CalculationCommonService {
      * @param accrDate 本次计提日
      * @return 回补利率
      */
-    public BigDecimal clawbackBenchMarkCalc(TargetFinClawbackCalcRule targetFinClawbackCalcRule, Date lastAccrDate, Date accrDate){
+    public BigDecimal clawbackBenchMarkCalc(TargetFinClawbackCalcRule targetFinClawbackCalcRule, Date lastAccrDate,
+                                            Date accrDate, List<TargetFinClawbackCalcRule> targetFinClawbackCalcRuleList){
     	if(targetFinClawbackCalcRule == null){
     		return BigDecimal.ZERO;
     	}
@@ -2052,23 +2054,56 @@ public class CalculationCommonService {
     	BigDecimal spreadRate = BigDecimal.ZERO;
     	//基准利率
     	BigDecimal basicRate = BigDecimal.ZERO;
-    	List<TargetPerfRewardCalRuleDetail> listTargetPerfRewardCalRuleDetail = targetFinClawbackCalcRule.getTargetPerfRewardCalRuleDetailList();
-    	if(!StringUtil.isEmptyList(listTargetPerfRewardCalRuleDetail)){
-    		coefficient = listTargetPerfRewardCalRuleDetail.get(0).getCoefficient();
-    		spreadRate = listTargetPerfRewardCalRuleDetail.get(0).getSpreadRate();
-    		if(listTargetPerfRewardCalRuleDetail.get(0).getBasicRate() == null){
-    			basicRate = BigDecimal.ZERO;
-    		} else {
-    			Map<String, MstIntRateInfo> mapsMstIntRateInfo = finProductCommonService.getValIntRateInfo(benchRateDate, listTargetPerfRewardCalRuleDetail.get(0).getBasicRate());
-    			if(mapsMstIntRateInfo == null || mapsMstIntRateInfo.get(listTargetPerfRewardCalRuleDetail.get(0).getBasicRate()) == null){
-    				basicRate = BigDecimal.ZERO;
-    			} else{
-        			basicRate = mapsMstIntRateInfo.get(listTargetPerfRewardCalRuleDetail.get(0).getBasicRate()).getIntRate();	
-    			}
-    		}
-    	}
-    		
-    	return ArithmeticUtil.doAdd(ArithmeticUtil.multiply(basicRate,coefficient), spreadRate);
+
+        // modify by weipeng ：此处改造为一体化版本与单估值版本的生效规则影响逻辑不同，做改造处理，若利率行情信息为空，则添加单估值逻辑 start
+        Map<String, MstIntRateInfo> mapsMstIntRateInfo = finProductCommonService.getValIntRateInfo(benchRateDate, null);
+        //  定义 变量.回补计提规则 = 参数.回补计提规则 ---默认初始化值
+        TargetFinClawbackCalcRule clawbackCalcRule = targetFinClawbackCalcRule;
+        if(mapsMstIntRateInfo == null || mapsMstIntRateInfo.isEmpty()){
+            // 变量.回补计提规则  = 初始化对象，防止期初业绩基准不存在的情况
+            clawbackCalcRule = new TargetFinClawbackCalcRule();
+            // 业绩报酬计提规则明细与业绩报酬计提规则为一一对应，故此处根据生效日取对应的业绩报酬计提规则即可
+            for(TargetFinClawbackCalcRule item : targetFinClawbackCalcRuleList){
+                // 取生效日对应的业绩报酬计提规则，下面计算时取生效规则对应生效日的业绩报酬计提明细
+                if(DateUtil.compareDate(benchRateDate, item.getEffDate()) == 0){
+                    clawbackCalcRule = item;
+                    break;
+                }
+            }
+        }
+        // modify by weipeng ：此处改造为一体化版本与单估值版本的生效规则影响逻辑不同，做改造处理，若利率行情信息为空，则添加单估值逻辑 end
+
+    	List<TargetPerfRewardCalRuleDetail> listTargetPerfRewardCalRuleDetail = clawbackCalcRule.getTargetPerfRewardCalRuleDetailList();
+        // 防止期初基准利率为空，加判空处理
+        if(!CollectionUtils.isEmpty(listTargetPerfRewardCalRuleDetail)){
+            // 集合需要按照层级进行排序
+            Collections.sort(listTargetPerfRewardCalRuleDetail,
+                new Comparator<TargetPerfRewardCalRuleDetail>() {
+
+                    @Override
+                    public int compare(TargetPerfRewardCalRuleDetail o1,
+                                       TargetPerfRewardCalRuleDetail o2) {
+                        return o1.getLevel() - o2.getLevel();
+                    }
+                });
+            List<TargetPerfRewardCalRuleDetail> targetPerfRewardRuleDetailListTmp = new ArrayList<>();
+            for (TargetPerfRewardCalRuleDetail targetPerfRewardRuleDetail : listTargetPerfRewardCalRuleDetail) {
+                // 调整系数 = 业绩报酬规则明细.调整系数
+                coefficient = targetPerfRewardRuleDetail.getCoefficient();
+                // 利差 = 业绩报酬规则明细.利差
+                spreadRate = targetPerfRewardRuleDetail.getSpreadRate();
+                if (!StringUtil.isEmpty(targetPerfRewardRuleDetail.getBasicRate())
+                    && mapsMstIntRateInfo != null && mapsMstIntRateInfo.size() > 0) {
+                    /**增加为空判定 add by yanya on 20191210**/
+                    if(mapsMstIntRateInfo.get(targetPerfRewardRuleDetail.getBasicRate()) != null) {
+                        basicRate = mapsMstIntRateInfo.get(
+                            targetPerfRewardRuleDetail.getBasicRate()).getIntRate();
+                    }
+                }
+            }
+        }
+
+        return ArithmeticUtil.doAdd(ArithmeticUtil.multiply(basicRate,coefficient), spreadRate);
     }
     /**
      * 判断交易是否入账

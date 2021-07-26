@@ -40,6 +40,21 @@
                    data-th-value="${entity?.entrustId}"/>
             <input type="text" id="entrustStatus" name="entrustId" disabled="disabled" style="display:none;"
                    data-th-value="${entity?.entrustStatus}"/>
+
+            <div class="layui-form-item" >
+                <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                    <label class="layui-form-label form-lable" style="width: 95px;"
+                           data-th-text="#{EtribBondInfo003.portfolioName}">组合系列</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="portfolioSeries" name="portfolioSeries"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}"
+                                required data-th-data-result="${PORTFOLIO_SERIES}"
+                                data-th-initvalue="${entity?.portfolioSeries}">
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="layui-form-item" >
                <!-- <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                     <label class="layui-form-label form-lable" style="width: 95px;"
@@ -127,12 +142,13 @@
                                     <input type="radio" id="calculateField_price" name="calculateField" value="price" th:title="#{EtribBondInfo003.price}" />
                         </label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="price" name="price" placeholder="请输入内容"
+                            <input required type="text" id="price" name="price" placeholder="请输入内容"
                                    data-pattern="" data-fixtype="2" data-textrange='4'
                                    class="layui-input form-input text-number"
                                    data-th-value="${entity?.price}">
                             <span class="input-right-show">元</span>
                         </div>
+                        <label id ="deviationDegree"></label>
                     </div>
                 </div>
                 <div class="layui-form-item">
