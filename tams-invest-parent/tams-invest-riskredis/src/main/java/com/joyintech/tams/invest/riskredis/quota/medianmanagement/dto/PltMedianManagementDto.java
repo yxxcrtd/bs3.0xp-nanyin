@@ -8,7 +8,6 @@ import java.util.Date;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -16,7 +15,6 @@ import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RskIndicatorParaCalcdetail;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.riskredis.quota.medianmanagement.validator.PltMedianManagementValidator;
 
@@ -422,9 +420,6 @@ public class PltMedianManagementDto extends RskIndicatorParaCalcdetail {
      * 资产类型
      */
 	public String getAssetTypeStr(){
-	    if (StringUtil.isNotEmpty(getAssetType()) && StringUtil.equals(getAssetType(), DictCodeListExt1.金融产品类型_理财产品.getValue())) {
-	        return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型,getAssetType());
-        }
     	return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型,getAssetType());
     }
 	
@@ -446,17 +441,12 @@ public class PltMedianManagementDto extends RskIndicatorParaCalcdetail {
      * 参数粒度
      */
 	public String getTypeyStr(){
-    	String str = "";
+	    String str = "";
 	    // modified by wangzhiang TYPE6对应数据字典过于复杂，现调整为资产类型 20190417 start
 //	    str +=SysDataUtil.getNameFromDataDict(DictCode.平安资产类型,this.getTypey1())==null?"":SysDataUtil.getNameFromDataDict(DictCode.平安资产类型,this.getTypey1());
-        if (StringUtil.isNotEmpty(getAssetType()) && StringUtil.equals(getAssetType(), DictCodeListExt1.金融产品类型_理财产品.getValue())) {
-            str += SysDataUtil.getNameFromDataDict(DictCode.金融产品类型, this.getAssetType())
-                == null ? "" : SysDataUtil.getNameFromDataDict(DictCode.金融产品类型, this.getAssetType());
-        }else {
-    	  str += SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, this.getAssetType())
+		str += SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, this.getAssetType())
 			   == null ? "" : SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, this.getAssetType());
-        }
-    	// modified by wangzhiang TYPE6对应数据字典过于复杂，现调整为资产类型 20190417 end
+		// modified by wangzhiang TYPE6对应数据字典过于复杂，现调整为资产类型 20190417 end
 		str +=SysDataUtil.getNameFromDataDict(BussinessDictCodeRds.交易方向, this.getTypey2())==null?"":SysDataUtil.getNameFromDataDict(BussinessDictCodeRds.交易方向, this.getTypey2());
     	return str;
     }
