@@ -577,11 +577,13 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
     			//多机构
     			else if(dto.getIbuQuoteBondDetList() != null && dto.getIbuQuoteBondDetList().size()>1) {
     					//终态：已撤回、已终止、已成交、已过期只展示一条,新增中初始态只展示一条
+                        //add by zznn 20210726 已新增、成功 请求报价合并
     					if(StringUtil.equals(dto.getTradeStatus(), com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已撤回.getValue())
     							|| StringUtil.equals(dto.getTradeStatus(), com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已终止.getValue())
     							|| StringUtil.equals(dto.getTradeStatus(), com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已过期.getValue())
     							|| StringUtil.equals(dto.getTradeStatus(), com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_新增中.getValue())
-    							|| dto.getTradeStatus() == null) {
+    							||(StringUtil.equals(dto.getTradeStatus(),com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已新增.getValue())&&StringUtil.equals(dto.getSendStatus(),com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行发送状态_成功.getValue()))
+                                || dto.getTradeStatus() == null) {
     						IbuQuoteBondDetDto newDto = new IbuQuoteBondDetDto();
     						BeanUtil.copyPropertiesIgnoreNull(newDto, dto.getIbuQuoteBondDetList().get(0));
     						for (int i = 0; i < dto.getIbuQuoteBondDetList().size(); i++) {
