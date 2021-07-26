@@ -56,6 +56,30 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
     public String init(Model model){
         this.setSelectOptionToModel(model, DictCode.WIND一级分类_含债券一级分类等,
                 DictCode.WIND二级分类_含债券二级分类等);
+        //add by swwan 【重庆银行】 增加 业务类型  2021年7月20日 start
+        //债券质押明细查询
+        List<SelectOptionDto> busiTypeList = new ArrayList<>();
+        SelectOptionDto busiTypeSelectOptionOne = new SelectOptionDto();
+        SelectOptionDto busiTypeSelectOptionTwo = new SelectOptionDto();
+        SelectOptionDto busiTypeSelectOptionThree = new SelectOptionDto();
+        SelectOptionDto busiTypeSelectOptionFour = new SelectOptionDto();
+        SelectOptionDto busiTypeSelectOptionFive = new SelectOptionDto();
+        busiTypeSelectOptionOne.setId(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        busiTypeSelectOptionOne.setText(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getCodeName());
+        busiTypeList.add(busiTypeSelectOptionOne);
+        busiTypeSelectOptionTwo.setId(DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue());
+        busiTypeSelectOptionTwo.setText(DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getCodeName());
+        busiTypeList.add(busiTypeSelectOptionTwo);
+        busiTypeSelectOptionThree.setId("BZQRK");
+        busiTypeSelectOptionThree.setText("标准券入库");
+        busiTypeList.add(busiTypeSelectOptionThree);
+        busiTypeSelectOptionFour.setId(DictCodeListExt1.金融产品类型_投管用_债券借贷.getValue());
+        busiTypeSelectOptionFour.setText(DictCodeListExt1.金融产品类型_投管用_债券借贷.getCodeName());
+        busiTypeList.add(busiTypeSelectOptionFour);
+        busiTypeSelectOptionFive.setId(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue());
+        busiTypeSelectOptionFive.setText(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getCodeName());
+        busiTypeList.add(busiTypeSelectOptionFive);
+        //add by swwan 【重庆银行】 增加 业务类型  2021年7月20日 end
         //质押券置换查询
         List<SelectOptionDto> psList =new ArrayList<SelectOptionDto>();
         SelectOptionDto psSelectOptionOne=new SelectOptionDto();
@@ -84,6 +108,7 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
         typeSelectOptionTwo.setId(DictCodeList.业务类型_债券借贷交易.getValue());
         typeSelectOptionTwo.setText(DictCodeList.业务类型_债券借贷交易.getCodeName());
         typeList.add(typeSelectOptionTwo);
+        model.addAttribute("BusiType", JsonUtils.object2Json(busiTypeList));
         model.addAttribute("TradePs", JsonUtils.object2Json(psList));
         model.addAttribute("TradeType", JsonUtils.object2Json(typeList));
         return super.init(model);
@@ -131,6 +156,19 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
         Map<String,Object> map = RequestUtil.getPageParam();
         List<SelectOptionDto> temp = ptlRepoPledgeSearch001Service.getFinprodMarketId(map);
         return temp;
+    }
+
+    /**
+     * 交易对手的下拉框事件
+     *
+     * @return 查询结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getCounter")
+    public List<SelectOptionDto> getCounter(){
+        return ptlRepoPledgeSearch001Service.getCounter(RequestUtil.getPageParam());
     }
 
     /**

@@ -75,6 +75,10 @@ public class PtlRepoPledgeSearchDto extends FinDealPledge {
      * 企业性质
      */
     private String companyNature;
+    /**
+     * 交易对手
+     */
+    private String counter;
 
     /**
      * 获取 counterId
@@ -316,5 +320,13 @@ public class PtlRepoPledgeSearchDto extends FinDealPledge {
 
     public void setFinprodType2(String finprodType2) {
         this.finprodType2 = finprodType2;
+    }
+
+    public String getCounter() {
+        return counter;
+    }
+
+    public void setCounter(String counter) {
+        this.counter = counter;
     }
 }

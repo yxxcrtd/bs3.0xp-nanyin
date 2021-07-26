@@ -42,6 +42,16 @@ public interface PtlRepoPledgeSearchMapper {
     List<SelectOptionDto> getFinprodMarketId(Map<String, Object> map);
 
     /**
+     * 交易对手的联想下拉框事件
+     *
+     * @param map 查询参数
+     * @return 查询结果
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getCounter(Map<String, Object> map);
+
+    /**
      * 查询界面查询事件
      *
      * @param pageParam 页面参数

@@ -104,6 +104,10 @@ public class PtlCashFlowGapAnalysis001Dto extends BaseEntity {
 	 */
 	private String ps;
 	/**
+	 * 组合系列
+	 */
+	private String portfolioSeries;
+	/**
 	 * 获取 paType
 	 *
 	 * @return paType
@@ -329,5 +333,17 @@ public class PtlCashFlowGapAnalysis001Dto extends BaseEntity {
 			}
 		}
 		return psStr;
+	}
+
+	public String getPortfolioSeries() {
+		return portfolioSeries;
+	}
+
+	public String getPortfolioSeriesStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.组合系列, this.getPortfolioSeries());
+	}
+
+	public void setPortfolioSeries(String portfolioSeries) {
+		this.portfolioSeries = portfolioSeries;
 	}
 }
