@@ -55,4 +55,6 @@ public interface RiskTrialCommMapper {
 	String selectWorkflowActionType(@Param(value = "seqNo") String seqNo);
 
 	String getPortfolioInstCode(@Param(value = "portfolioId") String portfolioId);
+
+    List<Map<String, Object>> selectImportValTableProdList(Map<String, Object> param);
 }

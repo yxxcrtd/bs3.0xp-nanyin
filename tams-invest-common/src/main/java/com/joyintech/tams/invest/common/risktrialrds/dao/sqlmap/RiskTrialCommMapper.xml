@@ -312,4 +312,35 @@
 	    and DATA_AUTH_NOTIFY_INST.DATA_TYPE = 'PTL01'
 	    and DATA_AUTH_NOTIFY_INST.BUSINESS_ID = #{portfolioId,jdbcType=VARCHAR}
     </select>
+	<select id="selectImportValTableProdList" resultType="java.util.Map">
+		SELECT DISTINCT prod.prodId "finprodId",max(tt.VAL_DATE) "valDate"
+		FROM (<if test="productIdList!=null and productIdList.size()>0">
+				<choose>
+					<when test="productIdList.size() == 1">
+						select '${prodId}' as prodId from SYSIBM.SYSDUMMY1
+					</when>
+					<otherwise>
+						<foreach collection="productIdList" item="item" separator="as prodId from SYSIBM.SYSDUMMY1 union all select" open="select " close="as prodId from SYSIBM.SYSDUMMY1">
+							#{item}
+						</foreach>
+					</otherwise>
+				</choose>
+			</if>) prod
+		LEFT JOIN FIN_PRODUCT fp1
+		ON fp1.FINPROD_ID = prod.prodId
+		LEFT JOIN PTL_SEC_VALUTION psv
+		ON fp1.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
+		AND psv.CDATE+1= #{dateMax,jdbcType=DATE}
+		LEFT JOIN FIN_PRODUCT fp
+		ON fp.FINPROD_ID = psv.FINPROD_ID
+		AND fp.FINPROD_TYPE2='F17'
+		LEFT JOIN (
+		SELECT PTL_ID,max(VAL_DATE) VAL_DATE from(
+		SELECT PTL_ID,MIN(VAL_DATE) VAL_DATE FROM RSK_VALTBL_ASSET_SUB rvas WHERE VAL_DATE>=#{dateMin,jdbcType=DATE} AND VAL_DATE &lt; #{dateMax,jdbcType=DATE} GROUP BY PTL_ID
+		<!--UNION ALL 跑过估值穿透批也需要重新跑指标计算
+		SELECT ZGPLAN_ID PTL_ID,max(CDATE) VAL_DATE FROM PTL_SEC_PIERCE_VALUTION_DETAIL WHERE CDATE >=#{dateMin,jdbcType=DATE} AND CDATE &lt; #{dateMax,jdbcType=DATE} GROUP BY ZGPLAN_ID-->
+		)GROUP BY PTL_ID)tt
+		ON tt.PTL_ID = fp.FINPROD_MARKET_ID
+		GROUP BY  prod.prodId
+	</select>
 </mapper>
