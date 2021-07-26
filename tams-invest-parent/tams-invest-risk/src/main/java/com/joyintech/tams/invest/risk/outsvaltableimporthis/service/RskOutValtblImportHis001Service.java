@@ -9,6 +9,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.RskOutValtblImportHisMapper;
+import com.joyintech.tams.common.base.dao.ValtblImportHisTraceMapper;
 import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
 import com.joyintech.tams.common.base.entity.RskValtblPrtImpMap;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -45,6 +46,9 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
 
     @Autowired
     private RskOutValtblImportHisMapper rskOutValtblImportHisMapper;
+
+    @Autowired
+    private ValtblImportHisTraceMapper valtblImportHisTraceMapper;
 
     // 平台日期
     @Autowired(required = false)
@@ -282,6 +286,7 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
         dto.setEndTime(DateUtil.now());
         dto.setTimedTaskStatus("S");
         rskOutValtblImportHisMapper.updateByPrimaryKey(dto);
+        valtblImportHisTraceMapper.insert(dto);
         return dto;
     }
 

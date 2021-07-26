@@ -11,13 +11,17 @@
 package com.joyintech.tams.invest.batch.valrift.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import com.joyintech.tams.common.base.dao.PtlSecPierceValutionDetailMapper;
+import com.joyintech.tams.invest.batch.valrift.dto.PtlSecPierceValutionDetailDto;
+import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +34,6 @@ import com.joyintech.tams.invest.batch.valrift.dto.PtlSecPierceValutionDto;
 import com.joyintech.tams.invest.batch.valrift.dto.PtlSecValutionDto;
 import com.joyintech.tams.invest.batch.valrift.dto.SubPtlNode;
 import com.joyintech.tams.invest.batch.valrift.dto.ValtblAssetSubDto;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 
 
 /**
@@ -51,6 +52,9 @@ public class ValRiftService {
     
     @Autowired
     private PtlSecPierceValutionMapper ptlSecPierceValutionMapper;
+
+    @Autowired
+    private PtlSecPierceValutionDetailMapper ptlSecPierceValutionDetailMapper;
     
     /**
      * 穿透处理
@@ -70,6 +74,7 @@ public class ValRiftService {
         for(PtlSecValutionDto ptl : ptlList){
             paramMap.put("portfolioId", ptl.getPortfolioId());
             List<PtlSecPierceValutionDto> result = new ArrayList<PtlSecPierceValutionDto>();
+            List<PtlSecPierceValutionDetailDto> detailResult = new ArrayList<PtlSecPierceValutionDetailDto>();
             //组合估值资产
             List<PtlSecValutionDto> ptlValList = selectPtlValAsset(paramMap);
             for(PtlSecValutionDto ptlVal : ptlValList){
@@ -78,7 +83,24 @@ public class ValRiftService {
                 paramMap.put("cdate", DateUtil.format(currentDate));
                 paramMap.put("portfolioId", portfolioId);
                 List<ValtblAssetSubDto> positionList = valRiftMapper.selectValtblAssetSub(paramMap);//底层资产
+                //剩余现金 finprodId = REMAININGCASH_+"成本科目号"
+                positionList.addAll(valRiftMapper.selectValtblAssetSubCash(paramMap));
+                //回购利息是否是汇总的
+                boolean hgSum = false;
                 if (positionList != null && !positionList.isEmpty()) {
+                    //没有回购四级科目 add by lpf
+                    /*if(!(positionList.stream().filter(x->(StringUtil.startsWith(x.getSubCode(),"120410")
+                            ||StringUtil.startsWith(x.getSubCode(),"2231"))).collect(Collectors.toList()).size()>0)){
+                        hgSum =true;
+                        //回购利息汇总情况下查询，科目代码<=8 优先3级科目 没有就2级 再1级科目
+                        positionList.addAll(valRiftMapper.selectValtblAssetSubHg(paramMap));
+                    }*/
+                    hgSum =true;
+                    /*过滤回购利息取汇总*/
+                    positionList = positionList.stream().filter(x->(!StringUtil.startsWith(x.getSubCode(),"120410") && !StringUtil.startsWith(x.getSubCode(),"2231"))).collect(Collectors.toList());
+                    //回购利息汇总情况下查询，科目代码<=8 优先3级科目 没有就2级 再1级科目
+                    positionList.addAll(valRiftMapper.selectValtblAssetSubHg(paramMap));
+
                     // 新建计划类标的信息 生成组合 市场代码作为组合代码
                     List<ValtblAssetSubDto> leafAssetPlan = dealRiftByPtlId(portfolioId, currentDate, ptlVal.getShareAmt(),
                         positionList);
@@ -95,6 +117,7 @@ public class ValRiftService {
                             //应计利息为空
                             if(StringUtil.startsWith(valtblAssetSubDto.getSubCode(),"1204")
                             || StringUtil.startsWith(valtblAssetSubDto.getSubCode(),"1203")//基金红利
+                            || StringUtil.startsWith(valtblAssetSubDto.getSubCode(),"2231")//回购利息 add by lpf
                             ){
                                 ptlSecPierceValutionDto.setTdyIntincexp(valtblAssetSubDto.getSecurityCost());
                             }else{
@@ -103,6 +126,11 @@ public class ValRiftService {
                             //应计利息为空
                             ptlSecPierceValutionDto.setMarketValue(valtblAssetSubDto.getSmv());
                             result.add(ptlSecPierceValutionDto);
+                            //add by lpf 资管计划
+                            PtlSecPierceValutionDetailDto detail = new PtlSecPierceValutionDetailDto();
+                            BeanUtil.copyPropertiesIgnoreNull(detail,ptlSecPierceValutionDto);
+                            detail.setZgplanId(portfolioId);
+                            detailResult.add(detail);
                         }
                     }
                 }
@@ -110,18 +138,166 @@ public class ValRiftService {
                     PtlSecPierceValutionDto ptlSecPierceValutionDto = new PtlSecPierceValutionDto();
                     BeanUtil.copyPropertiesIgnoreNull(ptlSecPierceValutionDto, ptlVal);
                     result.add(ptlSecPierceValutionDto);
+                    //add by lpf 资管计划
+                    PtlSecPierceValutionDetailDto detail = new PtlSecPierceValutionDetailDto();
+                    BeanUtil.copyPropertiesIgnoreNull(detail,ptlSecPierceValutionDto);
+                    detailResult.add(detail);
+                }
+                //按占比处理回购利息
+                if(hgSum){
+                    genHgInit(result);
                 }
             }
             //计算穿透后指标---modify by 裴家俊 2019/04/03---start--------
             List<PtlSecPierceValutionDto> resultRep = calValIndex(result);
+            //add by lpf 增加资管计划维度明细
+            List<PtlSecPierceValutionDetailDto> resultDetailRep = calValIndexDetail(detailResult);
             //删除当日跑批数据
             deleteValRift(currentDate,ptl);
             //入库
             writeValRift(resultRep);
+            //入库 资管计划维度
+            writeDetailValRift(resultDetailRep);
             //计算穿透后指标---modify by 裴家俊 2019/04/03---end--------
         }
     }
-    
+
+    /**add by lpf
+     * 按占比拆分回购利息
+     * @param result
+     */
+    private void genHgInit(List<PtlSecPierceValutionDto> result) {
+        //计算回购成本汇总
+        BigDecimal dscCostAmtMrSum = BigDecimal.ZERO;
+        BigDecimal dscCostAmtMcSum = BigDecimal.ZERO;
+        //买入返售成本科目list
+        List<PtlSecPierceValutionDto> mrfsListTemp = new ArrayList<>();
+        //回购成本科目List
+        List<PtlSecPierceValutionDto> hgListTemp = new ArrayList<>();
+
+        for(PtlSecPierceValutionDto dto:result){
+            //买入返售
+            if(StringUtil.startsWith(dto.getSubCode(),"1202")){
+                dscCostAmtMrSum = ArithmeticUtil.doAdd(dscCostAmtMrSum,dto.getDscCostAmt());
+                mrfsListTemp.add(dto);
+            }
+            //回购
+            if(StringUtil.startsWith(dto.getSubCode(),"2202")){
+                dscCostAmtMcSum = ArithmeticUtil.doAdd(dscCostAmtMcSum,dto.getDscCostAmt());
+                hgListTemp.add(dto);
+            }
+        }
+        //买入返售利息Dto
+        PtlSecPierceValutionDto mrfsdto = null;
+        List<PtlSecPierceValutionDto> mrfsList = result.stream().filter(x->StringUtil.startsWith(x.getSubCode(),"120410")).collect(Collectors.toList());
+        if(!StringUtil.isEmptyList(mrfsList) && mrfsList.size()>0){
+            mrfsdto = mrfsList.get(0);
+        }
+        //回购dto
+        PtlSecPierceValutionDto hgdto = null;
+        List<PtlSecPierceValutionDto> hgList = result.stream().filter(x->StringUtil.startsWith(x.getSubCode(),"2231")).collect(Collectors.toList());
+        if(!StringUtil.isEmptyList(hgList) && hgList.size()>0){
+            hgdto = hgList.get(0);
+        }
+
+        //循环成本科目计算利息
+        //买入返售
+        if(StringUtil.isNotEmpty(mrfsdto)){
+            //数量
+            BigDecimal shareAmt = BigDecimal.ZERO;
+            //摊销总成本
+            BigDecimal dscCostAmt = BigDecimal.ZERO;
+            //市值
+            BigDecimal marketValue = BigDecimal.ZERO;
+            //利息
+            BigDecimal tdyIntincexp = BigDecimal.ZERO;
+            for(int i =0;i<mrfsListTemp.size();i++){
+                PtlSecPierceValutionDto intDto = new PtlSecPierceValutionDto();
+                //买入返售
+                BeanUtil.copyPropertiesIgnoreNull(intDto,mrfsListTemp.get(i));
+                //最后一条倒减
+                if(i==mrfsListTemp.size()-1){
+                    intDto.setShareAmt(ArithmeticUtil.subtract(mrfsdto.getShareAmt(),shareAmt));
+                    intDto.setDscCostAmt(ArithmeticUtil.subtract(mrfsdto.getDscCostAmt(),dscCostAmt));
+                    intDto.setMarketValue(ArithmeticUtil.subtract(mrfsdto.getMarketValue(),marketValue));
+                    intDto.setTdyIntincexp(ArithmeticUtil.subtract(mrfsdto.getTdyIntincexp(),tdyIntincexp));
+                }
+                else{
+                    intDto.setShareAmt(ArithmeticUtil.multiply(mrfsdto.getShareAmt(),ArithmeticUtil.divide(mrfsListTemp.get(i).getDscCostAmt(),dscCostAmtMrSum,9,RoundingMode.HALF_UP)));
+                    intDto.setDscCostAmt(ArithmeticUtil.multiply(mrfsdto.getDscCostAmt(),ArithmeticUtil.divide(mrfsListTemp.get(i).getDscCostAmt(),dscCostAmtMrSum,9, RoundingMode.HALF_UP)));
+                    intDto.setMarketValue(ArithmeticUtil.multiply(mrfsdto.getMarketValue(),ArithmeticUtil.divide(mrfsListTemp.get(i).getDscCostAmt(),dscCostAmtMrSum,9,RoundingMode.HALF_UP)));
+                    intDto.setTdyIntincexp(ArithmeticUtil.multiply(mrfsdto.getTdyIntincexp(),ArithmeticUtil.divide(mrfsListTemp.get(i).getDscCostAmt(),dscCostAmtMrSum,9,RoundingMode.HALF_UP)));
+
+                    shareAmt = ArithmeticUtil.doAdd(shareAmt,intDto.getShareAmt());
+                    dscCostAmt = ArithmeticUtil.doAdd(dscCostAmt,intDto.getDscCostAmt());
+                    marketValue = ArithmeticUtil.doAdd(marketValue,intDto.getMarketValue());
+                    tdyIntincexp = ArithmeticUtil.doAdd(tdyIntincexp,intDto.getTdyIntincexp());
+                }
+                //利息计入成本
+                if(StringUtil.isNotEmpty(intDto.getTdyIntincexp())){
+                    mrfsListTemp.get(i).setTdyIntincexp(ArithmeticUtil.doAdd(mrfsListTemp.get(i).getTdyIntincexp(),intDto.getTdyIntincexp()));
+                }
+                else{
+                    mrfsListTemp.get(i).setTdyIntincexp(ArithmeticUtil.doAdd(mrfsListTemp.get(i).getTdyIntincexp(),intDto.getDscCostAmt()));
+                }
+            }
+        }
+        //回购
+        if(StringUtil.isNotEmpty(hgdto)){
+            //数量
+            BigDecimal shareAmt = BigDecimal.ZERO;
+            //摊销总成本
+            BigDecimal dscCostAmt = BigDecimal.ZERO;
+            //市值
+            BigDecimal marketValue = BigDecimal.ZERO;
+            //利息
+            BigDecimal tdyIntincexp = BigDecimal.ZERO;
+            for(int i =0;i<hgListTemp.size();i++){
+                PtlSecPierceValutionDto intDto = new PtlSecPierceValutionDto();
+                //买入返售
+                BeanUtil.copyPropertiesIgnoreNull(intDto,hgListTemp.get(i));
+                //最后一条倒减
+                if(i==hgListTemp.size()-1){
+                    intDto.setShareAmt(ArithmeticUtil.subtract(hgdto.getShareAmt(),shareAmt));
+                    intDto.setDscCostAmt(ArithmeticUtil.subtract(hgdto.getDscCostAmt(),dscCostAmt));
+                    intDto.setMarketValue(ArithmeticUtil.subtract(hgdto.getMarketValue(),marketValue));
+                    intDto.setTdyIntincexp(ArithmeticUtil.subtract(hgdto.getTdyIntincexp(),tdyIntincexp));
+                }
+                else{
+                    intDto.setShareAmt(ArithmeticUtil.multiply(hgdto.getShareAmt(),ArithmeticUtil.divide(hgListTemp.get(i).getShareAmt(),dscCostAmtMcSum,9,RoundingMode.HALF_UP)));
+                    intDto.setDscCostAmt(ArithmeticUtil.multiply(hgdto.getDscCostAmt(),ArithmeticUtil.divide(hgListTemp.get(i).getDscCostAmt(),dscCostAmtMcSum,9,RoundingMode.HALF_UP)));
+                    intDto.setMarketValue(ArithmeticUtil.multiply(hgdto.getMarketValue(),ArithmeticUtil.divide(hgListTemp.get(i).getDscCostAmt(),dscCostAmtMcSum,9,RoundingMode.HALF_UP)));
+                    intDto.setTdyIntincexp(ArithmeticUtil.multiply(hgdto.getTdyIntincexp(),ArithmeticUtil.divide(hgListTemp.get(i).getDscCostAmt(),dscCostAmtMcSum,9,RoundingMode.HALF_UP)));
+
+                    shareAmt = ArithmeticUtil.doAdd(shareAmt,intDto.getShareAmt());
+                    dscCostAmt = ArithmeticUtil.doAdd(dscCostAmt,intDto.getDscCostAmt());
+                    marketValue = ArithmeticUtil.doAdd(marketValue,intDto.getMarketValue());
+                    tdyIntincexp = ArithmeticUtil.doAdd(tdyIntincexp,intDto.getTdyIntincexp());
+                }
+
+                //利息计入成本
+                if(StringUtil.isNotEmpty(intDto.getTdyIntincexp())){
+                    hgListTemp.get(i).setTdyIntincexp(ArithmeticUtil.doAdd(hgListTemp.get(i).getTdyIntincexp(),intDto.getTdyIntincexp()));
+                }
+                else{
+                    hgListTemp.get(i).setTdyIntincexp(ArithmeticUtil.doAdd(hgListTemp.get(i).getTdyIntincexp(),intDto.getDscCostAmt()));
+                }
+            }
+        }
+        //过滤汇总利息
+        List<PtlSecPierceValutionDto> list = result.stream().filter(x->(!StringUtil.startsWith(x.getSubCode(),"120410")&&!StringUtil.startsWith(x.getSubCode(),"2231"))).collect(Collectors.toList());
+
+        result.clear();
+
+        result.addAll(list);
+    }
+
+    private void writeDetailValRift(List<PtlSecPierceValutionDetailDto> resultDetailRep) {
+        for(PtlSecPierceValutionDetailDto ptlSecPierceValutionDetailDto : resultDetailRep){
+            ptlSecPierceValutionDetailMapper.insert(ptlSecPierceValutionDetailDto);
+        }
+    }
+
     /**
      * 计算穿透后指标
      * <功能详细描述>
@@ -142,6 +318,70 @@ public class ValRiftService {
         });
         for(PtlSecPierceValutionDto bean : result){
             if(StringUtil.isNotEmpty(bean.getFinprodId())){
+                //add by lpf 剩余现金处理 start
+                if(StringUtil.startsWith(bean.getFinprodId(),"REMAININGCASH")){
+                    if(mapAsset.containsKey(bean.getFinprodId())){
+                        PtlSecPierceValutionDto ptlSecPierceValutionDto  = (PtlSecPierceValutionDto)mapAsset.get(bean.getFinprodId());
+                        //剩余现金
+                        if(!StringUtil.startsWith(bean.getSubCode(),"120401") &&!StringUtil.startsWith(bean.getSubCode(),"120402")
+                                &&!StringUtil.startsWith(bean.getSubCode(),"120403")){
+                            //数量
+                            if(StringUtil.isNotEmpty(bean.getShareAmt())){
+                                bean.setShareAmt(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getShareAmt(),ptlSecPierceValutionDto.getPositionRatio()),
+                                        ArithmeticUtil.multiply(bean.getShareAmt(),bean.getPositionRatio())));
+                            }
+                            else{
+                                bean.setShareAmt(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getShareAmt(),ptlSecPierceValutionDto.getPositionRatio()));
+                            }
+                            //摊销总成本
+                            if(StringUtil.isNotEmpty(bean.getDscCostAmt())){
+                                bean.setDscCostAmt(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getDscCostAmt(),ptlSecPierceValutionDto.getPositionRatio()),
+                                        ArithmeticUtil.multiply(bean.getDscCostAmt(),bean.getPositionRatio())));
+                            }
+                            else{
+                                bean.setDscCostAmt(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getDscCostAmt(),ptlSecPierceValutionDto.getPositionRatio()));
+                            }
+                            //市值
+                            if(StringUtil.isNotEmpty(bean.getMarketValue())){
+                                bean.setMarketValue(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getMarketValue(),ptlSecPierceValutionDto.getPositionRatio()),
+                                        ArithmeticUtil.multiply(bean.getMarketValue(),bean.getPositionRatio())));
+                            }
+                            else{
+                                bean.setMarketValue(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getMarketValue(),ptlSecPierceValutionDto.getPositionRatio()));
+                            }
+                        }
+                        //利息
+                        else{
+                            //数量
+                            if(StringUtil.isNotEmpty(ptlSecPierceValutionDto.getShareAmt())){
+                                bean.setShareAmt(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getShareAmt(),ptlSecPierceValutionDto.getPositionRatio()));
+                            }
+                            //摊销总成本
+                            if(StringUtil.isNotEmpty(ptlSecPierceValutionDto.getDscCostAmt())){
+                                bean.setDscCostAmt(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getDscCostAmt(),ptlSecPierceValutionDto.getPositionRatio()));
+                            }
+                            //市值
+                            if(StringUtil.isNotEmpty(ptlSecPierceValutionDto.getMarketValue())){
+                                bean.setMarketValue(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getMarketValue(),ptlSecPierceValutionDto.getPositionRatio()));
+                            }
+                            //利息
+                            if(StringUtil.isNotEmpty(bean.getTdyIntincexp())){
+                                bean.setTdyIntincexp(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getTdyIntincexp(),ptlSecPierceValutionDto.getPositionRatio()),
+                                        ArithmeticUtil.multiply(bean.getTdyIntincexp(),bean.getPositionRatio())));
+                            }
+                            else{
+                                bean.setTdyIntincexp(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getTdyIntincexp(),ptlSecPierceValutionDto.getPositionRatio()));
+                            }
+                        }
+                        bean.setPositionRatio(new BigDecimal(1));//重置持仓比例
+                        mapAsset.put(bean.getFinprodId(), bean);
+                    }
+                    else{
+                        mapAsset.put(bean.getFinprodId(), bean);
+                    }
+                }
+                ////add by lpf 剩余现金处理 end
+                else{
                     if(mapAsset.containsKey(bean.getFinprodId())){
                         PtlSecPierceValutionDto ptlSecPierceValutionDto  = (PtlSecPierceValutionDto)mapAsset.get(bean.getFinprodId());
                         //数量
@@ -150,23 +390,23 @@ public class ValRiftService {
                                 bean.setShareAmt(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getShareAmt(),ptlSecPierceValutionDto.getPositionRatio()),
                                         ArithmeticUtil.multiply(bean.getShareAmt(),bean.getPositionRatio())));
                             }else{
-								//update by xr for TISHKBS-405 	
+                                //update by xr for TISHKBS-405
                                 bean.setShareAmt(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getShareAmt(),ptlSecPierceValutionDto.getPositionRatio()));
                             }
                         }
                         //摊销总成本
                         if(StringUtil.isNotEmpty(ptlSecPierceValutionDto.getDscCostAmt())
-                                &&StringUtil.isNotEmpty(bean.getDscCostAmt())){
+                                && StringUtil.isNotEmpty(bean.getDscCostAmt())){
                             if(!StringUtil.startsWith(ptlSecPierceValutionDto.getSubCode(),"1204")
-                            && !StringUtil.startsWith(ptlSecPierceValutionDto.getSubCode(),"1203")
+                                    && !StringUtil.startsWith(ptlSecPierceValutionDto.getSubCode(),"1203")
                             ){
                                 if(!StringUtil.startsWith(bean.getSubCode(),"1204")
-                                && !StringUtil.startsWith(bean.getSubCode(),"1203")
+                                        && !StringUtil.startsWith(bean.getSubCode(),"1203")
                                 ){
                                     bean.setDscCostAmt(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getDscCostAmt(),ptlSecPierceValutionDto.getPositionRatio()),
                                             ArithmeticUtil.multiply(bean.getDscCostAmt(),bean.getPositionRatio())));
                                 }else{
-									//update by xr for TISHKBS-405 	
+                                    //update by xr for TISHKBS-405
                                     bean.setDscCostAmt(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getDscCostAmt(),ptlSecPierceValutionDto.getPositionRatio()));
                                 }
                             }
@@ -174,50 +414,52 @@ public class ValRiftService {
                         //add by zhagnnian 20191014 start
                         //利息
                         if(StringUtil.isNotEmpty(ptlSecPierceValutionDto.getTdyIntincexp())
-                                ){
+                        ){
                             if(StringUtil.isNotEmpty(bean.getTdyIntincexp())){
 
                                 if(StringUtil.startsWith(bean.getSubCode(),"1204")
-                                || StringUtil.startsWith(bean.getSubCode(),"1203") //基金
+                                        || StringUtil.startsWith(bean.getSubCode(),"1203") //基金
                                         || StringUtil.isEmpty(bean.getSubCode()) //直投
                                 ){
                                     bean.setTdyIntincexp(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getTdyIntincexp(),ptlSecPierceValutionDto.getPositionRatio()),
                                             ArithmeticUtil.multiply(bean.getTdyIntincexp(),bean.getPositionRatio())));
                                 }else{
-									//update by xr for TISHKBS-405 	
+                                    //update by xr for TISHKBS-405
                                     bean.setTdyIntincexp(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getTdyIntincexp(),ptlSecPierceValutionDto.getPositionRatio()));
                                 }
                             }else{
-									//update by xr for TISHKBS-405 	
-                                    bean.setTdyIntincexp(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getTdyIntincexp(),ptlSecPierceValutionDto.getPositionRatio()));
+                                //update by xr for TISHKBS-405
+                                bean.setTdyIntincexp(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getTdyIntincexp(),ptlSecPierceValutionDto.getPositionRatio()));
                             }
                         }
                         //add by zhagnnian 20191014 end
                         //市值
                         if(StringUtil.isNotEmpty(ptlSecPierceValutionDto.getMarketValue())
-                                &&StringUtil.isNotEmpty(bean.getMarketValue())){
+                                && StringUtil.isNotEmpty(bean.getMarketValue())){
                             if(!StringUtil.startsWith(ptlSecPierceValutionDto.getSubCode(),"1204")
-                            && !StringUtil.startsWith(ptlSecPierceValutionDto.getSubCode(),"1203")
+                                    && !StringUtil.startsWith(ptlSecPierceValutionDto.getSubCode(),"1203")
                             ){
                                 if(!StringUtil.startsWith(bean.getSubCode(),"1204")
-                                && !StringUtil.startsWith(bean.getSubCode(),"1203")
+                                        && !StringUtil.startsWith(bean.getSubCode(),"1203")
                                 ){
                                     bean.setMarketValue(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getMarketValue(),ptlSecPierceValutionDto.getPositionRatio()),
                                             ArithmeticUtil.multiply(bean.getMarketValue(),bean.getPositionRatio())));
                                 }else{
-									//update by xr for TISHKBS-405 	
+                                    //update by xr for TISHKBS-405
                                     bean.setMarketValue(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getMarketValue(),ptlSecPierceValutionDto.getPositionRatio()));
                                 }
                             }
                         }
                         bean.setPositionRatio(new BigDecimal(1));//重置持仓比例
                         mapAsset.put(bean.getFinprodId(), bean);
-                }else{
-                    //市值单独计算
-                    // 市值= 摊销总成本+isnull(公允价值变动,当日应计利息)
-                    /*bean.setMarketValue(ArithmeticUtil.doAdd(ArithmeticUtil.doAdd(null!=bean.getDscCostAmt()?bean.getDscCostAmt():BigDecimal.ZERO,null!=bean.getTdyFloatIngpl()?bean.getTdyFloatIngpl():BigDecimal.ZERO),null!=bean.getTdyIntincexp()?bean.getTdyIntincexp():BigDecimal.ZERO));*/
-                    mapAsset.put(bean.getFinprodId(), bean);
+                    }else{
+                        //市值单独计算
+                        // 市值= 摊销总成本+isnull(公允价值变动,当日应计利息)
+                        /*bean.setMarketValue(ArithmeticUtil.doAdd(ArithmeticUtil.doAdd(null!=bean.getDscCostAmt()?bean.getDscCostAmt():BigDecimal.ZERO,null!=bean.getTdyFloatIngpl()?bean.getTdyFloatIngpl():BigDecimal.ZERO),null!=bean.getTdyIntincexp()?bean.getTdyIntincexp():BigDecimal.ZERO));*/
+                        mapAsset.put(bean.getFinprodId(), bean);
+                    }
                 }
+
             }
         }
         //-----add by 裴家俊  2019/04/03----重新构造避免重复金融产品代码---start----
@@ -249,11 +491,141 @@ public class ValRiftService {
     	return resultRep;
     	//-----add by 裴家俊  2019/04/03----重新构造避免重复金融产品代码---end----
     }
+
+    /**
+     * 计算穿透后指标 增加资管计划的维度
+     * <功能详细描述>
+     * @param result
+     * @see
+     * @since 1.0
+     */
+    private List<PtlSecPierceValutionDetailDto> calValIndexDetail(List<PtlSecPierceValutionDetailDto> result){
+    	List<PtlSecPierceValutionDetailDto> resultRep = new ArrayList<PtlSecPierceValutionDetailDto>();
+        Map<String,PtlSecPierceValutionDetailDto> mapAsset = new HashMap<String,PtlSecPierceValutionDetailDto>();
+        Collections.sort(result, new Comparator<PtlSecPierceValutionDetailDto>() {
+            @Override
+            public int compare(PtlSecPierceValutionDetailDto o1, PtlSecPierceValutionDetailDto o2) {
+                return (StringUtil.isEmpty(o1.getSubCode()) ? "":o1.getSubCode()).compareTo(
+                        (StringUtil.isEmpty(o2.getSubCode())  ? "":o2.getSubCode())
+                );
+            }
+        });
+        for(PtlSecPierceValutionDetailDto bean : result){
+            if(StringUtil.isNotEmpty(bean.getFinprodId())){
+                    if(mapAsset.containsKey(bean.getFinprodId()+bean.getZgplanId())){
+                        PtlSecPierceValutionDetailDto ptlSecPierceValutionDetailDto  = (PtlSecPierceValutionDetailDto)mapAsset.get(bean.getFinprodId()+bean.getZgplanId());
+                        //数量
+                        if(StringUtil.isNotEmpty(ptlSecPierceValutionDetailDto.getShareAmt())){
+                            if(StringUtil.isNotEmpty(bean.getShareAmt())){
+                                bean.setShareAmt(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDetailDto.getShareAmt(),ptlSecPierceValutionDetailDto.getPositionRatio()),
+                                        ArithmeticUtil.multiply(bean.getShareAmt(),bean.getPositionRatio())));
+                            }else{
+								//update by xr for TISHKBS-405
+                                bean.setShareAmt(ArithmeticUtil.multiply(ptlSecPierceValutionDetailDto.getShareAmt(),ptlSecPierceValutionDetailDto.getPositionRatio()));
+                            }
+                        }
+                        //摊销总成本
+                        if(StringUtil.isNotEmpty(ptlSecPierceValutionDetailDto.getDscCostAmt())
+                                && StringUtil.isNotEmpty(bean.getDscCostAmt())){
+                            if(!StringUtil.startsWith(ptlSecPierceValutionDetailDto.getSubCode(),"1204")
+                            && !StringUtil.startsWith(ptlSecPierceValutionDetailDto.getSubCode(),"1203")
+                            ){
+                                if(!StringUtil.startsWith(bean.getSubCode(),"1204")
+                                && !StringUtil.startsWith(bean.getSubCode(),"1203")
+                                ){
+                                    bean.setDscCostAmt(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDetailDto.getDscCostAmt(),ptlSecPierceValutionDetailDto.getPositionRatio()),
+                                            ArithmeticUtil.multiply(bean.getDscCostAmt(),bean.getPositionRatio())));
+                                }else{
+									//update by xr for TISHKBS-405
+                                    bean.setDscCostAmt(ArithmeticUtil.multiply(ptlSecPierceValutionDetailDto.getDscCostAmt(),ptlSecPierceValutionDetailDto.getPositionRatio()));
+                                }
+                            }
+                        }
+                        //add by zhagnnian 20191014 start
+                        //利息
+                        if(StringUtil.isNotEmpty(ptlSecPierceValutionDetailDto.getTdyIntincexp())
+                                ){
+                            if(StringUtil.isNotEmpty(bean.getTdyIntincexp())){
+
+                                if(StringUtil.startsWith(bean.getSubCode(),"1204")
+                                || StringUtil.startsWith(bean.getSubCode(),"1203") //基金
+                                        || StringUtil.isEmpty(bean.getSubCode()) //直投
+                                ){
+                                    bean.setTdyIntincexp(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDetailDto.getTdyIntincexp(),ptlSecPierceValutionDetailDto.getPositionRatio()),
+                                            ArithmeticUtil.multiply(bean.getTdyIntincexp(),bean.getPositionRatio())));
+                                }else{
+									//update by xr for TISHKBS-405
+                                    bean.setTdyIntincexp(ArithmeticUtil.multiply(ptlSecPierceValutionDetailDto.getTdyIntincexp(),ptlSecPierceValutionDetailDto.getPositionRatio()));
+                                }
+                            }else{
+									//update by xr for TISHKBS-405
+                                    bean.setTdyIntincexp(ArithmeticUtil.multiply(ptlSecPierceValutionDetailDto.getTdyIntincexp(),ptlSecPierceValutionDetailDto.getPositionRatio()));
+                            }
+                        }
+                        //add by zhagnnian 20191014 end
+                        //市值
+                        if(StringUtil.isNotEmpty(ptlSecPierceValutionDetailDto.getMarketValue())
+                                && StringUtil.isNotEmpty(bean.getMarketValue())){
+                            if(!StringUtil.startsWith(ptlSecPierceValutionDetailDto.getSubCode(),"1204")
+                            && !StringUtil.startsWith(ptlSecPierceValutionDetailDto.getSubCode(),"1203")
+                            ){
+                                if(!StringUtil.startsWith(bean.getSubCode(),"1204")
+                                && !StringUtil.startsWith(bean.getSubCode(),"1203")
+                                ){
+                                    bean.setMarketValue(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(ptlSecPierceValutionDetailDto.getMarketValue(),ptlSecPierceValutionDetailDto.getPositionRatio()),
+                                            ArithmeticUtil.multiply(bean.getMarketValue(),bean.getPositionRatio())));
+                                }else{
+									//update by xr for TISHKBS-405
+                                    bean.setMarketValue(ArithmeticUtil.multiply(ptlSecPierceValutionDetailDto.getMarketValue(),ptlSecPierceValutionDetailDto.getPositionRatio()));
+                                }
+                            }
+                        }
+                        bean.setZgplanId(ptlSecPierceValutionDetailDto.getZgplanId());
+                        String zgplanId = ptlSecPierceValutionDetailDto.getZgplanId() == null?bean.getZgplanId():ptlSecPierceValutionDetailDto.getZgplanId();
+                        bean.setZgplanId(zgplanId);
+                        bean.setPositionRatio(new BigDecimal(1));//重置持仓比例
+                        mapAsset.put(bean.getFinprodId()+bean.getZgplanId(), bean);
+                }else{
+                    //市值单独计算
+                    // 市值= 摊销总成本+isnull(公允价值变动,当日应计利息)
+                    /*bean.setMarketValue(ArithmeticUtil.doAdd(ArithmeticUtil.doAdd(null!=bean.getDscCostAmt()?bean.getDscCostAmt():BigDecimal.ZERO,null!=bean.getTdyFloatIngpl()?bean.getTdyFloatIngpl():BigDecimal.ZERO),null!=bean.getTdyIntincexp()?bean.getTdyIntincexp():BigDecimal.ZERO));*/
+                    mapAsset.put(bean.getFinprodId()+bean.getZgplanId(), bean);
+                }
+            }
+        }
+        //-----add by 裴家俊  2019/04/03----重新构造避免重复金融产品代码---start----
+    	for (Entry<String, PtlSecPierceValutionDetailDto> entry : mapAsset.entrySet()) {
+			if (entry.getValue().getShareAmt() != null
+					) {
+				entry.getValue().setShareAmt(ArithmeticUtil.multiply(entry.getValue().getShareAmt()
+						,entry.getValue().getPositionRatio()));
+			}
+			if (entry.getValue().getDscCostAmt() != null ) {
+				entry.getValue().setDscCostAmt(ArithmeticUtil.multiply(entry.getValue().getDscCostAmt()
+						,entry.getValue().getPositionRatio()));
+			}
+            //市值单独计算
+            // 市值= 摊销总成本+isnull(公允价值变动,当日应计利息)
+			if (entry.getValue().getMarketValue() == null) {
+				entry.getValue().setMarketValue(ArithmeticUtil.multiply(ArithmeticUtil.doAdd(ArithmeticUtil.doAdd(null!=entry.getValue().getDscCostAmt()?entry.getValue().getDscCostAmt():BigDecimal.ZERO,null!=entry.getValue().getTdyFloatIngpl()?entry.getValue().getTdyFloatIngpl():BigDecimal.ZERO),null!=entry.getValue().getTdyIntincexp()?entry.getValue().getTdyIntincexp():BigDecimal.ZERO)
+						,entry.getValue().getPositionRatio()));
+			}else{
+                entry.getValue().setMarketValue(ArithmeticUtil.multiply(entry.getValue().getMarketValue()
+                        ,entry.getValue().getPositionRatio()));
+            }
+			if (entry.getValue().getTdyIntincexp() != null ) {
+				entry.getValue().setTdyIntincexp(ArithmeticUtil.multiply(entry.getValue().getTdyIntincexp()
+						,entry.getValue().getPositionRatio()));
+			}
+			resultRep.add(entry.getValue());
+		}
+    	return resultRep;
+    	//-----add by 裴家俊  2019/04/03----重新构造避免重复金融产品代码---end----
+    }
     
     /**
      * 处理穿透底层资产---add by 裴家俊---2019/04/03-----
      * <功能详细描述>
-     * @param leafAssetPlan
      * @param portfolioId
      * @param vdate
      * @param shareAmt 理财产品数量
@@ -399,5 +771,47 @@ public class ValRiftService {
         paramMap.put("portfolioId", ptl.getPortfolioId());
         paramMap.put("cdate", currentDate);
         valRiftMapper.deleteValRift(paramMap);
+        //add by lpf 增加资管计划维度明细
+        valRiftMapper.deleteDetailValRift(paramMap);
+    }
+    /**
+     * 查询指定日期范围导入估值表的产品
+     *
+     * @param supDate
+     * @param productIdList
+     * @return
+     */
+    public List<Map<String,Object>> selectImportValTableProdList(Date supDate, List<String> productIdList,String isReport) {
+        //参数
+        Map<String,Object> param = new HashMap<>();
+        //系统参数配置 指定日期范围内天数 联社：一个月以内，16天可以  杭联：1个月2次 默认16天
+        String importValDay = StringUtil.defaultString(CacheUtil.getSysParam("MAX_SUB_VALDATE"),"16");
+        //计算最小日期
+        Date dateMin = DateUtil.addDay(supDate,-1*Integer.valueOf(importValDay));
+
+        param.put("dateMin",dateMin);
+        param.put("dateMax",supDate);
+        param.put("isReport",isReport);
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        //防止语句过长
+        if(productIdList == null || productIdList.size()<800) {
+            param.put("productIdList",productIdList);
+            //查询产品对应最小跑批日期
+            resultList.addAll(valRiftMapper.selectImportValTableProdList(param));
+        }
+        else{
+            //分组查询防止语句过长
+            List<List<String>> totalList = DataHandleUtil.splitList(productIdList,800);
+            for (List<String> evrylist : totalList) {
+                param.put("productIdList",evrylist);
+                //查询产品对应最小跑批日期
+                List<Map<String,Object>> evryResList = valRiftMapper.selectImportValTableProdList(param);
+                if(StringUtil.isNotEmpty(evryResList)){
+                    resultList.addAll(evryResList);
+                }
+            }
+        }
+
+        return resultList;
     }
 }

@@ -75,6 +75,10 @@ public class RskOutValtblImportHis001Dto extends RskOutValtblImportHis implement
         return valdate;
     }
 
+    public String getValdateStr() {
+        return DateUtil.format(valdate);
+    }
+
     public void setValdate(Date valdate) {
         this.valdate = valdate;
     }

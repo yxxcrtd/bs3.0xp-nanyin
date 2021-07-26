@@ -113,4 +113,8 @@ public class RskOutValtblImportHisService extends BaseService<RskOutValtblImport
         dto.setName(rskOutsValTableImportHisMapper.selectGroupName(ptlId));
         return dto;
     }
+
+    public List<RskOutValtblImportHisDto> selectTraceByKey(RskOutValtblImportHisDto dto) {
+        return rskOutsValTableImportHisMapper.selectTraceByKey(dto);
+    }
 }

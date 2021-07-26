@@ -97,4 +97,25 @@
         left join RSK_VALTBL_ASSET_SUB_MAP rva
         on rva.ID = rvp.ASSET_SUB_MAP_ID
     </select>
+
+    <select id="selectTraceByKey" parameterType="com.joyintech.service.risk.outsvaltableimport.dto.RskOutValtblImportHisDto" resultType="com.joyintech.service.risk.outsvaltableimport.dto.RskOutValtblImportHisDto">
+        select
+        FILE_NAME      fileName,
+        FILE_PATH      filePath,
+        PORTFOLIO_ID   portfolioId,
+        PORTFOLIO_NAME portfolioName,
+        START_TIME     startTime,
+        END_TIME       endTime,
+        VALDATE        valdate,
+        IMPDATE        impdate,
+        IMPORT_TYPE    importType,
+        ERROR_CODE     errorCode
+        from VALTBL_IMPORT_HIS_TRACE
+        <where>
+            FILE_NAME = #{fileName,jdbcType=VARCHAR}
+            AND PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR}
+            and VALDATE = #{valdate,jdbcType=VARCHAR}
+        </where>
+        ORDER BY START_TIME DESC
+    </select>
 </mapper>

@@ -10,8 +10,13 @@
  
 package com.joyintech.tams.invest.batch.valrift.runner;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -75,13 +80,46 @@ public class ValRiftTask extends BatchBaseService{
 
 
         try {
-        	if(null!=batchExecuteInfo&&null!=batchExecuteInfo.getExecuteDate()){
-        		supDate=batchExecuteInfo.getExecuteDate();
-        	}
-        	else{
-        		supDate = new Date();
-        	}
-            valRiftService.run(supDate, this.getProductIdList());
+            if(null!=batchExecuteInfo&&null!=batchExecuteInfo.getExecuteDate()){
+                supDate=batchExecuteInfo.getExecuteDate();
+            }
+            else{
+                supDate = new Date();
+            }
+            //add by lpf for 估值穿透改造 S 将产品分为指定日期范围内的导入估值表 和没导入估值表的产品
+            List<Map<String,Object>> importValTableProdList = valRiftService.selectImportValTableProdList(supDate,this.getProductIdList(),"02");
+            List<String> importProdList = new ArrayList<>();
+            List<String> unImportProdList = new ArrayList<>();
+            Date minDate = supDate;
+            if(!StringUtil.isEmptyList(importValTableProdList)){
+                for (Map<String,Object> entry:importValTableProdList) {
+                    //导入了估值表的产品寻找最小跑批日
+                    if(StringUtil.isNotEmpty(entry.get("valDate"))){
+                        if(minDate.compareTo((Date)entry.get("valDate"))>0){
+                            minDate = (Date)entry.get("valDate");
+                        }
+                        importProdList.add((String)entry.get("finprodId"));
+                    }
+                    else {
+                        unImportProdList.add((String)entry.get("finprodId"));
+                    }
+                }
+            }
+
+            //未导入估值表的产品仅跑跑批日当日
+            if(!StringUtil.isEmptyList(unImportProdList)){
+                valRiftService.run(supDate, unImportProdList);
+            }
+            //导入估值表的产品循环最小跑批日到当前跑批日
+            if(!StringUtil.isEmptyList(importProdList)){
+                Date currentDate = minDate;
+                for(int i = 0; i<= DateUtil.getBetweenDayNumber(minDate,supDate); i++){
+                    valRiftService.run(currentDate, importProdList);
+                    currentDate = DateUtil.addDay(currentDate,1);
+                }
+            }
+            //add by lpf for 估值穿透改造 E
+//            valRiftService.run(supDate, this.getProductIdList());
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {
