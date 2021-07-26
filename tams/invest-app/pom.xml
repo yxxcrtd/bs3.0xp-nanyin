@@ -27,6 +27,11 @@
             <version>1.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>tams-customer-interf</artifactId>
+            <version>1.0</version>
+        </dependency>
         <!-- 服务 -->
         <dependency>
             <groupId>com.joyintech.service</groupId>
