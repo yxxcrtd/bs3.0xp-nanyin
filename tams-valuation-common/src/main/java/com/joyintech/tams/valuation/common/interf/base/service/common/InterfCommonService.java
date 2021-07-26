@@ -5387,24 +5387,26 @@ public class InterfCommonService {
             return;
         }
 
-        parmas = new HashMap<String,Object>();
-        parmas.put("createTime", interfDate);
-        parmas.put("createUser", InterfCommonConstant.接口_默认用户);
-        parmas.put("ftradeList", unDelDealList);
-        parmas.put("fpsList", paramMap.get("fpsList"));
-        parmas.put("IS_CHL", isChl);
-        parmas.put("TMP_E_NAME", tmpEName);
-        List<TrdProductDeal> unDelDealList_cf = this.queryUnDelDeal(parmas);
-        if(unDelDealList_cf==null || unDelDealList_cf.size()==0){
-            List<TrdProductDeal> totalList = this.queryDelChlFeeDeal(unDelDealList);
-            if(totalList != null && totalList.size()>0){
-                unDelDealList.addAll(totalList);
+        // modify by weipeng : 增加原交易编号判空处理，若取不到原交易，则不进行删除衍生交易处理
+        if(!CollectionUtils.isEmpty(unDelDealList)){
+            parmas = new HashMap<String,Object>();
+            parmas.put("createTime", interfDate);
+            parmas.put("createUser", InterfCommonConstant.接口_默认用户);
+            parmas.put("ftradeList", unDelDealList);
+            parmas.put("fpsList", paramMap.get("fpsList"));
+            parmas.put("IS_CHL", isChl);
+            parmas.put("TMP_E_NAME", tmpEName);
+            List<TrdProductDeal> unDelDealList_cf = this.queryUnDelDeal(parmas);
+            if(unDelDealList_cf==null || unDelDealList_cf.size()==0){
+                List<TrdProductDeal> totalList = this.queryDelChlFeeDeal(unDelDealList);
+                if(totalList != null && totalList.size()>0){
+                    unDelDealList.addAll(totalList);
+                }
+                this.deleteFinprodDealByTradeId(unDelDealList);
+                return;
             }
-            this.deleteFinprodDealByTradeId(unDelDealList);
-            return;
+            unDelDealList.addAll(unDelDealList_cf);
         }
-        unDelDealList.addAll(unDelDealList_cf);
-
         List<TrdProductDeal> totalList = this.queryDelChlFeeDeal(unDelDealList);
         if(totalList != null && totalList.size()>0){
             unDelDealList.addAll(totalList);
