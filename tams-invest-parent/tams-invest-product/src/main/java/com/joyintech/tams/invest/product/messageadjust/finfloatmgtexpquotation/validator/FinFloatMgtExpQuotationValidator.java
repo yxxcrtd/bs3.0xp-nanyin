@@ -11,14 +11,15 @@
 package com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.validator;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 //import java.util.HashMap;
-import java.util.List;
 //import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
+import com.joyintech.tams.common.base.entity.FinFloatCalcRule;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -531,7 +532,18 @@ public class FinFloatMgtExpQuotationValidator implements BeanValidator{
                 }
                 }
             }
-            
+
+            //查询此报价生效日所在的区间是否存在报价
+            Map<String, Object> param = new HashMap<>();
+            param.put("finprodId", finprodId);
+            param.put("CASH_TYPE_1_03", DictCodeListExt1.现金流一级类型_费用.getValue());
+            param.put("CASH_TYPE_2_C04", DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+            param.put("effDate",DateUtil.format(finFloatMgtExpQuotation001Dto.getEffDate()));
+            List<FinFloatAccrualSche> finFloatAccrualScheList = finFloatMgtExpQuotation001Service.getEffDateByFinProdid(param);
+            if(finFloatAccrualScheList!=null && !finFloatAccrualScheList.isEmpty()){
+                errorList.add(new ValidMessage(DateUtil.format(finFloatAccrualScheList.get(0).getAccrStrDate())+"至"
+                        +DateUtil.format(finFloatAccrualScheList.get(0).getAccrEndDate())+"区间内已存在浮动管理费报价！"));
+            }
         }
         //}    
         return errorList;
