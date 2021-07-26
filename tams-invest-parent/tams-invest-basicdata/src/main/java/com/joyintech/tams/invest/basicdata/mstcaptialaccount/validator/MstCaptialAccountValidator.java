@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
 import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +80,10 @@ public class MstCaptialAccountValidator implements BeanValidator{
                     }
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("acctName", "");
+                    if(MultilevelDataAuthorityUtil.isEnabled()){
+                        map.put("validInstitutionCode",MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
+                    }
+
                     List<MstCaptialAccountDto> list = mstCaptialAccountService.selectCheck(map);
                     for(int i=0; i<list.size(); i++){
                     	String temp = "";
@@ -107,6 +113,9 @@ public class MstCaptialAccountValidator implements BeanValidator{
                         Map<String, Object> param = new HashMap<String, Object>();
                         param.put("busiAcctNo", dto.getBusiAcctNo());
                         param.put("largePayno", dto.getLargePayno());
+                        if(MultilevelDataAuthorityUtil.isEnabled()){
+                            param.put("validInstitutionCode",MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
+                        }
                         int cnt =  mstCaptialAccountService.getUniqueAcctNoPayNo(param);
 
                         if(cnt>0){
@@ -142,6 +151,9 @@ public class MstCaptialAccountValidator implements BeanValidator{
                 }
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("acctName", "");
+                if(MultilevelDataAuthorityUtil.isEnabled()){
+                    map.put("validInstitutionCode",MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
+                }
                 List<MstCaptialAccountDto> list = mstCaptialAccountService.selectCheck(map);
                 for(int i=0; i<list.size(); i++){
                 	String temp = "";
