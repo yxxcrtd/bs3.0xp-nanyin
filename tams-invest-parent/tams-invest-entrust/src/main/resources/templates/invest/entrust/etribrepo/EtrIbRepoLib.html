@@ -85,6 +85,40 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="layui-form-item">
+
+                        <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                            <label class="layui-form-label form-lable"
+                                   th:utext="#{EtrStandardBond002.pledgeColModel.secType}">债券品种</label>
+                            <div class="layui-input-inline input-inline">
+                                <select type="text" id="secType" name="secType" required
+                                        class="layui-input form-input input-select"
+                                        placeholder="请输入内容"
+                                        th:placeholder="#{SysCommon.placeholder}"
+                                        th:data-result='${CUSTOM_ASSET_TYPE_TWO}'
+                                        allowClear="true" formatoption="true"
+                                >
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                            <label class="layui-form-label form-lable"
+                                   th:utext="#{EtrStandardBond002.pledgeColModel.mainGrade}">主体评级</label>
+                            <div class="layui-input-inline input-inline">
+                                <select type="text" id="mainGrade" name="mainGrade" required
+                                        class="layui-input form-input input-select"
+                                        placeholder="请输入内容"
+                                        th:placeholder="#{SysCommon.placeholder}"
+                                        th:data-result='${MAIN_GRADE_RESULT}'
+                                        allowClear="true" formatoption="true"
+                                >
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
                 </form>
             </div>
             <div class="repo-trade-wrap">

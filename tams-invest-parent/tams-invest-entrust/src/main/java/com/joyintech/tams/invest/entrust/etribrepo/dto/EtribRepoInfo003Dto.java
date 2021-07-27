@@ -168,6 +168,11 @@ public class EtribRepoInfo003Dto  extends EtrEntrust implements ProcessEntity {
      * 清算速度
      */
     private String settleSpreed;
+
+    /**
+     * 组合系列
+     */
+    private String portfolioSeries;
     
     /**
      * 获取 settleSpreed
@@ -609,4 +614,11 @@ public class EtribRepoInfo003Dto  extends EtrEntrust implements ProcessEntity {
 		this.bussRepoSec = bussRepoSec;
 	}
 
+    public String getPortfolioSeries() {
+        return portfolioSeries;
+    }
+
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries;
+    }
 }

@@ -728,8 +728,11 @@
             var chlFinprodId = $("#chlFinprodId").val();
             var finprodIdhid = $("#finprodIdhid").val();
             var termType = $("#termType").val();
+            var vdate = $("#vdate").val();
+            var ccy = $("#ccy").val();
             if (todoList == false) {
                 parent.EtrIbRepoinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId, termType);
+                window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
             }
             
             setBussRepoSecInput();

@@ -104,6 +104,15 @@ public class EtrIbRepoLibService extends BaseService<EtrIbRepoLibDto> implements
         if (StringUtil.isNotEmpty(params.get("secAcctId"))) {
             params.put("secAcctId", StringUtil.splitToList(",", (String)params.get("secAcctId")));
         }
+
+        if (StringUtil.isNotEmpty(params.get("secType"))) {
+            params.put("secType", StringUtil.splitToList(",", (String)params.get("secType")));
+        }
+
+        if (StringUtil.isNotEmpty(params.get("mainGrade"))) {
+            params.put("mainGrade", StringUtil.splitToList(",", (String)params.get("mainGrade")));
+        }
+
         list = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepoLib001/selectAvaPledgeBondList",
                 params, EtrIbRepoLibDto.class);
         
