@@ -166,11 +166,11 @@
 	    LEFT JOIN
 		    bok_ACCT_STANDARD B
 		    ON B.ACCT_STANDARD_ID=A.ACCT_STANDARD
-		<if test="userId != null and userId != ''">
-		 INNER JOIN PTL_PORTFOLIO_AUTHORITY
-	             ON PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID = REPLACE(A.BOOKSET_ID,'F16_','')
-		        AND USER_ID = #{userId}
-		</if>    
+<!--		<if test="userId != null and userId != ''">-->
+<!--		 INNER JOIN PTL_PORTFOLIO_AUTHORITY-->
+<!--	             ON PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID = REPLACE(A.BOOKSET_ID,'F16_','')-->
+<!--		        AND USER_ID = #{userId}-->
+<!--		</if>    -->
 		WHERE
 		    ACCT_SUBJECT_TYPE IN ('F16','F18')    
 		    AND BOOKSET_TYPE=#{booksetType} and BOOKSET_TYPE in ('02','03')
@@ -257,11 +257,11 @@
 		UNION ALL
 		SELECT BOOKSET_ID id,BOOKSET_NAME text,BOOKSET_TYPE
 		FROM BOK_BOOKSET
-		<if test="userId != null and userId != ''">
-		 INNER JOIN PTL_PORTFOLIO_AUTHORITY
-	             ON PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID = REPLACE(BOK_BOOKSET.BOOKSET_ID,'F16_','')
-		        AND USER_ID = #{userId}
-		</if>
+<!--		<if test="userId != null and userId != ''">-->
+-- 		 INNER JOIN PTL_PORTFOLIO_AUTHORITY
+-- 	             ON PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID = REPLACE(BOK_BOOKSET.BOOKSET_ID,'F16_','')
+-- 		        AND USER_ID = #{userId}
+<!--		</if>-->
 		<where>
 		        AND ACCT_SUBJECT_TYPE IN ('F16','F18')
 			<if test="booksetType !=null and booksetType != ''">
