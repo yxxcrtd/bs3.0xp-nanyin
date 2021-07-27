@@ -722,7 +722,51 @@ public class LendBookDetailProcessDealService {
                     }
                 }
                 //update by xr for TISHKBS-687 end
-                                
+                // 定义  变量.利息差额_本位币  = 	实收金额_本位币 - (本金金额 _本位币 + 利息金额_本位币)
+                BigDecimal subResultBccy = ArithmeticUtil.doSub(
+                    accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+                    ArithmeticUtil.doAdd(accountAmountMap.get(BookConstant.COST + BookConstant.BCCYAMT)
+                        , accountAmountMap.get(lxJeYs + BookConstant.BCCYAMT)));
+                if(DictCodeListExt1.金融产品类型_拆入.getValue().equals(dealDto.getFinprodType())){
+                    // 利息支出差额设置（借负，贷正）
+                    if (subResultBccy.compareTo(BigDecimal.ZERO) > 0) {
+
+                        //变量.利息差额金额元素 <- 交易明细.利息总额 - 变量.冲减应计利息
+                        accountAmountMap.put(lxCeJeYs_D + BookConstant.BCCYAMT, subResultBccy.abs());
+                    }
+                    else {
+                        //变量.利息差额金额元素 <- (交易明细.利息总额 - 变量.冲减应计利息)*-1
+                        accountAmountMap.put(lxCeJeYs_C+ BookConstant.BCCYAMT, subResult.abs());
+                    }
+                }else{
+                    // 利息支出差额设置（借正，贷负）
+                    if (subResultBccy.compareTo(BigDecimal.ZERO) > 0) {
+                        //变量.利息差额金额元素 <- 交易明细.利息总额 - 变量.冲减应计利息
+                        accountAmountMap.put(lxCeJeYs_C+ BookConstant.BCCYAMT, subResult.abs());
+                    }
+                    else {
+                        //变量.利息差额金额元素 <- (交易明细.利息总额 - 变量.冲减应计利息)*-1
+                        accountAmountMap.put(lxCeJeYs_D+ BookConstant.BCCYAMT, subResult.abs());
+                    }
+                }
+
+                accountCurrencyMap.put(BookConstant.B_CCY, acctEntity.getStandardCcy());
+                // 记账金额元素币种信息塞值
+                accountCurrencyMap.put(BookConstant.B_CCY, acctEntity.getStandardCcy());
+                // 因为与记账金额元素map的key及数量一致，故采用循环
+                for (String keyNow : accountAmountMap.keySet()) {
+                    accountCurrencyMap.put(keyNow, dealDto.getCcy());// 币种 - 交易明细.交易币种
+                }
+
+                // map塞入场景要素管理中
+                ad.setAccountSceneMap(accountSceneMap);// 记账场景要素
+                ad.setAccountAmountMap(accountAmountMap);// 记账金额要素
+                ad.setAccountCurrencyMap(accountCurrencyMap);// 记账金额币种要素
+                // 记账凭证生成
+                BookGenerateResult resultNowNow = bookLogic.genAccount(ad, batchExecuteInfo);
+                // 因为当前属于同一个维度，故将生成的账务名中的账务明细（当前表）数据，累加到返回数据中
+                rtnResult.getValBokBookdetailBatch().addAll(resultNowNow.getValBokBookdetailBatch());
+
                 // 全局变量的更新
                 // 变量.成本科目余额 = 变量.成本科目余额 - 变量.冲减成本
                 glb_subjectAmt = ArithmeticUtil.doSub(glb_subjectAmt, cjAmt);
