@@ -99,7 +99,7 @@ var table;
 	        if ($('#select2-finprodId-container').attr('title')){
 	            object.finprodName = $('#select2-finprodId-container').attr('title');
 	        }
-			object.tradeAmt = JoyinMath.doMul( !$("#tradeAmt").val()?0:$("#ownTradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
+			object.tradeAmt = JoyinMath.doMul( !$("#tradeAmt").val()?0:$("#tradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
             object.ownTradeAmt = JoyinMath.doMul( !$("#ownTradeAmt").val()?0:$("#ownTradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
             object.integrateTradeAmt = JoyinMath.doMul( !$("#integrateTradeAmt").val()?0:$("#integrateTradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
             object.finprodId = $("#finprodId").val();
