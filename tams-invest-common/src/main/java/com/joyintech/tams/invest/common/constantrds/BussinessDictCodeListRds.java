@@ -5670,6 +5670,17 @@ public enum BussinessDictCodeListRds implements BaseDictCodeList {
     ), 募集方式_私募(
             BussinessDictCodeRds.募集方式, "2", "私募"
     ),
+
+    /**
+     * 特定资产类型设置
+     */
+    共同业务类型_特定资产类型设置(BussinessDictCodeRds.共同业务类型, "RSK34", "特定资产类型设置"),
+
+    /**
+     * 流动性权重配置
+     */
+    共同业务类型_流动性权重配置(BussinessDictCodeRds.共同业务类型, "RSK35", "流动性权重配置"),
+
     枚举LIST_EXT转换LIST(BussinessDictCodeRds.是否,"Y","是"
     )
     , 参数数据类型_文本(
