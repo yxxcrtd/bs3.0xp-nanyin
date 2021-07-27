@@ -1068,6 +1068,14 @@
   	 ORDER BY t1.PBC_SUBMIT_DEADLINE ASC, t1.UPDATE_TIME DESC
   	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
   </select>
+
+	<select id="selectPbcBankCodeName" parameterType="java.lang.String" resultType="java.lang.String">
+        select
+        corb.PBC_BANK_CODE
+        from CHB_ORG_REGIST_BANK_CODE corb
+        where
+        corb.REGIST_BANK_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
   
   <!-- 手工处理 -->
   <update id="doManul" parameterType="map">

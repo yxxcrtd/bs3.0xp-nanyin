@@ -51,7 +51,7 @@
   (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
 	row_number() OVER (partition BY PBC_PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME)
 	DESC) AS myrank
-	FROM pbc_prd_baseinfo_sub) a
+	FROM pbc_prd_baseinfo_sub_new) a
 	WHERE a.myrank=1)
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >

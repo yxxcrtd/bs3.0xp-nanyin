@@ -60,7 +60,7 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
-	private PbcPrdBaseinfoEndSubNewMapper pbcPrdBaseinfoEndSubMapper;
+	private PbcPrdBaseinfoEndSubNewMapper pbcPrdBaseinfoEndSubNewMapper;
 
 	@Autowired
 	private SqlSessionTemplate template;
@@ -93,12 +93,12 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 				if (end > prodIdList.size()) {
 					end = prodIdList.size();
 				}
-				prodidsublist.addAll(pbcPrdBaseinfoEndSubMapper.getProdIdsByEndSub(DateUtil.format(executeDate),
+				prodidsublist.addAll(pbcPrdBaseinfoEndSubNewMapper.getProdIdsByEndSub(DateUtil.format(executeDate),
 						DictCodeListExt2.业务种类_到期兑付.getValue(), prodIdList.subList(i, end)));
 				i = end;
 			}
 		} else {
-			prodidsublist = pbcPrdBaseinfoEndSubMapper.getProdIdsByEndSub(DateUtil.format(executeDate),
+			prodidsublist = pbcPrdBaseinfoEndSubNewMapper.getProdIdsByEndSub(DateUtil.format(executeDate),
 					DictCodeListExt2.业务种类_到期兑付.getValue(), prodIdList);
 		}
 		if (!CollectionUtils.isEmpty(prodidsublist)) {
@@ -116,11 +116,11 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 			// 分批查询
 			for (int i = 0; i < endprods.size(); i++) {
 				// 查询产品基本信息
-				List<PbcPrdBaseinfoEndSubNew> prodinfolist = pbcPrdBaseinfoEndSubMapper.getProdInfoByEndSub(endprods.get(i));
+				List<PbcPrdBaseinfoEndSubNew> prodinfolist = pbcPrdBaseinfoEndSubNewMapper.getProdInfoByEndSub(endprods.get(i));
 				// 查询费用头寸
-				List<ChbPrdFeePosition> fee = pbcPrdBaseinfoEndSubMapper.getPrdFeePositionList(endprods.get(i));
+				List<ChbPrdFeePosition> fee = pbcPrdBaseinfoEndSubNewMapper.getPrdFeePositionList(endprods.get(i));
 				// 查询交易头寸
-				List<ChbPrdPosition> deal = pbcPrdBaseinfoEndSubMapper.getPrdDealPositionList(endprods.get(i));
+				List<ChbPrdPosition> deal = pbcPrdBaseinfoEndSubNewMapper.getPrdDealPositionList(endprods.get(i));
 				prodidlist.addAll(prodinfolist);
 				feeList.addAll(fee);
 				dealList.addAll(deal);
@@ -161,7 +161,7 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 					sub.setDealPositionList(listDeal);
 					// 按产品维度查询产品终止信息map(key:币种)
 					Map<String,PbcPrdBaseinfoEndSubNew> regMap = new HashMap<String,PbcPrdBaseinfoEndSubNew>();
-					List<PbcPrdBaseinfoEndSubNew> regList = pbcPrdBaseinfoEndSubMapper.selectRegList(sub);
+					List<PbcPrdBaseinfoEndSubNew> regList = pbcPrdBaseinfoEndSubNewMapper.selectRegList(sub);
 					String status = "";
 					if(!CollectionUtils.isEmpty(regList)){
 						//按照产品、币种维度生成map
@@ -289,7 +289,7 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
     // 切换数据源
     @DataSource(DataSourceType.INTERF)
     public BigDecimal queryBookBalanceLevel1(Date cdate,String prodid){
-    	return pbcPrdBaseinfoEndSubMapper.queryBookBalanceLevel1(cdate,prodid);
+    	return pbcPrdBaseinfoEndSubNewMapper.queryBookBalanceLevel1(cdate,prodid);
     }
 
     /**
@@ -304,7 +304,7 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
      */
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public BigDecimal queryBookBalanceLevel1SubSystem(Date cdate,String prodid){
-    	return pbcPrdBaseinfoEndSubMapper.queryBookBalanceLevel1SubSystem(cdate,prodid);
+    	return pbcPrdBaseinfoEndSubNewMapper.queryBookBalanceLevel1SubSystem(cdate,prodid);
     }
 	private void intoDatabase(List<PbcPrdBaseinfoEndSubNew> insertlist, List<PbcPrdBaseinfoEndSubNew> deletelist) {
 		// 插入前先删除未报送的登记数据
@@ -316,10 +316,10 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 		for (int index = 0; index < deletelist.size();) {
 			if (batchDeleteLastIndex > deletelist.size() - 1) {
 				batchDeleteLastIndex = deletelist.size();
-				pbcPrdBaseinfoEndSubMapper.deleteBatch(deletelist.subList(index, batchDeleteLastIndex));
+				pbcPrdBaseinfoEndSubNewMapper.deleteBatch(deletelist.subList(index, batchDeleteLastIndex));
 				break;// 数据插入完毕,退出循环
 			} else {
-				pbcPrdBaseinfoEndSubMapper.deleteBatch(deletelist.subList(index, batchDeleteLastIndex));
+				pbcPrdBaseinfoEndSubNewMapper.deleteBatch(deletelist.subList(index, batchDeleteLastIndex));
 				index = batchDeleteLastIndex;// 设置下一批下标
 				batchDeleteLastIndex = index + batchDeleteCount;
 			}

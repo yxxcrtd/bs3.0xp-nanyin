@@ -42,6 +42,9 @@ public interface PbcPrdBaseinfoSubNewMapper {
 	int insertHisBatchBySendStatus(List<PbcPrdBaseinfoSubNew> insertList);
 	
 	void deleteBatchBySendStatus(List<PbcPrdBaseinfoSubNew> deleteList);
+
+	/***根据中债编码获取人行编码**/
+	String selectPbcBankCodeName(String orgCode);
 	
 	/**
 	 * 查询所有不是删除状态的人行产品信息

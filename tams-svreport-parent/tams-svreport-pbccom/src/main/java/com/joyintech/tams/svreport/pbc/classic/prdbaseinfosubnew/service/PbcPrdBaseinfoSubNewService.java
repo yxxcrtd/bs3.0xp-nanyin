@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.service;
 
 import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
 public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBaseinfoSubNew>{
 
 	@Autowired
-	private PbcPrdBaseinfoSubNewMapper pbcPrdBaseinfoSubMapper;
+	private PbcPrdBaseinfoSubNewMapper pbcPrdBaseinfoSubNewMapper;
 	@Autowired
 	private SqlSessionTemplate template;
 	/**
@@ -70,13 +71,14 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 		PbcPrdBaseinfoSubNew qmodle=new PbcPrdBaseinfoSubNew();
 		qmodle.setStatusDate(executeDate);
 		qmodle.setProdList(prodIdList);
-		List<PbcPrdBaseinfoSubNew> needRegistSubList=pbcPrdBaseinfoSubMapper.selectNeedRegisteData(qmodle);
+		List<PbcPrdBaseinfoSubNew> needRegistSubList=pbcPrdBaseinfoSubNewMapper.selectNeedRegisteData(qmodle);
 		if(CollectionUtils.isEmpty(needRegistSubList)){
 			return;
 		}
+		/***新人行获取ex映射时候取getSrcfield2 字段**/
 		 List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
 	                .selectByMappingcode(PbcAssetPositionConstants.MAPPINGCODE_DEPT_CODE_CHBTOPBC);
-	        Map<String,ChbTypeMappingEx> inDepCodeMap = subjectNoMappingList.stream().collect(Collectors.toMap(ChbTypeMappingEx::getSrcfield1, a -> a,(k1,k2)->k1));
+	        Map<String,ChbTypeMappingEx> inDepCodeMap = subjectNoMappingList.stream().collect(Collectors.toMap(ChbTypeMappingEx::getSrcfield2, a -> a,(k1,k2)->k1));
 		Map<String,PbcPrdBaseinfoSubNew> regMap = new HashMap<String,PbcPrdBaseinfoSubNew>();
 		Map<String,String > pbcProdIdMap = new HashMap<String,String>();
 		//查询已生成人行产品代码的数据
@@ -86,10 +88,10 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
          for(int index = 0; index < needRegistSubList.size();){
              if(batchLastIndex > needRegistSubList.size()-1){
                  batchLastIndex = needRegistSubList.size();
-                 allPbcProdIdlist.addAll(pbcPrdBaseinfoSubMapper.selectAllRegisteData(needRegistSubList.subList(index, batchLastIndex)));
+                 allPbcProdIdlist.addAll(pbcPrdBaseinfoSubNewMapper.selectAllRegisteData(needRegistSubList.subList(index, batchLastIndex)));
                  break;//数据插入完毕,退出循环
              }else{
-            	 allPbcProdIdlist.addAll(pbcPrdBaseinfoSubMapper.selectAllRegisteData(needRegistSubList.subList(index, batchLastIndex)));
+            	 allPbcProdIdlist.addAll(pbcPrdBaseinfoSubNewMapper.selectAllRegisteData(needRegistSubList.subList(index, batchLastIndex)));
                  index = batchLastIndex;//设置下一批下标
                  batchLastIndex = index + batchCount;                     
              }
@@ -106,15 +108,15 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
         for(int index = 0; index < needRegistSubList.size();){
             if(batchLastIndex1 > needRegistSubList.size()-1){
             	batchLastIndex1 = needRegistSubList.size();
-            	allPbcAccountIdlist.addAll(pbcPrdBaseinfoSubMapper.selectAllRegisteAccountData(needRegistSubList.subList(index, batchLastIndex1)));
+            	allPbcAccountIdlist.addAll(pbcPrdBaseinfoSubNewMapper.selectAllRegisteAccountData(needRegistSubList.subList(index, batchLastIndex1)));
                 break;//数据插入完毕,退出循环
             }else{
-            	allPbcAccountIdlist.addAll(pbcPrdBaseinfoSubMapper.selectAllRegisteAccountData(needRegistSubList.subList(index, batchLastIndex1)));
+            	allPbcAccountIdlist.addAll(pbcPrdBaseinfoSubNewMapper.selectAllRegisteAccountData(needRegistSubList.subList(index, batchLastIndex1)));
                 index = batchLastIndex1;//设置下一批下标
                 batchLastIndex1 = index + batchCount;                     
             }
         }
-//				pbcPrdBaseinfoSubMapper.selectAllRegisteAccountData(needRegistSubList);
+//				pbcPrdBaseinfoSubNewMapper.selectAllRegisteAccountData(needRegistSubList);
 		 if(!CollectionUtils.isEmpty(allPbcAccountIdlist)){
 			 for(PbcPrdAccountSub regdto : allPbcAccountIdlist){
 				 pbcAccountIdMap.put(regdto.getAccountId(), regdto.getPbcAccountId());
@@ -126,15 +128,15 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
         for(int index = 0; index < needRegistSubList.size();){
             if(batchLastIndex2 > needRegistSubList.size()-1){
             	batchLastIndex2 = needRegistSubList.size();
-            	reglist.addAll(pbcPrdBaseinfoSubMapper.selectAlReadyRegisteData(needRegistSubList.subList(index, batchLastIndex2)));
+            	reglist.addAll(pbcPrdBaseinfoSubNewMapper.selectAlReadyRegisteData(needRegistSubList.subList(index, batchLastIndex2)));
                 break;//数据插入完毕,退出循环
             }else{
-            	reglist.addAll(pbcPrdBaseinfoSubMapper.selectAlReadyRegisteData(needRegistSubList.subList(index, batchLastIndex2)));
+            	reglist.addAll(pbcPrdBaseinfoSubNewMapper.selectAlReadyRegisteData(needRegistSubList.subList(index, batchLastIndex2)));
                 index = batchLastIndex2;//设置下一批下标
                 batchLastIndex2 = index + batchCount;                     
             }
         }
-//				pbcPrdBaseinfoSubMapper.selectAlReadyRegisteData(needRegistSubList);
+//				pbcPrdBaseinfoSubNewMapper.selectAlReadyRegisteData(needRegistSubList);
 		 if(!CollectionUtils.isEmpty(reglist)){
              for(PbcPrdBaseinfoSubNew regdto : reglist){
             	 regMap.put(regdto.getProdId(), regdto);
@@ -160,6 +162,8 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 	        		sub.setAccountId(pbcAccountIdMap.get(sub.getProdId()));
 	        	}
 	            sub.setRegistSeqno(IDGenerator.generate(36));
+	        	/**根据中债码获取人行机构编码**/
+				sub.setIssuePartyId(this.getPbcBankCode(sub.getIssuePartyId()));
 	            sub.setCreateUser(CommonUtil.getUserName());
 	            sub.setUpdateUser(CommonUtil.getUserName());
 	            sub.setCreateDept(CommonUtil.getDeptCode());
@@ -244,10 +248,10 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
             for(int index = 0; index < deleteDataList.size();){
                 if(batchLastIndex > deleteDataList.size()-1){
                     batchLastIndex = deleteDataList.size();
-                    pbcPrdBaseinfoSubMapper.deleteByProdid(deleteDataList.subList(index, batchLastIndex));
+                    pbcPrdBaseinfoSubNewMapper.deleteByProdid(deleteDataList.subList(index, batchLastIndex));
                     break;//数据插入完毕,退出循环
                 }else{
-                	pbcPrdBaseinfoSubMapper.deleteByProdid(deleteDataList.subList(index, batchLastIndex));
+                	pbcPrdBaseinfoSubNewMapper.deleteByProdid(deleteDataList.subList(index, batchLastIndex));
                     index = batchLastIndex;//设置下一批下标
                     batchLastIndex = index + batchCount;                     
                 }
@@ -296,6 +300,20 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
             return false;
         }
     }
+
+	/**
+	 * 根据中债编码获取人行机构编码
+	 * @return
+	 */
+	public String getPbcBankCode(String IssuePartyId){
+		String orgCode = "";
+		String code = pbcPrdBaseinfoSubNewMapper.selectPbcBankCodeName(IssuePartyId);
+		if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isEmpty(code)){
+			code=CacheUtil.getSysParam("SVR_ISSUE_PARTY_ID");
+		}
+		return null!=code?code:"";
+	}
+
     private PbcPrdBaseinfoSubNew genIssueDto(PbcPrdBaseinfoSubNew dto){
     	PbcPrdBaseinfoSubNew gendto = new PbcPrdBaseinfoSubNew();
     	gendto.setIssuePartyId(dto.getIssuePartyId());
@@ -362,7 +380,7 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
         data.put("report", pbcPrdBaseinfoSub);*/
         // 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
-        List<PbcPrdBaseinfoSubNew> listDetail = pbcPrdBaseinfoSubMapper.searchPage(param);
+        List<PbcPrdBaseinfoSubNew> listDetail = pbcPrdBaseinfoSubNewMapper.searchPage(param);
         if (!CollectionUtils.isEmpty(listDetail)) {
             for (PbcPrdBaseinfoSubNew detail : listDetail) {
                 // 处理数据
