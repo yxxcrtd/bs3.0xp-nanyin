@@ -26,12 +26,12 @@
     </resultMap>
     
     <sql id="Base_Column_List" >
-        BUSI_ACCT_NO, CCY, ACCT_NO, ACCT_NAME, BANK_DEP, 
-        IN_OUT_BANK, CORR_NO, LARGE_PAYNO, SWIFT_CODE, 
+		STL_CAPACCT_INFO.BUSI_ACCT_NO, STL_CAPACCT_INFO.CCY, STL_CAPACCT_INFO.ACCT_NO, STL_CAPACCT_INFO.ACCT_NAME, STL_CAPACCT_INFO.BANK_DEP,
+		STL_CAPACCT_INFO.IN_OUT_BANK, STL_CAPACCT_INFO.CORR_NO, STL_CAPACCT_INFO.LARGE_PAYNO, STL_CAPACCT_INFO.SWIFT_CODE,
         <!-- 一体化对应etliu -->
-        BLN_AREA, IS_OVERDRAW, <!-- IS_DVP, DVP_RETUEN_ACCT_NO, -->REMARK, 
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME
+		STL_CAPACCT_INFO.BLN_AREA, STL_CAPACCT_INFO.IS_OVERDRAW, <!-- IS_DVP, DVP_RETUEN_ACCT_NO, -->REMARK,
+		STL_CAPACCT_INFO.CREATE_USER, STL_CAPACCT_INFO.CREATE_DEPT, STL_CAPACCT_INFO.CREATE_TIME, STL_CAPACCT_INFO.UPDATE_USER,
+		STL_CAPACCT_INFO.UPDATE_TIME
     </sql>
     
     <select id="select" resultMap="BaseResultMap">
@@ -53,6 +53,13 @@
         select 
         <include refid="Base_Column_List" />
         from STL_CAPACCT_INFO
+		<if test="validInstitutionCode != null and validInstitutionCode != ''">
+			inner join data_auth_notify_inst dani
+			on dani.data_type = 'MST09'
+			and dani.model_type = '02'
+			and dani.institution_code = #{validInstitutionCode,jdbcType=VARCHAR}
+			and dani.business_id = STL_CAPACCT_INFO.seq_no
+		</if>
         <where>
 			<if test="acctName != null and acctName != ''">
 				ACCT_NAME like concat('%',concat(#{acctName,jdbcType=VARCHAR},'%'))
@@ -166,6 +173,13 @@
 		select
 		count(1)
 		from STL_CAPACCT_INFO
+		<if test="validInstitutionCode != null and validInstitutionCode != ''">
+			inner join data_auth_notify_inst dani
+			on dani.data_type = 'MST09'
+			and dani.model_type = '02'
+			and dani.institution_code = #{validInstitutionCode,jdbcType=VARCHAR}
+			and dani.business_id = STL_CAPACCT_INFO.seq_no
+		</if>
 		<where>
 			<if test="busiAcctNo != null and busiAcctNo != ''">
 				AND	BUSI_ACCT_NO = #{busiAcctNo,jdbcType=VARCHAR}

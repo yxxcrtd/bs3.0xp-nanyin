@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.joyintech.tams.common.base.entity.FinFloatCalcRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
@@ -261,5 +263,17 @@ public class FinOpenPlanMaintenanceService  extends BaseService<FinOpenPlanMaint
     	paraMap.put("cash_type_1", "01");
     	paraMap.put("cash_type_2", "C01");
         return finOpenPlanMaintenanceMapper.selectOpenPlanParamDto(paraMap);
+    }
+
+    /**
+     * 根据金融产品代码查询业绩报酬计算规则
+     * <功能详细描述>
+     * @param param
+     * @return FinFloatCalcRule FinFloatCalcRule
+     * @see
+     * @since 1.0
+     */
+    public List<FinFloatCalcRule> getFinFloatCalcRuleByFinProdId(Map<String,Object> param) {
+        return finOpenPlanMaintenanceMapper.getFinFloatCalcRuleByFinProdId(param);
     }
 }

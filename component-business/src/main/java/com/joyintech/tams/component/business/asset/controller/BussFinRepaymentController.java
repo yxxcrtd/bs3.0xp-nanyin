@@ -296,6 +296,6 @@ public class BussFinRepaymentController extends BaseController{
     @ResponseBody
     @RequestMapping("genPayDate")
     public String genPayDate() {
-        return JsonSanitizer.sanitize(bussFinRepaymentService.genPayDate(RequestUtil.getPageParam()));
+        return bussFinRepaymentService.genPayDate(RequestUtil.getPageParam());
     }
 }

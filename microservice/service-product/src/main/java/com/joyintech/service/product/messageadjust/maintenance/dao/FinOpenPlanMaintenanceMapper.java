@@ -13,6 +13,7 @@ package com.joyintech.service.product.messageadjust.maintenance.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.FinFloatCalcRule;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -132,4 +133,15 @@ public interface FinOpenPlanMaintenanceMapper {
     * 开放计划信息参数查询 String finprodId
     */
    OpenPlanParamDto selectOpenPlanParamDto(Map<String,Object> paraMap);
+
+
+    /**
+     * 根据金融产品代码查询业绩报酬计算规则
+     * <功能详细描述>
+     * @param
+     * @return FinFloatCalcRule FinFloatCalcRule
+     * @see
+     * @since 1.0
+     */
+    List<FinFloatCalcRule> getFinFloatCalcRuleByFinProdId(Map<String,Object> paraMap);
 }

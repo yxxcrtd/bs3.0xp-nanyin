@@ -10,12 +10,12 @@
  
 package com.joyintech.tams.invest.product.messageadjust.maintenance.validate;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.joyintech.tools.collectors.JoyinCollectors;
+import java.util.stream.Collectors;
+import com.joyintech.tams.common.base.entity.FinFloatCalcRule;
+import com.joyintech.tams.invest.product.messageadjust.maintenance.service.FinOpenPlanMaintenanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +44,11 @@ public class FinOpenPlanMaintenanceValidator implements BeanValidator{
     @Autowired
     private FinOpenRuleMapper finOpenRuleMapper;
     /**
+     * 现金流信息
+     */
+    @Autowired(required=false)
+    private FinOpenPlanMaintenanceService finOpenPlanMaintenanceService;
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -70,6 +75,57 @@ public class FinOpenPlanMaintenanceValidator implements BeanValidator{
             	}
             }
             //add by wm 2019-08-01增加净值型产品查询净值日取值规则，当净值日取值规则为 工作日-1时，不校验其净值日与开放起始日的大小 end
+            //List<FinOpenPlanMaintenanceDto> tempList = selectedDto.stream().filter(item -> !(item.getUpdateFlagStr().equals("02"))).collect(Collectors.toList());
+            List<FinOpenPlanMaintenanceDto> tempList =selectedDto;
+            if(tempList != null && tempList.size() > 1){
+                Collections.sort(tempList, new Comparator<FinOpenPlanMaintenanceDto>() {
+                    @Override
+                    public int compare(FinOpenPlanMaintenanceDto o1, FinOpenPlanMaintenanceDto o2) {
+                        return o1.getOpenVdate().compareTo(o2.getOpenVdate());
+                    }
+                });
+                //查询产品的 浮动管理费报价的生效日
+                Map<String, Object> param = new HashMap<>();
+                param.put("finprodId", dto.getFinprodId());
+                param.put("CASH_TYPE_1_03", DictCodeListExt1.现金流一级类型_费用.getValue());
+                param.put("CASH_TYPE_2_C04", DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+                List<FinFloatCalcRule> finFloatCalcRuleList = finOpenPlanMaintenanceService.getFinFloatCalcRuleByFinProdId(param);
+                for(int i = 0;i<tempList.size()-1;i++){
+                    int count = 0;//同一个业绩报酬计划报价条数
+                    //构建业绩报酬计提计划
+                    Date OpenVStartDate;//业绩报酬计提计划开始日
+                    Date OpenVEndDate;//业绩报酬计提计划结束日
+                    Date openVdate;//产品起息日
+                    if(i==0){
+                        openVdate = DateUtil.addDay(DateUtil.parse(dto.getVdate()),-1);
+                        OpenVStartDate = DateUtil.parse("2000-01-01");
+                        if(StringUtil.equals(DictCodeList.收益类型_净值型.getValue(), dto.getProfitType())){
+                            OpenVEndDate = tempList.get(0).getOpenNdate();
+                        }else{
+                            OpenVEndDate = tempList.get(0).getOpenDateEnd();
+                        }
+                    }else{
+                        if(StringUtil.equals(DictCodeList.收益类型_净值型.getValue(), dto.getProfitType())){
+                            openVdate = tempList.get(i-1).getOpenNdate();
+                            OpenVStartDate = tempList.get(i-1).getOpenNdate();
+                            OpenVEndDate = tempList.get(i).getOpenNdate();
+                        }else{
+                            openVdate = tempList.get(i-1).getOpenDateEnd();
+                            OpenVStartDate = tempList.get(i-1).getOpenDateEnd();
+                            OpenVEndDate = tempList.get(i).getOpenDateEnd();
+                        }
+                    }
+                    for(FinFloatCalcRule finFloatCalcRule : finFloatCalcRuleList){
+                        if(OpenVStartDate.compareTo(finFloatCalcRule.getEffDate())<0 && OpenVEndDate.compareTo(finFloatCalcRule.getEffDate())>=0){
+                            count = count+1;
+                        }
+                    }
+                    if(count>1){
+                        resultList.add(new ValidMessage(getMessage("FIN_PROD_E_0400",DateUtil.format(openVdate),"至",DateUtil.format(OpenVEndDate))));
+                        break;
+                    }
+                }
+            }
             for(int i = 0; i< selectedDto.size(); i++ ){
                 FinOpenPlanMaintenanceDto entity = selectedDto.get(i);
                 if(!StringUtil.equals(entity.getUpdateFlagStr(), "02")){
