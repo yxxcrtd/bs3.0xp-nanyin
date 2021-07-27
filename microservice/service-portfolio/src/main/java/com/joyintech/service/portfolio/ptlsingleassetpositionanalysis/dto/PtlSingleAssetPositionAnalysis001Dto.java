@@ -18,7 +18,9 @@ import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.grid.GridRowDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCode;
 import org.apache.commons.lang3.StringUtils;
+import com.joyintech.framework.util.SysDataUtil;
 
 /**
  * 单一资产持仓分析Dto
@@ -99,6 +101,16 @@ public class PtlSingleAssetPositionAnalysis001Dto extends BaseDto implements Gri
      * 子节点
      */
     private String childInfo;
+    // add by swwan [重庆银行] 增加资产占比，产品募集方式 2021年7月26日 start
+    /**
+     * 资产占比
+     */
+    private BigDecimal assetRatio;
+    /**
+     * 产品募集方式
+     */
+    private String ptlIssueType;
+    // add by swwan [重庆银行] 增加资产占比，产品募集方式 2021年7月26日 end
     /**
      * 获取 finprodAbbr
      * 
@@ -436,5 +448,21 @@ public class PtlSingleAssetPositionAnalysis001Dto extends BaseDto implements Gri
 
     public String getBelongInstitutionNameNew() {
         return StringUtils.isNotEmpty(this.belongInstitutionCodeNew) ? String.valueOf(CacheUtil.getAppCacheInstitutionCodeName(this.belongInstitutionCodeNew)) : this.belongInstitutionCodeNew;
+    }
+
+    public BigDecimal getAssetRatio() {
+        return assetRatio;
+    }
+
+    public void setAssetRatio(BigDecimal assetRatio) {
+        this.assetRatio = assetRatio;
+    }
+
+    public String getPtlIssueType() {
+        return ptlIssueType;
+    }
+
+    public void setPtlIssueType(String ptlIssueType) {
+        this.ptlIssueType = ptlIssueType;
     }
 }
