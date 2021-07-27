@@ -10,7 +10,6 @@
  
 package com.joyintech.tams.invest.common.component.base.core.impl;
 
-import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
@@ -91,6 +90,11 @@ public class PlatformDateImpl implements IPlatformDate {
 
     public Date selectCommonSysDate(){
         return platformDateImplMapper.getCommonSysDate();
+    }
+
+    @Override
+    public int insertSysDate(InstitutionDate institutionDate) {
+        return platformDateImplMapper.insertInstitutionDate(institutionDate);
     }
 
     /**
