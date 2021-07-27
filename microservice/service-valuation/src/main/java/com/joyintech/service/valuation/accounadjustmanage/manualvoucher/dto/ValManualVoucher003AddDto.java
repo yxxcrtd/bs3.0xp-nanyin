@@ -10,11 +10,10 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto;
 
-import java.math.BigDecimal;
-
+import com.joyintech.framework.base.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
-import com.joyintech.framework.base.BaseEntity;
+import java.math.BigDecimal;
 
 /**
  * 手工凭证添加到表格校验Dto
@@ -151,6 +150,16 @@ public class ValManualVoucher003AddDto extends BaseEntity {
      * 本币借方金额
      */
     private BigDecimal bdHappenAmt;
+
+    /**
+     * 金额
+     */
+    private BigDecimal happenAmt;
+
+    /**
+     * 本币金额
+     */
+    private BigDecimal bHappenAmt;
 
     /**
      * 获取 科目号
@@ -572,4 +581,12 @@ public class ValManualVoucher003AddDto extends BaseEntity {
 	public void setBdHappenAmt(BigDecimal bdHappenAmt) {
 		this.bdHappenAmt = bdHappenAmt;
 	}
+
+    public BigDecimal getHappenAmt() {
+        return happenAmt;
+    }
+
+    public void setHappenAmt(BigDecimal happenAmt) {
+        this.happenAmt = happenAmt;
+    }
 }

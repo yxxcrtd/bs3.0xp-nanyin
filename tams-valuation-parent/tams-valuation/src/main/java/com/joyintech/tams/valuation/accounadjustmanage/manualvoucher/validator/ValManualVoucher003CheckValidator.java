@@ -10,18 +10,6 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.validator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
@@ -30,9 +18,20 @@ import com.joyintech.tams.common.base.dao.BokAcctLayeringInfoMapper;
 import com.joyintech.tams.common.base.dao.BokBooksetMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dao.ValManualVoucher003Mapper;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003CheckValidatorDto;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 手工凭证确认校验
@@ -98,7 +97,7 @@ public class ValManualVoucher003CheckValidator implements BeanValidator {
             // 数量为空时
             if (dto.getHappenNumber() == null) {
                 // 数量不能为空
-                String msg = this.getMessage("VAL_COMMON_E_0002",
+                String msg = "科目号["+boksubject.getSubjectNo()+"]"+this.getMessage("VAL_COMMON_E_0002",
                     this.getMessage("ValManualVoucher.happenNumber"));
                 errorList.add(new ValidMessage(msg));
             }
@@ -107,7 +106,7 @@ public class ValManualVoucher003CheckValidator implements BeanValidator {
             // 数量不为空时
             if (dto.getHappenNumber() != null) {
                 // 数量必须为空
-                String msg = this.getMessage("MANUAL_VOUCHER_E_001",
+                String msg = "科目号["+boksubject.getSubjectNo()+"]"+this.getMessage("MANUAL_VOUCHER_E_001",
                     this.getMessage("ValManualVoucher.happenNumber"));
                 errorList.add(new ValidMessage(msg));
             }
@@ -243,7 +242,7 @@ public class ValManualVoucher003CheckValidator implements BeanValidator {
         // 金融产品时 科目尾部名称暂存业务明细类型
         // 画面.业务类型=“理财产品” 并且画面的资产代码对应的业务明细类型=“理财子产品”
         else if (DictCodeListExt1.金融产品类型_理财产品.getValue().equals(dto.getFinprodType())
-                 && dto.getBusiDetailType().equals(DictCodeListExt1.金融产品类型_理财子产品.getValue())) {
+                 && DictCodeListExt1.金融产品类型_理财子产品.getValue().equals(dto.getBusiDetailType())) {//modify by sunshuaishuai 20210305 空指针问题
             BokAcctLayeringInfoKey key = new BokAcctLayeringInfoKey();
             key.setBooksetId(dto.getBooksetId());
             key.setBusiDetailType(dto.getBusiDetailType());

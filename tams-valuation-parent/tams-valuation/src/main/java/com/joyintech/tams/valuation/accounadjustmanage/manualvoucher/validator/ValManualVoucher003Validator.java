@@ -10,18 +10,6 @@
  
 package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.validator;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -30,12 +18,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.BokAcctLayeringInfoMapper;
 import com.joyintech.tams.common.base.dao.BokBooksetDateMapper;
 import com.joyintech.tams.common.base.dao.BokBooksetMapper;
-import com.joyintech.tams.common.base.entity.BokAcctLayeringInfo;
-import com.joyintech.tams.common.base.entity.BokAcctLayeringInfoKey;
-import com.joyintech.tams.common.base.entity.BokBookset;
-import com.joyintech.tams.common.base.entity.BokBooksetDate;
-import com.joyintech.tams.common.base.entity.BokSubject;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListNatureGroup;
@@ -44,6 +27,17 @@ import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManu
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003Dto;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher003Service;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 手工凭证新建校验
@@ -164,7 +158,7 @@ public class ValManualVoucher003Validator implements BeanValidator{
                     // 数量为空时
                     if (detail.getHappenNumber() == null) {
                         // 数量不能为空
-                        String msg = this.getMessage("VAL_COMMON_E_0002",
+                        String msg ="科目号["+boksubject.getSubjectNo()+"]"+this.getMessage("VAL_COMMON_E_0002",
                             this.getMessage("ValManualVoucher.happenNumber"));
                         errorList.add(new ValidMessage(msg));
                         return errorList;
@@ -172,7 +166,7 @@ public class ValManualVoucher003Validator implements BeanValidator{
                 } else {
                     // 数量必须为空
                     if (detail.getHappenNumber() != null) {
-                        String msg = this.getMessage("MANUAL_VOUCHER_E_001",
+                        String msg = "科目号["+boksubject.getSubjectNo()+"]"+this.getMessage("MANUAL_VOUCHER_E_001",
                             this.getMessage("ValManualVoucher.happenNumber"));
                         errorList.add(new ValidMessage(msg));
                         return errorList;
@@ -398,8 +392,6 @@ public class ValManualVoucher003Validator implements BeanValidator{
                     // 设置投资目的
                     dto.setInvAim(dto.getInvAim()==null?invAim:dto.getInvAim());
                 }
-                
-                
                 // 投资目的=“AC” 并且 基本科目性质 IN 非摊余成本对应科目
                 if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(invAim)
                     && acout_kmcx.contains(invAim)) {

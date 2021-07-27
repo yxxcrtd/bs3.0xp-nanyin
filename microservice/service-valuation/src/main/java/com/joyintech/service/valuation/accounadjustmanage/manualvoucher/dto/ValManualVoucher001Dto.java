@@ -10,19 +10,18 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto;
 
-import java.math.BigDecimal;
-
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.validator.ValManualVoucher001Validator;
-import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 手工凭证查询dto
@@ -229,6 +228,26 @@ public class ValManualVoucher001Dto extends BaseEntity implements ProcessEntity 
      * 摘要（凭证说明）
      */
     private String bookRemark;
+
+    /**
+     * 记账顺序
+     */
+    private String accountOrder;
+
+    /**
+     * 分录类型
+     */
+    private String recordType;
+
+    /**
+     * 分录类型
+     */
+    private String busiType;
+
+    /**
+     * 业务类型
+     */
+    private String finprodType;
 
     /**
      * 获取 凭证流水号
@@ -620,4 +639,85 @@ public class ValManualVoucher001Dto extends BaseEntity implements ProcessEntity 
 		this.profitType = profitType;
 	}
 
+    public String getAccountOrder() {
+        return accountOrder;
+    }
+
+    public void setAccountOrder(String accountOrder) {
+        this.accountOrder = accountOrder;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
+    }
+
+    public String getBusiType() {
+        return busiType;
+    }
+
+    public void setBusiType(String busiType) {
+        this.busiType = busiType;
+    }
+
+    public String getFinprodType() {
+        return finprodType;
+    }
+
+    public void setFinprodType(String finprodType) {
+        this.finprodType = finprodType;
+    }
+
+    /**
+     * 自定义现金流编号
+     */
+    private String cashId;
+
+    public String getCashId() {
+        return cashId;
+    }
+
+    public void setCashId(String cashId) {
+        this.cashId = cashId;
+    }
+
+    /**
+     * 投资目的
+     */
+    private String invAim;
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
+    }
+    /*add by sunshuaishuai 20210303 start*/
+    private String tmpCode;
+
+    public String getTmpCode() {
+        return tmpCode;
+    }
+
+    public void setTmpCode(String tmpCode) {
+        this.tmpCode = tmpCode;
+    }
+
+    /**
+     * 分录信息
+     */
+    private List<ValManualVoucher002Dto> listAddDto = new ArrayList<ValManualVoucher002Dto>();
+
+    public List<ValManualVoucher002Dto> getListAddDto() {
+        return listAddDto;
+    }
+
+    public void setListAddDto(List<ValManualVoucher002Dto> listAddDto) {
+        this.listAddDto = listAddDto;
+    }
+    /*add by sunshuaishuai 20210303 end*/
 }
