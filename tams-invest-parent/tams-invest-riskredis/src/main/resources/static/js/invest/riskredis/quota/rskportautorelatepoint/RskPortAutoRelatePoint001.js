@@ -17,14 +17,6 @@ var loadTree = function (callback) {
     $("#mixTree").load(basePath +'invest/riskredis/quota/rskportautorelatepoint/RskPortAutoRelatePoint001/getRuleName',
         {ruleName: $('#rulename').val()}, function (data) {
         	ruleId = '';
-          //update by yantianyuan 二级法人按钮改造 start
-            if(purviewElements.indexOf('_edit')==-1){
-            	$(".node_modify").hide();
-            }
-            if(purviewElements.indexOf('_delete')==-1){
-            	$(".node_delete").hide();
-            }
-          //update by yantianyuan 二级法人按钮改造 end
             if (typeof callback == 'function') {
                 callback();
             }
@@ -118,8 +110,8 @@ $(function () {
                     return  '<i style="color:#0078F0;font-style: normal;cursor: pointer;" class="indName">'+data+'</a>';
                 }
             }
-            , {field: 'indTypeStr',sortField:"indType", title: 'RskPortAutoRelatePoint001.indType'}//指标类型
-            ,{field:'supTypeStr', width:130, title: 'RskPortAutoRelatePoint001.supType',sortField:"supType"}
+            , {field: 'indTypeStr',sortField:"IND_TYPE", title: 'RskPortAutoRelatePoint001.indType'}//指标类型
+            ,{field:'supTypeStr', width:130, title: 'RskPortAutoRelatePoint001.supType',sortField:"SUP_TYPE"}
             ,{field:'warnCond',  title: 'RskPortAutoRelatePoint001.warnCond',render: RskQuotaCommon.transferWarnFoul}
             ,{field:'foulCond', title: 'RskPortAutoRelatePoint001.foulCond',render: RskQuotaCommon.transferWarnFoul}
             ,{field:'approveCond', title: 'RskPortAutoRelatePoint001.approveCond',render: RskQuotaCommon.transferWarnFoul}

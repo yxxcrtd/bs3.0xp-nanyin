@@ -10,23 +10,20 @@
 
 package com.joyintech.tams.valuation.assetsamortize.service;
 
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.base.dao.BokAmoConfigMapper;
-import com.joyintech.tams.common.base.entity.BokAmoConfigKey;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.assetsamortize.dto.ValAssetsAmortizeSet001Dto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 资产摊销
@@ -80,7 +77,7 @@ public class ValAssetsAmortizeSet001Service extends CommonExportService<ValAsset
 //        map.put("booksetType", DictCodeList.账套类别_账套模板.getValue());
 //        return ValAssetsAmortizeSet001Mapper.getBooksetId(map);
     	return restTemplate.postForPage(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/ValAssetsAmortizeSet001/getBooksetId",
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ValAssetBook001/findBooksetIdByPage",
                 map, SelectOptionDto.class);
     }
 

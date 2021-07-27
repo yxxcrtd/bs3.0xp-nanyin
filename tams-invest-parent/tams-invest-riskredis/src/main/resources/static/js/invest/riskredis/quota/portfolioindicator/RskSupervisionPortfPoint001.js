@@ -196,14 +196,7 @@
             }
             ,{field:'portfolioName', width:"30%" , title: 'RskSupervisionPortfPointInd001.portfolioOrBagName'}
             ,{field:'portfolioMix', width:"20%" , title: 'RskSupervisionPortfPoint001.portfolioMix',visible: false}
-            ,{field:'startDate',  width:"20%" ,title: 'RskSupervisionPortfPoint001.effDate',render: function (data, type, row, meta) {
-            	if(typeof row.endDate === 'undefined'){
-            		return   new Date(row.startDate).Format('yyyy-MM-dd') +'-';
-            	}
-            	else{
-            		return   new Date(row.startDate).Format('yyyy-MM-dd') +'-'+ new Date(row.endDate).Format('yyyy-MM-dd');
-            	}
-             }}
+            ,{field:'effDateRange',  width:"20%" ,title: 'RskSupervisionPortfPoint001.effDate'}
             ,{field:'set', sortable:false, title: 'RskSupervisionPortfPoint001.supervisionindividuation',
             	render : function(data, type, row, meta) {
                     return '<i style="color:#0078F0;font-style: normal;cursor: pointer;" class="set">'+'设置'+'</a>';
@@ -323,15 +316,15 @@
 
   //单击左边组合或组合包逻辑
   var leftPortClickFun=function(){
-		  /*  if($("input[name='portfolioLevel']:checked").val()=='01'){
-	      table.showColumns([{field:'portfolioMix', width:250,visible:false}]);
-	  }
-	  else{
-	      table.showColumns([{field:'portfolioMix', width:250,visible:true}]);
-	  }*/
-	table.load();
-	  $('#RskSupervisionPortfPoint001_btn_delete').show();
-	}
+      /*  if($("input[name='portfolioLevel']:checked").val()=='01'){
+            table.showColumns([{field:'portfolioMix', width:250,visible:false}]);
+        }
+        else{
+            table.showColumns([{field:'portfolioMix', width:250,visible:true}]);
+        }*/
+	  table.load();
+        $('#RskSupervisionPortfPoint001_btn_delete').show();
+  }
     /**
      * 画面加载完成
      */
@@ -362,6 +355,9 @@
 		
     	//默认选择第一个（单组合）
 		 $("input[name='portfolioLevel'][value='01']").attr('checked','true');
+		// 风险启动按钮显示 add by yufei 2020819 start
+		$("#RskSupervisionPortfPoint001_btn_play").show();
+		// 风险启动按钮显示 add by yufei 2020819 end
 		 layui.form.render('radio')
     	// 绑定按钮事件
         $('#RskSupervisionPortfPoint001_btn_search').click(function() {

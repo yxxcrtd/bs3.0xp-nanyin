@@ -71,6 +71,19 @@ public class PtlRepoPledgeSearchController {
     }
 
     /**
+     * 交易对手的联想下拉框事件
+     *
+     * @param map 输入参数
+     * @return 查询结果
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("getCounter")
+    public List<SelectOptionDto> getCounter(@RequestBody Map<String,Object> map){
+        return ptlRepoPledgeSearchService.getCounter(map);
+    }
+
+    /**
      * 画面查询方法
      *
      * @param param 画面参数

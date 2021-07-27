@@ -175,9 +175,7 @@ public class RskEventService extends BaseService<RskEvent001Dto> {
         		// 插入风险事件规则表
                 setEventCode4ItemRule(entity.getEventCode(), list);
                 for(RskEventItemRule e:list){
-                    if (StringUtil.isNotEmpty(e.getItemCode())){
-                        rskEventItemRuleMapper.insert(e);
-                    }
+                	rskEventItemRuleMapper.insert(e);
                 }
         	}
         }
@@ -272,4 +270,10 @@ public class RskEventService extends BaseService<RskEvent001Dto> {
 	public boolean isExistEventCode(String eventCode) {
 		return rskEvent001Mapper.isExistEventCode(eventCode)>0;
 	}
+
+    // add by zhangrui1 公式配置 start
+    public List<SelectOptionDto> selectParamList() {
+        return rskEvent003Mapper.selectParamList();
+    }
+    // add by zhangrui1 公式配置 end
 }

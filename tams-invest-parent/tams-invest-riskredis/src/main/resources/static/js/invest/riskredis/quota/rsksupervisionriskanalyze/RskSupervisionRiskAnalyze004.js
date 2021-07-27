@@ -10,7 +10,7 @@ var rsk = function() {
         return {
         	indName : indName,
         	assetName : assetName,
-         	portfolioId : portfolioId,
+//        	portfolioId : portfolioId,
         	supDate : supDate,
         	assetCode : assetCode,
             exportFlag : "05"  //监督明细导出
@@ -55,7 +55,7 @@ var rsk = function() {
     $(function() {
         table.load();
         
-        $('div.analy-dtl-form>a#RskSupervisionRiskAnalyze004_btn_export').click(function() {
+        $('div.analy-dtl-form a#RskSupervisionRiskAnalyze004_btn_export').click(function() {
             exportExcel();
         });
     });

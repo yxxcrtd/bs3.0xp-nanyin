@@ -68,12 +68,13 @@ public class RskPortfolioIndicator002Dto  extends RskPortfolioIndicator implemen
      * 画面Id - 工作流参数
      */
     private String pageId;
-    /**
+
+	/**
 	 * 有效区间
 	 */
 	private String effDateRange;
-    /**
-     * 选择数据
+	/**
+	 * 选择数据
      */
     private List<RskSupervisionIndicator002Dto> rskSupervisionIndicator002DtoList;
     /**
@@ -296,11 +297,12 @@ public class RskPortfolioIndicator002Dto  extends RskPortfolioIndicator implemen
 	 public String getIsEnabledStr(){
     	 return SysDataUtil.getNameFromDataDict(BussinessDictCodeRds.使用状态, this.getIsEnabled());
 	 }
-	 public String getEffDateRange() {
-			return effDateRange;
-		}
 
-		public void setEffDateRange(String effDateRange) {
-			this.effDateRange = effDateRange;
-		}
+	public String getEffDateRange() {
+		return effDateRange;
+	}
+
+	public void setEffDateRange(String effDateRange) {
+		this.effDateRange = effDateRange;
+	}
 }

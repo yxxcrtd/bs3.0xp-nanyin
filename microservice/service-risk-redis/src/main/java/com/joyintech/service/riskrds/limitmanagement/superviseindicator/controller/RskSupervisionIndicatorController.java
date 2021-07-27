@@ -23,19 +23,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.framework.annotation.DTXTransaction;
-import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.riskrds.limitmanagement.superviseindicator.dto.RskPortfolioIndicatorDto;
 import com.joyintech.service.riskrds.limitmanagement.superviseindicator.dto.RskPortfolioPackageDto;
 import com.joyintech.service.riskrds.limitmanagement.superviseindicator.dto.RskSupervisionIndicator002Dto;
 import com.joyintech.service.riskrds.limitmanagement.superviseindicator.dto.RskSupervisionIndicatorDto;
 import com.joyintech.service.riskrds.limitmanagement.superviseindicator.service.RskSupervisionIndicatorService;
-import com.joyintech.tams.constant.DictCode;
 
 
 /**
@@ -64,22 +59,7 @@ public class RskSupervisionIndicatorController {
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<RskSupervisionIndicator002Dto> selectForPage(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
-        Page<RskSupervisionIndicator002Dto> pageList = rskSupervisionIndicatorService.selectForPage(page, length, param); 
-        //不是admin用户不能修改 机构号为null的指标
-        if (MultilevelDataAuthorityUtil.isEnabled() && !StringUtil.equals(LoginUserUtil.getUserName(), "admin")) {
-            for (RskSupervisionIndicator002Dto dto : pageList.getRoot()) {
-                if (StringUtil.isNotEmpty(dto.getInstitutionCode())) {
-                    dto.setUpdateFlg(DictCodeList.是否_是.getValue());
-                } else {
-                    dto.setUpdateFlg(DictCodeList.是否_否.getValue());
-                }
-            }
-        }else{
-            for (RskSupervisionIndicator002Dto dto : pageList.getRoot()) {
-                dto.setUpdateFlg(DictCodeList.是否_是.getValue());
-            } 
-        }
-        return pageList;
+        return rskSupervisionIndicatorService.selectForPage(page, length, param);
     }
 
     /**

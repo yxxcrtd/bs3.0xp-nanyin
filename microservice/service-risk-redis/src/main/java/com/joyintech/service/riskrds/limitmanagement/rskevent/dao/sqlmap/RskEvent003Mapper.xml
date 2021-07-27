@@ -18,6 +18,7 @@
 			<result column="REL_ITEM" property="relItem" jdbcType="VARCHAR" />
 			<result column="REMARK" property="remark" jdbcType="VARCHAR" />
 			<result column="CUSTOM_VAL" property="customVal" jdbcType="DECIMAL" />
+			<result column="FORMULA_VAL" property="formulaVal" jdbcType="VARCHAR" />
 			<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
 			<result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
 			<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
@@ -37,7 +38,8 @@
 		ev.REL_TYPE ,
 		ev.REL_ITEM ,
 		ev.REMARK,
-		ev.CUSTOM_VAL
+		ev.CUSTOM_VAL,
+		ev.FORMULA_VAL
 		FROM
 		RSK_EVENT_PARA_REL ev
 		LEFT JOIN RSK_EVENT er
@@ -48,4 +50,15 @@
 		</where>
 	</select>
 
+    <select id="selectParamList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT T.PARA_CODE || ':' || RIIPD.PARA_GRANULARITY || '[' || RIIPD.REDIS_FIELD || ']' id, T.PARA_NAME text
+        FROM RSK_ISUP_INDICATOR_PARA T
+        INNER JOIN RSK_ISUP_INDICATOR_PARA_DTL RIIPD ON RIIPD.PARA_CODE = T.PARA_CODE
+        WHERE T.IS_FORBID = 'N' AND T.IS_UP_REDIS = 'N' AND RIIPD.PARA_DISPLAY_TYPE = 'SQL'
+        AND RIIPD.PARA_GRANULARITY = '01' AND T.PARAM_MATH_TYPE = 'REDIS' AND RIIPD.REDIS_FIELD IS NOT NULL
+        UNION ALL 
+        SELECT T.PARA_CODE || ':FIX' || '[' || RIFR.CONTENT || ']' id, T.PARA_NAME text
+        FROM RSK_ISUP_INDICATOR_PARA T
+        INNER JOIN RSK_ISUP_FIX_RECODE RIFR ON RIFR.PARA_CODE = T.PARA_CODE
+    </select>
 </mapper>

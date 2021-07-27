@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
@@ -45,14 +44,6 @@ public class RskSupervisionIndicatorParam006Validator implements BeanValidator {
             			errorList.add(new ValidMessage("validDate",getMessage("BUSS_COM_E_0038",
                                 getMessage("RskSupervisionIndicatorParam006.validDate"))));
             		}
-            		//wangyang1 风险二级法人改造 start
-            		if (MultilevelDataAuthorityUtil.isEnabled()) {
-            		    if(StringUtil.isEmpty(e.getInstitutionCode())){
-                            errorList.add(new ValidMessage("institutionCode",getMessage("BUSS_COM_E_0038",
-                                    getMessage("RskSupervisionIndicatorParam006.institutionName"))));
-                        }  
-                    }
-            		//wangyang1 风险二级法人改造 end
             		/*if(e.getValidDate()!=null&&!StringUtil.equals(e.getUpdateFlag(), "02")&&
             				DateUtil.compareDate(e.getValidDate(), DateUtil.parse(DateUtil.format(DateUtil.platDateFromCache())))<0){
             			errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0004",

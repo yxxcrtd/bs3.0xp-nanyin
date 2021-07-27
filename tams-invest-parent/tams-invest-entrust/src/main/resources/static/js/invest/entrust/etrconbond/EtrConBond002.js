@@ -3,7 +3,15 @@
  */
 (function(){
     var getriskdata = function () {
-        var obj = {tradeDirection:etrPs,timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#purchBondTotal').val(),assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+        //配置单位 edit by yeming 20210721 start
+        var purchBondTotal=$('#purchBondTotal').val();
+        if (purchBondTotal) {
+            if(entrustAmtUnit == '02' ){
+                purchBondTotal=JoyinMath.doMul(purchBondTotal, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            }
+        }
+        //配置单位 edit by yeming 20210721 end
+        var obj = {tradeDirection:etrPs,timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:purchBondTotal,assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val()}
         var object = {tradeDirection:['ps','EtrConBond002.ps'],portfolioCode:['portfolioId','EtrConBond002.portfolioId'],tradeAmount:['purchBondTotal','EtrConBond001.purchBondTotal'],assetType:['assetType1','EtrConBond002.assetType1'],assetCode:['finprodId','EtrBondFirstLBidding002.finprodId'],data:obj}
         return object;
     }
@@ -188,6 +196,9 @@
      */
     var init = function() {
         $("#invAim").trigger("change").attr("disabled", true);
+        if(entrustAmtUnit == '01' ){
+            $(".unitNum").text('元');
+        }
         if (entity.finprodId){
             $("#assetType1").trigger("change").attr("disabled", true);
             $("#ccy").trigger("change").attr("disabled", true);

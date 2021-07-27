@@ -40,8 +40,16 @@
 				and C.IS_PREPAID = 'Y' 
 			inner join BOK_BOOKSET D
 				on D.BOOKSET_ID = B.BOOKSET_ID
+			inner join TRD_PRODUCT_DEAL E
+				on E.TRADE_ID = A.FINPROD_ID
+				AND E.TRADE_STATUS != '03'
+			LEFT JOIN TRD_PRODUCT_DEAL E1   ON
+				(E.TRADE_ID = E1.P_TRADE_ID
+				AND E1.TRADE_STATUS = '03'
+				)
 		where A.FINPROD_TYPE = 'C19'
-            <if test="booksetId != null  and booksetId !=''">
+			AND E1.TRADE_ID IS NULL
+		<if test="booksetId != null  and booksetId !=''">
                 AND  D.BOOKSET_ID = #{booksetId}
             </if>
             <if test="feeType !=null and feeType !='' ">

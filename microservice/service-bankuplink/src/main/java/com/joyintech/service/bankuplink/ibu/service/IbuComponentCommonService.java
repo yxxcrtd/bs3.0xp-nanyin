@@ -649,7 +649,8 @@ public class IbuComponentCommonService extends BaseService {
 		if (StringUtils.equals(cfetsBondDealDialogueQuoteDto.getOptType(), "revoke")) {
 			ibuQuoteBondDto.setWorkflowStatus(DictCodeListExt1.有效状态_有效.getValue());
 			ibuQuoteBondDto.setTradeStatus(DictCodeList.银行间上行报价状态_已成交.getValue());
-			ibuQuoteBondDto.setSendStatus(DictCodeList.银行间上行发送状态_成功.getValue());
+            //已成交/空的记录点击撤销，提交流程后，状态变成已成交/成功，应该还是已成交/空
+            ibuQuoteBondDto.setSendStatus(StringUtil.EMPTY);
 		}
         inputBean.setWflIbuQuoteBond2Dto(ibuQuoteBondDto);
 

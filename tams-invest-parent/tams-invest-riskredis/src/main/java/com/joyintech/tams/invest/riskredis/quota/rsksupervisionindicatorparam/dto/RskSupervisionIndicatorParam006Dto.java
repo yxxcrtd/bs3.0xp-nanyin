@@ -107,26 +107,4 @@ public class RskSupervisionIndicatorParam006Dto extends RskIsupFixRecode impleme
 		this.updateFlag = updateFlag;
 	}
 	
-	/**
-     * 机构名称
-     */
-    private String institutionName;
-
-    /**
-     * 获取 institutionName
-     * @return institutionName.
-     */
-    public String getInstitutionName() {
-        return institutionName;
-    }
-    
-    /**
-     * 设置 institutionName
-     * @param institutionName institutionName
-     */
-    public void setInstitutionName(String institutionName) {
-        this.institutionName = institutionName;
-    }
-    
-    
 }

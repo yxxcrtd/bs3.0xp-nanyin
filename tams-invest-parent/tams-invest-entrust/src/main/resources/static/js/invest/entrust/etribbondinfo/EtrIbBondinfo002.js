@@ -17,14 +17,14 @@
     doChange.reloadLayui = function(){
         layui.form.render();
     }
-    doChange.exerYield_setDisabled = function(isDisabled, isRight, priceModel){
+    doChange.exerYield_setDisabled = function(isDisabled){
         // 行权收益率
         let exerYield = query('#exerYield');
         if(isDisabled){
             exerYield.val('').attr('disabled', true).removeAttr("required");
             query('#calculateField_exerYield').prop('checked', false).attr('disabled', true);
         }else{
-            if(isRight !== N && priceModel !== PRICEMODEL_03){
+            if(query("#isRight").val() !== N && query("#priceModel").val() !== PRICEMODEL_03){
                 // 含权债或为空 且 价格模式不是市价
                 exerYield.val('').attr('disabled', false).trigger("change").trigger("blur");
                 query('#calculateField_exerYield').val('').attr('disabled', false);
@@ -146,9 +146,35 @@
         }
     };
 
+    /**
+     * 净值偏离度
+     */
+    function calDeviationDegree() {
+        if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
+            return;
+        }
+        Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/calDeviationDegree",
+            {
+                price: query("#price").val(),
+                finprodId: query("#finprodId").val(),
+                vdate:query('#vdate').val()
+            }, function (result) {
+            if (result ) {
+                document.getElementById('deviationDegree').innerHTML = JoyinUtil.formatNumber(result, 4, null, 2) + '%';
+            }
+        });
+    }
+
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
         if (!initFlag) {
+            let finvdate = query("#vdate").val();
+            let finmdate = query("#mdate").val();
+            if(finvdate !=='' && finvdate !== finmdate){
+                // 只有指令开始日=指令结束日时才联动
+                return;
+            }
+            
             var ps = query("#ps").val();
             if (!ps) {
                 return;
@@ -168,6 +194,12 @@
             if (!object.entrustNum) {
                 object.entrustNum = 100;
             }
+            // 根据净价计算可买数量
+            var portfolioIds = [];
+            portfolioIds.push(query("#portfolioId").val());
+            parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,query('#ccy').val(),query('#vdate').val(),query('#price').val());
+            // 根据净价计算净价偏离度
+            calDeviationDegree();
             //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 start
             var calculateField =  query("input[name=calculateField]:checked").val();
             if(calflag != calculateField){
@@ -381,14 +413,17 @@
             if (param.channelId) {
                 query("#chlFinprodId").val(param.channelId).trigger("change");//通道
             }
-            
-            if (param.price){
-                query("#calculateField").val(param.price).trigger("change");//净价
-            }
             query("#ps").textSelect('setValue',"T02");
             query("#priceModel").textSelect('setValue',"PRM02");
             query("#vdate").val(sysDate).trigger("change");
             query("#mdate").val(sysDate).trigger("change");
+
+            if (param.price){
+                //净价
+                query("#calculateField_price").prop('checked', true);
+                query("#price").val(param.price).trigger("change");
+                layui.form.render();
+            }
         }
     };
 
@@ -435,18 +470,18 @@
             if (param.priceModel) {
                 query("#priceModel").val(param.priceModel).trigger("change");//价格模式
             }
-            if (param.unitPrice) {
-                query("#price").val(param.unitPrice).trigger("change");//净价
-            }
-            if (param.allPrice) {
-                query("#fpriceAmt").val(param.allPrice).trigger("change");//全价
-            }
-            if (param.matureYield) {
-                query("#matureYield").val(param.matureYield).trigger("change");//到期收益率
-            }
-            if (param.exerYield) {
-                query("#exerYield").val(param.exerYield).trigger("change");//行权收益率
-            }
+            // if (param.unitPrice) {
+            //     query("#price").val(param.unitPrice).trigger("change");//净价
+            // }
+            // if (param.allPrice) {
+            //     query("#fpriceAmt").val(param.allPrice).trigger("change");//全价
+            // }
+            // if (param.matureYield) {
+            //     query("#matureYield").val(param.matureYield).trigger("change");//到期收益率
+            // }
+            // if (param.exerYield) {
+            //     query("#exerYield").val(param.exerYield).trigger("change");//行权收益率
+            // }
             /*             if (param.vdate) {
                 query("#vdate").val(param.vdate).trigger("change");//成立日
             }
@@ -463,7 +498,13 @@
             if(param.invAim){
                 query("#invAim").val(param.invAim).trigger("change");//投资目的
             }
-            
+
+            if (param.unitPrice){
+                //净价
+                query("#calculateField_price").prop('checked', true);
+                query("#price").val(param.unitPrice).trigger("change");
+                layui.form.render();
+            }
             pageModel = PAGE_MODEL_EDIT;
         }
     };
@@ -518,6 +559,7 @@
         if (todoList == false) {
             var rs = parent.EtrIbBondinfoHq.queryPositionInfo(finprodIdhid,portfolioId,chlFinprodId,ccy,vdate,calId);
             getPtlCashPositionInfo(rs);
+            window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
         }
     }
     /**
@@ -657,18 +699,14 @@
         query("#ps").change(function () {
             var finprodIdhid = query("#finprodIdhid").val();
             if (query("#ps").val() == T01) {
-                if (query("#isRight").val() != N) {
-                    doChange.exerYield_setDisabled(false);
-                }
+                doChange.exerYield_setDisabled(false);
                 query("#matureYield").removeAttr("disabled");
                 
                 // 当交易方向为买入卖出时，交易对手下拉框显示为银行间机构信息中的交易账户21位码+交易成员全称
                 query("#div_counterId1").css("display","block");
                 query("#div_counterId2").css("display","none");
             } else if (query("#ps").val() == T02) {
-                if (query("#isRight").val() != N) {
-                    doChange.exerYield_setDisabled(false);
-                }
+                doChange.exerYield_setDisabled(false);
                 query("#matureYield").attr("disabled", true);
                 query("#matureYield").val("");
                 
@@ -738,8 +776,6 @@
                     data = AutoCoupon.autoBondTradeCoupon(query("#finprodId").val());
                 }
                 // 不为空
-                query("#price").attr("required", false);
-                query("#matureYield").attr("required", false);
                 //var data = query('#finprodId').select2('data')[0].object;
                 query("#finprodIdhid").val(data.finprodId).trigger("change");
                 query("#finprodName").val(finprodId).trigger("change");
@@ -747,6 +783,8 @@
                 // // 资产为非含权债时，置灰“行权收益率”字段
                 if(data.isRight === N){
                     doChange.exerYield_setDisabled(true);
+                }else{
+                    doChange.exerYield_setDisabled(false);
                 }
                 query("#calendarId").val(data.calendarId).trigger("change");
                 query("#finvdate").val(new Date(data.finvdate)).trigger("change");
@@ -758,17 +796,14 @@
                 }
             } else {
                 // 为空
-                query("#price").attr("required", true);
-                query("#matureYield").attr("required", true);
                 query("#finprodIdhid").val("").trigger("change");
                 query("#finprodName").val("").trigger("change");
                 query("#calendarId").val("").trigger("change");
-                //query("#tradeMarket").val("").trigger("change").attr("disabled", false);
                 query("#ccy").val(CCY).trigger("change").attr("disabled", false);
                 query("#isRight").val("").trigger("change");
                 query("#matureYield").val("").trigger("change").trigger("blur");
                 
-                doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val());
+                doChange.exerYield_setDisabled(false);
             }
 
             //左下行情信息联动 & 组合可用现金,资产可用持仓
@@ -919,8 +954,11 @@
                     query("#fpriceAmt").val("").attr("disabled", false); // 全价
                     query("#matureYield").val("").attr("disabled", false); // 到期收益率
                     
-                    doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val()); // 行权收益率
+                    doChange.exerYield_setDisabled(false); // 行权收益率
                 }
+
+                query('#finprodId').trigger("change"); // 触发star功能
+                
                 if (query("#price").val()) {
                     calData("price");
                 }
@@ -942,19 +980,6 @@
             //左下行情信息联动
             getLeftMarketInfo();
          
-        });
-
-        /**
-         * 是否行权
-         */
-        query('#isRight').change(function () {
-            var isRight = query('#isRight').val();
-            if (!isRight || isRight === N) {
-                doChange.exerYield_setDisabled(true);
-            } else {
-                // 行权收益率
-                doChange.exerYield_setDisabled(false, isRight, query("#priceModel").val()); 
-            }
         });
 
     });

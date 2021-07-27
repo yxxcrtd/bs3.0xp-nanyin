@@ -259,7 +259,7 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
             entity.setWorkFlowId(dto.getWorkflowId());
             entity.setEtrPledgeList(getEtrPledgeListByBussRepoSecDto(dto.getBussRepoSec(),dto.getEntrustId()));
             restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/insertWithQuery", entity,
                 Boolean.class);
             if(baseEtrCashPositionCommService!=null){
                 baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);

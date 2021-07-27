@@ -127,8 +127,8 @@ public class PrepaidExpensesDrawProcessorService {
             // 2.1 交易类标的信息查询
             TradeInfoDto dealInfoForTarget = this.getTargetInfo(dto.getBusiId(),dto.getBusiDetailType(),dto.getBranch());
             // 上述返回结果为空
-            if (dealInfoForTarget == null || dealInfoForTarget.getVdate().after(acctEntity.getHappenDate())
-                    || dealInfoForTarget.getMdate().before(acctEntity.getHappenDate())) {
+            if (dealInfoForTarget == null || dealInfoForTarget.getVdate() ==null || dealInfoForTarget.getMdate() == null
+                || dealInfoForTarget.getVdate().after(acctEntity.getHappenDate()) || dealInfoForTarget.getMdate().before(acctEntity.getHappenDate())) {
                 continue;
             }
 

@@ -13,6 +13,7 @@ import java.util.*;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +63,9 @@ public class ValAccountHandle001Contoller extends BaseController {
     private ValBatchStart001Service sysBatchStart001Service;
     @Autowired
     private BaseCommonService baseCommonService;
-	
+
+    @Autowired
+    private ValAssetBook001Service valAssetBook001Service;
 	/**
      * 页面初始化，显示画面<br>
      * 
@@ -129,6 +132,30 @@ public class ValAccountHandle001Contoller extends BaseController {
     	}
     }
 
+    /**
+     * 套账下拉框数据选择20210617
+     * @return
+     */
+    @RequestMapping("/getBookSetIdNew")
+    @ResponseBody
+    public Page<SelectOptionDto> getBookSetIdNew() {
+        HashMap<String, Object> map = (HashMap<String, Object>) RequestUtil.getPageParam();
+        String booksetType = String.valueOf(map.get("booksets"));
+        String search = null;
+        if (map.containsKey("search")) {
+            search = String.valueOf(map.get("search"));
+        } else {
+            map.put("search", search);
+        }
+        if (GlobalConstant.BATCH_EXECUTE_TYPE_GROUP.equals(booksetType)) {
+            return valAssetBook001Service.findBooksetGroup(map);
+        } else {
+            /**add by wujie on 20190328 start**/
+            map.put("acctSubjectTypeNo", DictCodeListExt1.金融产品类型_通道.getValue());
+            /**add by wujie on 20190328 end**/
+            return valAccountHandle001Service.getBookSetId2(map);
+        }
+    }
 
     @RequestMapping("/findAllTask")
     @ResponseBody

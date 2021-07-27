@@ -313,17 +313,16 @@ spring:
   profiles: allinone
   thymeleaf:
     cache: false
+#   redis:
+#     database: 0
+#     host: 192.168.60.97
+#     port: 6379
+#     timeout: 20000
   redis:
-    database: 4
-    password: 123456
-    host: 192.168.60.40
-    port: 6379
-    timeout: 20000
-#  redis:
-#    cluster:
-#      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
-#  redislock:
-#    redissonEnabled: false
+    cluster:
+      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
+  redislock:
+    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     username: BS30INIT

@@ -133,7 +133,31 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
     	}
     	//add by hxy end 多级法人改造20200617
     }
-    
+
+    /**
+     * 检索账套代码列表(分页下拉框)
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> findBooksetIds(int page,int length,Map<String, Object> param) {
+        //多级法人改造  start add by hxy  20200616
+        if(null!=param.get("booksetType") && !StringUtil.isEmpty(param.get("booksetType"))){
+            if(DictCodeList.账套类别_账套模板.getValue().equals(param.get("booksetType"))){
+                return super.queryForPageForSelectReturn(page,length,()->mapper.findBooksetId1(param));
+            }else{
+                return super.queryForPageForSelectReturn(page,length,()->mapper.findBooksetId(param));
+            }
+        }else{
+            Page<SelectOptionDto> dto=new Page<SelectOptionDto>();
+            List<SelectOptionDto> listAll=new ArrayList<SelectOptionDto>();
+            listAll.addAll(mapper.findBooksetId1(param));
+            listAll.addAll(mapper.findBooksetId(param));
+            dto.setRoot(listAll);
+            return dto;
+        }
+        //add by hxy end 多级法人改造20200617
+    }
+
     /**
      * 下拉查询所属账套（根据账套类别查询）
      * @param param

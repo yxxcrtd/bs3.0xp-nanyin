@@ -35,7 +35,8 @@
 				where 1=1
 				and bobp.is_win='Y'
 				and bo.is_win = bobp.is_win
-				and bobp.WIN_PRICE = wtp.YIELD
+				and bobp.WIN_PRICE is not null
+				and wtp.YIELD is not null
 				<if test="portfolioIdList != null and portfolioIdList.size() >0">
 					AND  ee.PORTFOLIO_ID IN
 					<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
@@ -161,7 +162,8 @@
 				where 1=1
 				and bobp.is_win='Y'
 				and bo.is_win = bobp.is_win
-				and bobp.WIN_PRICE = wtp.YIELD
+				and bobp.WIN_PRICE is not null
+				and wtp.YIELD is not null
 				<if test="portfolioIdList != null and portfolioIdList.size() >0">
 					AND  ee.PORTFOLIO_ID IN
 					<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
@@ -264,11 +266,30 @@
 
 	<update id="updateTradeId" parameterType="java.util.Map">
 		update BID_ORDER_BID_PRICE  set TRADE_ID = #{tradeId,jdbcType = VARCHAR}
-		where ENTRUST_ID= #{entrustId,jdbcType=VARCHAR} and WIN_PRICE = #{winPrice,jdbcType=DECIMAL}
+		where ENTRUST_ID= #{entrustId,jdbcType=VARCHAR}
+		<!--and (WIN_PRICE = #{winPrice,jdbcType=DECIMAL}  OR  WIN_CPRICE = #{winCprice,jdbcType=DECIMAL})-->
 	</update>
 
 	<update id="deleteTradeId" parameterType="java.util.Map">
 		update BID_ORDER_BID_PRICE  set TRADE_ID = null
 		where ENTRUST_ID= #{entrustId,jdbcType=VARCHAR} and TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
 	</update>
+
+	<select id="getisFrozenPosition" resultType="java.math.BigDecimal">
+		select
+		WIN_PRIN_AMT * 100 * WIN_CPRICE * -1
+		from BID_ORDER_BID_PRICE
+		where is_frozen_position = 'Y'
+		and ENTRUST_ID= #{entrustId,jdbcType=VARCHAR}
+		and TRADE_ID = #{totleTradeId,jdbcType = VARCHAR}
+	</select>
+
+	<select id="checkFrozenPosition" resultType="java.lang.Integer">
+		select count(1)
+		from BID_ORDER_BID_PRICE
+		where IS_FROZEN_POSITION = 'Y'
+		and ENTRUST_ID= #{entrustId,jdbcType=VARCHAR}
+		and BID_ID = #{bidId,jdbcType=VARCHAR}
+		and BID_PRICE * 100 = #{bidPrice,jdbcType=DECIMAL}
+	</select>
 </mapper>

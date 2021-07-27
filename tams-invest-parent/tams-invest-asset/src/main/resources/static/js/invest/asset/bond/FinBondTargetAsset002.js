@@ -99,8 +99,11 @@ $(function() {
             object.finPayInterestStdInfoDto.finCashPlanList = FinPayInterestStdInfo.getAllRows(); 
         }
         // 还本计划
-        object.bussFinRepaymentDto.vdate = $('#vdate').val();
-        object.bussFinRepaymentDto.mdate = $('#mdate').val();
+        if (object.bussFinRepaymentDto){
+            object.bussFinRepaymentDto.vdate = $('#vdate').val();
+            object.bussFinRepaymentDto.mdate = $('#mdate').val();
+        }
+
         if(BussFinRepayment){
             object.bussFinRepaymentDto.finCashPlanList = BussFinRepayment.getAllRows();
         }
@@ -118,17 +121,27 @@ $(function() {
         }
         // 若系统参数ASSET_INFO_CHB_HIDE为隐藏中债信息，则不进行赋值
         if(ASSET_INFO_CHB_HIDE != '02'){
-        	//登记托管机构
-	        object.bussFinBondRepInfoDto.repRegistOrg = $("#registOrg").val();
-	        //权益类中债报送
-	        object.bussRepEquityInfoDto.repAssetType = repAssetType;
-	        //债券报送信息
-	        object.bussFinBondRepInfoDto.finprodType2 = FINPROD_TYPE_TG_F01;
-	        object.bussFinBondRepInfoDto.repAssetType = repAssetType;
-	        object.bussFinBondRepInfoDto.tradeMarket = $('#tradeMarket').val();
+
+            if (object.bussFinBondRepInfoDto){
+                //登记托管机构
+                object.bussFinBondRepInfoDto.repRegistOrg = $("#registOrg").val();
+                //债券报送信息
+                object.bussFinBondRepInfoDto.finprodType2 = FINPROD_TYPE_TG_F01;
+                object.bussFinBondRepInfoDto.repAssetType = repAssetType;
+                object.bussFinBondRepInfoDto.tradeMarket = $('#tradeMarket').val();
+            }
+	        if (object.bussRepEquityInfoDto){
+                //权益类中债报送
+                object.bussRepEquityInfoDto.repAssetType = repAssetType;
+
+            }
+
 	        
         }
-        object.finPayInterestStdInfoDto.mdate = $('#mdate').val();
+        if (object.finPayInterestStdInfoDto){
+            object.finPayInterestStdInfoDto.mdate = $('#mdate').val();
+        }
+
         Joyin.ajaxJson(basePath + 'invest/asset/bond/FinBondTargetAsset002/check', object, function(
                 result) {
             //息票品种为贴现、零息时不作付息计划 、还本计划check
@@ -160,9 +173,37 @@ $(function() {
      * 最终提交
      */
     var finalSava = function(object,operateType,result){
+        Joyin.ajaxJson(basePath + 'invest/asset/bond/FinBondTargetAsset002/isSameMdateAndVdate', {
+            mdate: object.mdate,
+            vdate: object.vdate,
+            oFinprodId: object.oFinprodId
+        },function (isSameMdateAndVdate){
             Joyin.ajaxJson(basePath + 'invest/asset/common/isHoliday', {mdate:object.mdate,calendarId:object.calendarId}, function(isHoliday){
-                if(isHoliday){
-                    Joyin.confirm("到期日为节假日，是否确认提交", function() {
+                if(isSameMdateAndVdate && isHoliday){
+                    Joyin.confirm("与关联的一级资产起息到期日不一致，请确认是否继续提交", function () {
+                        Joyin.confirm("到期日为节假日，是否确认提交", function () {
+                            if (operateType === 'save') {
+                                WorkFlow.doSaveList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
+                                    object, "FinBondTargetAsset002_btn_save");
+                            } else {
+                                WorkFlow.doSubmitList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
+                                    object, "FinBondTargetAsset002_btn_submit");
+                            }
+                        })
+
+                    })
+                }else if(isHoliday){
+                    Joyin.confirm("到期日为节假日，是否确认提交", function () {
+                        if (operateType === 'save') {
+                            WorkFlow.doSaveList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
+                                object, "FinBondTargetAsset002_btn_save");
+                        } else {
+                            WorkFlow.doSubmitList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
+                                object, "FinBondTargetAsset002_btn_submit");
+                        }
+                    })
+                }else if(isSameMdateAndVdate){
+                    Joyin.confirm("与关联的一级资产起息到期日不一致，请确认是否继续提交", function () {
                         if (operateType === 'save') {
                             WorkFlow.doSaveList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
                                 object, "FinBondTargetAsset002_btn_save");
@@ -172,17 +213,17 @@ $(function() {
                         }
                     })
                 }else{
-                    Joyin.confirm(result.data, function() {
-                        if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
-                                object, "FinBondTargetAsset002_btn_save");
-                        } else {
-                            WorkFlow.doSubmitList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
-                                object, "FinBondTargetAsset002_btn_submit");
-                        }
-                    })
+                    if (operateType === 'save') {
+                        WorkFlow.doSaveList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
+                            object, "FinBondTargetAsset002_btn_save");
+                    } else {
+                        WorkFlow.doSubmitList(basePath + 'invest/asset/bond/FinBondTargetAsset002/save',
+                            object, "FinBondTargetAsset002_btn_submit");
+                    }
                 }
-            });
+            })
+    })
+
     }
     /**
      * 是否含权债change事件

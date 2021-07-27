@@ -141,23 +141,30 @@ public class EtrInvestBondInfo002Controller extends BaseController {
         String finprodId = getParam("finprodId");
         String portfolioId = getParam("portfolioId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        //配置单位 add by yeming 20210721 start
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+        //配置单位 add by yeming 20210721 end
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             EtrInvestBondInfoDto dto = etrInvestBondInfoService.getBussinessEntityByWorkflowId(
                 workflowId); 
             dto.setRiskTrialRetDto(null);
             //单位以万元展示
-            if(dto.getEntrustNum() != null) {
-            	dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit.equals("02")){
+                if(dto.getEntrustNum() != null) {
+                    dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
+                }
+                if(dto.getMinAmt() != null) {
+                    dto.setMinAmt(dto.getMinAmt().divide(new BigDecimal(10000)));
+                }
+                if(dto.getEntrustOwnNum() != null) {
+                    dto.setEntrustOwnNum(dto.getEntrustOwnNum().divide(new BigDecimal(10000)));
+                }
+                if(dto.getEntrustIntegrateNum() != null) {
+                    dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
+                }
             }
-            if(dto.getMinAmt() != null) {
-            	dto.setMinAmt(dto.getMinAmt().divide(new BigDecimal(10000)));
-            }
-            if(dto.getEntrustOwnNum() != null) {
-            	dto.setEntrustOwnNum(dto.getEntrustOwnNum().divide(new BigDecimal(10000)));
-            }
-            if(dto.getEntrustIntegrateNum() != null) {
-            	dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
-            }
+            //配置单位 edit by yeming 20210721 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
@@ -168,18 +175,22 @@ public class EtrInvestBondInfo002Controller extends BaseController {
             /*dto.setCalflag("price");
             etrInvestBondInfoService.calcAmt(dto);*/
             //单位以万元展示
-            if(dto.getEntrustNum() != null) {
-            	dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit.equals("02")){
+                if(dto.getEntrustNum() != null) {
+                    dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
+                }
+                if(dto.getMinAmt() != null) {
+                    dto.setMinAmt(dto.getMinAmt().divide(new BigDecimal(10000)));
+                }
+                if(dto.getEntrustOwnNum() != null) {
+                    dto.setEntrustOwnNum(dto.getEntrustOwnNum().divide(new BigDecimal(10000)));
+                }
+                if(dto.getEntrustIntegrateNum() != null) {
+                    dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
+                }
             }
-            if(dto.getMinAmt() != null) {
-            	dto.setMinAmt(dto.getMinAmt().divide(new BigDecimal(10000)));
-            }
-            if(dto.getEntrustOwnNum() != null) {
-            	dto.setEntrustOwnNum(dto.getEntrustOwnNum().divide(new BigDecimal(10000)));
-            }
-            if(dto.getEntrustIntegrateNum() != null) {
-            	dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
-            }
+            //配置单位 edit by yeming 20210721 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("tradeId", dto.getEntrustId());
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
@@ -191,23 +202,30 @@ public class EtrInvestBondInfo002Controller extends BaseController {
             entity.setVdate(sysDate);
             entity.setMdate(sysDate);
             entity.setEntrustStatus(DictCodeList.委托状态_新建.getValue());
-            if(entity.getEntrustNum() != null) {
-            	entity.setEntrustNum(entity.getEntrustNum().divide(new BigDecimal(10000)));
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit.equals("02")){
+                if(entity.getEntrustNum() != null) {
+                    entity.setEntrustNum(entity.getEntrustNum().divide(new BigDecimal(10000)));
+                }
+                if(entity.getMinAmt() != null) {
+                    entity.setMinAmt(entity.getMinAmt().divide(new BigDecimal(10000)));
+                }
+                if(entity.getEntrustOwnNum() != null) {
+                    entity.setEntrustOwnNum(entity.getEntrustOwnNum().divide(new BigDecimal(10000)));
+                }
+                if(entity.getEntrustIntegrateNum() != null) {
+                    entity.setEntrustIntegrateNum(entity.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
+                }
             }
-            if(entity.getMinAmt() != null) {
-            	entity.setMinAmt(entity.getMinAmt().divide(new BigDecimal(10000)));
-            }
-            if(entity.getEntrustOwnNum() != null) {
-            	entity.setEntrustOwnNum(entity.getEntrustOwnNum().divide(new BigDecimal(10000)));
-            }
-            if(entity.getEntrustIntegrateNum() != null) {
-            	entity.setEntrustIntegrateNum(entity.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
-            }
+            //配置单位 edit by yeming 20210721 end
             model.addAttribute(GlobalConstant.ENTITY, entity);
         }
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("shortSellingSupported", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
+        //配置单位 add by yeming 20210721 start
+        model.addAttribute("entrustAmtUnit", entrustAmtUnit);
+        //配置单位 add by yeming 20210721 end
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
         pageElementConfigDto.setPageId("BaseRiskMathComm");
         Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面

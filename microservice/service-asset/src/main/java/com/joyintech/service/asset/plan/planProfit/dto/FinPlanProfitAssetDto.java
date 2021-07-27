@@ -421,6 +421,17 @@ private RepAssetOther repAssetOther;
     private String calRateType;
 
     /**
+     * 增信措施
+     */
+    private String creditEnhanceMeasure;
+
+    /**
+     * 基金经理姓名
+     */
+    private String fundMangerName;
+
+
+    /**
      * 取得 资产推荐方名称
      * @return 资产推荐方名称
      */
@@ -430,7 +441,7 @@ private RepAssetOther repAssetOther;
 
     /**
      * 设置 资产推荐方名称
-     * @param recommender 资产推荐方名称
+     * @param recommenderName 资产推荐方名称
      */
     public void setRecommenderName(String recommenderName) {
         this.recommenderName = recommender == null ? null : recommenderName.trim();
@@ -1343,5 +1354,37 @@ private RepAssetOther repAssetOther;
      */
     public void setCalRateType(String calRateType) {
         this.calRateType = calRateType;
+    }
+
+    /**
+     * 取得 增信措施
+     * @return 增信措施
+     */
+    public String getCreditEnhanceMeasure() {
+        return creditEnhanceMeasure;
+    }
+
+    /**
+     * 设置 增信措施
+     * @param creditEnhanceMeasure 增信措施
+     */
+    public void setCreditEnhanceMeasure(String creditEnhanceMeasure) {
+        this.creditEnhanceMeasure = creditEnhanceMeasure;
+    }
+
+    /**
+     * 取得 基金经理姓名
+     * @return 基金经理姓名
+     */
+    public String getFundMangerName() {
+        return fundMangerName;
+    }
+
+    /**
+     * 设置 基金经理姓名
+     * @param fundMangerName 基金经理姓名
+     */
+    public void setFundMangerName(String fundMangerName) {
+        this.fundMangerName = fundMangerName;
     }
 }

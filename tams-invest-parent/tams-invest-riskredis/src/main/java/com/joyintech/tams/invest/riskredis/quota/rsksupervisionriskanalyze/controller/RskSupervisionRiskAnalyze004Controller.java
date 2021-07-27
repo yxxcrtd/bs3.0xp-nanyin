@@ -48,7 +48,6 @@ public class RskSupervisionRiskAnalyze004Controller extends BaseController  {
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
         this.setSelectOptionToModel(model,DICT_CODES );
-        model.addAttribute("portfolioId", this.getParam("portfolioId"));
 	    model.addAttribute("indName", this.getParam("indName"));
 	    model.addAttribute("assetName", this.getParam("assetName"));
 	    model.addAttribute("assetCode", this.getParam("assetCode"));

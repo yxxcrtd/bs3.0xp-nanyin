@@ -98,7 +98,10 @@ $(function() {
             object.bussFinRepaymentDto.finCashPlanList = BussFinRepayment.getAllRows();
         }
         //投后信息
-        object.bussPostInvestInfoDto.type6 = type6;
+        if (object.bussPostInvestInfoDto){
+            object.bussPostInvestInfoDto.type6 = type6;
+        }
+
         //减持信息
         if(BussReduceShareInfo){
             object.bussReduceShareInfoDto = {};
@@ -125,26 +128,45 @@ $(function() {
             object.bussFinProductCreditDto = {};
             object.bussFinProductCreditDto.finProductCreditList = BussFinProductCredit.getAllRows();
         }
-        object.calRateType = $('#finInterestFactorDto_calRateType').val();
+        if (object.calRateType){
+            object.calRateType = $('#finInterestFactorDto_calRateType').val();
+        }
+
         //权益类中债报送
-         object.bussRepEquityInfoDto.repAssetType = repAssetType;
+        if (object.bussRepEquityInfoDto){
+            object.bussRepEquityInfoDto.repAssetType = repAssetType;
+        }
+
         //信贷及非标资产报送信息
-        object.bussRepAssetCreditNonstdInfoDto.repAssetType = repAssetType;
+        if(object.bussRepAssetCreditNonstdInfoDto) {
+            object.bussRepAssetCreditNonstdInfoDto.repAssetType = repAssetType;
+        }
         //非标资产(票据或信用)报送信息
-        object.bussRepAssetAstBillInfoDto.repAssetType = repAssetType;
+        if(object.bussRepAssetAstBillInfoDto) {
+            object.bussRepAssetAstBillInfoDto.repAssetType = repAssetType;
+        }
         //其他资产报送信息
-        object.bussRepOtherInvestTargetInfoDto.repAssetType = repAssetType;
+        if(object.bussRepOtherInvestTargetInfoDto) {
+            object.bussRepOtherInvestTargetInfoDto.repAssetType = repAssetType;
+        }
         //债券报送信息
-        object.bussFinBondRepInfoDto.finprodType2 = FINPROD_TYPE_TG_F18;
-        object.bussFinBondRepInfoDto.repAssetType = repAssetType;
+        if(object.bussFinBondRepInfoDto) {
+            object.bussFinBondRepInfoDto.finprodType2 = FINPROD_TYPE_TG_F18;
+            object.bussFinBondRepInfoDto.repAssetType = repAssetType;
+        }
         //基金报送信息
-        object.bussRepFundInfoDto.finprodType2 = FINPROD_TYPE_TG_F18;
-        object.bussRepFundInfoDto.repAssetType = repAssetType;
+        if(object.bussRepFundInfoDto) {
+            object.bussRepFundInfoDto.finprodType2 = FINPROD_TYPE_TG_F18;
+            object.bussRepFundInfoDto.repAssetType = repAssetType;
+        }
         //计划类报送信息
-        object.bussRepAssetMngProdInfo.finprodType2 = FINPROD_TYPE_TG_F18;
-        object.bussRepAssetMngProdInfo.repAssetType = repAssetType;
-        //是否需要验证判断
-        object.bussRepAssetMngProdInfo.needValid = repAssetType=="1702";
+        if(object.bussRepAssetMngProdInfo) {
+            object.bussRepAssetMngProdInfo.finprodType2 = FINPROD_TYPE_TG_F18;
+            object.bussRepAssetMngProdInfo.repAssetType = repAssetType;
+            //是否需要验证判断
+            object.bussRepAssetMngProdInfo.needValid = repAssetType=="1702";
+        }
+
         
         //sx个性化 草稿箱bug修复 start
         if (draftoption && object.bussRepAssetMngProdInfo){
@@ -162,6 +184,7 @@ $(function() {
             object.fileArrayCms2 = FinProjectTargetAssetCms.getUploadFileInfo('fileUploader2');
         }*/
         //评级信息
+
         object.busiFinBondRatingInfoDto = {};
         if(BusiFinProjectRatingInfo){
             object.busiFinBondRatingInfoDto.mstBondCreditRatingList = BusiFinProjectRatingInfo.getAllRows();

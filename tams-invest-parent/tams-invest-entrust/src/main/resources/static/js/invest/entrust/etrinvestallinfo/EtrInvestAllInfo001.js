@@ -287,7 +287,7 @@
             ,{field:'invManagerId', title: 'EtrInvestAllInfo001.invManagerId', width:'200',sortField:"invManagerId"}
             ,{field:'remark', title: 'EtrInvestAllInfo001.remark', width:'200',sortable:false}
             ,{field:'pbExportstatus', visible:false}
-            ,{field:'pbExportstatusStr', title: 'EtrInvestAllInfo001.pbExportstatus', width:'150',sortField:"pbExportstatus"}
+            ,{field:'pbExportstatusStr', title: 'EtrInvestAllInfo001.pbExportstatus', width:'150',sortField:"pbExportstatus", visible:false}
         ],
     });
     

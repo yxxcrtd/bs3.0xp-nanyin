@@ -384,10 +384,25 @@ public class EtrIbBondinfo002Controller extends BaseController {
                         + this.getMessage("EtrIbBondinfo002.vdate") + ":" + DateUtil.format(entity.getVdate())
                         + ")-(" + this.getMessage("EtrIbBondinfo002.mdate") + ":"
                         + DateUtil.format(entity.getMdate()) + ")-"
-                        + this.getMessage("EtrIbBondinfo003.entrustAmt") + ":"  // 此处使用多组合的卷面总额（万元）描述
+                        + this.getMessage("EtribBondInfo003.entrustAmt") + ":"  // 此处使用多组合的卷面总额（万元）描述
                         + entity.getEntrustNum());
         processParameter.setWorkFlowParameter(params);
         String msg = etrIbBondinfo002Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }
+
+
+    /**
+     * 计算净价偏离度
+     * @param paramMap
+     * @return
+     */
+    @RequestMapping("/calDeviationDegree")
+    @ResponseBody
+    public BigDecimal calDeviationDegree(@RequestBody Map<String, Object> paramMap) {
+        BigDecimal result =
+        etrIbBondinfo002Service.calDeviationDegree(paramMap);
+        return result;
+    }
+
 }

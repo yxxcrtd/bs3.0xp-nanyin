@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.riskredis.quota.rskevent.dto;
 import java.util.Date;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.base.entity.RskEvent;
 
 /**
@@ -36,6 +37,15 @@ public class RskEvent001Dto extends RskEvent implements ITableRow {
      */
     private Date updateTime;
 
+
+    /**
+     * 导出用更新时间
+     * 
+     * @return 导出用更新时间
+     */
+    public String getUpdateTimeStr() {
+        return DateUtil.format(this.getUpdateTime());
+    }
 
 	public Date getUpdateTime() {
 		return updateTime;

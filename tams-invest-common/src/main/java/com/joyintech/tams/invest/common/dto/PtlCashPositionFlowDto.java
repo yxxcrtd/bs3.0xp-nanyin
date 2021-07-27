@@ -89,4 +89,18 @@ public class PtlCashPositionFlowDto extends PtlCashPositionFlow {
     public void setNeedAcctType(boolean needAcctType) {
         this.needAcctType = needAcctType;
     }
+
+    /**
+     * add by sunhui 20210721 重庆银行：中标结果维护占用持仓改造，增加是否查询冻结持仓flag:Y查询
+     */
+    private String isFrozenPositionFlag;
+
+    public String getIsFrozenPositionFlag() {
+        return isFrozenPositionFlag;
+    }
+
+    public void setIsFrozenPositionFlag(String isFrozenPositionFlag) {
+        this.isFrozenPositionFlag = isFrozenPositionFlag;
+    }
+
 }

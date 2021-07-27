@@ -1798,7 +1798,7 @@ public class FinPlanProfitAssetDto extends FinProduct implements ProcessEntity {
 
     /**
      * 设置 资产推荐方名称
-     * @param recommender 资产推荐方名称
+     * @param recommenderName 资产推荐方名称
      */
     public void setRecommenderName(String recommenderName) {
         this.recommenderName = recommender == null ? null : recommenderName.trim();
@@ -1830,7 +1830,7 @@ public class FinPlanProfitAssetDto extends FinProduct implements ProcessEntity {
     // 增加推荐方与推荐费率 add by renping 20191014 end
 
 
-    @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
+ /*   @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})*/
     public String getRepAssetType() {
         return repAssetType;
     }
@@ -1866,5 +1866,47 @@ public class FinPlanProfitAssetDto extends FinProduct implements ProcessEntity {
 
     public void setParentPlanStr(String parentPlanStr) {
         this.parentPlanStr = parentPlanStr;
+    }
+
+    /**
+     * 增信措施
+     */
+    private String creditEnhanceMeasure;
+
+    /**
+     * 基金经理姓名
+     */
+    private String fundMangerName;
+
+    /**
+     * 取得 增信措施
+     * @return 增信措施
+     */
+    public String getCreditEnhanceMeasure() {
+        return creditEnhanceMeasure;
+    }
+
+    /**
+     * 设置 增信措施
+     * @param creditEnhanceMeasure 增信措施
+     */
+    public void setCreditEnhanceMeasure(String creditEnhanceMeasure) {
+        this.creditEnhanceMeasure = creditEnhanceMeasure;
+    }
+
+    /**
+     * 取得 基金经理姓名
+     * @return 基金经理姓名
+     */
+    public String getFundMangerName() {
+        return fundMangerName;
+    }
+
+    /**
+     * 设置 基金经理姓名
+     * @param fundMangerName 基金经理姓名
+     */
+    public void setFundMangerName(String fundMangerName) {
+        this.fundMangerName = fundMangerName;
     }
 }

@@ -69,11 +69,19 @@ public class EtrConBond002Controller extends BaseController {
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         String entrustId = getParam("entrustId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
         //流程代办
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
 
             EtrConBondDto dto = etrConBondService.getBussinessEntityByWorkflowId(
                 workflowId);
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit.equals("02")){
+                if(dto.getPurchBondTotal() != null) {
+                    dto.setPurchBondTotal(dto.getPurchBondTotal().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 edit by yeming 20210721 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
@@ -82,6 +90,13 @@ public class EtrConBond002Controller extends BaseController {
         }else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(entrustId)) {
             //编辑页面
             EtrConBondDto dto = etrConBondService.selectByKey(entrustId);
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit.equals("02")){
+                if(dto.getPurchBondTotal() != null) {
+                    dto.setPurchBondTotal(dto.getPurchBondTotal().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 edit by yeming 20210721 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("tradeId", dto.getEntrustId());
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
@@ -89,6 +104,13 @@ public class EtrConBond002Controller extends BaseController {
         }else{
             //新建页面初始化
             EtrConBondDto entity = new EtrConBondDto();
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit.equals("02")){
+                if(entity.getPurchBondTotal() != null) {
+                    entity.setPurchBondTotal(entity.getPurchBondTotal().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 edit by yeming 20210721 end
             entity.setEntrustDate(sysDate);
             entity.setEntrustStatus(BussinessDictCodeList.委托状态_新建.getValue());
             model.addAttribute(GlobalConstant.ENTITY, entity);
@@ -97,6 +119,9 @@ public class EtrConBond002Controller extends BaseController {
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("etrPs", DictCodeList.交易方向_申购.getValue());
         model.addAttribute("INV_AIM_default", DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue());
+        //配置单位 add by yeming 20210721 start
+        model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
+        //配置单位 add by yeming 20210721 end
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
         pageElementConfigDto.setPageId("BaseRiskMathComm");
         Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面

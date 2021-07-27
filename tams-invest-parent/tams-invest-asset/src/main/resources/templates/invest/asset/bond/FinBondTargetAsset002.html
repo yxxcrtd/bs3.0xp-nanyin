@@ -567,7 +567,16 @@
 									</div>
 								</div>
 								<!--　add by zhangpuyu 2019/10/24 end -->
-								</div>
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap"
+                                           data-th-text="#{FinBondTargetAsset002.isIssueAsset}">是否发行标的</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="checkbox" id="isIssueAsset" name="isIssueAsset"
+                                               lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+                                               data-th-checked="${YES_OR_NO_Y} ==${entity?.isIssueAsset}">
+                                    </div>
+                                </div>
+                            </div>
         	                    <!-- 新增担保人 add by renping 20190930 end -->
 							</div>
 						</div>
@@ -715,7 +724,7 @@
 					</div>
 				</div>
 				<!-- 判断系统参数是否隐藏中债信息,动态加载calss值"step",不展示在页面头  -->
-				<div class="" title="中债报送信息" 
+				<div id="bussRepBondInfo" class="" title="中债报送信息"
 					th:if="${ASSET_INFO_CHB_HIDE != '02'}"
 					th:classappend="${ASSET_INFO_CHB_HIDE != '02'}? 'pro-module-wrapper step':'pro-module-wrapper1 step1' " style="margin-bottom: 30px">
 					<div class="layui-form-item" style="margin-bottom: 5px">

@@ -127,7 +127,7 @@
     </insert>
     
     <insert id="insertParaList" parameterType="java.util.List">
-        insert into RSK_EVENT_PARA_REL (PARA_CODE, EVENT_CODE, PARA_GRANULARITY, REL_TYPE, REL_ITEM, REMARK,CUSTOM_VAL,
+        insert into RSK_EVENT_PARA_REL (PARA_CODE, EVENT_CODE, PARA_GRANULARITY, REL_TYPE, REL_ITEM, REMARK,CUSTOM_VAL,FORMULA_VAL,
         CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
         select
         t1.paraCode,
@@ -137,6 +137,7 @@
         t1.relItem,
         t1.remark,
         t1.customVal,
+        t1.formulaVal,
         t1.createUser,
         t1.createDept,
         t1.createTime,
@@ -152,6 +153,7 @@
             #{item.relItem,jdbcType=VARCHAR} relItem,
              #{item.remark,jdbcType=VARCHAR} remark,
             #{item.customVal,jdbcType=DECIMAL} customVal,
+            #{item.formulaVal,jdbcType=VARCHAR} formulaVal,
              #{item.createUser,jdbcType=VARCHAR} createUser,
             #{item.createDept,jdbcType=VARCHAR} createDept,
              #{item.createTime,jdbcType=TIMESTAMP} createTime,

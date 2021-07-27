@@ -78,10 +78,31 @@
         }
         if ($('#isForbid').next().find("em").text() === '是') {
         	$("#forbidEnumDiv").show();
+			$("#paramValueNoneDiv").show();
+			/*$('#isUpRedis').prop('checked', false).trigger('change');
+			$('#isUpRedis').next().addClass('layui-form-onswitch').trigger('change');
+			$('#isUpRedis').next().find("em").text('否');
+			$("#isUpRedis").prop('disabled',true).trigger('change');
+			layui.form.render('checkbox')*/
         } else {
         	$("#forbidEnum").val('');
        		$("#forbidEnumDiv").hide();
+			$("#paramValueNone").val('');
+			$("#paramValueNoneDiv").hide();
+		/*	$('#isUpRedis').prop('checked', true).trigger('change');
+			$('#isUpRedis').next().addClass('layui-form-onswitch').trigger('change');
+			$('#isUpRedis').next().find("em").text('是');
+			$("#isUpRedis").prop('disabled',false).trigger('change');
+			layui.form.render('checkbox')*/
         }
+		if($("#RskSupervisionIndicatorParam002_paramMathType").val()=='REDIS'&&entity&&!entity.isUpRedis){
+			$("#redisField").prop('disabled',false).trigger('change');
+			$('#isUpRedis').prop('checked', true).trigger('change');
+			$('#isUpRedis').next().addClass('layui-form-onswitch').trigger('change');
+			$('#isUpRedis').next().find("em").text('是');
+			$("#isUpRedis").prop('disabled',false).trigger('change');
+			layui.form.render('checkbox')
+		}
     }
 
     //保存按钮
@@ -215,10 +236,24 @@
    function isForbidChang(data) {
    	if(data.checked){
    		$("#forbidEnumDiv").show();
+		$("#paramValueNoneDiv").show();
+		$("#redisField").prop('disabled',true).trigger('change');
+		$('#isUpRedis').prop('checked', false).trigger('change');
+		$('#isUpRedis').next().addClass('layui-form-onswitch').trigger('change');
+		$('#isUpRedis').next().find("em").text('否');
+		$("#isUpRedis").prop('disabled',true).trigger('change');
+		layui.form.render('checkbox')
    	}
    	else{
    		$("#forbidEnum").val('');
    		$("#forbidEnumDiv").hide();
+		$("#paramValueNone").val('');
+		$("#paramValueNoneDiv").hide();
+		$('#isUpRedis').prop('checked', true).trigger('change');
+		$('#isUpRedis').next().addClass('layui-form-onswitch').trigger('change');
+		$('#isUpRedis').next().find("em").text('是');
+		$("#isUpRedis").prop('disabled',false).trigger('change');
+		layui.form.render('checkbox')
    	}
    }
     /**
@@ -241,6 +276,24 @@
         $("#paraDisplayType").change(function(){
         	paraDisplayTypeChange();
         });
+		$("#RskSupervisionIndicatorParam002_paramMathType").change(function(){
+			if($(this).val()=='REDIS'){
+				$("#redisField").prop('disabled',false).trigger('change');
+				$('#isUpRedis').prop('checked', true).trigger('change');
+				$('#isUpRedis').next().addClass('layui-form-onswitch').trigger('change');
+				$('#isUpRedis').next().find("em").text('是');
+				$("#isUpRedis").prop('disabled',false).trigger('change');
+				layui.form.render('checkbox')
+			}else {
+				$("#redisField").val('').trigger('change');
+				$("#redisField").prop('disabled',true).trigger('change');
+				$('#isUpRedis').prop('checked', false).trigger('change');
+				$('#isUpRedis').next().addClass('layui-form-onswitch').trigger('change');
+				$('#isUpRedis').next().find("em").text('否');
+				$("#isUpRedis").prop('disabled',true).trigger('change');
+				layui.form.render('checkbox')
+			}
+		});
         layui.form.on('switch(isForbidFilter)', function(data){
         	isForbidChang(this);
 		  });

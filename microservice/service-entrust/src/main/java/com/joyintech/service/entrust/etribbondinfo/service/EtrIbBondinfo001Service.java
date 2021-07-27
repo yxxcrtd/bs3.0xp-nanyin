@@ -21,6 +21,7 @@ import com.joyintech.service.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto;
 import com.joyintech.service.entrust.etribbondinfo.dto.EtrTrdProductDealDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -210,6 +211,9 @@ public class EtrIbBondinfo001Service extends BaseService{
      */
     public EtrFinProductDto getEtrFinProductInfo(Map<String, Object> pageParam) {
         pageParam.put("sysDate", iPlatformDate.getSysDateStr());
+        pageParam.put("EXEC_MODE_01", DictCodeList.行权方式_赎回.getValue());
+        pageParam.put("EXEC_MODE_02", DictCodeList.行权方式_回售.getValue());
+        pageParam.put("FINPROD_TYPE2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         EtrFinProductDto dto = etrIbBondinfo001Mapper.getEtrFinProductInfo(pageParam);
         if (dto != null) {
             //剩余期限为负统一为0
@@ -227,5 +231,36 @@ public class EtrIbBondinfo001Service extends BaseService{
             dto.setXqFlg(xqfangshi);
         }
         return dto;
+    }
+
+    public BigDecimal getCostPrice(Map<String, Object> pageParam) {
+        BigDecimal costPrice = BigDecimal.ZERO;
+        //根据资产代码查询相关所有的交易信息
+        List<EtrTrdProductDealDto> tradeList = etrIbBondinfo001Mapper.getAllTradeListByFinprodId(pageParam);
+        BigDecimal yesterDayPosAmount = BigDecimal.ZERO;
+        if (!StringUtil.isEmptyList(tradeList)) {
+            for (EtrTrdProductDealDto trdProductDeal : tradeList) {
+                if (trdProductDeal.getPs().equals(DictCodeList.交易方向_买入.getValue())) {
+                    BigDecimal shareAmt = trdProductDeal.getShareAmt() == null ? BigDecimal.ZERO : trdProductDeal.getShareAmt();
+                    BigDecimal unitCprice = trdProductDeal.getUnitCprice() == null ? BigDecimal.ZERO : trdProductDeal.getUnitCprice();
+                    if (ArithmeticUtil.doAdd(yesterDayPosAmount, shareAmt).compareTo(BigDecimal.ZERO) != 0) {
+                        //综合成本=昨日成本*昨日持仓数量+净价*份额
+                        costPrice = ArithmeticUtil.multiply(costPrice, yesterDayPosAmount);
+                        costPrice = ArithmeticUtil.doAdd(costPrice, ArithmeticUtil.multiply(shareAmt, unitCprice));
+                        //今日数量= 昨日持仓数量 + 份额
+                        yesterDayPosAmount = ArithmeticUtil.doAdd(yesterDayPosAmount, shareAmt);
+                        //单位成本= 综合成本 / 今日数量
+                        costPrice = ArithmeticUtil.divide(costPrice, yesterDayPosAmount, 12);
+                    } else {
+                        yesterDayPosAmount = BigDecimal.ZERO;
+                        costPrice = BigDecimal.ZERO;
+                    }
+                }
+                if (trdProductDeal.getPs().equals(DictCodeList.交易方向_卖出.getValue())) {
+                    yesterDayPosAmount = yesterDayPosAmount.subtract(trdProductDeal.getShareAmt() == null ? new BigDecimal(0) : trdProductDeal.getShareAmt());
+                }
+            }
+        }
+        return costPrice;
     }
 }

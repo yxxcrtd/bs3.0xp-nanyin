@@ -3,14 +3,21 @@ package com.joyintech.tams.invest.trade.primarybiddingmanage.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.BidOrderBidPriceMapper;
 import com.joyintech.tams.common.base.dao.BidOrderMapper;
+import com.joyintech.tams.common.base.dao.EtrCashPositionFlowMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -61,6 +68,15 @@ public class PrimaryBiddingManage003Service extends BaseService<TrdBiddingManage
     private BidOrderMapper bidOrderMapper;
     @Autowired
     private  BidOrderBidPriceMapper bidOrderBidPriceMapper;
+
+    @Autowired
+    private BasePtlCashPositionInfoMapper basePtlCashPositionInfoMapper;
+
+    @Autowired
+    private EtrCommonCashPositionDealService etrCommonCashPositionDealService;
+
+    @Autowired
+    private EtrCashPositionFlowMapper etrCashPositionFlowMapper;
     /**
      * {@inheritDoc}
      */
@@ -99,6 +115,31 @@ public class PrimaryBiddingManage003Service extends BaseService<TrdBiddingManage
                     bidOrderBidPrice.setIsWin(tenderConfirmStatus);
 //                    bussCommonMapperDelegateService.updateByPrimaryKey(BidOrderBidPriceMapper.class, bidOrderBidPrice);
                     bidOrderBidPriceMapper.updateByPrimaryKey(bidOrderBidPrice);
+                    /**add by sunhui 20210719 重庆银行：中标结果维护，【是否头寸冻结】为是时，取消冻结组合可用现金   start**/
+                    if(StringUtil.equals(bidOrderBidPriceDto.getIsFrozenPosition(), BussinessDictCodeList.是否_是.getValue())){
+                        //1.撤销删除组合可用现金冻结
+                        EntrustCommonDto entrustCommonDto = etrCommonCashPositionDealService.findEntrust(entity.getEntrustId());
+                        String acctId = EtrCommonCashPositionDealService.select组合托管户(entrustCommonDto.getEtrEntrust().getPortfolioId(),
+                                entrustCommonDto.getEtrEntrust().getCcy(),
+                                DictCodeListExt2.资金账户类型_托管户.getValue());
+                        PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+                        ptlCashPositionFlowDto.setPortfolioId(bidOrderBidPriceDto.getPortfolioId());
+                        ptlCashPositionFlowDto.setCcy(entrustCommonDto.getEtrEntrust().getCcy());
+                        ptlCashPositionFlowDto.setCdate(entrustCommonDto.getEtrEntrust().getVdate());
+                        ptlCashPositionFlowDto.setAcctId(acctId);
+                        ptlCashPositionFlowDto.setOrderId(entrustCommonDto.getEtrEntrust().getEntrustId());
+                        ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());//冻结的现金
+                        basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
+                        //2.撤销删除指令可用现金冻结--生成反向流水
+                        EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
+                        BeanUtil.copyPropertiesIgnoreNull(dto, ptlCashPositionFlowDto);
+                        dto.setSeqno(IDGenerator.generate());
+                        dto.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
+                        dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                        dto.setAmount(ArithmeticUtil.multiply(bidOrderBidPriceDto.getWinPrinAmt(),new BigDecimal("100"),bidOrderBidPriceDto.getWinCprice()));
+                        etrCashPositionFlowMapper.insertSelective(dto);
+                    }
+                    /**add by sunhui 20210719 重庆银行：中标结果维护，【是否头寸冻结】为是时，取消冻结组合可用现金   end**/
                 }
             }
             return;

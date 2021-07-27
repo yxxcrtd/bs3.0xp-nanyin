@@ -53,8 +53,21 @@ public class RskSupervisionLogService extends CommonExportService<RskSupervision
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
     	 if(("logTime".equals(propName)) && value != null){
-             cell.setCellValue(DateUtil.format((Date)value));
+    	     if(value instanceof Long) {
+    	         cell.setCellValue(DateUtil.format(new Date((Long)value)));
+    	     }
+    	     else if(value instanceof Date) {
+                 cell.setCellValue(DateUtil.format((Date)value));
+    	     }
          }
+    	 else if(("createTime".equals(propName)) && value != null){
+    	     if(value instanceof Long) {
+    	         cell.setCellValue(DateUtil.formatDateTime(new Date((Long)value)));
+    	     }
+    	     else if(value instanceof Date) {
+    	         cell.setCellValue(DateUtil.formatDateTime((Date)value));
+    	     }
+    	 }
     }
 
     /**

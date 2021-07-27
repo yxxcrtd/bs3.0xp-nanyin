@@ -39,9 +39,12 @@
 		select
 			fp.FINPROD_ID id,
 			fp.FINPROD_MARKET_ID || ':'|| fp.FINPROD_NAME text
-		  from 
-			FIN_PRODUCT fp inner join FIN_PRODUCT_TYPE ft on 
-			fp.FINPROD_ID = ft.FINPROD_ID
+		  from
+		FIN_PRODUCT fp
+		LEFT JOIN FIN_PRODUCT_ADD FPA
+		ON fp.FINPROD_ID = FPA.FINPROD_ID
+		inner join FIN_PRODUCT_TYPE ft on
+		fp.FINPROD_ID = ft.FINPROD_ID
 		<where>
 			ft.TYPE_8 is not null
 			<if test="search != null and search != ''">
@@ -51,6 +54,7 @@
 				fp.FINPROD_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
 			)
 			</if>
+			AND (FPA.IS_ISSUE_ASSET IS NULL OR FPA.IS_ISSUE_ASSET = 'N')
 		</where>
 	</select>
 	<select id="selectAssetInfo" resultType="com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.dto.CeAssetGroupManagement002Dto">

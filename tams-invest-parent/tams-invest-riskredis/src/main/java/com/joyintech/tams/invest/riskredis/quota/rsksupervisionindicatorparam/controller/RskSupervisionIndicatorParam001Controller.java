@@ -1,23 +1,11 @@
 package com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.DTXTransaction;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.intf.IDictCode;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.groups.ValidateGroupDelete;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParamDto;
-import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam001Service;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import java.util.Enumeration;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,9 +16,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
-import java.util.Map;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.intf.IDictCode;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
+import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParamDto;
+import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam001Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 指标参数管理controller
@@ -54,8 +56,8 @@ public class RskSupervisionIndicatorParam001Controller extends BaseController {
     /**
      * 平台日期组件接口
      */
-    @Autowired(required=false)
-    private IPlatformDate iPlatformDate;
+    @Autowired
+    private CommonPlatformDateService commonPlatformDateService;
     private static final IDictCode[] DICT_CODES = new BussinessDictCodeRds[] { BussinessDictCodeRds.指标参数实现类型
     };
     /**
@@ -72,7 +74,7 @@ public class RskSupervisionIndicatorParam001Controller extends BaseController {
     	model.addAttribute("PLUGIN", BussinessDictCodeListRds.指标参数实现类型_类名.getValue());
     	model.addAttribute("SQL", BussinessDictCodeListRds.指标参数实现类型_SQL.getValue());
     	model.addAttribute("CUSTOM", BussinessDictCodeListRds.指标参数实现类型_自定义.getValue());
-        model.addAttribute("ipatFormDate",iPlatformDate.getSysDateStr());
+        model.addAttribute("ipatFormDate",commonPlatformDateService.getSysDateStr());
         return super.init(model);
     }
     /**
@@ -93,7 +95,7 @@ public class RskSupervisionIndicatorParam001Controller extends BaseController {
         model.addAttribute("PLUGIN", BussinessDictCodeListRds.指标参数实现类型_类名.getValue());
         model.addAttribute("SQL", BussinessDictCodeListRds.指标参数实现类型_SQL.getValue());
         model.addAttribute("CUSTOM", BussinessDictCodeListRds.指标参数实现类型_自定义.getValue());
-        model.addAttribute("ipatFormDate",iPlatformDate.getSysDateStr());
+        model.addAttribute("ipatFormDate",commonPlatformDateService.getSysDateStr());
         return super.init(model);
     }
 

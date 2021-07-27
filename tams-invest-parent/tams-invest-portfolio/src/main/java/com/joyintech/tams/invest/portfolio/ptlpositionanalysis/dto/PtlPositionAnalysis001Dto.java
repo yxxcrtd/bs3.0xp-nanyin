@@ -91,6 +91,11 @@ public class PtlPositionAnalysis001Dto extends BaseDto implements GridRowDto {
     private BigDecimal dscCostAmt;
 
     /**
+     * 盈亏 = 市值 - 成本
+     */
+    private BigDecimal floatAmt;
+
+    /**
      * 数量
      */
     private BigDecimal shareAmt;
@@ -464,6 +469,14 @@ public class PtlPositionAnalysis001Dto extends BaseDto implements GridRowDto {
      */
     public void setDscCostAmt(BigDecimal dscCostAmt) {
         this.dscCostAmt = dscCostAmt;
+    }
+
+    public BigDecimal getFloatAmt() {
+        return floatAmt;
+    }
+
+    public void setFloatAmt(BigDecimal floatAmt) {
+        this.floatAmt = floatAmt;
     }
 
     /**

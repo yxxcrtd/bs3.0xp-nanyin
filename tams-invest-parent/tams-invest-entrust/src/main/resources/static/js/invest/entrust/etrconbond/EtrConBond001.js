@@ -52,7 +52,7 @@ $(function() {
             ,{field:'winlotteryAmt', title:'EtrConBond001.winlotteryAmt',width:'10%'}
             ,{field:'entrustDate', title:'EtrConBond001.purchDate',width:'10%',type:'date'}
             ,{field:'purchModle',visible:false}
-            ,{field:'purchModleStr', title:'EtrConBond001.purchModle',width:'10%'}
+            ,{field:'purchModleStr', title:'EtrConBond001.purchModle',width:'10%',visible:false}
             ,{field:'purchType', visible:false}
             ,{field:'purchTypeStr', title:'EtrConBond001.purchType',width:'10%'}
             ,{field:'TradeMarket', visible:false}

@@ -29,19 +29,19 @@ import java.util.Map;
 @Service
 public class RskEvent003Service extends CommonExportService<RskEvent003Dto> implements BaseProcessService<RskEvent003Dto> {
 
-	/**
+    /**
      * 日志
      */
     private static Logger logger = LoggerFactory.getLogger(RskEvent003Service.class);
 
-	/**
+    /**
      * redis数据初始化
      */
     @Autowired
     private RiskRedisInitService<ImplCond> redisRriter;
+
     @Autowired
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-
 
 	@Override
 	public void doComplete(RskEvent003Dto entity, OperationType type) {

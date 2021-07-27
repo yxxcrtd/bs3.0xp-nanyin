@@ -899,8 +899,6 @@ public class CfetsQuotedCommonService extends BaseService {
      */
     public Page<SelectOptionDto> selectPortfolioId(int page, int length,
                                                    Map<String, Object> param) {
-    	String userId = SecurityUtil.getLoginUser().getUserName();
-		param.put("userId", userId == null ? "" : userId);
         Page<SelectOptionDto> pageList = this.queryForPageForSelectReturn(page, length,
             () -> cfetsQuotedCommonMapper.selectPortfolioId(param));
         return pageList;

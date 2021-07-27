@@ -697,7 +697,7 @@ public class TrdFundInvestTradeConfirmDto extends TrdProductDeal implements Proc
      * 
      * @return tradeMarket.
      */
-    @NotEmpty(fieldName = "TrdFundInvestTrade002.tradeMarket", groups = {ValidateGroupEdit.class})
+    /*@NotEmpty(fieldName = "TrdFundInvestTrade002.tradeMarket", groups = {ValidateGroupEdit.class})*/
     public String getTradeMarket() {
         return tradeMarket;
     }

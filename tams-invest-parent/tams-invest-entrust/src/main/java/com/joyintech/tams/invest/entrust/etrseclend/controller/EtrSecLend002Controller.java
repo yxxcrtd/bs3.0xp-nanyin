@@ -99,9 +99,17 @@ public class EtrSecLend002Controller extends BaseController {
         String finprodId = getParam("targetFinprodId");
         String portfolioId = getParam("portfolioId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             EtrSecLendDto dto = etrSecLendService.getBussinessEntityByWorkflowId(
                 workflowId);
+            //配置单位 add by yeming 20210723 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(dto.getTotalAmt() != null) {
+                    dto.setTotalAmt(dto.getTotalAmt().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 add by yeming 20210723 end
             if(dto.getSettleSpeed()!=null){
                 if(dto.getSettleSpeed().equals("0")){
                     dto.setSettleSpeed(DictCodeList.清算速度_T_0.getValue());
@@ -119,6 +127,13 @@ public class EtrSecLend002Controller extends BaseController {
         }
         else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(entrustId)) {
             EtrSecLendDto dto = etrSecLendService.selectByKey(entrustId,finprodId,portfolioId);
+            //配置单位 add by yeming 20210723 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(dto.getTotalAmt() != null) {
+                    dto.setTotalAmt(dto.getTotalAmt().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 add by yeming 20210723 end
             if(dto.getSettleSpeed()!=null){
                 if(dto.getSettleSpeed().equals("0")){
                     dto.setSettleSpeed(DictCodeList.清算速度_T_0.getValue());
@@ -138,6 +153,13 @@ public class EtrSecLend002Controller extends BaseController {
         //新建初始化
         else if (WorkFlowUtil.isNotFromToDoList() && !StringUtil.isNotEmpty(entrustId)) {
             EtrSecLendDto entity = new EtrSecLendDto();
+            //配置单位 add by yeming 20210723 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(entity.getTotalAmt() != null) {
+                    entity.setTotalAmt(entity.getTotalAmt().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 add by yeming 20210723 end
             entity.setVdate(sysDate);
             entity.setMdate(sysDate);
             entity.setEntrustStatus(DictCodeList.委托状态_新建.getValue());
@@ -151,6 +173,9 @@ public class EtrSecLend002Controller extends BaseController {
         //----add by jjpei 20190718--------委托监控风险试算-----------start--------
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F12",DictCodeListExt2.平安资产类型_债券借贷.getValue());
+        //配置单位 add by yeming 20210721 start
+        model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
+        //配置单位 add by yeming 20210721 end
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
         pageElementConfigDto.setPageId("BaseRiskMathComm");
         Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面

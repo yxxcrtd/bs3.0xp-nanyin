@@ -119,8 +119,10 @@
 				
 			}else{
 				/* 禁止型 */
-				wg = detailJson.threshold_1.value_cn;
-				wg=wg.substring(0,wg.length-1);
+				if(detailJson.threshold_1.value_cn) {
+				    wg = detailJson.threshold_1.value_cn;
+				    wg=wg.substring(0,wg.length-1);  
+				}
 			}
 		}
 		return wg;

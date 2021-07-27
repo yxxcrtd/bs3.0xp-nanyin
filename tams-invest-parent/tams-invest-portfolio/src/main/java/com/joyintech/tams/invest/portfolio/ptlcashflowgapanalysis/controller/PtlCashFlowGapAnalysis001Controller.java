@@ -48,6 +48,7 @@ public class PtlCashFlowGapAnalysis001Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.平安业务类型);
         this.setSelectOptionToModel(model, DictCode.金融产品类型_投管用);
         this.setSelectOptionToModel(model, DictCode.交易方向);
+        this.setSelectOptionToModel(model, DictCode.组合系列);
         PtlCashFlowGapAnalysis001Dto dto = new PtlCashFlowGapAnalysis001Dto();
         dto.setDisplayAccuracy("01");
         dto.setCcy("CNY"); 

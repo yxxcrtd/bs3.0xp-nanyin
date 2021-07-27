@@ -370,4 +370,6 @@ public interface IbuQuoteMapper {
     // add by etliu 20210309 银行间上下行多组合 end
 
     List<IbuQuoteEntCrepPledgeDto> selectQuoteEntCrepPledgeDataByQuoteId(@Param("quoteId")String quoteId);
+
+    int updateBondQuoteFinalStatusForRevoke(IbuQuoteBond dto);
 }

@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class RskSupervisionIndicatorParamValidator implements BeanValidator {
@@ -60,11 +62,11 @@ public class RskSupervisionIndicatorParamValidator implements BeanValidator {
           	}
         	if(StringUtil.isNotEmpty(dto.getParaCode())) {
                 char content[] = dto.getParaCode().toCharArray();
-                for (char c : content) {
-                    if ((c >= '0' && c <= '9')) {
+                Pattern pattern = Pattern.compile("[A-Za-z0-9]+$");
+                Matcher matcher = pattern.matcher(dto.getParaCode());
+                if (!matcher.matches()) {
                         errorList.add(new ValidMessage("paraCode",getMessage("RSKRDS_W_0002",
                                 getMessage("RskSupervisionIndicatorParam002.paraCode"))));
-                    }
                 }
             }
             if(StringUtil.equals(dto.getParaDisplayType(), BussinessDictCodeListRds.指标参数实现类型_SQL.getValue())){

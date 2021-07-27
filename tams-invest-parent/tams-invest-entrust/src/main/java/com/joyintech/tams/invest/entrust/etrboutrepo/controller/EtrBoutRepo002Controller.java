@@ -125,9 +125,17 @@ public class EtrBoutRepo002Controller extends BaseController {
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         String entrustId = getParam("entrustId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
         RequestUtil.getPageParam();
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             dto = etrBoutRepoService.getBussinessEntityByWorkflowId(workflowId);
+            //配置单位 edit by yeming 20210723 start
+            if(entrustAmtUnit.equals("02")){
+                if(dto.getEntrustAmt() != null) {
+                    dto.setEntrustAmt(dto.getEntrustAmt().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 edit by yeming 20210723 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
@@ -144,7 +152,15 @@ public class EtrBoutRepo002Controller extends BaseController {
                     dto.setSettleSpreed(DictCodeList.清算速度_T_1.getValue());
                 }
             }
-            dto.setEntrustAmt(dto.getEntrustNum());
+            //配置单位 edit by yeming 20210723 start
+            if(entrustAmtUnit.equals("02")){
+                if(dto.getEntrustAmt() != null) {
+                    dto.setEntrustAmt(dto.getEntrustAmt().divide(new BigDecimal(10000)));
+                }else {
+                    dto.setEntrustAmt(dto.getEntrustNum());
+                }
+            }
+            //配置单位 edit by yeming 20210723 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("tradeId", dto.getEntrustId());
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
@@ -158,12 +174,22 @@ public class EtrBoutRepo002Controller extends BaseController {
             dto.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());
             dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             dto.setEntrustStatus(DictCodeList.委托状态_新建.getValue());
+            //配置单位 edit by yeming 20210723 start
+            if(entrustAmtUnit.equals("02")){
+                if(dto.getEntrustAmt() != null) {
+                    dto.setEntrustAmt(dto.getEntrustAmt().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 edit by yeming 20210723 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
         model.addAttribute("fintype_zhg", DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue());
         model.addAttribute("fintype_nhg", DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F10",DictCodeList.平安资产类型_买断式回购.getValue());
+        //配置单位 add by yeming 20210721 start
+        model.addAttribute("entrustAmtUnit", entrustAmtUnit);
+        //配置单位 add by yeming 20210721 end
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
         pageElementConfigDto.setPageId("BaseRiskMathComm");
         Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.CreditRuleInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.CreditRuleInfo" >
+        <id column="CREDIT_RULE_ID" property="creditRuleId" jdbcType="VARCHAR" />
+        <result column="CREDIT_RULE_TYPE" property="creditRuleType" jdbcType="VARCHAR" />
+        <result column="CREDIT_TAG_ID" property="creditTagId" jdbcType="VARCHAR" />
+        <result column="AST_TYPE_1" property="astType1" jdbcType="VARCHAR" />
+        <result column="AST_TYPE_2" property="astType2" jdbcType="VARCHAR" />
+        <result column="AST_TYPE_3" property="astType3" jdbcType="VARCHAR" />
+        <result column="AST_TYPE_4" property="astType4" jdbcType="VARCHAR" />
+        <result column="AST_TYPE_5" property="astType5" jdbcType="VARCHAR" />
+        <result column="ORG_TYPE" property="orgType" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="DEDUCT_OBJ_TYPE" property="deductObjType" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CREDIT_RULE_ID CREDIT_RULE_ID, CREDIT_RULE_TYPE CREDIT_RULE_TYPE, CREDIT_TAG_ID CREDIT_TAG_ID, 
+        AST_TYPE_1 AST_TYPE_1, AST_TYPE_2 AST_TYPE_2, AST_TYPE_3 AST_TYPE_3, AST_TYPE_4 AST_TYPE_4, 
+        AST_TYPE_5 AST_TYPE_5, ORG_TYPE ORG_TYPE, FINPROD_ID FINPROD_ID, DEDUCT_OBJ_TYPE DEDUCT_OBJ_TYPE, 
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CreditRuleInfoMapper.Base_Column_List" />
+        from CREDIT_RULE_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CreditRuleInfoMapper.Base_Column_List" />
+        from CREDIT_RULE_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CreditRuleInfoMapper.Base_Column_List" />
+        from CREDIT_RULE_INFO
+        where CREDIT_RULE_ID = #{creditRuleId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CREDIT_RULE_INFO
+        where CREDIT_RULE_ID = #{creditRuleId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.CreditRuleInfo" >
+        insert into CREDIT_RULE_INFO (CREDIT_RULE_ID, CREDIT_RULE_TYPE, CREDIT_TAG_ID, 
+            AST_TYPE_1, AST_TYPE_2, AST_TYPE_3, 
+            AST_TYPE_4, AST_TYPE_5, ORG_TYPE, 
+            FINPROD_ID, DEDUCT_OBJ_TYPE, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{creditRuleId,jdbcType=VARCHAR}, #{creditRuleType,jdbcType=VARCHAR}, #{creditTagId,jdbcType=VARCHAR}, 
+            #{astType1,jdbcType=VARCHAR}, #{astType2,jdbcType=VARCHAR}, #{astType3,jdbcType=VARCHAR}, 
+            #{astType4,jdbcType=VARCHAR}, #{astType5,jdbcType=VARCHAR}, #{orgType,jdbcType=VARCHAR}, 
+            #{finprodId,jdbcType=VARCHAR}, #{deductObjType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CreditRuleInfo" >
+        insert into CREDIT_RULE_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="creditRuleId != null" >
+                CREDIT_RULE_ID,
+            </if>
+            <if test="creditRuleType != null" >
+                CREDIT_RULE_TYPE,
+            </if>
+            <if test="creditTagId != null" >
+                CREDIT_TAG_ID,
+            </if>
+            <if test="astType1 != null" >
+                AST_TYPE_1,
+            </if>
+            <if test="astType2 != null" >
+                AST_TYPE_2,
+            </if>
+            <if test="astType3 != null" >
+                AST_TYPE_3,
+            </if>
+            <if test="astType4 != null" >
+                AST_TYPE_4,
+            </if>
+            <if test="astType5 != null" >
+                AST_TYPE_5,
+            </if>
+            <if test="orgType != null" >
+                ORG_TYPE,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="deductObjType != null" >
+                DEDUCT_OBJ_TYPE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="creditRuleId != null" >
+                #{creditRuleId,jdbcType=VARCHAR},
+            </if>
+            <if test="creditRuleType != null" >
+                #{creditRuleType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditTagId != null" >
+                #{creditTagId,jdbcType=VARCHAR},
+            </if>
+            <if test="astType1 != null" >
+                #{astType1,jdbcType=VARCHAR},
+            </if>
+            <if test="astType2 != null" >
+                #{astType2,jdbcType=VARCHAR},
+            </if>
+            <if test="astType3 != null" >
+                #{astType3,jdbcType=VARCHAR},
+            </if>
+            <if test="astType4 != null" >
+                #{astType4,jdbcType=VARCHAR},
+            </if>
+            <if test="astType5 != null" >
+                #{astType5,jdbcType=VARCHAR},
+            </if>
+            <if test="orgType != null" >
+                #{orgType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="deductObjType != null" >
+                #{deductObjType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CreditRuleInfo" >
+        insert into CREDIT_RULE_INFO(CREDIT_RULE_ID, CREDIT_RULE_TYPE, CREDIT_TAG_ID, AST_TYPE_1, 
+        AST_TYPE_2, AST_TYPE_3, AST_TYPE_4, AST_TYPE_5, ORG_TYPE, FINPROD_ID, DEDUCT_OBJ_TYPE, 
+        REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select CREDIT_RULE_ID, CREDIT_RULE_TYPE, CREDIT_TAG_ID, AST_TYPE_1, 
+            AST_TYPE_2, AST_TYPE_3, AST_TYPE_4, AST_TYPE_5, ORG_TYPE, FINPROD_ID, DEDUCT_OBJ_TYPE, 
+            REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from CREDIT_RULE_INFO
+             where 1 = 1 and CREDIT_RULE_ID = #{creditRuleId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.CreditRuleInfo" >
+        update CREDIT_RULE_INFO
+        <set >
+            <if test="creditRuleType != null" >
+                CREDIT_RULE_TYPE = #{creditRuleType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditTagId != null" >
+                CREDIT_TAG_ID = #{creditTagId,jdbcType=VARCHAR},
+            </if>
+            <if test="astType1 != null" >
+                AST_TYPE_1 = #{astType1,jdbcType=VARCHAR},
+            </if>
+            <if test="astType2 != null" >
+                AST_TYPE_2 = #{astType2,jdbcType=VARCHAR},
+            </if>
+            <if test="astType3 != null" >
+                AST_TYPE_3 = #{astType3,jdbcType=VARCHAR},
+            </if>
+            <if test="astType4 != null" >
+                AST_TYPE_4 = #{astType4,jdbcType=VARCHAR},
+            </if>
+            <if test="astType5 != null" >
+                AST_TYPE_5 = #{astType5,jdbcType=VARCHAR},
+            </if>
+            <if test="orgType != null" >
+                ORG_TYPE = #{orgType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="deductObjType != null" >
+                DEDUCT_OBJ_TYPE = #{deductObjType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CREDIT_RULE_ID = #{creditRuleId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CreditRuleInfo" >
+        update CREDIT_RULE_INFO
+        set CREDIT_RULE_TYPE = #{creditRuleType,jdbcType=VARCHAR},
+            CREDIT_TAG_ID = #{creditTagId,jdbcType=VARCHAR},
+            AST_TYPE_1 = #{astType1,jdbcType=VARCHAR},
+            AST_TYPE_2 = #{astType2,jdbcType=VARCHAR},
+            AST_TYPE_3 = #{astType3,jdbcType=VARCHAR},
+            AST_TYPE_4 = #{astType4,jdbcType=VARCHAR},
+            AST_TYPE_5 = #{astType5,jdbcType=VARCHAR},
+            ORG_TYPE = #{orgType,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            DEDUCT_OBJ_TYPE = #{deductObjType,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CREDIT_RULE_ID = #{creditRuleId,jdbcType=VARCHAR}
+    </update>
+</mapper>

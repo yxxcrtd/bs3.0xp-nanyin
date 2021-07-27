@@ -66,6 +66,7 @@ $(function() {
             ,{field:'bidPrice', title:'投标标位%',width:150,sortable:false,visible:false}
             ,{field:'bidPriceStr', title:'投标标位%',width:150,sortable:false}
             ,{field:'winPrice', title:'中标标位%',width:150,sortable:false}
+            ,{field:'winCprice', title:'中标净价',width:150,sortable:false,visible:false,type:'number'}
             ,{field:'bidDate', title:'投标日',type:'date',width:150,sortable:false}
         ]
     });
@@ -124,6 +125,160 @@ $(function() {
                 }
             });
         });
+        /**add by sunhui 20210721 重庆银行：手工释放中标结果占用的头寸 start**/
+        // 手工释放
+        $('#'+pageId+"_btn_manualRelease").click(function () {
+
+            if(table!=null && table!=''){
+                var selArr = table.getAllCheckedRows();
+            }
+            // 列表中未勾选
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            // 列表中勾选对象1条以上时
+            if (selArr.length > 1) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0058"));
+                return;
+            }
+            //check委托已关闭
+            if ('06' == selArr[0].entrustStatus){
+                Joyin.error(JoyinUtil.getMessage("ETR_BBR_005"));
+                return;
+            }
+            //check流程中和已完成
+            if ('04' == selArr[0].paymentStatus || '05' == selArr[0].paymentStatus){
+                Joyin.error(JoyinUtil.getMessage("ETR_BBR_003"));
+                return;
+            }
+            //平台日是缴款日时提示
+            if (platDate >= selArr[0].payDate){
+                Joyin.error(JoyinUtil.getMessage("ETR_BBR_006"));
+                return;
+            }
+
+            var paramObj ={};
+            paramObj.finprodId=selArr[0].finprodId;//金融产品代码
+            paramObj.finprodMarketId=selArr[0].finprodMarketId;//资产代码
+            paramObj.payDate=selArr[0].payDate;//缴款日
+            paramObj.entrustId=selArr[0].entrustId;//委托代码
+            paramObj.portfolioId=selArr[0].portfolioId;//组合代码
+            paramObj.portfolioName=selArr[0].portfolioName;//组合名称
+            paramObj.bidId=selArr[0].bidId;//投标编号
+            paramObj.bidPrice=selArr[0].bidPrice;//投标标位
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrbondbiddingresult/EtrBondBiddingResult001/checkManualRelease', paramObj, function(result) {//数据验证
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrbondbiddingresult/EtrBondBiddingResult001/doManualRelease',paramObj,function (result){
+                    table.reload();
+                });
+            });
+        });
+        /**add by sunhui 20210721 重庆银行：手工释放中标结果占用的头寸 end**/
+
+        /**add by sunhui 20210722 重庆银行：中标结果批量缴款 start**/
+        // 批量缴款
+        $('#'+pageId+"_btn_paymentBatch").click(function () {
+            //定义多组合交易入口标记
+            var flg = true;
+
+            if(table!=null && table!=''){
+                var selArr = table.getAllCheckedRows();
+            }
+            // 列表中未勾选
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                flg = false;
+                return;
+            }
+            /*// 列表中勾选对象只有一条时提示请选择至少2条记录批量缴款
+            if (selArr.length == 1) {
+                Joyin.error(JoyinUtil.getMessage("ETR_BBR_008"));
+                flg = false;
+                return;
+            }*/
+            //遍历校验
+            var finprodIdOne = selArr[0].finprodId;//第一个资产代码
+            var payDateOne = selArr[0].payDate;//第一个缴款日
+            var portfolioIdOne = selArr[0].portfolioId;//第一个缴款组合
+            $.each(selArr, function(i, d) {
+                //check委托已关闭
+                if ('06' == d.entrustStatus){
+                    Joyin.error(JoyinUtil.getMessage("ETR_BBR_002") + d.entrustId);
+                    flg = false;
+                    return;
+                }
+                //check流程中和已完成
+                if ('04' == d.paymentStatus || '05' == d.paymentStatus){
+                    Joyin.error(JoyinUtil.getMessage("ETR_BBR_009"));
+                    flg = false;
+                    return;
+                }
+                //所选结果非同一资产，请重新选择!
+                if(finprodIdOne != d.finprodId){
+                    Joyin.error(JoyinUtil.getMessage("ETR_BBR_010"));
+                    flg = false;
+                    return;
+                }
+                //所选结果非同一缴款日，请重新选择!
+                if(payDateOne != d.payDate){
+                    Joyin.error(JoyinUtil.getMessage("ETR_BBR_011"));
+                    flg = false;
+                    return;
+                }
+                //所选组合存在相同组合，请重新选择！
+                if(i != 0 && portfolioIdOne ==d.portfolioId){
+                    Joyin.error(JoyinUtil.getMessage("ETR_BBR_012"));
+                    flg = false;
+                    return;
+                }
+            });
+
+            //所有校验都通过则调用多组合交易界面
+            if(flg){
+                var paramObj ={};
+                paramObj.finprodId=selArr[0].finprodId;
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrbondbiddingresult/EtrBondBiddingResult001/findFinProductByOFinprodId',paramObj,function (result){
+                    if (!result || !result.finprodMarketId) {
+                        Joyin.error("没有关联一级市场债，是否直接录入");
+                    }
+                    else {
+                        initBondTradeBatch(result, selArr);
+                    }
+                });
+            }
+        });
+        var initBondTradeBatch = function (result, selArr) {
+            /*selArr[0].finprodMarketId = result.finprodMarketId;
+            selArr[0].finprodId = result.finprodId;
+            selArr[0].pageModel = PAGE_MODEL_NEW;
+            selArr[0].yield = selArr[0].winPrice;
+            selArr[0].tradeMarketMode = '01';
+            selArr[0].tradeMarket = '01';
+            //标识债券一级市场
+            selArr[0].bondFirstSign = '01';*/
+            //改造定义参数 sunhui start
+            var winPrinAmt = 0;
+            var entrustId = "";
+            $.each(selArr, function(i, d) {
+                winPrinAmt = JoyinMath.doAdd(d.winPrinAmt) ;
+                entrustId = entrustId + "," + d.entrustId;
+            });
+            var paramObjs ={};
+            paramObjs.bondFirstSign = '01';
+            paramObjs.pageModel = PAGE_MODEL_NEW;
+            paramObjs.tradeMarket = '01';
+            paramObjs.finprodMarketId = result.finprodMarketId;
+            paramObjs.finprodId = result.finprodId;
+            paramObjs.needDoTrade = selArr;
+            paramObjs.winPrinAmt = winPrinAmt;// 中标 "中标券面总额"
+            paramObjs.entrustId = entrustId.substr(1,entrustId.length);
+            paramObjs.winCprice = selArr[0].winCprice;//第一条的中标净价
+            //改造定义参数 sunhui end
+            Joyin.dialog(JoyinUtil.getLabel("TrdBondInvestTrade003"), basePath + "invest/trade/bond/TrdBondInvestTrade003/init", "98%", "98%", paramObjs, function () {
+                table.reload();
+            });
+        }
+        /**add by sunhui 20210722 重庆银行：中标结果批量缴款 end**/
 
         var initBondTrade = function (result, selArr) {
             selArr[0].finprodMarketId = result.finprodMarketId;

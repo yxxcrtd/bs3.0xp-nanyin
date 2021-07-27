@@ -193,7 +193,7 @@
         MST_SHARE_PRICE b
         WHERE
         A .SHARES_ID = b.SHARES_ID
-        AND DEAL_DATE <![CDATA[<]]> #{sysDate}
+        AND DEAL_DATE <![CDATA[<]]> #{sysDate,jdbcType=VARCHAR}
         GROUP BY
         SHARES_ID
         )

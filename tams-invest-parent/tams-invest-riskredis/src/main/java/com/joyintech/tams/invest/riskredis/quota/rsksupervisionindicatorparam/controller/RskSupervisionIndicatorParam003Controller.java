@@ -6,11 +6,11 @@ import java.util.List;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParam003Dto;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam001Service;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam003Service;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,10 +27,8 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -57,10 +55,10 @@ public class RskSupervisionIndicatorParam003Controller extends BaseController{
 	private RskSupervisionIndicatorParam003Service rskSupervisionIndicatorParam003Service;
 
     /**
-     * IPlatformDate
+     * 平台日期组件接口
      */
-    @Autowired(required = false)
-    private IPlatformDate iPlatformDate;
+    @Autowired
+    private CommonPlatformDateService commonPlatformDateService;
 
 	@Override
     @RequestMapping(PAGE_INIT)
@@ -102,19 +100,7 @@ public class RskSupervisionIndicatorParam003Controller extends BaseController{
     	}
         return commonCheck(result, dto.getOperateType());
     }
- 
-    /**
-     * 新建机构代码联想框 
-     * @return List List
-     * @throws Exception Exception
-     */
-    @ResponseBody
-    @RequestMapping("/getInstitutionId")
-    public List<SelectOptionDto> getInstitutionId()
-        throws Exception { 
-        return rskSupervisionIndicatorParam003Service.getInstitutionId(RequestUtil.getPageParam());
-    }
-    
+
     /**
      * 保存操作
      *
@@ -144,7 +130,7 @@ public class RskSupervisionIndicatorParam003Controller extends BaseController{
             String code = baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(
                 param) : IDGenerator.generate();
             if(StringUtil.isNotEmpty(code)&&code.length()>=2){
-                code=code.substring(0,2)+DateUtil.format(StringUtil.isNotEmpty(dto.getValidDate())?dto.getValidDate():iPlatformDate.getSysDate(),DateUtil.DEFAULT_OTHER_FORMAT)+code.substring(2,code.length());
+                code=code.substring(0,2)+DateUtil.format(StringUtil.isNotEmpty(dto.getValidDate())?dto.getValidDate():commonPlatformDateService.getSysDate(),DateUtil.DEFAULT_OTHER_FORMAT)+code.substring(2,code.length());
             }
             dto.setParaCode(code);
         }

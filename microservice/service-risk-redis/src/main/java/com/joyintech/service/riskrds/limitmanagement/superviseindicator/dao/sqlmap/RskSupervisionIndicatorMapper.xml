@@ -18,13 +18,12 @@
 	 	A.APPROVE_COND approveCond,
 	 	A.IS_ENABLED isEnabled,
 	 	A.IS_ADJUST isAdjust,
-	 	A.ADJUST adjust,
-	 	A.INSTITUTION_CODE institutionCode
+	 	A.ADJUST adjust
 	 FROM 
 	 	RSK_ISUP_INDICATOR A
-	 <where> 
+	 <where>
     	<if test="indName !=null and indName !=''">
-		 AND A.IND_NAME LIKE CONCAT(CONCAT('%',#{indName}),'%')
+			A.IND_NAME LIKE CONCAT(CONCAT('%',#{indName}),'%')
 		</if>
 	 	<if test="indType != null and indType != ''">
 	 	AND A.IND_TYPE = #{indType,jdbcType=VARCHAR}
@@ -62,7 +61,7 @@
 	 <select id="getAllPortfolioByProfit" resultType="com.joyintech.framework.select.TreeNode">
 	 	<!-- select PORTFOLIO_ID id,PORTFOLIO_NAME name,PROFIT_TYPE pId   
 		from PTL_PORTFOLIO  -->
-		select t.PORTFOLIO_ID id,m.PORTFOLIO_NAME name,m.PROFIT_TYPE pId,m.RISK_ENABLED object
+		select distinct t.PORTFOLIO_ID id,m.PORTFOLIO_NAME name,m.PROFIT_TYPE pId,m.RISK_ENABLED object
 		 from PA_PTL_PORTFOLIO t
 		 inner join  PTL_PORTFOLIO m
 		 on t.PORTFOLIO_ID=m.PORTFOLIO_ID
@@ -95,7 +94,7 @@
 		</where>
 	</select>
 	 <select id="getAllPortfolioByOther" resultType="com.joyintech.framework.select.TreeNode">
-	 	select t.PORTFOLIO_ID id,m.PORTFOLIO_NAME name,${fields} as pId,m.RISK_ENABLED object
+	 	select distinct t.PORTFOLIO_ID id,m.PORTFOLIO_NAME name,${fields} as pId,m.RISK_ENABLED object
 		 from PA_PTL_PORTFOLIO t
 		 inner join  PTL_PORTFOLIO m
 		 on t.PORTFOLIO_ID=m.PORTFOLIO_ID
@@ -160,7 +159,7 @@
             APPROVE_COND,         
 			IS_EXCP_WHEN_DIV_ZERO,
 			COMPARE_DAYS,
-			INSTITUTION_CODE
+			IS_DISPLAY_ORIGINAL
 		) values (
 		    #{indId, jdbcType=VARCHAR},
 			#{indName , jdbcType=VARCHAR},
@@ -184,7 +183,7 @@
             #{approveCond, jdbcType=VARCHAR},
  			#{isExcpWhenDivZero,jdbcType=VARCHAR},
  			#{compareDays,jdbcType=DECIMAL},
- 			#{institutionCode,jdbcType=VARCHAR}
+ 			#{isDisplayOriginal,jdbcType=VARCHAR}
 		)
  	</insert>
  	
@@ -243,7 +242,7 @@
 	  m.IS_ENABLED isEnabled,
 	  m.IS_EXCP_WHEN_DIV_ZERO isExcpWhenDivZero,
 	  m.COMPARE_DAYS compareDays,
-	  m.INSTITUTION_CODE institutionCode
+	  m.IS_DISPLAY_ORIGINAL isDisplayOriginal
     from   RSK_ISUP_INDICATOR m 
     left join (select XMLAGG(xmlelement(E,PORTFOLIO_ID || ',')).extract('//text()').getclobval() as PORTFOLIO_ID ,IND_ID from RSK_PORTFOLIO_INDICATOR  GROUP BY IND_ID) n
     on m.IND_ID=n.IND_ID
@@ -339,7 +338,7 @@
 		where IND_ID = #{indId,jdbcType=VARCHAR}
 	</delete>
 	<select id="getAllPortfolioId" resultType="java.lang.String">
-	SELECT 
+	SELECT DISTINCT
 	PORTFOLIO_ID
 	FROM RSK_PORTFOLIO_INDICATOR
 	<where>

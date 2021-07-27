@@ -70,6 +70,7 @@
                                             <input type="text" id="finprodName" name="finprodName"
                                                    class="layui-input form-input" disabled
                                                    data-th-value="${entity?.finprodName}">
+                                            <a id="EtrFund002_btn_search" class="layui-btn layui-btn-sm form-input-text">查看</a>
                                         </div>
                                     </div>
                                     <div id="trmFundAbbrDiv" class="form-inline-wrap" style="display: none">
@@ -83,7 +84,7 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <div class="form-inline-wrap">
+                                    <div id="etrTradeMarket" class="form-inline-wrap">
                                         <label class="layui-form-label form-lable" data-th-text="#{EtrFund002.tradePlat}">交易场所</label>
                                         <div class="layui-input-inline input-inline">
                                             <select type="text" id="tradeMarket" name="tradeMarket" class="layui-input form-input input-select"
@@ -420,8 +421,9 @@
             // add by etliu 20210501 银行间场内场外拆分 end
         </script>
         <script data-th-src="@{/js/component/common/TradeCommon.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/component/entrust/EtrShowFinPlanAssetDetailInfo.js}" type="text/javascript"></script>
         <script data-th-src="@{/js/invest/entrust/etrfund/EtrFund002.js}" type="text/javascript"></script>
-        <script data-th-src="@{/js/component/autocoupon/AutoCoupon.js}" type="text/javascript"></script>        
+        <script data-th-src="@{/js/component/autocoupon/AutoCoupon.js}" type="text/javascript"></script>
     </div>
 </body>
 </html>

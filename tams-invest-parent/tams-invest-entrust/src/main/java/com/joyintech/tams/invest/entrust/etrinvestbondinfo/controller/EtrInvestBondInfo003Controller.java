@@ -163,6 +163,9 @@ public class EtrInvestBondInfo003Controller extends BaseController {
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("shortSellingSupported", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
+        //配置单位 add by yeming 20210721 start
+        model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
+        //配置单位 add by yeming 20210721 end
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
         pageElementConfigDto.setPageId("BaseRiskMathComm");
         Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面

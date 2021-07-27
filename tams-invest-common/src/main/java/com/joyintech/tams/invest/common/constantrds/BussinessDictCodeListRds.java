@@ -4174,6 +4174,8 @@ public enum BussinessDictCodeListRds implements BaseDictCodeList {
             BussinessDictCodeRds.共通业务类型, "RSK28", "固定值参数管理"
     ), 共通业务类型_自定义参数管理(
             BussinessDictCodeRds.共通业务类型, "RSK33", "自定义参数管理"
+    ), 共通业务类型_REDIS功能参数配置(
+            BussinessDictCodeRds.共通业务类型, "RSK36", "REDIS功能参数配置"
     ), 共通业务类型_报表规则定义管理(
             BussinessDictCodeRds.共通业务类型, "S01", "报表规则定义管理"
     ), 共通业务类型_用户管理(
@@ -5668,6 +5670,17 @@ public enum BussinessDictCodeListRds implements BaseDictCodeList {
     ), 募集方式_私募(
             BussinessDictCodeRds.募集方式, "2", "私募"
     ),
+
+    /**
+     * 特定资产类型设置
+     */
+    共同业务类型_特定资产类型设置(BussinessDictCodeRds.共同业务类型, "RSK34", "特定资产类型设置"),
+
+    /**
+     * 流动性权重配置
+     */
+    共同业务类型_流动性权重配置(BussinessDictCodeRds.共同业务类型, "RSK35", "流动性权重配置"),
+
     枚举LIST_EXT转换LIST(BussinessDictCodeRds.是否,"Y","是"
     )
     , 参数数据类型_文本(

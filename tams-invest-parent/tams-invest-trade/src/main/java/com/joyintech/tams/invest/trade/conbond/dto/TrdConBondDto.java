@@ -366,7 +366,7 @@ public class TrdConBondDto extends TrdFinProductDealTotal implements ProcessEnti
 		this.uploadFileList = uploadFileList;
 	}
 
-	@NotEmpty(fieldName = "TrdConBond002.purchModle", groups = {ValidateGroupEdit.class})
+/*	@NotEmpty(fieldName = "TrdConBond002.purchModle", groups = {ValidateGroupEdit.class})*/
 	public String getPurchModle() {
 		return purchModle;
 	}

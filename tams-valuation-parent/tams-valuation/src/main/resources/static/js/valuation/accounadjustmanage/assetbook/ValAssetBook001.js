@@ -6,7 +6,7 @@ $(function() {
     var getSearchParams = function() {
         return {
             name : $.trim($('#ValAssetBook001_name').val()),
-            type : $('#ValAssetBook001_type').val()
+            type : $('#booksetType').val()
         }
     };
 /**
@@ -129,7 +129,7 @@ $(function() {
         });
 
         // 2.0.1 个性化 : BS2.0BSTWO-26 建议勾选新的账套类别，实时刷新清空显示一览列表。
-        $("#ValAssetBook001_type").next("ul").click(function () {
+        $("#booksetType").next("ul").click(function () {
             if (!table.table){
                 table.load();
             } else {

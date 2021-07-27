@@ -99,7 +99,8 @@
                 }
                 ,width:150}
             ,{field:'finprodName', width:150 , title: '资产名称/标的资产简称'}
-            ,{field:'chlName', width:150 , title: '通道'}
+            // 通道隐藏  by gaoshuqi 20210721
+           /* ,{field:'chlName', width:150 , title: '通道'}*/
             ,{field:'secAcctName', width:150 , title: '证券账户'}
             ,{field:'invAimVal', width:150 , title: '投资目的',sortField:'invAim'}
             ,{field:'vdate', width:150 , title: '起息日',type:'date'}
@@ -267,7 +268,8 @@
                     }
                 }}
             ,{field:'finprodName', width:150 , title: '资产名称/标的资产简称'}
-            ,{field:'chlName', width:150 , title: '通道'}
+            // 通道隐藏  by gaoshuqi 20210721
+           /* ,{field:'chlName', width:150 , title: '通道'}*/
             ,{field:'tradeDate', width:150 , title: '交易日期',type:'date'}
             ,{field:'psVal', width:150 , title: '交易方向',sortField:'ps'}
             ,{field:'tradeMarketVal', width:150 , title: '交易场所',sortField:'tradeMarket'}

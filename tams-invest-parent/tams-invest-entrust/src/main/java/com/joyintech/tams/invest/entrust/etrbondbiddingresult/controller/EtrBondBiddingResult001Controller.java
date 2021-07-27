@@ -1,9 +1,13 @@
 package com.joyintech.tams.invest.entrust.etrbondbiddingresult.controller;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.etrbondbiddingresult.dto.Etrbondbiddingresult001Dto;
@@ -12,10 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,5 +85,42 @@ public class EtrBondBiddingResult001Controller extends BaseController {
             return new FinProduct();
         }
         return result.get(0);
+    }
+
+    /**
+     * 手工释放check
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("checkManualRelease")
+    public AjaxResult checkManualRelease(@RequestBody Map<String,Object> map){
+        String msg = StringUtil.EMPTY;
+        //1.根据有用参数查询是否设置了冻结头寸
+        int  checkFrozenPosition = etrbondbiddingresultService.checkFrozenPosition(map);
+        if(checkFrozenPosition == 0){
+            msg = map.get("portfolioId")+"组合并未有冻结头寸，请确认！";
+            return new AjaxResult(msg, MessageType.错误消息);
+        }
+        //2.是否已释放头寸
+        BigDecimal getHasFrozenPosition = etrbondbiddingresultService.getHasFrozenPosition(map);
+        if(checkFrozenPosition != 0 && (getHasFrozenPosition == null || getHasFrozenPosition.compareTo(BigDecimal.ZERO) == 0)){
+            msg = map.get("portfolioId")+"组合对应头寸已释放，不能重复释放！";
+            return new AjaxResult(msg, MessageType.错误消息);
+        }
+        return new AjaxResult("确认释放头寸？",MessageType.确认消息);
+    }
+    /**
+     * 手工释放头寸
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("doManualRelease")
+    public AjaxResult doManualRelease(@RequestBody Map<String,Object> map){
+        etrbondbiddingresultService.doManualRelease(map);
+        return new AjaxResult("头寸释放成功！",MessageType.提示消息);
     }
 }

@@ -100,4 +100,5 @@ public class BidOrderBidPriceDto extends BidOrderBidPrice {
 	public void setBidPriceStr(String bidPriceStr) {
 		this.bidPriceStr = bidPriceStr;
 	}
+
 }

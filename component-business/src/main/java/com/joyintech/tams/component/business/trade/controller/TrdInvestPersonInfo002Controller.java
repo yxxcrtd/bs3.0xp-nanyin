@@ -105,7 +105,7 @@ public class TrdInvestPersonInfo002Controller extends BaseController {
 						&& !StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), params.get("ps"))
 						&& StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(), params.get("tradeMarket"))
 						&&!StringUtil.isNotEmpty(params.get("chlId"))
-						&& StringUtil.isNotEmpty(params.get("fTradeId")))) {
+						&& (StringUtil.isNotEmpty(params.get("fTradeId")))||StringUtil.isNotEmpty(params.get("fTradeIdShow")))) {
 			//return bussEtrInvestPersonInfoService.getCfetsCounterId(params);
 			return bussEtrInvestPersonInfoService.getCounterIdCfets(params);
 		}

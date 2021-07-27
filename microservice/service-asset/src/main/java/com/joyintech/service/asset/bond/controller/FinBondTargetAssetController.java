@@ -15,6 +15,9 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.asset.bond.dto.FinBondTargetAssetDto;
 import com.joyintech.service.asset.bond.service.FinBondTargetAssetService;
+import com.joyintech.service.asset.common.dto.FinPayInterestStdInfoDto;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.component.base.core.dto.BaseFinProductBaseInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -177,5 +180,50 @@ public class FinBondTargetAssetController {
     public int selectCountByOFinprodId(String oFinprodId,String finprodId) {
         return finBondTargetAssetService.selectCountByOFinprodId(oFinprodId,finprodId);
     }
+
+    /**
+     * 根据资产代码查询是否是上市标的
+     *
+     * @param finprodId
+     * @return 是否是上市标的，大于0则为是
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("selectIsIssueAsset")
+    public int selectIsIssueAsset(String finprodId) {
+        return finBondTargetAssetService.selectIsIssueAsset(finprodId);
+    }
+    /**
+     * 查询资产相关行权计划
+     * <功能详细描述>
+     * @param finprodId
+     * @return 资产相关计划
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("getFinPlanList")
+    public FinBondTargetAssetDto getFinPlanList(String finprodId) {
+        return finBondTargetAssetService.getFinPlanList(finprodId);
+    }
+
+
+    /**
+     * 根据产品代码得到起息日和到期日
+     * @param oFinprodId 产品代码
+     * @return
+     */
+    @GetMapping("getMdateAndVdate")
+    public FinBondTargetAssetDto getMdateAndVdate(String oFinprodId){
+        FinBondTargetAssetDto dto = new FinBondTargetAssetDto();
+        FinProduct finProduct = finBondTargetAssetService.getMdateAndVdate(oFinprodId);
+        if(finProduct != null){
+            dto.setMdate(finProduct.getMdate());
+            dto.setVdate(finProduct.getVdate());
+            dto.setoFinprodId(finProduct.getoFinprodId());
+        }
+        return dto;
+    }
+
+
 
 }

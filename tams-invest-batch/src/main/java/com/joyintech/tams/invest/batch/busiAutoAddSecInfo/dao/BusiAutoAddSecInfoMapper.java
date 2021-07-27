@@ -14,6 +14,8 @@ import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +46,7 @@ public interface BusiAutoAddSecInfoMapper {
      * @see
      * @since 1.0
      */
-    String getSecId(FinProduct finProduct);
+    InterfPayhsrcsecinfo getSecId(FinProduct finProduct);
 
     List<FinCashInfo> selectFinCashInfo(@Param("finprodId") String finprodId);
 
@@ -117,4 +119,34 @@ public interface BusiAutoAddSecInfoMapper {
     List<PtlSecPosition> getPtlSecPositionList(Map<String, String> tempMap);
 
     void updateByPrimaryKey(FinProductAdd finProductAdd);
+
+    List<MstBondCreditRating> selectMstBondCreditRating(@Param("marketId") String marketId);
+
+    Collection<? extends MstBondCreditRating> selectMstinnercreditrating(@Param("marketId") String marketId);
+
+    /**
+     * 获取债券面值
+     *
+     * @param paraMap 传递参数
+     * @return 债券面值
+     * @see
+     * @since 1.0
+     */
+    BigDecimal getUnitPrice(Map<String, Object> paraMap);
+
+    /**
+     * 根据交易日期和资产代码查询交易数据
+     *
+     * @param param 交易数据
+     * @see
+     * @since 1.0
+     */
+    List<Map<String,Object>> getSaveParam(Map<String,Object> param);
+    
+    /**
+     * 插入风险实占信息，redis初始化批会用到该数据
+     * @param param
+     * @return
+     */
+    int insertRskOccupyInfo(Map<String,Object> param);
 }

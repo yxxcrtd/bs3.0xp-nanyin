@@ -868,4 +868,47 @@ implements BaseProcessService<FinBondTargetAssetDto>{
                 ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectCountByOFinprodId?oFinprodId="+oFinprodId+"&finprodId="+finprodId,
                 Integer.class);
     }
+
+    /**
+     * 根据资产代码查询是否是上市标的
+     *
+     * @param finprodId
+     * @return 是否是上市标的，大于0则为是
+     * @see
+     * @since 1.0
+     */
+    public int selectIsIssueAsset(String finprodId){
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectIsIssueAsset?finprodId="+finprodId,
+                Integer.class);
+    }
+
+
+    /**
+     * 查询业务表资产信息
+     *
+     * @param finprodId 资产代码
+     * @return 资产付息等现金流信息
+     * @see
+     * @since 1.0
+     */
+    public FinBondTargetAssetDto getFinPlanList(String finprodId) {
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/getFinPlanList?finprodId="+finprodId,
+                FinBondTargetAssetDto.class);
+    }
+
+
+
+    /**
+     * 根据产品代码得到起息日和到期日
+     * @param oFinprodId 产品代码
+     * @return
+     */
+    public FinBondTargetAssetDto getMdateAndVdate(String oFinprodId){
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/getMdateAndVdate?oFinprodId="+oFinprodId,
+                FinBondTargetAssetDto.class);
+    }
+
 }

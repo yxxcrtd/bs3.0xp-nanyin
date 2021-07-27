@@ -61,7 +61,7 @@ implements BaseProcessService<RskPortAutoRelatePointDto> {
 	            ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskPortAutoRelatePoint/" + action, dto,
 	            Integer.class);
 		   //----------add by 裴家俊-------指标添加时重新关联组合-------20191015-----------
-	        if(action.equals("insert")) {
+			if(action.equals("insert")) {
 				threadPoolTaskExecutor.execute(()->{
 					try {
 						Thread.sleep(6000);

@@ -5,9 +5,6 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.RskRuleIndicator;
 import com.joyintech.tams.common.base.entity.RskRuleInfo;
 import com.joyintech.tams.common.base.entity.RskRulePoolConfig;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListRsk;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.prodinfo.BussRuleService;
@@ -20,8 +17,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.riskredis.quota.rskportautorelatepoint.dto.RskPortAutoRelatePoint002Dto;
@@ -29,7 +24,6 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,9 +96,9 @@ implements BaseProcessService<RskPortAutoRelatePoint002Dto> {
 				logger.info("----------->异步自动关联开始--------------");
 				bussRuleService.relatePortIndicator(portIdList,indIdList);
 				logger.info("----------->异步自动关联结束--------------");
-                if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
-    				logger.info("----------->装载redis开始--------------");
-                	ImplCond cond = new ImplCond();
+				if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+					logger.info("----------->装载redis开始--------------");
+					ImplCond cond = new ImplCond();
 					String[] prodIdList = portIdList.toArray(new String[portIdList.size()]);
 					cond.setPortfIdArray(prodIdList);
 					redisRriter.dealRiskPtlIndicator(cond);
@@ -112,25 +106,6 @@ implements BaseProcessService<RskPortAutoRelatePoint002Dto> {
 				}
 			});
 		}
-		// 二级法人权限处理 WY
-        if(MultilevelDataAuthorityUtil.isEnabled()) {
-            //创建机构代码
-            String createInst = MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-            entity.setCreateInst(createInst); 
-            // 有查询权限的机构代码
-            List<String> searchOrgCodeList = null;
-            // 有编辑权限的机构代码
-            List<String> editOrgCodeList = null;
-            // 新建或修改时重新设置二级法人权限，删除时则清空
-            if (!OperationType.DELETE.equals(type)) { 
-                //获取所有父级机构。  拥有查看权限
-                searchOrgCodeList = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(createInst);
-                // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
-                editOrgCodeList = Arrays.asList(entity.getCreateInst());
-            }
-            // 记录二级法人权限
-            insertDataAuthTypeInst(entity.getRuleId(), searchOrgCodeList, editOrgCodeList,"RSK25");
-        }
 
 	}
 

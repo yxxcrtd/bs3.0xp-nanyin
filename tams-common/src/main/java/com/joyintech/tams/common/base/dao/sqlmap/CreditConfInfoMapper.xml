@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.CreditConfInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.CreditConfInfo" >
+        <id column="CREDIT_MST_ID" property="creditMstId" jdbcType="VARCHAR" />
+        <result column="CREDIT_TAG_ID" property="creditTagId" jdbcType="VARCHAR" />
+        <result column="TERM" property="term" jdbcType="DECIMAL" />
+        <result column="TERM_UNIT" property="termUnit" jdbcType="VARCHAR" />
+        <result column="CREDIT_CONDITION" property="creditCondition" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CREDIT_MST_ID CREDIT_MST_ID, CREDIT_TAG_ID CREDIT_TAG_ID, TERM TERM, TERM_UNIT TERM_UNIT, 
+        CREDIT_CONDITION CREDIT_CONDITION, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CreditConfInfoMapper.Base_Column_List" />
+        from CREDIT_CONF_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CreditConfInfoMapper.Base_Column_List" />
+        from CREDIT_CONF_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CreditConfInfoMapper.Base_Column_List" />
+        from CREDIT_CONF_INFO
+        where CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CREDIT_CONF_INFO
+        where CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.CreditConfInfo" >
+        insert into CREDIT_CONF_INFO (CREDIT_MST_ID, CREDIT_TAG_ID, TERM, 
+            TERM_UNIT, CREDIT_CONDITION, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{creditMstId,jdbcType=VARCHAR}, #{creditTagId,jdbcType=VARCHAR}, #{term,jdbcType=DECIMAL}, 
+            #{termUnit,jdbcType=VARCHAR}, #{creditCondition,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CreditConfInfo" >
+        insert into CREDIT_CONF_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="creditMstId != null" >
+                CREDIT_MST_ID,
+            </if>
+            <if test="creditTagId != null" >
+                CREDIT_TAG_ID,
+            </if>
+            <if test="term != null" >
+                TERM,
+            </if>
+            <if test="termUnit != null" >
+                TERM_UNIT,
+            </if>
+            <if test="creditCondition != null" >
+                CREDIT_CONDITION,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="creditMstId != null" >
+                #{creditMstId,jdbcType=VARCHAR},
+            </if>
+            <if test="creditTagId != null" >
+                #{creditTagId,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                #{term,jdbcType=DECIMAL},
+            </if>
+            <if test="termUnit != null" >
+                #{termUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="creditCondition != null" >
+                #{creditCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CreditConfInfo" >
+        insert into CREDIT_CONF_INFO(CREDIT_MST_ID, CREDIT_TAG_ID, TERM, TERM_UNIT, CREDIT_CONDITION, 
+        REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select CREDIT_MST_ID, CREDIT_TAG_ID, TERM, TERM_UNIT, CREDIT_CONDITION, 
+            REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from CREDIT_CONF_INFO
+             where 1 = 1 and CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.CreditConfInfo" >
+        update CREDIT_CONF_INFO
+        <set >
+            <if test="creditTagId != null" >
+                CREDIT_TAG_ID = #{creditTagId,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                TERM = #{term,jdbcType=DECIMAL},
+            </if>
+            <if test="termUnit != null" >
+                TERM_UNIT = #{termUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="creditCondition != null" >
+                CREDIT_CONDITION = #{creditCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CreditConfInfo" >
+        update CREDIT_CONF_INFO
+        set CREDIT_TAG_ID = #{creditTagId,jdbcType=VARCHAR},
+            TERM = #{term,jdbcType=DECIMAL},
+            TERM_UNIT = #{termUnit,jdbcType=VARCHAR},
+            CREDIT_CONDITION = #{creditCondition,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
+    </update>
+</mapper>

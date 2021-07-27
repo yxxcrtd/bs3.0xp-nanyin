@@ -154,6 +154,25 @@
             }
         }
     }
+
+    /**
+     * 查看资产详情事件
+     */
+    $('#EtrPlanAssetC002_btn_search').click(function() {
+        var finprodId =$('#finprodId').val();
+        var url = "/invest/asset/plan/plancur/FinPlanAssetC002/init";
+        if (finprodId != ""){
+            var params = {
+                'pageModel':PAGE_MODEL_REFERENCE,
+                'finprodMarketId':finprodId,
+                'isQuickInput':true
+            };
+            EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
+        } else {
+            Joyin.error("资产名称不能为空")
+        }
+    });
+
     /**
      * 绑定事件
      */

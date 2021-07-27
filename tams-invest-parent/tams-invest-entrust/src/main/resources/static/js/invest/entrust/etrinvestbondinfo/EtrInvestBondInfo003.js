@@ -25,9 +25,13 @@
 			var objects = new Array();
 	    	for(var index in bussCombDistribtList){
 	    		var item = bussCombDistribtList[index];
-		var entrustNum =item.entrustNum;
+		        var entrustNum =item.entrustNum;
                  if (entrustNum) {
-                    entrustNum=entrustNum*10000;//万元转成元
+                     //配置单位 edit by yeming 20210721 start
+                     if(entrustAmtUnit == '02' ){
+                         entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                     }
+                     //配置单位 edit by yeming 20210721 end
                  }
 	    		var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:item.portfolioId,tradeAmount:entrustNum, assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val()}
 	            var object = {tradeDirection:['ps','EtrInvestBondInfo002.ps'],portfolioCode:['portfolioId','EtrInvestBondInfo002.portfolioId'],tradeAmount:['entrustNum','EtrInvestBondInfo002.entrustAmt'],assetType:['assetType1','EtrInvestBondInfo002.bondType'],data:obj}
@@ -49,7 +53,16 @@
         }
         ,{field:'invAim', width:100, title: 'EtrInvestBondInfo002.invAim', sortable: false, edit:true
           	 ,editOption:{type:'select',id:"invAim",formatoption:true,result:INV_AIM} }
-        ,{field:'entrustNum', width:100, title: 'EtrInvestBondInfo002.entrustAmt', edit:true, sortable: false, type:'number', digit:2}
+        ,{field:'entrustNum', width:100, title: function(){
+                //配置单位 edit by yeming 20210721 start
+            if (entrustAmtUnit == "01 "){
+                return JoyinUtil.getLabel("EtrInvestBondInfo002.entrustAmt");
+            }else{
+                return JoyinUtil.getLabel("EtrInvestBondInfo002.entrustAmt1");
+            }
+        }(),
+                //配置单位 edit by yeming 20210721 end
+            edit:true, sortable: false, type:'number', digit: 4 }
         ,{field:'secManageAcctId', width:100,  title: 'EtrInvestBondInfo003.secManageAcctId',edit:true,sortable: false,
             editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId', multiple: false, showField:'text',searchable: true,
                 url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
@@ -255,7 +268,13 @@
             temp.counterId = temp.counterIdName;
             // 指令授信 end
         	temp.portfolioId = item.portfolioId;
-        	temp.entrustNum = item.entrustNum*10000;//万元转成元
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit == '02' ){
+                temp.entrustNum = JoyinMath.doMul(item.entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            }else{
+                temp.entrustNum = item.entrustNum;
+            }
+            //配置单位 edit by yeming 20210721 end
         	entrustNum = entrustNum + item.entrustNum*1;
         	temp.invAim = item.invAim;
         	temp.secAcctId = item.secManageAcctId;

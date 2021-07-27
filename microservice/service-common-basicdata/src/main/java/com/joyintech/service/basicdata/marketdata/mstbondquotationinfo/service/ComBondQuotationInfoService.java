@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.service.basicdata.marketdata.mstbondquotationinfo.dao.ComBondQuotationInfoMapper;
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -210,4 +211,13 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
            }
        }
    }
+
+
+
+    public BigDecimal selectNewValuationPriceByKey(Map<String, Object> map) {
+        map.put("VALUE_SOURCE_CSD", DictCodeList.估值市价_中证登.getValue());
+        map.put("VALUE_SOURCE_CBC", DictCodeList.估值市价_中债登.getValue());
+        map.put("VALUE_SOURCE_SCH", DictCodeList.估值市价_上清所.getValue());
+        return comBondQuotationInfoMapper.selectNewValuationPriceByKey(map);
+    }
 }

@@ -92,6 +92,11 @@ public class RskIsupIndicator extends BaseEntity {
     private Long compareDays;
 
     /**
+     * 是否显示原值
+     */
+    private String isDisplayOriginal;
+
+    /**
      * 取得 监督指标编号
      * @return 监督指标编号
      */
@@ -397,6 +402,20 @@ public class RskIsupIndicator extends BaseEntity {
     public void setInstitutionCode(String institutionCode) {
         this.institutionCode = institutionCode;
     }
-    
-    
+
+    /**
+     * 取得 是否显示原值
+     * @return 是否显示原值
+     */
+    public String getIsDisplayOriginal() {
+        return isDisplayOriginal;
+    }
+
+    /**
+     * 设置 是否显示原值
+     * @param isDisplayOriginal 是否显示原值
+     */
+    public void setIsDisplayOriginal(String isDisplayOriginal) {
+        this.isDisplayOriginal = isDisplayOriginal == null ? null : isDisplayOriginal.trim();
+    }
 }

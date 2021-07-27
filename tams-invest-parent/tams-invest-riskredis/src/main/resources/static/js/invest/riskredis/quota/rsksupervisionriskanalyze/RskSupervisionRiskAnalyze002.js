@@ -48,7 +48,7 @@ var rsk = function() {
                 }
             }
             , {field: 'operation',title: 'SysCommon.operation', type: 'action',render:function(d, type, row, meta){
-	                return  '<a onclick="showSecValuation(\''+ row.portfolioId+'\''+',\''+ row.assetCode+'\''+',\''+row.assetName+'\''+',\''+row.indName
+	                return  '<a onclick="showSecValuation(\''+ row.assetCode+'\''+',\''+row.assetName+'\''+',\''+row.indName
 					+ '\''+',\''+new Date(row.supDate).format('yyyy-MM-dd')+'\')"  style="cursor: pointer;cursor: pointer;display: block;width: 70px;background: #2693ff; color: #fff;border-radius: 2px;"><span >持仓明细</span></a>';
                }
             }]
@@ -88,15 +88,14 @@ var rsk = function() {
      */
     $(function() {
         table.load();
-        $('div.analy-dtl-form>a#RskSupervisionRiskAnalyze002_btn_export').click(function() {
+        $('div.analy-dtl-form a#RskSupervisionRiskAnalyze002_btn_export').click(function() {
             exportExcel();
         });
     });
 }();
 
-function showSecValuation(portfolioId,assetCode,assetName,indName,supDate){
+function showSecValuation(assetCode,assetName,indName,supDate){
 	var data={};
-	data.portfolioId=portfolioId;
 	data.assetName=assetName;
 	data.assetCode=assetCode;
 	data.indName=indName;

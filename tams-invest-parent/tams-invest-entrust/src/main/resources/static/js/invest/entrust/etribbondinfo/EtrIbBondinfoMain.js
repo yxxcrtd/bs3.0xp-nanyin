@@ -95,27 +95,28 @@ $(
          */
         function doRiskcal003() {
             var object = EtrIbBondinfo003.getSearchParams();
-            var checkParam = {};
-            checkParam.data = EtrIbBondinfo003.getriskdata();
-            if(!checkParam.data){
-                return null;
-            }
-            var param = [];
+            // var checkParam = {};
+            // checkParam.data = EtrIbBondinfo003.getriskdata();
+            // if(!checkParam.data){
+            //     return null;
+            // }
+            // var param = [];
 
-            if (checkParam.data.length > 0) {
-                for (var index in checkParam.data) {
-                    var item = checkParam.data[index];
-                    item.data.assetCode = object.finprodId;
-                    item.data.finprodId = object.finprodId;
-                    item.data.counterId = object.counterId;
-                    item.data.ps = object.ps;
-                    item.data.ccy = "CNY";
-                    item.data.portfolioId = item.data.portfolioCode;
-                    item.data.price = object.price;
-                    item.data.entrustNum = item.data.entrustNum;
-                    param.push(item.data);
-                }
-            }
+            // if (checkParam.data.length > 0) {
+            //     for (var index in checkParam.data) {
+            //         var item = checkParam.data[index];
+            //         item.data.assetCode = object.finprodId;
+            //         item.data.finprodId = object.finprodId;
+            //         item.data.counterId = object.counterId;
+            //         item.data.ps = object.ps;
+            //         item.data.ccy = "CNY";
+            //         item.data.portfolioId = item.data.portfolioCode;
+            //         item.data.price = object.price;
+            //         item.data.entrustNum = item.data.entrustNum;
+            //         param.push(item.data);
+            //     }
+            // }
+            let checkParam = EtrIbBondinfo003.getriskdata();
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + "riskrds/interf/doInfBatchData/0/RSK002/F01", object, checkParam, riskMathRedisCallback003);
         }
         /**
@@ -161,31 +162,32 @@ $(
                 if (!s && s != "") {
                     return;
                 }
-                var checkData = {};
-                checkData.data = EtrIbBondinfo003.getriskdata();
+                var checkData = EtrIbBondinfo003.getriskdata();
                 if (window.BaseRiskMathComm.isCalcConditionChanged(checkData)) {
                     return;
                 }
             }
             
             var res = EtrIbBondinfo003.getSubmitParam(operateType);
+            if(res == null) return;
+
             Joyin.ajaxJson(basePath + "invest/entrust/EtrCommonController/check", res.param, function (result1) {
                 if (res.objects.length > 0) {
-                    Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/check", res.objects, function (result) {
-                        Joyin.confirm(result.data, function () {
-                            if (operateType === "save") {
-                                WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_save", "EtribBondInfo003"
-                                ,function(){
-                                    window.location.reload();
+                    if (operateType === "save") {
+                        WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_save", "EtribBondInfo003"
+                            ,function(){
+                                window.location.reload();
+                            });
+                    }else{
+                                Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/check", res.objects, function (result) {
+                                    Joyin.confirm(result.data, function () {
+                                        WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_submit", "EtribBondInfo003"
+                                            ,function(){
+                                                window.location.reload();
+                                            });
+                                    });
                                 });
-                            } else {
-                                WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_submit", "EtribBondInfo003"
-                                ,function(){
-                                    window.location.reload();
-                                });
-                            }
-                        });
-                    });
+                    }
                 } else {
                     Joyin.warn("请添加组合分配！");
                     return;
@@ -284,6 +286,12 @@ $(
 
         var defaultStyle = "";
         $("#enlarge").click(function () {
+            enlarge_narrow("enlarge");
+        });
+        $("#narrow").click(function () {
+            enlarge_narrow("narrow");
+        });
+        function enlarge_narrow(flag) {
             let rightDiv = $("#right_bottom_panel_dev");
             if(!rightDiv.attr("flag") || rightDiv.attr("flag") === "1"){
                 defaultStyle = rightDiv.attr("style");
@@ -293,7 +301,14 @@ $(
                 rightDiv.attr("style", defaultStyle);
                 rightDiv.attr("flag","1");
             }
-        });
+            if(flag === "narrow"){
+                $("#enlarge").show();
+                $("#narrow").hide();
+            }else{
+                $("#enlarge").hide();
+                $("#narrow").show();
+            }
+        }
         /**
          * 绑定事件
          */
@@ -349,13 +364,15 @@ function importEtr() {
                         Joyin.dialog(JoyinUtil.getLabel("EtrInvestBondInfo004"),
                             JoyinUtil.getRealPath("/invest/entrust/etribbondinfo/EtrIbBondInfo004/init"),
                             "98%", "95%", result,
-                            function(){table.reload();});
+                            function(){
+                            // table.reload();
+                        });
                     });
                 },1000);
             }
         });
     },function() {
-        table.reload();
+        // table.reload();
     });
 }
 
@@ -364,9 +381,16 @@ dialogSelf.flag="abc";
 dialogSelf.dialog=function(msg, url, param){
     Joyin.dialog(msg, url, "98%", "95%", param);
 }
+
+let changeFlgObj = {}; 
+changeFlgObj.getChangeFlg=function () {
+    return changeFlg;
+}
 parent.EtrIbBondinfoMain = {
     dialogSelf:dialogSelf,
+    changeFlgObj:changeFlgObj
 }
 EtrIbBondinfoMain = {
-    dialogSelf:dialogSelf
+    dialogSelf:dialogSelf,
+    changeFlgObj:changeFlgObj
 }

@@ -85,7 +85,9 @@ var QueryFunc = function () {
                 });
             }
         }
-        object.fileCommonList = FileCommon.getUploadFileInfo();
+        if (FileCommon){
+            object.fileCommonList = FileCommon.getUploadFileInfo();
+        }
         //alert(4);
         Joyin.ajaxJson(basePath + 'invest/asset/stock/FinStockInfo002/check', object, function (result) {
             Joyin.confirm(result.data, function () {

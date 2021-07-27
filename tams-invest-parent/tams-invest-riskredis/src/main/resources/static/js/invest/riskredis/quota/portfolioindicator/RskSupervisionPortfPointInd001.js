@@ -88,14 +88,7 @@
 			}
             ,{field:'portfolioLevelStr', sortField:'portfolioLevel',width:"20%" , title: 'RskSupervisionPortfPointInd001.portfolioLevel'}
             ,{field:'portfolioName', width:"20%", title: 'RskSupervisionPortfPointInd001.portfolioOrBagName'}
-            ,{field:'startDate',  title: 'RskSupervisionPortfPointInd001.effDate',render: function (data, type, row, meta) {
-            	if(typeof row.endDate === 'undefined'){
-            		return   new Date(row.startDate).Format('yyyy-MM-dd') +'-';
-            	}
-            	else{
-            		return   new Date(row.startDate).Format('yyyy-MM-dd') +'-'+ new Date(row.endDate).Format('yyyy-MM-dd');
-            	}
-             }}
+			,{field:'effDateRange',  width:"20%" ,title: 'RskSupervisionPortfPoint001.effDate'}
 			,{field:'set', sortable:false, title: 'RskSupervisionPortfPoint001.supervisionindividuation',
 				render : function(data, type, row, meta) {
 					return '<i style="color:#0078F0;font-style: normal;cursor: pointer;" class="set">'+'设置'+'</i>';

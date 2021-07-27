@@ -128,7 +128,22 @@ public class ValAssetBook001Controller extends BaseController {
         params.put("type",this.getParam("type"));
         return valAssetBook001Service.getAllAssetbookPage(params);
     }
-    
+
+    /**
+     * 检索账套代码(只取理财账套)
+     *
+     * @return 账套代码联想框内容
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/findBooksetIds")
+    public Page<SelectOptionDto> findBooksetIds()
+        throws Exception {
+        return valAssetBook001Service.findBooksetIds(RequestUtil.getPageParam());
+    }
+
     /**
      * 导出数据
      * 

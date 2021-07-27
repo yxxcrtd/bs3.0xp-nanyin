@@ -80,6 +80,7 @@ public class PrimaryBiddingManage003Validator implements BeanValidator {
                 BigDecimal winPrinAmtSum = BigDecimal.ZERO;
                 BigDecimal theWinPrinAmtSum = BigDecimal.ZERO;
                 boolean flag = false;
+                boolean isFrozenPositionFlag = false;/**add by sunhui 20210719 重庆银行：中标结果维护，对应明细中，增加【是否头寸冻结】字段必填校验 **/
                 for (BidOrderBidPriceDto bidOrderBidPriceDto : bidOrderBidPriceList) {
                     winPrinAmtSum = ArithmeticUtil.doAdd(bidOrderBidPriceDto.getWinPrinAmt(), winPrinAmtSum);
                     theWinPrinAmtSum = ArithmeticUtil.doAdd(bidOrderBidPriceDto.getTheWinPrinAmt(), theWinPrinAmtSum);
@@ -90,7 +91,17 @@ public class PrimaryBiddingManage003Validator implements BeanValidator {
                     if (null != bidOrderBidPriceDto.getWinPrice()){
                         flag = true;
                     }
+                    /**add by sunhui 20210719 重庆银行：中标结果维护，对应明细中，增加【是否头寸冻结】字段必填校验   start**/
+                    if(StringUtil.isEmpty(bidOrderBidPriceDto.getIsFrozenPosition())){
+                        isFrozenPositionFlag = true;
+                    }
+                    /**add by sunhui 20210719 重庆银行：中标结果维护，对应明细中，增加【是否头寸冻结】字段必填校验   end**/
                 }
+                /**add by sunhui 20210719 重庆银行：中标结果维护，对应明细中，增加【是否头寸冻结】字段必填校验   start**/
+                if(isFrozenPositionFlag){
+                    errorList.add(new ValidMessage("","分配明细中【是否头寸冻结】要素必填!"));
+                }
+                /**add by sunhui 20210719 重庆银行：中标结果维护，对应明细中，增加【是否头寸冻结】字段必填校验   end**/
                 //如果分配明细列表数据中标标位都为null，说明没有自动分配，则给出提示
                 if (!flag){
                     errorList.add(new ValidMessage("",

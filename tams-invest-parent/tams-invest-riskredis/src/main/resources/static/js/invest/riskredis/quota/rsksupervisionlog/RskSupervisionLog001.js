@@ -68,15 +68,15 @@ var rsk = function() {
         $('#RskSupervisionLog001_btn_search').click(function() {
             table.load();
             /*if($("select[name='functionId']").val()!='02'&&$("input[name='functionId']").val()!='03'){
-            table.showColumns([{field:'portfolioName', visible:false}]);
-            table.showColumns([{field:'indTypeStr', width:150,visible:false}]);
-            table.showColumns([{field:'indName', width:420,visible:false}]);
-	        }
-	        else{
-	            table.showColumns([{field:'portfolioName', visible:true}]);
-	            table.showColumns([{field:'indTypeStr', width:150,visible:true}]);
-	            table.showColumns([{field:'indName', width:420,visible:true}]);
-	        }*/
+                table.showColumns([{field:'portfolioName', visible:false}]);
+                table.showColumns([{field:'indTypeStr', width:150,visible:false}]);
+                table.showColumns([{field:'indName', width:420,visible:false}]);
+            }
+            else{
+                table.showColumns([{field:'portfolioName', visible:true}]);
+                table.showColumns([{field:'indTypeStr', width:150,visible:true}]);
+                table.showColumns([{field:'indName', width:420,visible:true}]);
+            }*/
         });
         $('#RskSupervisionLog001_btn_export').click(function() {
             exportExcel();

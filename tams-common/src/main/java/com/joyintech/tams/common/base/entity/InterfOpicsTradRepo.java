@@ -377,6 +377,8 @@ I 内部客户 O 外部客户
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal scFpriceAmt;
 
+    private Integer cashHoldingDays;//实际占款天数
+
     /**
      * 取得 网下交易编号生成规则：DEPO
      * @return 网下交易编号生成规则：DEPO
@@ -1494,5 +1496,13 @@ I 内部客户 O 外部客户
      */
     public void setScFpriceAmt(BigDecimal scFpriceAmt) {
         this.scFpriceAmt = scFpriceAmt;
+    }
+
+    public Integer getCashHoldingDays() {
+        return cashHoldingDays;
+    }
+
+    public void setCashHoldingDays(Integer cashHoldingDays) {
+        this.cashHoldingDays = cashHoldingDays;
     }
 }

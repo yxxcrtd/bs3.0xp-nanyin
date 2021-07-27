@@ -3,13 +3,15 @@
  * 债券投资委托新建
  */
 (function () {
+    var unitNum;
     var initFlag = true;
     var isautobond = false;
     var getriskdata = function () {
 		var entrustNum=$('#entrustNum').val();
          if (entrustNum) {
-              //万元转成元
-              entrustNum=entrustNum*10000;
+             //配置单位 edit by yeming 20210721 start
+             entrustNum=JoyinMath.doMul(entrustNum, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元或不转换
+             //配置单位 edit by yeming 20210721 end
          }
         var obj = {
             tradeDirection: $('#ps').val(),
@@ -95,19 +97,27 @@
 
 		var entrustNum=$('#entrustNum').val();
          if (entrustNum) {
-			  object.entrustNum = entrustNum*10000;//万元转成元
+             //配置单位 edit by yeming 20210721 start
+			  object.entrustNum = JoyinMath.doMul(entrustNum, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元或不转换
+             //配置单位 edit by yeming 20210721 end
          }
 		 var minAmt=$('#minAmt').val();
          if (minAmt) {
-			  object.minAmt = minAmt*10000;//万元转成元
+             //配置单位 edit by yeming 20210721 start
+			  object.minAmt = JoyinMath.doMul(minAmt, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元或不转换
+             //配置单位 edit by yeming 20210721 end
          }
          var entrustOwnNum = $("#entrustOwnNum").val();
          if (entrustOwnNum) {
-			  object.entrustOwnNum = entrustOwnNum*10000;//万元转成元
+             //配置单位 edit by yeming 20210721 start
+			  object.entrustOwnNum = JoyinMath.doMul(entrustOwnNum, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元或不转换
+             //配置单位 edit by yeming 20210721 end
          }
          var entrustIntegrateNum = $("#entrustIntegrateNum").val();
          if (entrustIntegrateNum) {
-			  object.entrustIntegrateNum = entrustIntegrateNum*10000;//万元转成元
+             //配置单位 edit by yeming 20210721 start
+			  object.entrustIntegrateNum = JoyinMath.doMul(entrustIntegrateNum, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元或不转换
+             //配置单位 edit by yeming 20210721 end
          }
         /*if($('#priceModel').val() == PRICEMODEL_03){
             Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getClosePriceByPara',{finprodMarketId:object.finprodMarketId},
@@ -276,7 +286,9 @@
                         if (item.entrustNum == null || item.entrustNum == '') return;
                         entrustNum += parseFloat(item.entrustNum);
                     }
-					entrustNum = entrustNum*10000;//万元转成元
+                    //配置单位 edit by yeming 20210721 start
+					entrustNum = JoyinMath.doMul(entrustNum, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元或不转换
+                    //配置单位 edit by yeming 20210721 end
                     object.entrustNum = String(entrustNum);
                 } else {
                     return;
@@ -360,6 +372,14 @@
         if (shortSellingSupported == '02') {
             $(".shortSellingSupported").hide();
         }
+        //配置单位 add by yeming 20210721 start
+        if(entrustAmtUnit == '01' ){
+            $(".unitNum").text('元');
+            unitNum = 1;
+        }else{
+            unitNum = 10000;
+        }
+        //配置单位 add by yeming 20210721 end
     }
 
     //添加风险试算验证
@@ -402,7 +422,9 @@
             var object = $.serializeToObject('#searchForm');
 			var entrustNum=$('#entrustNum').val();
             if (entrustNum) {
-	             object.entrustNum=entrustNum*10000;//万元转成元
+                //配置单位 edit by yeming 20210721 start
+	             object.entrustNum=JoyinMath.doMul(entrustNum, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元或不转换
+                //配置单位 edit by yeming 20210721 end
             }
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F01', object,getriskdata());
         });
@@ -916,7 +938,7 @@
                 entrustNum = 0;
             }
             var entrustIntegrateNum = $("#entrustIntegrateNum").val();
-            var entrustOwnNum = JoyinMath.doMinus(entrustNum, entrustIntegrateNum, 2, JoyinMath.ROUND_HALF_UP)
+            var entrustOwnNum = JoyinMath.doMinus(entrustNum, entrustIntegrateNum, 4, JoyinMath.ROUND_HALF_UP);
             if (entrustOwnNum < 0) {
                 $("#entrustOwnNum").val(entrustNum).trigger("blur");
                 $("#entrustIntegrateNum").val(0).trigger("blur");
@@ -934,7 +956,7 @@
             }
             var entrustOwnNum = $("#entrustOwnNum").val();
 
-            var entrustIntegrateNum = JoyinMath.doMinus(entrustNum, entrustOwnNum, 2, JoyinMath.ROUND_HALF_UP)
+            var entrustIntegrateNum = JoyinMath.doMinus(entrustNum, entrustOwnNum, 4, JoyinMath.ROUND_HALF_UP);
             if (entrustIntegrateNum < 0) {
                 $("#entrustNum").val(entrustOwnNum).trigger("blur");
                 $("#entrustIntegrateNum").val(0).trigger("blur");
@@ -956,7 +978,7 @@
                 entrustIntegrateNum = 0;
             }
 
-            var entrustOwnNum = JoyinMath.doMinus(entrustNum, entrustIntegrateNum, 2, JoyinMath.ROUND_HALF_UP);
+            var entrustOwnNum = JoyinMath.doMinus(entrustNum, entrustIntegrateNum, 4, JoyinMath.ROUND_HALF_UP);
             if (entrustOwnNum < 0) {
                 $("#entrustOwnNum").val(entrustNum).trigger("blur");
                 $("#entrustIntegrateNum").val(0).trigger("blur");

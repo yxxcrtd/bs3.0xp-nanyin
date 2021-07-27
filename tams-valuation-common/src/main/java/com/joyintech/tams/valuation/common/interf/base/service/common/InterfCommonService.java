@@ -356,11 +356,14 @@ public class InterfCommonService {
             //6.估值表模板 add by wujie on 20181220
             if (ValDictCodeList.账套配置表参数项_估值表模板.getValue().equals(ext.getParamCode())) {
                 isAreadyMap.put(ValDictCodeList.账套配置表参数项_估值表模板.getValue(), true);
-                ext.setParamValue(valSysParaService.findParamValue("SCHEME_MODE"));
-                
-                if (otherParams != null && otherParams.getValuationTemplate() != null) {
-                    ext.setParamValue(otherParams.getValuationTemplate());
+                // 20210623 weipeng :修改取值逻辑，原逻辑有误，otherParams并不会塞值，现改为只有模板没有对应值时取系统参数 start
+                if(!StringUtil.isNotEmpty(ext.getParamValue())){
+                    ext.setParamValue(valSysParaService.findParamValue("SCHEME_MODE"));
                 }
+//                if (otherParams != null && otherParams.getValuationTemplate() != null) {
+//                    ext.setParamValue(otherParams.getValuationTemplate());
+//                }
+                // 20210623 weipeng :修改取值逻辑，原逻辑有误，otherParams并不会塞值，现改为只有模板没有对应值时取系统参数 end
             }
             resValBokBooksetExt.add(ext);
         }
@@ -471,11 +474,12 @@ public class InterfCommonService {
                 resValBokBooksetExt.add(bokBooksetExt);
             }
             if (ValDictCodeList.账套配置表参数项_估值表模板.getValue().equals(key)) {
+                // 20210623 weipeng :修改取值逻辑，此处为模板没有对应值，直接取系统参数 start
             	String paramValue = valSysParaService.findParamValue("SCHEME_MODE");
-                if (otherParams != null && otherParams.getValuationTemplate() != null) {
-                	paramValue = otherParams.getValuationTemplate();
-                }
-                
+//                if (otherParams != null && otherParams.getValuationTemplate() != null) {
+//                	paramValue = otherParams.getValuationTemplate();
+//                }
+                // 20210623 weipeng :修改取值逻辑，此处为模板没有对应值，直接取系统参数 end
                 BokBooksetExt bokBooksetExt = new BokBooksetExt();
                 bokBooksetExt.setBooksetId(resValBokBookset.getBooksetId());
                 bokBooksetExt.setParamCode(ValDictCodeList.账套配置表参数项_估值表模板.getValue());
@@ -5383,24 +5387,26 @@ public class InterfCommonService {
             return;
         }
 
-        parmas = new HashMap<String,Object>();
-        parmas.put("createTime", interfDate);
-        parmas.put("createUser", InterfCommonConstant.接口_默认用户);
-        parmas.put("ftradeList", unDelDealList);
-        parmas.put("fpsList", paramMap.get("fpsList"));
-        parmas.put("IS_CHL", isChl);
-        parmas.put("TMP_E_NAME", tmpEName);
-        List<TrdProductDeal> unDelDealList_cf = this.queryUnDelDeal(parmas);
-        if(unDelDealList_cf==null || unDelDealList_cf.size()==0){
-            List<TrdProductDeal> totalList = this.queryDelChlFeeDeal(unDelDealList);
-            if(totalList != null && totalList.size()>0){
-                unDelDealList.addAll(totalList);
+        // modify by weipeng : 增加原交易编号判空处理，若取不到原交易，则不进行删除衍生交易处理
+        if(!CollectionUtils.isEmpty(unDelDealList)){
+            parmas = new HashMap<String,Object>();
+            parmas.put("createTime", interfDate);
+            parmas.put("createUser", InterfCommonConstant.接口_默认用户);
+            parmas.put("ftradeList", unDelDealList);
+            parmas.put("fpsList", paramMap.get("fpsList"));
+            parmas.put("IS_CHL", isChl);
+            parmas.put("TMP_E_NAME", tmpEName);
+            List<TrdProductDeal> unDelDealList_cf = this.queryUnDelDeal(parmas);
+            if(unDelDealList_cf==null || unDelDealList_cf.size()==0){
+                List<TrdProductDeal> totalList = this.queryDelChlFeeDeal(unDelDealList);
+                if(totalList != null && totalList.size()>0){
+                    unDelDealList.addAll(totalList);
+                }
+                this.deleteFinprodDealByTradeId(unDelDealList);
+                return;
             }
-            this.deleteFinprodDealByTradeId(unDelDealList);
-            return;
+            unDelDealList.addAll(unDelDealList_cf);
         }
-        unDelDealList.addAll(unDelDealList_cf);
-
         List<TrdProductDeal> totalList = this.queryDelChlFeeDeal(unDelDealList);
         if(totalList != null && totalList.size()>0){
             unDelDealList.addAll(totalList);

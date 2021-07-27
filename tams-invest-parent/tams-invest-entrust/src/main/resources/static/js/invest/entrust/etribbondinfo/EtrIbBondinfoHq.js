@@ -2,7 +2,9 @@
  * 行情（左上）
  */
 (function(){
-    
+
+    var finprodAbbr = '';
+    var secId = '';
     /**根据市场代码，查询行情信息，展示出来*/
     var queryJJHQXX = function(seccode) {
         $.ajax({
@@ -201,7 +203,6 @@
             }, false);
         }
         if (finprodId != null && finprodId != '') {
-            var secId = '';
             
             // document.getElementById('secName').innerHTML = '';
             // document.getElementById('secType').innerHTML = '';
@@ -222,11 +223,13 @@
             Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findSecinfo', param, function (result) {
                 if (result) {
                     secId = result.secId;
+                    finprodAbbr = result.finprodAbbr;
                     $("#secName").html('');
                     $("#secName").html(result.secName);
                     result.secType=result.secTypeName;
                     result.rateType=result.rateTypeName;
                     result.issuer=result.issuerName;
+                    result.xqFlg=result.xqFlgName;
                     dynview.resultToView(result);
                     //
                     // if (result.secName != null && result.secName != '') {
@@ -285,9 +288,17 @@
             }, false);
 
             queryJJHQXX(secId);
-            
+            window.EtrInitAmount.queryAmountInfo(secId,finprodAbbr,finprodId,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
             return rs;
         }
+    }
+
+    var queryAmountInfoMuti = function(finprodId,portfolioIds,chlFinprodId,ccy,sysDateT1,calId) {
+        window.EtrInitAmount.queryAmountInfoMuti(secId,finprodAbbr,finprodId,portfolioIds,chlFinprodId,ccy,sysDateT1,calId);
+    }
+
+    var calCanBuyAmount = function(portfolioId,ccy,sysDate,price) {
+        window.EtrInitAmount.calCanBuyAmount(portfolioId,ccy,sysDate,price);
     }
 
     /**
@@ -297,6 +308,8 @@
         querySecinfo:querySecinfo,
         queryPositionInfo:queryPositionInfo,
         viewPositionInfo:viewPositionInfo,
+        calCanBuyAmount:calCanBuyAmount,
+        queryAmountInfoMuti:queryAmountInfoMuti,
         zhkyxj_t: zhkyxj_t
     }
     

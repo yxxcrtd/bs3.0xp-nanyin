@@ -15,6 +15,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseDictCode;
 import com.joyintech.framework.base.BaseDictCodeList;
+import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.intf.*;
 import com.joyintech.framework.base.service.DealDictCodeDataService;
 import com.joyintech.framework.constant.DictCodeList;
@@ -43,11 +44,13 @@ import com.joyintech.tams.invest.common.riskinfrds.event.entity.EventMap;
 import com.joyintech.tams.invest.common.riskinfrds.event.entity.IEvent;
 import com.joyintech.tams.invest.common.riskinfrds.event.service.RskEventService;
 import com.joyintech.tams.invest.common.riskinfrds.indic.service.IndicatorService;
+import com.joyintech.tams.invest.common.riskinfrds.indic.service.IndicatorTrendService;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.*;
 import com.joyintech.tams.invest.common.riskinfrds.occupy.service.OccupyRelParamService;
 import com.joyintech.tams.invest.common.riskinfrds.param.service.IndicatorParamService;
 import com.joyintech.tams.invest.common.riskinfrds.param.service.IndicatorParamValService;
 import com.joyintech.tams.invest.common.riskinfrds.prod.service.PtlIndicatorService;
+import com.joyintech.tams.invest.riskredis.quota.superviseindicator.service.RskSupervisionIndicator001Service;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
@@ -57,6 +60,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -155,6 +159,18 @@ public class RedisViewController extends RedisBaseController {
     @Autowired
     private CalendarService calendarSrc;
 
+    // add by zhangrui1 start
+    /**
+     * 资产实时规模信息
+     */
+    @Autowired
+    private ProdAssetAmountService prodAssetAmtSrc;
+    // add by zhangrui1 end
+    // add by zhangrui1 20200814 start
+    @Autowired
+    private IndicatorTrendService indTrendSrc;
+    // add by zhangrui1 20200814 end
+
     private String pageId;
     private String subPageId;
     private com.joyintech.framework.base.intf.Page page;
@@ -179,6 +195,9 @@ public class RedisViewController extends RedisBaseController {
             required = false
     )
     private DealDictCodeDataService dealDictCodeDataService;
+
+    @Autowired(required = false)
+    private RskSupervisionIndicator001Service rskSupervisionIndicator001Service;
 
     @ModelAttribute
     protected void initCommonParams() {
@@ -256,9 +275,15 @@ public class RedisViewController extends RedisBaseController {
      */
     @RequestMapping("init")
     public String init(Model model) {
-        this.setSelectOptionToModel(model, BussinessDictCodeRds.REDIS模块);
+        this.setSelectOptionToModel(model, new BussinessDictCodeRds[] {BussinessDictCodeRds.共通业务类型,
+                BussinessDictCodeRds.REDIS模块
+        });
+        //查询指标参数
+        List<SelectOptionDto> mapZbcs = rskSupervisionIndicator001Service.getIndicatorParamList();
+        model.addAttribute("INDICATOR_PARAM",mapZbcs);
         model.addAttribute("REDIS_MODEL_PARAMVAL", BussinessDictCodeListRds.REDIS模块_指标参数值.getValue());
         model.addAttribute("REDIS_MODEL_EVENT", RedisKeyEnum.风险事件配置.key());
+        model.addAttribute("REDIS_MODEL_PARAM_CONFIG", RedisKeyEnum.指标参数配置.key());
         Assert.notNull(this.page, "[" + this.pageId + "]对应的当前画面在数据库中未配置， 请重写getPagePath或init方法");
         return this.page.getFile();
     }
@@ -272,9 +297,24 @@ public class RedisViewController extends RedisBaseController {
             return new Page<>();
         }
         String fields = (String)param.get(RDS_FIELD);
-        List<String> fieldList = StringUtil.splitToList(GlobalConstant.COMMA, fields);
         String[] keys = StringUtil.split(key, GlobalConstant.COMMA);
         RedisBaseService<?> baseService = getRedisBaseService(key);
+        List<String> fldList = new ArrayList<>();
+        if (StringUtil.contains(fields, GlobalConstant.COMMA)) {
+            fldList = StringUtil.splitToList(GlobalConstant.COMMA, fields);
+        }
+        else if (null != baseService && !isRedisKey(key, RedisKeyEnum.风险事件配置)) {
+            fldList = baseService.allHKeys(key, fields);
+        }
+        else {
+            for (String k : keys) {
+                fldList.addAll(valSrc.allHKeys(k, fields));
+            }
+        }
+        if (StringUtil.isEmptyList(fldList) && StringUtil.isNotEmpty(fields)) {
+            fldList.add(fields);
+        }
+        List<String> fieldList = fldList;
         if (baseService != null) {
             if (isRedisKey(key, RedisKeyEnum.风险事件配置)) {
                 if (StringUtil.isEmptyList(fieldList)) {
@@ -297,7 +337,12 @@ public class RedisViewController extends RedisBaseController {
             Map<String, Map<String, IValue<Object>>> paraValList = new HashMap<>();
             for (String k : keys) {
                 Map<String, IValue<Object>> map = new HashMap<>();
-                map.put(fields, null);
+                if (!StringUtil.contains(fields, GlobalConstant.COMMA)) {
+                    fieldList.forEach(f -> map.put(f, null));
+                }
+                else {
+                    map.put(fields, null);
+                }
                 paraValList.put(k, map);
             }
             return selectForPage(() -> changeToNumMap(valSrc.getParamVal(paraValList)));
@@ -323,7 +368,7 @@ public class RedisViewController extends RedisBaseController {
             page.setTotal((long)size);
             int start = (pageNum - 1) * pageSize;
             if(size<start){
-                start=0;
+              start=0;
             }
             int end = start + pageSize;
             page.addAll(resList.subList(start, end >= size ? size : end));
@@ -341,6 +386,13 @@ public class RedisViewController extends RedisBaseController {
                 String field = en.getKey();
                 if (fieldList.contains(field)) {
                     resMap.put(field, JsonUtils.object2Json(en.getValue()));
+                }
+                else {
+                    fieldList.forEach(f -> {
+                        if (StringUtil.contains(field, f)) {
+                            resMap.put(field, JsonUtils.object2Json(en.getValue()));
+                        }
+                    });
                 }
             });
             listMap.put(RedisKeyEnum.风险事件配置.key(), resMap);
@@ -416,9 +468,11 @@ public class RedisViewController extends RedisBaseController {
         }
         return eventMp;
     }
+
     public interface KeyReader<T> {
         List<T> doReader(T var1);
     }
+
     @ResponseBody
     @RequestMapping("queryItemInfo")
     public Page<SelectOptionDto> queryItemInfo() {
@@ -426,6 +480,7 @@ public class RedisViewController extends RedisBaseController {
         String key = (String)param.get("search");
         return queryKeyInfo(key, k -> valSrc.allKeys(k));
     }
+
     /**
      * 获取redis中key
      * @param k
@@ -451,6 +506,7 @@ public class RedisViewController extends RedisBaseController {
         });
         return toPage(dtoList);
     }
+
     @ResponseBody
     @RequestMapping("queryField")
     public Page<SelectOptionDto> queryField() {
@@ -461,19 +517,20 @@ public class RedisViewController extends RedisBaseController {
     }
 
     @ResponseBody
-    @RequestMapping("refresh")
-    public AjaxResult refresh(@RequestBody RedisHash<String, String, String> dto) {
+    @RequestMapping(value={"refresh/{isUpParamVal}","refresh"})
+    public AjaxResult refresh(@RequestBody RedisHash<String, String, String> dto, @PathVariable(value="isUpParamVal",required=false) String isUpParamVal) {
         AjaxResult aj = new AjaxResult();
-        fresh(dto.getKey(), dto.getField());
+        fresh(dto.getKey(), dto.getField(),isUpParamVal);
         return aj;
     }
 
-    private void fresh(String key, String filed) {
+    private void fresh(String key, String filed,String isUpParamVal) {
         ImplCond cond = new ImplCond();
         cond.setDel(false);
         cond.setPlateDate(DateUtil.parse(DateUtil.getSysDate()));
         RedisBaseService<?> baseService = getRedisBaseService(key);
-        if (baseService != null && !isRedisKey(key, RedisKeyEnum.预占实占信息)) {
+        if (baseService != null && !isRedisKey(key, RedisKeyEnum.预占实占信息)
+            && !isRedisKey(key, RedisKeyEnum.指标趋势信息)) {
         	baseService.deleteInfoFromRedis(key, !StringUtil.isEmpty(filed) ? filed : null);
         }
         if (isRedisKey(key, RedisKeyEnum.指标信息配置)) {
@@ -484,14 +541,15 @@ public class RedisViewController extends RedisBaseController {
             return;
         }
         if (isRedisKey(key, RedisKeyEnum.指标参数配置)) {
+            cond.setIsUpdParVal(false);
         	if (!StringUtil.isEmpty(filed)) {
                 filed = StringUtil.contains(filed, GlobalConstant.COLON)
                         ? StringUtil.substring(filed, 0, StringUtil.indexOf(filed, GlobalConstant.COLON))
                         : filed;
                 cond.setParamCodeArray(filed);
+                cond.setIsUpdParVal(StringUtil.equals(isUpParamVal,BussinessDictCodeListRds.是否_是.getValue())?true:false);
         	}
             cond.setLoadOffset(true);
-            cond.setIsUpdParVal(true);
             redisWriter.dealRiskIndParam(cond);
             return;
         }
@@ -555,6 +613,17 @@ public class RedisViewController extends RedisBaseController {
         	redisWriter.dealCalendarData(cond);
             return;
         }
+        // add by zhangrui1 start
+        if (isRedisKey(key, RedisKeyEnum.资产实时规模信息)) {
+            if (!StringUtil.isEmpty(filed)) {
+                List<String> fList = new ArrayList<>();
+                fList.add(filed);
+                cond.setCondList(fList);
+            }
+            redisWriter.dealProdAssetAmount(cond);
+            return;
+        }
+        // add by zhangrui1 end
         cond.setParamCodeArray(StringUtil.substring(key, 0, StringUtil.indexOf(key, GlobalConstant.COLON)));
         cond.setIsUpdParVal(true);
         List<String> fList = new ArrayList<>();
@@ -598,6 +667,16 @@ public class RedisViewController extends RedisBaseController {
         if (isRedisKey(key, RedisKeyEnum.日历信息)) {
             return getCalendarSrc();
         }
+        // add by zhangrui1 start 
+        if (isRedisKey(key, RedisKeyEnum.资产实时规模信息)) {
+            return getProdAssetAmtSrc();
+        }
+        // add by zhangrui1 end
+        // add by zhangrui1 start
+        if (isRedisKey(key, RedisKeyEnum.指标趋势信息)) {
+            return getProdAssetAmtSrc();
+        }
+        // add by zhangrui1 end
         return null;
     }
 
@@ -732,7 +811,6 @@ public class RedisViewController extends RedisBaseController {
 
     protected String getParam(String paramName) {
         String result = this.request.getParameter(paramName);
-//      result = StringUtil.delHTMLTag(result);
         result = StringUtil.trimHtmlTag(result);
         if (!StringUtil.strPos(paramName, "inputSql")) {
             result = StringUtil.StringFilter(result);
@@ -934,4 +1012,22 @@ public class RedisViewController extends RedisBaseController {
     public String getSubPageId() {
         return this.subPageId;
     }
+    // add by zhangrui1 start
+	public ProdAssetAmountService getProdAssetAmtSrc() {
+		return prodAssetAmtSrc;
+	}
+
+	public void setProdAssetAmtSrc(ProdAssetAmountService prodAssetAmtSrc) {
+		this.prodAssetAmtSrc = prodAssetAmtSrc;
+	}
+    // add by zhangrui1 end
+    // add by zhangrui1 20200814 start
+    public IndicatorTrendService getIndTrendSrc() {
+        return indTrendSrc;
+    }
+
+    public void setProdAssetAmtSrc(IndicatorTrendService indTrendSrc) {
+        this.indTrendSrc = indTrendSrc;
+    }
+    // add by zhangrui1 20200814 end
 }
