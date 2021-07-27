@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.common.asset.dao.AssetGenerateMapper">
+	<select id="qryFaceOrOtherInf" resultType="com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry">
+		SELECT
+		FP.*,
+		FP.CCY,NVL(FPA.FACE_VALUE,100) AS faceValue,
+		FPT.TYPE_11 type11,
+		FPT.TYPE_12 type12
+		FROM FIN_PRODUCT FP
+		INNER JOIN FIN_PRODUCT_ADD FPA ON FP.FINPROD_ID=FPA.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT_TYPE FPT ON FP.FINPROD_ID=FPT.FINPROD_ID AND FPT.BRANCH=0
+		WHERE  FP.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getExchangeRate" resultType="java.math.BigDecimal">
+		SELECT CLOSE_PRICE FROM (
+		select
+		MID_PRICE,rank() OVER(PARTITION BY EXCHARGE_CODE ORDER BY TRADE_DATE DESC ) AS rowno
+		from MST_EXCHARGE_QUOTE  WHERE TRADE_DATE &lt;= #{valDate, jdbcType=DATE}
+		AND QUOT_CYY = #{quotCcy}
+		AND BASIS_CYY = #{basisCcy}
+		) WHERE ROWNO =1
+	</select>
+
+
+	<select id="getBondValuation" resultType="Map">
+		SELECT SEC_ID,PRICE,NETPRICE,M_DURATION,BPYIELD,LAST_PERIOD FROM (
+		select
+		SEC_ID,PRICE,NETPRICE,M_DURATION,BPYIELD,LAST_PERIOD,rank() OVER(PARTITION BY SEC_ID ORDER BY VALUE_DATE DESC ) AS rowno
+		from MST_BOND_VALUATION_INFO
+		 WHERE VALUE_DATE &lt;= #{valDate, jdbcType=DATE}
+		<if test="finprodIdList != null  and finprodIdList.size() > 0">
+			and #{FINPROD_TYPE_TG_01}||SEC_ID in
+			<foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		) WHERE ROWNO =1
+	</select>
+
+	<select id="getAstNetVal" resultType="Map">
+        SELECT PORTFOLIO_ID,TDY_ASSET_NETVALUE,TDY_ASSET_VALUE FROM (
+             SELECT
+             PORTFOLIO_ID,TDY_ASSET_NETVALUE,TDY_ASSET_VALUE,
+             RANK() OVER(PARTITION BY PORTFOLIO_ID ORDER BY CDATE desc) AS rowno
+             FROM PTL_PORTFOLIO_VALUATION ppv
+             WHERE CDATE &lt;= #{valDate, jdbcType=DATE} and nvl(TDY_ASSET_NETVALUE,0)>0
+             <if test="portfolioIdList != null  and portfolioIdList.size() > 0">
+				and PORTFOLIO_ID in
+				<foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+        ) WHERE ROWNO =1
+    </select>
+
+	<select id="getStlAccount" resultType="Map">
+		SELECT distinct
+		A.PORTFOLIO_ID ,
+		A.ACCT_NO ,
+		B.REGIST_ORG ,
+		B.TRADE_PLACE
+		FROM PTL_SEC_ACCT A
+		INNER JOIN STL_SEC_ACCT_INFO B ON A.ACCT_NO = B.SEC_ACCT_ID
+		<where>
+			<if test="portfolioIdList != null  and portfolioIdList.size() > 0">
+				and A.PORTFOLIO_ID in
+				<foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="tradeMarket !=null and tradeMarket !='' ">
+				AND B.TRADE_PLACE = #{tradeMarket, jdbcType=VARCHAR}
+			</if>
+			<if test="registOrg !=null and registOrg !='' ">
+				AND B.REGIST_ORG = #{registOrg, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>
