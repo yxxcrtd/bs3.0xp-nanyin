@@ -292,7 +292,7 @@
 	<select id="selectValtblAssetSubHg" resultType="com.joyintech.tams.invest.batch.valrift.dto.ValtblAssetSubDto">
 		SELECT * FROM(
 		SELECT
-		row_number() over (partition by T1.PTL_ID,left(T1.SUB_CODE,4) order by LENGTH(T1.SUB_CODE) desc) as num,
+		row_number() over (partition by T1.PTL_ID,substr(T1.SUB_CODE,0,4) order by LENGTH(T1.SUB_CODE) desc) as num,
 		T1.VAL_DATE VAL_DATE,
 		T1.PTL_ID PTL_ID,
 		T1.SUB_CODE SUB_CODE,
