@@ -10,6 +10,8 @@
     
 package com.joyintech.tams.report.submitmaintenance.transformrule.service;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,14 +116,12 @@ public class TransformRuleMService extends CommonExportService<TransformRule001D
         		SvrServiceApplication.CHB3_SERVICE_NAME + "/TransformRule/doEditSave", dto,
         		Integer.class);
 	}
-	
 	/**
 	 * 
 	 * @Description 刷新待处理数据  
 	 * @Author      高健  
 	 * @Date        2019年12月31日 上午9:58:27  
-	 * @param  参数  
-	 * @return void 返回类型   
+	 * @return void 返回类型
 	 * @throws
 	 */
 	public void excuteRefresh(){
@@ -129,5 +129,13 @@ public class TransformRuleMService extends CommonExportService<TransformRule001D
 		restTemplate.postForObject(
         		SvrServiceApplication.CHB3_SERVICE_NAME + "/TransformRule/excuteRefresh",param,
         		Integer.class);
+	}
+
+
+
+	public String ch2Unicdoe(String str) throws UnsupportedEncodingException {
+		str = (str == null ? "" : str);
+		str = str.replaceAll("\"","");
+		return Integer.toHexString(str.codePointAt(0));
 	}
 }
