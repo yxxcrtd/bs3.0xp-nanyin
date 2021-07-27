@@ -1,18 +1,11 @@
 package com.joyintech.service.entrust.etrastconfigtransfer.dao;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
 import com.joyintech.service.entrust.etrastconfigtransfer.dto.EtrAssetConfigDto;
-import com.joyintech.service.entrust.etrastconfigtransfer.service.EtrAssetConfigTransferService;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.entrust.etrstock.dto.EtrStockDto;
+import java.util.List;
+import java.util.Map;
 
 
 /**
