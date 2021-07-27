@@ -37,7 +37,7 @@
             )
         </if>
         <if test="bizCode != null and !bizCode.isEmpty()">
-            AND T1.TRADE_ID LIKE CONCAT('%',CONCAT(#{bizCode},'%'))
+            AND T1.TOTLE_TRADE_ID LIKE CONCAT('%',CONCAT(#{bizCode},'%'))
         </if>
         <if test="payDateStart != null and !payDateStart.isEmpty()">
             AND T1.SETTLE_DATE >= TO_DATE(#{payDateStart}, 'yyyy-MM-dd')
