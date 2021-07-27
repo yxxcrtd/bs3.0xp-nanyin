@@ -317,10 +317,10 @@
 		FROM (<if test="productIdList!=null and productIdList.size()>0">
 				<choose>
 					<when test="productIdList.size() == 1">
-						select '${prodId}' as prodId from SYSIBM.SYSDUMMY1
+						select '${prodId}' as prodId from DUAL
 					</when>
 					<otherwise>
-						<foreach collection="productIdList" item="item" separator="as prodId from SYSIBM.SYSDUMMY1 union all select" open="select " close="as prodId from SYSIBM.SYSDUMMY1">
+						<foreach collection="productIdList" item="item" separator="as prodId from DUAL union all select" open="select " close="as prodId from DUAL">
 							#{item}
 						</foreach>
 					</otherwise>
