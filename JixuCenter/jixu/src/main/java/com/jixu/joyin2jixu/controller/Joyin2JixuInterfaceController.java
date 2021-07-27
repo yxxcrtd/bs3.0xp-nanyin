@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 几许对外开放接口，供估值调用
@@ -25,7 +26,11 @@ public class Joyin2JixuInterfaceController {
     private Joyin2JixuInterface joyin2JixuInterface;
 
     @PostMapping(ApiPathConst.EXECUTE_MESSAGE)
-    public ResultContainer executeJixuMessage(@RequestParam(name = "withTx", required = false) boolean withTx, @RequestParam("jsonMsg") String jsonMsg) {
+    public ResultContainer executeJixuMessage(@RequestBody Map<String,Object> param) {
+
+
+        boolean withTx = (boolean)param.get("withTx");
+        String jsonMsg = (String)param.get("jsonMsg");
         if(withTx) {
             return joyin2JixuInterface.executeJixuMessage(jsonMsg);
         }

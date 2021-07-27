@@ -315,7 +315,8 @@ public class Joyin2JixuInterface {
 		//getErrorMsg()	错误消息
 		return commService.executeMsg(jsonMsg);
 	}
-	
+
+	@Transactional(value = "jixuTXManager", rollbackFor = Exception.class)
 	public ResultContainer executeJixuMessageNoTx(String jsonMsg) {
 		//ResultContainer
 		//isCorrectFlag() 执行是否成功
