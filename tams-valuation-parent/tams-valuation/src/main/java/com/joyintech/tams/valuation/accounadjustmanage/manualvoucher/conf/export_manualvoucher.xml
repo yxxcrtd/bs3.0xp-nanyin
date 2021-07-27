@@ -12,7 +12,7 @@
 			<Cell order="8" name="科目尾号名称">detailSubjectName</Cell>
 			<Cell order="9" name="借贷">cdFlagFmt</Cell>
 			<Cell order="10" name="原币币种">ccyFmt</Cell>
-			<Cell order="11" name="原币余额">happenAmt</Cell>
+			<Cell order="11" name="原币金额">happenAmt</Cell>
 			<Cell order="12" name="数量">happenNumber</Cell>
 			<Cell order="13" name="记账币种">bCcy</Cell>
 			<Cell order="14" name="本币金额">bHappenAmt</Cell>
@@ -22,8 +22,9 @@
 			<Cell order="18" name="业务编号">tradeId</Cell>
 			<Cell order="19" name="原始业务编号">pTradeId</Cell>
 			<Cell order="20" name="冲销标识">offsetFlagFmt</Cell>
-			<Cell order="21" name="摘要">bookRemark</Cell>
-			<Cell order="22" name="制作人">createUser</Cell>
+			<Cell order="21" name="记账顺序">accountOrderFmt</Cell>
+			<Cell order="22" name="摘要">bookRemark</Cell>
+			<Cell order="23" name="制作人">createUser</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

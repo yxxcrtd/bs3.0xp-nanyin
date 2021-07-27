@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">业务类别</label>
+                    <label class="layui-form-label form-lable">业务类型</label>
                     <div class="layui-input-inline input-inline" style="display: block;">
                       <input id="finprodType" name="finprodType" class="layui-input form-input input-select" placeholder="请选择" data-th-data-result="${FINPROD_TYPE}" allowClear="true">
                     </div>
@@ -42,7 +42,7 @@
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">记账日期</label>
                     <div class="layui-input-inline input-inline">
-                      <input type="text" id="bookDate" name="bookDate" placeholder="请选择、支持区间" class="layui-input form-input input-dateRangeSelect" allowClear="true">
+                      <input type="text" id="bookDate" name="bookDate" data-th-value="${sysDate}" placeholder="请选择、支持区间" class="layui-input form-input input-dateRangeSelect" allowClear="true">
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4" >
-                   <label class="layui-form-label form-lable">是否展示分录</label>
+                   <label class="layui-form-label form-lable">凭证是否展示分录</label>
                    <div class="layui-input-inline input-inline" >
                        <input type="checkbox" name="isShowfl" id ="isShowfl" lay-skin="switch" lay-text="是|否"
                        data-th-checked="${YES}"   data-th-value="${YES_OR_NO}" >

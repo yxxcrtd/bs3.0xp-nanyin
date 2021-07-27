@@ -10,64 +10,20 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.service;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.activiti.editor.language.json.converter.util.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.common.base.dao.BokAcctLayeringInfoMapper;
-import com.joyintech.tams.common.base.dao.BokBookdetailAllMapper;
-import com.joyintech.tams.common.base.dao.BokBooksetMapper;
-import com.joyintech.tams.common.base.dao.BokBussDetsubMapper;
-import com.joyintech.tams.common.base.dao.BokDealAccountingDetailMapper;
-import com.joyintech.tams.common.base.dao.BokDealAccountingMapper;
-import com.joyintech.tams.common.base.dao.BokDetailIdMapper;
-import com.joyintech.tams.common.base.dao.BokVouchDetailMapper;
-import com.joyintech.tams.common.base.dao.BokVouchMainMapper;
-import com.joyintech.tams.common.base.dao.BokVouchRelMapper;
-import com.joyintech.tams.common.base.dao.TrdVouchDealDetailMapper;
-import com.joyintech.tams.common.base.dao.TrdVouchDealMapper;
-import com.joyintech.tams.common.base.entity.BokAcctLayeringInfo;
-import com.joyintech.tams.common.base.entity.BokAcctLayeringInfoKey;
-import com.joyintech.tams.common.base.entity.BokBookdetailAll;
-import com.joyintech.tams.common.base.entity.BokBookset;
-import com.joyintech.tams.common.base.entity.BokBussDetsub;
-import com.joyintech.tams.common.base.entity.BokBussDetsubKey;
-import com.joyintech.tams.common.base.entity.BokDealAccounting;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetailKey;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.BokDetailIdKey;
-import com.joyintech.tams.common.base.entity.BokSubject;
-import com.joyintech.tams.common.base.entity.BokVouchDetail;
-import com.joyintech.tams.common.base.entity.BokVouchMain;
-import com.joyintech.tams.common.base.entity.BokVouchRel;
-import com.joyintech.tams.common.base.entity.SysBatchTask;
-import com.joyintech.tams.common.base.entity.TrdVouchDeal;
-import com.joyintech.tams.common.base.entity.TrdVouchDealDetail;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListNatureGroup;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dao.ValManualVoucher003Mapper;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.BokDetailIdDto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddValidatorDto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003Dto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003SubjectDto;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.*;
 import com.joyintech.tams.valuation.common.constants.DataIndexSequenceType;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
@@ -75,6 +31,16 @@ import com.joyintech.tams.valuation.common.service.BookAccountCommonService;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.activiti.editor.language.json.converter.util.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 手工凭证新建Service
@@ -314,6 +280,18 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
     }
 
     /**
+     * 获取详情中列表信息
+     *
+     * @param seqno 凭证编号
+     * @return 详情中列表信息
+     * @throws Exception 异常
+     */
+    public List<ValManualVoucher003AddDto> searchList1(String seqno) {
+        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/searchList1", seqno, ValManualVoucher003AddDto.class);
+//        return valManualVoucher003Mapper.searchList(bookId);
+    }
+
+    /**
      * 将数据格式化，为录入表格
      * 
      * @param dto
@@ -323,6 +301,7 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
      */
     public ValManualVoucher003AddDto initTableDto(ValManualVoucher003AddValidatorDto dto) {
         ValManualVoucher003AddDto returndto = new ValManualVoucher003AddDto();
+        returndto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         return returndto;
     }
 
@@ -1361,7 +1340,10 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
 //            doSubmit(entity);
         	 restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/doSubmit",
         	     setEntity(entity), Integer.class);
-        }
+        }else if(OperationType.MODIFY.equals(type)){//add by sunshuaishuai 20210302
+                restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/update",
+                        setEntity(entity), Integer.class);
+            }
     }
 
     /**modify by dongjun on 20181214 start **/
@@ -1484,4 +1466,65 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
     public BokDetailIdDto getInvAim(Map<String, Object> params) {
         return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/getInvAim", params, BokDetailIdDto.class);
     }
+
+    //add by sunshuaishuai 20210302 start
+    /**
+     * 检索模板代码
+     *
+     * @param params 过滤参数
+     * @return 模板代码
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getTmpCode(Map<String, Object> params) {
+        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/getTmpCode", params, SuggestDto.class);
+    }
+
+    /**
+     * 快录
+     *
+     * @param params 过滤参数
+     * @return 模板代码
+     * @see
+     * @since 1.0
+     */
+    public ValManualVoucherTemplete003Dto quickInput(Map<String, Object> params) {
+        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/quickInput", params, ValManualVoucherTemplete003Dto.class);
+    }
+
+    /**
+     * 快录
+     *
+     * @param tmpCode 过滤参数
+     * @return 模板代码
+     * @see
+     * @since 1.0
+     */
+    public List<ValManualVoucherTemplete003AddDto> quickInputList(String tmpCode) {
+        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/quickInputList", tmpCode, ValManualVoucherTemplete003AddDto.class);
+    }
+
+    /**
+     * 快录时，模板代码校验
+     *
+     * @param tmpCode 过滤参数
+     * @return 模板代码
+     * @see
+     * @since 1.0
+     */
+    public String checkTmpCode(String tmpCode) {
+        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/checkTmpCode", tmpCode, String.class);
+    }
+
+    /**
+     * 科目号下拉框获取
+     *
+     * @return 返回的数据
+     * @exception Exception 异常
+     * @since 1.0
+     */
+    public ValManualVoucher003SubjectDto getDetailSubjectNo(Map<String, String> params) {
+        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/getDetailSubjectNo",params, ValManualVoucher003SubjectDto.class);
+    }
+    //add by sunshuaishuai end
 }

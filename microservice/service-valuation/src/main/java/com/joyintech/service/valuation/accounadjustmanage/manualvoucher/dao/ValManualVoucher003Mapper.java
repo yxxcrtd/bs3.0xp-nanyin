@@ -10,20 +10,16 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dao;
 
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.*;
+import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.common.base.entity.SysBatchTask;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.BokDetailIdDto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003SubjectDto;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.SysBatchTask;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 手工凭证新建Mapper
@@ -167,7 +163,7 @@ public interface ValManualVoucher003Mapper {
      * @see
      * @since 1.0
      */
-    SysBatchTask getTaskInfo(@Param("beanName") String beanName);
+    List<SysBatchTask> getTaskInfo(@Param("beanName") String beanName);
 
     /**
      * 删除手工交易凭证明细
@@ -241,7 +237,7 @@ public interface ValManualVoucher003Mapper {
      * 根据科目号和币种查询资金账户
      * 
      * @param booksetId
-     * @param acctTypeA01
+     * @param acctType
      * @param ccy
      * @return
      * @see
@@ -251,6 +247,20 @@ public interface ValManualVoucher003Mapper {
                      @Param("acctType") String acctType,
                      @Param("ccy") String ccy);
     /**moidfy by dongjun on 20181211 end ***/
+
+    /**moidfy by sunshuaishuai on 20210312 start ***/
+    /**
+     *
+     * 查询资金账户名称
+     *
+     * @param acctNo
+     * @return
+     * @see
+     * @since 1.0
+     */
+    String getAcctNa(@Param("acctNo") String acctNo);
+    /**moidfy by sunshuaishuai on 20210312 end ***/
+
 
     /**modify by dongjun on 20181214 start **/
     /**
@@ -278,10 +288,66 @@ public interface ValManualVoucher003Mapper {
     
     /**
      * 投资目的查询
-     * @param para
+     * @param params
      * @return
      * @see
      * @since 1.0
      */
     BokDetailIdDto getInvAim(Map<String, Object> params);
+
+    /*add by sunshuaishuai 20210302 start*/
+    /**
+     * 检索模板代码
+     *
+     * @return 模板代码列表
+     * @see
+     * @since 1.0
+     */
+    List<SuggestDto> getTmpCode(@Param("param") String param);
+
+    /**
+     * 获取列表信息
+     *
+     * @param seqno 凭证编号
+     * @return 列表信息
+     * @throws Exception 异常
+     */
+    List<ValManualVoucher003AddDto> searchList1(String seqno);
+
+    /**
+     * 检索模板代码
+     *
+     * @return 模板代码列表
+     * @see
+     * @since 1.0
+     */
+    ValManualVoucherTemplete003Dto quickInput(@Param("tmpCode") String tmpCode);
+
+    /**
+     * 检索模板代码
+     *
+     * @return 模板代码列表
+     * @see
+     * @since 1.0
+     */
+    List<ValManualVoucherTemplete003AddDto> quickInputList(@Param("tmpCode") String tmpCode);
+
+    /**
+     * 快录时，模板代码校验
+     *
+     * @return 模板名称
+     * @see
+     * @since 1.0
+     */
+    String checkTmpCode(@Param("tmpCode") String tmpCode);
+
+    /**
+     * 查询基础科目性质
+     *
+     * @param booksetIdTmpl
+     * @param subjectNo
+     * @return
+     */
+    String getNatureInfo(@Param("booksetIdTmpl") String booksetIdTmpl,@Param("subNo") String subNo);
+    /*add by sunshuaishuai end*/
 }

@@ -10,10 +10,10 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto;
 
-import java.util.Date;
-
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.validation.annotation.NotEmpty;
+
+import java.util.Date;
 
 /**
  * 手工凭证新建dto
@@ -77,6 +77,12 @@ public class ValManualVoucher003AddValidatorDto extends BaseEntity {
      * 摘要（凭证说明）
      */
     private String bookRemark;
+
+    /**
+     * 记账顺序
+     */
+    @NotEmpty(fieldName = "ValManualVoucher.accountOrder")
+    private String accountOrder;
 
     /**
      * 获取 凭证流水号
@@ -239,5 +245,12 @@ public class ValManualVoucher003AddValidatorDto extends BaseEntity {
     public void setCashId(String cashId) {
         this.cashId = cashId;
     }
-    
+
+    public String getAccountOrder() {
+        return accountOrder;
+    }
+
+    public void setAccountOrder(String accountOrder) {
+        this.accountOrder = accountOrder;
+    }
 }
