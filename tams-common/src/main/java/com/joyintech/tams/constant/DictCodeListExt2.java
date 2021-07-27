@@ -1912,6 +1912,8 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
      * 上游接口文件类型_产品费用头寸信息
      */
     上游接口文件类型_产品费用头寸信息(DictCode.上游接口文件类型, "34", "产品费用头寸信息"),
+
+    共通业务类型_基金投向维护(DictCode.共通业务类型,"RSK51","基金投向维护"),
     共通业务类型_股票分红公告(DictCode.共通业务类型,"MST34","股票分红公告"),
     共通业务类型_基金分红公告(DictCode.共通业务类型,"MST35","基金分红公告"),
 ;
