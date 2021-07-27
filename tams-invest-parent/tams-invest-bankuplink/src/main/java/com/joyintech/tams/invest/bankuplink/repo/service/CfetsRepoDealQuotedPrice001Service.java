@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -1060,5 +1061,15 @@ public class CfetsRepoDealQuotedPrice001Service extends CommonExportService<Cstp
         return restTemplate.postForList(
                 ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPrice001/getQualifiedByentrustIds",
                 map, CfetsRepoDealQuotedPrice001Dto.class);
+    }
+
+    public CfetsRepoDealQuotedPrice003Dto queryPledgeBondElementForImport(String finprodId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("finprodId",finprodId);
+        param.put("platDate", iPlatformDate.getSysDateStr());
+        param.put("valueSourceCBC",BussinessDictCodeList.估值来源_中债登.getValue());
+        return restTemplate.postForObject(
+                ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPrice001/queryPledgeBondElementForImport",
+                param, CfetsRepoDealQuotedPrice003Dto.class);
     }
 }
