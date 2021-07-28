@@ -58,15 +58,35 @@
 		AND TRADE_CALENDAR_ID = #{calendarId}
 	</select>
 	
+<!--	&lt;!&ndash; 查询上一开放日 &ndash;&gt;-->
+<!--	<select id="getLastOpenDate" parameterType="java.util.Map" resultType="java.util.Date">-->
+<!--	SELECT MAX(OPEN_DATE_END) AS lastOpenDate-->
+<!--&lt;!&ndash; 	一体化问题12：表名变更（开放计划表(FIN_VAL_OPEN_PLAN) -> 开放计划(FIN_OPEN_PLAN) &ndash;&gt;-->
+<!--	FROM FIN_OPEN_PLAN-->
+<!--	WHERE FINPROD_ID = #{finprodId}-->
+<!--	AND OPEN_DATE_END<![CDATA[<]]>#{cdate}-->
+<!--	</select>-->
+
 	<!-- 查询上一开放日 -->
 	<select id="getLastOpenDate" parameterType="java.util.Map" resultType="java.util.Date">
-	SELECT MAX(OPEN_DATE_END) AS lastOpenDate
-<!-- 	一体化问题12：表名变更（开放计划表(FIN_VAL_OPEN_PLAN) -> 开放计划(FIN_OPEN_PLAN) -->
-	FROM FIN_OPEN_PLAN
-	WHERE FINPROD_ID = #{finprodId}
-	AND OPEN_DATE_END<![CDATA[<]]>#{cdate}
+		select max(ffas.accr_date)+1 lastOpenDate  /**  weipeng:开放确认日 =  业绩报酬计提计划开始日+1 **/
+		from fin_cash_info fci
+				 left join fin_float_accrual_sche ffas
+						   on ffas.cash_id = fci.cash_id
+		where 1 = 1
+		  and fci.finprod_id = #{finprodId}
+		  and fci.cash_type_2 = 'C04'
+		  and ffas.accr_date <![CDATA[<]]> #{cdate}  /** weipeng:确认日当天取自身，其他取上一确认日 **/
+		order by ffas.accr_str_date asc
 	</select>
-	
+
+	<!-- 查询第一个开放日（起息日） -->
+	<select id="getVdDateByFinprodId" parameterType="java.util.Map" resultType="java.util.Date">
+		select t.vdate as lastOpenDate
+		from fin_product t
+		where t.finprod_id = #{finprodId}
+	</select>
+
 	<!-- 摊销重算配置查询 -->
 	<select id="getBokAmoConfig" parameterType="java.util.Map" resultType="com.joyintech.tams.common.base.entity.BokAmoConfig">
 select		
