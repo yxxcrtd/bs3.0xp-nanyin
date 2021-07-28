@@ -1285,11 +1285,11 @@ var TrdCommandReceive001 = function () {
                                         '#TrdCommandReceive001_btn_transaction')
                                         .attr("style",
                                             "display:false");
-                                    $('#TrdCommandReceive001_btn_preTrade').attr("style","display:false");// 交易预录入按钮
+                                    $('#TrdCommandReceive001_btn_preTrade').attr("style","display:none");// 交易预录入按钮
                                     $(
                                         '#TrdCommandReceive001_btn_contract')
                                         .attr("style",
-                                            "display:false");
+                                            "display:none");
                                     $(
                                         '#TrdCommandReceive001_btn_refuce')
                                         .attr("style",
