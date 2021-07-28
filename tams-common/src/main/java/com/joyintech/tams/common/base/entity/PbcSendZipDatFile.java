@@ -437,7 +437,7 @@ public class PbcSendZipDatFile extends BaseEntity {
      */
     public String getDatZipTypeStr() {
         if(StringUtil.isNotEmpty(this.getDatZipType())){
-            return SysDataUtil.getNameFromDataDict(DictCode.发送状态, this.getDatZipType());
+            return SysDataUtil.getNameFromDataDict(DictCode.人行报送类型, this.getDatZipType());
         }
         return "" ;
     }
@@ -447,7 +447,7 @@ public class PbcSendZipDatFile extends BaseEntity {
      */
     public String getDatZipDatTypeStr() {
         if(StringUtil.isNotEmpty(this.getDatZipDatType())){
-            return SysDataUtil.getNameFromDataDict(DictCode.发送状态, this.getDatZipDatType());
+            return SysDataUtil.getNameFromDataDict(DictCode.人行报送明细类型, this.getDatZipDatType());
         }
         return "" ;
     }
@@ -457,7 +457,7 @@ public class PbcSendZipDatFile extends BaseEntity {
      */
     public String getZipSendStatusStr() {
         if(StringUtil.isNotEmpty(this.getZipSendStatus())){
-            return SysDataUtil.getNameFromDataDict(DictCode.发送状态, this.getZipSendStatus());
+            return SysDataUtil.getNameFromDataDict(DictCode.报送状态, this.getZipSendStatus());
         }
         return "" ;
     }
@@ -467,7 +467,7 @@ public class PbcSendZipDatFile extends BaseEntity {
      */
     public String getReturnZipSendStatusStr() {
         if(StringUtil.isNotEmpty(this.getReturnZipSendStatus())){
-            return SysDataUtil.getNameFromDataDict(DictCode.发送状态, this.getReturnZipSendStatus());
+            return SysDataUtil.getNameFromDataDict(DictCode.人行报送管理反馈状态, this.getReturnZipSendStatus());
         }
         return "" ;
     }

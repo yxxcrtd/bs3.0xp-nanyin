@@ -18,8 +18,8 @@
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">报送类型</label>
 						<div class="layui-input-inline input-inline">
-							<select id="reporttype" class="input-select"
-								data-th-data-result='${DAT_ZIP_TYPE}'
+							<select id="datZipType" class="input-select"
+								data-th-data-result='${SVR_PBC_DAT_ZIP_TYPE}'
 								data-th-initvalue="${datZipType}" placeholder="请选择"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
 								allowClear="true" multiple="multiple">
@@ -29,7 +29,7 @@
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">报送状态</label>
 						<div class="layui-input-inline input-inline">
-							<select id="sendStatus" name="sendStatus" class="input-select"
+							<select id="zipSendStatus" name="sendStatus" class="input-select"
 								data-th-data-result='${SUBMIT_STATUS}'
 								data-th-initvalue="${zipSendStatus}" placeholder="请选择"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
@@ -40,8 +40,8 @@
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">反馈状态</label>
 						<div class="layui-input-inline input-inline">
-							<select id="submitFeedbackStatus" class="input-select"
-									data-th-data-result='${SVR_PBC_SUBMIT_FEEDBACK_STATUS}'
+							<select id="returnZipSendStatus" class="input-select"
+									data-th-data-result='${SVR_PBC_RETURN_ZIP_SEND_STATUS}'
 									placeholder="请选择"
 									data-th-placeholder="#{SysCommon.selectplaceholder}"
 									data-th-initvalue="${returnZipSendStatus}" allowClear="true"

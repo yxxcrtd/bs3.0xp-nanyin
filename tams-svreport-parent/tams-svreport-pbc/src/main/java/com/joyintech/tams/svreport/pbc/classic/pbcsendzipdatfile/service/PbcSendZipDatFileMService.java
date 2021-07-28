@@ -30,10 +30,10 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 	 * @see
 	 * @since 1.0
 	 */
-	public Page<PbcMonthReport> searchPage(Map<String, Object> param) {
+	public Page<PbcSendZipDatFile> searchPage(Map<String, Object> param) {
 		return restTemplate.postForPage(
         		SvrServiceApplication.PBC_SERVICE_NAME + "/PbcSendZipDatFile/findPage",param,
-        		PbcMonthReport.class);
+				PbcSendZipDatFile.class);
 	}
 
 
@@ -45,10 +45,10 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
      * @see
      * @since 1.0
      */
-    public PbcMonthReport searchPageBysubmitDate(Map<String, Object> param) {
+    public PbcSendZipDatFile searchPageBysubmitDate(Map<String, Object> param) {
         return restTemplate.postForObject(
         		SvrServiceApplication.PBC_SERVICE_NAME + "/PbcSendZipDatFile/searchPageBysubmitDate",param,
-        		PbcMonthReport.class);
+				PbcSendZipDatFile.class);
     }
 
 	

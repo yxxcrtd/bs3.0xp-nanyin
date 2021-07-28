@@ -8,6 +8,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.service.PbcSendZipDatFileMService;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
@@ -53,7 +54,7 @@ public class PbcSendZipDatFile001Controller extends BaseController{
     @RequestMapping(PAGE_INIT)
 	@Override
 	public String init(Model model) {
-		super.setSelectOptionToModel(model, DictCode.人行报送类型, DictCode.报送状态, DictCode.人行报送反馈状态);
+		super.setSelectOptionToModel(model, DictCode.人行报送类型, DictCode.报送状态, DictCode.人行报送管理反馈状态);
 		return super.init(model);
 	}
 
@@ -67,35 +68,15 @@ public class PbcSendZipDatFile001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<PbcMonthReport> searchPage() {
-		Page<PbcMonthReport> page = pbcSendZipDatFileMService
-				.searchPage(RequestUtil.getPageParam());
+	public Page<PbcSendZipDatFile> searchPage() {
+		Map<String,Object> searchParam = RequestUtil.getPageParam();
+		Page<PbcSendZipDatFile> page = pbcSendZipDatFileMService
+				.searchPage(searchParam);
 		return page;
 	}
 
 
-    /**
-     *
-     * 业务画面查询事件
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    @ResponseBody
-    @RequestMapping("findPageBysubmitDate")
-    public String searchPageBysubmitDate() {
-        Map<String,String> result = new HashMap<String,String>();
-        PbcMonthReport report = pbcSendZipDatFileMService
-                .searchPageBysubmitDate(RequestUtil.getPageParam());
-        if (report.getStartdate() != null){
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(report.getStartdate());
-            result.put("YEAR",cal.get(Calendar.YEAR)+"");
-            result.put("MONTH",cal.get(Calendar.MONTH)+1+"");
-        }
-        return JsonUtils.object2Json(result);
-    }
+
 
 
 }

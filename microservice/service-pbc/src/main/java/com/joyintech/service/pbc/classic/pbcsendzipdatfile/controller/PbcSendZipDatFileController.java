@@ -2,8 +2,8 @@ package com.joyintech.service.pbc.classic.pbcsendzipdatfile.controller;
 
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.PbcSendZipDatFileService;
-import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,24 +39,11 @@ public class PbcSendZipDatFileController {
 	 * @since 1.0
 	 */
 	@PostMapping("findPage/{page}/{length}")
-	public Page<PbcMonthReport> searchPage(@RequestBody Map<String, Object> param) {
-		Page<PbcMonthReport> page = pbcSendZipDatFileService.searchPage(param);
+	public Page<PbcSendZipDatFile> searchPage(@RequestBody Map<String, Object> param) {
+		Page<PbcSendZipDatFile> page = pbcSendZipDatFileService.searchPage(param);
 		return page;
 	}
 
-
-    /**
-     *
-     * 业务画面查询事件
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-	@PostMapping("searchPageBysubmitDate")
-    public PbcMonthReport searchPageBysubmitDate(@RequestBody Map<String, Object> param) {
-        return pbcSendZipDatFileService.searchPageBysubmitDate(param);
-    }
 
 	
 }

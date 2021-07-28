@@ -28,8 +28,8 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
     </resultMap>
     <sql id="Base_Column_List" >
-        REGIST_SEQNO,DAT_ZIP_CODE,DAT_ZIP_PATH,DAT_ZIP_TYPE,DAT_ZIP_STATUS,
-ZIP_DOWNLOAD_TIME,STATUS_VDATE,REPORTUUID,PIB_DETAIL_CNT,SUBMIT_TIME,ZIP_SEND_STATUS,
+        REGIST_SEQNO,DAT_ZIP_CODE,DAT_ZIP_PATH,DAT_ZIP_TYPE,DAT_ZIP_DAT_TYPE,DAT_ZIP_STATUS,
+ZIP_DOWNLOAD_TIME,STATUS_VDATE,REPORTUUID,PIB_DETAIL_CNT,SUBMIT_TIME,ZIP_SEND_STATUS,RETURN_ZIP_SEND_STATUS,
 RETURN_ZIP_CODE,RETURN_TIME,RETURN_MSG,RETURN_ERROR_CNT,RETURN_PASS_CNT,CREATE_USER,
 ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
     </sql>
@@ -226,13 +226,13 @@ ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
         <include refid="Base_Column_List" />
         from PBC_SEND_ZIP_DAT_FILE
         <where>
-            <if test="zipSendStatusList != null and zipSendStatusList.size()&gt;0">
-                <foreach close=")" collection="sendStatusList" item="item" open="and ZIP_SEND_STATUS in(" separator=",">
+            <if test="datZipTypeList != null and datZipTypeList.size()&gt;0">
+                <foreach close=")" collection="datZipTypeList" item="item" open="and DAT_ZIP_TYPE in(" separator=",">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
-            <if test="datZipTypeList != null and datZipTypeList.size()&gt;0">
-                <foreach close=")" collection="datZipTypeList" item="item" open="and DAT_ZIP_TYPE in(" separator=",">
+            <if test="zipSendStatusList != null and zipSendStatusList.size()&gt;0">
+                <foreach close=")" collection="zipSendStatusList" item="item" open="and ZIP_SEND_STATUS in(" separator=",">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
@@ -242,6 +242,6 @@ ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
                 </foreach>
             </if>
         </where>
-        ) ORDER BY STATUS_DATE
+        ) ORDER BY STATUS_VDATE
     </select>
 </mapper>
