@@ -1,0 +1,16 @@
+--weipeng: 资产减值升级时删除了手工凭证-计提后得批处理，需要给恢复回来
+--批处理任务表添加批处理任务：手工凭证-计提后：手工凭证-计提后
+DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '204';
+insert into SYS_BATCH_TASK (task_id, system_code, task_name, ftask_id, bean_name, task_pri, create_user, create_time, update_user, update_time, create_dept) values ('204','VAL','手工凭证批处理-计提后','','manualVoucherTask','83','system',to_date('2021/02/24', 'yyyy/mm/dd'), 'system',to_date('2021/02/24', 'yyyy/mm/dd'), '');
+
+--批处理任务组添加批处理任务：手工凭证-计提后
+DELETE FROM SYS_BATCH_JOB WHERE TASK_ID = '204' AND BATCH_SEQ_NO = '6f8803b3aa6fbaffe050007f01003cad';
+insert into SYS_BATCH_JOB values ('6f8803b3aa6fbaffe050007f01003cad','204','system','',to_date('2021/2/24', 'yyyy/mm/dd'), 'system',to_date('2021/2/24', 'yyyy/mm/dd'));
+
+--匹配关系表增加【手工凭证-计提后】批处理配置：
+DELETE FROM bok_match_rlat t WHERE t.source = '204';
+insert into bok_match_rlat (MATCH_TYPE, ACCT_STANDARD, SOURCE, TARGET, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('01', 'ALL', '204', '23', 'system', null, sysdate, 'system', sysdate);
+
+--删除203任务原先多余一条批处理配置，原先是手工凭证-计提后的配置
+DELETE FROM bok_match_rlat t WHERE t.source = '203' AND TARGET= '23';

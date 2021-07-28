@@ -1,0 +1,7 @@
+--利润表、资产负债表、理财产品净值变动表界面菜单地址改为新落地后的三表对应界面地址
+delete from sys_menu where MENU_ID ='ACCOUTING_001_004_002_001';
+delete from sys_menu where MENU_ID ='ACCOUTING_001_004_002_002';
+delete from sys_menu where MENU_ID ='ACCOUTING_001_004_002_003';
+Insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ACCOUTING_001_004_002_001','VAL',null,'ACCOUTING_001_004_002','OwnerEquityChangeNew001',6,'03','理财产品净值变动表','system',null,sysdate,'system',sysdate);
+Insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ACCOUTING_001_004_002_002','VAL',null,'ACCOUTING_001_004_002','ValProfitNewQuery001',7,'02','利润表','system',null,sysdate,'system',sysdate);
+Insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ACCOUTING_001_004_002_003','VAL',null,'ACCOUTING_001_004_002','AssetLiabilityStatementNewQuery001',5,'02','资产负债表','system',null,sysdate,'system',sysdate);
