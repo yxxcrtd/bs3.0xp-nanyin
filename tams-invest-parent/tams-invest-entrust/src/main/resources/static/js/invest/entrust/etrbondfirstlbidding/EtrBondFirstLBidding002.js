@@ -283,6 +283,7 @@
             if(entrustAmtUnit == '02' ){
                 entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
                 entrustNum_old=JoyinMath.doMul(entrustNum_old, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                object.entrustNum = entrustNum;
             }
             //配置单位 edit by yeming 20210721 end
         }
