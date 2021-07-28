@@ -208,6 +208,7 @@ public class FinBondTargetAssetController {
 
 
     /**
+     * add by xxg 20210721
      * 根据产品代码得到起息日和到期日
      * @param oFinprodId 产品代码
      * @return

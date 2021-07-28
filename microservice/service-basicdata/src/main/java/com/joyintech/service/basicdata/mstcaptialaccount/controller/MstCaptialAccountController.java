@@ -10,6 +10,7 @@
  
 package com.joyintech.service.basicdata.mstcaptialaccount.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -188,4 +189,17 @@ public class MstCaptialAccountController {
     public Page<SelectOptionDto> getOwnDept(@RequestBody Map<String,Object> map, @PathVariable int page, @PathVariable int length) {
         return mstCaptialAccountService.getOwnDept(map, page, length);
     }
+
+
+    /**
+     * add by xxg 20210726
+     * 根据所属柜台获取第一次设置的利率
+     * @param ownDept  所属柜台
+     * @return
+     */
+    @PostMapping("/getFirstRateByownDept")
+    public MstCaptialAccountDto getFirstRateByownDept(@RequestBody String ownDept){
+        return mstCaptialAccountService.getFirstRateByownDept(ownDept);
+    }
+
 }
