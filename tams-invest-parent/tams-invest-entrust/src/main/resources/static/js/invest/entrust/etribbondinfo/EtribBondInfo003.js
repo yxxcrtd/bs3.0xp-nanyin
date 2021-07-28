@@ -759,7 +759,7 @@
 
             objects.push(temp);
         }
-        if(tradeAmt !== parseFloat(object.tradeAmt)){
+        if(tradeAmt && tradeAmt !== parseFloat(object.tradeAmt)){
             JoyinUtil.showMessage("多组合劵面总额不等！" + tradeAmt + ":" + parseFloat(object.tradeAmt), "error")
             return null;
         }
