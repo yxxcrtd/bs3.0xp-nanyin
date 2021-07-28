@@ -152,6 +152,11 @@
         if(object.etrInvestPersonInfo.trader != null && object.etrInvestPersonInfo.trader != ''){
             object.etrInvestPersonInfo.trader = object.etrInvestPersonInfo.trader;//.join(",");
         }
+        //配置单位 edit by yeming 20210728 start
+        if ($('#purchBondTotal').val()) {
+            object.purchBondTotal=JoyinMath.doMul($('#purchBondTotal').val(), entrustAmtUnit == '02' ? 10000 : 1, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+        }
+        //配置单位 edit by yeming 20210728 end
         if(FileCommon) {
             object.fileArray = FileCommon.getUploadFileInfo();
             if(object.fileArray && _.isArray(object.fileArray)){
