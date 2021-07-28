@@ -33,7 +33,7 @@ import java.util.List;
  */
 
 @Component
-public class Joyin2JixuInterface {
+public class Joyin2JixuInterfaceService {
 	
 	@Autowired
 	private BrokerDao brokerDao;

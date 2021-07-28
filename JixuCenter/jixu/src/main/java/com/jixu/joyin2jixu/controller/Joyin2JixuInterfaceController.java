@@ -3,7 +3,7 @@ package com.jixu.joyin2jixu.controller;
 import com.jixu.common.apiconst.ApiPathConst;
 import com.jixu.common.type.ResultContainer;
 import com.jixu.common.type.ResultInterface;
-import com.jixu.joyin2jixu.service.Joyin2JixuInterface;
+import com.jixu.joyin2jixu.service.Joyin2JixuInterfaceService;
 import com.jixu.msg.dto.JJBkCashAcctDto;
 import com.jixu.msg.dto.JJPortfolioDto;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -23,7 +23,7 @@ import java.util.Map;
 public class Joyin2JixuInterfaceController {
 
     @Autowired
-    private Joyin2JixuInterface joyin2JixuInterface;
+    private Joyin2JixuInterfaceService joyin2JixuInterface;
 
     @PostMapping(ApiPathConst.EXECUTE_MESSAGE)
     public ResultContainer executeJixuMessage(@RequestBody Map<String,Object> param) {
