@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.basicdata.mstcaptialaccount.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.*;
+import io.protostuff.Request;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -185,6 +187,20 @@ public class MstCaptialAccount002Controller extends BaseController{
         Map<String,Object> map = RequestUtil.getPageParam();
         return mstCaptialAccountService.getOwnDept(map);
     }
+
+
+    /**
+     * add by xxg 20210726
+     * 根据所属柜台获取第一次设置的利率
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("getFirstRateByownDept")
+    public BigDecimal getFirstRateByownDept(@RequestBody String ownDept){
+        MstCaptialAccountDto dto = mstCaptialAccountService.getFirstRateByownDept(ownDept.replace("\"", ""));
+        return dto.getRate();
+    }
+
     
     /**
      * 保存按钮点击时的check

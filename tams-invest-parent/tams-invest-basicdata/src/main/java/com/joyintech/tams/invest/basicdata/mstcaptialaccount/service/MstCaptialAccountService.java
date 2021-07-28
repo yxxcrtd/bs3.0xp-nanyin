@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.basicdata.mstcaptialaccount.service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.framework.security.LoginUserUtil;
@@ -249,6 +250,18 @@ public class MstCaptialAccountService extends CommonExportService<MstCaptialAcco
         return restTemplate.postForPage(
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCaptialAccount/getOwnDept", map,
             SelectOptionDto.class);        
+    }
+
+
+    /**
+     * add by xxg 20210726
+     * 根据所属柜台获取第一次设置的利率
+     * @param ownDept  所属柜台
+     * @return
+     */
+    public MstCaptialAccountDto getFirstRateByownDept(String ownDept){
+        return restTemplate.postForObject(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCaptialAccount/getFirstRateByownDept",ownDept,MstCaptialAccountDto.class);
     }
     
 }

@@ -59,7 +59,7 @@
      */
     var cols = [
         {field:'bidPrice',  title: '投标标位（%）',edit:true, type:'number', fixtype:2, width:500}
-        ,{field:'bidPrinAmt',  title: '投标券面总额',edit:true, width:500}
+        ,{field:'bidPrinAmt',  title: entrustAmtUnit == '01'?'投标券面总额/元':'投标券面总额/万元',edit:true, width:500}
         ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt']}//编辑和删除事件
     ];
     var table =$("#dataTable").joyintable({

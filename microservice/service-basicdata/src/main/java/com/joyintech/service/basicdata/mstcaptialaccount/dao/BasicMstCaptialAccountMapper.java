@@ -193,5 +193,14 @@ public interface BasicMstCaptialAccountMapper {
      * @since 1.0
      */
     List<StlCapacctReInfo> getStlCapacctReInfo(Map<String,Object> map);
-	
+
+
+    /**
+     * add by xxg 20210726
+     * 根据所属柜台获取第一次设置的利率
+     * @param ownDept  所属柜台
+     * @return
+     */
+    MstCaptialAccountDto getFirstRateByownDept(String ownDept);
+
 	}
