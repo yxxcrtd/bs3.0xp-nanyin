@@ -32,7 +32,8 @@ $(function() {
         cellMinWidth : 200,
         cols:[
              {field:'anapleroticId', visible : false} //回补代码
-            ,{field:'finprodId', title: 'FinProductAnapleroticInfo.finprodId', width:200, sort : true} //产品代码
+            ,{field:'finprodId', title: 'FinProductAnapleroticInfo.finprodId',visible: false} //产品代码
+            ,{field:'finprodMarketId', title: 'FinProductAnapleroticInfo.finprodId', width:200, sort : true} //页面显示的产品代码
             ,{field:'finprodAbbr', title: 'FinProductAnapleroticInfo.finprodAbbr',sort : true}//产品简称
             ,{field:'prodStyle', title: 'BussFinProductAnapleroticInfo.prodStyle',sort : true}//适用款型
             ,{field:'effDateStr', title: 'FinProductAnapleroticInfo.effDate',sort : true,sortField:'effDate'}//生效日

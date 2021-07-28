@@ -88,13 +88,14 @@
 	           nvl(j.FINPROD_ID,b.FINPROD_ID)      finprodId,
     		   i.PROD_STYLE prodStyle,
     		   nvl(j.FINPROD_ABBR,g.FINPROD_ABBR)    finprodAbbr,
-    		   i.FINPROD_ID             sFinprodId,   
+    		   nvl(j.FINPROD_MARKET_ID,g.FINPROD_MARKET_ID)    finprodMarketId,/*页面显示的产品代码*/
+    		   i.FINPROD_ID             sFinprodId,
 	           c.ACCR_CYCLE_UNIT anapleroticFrequency, /*回补规则*/
 	           c.ACCR_TDAY_RULE cycleTdayRule,/*营业日准则*/ 
 	           c.F_ACCR_DATE firstAnapleroticDate,
 	           c.F_ACCR_END_DATE firstAnapleroticCycleEndDate,
 	            f.COEFFICIENT*100 anapleroticRatio
-	      from FIN_CLAWBACK_CALC_RULE a  
+		from FIN_CLAWBACK_CALC_RULE a
 	     inner join FIN_CASH_INFO b
 	        on b.cash_id= a.cash_id
 	      left join  Fin_Float_Counting_Rule c
@@ -233,7 +234,7 @@
 	      </if>
     </select>
     <select id="queryProdIdInfo" resultType="com.joyintech.framework.select.SelectOptionDto" >
-       select FIN_PRODUCT.FINPROD_ID id, FIN_PRODUCT.FINPROD_MARKET_ID || ':' || FIN_PRODUCT.FINPROD_ABBR text,
+       select FIN_PRODUCT.FINPROD_ID id, FIN_PRODUCT.FINPROD_MARKET_ID text,
        			FIN_PRODUCT_ADD.DEAL_MODE object
 	     from FIN_PRODUCT,FIN_PRODUCT_ADD,PTL_PORTFOLIO_AUTHORITY
 	    where FIN_PRODUCT.FINPROD_TYPE = #{finprodType1}
@@ -241,7 +242,7 @@
 	      and FIN_PRODUCT.P_FINPROD_ID IS NULL
 	      and FIN_PRODUCT.PROFIT_TYPE != #{notProfitType}
 		  and FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		  and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID	
+		  and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
 		  <!-- and FIN_PRODUCT.mdate > #{currentDate, jdbcType = DATE} -->
 		  and not exists (
 		        select 1 from fin_product_add fpa where fin_product.FINPROD_ID =fpa.FINPROD_ID
