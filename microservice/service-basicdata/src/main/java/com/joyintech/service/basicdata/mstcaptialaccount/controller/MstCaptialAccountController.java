@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -200,6 +201,11 @@ public class MstCaptialAccountController {
     @PostMapping("/getFirstRateByownDept")
     public MstCaptialAccountDto getFirstRateByownDept(@RequestBody String ownDept){
         return mstCaptialAccountService.getFirstRateByownDept(ownDept);
+    }
+
+    @PostMapping("/getAcctInfo")
+    public List<SelectOptionDto> getAcctInfo(Map<String,Object> param){
+        return mstCaptialAccountService.getAcctInfo(param);
     }
 
 }

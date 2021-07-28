@@ -498,5 +498,15 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
     public MstCaptialAccountDto getFirstRateByownDept(String ownDept){
         return basicMstCaptialAccountMapper.getFirstRateByownDept(ownDept);
     }
+
+    /**
+     * add by caozhenming 20210728
+     * 根据所属券商获取资金账号
+     * @param param
+     * @return
+     */
+    public List<SelectOptionDto>  getAcctInfo(Map<String,Object> param){
+        return stlCapacctInfoMapper.getAcctInfo(param);
+    }
     
 }
