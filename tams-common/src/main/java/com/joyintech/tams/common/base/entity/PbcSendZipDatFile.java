@@ -3,6 +3,10 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+
 import java.util.Date;
 
 public class PbcSendZipDatFile extends BaseEntity {
@@ -108,6 +112,25 @@ public class PbcSendZipDatFile extends BaseEntity {
     public String getRegistSeqno() {
         return registSeqno;
     }
+    /**
+     * 取得 报送类型
+     * @return 报送类型
+     */
+    private String  datZipTypeStr;
+    /**
+     * 取得 报送明细类型
+     * @return 报送明细类型
+     */
+    private String  datZipDatTypeStr;
+    /**
+     * 报送状态
+     */
+    private String zipSendStatusStr;
+
+    /**
+     * 反馈状态
+     */
+    private String returnZipSendStatusStr;
 
     /**
      * 设置 主键uuid
@@ -406,5 +429,46 @@ public class PbcSendZipDatFile extends BaseEntity {
      */
     public void setOrgCode(String orgCode) {
         this.orgCode = orgCode == null ? null : orgCode.trim();
+    }
+
+    /**
+     * 取得 报送类型
+     * @return 报送类型
+     */
+    public String getDatZipTypeStr() {
+        if(StringUtil.isNotEmpty(this.getDatZipType())){
+            return SysDataUtil.getNameFromDataDict(DictCode.发送状态, this.getDatZipType());
+        }
+        return "" ;
+    }
+    /**
+     * 取得 报送明细类型
+     * @return 报送明细类型
+     */
+    public String getDatZipDatTypeStr() {
+        if(StringUtil.isNotEmpty(this.getDatZipDatType())){
+            return SysDataUtil.getNameFromDataDict(DictCode.发送状态, this.getDatZipDatType());
+        }
+        return "" ;
+    }
+    /**
+     * 取得 发送状态
+     * @return 发送状态
+     */
+    public String getZipSendStatusStr() {
+        if(StringUtil.isNotEmpty(this.getZipSendStatus())){
+            return SysDataUtil.getNameFromDataDict(DictCode.发送状态, this.getZipSendStatus());
+        }
+        return "" ;
+    }
+    /**
+     * 取得 反馈状态
+     * @return 反馈状态
+     */
+    public String getReturnZipSendStatusStr() {
+        if(StringUtil.isNotEmpty(this.getReturnZipSendStatus())){
+            return SysDataUtil.getNameFromDataDict(DictCode.发送状态, this.getReturnZipSendStatus());
+        }
+        return "" ;
     }
 }
