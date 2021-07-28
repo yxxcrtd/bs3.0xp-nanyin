@@ -2,15 +2,14 @@
  * 债券借贷投资委托新建
  */
 (function() {
+    var unitNum;
     var initFlag = true;
     //---add by jjpei 20190718----start---获取风险试算画面要素与Label提示文本
     var getRiskData = function () {
         //配置单位 edit by yeming 20210723 start
         var totalAmt=$('#totalAmt').val();
         if (totalAmt) {
-            if(entrustAmtUnit == '02' ){
-                totalAmt=JoyinMath.doMul(totalAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
-            }
+                totalAmt=JoyinMath.doMul(totalAmt, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
         }
         //配置单位 edit by yeming 20210723 end
         var obj = {tradeDirection:$('#busiPs').val(),timePoint:MY_SUP_TIME_TYPE_01,valDate:sysDate,assetCode:$('#finprodId').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#totalAmt').val()?totalAmt:null,isEnabled:USE_STATUS_01}
@@ -53,6 +52,9 @@
         object.entrustStatus = $('#entrustStatus').val();
         object.objectAvailablePosition = $("#bussTrdAvailableCashQuery_assetPosition").val(); // 资产可用持仓
         object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
+        ////配置单位 add by yeming 20210728 start
+        object.totalAmt =JoyinMath.doMul($('#totalAmt').val(), unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+        //配置单位 add by yeming 20210728 end
         if(object.busiRate != null && object.busiRate != ''){
             object.busiRate = JoyinMath.doDiv(object.busiRate,100,6);
         }
@@ -140,6 +142,9 @@
     var init= function(){
         if(entrustAmtUnit == '01' ){
             $(".unitNum").text('元');
+            unitNum = 1;
+        }else{
+            unitNum = 10000;
         }
         $("#avaStandardBondPositionDiv").hide();
         $("#pledgeStamps_div").hide();
@@ -171,9 +176,7 @@
             //配置单位 edit by yeming 20210723 start
             var totalAmt=$('#totalAmt').val();
             if (totalAmt) {
-                if(entrustAmtUnit == '02' ){
-                    totalAmt=JoyinMath.doMul(totalAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
-                }
+                    totalAmt=JoyinMath.doMul(totalAmt, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
             }
             //配置单位 edit by yeming 20210723 end
             object.entrustAmt=$('#totalAmt').val()?totalAmt:null;
