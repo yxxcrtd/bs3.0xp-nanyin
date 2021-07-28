@@ -363,21 +363,21 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
             etrConBondDto.setAssetType1(jsonObject.get("assetType1").toString());
             //币种
             etrConBondDto.setCcy(data.get(4).toString().split(":")[0]);
+           /* //申购方式
+            etrConBondDto.setPurchModle(data.get(5).toString().split(":")[0]);*/
             //申购类型
-            etrConBondDto.setPurchModle(data.get(5).toString().split(":")[0]);
-            /*//申购方式
-            etrConBondDto.setPurchType(data.get(6).toString().split(":")[0]);*/
+            etrConBondDto.setPurchType(data.get(5).toString().split(":")[0]);
             //申购券面总额
-            etrConBondDto.setPurchBondTotal(new BigDecimal((data.get(7).toString())));
+            etrConBondDto.setPurchBondTotal(new BigDecimal((data.get(6).toString())));
             //投资目的
-            String invAim = data.get(8).toString().trim();
+            String invAim = data.get(7).toString().trim();
             etrConBondDto.setInvAim(invAim.split(":")[0]);
             Map<String, Object> param = new HashMap<>();
             // 证券账户
-            if (StringUtil.isNotBlank(data.get(9).toString())) {
-                etrConBondDto.setSecAcctId(data.get(9).toString());
+            if (StringUtil.isNotBlank(data.get(8).toString())) {
+                etrConBondDto.setSecAcctId(data.get(8).toString());
                 param = new HashMap<>();
-                param.put("initValue", data.get(9).toString());
+                param.put("initValue", data.get(8).toString());
                 param.put("portfolioId", data.get(2).toString());
                 param.put("tradeMarket", jsonObject.get("tradeMarket").toString());
                 param.put("page", 1);
@@ -389,10 +389,10 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
                 }
              }
             // 通道
-            if (StringUtil.isNotBlank(data.get(10).toString())) {
-                etrConBondDto.setChlId(data.get(10).toString());
+            if (StringUtil.isNotBlank(data.get(9).toString())) {
+                etrConBondDto.setChlId(data.get(9).toString());
                 param = new HashMap<>();
-                param.put("initValue", data.get(10).toString());
+                param.put("initValue", data.get(9).toString());
                 param.put("page", 1);
                 param.put("length", 20);
                 Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
@@ -403,7 +403,7 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
                 }
             }
             // 备注
-            etrConBondDto.setRemark(data.get(11).toString());
+            etrConBondDto.setRemark(data.get(10).toString());
             param.put("portfolioId", etrConBondDto.getPortfolioId());
             param.put("ccy", etrConBondDto.getCcy());
             param.put("vdate", etrConBondDto.getPurchDate());
@@ -485,11 +485,11 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
                     JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(selectOptionDto.getObject()));
                     String tradeMarket = jsonObject.get("tradeMarket").toString();
                     // 证券账户存在
-                    if (StringUtil.isNotBlank(rowData.get(9).toString())
+                    if (StringUtil.isNotBlank(rowData.get(8).toString())
                         && StringUtil.isNotBlank(rowData.get(2).toString())
                         && StringUtil.isNotBlank(tradeMarket)) {
                         Map<String, Object> param = new HashMap<>();
-                        param.put("initValue", rowData.get(9).toString());
+                        param.put("initValue", rowData.get(8).toString());
                         param.put("portfolioId", rowData.get(2).toString());
                         param.put("tradeMarket", tradeMarket);
                         param.put("page", 1);
@@ -511,8 +511,8 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
                     etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrConBond001.purchModle", lineNo));*/
                 // 申购类型非空
                 confirmMsg =  etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(6).toString(), "EtrConBond001.purchType", lineNo));
-                String purchBondTotal = rowData.get(7).toString(); 
+                    etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrConBond001.purchType", lineNo));
+                String purchBondTotal = rowData.get(6).toString();
                 // 申购券面总额(元)非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(purchBondTotal, "EtrConBond001.purchBondTotal", lineNo));
@@ -524,20 +524,20 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
                     etrCommonService.checkIsGtZero(purchBondTotal, "EtrConBond001.purchBondTotal", lineNo));
                 // 投资目的非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(8).toString(), "EtrConBond003.invAim", lineNo));
+                    etrCommonService.checkIsBlank(rowData.get(7).toString(), "EtrConBond003.invAim", lineNo));
                 // 证券账户
                 // 通道
-                if ((StringUtil.isBlank(rowData.get(9).toString ())
-                     && StringUtil.isBlank(rowData.get(10).toString()))
-                    || (StringUtil.isNotBlank(rowData.get(9).toString())
-                        && StringUtil.isNotBlank(rowData.get(10).toString()))) {
+                if ((StringUtil.isBlank(rowData.get(8).toString ())
+                     && StringUtil.isBlank(rowData.get(9).toString()))
+                    || (StringUtil.isNotBlank(rowData.get(8).toString())
+                        && StringUtil.isNotBlank(rowData.get(9).toString()))) {
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0020",
                     getMessage( "EtrConBond003.secAcctId"), getMessage("invest.channelId"), lineNo));
                 }
                 // 通道存在
-                if (StringUtil.isNotBlank(rowData.get(10).toString())) {
+                if (StringUtil.isNotBlank(rowData.get(9).toString())) {
                     Map<String, Object> param = new HashMap<>();
-                    param.put("initValue", rowData.get(10).toString());
+                    param.put("initValue", rowData.get(9).toString());
                     param.put("page", 1);
                     param.put("length", 20);
                     Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
