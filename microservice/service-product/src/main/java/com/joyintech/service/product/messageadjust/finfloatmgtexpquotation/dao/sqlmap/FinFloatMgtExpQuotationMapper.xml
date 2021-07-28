@@ -564,10 +564,9 @@
 	<!-- ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 start -->
 	<select id="checkeffDate" resultType="java.lang.Integer" parameterType="java.lang.String">                
            select COUNT(1) 
-           from FIN_OPEN_PLAN fop
-		   left join fin_product fp on fop.finprod_id = fp.finprod_id
-           where fop.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-           and decode(fp.profit_type,#{PROFIT_TYPE_JZX},fop.open_ndate,fop.open_date_end) = TO_DATE(#{dateStr,jdbcType=VARCHAR},'YYYY-MM-DD')
+           from FIN_OPEN_PLAN           
+           where FIN_OPEN_PLAN.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+           and FIN_OPEN_PLAN.OPEN_DATE_STR = TO_DATE(#{dateStr,jdbcType=VARCHAR},'YYYY-MM-DD')-1 
     </select>
     <!-- ZGBSS-42 非首次新建浮动管理费报价时 生效日选择开放计划开放开始日+1天作为生效日 add by yujiaping 20210118 end -->
     
@@ -592,18 +591,4 @@
          where fci.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}  
          and fci.CASH_TYPE_1 = '03' and fci.CASH_TYPE_2 = 'C04'       
     </select>
-
-	<select id="getEffDateByFinProdid" resultType="com.joyintech.tams.common.base.entity.FinFloatAccrualSche" >
-		select ffas.*
-		from FIN_FLOAT_ACCRUAL_SCHE ffas
-		INNER JOIN FIN_CASH_INFO fci on ffas.cash_id = fci.cash_id
-		left join FIN_FLOAT_CALC_RULE ffcr on ffas.cash_id = ffcr.cash_id
-		where fci.finprod_id = #{finprodId}
-		and fci.cash_type_1 = #{CASH_TYPE_1_03}
-		and fci.cash_type_2 = #{CASH_TYPE_2_C04}
-		and to_date(#{effDate,jdbcType=VARCHAR}, 'yyyy-MM-dd') > ffas.accr_str_date
-		and ffas.accr_end_date >= to_date(#{effDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
-		and ffcr.eff_date > ffas.accr_str_date
-		and ffas.accr_end_date >= ffcr.eff_date
-	</select>
 </mapper>

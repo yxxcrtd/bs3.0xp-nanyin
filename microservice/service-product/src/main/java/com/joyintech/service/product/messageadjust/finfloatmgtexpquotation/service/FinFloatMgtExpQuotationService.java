@@ -1251,7 +1251,6 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
         if (StringUtil.isEmpty((String)param.get("dateStr")) || StringUtil.isEmpty((String)param.get("finprodId"))) {
             return false;
         }
-        param.put("PROFIT_TYPE_JZX", DictCodeList.收益类型_净值型.getValue());
         int dataCount = finFloatMgtExpQuotationMapper.checkeffDate(param);
         if (dataCount > 0) {
             return true;
@@ -1267,16 +1266,5 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
     }
     public String getisInitial(Map<String,Object> param) {       
         return finFloatMgtExpQuotationMapper.getisInitial(param);
-    }
-
-    /**
-     * 查询此报价生效日所在的区间是否存在报价
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public List<FinFloatAccrualSche> getEffDateByFinProdid(Map<String, Object> paraMap) {
-        return finFloatMgtExpQuotationMapper.getEffDateByFinProdid(paraMap);
     }
 }

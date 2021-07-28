@@ -307,12 +307,4 @@
 		   and fin_cash_info.cash_type_2 = #{cash_type_2,jdbcType=VARCHAR}
 		   and rownum <= 1]]>
 	</select>
-
-	<select id="getFinFloatCalcRuleByFinProdId" resultType="com.joyintech.tams.common.base.entity.FinFloatCalcRule">
-		select ffcr.* from FIN_FLOAT_CALC_RULE ffcr
-		  INNER JOIN FIN_CASH_INFO fci on ffcr.cash_id = fci.cash_id
-		where fci.finprod_id =#{finprodId,jdbcType=VARCHAR}
-			and fci.cash_type_1 = #{CASH_TYPE_1_03,jdbcType=VARCHAR}
-			and fci.cash_type_2 = #{CASH_TYPE_2_C04,jdbcType=VARCHAR}
-	</select>
 </mapper>

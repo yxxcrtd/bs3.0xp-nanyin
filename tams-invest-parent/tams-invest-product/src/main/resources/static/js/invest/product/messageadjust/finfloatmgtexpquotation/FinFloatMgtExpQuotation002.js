@@ -91,7 +91,7 @@
                             			if(result == false){
                             				Joyin.ajax(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getopenType', object, function(result) {
                                     			if(result == '02'){
-                            				       Joyin.error(JoyinUtil.getMessage("浮动管理费报价调整，净值型产品生效日必须等于净值日、货币型产品生效日必须等于开放结束日！"));
+                            				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
                             	                    return;
                                     			}else{
                                     				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
@@ -168,7 +168,7 @@
                                 			if(result == false){
                                 				Joyin.ajax(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getopenType', object, function(result) {
                                         			if(result == '02'){
-                                				       Joyin.error(JoyinUtil.getMessage("浮动管理费报价调整，净值型产品生效日必须等于净值日、货币型产品生效日必须等于开放结束日！"));
+                                				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
                                 	                    return;
                                         			}else{
                                         				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
@@ -243,7 +243,7 @@
                 			if(result == false){
                 				Joyin.ajax(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getopenType', object, function(result) {
                         			if(result == '02'){
-                				       Joyin.error(JoyinUtil.getMessage("浮动管理费报价调整，净值型产品生效日必须等于净值日、货币型产品生效日必须等于开放结束日！"));
+                				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
                 	                    return;
                         			}else{
                         				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {

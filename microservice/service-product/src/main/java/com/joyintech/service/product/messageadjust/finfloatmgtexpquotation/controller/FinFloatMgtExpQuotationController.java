@@ -13,8 +13,6 @@ package com.joyintech.service.product.messageadjust.finfloatmgtexpquotation.cont
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
-import com.joyintech.tams.common.base.entity.FinFloatCalcRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -256,16 +254,5 @@ public class FinFloatMgtExpQuotationController {
     @PostMapping("getisInitial")
     public String getisInitial(@RequestBody Map<String,Object> param){
         return finFloatMgtExpQuotationService.getisInitial(param);
-    }
-    /**
-     * 查询此报价生效日所在的区间是否存在报价
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    @PostMapping("getEffDateByFinProdid")
-    public List<FinFloatAccrualSche> getEffDateByFinProdid(@RequestBody Map<String,Object> paraMap) {
-        return finFloatMgtExpQuotationService.getEffDateByFinProdid(paraMap);
     }
 }

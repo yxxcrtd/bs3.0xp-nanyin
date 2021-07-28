@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.base.entity.FinFloatCalcRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -265,9 +264,4 @@ public class FinOpenPlanMaintenanceService extends CommonExportService<FinOpenPl
                 Map.class);
     }
 
-    public List<FinFloatCalcRule> getFinFloatCalcRuleByFinProdId(Map<String, Object> param) {
-        return restTemplate.postForList(
-                ServiceApplication.CUSTOMER_INTERF_NAME + "/FinOpenPlanMaintenance/getFinFloatCalcRuleByFinProdId",param,
-                FinFloatCalcRule.class);
-    }
 }

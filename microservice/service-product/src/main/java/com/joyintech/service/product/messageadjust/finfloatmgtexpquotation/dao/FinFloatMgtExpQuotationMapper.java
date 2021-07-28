@@ -220,13 +220,4 @@ public interface FinFloatMgtExpQuotationMapper {
    String getopenMode(Map<String,Object> param);
    String getopenType(Map<String,Object> param);
    String getisInitial(Map<String,Object> param);
-
-   /**
-    * 查询此报价生效日所在的区间是否存在报价
-    *
-    * @return
-    * @see
-    * @since 1.0
-    */
-    List<FinFloatAccrualSche> getEffDateByFinProdid(Map<String, Object> paraMap);
 }

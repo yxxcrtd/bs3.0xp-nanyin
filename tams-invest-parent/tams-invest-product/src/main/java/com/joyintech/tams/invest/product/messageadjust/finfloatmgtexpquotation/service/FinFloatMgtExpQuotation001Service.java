@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
-import com.joyintech.tams.common.base.entity.FinFloatCalcRule;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -757,17 +755,5 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
     	return restTemplate.postForObject(
                 ServiceApplication.PRODUCT_SERVICE_NAME + "/FinFloatMgtExpQuotation/getisInitial", param,
                 String.class);
-    }
-    /**
-     * 查询此报价生效日所在的区间是否存在报价
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public List<FinFloatAccrualSche> getEffDateByFinProdid(Map<String, Object> param) {
-        return restTemplate.postForList(
-                ServiceApplication.CUSTOMER_INTERF_NAME + "/FinFloatMgtExpQuotation/getEffDateByFinProdid",param,
-                FinFloatAccrualSche.class);
     }
 }
