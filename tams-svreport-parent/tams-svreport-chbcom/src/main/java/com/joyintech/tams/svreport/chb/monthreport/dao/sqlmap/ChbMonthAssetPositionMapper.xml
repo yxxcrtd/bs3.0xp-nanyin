@@ -857,7 +857,7 @@
 					)
 					AND pos_date = #{cdate,jdbcType=DATE}
 					AND status != 'D'
-					AND UNINVEST_CASH != 0)
+                    AND ASSET_CODE = 'REMAININGCASH')
 			)
 		SELECT cp.PROD_ID AS prodId
 			, Round(cp.accuqty / ap.TOTAL_NUM * ap.UNINVEST_CASH, 2) AS cashamt

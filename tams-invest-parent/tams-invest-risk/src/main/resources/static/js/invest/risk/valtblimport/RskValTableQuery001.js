@@ -37,7 +37,7 @@ $(function () {
         isMulti: true,
         cols: [[
             {field:'ptlId', title: '组合名称',visible:false, rowspan: 2,sortable: false}//组合名称
-            ,{field:'valDate', title: '组合名称',visible:false, rowspan: 2,sortable: false}//组合名称
+            ,{field:'valDate', title: '查询日期',visible:false, rowspan: 2,sortable: false}//组合名称
             ,{field:'portfolioName', title: '组合名称',width:200, rowspan: 2,sortable: false}//组合名称
             ,{title: '总资产', colspan: 2,align:'center',sortable: false}//总资产
             ,{title: '净资产', colspan: 2,align:'center',sortable: false}//总资产

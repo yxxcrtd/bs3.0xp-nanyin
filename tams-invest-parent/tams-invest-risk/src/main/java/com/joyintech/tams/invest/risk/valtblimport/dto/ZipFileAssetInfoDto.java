@@ -16,15 +16,17 @@ public class ZipFileAssetInfoDto {
     public ZipFileAssetInfoDto() {
     }
 
-    public ZipFileAssetInfoDto(String fileName, SelectOptionDto info, Date date) {
+    public ZipFileAssetInfoDto(String fileName, SelectOptionDto info, Date date,String fileNameText) {
         this.fileName = fileName;
         this.info = info;
         this.date = date;
+        this.fileNameText = fileNameText;
     }
 
     private String fileName;
     private SelectOptionDto info;
     private Date date;
+    private String fileNameText;
 
     public String getFileName() {
         return fileName;
@@ -48,5 +50,13 @@ public class ZipFileAssetInfoDto {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getFileNameText() {
+        return fileNameText;
+    }
+
+    public void setFileNameText(String fileNameText) {
+        this.fileNameText = fileNameText;
     }
 }

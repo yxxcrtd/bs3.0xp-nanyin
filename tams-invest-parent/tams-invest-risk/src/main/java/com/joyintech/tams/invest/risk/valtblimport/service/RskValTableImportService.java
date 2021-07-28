@@ -397,7 +397,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_正回购.getValue());
                         } else if (StringUtil.equals(entity2.getSubCode().substring(0, 6),"120410")){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_逆回购.getValue());
-                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),"3103")){
+                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),"3103") || StringUtil.equals(entity2.getSubCode().substring(0, 4),"3102")){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_衍生品.getValue());
                         }else{
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_其他.getValue());

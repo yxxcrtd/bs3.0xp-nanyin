@@ -42,17 +42,5 @@ public class RskValStructureDto extends RskValtblStructMapDtl{
     public void setStructName(String structName) {
         this.structName = structName;
     }
-    /**
-     * 列索引(字母)
-     */
-    private int srcColIndexNumber;
 
-
-    public int getSrcColIndexNumber() {
-        return srcColIndexNumber;
-    }
-
-    public void setSrcColIndexNumber(int srcColIndexNumber) {
-        this.srcColIndexNumber = srcColIndexNumber;
-    }
 }

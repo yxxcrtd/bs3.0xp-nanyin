@@ -114,7 +114,8 @@ function checkDate(dateStr) {
             }
             ,{
                 field : 'srcColIndexLetter',
-                sortField :"srcColIndexNumber",
+               // sortField :"srcColIndexNumber",
+               sortField:'TO_NUMBER(SRC_COL_INDEX)',
                 title : 'RskValStructure001.srcColIndex'
             }, {
                 field : 'srcColDataTypeStr',
@@ -318,7 +319,7 @@ function checkDate(dateStr) {
                             {
                                 fileName: fileName
                             }, function (result) {
-                                layer.close(processIndex);
+                               // layer.close(processIndex);
                                 //点击保存后关闭窗口
                                 var index = parent.layer.getFrameIndex(window.name);
                                 parent.layer.close(index);
