@@ -263,6 +263,17 @@
                     $('#trdInvestPersonInfo_counterId').on("change",function(){
                     	checkChannelFee();
                     	commissionAmtChange();
+
+                        var counterId = $('#trdInvestPersonInfo_counterId');
+                        if (counterId.select2('data') && counterId.select2('data')[0]) {
+                            var 交易对手 =  counterId.select2('data')[0].object;
+                            // 交易对手选择内部交易对手时
+                            if (交易对手 == 'N') {
+                                changeTurnInvAim(true);
+                            } else {
+                                changeTurnInvAim(false);
+                            }
+                        }
                /*         var counterId = $('#trdInvestPersonInfo_counterId');
                         if (counterId.select2('data') && counterId.select2('data')[0]) {
                             var 交易对手 = counterId.select2('data')[0].object;
@@ -701,6 +712,18 @@
     	    }
         }
         //add by lizhi 2020-2-26 划款指令是否自动生成  end
+
+
+        var changeTurnInvAim = function(isShow) {
+            if (isShow){
+                $("#turnInvAim_div").show();
+            } else{
+                $("#turnInvAim").val('').trigger("change");
+                $("#turnInvAim_div").hide();
+            }
+        }
+
+
         /**
          * 画面加载完成
          */

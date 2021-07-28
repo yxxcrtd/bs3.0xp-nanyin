@@ -134,6 +134,11 @@ public class TrdProjectInvestTrade002Dto extends TrdProjectInvestTradeDto implem
      */
     private  String appAssetPosition;
 
+    /**
+     * 转仓投资目的
+     */
+    private String turnInvAim;
+
 
     public String getAppAvalibleCash() {
         return appAvalibleCash;
@@ -509,5 +514,13 @@ public class TrdProjectInvestTrade002Dto extends TrdProjectInvestTradeDto implem
     @Override
     public String getInvAim() {
     	return super.getInvAim();
+    }
+
+    public String getTurnInvAim() {
+        return turnInvAim;
+    }
+
+    public void setTurnInvAim(String turnInvAim) {
+        this.turnInvAim = turnInvAim;
     }
 }
