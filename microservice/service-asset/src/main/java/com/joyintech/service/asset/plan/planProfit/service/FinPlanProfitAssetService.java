@@ -324,7 +324,6 @@ public class FinPlanProfitAssetService extends BaseService<FinPlanProfitAssetDto
         //end
         //调用资产负债报送信息组件插入数据
         List<RepAssetDept> repAssetDeptList = new ArrayList<>();
-
         // 20210720 增加判空校验 by caozhenming start
         if (Objects.nonNull(dto.getRepAssetDept())){
             repAssetDeptList.add(dto.getRepAssetDept());
@@ -453,9 +452,12 @@ public class FinPlanProfitAssetService extends BaseService<FinPlanProfitAssetDto
         //调用资产负债报送信息组件修改数据
         BaseRepAssetDeptInfoDto baseRepAssetDeptInfoDto = new BaseRepAssetDeptInfoDto();
         List<RepAssetDept> repAssetDeptList = new ArrayList<>();
-        repAssetDeptList.add(dto.getRepAssetDept());
-        for (RepAssetDept r :repAssetDeptList){
-            r.setRepCcy(dto.getCcy());
+        // 20210720 增加判空校验 by caozhenming start
+        if (Objects.nonNull(dto.getRepAssetDept())) {
+            repAssetDeptList.add(dto.getRepAssetDept());
+            for (RepAssetDept r : repAssetDeptList) {
+                r.setRepCcy(dto.getCcy());
+            }
         }
         baseRepAssetDeptInfoDto.setRepAssetDeptList(repAssetDeptList);
         List<String> finProdIdList = new ArrayList<>();
