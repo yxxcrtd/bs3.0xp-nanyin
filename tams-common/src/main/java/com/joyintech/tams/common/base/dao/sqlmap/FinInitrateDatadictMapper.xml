@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinInitrateDatadictMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinInitrateDatadict" >
+        <id column="OWN_DEPT" property="ownDept" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OWN_DEPT OWN_DEPT, RATE RATE, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinInitrateDatadictMapper.Base_Column_List" />
+        from FIN_INITRATE_DATADICT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinInitrateDatadictMapper.Base_Column_List" />
+        from FIN_INITRATE_DATADICT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinInitrateDatadictMapper.Base_Column_List" />
+        from FIN_INITRATE_DATADICT
+        where OWN_DEPT = #{ownDept,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from FIN_INITRATE_DATADICT
+        where OWN_DEPT = #{ownDept,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinInitrateDatadict" >
+        insert into FIN_INITRATE_DATADICT (OWN_DEPT, RATE, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME
+            )
+        values (#{ownDept,jdbcType=VARCHAR}, #{rate,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinInitrateDatadict" >
+        insert into FIN_INITRATE_DATADICT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="ownDept != null" >
+                OWN_DEPT,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="ownDept != null" >
+                #{ownDept,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinInitrateDatadict" >
+        insert into FIN_INITRATE_DATADICT(OWN_DEPT, RATE, REMARK, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME)
+        select OWN_DEPT, RATE, REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME
+             from FIN_INITRATE_DATADICT
+             where 1 = 1 and OWN_DEPT = #{ownDept,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinInitrateDatadict" >
+        update FIN_INITRATE_DATADICT
+        <set >
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OWN_DEPT = #{ownDept,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinInitrateDatadict" >
+        update FIN_INITRATE_DATADICT
+        set RATE = #{rate,jdbcType=DECIMAL},
+            REMARK = #{remark,jdbcType=VARCHAR},
+        where OWN_DEPT = #{ownDept,jdbcType=VARCHAR}
+    </update>
+</mapper>
