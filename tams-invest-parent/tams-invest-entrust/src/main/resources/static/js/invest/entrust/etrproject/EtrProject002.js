@@ -125,6 +125,26 @@
             }
         }
     }
+
+    /**
+     * 查看资产详情事件
+     */
+    $('#EtrProject002_btn_search').click(function() {
+        // var finprodMarketId = $("#finprodMarketId").val();
+        var finprodMarketId = $("#finprodId").val();
+        var url = "/invest/asset/project/FinProjectTargetAsset002/init";
+        if (finprodMarketId != ""){
+            var params = {
+                pageModel:PAGE_MODEL_REFERENCE,
+                isQuickInput:true,
+                finprodMarketId:finprodMarketId
+            };
+            EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
+        } else {
+            Joyin.error("资产名称不能为空")
+        }
+    });
+
     /**
      * 绑定事件
      */
