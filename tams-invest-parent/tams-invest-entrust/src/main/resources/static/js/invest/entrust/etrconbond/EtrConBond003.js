@@ -48,7 +48,7 @@
 		, {field: 'ccy', title: 'EtrConBond003.ccy', width: 120, visible: false, sortable: false}
 		, {field: 'assetType1', title: 'EtrConBond002.assetType1', width: 120, visible: false, sortable: false}
 		, {field: 'ccyName', title: 'EtrConBond003.ccy', width: 120, sortable: false}
-		, {field: 'purchModleName', title: 'EtrConBond001.purchModle', width: 120, sortable: false}
+		, {field: 'purchModleName', title: 'EtrConBond001.purchModle', width: 120,visible: false, sortable: false}
 		, {field: 'purchTypeName', title: 'EtrConBond001.purchType', width: 120, sortable: false}
 		, {field: 'purchModle', title: 'EtrConBond001.purchModle', width: 120, visible: false, sortable: false}
 		, {field: 'purchType', title: 'EtrConBond001.purchType', width: 120, visible: false, sortable: false}
