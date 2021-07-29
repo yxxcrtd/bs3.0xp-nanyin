@@ -20,6 +20,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -259,9 +260,16 @@ public class MstCaptialAccountService extends CommonExportService<MstCaptialAcco
      * @param ownDept  所属柜台
      * @return
      */
-    public MstCaptialAccountDto getFirstRateByownDept(String ownDept){
-        return restTemplate.postForObject(
+    public BigDecimal getFirstRateByownDept(String ownDept){
+        MstCaptialAccountDto dto = restTemplate.postForObject(
                 ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCaptialAccount/getFirstRateByownDept",ownDept,MstCaptialAccountDto.class);
+        BigDecimal rate = null;
+        if(dto != null){
+            rate = dto.getRate();
+        }else{
+            rate = new BigDecimal(0);
+        }
+        return rate;
     }
     
 }

@@ -197,8 +197,7 @@ public class MstCaptialAccount002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("getFirstRateByownDept")
     public BigDecimal getFirstRateByownDept(@RequestBody String ownDept){
-        MstCaptialAccountDto dto = mstCaptialAccountService.getFirstRateByownDept(ownDept.replace("\"", ""));
-        return dto.getRate();
+        return mstCaptialAccountService.getFirstRateByownDept(ownDept.replace("\"", ""));
     }
 
     
