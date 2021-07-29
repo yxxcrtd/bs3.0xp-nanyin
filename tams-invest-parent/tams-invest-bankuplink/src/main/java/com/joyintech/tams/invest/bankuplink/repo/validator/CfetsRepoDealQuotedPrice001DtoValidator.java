@@ -115,12 +115,12 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
                     fpriceAmtTotal = ArithmeticUtil.doAdd(fpriceAmtTotal, item.getFpriceAmt());
                     entrustIdList.add(item.getEntrustId());
                     if(StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())){
-                        if(maxOrminprice.compareTo(item.getPrice())>=0){
+                        if(null!=item.getPrice()&&maxOrminprice.compareTo(item.getPrice())>=0){
                             maxOrminprice = item.getPrice();
                         }
                     }
                     else if(StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_逆回购.getValue())){
-                        if(maxOrminprice.compareTo(item.getPrice())<=0){
+                        if(null!=item.getPrice()&&maxOrminprice.compareTo(item.getPrice())<=0){
                             maxOrminprice = item.getPrice();
                         }
                     }

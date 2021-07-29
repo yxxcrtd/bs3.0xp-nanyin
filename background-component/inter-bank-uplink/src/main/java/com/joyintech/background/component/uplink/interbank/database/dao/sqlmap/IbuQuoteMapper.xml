@@ -304,7 +304,7 @@
 
 	<select id="selectEtrReHisListByQuoteId" resultType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto">
 		select c.QUOTE_ID,  c.VERSION , c.ENTRUST_ID , c.PORTFOLIO_ID , c.SHARE_AMT , c.FPRICE_AMT , c.REMARK  ,c.CREATE_USER ,
-		c.CREATE_TIME, c.CREATE_DEPT , c.UPDATE_USER , c.UPDATE_TIME,,c.CB_FPRICE_AMT,c.SC_FPRICE_AMT from IBU_QUOTE_ETR_RE_HIS c
+		c.CREATE_TIME, c.CREATE_DEPT , c.UPDATE_USER , c.UPDATE_TIME,c.CB_FPRICE_AMT,c.SC_FPRICE_AMT from IBU_QUOTE_ETR_RE_HIS c
 		where c.QUOTE_ID = #{I_Q_B_QUOTE_ID,jdbcType=VARCHAR} and c.VERSION = #{I_Q_B_VERSION,jdbcType=DECIMAL}
 	</select>
 

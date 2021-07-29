@@ -816,6 +816,19 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
 					}
 				}
 			}
+			if(null!= repoDialogueQuoteDto && null!=repoDialogueQuoteDto.getIbuQuoteEtrReDtoList()){
+                List<PtlAllocationDto> ptlAllocationList = dto.getPtlAllocationList();
+                if(null == ptlAllocationList){
+                    ptlAllocationList = new ArrayList<PtlAllocationDto>();
+                    for (IbuQuoteEtrReDto ibuQuoteEtrReDto : repoDialogueQuoteDto.getIbuQuoteEtrReDtoList()) {
+                        PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
+                        BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto,ibuQuoteEtrReDto);
+                        ptlAllocationList.add(ptlAllocationDto);
+                    }
+                    dto.setPtlAllocationList(ptlAllocationList);
+                }
+
+            }
 		}
 		PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();// 组合持仓流水、组合现金流水
 		List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<>();// 现金流水
