@@ -895,4 +895,18 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     public Map<String, Object> getTradeMarketCash(@RequestBody Map<String, Object> params) {
         return trdBondInvestTrade002Service.getTradeMarketCash(params);
     }
+
+    /**
+     *  查询平台日前摊销净价
+     *
+     * @author yangxiaoteng
+     */
+    @ResponseBody
+    @RequestMapping("getLastNetAmortizationPrice")
+    public AjaxResult getLastNetAmortizationPrice(@RequestBody Map<String, Object> param){
+        AjaxResult result = new AjaxResult();
+        result.setData(trdBondInvestTrade002Service.getLastNetAmortizationPrice(param));
+        return result;
+    }
+
 }

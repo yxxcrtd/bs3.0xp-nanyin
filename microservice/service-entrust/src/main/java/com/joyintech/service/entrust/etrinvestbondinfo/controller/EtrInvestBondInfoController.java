@@ -301,4 +301,15 @@ public class EtrInvestBondInfoController {
     public BigDecimal getStdPosition(@RequestBody Map<String,Object> param) {
     	return etrInvestBondInfoService.getStdPosition(param);
     }
+
+    /**
+     * 查询平台日前公摊净值
+     *
+     * @author jiangpeng
+     */
+    @PostMapping("getLastNetAmortizationPrice")
+    public BigDecimal getLastNetAmortizationPrice(@RequestBody Map<String, Object> param) {
+        return etrInvestBondInfoService.getLastNetAmortizationPrice(param);
+    }
+
 }
