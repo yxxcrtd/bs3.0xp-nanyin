@@ -224,12 +224,12 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 resultList.add(new ValidMessage("repInDepCode", getMessage("FW_E_ZZ_0002")));
             }
         }
-        if (StringUtil.isNotEmpty(dto.getRepAvgOpenCount())) {
-            if (dto.getRepAvgOpenCount().compareTo(new BigDecimal(366)) > 0) {
-                resultList.add(
-                    new ValidMessage("repAvgOpenCount", getMessage("REP_E_0008")));
-            }
-        }
+//        if (StringUtil.isNotEmpty(dto.getRepAvgOpenCount())) {
+//            if (dto.getRepAvgOpenCount().compareTo(new BigDecimal(366)) > 0) {
+//                resultList.add(
+//                    new ValidMessage("repAvgOpenCount", getMessage("REP_E_0008")));
+//            }
+//        }
         
         // modify by zhangliang 20190226 start
         // 资金投向地区

@@ -123,12 +123,6 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
 
         if (entity != null && entity.getBussRepFinProductInfoDto() != null) {
 
-            //报送信息页面托管费率和销售费率必填
-            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepSaleFeeRate())) {
-                validList.add(new ValidMessage("bussRepFinProductInfoDto.repSaleFeeRate", this.getMessage("BUSS_COM_E_0038",
-                        this.getMessage("BussRepFinProductInfo.repSaleFeeRate"))));
-            }
-
             if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepTruFeeRate())) {
                 validList.add(new ValidMessage("bussRepFinProductInfoDto.repTruFeeRate", this.getMessage("BUSS_COM_E_0038",
                         this.getMessage("BussRepFinProductInfo.repTruFeeRate"))));
