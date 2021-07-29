@@ -14,11 +14,13 @@
             <Cell order="10" name="申购日期">purchDate</Cell>
             <Cell order="11" name="确认日期">tradeDate</Cell>
             <Cell order="12" name="缴款日期">settleDate</Cell>
-            <Cell order="13" name="申购方式">purchModleStr</Cell>
-            <Cell order="14" name="申购类型">purchTypeStr</Cell>
-            <Cell order="15" name="交易场所">tradeMarketStr</Cell>
-            <Cell order="16" name="币种">ccyStr</Cell>
-            <Cell order="17" name="备注">remark</Cell>
+            <!--delete by gaoshuqi 20210729 隐藏合申购方式 start-->
+            <!-- <Cell order="13" name="申购方式">purchModleStr</Cell>-->
+            <!--delete by gaoshuqi 20210729 隐藏申购方式 end-->
+            <Cell order="13" name="申购类型">purchTypeStr</Cell>
+            <Cell order="14" name="交易场所">tradeMarketStr</Cell>
+            <Cell order="15" name="币种">ccyStr</Cell>
+            <Cell order="16" name="备注">remark</Cell>
         </Row>
     </Worksheet>
 </Workbook>

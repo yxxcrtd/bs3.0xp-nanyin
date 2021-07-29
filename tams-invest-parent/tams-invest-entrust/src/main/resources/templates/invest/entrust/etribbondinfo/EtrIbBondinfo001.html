@@ -76,13 +76,13 @@
 </head>
 <body>
 <div layout:fragment="content">
-	<div class="layui-tab" lay-filter="tradePlatform">
+	<div class="layui-tab" lay-filter="tradePlatform" style="display: none">
 		<ul class="layui-tab-title">
-			<li class="layui-this">指令管理</li>
-			<li>持仓</li>
+			<li th:attr="title=${#strings.contains(DYN_INFO,'ZLGL')}" id="ZLGL" class="layui-this">指令管理</li>
+			<li th:attr="title=${#strings.contains(DYN_INFO,'CC')}" id="CC">持仓</li>
 		</ul>
 		<div class="layui-tab-content">
-			<div class="layui-tab-item layui-show">	<!-- 指令管理tab页 -->
+			<div id="zlgl_tab" class="layui-tab-item layui-show">	<!-- 指令管理tab页 -->
 				<div class="layui-col-md12 form-button-area transfer-form">
 					<a id="EtrIbBondinfo001_btn_import" class="layui-btn layui-btn-sm btn-import">
                         <i class="iconfont icon-import"></i><span data-th-text="#{EtrInvestBondInfo001.import}"></span></a>
@@ -252,7 +252,7 @@
 				</div>
 			</div>
 			<!-- 持仓 -->
-			<div class="layui-tab-item">
+			<div id="cc_tab" class="layui-tab-item">
 				<div class="layui-col-md12 form-button-area cc-transfer-form">
 				</div>
 				<div class='joyin-form-wrap joyin-filter-form condition-area curr-form cc-transfer-form'>

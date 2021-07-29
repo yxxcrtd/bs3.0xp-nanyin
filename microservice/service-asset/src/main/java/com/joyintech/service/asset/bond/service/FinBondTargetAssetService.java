@@ -365,7 +365,7 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
                 }
             }
         }else{
-            if(null!=baseRepAssetDeptInfoService){
+            if(null!=baseRepAssetDeptInfoService&&entity.getBaseRepAssetDeptInfoDto()!=null){
                 //中债报送
                 baseRepAssetDeptInfoService.updateBaseRepAssetDeptInfoDto(entity.getBaseRepAssetDeptInfoDto());
                 baseRepBondAssetInfoService.update(entity.getBaseRepBondAssetInfoDto());

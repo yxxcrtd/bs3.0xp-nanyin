@@ -26,6 +26,9 @@ import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTra
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrFinProductDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtrIbBondinfo001Service;
+import com.joyintech.tams.invest.entrust.home.service.HomeService;
+import feign.Param;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +75,9 @@ public class EtrIbBondinfo001Controller extends BaseController{
      */
     @Autowired
     private EtrExchangeTrade002Service etrExchangeTrade002Service;
+
+    @Autowired
+    private HomeService homeService;
     
     @Override
     public String init(Model model) {
@@ -82,6 +88,9 @@ public class EtrIbBondinfo001Controller extends BaseController{
         this.setSelectOptionToModel(model, DictCode.价格模式);
         this.setSelectOptionToModel(model, DictCode.清算速度);
         model.addAttribute("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+
+        // 定制化配置信息控制页面展示
+        model.addAttribute("DYN_INFO", homeService.getChecked("EtrIbBondinfoMain"));
         return super.init(model);
     }
     
