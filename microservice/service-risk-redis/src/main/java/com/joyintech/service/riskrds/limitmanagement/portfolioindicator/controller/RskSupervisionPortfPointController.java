@@ -10,6 +10,7 @@
  
 package com.joyintech.service.riskrds.limitmanagement.portfolioindicator.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +69,10 @@ public class RskSupervisionPortfPointController {
     @PostMapping("/selectTableIndForPage/{page}/{length}")
     public Page<RskPortfolioIndicator002Dto> selectTableIndForPage(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length) {
+        // 日期格式 long转date
+        if (param.get("platDate") instanceof Long) {
+            param.put("platDate", new Date((Long) param.get("platDate")));
+        }
         return rskSupervisionPortfPointService.selectTableIndForPage(page, length, param);
     }
     
