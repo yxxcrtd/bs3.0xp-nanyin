@@ -13,6 +13,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
@@ -70,6 +71,8 @@ public class EtrAutoManagementAccount001Controller extends BaseController {
     @RequestMapping("/getSelectPortfolioId")
     public Page<SelectOptionDto> getSelectPortfolioId()
             throws Exception {
+        Map<String, Object> map = RequestUtil.getPageParam();
+        map.put("planAssetSecType", DictCodeList.计划类资产二级分类_自主管理.getValue());
         Page<SelectOptionDto> temp = etrAutoManagementAccountService.getSelectPortfolioId(RequestUtil.getPageParam());
         return temp;
     }

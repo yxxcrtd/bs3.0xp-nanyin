@@ -82,7 +82,9 @@
       INNER JOIN FIN_PRODUCT_TYPE FPT ON FPT.FINPROD_ID = fp.FINPROD_ID
       <where>
           fp.FINPROD_TYPE2 in ('F17')
-          and FPT.TYPE_10 = 'N004'
+        <if test="planAssetSecType != null and planAssetSecType != ''">
+          AND   FPT.TYPE_7 = #{planAssetSecType,jdbcType=VARCHAR}
+        </if>
         <if test="search != null and search != ''">
             AND    (fp.FINPROD_ID LIKE concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
             OR fp.FINPROD_MARKET_ID LIKE concat('%',concat(#{search,jdbcType=VARCHAR},'%')))
