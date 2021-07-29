@@ -8,3 +8,6 @@ IS '计算方式';
 
 ALTER TABLE wfl_etr_entrust_add ADD "PLEDGE_STOCK_ID" varchar2(50);
 COMMENT ON COLUMN "ETR_ENTRUST_ADD"."PLEDGE_STOCK_ID" IS '质押券库代码';
+
+alter table etr_entrust_add_backup add (PORTFOLIO_SERIES VARCHAR2(50));
+comment on column etr_entrust_add_backup.PORTFOLIO_SERIES is '组合系列';
