@@ -283,8 +283,14 @@
             var vdate = $('#vdate').val();
             var finprodIdhid = $('#finprodIdhid').val();
             var finprodId;
+            $("#purSpeed").val('').trigger('change');
+            $("#redSpeed").val('').trigger('change');
             if($('#finprodId').val() && $('#finprodId').select2('data') && $('#finprodId').select2('data')[0]){
                 var data = $('#finprodId').select2('data')[0].object;
+                Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade002/getSpeedByFinprodId', data,function (result) {
+                    $("#purSpeed").val(result.PURSPEED).trigger('change');
+                    $("#redSpeed").val(result.REDSPEED).trigger('change');
+                });
                 finprodId = data.finprodId;
                 $('#finprodIdhid').val(data.finprodId).trigger('change');
                 $('#finprodName').val(data.finprodId).trigger('change');
