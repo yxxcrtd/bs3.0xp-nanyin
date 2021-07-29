@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.trade.buyoutrepo.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -214,6 +215,11 @@ public class TrdOutRightRepoTrade002Controller extends BaseController {
 
 		model.addAttribute("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
 
+		//配置单位 add by yeming 20210726 start
+		String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+		model.addAttribute("entrustAmtUnit", entrustAmtUnit );
+		//配置单位 add by yeming 20210726 end
+
 		TrdOutRightRepoTrade002Dto trdOutRightRepoTrade002Dto = new TrdOutRightRepoTrade002Dto();
 		
 		if (!WorkFlowUtil.isNotFromToDoList() || StringUtil.equals(this.getParam("workflowStatus"), DictCodeListExt1.交易流程状态_流程中.getValue())) {
@@ -221,7 +227,13 @@ public class TrdOutRightRepoTrade002Controller extends BaseController {
 			if (pro != null) {
 				trdOutRightRepoTrade002Dto = (TrdOutRightRepoTrade002Dto) JsonUtils.json2Object(pro.getBusinessData(),
 						TrdOutRightRepoTrade002Dto.class);
-				trdOutRightRepoTrade002Dto.setSecTotalPrin(trdOutRightRepoTrade002Dto.getSecTotalPrin().divide(new BigDecimal(10000)));
+				//配置单位 edit by yeming 20210726 start
+				if(StringUtil.equals(entrustAmtUnit,"02")){
+					if(trdOutRightRepoTrade002Dto.getSecTotalPrin() != null) {
+						trdOutRightRepoTrade002Dto.setSecTotalPrin(trdOutRightRepoTrade002Dto.getSecTotalPrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+					}
+				}
+				//配置单位 edit by yeming 20210726 end
 				model.addAttribute(GlobalConstant.WORKFLOW_ID, this.getParam(GlobalConstant.WORKFLOW_ID));
 				if (!StringUtil.isEmptyList(trdOutRightRepoTrade002Dto.getBussTrdTransferOrder())) {
 					model.addAttribute("entity_bussTrdTransferOrder",
@@ -236,7 +248,13 @@ public class TrdOutRightRepoTrade002Controller extends BaseController {
 		else if (StringUtil.isNotEmpty(this.getParam("tradeId"))) {
 			trdOutRightRepoTrade002Dto = trdOutRightRepoTrade002Service
 					.queryBuyOutRepoByTradeId(this.getParam("tradeId"));
-			trdOutRightRepoTrade002Dto.setSecTotalPrin(trdOutRightRepoTrade002Dto.getSecTotalPrin().divide(new BigDecimal(10000)));
+			//配置单位 edit by yeming 20210726 start
+			if(StringUtil.equals(entrustAmtUnit,"02")){
+				if(trdOutRightRepoTrade002Dto.getSecTotalPrin() != null) {
+					trdOutRightRepoTrade002Dto.setSecTotalPrin(trdOutRightRepoTrade002Dto.getSecTotalPrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+				}
+			}
+			//配置单位 edit by yeming 20210726 end
 			if (StringUtil.isNotEmpty(trdOutRightRepoTrade002Dto.getTrdOutRightRepoPersonInfo())) {
 				model.addAttribute("entity_trdInvestPersonInfo",
 						JsonUtils.object2Json(trdOutRightRepoTrade002Dto.getTrdOutRightRepoPersonInfo()));

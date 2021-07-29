@@ -1014,4 +1014,36 @@
             </if>
         </where>
     </select>
+
+    <!--报价导入 首次净价和托管机构未处理-->
+    <select id="queryPledgeBondElementForImport" resultType="com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto">
+        SELECT
+        fp.FINPROD_ID        AS finprodId,
+        mbvi.NETPRICE        AS netPrice,
+        fp.REGIST_ORG        AS repRegistOrg
+        FROM
+        FIN_PRODUCT fp
+        LEFT JOIN
+        MST_BOND_VALUATION_INFO mbvi
+        ON
+        mbvi.SEC_ID = fp.FINPROD_MARKET_ID
+        AND mbvi.VALUE_SOURCE = #{valueSourceCBC}
+        AND mbvi.VALUE_DATE <![CDATA[ <= ]]> TO_DATE(#{platDate}, 'yyyy-MM-dd')
+        AND NOT EXISTS
+        (
+        SELECT
+        1
+        FROM
+        MST_BOND_VALUATION_INFO mbviInner
+        WHERE
+        mbviInner.SEC_ID = fp.FINPROD_MARKET_ID
+        AND mbviInner.VALUE_SOURCE = #{valueSourceCBC}
+        AND mbviInner.VALUE_DATE <![CDATA[ <= ]]> TO_DATE(#{platDate}, 'yyyy-MM-dd')
+        AND mbviInner.VALUE_DATE > mbvi.VALUE_DATE )
+        <where>
+            <if test="finprodId !=null and finprodId != ''">
+                fp.FINPROD_ID  = #{finprodId}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -10,10 +10,6 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -22,6 +18,10 @@ import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.validato
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 手工凭证新建dto
@@ -103,6 +103,12 @@ public class ValManualVoucher003Dto extends BaseEntity implements ProcessEntity 
      * 投资目的
      */
     private String invAim;
+
+    /**
+     * add by sunshuaishuai 20210302
+     * 记账顺序
+     */
+    private String accountOrder;
 
     /**
      * 凭证新建时的分录信息
@@ -213,7 +219,7 @@ public class ValManualVoucher003Dto extends BaseEntity implements ProcessEntity 
     /**
      * 设置 凭证编号
      * 
-     * @param busVouchnum 凭证编号
+     * @param bookId 凭证编号
      */
     public void setBookId(String bookId) {
         this.bookId = bookId;
@@ -231,7 +237,7 @@ public class ValManualVoucher003Dto extends BaseEntity implements ProcessEntity 
     /**
      * 设置 凭证说明
      * 
-     * @param vouchRemark 凭证说明
+     * @param bookRemark 凭证说明
      */
     public void setBookRemark(String bookRemark) {
         this.bookRemark = bookRemark;
@@ -425,4 +431,19 @@ public class ValManualVoucher003Dto extends BaseEntity implements ProcessEntity 
 		this.profitType = profitType;
 	}
 
+    /**
+     * 取得 记账顺序
+     * @return 记账顺序
+     */
+    public String getAccountOrder() {
+        return accountOrder;
+    }
+
+    /**
+     * 设置 记账顺序
+     * @param accountOrder 记账顺序
+     */
+    public void setAccountOrder(String accountOrder) {
+        this.accountOrder = accountOrder;
+    }
 }

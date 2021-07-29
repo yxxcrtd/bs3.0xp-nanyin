@@ -365,7 +365,7 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
                 }
             }
         }else{
-            if(null!=baseRepAssetDeptInfoService){
+            if(null!=baseRepAssetDeptInfoService&&entity.getBaseRepAssetDeptInfoDto()!=null){
                 //中债报送
                 baseRepAssetDeptInfoService.updateBaseRepAssetDeptInfoDto(entity.getBaseRepAssetDeptInfoDto());
                 baseRepBondAssetInfoService.update(entity.getBaseRepBondAssetInfoDto());
@@ -701,5 +701,16 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
 
         finBondTargetAssetDto.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
         return finBondTargetAssetDto;
+    }
+
+
+    /**
+     * add by xxg 20210721
+     *根据产品代码得到起息日和到期日
+     * @param oFinprodId 产品代码
+     * @return
+     */
+    public FinProduct getMdateAndVdate(String oFinprodId){
+        return  finProductMapper.selectByPrimaryKey(oFinprodId);
     }
 }

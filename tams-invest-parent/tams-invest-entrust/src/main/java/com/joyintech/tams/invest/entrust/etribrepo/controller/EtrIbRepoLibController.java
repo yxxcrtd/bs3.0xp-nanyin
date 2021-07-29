@@ -54,6 +54,8 @@ public class EtrIbRepoLibController extends BaseController{
         dto.setSecAcctId(this.getParam("secAcctId"));
         model.addAttribute("entity", dto);
         this.setSelectOptionToModel(model, DictCode.交易场所);
+        this.setSelectOptionToModel(model, DictCode.资产二级分类);
+        this.setSelectOptionToModel(model, DictCode.评级结果);
         return super.init(model);
     }
     

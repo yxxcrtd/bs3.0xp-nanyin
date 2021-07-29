@@ -546,6 +546,8 @@ public class CfetsRepoDealQuotedPrice001Controller extends BaseController {
 		}
     	List<RepoQuoteImportPreviewDto> dataRows = allDto.getRepoQuoteImportPreviewDtoList();
     	List<RepoQuoteImportPreviewDto> dataList = new ArrayList<RepoQuoteImportPreviewDto>();
+        //报价导入  首次净价和登记托管机构 未处理
+        Map<String,Object> pledgeMap= new HashMap<>();
     	//将质押券添加到list中
     	for(RepoQuoteImportPreviewDto dto:dataRows) {
     		if(StringUtils.isNotEmpty(dto.getEntrustId())) {
@@ -558,6 +560,19 @@ public class CfetsRepoDealQuotedPrice001Controller extends BaseController {
     					cfetsRepoDealQuotedPrice003Dto.setPledgePrin(pledgeDto.getPledgePrin().multiply(new BigDecimal(10000)));
     					cfetsRepoDealQuotedPrice003Dto.setPledgeRate(pledgeDto.getPledgeRate());
     					cfetsRepoDealQuotedPrice003Dto.setFinprodId(pledgeDto.getFinprodId());
+                        //处理托管机构和首次净价
+                        if(pledgeMap.containsKey(pledgeDto.getFinprodId())){
+                            CfetsRepoDealQuotedPrice003Dto o = (CfetsRepoDealQuotedPrice003Dto)pledgeMap.get(pledgeDto.getFinprodId());
+                            cfetsRepoDealQuotedPrice003Dto.setNetPrice(o.getNetPrice());
+                            cfetsRepoDealQuotedPrice003Dto.setRepRegistOrg(o.getRepRegistOrg());
+                        }else{
+                            CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto1 = cfetsRepoDealQuotedPrice001Service.queryPledgeBondElementForImport(pledgeDto.getFinprodId());
+                            if(null!=cfetsRepoDealQuotedPrice003Dto1){
+                                pledgeMap.put(pledgeDto.getFinprodId(),cfetsRepoDealQuotedPrice003Dto1);
+                                cfetsRepoDealQuotedPrice003Dto.setNetPrice(cfetsRepoDealQuotedPrice003Dto1.getNetPrice());
+                                cfetsRepoDealQuotedPrice003Dto.setRepRegistOrg(cfetsRepoDealQuotedPrice003Dto1.getRepRegistOrg());
+                            }
+                        }
     					pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
     				}
     			}

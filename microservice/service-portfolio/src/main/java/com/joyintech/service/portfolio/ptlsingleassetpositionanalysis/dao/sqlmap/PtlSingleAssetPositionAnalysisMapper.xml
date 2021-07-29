@@ -8,7 +8,7 @@
 		                          gavInfo.marketValue,gavInfo.dscCostAmt,gavInfo.shareAmt,
 		                          round(nvl(gavInfo.marketValue,0)/ppvInfo.tdyAssetValue*100,2) as
 		                          marketValueRatio,gavInfo.portfolioId,ppvInfo.tdyAssetValue,
-								  gavInfo.portfolioId1
+								  gavInfo.portfolioId1, gavInfo.ptlIssueType
 		                     from (select psv.CDATE cdate,psv.PORTFOLIO_ID portfolioId,psv.FINPROD_ID finprodId,
 		                                  psv.SHARE_AMT shareAmt,
 					                      case when fpt.TYPE_8 = 'F08' AND fpt.TYPE_6 = 'L01' then -1*psv.DSC_COST_AMT
@@ -25,7 +25,10 @@
 											  else NVL(psv.TDY_INTINCEXP,0) end as tdyIntincexp,
 		                                  pp.PORTFOLIO_NAME portFolioName,fp.FINPROD_MARKET_ID finprodMarketId,
 		                                  fp.FINPROD_ABBR finprodAbbr,
-										  pp.PORTFOLIO_ID portfolioId1
+										  <!-- add by swwan 【重庆银行】增加产品募集方式 2021-07-26 start -->
+										  fp.ISSUE_TYPE ptlIssueType,
+										  <!-- add by swwan 【重庆银行】增加产品募集方式 2021-07-26 end -->
+		                                  pp.PORTFOLIO_ID portfolioId1
 		                             from PTL_SEC_VALUTION psv
 		                       inner join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
 		                       inner join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
@@ -67,12 +70,16 @@
     with assetHold as (select gavInfo.finprodAbbr,gavInfo.finprodMarketId,gavInfo.portFolioName,
 		                          gavInfo.marketValue,gavInfo.dscCostAmt,gavInfo.shareAmt,
                                   round(nvl(gavInfo.marketValue,0)/ppvInfo.tdyAssetValue*100,2) as
-		                          marketValueRatio,gavInfo.portfolioId,ppvInfo.tdyAssetValue,gavInfo.portfolioId1
+		                          marketValueRatio,gavInfo.portfolioId,ppvInfo.tdyAssetValue,
+                                  gavInfo.portfolioId1,gavInfo.ptlIssueType
 		                     from (select psv.CDATE cdate,psv.PORTFOLIO_ID portfolioId,psv.FINPROD_ID finprodId,
 		                                  psv.MARKET_VALUE marketValue,psv.SHARE_AMT shareAmt,psv.DSC_COST_AMT dscCostAmt,
 		                                  psv.tdy_intincexp tdyIntincexp,
 		                                  pp.PORTFOLIO_NAME portFolioName,fp.FINPROD_MARKET_ID finprodMarketId,
 		                                  fp.FINPROD_ABBR finprodAbbr,
+										  <!-- add by swwan 【重庆银行】增加产品募集方式 2021-07-26 start -->
+										  fp.ISSUE_TYPE ptlIssueType,
+										  <!-- add by swwan 【重庆银行】增加产品募集方式 2021-07-26 end -->
 										  pp.PORTFOLIO_ID portfolioId1
 		                             from PTL_SEC_PIERCE_VALUTION psv
 		                       inner join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
@@ -121,7 +128,7 @@
 		select finprodMarketId,finprodAbbr,null portFolioName,sum(marketValue) as marketValue,
 		       sum(dscCostAmt) as dscCostAmt,sum(shareAmt) as shareAmt,
 			round(sum(nvl(assetHold.marketValue,0))/sum(assetHold.tdyAssetValue)*100,2) as marketValueRatio,null portfolioId,'02' as hasChildren
-		       ,'root' parentInfo,finprodMarketId childInfo,portfolioId1
+		       ,'root' parentInfo,finprodMarketId childInfo,portfolioId1,ptlIssueType
 		from assetHold
 		group by finprodMarketId,finprodAbbr,portfolioId1
 		</if>
@@ -136,7 +143,7 @@
 		select finprodMarketId,finprodAbbr,null portFolioName,sum(marketValue) as marketValue,
 		       sum(dscCostAmt) as dscCostAmt,sum(shareAmt) as shareAmt,
 		       sum(marketValueRatio) as marketValueRatio,null portfolioId,'02' as hasChildren
-		       ,'root' parentInfo,finprodMarketId childInfo,portfolioId1
+		       ,'root' parentInfo,finprodMarketId childInfo,portfolioId1,ptlIssueType
 		from assetHold
 		group by finprodMarketId,finprodAbbr,portfolioId1
 		</if>
@@ -239,7 +246,7 @@
 			select assetHold1.finprodMarketId,assetHold1.finprodAbbr,null portFolioName,sum(assetHold1.marketValue) as marketValue,
 			sum(assetHold1.dscCostAmt) as dscCostAmt,sum(assetHold1.shareAmt) as shareAmt,
 			round(sum(nvl(assetHold1.marketValue,0))/sum(assetHold1.tdyAssetValue)*100,2) as marketValueRatio,null portfolioId,'02' as hasChildren
-			,'root' parentInfo,assetHold1.finprodMarketId childInfo
+			,'root' parentInfo,assetHold1.finprodMarketId childInfo,assetHold1.ptlIssueType ptlIssueType
 			from (
 			SELECT
 			assetHold.*
@@ -254,7 +261,7 @@
 			</if>
 			) assetHold1
 			WHERE NVL(assetHold1.shareAmt,0)!=0
-			group by assetHold1.finprodMarketId,assetHold1.finprodAbbr
+			group by assetHold1.finprodMarketId,assetHold1.finprodAbbr,assetHold1.ptlIssueType
 		</if>
 		<if test="parentId != null and parentId neq 'root'">
 			select null finprodMarketId,null finprodAbbr,assetHold1.portFolioName,assetHold1.marketValue,assetHold1.dscCostAmt,NVL(assetHold1.shareAmt,0) shareAmt,
@@ -281,7 +288,7 @@
 			select assetHold1.finprodMarketId,assetHold1.finprodAbbr,null portFolioName,sum(assetHold1.marketValue) as marketValue,
 			sum(assetHold1.dscCostAmt) as dscCostAmt,sum(assetHold1.shareAmt) as shareAmt,
 			sum(assetHold1.marketValueRatio) as marketValueRatio,null portfolioId,'02' as hasChildren
-			,'root' parentInfo,assetHold1.finprodMarketId childInfo
+			,'root' parentInfo,assetHold1.finprodMarketId childInfo,assetHold1.ptlIssueType ptlIssueType
 			from
 			(
 			SELECT
@@ -297,7 +304,7 @@
 			</if>
 			) assetHold1
 			WHERE NVL(assetHold1.shareAmt,0)!=0
-			group by assetHold1.finprodMarketId,assetHold1.finprodAbbr
+			group by assetHold1.finprodMarketId,assetHold1.finprodAbbr,assetHold1.ptlIssueType
 		</if>
 	</select>
 </mapper>

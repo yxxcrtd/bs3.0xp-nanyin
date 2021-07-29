@@ -19,6 +19,7 @@
             <Cell order="15" name="质押债券面额（元）">pledgeFaceValue</Cell>
             <Cell order="16" name="主体评级">gradeResult</Cell>
             <Cell order="17" name="托管场所">registOrgAbbr</Cell>
+            <Cell order="18" name="交易对手">counter</Cell>
         </Row>
     </Worksheet>
 </Workbook>

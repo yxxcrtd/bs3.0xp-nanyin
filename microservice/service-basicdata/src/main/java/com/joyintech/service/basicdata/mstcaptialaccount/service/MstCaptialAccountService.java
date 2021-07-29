@@ -240,7 +240,16 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
             //资金账户更新
 //            entity.setAcctNo(entity.getLargePayno()+":"+entity.getBusiAcctNo());
             stlCapacctInfoMapper.updateByPrimaryKeySelective(entity);
- 
+
+            // 账户类型为“券商资金账户“时，支持修改利率
+            String cashId = CommonUtil.generateCashFlowCode(entity.getLargePayno()+":"+entity.getBusiAcctNo(), DictCodeListExt1.现金流业务类型_资金账户.getValue(), 0L, DictCodeListExt1.现金流二级类型_利息.getValue());
+            FinRateInfo finRateInfo = new FinRateInfo();
+            finRateInfo.setEffDate(entity.getEffectDate());
+            finRateInfo.setCashId(cashId);
+            finRateInfo.setRate(entity.getRate().divide(new BigDecimal("100")));
+            finRateInfoMapper.updateByPrimaryKeySelective(finRateInfo);
+
+
             //上传文件修改更新
             MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
             for(SysUploadFileInfo fileArray:entity.getFileArray()){
@@ -477,6 +486,27 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
             }
         } 
         return list;  
+    }
+
+
+    /**
+     * add by xxg 20210726
+     * 根据所属柜台获取第一次设置的利率
+     * @param ownDept  所属柜台
+     * @return
+     */
+    public MstCaptialAccountDto getFirstRateByownDept(String ownDept){
+        return basicMstCaptialAccountMapper.getFirstRateByownDept(ownDept);
+    }
+
+    /**
+     * add by caozhenming 20210728
+     * 根据所属券商获取资金账号
+     * @param param
+     * @return
+     */
+    public List<SelectOptionDto>  getAcctInfo(Map<String,Object> param){
+        return stlCapacctInfoMapper.getAcctInfo(param);
     }
     
 }

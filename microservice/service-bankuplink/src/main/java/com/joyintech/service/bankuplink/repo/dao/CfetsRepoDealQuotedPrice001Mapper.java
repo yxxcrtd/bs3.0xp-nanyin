@@ -138,4 +138,6 @@ public interface CfetsRepoDealQuotedPrice001Mapper {
     String getIsShowDsfPledge(Map<String,Object> map);
 
     List<CfetsRepoDealQuotedPrice001Dto> getQualifiedByentrustIds(Map<String,Object> map);
+
+    CfetsRepoDealQuotedPrice003Dto queryPledgeBondElementForImport(Map<String, Object> param);
 }

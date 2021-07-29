@@ -1,1 +1,0 @@
-UPDATE sys_para SET DATA_TYPE = '02' where PARA_CODE = 'is_show_myhome' and system_code = 'SYS';

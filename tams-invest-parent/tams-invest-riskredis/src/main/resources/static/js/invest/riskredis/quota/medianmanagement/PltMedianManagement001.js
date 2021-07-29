@@ -29,7 +29,7 @@ $(function() {
          * 定义表格名称
          */
         cols:[
-             {field:'supDate', title: 'PltMedianManagement001.supDate',width:100,type:'date'}
+             {field:'supDateStr', title: 'PltMedianManagement001.supDate',width:100,type:'date'}
             ,{field:'paraCode', title: 'PltMedianManagement001.paraCode',width:230}
             ,{field:'paraName', title: 'PltMedianManagement001.paraName',width:500}
             ,{field:'portfolioId',title: 'PltMedianManagement001.portfolioId',width:270}

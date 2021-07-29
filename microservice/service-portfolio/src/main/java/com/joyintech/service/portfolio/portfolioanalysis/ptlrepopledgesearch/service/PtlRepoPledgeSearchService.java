@@ -57,6 +57,18 @@ public class PtlRepoPledgeSearchService extends BaseService<PtlRepoPledgeSearchD
     }
 
     /**
+     * 交易对手的联想下拉框事件
+     *
+     * @param map 输入参数
+     * @return 结果
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> getCounter(Map<String,Object> map) {
+        return ptlRepoPledgeSearchMapper.getCounter(map);
+    }
+
+    /**
      * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
      * @param pageParam pageParam
      * @param page 页码
@@ -75,7 +87,20 @@ public class PtlRepoPledgeSearchService extends BaseService<PtlRepoPledgeSearchD
         } else {
             pageParam.put("prodManager", null);
         }
-         // add by wangyang1 【吉林银行】 增加 产品经理  end  
+         // add by wangyang1 【吉林银行】 增加 产品经理  end
+        // add by swwan 【重庆银行】 增加 业务类型  2021年7月22日 start
+        if(StringUtil.isNotEmpty(pageParam.get("busiType"))){
+            pageParam.put("busiTypeList", StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("busiType").toString()));
+        }
+        if(StringUtil.isNotEmpty(pageParam.get("counter"))){
+            List<String> counterList = StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("counter").toString());
+            if (counterList.contains("BZQRK")) {
+                counterList.add("标准债");
+                counterList.remove("BZQRK");
+            }
+            pageParam.put("counterList", counterList);
+        }
+        // add by swwan 【重庆银行】 增加 业务类型  2021年7月22日 end
         pageParam.put("BACK_LEND_DIRECTION_03", DictCodeList.回购拆借方向_正回购.getValue());
         pageParam.put("BACK_LEND_DIRECTION_05", DictCodeList.回购拆借方向_融入.getValue());
         pageParam.put("BACK_LEND_DIRECTION_06", DictCodeList.回购拆借方向_融出.getValue());

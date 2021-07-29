@@ -94,6 +94,7 @@ public class EtribRepoInfo003Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.投资目的);
         this.setSelectOptionToModel(model, DictCode.交易平台);
         this.setSelectOptionToModel(model, DictCode.价格模式);
+        this.setSelectOptionToModel(model, DictCode.组合系列);
         Date sysDate = DateUtil.platDateFromCache();
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         EtribRepoInfo003Dto entity = null;

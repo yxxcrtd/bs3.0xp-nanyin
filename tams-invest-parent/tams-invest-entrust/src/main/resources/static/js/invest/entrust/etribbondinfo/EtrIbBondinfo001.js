@@ -2,7 +2,22 @@
  * 持仓信息（右上）
  */
 (function(){
-
+    // 定制化配置信息控制页面展示====================================================
+    const CC = $("#CC").attr("title");
+    const ZLGL = $("#ZLGL").attr("title");
+    if(CC !== 'true' || ZLGL !== 'true'){
+        if(CC === 'true'){
+            $("#ZLGL").hide();
+            $("#CC").show().trigger("click");
+        }else if (ZLGL === 'true'){
+            $("#ZLGL").show().trigger("click");
+            $("#CC").hide();
+        }
+    }
+    $(".layui-tab").show();
+    // ==========================================================================
+    
+    
     // 持仓
     function getPositionsSearchParams(){
         var data = $.serializeToObject('#searchForm_cc');
@@ -250,14 +265,14 @@
      * 画面加载完成
      */
     $(function() {
-        $(".cc-transfer-form #EtrIbBondinfo001_btn_search").click(function () {
+        $(".CC-transfer-form #EtrIbBondinfo001_btn_search").click(function () {
             positionsTable.load();
         })
         
         var resetBtn = $('<a class="layui-btn layui-btn-sm btn-reset"></a>');
         resetBtn.attr('id', pageId + '_btn_reset')
             .text(JoyinUtil.getLabel('SysCommon.reset'));
-        $(".cc-transfer-form #EtrIbBondinfo001_btn_search").after(resetBtn);
+        $(".CC-transfer-form #EtrIbBondinfo001_btn_search").after(resetBtn);
         resetBtn.click(function () {
             $("#searchForm_cc #portfolioId").val('').trigger("change");
             $("#searchForm_cc #secType1").val('').trigger("change");
@@ -296,7 +311,7 @@
             positionsTable_zqzy.table ? positionsTable_zqzy.reload() : positionsTable_zqzy.load();
         });
         
-        $(".cc-transfer-form #EtrIbBondinfo001_btn_export").click(getPositionsExportExcel)
+        $(".CC-transfer-form #EtrIbBondinfo001_btn_export").click(getPositionsExportExcel)
         $(".transfer-form #EtrIbBondinfo001_btn_export").click(getZqzyPositionExportExcel)
 
         /**

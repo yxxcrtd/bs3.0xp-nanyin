@@ -257,4 +257,13 @@ public class MstCommissionSet002Controller extends BaseController {
 
         return temp;
     }
+
+    @ResponseBody
+    @RequestMapping("/getMstAcctInfo")
+    public List<SelectOptionDto> getMstAcctInfo(){
+        Map<String, Object> params = new HashMap<>();
+        params.put("brokerId",RequestUtil.getPageParam().get("customerId"));
+        List<SelectOptionDto> temp = mstCommissionSetService.getMstAcctInfo(params);
+        return temp;
+    }
 }

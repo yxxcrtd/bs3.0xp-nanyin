@@ -462,8 +462,20 @@ public class BondRequestQuoteSubServiceImpl extends BaseService<IbuQuoteBond> im
                             inputBean.getIbuQuoteBondDto());
                     }
                     else {
-                        //查询明细表中是否存在至少一条（已回复）？更新主表交易状态，true: 已回复， false:待回复
-                        affectRows += ibuQuoteMapper.updateBondQuoteTradeStatus(inputBean.getIbuQuoteBondDto());
+                        //add by zznn 20210726 start
+                        //针对做市方撤销  当所有报价全部撤回后  主报价终态应该为已新增 成功
+                        //非做市方接收已过期  当所有报价全部已过期  主报价终态应该为已新增 成功
+                        if(detStatusMap != null && detStatusMap.size() == 1&&(StringUtil.equals(inputBean.getExeTypeIBU(),DictCodeList.银行间上行操作类型_本方请求报价撤回成功.getValue())
+                            ||StringUtil.equals(inputBean.getExeTypeIBU(),DictCodeList.银行间上行操作类型_接收已过期.getValue()))){
+                                inputBean.getIbuQuoteBondDto().setTradeStatus(DictCodeList.银行间上行报价状态_已新增.getValue());
+                                inputBean.getIbuQuoteBondDto().setSendStatus(DictCodeList.银行间上行发送状态_成功.getValue());
+                                affectRows +=ibuQuoteMapper.updateBondQuoteFinalStatusForRevoke(inputBean.getIbuQuoteBondDto());
+                        }
+                        //add by zznn 20210726 end
+                        else{
+                            //查询明细表中是否存在至少一条（已回复）？更新主表交易状态，true: 已回复， false:待回复
+                            affectRows += ibuQuoteMapper.updateBondQuoteTradeStatus(inputBean.getIbuQuoteBondDto());
+                        }
                     }
                     // modify by etliu 20210123 end
                 }

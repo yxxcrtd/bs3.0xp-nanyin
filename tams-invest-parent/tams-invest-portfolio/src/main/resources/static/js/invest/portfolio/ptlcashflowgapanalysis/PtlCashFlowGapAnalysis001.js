@@ -65,6 +65,13 @@ $(function () {
         else{
             result.ps = $("#ps").val().join(',');
         }
+        //add by swwan [重庆银行] 组合系列 20190722 start
+        if($("#portfolioSeries").val() == null || $("#portfolioSeries").val() == ''){
+            result.portfolioSeries = $("#portfolioSeries").val();
+        } else {
+            result.portfolioSeries = $("#portfolioSeries").val().join(',');
+        }
+        //add by swwan [重庆银行] 组合系列 20190722 end
         return result;
     };
     
@@ -112,6 +119,13 @@ $(function () {
             result.prodManager1 = $("#prodManager1").val();
         }
         // add by wangyang1 【吉林银行】 增加 产品经理  end
+        //add by swwan [重庆银行] 组合系列 20190722 start
+        if($("#portfolioSeries1").val() == null || $("#portfolioSeries1").val() == ''){
+            result.portfolioSeries1 = $("#portfolioSeries1").val();
+        } else {
+            result.portfolioSeries1 = $("#portfolioSeries1").val().join(',');
+        }
+        //add by swwan [重庆银行] 组合系列 20190722 end
         return result;
     };
     
@@ -135,6 +149,7 @@ $(function () {
             , {field: 'assetSign', title: '资产标的'}
             , {field: 'cashFlow', title: '现金流', width: 200, type: 'number'}
             , {field: 'ccyStr', title: '币种', sortField: 'cashFlow'}
+            , {field: 'portfolioSeriesStr', title: '组合系列'}
         ]
     });
     
@@ -157,6 +172,7 @@ $(function () {
             ,{field:'inCashflow',title:'流入现金流', width:200, type: 'number'}
             ,{field:'outCashflow',title:'流出现金流', width:200, type: 'number'}
             ,{field:'netCashflow',title:'净现金流', width:200, type: 'number'}
+            ,{field:'portfolioSeriesStr', title: '组合系列',  width:300}
         ],
     });
     

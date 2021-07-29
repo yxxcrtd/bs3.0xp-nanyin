@@ -2,6 +2,7 @@
     /**
      * 将资产代码带出的值置灰不可修改
      */
+    var unitNum;
     var init = function() {
         // $("#invAim").trigger("change").attr("disabled", true);
         // if ($("#finprodId").val()){
@@ -12,6 +13,14 @@
         //     // $("#tradeMarket").trigger("change").attr("disabled", true);
         //     $("#finprodId").trigger('change');
         // }
+        //配置单位 edit by yeming 20210726 start
+        if(entrustAmtUnit == '01' ){
+            $(".unitNum").text('元');
+            unitNum = 1;
+        }else{
+            unitNum = 10000;
+        }
+//配置单位 edit by yeming 20210726 start
         if($("#finprodId").val() != null && $("#finprodId").val() != ''){
             $("#finprodName").val($('#finprodId').select2('data')[0].text);
             $("#finprodMarketId").val($('#finprodId').select2('data')[0].object.shareId);
@@ -59,7 +68,10 @@
             Joyin.ajax(basePath + 'invest/trade/bondtostock/TrdBondToStock002/getPositionInfo',params,function (ret) {
                 if(ret&&ret.data){
                     if(ret.data.holdetrPriceTotal){
-                        $("#holdetrPriceTotal").val(ret.data.holdetrPriceTotal);
+                        //配置单位 edit by yeming 20210726 start
+                        var holdetrPriceTotal = JoyinMath.doDiv(ret.data.holdetrPriceTotal,unitNum,2,JoyinMath.ROUND_HALF_UP);
+                        $("#holdetrPriceTotal").val(holdetrPriceTotal);
+                        //配置单位 edit by yeming 20210726 start
                     }
                     else{
                         $("#holdetrPriceTotal").val(0);
@@ -71,7 +83,10 @@
             Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (cashdata) {
                 // table.renderRow(data.LAY_TABLE_INDEX, {"assetsavailablepositions": cashdata.position});
                 if(cashdata.position) {
-                    $("#conetrPriceTotal").val(JoyinMath.doMul(cashdata.position, 100));
+                    //配置单位 edit by yeming 20210726 start
+                    var conetrPriceTotal = JoyinMath.doDiv(cashdata.position,unitNum,2,JoyinMath.ROUND_HALF_UP);
+                    $("#conetrPriceTotal").val(JoyinMath.doMul(conetrPriceTotal, 100));
+                    //配置单位 edit by yeming 20210726 start
                 }
                 else{
                     $("#conetrPriceTotal").val(0);
@@ -84,7 +99,9 @@
         //转股价格
         var conPrice = $("#conPrice").val();
         // 转股券面总额
-        var shareAmt = $("#shareAmt").val();
+        //配置单位 edit by yeming 20210726 start
+            var shareAmt = JoyinMath.doMul($("#shareAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
+        //配置单位 edit by yeming 20210726 start
         if(!conPrice || !shareAmt){
             return;
         }
@@ -108,7 +125,9 @@
         //         转股价值= 转股券面总额/转股价格*正股价；
         //         转股溢价率= （转债价格—转股价值）/转股价值*100%；
         //         纯债溢价率=（转债价格—纯债价值）/纯债价值*100%;
-        var shareAmt = $("#shareAmt").val();
+        //配置单位 edit by yeming 20210726 start
+        var shareAmt = JoyinMath.doMul($("#shareAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
+        //配置单位 edit by yeming 20210726 start
         //正股价
         var firstUnitCprice3 = $("#firstUnitCprice3").val();
         // 转股价
@@ -132,12 +151,15 @@
         }
     };
     var getriskdata = function () {
+        //配置单位 edit by yeming 20210726 start
+        var shareAmt = JoyinMath.doMul($("#shareAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
+        //配置单位 edit by yeming 20210726 start
         var obj = {
             assetCode:$("#finprodId").val(),
             timePoint:MY_SUP_TIME_TYPE_02,
             valDate:$('#tradeDate').val(),
             portfolioCode:$('#portfolioId').val(),
-            tradeAmount:$('#shareAmt').val(),
+            tradeAmount:shareAmt,
             assetType:PA_TYPE_ZQMC,
             isEnabled:'01',
             tradeDirection:PS_MC

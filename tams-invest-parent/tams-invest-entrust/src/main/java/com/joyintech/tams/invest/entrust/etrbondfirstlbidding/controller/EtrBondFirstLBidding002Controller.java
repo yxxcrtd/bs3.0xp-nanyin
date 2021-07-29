@@ -96,7 +96,7 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
             EtrBondFirstLBiddingDto dto = firstService.getBussinessEntityByWorkflowId(
                 workflowId);
             //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
+            if(StringUtil.equals(entrustAmtUnit,"02")){
                 if(dto.getEntrustNum() != null) {
                     dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
                 }
@@ -112,7 +112,7 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
             //编辑页面
             EtrBondFirstLBiddingDto dto = firstService.selectByKey(entrustId,finprodId,portfolioId);
             //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
+            if(StringUtil.equals(entrustAmtUnit,"02")){
                 if(dto.getEntrustNum() != null) {
                     dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
                 }
@@ -127,7 +127,7 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
             //新建页面初始化
             EtrBondFirstLBiddingDto entity = new EtrBondFirstLBiddingDto();
             //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
+            if(StringUtil.equals(entrustAmtUnit,"02")){
                 if(entity.getEntrustNum() != null) {
                     entity.setEntrustNum(entity.getEntrustNum().divide(new BigDecimal(10000)));
                 }

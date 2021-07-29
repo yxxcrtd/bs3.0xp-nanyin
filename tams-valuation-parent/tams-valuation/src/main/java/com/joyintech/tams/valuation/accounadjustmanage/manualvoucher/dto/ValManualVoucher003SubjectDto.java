@@ -14,10 +14,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.BokSubject;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
 
 /**
  * 用于科目联动检索
@@ -107,6 +104,22 @@ public class ValManualVoucher003SubjectDto extends BokSubject {
         this.ccy = ccy;
     }
     /** modify by dongjun on 20181211 end**/
+
+    /*modify by sunshuaishuai 20210312 start*/
+    /**
+     * 资金帐户
+     */
+    private String acctName;
+
+    public String getAcctName() {
+        return acctName;
+    }
+
+    public void setAcctName(String acctName) {
+        this.acctName = acctName;
+    }
+
+    /*modify by sunshuaishuai 20210312 start*/
     
     /**
      * 获取 serialversionuid

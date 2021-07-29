@@ -10,19 +10,21 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto;
 
-import java.math.BigDecimal;
-
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.validator.ValManualVoucher001Validator;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.validator.ValManualVoucher001Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 手工凭证查询dto
@@ -98,6 +100,7 @@ public class ValManualVoucher001Dto extends BaseEntity implements ProcessEntity 
      * 制作人
      */
     private String createUser;
+    
     /**
      * 收益类型
      * add by wujie on 20201112
@@ -229,6 +232,20 @@ public class ValManualVoucher001Dto extends BaseEntity implements ProcessEntity 
      */
     private BigDecimal bHappenAmt;
 
+    /**
+     * 记账顺序
+     */
+    private String accountOrder;
+
+    /**
+     * 分录类型
+     */
+    private String recordType;
+
+    /**
+     * 业务类型
+     */
+    private String busiType;
 
     /**
      * 获取 凭证流水号
@@ -332,7 +349,7 @@ public class ValManualVoucher001Dto extends BaseEntity implements ProcessEntity 
     /**
      * 设置 凭证编号
      * 
-     * @param busVouchnum 凭证编号
+     * @param bookId 凭证编号
      */
     public void setBookId(String bookId) {
         this.bookId = bookId;
@@ -495,7 +512,7 @@ public class ValManualVoucher001Dto extends BaseEntity implements ProcessEntity 
     /**
      * 设置 凭证说明
      * 
-     * @param vouchRemark 凭证说明
+     * @param bookRemark 凭证说明
      */
     public void setBookRemark(String bookRemark) {
         this.bookRemark = bookRemark;
@@ -657,6 +674,123 @@ public class ValManualVoucher001Dto extends BaseEntity implements ProcessEntity 
 	public void setProfitType(String profitType) {
 		this.profitType = profitType;
 	}
-	
-	
+
+    public String getAccountOrder() {
+        return accountOrder;
+    }
+
+    public void setAccountOrder(String accountOrder) {
+        this.accountOrder = accountOrder;
+    }
+
+    public String getAccountOrderFmt() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.记账顺序, accountOrder))?
+                SysDataUtil.getNameFromDataDict(DictCode.记账顺序, accountOrder):accountOrder;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
+    }
+
+    public String getBusiType() {
+        return busiType;
+    }
+
+    public void setBusiType(String busiType) {
+        this.busiType = busiType;
+    }
+
+    /**
+     * 业务类型
+     */
+    private String finprodType;
+
+    public String getFinprodType() {
+        return finprodType;
+    }
+
+    public void setFinprodType(String finprodType) {
+        this.finprodType = finprodType;
+    }
+
+    /**
+     * 自定义现金流编号
+     */
+    private String cashId;
+
+    public String getCashId() {
+        return cashId;
+    }
+
+    public void setCashId(String cashId) {
+        this.cashId = cashId;
+    }
+
+    /**
+     * 投资目的
+     */
+    private String invAim;
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
+    }
+    /*add by sunshuaishuai 20210303 start*/
+    private String tmpCode;
+
+    public String getTmpCode() {
+        return tmpCode;
+    }
+
+    public void setTmpCode(String tmpCode) {
+        this.tmpCode = tmpCode;
+    }
+
+    /**
+     * 分录信息
+     */
+    private List<ValManualVoucher002Dto> listAddDto = new ArrayList<ValManualVoucher002Dto>();
+
+    public List<ValManualVoucher002Dto> getListAddDto() {
+        return listAddDto;
+    }
+
+    public void setListAddDto(List<ValManualVoucher002Dto> listAddDto) {
+        this.listAddDto = listAddDto;
+    }
+
+    /**
+     * 操作类型
+     */
+    private String operateType;
+
+    public String getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(String operateType) {
+        this.operateType = operateType;
+    }
+
+    /**
+     * 选中的数据
+     */
+    private transient List<ValManualVoucher001Dto> selectedItem;
+
+    public List<ValManualVoucher001Dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<ValManualVoucher001Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    /*add by sunshuaishuai 20210303 end*/
 }

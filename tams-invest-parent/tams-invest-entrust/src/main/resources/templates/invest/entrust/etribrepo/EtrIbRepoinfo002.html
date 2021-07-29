@@ -19,6 +19,10 @@
                     <input type="hidden" id="ccy" name="ccy" value="CNY" />
                     <input type="hidden" id="tradeMarket" name="tradeMarket" value="01" />
                     <input type="hidden" id="secManageAcctId" name="secAcctId" th:value="${entity?.secAcctId}">
+                    <div class="layui-tab-item layui-show" style="height:30px;" id="cash_div">
+                        <iframe th:src="@{/invest/entrust/EtrCommonController/initCash}" width="100%"
+                                height="100%" frameborder="0" style="border:none;"></iframe>
+                    </div>
                     <div class="layui-form-item">
                         <div class="form-inline-wrap"  style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbRepoinfo002.portfolioId}">组合名称</label>

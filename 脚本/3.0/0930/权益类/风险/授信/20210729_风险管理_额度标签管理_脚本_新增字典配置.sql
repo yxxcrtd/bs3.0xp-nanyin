@@ -1,0 +1,10 @@
+-- ----------------------------
+-- Table structure for SYS_DATADICT
+-- ----------------------------
+INSERT INTO SYS_DATADICT ("DICT_CODE", "SYSTEM_CODE", "DICT_CNNAME", "DICT_ENNAME", "UPDATE_FLG", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('CREDIT_USING_TYPE', 'RSK', '授信占用方式', NULL, '02', 'system', NULL, SYSDATE, 'system', SYSDATE);
+
+-- ----------------------------
+-- Table structure for SYS_DATADICT_LIST
+-- ----------------------------
+INSERT INTO SYS_DATADICT_LIST ("DICT_CODE", "ITEM_CODE", "ITEM_VALUE", "ORDER_NO", "DEFAULT_VALUE", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('CREDIT_USING_TYPE', '01', '机构授信', '1', '0', 'system', NULL, SYSDATE, 'system', SYSDATE);
+INSERT INTO SYS_DATADICT_LIST ("DICT_CODE", "ITEM_CODE", "ITEM_VALUE", "ORDER_NO", "DEFAULT_VALUE", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('CREDIT_USING_TYPE', '02', '资产授信', '2', '0', 'system', NULL, SYSDATE, 'system', SYSDATE);

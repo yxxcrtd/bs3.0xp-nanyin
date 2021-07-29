@@ -11,16 +11,16 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dao.ValManualVoucher002Mapper;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher002Dto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 手工凭证详情查看service
@@ -65,5 +65,10 @@ public class ValManualVoucher002Service extends CommonExportService<ValManualVou
         dto.setId(selectId);
         dto.setText(text);
         return dto;
+    }
+
+    public ValManualVoucher001Dto getBySeqno(String seqno) {
+        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher002/getBySeqno", seqno, ValManualVoucher001Dto.class);
+//        return valManualVoucher003Mapper.getBySeqno(seqno);
     }
 }

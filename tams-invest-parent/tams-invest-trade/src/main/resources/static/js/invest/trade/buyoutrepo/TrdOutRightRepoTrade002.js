@@ -3,6 +3,7 @@
 	/**
 	 * 资产代码
 	 */
+	var unitNum;
 	var secIdChangeAction = function(){
 		$('#TrdOutRightRepoTrade002_finprodName').val($("#TrdOutRightRepoTrade002_finprodId").select2('data')[0].id);
 	};
@@ -362,7 +363,7 @@
      * 首次结算金额=券面总额*首次全价/100
      */
     var calc3 = function(){
-    	var secTotalPrin = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*10000;
+    	var secTotalPrin = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*unitNum;
     	var fFprice = $('#TrdOutRightRepoTrade002_fFprice').val();
     	if (fFprice && fFprice != '' && secTotalPrin && secTotalPrin != ''){
     		$('#TrdOutRightRepoTrade002_fSettleAmt').val(JoyinMath.doDiv(JoyinMath.doMul(secTotalPrin, fFprice), 100)).trigger('change').trigger('blur');
@@ -376,7 +377,7 @@
      * 到期结算金额=券面总额*到期全价/100
      */
     var calc4 = function(){
-    	var secTotalPrin = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*10000;
+    	var secTotalPrin = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*unitNum;
     	var mFprice = $('#TrdOutRightRepoTrade002_mFprice').val();
     	if (mFprice && mFprice != '' && secTotalPrin && secTotalPrin != ''){
     		$('#TrdOutRightRepoTrade002_mSettleAmt').val(JoyinMath.doDiv(JoyinMath.doMul(secTotalPrin, mFprice, 8), 100, 8)).trigger('change').trigger('blur');
@@ -563,7 +564,7 @@
 
 		paramObj.portfolioId = $('#TrdOutRightRepoTrade002_pltId').val();
 		paramObj.finprodId = $('#TrdOutRightRepoTrade002_finprodId').val();
-		paramObj.tradeAmt = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*10000;
+		paramObj.tradeAmt = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*unitNum;
 		paramObj.invAim = INV_AIM_TC;
 		paramObj.tradeMarketMode = TRADE_PLACE_SEC;
 		paramObj.calculateField = 'unitCprice';
@@ -587,7 +588,7 @@
 		}
 		//add by zhangniann 20200106  start
 		paramObj.calendarId = $('#TrdOutRightRepoTrade002_dealCalId').val();
-		paramObj.secTotalPrin = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*10000;
+		paramObj.secTotalPrin = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*unitNum;
 		paramObj.mdate = $('#TrdOutRightRepoTrade002_mdate').val();
 		//add by zhangnian  20200106  end
         return paramObj;
@@ -746,7 +747,7 @@
 
 	        // 资产可用持仓
 	        object.assetPosition = $("#bussTrdOutRightRepoTrade_assetPosition").val();
-			object.secTotalPrin = JoyinMath.doMul(object.secTotalPrin, 10000, 2);
+			object.secTotalPrin = JoyinMath.doMul(object.secTotalPrin, unitNum, 2);
 			if (object.secTotalPrin == "NaN") {
 				object.secTotalPrin = 0;
 			}
@@ -828,6 +829,14 @@
 	}
 
     var init = function(){
+		//配置单位 edit by yeming 20210726 start
+		if(entrustAmtUnit == '01' ){
+			$(".unitNum").text('元');
+			unitNum = 1;
+		}else{
+			unitNum = 10000;
+		}
+		//配置单位 edit by yeming 20210726 start
     	if(pageModel == PAGE_MODEL_REFERENCE&&!$('#workflowId').val()){
 			$('#calcModel_div').hide();
 		}
@@ -1379,7 +1388,7 @@
 							$('#TrdOutRightRepoTrade002_finprodId').attr('disabled',false);
 						}
 						if(result.facetotalamt){
-							var number = result.facetotalamt/10000;
+							var number = result.facetotalamt/unitNum;
 							$('#TrdOutRightRepoTrade002_secTotalPrin').val(number).trigger('blur').trigger('change');//卷面总额
                             if($('#TrdOutRightRepoTrade002_secTotalPrin').val()){
                                 $('#TrdOutRightRepoTrade002_secTotalPrin').attr('disabled', true);

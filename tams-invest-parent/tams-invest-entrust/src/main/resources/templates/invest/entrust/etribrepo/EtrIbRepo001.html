@@ -96,18 +96,18 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<div class="layui-tab" lay-filter="tradePlatform">
+		<div class="layui-tab" lay-filter="tradePlatform" style="display: none">
 			<ul class="layui-tab-title">
-				<li class="layui-this">指令管理</li>
-				<li th:if="${repo_pledge_model} =='03' ">质押券管理</li>
-				<li th:if="${repo_pledge_model} =='01' or${repo_pledge_model} =='02' ">质押券管理</li>
+				<li th:attr="title=${#strings.contains(DYN_INFO,'ZLGL')}" class="layui-this ZLGL">指令管理</li>
+				<li th:attr="title=${#strings.contains(DYN_INFO,'ZYQGL')}" th:if="${repo_pledge_model} =='03' " class="ZYQGL">质押券管理</li>
+				<li th:attr="title=${#strings.contains(DYN_INFO,'ZYQGL')}" th:if="${repo_pledge_model} =='01' or${repo_pledge_model} =='02' " class="ZYQGL">质押券管理</li>
 			</ul>
 			<div class="layui-tab-content">
 				<!-- 指令管理 -->
 				<div class="layui-tab-item layui-show">
 					<div class="layui-col-md12 form-button-area cc-transfer-form">
-						<!-- <a id="EtrIbRepo001_btn_import" class="layui-btn layui-btn-sm btn-import">
-							<i class="iconfont icon-import"></i><span data-th-text="#{EtrInvestBondInfo001.import}"></span></a> -->
+						<a id="EtrIbRepo001_btn_import" class="layui-btn layui-btn-sm btn-import">
+							<i class="iconfont icon-import"></i><span data-th-text="#{EtrInvestBondInfo001.import}"></span></a>
 						<a id="EtrIbRepo001_btn_close" class="layui-btn layui-btn-sm"><i class="iconfont icon-close"></i><span data-th-text="#{SysCommon.close}"></a>
 						<a id="EtrIbRepo001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke"><i class="iconfont icon-revoke"></i><span data-th-text="#{ETR_REVERT}"></a>
 					</div>

@@ -80,7 +80,36 @@
                             </div>
                         </div>
                         <!--  add by wangyang1 【吉林银行】 增加 产品经理 end -->
+						<!--  add by swwan 【重庆银行】 增加 业务类型  2021年7月20日 start -->
+						<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
+							<label class="layui-form-label form-lable"
+								   data-th-text="#{PtlRepoPledgeSearch001.finprodType2}">业务类型</label>
+							<div class="layui-input-inline input-inline">
+								<select type="text" name="finprodType2" id="finprodType2"
+										class="layui-input form-input input-select"
+										allowClear="true" data-th-data-result='${BusiType}' multiple="true"
+										formatoption="true" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+										>
+								</select>
+							</div>
+						</div>
+						<!--  add by swwan 【重庆银行】 增加 业务类型  2021年7月20日 end -->
 					</div>
+					<!--  add by swwan 【重庆银行】 增加 交易对手  2021年7月22日 start -->
+					<div class="layui-form-item">
+						<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
+							<label class="layui-form-label form-lable"
+								   data-th-text="#{PtlRepoPledgeSearch001.counter}">交易对手</label>
+							<div class="layui-input-inline input-inline">
+								<select type="text" id="counter" name="counter" placeholder="请输入内容"
+										data-th-placeholder="#{SysCommon.placeholder}" class="layui-input form-input input-select"
+										data-th-data-url="@{/invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch001/getCounter}"
+										allowClear="true" multiple="true" formatoption="true">
+								</select>
+							</div>
+						</div>
+					</div>
+					<!--  add by swwan 【重庆银行】 增加 交易对手  2021年7月22日 end -->
 				</form>
 						</div>
 						<div>

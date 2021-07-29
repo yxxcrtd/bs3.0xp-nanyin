@@ -2,46 +2,56 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
     namespace="com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dao.ValManualVoucher003Mapper">
-   
+   <!--modify by sunshuaishuai 20210302 编辑时获取信息 start-->
    	<select id="getBySeqno" resultType="com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto" >
-	    SELECT 
-            bk.SEQNO as seqno,
-            bk.BOOK_DATE as bookDate,
-            bk.HAPPEN_DATE as happenDate,
-            bk.BOOKSET_ID AS booksetId,
-            bb.BOOKSET_NAME as booksetName, 
-            bk.BOOK_ID as bookId,
-            bk.SUBJECT_NO as subjectNo,
-            bs.SUBJECT_NAME AS subjectName,
-            bk.CD_FLAG AS cdFlag,
-            bk.O_CCY AS ccy,
-            bk.O_HAPPEN_AMT as happenAmt,
-            bk.HAPPEN_NUMBER as happenNumber,
-            bk.TABLE_ID as tableId,
-            bk.BUSI_ID as busiId,
-            fp.FINPROD_ABBR as busiName,
-            bk.TRADE_ID as tradeId,
-            fpd.P_TRADE_ID AS pTradeId,
-            bk.OFFSET_FLAG AS offsetFlag,
-            bk.BOOK_REMARK as bookRemark
-            <!-- add by wujie on 20201112 start -->
-            ,NVL(fp.PROFIT_TYPE,'02') AS profitType
-            <!-- add by wujie on 20201112 end -->
-        FROM BOK_BOOKDETAIL_CURRENT bk 
-        LEFT JOIN  BOK_BOOKSET bb 
-            on bk.BOOKSET_ID = bb.BOOKSET_ID
-        LEFT JOIN BOK_TABLELIST bt
-            on bt.TABLE_ID = bk.TABLE_ID
-        LEFT JOIN BOK_SUBJECT bs
-            ON bs.BOOKSET_ID = bb.BOOKSET_ID_TMPL
-            AND bs.SUBJECT_NO = bk.SUBJECT_NO
-        LEFT JOIN FIN_PRODUCT fp
-                ON fp.FINPROD_ID = bk.BUSI_ID
-        LEFT JOIN TRD_PRODUCT_DEAL fpd
-                ON fpd.TRADE_ID = bk.TRADE_ID    
-        WHERE   bk.SEQNO = #{seqno}
+		select
+			DEAL.TRADE_ID as seqno,   			<!--凭证流水号-->
+			DEAL.BOOK_DATE as bookDate, 		<!--入账日期-->
+			DEAL.BOOKSET_ID AS booksetId,		<!--账套代码-->
+			DEAL.BOOK_ID as bookId,			<!--凭证编号-->
+			DEAL.OFFSET_FLAG AS offsetFlag,	<!--冲销标识-->
+			DEAL.RECORD_TYPE   AS recordType,	<!--分录类型-->
+			DEAL.BUSI_ID as busiId,			<!--资产/负债代码-->
+			DEAL.BUSI_DETAIL_TYPE as finprodType,<!--业务类型-->
+			DEAL.BUSI_TYPE as busiType,			<!--业务类型-->
+			DEAL.BOOK_REMARK AS bookRemark,    	<!--摘要（凭证说明）-->
+			DEAL.P_TRADE_ID AS cashId,			<!--原始业务编号-->
+			DEAL.ACCOUNT_ORDER AS accountOrder, 	<!--记账顺序-->
+			DEAL.INV_AIM as invAim,
+			'' as tmpCode,
+			NVL(FIN.FINPROD_ABBR,BALI.LAYERING_NAME) as BUSI_NAME,
+			NVL(FIN.PROFIT_TYPE,'02') AS profitType
+		from TRD_VOUCH_DEAL DEAL
+		left join FIN_PRODUCT FIN on FIN.FINPROD_ID=DEAL.BUSI_ID AND FIN.FINPROD_TYPE = DEAL.BUSI_DETAIL_TYPE
+		LEFT JOIN BOK_ACCT_LAYERING_INFO BALI ON BALI.LAYERING_ID=DEAL.BUSI_ID
+		where TRADE_ID=#{seqno}
     </select>
-    
+	<select id="searchList1" resultType="com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto" >
+		SELECT
+			bk.SEQ_NO AS seqno,
+			bk.BUSI_ID AS busiId,
+			bk.SUBJECT_NO AS subjectNo,
+			bk.SUBJECT_NAME AS subjectName,
+			bk.DETAIL_SUBJECT_NO_TAIL AS detailSubjectNo,
+			bk.DETAIL_SUBNAME_TAIL AS detailSubjectName,
+			bk.CD_FLAG AS cdFlag,
+			bk.CCY AS ccy,
+			bk.O_HAPPEN_AMT AS happenAmt,
+			CASE WHEN bk.CD_FLAG ='C' THEN bk.O_HAPPEN_AMT ELSE NULL END cAmt,
+			CASE WHEN bk.CD_FLAG ='D' THEN bk.O_HAPPEN_AMT ELSE NULL END dAmt,
+			bk.HAPPEN_NUMBER AS happenNumber,
+			bk.B_HAPPEN_AMT AS bHappenAmt,
+			CASE WHEN bk.CD_FLAG ='C' THEN bk.B_HAPPEN_AMT ELSE NULL END bcHappenAmt,
+			CASE WHEN bk.CD_FLAG ='D' THEN bk.B_HAPPEN_AMT ELSE NULL END bdHappenAmt,
+			bk.BRANCH AS branch,
+			CASE WHEN bs.BASE_SUBJECT_NATURE='XJ' or bk.SUBJECT_NO in('10020101','10020201','10210101','10310101','10310201','10310301')
+				THEN bk.BUSI_ID ELSE NULL END acctCode
+		FROM TRD_VOUCH_DEAL_DETAIL bk
+		LEFT JOIN BOK_BOOKSET bb ON bb.BOOKSET_ID=bk.BOOKSET_ID
+		LEFT JOIN BOK_SUBJECT bs ON bs.BOOKSET_ID=bb.BOOKSET_ID_TMPL AND bk.SUBJECT_NO =bs.SUBJECT_NO
+		WHERE bk.TRADE_ID  = #{seqno}
+	</select>
+    <!--modify by sunshuaishuai 20210302 end-->
     <select id="getSubjectNo" resultType="com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003SubjectDto">
 	    SELECT 
 	    	*
@@ -57,9 +67,7 @@
 			FROM 
 			    BOK_SUBJECT
 			WHERE BOOKSET_ID = #{booksetId}
-				AND CONNECT_BY_ISLEAF = 1
-				CONNECT BY FSUBJECT_ID = PRIOR SUBJECT_NO
-                AND BOOKSET_ID = PRIOR BOOKSET_ID
+
 	  	) TMP
 	  	WHERE
 	  	  TMP.subjectNo = #{subjectNo}
@@ -158,10 +166,13 @@
     <select id='getBooksetCapacctInfo' resultType="com.joyintech.framework.select.SuggestDto">
     	SELECT
 		    BCI.ACCT_NO AS code,
-		    BCI.ACCT_NO AS name,
-		    BCI.ACCT_NO AS shortName,
+			<!--MODIFY BY sunshuaishuai 20210312 start	-->
+			SCI.ACCT_NAME AS name,
+			SCI.ACCT_NAME AS shortName,
 		    BCI.ACCT_NO AS hidCode
 		FROM BOK_BOOKSET_CAPACCT_INFO BCI
+		LEFT JOIN STL_CAPACCT_INFO SCI ON BCI.ACCT_NO=SCI.ACCT_NO
+		<!--MODIFY BY sunshuaishuai 20210312 end	-->
 		WHERE BCI.BOOKSET_ID = #{booksetId}
     </select>
     
@@ -276,14 +287,23 @@
             </if>
     </select>
     
-    <!-- modify by dongjun on 20181211 start -->
-    <select id="getAcctNo" resultType="java.lang.String">
-    	SELECT ACCT_NO FROM BOK_BOOKSET_CAPACCT_INFO 
-    	WHERE BOOKSET_ID = #{booksetId}
-    	AND ACCT_TYPE = #{acctType}
-    	AND CCY = #{ccy}
+    <!-- moidfy by sunshuaishuai on 20210312 start -->
+    <select id="getAcctNa" resultType="java.lang.String">
+		SELECT
+			ACCT_NAME AS acctName
+		FROM STL_CAPACCT_INFO
+		WHERE ACCT_NO = #{acctNo}
     </select>
-    <!-- modify by dongjun on 20181211 end -->
+    <!-- moidfy by sunshuaishuai on 20210312 end-->
+
+	<!-- modify by dongjun on 20181211 start -->
+	<select id="getAcctNo" resultType="java.lang.String">
+		SELECT ACCT_NO FROM BOK_BOOKSET_CAPACCT_INFO
+		WHERE BOOKSET_ID = #{booksetId}
+		AND ACCT_TYPE = #{acctType}
+		AND CCY = #{ccy}
+	</select>
+	<!-- modify by dongjun on 20181211 end -->
     
     <!-- modify by dongjun on 20181214 start -->
     <select id="querySubjectNo" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -364,5 +384,64 @@
   		 AND P.FINPROD_TYPE = #{busiDetailType}
 		 <!-- modify by wujie on 20201111 end -->
     </select>
-    
+
+	<!-- 下拉查询模板代码 add by sunshuaishuai 20210224 start-->
+	<select id="getTmpCode" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT
+			TMP_CODE code,
+			TMP_NAME name,
+			TMP_NAME shortName,
+			TMP_CODE hidCode
+		FROM VAL_MANUAL_VOUCHER_TMP
+		where 1=1
+		<if test="param !=null and param != ''">
+			AND	(TMP_CODE like concat('%',concat(#{param},'%'))
+			OR TMP_NAME like concat('%',concat(#{param},'%')))
+		</if>
+		order by TMP_CODE
+	</select>
+	<!--  add by sunshuaishuai 20210224 end-->
+	<!--add by sunshuaishuai 20210303 start-->
+	<select id="quickInput" resultType="com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucherTemplete003Dto">
+		SELECT
+			BUSI_TYPE busiType,
+			RECORD_TYPE recordType,
+			REMARK remark
+		FROM VAL_MANUAL_VOUCHER_TMP
+		where 1=1
+		<if test="tmpCode !=null and tmpCode != ''">
+			AND	TMP_CODE=#{tmpCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="quickInputList" resultType="com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucherTemplete003AddDto">
+		select
+			DETAIL.SUBJECT_NO subjectNo,
+			DETAIL.SUBJECT_NAME subjectName,
+			DETAIL.CD_FLAG cdFlag,
+			DETAIL.CCY ccy,
+			DETAIL.O_HAPPEN_AMT oHappenAmt,
+			CASE WHEN DETAIL.CD_FLAG ='C' THEN DETAIL.O_HAPPEN_AMT ELSE NULL END cAmt,
+			CASE WHEN DETAIL.CD_FLAG ='D' THEN DETAIL.O_HAPPEN_AMT ELSE NULL END dAmt,
+			DETAIL.HAPPEN_NUMBER happenNumber
+		FROM VAL_MANUAL_VOUCHER_TMP VMVT
+		LEFT JOIN VAL_MANUAL_VOUCHER_TMP_DETAIL DETAIL ON VMVT.TMP_CODE =DETAIL.TMP_CODE
+		where  VMVT.TMP_CODE=#{tmpCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="checkTmpCode" resultType="java.lang.String">
+		select
+			TMP_NAME tmpName
+		FROM VAL_MANUAL_VOUCHER_TMP
+		where  TMP_CODE=#{tmpCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getNatureInfo" resultType="java.lang.String">
+		SELECT
+			BASE_SUBJECT_NATURE baseSubjectNature
+		FROM BOK_SUBJECT
+		WHERE  BOOKSET_ID=#{booksetIdTmpl,jdbcType=VARCHAR}
+			   AND SUBJECT_NO=#{subNo,jdbcType=VARCHAR}
+	</select>
+	<!--add by sunshuaishuai 20210303 end-->
 </mapper>

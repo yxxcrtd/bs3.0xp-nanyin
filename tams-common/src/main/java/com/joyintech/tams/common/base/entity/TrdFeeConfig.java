@@ -142,6 +142,11 @@ public class TrdFeeConfig extends BaseEntity {
     private String isMlti;
 
     /**
+     * 资金账户
+     */
+    private String capitalAccountNo;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -572,5 +577,20 @@ public class TrdFeeConfig extends BaseEntity {
      */
     public void setIsMlti(String isMlti) {
         this.isMlti = isMlti == null ? null : isMlti.trim();
+    }
+
+    /**
+     * 取得 资金账户
+     * @return 资金账户
+     */
+    public String getCapitalAccountNo() {
+        return capitalAccountNo;
+    }
+    /**
+     * 设置 资金账户
+     * @param capitalAccountNo 资金账户
+     */
+    public void setCapitalAccountNo(String capitalAccountNo) {
+        this.capitalAccountNo = capitalAccountNo;
     }
 }

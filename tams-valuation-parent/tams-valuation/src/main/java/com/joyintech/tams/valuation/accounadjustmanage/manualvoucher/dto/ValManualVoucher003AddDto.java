@@ -10,23 +10,20 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto;
 
-import java.math.BigDecimal;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import org.apache.commons.lang.StringUtils;
+
+import java.math.BigDecimal;
 
 /**
  * 手工凭证添加到表格校验Dto
  * 
  * @author weipeng
  * @version 1.0 2018年7月11日
- * @see ValManualVoucher003SearchDto
+ * @see ValManualVoucher003AddDto
  * @since 1.0
  */
 public class ValManualVoucher003AddDto extends BaseEntity {
@@ -156,6 +153,16 @@ public class ValManualVoucher003AddDto extends BaseEntity {
      * 本币借方金额
      */
     private BigDecimal bdHappenAmt;
+
+    /**
+     * 金额
+     */
+    private BigDecimal happenAmt;
+
+    /**
+     * 本币金额
+     */
+    private BigDecimal bHappenAmt;
 
     /**
      * 获取 科目号
@@ -589,7 +596,12 @@ public class ValManualVoucher003AddDto extends BaseEntity {
 	public void setBdHappenAmt(BigDecimal bdHappenAmt) {
 		this.bdHappenAmt = bdHappenAmt;
 	}
-	
 
+    public BigDecimal getHappenAmt() {
+        return happenAmt;
+    }
 
+    public void setHappenAmt(BigDecimal happenAmt) {
+        this.happenAmt = happenAmt;
+    }
 }

@@ -218,23 +218,27 @@
             if (query('#priceModel').val() == PRICEMODEL_03) {
                 // 净价置灰不可填
                 query('#price').val('').attr("required", false).attr('disabled', true);
+                query("#calculateField_price").prop('checked', false).attr('disabled', true);
                 // 全价置灰不可填
                 query('#fpriceAmt').val('').attr('disabled', true);
 
                 // 到期收益率
                 query('#matureYield').val('').attr('disabled', true);
-
+                query("#calculateField_matureYield").prop('checked', false).attr('disabled', true);
+                
                 // 行权收益率
-                query('#exerYield').val('').attr('disabled', true);
+                doOther.exerYield_setDisabled(true);
 
             } else {
                 // 净价必填
                 query('#price').attr('disabled', false).attr("required", true);
+                query("#calculateField_price").attr('disabled', false);
                 // 全价 可填
                 query('#fpriceAmt').attr('disabled', false);
 
                 query('#matureYield').attr('disabled', false);
-
+                query("#calculateField_matureYield").attr('disabled', false);
+                
                 // 行权收益率
                 doOther.exerYield_setDisabled(false);
             }
@@ -345,6 +349,7 @@
             }
             // 画星星
             doOther.star();
+            layui.form.render(); // reload layui
         }
     };
 
@@ -754,7 +759,7 @@
 
             objects.push(temp);
         }
-        if(tradeAmt !== parseFloat(object.tradeAmt)){
+        if(tradeAmt && tradeAmt !== parseFloat(object.tradeAmt)){
             JoyinUtil.showMessage("多组合劵面总额不等！" + tradeAmt + ":" + parseFloat(object.tradeAmt), "error")
             return null;
         }

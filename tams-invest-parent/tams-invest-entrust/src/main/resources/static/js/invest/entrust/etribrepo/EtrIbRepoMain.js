@@ -347,6 +347,6 @@ function importEtr() {
             },1000);
         });
     },function() {
-    	zlglTable.reload();
+    	// zlglTable.reload();
     });
 };

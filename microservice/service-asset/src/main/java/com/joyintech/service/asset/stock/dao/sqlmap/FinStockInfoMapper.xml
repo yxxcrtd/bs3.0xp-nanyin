@@ -30,7 +30,7 @@
         (select a.S_SHARES ,a.c_shares,a.shares_id,a.deal_date from (
         select max(deal_date) deal_date,shares_id  from mst_share_price
         where
-        deal_date <![CDATA[<]]> #{sysDate}
+        deal_date <![CDATA[<]]> TO_DATE(#{sysDate,jdbcType=VARCHAR},'YYYY-MM-DD')
         group by shares_id
         ) b  left join 
          mst_share_price a
@@ -131,7 +131,7 @@
         MST_SHARE_PRICE b
         WHERE
         A .SHARES_ID = b.SHARES_ID
-        AND DEAL_DATE <![CDATA[<]]> #{sysDate}
+        AND DEAL_DATE <![CDATA[<]]> TO_DATE(#{sysDate,jdbcType=VARCHAR},'YYYY-MM-DD')
         GROUP BY
         SHARES_ID
         )
@@ -193,7 +193,7 @@
         MST_SHARE_PRICE b
         WHERE
         A .SHARES_ID = b.SHARES_ID
-        AND DEAL_DATE <![CDATA[<]]> #{sysDate,jdbcType=VARCHAR}
+        AND DEAL_DATE <![CDATA[<]]> TO_DATE(#{sysDate,jdbcType=VARCHAR},'YYYY-MM-DD')
         GROUP BY
         SHARES_ID
         )
@@ -228,7 +228,7 @@
         MST_SHARE_PRICE b
         WHERE
         A .SHARES_ID = b.SHARES_ID
-        AND DEAL_DATE <![CDATA[<]]> #{sysDate}
+        AND DEAL_DATE <![CDATA[<]]> TO_DATE(#{sysDate,jdbcType=VARCHAR},'YYYY-MM-DD')
         GROUP BY
         SHARES_ID
         )

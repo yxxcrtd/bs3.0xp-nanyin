@@ -10,22 +10,6 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -36,6 +20,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.BokBooksetDateMapper;
 import com.joyintech.tams.common.base.entity.BokBooksetDate;
 import com.joyintech.tams.constant.DictCode;
@@ -43,13 +28,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.BokDetailIdDto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddValidatorDto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003CheckValidatorDto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003Dto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003SubjectDto;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.*;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher003Service;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
@@ -58,6 +37,21 @@ import com.joyintech.tams.valuation.common.service.BaseCommonService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 新建-手工凭证
@@ -85,10 +79,12 @@ public class ValManualVoucher003Controller extends BaseController {
     @Autowired
     private BokBooksetDateMapper bokBooksetDateMapper;
 
+    private String seq;
+
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.会计场景代码, DictCode.币种, DictCode.冲正标识,
-            DictCode.借贷方向, DictCode.投资目的, DictCode.分录类型, DictCode.金融产品类型);
+            DictCode.借贷方向, DictCode.投资目的, DictCode.分录类型, DictCode.金融产品类型 ,DictCode.记账顺序);
         // 获取业务类型
         // 获取 金融产品类型 数据字典
         SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.金融产品类型, null);
@@ -124,11 +120,13 @@ public class ValManualVoucher003Controller extends BaseController {
         
         // 工作流ID
         String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);
-        
-        // 判断是修改操作还是新建操作
+
+        String operateType = getParam("operateType");
+        // 修改
         String seqno = getParam("seqno");
-        if (StringUtil.isNotEmpty(seqno)) {
+        if (StringUtil.isNotEmpty(seqno) && !"copy".equals(operateType)) {
             ValManualVoucher001Dto entity = valManualVoucher003Service.getBySeqno(seqno);
+            setSeq(entity.getSeqno());
             model.addAttribute("entity", entity);
             // 冲销标志默认值
             model.addAttribute("offsetFlag", entity.getOffsetFlag());
@@ -136,7 +134,11 @@ public class ValManualVoucher003Controller extends BaseController {
             model.addAttribute("cdFlag", entity.getCdFlag());
             // 入账日期默认为系统平台日
             model.addAttribute("sysDate", entity.getBookDate());
-        }
+            //操作类型标识
+            model.addAttribute("optType","modify");
+            model.addAttribute("busiName", entity.getBusiName());
+            model.addAttribute("busiDetailType", entity.getFinprodType());
+        }//流程中
         else if(StringUtil.isNotEmpty(workflowId)){
             ValManualVoucher003Dto entity= valManualVoucher003Service.getBussinessEntityByWorkflowId(workflowId);
 
@@ -151,6 +153,24 @@ public class ValManualVoucher003Controller extends BaseController {
             model.addAttribute("busiName", entity.getBusiName());
             model.addAttribute("busiDetailType", entity.getBusiDetailType());
         }
+        //add by sunshuaishuai 20210225 复制 start
+        else if(StringUtil.isNotEmpty(seqno) && operateType.equals("copy")){
+            ValManualVoucher001Dto entity = valManualVoucher003Service.getBySeqno(seqno);
+            setSeq(entity.getSeqno());
+            entity.setSeqno("");
+            model.addAttribute("entity", entity);
+            // 冲销标志默认值
+            model.addAttribute("offsetFlag", entity.getOffsetFlag());
+            // 借贷方向设一个默认值
+            model.addAttribute("cdFlag", entity.getCdFlag());
+            // 入账日期默认为系统平台日
+            model.addAttribute("sysDate", entity.getBookDate());
+            //操作类型标识
+            model.addAttribute("optType","copy");
+            model.addAttribute("busiName", entity.getBusiName());
+            model.addAttribute("busiDetailType", entity.getFinprodType());
+        }
+        //add by sunshuaishuai 20210225 end
         else {
             // 冲销标志默认值
             model.addAttribute("offsetFlag", DictCodeList.冲正标识_正常交易.getValue());
@@ -159,6 +179,8 @@ public class ValManualVoucher003Controller extends BaseController {
             // 入账日期默认为系统平台日
             model.addAttribute("sysDate",
                 DateUtil.format(baseCommonService.getSysDate(), "yyyy-MM-dd"));
+            //操作类型标识
+            model.addAttribute("optType","new");
         }
         
         return super.init(model);
@@ -412,9 +434,13 @@ public class ValManualVoucher003Controller extends BaseController {
         // 启动流程
         ProcessParameter<ValManualVoucher003Dto> proParam = new ProcessParameter<>();
         WorkFlowParameter<ValManualVoucher003Dto> params = new WorkFlowParameter<>();
-        
+
+        String s="手工凭证修改：";
         //设置主键，即【即TRD_VOUCH_DEAL（手工凭证交易表）中的TRADE_ID（交易编号）】
-        dto.setSeqno(interfCommonService.getTradeid("T28", dto.getBookDate(), "A"));
+        if(!StringUtil.isNotEmpty(dto.getSeqno())){
+            dto.setSeqno(interfCommonService.getTradeid("T28", dto.getBookDate(), "A"));
+            s="手工凭证新建：";
+        }
         
         // 业务代码（凭证流水号）
         params.setBusinessCode(dto.getSeqno());
@@ -426,7 +452,8 @@ public class ValManualVoucher003Controller extends BaseController {
         params.setElementId(this.getParam(GlobalConstant.ELEMENT_ID));
         
         //设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> WorkFlowUtil.concatComment("手工凭证新建：",
+        String finalS = s;
+        params.setComment(entity -> WorkFlowUtil.concatComment(finalS,
             entity.getSeqno(),//凭证流水号
             DateUtil.format(entity.getBookDate()),//记账日期
             entity.getBooksetId()//账套代码
@@ -479,13 +506,38 @@ public class ValManualVoucher003Controller extends BaseController {
         Map<String,Object> map=RequestUtil.getPageParam();
         
         String workflowId = (String)map.get("workflowId");
+
+        String tmpCode = String.valueOf(map.get("tmpCode"));
+
+        String seqno=getSeq();
         
         //根据流程id获取对应的凭证新建时的分录信息
         if(workflowId!=null && workflowId.length()>0){
             ValManualVoucher003Dto entity= valManualVoucher003Service.getBussinessEntityByWorkflowId(workflowId);
             returnList = entity.getListAddDto();
         }
-
+        //add by sunshuaishuai 编辑，复制时加载表格 20210226 start
+        else if(!StringUtil.isNotEmpty(workflowId) && seqno!=null && seqno.length()>0){
+            List<ValManualVoucher003AddDto> entity = valManualVoucher003Service.searchList1(seqno);
+            returnList = entity;
+            setSeq("");
+        }else if(StringUtil.isNotEmpty(tmpCode) &&  tmpCode!=null && !StringUtil.isNotEmpty(workflowId)){
+            List<ValManualVoucherTemplete003AddDto> list = valManualVoucher003Service.quickInputList(tmpCode);
+            List<ValManualVoucher003AddDto> dtoList=new ArrayList<ValManualVoucher003AddDto>();
+            for(ValManualVoucherTemplete003AddDto dto:list){
+                ValManualVoucher003AddDto addDto = new ValManualVoucher003AddDto();
+                addDto.setSubjectNo(dto.getSubjectNo());
+                addDto.setSubjectName(dto.getSubjectName());
+                addDto.setcAmt(dto.getcAmt());
+                addDto.setdAmt(dto.getdAmt());
+                addDto.setCcy(dto.getCcy());
+                addDto.setHappenNumber(dto.getHappenNumber());
+                addDto.setHappenAmt(dto.getoHappenAmt());
+                dtoList.add(addDto);
+            }
+            returnList = dtoList;
+        }
+        //add by sunshuaishuai end
         // 因为分录信息中的【分支序号】实体类中设置的类型为【Long】,当不传递值的时候，会默认给一个0。
         // 故判断当前分支序号若为0，显示为空
         if (returnList != null) {
@@ -570,4 +622,132 @@ public class ValManualVoucher003Controller extends BaseController {
             return new AjaxResult();
         }
     }
+
+    //add by sunshuaishuai 20210224 start
+    /**
+     * 检索模板代码
+     *
+     * @return 模板代码联想框内容
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getTmpCode")
+    public List<SuggestDto> getTmpCode() throws Exception {
+        return valManualVoucher003Service.getTmpCode(RequestUtil.getPageParam());
+    }
+
+
+    /**
+     * 快录
+     *
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/quickInput")
+    public ValManualVoucherTemplete003Dto quickInput() throws Exception {
+        return valManualVoucher003Service.quickInput(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 快录时，模板代码校验
+     *
+     * @return AjaxResult
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/checkTmpCode")
+    public AjaxResult checkTmpCode() throws Exception {
+        AjaxResult ajaxResult = new AjaxResult();
+        ArrayList<ValidMessage> errorList = new ArrayList<>();
+        String tmpCode = this.getParam("tmpCode");
+        String booksetId = this.getParam("booksetId");
+        //点击快录，检验账套是否为空
+        if(!StringUtil.isNotEmpty(booksetId)){
+            errorList.add(new ValidMessage(getMessage("MANUAL_VOUCHER_E_014")));
+            ajaxResult.setErrorList(errorList);
+            return ajaxResult;
+        }
+        //校验输入的模板代码是否有对应的模板
+        if(StringUtil.isNotEmpty(booksetId) && StringUtil.isNotEmpty(tmpCode)) {
+            String tmpName = valManualVoucher003Service.checkTmpCode(tmpCode);
+            if (StringUtil.isNotEmpty(tmpName)) {
+                ajaxResult.setData(tmpName);
+                return ajaxResult;
+            } else {
+                errorList.add(new ValidMessage(getMessage("MANUAL_VOUCHER_E_013")));
+                ajaxResult.setErrorList(errorList);
+                return ajaxResult;
+            }
+        }else{
+            errorList.add(new ValidMessage(getMessage("MANUAL_VOUCHER_E_015")));
+            ajaxResult.setErrorList(errorList);
+        }
+        return ajaxResult;
+    }
+
+    /**
+     * 快录时，科目尾号联动
+     *
+     * @return 科目尾号联动
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getDetailSubjectNo")
+    public AjaxResult getDetailSubjectNo() {
+        Map<String,Object> map=RequestUtil.getPageParam();
+        String booksetId = (String)map.get("booksetId");
+        String datas = this.getParam("datas");
+        String busiId=(String)map.get("busiId");
+        String finprodType=(String)map.get("finprodType") ;
+        List<ValManualVoucher003AddDto> listdto = null;
+        try {
+            listdto = JsonUtils.json2List(datas, ValManualVoucher003AddDto.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Map<String,String> params=new HashMap<>();
+        params.put("booksetId",booksetId);
+        params.put("busiId",busiId);
+        params.put("finprodType",finprodType);
+        List<ValManualVoucher003SubjectDto> list = new ArrayList<ValManualVoucher003SubjectDto>();
+        for(ValManualVoucher003AddDto dto : listdto){
+            ValManualVoucher003SubjectDto subjectDto=new ValManualVoucher003SubjectDto();
+            String subjectNo= dto.getSubjectNo();
+            String ccy=dto.getCcy();
+            params.put("subjectNo",subjectNo);
+            params.put("ccy",ccy);
+            if(StringUtil.isNotEmpty(subjectNo)){
+                subjectDto=valManualVoucher003Service.getDetailSubjectNo(params);
+            }
+            list.add(subjectDto);
+        }
+
+        if (StringUtil.isNotEmpty(booksetId) && StringUtil.isNotEmpty(datas)) {
+            AjaxResult ajaxResult = new AjaxResult();
+            ajaxResult.setData(list
+                    );
+            return ajaxResult;
+        }
+        else {
+            return new AjaxResult();
+        }
+    }
+
+    public String getSeq() {
+        return seq;
+    }
+
+    public void setSeq(String seq) {
+        this.seq = seq;
+    }
+    //add by sunshuaishuai end
 }
