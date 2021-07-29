@@ -55,7 +55,7 @@
 		<module>../../tams-disclosure-parent</module>
         <module>../../tams-svreport-parent</module>
         <module>../../tams-valuation-parent</module>
-        <module>../../tams-valuation-report</module>
+<!--        <module>../../tams-valuation-report</module>-->
         <module>../../tams-valuation-basicdata</module>
         <module>../../tams-system/yunying/app</module>
 

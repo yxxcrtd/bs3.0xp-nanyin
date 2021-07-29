@@ -41,7 +41,7 @@
         <module>tams-valuation-common</module>
         <module>tams-valuation-basicdata</module>
         <module>tams-valuation-parent</module>
-        <module>tams-valuation-report</module>
+<!--        <module>tams-valuation-report</module>-->
         <module>tams-exchange-parent</module>
 
         <!-- 批处理  -->
