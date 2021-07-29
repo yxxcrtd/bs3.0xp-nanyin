@@ -3158,4 +3158,68 @@
         group by parentInfo
 	</select>
 
+    <!-- 剩余现金明细-->
+    <select id="selectRemain" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis003Dto">
+        SELECT
+        P.PORTFOLIO_ID  AS portfolioId,
+        '01' hasChildren,
+        'SYXJ' pinanAssetType,
+        A.COST         AS posValue
+        FROM PTL_PORTFOLIO P
+        INNER JOIN BOK_VAL_TABLE_DATA A ON ('F16_'||P.PORTFOLIO_ID = A.BOOKSET_ID OR P.PORTFOLIO_ID = A.BOOKSET_ID)
+        <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+            inner join data_auth_notify_inst dani
+            on dani.BUSINESS_ID =P.PORTFOLIO_ID
+            and dani.data_type='PTL01'
+            and dani.model_type = '02'
+            and dani.institution_code
+            <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                     open="in ("  close=")">
+                #{item}
+            </foreach>
+        </if>
+        WHERE
+        A.val_DATE = to_date(#{searchDate},'yyyy-mm-dd')
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            AND PORTFOLIO_ID IN
+            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
+        AND A.DETAIL_DIST = '01'
+        AND DECODE (A.FSUBJECT_ID, NULL, 'root', DECODE (A.FSUBJECT_ID, ' ', 'root', A.FSUBJECT_ID)) = 'root'
+        and subject_no in ('120401','1002','120402','1021','120403','1031')
+
+        <if test="pass != null and pass != null and pass == '02'.toString() ">
+            /* 穿透后剩余现金数据查询*/
+            UNION ALL
+
+            SELECT
+            A.PORTFOLIO_ID AS portfolioId,
+            '01' hasChildren,
+            'SYXJ' pinanAssetType,
+            A.MARKET_VALUE  AS posValue
+            FROM PTL_SEC_PIERCE_VALUTION A
+            <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+                inner join data_auth_notify_inst dani
+                on dani.BUSINESS_ID =A.PORTFOLIO_ID
+                and dani.data_type='PTL01'
+                and dani.model_type = '02'
+                and dani.institution_code
+                <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                         open="in ("  close=")">
+                    #{item}
+                </foreach>
+            </if>
+            WHERE
+            A.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            AND A.FINPROD_ID like 'REMAININGCASH_%'
+        </if>
+    </select>
 </mapper>

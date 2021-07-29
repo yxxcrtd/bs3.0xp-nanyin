@@ -122,6 +122,15 @@ public interface PtlPositionAnalysisMapper {
      */
     List<PtlPositionAnalysis003Dto> getFinpordType(Map<String, Object> pageParam);
 
+    /**
+     *查询组合对应的剩余现金
+     * @param pageParam 页面参数
+     * @return 结果
+     * @see
+     * @since 1.0
+     */
+    List<PtlPositionAnalysis003Dto> selectRemain(Map<String, Object> pageParam);
+
     List<TargetDetail> getTableColumn();
     
     
