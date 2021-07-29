@@ -348,7 +348,7 @@
 				var ownDept = $('#ownDept').val();
 				var rateType = $('#rateType').val();
 				if(rateType == INT_TYPE_01 && ownDept !=''){
-					Joyin.ajaxJson(basePath + 'invest/basicdata/mstcaptialaccount/MstCaptialAccount002/getFirstRateByownDept', ownDept, function(rate) {
+					Joyin.ajaxJson(basePath + 'invest/basicdata/mstcaptialaccount/MstCaptialAccount002/getFirstRateByOwnDept', ownDept, function(rate) {
 						if(rate != 0 && rate != ''){
 							$('#rate').val(rate);
 						}else{
