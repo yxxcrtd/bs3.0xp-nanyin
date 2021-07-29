@@ -224,6 +224,10 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
             result.putAll(searchCountR8(param));
             //公共数据变更
             result.putAll(searchCountR9(param));
+            //add by chenjiaxing 分销缴款提醒 20210727 start
+            //分销缴款提醒
+            result.putAll(searchCountR10(param));
+            //add by chenjiaxing 分销缴款提醒 20210727 end
         }
         // 查询主动提醒数据表
         else {
@@ -444,8 +448,13 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
         if (StringUtil.isNotEmpty(param.get("institution"))) {
             List<String> institutionList = LoginUserUtil.getTreeInstCode(); 
             param.put("institutionList",institutionList); 
-        } 
-        return paActiveRemind001Mapper.searchCountR5(param);
+        }
+        Map<String, Object> temp = paActiveRemind001Mapper.searchCountR5(param);
+        //add by chenjiaxing 20200726 固定值参数更新提醒 start
+        Map<String, Object> tempS3 = paActiveRemind001Mapper.searchCountR5S3(param);
+        temp.put("R5S3",tempS3.get("R5S3"));
+        //add by chenjiaxing 20200726 固定值参数更新提醒 end
+        return temp;
     }
 
     /**
@@ -493,4 +502,17 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
         param.put("R9S1", BussinessDictCodeList.提醒类型_小分类_数据修改.getValue());
         return paActiveRemind001Mapper.searchCountR9S1(param);
     }
+
+    //add by chenjiaxing 分销缴款提醒 20210727 start
+    /**
+     * 实时查询主动提醒数量_分销缴款提醒
+     *
+     * @param param
+     */
+    public Map<String, Object> searchCountR10(Map<String, Object> param) {
+        param.put("R10S1", BussinessDictCodeList.提醒类型_小分类_分销缴款提醒.getValue());
+        Map<String, Object> a = paActiveRemind001Mapper.searchCountR10S1(param);
+        return paActiveRemind001Mapper.searchCountR10S1(param);
+    }
+    //add by chenjiaxing 分销缴款提醒 20210727 end
 }
