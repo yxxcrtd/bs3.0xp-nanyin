@@ -2113,6 +2113,36 @@ public class AllTradeCommonUtil {
 	}
 	// add by lijie2 20200910 投资目的取值逻辑 end
 
+    // add by zahngrui1 20200703 批量抽取反向交易编号内部就交易对手 start
+    /**
+     * 批量抽取反向交易编号
+     *
+     * @param tradeIds 交易编号/汇总交易编号
+     * @return 反向交易编号
+     */
+    public static Map<String, TrdProductDeal> queryRTradeIds(List<String> tradeIds) {
+        if (!StringUtil.isEmptyList(tradeIds)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("list", tradeIds);
+            List<TrdProductDeal> resList = trdCommonBaseMapper.queryRTradeIds(map);
+            if (!StringUtil.isEmptyList(resList)) {
+                return resList.stream().collect(
+                        Collectors.toMap(TrdProductDeal::getTradeId, info -> info));
+            }
+        }
+        return new HashMap<>();
+    }
+
+    // add by zhangrui1 20200619 取得反向交易编号 start
+    public static String queryRTradeId(String tradeId) {
+        if (!StringUtil.isEmpty(tradeId)) {
+            return trdCommonBaseMapper.queryRTradeId(tradeId);
+        }
+        return tradeId;
+    }
+
+    // add by zhangrui1 20200619 取得反向交易编号 end
+
     /**
      * 批量抽取内部交易对手
      *

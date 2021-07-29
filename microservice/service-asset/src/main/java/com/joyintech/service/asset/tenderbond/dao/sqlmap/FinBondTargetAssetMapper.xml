@@ -175,6 +175,9 @@
 		<where>
 			<if test="finprodId != null and finprodId != ''">
 				T1.FINPROD_ID = #{finprodId}
+				<!-- add 资产名称后增加查看按钮 by caozhenming 20210729 start-->
+				or T1.FINPROD_MARKET_ID = #{finprodId}
+				<!-- add 资产名称后增加查看按钮 by caozhenming 20210729 end-->
 			</if>
 		</where>
 	</select>

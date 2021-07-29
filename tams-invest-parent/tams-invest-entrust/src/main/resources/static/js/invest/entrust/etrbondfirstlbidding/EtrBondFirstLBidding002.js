@@ -344,7 +344,6 @@
         }
         //配置单位 add by yeming 20210721 end
     }
-
     $(function(){
         star();
         init();
@@ -400,5 +399,23 @@
         }else{
         	$('#assetType11Div').hide();
         }
-	})
+
+        /**
+         * 查看资产详情事件
+         */
+        $('#EtrBondFirstLBidding002_btn_search').click(function() {
+            var finprodId = $("#finprodId").val();
+            var url = "/invest/asset/tenderbond/FinTenderBondTargetAsset002/init";
+            if (finprodId != ""){
+                var params = {
+                    pageModel:PAGE_MODEL_REFERENCE,
+                    finprodId:finprodId
+                };
+                EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
+            } else {
+                Joyin.error("资产名称不能为空")
+            }
+        });
+
+    })
 }());
