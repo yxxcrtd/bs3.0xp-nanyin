@@ -21,7 +21,7 @@
                 AND IMPORT_TYPE = #{importType,jdbcType=VARCHAR}
             </if>
             <if test="searchDate != null and searchDate != ''">
-                and to_char(START_TIME,'yyyy-MM-dd') &gt;= #{searchDate,jdbcType=VARCHAR}
+                and to_char(IMPDATE,'yyyy-MM-dd') = #{searchDate,jdbcType=VARCHAR}
             </if>
             <if test="endDate != null and endDate != ''">
                 and to_char(END_TIME,'yyyy-MM-dd') &gt;= #{searchDate,jdbcType=VARCHAR}
