@@ -3,6 +3,9 @@ package com.joyintech.tams.common.base.dao;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 @Repository
 public interface PbcSendZipDatFileMapper {
     int insert(PbcSendZipDatFile record);
@@ -10,4 +13,6 @@ public interface PbcSendZipDatFileMapper {
     int insertSelective(PbcSendZipDatFile record);
 
     int insertBasicByBasicInfo(PbcSendZipDatFile record);
+
+    List<PbcSendZipDatFile> searchPage(Map<String,Object> map);
 }
