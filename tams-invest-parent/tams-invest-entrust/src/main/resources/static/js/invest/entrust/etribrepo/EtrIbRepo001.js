@@ -2,6 +2,20 @@
  * 持仓信息（右上）
  */
 (function(){
+    // 定制化配置信息控制页面展示====================================================
+    const ZLGL = $(".ZLGL").attr("title");
+    const ZYQGL = $(".ZYQGL").attr("title");
+    if(ZLGL !== 'true' || ZYQGL !== 'true'){
+        if(ZLGL === 'true'){
+            $(".ZYQGL").hide();
+            $(".ZLGL").show().trigger("click");
+        }else if (ZYQGL === 'true'){
+            $(".ZYQGL").show().trigger("click");
+            $(".ZLGL").hide();
+        }
+    }
+    $(".layui-tab").show();
+    // ==========================================================================
 	
     function getPositionsSearchParams(){
         var data = $.serializeToObject('#searchForm_cc');
@@ -248,7 +262,7 @@
              }
         });
         
-        $(".cc-transfer-form #EtrIbRepo001_btn_search").click(function () {
+        $(".ZLGL-transfer-form #EtrIbRepo001_btn_search").click(function () {
 //            zlglTable.load();
         	$('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
             $('#dayOfferSelectorConditionFilter001').hide();
@@ -300,7 +314,7 @@
 			$("#selectorConditionFilter001").hide();
         });
         
-        $(".cc-transfer-form #EtrIbRepo001_btn_export").click(getPositionsExportExcel)
+        $(".ZLGL-transfer-form #EtrIbRepo001_btn_export").click(getPositionsExportExcel)
         $(".transfer-form #EtrIbRepo001_btn_export").click(getZqzyPositionExportExcel)
         
         /**

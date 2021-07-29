@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepo001Dto;
 import com.joyintech.tams.invest.entrust.etribrepo.service.EtrIbRepo001Service;
 import com.joyintech.tams.invest.entrust.etrstandardbond.dto.EtrStandardBond001Dto;
 
+import com.joyintech.tams.invest.entrust.home.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +78,9 @@ public class EtrIbRepo001Controller extends BaseController{
     
     @Autowired(required=false)
     private BussEtrInvestPersonInfoService bussEtrInvestPersonInfoService;
+
+    @Autowired
+    private HomeService homeService;
     
     @Override
     public String init(Model model) {
@@ -88,6 +92,9 @@ public class EtrIbRepo001Controller extends BaseController{
         this.setSelectOptionToModel(model, DictCode.价格模式);
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("repo_pledge_model",CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
+
+        // 定制化配置信息控制页面展示
+        model.addAttribute("DYN_INFO", homeService.getChecked("EtrIbRepoMain"));
         return super.init(model);
     }
     
