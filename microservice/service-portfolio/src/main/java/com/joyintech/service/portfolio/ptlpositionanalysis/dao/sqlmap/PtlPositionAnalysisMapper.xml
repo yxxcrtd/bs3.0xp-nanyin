@@ -3222,4 +3222,32 @@
             AND A.FINPROD_ID like 'REMAININGCASH_%'
         </if>
     </select>
+
+    <select id="selectPeiZhiRemain" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis002Dto">
+        /* 穿透后剩余现金数据查询*/
+        SELECT
+        A.PORTFOLIO_ID AS portfolioId,
+        nvl(A.MARKET_VALUE,0)  AS marketValue
+        FROM PTL_SEC_PIERCE_VALUTION A
+        <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+            inner join data_auth_notify_inst dani
+            on dani.BUSINESS_ID =A.PORTFOLIO_ID
+            and dani.data_type='PTL01'
+            and dani.model_type = '02'
+            and dani.institution_code
+            <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                     open="in ("  close=")">
+                #{item}
+            </foreach>
+        </if>
+        WHERE
+        A.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            AND PORTFOLIO_ID IN
+            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
+        AND A.FINPROD_ID like 'REMAININGCASH_%'
+    </select>
 </mapper>

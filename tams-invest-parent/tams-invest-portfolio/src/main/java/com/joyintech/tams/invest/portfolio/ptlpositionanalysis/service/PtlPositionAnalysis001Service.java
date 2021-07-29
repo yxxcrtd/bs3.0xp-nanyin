@@ -201,6 +201,16 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
                         + "/PtlPositionAnalysis/getPortFolioInfo" , map,
                 SelectOptionDto.class);
     }
-    
-    
+
+    /**
+     * 剩余金额的信息
+     * @param map
+     * @return
+     */
+    public List<PtlPositionAnalysis002Dto> selectRemain(Map<String,Object> map ){
+        List<PtlPositionAnalysis002Dto> typelist = simpleRestTemplate.postForList(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/selectPeiZhiRemain",
+                map, PtlPositionAnalysis002Dto.class);
+        return typelist;
+    }
 }

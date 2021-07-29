@@ -225,4 +225,14 @@ public class PtlPositionAnalysisController {
         return ptlPositionAnalysisService.selectRemain(pageParam);
     }
 
+    /**
+     * 查询组合对应的剩余现金
+     * @return 查询结果
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("selectPeiZhiRemain")
+    public List<PtlPositionAnalysis002Dto> selectPeiZhiRemain(@RequestBody  Map<String, Object> pageParam) {
+        return ptlPositionAnalysisService.selectPeiZhiRemain(pageParam);
+    }
 }

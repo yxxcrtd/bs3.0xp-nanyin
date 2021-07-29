@@ -579,4 +579,26 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         }
         return ptlPositionAnalysisMapper.selectRemain(pageParam);
     }
+
+    /**
+     * 查询组合对应的剩余现金
+     * @return 查询结果
+     * @see
+     * @since 1.0
+     */
+    public List<PtlPositionAnalysis002Dto> selectPeiZhiRemain(Map<String, Object> pageParam) {
+        if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){
+            pageParam.put("portfolioIdList",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("portfolioId")));
+        }
+
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            //当前用户所属机构代码
+            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+            //右上角选择框为空时 存放本级机构及有权限的下级机构 选择时 存放所选机构
+            List<String> resourcesTreeInstCodeList =  LoginUserUtil.getTreeInstCode();
+            pageParam.put("institutionCode",createInst);
+            pageParam.put("resourcesTreeInstCodeList",resourcesTreeInstCodeList);
+        }
+        return ptlPositionAnalysisMapper.selectPeiZhiRemain(pageParam);
+    }
 }
