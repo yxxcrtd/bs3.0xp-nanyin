@@ -127,7 +127,7 @@
 		T1.VAL_DATE VAL_DATE,
 		T1.PTL_ID PTL_ID,
 		T1.SUB_CODE SUB_CODE,
-		T1.FINPROD_ID FINPROD_ID,
+		DECODE(T1.FINPROD_ID,null,T3.FINPROD_ID) FINPROD_ID,
 		T1.SECURITY_QUANTITY SECURITY_QUANTITY,
 		T1.UNIT_COST UNIT_COST,
 		T1.SECURITY_COST SECURITY_COST,
@@ -149,15 +149,18 @@
 		FROM
 		RSK_VALTBL_ASSET_SUB T1
 		left join FIN_PRODUCT T2 on T1.FINPROD_ID = T2.FINPROD_ID
-		where SUB_CODE like '_________%'
+		left join RSK_VALTBL_PRT_BOTASSET_MAP T3
+			ON T1.PTL_ID = T3.PTL_ID
+			AND T1.SUB_CODE = T3.SUB_CODE
+		where T1.SUB_CODE like '_________%'
 		<if test="cdate != null and cdate != ''">
 			<!-- TISHKBS-621 【批处理-估值穿透逻辑问题】目前系统跑批逻辑为只能取导入底层估值日的数据，期望，跑批日无底层数据时，取跑批日前最新的底层数据 modify by lizhi 20200629 start -->
 			<!-- AND T1.VAL_DATE = TO_DATE(#{cdate},'YYYY-MM-DD') -->
-			AND T1.VAL_DATE = 
+			AND T1.VAL_DATE =
 		      ( select
 		          max(val_date) val_date
-		        from RSK_VALTBL_ASSET_SUB 
-		        where SUB_CODE like '_________%' 
+		        from RSK_VALTBL_ASSET_SUB
+		        where SUB_CODE like '_________%'
 		          and PTL_ID = #{portfolioId,jdbcType=VARCHAR}
 		          <![CDATA[and VAL_DATE <=  TO_DATE(#{cdate},'YYYY-MM-DD')]]>
 		        )
@@ -166,7 +169,7 @@
 		<if test="portfolioId != null and portfolioId != ''">
 			AND T1.PTL_ID = #{portfolioId,jdbcType=VARCHAR}
 		</if>
-		order by sub_code desc
+		order by T1.sub_code desc
 	</select>
 
 	<!-- 获取组合某日实收资本 -->
