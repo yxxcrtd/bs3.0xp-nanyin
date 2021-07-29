@@ -289,8 +289,8 @@
         		$('#coefficient_div').toggle(false);
         		$('#spreadRate_div').toggle(false);
         		
-        		//默认固定利率0.3
-        		$('#rate').val(RATE_DEF_DEFAULT);
+        		//默认固定利率
+        		$('#rate').val('');
 
         	} 
         	else if($('#rateType').val() === INT_TYPE_02){
@@ -349,7 +349,11 @@
 				var rateType = $('#rateType').val();
 				if(rateType == INT_TYPE_01 && ownDept !=''){
 					Joyin.ajaxJson(basePath + 'invest/basicdata/mstcaptialaccount/MstCaptialAccount002/getFirstRateByownDept', ownDept, function(rate) {
-						$('#rate').val(rate);
+						if(rate != 0 && rate != ''){
+							$('#rate').val(rate);
+						}else{
+							$('#rate').val('');
+						}
 					})
 				}
 			}
