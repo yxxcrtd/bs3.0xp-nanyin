@@ -70,7 +70,7 @@ public class AssetMarketDataService extends BaseService {
         Iterator<AssetMarketDataResultDto> detailIterator = details.iterator();
         String happenDateStr = DateUtil.format(dto.getCheckDate());
         while(detailIterator.hasNext()) {
-        	String urlHead = "http://127.0.0.1:"+serverPort;
+//        	String urlHead = "http://127.0.0.1:"+serverPort;
         	AssetMarketDataResultDto resultDto = detailIterator.next();
         	//2.1 股票和计划类净值型资产可以直接访问finProductCommonBatchService
         	if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_股票.getValue())) {
