@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.controller;
 
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -12,11 +13,13 @@ import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.service.PbcSendZipDatFileMService;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -76,6 +79,36 @@ public class PbcSendZipDatFile001Controller extends BaseController{
 	}
 
 
+
+
+
+	/**
+	 *
+	 * 业务画面导入检查事件
+	 *
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping("checkBaseInfoSubDat")
+	public AjaxResult checkBaseInfoSubDat(String fileName) {
+		return pbcSendZipDatFileMService.checkBaseInfoSubDat(fileName);
+	}
+
+	/**
+	 *
+	 * 业务画面导入事件
+	 *
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping("importBaseInfoSubDat")
+	public List<ExcelValidDto> importBaseInfoSubDat(String fileName) {
+		return pbcSendZipDatFileMService.importBaseInfoSubDat(fileName);
+	}
 
 
 

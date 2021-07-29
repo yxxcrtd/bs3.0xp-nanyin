@@ -391,6 +391,18 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
      * 定义人行的枚举值
      */
     private String  isMarketFund;
+    /**
+     * 压缩包编码
+     */
+    private String datZipCode;
+
+    public String getDatZipCode() {
+        return datZipCode;
+    }
+
+    public void setDatZipCode(String datZipCode) {
+        this.datZipCode = datZipCode;
+    }
 
     public String getIsMarketFund() {
         return isMarketFund;
