@@ -111,6 +111,36 @@ public class BaseEtrInvestInfoDto {
      */
     private MstFileInputParameter mstFileInputParameter;
 
+    private EtrEntrustWw etrEntrustWw;
+
+    private EtrEntrustWwDetail etrEntrustWwDetail;
+
+    public EtrEntrustWw getEtrEntrustWw() {
+        return etrEntrustWw;
+    }
+
+    public void setEtrEntrustWw(EtrEntrustWw etrEntrustWw) {
+        this.etrEntrustWw = etrEntrustWw;
+    }
+
+    public EtrEntrustWwDetail getEtrEntrustWwDetail() {
+        return etrEntrustWwDetail;
+    }
+
+    public void setEtrEntrustWwDetail(EtrEntrustWwDetail etrEntrustWwDetail) {
+        this.etrEntrustWwDetail = etrEntrustWwDetail;
+    }
+
+    public List<EtrEntrustWwDetail> getEtrEntrustWwDetailList() {
+        return etrEntrustWwDetailList;
+    }
+
+    public void setEtrEntrustWwDetailList(List<EtrEntrustWwDetail> etrEntrustWwDetailList) {
+        this.etrEntrustWwDetailList = etrEntrustWwDetailList;
+    }
+
+    private List<EtrEntrustWwDetail> etrEntrustWwDetailList;
+
     public MstFileInputParameter getMstFileInputParameter() {
         return mstFileInputParameter;
     }
@@ -381,4 +411,5 @@ public class BaseEtrInvestInfoDto {
     public void setChangeToFinprodName(String changeToFinprodName) {
         this.changeToFinprodName = changeToFinprodName;
     }
+
 }

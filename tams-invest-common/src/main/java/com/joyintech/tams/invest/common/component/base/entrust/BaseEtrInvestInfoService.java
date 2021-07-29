@@ -67,6 +67,17 @@ public interface BaseEtrInvestInfoService {
     boolean newDelegate(BaseEtrInvestInfoDto dto);
 
     /**
+     * 新建委托
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param dto 实体类
+     * @return boolean
+     * @see
+     * @since 1.0
+     */
+    boolean newWwDelegate(BaseEtrInvestInfoDto dto);
+
+    /**
      * 删除委托 
      * <一句话功能简述> 
      * <功能详细描述>
@@ -76,6 +87,17 @@ public interface BaseEtrInvestInfoService {
      * @since 1.0
      */
     boolean deleteDelegate(String entrustId);
+
+    /**
+     * 删除委托
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param entrustId String
+     * @return boolean
+     * @see
+     * @since 1.0
+     */
+    boolean deleteWwDelegate(String entrustId);
 
     /**
      * 修改委托 
@@ -89,6 +111,17 @@ public interface BaseEtrInvestInfoService {
     boolean updateDelegate(BaseEtrInvestInfoDto dto);
 
     /**
+     * 修改委托
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param dto 实体类
+     * @return boolean
+     * @see
+     * @since 1.0
+     */
+    boolean updateWwDelegate(BaseEtrInvestInfoDto dto);
+
+    /**
      * 更新委托状态 
      * <一句话功能简述> 
      * <功能详细描述>
@@ -99,6 +132,18 @@ public interface BaseEtrInvestInfoService {
      * @since 1.0
      */
     boolean updateDelegateStatus(String entrustId, String entrustStatus);
+
+    /**
+     * 更新委托状态
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param entrustId String
+     * @param entrustStatus String
+     * @return boolean
+     * @see
+     * @since 1.0
+     */
+    boolean updateWwDelegateStatus(String entrustId, String entrustStatus);
 
     /**
      * 撤回委托 
@@ -154,6 +199,17 @@ public interface BaseEtrInvestInfoService {
      * @since 1.0
      */
     boolean closeDelegate(String entrustId,String closeWay);
+
+    /**
+     * 关闭委托
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param entrustId String
+     * @return boolean
+     * @see
+     * @since 1.0
+     */
+    boolean closeWwDelegate(String entrustId,String closeWay);
 
     /**
      * 委托完成状况查询 

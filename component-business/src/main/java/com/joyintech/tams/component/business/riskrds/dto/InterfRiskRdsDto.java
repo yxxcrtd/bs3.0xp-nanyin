@@ -307,7 +307,29 @@ public class InterfRiskRdsDto implements IRiskRds {
      * 机构代码
      */
     private String instCode;
-    
+
+    // add by zhangrui1 关联方信息 start
+    /**
+     * 关联方
+     */
+    private String relatedParty;
+
+    /**
+     * 是否关联方
+     */
+    private String isRelatedParty;
+
+    /**
+     * 关联方是否授信机构
+     */
+    private String isRelatedPartyCeOrg;
+
+    /**
+     * 关联方机构授信额度
+     */
+    private BigDecimal relatedPartyAmt;
+    // add by zhangrui1 关联方信息 end
+
     /**
      * 取得 流水号
      * @return 流水号
@@ -984,5 +1006,77 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     public void setInvAim(String invAim) {
         this.invAim = invAim;
+    }
+
+    /**
+     * 获取 关联方
+     *
+     * @return 关联方.
+     */
+    public String getRelatedParty() {
+        return relatedParty;
+    }
+
+    /**
+     * 设置 关联方
+     *
+     * @param relatedParty 关联方
+     */
+    public void setRelatedParty(String relatedParty) {
+        this.relatedParty = relatedParty;
+    }
+
+    /**
+     * 获取 是否关联方
+     *
+     * @return 是否关联方.
+     */
+    public String getIsRelatedParty() {
+        return isRelatedParty;
+    }
+
+    /**
+     * 设置 是否关联方
+     *
+     * @param isRelatedParty 是否关联方
+     */
+    public void setIsRelatedParty(String isRelatedParty) {
+        this.isRelatedParty = isRelatedParty;
+    }
+
+    /**
+     * 获取 关联方是否授信机构
+     *
+     * @return 关联方是否授信机构.
+     */
+    public String getIsRelatedPartyCeOrg() {
+        return isRelatedPartyCeOrg;
+    }
+
+    /**
+     * 设置 关联方是否授信机构
+     *
+     * @param isRelatedPartyCeOrg 关联方是否授信机构
+     */
+    public void setIsRelatedPartyCeOrg(String isRelatedPartyCeOrg) {
+        this.isRelatedPartyCeOrg = isRelatedPartyCeOrg;
+    }
+
+    /**
+     * 获取 关联方机构授信额度
+     *
+     * @return 关联方机构授信额度.
+     */
+    public BigDecimal getRelatedPartyAmt() {
+        return relatedPartyAmt;
+    }
+
+    /**
+     * 设置 关联方机构授信额度
+     *
+     * @param relatedPartyAmt 关联方机构授信额度
+     */
+    public void setRelatedPartyAmt(BigDecimal relatedPartyAmt) {
+        this.relatedPartyAmt = relatedPartyAmt;
     }
 }
