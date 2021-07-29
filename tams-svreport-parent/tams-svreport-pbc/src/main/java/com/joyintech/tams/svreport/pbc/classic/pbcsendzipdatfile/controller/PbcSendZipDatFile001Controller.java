@@ -11,6 +11,7 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.PbcSendZipDatFileService;
 import com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.service.PbcSendZipDatFileMService;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
@@ -23,6 +24,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.*;
 
 
@@ -49,7 +57,11 @@ public class PbcSendZipDatFile001Controller extends BaseController{
      */
     @Autowired
     private PbcSendZipDatFileMService pbcSendZipDatFileMService;
-
+	/**
+	 * service
+	 */
+	@Autowired
+	private PbcSendZipDatFileService pbcSendZipDatFileService;
 	
     /**
 	 * {@inheritDoc}
@@ -57,7 +69,7 @@ public class PbcSendZipDatFile001Controller extends BaseController{
     @RequestMapping(PAGE_INIT)
 	@Override
 	public String init(Model model) {
-		super.setSelectOptionToModel(model, DictCode.人行报送类型, DictCode.报送状态, DictCode.人行报送管理反馈状态);
+		super.setSelectOptionToModel(model, DictCode.人行报送类型, DictCode.报送状态, DictCode.人行报送反馈状态);
 		return super.init(model);
 	}
 
@@ -76,6 +88,39 @@ public class PbcSendZipDatFile001Controller extends BaseController{
 		Page<PbcSendZipDatFile> page = pbcSendZipDatFileMService
 				.searchPage(searchParam);
 		return page;
+	}
+
+	/**
+	 * 查询列表
+	 *
+	 * @return DtPage
+	 */
+	@ResponseBody
+	@RequestMapping(value ="/preView")
+	public String preView(HttpServletRequest request, HttpServletResponse response) {
+		String htmlExcel = pbcSendZipDatFileService.priview(this.getPageId(), RequestUtil.getPageParam());
+		if ("fail".equals(htmlExcel)){
+			return "fail";
+		}
+		response.reset();
+		response.setContentType("text/html;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		InputStream res = new ByteArrayInputStream(htmlExcel.getBytes(Charset.forName("UTF-8")));
+		byte[] buf = new byte[1024*10];
+		int len = 0;
+		OutputStream out;
+		try {
+			out = response.getOutputStream();
+			while ((len = res.read(buf)) != -1)
+				out.write(buf, 0, len);
+			out.flush();
+			res.close();
+			out.close();
+		} catch (IOException e) {
+			logger.error(e.getMessage(),e);
+			return "fail";
+		}
+		return "success";
 	}
 
 

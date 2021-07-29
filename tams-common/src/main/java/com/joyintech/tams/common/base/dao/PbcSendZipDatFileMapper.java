@@ -8,6 +8,8 @@ import java.util.Map;
 
 @Repository
 public interface PbcSendZipDatFileMapper {
+    PbcSendZipDatFile selectByPrimaryKey(String reportuuid);
+
     int insert(PbcSendZipDatFile record);
 
     int insertSelective(PbcSendZipDatFile record);

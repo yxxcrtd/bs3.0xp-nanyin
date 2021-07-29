@@ -56,14 +56,14 @@ $(function() {
         var btns = {};
         var keyList = [];
         var dialogIndex = -1;
-        var path = basePath + 'svreport/pbc/PbcSendZipDatFile/preView';
+        var path = basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/preView';
         if(data.status=='03'){
             Joyin.error("删除状态数据不支持预览");
             return;
         }
 
         var param={reportuuid:data.reportuuid,
-            termid:data.termid,reporttype:data.reporttype}
+            reporttype:data.datZipDatType}
 
         Joyin.ajax('preView', param, function(result) {
             if ("fail" == result){

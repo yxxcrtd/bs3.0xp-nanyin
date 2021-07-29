@@ -78,6 +78,8 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	@Autowired
 	private SqlSessionFactory sqlSessionFactory;
 	@Autowired
+	private  PbcPrdBaseInfoSubDatService pbcPrdBaseInfoSubDatService;
+	@Autowired
 	private PbcReportProd001Sub001Service pbcReportProd001Sub001Service;
 	@Autowired
 	private PbcReportProd001Sub002Service pbcReportProd001Sub002Service;
@@ -127,37 +129,7 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
     
     private Logger logger = LoggerFactory.getLogger(getClass());
     
-    /**
-     * 人行导出模版sheet页名称
-     */
-    private final static String SHEET_1_1 = "表1-1资管产品募集余额";
-    
-    private final static String SHEET_1_2 = "表1-2募集及兑付发生额";
-    
-    private final static String SHEET_1_3 = "表1-3只数情况";
-    
-    private final static String SHEET_1_4 = "表1-4境内募集余额分地区";
-    
-    private final static String SHEET_1_5 = "表1-5提前及延期兑付";
-    
-    private final static String SHEET_1_6 = "表1-6资管产品到期未兑付";
-    
-    private final static String SHEET_2_1 = "表2-1资产负债";
-    
-    private final static String SHEET_2_2 = "表2-2除回购和拆借外贷款按行业、企业";
-    
-    private final static String SHEET_2_3 = "表2-3除回购和拆借外贷款分地区";
-    
-    private final static String SHEET_2_4 = "表2-4资产收益权按基础资产投向";
-    
-    private final static String SHEET_2_5 = "表2-5企业债券按行业、企业";
-    
-    private final static String SHEET_3_1 = "表3-1存续产品分期限募集余额";
-    
-    private final static String SHEET_3_2 = "表3-2新发产品分期限募集金额";
-    
-    private final static String SHEET_3_3 = "表3-3资产负债剩余期限";
-    
+
 	/**
 	 * 查询页面数据
 	 *
@@ -183,6 +155,68 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
     				pageParam);
             return page;
         }
+	}
+
+	public String priview(String pageid,Map<String, Object> selectParam) {
+		//获取报表类型  根据不同的报表类型 查询不同的明细和对应的 模板数据
+		String reporttype=selectParam.get("reporttype").toString();
+		String message="";
+		if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue())){
+			// 设置table预览大小
+			selectParam.put("tableWidth", 200);
+			message=pbcPrdBaseInfoSubDatService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品终止信息)){
+			// 设置table预览大小
+			selectParam.put("tableWidth", 200);
+			message=pbcReportProd001Sub002Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集余额报表)){
+			// 设置table预览大小
+			selectParam.put("tableWidth", 120);
+			message=pbcReportProd001Sub001Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集兑付报表)){
+			// 设置table预览大小
+			selectParam.put("tableWidth", 200);
+			message=pbcReportProd001Sub002Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_只数情况报表)){
+			message=pbcReportProd001Sub003Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集余额报表分地区报表)){
+			// 设置table预览大小
+			selectParam.put("tableWidth", 120);
+			message=pbcReportProd001Sub004Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_提前及延期兑付报表)){
+			// 设置table预览大小
+			selectParam.put("tableWidth", 160);
+			message=pbcReportProd001Sub005Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_到期未兑付报表)){
+			message=pbcReportProd001Sub006Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资管产品资产负债统计)){
+			// 设置table预览大小
+			selectParam.put("tableWidth", 200);
+			message=pbcReportAssetDebtService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_除回购和拆借外贷款分行业企业规模统计)){
+			message=pbcReportCompanyService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_除回购和拆借外贷款分地区统计表)){
+			message=pbcReportAreaService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资产收益权按基础资产投向分类统计报表)){
+			// 设置table预览大小
+			selectParam.put("tableWidth", 120);
+			message=pbcReportAssetIncomeDetailService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_企业债券分行业企业规模统计)){
+			message=pbcReportCompanyBondService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_存续产品分期限募集余额报表)){
+			message=pbcReportProd003Sub001Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表)){
+			message=pbcReportProd003Sub002Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资管产品资产负债剩余期限统计)){
+			message=pbcReportDebtTermDetailService.priview(selectParam);
+		}
+
+//		Map<Object,Object> data = createData(selectParam);
+//
+//		data.put("termname",data.get("termname").toString());
+//	    File depositfile = createFile(data,exceltemplate);
+//		return this.priView(depositfile, true);
+		return message;
 	}
 
 

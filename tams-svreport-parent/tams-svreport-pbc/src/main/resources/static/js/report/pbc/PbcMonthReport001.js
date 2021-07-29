@@ -404,7 +404,7 @@ $(function() {
 	    }
 	   
 	    var param={reportuuid:data.reportuuid,
-	    			termid:data.termid,reporttype:data.reporttype}
+	    			reporttype:data.reporttype}
 
         Joyin.ajax('preView', param, function(result) {
         	if ("fail" == result){
