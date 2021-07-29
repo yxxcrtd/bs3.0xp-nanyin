@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.productplanning.asset.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public class FinAssetConfigPlan002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinAssetConfigPlan001Dto> getFinAssetConfigPlanList() throws Exception {
+    public Page<FinAssetConfigPlan001Dto> getFinAssetConfigPlanList() throws NoSuchMethodException, IllegalAccessException, ParseException, InvocationTargetException {
     	/*if (StringUtil.isNotEmpty(this.getParam("workflowId"))) {
     		ProcessMark pro = finAssetConfigPlan002Service.getBusinessInfo(this.getParam("workflowId"));
             if (pro != null) {

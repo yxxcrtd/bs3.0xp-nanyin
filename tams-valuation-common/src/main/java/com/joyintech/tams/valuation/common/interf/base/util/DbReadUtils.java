@@ -76,8 +76,7 @@ public class DbReadUtils {
     
 	@SuppressWarnings("rawtypes")
 	public <T> List<T> readDb(Class<T> clazz, TemplateOrderInfoReaderResult acctEntity,
-            List<ValInterflog> valList)
-		throws Exception {
+            List<ValInterflog> valList) throws IllegalAccessException, InstantiationException, NoSuchFieldException {
     	// 目标DTO字段
 		Field[] fields = clazz.getDeclaredFields();
 		Map<String,Field> mapfields = new HashMap<String,Field>();
@@ -182,7 +181,7 @@ public class DbReadUtils {
     
     /**
      * 构建校验信息字典
-     * @param _check
+     * @param checkList
      * @return
      */
     private Map<String, TemplateOrderInfoReaderDTO> createCheckMap(List<TemplateOrderInfoReaderDTO> checkList) {

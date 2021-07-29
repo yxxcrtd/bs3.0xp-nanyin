@@ -2,6 +2,7 @@ package com.joyintech.tams.mobileApproval.util;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -81,7 +82,7 @@ public class HttpKit {
         return getResult(httpPost);
     }
 
-    public static String post(String url, Map<String, Object> params) throws Exception {
+    public static String post(String url, Map<String, Object> params) throws IOException {
         HttpPost httpPost = new HttpPost(url);
         ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
         httpPost.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));

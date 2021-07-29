@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.interf.valuation.transdata.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -48,8 +49,7 @@ public class ValFtpService {
      * @throws Exception
      */
     public ValRecvFileEntity doRecv(ValRecvServerInfoEntity entity,
-                                    List<ValInterfTemplate> tempList)
-        throws Exception {
+                                    List<ValInterfTemplate> tempList) throws IOException {
         ValRecvFileEntity retEntity = new ValRecvFileEntity();
         String localDirTemp = entity.getLocalPath() + File.separator + entity.getSystemID()
                           + File.separator

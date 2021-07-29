@@ -91,8 +91,7 @@ public class ValBondQuotationInfoController {
      * @throws Exception 异常
      */
     @PostMapping("getFinprodAbbrOption")
-    public List<SelectOptionDto> getFinprodAbbrOption(@RequestBody Map<String, Object> map)
-        throws Exception {
+    public List<SelectOptionDto> getFinprodAbbrOption(@RequestBody Map<String, Object> map){
         return valBondQuotationInfoService.getFinprodAbbrOption(map);
     }
 

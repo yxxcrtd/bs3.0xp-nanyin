@@ -150,8 +150,7 @@ public class FinTenderBondTargetAsset001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
 		param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return finTenderBondTargetAssetService.export(this.getPageId(),param);

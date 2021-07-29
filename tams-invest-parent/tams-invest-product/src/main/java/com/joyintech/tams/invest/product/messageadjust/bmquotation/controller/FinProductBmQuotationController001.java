@@ -107,8 +107,7 @@ public class FinProductBmQuotationController001 extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketIdList")
-    public Page<SelectOptionDto> getFinprodMarketIdList()
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodMarketIdList(){
         return finProductBmQuotationService.getFinprodMarketIdList(getParam("search"));
     }
     /**
