@@ -86,6 +86,23 @@
 				function(){table.reload();});
 		});
 
+		// 导入按钮
+		$('#AssetInfoDetail001_btn_import').click(function() {
+			Joyin.confirm("请确认是否要导入数据？", function() {
+				var options = {};
+				options.pageId = "AssetInfoDetail001_2";
+				options.exts = 'zip|xls|xlsx';
+				Joyin.uploadFile(options,function(fileName) {
+					Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+						Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName},function () {
+							table.reload();
+						});
+					});
+				},function() {
+					table.reload();
+				});
+			});
+		});
 
 		// 导出按钮
 		$('#AssetInfoDetail001_btn_export').click(function(){

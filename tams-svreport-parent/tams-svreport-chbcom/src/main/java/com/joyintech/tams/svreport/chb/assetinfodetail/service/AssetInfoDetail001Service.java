@@ -28,6 +28,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinforeg.dao.AssetInfoRegist001Mapper;
@@ -173,5 +174,48 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 	public AssetInfoDetailDto getAssetInfoByUUid(String UUid){
 		return assetInfoDetailMapper.getAssetInfoDetail(UUid);
 	}
+	
+	public List<ExcelValidDto> importData(List<AssetInfoDetailDto> dataList){
+		List<ExcelValidDto> checkResult = new ArrayList<>();
+		if(!StringUtil.isEmptyList(dataList)){
+	/*		List<AssetInfoDetailDto> existAsset = assetInfoDetailMapper.selectKeyListData(dataList);
+			List<ChbAssetInfo> insertList = new ArrayList<>();
+			List<ChbAssetInfo> updateList = new ArrayList<>();
+			if (StringUtil.isEmptyList(existAsset)){
+				insertList.addAll(dataList);
+			}else {
+				List<String> assetCodes = new ArrayList<>();
+				Map<String,String> keyMap = new HashMap<>();
+				existAsset.forEach(assetInfoDetailDto -> {
+                    assetCodes.add(assetInfoDetailDto.getAssetCode());
+                    keyMap.put(assetInfoDetailDto.getAssetCode(),assetInfoDetailDto.getAssetUuid());
+				});
+				dataList.forEach(assetInfoDetailDto -> {
+					if (assetCodes.contains(assetInfoDetailDto.getAssetCode())){
+						assetInfoDetailDto.setAssetUuid(keyMap.get(assetInfoDetailDto.getAssetCode()));
+						updateList.add(assetInfoDetailDto);
+					}else {
+						insertList.add(assetInfoDetailDto);
+					}
+				});
+			}
+			if(!StringUtil.isEmptyList(insertList)){
+				assetInfoDetailMapper.insertBatch(insertList);
+			}
+			if(!StringUtil.isEmptyList(updateList)){
+				assetInfoDetailMapper.updateBatchNotCheckNull(updateList);
+			}*/
+			List<ChbAssetInfo> assetInfo = new ArrayList<>();
+			dataList.forEach(assetInfoDetailDto -> {
+				assetInfo.add(assetInfoDetailDto);				
+			});
+			assetInfoDetailMapper.mergeInfoListEx(assetInfo);
+			return checkResult;
+		}
+		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),
+				this.getMessage("REPORT_COMMON_FILE_E_0016")));
+		return  checkResult;
+	}
+
 
 }
