@@ -1312,5 +1312,14 @@
 	<select id="getPriceByWorkflowId" resultType="java.math.BigDecimal" parameterType="java.lang.String">
 		SELECT UNIT_CPRICE FROM WFL_TRD_PRODUCT_DEAL where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR} AND ROWNUM = 1
 	</select>
-    
+
+
+    <select id = "getSpeedByFinprodId" resultType = "java.util.Map">
+        SELECT b.pur_speed purSpeed,b.red_speed redSpeed
+        FROM FIN_PRODUCT a
+        left join FIN_PRODUCT_ADD b
+        on a.finprod_id = b.finprod_id
+        where b.finprod_id = #{finprodId,jdbcType=VARCHAR}
+    </select>
+
 </mapper>
