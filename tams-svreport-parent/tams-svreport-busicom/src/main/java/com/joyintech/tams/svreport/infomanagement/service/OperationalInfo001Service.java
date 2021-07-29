@@ -1231,10 +1231,10 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				mapList.add(tableMap);
 			}
 		}
-		
+
 		Map<String, List<Map<String, String>>> groupMap = convertListToMap(mapList);
 		Iterator<Entry<String, List<Map<String, String>>>> iterator = groupMap.entrySet().iterator();
-//		while (iterator.hasNext()) {
+		if (iterator.hasNext()) {
 			Entry<String, List<Map<String, String>>> entity = iterator.next();
 			// 根据接口类型找到表名
 			List<String> tableIds = baseInformationMapper.queryTableIdByDataObject(entity.getKey());
@@ -1266,7 +1266,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
         			}
 
         		}
-        		
+
         		for (Map<String, String> map : entity.getValue()) {
         			if (StringUtil.isNotEmpty(map.get("ASSET_TYPE"))) {
         				if(StringUtil.equals("ASSET_TYPE", map.get("ASSET_TYPE"))){
@@ -1289,14 +1289,14 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     						if (str.endsWith(assetType)) {
     							realStr = str.replace(assetType, "");
     						}
-    						
+
     						//查询结果为日期类型字段处理
     						if (dateColumnList.contains(str) || dateColumnList.contains(realStr)) {
     							Object dateObj = newMap.get(str);
     							if (null != dateObj) {
     								newMap.put(str, (String) dateObj);
     							}
-    							
+
     						}
     						// 查询结果为时间类型字段处理
     						if (timeColumnList.contains(str) || timeColumnList.contains(realStr)) {
@@ -1345,7 +1345,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     				listMap.add(map);
     			}
     		}
-            
+
 
             int size = chbInfoMgrResultConfigList.size();
 			String[] title = new String[size + 1];
@@ -1393,10 +1393,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                     }
                 }
             }
-
-
-//		}
-		try {
+			try {
 			if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
 				responseEntity = chbAssetListToExcel(tableIds.get(0),tableIds.get(0), title, dataList, enumIndexMap, mergeIndexList);;
 			}
@@ -1407,7 +1404,107 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			logger.error(e.getMessage(),e);
 			e.printStackTrace();
 		}
-		return responseEntity;
+			return responseEntity;
+
+		}  else {  // update by zoujiamin TISHKBS-2318  当错误信息查询结果为空的时候，完成导出空文件功能  start
+			// 根据传参接口类型找到表名
+			List<String> tableIds = baseInformationMapper.queryTableIdByDataObject((String) param.get("serachInterf"));
+
+			Map<String,Object> selectParam = new HashMap<>();
+			selectParam.put("tableId", tableIds.get(0));
+			List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam);
+			Map<String, String> resultMap = new HashMap<String, String>(16);
+			// 资产要素表导出需要合并单元格的列号索引
+			List<Integer> mergeIndexList = new ArrayList<Integer>();
+			if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
+				List<SysDataDict> dictList = tamsBaseMapper.selectSysDatadictValueList("SVR_ASSETDEBT_TYPE");
+				chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfoEx(selectParam);
+				mergeIndexList.add(0);
+				mergeIndexList.add(1);
+				int columnSize = chbInfoMgrResultConfigList.size();
+				if (columnSize >= CAI_BASE_COUNT) {
+					for (int i = CAI_BASE_COUNT; i <=  columnSize; i ++) {
+						mergeIndexList.add(i);
+					}
+				}
+				for (ChbInfoMgrResultConfig chbInfoMgrResultConfig : chbInfoMgrResultConfigList) {
+					if (StringUtil.isNotEmpty(chbInfoMgrResultConfig.getResultdictCode())) {
+						resultMap.put(chbInfoMgrResultConfig.getRealColumnId(), chbInfoMgrResultConfig.getResultdictCode());
+						for (SysDataDict sysDataDict : dictList) {
+							resultMap.put(chbInfoMgrResultConfig.getRealColumnId() + sysDataDict.getItemCode(), chbInfoMgrResultConfig.getResultdictCode());
+						}
+					}
+				}
+			}
+			else{
+				chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam);
+				for (ChbInfoMgrResultConfig chbInfoMgrResultConfig : chbInfoMgrResultConfigList) {
+					resultMap.put(chbInfoMgrResultConfig.getColumnId(), chbInfoMgrResultConfig.getResultdictCode());
+				}
+			}
+
+
+			int size = chbInfoMgrResultConfigList.size();
+			String[] title = new String[size + 1];
+			String[] titleCode = new String[size + 1];
+			title[0] = "操作类型";
+			if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
+				titleCode[0] = "操作类型";
+			}
+			int i = 1;
+			for (ChbInfoMgrResultConfig chbInfoMgrResultConfig : chbInfoMgrResultConfigList) {
+				title[i] = chbInfoMgrResultConfig.getColumnName();
+				// modify by dubaojun 2020-10-31 在上面已经设置了带有ASSET_TYPE的字段值，此处直接取即可 start
+//                if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
+//                    titleCode[i] = chbInfoMgrResultConfig.getRealColumnId();
+//                }
+//                else{
+				titleCode[i] = chbInfoMgrResultConfig.getColumnId();
+//                }
+				// modify by dubaojun 2020-10-31 在上面已经设置了带有ASSET_TYPE的字段值，此处直接取即可 end
+				i++;
+			}
+			List<Object[]> dataList = new ArrayList<Object[]>();
+			Object[] objs = new Object[size + 1];
+			Map<Integer, String> enumIndexMap = new HashMap<Integer, String>(16);
+			if(listMap.size()>0){
+				for (int j = 0; j < listMap.size(); j++) {
+					Map<String,String> data = listMap.get(j);
+					objs = new Object[size + 1];
+					objs[0] = "导出";
+					for (int k = 1; k < size + 1; k++) {
+						objs[k] = data.get(titleCode[k]);
+						String resultDictCode = resultMap.get(titleCode[k]);
+						if (StringUtil.isNotEmpty(resultDictCode)) {
+							enumIndexMap.put(k,resultDictCode);
+						}
+					}
+					dataList.add(objs);
+				}
+			}
+			else{
+				for (int k = 1; k < size + 1; k++) {
+					String resultDictCode = resultMap.get(titleCode[k]);
+					if (StringUtil.isNotEmpty(resultDictCode)) {
+						enumIndexMap.put(k,resultDictCode);
+					}
+				}
+			}
+			try {
+				if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
+					responseEntity = chbAssetListToExcel(tableIds.get(0),tableIds.get(0), title, dataList, enumIndexMap, mergeIndexList);;
+				}
+				else{
+					responseEntity = objListToExcel(tableIds.get(0),tableIds.get(0), title, dataList, false, enumIndexMap);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(),e);
+				e.printStackTrace();
+			}
+			return responseEntity;
+		}
+		// update by zoujiamin TISHKBS-2318  当错误信息查询结果为空的时候，完成导出空文件功能  end
+
 	}
 	
 	/**
