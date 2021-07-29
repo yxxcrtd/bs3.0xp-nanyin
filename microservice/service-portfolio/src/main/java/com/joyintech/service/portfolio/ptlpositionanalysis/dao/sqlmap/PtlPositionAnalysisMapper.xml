@@ -3164,7 +3164,7 @@
         P.PORTFOLIO_ID  AS portfolioId,
         '01' hasChildren,
         'SYXJ' pinanAssetType,
-        A.COST         AS posValue
+        nvl(A.COST,0)         AS posValue
         FROM PTL_PORTFOLIO P
         INNER JOIN BOK_VAL_TABLE_DATA A ON ('F16_'||P.PORTFOLIO_ID = A.BOOKSET_ID OR P.PORTFOLIO_ID = A.BOOKSET_ID)
         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
@@ -3198,7 +3198,7 @@
             A.PORTFOLIO_ID AS portfolioId,
             '01' hasChildren,
             'SYXJ' pinanAssetType,
-            A.MARKET_VALUE  AS posValue
+            nvl(A.MARKET_VALUE,0)  AS posValue
             FROM PTL_SEC_PIERCE_VALUTION A
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                 inner join data_auth_notify_inst dani
