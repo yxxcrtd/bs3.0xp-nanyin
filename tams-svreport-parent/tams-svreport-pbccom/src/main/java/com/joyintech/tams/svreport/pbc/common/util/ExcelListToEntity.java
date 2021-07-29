@@ -3,7 +3,9 @@ package com.joyintech.tams.svreport.pbc.common.util;
 import cn.hutool.core.date.DateTime;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.ExcelCellNumber;
+import com.joyintech.tams.svreport.pbc.common.dto.ExcelEntity;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.reflect.Constructor;
@@ -21,7 +23,9 @@ import java.util.List;
 public class ExcelListToEntity {
 
     public static  <T> List<T> convertToEntity(List<List<String>> dataList, Class<T> clazz) throws Exception{
+        ExcelEntity entity = new ExcelEntity();
         List<T> tList = new ArrayList<>();
+        List<ExcelValidDto> excelValidDtos = new ArrayList<>();
         if(StringUtil.isNotEmpty(dataList)){
             Field[] declaredFields = clazz.getDeclaredFields();
             Constructor<T> declaredConstructor = clazz.getDeclaredConstructor();
@@ -47,9 +51,8 @@ public class ExcelListToEntity {
         return tList;
     }
 
-    private static Object checkValueType(Field field,Object value){
-        if(field != null && value != null && !"".equals(value.toString())){
-            Class<?> reqType = field.getType();
+    private static Object checkValueType(Class<?> reqType, Object value){
+        if(value != null && !"".equals(value.toString())){
             if(reqType.equals(String.class)){
                 return value;
             }else{
@@ -106,7 +109,7 @@ public class ExcelListToEntity {
         String setMethod = buildSetMethod(feildName);
         Method method = tClass.getMethod(setMethod, fieldType);
         //执行请求实体中set方法设置请求参数值
-        method.invoke(newInstance,value);
+        method.invoke(newInstance,checkValueType(fieldType,value));
     }
 
     private static String buildSetMethod(String feild){

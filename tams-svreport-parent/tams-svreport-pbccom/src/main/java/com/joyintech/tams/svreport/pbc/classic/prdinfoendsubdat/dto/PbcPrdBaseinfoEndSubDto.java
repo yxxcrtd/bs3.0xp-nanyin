@@ -1,6 +1,5 @@
 package com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto;
 
-import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.svreport.pbc.common.annotation.ExcelCellNumber;
 
 import java.math.BigDecimal;
@@ -15,9 +14,9 @@ public class PbcPrdBaseinfoEndSubDto  {
     //序号
     @ExcelCellNumber(cellNumber = 0)
     private String number;
-    //理财产品代码
+    //人行产品代码
     @ExcelCellNumber(cellNumber = 1)
-    private String prodId;
+    private String pbcProdId;
     //产品实际终止日期
     @ExcelCellNumber(cellNumber = 2)
     private Date mdate;
@@ -42,12 +41,12 @@ public class PbcPrdBaseinfoEndSubDto  {
         this.number = number;
     }
 
-    public String getProdId() {
-        return prodId;
+    public String getPbcProdId() {
+        return pbcProdId;
     }
 
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
+    public void setPbcProdId(String pbcProdId) {
+        this.pbcProdId = pbcProdId;
     }
 
     public Date getMdate() {

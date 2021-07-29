@@ -14,9 +14,9 @@ public class PbcPrdBaseinfoSubDatDto {
     //序号
     @ExcelCellNumber(cellNumber = 0)
     private String number;
-    //理财产品代码
+    //人行产品代码
     @ExcelCellNumber(cellNumber = 1)
-    private String prodId;
+    private String pbcProdId;
     //发行机构代码
     @ExcelCellNumber(cellNumber = 2)
     private String issuePartyId;
@@ -25,7 +25,7 @@ public class PbcPrdBaseinfoSubDatDto {
     private String prodName;
     //产品品种
     @ExcelCellNumber(cellNumber = 4)
-    private String prod1;
+    private String prodType;
     //产品类型
     @ExcelCellNumber(cellNumber = 5)
     private String ivstorientation;
@@ -35,9 +35,9 @@ public class PbcPrdBaseinfoSubDatDto {
     //产品期次
     @ExcelCellNumber(cellNumber = 7)
     private BigDecimal prodStage;
-    //发行机构内部产品代码
+    //发行机构内部产品代码,理财产品代码
     @ExcelCellNumber(cellNumber = 8)
-    private String prodStage1;
+    private String prodId;
     //募集方式
     @ExcelCellNumber(cellNumber = 9)
     private String raiseType;
@@ -49,10 +49,10 @@ public class PbcPrdBaseinfoSubDatDto {
     private String operateMode;
     //募集起始日期
     @ExcelCellNumber(cellNumber = 12)
-    private String raiseVdate01;
+    private Date raiseVdate01;
     //募集结束日期
     @ExcelCellNumber(cellNumber = 13)
-    private String raiseEnddate01;
+    private Date raiseEnddate01;
     //发行机构提前终止权标识
     @ExcelCellNumber(cellNumber = 14)
     private String termRightFlag;
@@ -114,6 +114,14 @@ public class PbcPrdBaseinfoSubDatDto {
     @ExcelCellNumber(cellNumber = 33)
     private String creditMode;
 
+    public String getPbcProdId() {
+        return pbcProdId;
+    }
+
+    public void setPbcProdId(String pbcProdId) {
+        this.pbcProdId = pbcProdId;
+    }
+
     public String getNumber() {
         return number;
     }
@@ -146,12 +154,12 @@ public class PbcPrdBaseinfoSubDatDto {
         this.prodName = prodName;
     }
 
-    public String getProd1() {
-        return prod1;
+    public String getProdType() {
+        return prodType;
     }
 
-    public void setProd1(String prod1) {
-        this.prod1 = prod1;
+    public void setProdType(String prodType) {
+        this.prodType = prodType;
     }
 
     public String getIvstorientation() {
@@ -178,14 +186,6 @@ public class PbcPrdBaseinfoSubDatDto {
         this.prodStage = prodStage;
     }
 
-    public String getProdStage1() {
-        return prodStage1;
-    }
-
-    public void setProdStage1(String prodStage1) {
-        this.prodStage1 = prodStage1;
-    }
-
     public String getRaiseType() {
         return raiseType;
     }
@@ -210,19 +210,19 @@ public class PbcPrdBaseinfoSubDatDto {
         this.operateMode = operateMode;
     }
 
-    public String getRaiseVdate01() {
+    public Date getRaiseVdate01() {
         return raiseVdate01;
     }
 
-    public void setRaiseVdate01(String raiseVdate01) {
+    public void setRaiseVdate01(Date raiseVdate01) {
         this.raiseVdate01 = raiseVdate01;
     }
 
-    public String getRaiseEnddate01() {
+    public Date getRaiseEnddate01() {
         return raiseEnddate01;
     }
 
-    public void setRaiseEnddate01(String raiseEnddate01) {
+    public void setRaiseEnddate01(Date raiseEnddate01) {
         this.raiseEnddate01 = raiseEnddate01;
     }
 

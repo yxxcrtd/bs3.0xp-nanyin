@@ -21,7 +21,7 @@ import java.util.Map;
  * @since 1.0
  */
 @RestController
-@RequestMapping("/PbcPrdBaseinfoSubDat")
+@RequestMapping("/PbcPrdBaseInfoSubDat")
 public class PbcPrdBaseinfoSubDatController {
 
     /**
