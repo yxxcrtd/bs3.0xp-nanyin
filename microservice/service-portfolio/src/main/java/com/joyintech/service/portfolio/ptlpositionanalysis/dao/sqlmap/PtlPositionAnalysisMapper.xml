@@ -511,6 +511,16 @@
 	        </if>
             group by PORTFOLIO_ID
          ),
+         /*查询底层剩余现金*/
+        cash as (
+            select sum(psv.MARKET_VALUE) MARKET_VALUE,
+                psv.PORTFOLIO_ID portfolioId
+            from PTL_SEC_PIERCE_VALUTION psv
+            WHERE
+                psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
+                AND psv.FINPROD_ID like 'REMAININGCASH_%'
+                GROUP BY psv.PORTFOLIO_ID
+        ),
          assetHold as (
                     select A.cdate,A.portfolioId,A.portfolioName,A.finprodType2,A.type5,A.finprodMarketId,A.finprodAbbr,A.marketValue,
                     <!--CASE WHEN A.finprodType2 IN ('F08', 'F09', 'F16') THEN NULL ELSE A.dscCostAmt END dscCostAmt, --> <!--BS-1790 拆借，计划类货币型，利率互换也显示成本字段-->
@@ -966,8 +976,8 @@
             psv.portfolio_Id portfolioId,
             pp.portfolio_Name portfolioName,
             #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
-            pcp.amount marketValue,
-            pcp.amount dscCostAmt,
+            pcp.amount + NVL(CH.MARKET_VALUE,0) marketValue,
+            pcp.amount + NVL(CH.MARKET_VALUE,0) dscCostAmt,
             null shareAmt,
             NULL tdyIntincexp,
             NULL tdyAmtRation,
@@ -986,6 +996,7 @@
             LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
             LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
             left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+            LEFT JOIN cash CH on psv.PORTFOLIO_ID = CH.portfolioId
             WHERE
             psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
             and pcp.portfolio_Id is not NULL
@@ -1010,7 +1021,7 @@
             </if>
             <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
             GROUP BY
-            psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount,pcp.acct_id
+            psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount + NVL(CH.MARKET_VALUE,0),pcp.acct_id
             ) S
             LEFT JOIN (
             SELECT
