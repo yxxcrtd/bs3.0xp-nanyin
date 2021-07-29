@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -233,6 +234,10 @@ public class TrdConBondController {
      */
     @PostMapping("getTongDaoCash")
     public BigDecimal getTongDaoCash(@RequestBody Map<String, Object> map){
+        // 日期格式 long转date
+        if (map.get("platDate") instanceof Long) {
+            map.put("platDate", new Date((Long) map.get("platDate")));
+        }
         BigDecimal big = trdConBondService.getTongDaoCash(map);
         if(big!=null){
             return big;
