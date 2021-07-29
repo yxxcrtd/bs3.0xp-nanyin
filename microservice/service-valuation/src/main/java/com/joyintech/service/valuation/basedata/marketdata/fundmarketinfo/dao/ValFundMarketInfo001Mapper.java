@@ -13,11 +13,11 @@ import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.dto.Va
  * 〈功能详细描述〉
  * @author wangqidong
  * @version 1.0 2018年7月23日
- * @see ValFundMarketInfo001mapper
+ * @see ValFundMarketInfo001Mapper
  * @since 1.0
  */
 @Repository(value="serviceValFundMarketInfo001mapper")
-public interface ValFundMarketInfo001mapper {
+public interface ValFundMarketInfo001Mapper {
 
 
 	/**

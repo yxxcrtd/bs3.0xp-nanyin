@@ -3,12 +3,12 @@ package com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.servi
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.dao.ValFundMarketInfo001Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.dao.ValFundMarketInfo001mapper;
 import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.dto.ValFundMarketInfo001dto;
 /**
  * 每日基金行情业务层
@@ -23,10 +23,10 @@ import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.dto.Va
 public class ValFundMarketInfo001Service extends CommonExportService<ValFundMarketInfo001dto>{
 
     /**
-     * ValFundMarketInfo001mapper 对象
+     * ValFundMarketInfo001Mapper 对象
      */
     @Autowired
-    private ValFundMarketInfo001mapper valFundMarketInfo001mapper;
+    private ValFundMarketInfo001Mapper valFundMarketInfo001mapper;
 
 	/**
 	 * 加载表格
