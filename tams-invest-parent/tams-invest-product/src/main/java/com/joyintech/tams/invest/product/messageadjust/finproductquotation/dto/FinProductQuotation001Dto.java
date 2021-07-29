@@ -222,7 +222,7 @@ public class FinProductQuotation001Dto extends FinProduct implements ProcessEnti
      * 获取 yield
      * @return yield.
      */
-    @Amount(fieldName = "FinProductQuotation001.yield", maxDecBit = 4,message = "FIN_PROD_E_0399")
+    @Amount(fieldName = "FinProductQuotation001.yield", maxDecBit = 4)
     public BigDecimal getYield() {
         return yield;
     }
