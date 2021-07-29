@@ -250,7 +250,13 @@ public class PtlMockTestImportService extends BaseCommonService {
                 if (StringUtil.isNotBlank(rowData.get(9))) {
                     dto.setAccuir(new BigDecimal(rowData.get(9)));
                 }
-                dto.setTradeDate(DateUtil.parse(iPlatformDate.getSysDateStr()));
+                //
+                if (StringUtil.isNotBlank(rowData.get(4))) {
+                    dto.setTradeDate(DateUtil.parse(rowData.get(4)));
+                }else{
+                    dto.setTradeDate(DateUtil.parse(iPlatformDate.getSysDateStr()));
+                }
+
                 if (StringUtil.isNotBlank(rowData.get(10))) {
                     dto.setMdate(DateUtil.parse(rowData.get(10)));
                 }
