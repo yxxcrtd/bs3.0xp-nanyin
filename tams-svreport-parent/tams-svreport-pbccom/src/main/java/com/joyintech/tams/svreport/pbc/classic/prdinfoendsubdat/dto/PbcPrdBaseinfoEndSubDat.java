@@ -22,7 +22,7 @@ import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
  * @author:  Administrator
  * @创建时间: 2019-06-05
  */
-@TableName("PBC_PRD_BASEINFO_END_SUB_NEW")
+@TableName("PBC_PRD_BASEINFO_END_SUB_DAT")
 public class PbcPrdBaseinfoEndSubDat extends BaseEntity {
     /**
      * 主键uuid
@@ -197,8 +197,19 @@ public class PbcPrdBaseinfoEndSubDat extends BaseEntity {
      *  人行产品代码（页面展示用）
      */
     private String pbcProdIdShow;
-    
-    
+    /**
+     *  压缩包编码
+     */
+    private String datZipCode;
+
+    public String getDatZipCode() {
+        return datZipCode;
+    }
+
+    public void setDatZipCode(String datZipCode) {
+        this.datZipCode = datZipCode;
+    }
+
     /** 人行产品代码（页面展示用）
      * @return PBC_PROD_ID
      */

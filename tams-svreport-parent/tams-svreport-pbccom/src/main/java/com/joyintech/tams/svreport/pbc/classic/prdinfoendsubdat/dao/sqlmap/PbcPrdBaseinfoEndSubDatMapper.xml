@@ -36,7 +36,7 @@
     REGIST_SEQNO, PBC_PROD_ID, MDATE, CCY, PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, 
     CUS_YEAR_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
     PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
-    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME,PROD_ID,DAT_ZIP_CODE
   </sql>
    <sql id="Base_Column_List2" >
     HIS_NO, PBC_PROD_ID, MDATE, CCY, PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, 
@@ -870,4 +870,83 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
 			and SUBJECT_LEVEL='1'
 			and subject_no = '1002'
       </select>
+
+    <select id="queryPbcPrdBaseInfoByprodId" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from PBC_PRD_BASEINFO_END_SUB_DAT
+        where PROD_ID in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item.prodId,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into PBC_PRD_BASEINFO_END_SUB_DAT
+            (REGIST_SEQNO, PBC_PROD_ID, MDATE,
+            CCY, PROFIT, PROFIT_CNY,
+            CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, CUS_YEAR_YIELD,
+            SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS,
+            SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE,
+            SUBMIT_DEADLINE, STATUS, CREATE_USER,
+            ORG_CODE, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME,PROD_ID,DAT_ZIP_CODE)
+        values
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            (
+            #{item.registSeqno,jdbcType=CHAR}, #{item.pbcProdId,jdbcType=VARCHAR}, #{item.mdate,jdbcType=TIMESTAMP},
+            #{item.ccy,jdbcType=CHAR}, #{item.profit,jdbcType=DECIMAL}, #{item.profitCny,jdbcType=DECIMAL},
+            #{item.customProfit,jdbcType=DECIMAL}, #{item.customProfitCny,jdbcType=DECIMAL}, #{item.cusYearYield,jdbcType=DECIMAL},
+            #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitTime,jdbcType=TIMESTAMP}, #{item.submitFeedbackStatus,jdbcType=VARCHAR},
+            #{item.sumitSeq,jdbcType=VARCHAR}, sysdate, #{item.pbcSubmitDeadline,jdbcType=TIMESTAMP},
+            #{item.submitDeadline,jdbcType=TIMESTAMP}, #{item.status,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
+            #{item.orgCode,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, sysdate,
+            #{item.updateUser,jdbcType=VARCHAR}, sysdate,#{item.prodId,jdbcType=VARCHAR},#{item.datZipCode,jdbcType=VARCHAR})
+        </foreach>
+
+    </insert>
+
+    <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update PBC_PRD_BASEINFO_END_SUB_DAT
+            set PBC_PROD_ID = #{item.pbcProdId,jdbcType=VARCHAR},
+            MDATE = #{item.mdate,jdbcType=TIMESTAMP},
+            CCY = #{item.ccy,jdbcType=CHAR},
+            PROFIT = #{item.profit,jdbcType=DECIMAL},
+            PROFIT_CNY = #{item.profitCny,jdbcType=DECIMAL},
+            CUSTOM_PROFIT = #{item.customProfit,jdbcType=DECIMAL},
+            CUSTOM_PROFIT_CNY = #{item.customProfitCny,jdbcType=DECIMAL},
+            CUS_YEAR_YIELD = #{item.cusYearYield,jdbcType=DECIMAL},
+            SEND_STATUS = #{item.sendStatus,jdbcType=VARCHAR},
+            SUBMIT_TIME = #{item.submitTime,jdbcType=TIMESTAMP},
+            SUBMIT_FEEDBACK_STATUS = #{item.submitFeedbackStatus,jdbcType=VARCHAR},
+            SUMIT_SEQ = #{item.sumitSeq,jdbcType=VARCHAR},
+            STATUS_DATE = #{item.statusDate,jdbcType=TIMESTAMP},
+            PBC_SUBMIT_DEADLINE = #{item.pbcSubmitDeadline,jdbcType=TIMESTAMP},
+            SUBMIT_DEADLINE = #{item.submitDeadline,jdbcType=TIMESTAMP},
+            STATUS = #{item.status,jdbcType=VARCHAR},
+            CREATE_USER = #{item.createUser,jdbcType=VARCHAR},
+            ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
+            CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR},
+            CREATE_TIME = #{item.createTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{item.updateTime,jdbcType=TIMESTAMP},
+            DAT_ZIP_CODE = #{item.datZipCode,jdbcType=VARCHAR},
+            PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+            where REGIST_SEQNO = #{item.registSeqno,jdbcType=CHAR}
+        </foreach>
+
+    </update>
+
+    <delete id="deleteBatchByProdId" parameterType="java.util.List">
+        delete from PBC_PRD_BASEINFO_END_SUB_DAT
+        where PROD_ID in
+        <if test="list!=null and list.size()>0">
+            <foreach collection="list" item="item" open="(" separator=","
+                     close=")">
+                #{item.prodId,jdbcType=VARCHAR}
+            </foreach>
+            AND SEND_STATUS = '01'
+        </if>
+    </delete>
 </mapper>

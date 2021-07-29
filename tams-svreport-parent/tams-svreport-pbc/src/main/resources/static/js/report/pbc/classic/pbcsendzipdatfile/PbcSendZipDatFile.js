@@ -82,4 +82,16 @@ $(function() {
                table.load();
            });
        });
+    // 导入资管产品信息事件
+    $('#PbcSendZipDatFile_btn_prdImport').click(function() {
+        Joyin.confirm("请确认是否要导入数据？", function() {
+           Joyin.uploadFile(function(fileName) {
+                Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/checkBaseInfoSubDat', {fileName: fileName}, function() {
+                    Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/importBaseInfoSubDat', {fileName: fileName});
+                });
+            },function() {
+                table.reload();
+            });
+        });
+    });
 }());

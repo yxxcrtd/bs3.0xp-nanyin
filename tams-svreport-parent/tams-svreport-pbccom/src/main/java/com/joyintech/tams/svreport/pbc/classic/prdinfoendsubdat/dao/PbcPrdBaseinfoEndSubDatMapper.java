@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -60,6 +61,31 @@ public interface PbcPrdBaseinfoEndSubDatMapper {
 	BigDecimal queryBookBalanceLevel1(@Param("cdate") Date cdate, @Param("prodid") String prodid);
            
 	BigDecimal queryBookBalanceLevel1SubSystem(@Param("cdate") Date cdate, @Param("prodid") String prodid);
-           
+
+	/**
+	 * 根据理财产品代码查询
+	 * @param prodIdList
+	 * @return
+	 */
+	List<PbcPrdBaseinfoEndSubDat> queryPbcPrdBaseInfoByprodId(@Param("list") List<String> prodIdList);
+
+	/**
+	 * 根据理财产品代码查询
+	 * @param prodIdList
+	 * @return
+	 */
+	int insertBatch(@Param("list") List<PbcPrdBaseinfoEndSubDat> prodIdList);
+	/**
+	 * 根据主键批量更新
+	 * @param record
+	 * @return
+	 */
+	int updateBatchByPrimaryKey(@Param("list") List<PbcPrdBaseinfoEndSubDat> record);
+	/**
+	 * 根据理财产品代码删除
+	 * @param list
+	 * @return
+	 */
+	int deleteBatchByProdId(@Param("list") List<PbcPrdBaseinfoEndSubDat> list);
 
 }

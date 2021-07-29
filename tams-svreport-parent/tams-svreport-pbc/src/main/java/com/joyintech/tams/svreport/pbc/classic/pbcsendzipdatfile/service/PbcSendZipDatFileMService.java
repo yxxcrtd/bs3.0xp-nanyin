@@ -1,14 +1,18 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.service;
 
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
-import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
+import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -21,7 +25,12 @@ import java.util.Map;
  */
 @Service
 public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
- 
+
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(PbcSendZipDatFileMService.class);
+
 	/**
 	 *
 	 * 业务画面查询事件
@@ -51,6 +60,39 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 				PbcSendZipDatFile.class);
     }
 
-	
+	/**
+	 *
+	 * 业务导入检查事件
+	 *
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public AjaxResult checkBaseInfoSubDat(String fileName) {
+		Map<String,Object> param = new HashMap<>();
+		param.put("dataList", ExcelUtil.getDataList1(fileName));
+		return restTemplate.postForObject(
+				SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseinfoSubDat/checkBaseInfoSubDat?fileName="+fileName,param,
+				AjaxResult.class);
+
+	}
+
+
+	/**
+	 * 导入数据文件
+	 *
+	 * @param fileName 导入的文件名
+	 * @return 导入结果，包含验证内容，如果验证失败，返回message
+	 */
+	public List<ExcelValidDto> importBaseInfoSubDat(String fileName) {
+		Map<String,Object> param = new HashMap<String,Object>();
+		param.put("dataList", ExcelUtil.getDataList1(fileName));
+		param.put("sheetName", ExcelUtil.getDataList1(fileName));
+		return restTemplate.postForList(
+				SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseinfoSubDat/importBaseInfoSubDat",
+				param,
+				ExcelValidDto.class);
+	}
+
 
 }
