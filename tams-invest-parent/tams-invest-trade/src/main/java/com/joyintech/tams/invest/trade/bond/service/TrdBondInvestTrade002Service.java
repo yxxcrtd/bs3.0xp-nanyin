@@ -3771,4 +3771,21 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 ServiceApplication.ASSET_SERVICE_NAME + "/TrdBondMarketTrade/selectIssueAsset?finprodId="+finprodId,
                 Integer.class);
     }
+
+    /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    public BigDecimal getLastNetAmortizationPrice(Map<String, Object> paramMap) {
+        if (StringUtil.isEmpty((String) paramMap.get("sysdate"))) {
+            paramMap.put("sysdate", iPlatformDate.getSysDateStr());
+        }
+        String sysdate = (String) paramMap.get("sysdate");
+        paramMap.put("sysdate", DateUtil.addDay(sysdate, -1));
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getLastNetAmortizationPrice", paramMap,
+                BigDecimal.class);
+    }
+
 }
