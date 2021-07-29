@@ -262,7 +262,7 @@
              }
         });
         
-        $(".ZLGL-transfer-form #EtrIbRepo001_btn_search").click(function () {
+        $(".cc-transfer-form #EtrIbRepo001_btn_search").click(function () {
 //            zlglTable.load();
         	$('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
             $('#dayOfferSelectorConditionFilter001').hide();
@@ -314,7 +314,7 @@
 			$("#selectorConditionFilter001").hide();
         });
         
-        $(".ZLGL-transfer-form #EtrIbRepo001_btn_export").click(getPositionsExportExcel)
+        $(".cc-transfer-form #EtrIbRepo001_btn_export").click(getPositionsExportExcel)
         $(".transfer-form #EtrIbRepo001_btn_export").click(getZqzyPositionExportExcel)
         
         /**
