@@ -204,7 +204,7 @@ public class MstCaptialAccountController {
     }
 
     @PostMapping("/getAcctInfo")
-    public List<SelectOptionDto> getAcctInfo(Map<String,Object> param){
+    public List<SelectOptionDto> getAcctInfo(@RequestBody Map<String,Object> param){
         return mstCaptialAccountService.getAcctInfo(param);
     }
 
