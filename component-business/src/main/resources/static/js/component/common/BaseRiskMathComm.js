@@ -732,6 +732,111 @@
             },true);
         }
     };
+
+    /**
+     * 上农商个性化_指令环节风险试算改造需求 add by libaisong 2020-11-27
+     */
+    var initBaseRiskMathRedisEtr = function(url,initParam,checkParam,callback){
+        if(null==checkParam||null==checkParam.data|| checkParam.data.length==0){
+            return;
+        }
+        param = checkParam;
+        param2 = {
+            data: checkParam.data
+        }
+        var forbidFlag=false;
+        Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', checkParam, function() {
+            Joyin.ajaxJson(url, initParam, function(resultArr) {
+                $("#riskTrialSpan").empty();
+                table.reload({data:[]});
+                if(risk_math_switch!='Y') {
+                    $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
+                }
+                if(resultArr&&resultArr.head&&resultArr.head.std400msgt){
+                    if(resultArr.head.std400msgt=='E'){
+                        Joyin.error(resultArr.head.stdrtninfo)
+                        return;
+                    }
+                }
+                if(!resultArr||!resultArr.body||!resultArr.body.RSK_LIST||!resultArr.body.rskStatus){
+                    $("#FundAccountInfo_DIV3").hide();
+                    $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
+                    return;
+                }
+                var result=resultArr.body.RSK_LIST
+                for(var row in result) {
+                    result[row].kriValue = forbidVal(result[row].kriValue, result[row].kriType);
+                    checkRiskStatus(result[row]);
+                    changeHtml(result[row]);
+                    if(resultArr.body.rskStatus != "0" && resultArr.body.rskStatus != "1" &&resultArr.body.rskStatus != "2" && result[row].kriStatus=="3"&&result[row].kriTrend!="向好" ){
+                        forbidFlag=true
+                    }
+                }
+                table.reload({data:result});
+                var cluflag=true;
+                if(resultArr.body.rskStatus!="3"){
+                    if(resultArr.body.rskStatus=="4"||forbidFlag){
+                        cluflag=false;
+                        resultArr.body.rskStatus="3";
+                    }
+                }else{
+                    cluflag=false;
+                }
+                // var cluflag=resultArr.body.rskStatus!="3"?resultArr.body.rskStatus=="4"&&forbidFlag?false:true:true;
+                if(!cluflag){
+                    $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.noclusion"))
+                    $("#FundAccountInfo_DIV3").hide();
+                    Joyin.dialog("风险试算", basePath +'component/common/BaseRiskMathCommEtr/init', '98%', '95%',{initParam:JSON.stringify(resultArr)});
+
+                }
+                else{
+                    $("#FundAccountInfo_DIV3").hide();
+                    $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
+                }
+                if (!(initParam instanceof Array)){
+                    var requestObj = $.extend(initParam,{data: checkParam.data})
+                    Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', requestObj, function (result) {
+                        if (result.data){
+                            if(null==$("#remark").val()||""==$("#remark").val()){
+                                $("#remark").val(result.data);
+                            }
+                            else{
+                                //不存在这条件备注，才处理
+                                if($("#remark").val().indexOf(result.data)==-1){
+                                    $("#remark").val($("#remark").val()+"\n"+result.data);
+                                }
+                            }
+                            //$("#remark").html($("#remark").html() + result.data);
+                        }
+                        //修改为同步 防止使用条件出现异常
+                    },false);
+                }
+
+                if(risk_math_switch=='Y'){
+                    $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
+                }
+                //把总结论也放在列表中隐藏以方便保存到库中
+                var cacheData = table.getRow(0, true);
+                cacheData.totalConclu = resultArr.body.rskStatus;
+
+                for(var row in result) {
+                    //把总结论也放在列表中隐藏以方便保存到库中
+                    result[row].totalConclu = resultArr.body.rskStatus;
+                }
+
+                /**
+                 * add by chendijun 20200710 上农商场内交易页面试算和展示不在同一个页面，需要回调传出数据
+                 */
+                if(callback) {
+                    callback(result,cluflag);
+                }
+            },false);
+        },false);
+        // del 批量试算 by zhangrui1 start
+//        }
+        // del 批量试算 by zhangrui1 end
+    };
+
     var changeHtml = function(result) {
         for(var key in result) {
             if(result.hasOwnProperty(key) && result[key] && typeof result[key] === 'string') {
@@ -1119,6 +1224,7 @@
              * {timePoint:'01','valDate':'2018-01-01','portfolioCode':'123456','tradeAmount':111,assetType:'01',assetCode:'214'}
              */
 			initBaseRiskMathRedis: initBaseRiskMathRedis,
+            initBaseRiskMathRedisEtr: initBaseRiskMathRedisEtr,//上农商个性化_指令环节风险试算改造需求 add by libaisong 2020-11-27
             initBaseRiskMathCommPage: initBaseRiskMathCommPage,
             initBaseRiskMathCommPage2: initBaseRiskMathCommPage2,
             initBaseRiskMathCommPageCus: initBaseRiskMathCommPageCus,
