@@ -13,5 +13,9 @@ public class PbcDatTemplateName {
      * 产品基本信息表
      */
     public static final String PBC_DAT_REPORT_PIB= "PIB";
+    /**
+     * 产品终止信息
+     */
+    public static final String PBC_DAT_REPORT_PIE= "PIE";
 
 }

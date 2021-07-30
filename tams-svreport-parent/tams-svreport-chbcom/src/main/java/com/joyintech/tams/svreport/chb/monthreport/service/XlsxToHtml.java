@@ -263,7 +263,7 @@ public class XlsxToHtml {
              
              if (wb instanceof XSSFWorkbook) {
                              
-                 XSSFFont xf = ((XSSFCellStyle) cellStyle).getFont(); 
+                 XSSFFont xf = ((XSSFCellStyle) cellStyle).getFont();
                  short boldWeight = xf.getBold()?(short)700:(short)400;
                  sb.append("style='");
                  sb.append("font-weight:" + boldWeight + ";"); // 字体加粗

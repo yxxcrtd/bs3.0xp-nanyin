@@ -1,38 +1,40 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.base.entity.SysInstitution;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
-import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.util.DeadlineUtil;
+import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.interf.common.util.ObjEqual;
 import com.joyintech.tams.report.system.instregbankcode.dao.SysInstRegBankCode001Mapper;
 import com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode001Dto;
-import com.joyintech.tams.svreport.pbc.common.constants.PbcMonthReportConstants;
-import com.joyintech.tams.svreport.pbc.common.service.PbcExportService;
-import com.joyintech.tams.svreport.pbc.prod.dao.PbcReportProdDetailMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dao.PbcPrdAccountSubMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dao.PbcPrdBaseinfoSubMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dao.PbcPrdBaseinfoEndSubMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
+import com.joyintech.tams.svreport.pbc.common.service.PbcDatPriviewService;
 import com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto;
 import com.joyintech.tams.svreport.pbc.prod.dto.PbcReportProdDetailDto;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcReportTemplateMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
-import com.joyintech.tams.svreport.pbc.report.dto.PbcReportTemplateDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -45,53 +47,37 @@ import java.util.*;
  * @修改记录：
  */
 @Service
-public abstract class PbcReportProdDatTotalService extends PbcExportService  {
+public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService {
     
     @Autowired
-    private PbcSendZipDatFileMapper  pbcSendZipDatFileMapper;
+    private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
 	@Autowired
-	private PbcReportTemplateMapper pbcReportTemplateMapper;
+	private PbcPrdBaseinfoSubMapper pbcPrdBaseinfoSubMapper;
 	@Autowired
-    private SysInstRegBankCode001Mapper sysInstRegBankCode001Mapper;
-    
-    public abstract void generateReport(Date generateDate,Date reportStartDate,Date reportEndDate,
-            List<PbcMonthPrdPostionDto> prodPositionList,boolean isEdit);
-    
+	private PbcPrdBaseinfoEndSubDatMapper pbcPrdBaseinfoEndSubDatMapper;
+	@Autowired
+	private PbcPrdBaseinfoEndSubMapper pbcPrdBaseinfoEndSubMapper;
+
     @Override
     public Map<Object, Object> createData(Map<String,Object> param){
     	Map<Object,Object> data  = new HashMap<Object,Object>();
     	if(param.get("reportuuid")==null){
     		return data;
     	}
-    	String reportuuid = param.get("reportuuid").toString();
+    	String reportuuid=param.get("reportuuid").toString();
 		String reporttype=param.get("reporttype").toString();
 		if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue())){
-			Map<Object,Object> pbcReport  = new HashMap<Object,Object>();
-			pbcReport.put("rowIndex","1");
-			pbcReport.put("prodId","C00001121000058");
-			pbcReport.put("issuePartyId","C00001");
-			data.put("report", pbcReport);
-		}else {
-			PbcSendZipDatFile pbcReport = pbcSendZipDatFileMapper.selectByPrimaryKey(reportuuid);
-			// 如果报表为空则返回data
-			if (pbcReport == null) {
-				return data;
-			}
-			data.put("report", pbcReport);
-			// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
-			String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
-			List<PbcReportProdDetailDto> listDetail = null;//pbcReportProdDetailMapper.selectByReportuuid(reportuuid);
-			if (!CollectionUtils.isEmpty(listDetail)) {
-				for (PbcReportProdDetailDto detail : listDetail) {
-					dealProdData(detail, isShowZero);
-					// 处理数据
-					if (!DictCodeListExt2.人行报表名称_资管产品只数情况统计表.getValue().equals(pbcReport.getDatZipDatType())) {
-						// 处理数据
-						dealAreaDateListForExport(detail);
-					}
-					data.put(detail.getPropertyCode(), detail);
-				}
-			}
+			PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat = pbcPrdBaseinfoSubDatMapper.selectByPrimaryKey(reportuuid);
+			PbcPrdBaseinfoSub pbcPrdBaseinfoSub=pbcPrdBaseinfoSubMapper.selectByPrimaryKey(reportuuid);
+			Map<String,Integer> redMap=ObjEqual.domainEquals(pbcPrdBaseinfoSubDat,pbcPrdBaseinfoSub);
+			data.put("report", dealPbcPrdBaseinfoSubDat(pbcPrdBaseinfoSubDat));
+			data.put("redMap", redMap);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue())){
+			PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoEndSubDat = pbcPrdBaseinfoEndSubDatMapper.selectByPrimaryKey(reportuuid);
+			PbcPrdBaseinfoEndSub pbcPrdBaseinfoEndSub=pbcPrdBaseinfoEndSubMapper.selectByPrimaryKey(reportuuid);
+			Map<String,Integer> redMap=ObjEqual.domainEquals(pbcPrdBaseinfoEndSubDat,pbcPrdBaseinfoEndSub);
+			data.put("report", pbcPrdBaseinfoEndSubDat);
+			data.put("redMap", redMap);
 		}
     	return  data;
     }
@@ -105,193 +91,117 @@ public abstract class PbcReportProdDatTotalService extends PbcExportService  {
 //        		Map.class);
     }
 
-    
+
 	/**
 	 * 功能:处理查询出的产品报表明细数据
 	 * @since 1.6.0
 	 * @version 1.6.0
-	 * @param detail
-	 * @return 
-	 * PbcReportAssetDebtDetailDto
+	 * @param result
+	 * @return
+	 * PbcPrdBaseinfoSubDat
 	 */
-	public void dealAreaDateListForExport(PbcReportProdDetailDto detail) {
-		BigDecimal tenthousand = new BigDecimal(10000);
-		// 人民币
-		if(detail.getCny() != null){
-			detail.setCny(detail.getCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+	public PbcPrdBaseinfoSubDat dealPbcPrdBaseinfoSubDat(PbcPrdBaseinfoSubDat result) {
+		if (StringUtil.isNotEmpty(result.getPbcProdType())){
+			result.setPbcProdType( SysDataUtil.getNameFromDataDict(DictCode.人行产品种类,result.getPbcProdType()));
 		}
-		//外币
-//		if(detail.getForeignCcy() != null){
-//			detail.setForeignCcy(detail.getForeignCcy().divide(tenthousand));
-//		}
-		//美元折人民币
-		if(detail.getUsdToCny() != null){
-			detail.setUsdToCny(detail.getUsdToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+		if (StringUtil.isNotEmpty(result.getCustomerType())){
+			result.setCustomerType( SysDataUtil.getNameFromDataDict(DictCode.人行客户类型,result.getCustomerType()));
 		}
-		//欧元折人民币
-		if(detail.getEurToCny() != null){
-			detail.setEurToCny(detail.getEurToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+		if (StringUtil.isNotEmpty(result.getRaiseType())){
+			result.setRaiseType( SysDataUtil.getNameFromDataDict(DictCode.人行募集方式,result.getRaiseType()));
 		}
-		//英镑折人民币
-		if(detail.getGbpToCny() != null){
-			detail.setGbpToCny(detail.getGbpToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+		if (StringUtil.isNotEmpty(result.getManageType())){
+			result.setManageType( SysDataUtil.getNameFromDataDict(DictCode.人行管理类型,result.getManageType()));
 		}
-		//日元折人民币
-		if(detail.getJpyToCny() != null){
-			detail.setJpyToCny(detail.getJpyToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+		if (StringUtil.isNotEmpty(result.getFiduciaryDuty())){
+			result.setFiduciaryDuty( SysDataUtil.getNameFromDataDict(DictCode.人行管理方式,result.getFiduciaryDuty()));
 		}
-		//其他币种(外币)折人民币
-		if(detail.getOthToCny() != null){
-			detail.setOthToCny(detail.getOthToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+		if (StringUtil.isNotEmpty(result.getOperateMode())){
+			result.setOperateMode(result.getOperateMode() + StringUtil.SPACE + SysDataUtil.getNameFromDataDict(DictCode.人行产品运作模式,result.getOperateMode()));
 		}
-		//合计
-		if(detail.getTotal() != null){
-			detail.setTotal(detail.getTotal().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+		if (StringUtil.isNotEmpty(result.getContMode())){
+			result.setContMode(SysDataUtil.getNameFromDataDict(DictCode.人行合作模式,result.getContMode()));
 		}
+		if (StringUtil.isNotEmpty(result.getBusiModel())){
+			result.setBusiModel( SysDataUtil.getNameFromDataDict(DictCode.人行业务模式,result.getBusiModel()));
+		}
+		if (StringUtil.isNotEmpty(result.getIncomeGuaranIdent())){
+			result.setIncomeGuaranIdent(StringUtil.SPACE + SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getIncomeGuaranIdent()));
+		}
+		if (StringUtil.isNotEmpty(result.getPrinGuaranIdent())){
+			result.setPrinGuaranIdent( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getPrinGuaranIdent()));
+		}
+		if (StringUtil.isNotEmpty(result.getTermRightFlag())){
+			result.setTermRightFlag( SysDataUtil.getNameFromDataDict(DictCode.人行有无,result.getTermRightFlag()));
+		}
+		if (StringUtil.isNotEmpty(result.getCusRedeemFlag())){
+			result.setCusRedeemFlag( SysDataUtil.getNameFromDataDict(DictCode.人行有无,result.getCusRedeemFlag()));
+		}
+		if (StringUtil.isNotEmpty(result.getCreditFlag())){
+			result.setCreditFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCreditFlag()));
+		}
+		if (StringUtil.isNotEmpty(result.getCreditType())){
+			result.setCreditType( SysDataUtil.getNameFromDataDict(DictCode.人行信誉机构类型,result.getCreditType()));
+		}
+		if (StringUtil.isNotEmpty(result.getCreditMode())){
+			//多个用,切开
+			String [] creditModes=result.getCreditMode().split(GlobalConstant.COMMA);
+			String creditMode="";
+			int i=0;
+			for(String single:creditModes){
+				i++;
+				creditMode=creditMode+SysDataUtil.getNameFromDataDict(DictCode.人行增信形式,single);
+				if(i<creditModes.length){
+					creditMode=creditMode+GlobalConstant.COMMA;
+				}
+			}
+			result.setCreditMode(creditMode);
+		}
+		if (StringUtil.isNotEmpty(result.getIsConstracte())){
+			result.setIsConstracte( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getIsConstracte()));
+		}
+		if (StringUtil.isNotEmpty(result.getTransferType())){
+			result.setTransferType( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getTransferType()));
+		}
+		if (StringUtil.isNotEmpty(result.getIdentiFlag())){
+			result.setIdentiFlag( SysDataUtil.getNameFromDataDict(DictCode.人行理财产品发起机构标识,result.getIdentiFlag()));
+		}
+		if(result.getOutDepCtry()!=null){
+			List<String> outDepCtrys=StringUtil.splitToList(GlobalConstant.COMMA, result.getOutDepCtry());
+			result.setOutDepCtry("");
+			for(String outDepCtry : outDepCtrys){
+				result.setOutDepCtry(result.getOutDepCtry()+","+outDepCtry+" "+SvrDataUtil.getNameFromDataDict(DictCode.所属国家或地区, outDepCtry));
+			}
+			result.setOutDepCtry(result.getOutDepCtry().substring(1));
+		}
+		//募集资金币种
+		if (StringUtil.isNotEmpty(result.getRaiseCcy())){
+			String raiseCcyStr= SysDataUtil.getNameFromDataDict(DictCode.币种,result.getRaiseCcy());
+			result.setRaiseCcy(raiseCcyStr);
+		}
+		//兑付本金币种
+		if (StringUtil.isNotEmpty(result.getCashPrinCcy())){
+			String cashPrinCcy= SysDataUtil.getNameFromDataDict(DictCode.币种,result.getCashPrinCcy());
+			result.setCashPrinCcy(cashPrinCcy);
+		}
+		//兑付收益币种
+		if (StringUtil.isNotEmpty(result.getCashProfCcy())){
+			String cashProfCcy= SysDataUtil.getNameFromDataDict(DictCode.币种,result.getCashProfCcy());
+			result.setCashProfCcy(cashProfCcy);
+		}
+		// 境内托管机构名称
+		if(result.getInDepName()!=null){
+			result.setInDepName(result.getInDepName().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.境内托管机构名称, result.getInDepName()));
+		}
+		return result;
 	}
+
+    
 
 
 
 	
 	
-	
-	/**
-	 * 数据计算
-	 * @param dto
-	 * @param ccy
-	 * @param value
-	 * @param rateMap
-	 * @param generateDate
-	 * @param source
-	 */
-    public void setDetailValue(PbcReportProdDetailDto dto,String ccy,BigDecimal value,Map<String, BigDecimal> rateMap,Date generateDate,String source){
-        BigDecimal cny = ChbCcyConvertUtil.exchangeMoney(
-        		ccy,DictCodeListExt1.币种_中债_人民币.getValue(),generateDate,value,rateMap,source);
-        if(DictCodeListExt1.币种_中债_人民币.getValue().equals(ccy)){//人民币
-            dto.setCny(dto.getCny().add(cny));
-        }else if(DictCodeListExt1.币种_中债_美元.getValue().equals(ccy)){//美元
-            dto.setUsdToCny((dto.getUsdToCny().add(cny)));
-        }else if(DictCodeListExt1.币种_中债_欧元.getValue().equals(ccy)){//欧元
-            dto.setEurToCny((dto.getEurToCny().add(cny)));
-        }else if(DictCodeListExt1.币种_中债_英镑.getValue().equals(ccy)){//英镑
-            dto.setGbpToCny((dto.getGbpToCny().add(cny)));
-        }else if(DictCodeListExt1.币种_中债_日元.getValue().equals(ccy)){//日元
-            dto.setJpyToCny((dto.getJpyToCny().add(cny)));
-        }else{ //其他币种
-            dto.setOthToCny((dto.getOthToCny().add(cny)));
-        }
-        //合计
-        dto.setTotal(dto.getTotal().add(cny));
-    }
-    
-    
-    /**
-   	 * 数据计算 (多法人处理) 同时计算汇总数据以及当前数据所属部门的数据
-   	 * @param dto   汇总数据
-   	 * @param deptDto  部门数据
-   	 * @param ccy
-   	 * @param value
-   	 * @param rateMap
-   	 * @param generateDate
-   	 * @param source
-   	 */
-       public void setDetailValueAndDept(Map<String,PbcReportProdDetailDto> dto,Map<String,PbcReportProdDetailDto> deptDto,String code,
-       												String ccy,BigDecimal value,Map<String, BigDecimal> rateMap,Date generateDate,String source){
-       	//汇总数据计算
-       	setDetailValue(dto.get(code), ccy, value, rateMap, generateDate, source);
-       	//部门数据计算
-       	if(null!=deptDto&&null!=deptDto.get(code)){
-       		
-           	setDetailValue(deptDto.get(code), ccy, value, rateMap, generateDate, source);
-       	}
 
-       }
-    
-    
-
-    /**
-     * @Description 导出预览为零的数据显示空还是显示零
-     * @param detail
-     * @version 1.7 2019年7月4日
-     * @param isShowZero 
-     */
-    private void dealProdData(PbcReportProdDetailDto detail, String isShowZero) {
-    	// 显示成零
-		if("01".equals(isShowZero)){
-			if(detail.getCny()==null){
-				detail.setCny(BigDecimal.ZERO);
-			}
-			if(detail.getUsdToCny()==null){
-				detail.setUsdToCny(BigDecimal.ZERO);
-			}
-			if(detail.getEurToCny()==null){
-				detail.setEurToCny(BigDecimal.ZERO);
-			}
-			if(detail.getGbpToCny()==null){
-				detail.setGbpToCny(BigDecimal.ZERO);
-			}
-			if(detail.getJpyToCny()==null){
-				detail.setJpyToCny(BigDecimal.ZERO);
-			}
-			if(detail.getOthToCny()==null){
-				detail.setOthToCny(BigDecimal.ZERO);
-			}
-			if(detail.getTotal()==null){
-				detail.setTotal(BigDecimal.ZERO);
-			}
-			if(detail.getProdcounts()==null){
-				detail.setProdcounts(new Long(0));
-			}
-		} else if("02".equals(isShowZero)){
-			if(detail.getCny()!=null&&(BigDecimal.ZERO).compareTo(detail.getCny())==0){
-				detail.setCny(null);
-			}
-			if(detail.getUsdToCny()!=null&&(BigDecimal.ZERO).compareTo(detail.getUsdToCny())==0){
-				detail.setUsdToCny(null);
-			}
-			if(detail.getEurToCny()!=null&&(BigDecimal.ZERO).compareTo(detail.getEurToCny())==0){
-				detail.setEurToCny(null);
-			}
-			if(detail.getGbpToCny()!=null&&(BigDecimal.ZERO).compareTo(detail.getGbpToCny())==0){
-				detail.setGbpToCny(null);
-			}
-			if(detail.getJpyToCny()!=null&&(BigDecimal.ZERO).compareTo(detail.getJpyToCny())==0){
-				detail.setJpyToCny(null);
-			}
-			if(detail.getOthToCny()!=null&&(BigDecimal.ZERO).compareTo(detail.getOthToCny())==0){
-				detail.setOthToCny(null);
-			}
-			if(detail.getTotal()!=null&&(BigDecimal.ZERO).compareTo(detail.getTotal())==0){
-				detail.setTotal(null);
-			}
-			if(detail.getProdcounts()!=null&&(new Long(0)).compareTo(detail.getProdcounts())==0){
-				detail.setProdcounts(null);
-			}
-		}
-	}
-
-
-    
-    public String[] getRegistCode(String orgCode){
-        //String issuePartyId = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID);
-		String issuePartyId =  CommonUtil.selectBankCode();
-        //String  issuePartyName = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME);
-		String  issuePartyName = CommonUtil.selectBankCodeName();
-        // 发行机构代码取值
-        if(null!=orgCode){
-        	Map<String,Object> param = new HashMap<>();
-        	List<String> orgCodeList = new ArrayList<>();
-        	orgCodeList.add(orgCode);
-        	param.put("orgCodeList", orgCodeList);
-        	List<SysInstRegBankCode001Dto> list = sysInstRegBankCode001Mapper.queryForPage(param);
-        	
-        	if(null!=list&&list.size()>0){
-        		issuePartyId = list.get(0).getRegistBankCode();
-        		SysInstitution dtp = (SysInstitution) CommonUtil.queryCode(GlobalConstant.SYS_INSTITUTION_KEY,orgCode);
-        		issuePartyName =  null!=dtp?dtp.getInstitutionName():issuePartyName;
-        	}
-        }
-		return new String[]{issuePartyId,issuePartyName};
-	}
     
 }
