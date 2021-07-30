@@ -117,11 +117,18 @@ public class TrdConBondDtoValidator implements TradeCommonValidator {
         }
 
         //证券托管户 与通道二选一
-        if((inputDto.getChlId()==null||"".equals(inputDto.getChlId()))&&(inputDto.getSecManageAcctId()==null||"".equals(inputDto.getSecManageAcctId()))){
-        	 ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0014",getMessage("invest.channelId")));
-        	
-        	errorList.add(validMessage);
+//        if((inputDto.getChlId()==null||"".equals(inputDto.getChlId()))&&(inputDto.getSecManageAcctId()==null||"".equals(inputDto.getSecManageAcctId()))){
+//        	 ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0014",getMessage("invest.channelId")));
+//
+//        	errorList.add(validMessage);
+//        }
+
+        if(StringUtil.isEmpty(inputDto.getSecManageAcctId())){
+            ValidMessage validMessage = new ValidMessage(getMessage("FIN_PROD_M_004","证券托管户"));
+
+            errorList.add(validMessage);
         }
+
         
         if (StringUtil.isNotEmpty(inputDto.getProAvailableCash())
                 && StringUtil.isNotEmpty(inputDto.getTradeAmt())
