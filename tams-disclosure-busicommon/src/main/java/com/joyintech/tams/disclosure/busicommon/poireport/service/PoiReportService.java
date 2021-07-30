@@ -301,7 +301,7 @@ public class PoiReportService {
 				rs = ps.executeQuery();
 				// 子表的一行数据
 				List<String> row = new ArrayList<>();
-				while (rs.next()) {
+				while (rs != null && rs.next()) {
 					row = new ArrayList<>();
 					// 遍历获取每列数据
 					for (int i = 1; i < 50; i++) {
