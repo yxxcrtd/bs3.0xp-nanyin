@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.FinProductType;
+import com.joyintech.tams.common.base.entity.FinTradeProduct;
 import com.joyintech.tams.invest.risk.valtblimport.dto.*;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -385,6 +387,8 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                             } else {
                                 entity2.setFinprodId(entity2.getSubCode().substring(8, entity2.getSubCode().length()));
                             }
+                            //在fin_trade_product、fin_product_type生成相关数据，风险需要用到
+                            createRepoInfo(entity2);
                         } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),"2202")){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_正回购.getValue());
                             String termType = rskValTableImportCommonService.getTermTypeFromStr(entity2.getSubCode(), entity2.getSubName());
@@ -393,6 +397,8 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                             } else {
                                 entity2.setFinprodId(entity2.getSubCode().substring(8, entity2.getSubCode().length()));
                             }
+                            //在fin_trade_product、fin_product_type生成相关数据，风险需要用到
+                            createRepoInfo(entity2);
                         } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),"2231")){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_正回购.getValue());
                         } else if (StringUtil.equals(entity2.getSubCode().substring(0, 6),"120410")){
@@ -1551,5 +1557,15 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getGroupIdInfo", param,
            SelectOptionDto.class);
    }
+
+    /**
+     * 根据估值表中回购数据生成对应的回购信息，存入表fin_trade_product、fin_product_type
+     * @param entity2
+     */
+    private void createRepoInfo(RskValtblAssetSubDto entity2){
+        restTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/createRepoInfo",
+                entity2,Integer.class);
+    }
    
 }
