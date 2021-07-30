@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FileUtils;
 import org.n3r.idworker.Sid;
 import org.slf4j.Logger;
@@ -129,7 +130,7 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
         List<ChbFeedbackFileManagementDto> resultList = new ArrayList<>();
         //根据流水号找到对应的记录
         for(ChbFeedbackFileManagementDto dto:list){
-            File file = new File(dto.getFilePath()+dto.getFileName());
+            File file = new SafelyFile(dto.getFilePath()+dto.getFileName());
             if(file.exists() && StringUtil.lowerCase(dto.getFileName()).endsWith(".zip")){
                 //解析文件
                 List<XbrliDownLoadXml> xmlList = chbFeedbackFileAnalysisUtil.analysisXmlFileList(dto.getFilePath(), dto.getFileName());
@@ -351,8 +352,8 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
         chbFeedbackMsgService.updateChbFeedbackFileByNo(backfile);
         
         try {
-            FileUtils.moveFileToDirectory(new File(dto.getFilePath() + dto.getFileName()), new File(filePathBak), true);
-            FileUtils.moveFileToDirectory(new File(dto.getFilePath() + dto.getFileName().replace(".zip",".xml")), new File(filePathBak), true);
+            FileUtils.moveFileToDirectory(new SafelyFile(dto.getFilePath() + dto.getFileName()), new SafelyFile(filePathBak), true);
+            FileUtils.moveFileToDirectory(new SafelyFile(dto.getFilePath() + dto.getFileName().replace(".zip",".xml")), new SafelyFile(filePathBak), true);
         }catch (Exception e){
             logger.error("反馈文件处理结束文件迁移异常，异常内容：" + e.getMessage());
             return "反馈文件处理结束文件迁移异常！";
@@ -397,11 +398,11 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
         try{
             String fileLockPath = chbFeedbackMsgService.getDownloadFilePath() + "lock" + File.separator;
             // 查看锁文件是否存在
-            File lockPath = new File(fileLockPath);
+            File lockPath = new SafelyFile(fileLockPath);
             if (!lockPath.exists()) {
                 lockPath.mkdirs();
             }
-            lockFile = new File(fileLockPath + File.separator + chbFeedbackFile.getFileName().replace(".zip","") + "up.lockfile");
+            lockFile = new SafelyFile(fileLockPath + File.separator + chbFeedbackFile.getFileName().replace(".zip","") + "up.lockfile");
             if (!lockFile.exists()) {
                 lockFile.createNewFile();
             }
