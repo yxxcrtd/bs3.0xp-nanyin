@@ -480,28 +480,31 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
                     Page<SelectOptionDto> finprodIds = getFinprodIdForAdd(map);
                     if (finprodIds.getRoot().isEmpty()) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017",getMessage("EtrConBond003.finprodId"), lineNo));
-                    }
-                    SelectOptionDto selectOptionDto = finprodIds.getRoot().get(0);
-                    JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(selectOptionDto.getObject()));
-                    String tradeMarket = jsonObject.get("tradeMarket").toString();
-                    // 证券账户存在
-                    if (StringUtil.isNotBlank(rowData.get(8).toString())
-                        && StringUtil.isNotBlank(rowData.get(2).toString())
-                        && StringUtil.isNotBlank(tradeMarket)) {
-                        Map<String, Object> param = new HashMap<>();
-                        param.put("initValue", rowData.get(8).toString());
-                        param.put("portfolioId", rowData.get(2).toString());
-                        param.put("tradeMarket", tradeMarket);
-                        param.put("page", 1);
-                        param.put("length", 20);
-                        List<SelectOptionDto> selectOptionDtoList = restTemplate.postForList(
-                            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/getSecManageAcctId",
-                            param, SelectOptionDto.class);
-                        if (StringUtil.isEmptyList(selectOptionDtoList)) {
-                            confirmMsg =  etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017",
-                                getMessage("EtrConBond003.secAcctId"), lineNo));
+                    }else {
+                        SelectOptionDto selectOptionDto = finprodIds.getRoot().get(0);
+                        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(selectOptionDto.getObject()));
+                        String tradeMarket = jsonObject.get("tradeMarket").toString();
+                        // 证券账户存在
+                        if (StringUtil.isNotBlank(rowData.get(8).toString())
+                                && StringUtil.isNotBlank(rowData.get(2).toString())
+                                && StringUtil.isNotBlank(tradeMarket)) {
+                            Map<String, Object> param = new HashMap<>();
+                            param.put("initValue", rowData.get(8).toString());
+                            param.put("portfolioId", rowData.get(2).toString());
+                            param.put("tradeMarket", tradeMarket);
+                            param.put("page", 1);
+                            param.put("length", 20);
+                            List<SelectOptionDto> selectOptionDtoList = restTemplate.postForList(
+                                    ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/getSecManageAcctId",
+                                    param, SelectOptionDto.class);
+                            if (StringUtil.isEmptyList(selectOptionDtoList)) {
+                                confirmMsg =  etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017",
+                                        getMessage("EtrConBond003.secAcctId"), lineNo));
+                            }
                         }
                     }
+
+
                 }
                 // 币种非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
