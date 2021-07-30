@@ -7,6 +7,7 @@ import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.RskAssetInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussFinBondRepInfoRiskDto;
@@ -122,6 +123,16 @@ public class AssetInfoDetailRisk001Dto extends RskAssetInfo implements ITableRow
 
 	public void setFinProductAdd(FinProductAdd finProductAdd) {
 		this.finProductAdd = finProductAdd;
+	}
+
+	private FinProductType finProductType;
+
+	public FinProductType getFinProductType() {
+		return finProductType;
+	}
+
+	public void setFinProductType(FinProductType finProductType) {
+		this.finProductType = finProductType;
 	}
 
 

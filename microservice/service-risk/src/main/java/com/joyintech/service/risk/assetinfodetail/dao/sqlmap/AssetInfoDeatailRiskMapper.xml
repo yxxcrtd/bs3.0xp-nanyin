@@ -2952,6 +2952,11 @@
         DELETE CHB_ASSET_INFO_ERRODATA WHERE trim(DATAUUID) = #{assetUUid}
     </delete>
 
+    <delete id="deleteFinProductType">
+        DELETE FROM FIN_PRODUCT_TYPE
+        WHERE FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </delete>
+
     <update id="updateChbAssetType">
             update RSK_ASSET_INFO
             set status = 'D',
@@ -2965,6 +2970,11 @@
 
     <select id="selectByFinprodId" resultType="com.joyintech.tams.common.base.entity.FinProductAdd" parameterType="java.lang.String">
         select * from FIN_PRODUCT_ADD
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByFinprodIdType" resultType="com.joyintech.tams.common.base.entity.FinProductType" parameterType="java.lang.String">
+        select * from FIN_PRODUCT_TYPE
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </select>
 

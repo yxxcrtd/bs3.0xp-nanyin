@@ -23,6 +23,7 @@ import com.joyintech.service.risk.assetinfodetail.dto.asset.SvrBussRepQDIIStruct
 import com.joyintech.service.risk.assetinfodetail.dto.asset.SvrBussRepQDIIdemolitionInfoRiskDto;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.RskAssetInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -115,6 +116,16 @@ public class AssetInfoDetailRiskDto extends RskAssetInfo implements ITableRow,Pr
 
 	public void setFinProductAdd(FinProductAdd finProductAdd) {
 		this.finProductAdd = finProductAdd;
+	}
+
+	private FinProductType finProductType;
+
+	public FinProductType getFinProductType() {
+		return finProductType;
+	}
+
+	public void setFinProductType(FinProductType finProductType) {
+		this.finProductType = finProductType;
 	}
 
 	public SvrBussQDIISharesInfoRiskDto getSvrBussQDIISharesInfoRiskDto() {

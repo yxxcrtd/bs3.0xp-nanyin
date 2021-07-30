@@ -18,8 +18,10 @@ import com.joyintech.service.risk.assetinfodetail.dao.AssetInfoDetailRiskMapper;
 import com.joyintech.service.risk.assetinfodetail.dto.AssetInfoDetailRiskDto;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
+import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.RskAssetInfo;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -48,6 +50,9 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
      */
     @Autowired
     private FinProductAddMapper finProductAddMapper;
+
+	@Autowired
+	private FinProductTypeMapper finProductTypeMapper;
 
 
 	/**
@@ -106,7 +111,7 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 			assetInfo.add(dto);
 			flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
 		}
-		//股票需在金融产品附属表FinProductAdd赋值
+		//股票需在金融产品附属表FinProductAdd、FIN_PRODUCT_TYPE表赋值
 		if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
 				||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
 			 if (dto.getFinProductAdd() != null) {
@@ -118,6 +123,16 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 				 finProductAddMapper.updateByPrimaryKeySelective(dto.getFinProductAdd()); 
 				 }
              }
+
+			if (dto.getFinProductType() != null) {
+				String finprodId = dto.getFinProductType().getFinprodId();
+				FinProductType finProductType = assetInfoDetailMapper.selectByFinprodIdType(finprodId);
+				if(finProductType == null) {
+					finProductTypeMapper.insert(dto.getFinProductType());
+				}else {
+					finProductTypeMapper.updateByPrimaryKeySelective(dto.getFinProductType());
+				}
+			}
 		}
 
 		return flag;
@@ -141,11 +156,12 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 //			assetInfoDetailMapper.deleteError(dto.getAssetUuid());
 //		}
 			
-		//股票需删除FinProductAdd的值
+		//股票需删除FinProductAdd、FIN_PRODUCT_TYPE表的值
 	   if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
 			||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
 		   String finprodId = dto.getFinProductAdd().getFinprodId();
 		   finProductAddMapper.deleteByPrimaryKey(finprodId);
+		   assetInfoDetailMapper.deleteFinProductType(finprodId);
 				
 		}
 

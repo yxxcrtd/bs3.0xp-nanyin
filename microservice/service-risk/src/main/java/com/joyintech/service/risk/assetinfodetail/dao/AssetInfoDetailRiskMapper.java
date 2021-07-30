@@ -5,6 +5,7 @@ import com.joyintech.service.risk.assetinfodetail.dto.AssetInfoDetailRiskDto;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.RskAssetInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -59,6 +60,10 @@ public interface AssetInfoDetailRiskMapper {
 	int selectDataCount(@Param("keylist") List<AssetInfoDetailRiskDto> list);
 	
 	FinProductAdd selectByFinprodId(@Param("finprodId") String finprodId);
+
+	FinProductType selectByFinprodIdType(@Param("finprodId") String finprodId);
+
+	void deleteFinProductType(@Param("finprodId") String finprodId);
 
 	int deleteError(String assetUUid);
 

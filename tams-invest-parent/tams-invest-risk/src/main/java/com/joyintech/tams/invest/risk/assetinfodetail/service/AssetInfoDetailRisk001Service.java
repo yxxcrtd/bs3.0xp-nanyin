@@ -9,18 +9,17 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.RskAssetInfo;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
@@ -140,14 +139,28 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 		if(StringUtil.isEmpty(dto.getAssetUuid())){
 			dto.setAssetUuid(IDGenerator.generate(36));
 		}
-		//股票需在金融产品附属表FinProductAdd赋值
+		//股票需在金融产品附属表FinProductAdd、FIN_PRODUCT_TYPE表赋值
 		if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
 			||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
-        FinProductAdd finProductAdd = new FinProductAdd();
-        BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
-        finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
-        finProductAdd.setInvestNature(DictCodeList.投资性质_权益类.getValue());
-        dto.setFinProductAdd(finProductAdd);
+            FinProductAdd finProductAdd = new FinProductAdd();
+            BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
+            finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+            finProductAdd.setInvestNature(DictCodeList.投资性质_权益类.getValue());
+            dto.setFinProductAdd(finProductAdd);
+
+			FinProductType finProductType = new FinProductType();
+			BeanUtil.copyPropertiesIgnoreNull(finProductType, dto);
+			finProductType.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+			// 分支序号
+			Long branch = StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)) ? 0 : Long.parseLong(
+					CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
+			finProductType.setBranch(branch);
+			finProductType.setType8(DictCodeListExt2.平安资产类型_股票.getValue());
+			finProductType.setType9("04");
+			finProductType.setType10("47");
+			finProductType.setType11("095");
+			finProductType.setType12("097");
+			dto.setFinProductType(finProductType);
 		}
 		/***当资产为资管计划或者委外时,需要保存资管计划开始结束日**/
 		if(DictCodeListExt2.资产_负债类别_资产管理产品.getValue().equals(dto.getAssetType())
