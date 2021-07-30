@@ -1167,38 +1167,48 @@ public class RealTimeValIndicatorCalcUtil {
                 || StringUtil.equals(DictCodeListExt3.组合开放类型_高频开放.getValue(), openType)) {
                 // 封闭型产品：收益率%=（组合到期日累计单位净值/1-1）*100%
                 // 高频开放型产品：收益率%=（一季度后组合累计单位净值/1-1）*100%
-                BigDecimal 区间终点累计单位净值 = ptlValuationDtoMap.get(
-                    periodList.get(1)).getTdyUnitValueSum();
-                BigDecimal 区间起点累计单位净值 = BigDecimal.ONE;
-                Date calcDate_1 = calcDate;
-                if(StringUtil.equals(DictCodeListExt3.组合开放类型_封闭式.getValue(), openType)){
-                    calcDate_1 = DateUtil.addDay(periodList.get(0),-1);
-                    if(ptlValuationDtoMap.get(
-                            calcDate_1)!=null&& ptlValuationDtoMap.get(
-                            calcDate_1).getTdyUnitValueSum()!=null){
-                        区间起点累计单位净值 =
-                                ptlValuationDtoMap.get(
-                                        calcDate_1).getTdyUnitValueSum();
+//                BigDecimal 区间终点累计单位净值 = ptlValuationDtoMap.get(
+//                    periodList.get(1)).getTdyUnitValueSum();
+
+                BigDecimal 计算结果 = null;
+                MockPtlPortfolioValuationDto portfolioValuationDtoEnd =ptlValuationDtoMap.get(periodList.get(1));
+
+                if(portfolioValuationDtoEnd!=null){
+
+                    BigDecimal 区间终点累计单位净值 = portfolioValuationDtoEnd.getTdyUnitValueSum();
+
+                    BigDecimal 区间起点累计单位净值 = BigDecimal.ONE;
+                    Date calcDate_1 = calcDate;
+                    if(StringUtil.equals(DictCodeListExt3.组合开放类型_封闭式.getValue(), openType)){
+                        calcDate_1 = DateUtil.addDay(periodList.get(0),-1);
+                        if(ptlValuationDtoMap.get(
+                                calcDate_1)!=null&& ptlValuationDtoMap.get(
+                                calcDate_1).getTdyUnitValueSum()!=null){
+                            区间起点累计单位净值 =
+                                    ptlValuationDtoMap.get(
+                                            calcDate_1).getTdyUnitValueSum();
+                        }
+                    } else{
+                        if(ptlValuationDtoMap.get(
+                                calcDate_1)!=null&& ptlValuationDtoMap.get(
+                                calcDate_1).getTdyUnitValueSum()!=null){
+                            区间起点累计单位净值 =
+                                    ptlValuationDtoMap.get(
+                                            calcDate).getTdyUnitValueSum();
+                        }
                     }
-                } else{
-                    if(ptlValuationDtoMap.get(
-                            calcDate_1)!=null&& ptlValuationDtoMap.get(
-                            calcDate_1).getTdyUnitValueSum()!=null){
-                        区间起点累计单位净值 =
-                                ptlValuationDtoMap.get(
-                                        calcDate).getTdyUnitValueSum();
+
+                    计算结果 = ArithmeticUtil.subtract(
+                            ArithmeticUtil.divide(区间终点累计单位净值, 区间起点累计单位净值, 12), BigDecimal.ONE);
+
+                    计算结果 = ArithmeticUtil.multiply(计算结果, BigDecimal.valueOf(basisNum));
+                    if(StringUtil.equals(DictCodeListExt3.组合开放类型_封闭式.getValue(), openType)){
+                        计算结果 = ArithmeticUtil.divide(计算结果, BigDecimal.valueOf(DateUtil.getBetweenDayNumber(calcDate_1,periodList.get(1))), 6);
+                    }else{
+                        计算结果 = ArithmeticUtil.divide(计算结果, BigDecimal.valueOf(DateUtil.getBetweenDayNumber(calcDate_1,periodList.get(1))), 6);
                     }
                 }
 
-                BigDecimal 计算结果 = ArithmeticUtil.subtract(
-                    ArithmeticUtil.divide(区间终点累计单位净值, 区间起点累计单位净值, 12), BigDecimal.ONE);
-
-                计算结果 = ArithmeticUtil.multiply(计算结果, BigDecimal.valueOf(basisNum));
-                if(StringUtil.equals(DictCodeListExt3.组合开放类型_封闭式.getValue(), openType)){
-                    计算结果 = ArithmeticUtil.divide(计算结果, BigDecimal.valueOf(DateUtil.getBetweenDayNumber(calcDate_1,periodList.get(1))), 6);
-                }else{
-                    计算结果 = ArithmeticUtil.divide(计算结果, BigDecimal.valueOf(DateUtil.getBetweenDayNumber(calcDate_1,periodList.get(1))), 6);
-                }
                return 计算结果;
             }
         }
