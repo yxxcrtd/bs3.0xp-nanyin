@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.service;
 
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.WorkbookUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -24,6 +25,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.commons.util.IdUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,7 +126,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                         //设置数据状态为修改
                         baseinfoSubDat.setStatus(DictCodeList.数据状态_修改.getValue());
                         //设置报送流水号   重新生成报送流水号 TODO
-                        baseinfoSubDat.setSumitSeq(UUID.randomUUID().toString());
+                        baseinfoSubDat.setSumitSeq(null);
                         //设置压缩包编码为空
                         baseinfoSubDat.setDatZipCode(null);
                         baseinfoSubDatsSend.add(baseinfoSubDat);
@@ -139,7 +141,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                     //设置数据状态为新建
                     baseinfoSubDat.setStatus(DictCodeList.数据状态_新建.getValue());
                     //设置报送流水号   重新生成报送流水号 TODO
-                    baseinfoSubDat.setSumitSeq(UUID.randomUUID().toString());
+                    baseinfoSubDat.setSumitSeq(null);
                     //设置压缩包编码为空
                     baseinfoSubDat.setDatZipCode(null);
                     baseinfoSubDatsNew.add(baseinfoSubDat);
@@ -171,6 +173,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
 
     private PbcPrdBaseinfoSubDat updatePbcPrdBaseinfoSubDat(PbcPrdBaseinfoSubDatDto pbcPrdBaseinfoSubDatDto,PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat){
         BeanUtil.copyPropertiesIgnoreNull(pbcPrdBaseinfoSubDat,pbcPrdBaseinfoSubDatDto);
+        pbcPrdBaseinfoSubDat.setRegistSeqno(cn.hutool.core.lang.UUID.randomUUID().toString());
         return pbcPrdBaseinfoSubDat;
     }
 

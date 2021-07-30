@@ -1230,34 +1230,34 @@
 		from PBC_PRD_BASEINFO_SUB_DAT
 		where PROD_ID in
 		<foreach collection="list" open="(" close=")" separator="," item="item">
-			#{item.prodId,jdbcType=VARCHAR}
+			#{item,jdbcType=VARCHAR}
 		</foreach>
 	</select>
 
 	<insert id="insertBatch" parameterType="java.util.List">
-		insert into PBC_PRD_BASEINFO_SUB_DAT (SUB_PROD_ID,REGIST_SEQNO, PBC_PROD_ID,
-											  ISSUE_PARTY_ID,
-											  PBC_PROD_TYPE, PROD_NAME, PROD_BRAND,
-											  PROD_STAGE, PROD_ID, RAISE_CCY,
-											  CASH_PRIN_CCY, CASH_PROF_CCY, CUSTOMER_TYPE,
-											  RAISE_TYPE, MANAGE_TYPE, FIDUCIARY_DUTY,
-											  CONT_MODE, OPERATE_MODE, IVSTORIENTATION,
-											  BUSI_MODEL, INCOME_GUARAN_IDENT, PRIN_GUARAN_IDENT,
-											  HIGH_YIELD_ISSUE, LOW_YIELD_ISSUE, RAISE_VDATE,
-											  RAISE_ENDDATE, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG,
-											  CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE,
-											  IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY,
-											  OUT_DEP_NAME, VDATE, MDATE,
-											  ACCOUNT_ID, IS_CONSTRACTE, TRANSFER_TYPE,
-											  IDENTI_FLAG, SEND_STATUS, SUBMIT_TIME,
-											  SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE,IS_MARKET_FUND,
-											  PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
-											  STATUS, CREATE_USER, ORG_CODE,DAT_ZIP_CODE,
-											  CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-											  UPDATE_TIME)
+		insert into PBC_PRD_BASEINFO_SUB_DAT
+		(SUB_PROD_ID,REGIST_SEQNO, PBC_PROD_ID,
+		ISSUE_PARTY_ID,
+		PBC_PROD_TYPE, PROD_NAME, PROD_BRAND,
+		PROD_STAGE, PROD_ID, RAISE_CCY,
+		CASH_PRIN_CCY, CASH_PROF_CCY, CUSTOMER_TYPE,
+		RAISE_TYPE, MANAGE_TYPE, FIDUCIARY_DUTY,
+		CONT_MODE, OPERATE_MODE, IVSTORIENTATION,
+		BUSI_MODEL, INCOME_GUARAN_IDENT, PRIN_GUARAN_IDENT,
+		HIGH_YIELD_ISSUE, LOW_YIELD_ISSUE, RAISE_VDATE,
+		RAISE_ENDDATE, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG,
+		CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE,
+		IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY,
+		OUT_DEP_NAME, VDATE, MDATE,
+		ACCOUNT_ID, IS_CONSTRACTE, TRANSFER_TYPE,
+		IDENTI_FLAG, SEND_STATUS, SUBMIT_TIME,
+		SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE,IS_MARKET_FUND,
+		PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+		STATUS, CREATE_USER, ORG_CODE,DAT_ZIP_CODE,
+		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME)
 		values
 		<foreach collection="list" open="(" close=")" separator="," item="item">
-			(
 			#{item.subProdId,jdbcType=VARCHAR},
 			#{item.registSeqno,jdbcType=CHAR}, #{item.pbcProdId,jdbcType=VARCHAR},
 			#{item.issuePartyId,jdbcType=VARCHAR},
@@ -1287,7 +1287,7 @@
 			#{item.status,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR},#{item.datZipCode,jdbcType=VARCHAR},
 			#{item.createDept,jdbcType=VARCHAR}, sysdate,
 			#{item.updateUser,jdbcType=VARCHAR},
-			sysdate)
+			sysdate
 		</foreach>
 
 	</insert>
