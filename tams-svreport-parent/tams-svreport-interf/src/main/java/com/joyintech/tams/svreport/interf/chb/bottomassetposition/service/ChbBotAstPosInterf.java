@@ -464,7 +464,7 @@ public class ChbBotAstPosInterf extends BaseService{
 				logger.info("当前资管计划代码:"+ bot.getPlanAssetId() + ",中债二级分类:" + assets2);
 				//根据当前bot的资管计划找到对应的回购资产数据
 				String finalAssets = assets2;
-				List<ChbAssetInfo> intAmtList = repInfoList.stream().filter(repines -> StringUtil.equals(repines.getCheckCode(), bot.getPlanAssetId()) && StringUtil.equals(repines.getAssetType2(), finalAssets)).collect(Collectors.toList());
+				List<ChbAssetInfo> intAmtList = repInfoList.stream().filter(repines -> StringUtil.equals(repines.getPlanId(), bot.getPlanAssetId()) && StringUtil.equals(repines.getAssetType2(), finalAssets)).collect(Collectors.toList());
 				if(StringUtil.isEmptyList(intAmtList)){
 					logger.info("根据当前资管计划:"+ bot.getPlanAssetId() +"以及科目号："+bot.getAssetCode() +",未找到对应的底层回购要素信息,请检查是否维护底层回购信息!");
 					continue;
@@ -534,7 +534,7 @@ public class ChbBotAstPosInterf extends BaseService{
 			//根据二级分类以及交易场所找到对应的回购要素
 			String finalAssets = assets2;
 			String finalTradeMkt = tradeMarket;
-			List<ChbAssetInfo> costAmtList = repInfoList.stream().filter(repines -> StringUtil.equals(repines.getCheckCode(),bot.getPlanAssetId())
+			List<ChbAssetInfo> costAmtList = repInfoList.stream().filter(repines -> StringUtil.equals(repines.getPlanId(),bot.getPlanAssetId())
 					&& StringUtil.equals(repines.getAssetType2(),finalAssets)
 					&& StringUtil.equals(repines.getTradeMarket(),finalTradeMkt)
 			).collect(Collectors.toList());
