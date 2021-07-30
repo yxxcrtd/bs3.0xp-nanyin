@@ -499,7 +499,6 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
                 }
                 catch (IOException e) {
                     logger.error("当前中债反馈文件" + chbFeedbackFile.getFileName() + e.getMessage(),e);
-                    return resMsg;
                 }
             }
             if (channel != null) {
@@ -508,7 +507,6 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
                 }
                 catch (IOException e) {
                     logger.error("当前中债反馈文件" + chbFeedbackFile.getFileName() + e.getMessage(),e);
-                    return resMsg;
                 }
             }
             if (fos != null) {
@@ -517,7 +515,6 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
                 }
                 catch (IOException e) {
                     logger.error("当前中债反馈文件" + chbFeedbackFile.getFileName() + e.getMessage(),e);
-                    return resMsg;
                 }
             }
             if(lockFile != null){
