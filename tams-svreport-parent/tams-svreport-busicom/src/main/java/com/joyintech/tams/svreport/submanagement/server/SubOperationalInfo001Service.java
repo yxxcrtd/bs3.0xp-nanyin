@@ -1611,17 +1611,20 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			}
 
 			if (workbook != null) {
+				FileOutputStream out = null;
 				try {
 					File exportFile = new File(fileName);
-					FileOutputStream out = new FileOutputStream(exportFile);
+					out= new FileOutputStream(exportFile);
 					workbook.write(out);
-					out.close();
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
+				}finally {
+					if (out != null){
+						out.close();
+					}
 				}
 			}
-
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
@@ -1743,17 +1746,20 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			// 处理中文不能自动调整列宽的问题
 			this.setSizeColumn(sheet, columnNum);
 			if (workbook != null) {
+				FileOutputStream out = null;
 				try {
 					File exportFile = new File(fileName);
-					FileOutputStream out = new FileOutputStream(exportFile);
+					out = new FileOutputStream(exportFile);
 					workbook.write(out);
-					out.close();
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
+				} finally {
+					if (out != null){
+						out.close();
+					}
 				}
 			}
-
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
