@@ -139,7 +139,8 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 		if(StringUtil.isEmpty(dto.getAssetUuid())){
 			dto.setAssetUuid(IDGenerator.generate(36));
 		}
-		//股票需在金融产品附属表FinProductAdd、FIN_PRODUCT_TYPE表赋值
+		//股票需在金融产品附属表FinProductAdd（投资性质为02）、FIN_PRODUCT_TYPE表赋值,
+		// 金融衍生品、QDII需在金融产品附属表FinProductAdd存值，投资性质为03
 		if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
 			||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
             FinProductAdd finProductAdd = new FinProductAdd();
@@ -161,6 +162,12 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 			finProductType.setType11("095");
 			finProductType.setType12("097");
 			dto.setFinProductType(finProductType);
+		}else{
+			FinProductAdd finProductAdd = new FinProductAdd();
+			BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
+			finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+			finProductAdd.setInvestNature(DictCodeList.投资性质_商品及金融衍生品类.getValue());
+			dto.setFinProductAdd(finProductAdd);
 		}
 		/***当资产为资管计划或者委外时,需要保存资管计划开始结束日**/
 		if(DictCodeListExt2.资产_负债类别_资产管理产品.getValue().equals(dto.getAssetType())

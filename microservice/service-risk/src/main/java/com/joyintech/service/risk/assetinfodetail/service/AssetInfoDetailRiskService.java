@@ -111,19 +111,19 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 			assetInfo.add(dto);
 			flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
 		}
-		//股票需在金融产品附属表FinProductAdd、FIN_PRODUCT_TYPE表赋值
-		if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
-				||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
+		//股票需在金融产品附属表FinProductAdd（投资性质为02）、FIN_PRODUCT_TYPE表赋值,
+		// 金融衍生品、QDII需在金融产品附属表FinProductAdd存值，投资性质为03
 			 if (dto.getFinProductAdd() != null) {
 				 String finprodId = dto.getFinProductAdd().getFinprodId();
 				 FinProductAdd finProductAdd = assetInfoDetailMapper.selectByFinprodId(finprodId);
 				 if(finProductAdd == null) {
                  finProductAddMapper.insert(dto.getFinProductAdd());
 				 }else {
-				 finProductAddMapper.updateByPrimaryKeySelective(dto.getFinProductAdd()); 
+				 finProductAddMapper.updateByPrimaryKeySelective(dto.getFinProductAdd());
 				 }
              }
-
+		if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
+				||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
 			if (dto.getFinProductType() != null) {
 				String finprodId = dto.getFinProductType().getFinprodId();
 				FinProductType finProductType = assetInfoDetailMapper.selectByFinprodIdType(finprodId);
@@ -156,11 +156,11 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 //			assetInfoDetailMapper.deleteError(dto.getAssetUuid());
 //		}
 			
-		//股票需删除FinProductAdd、FIN_PRODUCT_TYPE表的值
-	   if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
-			||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
+		//删除FinProductAdd、FIN_PRODUCT_TYPE表的值
 		   String finprodId = dto.getFinProductAdd().getFinprodId();
 		   finProductAddMapper.deleteByPrimaryKey(finprodId);
+		if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
+				||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
 		   assetInfoDetailMapper.deleteFinProductType(finprodId);
 				
 		}
