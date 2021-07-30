@@ -497,6 +497,7 @@
 		FROM FIN_PRODUCT A
 		LEFT JOIN FIN_PRODUCT_ADD B on a.finprod_id=b.finprod_id
 		where A.FINPROD_TYPE2 = #{FINPROD_TYPE_TG}
+		AND A.TRADE_MARKET != '12'
 		<if test="search != null and search != ''">
 			and	(
 				A.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search},
