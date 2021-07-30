@@ -143,6 +143,12 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     private WflEtrPledgeMapper wflEtrPledgeMapper;
 
     @Autowired
+    private WflEtrEntrustWwDetailMapper wflEtrEntrustWwDetailMapper;
+
+    @Autowired
+    private WflEtrEntrustWwMapper wflEtrEntrustWwMapper;
+
+    @Autowired
     private EtrEntrustWwMapper etrEntrustWwMapper;
 
     @Autowired
@@ -1156,6 +1162,70 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                 dto.getMstFileInputParameter().setBussinessId(dto.getWorkFlowId());
                 mstFileCommonService.updateBusinessId(dto.getMstFileInputParameter());
             }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean newWwDelegateFlow(BaseEtrInvestInfoDto dto) {
+        if (dto != null) {
+            WflEtrEntrustWw entrustWw = new WflEtrEntrustWw();
+            BeanUtil.copyPropertiesIgnoreNull(entrustWw,dto.getEtrEntrustWw ());
+            entrustWw.setWorkflowId(dto.getWorkFlowId());
+            entrustWw.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            wflEtrEntrustWwMapper.insertSelective(entrustWw);
+            // 保存委托指令附属表
+
+            if(dto.getEtrEntrustWwDetailList () != null){
+                for(int i = 0; i < dto.getEtrEntrustWwDetailList ().size (); i++){
+                    WflEtrEntrustWwDetail etrEntrustWwDetail = new WflEtrEntrustWwDetail();
+                    BeanUtil.copyPropertiesIgnoreNull(etrEntrustWwDetail,dto.getEtrEntrustWwDetailList().get (i));
+                    etrEntrustWwDetail.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrEntrustWwDetailMapper.insertSelective(etrEntrustWwDetail);
+                }
+            }
+
+
+            // 保存List<委托指令回购质押品>
+            if (dto.getEtrPledgeList() != null && dto.getEtrPledgeList().size() > 0) {
+                for (EtrPledge etrPledge : dto.getEtrPledgeList()) {
+                    WflEtrPledge wflEtrPledge = new WflEtrPledge();
+                    BeanUtil.copyPropertiesIgnoreNull(wflEtrPledge,etrPledge);
+                    wflEtrPledge.setWorkflowId(dto.getWorkFlowId());
+                    wflEtrPledge.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrPledgeMapper.insertSelective(wflEtrPledge);
+                }
+            }
+            // 保存List<委托投标标位表>
+            if (dto.getBidPriceList() != null && !dto.getBidPriceList().isEmpty()) {
+                for (EtrEntrustBidPrice etrEntrustBidPrice : dto.getBidPriceList()) {
+                    etrEntrustBidPrice.setBidPrice(etrEntrustBidPrice.getBidPrice().divide(BigDecimal.valueOf(100)));
+                    WflEtrEntrustBidPrice wflEtrEntrustBidPrice = new WflEtrEntrustBidPrice();
+                    BeanUtil.copyPropertiesIgnoreNull(wflEtrEntrustBidPrice,etrEntrustBidPrice);
+                    wflEtrEntrustBidPrice.setWorkflowId(dto.getWorkFlowId());
+                    wflEtrEntrustBidPrice.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrEntrustBidPriceMapper.insertSelective(wflEtrEntrustBidPrice);
+                }
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteWwDelegateFlow(Map<String, Object> param) {
+        String workflowId = (String)param.get("workflowId");
+        if (workflowId != null) {
+            // 删除委托指令
+            wflEtrEntrustWwMapper.deleteByWorkflowId(workflowId);
+            // 删除委托指令附属
+            wflEtrEntrustWwDetailMapper.deleteByWorkflowId(workflowId);
+            // 删除委托指令回购质押品
+            wflEtrPledgeMapper.deleteByWorkflowId(workflowId);
+            // 全删委托投标标位表
+            wflEtrEntrustBidPriceMapper.deleteByWorkflowId(workflowId);
             return true;
         }
         return false;
