@@ -482,4 +482,9 @@ public class CfetsQuotedCommonController {
         return cfetsQuotedCommonService.selectEntrustId(page, length, param);
     }
 
+    @RequestMapping("isOpeQuotedPrice")
+    public boolean isOpeQuotedPrice(@RequestBody Map<String,Object> param){
+        return cfetsQuotedCommonService.isOpeQuotedPrice(param);
+    }
+
 }

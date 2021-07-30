@@ -494,4 +494,21 @@
 		WHERE T1.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </select>
 
+    <!--用户是否是交易处长-->
+    <select id="isTraDirector" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+            SYS_ROLE sr
+        LEFT JOIN SYS_USER_ROLE su ON
+            sr.ROLE_ID = su.ROLE_ID
+        <where>
+            <if test="userId != null and userId !='' ">
+                AND su.USER_ID =#{userId}
+            </if>
+            <if test="rolePos != null and rolePos !='' ">
+                AND sr.ROLE_POS=#{rolePos}
+            </if>
+        </where>
+    </select>
 </mapper>

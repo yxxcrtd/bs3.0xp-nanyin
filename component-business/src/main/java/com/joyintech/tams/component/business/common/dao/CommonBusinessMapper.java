@@ -90,4 +90,10 @@ public interface CommonBusinessMapper {
     int selectFundNum(@Param("finprodId") String finprodId);
 
 	String selectCustomer(Map<String, Object> map);
+
+    /**
+     * 登录用户是否是交易处长
+     * @return
+     */
+	int isTraDirector(Map<String,Object> param);
 }
