@@ -509,23 +509,23 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
         //-------费用因四舍五入差一分导致check不过进行倒减处理-------<<<<<<<
     }
 
-    public static void main(String[] args) {
-        BigDecimal A = new BigDecimal("90");
-        BigDecimal B = new BigDecimal("20");
-        BigDecimal C = new BigDecimal("140");
-        BigDecimal D = new BigDecimal("240");
-        BigDecimal E = new BigDecimal("50");
-        List<BigDecimal> tmpList = new ArrayList<>();
-        tmpList.add(A);
-        tmpList.add(B);
-        tmpList.add(C);
-        tmpList.add(D);
-        tmpList.add(E);
-        Collections.sort(tmpList);
-        tmpList.forEach(x-> {            
-            logger.info(x.toString());
-        });
-    }
+//    public static void main(String[] args) {
+//        BigDecimal A = new BigDecimal("90");
+//        BigDecimal B = new BigDecimal("20");
+//        BigDecimal C = new BigDecimal("140");
+//        BigDecimal D = new BigDecimal("240");
+//        BigDecimal E = new BigDecimal("50");
+//        List<BigDecimal> tmpList = new ArrayList<>();
+//        tmpList.add(A);
+//        tmpList.add(B);
+//        tmpList.add(C);
+//        tmpList.add(D);
+//        tmpList.add(E);
+//        Collections.sort(tmpList);
+//        tmpList.forEach(x-> {
+//            logger.info(x.toString());
+//        });
+//    }
 
 
     /**
