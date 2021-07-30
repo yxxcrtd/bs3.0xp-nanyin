@@ -225,7 +225,7 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
             //账户资金管理，所属柜台初始利率表
             //查询是否存在所属柜台对应利率，无记录，则新增  add by xxg start
             FinInitrateDatadict ft = finInitrateDatadictMapper.selectByPrimaryKey(entity.getOwnDept());
-            if(ft == null){
+            if(ft == null && "A07".equals(entity.getAccountType())){
                 FinInitrateDatadict finInitrateDatadict = new FinInitrateDatadict();
                 finInitrateDatadict.setRate(entity.getRate());
                 finInitrateDatadict.setOwnDept(entity.getOwnDept());
