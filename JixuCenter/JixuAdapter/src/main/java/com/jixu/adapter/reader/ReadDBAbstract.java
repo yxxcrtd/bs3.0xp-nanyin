@@ -128,6 +128,7 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 		
 		//一个适配器配置只连接一次，分段查询。在第一次查询建立jdbc连接，之后查询则使用之前的连接。发现中断则重连
 		Connection conn=null;
+		ResultSet rs = null;
 		try {
 			if(dataCounter.getConn()==null || dataCounter.getConn().isClosed()){
 				conn=getConnection(source.getFilepath(), source.getChannelAccount(), AESUtil.Decrypt(source.getChannelPWD()));
@@ -216,7 +217,7 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 				}
 			}
 
-			ResultSet rs=stmt.executeQuery();
+			rs=stmt.executeQuery();
 			ResultSetMetaData md = rs.getMetaData(); //获得结果集结构信息,元数据
 			int columnCount = md.getColumnCount();   //获得列数
 
@@ -313,6 +314,9 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 			if (conn != null){
 				conn.close();
 			}
+			if (rs != null){
+				rs.close();
+			}
 		}
 		return result;
 	}
@@ -386,6 +390,7 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 		String connectInfo=source.getFilepath();
 		Connection conn=null;
 		PreparedStatement stmt=null;
+		ResultSet rs= null;
 		try{
 			conn=getConnection(connectInfo, source.getChannelAccount(), AESUtil.Decrypt(source.getChannelPWD()));
 			
@@ -398,7 +403,7 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 				sql=sql.replace(param, "null");
 			}
 			stmt=conn.prepareStatement(sql);
-			ResultSet rs=stmt.executeQuery();
+			rs=stmt.executeQuery();
 			
 			ResultSetMetaData rsmd = rs.getMetaData(); //获得结果集结构信息,元数据
 			for( int i=1; i<=rsmd.getColumnCount(); i++ ){
@@ -414,6 +419,9 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 				}
 				if(conn!=null){
 					conn.close();
+				}
+				if (rs != null){
+			    	rs.close();
 				}
 			}catch(SQLException se){
 				logger.error("Error", se);
@@ -426,6 +434,7 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 		List<String> columnList=new ArrayList<String>();
 		Connection conn=null;
 		Statement stmt=null;
+		ResultSet rs = null;
 		try{
 			conn=getConnection(urlpath, dbUser, dbPwd);
 			stmt=conn.createStatement();
@@ -438,7 +447,7 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 				sql=sql.replace(param, "null");
 			}
 			
-			ResultSet rs=stmt.executeQuery(sql);
+			rs=stmt.executeQuery(sql);
 			
 			ResultSetMetaData rsmd = rs.getMetaData(); //获得结果集结构信息,元数据
 			for( int i=1; i<=rsmd.getColumnCount(); i++ ){
@@ -454,6 +463,9 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 				}
 				if(conn!=null){
 					conn.close();
+				}
+				if(rs!=null){
+					rs.close();
 				}
 			}catch(SQLException se){
 				logger.error("Error", se);
