@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.CreditUsingCustomerMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.CreditUsingCustomer" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="LAST_AMOUNT" property="lastAmount" jdbcType="DECIMAL" />
+        <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+        <result column="NEW_AMOUNT" property="newAmount" jdbcType="DECIMAL" />
+        <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="IS_BOTTOM" property="isBottom" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREDIT_LINES_ID" property="creditLinesId" jdbcType="VARCHAR" />
+        <result column="CREDIT_OCCURE_TYPE" property="creditOccureType" jdbcType="VARCHAR" />
+        <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="ORI_TRADE_ID" property="oriTradeId" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="AMOUNT_ADD" property="amountAdd" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, CUSTOMER_ID CUSTOMER_ID, CDATE CDATE, LAST_AMOUNT LAST_AMOUNT, AMOUNT AMOUNT, 
+        NEW_AMOUNT NEW_AMOUNT, TRADE_ID TRADE_ID, FINPROD_ID FINPROD_ID, BRANCH BRANCH, IS_BOTTOM IS_BOTTOM, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, CREDIT_LINES_ID CREDIT_LINES_ID, CREDIT_OCCURE_TYPE CREDIT_OCCURE_TYPE, 
+        ENTRUST_ID ENTRUST_ID, ORI_TRADE_ID ORI_TRADE_ID, STATUS STATUS, AMOUNT_ADD AMOUNT_ADD
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CreditUsingCustomerMapper.Base_Column_List" />
+        from CREDIT_USING_CUSTOMER
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CreditUsingCustomerMapper.Base_Column_List" />
+        from CREDIT_USING_CUSTOMER
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CreditUsingCustomerMapper.Base_Column_List" />
+        from CREDIT_USING_CUSTOMER
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CREDIT_USING_CUSTOMER
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.CreditUsingCustomer" >
+        insert into CREDIT_USING_CUSTOMER (SEQNO, CUSTOMER_ID, CDATE, 
+            LAST_AMOUNT, AMOUNT, NEW_AMOUNT, 
+            TRADE_ID, FINPROD_ID, BRANCH, 
+            IS_BOTTOM, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            CREDIT_LINES_ID, CREDIT_OCCURE_TYPE, ENTRUST_ID, 
+            ORI_TRADE_ID, STATUS, AMOUNT_ADD
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, 
+            #{lastAmount,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, #{newAmount,jdbcType=DECIMAL}, 
+            #{tradeId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
+            #{isBottom,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{creditLinesId,jdbcType=VARCHAR}, #{creditOccureType,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, 
+            #{oriTradeId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{amountAdd,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CreditUsingCustomer" >
+        insert into CREDIT_USING_CUSTOMER
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="customerId != null" >
+                CUSTOMER_ID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="lastAmount != null" >
+                LAST_AMOUNT,
+            </if>
+            <if test="amount != null" >
+                AMOUNT,
+            </if>
+            <if test="newAmount != null" >
+                NEW_AMOUNT,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="isBottom != null" >
+                IS_BOTTOM,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="creditLinesId != null" >
+                CREDIT_LINES_ID,
+            </if>
+            <if test="creditOccureType != null" >
+                CREDIT_OCCURE_TYPE,
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
+            <if test="oriTradeId != null" >
+                ORI_TRADE_ID,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="amountAdd != null" >
+                AMOUNT_ADD,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="customerId != null" >
+                #{customerId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="lastAmount != null" >
+                #{lastAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="amount != null" >
+                #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="newAmount != null" >
+                #{newAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="isBottom != null" >
+                #{isBottom,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creditLinesId != null" >
+                #{creditLinesId,jdbcType=VARCHAR},
+            </if>
+            <if test="creditOccureType != null" >
+                #{creditOccureType,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="oriTradeId != null" >
+                #{oriTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="amountAdd != null" >
+                #{amountAdd,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CreditUsingCustomer" >
+        insert into CREDIT_USING_CUSTOMER(SEQNO, CUSTOMER_ID, CDATE, LAST_AMOUNT, AMOUNT, 
+        NEW_AMOUNT, TRADE_ID, FINPROD_ID, BRANCH, IS_BOTTOM, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, CREDIT_LINES_ID, CREDIT_OCCURE_TYPE, ENTRUST_ID, ORI_TRADE_ID, 
+        STATUS, AMOUNT_ADD)
+        select SEQNO, CUSTOMER_ID, CDATE, LAST_AMOUNT, AMOUNT, 
+            NEW_AMOUNT, TRADE_ID, FINPROD_ID, BRANCH, IS_BOTTOM, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREDIT_LINES_ID, CREDIT_OCCURE_TYPE, ENTRUST_ID, ORI_TRADE_ID, 
+            #{status,jdbcType=VARCHAR} STATUS, AMOUNT_ADD
+             from CREDIT_USING_CUSTOMER
+             where STATUS = 'E' and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.CreditUsingCustomer" >
+        update CREDIT_USING_CUSTOMER
+        <set >
+            <if test="customerId != null" >
+                CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                CDATE = #{cdate,jdbcType=DATE},
+            </if>
+            <if test="lastAmount != null" >
+                LAST_AMOUNT = #{lastAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="amount != null" >
+                AMOUNT = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="newAmount != null" >
+                NEW_AMOUNT = #{newAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="isBottom != null" >
+                IS_BOTTOM = #{isBottom,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creditLinesId != null" >
+                CREDIT_LINES_ID = #{creditLinesId,jdbcType=VARCHAR},
+            </if>
+            <if test="creditOccureType != null" >
+                CREDIT_OCCURE_TYPE = #{creditOccureType,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="oriTradeId != null" >
+                ORI_TRADE_ID = #{oriTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="amountAdd != null" >
+                AMOUNT_ADD = #{amountAdd,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CreditUsingCustomer" >
+        update CREDIT_USING_CUSTOMER
+        set CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+            CDATE = #{cdate,jdbcType=DATE},
+            LAST_AMOUNT = #{lastAmount,jdbcType=DECIMAL},
+            AMOUNT = #{amount,jdbcType=DECIMAL},
+            NEW_AMOUNT = #{newAmount,jdbcType=DECIMAL},
+            TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            IS_BOTTOM = #{isBottom,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CREDIT_LINES_ID = #{creditLinesId,jdbcType=VARCHAR},
+            CREDIT_OCCURE_TYPE = #{creditOccureType,jdbcType=VARCHAR},
+            ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            ORI_TRADE_ID = #{oriTradeId,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            AMOUNT_ADD = #{amountAdd,jdbcType=DECIMAL}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

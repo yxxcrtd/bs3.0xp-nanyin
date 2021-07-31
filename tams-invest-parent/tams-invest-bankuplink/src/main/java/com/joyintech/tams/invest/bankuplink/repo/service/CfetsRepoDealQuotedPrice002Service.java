@@ -232,8 +232,20 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 		String entrustId = (String) param.get("entrustId");
 		String operation = (String) param.get("operation");
 		String quoteId = (String) param.get("quoteId");
+		String validStatus = (String) param.get("validStatus");
 		CfetsRepoDealQuotedPrice001Dto dto = null;
 		if(StringUtil.isNotEmpty(quoteId)){
+			//报价权限(是否属于该交易员)
+			if(StringUtil.equals(validStatus,BussinessDictCodeList.有效状态_有效.getValue())){
+				Map<String,Object> mapOpr= new HashMap<>();
+				mapOpr.put("quoteIdTyep","rep");
+				mapOpr.put("quoteId",quoteId);
+				boolean opeQuotedPrice = cfetsQuotedCommonService.isOpeQuotedPrice(mapOpr);
+				if(!opeQuotedPrice){
+					ar.appendMessage(new ValidMessage("交易员无权限操作报价,报价编号:"+quoteId));
+					return ar;
+				}
+			}
 			validList.addAll(isInWflProcess(quoteId,param.get("pageId").toString()));
 			if(validList.size()>0){
 				ar.setErrorList(validList);

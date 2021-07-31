@@ -1,8 +1,12 @@
 package com.joyintech.service.common.config.service;
 
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.common.config.dao.DynamicConfigMapper;
+import com.joyintech.service.common.select.dao.CommonSelectMapper;
 import io.netty.util.internal.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +20,7 @@ import java.util.*;
  * @since 3.0
  */
 @Service
-public class DynamicConfigService {
+public class DynamicConfigService extends BaseService {
 
     @Autowired
     private DynamicConfigMapper dynamicConfigMapper;
@@ -55,4 +59,27 @@ public class DynamicConfigService {
         return 0;
     }
 
+    public Page<SelectOptionDto> selectPage(int page, int length,
+                                            Map<String, Object> param) {
+        Page<SelectOptionDto> pages = this.queryForPageForSelectReturn(page, length,
+                () -> dynamicConfigMapper.selectPage(param));
+        System.out.println(pages);
+        return pages;
+    }
+
+    public Integer updateByParamSelf(Map<String, Object> param) {
+        if (param != null){
+            String dynId = param.get("dynId") + "";
+            if (StringUtil.isNotEmpty(dynId)){
+                String jsonStr = selectByDynId(dynId);
+                if (StringUtil.isNotEmpty(jsonStr)){
+                    Map m = JsonUtils.json2Object(jsonStr, HashMap.class);
+                    m.put("layoutStyle", param.get("layoutStyle"));
+                    param.put("dynInfo", JsonUtils.object2Json(m));
+                    return dynamicConfigMapper.updateByParam(param);
+                }
+            }
+        }
+        return 0;
+    }
 }

@@ -142,6 +142,18 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     @Autowired
     private WflEtrPledgeMapper wflEtrPledgeMapper;
 
+    @Autowired
+    private WflEtrEntrustWwDetailMapper wflEtrEntrustWwDetailMapper;
+
+    @Autowired
+    private WflEtrEntrustWwMapper wflEtrEntrustWwMapper;
+
+    @Autowired
+    private EtrEntrustWwMapper etrEntrustWwMapper;
+
+    @Autowired
+    private EtrEntrustWwDetailMapper etrEntrustWwDetailMapper;
+
     /**
      * 委托操作相关校验 <一句话功能简述> <功能详细描述>
      *
@@ -519,6 +531,59 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         return false;
     }
 
+    @Override
+    public boolean newWwDelegate(BaseEtrInvestInfoDto dto) {
+        if (dto != null) {
+            // 保存委托指令
+            if (!DictCodeList.委托状态_待接收.getValue().equals(dto.getEtrEntrustWw ().getEntrustStatus())) {
+                dto.getEtrEntrustWw ().setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+            }
+            etrEntrustWwMapper.insertSelective(dto.getEtrEntrustWw ());
+            // 保存委托指令附属表
+
+            if(dto.getEtrEntrustWwDetailList () != null){
+                for(int i = 0; i < dto.getEtrEntrustWwDetailList ().size (); i++){
+                    EtrEntrustWwDetail etrEntrustWwDetail = new EtrEntrustWwDetail();
+                    BeanUtil.copyPropertiesIgnoreNull(etrEntrustWwDetail,dto.getEtrEntrustWwDetailList().get (i));
+                    etrEntrustWwDetailMapper.insertSelective(etrEntrustWwDetail);
+                }
+            }
+
+
+            // 保存List<委托指令回购质押品>
+            if (dto.getEtrPledgeList() != null && dto.getEtrPledgeList().size() > 0) {
+                for (EtrPledge etrPledge : dto.getEtrPledgeList()) {
+                    etrPledgeMapper.insertSelective(etrPledge);
+                }
+            }
+            // 保存list<委托指令分发>
+            if (dto.getEtrDistributeList() != null && dto.getEtrDistributeList().size() > 0) {
+                for (EtrDistribute etrDistribute : dto.getEtrDistributeList()) {
+                    if (!DictCodeList.委托状态_待接收.getValue().equals(etrDistribute.getRecStatus())) {
+                        etrDistribute.setRecStatus(DictCodeList.委托状态_待接收.getValue());
+                    }
+                    etrDistributeMapper.insertSelective(etrDistribute);
+                }
+            }
+            // 保存List<委托完成状况表>
+            if (dto.getEtrFinishStatusList() != null && dto.getEtrFinishStatusList().size() > 0) {
+                for (EtrFinishStatus etrFinishStatus : dto.getEtrFinishStatusList()) {
+                    etrFinishStatusMapper.insertSelective(etrFinishStatus);
+                }
+            }
+
+            // 保存List<委托投标标位表>
+            if (dto.getBidPriceList() != null && !dto.getBidPriceList().isEmpty()) {
+                for (EtrEntrustBidPrice etrEntrustBidPrice : dto.getBidPriceList()) {
+                    etrEntrustBidPrice.setBidPrice(etrEntrustBidPrice.getBidPrice().divide(BigDecimal.valueOf(100)));
+                    etrEntrustBidPriceMapper.insertSelective(etrEntrustBidPrice);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 删除委托 <一句话功能简述> <功能详细描述>
      *
@@ -558,6 +623,44 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     }
 
     /**
+     * 删除委托 <一句话功能简述> <功能详细描述>
+     *
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @Override
+    public boolean deleteWwDelegate(String entrustId) {
+        if (entrustId != null) {
+            // 删除委托指令
+            etrEntrustWwMapper.deleteByPrimaryKey(entrustId);
+            // 删除委托指令附属
+            etrEntrustWwDetailMapper.deleteByPrimaryKey(entrustId);
+            // 删除委托指令回购质押品
+            EtrPledgeKey etrPledgeKey = new EtrPledgeKey();
+            etrPledgeKey.setEntrustId(entrustId);
+            baseEtrInvestInfoMapper.deleteEtrPledgeByPrimaryKey(etrPledgeKey);
+            // 删除委托指令分发
+            EtrDistribute etrDistribute = new EtrDistribute();
+            etrDistribute.setEntrustId(entrustId);
+            baseEtrInvestInfoMapper.deleteEtrDistributeByPrimaryKey(etrDistribute);
+            // 删除委托完成状况表
+            EtrFinishStatus etrFinishStatus = new EtrFinishStatus();
+            etrFinishStatus.setEntrustId(entrustId);
+            baseEtrInvestInfoMapper.deleteEtrFinishStatusByPrimaryKey(etrFinishStatus);
+            // 全删全插委托投标标位表
+            baseEtrInvestInfoMapper.deleteBidPrice(entrustId);
+            // 判断删除委托是否全部执行成功
+            if (baseEtrCashPositionCommService != null) {
+                baseEtrCashPositionCommService.entrustCloseExecute(entrustId);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 修改委托 <一句话功能简述> <功能详细描述>
      *
      * @param dto
@@ -572,6 +675,19 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             etrInvestInfoServiceImpl.deleteDelegate(dto.getEtrEntrust().getEntrustId());
             // 调用新建委托接口
             etrInvestInfoServiceImpl.newDelegate(dto);
+            // 判断修改委托是否执行成功
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateWwDelegate(BaseEtrInvestInfoDto dto) {
+        if (dto != null) {
+            // 调用删除委托接口（投资委托信息dto.委托指令Entity.委托代码）
+            etrInvestInfoServiceImpl.deleteWwDelegate(dto.getEtrEntrustWw ().getEntrustId());
+            // 调用新建委托接口
+            etrInvestInfoServiceImpl.newWwDelegate(dto);
             // 判断修改委托是否执行成功
             return true;
         }
@@ -596,6 +712,29 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         int flag = etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
         // 修改委托指令分发表中值 add by yangwenjun 20201209
         baseEtrInvestInfoMapper.updatEetrDistribute(etrEntrust);
+        // 判断更新委托状态执行成功
+        if (flag == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 更新委托状态 <一句话功能简述> <功能详细描述>
+     *
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @Override
+    public boolean updateWwDelegateStatus(String entrustId, String entrustStatus) {
+        // 委托指令查询
+        EtrEntrustWw etrEntrust = etrEntrustWwMapper.selectByPrimaryKey(entrustId);
+        // 更改委托状态
+        etrEntrust.setEntrustStatus(entrustStatus);
+        // 修改委托指令表中值
+        int flag = etrEntrustWwMapper.updateByPrimaryKeySelective(etrEntrust);
         // 判断更新委托状态执行成功
         if (flag == 1) {
             return true;
@@ -749,6 +888,35 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         }
         return false;
     }
+
+    /**
+     * 关闭委托 <一句话功能简述> <功能详细描述>
+     *
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @Override
+    public boolean closeWwDelegate(String entrustId, String closeWay) {
+        EtrEntrustWw ee = etrEntrustWwMapper.selectByPrimaryKey(entrustId);
+        if (ee != null) {
+            // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已关闭”
+            String tempEntrustStatu = ee.getEntrustStatus();// 获取该委托原始状态，防止后续更改成关闭
+            boolean flag = etrInvestInfoServiceImpl.updateWwDelegateStatus(entrustId, DictCodeList.委托状态_已关闭.getValue());
+
+            if (baseEtrCashPositionCommService != null && DictCodeList.委托状态_已接收.getValue().equals(tempEntrustStatu)) {
+                baseEtrCashPositionCommService.entrustCloseExecute(entrustId);
+            }
+
+            // 判断关闭委托是否完成
+            if (flag) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * 委托完成状况查询 <一句话功能简述> <功能详细描述>
@@ -994,6 +1162,70 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                 dto.getMstFileInputParameter().setBussinessId(dto.getWorkFlowId());
                 mstFileCommonService.updateBusinessId(dto.getMstFileInputParameter());
             }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean newWwDelegateFlow(BaseEtrInvestInfoDto dto) {
+        if (dto != null) {
+            WflEtrEntrustWw entrustWw = new WflEtrEntrustWw();
+            BeanUtil.copyPropertiesIgnoreNull(entrustWw,dto.getEtrEntrustWw ());
+            entrustWw.setWorkflowId(dto.getWorkFlowId());
+            entrustWw.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            wflEtrEntrustWwMapper.insertSelective(entrustWw);
+            // 保存委托指令附属表
+
+            if(dto.getEtrEntrustWwDetailList () != null){
+                for(int i = 0; i < dto.getEtrEntrustWwDetailList ().size (); i++){
+                    WflEtrEntrustWwDetail etrEntrustWwDetail = new WflEtrEntrustWwDetail();
+                    BeanUtil.copyPropertiesIgnoreNull(etrEntrustWwDetail,dto.getEtrEntrustWwDetailList().get (i));
+                    etrEntrustWwDetail.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrEntrustWwDetailMapper.insertSelective(etrEntrustWwDetail);
+                }
+            }
+
+
+            // 保存List<委托指令回购质押品>
+            if (dto.getEtrPledgeList() != null && dto.getEtrPledgeList().size() > 0) {
+                for (EtrPledge etrPledge : dto.getEtrPledgeList()) {
+                    WflEtrPledge wflEtrPledge = new WflEtrPledge();
+                    BeanUtil.copyPropertiesIgnoreNull(wflEtrPledge,etrPledge);
+                    wflEtrPledge.setWorkflowId(dto.getWorkFlowId());
+                    wflEtrPledge.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrPledgeMapper.insertSelective(wflEtrPledge);
+                }
+            }
+            // 保存List<委托投标标位表>
+            if (dto.getBidPriceList() != null && !dto.getBidPriceList().isEmpty()) {
+                for (EtrEntrustBidPrice etrEntrustBidPrice : dto.getBidPriceList()) {
+                    etrEntrustBidPrice.setBidPrice(etrEntrustBidPrice.getBidPrice().divide(BigDecimal.valueOf(100)));
+                    WflEtrEntrustBidPrice wflEtrEntrustBidPrice = new WflEtrEntrustBidPrice();
+                    BeanUtil.copyPropertiesIgnoreNull(wflEtrEntrustBidPrice,etrEntrustBidPrice);
+                    wflEtrEntrustBidPrice.setWorkflowId(dto.getWorkFlowId());
+                    wflEtrEntrustBidPrice.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrEntrustBidPriceMapper.insertSelective(wflEtrEntrustBidPrice);
+                }
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteWwDelegateFlow(Map<String, Object> param) {
+        String workflowId = (String)param.get("workflowId");
+        if (workflowId != null) {
+            // 删除委托指令
+            wflEtrEntrustWwMapper.deleteByWorkflowId(workflowId);
+            // 删除委托指令附属
+            wflEtrEntrustWwDetailMapper.deleteByWorkflowId(workflowId);
+            // 删除委托指令回购质押品
+            wflEtrPledgeMapper.deleteByWorkflowId(workflowId);
+            // 全删委托投标标位表
+            wflEtrEntrustBidPriceMapper.deleteByWorkflowId(workflowId);
             return true;
         }
         return false;

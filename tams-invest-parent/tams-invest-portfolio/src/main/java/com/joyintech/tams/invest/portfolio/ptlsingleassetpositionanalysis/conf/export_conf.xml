@@ -9,6 +9,7 @@
             <Cell order="5" name="成本(元)">dscCostAmt</Cell>
             <Cell order="6" name="市值(元)">marketValue</Cell>
             <Cell order="7" name="市值比例%">marketValueRatio</Cell>
+            <Cell order="8" name="产品募集方式">ptlIssueTypeStr</Cell>
         </Row>
     </Worksheet>
 </Workbook>

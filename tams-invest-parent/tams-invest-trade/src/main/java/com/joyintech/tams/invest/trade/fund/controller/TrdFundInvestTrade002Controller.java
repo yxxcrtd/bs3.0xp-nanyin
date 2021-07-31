@@ -619,4 +619,14 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         return trdTradeFeeDetail;
     }
     // 场内基金改造 add by renping 20191117 end
+
+
+
+    @RequestMapping("getSpeedByFinprodId")
+    @ResponseBody
+    public Map<String, Object> getSpeedByFinprodId(@RequestBody Map<String, Object> params) {
+        return trdFundInvestTrade002Service.getSpeedByFinprodId(params);
+    }
+
+
 }

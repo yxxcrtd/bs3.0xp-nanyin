@@ -81,7 +81,7 @@
         		var tableRows  = table.getAllRows();
             	$.each(tableRows, function(id, value){
                     // bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseInt(value.bidPrinAmt), 2)
-                    bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseFloat(value.bidPrinAmt), 4)
+                    bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseFloat(value.bidPrinAmt), entrustAmtUnit == '02' ? 4 : 2);
             	});
             	$('#entrustNum').val(bidPrinAmt);
             	return true;
@@ -93,7 +93,7 @@
     table.bind('click', '.delt', function(data, index) {
     	if (data.bidPrinAmt) {
         	// $('#entrustNum').val($('#entrustNum').val()-parseInt(data.bidPrinAmt));
-            $('#entrustNum').val(JoyinMath.doMinus($('#entrustNum').val(), parseFloat(data.bidPrinAmt), 4));
+            $('#entrustNum').val(JoyinMath.doMinus($('#entrustNum').val(), parseFloat(data.bidPrinAmt), entrustAmtUnit == '02' ? 4 : 2));
 		}
     	
     	table.deleteRow(index);
@@ -256,6 +256,11 @@
          * 获取列表参数
          */
         var object = $.serializeToObject('#searchForm',true);
+        //配置单位 add by yeming 20210730 start
+        for (var i=0;i<tableData.length;i++){
+            tableData[i].bidPrinAmt = JoyinMath.doMul(tableData[i].bidPrinAmt, entrustAmtUnit == '02' ? 10000 : 1, 2) ;
+        }
+        //配置单位 add by yeming 20210730 end
         object.bidPriceList = tableData;
         object.operateType = operateType;
         object.pageModel = pageModel;
@@ -283,6 +288,7 @@
             if(entrustAmtUnit == '02' ){
                 entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
                 entrustNum_old=JoyinMath.doMul(entrustNum_old, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                object.entrustNum = entrustNum;
             }
             //配置单位 edit by yeming 20210721 end
         }
@@ -340,16 +346,16 @@
         //配置单位 add by yeming 20210721 start
         if(entrustAmtUnit == '01' ) {
             $(".unitNum").text('元');
+            $("#entrustNum").attr("data-textrange",2);
         }
         //配置单位 add by yeming 20210721 end
     }
-
     $(function(){
         star();
         init();
 		if (bidPriceList) {
 			$.each(JSON.parse(bidPriceList), function(id, value){
-				bidPrinAmt += parseInt(value.bidPrinAmt);
+                bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseFloat(value.bidPrinAmt), entrustAmtUnit == '02' ? 4 : 2);
 			});
 			$('#entrustNum').val(bidPrinAmt);
             $('#entrustNum_old').val(bidPrinAmt);
@@ -399,5 +405,23 @@
         }else{
         	$('#assetType11Div').hide();
         }
-	})
+
+        /**
+         * 查看资产详情事件
+         */
+        $('#EtrBondFirstLBidding002_btn_search').click(function() {
+            var finprodId = $("#finprodId").val();
+            var url = "/invest/asset/tenderbond/FinTenderBondTargetAsset002/init";
+            if (finprodId != ""){
+                var params = {
+                    pageModel:PAGE_MODEL_REFERENCE,
+                    finprodId:finprodId
+                };
+                EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
+            } else {
+                Joyin.error("资产名称不能为空")
+            }
+        });
+
+    })
 }());

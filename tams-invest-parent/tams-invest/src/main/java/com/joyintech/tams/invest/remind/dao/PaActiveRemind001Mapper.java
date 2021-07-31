@@ -248,6 +248,18 @@ public interface PaActiveRemind001Mapper {
      * @since 1.0
      */
     Map<String, Object> searchCountR5(Map<String, Object> param);
+
+    //add by chenjiaxing 固定值参数更新提醒 20210726
+    /**
+     * 实时询主动提醒数量_风险提醒
+     * <功能详细描述>
+     * @param param 传入查询参数
+     * @return 返回查询出信息的条数
+     * @see
+     * @since 1.0
+     */
+    Map<String, Object> searchCountR5S3(Map<String, Object> param);
+    //add by chenjiaxing 固定值参数更新提醒 20210726
     /**
      * 净值披露
      * <功能详细描述>
@@ -369,5 +381,17 @@ public interface PaActiveRemind001Mapper {
      * @return
      */
     Map<String, Object> searchCountR9S1(Map<String, Object> param);
+
+    //add by chenjiaxing 分销缴款提醒 20210728
+    /**
+     * 实时询主动提醒数量_风险提醒
+     * <功能详细描述>
+     * @param param 传入查询参数
+     * @return 返回查询出信息的条数
+     * @see
+     * @since 1.0
+     */
+    Map<String, Object> searchCountR10S1(Map<String, Object> param);
+    //add by chenjiaxing 分销缴款提醒 20210728
     
 }

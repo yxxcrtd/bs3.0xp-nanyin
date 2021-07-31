@@ -10,6 +10,7 @@
             <Cell order="6" name="市值(元)">marketValue</Cell>
             <Cell order="7" name="市值比例%">marketValueRatio</Cell>
             <Cell order="8" name="机构名称">belongInstitutionNameNew</Cell>
+            <Cell order="9" name="产品募集方式">ptlIssueTypeStr</Cell>
         </Row>
     </Worksheet>
 </Workbook>

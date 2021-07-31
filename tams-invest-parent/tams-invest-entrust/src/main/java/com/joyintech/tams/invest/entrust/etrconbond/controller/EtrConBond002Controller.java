@@ -76,7 +76,7 @@ public class EtrConBond002Controller extends BaseController {
             EtrConBondDto dto = etrConBondService.getBussinessEntityByWorkflowId(
                 workflowId);
             //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
+            if(StringUtil.equals(entrustAmtUnit,"02")){
                 if(dto.getPurchBondTotal() != null) {
                     dto.setPurchBondTotal(dto.getPurchBondTotal().divide(new BigDecimal(10000)));
                 }
@@ -91,7 +91,7 @@ public class EtrConBond002Controller extends BaseController {
             //编辑页面
             EtrConBondDto dto = etrConBondService.selectByKey(entrustId);
             //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
+            if(StringUtil.equals(entrustAmtUnit,"02")){
                 if(dto.getPurchBondTotal() != null) {
                     dto.setPurchBondTotal(dto.getPurchBondTotal().divide(new BigDecimal(10000)));
                 }
@@ -105,7 +105,7 @@ public class EtrConBond002Controller extends BaseController {
             //新建页面初始化
             EtrConBondDto entity = new EtrConBondDto();
             //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
+            if(StringUtil.equals(entrustAmtUnit,"02")){
                 if(entity.getPurchBondTotal() != null) {
                     entity.setPurchBondTotal(entity.getPurchBondTotal().divide(new BigDecimal(10000)));
                 }

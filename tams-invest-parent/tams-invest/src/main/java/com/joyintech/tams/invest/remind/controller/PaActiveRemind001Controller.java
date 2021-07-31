@@ -86,6 +86,9 @@ public class PaActiveRemind001Controller extends BaseController implements Activ
         model.addAttribute("R6", BussinessDictCodeList.提醒类型_大分类_披露管理.getValue());
         model.addAttribute("R7", BussinessDictCodeList.提醒类型_大分类_变更提醒.getValue());
         model.addAttribute("R9", BussinessDictCodeList.提醒类型_大分类_公共数据变更.getValue());
+        //add by chenjiaxing 分销缴款提醒 20210727 start
+        model.addAttribute("R10", BussinessDictCodeList.提醒类型_大分类_分销缴款提醒.getValue());
+        //add by chenjiaxing 分销缴款提醒 20210727 end
         //小分类
         model.addAttribute("R6S1", BussinessDictCodeList.提醒类型_小分类_净值披露提醒.getValue());
         model.addAttribute("R7S1", BussinessDictCodeList.提醒类型_小分类_债项和主体评级变动.getValue());
@@ -128,9 +131,12 @@ public class PaActiveRemind001Controller extends BaseController implements Activ
 
         model.addAttribute("R5S1", BussinessDictCodeList.提醒类型_小分类_指标预警提醒.getValue());
         model.addAttribute("R5S2", BussinessDictCodeList.提醒类型_小分类_指标违规提醒.getValue());
-        model.addAttribute("R5S2", BussinessDictCodeList.提醒类型_小分类_指标违规提醒.getValue());
+        model.addAttribute("R5S3", BussinessDictCodeList.提醒类型_小分类_固定值参数更新提醒.getValue());
 
         model.addAttribute("R9S1", BussinessDictCodeList.提醒类型_小分类_数据修改.getValue());
+        //add by chenjiaxing 分销缴款提醒 20210727 start
+        model.addAttribute("R10S1", BussinessDictCodeList.提醒类型_小分类_分销缴款提醒.getValue());
+        //add by chenjiaxing 分销缴款提醒 20210727 end
        return super.init(model);
     }
     /**

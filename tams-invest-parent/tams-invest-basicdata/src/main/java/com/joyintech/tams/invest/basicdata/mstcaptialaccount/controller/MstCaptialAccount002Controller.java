@@ -189,17 +189,19 @@ public class MstCaptialAccount002Controller extends BaseController{
     }
 
 
+
+
     /**
      * add by xxg 20210726
      * 根据所属柜台获取第一次设置的利率
      * @return
      */
     @ResponseBody
-    @RequestMapping("getFirstRateByownDept")
-    public BigDecimal getFirstRateByownDept(@RequestBody String ownDept){
-        MstCaptialAccountDto dto = mstCaptialAccountService.getFirstRateByownDept(ownDept.replace("\"", ""));
-        return dto.getRate();
+    @RequestMapping("getFirstRateByOwnDept")
+    public BigDecimal getFirstRateByOwnDept(@RequestBody String ownDept) {
+        return mstCaptialAccountService.getFirstRateByOwnDept(ownDept.replace("\"", ""));
     }
+
 
     
     /**

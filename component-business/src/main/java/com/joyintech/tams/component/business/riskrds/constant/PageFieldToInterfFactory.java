@@ -53,6 +53,10 @@ public class PageFieldToInterfFactory {
     public static final String INF_CODE = "infCode";
     public static final String INF_REVOKEFLG = "revokeFlg";
     public static final String INF_ISINNERTRD = "isInnerTrd";
+    // 预占功能 add by zhangrui1 start
+    public static final String INF_OCCUPYDATE = "occupyDate";
+    // 预占功能 add by zhangrui1 end
+    public static final String INF_TOTALFACEAMT = "totalFaceAmt";
     /*************************************************************/
     /**                      *△接口字段区域△*                        */
     /*************************************************************/

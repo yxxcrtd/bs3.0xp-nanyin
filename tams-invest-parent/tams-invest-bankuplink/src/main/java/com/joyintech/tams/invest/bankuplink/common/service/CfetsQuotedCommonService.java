@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.bankuplink.common.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +79,9 @@ public class CfetsQuotedCommonService extends BaseService {
      */
     @Autowired
     private CfetsBondDealQuotedPrice003Service cfetsBondDealQuotedPrice003Service;
+
+    @Autowired
+    private CfetsQuotedCommonService cfetsQuotedCommonService;
 
     /**
      * 根据查询查询符合条件的委托列表
@@ -290,6 +294,18 @@ public class CfetsQuotedCommonService extends BaseService {
         boolean statusChangeFlag = false;
         boolean validFlag = false;
         String msg ="";
+        //统一处理
+        //报价权限(是否属于该交易员)
+        if(StringUtil.equals(bondQuoteInfoDto.getValidStatus(),BussinessDictCodeList.有效状态_有效.getValue())){
+            Map<String,Object> mapOpr= new HashMap<>();
+            mapOpr.put("quoteIdTyep","bond");
+            mapOpr.put("quoteId",bondQuoteInfoDto.getQuoteId());
+            boolean opeQuotedPrice = cfetsQuotedCommonService.isOpeQuotedPrice(mapOpr);
+            if(!opeQuotedPrice){
+                ar.appendMessage(new ValidMessage("交易员无权限操作报价,报价编号:"+bondQuoteInfoDto.getQuoteId()));
+                return ar;
+            }
+        }
         if (StringUtil.equals(bondQuoteInfoDto.getOperationType(), "recall")) {
             if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
                 BussinessDictCodeList.银行间上行本方角色_询价方.getValue())) {
@@ -721,5 +737,17 @@ public class CfetsQuotedCommonService extends BaseService {
         return restTemplate.postForPage(
                 ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsQuotedCommon/selectEntrustId",
                 param, SelectOptionDto.class);
+    }
+
+    /**
+     * 是否可以操作报价
+     * @param param
+     * @return
+     */
+    public boolean isOpeQuotedPrice(Map<String, Object> param) {
+        param.put("loginUserId", LoginUserUtil.getUserName());
+        return restTemplate.postForObject(
+                ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsQuotedCommon/isOpeQuotedPrice",
+                param, Boolean.class);
     }
 }

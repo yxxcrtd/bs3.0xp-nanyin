@@ -3040,6 +3040,411 @@ select #{R7S1} as remType,
         </where>
         ORDER BY  A.SUP_DATE DESC
     </select>
+	<!--固定值参数更新提醒 add by chenjiaxing 20210726 start-->
+	<select id="selramindR5S3" resultType="com.joyintech.tams.invest.remind.dto.PaActiveRemind001Dto" >
+		select *
+		from (SELECT C.PARA_CODE assetCode,
+					 C.PARA_NAME assetName,
+					 'R5S3'      remType,
+					 '固定值参数更新提醒' reminder,
+					  REMINDER_SET.DAYS days,
+					  REMINDER_SET.MENU_ID menuId,
+				      REMINDER_SET.URL url,
+					  REMINDER_SET.LABLE lable,
+					  REMINDER_SET.DEALF dealF,
+					  REMINDER_SET.CLOSF closF,
+					  D.NOTIFY_DATE mdate
+			  FROM RSK_ISUP_INDICATOR_PARA C
+					   LEFT JOIN (SELECT PARA_CODE,NOTIFY_DATE
+								  FROM RSK_ISUP_FIX_RECODE SS
+								  WHERE SS.NOTIFY_DATE <![CDATA[<=]]> #{quaryDate,jdbcType= DATE}) D
+								 ON C.PARA_CODE = D.PARA_CODE
+					   LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET
+					   ON REMINDER_SET.REM_TYPE = 'R5S3'
+			  WHERE C.PARA_TYPE = 'FIX' and D.NOTIFY_DATE <![CDATA[<=]]> #{quaryDate} + 1
+			  and D.NOTIFY_DATE <![CDATA[>=]]> #{quaryDate} - REMINDER_SET.DAYS
+				and 'FIX' = 'FIX'
+				AND NOT EXISTS(
+					SELECT 1 FROM SYS_ACTIVEREMINDER_INFO
+					WHERE
+					SYS_ACTIVEREMINDER_INFO.REM_TYPE = 'R5S3'
+					AND
+					SYS_ACTIVEREMINDER_INFO.EFFFLAG = #{noFlag}
+					AND
+					SYS_ACTIVEREMINDER_INFO.FINPROD_ID = C.PARA_CODE
+					AND
+					SYS_ACTIVEREMINDER_INFO.MDATE = D.NOTIFY_DATE
+					))
+		ORDER BY assetCode DESC
+	</select>
+	<!--固定值参数更新提醒 add by chenjiaxing 20210726 end-->
+
+	<!--分销缴款提醒 add by chenjiaxing 20210728 start-->
+	<select id="selramindR10S1" resultType="com.joyintech.tams.invest.remind.dto.PaActiveRemind001Dto" >
+		select *
+		from(select distinct a.assetCode assetCode,
+             a.assetName assetName,
+             a.remType remType,
+             a.reminder reminder,
+             a.mdate mdate,
+             a.days days,
+             a.menuId menuId,
+             a.url url,
+             a.lable lable,
+             a.dealF dealF,
+             a.closF closF
+             from (/*银行间缴款查询*/
+		/*银行间缴款查询*/ select case when wtpd.trade_id is not null then '04' else '' end paymentStatus, /*缴款状态*/
+                               ee.ENTRUST_STATUS                                         entrustStatus, /*委托状态*/
+                               fp.FINPROD_MARKET_ID                                      assetCode, /*资产代码*/
+                               fp.finprod_name                                           assetName, /*资产名称*/
+                               'R10S1'                                                   remType,
+                               to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款'             reminder,
+                               bo.PAY_DATE                                               mdate, /*缴款日*/
+                               REMINDER_SET.DAYS                                         days,
+                               REMINDER_SET.MENU_ID                                      menuId,
+                               REMINDER_SET.URL                                          url,
+                               REMINDER_SET.LABLE                                        lable,
+                               REMINDER_SET.DEALF                                        dealF,
+                               REMINDER_SET.CLOSF                                        closF,
+                               bobp.ENTRUST_ID                                           entrustId, /*委托编号*/
+                               bobp.BID_ID                                               bidId, /*投标编号*/
+                               ee.portfolio_id                                           portfolioId, /*组合代码*/
+                               pp.portfolio_name                                         portfolioName, /*组合名称*/
+                               fp.FINPROD_ID                                             finprodId, /*资产代码*/
+                               ee.TRADE_MARKET                                           tradeMarket, /*交易场所*/
+                               bo.PAY_TYPE                                               payType, /*缴款方式*/
+                               ebp.bid_prin_amt                                          bidPrinAmt, /*投标券面总额*/
+                               bobp.WIN_PRIN_AMT                                         winPrinAmt, /*中标券面总额*/
+                               bobp.BID_PRICE * 100                                      bidPrice, /*投标标位%*/
+                               bobp.WIN_PRICE * 100                                      winPrice, /*中标标位%*/
+                               bo.BID_DATE                                               bidDate, /*投标日*/
+                               bobp.WIN_CPRICE                                           winCprice /*中标净价*/
+                        from BID_ORDER_BID_PRICE bobp
+                                 left join ETR_ENTRUST ee on bobp.entrust_id = ee.entrust_id
+                                 left join PTL_PORTFOLIO pp on ee.portfolio_id = pp.portfolio_id
+                                 left join FIN_PRODUCT fp on fp.FINPROD_ID = ee.finprod_id
+                                 left join BID_ORDER bo on bo.bid_id = bobp.bid_id
+                                 LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
+                                           on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
+                                 LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD wtpd on wtpd.entrust_id = ebp.entrust_id
+                                 LEFT JOIN WFL_TRD_PRODUCT_DEAL wtp on wtp.TRADE_ID = wtpd.TRADE_ID
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S1'
+                        where 1 = 1
+                          and bobp.is_win = 'Y'
+                          and bo.is_win = bobp.is_win
+                          and bobp.WIN_PRICE is not null
+                          and wtp.YIELD is not null
+                          AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('01')
+                        union all
+                        select bo.PAY_TYPE                                   paymentStatus, /*缴款状态*/
+                               ee.ENTRUST_STATUS                             entrustStatus, /*委托状态*/
+                               fp.FINPROD_MARKET_ID                          assetCode, /*资产代码*/
+                               fp.finprod_name                               assetName, /*资产名称*/
+                               'R10S1'                                       remType,
+                               to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款' reminder,
+                               bo.PAY_DATE                                   mdate, /*缴款日*/
+                               REMINDER_SET.DAYS                             days,
+                               REMINDER_SET.MENU_ID                          menuId,
+                               REMINDER_SET.URL                              url,
+                               REMINDER_SET.LABLE                            lable,
+                               REMINDER_SET.DEALF                            dealF,
+                               REMINDER_SET.CLOSF                            closF,
+                               bobp.ENTRUST_ID                               entrustId, /*委托编号*/
+                               bobp.BID_ID                                   bidId, /*投标编号*/
+                               ee.portfolio_id                               portfolioId, /*组合代码*/
+                               pp.portfolio_name                             portfolioName, /*组合名称*/
+                               fp.FINPROD_ID                                 finprodId, /*资产代码*/
+                               ee.TRADE_MARKET                               tradeMarket, /*交易场所*/
+                               bo.PAY_TYPE                                   payType, /*缴款方式*/
+                               ebp.bid_prin_amt                              bidPrinAmt, /*投标券面总额*/
+                               bobp.WIN_PRIN_AMT                             winPrinAmt, /*中标券面总额*/
+                               bobp.BID_PRICE * 100                          bidPrice, /*投标标位%*/
+                               bobp.WIN_PRICE * 100                          winPrice, /*中标标位%*/
+                               bo.BID_DATE                                   bidDate, /*投标日*/
+                               bobp.WIN_CPRICE                               winCprice /*中标净价*/
+                        from BID_ORDER_BID_PRICE bobp
+                                 left join ETR_ENTRUST ee on bobp.entrust_id = ee.entrust_id
+                                 left join PTL_PORTFOLIO pp on ee.portfolio_id = pp.portfolio_id
+                                 left join FIN_PRODUCT fp on fp.FINPROD_ID = ee.finprod_id
+                                 left join BID_ORDER bo on bo.bid_id = bobp.bid_id
+                                 LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
+                                           on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S1'
+                        where 1 = 1
+                          and bobp.is_win = 'Y'
+                          and bo.is_win = bobp.is_win
+                          and bobp.TRADE_ID is null
+                          AND BOBP.WIN_PRICE IS NOT NULL
+                          AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('01')
+                        minus
+                        select bo.PAY_TYPE                                   paymentStatus, /*缴款状态*/
+                               ee.ENTRUST_STATUS                             entrustStatus, /*委托状态*/
+                               fp.FINPROD_MARKET_ID                          assetCode, /*资产代码*/
+                               fp.finprod_name                               assetName, /*资产名称*/
+                               'R10S1'                                       remType,
+                               to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款' reminder,
+                               bo.PAY_DATE                                   mdate, /*缴款日*/
+                               REMINDER_SET.DAYS                             days,
+                               REMINDER_SET.MENU_ID                          menuId,
+                               REMINDER_SET.URL                              url,
+                               REMINDER_SET.LABLE                            lable,
+                               REMINDER_SET.DEALF                            dealF,
+                               REMINDER_SET.CLOSF                            closF,
+                               bobp.ENTRUST_ID                               entrustId, /*委托编号*/
+                               bobp.BID_ID                                   bidId, /*投标编号*/
+                               ee.portfolio_id                               portfolioId, /*组合代码*/
+                               pp.portfolio_name                             portfolioName, /*组合名称*/
+                               fp.FINPROD_ID                                 finprodId, /*资产代码*/
+                               ee.TRADE_MARKET                               tradeMarket, /*交易场所*/
+                               bo.PAY_TYPE                                   payType, /*缴款方式*/
+                               ebp.bid_prin_amt                              bidPrinAmt, /*投标券面总额*/
+                               bobp.WIN_PRIN_AMT                             winPrinAmt, /*中标券面总额*/
+                               bobp.BID_PRICE * 100                          bidPrice, /*投标标位%*/
+                               bobp.WIN_PRICE * 100                          winPrice, /*中标标位%*/
+                               bo.BID_DATE                                   bidDate, /*投标日*/
+                               bobp.WIN_CPRICE                               winCprice /*中标净价*/
+                        from BID_ORDER_BID_PRICE bobp
+                                 left join ETR_ENTRUST ee on bobp.entrust_id = ee.entrust_id
+                                 left join PTL_PORTFOLIO pp on ee.portfolio_id = pp.portfolio_id
+                                 left join FIN_PRODUCT fp on fp.FINPROD_ID = ee.finprod_id
+                                 left join BID_ORDER bo on bo.bid_id = bobp.bid_id
+                                 LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
+                                           on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
+                                 LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD wtpd on wtpd.entrust_id = ebp.entrust_id
+                                 LEFT JOIN WFL_TRD_PRODUCT_DEAL wtp on wtp.TRADE_ID = wtpd.TRADE_ID
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S1'
+                        where 1 = 1
+                          and bobp.is_win = 'Y'
+                          and bo.is_win = bobp.is_win
+                          and bobp.WIN_PRICE is not null
+                          and wtp.YIELD is not null
+                          AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('01')
+                        union all
+                        select case when bobp.trade_id is not null then '05' else '' end paymentStatus, /*缴款状态*/
+                               ee.ENTRUST_STATUS                                         entrustStatus, /*委托状态*/
+                               fp.FINPROD_MARKET_ID                                      assetCode, /*资产代码*/
+                               fp.finprod_name                                           assetName, /*资产名称*/
+                               'R10S1'                                                   remType,
+                               to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款'             reminder,
+                               bo.PAY_DATE                                               mdate, /*缴款日*/
+                               REMINDER_SET.DAYS                                         days,
+                               REMINDER_SET.MENU_ID                                      menuId,
+                               REMINDER_SET.URL                                          url,
+                               REMINDER_SET.LABLE                                        lable,
+                               REMINDER_SET.DEALF                                        dealF,
+                               REMINDER_SET.CLOSF                                        closF,
+                               bobp.ENTRUST_ID                                           entrustId, /*委托编号*/
+                               bobp.BID_ID                                               bidId, /*投标编号*/
+                               ee.portfolio_id                                           portfolioId, /*组合代码*/
+                               pp.portfolio_name                                         portfolioName, /*组合名称*/
+                               fp.FINPROD_ID                                             finprodId, /*资产代码*/
+                               ee.TRADE_MARKET                                           tradeMarket, /*交易场所*/
+                               bo.PAY_TYPE                                               payType, /*缴款方式*/
+                               ebp.bid_prin_amt                                          bidPrinAmt, /*投标券面总额*/
+                               bobp.WIN_PRIN_AMT                                         winPrinAmt, /*中标券面总额*/
+                               bobp.BID_PRICE * 100                                      bidPrice, /*投标标位%*/
+                               bobp.WIN_PRICE * 100                                      winPrice, /*中标标位%*/
+                               bo.BID_DATE                                               bidDate, /*投标日*/
+                               bobp.WIN_CPRICE                                           winCprice /*中标净价*/
+                        from BID_ORDER_BID_PRICE bobp
+                                 left join ETR_ENTRUST ee on bobp.entrust_id = ee.entrust_id
+                                 left join PTL_PORTFOLIO pp on ee.portfolio_id = pp.portfolio_id
+                                 left join FIN_PRODUCT fp on fp.FINPROD_ID = ee.finprod_id
+                                 left join BID_ORDER bo on bo.bid_id = bobp.bid_id
+                                 LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
+                                           on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S1'
+                        where 1 = 1
+                          and bobp.is_win = 'Y'
+                          and bo.is_win = bobp.is_win
+                          AND bobp.trade_id is not NULL
+                          AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('01')
+                        union all
+                        /*场内债券缴款查询*/
+                        select case when wtpd.trade_id is not null then '04' else '' end paymentStatus, /*缴款状态*/
+                               ee.ENTRUST_STATUS                                         entrustStatus, /*委托状态*/
+                               fp.FINPROD_MARKET_ID                                      assetCode, /*资产代码*/
+                               fp.finprod_name                                           assetName, /*资产名称*/
+                               'R10S1'                                                   remType,
+                               to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款'             reminder,
+                               bo.PAY_DATE                                               mdate, /*缴款日*/
+                               REMINDER_SET.DAYS                                         days,
+                               REMINDER_SET.MENU_ID                                      menuId,
+                               REMINDER_SET.URL                                          url,
+                               REMINDER_SET.LABLE                                        lable,
+                               REMINDER_SET.DEALF                                        dealF,
+                               REMINDER_SET.CLOSF                                        closF,
+                               bobp.ENTRUST_ID                                           entrustId, /*委托编号*/
+                               bobp.BID_ID                                               bidId, /*投标编号*/
+                               ee.portfolio_id                                           portfolioId, /*组合代码*/
+                               pp.portfolio_name                                         portfolioName, /*组合名称*/
+                               fp.FINPROD_ID                                             finprodId, /*资产代码*/
+                               ee.TRADE_MARKET                                           tradeMarket, /*交易场所*/
+                               bo.PAY_TYPE                                               payType, /*缴款方式*/
+                               ebp.bid_prin_amt                                          bidPrinAmt, /*投标券面总额*/
+                               bobp.WIN_PRIN_AMT                                         winPrinAmt, /*中标券面总额*/
+                               bobp.BID_PRICE * 100                                      bidPrice, /*投标标位%*/
+                               bobp.WIN_PRICE * 100                                      winPrice, /*中标标位%*/
+                               bo.BID_DATE                                               bidDate, /*投标日*/
+                               bobp.WIN_CPRICE                                           winCprice /*中标净价*/
+                        from BID_ORDER_BID_PRICE bobp
+                                 left join ETR_ENTRUST ee on bobp.entrust_id = ee.entrust_id
+                                 left join PTL_PORTFOLIO pp on ee.portfolio_id = pp.portfolio_id
+                                 left join FIN_PRODUCT fp on fp.FINPROD_ID = ee.finprod_id
+                                 left join BID_ORDER bo on bo.bid_id = bobp.bid_id
+                                 LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
+                                           on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
+                                 LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD wtpd on wtpd.entrust_id = ebp.entrust_id
+                                 LEFT JOIN WFL_TRD_PRODUCT_DEAL wtp on wtp.TRADE_ID = wtpd.TRADE_ID
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S2'
+                        where 1 = 1
+                          and bobp.is_win = 'Y'
+                          and bo.is_win = bobp.is_win
+                          and bobp.WIN_PRICE is not null
+                          and wtp.YIELD is not null
+                          AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('03', '04')
+                        union all
+                        select bo.PAY_TYPE                                   paymentStatus, /*缴款状态*/
+                               ee.ENTRUST_STATUS                             entrustStatus, /*委托状态*/
+                               fp.FINPROD_MARKET_ID                          assetCode, /*资产代码*/
+                               fp.finprod_name                               assetName, /*资产名称*/
+                               'R10S1'                                       remType,
+                               to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款' reminder,
+                               bo.PAY_DATE                                   mdate, /*缴款日*/
+                               REMINDER_SET.DAYS                             days,
+                               REMINDER_SET.MENU_ID                          menuId,
+                               REMINDER_SET.URL                              url,
+                               REMINDER_SET.LABLE                            lable,
+                               REMINDER_SET.DEALF                            dealF,
+                               REMINDER_SET.CLOSF                            closF,
+                               bobp.ENTRUST_ID                               entrustId, /*委托编号*/
+                               bobp.BID_ID                                   bidId, /*投标编号*/
+                               ee.portfolio_id                               portfolioId, /*组合代码*/
+                               pp.portfolio_name                             portfolioName, /*组合名称*/
+                               fp.FINPROD_ID                                 finprodId, /*资产代码*/
+                               ee.TRADE_MARKET                               tradeMarket, /*交易场所*/
+                               bo.PAY_TYPE                                   payType, /*缴款方式*/
+                               ebp.bid_prin_amt                              bidPrinAmt, /*投标券面总额*/
+                               bobp.WIN_PRIN_AMT                             winPrinAmt, /*中标券面总额*/
+                               bobp.BID_PRICE * 100                          bidPrice, /*投标标位%*/
+                               bobp.WIN_PRICE * 100                          winPrice, /*中标标位%*/
+                               bo.BID_DATE                                   bidDate, /*投标日*/
+                               bobp.WIN_CPRICE                               winCprice /*中标净价*/
+                        from BID_ORDER_BID_PRICE bobp
+                                 left join ETR_ENTRUST ee on bobp.entrust_id = ee.entrust_id
+                                 left join PTL_PORTFOLIO pp on ee.portfolio_id = pp.portfolio_id
+                                 left join FIN_PRODUCT fp on fp.FINPROD_ID = ee.finprod_id
+                                 left join BID_ORDER bo on bo.bid_id = bobp.bid_id
+                                 LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
+                                           on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S2'
+                        where 1 = 1
+                          and bobp.is_win = 'Y'
+                          and bo.is_win = bobp.is_win
+                          and bobp.TRADE_ID is null
+                          AND BOBP.WIN_PRICE IS NOT NULL
+                          AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('03', '04')
+                        minus
+                        select bo.PAY_TYPE                                   paymentStatus, /*缴款状态*/
+                               ee.ENTRUST_STATUS                             entrustStatus, /*委托状态*/
+                               fp.FINPROD_MARKET_ID                          assetCode, /*资产代码*/
+                               fp.finprod_name                               assetName, /*资产名称*/
+                               'R10S1'                                       remType,
+                               to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款' reminder,
+                               bo.PAY_DATE                                   mdate, /*缴款日*/
+                               REMINDER_SET.DAYS                             days,
+                               REMINDER_SET.MENU_ID                          menuId,
+                               REMINDER_SET.URL                              url,
+                               REMINDER_SET.LABLE                            lable,
+                               REMINDER_SET.DEALF                            dealF,
+                               REMINDER_SET.CLOSF                            closF,
+                               bobp.ENTRUST_ID                               entrustId, /*委托编号*/
+                               bobp.BID_ID                                   bidId, /*投标编号*/
+                               ee.portfolio_id                               portfolioId, /*组合代码*/
+                               pp.portfolio_name                             portfolioName, /*组合名称*/
+                               fp.FINPROD_ID                                 finprodId, /*资产代码*/
+                               ee.TRADE_MARKET                               tradeMarket, /*交易场所*/
+                               bo.PAY_TYPE                                   payType, /*缴款方式*/
+                               ebp.bid_prin_amt                              bidPrinAmt, /*投标券面总额*/
+                               bobp.WIN_PRIN_AMT                             winPrinAmt, /*中标券面总额*/
+                               bobp.BID_PRICE * 100                          bidPrice, /*投标标位%*/
+                               bobp.WIN_PRICE * 100                          winPrice, /*中标标位%*/
+                               bo.BID_DATE                                   bidDate, /*投标日*/
+                               bobp.WIN_CPRICE                               winCprice /*中标净价*/
+                        from BID_ORDER_BID_PRICE bobp
+                                 left join ETR_ENTRUST ee on bobp.entrust_id = ee.entrust_id
+                                 left join PTL_PORTFOLIO pp on ee.portfolio_id = pp.portfolio_id
+                                 left join FIN_PRODUCT fp on fp.FINPROD_ID = ee.finprod_id
+                                 left join BID_ORDER bo on bo.bid_id = bobp.bid_id
+                                 LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
+                                           on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
+                                 LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD wtpd on wtpd.entrust_id = ebp.entrust_id
+                                 LEFT JOIN WFL_TRD_PRODUCT_DEAL wtp on wtp.TRADE_ID = wtpd.TRADE_ID
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S2'
+                        where 1 = 1
+                          and bobp.is_win = 'Y'
+                          and bo.is_win = bobp.is_win
+                          and bobp.WIN_PRICE is not null
+                          and wtp.YIELD is not null
+                          AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('03', '04')
+                        union all
+                        select case when bobp.trade_id is not null then '05' else '' end paymentStatus, /*缴款状态*/
+                               ee.ENTRUST_STATUS                                         entrustStatus, /*委托状态*/
+                               fp.FINPROD_MARKET_ID                                      assetCode, /*资产代码*/
+                               fp.finprod_name                                           assetName, /*资产名称*/
+                               'R10S1'                                                   remType,
+                               to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款'             reminder,
+                               bo.PAY_DATE                                               mdate, /*缴款日*/
+                               REMINDER_SET.DAYS                                         days,
+                               REMINDER_SET.MENU_ID                                      menuId,
+                               REMINDER_SET.URL                                          url,
+                               REMINDER_SET.LABLE                                        lable,
+                               REMINDER_SET.DEALF                                        dealF,
+                               REMINDER_SET.CLOSF                                        closF,
+                               bobp.ENTRUST_ID                                           entrustId, /*委托编号*/
+                               bobp.BID_ID                                               bidId, /*投标编号*/
+                               ee.portfolio_id                                           portfolioId, /*组合代码*/
+                               pp.portfolio_name                                         portfolioName, /*组合名称*/
+                               fp.FINPROD_ID                                             finprodId, /*资产代码*/
+                               ee.TRADE_MARKET                                           tradeMarket, /*交易场所*/
+                               bo.PAY_TYPE                                               payType, /*缴款方式*/
+                               ebp.bid_prin_amt                                          bidPrinAmt, /*投标券面总额*/
+                               bobp.WIN_PRIN_AMT                                         winPrinAmt, /*中标券面总额*/
+                               bobp.BID_PRICE * 100                                      bidPrice, /*投标标位%*/
+                               bobp.WIN_PRICE * 100                                      winPrice, /*中标标位%*/
+                               bo.BID_DATE                                               bidDate, /*投标日*/
+                               bobp.WIN_CPRICE                                           winCprice /*中标净价*/
+                        from BID_ORDER_BID_PRICE bobp
+                                 left join ETR_ENTRUST ee on bobp.entrust_id = ee.entrust_id
+                                 left join PTL_PORTFOLIO pp on ee.portfolio_id = pp.portfolio_id
+                                 left join FIN_PRODUCT fp on fp.FINPROD_ID = ee.finprod_id
+                                 left join BID_ORDER bo on bo.bid_id = bobp.bid_id
+                                 LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
+                                           on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S2'
+                        where 1 = 1
+                          and bobp.is_win = 'Y'
+                          and bo.is_win = bobp.is_win
+                          AND bobp.trade_id is not NULL
+                          AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('03', '04')) a
+		where
+		a.entrustStatus != '06'
+		and a.paymentStatus != '04'
+		and a.paymentStatus != '05'
+		and a.mdate <![CDATA[<=]]> #{quaryDate} + 1
+		and a.mdate <![CDATA[>=]]> #{quaryDate} - a.days
+		AND NOT EXISTS(
+		SELECT 1
+		FROM SYS_ACTIVEREMINDER_INFO
+		WHERE SYS_ACTIVEREMINDER_INFO.REM_TYPE = 'R10S1'
+		AND SYS_ACTIVEREMINDER_INFO.EFFFLAG = #{noFlag}
+		AND SYS_ACTIVEREMINDER_INFO.FINPROD_ID = a.assetCode
+		AND SYS_ACTIVEREMINDER_INFO.MDATE = a.mdate
+		))
+
+	</select>
+	<!--分销缴款提醒 add by chenjiaxing 20210728 end-->
 
 	<select id="selramindR9S1" resultType="com.joyintech.tams.invest.remind.dto.PaActiveRemind001Dto">
 		select * from (

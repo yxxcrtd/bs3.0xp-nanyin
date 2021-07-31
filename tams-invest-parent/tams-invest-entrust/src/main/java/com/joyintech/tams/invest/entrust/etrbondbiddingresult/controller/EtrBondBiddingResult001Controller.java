@@ -40,6 +40,13 @@ public class EtrBondBiddingResult001Controller extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.交易场所,
                 BussinessDictCode.交易流程状态, BussinessDictCode.交易平台, BussinessDictCode.交易市场, BussinessDictCode.缴款状态);
+        //add by chenjiaxing 主动提醒跳转初始化 start
+        Map<String, Object> map = RequestUtil.getPageParam();
+        if(StringUtil.isNotEmpty(map.get("remType")) && StringUtil.equals(map.get("remType"),"R10S1")) {
+            model.addAttribute("finprodId", (String)map.get("finprodId"));
+            model.addAttribute("mdate", (String)map.get("mdate"));
+        }
+        //add by chenjiaxing 主动提醒跳转初始化 end
         return super.init(model);
     }
 

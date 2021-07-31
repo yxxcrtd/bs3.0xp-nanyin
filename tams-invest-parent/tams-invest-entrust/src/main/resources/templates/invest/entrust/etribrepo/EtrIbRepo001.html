@@ -96,11 +96,11 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<div class="layui-tab" lay-filter="tradePlatform">
+		<div class="layui-tab" lay-filter="tradePlatform" style="display: none">
 			<ul class="layui-tab-title">
-				<li class="layui-this">指令管理</li>
-				<li th:if="${repo_pledge_model} =='03' ">质押券管理</li>
-				<li th:if="${repo_pledge_model} =='01' or${repo_pledge_model} =='02' ">质押券管理</li>
+				<li th:attr="title=${#strings.contains(DYN_INFO,'ZLGL')}" class="layui-this ZLGL">指令管理</li>
+				<li th:attr="title=${#strings.contains(DYN_INFO,'ZYQGL')}" th:if="${repo_pledge_model} =='03' " class="ZYQGL">质押券管理</li>
+				<li th:attr="title=${#strings.contains(DYN_INFO,'ZYQGL')}" th:if="${repo_pledge_model} =='01' or${repo_pledge_model} =='02' " class="ZYQGL">质押券管理</li>
 			</ul>
 			<div class="layui-tab-content">
 				<!-- 指令管理 -->

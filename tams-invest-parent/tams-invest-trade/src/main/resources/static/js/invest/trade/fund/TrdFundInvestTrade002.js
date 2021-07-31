@@ -694,6 +694,10 @@ $(function () {
                         $("#settleSpreed").val(data.redSpreed).change();
                     }
                     //add  by zhangnian  20190917  end
+                    Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade002/getSpeedByFinprodId', data,function (result) {
+                        $("#purSpeed").val(result.PURSPEED).trigger('change');
+                        $("#redSpeed").val(result.REDSPEED).trigger('change');
+                    });
                 } else {
                     //自动 加券
                     var autoCoupon = AutoCoupon.autoFundTradeCoupon($('#finprodId').select2('data')[0].text);
@@ -707,7 +711,8 @@ $(function () {
                         $('#trdInvestPersonInfo_counterId option').remove()
                         selectManeger();
                     }
-
+                    $("#purSpeed").val('').trigger('change');
+                    $("#redSpeed").val('').trigger('change');
                 }
             }
             if ((ps == ps_T04 || ps == ps_mr || ps == ps_T52) && finprodId && portfolioId) {

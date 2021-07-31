@@ -1728,4 +1728,9 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
         return dtoList;
     }
 
+    public Map<String, Object> getSpeedByFinprodId(Map<String, Object> param) {
+        // 场内基金改造 add by renping 20191117 end
+        return trdFundInvestTradeMapper.getSpeedByFinprodId(param);
+    }
+
 }

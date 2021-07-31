@@ -228,8 +228,10 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
                 // add by lizhi 判断系统参数ASSET_INFO_CHB_HIDE是否显示中债信息 2020-2-28
                 if(!StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ASSET_INFO_CHB_HIDE), DictCodeListExt1.是或否_否.getValue())){
                     //中债报送
-                    baseRepAssetDeptInfoService.insert(entity.getBaseRepAssetDeptInfoDto().getRepAssetDeptList());
-                    baseRepBondAssetInfoService.insert(entity.getBaseRepBondAssetInfoDto().getRepAssetBondList());
+                    if(entity.getBaseRepAssetDeptInfoDto()!=null){
+                        baseRepAssetDeptInfoService.insert(entity.getBaseRepAssetDeptInfoDto().getRepAssetDeptList());
+                        baseRepBondAssetInfoService.insert(entity.getBaseRepBondAssetInfoDto().getRepAssetBondList());
+                    }
                 }
             }
         }
@@ -365,7 +367,7 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
                 }
             }
         }else{
-            if(null!=baseRepAssetDeptInfoService){
+            if(null!=baseRepAssetDeptInfoService&&entity.getBaseRepAssetDeptInfoDto()!=null){
                 //中债报送
                 baseRepAssetDeptInfoService.updateBaseRepAssetDeptInfoDto(entity.getBaseRepAssetDeptInfoDto());
                 baseRepBondAssetInfoService.update(entity.getBaseRepBondAssetInfoDto());
