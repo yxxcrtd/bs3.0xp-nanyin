@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -222,5 +224,10 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
     public int checkGroupName(RskValRelateImportDto dto) {
         return rskValRelateImportMapper.checkGroupName(dto);
     }
-
+    /**
+     * 查询所有资产要素完整信息
+     */
+    public List<FinProduct> selectAllAsset() {
+        return rskValRelateImportMapper.selectAllAsset();
+    }
 }

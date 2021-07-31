@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -139,4 +140,80 @@ public class RskValtblPrtBotassetController {
     public void applyMapForValDiffmapped(@RequestBody Map<String,Object> paramMap){
         rskValtblPrtBotassetService.applyMapForValDiffmapped(paramMap);
     }
+    /**
+     * 获取无标的信息下拉框
+     * @param paramMap
+     * @return
+     */
+    @RequestMapping("selectUnTargetAsset")
+    public List<SelectOptionDto> selectUnTargetAsset(@RequestBody Map<String,Object> paramMap){
+        List<SelectOptionDto> result=rskValtblPrtBotassetService.selectUnTargetAsset(paramMap);
+        return result;
+    }
+
+    /**
+     * @Description: 查询未映射科目组装树
+     * @Param:
+     * @return:
+     * @Author: liupengfei
+     * @Date: 2021/3/24
+     */
+    @PostMapping("selectUnMapSubject")
+    public List<RskValtblPrtBotassetMapDto>selectUnMapSubject(@RequestBody Map<String,Object> paramMap){
+        return rskValtblPrtBotassetService.selectUnMapSubject(paramMap);
+    }
+    /**
+     * @Description: 查询已映射科目 展示在表格
+     * @Param:
+     * @return:
+     * @Author: liupengfei
+     * @Date: 2021/3/24
+     */
+    @PostMapping("selectMapSubjectInfoForPage/{page}/{length}")
+    public Page<RskValtblPrtBotassetMapDto>selectMapSubjectInfoForPage(@RequestBody Map<String,Object> paramMap,
+                                                                       @PathVariable("page") int page, @PathVariable("length") int length){
+        return rskValtblPrtBotassetService.selectMapSubjectInfoForPage(paramMap,page,length);
+    }
+    /**
+     * @Description: 映射&应用
+     * @Param:
+     * @return:
+     * @Author: liupengfei
+     * @Date:
+     */
+    @PostMapping("applyMapForSubject")
+    public void applyMapForSubject(@RequestBody Map<String,Object> paramMap){
+        rskValtblPrtBotassetService.applyMapForSubject(paramMap);
+    }
+    /**
+     * @Description: 取消映射&应用
+     * @Param:
+     * @return:
+     * @Author: liupengfei
+     * @Date: 2021/3/24
+     */
+    @PostMapping("cancelApplyMapForSubject")
+    public void cancelApplyMapForSubject(@RequestBody Map<String,Object> paramMap){
+        rskValtblPrtBotassetService.cancelApplyMapForSubject(paramMap);
+    }
+    /**
+     * 获取资产维护界面维护的资产
+     * @param paramMap
+     * @return
+     */
+    @RequestMapping("selectRskAsset")
+    public List<SelectOptionDto> selectRskAsset(@RequestBody Map<String,Object> paramMap){
+        List<SelectOptionDto> result=rskValtblPrtBotassetService.selectRskAsset(paramMap);
+        return result;
+    }
+    /**
+     * 获取底层资产要素的信息下拉框
+     * @param paramMap
+     * @return
+     */
+ /*   @RequestMapping("selectRepAssetDept")
+    public List<SelectOptionDto> selectRepAssetDept(@RequestBody Map<String,Object> paramMap){
+        List<SelectOptionDto> result=rskValtblPrtBotassetService.selectRepAssetDept(paramMap);
+        return result;
+    }*/
 }

@@ -306,4 +306,8 @@ public interface BussinessConstant {
      * 公墓基金存续期处理逻辑 01：旧逻辑 02：新逻辑
      */
     String FUND_DEAL_TYPE = "FUND_DEAL_TYPE";
+    /**
+     * 中债导入估值表中文件名称拆分分隔符：估值表-
+     */
+    String CHB_VAL_SPLIT_STR = "CHB_VAL_SPLIT_STR";
 }

@@ -97,7 +97,17 @@ public class PtlPositionAnalysis001Controller extends BaseController {
     public List<PtlPositionAnalysis002Dto> selectAllAssetList(){
         Map<String,Object> map = RequestUtil.getPageParam();
         List<PtlPositionAnalysis002Dto> list = ptlPositionAnalysis001Service.selectAllAssetList(map);
-        
+
+        if (StringUtil.equals(map.get("sex"),"02")){
+            List<PtlPositionAnalysis002Dto> cashList =  ptlPositionAnalysis001Service.selectRemain(map);
+            for (PtlPositionAnalysis002Dto ptlPositionAnalysis002Dto : list) {
+                if (StringUtil.equals(ptlPositionAnalysis002Dto.getFinprodType2(),"现金")){
+                    cashList.forEach(item->{
+                        ptlPositionAnalysis002Dto.setMarketValue(ptlPositionAnalysis002Dto.getMarketValue().add(item.getMarketValue()));
+                    });
+                }
+            }
+        }
         // start  modify by wj 2020-04-16 饼图展示数据 无现金数据。重新计算并赋值。
         countSumAndCalPercent(list);
 

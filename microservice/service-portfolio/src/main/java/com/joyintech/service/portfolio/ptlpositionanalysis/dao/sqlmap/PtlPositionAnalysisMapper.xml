@@ -511,6 +511,16 @@
 	        </if>
             group by PORTFOLIO_ID
          ),
+         /*查询底层剩余现金*/
+        cash as (
+            select sum(psv.MARKET_VALUE) MARKET_VALUE,
+                psv.PORTFOLIO_ID portfolioId
+            from PTL_SEC_PIERCE_VALUTION psv
+            WHERE
+                psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
+                AND psv.FINPROD_ID like 'REMAININGCASH_%'
+                GROUP BY psv.PORTFOLIO_ID
+        ),
          assetHold as (
                     select A.cdate,A.portfolioId,A.portfolioName,A.finprodType2,A.type5,A.finprodMarketId,A.finprodAbbr,A.marketValue,
                     <!--CASE WHEN A.finprodType2 IN ('F08', 'F09', 'F16') THEN NULL ELSE A.dscCostAmt END dscCostAmt, --> <!--BS-1790 拆借，计划类货币型，利率互换也显示成本字段-->
@@ -966,8 +976,8 @@
             psv.portfolio_Id portfolioId,
             pp.portfolio_Name portfolioName,
             #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
-            pcp.amount marketValue,
-            pcp.amount dscCostAmt,
+            pcp.amount + NVL(CH.MARKET_VALUE,0) marketValue,
+            pcp.amount + NVL(CH.MARKET_VALUE,0) dscCostAmt,
             null shareAmt,
             NULL tdyIntincexp,
             NULL tdyAmtRation,
@@ -986,6 +996,7 @@
             LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
             LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
             left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+            LEFT JOIN cash CH on psv.PORTFOLIO_ID = CH.portfolioId
             WHERE
             psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
             and pcp.portfolio_Id is not NULL
@@ -1010,7 +1021,7 @@
             </if>
             <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
             GROUP BY
-            psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount,pcp.acct_id
+            psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount + NVL(CH.MARKET_VALUE,0),pcp.acct_id
             ) S
             LEFT JOIN (
             SELECT
@@ -3158,4 +3169,96 @@
         group by parentInfo
 	</select>
 
+    <!-- 剩余现金明细-->
+    <select id="selectRemain" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis003Dto">
+        SELECT
+        P.PORTFOLIO_ID  AS portfolioId,
+        '01' hasChildren,
+        'SYXJ' pinanAssetType,
+        nvl(A.COST,0)         AS posValue
+        FROM PTL_PORTFOLIO P
+        INNER JOIN BOK_VAL_TABLE_DATA A ON ('F16_'||P.PORTFOLIO_ID = A.BOOKSET_ID OR P.PORTFOLIO_ID = A.BOOKSET_ID)
+        <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+            inner join data_auth_notify_inst dani
+            on dani.BUSINESS_ID =P.PORTFOLIO_ID
+            and dani.data_type='PTL01'
+            and dani.model_type = '02'
+            and dani.institution_code
+            <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                     open="in ("  close=")">
+                #{item}
+            </foreach>
+        </if>
+        WHERE
+        A.val_DATE = to_date(#{searchDate},'yyyy-mm-dd')
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            AND PORTFOLIO_ID IN
+            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
+        AND A.DETAIL_DIST = '01'
+        AND DECODE (A.FSUBJECT_ID, NULL, 'root', DECODE (A.FSUBJECT_ID, ' ', 'root', A.FSUBJECT_ID)) = 'root'
+        and subject_no in ('120401','1002','120402','1021','120403','1031')
+
+        <if test="pass != null and pass != null and pass == '02'.toString() ">
+            /* 穿透后剩余现金数据查询*/
+            UNION ALL
+
+            SELECT
+            A.PORTFOLIO_ID AS portfolioId,
+            '01' hasChildren,
+            'SYXJ' pinanAssetType,
+            nvl(A.MARKET_VALUE,0)  AS posValue
+            FROM PTL_SEC_PIERCE_VALUTION A
+            <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+                inner join data_auth_notify_inst dani
+                on dani.BUSINESS_ID =A.PORTFOLIO_ID
+                and dani.data_type='PTL01'
+                and dani.model_type = '02'
+                and dani.institution_code
+                <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                         open="in ("  close=")">
+                    #{item}
+                </foreach>
+            </if>
+            WHERE
+            A.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            AND A.FINPROD_ID like 'REMAININGCASH_%'
+        </if>
+    </select>
+
+    <select id="selectPeiZhiRemain" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis002Dto">
+        /* 穿透后剩余现金数据查询*/
+        SELECT
+        A.PORTFOLIO_ID AS portfolioId,
+        nvl(A.MARKET_VALUE,0)  AS marketValue
+        FROM PTL_SEC_PIERCE_VALUTION A
+        <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+            inner join data_auth_notify_inst dani
+            on dani.BUSINESS_ID =A.PORTFOLIO_ID
+            and dani.data_type='PTL01'
+            and dani.model_type = '02'
+            and dani.institution_code
+            <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                     open="in ("  close=")">
+                #{item}
+            </foreach>
+        </if>
+        WHERE
+        A.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            AND PORTFOLIO_ID IN
+            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
+        AND A.FINPROD_ID like 'REMAININGCASH_%'
+    </select>
 </mapper>

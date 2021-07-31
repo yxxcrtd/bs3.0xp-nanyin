@@ -124,6 +124,7 @@
         <where>
             FINPROD_MARKET_ID IS NOT NULL AND
             FINPROD_TYPE2 = #{planasset}
+            AND TRADE_MARKET != '12'
             <if test="param != null and !param.equals('')">
                 and (FINPROD_MARKET_ID like concat('%',concat(#{param},'%'))
                 or FINPROD_NAME like concat('%',concat(#{param},'%')))
@@ -185,6 +186,7 @@
         <where>
             T1.FINPROD_MARKET_ID IS NOT NULL AND
             T1.FINPROD_TYPE2 = #{planasset}
+            AND TRADE_MARKET != '12'
             <if test="search != null and !search.equals('')">
                 and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
                 or T1.FINPROD_NAME like concat('%',concat(#{search},'%')))

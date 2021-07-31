@@ -1,0 +1,3 @@
+--估值表自动解析文件路径
+delete from  SYS_PARA where PARA_CODE='RSK_OUTS_VALTABLE_IMPORT_PATH';
+INSERT INTO SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RSK', 'RSK_OUTS_VALTABLE_IMPORT_PATH', '/home/rsk/file/', '01', null, '估值表自动解析文件路径', 'system', null, sysdate, 'admin', sysdate);

@@ -17,6 +17,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -90,10 +91,19 @@ public class AssetInfoDetailValidator implements BeanValidator{
                 resultList.add(new ValidMessage("assetCode","资产编码已存在"));
             }
         }
+        dto.setIssuePartyId(CommonUtil.selectBankCode());
         // add by zhangliang 20210126 中债check调用 start
         resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getAssetType2(), ValidMessage.class);
         // add by zhangliang 20210126 中债check调用 end
-
+        
+        //对应资管计划代码必填校验
+        if(StringUtil.equals(dto.getAssetType2(), "1107")||StringUtil.equals(dto.getAssetType2(), "1108")
+        		||StringUtil.equals(dto.getAssetType2(), "1901")||StringUtil.equals(dto.getAssetType2(), "1902")){
+        	if(!StringUtil.isNotEmpty(dto.getPlanId())) {
+        		resultList.add(new ValidMessage("planId",
+        				getMessage("COMMON_E_0057", getMessage("对应资管计划代码"))));      		
+        	}
+      }
          return resultList;
     }
 

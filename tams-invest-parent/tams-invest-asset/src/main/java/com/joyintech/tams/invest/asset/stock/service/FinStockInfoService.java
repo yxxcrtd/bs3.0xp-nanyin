@@ -284,7 +284,7 @@ public class FinStockInfoService extends CommonExportService<FinStockInfoDto> im
                 trdCommDto.setFinProduct(finProduct);
                 trdCommDto.setFinProductAdd(entity.getBaseFinProductBaseInfoList().get(0).getFinProductAdd());
                 trdCommDto.setHeader(BussinessJixuConstant.消息头_股票标的信息);
-                ResultContainer resultContainer = valuationInterfService.runValInvest2Jixu(trdCommDto);
+//                ResultContainer resultContainer = valuationInterfService.runValInvest2Jixu(trdCommDto);
             } 
 //            System.out.println(resultContainer);
         }
@@ -355,22 +355,22 @@ public class FinStockInfoService extends CommonExportService<FinStockInfoDto> im
         BeanUtil.copyPropertiesIgnoreNull(finProductType, dto);
         finProductType.setBranch(branch);
 //        DictCode
-        if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_否.getValue())
-        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())){
-        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_上海股票.getValue());
-        }
-        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_否.getValue())
-        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深圳股票.getValue());
-        }
-        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_沪港通.getValue())
-        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())){
-        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_沪港通.getValue());
-        }
-        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_深港通.getValue())
-        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深港通.getValue());
-        }
+//        if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_否.getValue())
+//        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())){
+//        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_上海股票.getValue());
+//        }
+//        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_否.getValue())
+//        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深圳股票.getValue());
+//        }
+//        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_沪港通.getValue())
+//        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())){
+//        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_沪港通.getValue());
+//        }
+//        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_深港通.getValue())
+//        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深港通.getValue());
+//        }
        finProductType.setType8(DictCodeListExt2.平安资产类型_股票.getValue());
         // 金融产品附属表entity
         FinProductAdd finProductAdd = new FinProductAdd();

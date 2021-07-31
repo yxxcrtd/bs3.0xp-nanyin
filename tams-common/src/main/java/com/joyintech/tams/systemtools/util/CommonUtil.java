@@ -903,6 +903,24 @@ public class CommonUtil {
 	public static String getYHGeneralBankCode(){
 		return baseCommonService.getYHGeneralBankCode();
 	}
+	
+	/**
+	 * 主要功能:判断字符串是否为日期 注意事项:无
+	 *
+	 * @param str
+	 *            日期字符串 yyyy-MM-dd
+	 * @return 是否
+	 */
+	public static boolean isEnDateStr(String str) {
+		SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_DATE_FORMAT_EN);
+		try {
+			format.setLenient(false);
+			format.parse(str);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
 
 
 }

@@ -122,7 +122,9 @@ $(function(){
         			 $('#tradeMarketId').val('.SZ');
         		}else if (tradeMarket == '09') {//OTC场外
         			 $('#tradeMarketId').val('.OF');
-        		}else{//机构间私募系统
+        		}else if(tradeMarket == '12'){
+                     $('#tradeMarketId').val('.HK');
+                 }else{//机构间私募系统
         			 $('#tradeMarketId').val('.IOC');
         		}
         		 return $('#tradeMarketId').val();
@@ -183,7 +185,9 @@ $(function(){
         			 $('#tradeMarketId').val('.SZ');
         		}else if (tradeMarket == '09') {//OTC场外
         			 $('#tradeMarketId').val('.OF');
-        		}else{//机构间私募系统
+        		}else if(tradeMarket == '12'){
+                     $('#tradeMarketId').val('.HK');
+                 }else{//机构间私募系统
         			 $('#tradeMarketId').val('.IOC');
             }
         		 return $('#tradeMarketId').val();

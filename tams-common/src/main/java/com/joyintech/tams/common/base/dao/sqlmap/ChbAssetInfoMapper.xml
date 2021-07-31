@@ -207,18 +207,19 @@
         <result column="HOLD_PURPOSE" property="holdPurpose" jdbcType="VARCHAR" />
         <result column="FINANCIAL_COMISSUE" property="financialComissue" jdbcType="VARCHAR" />
         <result column="IS_CHL" property="isChl" jdbcType="VARCHAR" />
-        <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR" />
-        <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
-        <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
-        <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
         <result column="CHB_ISSUER_ID" property="chbIssuerId" jdbcType="VARCHAR" />
         <result column="CHB_MANAGER_ID" property="chbManagerId" jdbcType="VARCHAR" />
         <result column="CHB_FINANCIER_ID" property="chbFinancierId" jdbcType="VARCHAR" />
         <result column="PERPETUAL_FLAG" property="perpetualFlag" jdbcType="VARCHAR" />
         <result column="OPTION_FLAG" property="optionFlag" jdbcType="VARCHAR" />
         <result column="IS_BJSZQ" property="isBjszq" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
+        <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
+        <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
         <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
         <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
+        <result column="PLAN_ID" property="planId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ASSET_UUID ASSET_UUID, ASSET_CODE ASSET_CODE, ASSET_TYPE ASSET_TYPE, ASSET_TYPE2 ASSET_TYPE2, 
@@ -279,10 +280,10 @@
         FIRST_REPRCE_DATE FIRST_REPRCE_DATE, REPRCE_CYCLE REPRCE_CYCLE, PART_REDEM_FLAG PART_REDEM_FLAG, 
         PART_REDEM_RATE PART_REDEM_RATE, CREDIT_ORG_CODE CREDIT_ORG_CODE, CREDIT_ORG_NAME CREDIT_ORG_NAME, 
         EQUITY_QUIT EQUITY_QUIT, DEPT_EQUITY DEPT_EQUITY, HOLD_PURPOSE HOLD_PURPOSE, FINANCIAL_COMISSUE FINANCIAL_COMISSUE, 
-        IS_CHL IS_CHL, BANK_SEC_KZZQ BANK_SEC_KZZQ, BANK_SEC_ZXZQ BANK_SEC_ZXZQ, ISUNLISTED ISUNLISTED, 
-        IS_BZHPJ IS_BZHPJ, CHB_ISSUER_ID CHB_ISSUER_ID, CHB_MANAGER_ID CHB_MANAGER_ID, CHB_FINANCIER_ID CHB_FINANCIER_ID, 
-        PERPETUAL_FLAG PERPETUAL_FLAG, OPTION_FLAG OPTION_FLAG, IS_BJSZQ IS_BJSZQ, IS_PERPETUAL IS_PERPETUAL, 
-        IS_FBZB IS_FBZB
+        IS_CHL IS_CHL, CHB_ISSUER_ID CHB_ISSUER_ID, CHB_MANAGER_ID CHB_MANAGER_ID, CHB_FINANCIER_ID CHB_FINANCIER_ID, 
+        PERPETUAL_FLAG PERPETUAL_FLAG, OPTION_FLAG OPTION_FLAG, IS_BJSZQ IS_BJSZQ, BANK_SEC_KZZQ BANK_SEC_KZZQ, 
+        BANK_SEC_ZXZQ BANK_SEC_ZXZQ, ISUNLISTED ISUNLISTED, IS_BZHPJ IS_BZHPJ, IS_PERPETUAL IS_PERPETUAL, 
+        IS_FBZB IS_FBZB, PLAN_ID PLAN_ID
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -374,11 +375,12 @@
             FIRST_REPRCE_DATE, REPRCE_CYCLE, PART_REDEM_FLAG, 
             PART_REDEM_RATE, CREDIT_ORG_CODE, CREDIT_ORG_NAME, 
             EQUITY_QUIT, DEPT_EQUITY, HOLD_PURPOSE, 
-            FINANCIAL_COMISSUE, IS_CHL, BANK_SEC_KZZQ, 
+            FINANCIAL_COMISSUE, IS_CHL, CHB_ISSUER_ID, 
+            CHB_MANAGER_ID, CHB_FINANCIER_ID, PERPETUAL_FLAG, 
+            OPTION_FLAG, IS_BJSZQ, BANK_SEC_KZZQ, 
             BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, 
-            CHB_ISSUER_ID, CHB_MANAGER_ID, CHB_FINANCIER_ID, 
-            PERPETUAL_FLAG, OPTION_FLAG, IS_BJSZQ, 
-            IS_PERPETUAL, IS_FBZB)
+            IS_PERPETUAL, IS_FBZB, PLAN_ID
+            )
         values (#{assetUuid,jdbcType=CHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, 
             #{assetType2,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, 
             #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{discountYield,jdbcType=DECIMAL}, 
@@ -447,11 +449,12 @@
             #{firstReprceDate,jdbcType=DATE}, #{reprceCycle,jdbcType=DECIMAL}, #{partRedemFlag,jdbcType=VARCHAR}, 
             #{partRedemRate,jdbcType=DECIMAL}, #{creditOrgCode,jdbcType=VARCHAR}, #{creditOrgName,jdbcType=VARCHAR}, 
             #{equityQuit,jdbcType=DATE}, #{deptEquity,jdbcType=VARCHAR}, #{holdPurpose,jdbcType=VARCHAR}, 
-            #{financialComissue,jdbcType=VARCHAR}, #{isChl,jdbcType=VARCHAR}, #{bankSecKzzq,jdbcType=VARCHAR}, 
+            #{financialComissue,jdbcType=VARCHAR}, #{isChl,jdbcType=VARCHAR}, #{chbIssuerId,jdbcType=VARCHAR}, 
+            #{chbManagerId,jdbcType=VARCHAR}, #{chbFinancierId,jdbcType=VARCHAR}, #{perpetualFlag,jdbcType=VARCHAR}, 
+            #{optionFlag,jdbcType=VARCHAR}, #{isBjszq,jdbcType=VARCHAR}, #{bankSecKzzq,jdbcType=VARCHAR}, 
             #{bankSecZxzq,jdbcType=VARCHAR}, #{isunlisted,jdbcType=VARCHAR}, #{isBzhpj,jdbcType=VARCHAR}, 
-            #{chbIssuerId,jdbcType=VARCHAR}, #{chbManagerId,jdbcType=VARCHAR}, #{chbFinancierId,jdbcType=VARCHAR}, 
-            #{perpetualFlag,jdbcType=VARCHAR}, #{optionFlag,jdbcType=VARCHAR}, #{isBjszq,jdbcType=VARCHAR}, 
-            #{isPerpetual,jdbcType=VARCHAR}, #{isFbzb,jdbcType=VARCHAR})
+            #{isPerpetual,jdbcType=VARCHAR}, #{isFbzb,jdbcType=VARCHAR}, #{planId,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo" >
         insert into CHB_ASSET_INFO
@@ -1071,18 +1074,6 @@
             <if test="isChl != null" >
                 IS_CHL,
             </if>
-            <if test="bankSecKzzq != null" >
-                BANK_SEC_KZZQ,
-            </if>
-            <if test="bankSecZxzq != null" >
-                BANK_SEC_ZXZQ,
-            </if>
-            <if test="isunlisted != null" >
-                ISUNLISTED,
-            </if>
-            <if test="isBzhpj != null" >
-                IS_BZHPJ,
-            </if>
             <if test="chbIssuerId != null" >
                 CHB_ISSUER_ID,
             </if>
@@ -1101,11 +1092,26 @@
             <if test="isBjszq != null" >
                 IS_BJSZQ,
             </if>
+            <if test="bankSecKzzq != null" >
+                BANK_SEC_KZZQ,
+            </if>
+            <if test="bankSecZxzq != null" >
+                BANK_SEC_ZXZQ,
+            </if>
+            <if test="isunlisted != null" >
+                ISUNLISTED,
+            </if>
+            <if test="isBzhpj != null" >
+                IS_BZHPJ,
+            </if>
             <if test="isPerpetual != null" >
                 IS_PERPETUAL,
             </if>
             <if test="isFbzb != null" >
                 IS_FBZB,
+            </if>
+            <if test="planId != null" >
+                PLAN_ID,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -1724,18 +1730,6 @@
             <if test="isChl != null" >
                 #{isChl,jdbcType=VARCHAR},
             </if>
-            <if test="bankSecKzzq != null" >
-                #{bankSecKzzq,jdbcType=VARCHAR},
-            </if>
-            <if test="bankSecZxzq != null" >
-                #{bankSecZxzq,jdbcType=VARCHAR},
-            </if>
-            <if test="isunlisted != null" >
-                #{isunlisted,jdbcType=VARCHAR},
-            </if>
-            <if test="isBzhpj != null" >
-                #{isBzhpj,jdbcType=VARCHAR},
-            </if>
             <if test="chbIssuerId != null" >
                 #{chbIssuerId,jdbcType=VARCHAR},
             </if>
@@ -1754,11 +1748,26 @@
             <if test="isBjszq != null" >
                 #{isBjszq,jdbcType=VARCHAR},
             </if>
+            <if test="bankSecKzzq != null" >
+                #{bankSecKzzq,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecZxzq != null" >
+                #{bankSecZxzq,jdbcType=VARCHAR},
+            </if>
+            <if test="isunlisted != null" >
+                #{isunlisted,jdbcType=VARCHAR},
+            </if>
+            <if test="isBzhpj != null" >
+                #{isBzhpj,jdbcType=VARCHAR},
+            </if>
             <if test="isPerpetual != null" >
                 #{isPerpetual,jdbcType=VARCHAR},
             </if>
             <if test="isFbzb != null" >
                 #{isFbzb,jdbcType=VARCHAR},
+            </if>
+            <if test="planId != null" >
+                #{planId,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -1796,8 +1805,9 @@
         FIRST_EXERCISE_DATE, EXERCISE_PERIOD, EXERCISE_PRICE, PERPETUAL_CLAUSE_TYPE, DEFERRED_INTEREST_TYPE, 
         DEFERRED_INTEREST_INT, FIRST_REPRCE_DATE, REPRCE_CYCLE, PART_REDEM_FLAG, PART_REDEM_RATE, 
         CREDIT_ORG_CODE, CREDIT_ORG_NAME, EQUITY_QUIT, DEPT_EQUITY, HOLD_PURPOSE, FINANCIAL_COMISSUE, 
-        IS_CHL, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, CHB_ISSUER_ID, CHB_MANAGER_ID, 
-        CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, IS_BJSZQ, IS_PERPETUAL, IS_FBZB)
+        IS_CHL, CHB_ISSUER_ID, CHB_MANAGER_ID, CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, 
+        IS_BJSZQ, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, IS_PERPETUAL, IS_FBZB, 
+        PLAN_ID)
         select ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, 
             TRADE_MARKET, VDATE, MDATE, DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT, 
             TARGET_TYPE, TARGET, ASSET_ID, ASSET_NAME, CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE, 
@@ -1831,8 +1841,9 @@
             FIRST_EXERCISE_DATE, EXERCISE_PERIOD, EXERCISE_PRICE, PERPETUAL_CLAUSE_TYPE, DEFERRED_INTEREST_TYPE, 
             DEFERRED_INTEREST_INT, FIRST_REPRCE_DATE, REPRCE_CYCLE, PART_REDEM_FLAG, PART_REDEM_RATE, 
             CREDIT_ORG_CODE, CREDIT_ORG_NAME, EQUITY_QUIT, DEPT_EQUITY, HOLD_PURPOSE, FINANCIAL_COMISSUE, 
-            IS_CHL, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, CHB_ISSUER_ID, CHB_MANAGER_ID, 
-            CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, IS_BJSZQ, IS_PERPETUAL, IS_FBZB
+            IS_CHL, CHB_ISSUER_ID, CHB_MANAGER_ID, CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, 
+            IS_BJSZQ, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, IS_PERPETUAL, IS_FBZB, 
+            PLAN_ID
              from CHB_ASSET_INFO
              where STATUS = 'E' and ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </insert>
@@ -2445,18 +2456,6 @@
             <if test="isChl != null" >
                 IS_CHL = #{isChl,jdbcType=VARCHAR},
             </if>
-            <if test="bankSecKzzq != null" >
-                BANK_SEC_KZZQ = #{bankSecKzzq,jdbcType=VARCHAR},
-            </if>
-            <if test="bankSecZxzq != null" >
-                BANK_SEC_ZXZQ = #{bankSecZxzq,jdbcType=VARCHAR},
-            </if>
-            <if test="isunlisted != null" >
-                ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
-            </if>
-            <if test="isBzhpj != null" >
-                IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
-            </if>
             <if test="chbIssuerId != null" >
                 CHB_ISSUER_ID = #{chbIssuerId,jdbcType=VARCHAR},
             </if>
@@ -2475,11 +2474,26 @@
             <if test="isBjszq != null" >
                 IS_BJSZQ = #{isBjszq,jdbcType=VARCHAR},
             </if>
+            <if test="bankSecKzzq != null" >
+                BANK_SEC_KZZQ = #{bankSecKzzq,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecZxzq != null" >
+                BANK_SEC_ZXZQ = #{bankSecZxzq,jdbcType=VARCHAR},
+            </if>
+            <if test="isunlisted != null" >
+                ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
+            </if>
+            <if test="isBzhpj != null" >
+                IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
+            </if>
             <if test="isPerpetual != null" >
                 IS_PERPETUAL = #{isPerpetual,jdbcType=VARCHAR},
             </if>
             <if test="isFbzb != null" >
                 IS_FBZB = #{isFbzb,jdbcType=VARCHAR},
+            </if>
+            <if test="planId != null" >
+                PLAN_ID = #{planId,jdbcType=VARCHAR},
             </if>
         </set>
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
@@ -2688,18 +2702,19 @@
             HOLD_PURPOSE = #{holdPurpose,jdbcType=VARCHAR},
             FINANCIAL_COMISSUE = #{financialComissue,jdbcType=VARCHAR},
             IS_CHL = #{isChl,jdbcType=VARCHAR},
-            BANK_SEC_KZZQ = #{bankSecKzzq,jdbcType=VARCHAR},
-            BANK_SEC_ZXZQ = #{bankSecZxzq,jdbcType=VARCHAR},
-            ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
-            IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
             CHB_ISSUER_ID = #{chbIssuerId,jdbcType=VARCHAR},
             CHB_MANAGER_ID = #{chbManagerId,jdbcType=VARCHAR},
             CHB_FINANCIER_ID = #{chbFinancierId,jdbcType=VARCHAR},
             PERPETUAL_FLAG = #{perpetualFlag,jdbcType=VARCHAR},
             OPTION_FLAG = #{optionFlag,jdbcType=VARCHAR},
             IS_BJSZQ = #{isBjszq,jdbcType=VARCHAR},
+            BANK_SEC_KZZQ = #{bankSecKzzq,jdbcType=VARCHAR},
+            BANK_SEC_ZXZQ = #{bankSecZxzq,jdbcType=VARCHAR},
+            ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
+            IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
             IS_PERPETUAL = #{isPerpetual,jdbcType=VARCHAR},
-            IS_FBZB = #{isFbzb,jdbcType=VARCHAR}
+            IS_FBZB = #{isFbzb,jdbcType=VARCHAR},
+            PLAN_ID = #{planId,jdbcType=VARCHAR}
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </update>
 </mapper>
