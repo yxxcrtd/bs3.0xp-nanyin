@@ -403,6 +403,52 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 		List<List<String>> data = ExcelUtil.getDataList2(fileName);
 		List<AssetInfoDetailRisk001Dto> list = new ArrayList<>();
 		List<ExcelValidDto> resultList = assetInfoDetailUtil.convertToBean(list,data);
+		//在金融产品附属表FinProductAdd存值,股票还要在FIN_PRODUCT_TYPE表存值
+		list.forEach(assetInfoDetailDto -> {
+			if(StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
+					||StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
+				FinProductAdd finProductAdd = new FinProductAdd();
+				BeanUtil.copyPropertiesIgnoreNull(finProductAdd, assetInfoDetailDto);
+				finProductAdd.setFinprodId(commonBusinessService.getFinProdId(assetInfoDetailDto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+				finProductAdd.setInvestNature(DictCodeList.投资性质_权益类.getValue());
+				assetInfoDetailDto.setFinProductAdd(finProductAdd);
+
+				FinProductType finProductType = new FinProductType();
+				BeanUtil.copyPropertiesIgnoreNull(finProductType, assetInfoDetailDto);
+				finProductType.setFinprodId(commonBusinessService.getFinProdId(assetInfoDetailDto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+				// 分支序号
+				Long branch = StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)) ? 0 : Long.parseLong(
+						CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
+				finProductType.setBranch(branch);
+				finProductType.setType8(DictCodeListExt2.平安资产类型_股票.getValue());
+				finProductType.setType9("04");
+				finProductType.setType10("47");
+				finProductType.setType11("095");
+				finProductType.setType12("097");
+				assetInfoDetailDto.setFinProductType(finProductType);
+			}else if(StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_互换.getValue())
+					||StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期货.getValue())
+					||StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期权.getValue())
+			){
+				FinProductAdd finProductAdd = new FinProductAdd();
+				BeanUtil.copyPropertiesIgnoreNull(finProductAdd, assetInfoDetailDto);
+				finProductAdd.setFinprodId(commonBusinessService.getFinProdId(assetInfoDetailDto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+				finProductAdd.setInvestNature(DictCodeList.投资性质_商品及金融衍生品类.getValue());
+				assetInfoDetailDto.setFinProductAdd(finProductAdd);
+			}else if(StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_QDII债券.getValue())){
+				FinProductAdd finProductAdd = new FinProductAdd();
+				BeanUtil.copyPropertiesIgnoreNull(finProductAdd, assetInfoDetailDto);
+				finProductAdd.setFinprodId(commonBusinessService.getFinProdId(assetInfoDetailDto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+				finProductAdd.setInvestNature(DictCodeList.投资性质_固定收益类.getValue());
+				assetInfoDetailDto.setFinProductAdd(finProductAdd);
+			}else{
+				FinProductAdd finProductAdd = new FinProductAdd();
+				BeanUtil.copyPropertiesIgnoreNull(finProductAdd, assetInfoDetailDto);
+				finProductAdd.setFinprodId(commonBusinessService.getFinProdId(assetInfoDetailDto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+				finProductAdd.setInvestNature(assetInfoDetailDto.getSvrBussQDIISharesInfoRiskDto().getInvestNature());
+				assetInfoDetailDto.setFinProductAdd(finProductAdd);
+			}
+		});
 		if (StringUtil.isEmptyList(resultList)){
 			return restTemplate.postForList(
 					ServiceApplication.RISK_SERVICE_NAME + "/AssetInfoDetailRiskController/importData",

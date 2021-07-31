@@ -397,7 +397,12 @@ public class AssetInfoDetailRiskUtil {
             messages.add(new ValidMessage("行业数据不能为空。"));
         }
         dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
-        dto.setRemark(list.get(26));
+        if (StringUtil.isNotEmpty(list.get(26))) {
+            dto.setInvestNature(SysDataUtil.getZZDictCodeFromName(DictCode.投资性质, list.get(26)));
+        }else {
+            messages.add(new ValidMessage("资产投资性质数据不能为空。"));
+        }
+        dto.setRemark(list.get(27));
        /* if (StringUtil.isNotEmpty(list.get(48)) && list.get(48).length()>2){
             dto.setPbcAssetType1(list.get(48).substring(0,3));
         }
@@ -500,6 +505,7 @@ public class AssetInfoDetailRiskUtil {
         }
         if (StringUtil.isNotEmpty(list.get(17))) {
             dto.setGuaranteeCmt(list.get(17));
+            dto.setGuaTypeRemark(list.get(17));
         }else {
             messages.add(new ValidMessage("担保情况说明数据不能为空。"));
         }
@@ -508,7 +514,7 @@ public class AssetInfoDetailRiskUtil {
         }else {
             messages.add(new ValidMessage("是否含权等特殊条款情况说明数据不能为空。"));
         }
-        dto.setRemark(list.get(26));
+        dto.setRemark(list.get(27));
        /* if (StringUtil.isNotEmpty(list.get(48)) && list.get(48).length()>2){
             dto.setPbcAssetType1(list.get(48).substring(0,3));
         }
@@ -787,6 +793,7 @@ public class AssetInfoDetailRiskUtil {
         headList.add("*股票/基金名称");
         headList.add("*发行机构");
         headList.add("*行业");
+        headList.add("*资产投资性质");
         headList.add("备注");
     }
 

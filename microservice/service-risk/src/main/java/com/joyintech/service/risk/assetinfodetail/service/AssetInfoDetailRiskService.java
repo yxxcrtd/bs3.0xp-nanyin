@@ -13,6 +13,8 @@ package com.joyintech.service.risk.assetinfodetail.service;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.risk.assetinfodetail.dao.AssetInfoDetailRiskMapper;
 import com.joyintech.service.risk.assetinfodetail.dto.AssetInfoDetailRiskDto;
@@ -23,8 +25,11 @@ import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.RskAssetInfo;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
@@ -53,6 +58,7 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 
 	@Autowired
 	private FinProductTypeMapper finProductTypeMapper;
+
 
 
 	/**
@@ -111,8 +117,7 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 			assetInfo.add(dto);
 			flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
 		}
-		//股票需在金融产品附属表FinProductAdd（投资性质为02）、FIN_PRODUCT_TYPE表赋值,
-		// 金融衍生品、QDII需在金融产品附属表FinProductAdd存值，投资性质为03
+		//在金融产品附属表FinProductAdd存值,股票还要在FIN_PRODUCT_TYPE表存值
 			 if (dto.getFinProductAdd() != null) {
 				 String finprodId = dto.getFinProductAdd().getFinprodId();
 				 FinProductAdd finProductAdd = assetInfoDetailMapper.selectByFinprodId(finprodId);
@@ -247,6 +252,30 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 				assetInfo.add(assetInfoDetailDto);				
 			});
 			assetInfoDetailMapper.mergeInfoListEx(assetInfo);
+			//在金融产品附属表FinProductAdd存值,股票还要在FIN_PRODUCT_TYPE表存值
+			dataList.forEach(dto -> {
+			if (dto.getFinProductAdd() != null) {
+				String finprodId = dto.getFinProductAdd().getFinprodId();
+				FinProductAdd finProductAdd = assetInfoDetailMapper.selectByFinprodId(finprodId);
+				if(finProductAdd == null) {
+					finProductAddMapper.insert(dto.getFinProductAdd());
+				}else {
+					finProductAddMapper.updateByPrimaryKeySelective(dto.getFinProductAdd());
+				}
+			}
+			if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
+					||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
+				if (dto.getFinProductType() != null) {
+					String finprodId = dto.getFinProductType().getFinprodId();
+					FinProductType finProductType = assetInfoDetailMapper.selectByFinprodIdType(finprodId);
+					if(finProductType == null) {
+						finProductTypeMapper.insert(dto.getFinProductType());
+					}else {
+						finProductTypeMapper.updateByPrimaryKeySelective(dto.getFinProductType());
+					}
+				}
+			}
+			});
 			return checkResult;
 		}
 		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),

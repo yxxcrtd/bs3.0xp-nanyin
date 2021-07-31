@@ -304,6 +304,10 @@ public class AssetInfoDetailRiskValidator implements BeanValidator{
       		resultList.add(new ValidMessage("svrBussQDIISharesInfoRiskDto.industryShares2",
       				getMessage("COMMON_E_0057", getMessage("行业二级分类"))));      		
       	   }
+		  if(!StringUtil.isNotEmpty(dto.getSvrBussQDIISharesInfoRiskDto().getInvestNature())) {
+			  resultList.add(new ValidMessage("svrBussQDIISharesInfoRiskDto.investNature",
+					  getMessage("COMMON_E_0057", getMessage("资产投资性质"))));
+		  }
       }
       //基本信息字段必填校验
       	if(!StringUtil.isNotEmpty(dto.getAssetCode())) {
