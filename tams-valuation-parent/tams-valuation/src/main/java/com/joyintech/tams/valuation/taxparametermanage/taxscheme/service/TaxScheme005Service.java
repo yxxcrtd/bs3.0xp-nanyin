@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.taxparametermanage.taxscheme.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,9 +65,9 @@ public class TaxScheme005Service extends CommonExportService<TaxScheme005Dto> im
      * @return
      * @throws Exception
      */
-    public List<SelectOptionDto> findAsset(Map<String, Object> pageParam)
+    public Page<SelectOptionDto> findAsset(Map<String, Object> pageParam)
         throws Exception {
-        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/TaxScheme005/findAsset",
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/TaxScheme005/findAsset",
             pageParam, SelectOptionDto.class);
     }
 

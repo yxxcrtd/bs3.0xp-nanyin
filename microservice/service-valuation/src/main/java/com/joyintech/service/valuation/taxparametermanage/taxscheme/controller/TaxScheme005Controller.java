@@ -13,6 +13,7 @@ package com.joyintech.service.valuation.taxparametermanage.taxscheme.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,10 +52,10 @@ public class TaxScheme005Controller extends BaseController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/findAsset")
-    public List<SelectOptionDto> findAsset(@RequestBody Map<String, Object> param)
+    @PostMapping("/findAsset/{page}/{length}")
+    public Page<SelectOptionDto> findAsset(@PathVariable("page") int page, @PathVariable("length") int length,@RequestBody Map<String, Object> param)
         throws Exception {
-        return taxScheme005Service.findAsset(param);
+        return taxScheme005Service.findAsset(page,length,param);
     }
 
     /**

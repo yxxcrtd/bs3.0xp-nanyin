@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -112,7 +113,7 @@ public class TaxScheme005Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findAsset")
-    public List<SelectOptionDto> findAsset()
+    public Page<SelectOptionDto> findAsset()
         throws Exception {
         return taxScheme005Service.findAsset(RequestUtil.getPageParam());
     }
