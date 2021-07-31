@@ -129,7 +129,7 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 		return dtoList;
 	}
 
-	public void doSave(AssetInfoDetailRisk001Dto dto) throws Exception {
+	public void doSave(AssetInfoDetailRisk001Dto dto) {
 		//分别调用各自的setEntity方法
 		this.getDtoByPageMessgae(dto);
 		//赋值相关数据
@@ -139,8 +139,7 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 		if(StringUtil.isEmpty(dto.getAssetUuid())){
 			dto.setAssetUuid(IDGenerator.generate(36));
 		}
-		//股票需在金融产品附属表FinProductAdd（投资性质为02）、FIN_PRODUCT_TYPE表赋值,
-		// 金融衍生品、QDII需在金融产品附属表FinProductAdd存值，投资性质为03
+		//在金融产品附属表FinProductAdd存值,股票还要在FIN_PRODUCT_TYPE表存值
 		if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
 			||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
             FinProductAdd finProductAdd = new FinProductAdd();
@@ -162,11 +161,26 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 			finProductType.setType11("095");
 			finProductType.setType12("097");
 			dto.setFinProductType(finProductType);
-		}else{
+		}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_互换.getValue())
+		        ||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期货.getValue())
+				||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期权.getValue())
+		  ){
 			FinProductAdd finProductAdd = new FinProductAdd();
 			BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
 			finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
 			finProductAdd.setInvestNature(DictCodeList.投资性质_商品及金融衍生品类.getValue());
+			dto.setFinProductAdd(finProductAdd);
+		}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_QDII债券.getValue())){
+			FinProductAdd finProductAdd = new FinProductAdd();
+			BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
+			finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+			finProductAdd.setInvestNature(DictCodeList.投资性质_固定收益类.getValue());
+			dto.setFinProductAdd(finProductAdd);
+		}else{
+			FinProductAdd finProductAdd = new FinProductAdd();
+			BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
+			finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+			finProductAdd.setInvestNature(dto.getSvrBussQDIISharesInfoRiskDto().getInvestNature());
 			dto.setFinProductAdd(finProductAdd);
 		}
 		/***当资产为资管计划或者委外时,需要保存资管计划开始结束日**/

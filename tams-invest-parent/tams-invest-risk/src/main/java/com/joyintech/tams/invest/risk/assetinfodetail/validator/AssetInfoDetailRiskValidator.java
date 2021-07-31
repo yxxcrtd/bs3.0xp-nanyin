@@ -191,7 +191,8 @@ public class AssetInfoDetailRiskValidator implements BeanValidator{
     		  ||StringUtil.equals(dto.getAssetType2(), "1301")){
     	  if(StringUtil.equals(dto.getSvrBussRepEquityInfoRiskDto().getSharesType1(),"99") 
     			  || StringUtil.equals(dto.getSvrBussRepEquityInfoRiskDto().getSharesType2(),"99")
-    			  || StringUtil.equals(dto.getSvrBussRepEquityInfoRiskDto().getSharesType3(),"99")) {
+    			  || StringUtil.equals(dto.getSvrBussRepEquityInfoRiskDto().getSharesType3(),"99")
+				  || StringUtil.equals(dto.getSvrBussRepEquityInfoRiskDto().getSharesType(),"99")) {
         	if(!StringUtil.isNotEmpty(dto.getSvrBussRepEquityInfoRiskDto().getRemark())) {
         		resultList.add(new ValidMessage("svrBussRepEquityInfoRiskDto.remark",
         				getMessage("COMMON_E_0057", getMessage("备注"))));      		

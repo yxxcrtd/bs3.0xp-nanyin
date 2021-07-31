@@ -643,11 +643,13 @@ public class AssetInfoDetailRiskUtil {
         }else {
             messages.add(new ValidMessage("是否为债转股数据不能为空。"));
         }
-        dto.setRemark(list.get(15));
+        dto.setBankSecPrefer(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(15)));
+        dto.setRemark(list.get(16));
         if(StringUtil.equals(dto.getSharesType1(),"99")
                 || StringUtil.equals(dto.getSharesType2(),"99")
-                || StringUtil.equals(dto.getSharesType3(),"99")) {
-            if (!StringUtil.isNotEmpty(list.get(15))) {
+                || StringUtil.equals(dto.getSharesType3(),"99")
+                || StringUtil.equals(dto.getSharesType(),"99")) {
+            if (!StringUtil.isNotEmpty(list.get(16))) {
                 messages.add(new ValidMessage("备注数据不能为空。"));
             }
         }
@@ -739,6 +741,7 @@ public class AssetInfoDetailRiskUtil {
         headList.add("*企业类型（按经济类型划分）");
         headList.add("*是否为质押融资");
         headList.add("*是否为债转股");
+        headList.add("是否商业银行优先股");
         headList.add("备注");
     }
 

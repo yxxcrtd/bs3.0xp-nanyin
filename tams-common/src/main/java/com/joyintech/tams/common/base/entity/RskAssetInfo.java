@@ -10,11 +10,11 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class RskAssetInfo extends BaseEntity{
+public class RskAssetInfo extends BaseEntity {
     /**
      * 资产要素uuid（为修改删除使用）
      */
-	@PrimaryKey(PrimaryKey.Field.PK_1)
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String assetUuid;
 
     /**
@@ -711,7 +711,7 @@ public class RskAssetInfo extends BaseEntity{
     private String dataSource;
 
     /**
-     * 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
+     * 是否投向“金融资产投资公司或其附属机构发行的私募股权投资基金
      */
     private String privatefundFlag;
 
@@ -1109,6 +1109,11 @@ public class RskAssetInfo extends BaseEntity{
      * 对应资管计划代码
      */
     private String planId;
+
+    /**
+     * 资产投资性质
+     */
+    private String investNature;
 
     /**
      * 取得 资产要素uuid（为修改删除使用）
@@ -3259,16 +3264,16 @@ public class RskAssetInfo extends BaseEntity{
     }
 
     /**
-     * 取得 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
-     * @return 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
+     * 取得 是否投向“金融资产投资公司或其附属机构发行的私募股权投资基金
+     * @return 是否投向“金融资产投资公司或其附属机构发行的私募股权投资基金
      */
     public String getPrivatefundFlag() {
         return privatefundFlag;
     }
 
     /**
-     * 设置 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
-     * @param privatefundFlag 是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金
+     * 设置 是否投向“金融资产投资公司或其附属机构发行的私募股权投资基金
+     * @param privatefundFlag 是否投向“金融资产投资公司或其附属机构发行的私募股权投资基金
      */
     public void setPrivatefundFlag(String privatefundFlag) {
         this.privatefundFlag = privatefundFlag == null ? null : privatefundFlag.trim();
@@ -4526,5 +4531,21 @@ public class RskAssetInfo extends BaseEntity{
      */
     public void setPlanId(String planId) {
         this.planId = planId == null ? null : planId.trim();
+    }
+
+    /**
+     * 取得 资产投资性质
+     * @return 资产投资性质
+     */
+    public String getInvestNature() {
+        return investNature;
+    }
+
+    /**
+     * 设置 资产投资性质
+     * @param investNature 资产投资性质
+     */
+    public void setInvestNature(String investNature) {
+        this.investNature = investNature == null ? null : investNature.trim();
     }
 }

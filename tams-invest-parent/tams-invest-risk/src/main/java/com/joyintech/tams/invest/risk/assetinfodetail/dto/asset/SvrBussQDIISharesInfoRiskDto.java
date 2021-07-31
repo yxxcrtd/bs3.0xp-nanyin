@@ -60,6 +60,11 @@ public class SvrBussQDIISharesInfoRiskDto extends RepAssetBond {
      */
     private String pbcAssetType3;
 
+    /**
+     * 投资性质
+     */
+    private String investNature;
+
     public String getPbcAssetType1() {
         return pbcAssetType1;
     }
@@ -141,5 +146,13 @@ public class SvrBussQDIISharesInfoRiskDto extends RepAssetBond {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getInvestNature() {
+        return investNature;
+    }
+
+    public void setInvestNature(String investNature) {
+        this.investNature = investNature;
     }
 }

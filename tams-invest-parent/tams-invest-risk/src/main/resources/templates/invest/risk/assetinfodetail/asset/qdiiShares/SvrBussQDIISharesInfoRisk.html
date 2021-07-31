@@ -97,6 +97,19 @@
 
             </div>
 
+            <div class="layui-form-item">
+             <div class="form-inline-wrap">
+                <label class="layui-form-label form-label-wrap">资产投资性质</label>
+                <div class="layui-input-inline input-inline">
+                    <select th:id="|${entityName}_investNature|"
+                            th:name="|${entityName}.investNature|"
+                            class="layui-input form-input input-select"
+                            data-th-placeholder="#{SysCommon.placeholder}"
+                            required data-th-data-result="${INVEST_TYPE}" data-th-initvalue="${entity?.investNature}">
+                    </select>
+                </div>
+             </div>
+            </div>
 
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style="width: 100% !important;">

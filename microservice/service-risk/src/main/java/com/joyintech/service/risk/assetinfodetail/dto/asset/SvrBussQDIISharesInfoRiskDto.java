@@ -44,6 +44,10 @@ public class SvrBussQDIISharesInfoRiskDto extends RepAssetBond {
      * 备注
      */
     private String remark;
+    /**
+     * 资产投资性质
+     */
+    private String investNature;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -103,5 +107,20 @@ public class SvrBussQDIISharesInfoRiskDto extends RepAssetBond {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+    /**
+     * 取得 资产投资性质
+     * @return 资产投资性质
+     */
+    public String getInvestNature() {
+        return investNature;
+    }
+
+    /**
+     * 设置 资产投资性质
+     * @param investNature 资产投资性质
+     */
+    public void setInvestNature(String investNature) {
+        this.investNature = investNature == null ? null : investNature.trim();
     }
 }
