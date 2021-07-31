@@ -50,9 +50,9 @@ import java.util.Map;
 @Service
 public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatFile> {
 	@Autowired
-	private SqlSessionFactory sqlSessionFactory;
-	@Autowired
 	private  PbcPrdBaseInfoSubDatService pbcPrdBaseInfoSubDatService;
+	@Autowired
+	private  PbcPrdBaseInfoEndSubDatService pbcPrdBaseInfoEndSubDatService;
 	@Autowired
 	private PbcReportProd001Sub001Service pbcReportProd001Sub001Service;
 	@Autowired
@@ -81,16 +81,6 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	private PbcReportAssetIncomeDetailService pbcReportAssetIncomeDetailService;
 	@Autowired
 	private PbcReportDebtTermDetailService pbcReportDebtTermDetailService;
-    @Autowired
-    private PbcMonthProdPositionService pbcMonthProdPositionService;
-    @Autowired
-    private PbcMonthAssetPositionService pbcAssetPositionInterf;
-    @Autowired
-    private PbcMonthAssetReportService pbcMonthAssetPositionService;
-    @Autowired
-	private CheckReport001Mapper checkReport001Mapper;
-    @Autowired
-	private PbcBeforeSubCheck pbcBeforeSubCheck;
 
 	@Autowired
 	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
@@ -139,10 +129,10 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 			// 设置table预览大小
 			selectParam.put("tableWidth", 200);
 			message=pbcPrdBaseInfoSubDatService.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品终止信息)){
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue())){
 			// 设置table预览大小
 			selectParam.put("tableWidth", 200);
-			message=pbcReportProd001Sub002Service.priview(selectParam);
+			message=pbcPrdBaseInfoEndSubDatService.priview(selectParam);
 		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集余额报表)){
 			// 设置table预览大小
 			selectParam.put("tableWidth", 120);
