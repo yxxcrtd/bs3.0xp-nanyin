@@ -234,7 +234,7 @@
 						and fp.FINPROD_TYPE2 != 'F28' and fp.FINPROD_TYPE2 is not null
 						inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID
 						where 1=1
-						and to_char(psv.CDATE,'yyyy-mm-dd') = to_date(#{cdate},'yyyy-MM-dd')
+						and psv.CDATE = to_date(#{cdate},'yyyy-MM-dd')
 					)gavInfo
 					group by finprodMarketId
 				) mv on t.FINPROD_ID = mv.finprodMarketId

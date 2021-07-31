@@ -23,6 +23,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
@@ -368,4 +369,23 @@ public class FinBondTargetAsset002Controller extends BaseController{
         ar.setData (map);
         return ar;
     }
+
+    /**
+     * add by xxg 20210721
+     * 根据产品代码得到起息日和到期日
+     */
+    @ResponseBody
+    @RequestMapping("/isSameMdateAndVdate")
+    public Boolean isSameMdateAndVdate(@RequestBody FinProduct finProduct){
+        //债券标的   债券修改或新建，关联一级市场债券时，若关联的一级债券起息日、到期日与资产起息日、到期日不一致，需要进行提醒
+        FinBondTargetAssetDto dto = finBondTargetAssetService.getMdateAndVdate(finProduct.getoFinprodId());
+        if (null != dto.getVdate() && null != dto.getMdate()) {
+            if (DateUtil.compareDate(dto.getMdate(), finProduct.getMdate()) != 0
+                    || DateUtil.compareDate(dto.getVdate(), finProduct.getVdate()) != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

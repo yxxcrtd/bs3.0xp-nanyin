@@ -345,11 +345,11 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
         
         //调用资产负债报送信息组件插入数据
         List<RepAssetDept> repAssetDeptList = new ArrayList<>();
-        for (RepAssetDept r :repAssetDeptList){
-            r.setRepCcy(dto.getCcy());
-        }
         if (Objects.nonNull(dto.getRepAssetDept())){
             repAssetDeptList.add(dto.getRepAssetDept());
+            for (RepAssetDept r :repAssetDeptList){
+                r.setRepCcy(dto.getCcy());
+            }
         }
         baseRepAssetDeptInfoService.insert(repAssetDeptList);
         /**
@@ -451,12 +451,14 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
         //调用资产负债报送信息组件修改数据
         BaseRepAssetDeptInfoDto baseRepAssetDeptInfoDto = new BaseRepAssetDeptInfoDto();
         List<RepAssetDept> repAssetDeptList = new ArrayList<>();
+        // 20210720 增加判空校验 by caozhenming start
         if (Objects.nonNull(dto.getRepAssetDept())){
             repAssetDeptList.add(dto.getRepAssetDept());
             for (RepAssetDept r :repAssetDeptList){
                 r.setRepCcy(dto.getCcy());
             }
         }
+        // 20210720 增加判空校验 by caozhenming end
         baseRepAssetDeptInfoDto.setRepAssetDeptList(repAssetDeptList);
         List<String> finProdIdList = new ArrayList<>();
         finProdIdList.add(dto.getFinProduct().getFinprodId());

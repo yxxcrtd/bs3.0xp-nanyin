@@ -60,15 +60,24 @@ public interface CalculationCommonMapper {
      * @since 1.0
      */
     String getIsHoliday(@Param("cdate") Date cdate,@Param("calendarId") String calendarId);
-    /**
-     * 查询上一开放日
-     * @param finprodId 金融产品代码
-     * @param cdate 查询日期
-     * @return 上一开放日
-     * @see
-     * @since 1.0
-     */
-    Date getLastOpenDate(@Param("finprodId") String finprodId,@Param("cdate") Date cdate);
+	/**
+	 * 查询上一开放日（估值现不存开放计划，通过业绩报酬计提计划取值--魏鹏）
+	 * @param finprodId 金融产品代码
+	 * @param cdate 查询日期
+	 * @return 上一开放日
+	 * @see
+	 * @since 1.0
+	 */
+	Date getLastOpenDate(@Param("finprodId") String finprodId, @Param("cdate") Date cdate);
+
+	/**
+	 * 查询起息日
+	 * @param finprodId 金融产品代码
+	 * @return 第一个开放日（起息日）
+	 * @see
+	 * @since 1.0
+	 */
+	Date getVdDateByFinprodId(@Param("finprodId") String finprodId);
     
 	/**
 	 * 

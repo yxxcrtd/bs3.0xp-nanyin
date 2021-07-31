@@ -4,6 +4,7 @@ var table;
     /**
      * 定义数据表格
      */
+    var unitNum;
     var rateTable=$("#bondLendTable").joyintable({
         searchOnInit: true,
         checkbox:false,
@@ -27,7 +28,7 @@ var table;
     var entrustExerYield; // 委托时的行权收益率
     //获取风险试算画面要素与Label提示文本
     var getriskdata = function () {
-        var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#tradeDate').val(),portfolioCode:$('#portfolioId').val(),assetCode:$('#finprodId').val(),tradeAmount:$('#shareAmt').val()?$('#shareAmt').val()*10000:null,isEnabled:'01',tradeDirection:$('#ps').val()}
+        var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#tradeDate').val(),portfolioCode:$('#portfolioId').val(),assetCode:$('#finprodId').val(),tradeAmount:$('#shareAmt').val()?$('#shareAmt').val()*unitNum:null,isEnabled:'01',tradeDirection:$('#ps').val()}
         if ($("#ps").val() == BACK_LEND_DIRECTION_05 ) {
             obj.assetType=FINPROD_TYPE_TG_F29;
         }
@@ -557,6 +558,14 @@ var table;
         /**
          * 若从委托场合点击交易录单
          */
+        //配置单位 edit by yeming 20210726 start
+        if(entrustAmtUnit == '01' ){
+            $(".unitNum").text('元');
+            unitNum = 1;
+        }else{
+            unitNum = 10000;
+        }
+        //配置单位 edit by yeming 20210726 start
         var entrustId = $("#entrustId").val();
         if(entrustId != ''){
             Joyin.ajaxSync(basePath + 'invest/trade/bondlend/TrdBondLendInvestTrade002/getEntrustInfo', {'entrustId':entrustId},function (data) {

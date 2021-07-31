@@ -10,20 +10,6 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.manualvoucher.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseController;
@@ -32,16 +18,20 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.BokDetailIdDto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003CheckValidatorDto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003Dto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003SubjectDto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.*;
 import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher003Service;
+
 import com.joyintech.tams.common.base.dao.BokBooksetDateMapper;
 import com.joyintech.tams.common.base.entity.BokBooksetDate;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 新建-手工凭证
@@ -161,6 +151,24 @@ public class ValManualVoucher003Controller extends BaseController {
         }
     }
 
+    /*add by sunshuaishuai 20210302 start*/
+    /**
+     * 根据手工凭证编号bookId获取对应相同编号的所有数据
+     *
+     * @return 记账手工凭证数据
+     * @throws Exception 异常
+     * @see
+     */
+    @PostMapping("/searchList1")
+    public List<ValManualVoucher003AddDto> searchList1(@RequestBody String seqno) {
+        if (StringUtil.isNotEmpty(seqno)) {
+            return valManualVoucher003Service.searchList1(seqno);
+        }
+        else {
+            return null;
+        }
+    }
+    /*add by sunshuaishuai end*/
 //    /**
 //     * 修改凭证摘要
 //     * 
@@ -530,4 +538,89 @@ public class ValManualVoucher003Controller extends BaseController {
         throws Exception {
        return valManualVoucher003Service.getInvAim(params);
     }
+
+    //add by sunshuaishuai 20210303 start
+    /**
+     * 检索模板代码
+     *
+     * @return 模板代码联想框内容
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getTmpCode")
+    public List<SuggestDto> getTmpCode(@RequestBody Map<String, Object> params)
+            throws Exception {
+        String param = (String) params.get("param");
+        return valManualVoucher003Service.getTmpCode(param);
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("update")
+    public int update(@RequestBody ValManualVoucher003Dto dto){
+        valManualVoucher003Service.update(dto);
+        return 1;
+
+    }
+
+    /**
+     * 快录
+     *
+     * @return 模板代码联想框内容
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/quickInput")
+    public ValManualVoucherTemplete003Dto quickInput(@RequestBody Map<String, Object> params)
+            throws Exception {
+        String tmpCode = (String) params.get("tmpCode");
+        return valManualVoucher003Service.quickInput(tmpCode);
+    }
+
+    /**
+     * 快录
+     *
+     * @return 模板代码联想框内容
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/quickInputList")
+    public List<ValManualVoucherTemplete003AddDto> quickInputList(@RequestBody String tmpCode) {
+        return valManualVoucher003Service.quickInputList(tmpCode);
+    }
+
+    /**
+     * 快录校验
+     *
+     * @return 模板代码联想框内容
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/checkTmpCode")
+    public String checkTmpCode(@RequestBody String tmpCode) {
+        return valManualVoucher003Service.checkTmpCode(tmpCode);
+    }
+
+    /**
+     * 快录时，科目尾号联动
+     *
+     * @return 模板代码联想框内容
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getDetailSubjectNo")
+    public ValManualVoucher003SubjectDto getDetailSubjectNo(@RequestBody Map<String, String> params) {
+        String booksetId = params.get("booksetId");
+        String subjectNo = params.get("subjectNo");
+        String busiId = params.get("busiId");
+        String finprodType = params.get("finprodType");
+        String ccy = params.get("ccy");
+        return valManualVoucher003Service.getSubjectNo(booksetId, subjectNo, busiId, finprodType,ccy);
+    }
+    /*add by sunshuaishuai 20210303 end*/
 }

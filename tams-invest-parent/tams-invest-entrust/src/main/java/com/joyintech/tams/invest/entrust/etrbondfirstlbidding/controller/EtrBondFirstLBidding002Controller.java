@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -95,13 +96,18 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
 
             EtrBondFirstLBiddingDto dto = firstService.getBussinessEntityByWorkflowId(
                 workflowId);
-            //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
-                if(dto.getEntrustNum() != null) {
-                    dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
+            //配置单位 edit by yeming 20210730 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(dto.getBidPriceList() != null){
+                    for(int i = 0 ; i < dto.getBidPriceList().size() ; i++){
+                        EtrEntrustBidPrice etrEntrustBidPrice = dto.getBidPriceList().get(i);
+                        if(etrEntrustBidPrice.getBidPrinAmt() != null){
+                            etrEntrustBidPrice.setBidPrinAmt(etrEntrustBidPrice.getBidPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                        }
+                    }
                 }
             }
-            //配置单位 edit by yeming 20210721 end
+            //配置单位 edit by yeming 20210730 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("bidPriceList", StringUtil.isEmptyList(dto.getBidPriceList()) ? null : JsonUtils.object2Json(dto.getBidPriceList()));
@@ -111,13 +117,18 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         }else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(entrustId)) {
             //编辑页面
             EtrBondFirstLBiddingDto dto = firstService.selectByKey(entrustId,finprodId,portfolioId);
-            //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
-                if(dto.getEntrustNum() != null) {
-                    dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
+            //配置单位 edit by yeming 20210730 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(dto.getBidPriceList() != null){
+                    for(int i = 0 ; i < dto.getBidPriceList().size() ; i++){
+                        EtrEntrustBidPrice etrEntrustBidPrice = dto.getBidPriceList().get(i);
+                        if(etrEntrustBidPrice.getBidPrinAmt() != null){
+                            etrEntrustBidPrice.setBidPrinAmt(etrEntrustBidPrice.getBidPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                        }
+                    }
                 }
             }
-            //配置单位 edit by yeming 20210721 end
+            //配置单位 edit by yeming 20210730 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("tradeId", dto.getEntrustId());
             model.addAttribute("bidPriceList", StringUtil.isEmptyList(dto.getBidPriceList()) ? null : JsonUtils.object2Json(dto.getBidPriceList()));
@@ -126,13 +137,18 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         }else{
             //新建页面初始化
             EtrBondFirstLBiddingDto entity = new EtrBondFirstLBiddingDto();
-            //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
-                if(entity.getEntrustNum() != null) {
-                    entity.setEntrustNum(entity.getEntrustNum().divide(new BigDecimal(10000)));
+            //配置单位 edit by yeming 20210730 start
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(entity.getBidPriceList() != null){
+                    for(int i = 0 ; i < entity.getBidPriceList().size() ; i++){
+                        EtrEntrustBidPrice etrEntrustBidPrice = entity.getBidPriceList().get(i);
+                        if(etrEntrustBidPrice.getBidPrinAmt() != null){
+                            etrEntrustBidPrice.setBidPrinAmt(etrEntrustBidPrice.getBidPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                        }
+                    }
                 }
             }
-            //配置单位 edit by yeming 20210721 end
+            //配置单位 edit by yeming 20210730 end
             entity.setVdate(sysDate);
             entity.setMdate(sysDate);
             // 从一级新债日历进入一级债券委托界面带出信息 by 赵东东  20191116 start

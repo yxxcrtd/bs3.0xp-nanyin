@@ -60,6 +60,16 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 提醒类型_大分类_公共数据变更
      */
     提醒类型_大分类_公共数据变更(BussinessDictCode.提醒类型_大分类,"R9","公共数据变更"),
+    //add by chenjiaxing 分销缴款提醒 20210727 start
+    /**
+     * 提醒类型_大分类_分销缴款提醒
+     */
+    提醒类型_大分类_分销缴款提醒(BussinessDictCode.提醒类型_大分类,"R10","分销缴款提醒"),
+    /**
+     * 提醒类型_小分类_债券借贷融出的券还本收息
+     */
+    提醒类型_小分类_分销缴款提醒(BussinessDictCode.提醒类型_小分类,"R10S1","分销缴款提醒"),
+    //add by chenjiaxing 分销缴款提醒 20210727 end
     /**
      * 提醒类型_小分类_债券借贷融出的券还本收息
      */
@@ -5433,6 +5443,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 持仓类型_卖空
      */
     持仓类型_卖空(BussinessDictCode.持仓类型, "07", "卖空"),
+
+    //add by chenjiaxing 固定值参数更新提醒 20210726
+    提醒类型_小分类_固定值参数更新提醒(BussinessDictCode.提醒类型_小分类,"R5S3","固定值参数更新提醒"),
+    //add by chenjiaxing 固定值参数更新提醒 20210726
   ;
 	//add by gaopeng 20191024 start
 	//add by gaopeng 20191024 end

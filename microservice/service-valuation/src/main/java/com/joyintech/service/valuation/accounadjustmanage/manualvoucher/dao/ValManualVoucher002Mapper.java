@@ -10,12 +10,12 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dao;
 
-import java.util.List;
-
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher002Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher002Dto;
+import java.util.List;
 
 /**
  * 手工凭证详情查看Mapper 〈功能详细描述〉
@@ -31,11 +31,13 @@ public interface ValManualVoucher002Mapper {
     /**
      * 根据手工凭证编号bookId查询对应编号的所有手工凭证信息
      * 
-     * @param bookId 手工凭证编号
+     * @param seqno 手工凭证编号
      * @return List<ValManualVoucher002Dto>
      * @see
      * @since 1.0
      */
-    List<ValManualVoucher002Dto> searchList(@Param("tradeId") String tradeId);
+    List<ValManualVoucher002Dto> searchList(@Param("seqno") String seqno);
+
+    ValManualVoucher001Dto getBySeqno(@Param("seqno") String seqno);
 
 }

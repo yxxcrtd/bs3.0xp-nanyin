@@ -17,6 +17,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 报价服务MyBatis接口
@@ -370,4 +371,8 @@ public interface IbuQuoteMapper {
     // add by etliu 20210309 银行间上下行多组合 end
 
     List<IbuQuoteEntCrepPledgeDto> selectQuoteEntCrepPledgeDataByQuoteId(@Param("quoteId")String quoteId);
+
+    int updateBondQuoteFinalStatusForRevoke(IbuQuoteBond dto);
+
+    int isOpeQuotedPrice(Map<String,Object> param);
 }

@@ -23,6 +23,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -108,6 +110,9 @@ public class CfetsRepoDealQuotedPrice001Service extends CommonExportService<Cstp
     @Autowired(required = false)
     private BussRepoSecService bussRepoSecService;
 
+    @Autowired(required = false)
+    private CommonBusinessService commonBusinessService;
+
     /**
      * 根据查询条件查询委托列表
      * 
@@ -177,7 +182,15 @@ public class CfetsRepoDealQuotedPrice001Service extends CommonExportService<Cstp
             return Collections.emptyList();
         }
         param.put("loginUserId", user.getUserName());
-        param.put("isAdmin", user.isAdmin());
+        //add by zznn 20210730 start
+        //岗位信息 框架没有封装  单独处理
+        //交易主管(交易处长03)、超级管理员能够查询出所有的报价信息
+        Map<String,Object> paramUser = new HashMap<>();
+        paramUser.put("userId",user.getUserName());
+        paramUser.put("rolePos","03");
+        boolean traDirector = commonBusinessService.isTraDirector(paramUser);
+        param.put("isAdmin", user.isAdmin()||traDirector);
+        //add by zznn 20210730 end
         // 待回复报价是否所有交易员可见（01：不允许，02：允许）
         param.put("unAnswerFlag", CacheUtil.getSysParam("ibuFlag_allTraderCanShowUnAnswerQuote"));
         
@@ -1060,5 +1073,15 @@ public class CfetsRepoDealQuotedPrice001Service extends CommonExportService<Cstp
         return restTemplate.postForList(
                 ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPrice001/getQualifiedByentrustIds",
                 map, CfetsRepoDealQuotedPrice001Dto.class);
+    }
+
+    public CfetsRepoDealQuotedPrice003Dto queryPledgeBondElementForImport(String finprodId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("finprodId",finprodId);
+        param.put("platDate", iPlatformDate.getSysDateStr());
+        param.put("valueSourceCBC",BussinessDictCodeList.估值来源_中债登.getValue());
+        return restTemplate.postForObject(
+                ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPrice001/queryPledgeBondElementForImport",
+                param, CfetsRepoDealQuotedPrice003Dto.class);
     }
 }

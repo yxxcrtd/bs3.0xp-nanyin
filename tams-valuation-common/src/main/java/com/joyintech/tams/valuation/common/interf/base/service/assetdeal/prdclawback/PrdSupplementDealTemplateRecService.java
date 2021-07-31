@@ -222,7 +222,17 @@ public class PrdSupplementDealTemplateRecService {
         }
         result.setFinprodId(dto.getProdId());
         // 金融产品类型
-        result.setFinprodType(DictCodeListExt1.现金流二级类型_固定管理费.getValue());
+//        result.setFinprodType(DictCodeListExt1.现金流二级类型_固定管理费.getValue());
+        String feeId = dto.getProdId()+DictCodeListExt1.现金流二级类型_浮动管理费.getValue();
+        // 产品代码+现金流二级类型 _浮动管理费= 费用类型 or 现金流二级类型 _浮动管理费 = 费用类型
+        if(feeId.equals(dto.getFeeId()) || DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(dto.getFeeId())){
+            // 金融产品类型
+            result.setFinprodType(DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+        }
+        else{
+            // 金融产品类型
+            result.setFinprodType(DictCodeListExt1.现金流二级类型_固定管理费.getValue());
+        }
 
         // 分支序号
         result.setBranch(branch);

@@ -315,4 +315,13 @@
         where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
           and CCY = #{ccy,jdbcType=VARCHAR}
     </update>
+
+    <select id="getAcctInfo" resultType="com.joyintech.framework.select.SelectOptionDto" parameterType="Map">
+        select
+            SCI.BUSI_ACCT_NO id,
+            SCI.ACCT_NAME text
+        from STL_CAPACCT_INFO SCI
+        left join MST_SALE_DEPARTMENT MSD on SCI.OWN_DEPT = MSD.SALE_DEPID
+        where MSD.BROKER_ID= #{brokerId,jdbcType=VARCHAR}
+    </select>
 </mapper>

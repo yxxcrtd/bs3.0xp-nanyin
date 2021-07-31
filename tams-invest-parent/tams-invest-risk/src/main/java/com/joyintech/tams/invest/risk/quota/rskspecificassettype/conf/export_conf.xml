@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="RskSpecificAssetType001.xlsx" name="特定资产类型设置">
+    <Worksheet javaBean="com.joyintech.tams.invest.risk.quota.rskspecificassettype.dto.RskSpecificAssetTypeDto">
+        <Row>
+            <Cell order="1" name="资产一级分类">type1Name</Cell>
+            <Cell order="2" name="资产二级分类">type2Name</Cell>
+            <Cell order="3" name="资产三级分类">type3Name</Cell>
+            <Cell order="4" name="业务分类">type4Name</Cell>
+            <Cell order="5" name="资产代码">finprodMarketId</Cell>
+            <Cell order="6" name="资产名称">finprodName</Cell>
+            <Cell order="7" name="是否不良资产/收受益权">isBadassetName</Cell>
+            <Cell order="8" name="是否国务院银行业监督管理机构另有规定">isRegulationName</Cell>
+            <Cell order="9" name="是否信贷资产">isCreditAssetName</Cell>
+            <Cell order="10" name="是否流动性受限">isFlowLimitedStr</Cell>
+  		</Row>
+    </Worksheet>
+</Workbook>

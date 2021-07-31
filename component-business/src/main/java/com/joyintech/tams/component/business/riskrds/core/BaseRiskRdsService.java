@@ -19,6 +19,8 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.constant.PageFieldToInterfFactory;
 import com.joyintech.tams.invest.common.CommonUtil;
@@ -26,12 +28,11 @@ import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.redisinit.dto.IRiskRds;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import org.apache.shiro.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 基础接口组件Service
@@ -205,4 +206,47 @@ public abstract class BaseRiskRdsService<V extends IRiskRds> extends BaseService
         return ar;
     }
 
+    // add by zhangrui1 批量处理对应 start
+    /**
+     * 取出内部交易对手
+     *
+     * @param counterIdSet 交易对手
+     * @return 内部交易对手列表
+     */
+    protected Map<String, String> selectInnerCounter(Set<String> counterIdSet) {
+        if (CollectionUtils.isEmpty(counterIdSet)) {
+            return new HashMap<>();
+        }
+        Map<String, PtlPortfolio> infos = AllTradeCommonUtil.selectPortfolioIds(
+                counterIdSet.stream().collect(Collectors.toList()));
+        CommonUtil.removeNull(infos);
+        if (CollectionUtils.isEmpty(infos) || CollectionUtils.isEmpty(infos.entrySet())) {
+            return new HashMap<>();
+        }
+        Map<String, String> map = new HashMap<>();
+        infos.entrySet().forEach(en -> {
+            if (StringUtil.isEmpty(en.getKey()) || en.getValue() == null) {
+                return;
+            }
+            String parentPfId = en.getValue().getParentPortfolioId();
+            map.put(en.getKey(), StringUtil.isEmpty(parentPfId) ? en.getValue().getPortfolioId() : parentPfId);
+        });
+        return map;
+    }
+
+    /**
+     * 取出反向交易编号
+     *
+     * @param tradeIds 交易编号/汇总交易编号
+     * @return 反向交易编号
+     */
+    protected Map<String, String> selectRTradeIds(List<String> tradeIds) {
+        Map<String, TrdProductDeal> infos = AllTradeCommonUtil.queryRTradeIds(tradeIds);
+        if (CollectionUtils.isEmpty(infos)) {
+            return new HashMap<>();
+        }
+        return infos.entrySet().stream().collect(
+                Collectors.toMap(Map.Entry::getKey, en -> removeLasStr(en.getValue().getrTradeId())));
+    }
+    // add by zhangrui1 批量处理对应 end
 }

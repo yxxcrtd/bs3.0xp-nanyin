@@ -26,6 +26,21 @@
             <input type="text" id="entrustStatus" name="entrustId" disabled="disabled" style="display:none;"
                    data-th-value="${entity?.entrustStatus}"/>
             <input type="hidden" id="tradeMarket" name="tradeMarket" value="01" />
+
+            <div class="layui-form-item" >
+                <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                    <label class="layui-form-label form-lable" style="width: 95px;"
+                           data-th-text="#{EtrIbRepoinfo002.portfolioSeries}">组合系列</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="portfolioSeries" name="portfolioSeries"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}"
+                                required data-th-data-result="${PORTFOLIO_SERIES}"
+                                data-th-initvalue="${entity?.portfolioSeries}">
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="layui-form-item" >
               <!--   <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                     <label class="layui-form-label form-lable" style="width: 95px; margin-left: 20px;"

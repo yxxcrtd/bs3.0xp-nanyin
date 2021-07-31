@@ -283,6 +283,14 @@ public interface TrdCommonBaseMapper {
 	List<PtlPortfolio> selectPortfolioIds(Map<String, Object> map);
 
     /**
+     * 取得反向交易编号
+     *
+     * @param map 交易编号/汇总交易编号
+     * @return 反向交易编号
+     */
+    List<TrdProductDeal> queryRTradeIds(Map<String, Object> map);
+
+    /**
      * 根据投资组合代码查询对应的理财产品信息
      * @param portfolidId
      * @return

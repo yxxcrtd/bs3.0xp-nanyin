@@ -34,6 +34,7 @@
         <result column="OTHRER_RETENTION_BIT" property="othrerRetentionBit" jdbcType="VARCHAR" />
         <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
         <result column="IS_MLTI" property="isMlti" jdbcType="VARCHAR" />
+        <result column="CAPITAL_ACCOUNT_NO" property="capitalAccountNo" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQ_NO SEQ_NO, TRADE_MARKET TRADE_MARKET, FEE_TYPE FEE_TYPE, REGIST_ORG REGIST_ORG, 
@@ -44,7 +45,7 @@
         RETENTION_BIT RETENTION_BIT, BROKER_BAER_FEE BROKER_BAER_FEE, COMM_CAL_METHOD COMM_CAL_METHOD, 
         GRADE_MODE GRADE_MODE, CUSTOMER_ID CUSTOMER_ID, REMARK REMARK, ASSET_CLASSIFY1 ASSET_CLASSIFY1, 
         ASSET_CLASSIFY2 ASSET_CLASSIFY2, TRADE_PLAT TRADE_PLAT, OTHRER_RETENTION_BIT OTHRER_RETENTION_BIT, 
-        PORTFOLIO_ID PORTFOLIO_ID, IS_MLTI IS_MLTI
+        PORTFOLIO_ID PORTFOLIO_ID, IS_MLTI IS_MLTI,CAPITAL_ACCOUNT_NO CAPITAL_ACCOUNT_NO
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -77,7 +78,7 @@
             BROKER_BAER_FEE, COMM_CAL_METHOD, GRADE_MODE, 
             CUSTOMER_ID, REMARK, ASSET_CLASSIFY1, 
             ASSET_CLASSIFY2, TRADE_PLAT, OTHRER_RETENTION_BIT, 
-            PORTFOLIO_ID, IS_MLTI)
+            PORTFOLIO_ID, IS_MLTI, CAPITAL_ACCOUNT_NO)
         values (#{seqNo,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, 
             #{registOrg,jdbcType=VARCHAR}, #{tradeType,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
             #{termType,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, #{chargeType,jdbcType=VARCHAR}, 
@@ -88,7 +89,7 @@
             #{brokerBaerFee,jdbcType=VARCHAR}, #{commCalMethod,jdbcType=VARCHAR}, #{gradeMode,jdbcType=VARCHAR}, 
             #{customerId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{assetClassify1,jdbcType=VARCHAR}, 
             #{assetClassify2,jdbcType=VARCHAR}, #{tradePlat,jdbcType=VARCHAR}, #{othrerRetentionBit,jdbcType=VARCHAR}, 
-            #{portfolioId,jdbcType=VARCHAR}, #{isMlti,jdbcType=VARCHAR})
+            #{portfolioId,jdbcType=VARCHAR}, #{isMlti,jdbcType=VARCHAR}, #{capitalAccountNo,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
         insert into TRD_FEE_CONFIG
@@ -189,6 +190,9 @@
             <if test="isMlti != null" >
                 IS_MLTI,
             </if>
+            <if test="capitalAccountNo != null" >
+                CAPITAL_ACCOUNT_NO,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqNo != null" >
@@ -287,6 +291,9 @@
             <if test="isMlti != null" >
                 #{isMlti,jdbcType=VARCHAR},
             </if>
+            <if test="capitalAccountNo != null" >
+                #{capitalAccountNo,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
@@ -295,13 +302,13 @@
         CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_PAY_WITH_TRADE, 
         TRADE_MARKET_MODE, RETENTION_BIT, BROKER_BAER_FEE, COMM_CAL_METHOD, GRADE_MODE, CUSTOMER_ID, 
         REMARK, ASSET_CLASSIFY1, ASSET_CLASSIFY2, TRADE_PLAT, OTHRER_RETENTION_BIT, PORTFOLIO_ID, 
-        IS_MLTI)
+        IS_MLTI,CAPITAL_ACCOUNT_NO)
         select SEQ_NO, TRADE_MARKET, FEE_TYPE, REGIST_ORG, TRADE_TYPE, 
             PS, TERM_TYPE, SEC_ACCT_ID, CHARGE_TYPE, CHARGE_BASIS, IS_GRADE, EFF_DATE, BATCH_SEQ, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, IS_PAY_WITH_TRADE, 
             TRADE_MARKET_MODE, RETENTION_BIT, BROKER_BAER_FEE, COMM_CAL_METHOD, GRADE_MODE, CUSTOMER_ID, 
             REMARK, ASSET_CLASSIFY1, ASSET_CLASSIFY2, TRADE_PLAT, OTHRER_RETENTION_BIT, PORTFOLIO_ID, 
-            IS_MLTI
+            IS_MLTI,CAPITAL_ACCOUNT_NO
              from TRD_FEE_CONFIG
              where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </insert>
@@ -392,6 +399,9 @@
             <if test="isMlti != null" >
                 IS_MLTI = #{isMlti,jdbcType=VARCHAR},
             </if>
+            <if test="capitalAccountNo != null" >
+                CAPITAL_ACCOUNT_NO = #{capitalAccountNo,jdbcType=VARCHAR},
+            </if>
         </set>
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </update>
@@ -424,7 +434,8 @@
             TRADE_PLAT = #{tradePlat,jdbcType=VARCHAR},
             OTHRER_RETENTION_BIT = #{othrerRetentionBit,jdbcType=VARCHAR},
             PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
-            IS_MLTI = #{isMlti,jdbcType=VARCHAR}
+            IS_MLTI = #{isMlti,jdbcType=VARCHAR},
+            CAPITAL_ACCOUNT_NO = #{capitalAccountNo,jdbcType=VARCHAR}
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </update>
     

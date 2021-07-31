@@ -220,6 +220,13 @@ public class TrdProjectInvestTrade002Controller extends BaseController {
         info002Dto.setIsOutTrade(entity.getIsOutTrade());
         entity.setTrdInvestPersonInfo(info002Dto);
         model.addAttribute("tradeId", entity.getBizCode());
+        //转仓交易目的 显示为转仓交易的 交易目的
+        if(entity!=null){
+            String turnInvAim = trdProjectInvestTrade002Service.getReverseTradeDtoInvAim(entity.getBizCode());
+            if(StringUtil.isNotEmpty(turnInvAim)) {
+                entity.setTurnInvAim(turnInvAim);
+            }
+        }
         return entity;
     }
 

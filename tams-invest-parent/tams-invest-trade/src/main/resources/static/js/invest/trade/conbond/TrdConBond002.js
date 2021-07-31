@@ -288,6 +288,7 @@ var table;
                 }
                 //交易场所为申购方式
                 data.tradeMarket = $("#purchModle").val();
+                // data.tradeMarket = '01';//网上申购
                 data.portfolioId = $('#portfolioId').val();
                 data.ps = $('#ps').val();
                 data.finprodId = selectData.finprodId;

@@ -229,8 +229,14 @@
     $("#finprodMarketId").change(function(){
         var tradeMarket;
         var ccy;
+        $("#purSpeed").val('').trigger('change');
+        $("#redSpeed").val('').trigger('change');
         if($("#finprodMarketId").val()){
             var selectObject = $('#finprodMarketId').select2('data')[0].object;
+            Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade002/getSpeedByFinprodId', selectObject,function (result) {
+                $("#purSpeed").val(result.PURSPEED).trigger('change');
+                $("#redSpeed").val(result.REDSPEED).trigger('change');
+            });
             if ($('#finprodMarketId').select2('data')[0].object) {
                 $('#finprodIdhid').val(selectObject.finprodId);
                 //新增资产二、三、四级分类    王贵奇    2019/7/29    开始    

@@ -332,5 +332,25 @@
 				AND SALE_DEPID = #{initValue}
 			</if>
 		</where> 
-	</select>		
+	</select>
+
+	<!-- 根据所属柜台获取第一次设置的利率 add by xxg 20210726 -->
+	<select id="getFirstRateByownDept" resultType="com.joyintech.service.basicdata.mstcaptialaccount.dto.MstCaptialAccountDto">
+		SELECT
+			rate.rate*100 rate
+		FROM
+		stl_capacct_info stl
+		LEFT JOIN fin_cash_info    info ON stl.acct_no = info.finprod_id
+		LEFT JOIN fin_rate_info    rate ON rate.cash_id = info.cash_id
+		WHERE
+		stl.create_time = (
+		SELECT
+		MIN(create_time)
+		FROM
+		stl_capacct_info
+		WHERE
+		own_dept = #{ownDept,jdbcType=VARCHAR}
+		)
+	</select>
+
 </mapper>

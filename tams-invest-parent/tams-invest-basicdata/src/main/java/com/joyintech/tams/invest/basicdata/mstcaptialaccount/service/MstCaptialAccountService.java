@@ -10,12 +10,14 @@
 
 package com.joyintech.tams.invest.basicdata.mstcaptialaccount.service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.common.base.entity.FinInitrateDatadict;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -250,5 +252,26 @@ public class MstCaptialAccountService extends CommonExportService<MstCaptialAcco
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCaptialAccount/getOwnDept", map,
             SelectOptionDto.class);        
     }
+
+
+
+    /**
+     * add by xxg 20210726
+     * 根据所属柜台获取第一次设置的利率
+     * @param ownDept  所属柜台
+     * @return
+     */
+    public BigDecimal getFirstRateByOwnDept(String ownDept){
+        FinInitrateDatadict finInitrateDatadict = restTemplate.postForObject(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCaptialAccount/getFirstRateByOwnDept",ownDept, FinInitrateDatadict.class);
+        BigDecimal rate = null;
+        if(finInitrateDatadict != null){
+            rate = finInitrateDatadict.getRate();
+        }else{
+            rate = new BigDecimal(0);
+        }
+        return rate;
+    }
+
     
 }

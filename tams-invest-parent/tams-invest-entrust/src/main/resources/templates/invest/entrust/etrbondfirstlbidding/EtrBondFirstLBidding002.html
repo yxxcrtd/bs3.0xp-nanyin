@@ -157,6 +157,7 @@
                                        <input type="text" id="finprodName" name="finprodName" 
                                         class="layui-input form-input" disabled
                                         data-th-value="${entity?.finprodName}">
+                                        <a id="EtrBondFirstLBidding002_btn_search" class="layui-btn layui-btn-sm form-input-text">查看</a>
                                     </div>
                                 </div>
                             </div>
@@ -317,7 +318,7 @@
                                     <label class="layui-form-label form-label-wrap"
                                     data-th-text="#{EtrBondFirstLBidding002.bidSumAmt}">投标券面总额汇总</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" id="entrustNum" name="entrustNum"
+                                        <input type="text" id="entrustNum" name="entrustNum" data-textrange="4"
                                                 class="layui-input form-input" readonly="readonly"/>
                                         <span class="input-right-show unitNum">万元</span>
                                     </div>
@@ -400,6 +401,7 @@
         var entrustAmtUnit = /*[[${entrustAmtUnit}]]*/'';
         //配置单位 add by yeming 20210721 end
      </script>
+    <script data-th-src="@{/js/component/entrust/EtrShowFinPlanAssetDetailInfo.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/component/common/util.js}" type="text/javascript"></script>
 

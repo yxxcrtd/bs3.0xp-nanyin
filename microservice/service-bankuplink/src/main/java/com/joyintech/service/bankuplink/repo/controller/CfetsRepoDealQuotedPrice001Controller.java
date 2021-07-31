@@ -439,4 +439,9 @@ public class CfetsRepoDealQuotedPrice001Controller {
     public List<CfetsRepoDealQuotedPrice001Dto> getQualifiedByentrustIds(@RequestBody Map<String,Object> map){
         return cfetsRepoDealQuotedPrice001Service.getQualifiedByentrustIds(map);
     }
+
+    @PostMapping("queryPledgeBondElementForImport")
+    public CfetsRepoDealQuotedPrice003Dto queryPledgeBondElementForImport(@RequestBody Map<String,Object> map) {
+        return cfetsRepoDealQuotedPrice001Service.queryPledgeBondElementForImport(map);
+    }
 }

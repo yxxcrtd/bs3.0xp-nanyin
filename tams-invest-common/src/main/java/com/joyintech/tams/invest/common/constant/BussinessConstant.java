@@ -196,6 +196,26 @@ public interface BussinessConstant {
     String ISNEEDCONTROLCREDIT = "ISNEEDCONTROLCREDIT";
   //sjj add 20180131 授信相关开关 end
 
+    /**
+     * 授信软控跳过模式(Y 跳过 N 不跳过)
+     */
+    String CREDIT_SOFT_SKIP_MODE = "credit_soft_skip_mode";
+
+    /**
+     * 计划类净值型、计划类货币性资产额度释放方式，01、先进先出  02、实时净值
+     */
+    String RELEASE_MODE = "RELEASE_MODE";
+
+    /**
+     * 计划类净值型、计划类货币性资产额度释放方式: 先进先出
+     */
+    String RELEASE_MODE_01 = "01";
+
+    /**
+     * 债券质押式逆回购不需要扣减授信资产类型
+     */
+    String CREDIT_ASSET_TYPE_F03 = "CREDIT_ASSET_TYPE_F03";
+
     // 2.0自动生成反向交易 bug修改 start
     /**
      * 是否自动生成反向交易
@@ -313,7 +333,12 @@ public interface BussinessConstant {
      * 委托指令交易时间端配置的开关 Y：开 N：关
      */
     String ETR_TRADE_TIME_SWITCH = "etr_trade_time_switch";
-    
+
+    /**
+     * 上农商授权审批流程 流程模板名称
+     */
+    String AUTH_MODULE_NAME = "authModuleName";
+
     /**
      * 银行帐账套前缀
      */

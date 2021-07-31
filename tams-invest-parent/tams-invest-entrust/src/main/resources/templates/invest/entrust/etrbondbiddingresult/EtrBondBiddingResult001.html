@@ -98,6 +98,10 @@
     </div>
 </div>
 <div layout:fragment="script">
+    <script data-th-inline="javascript" type="text/javascript">
+        var finprodId = /*[[${finprodId}]]*/'';
+        var mdate = /*[[${mdate}]]*/'';
+    </script>
     <script data-th-src="@{/js/invest/entrust/etrbondbiddingresult/EtrBondBiddingResult001.js?sdsd3sdssdd}" type="text/javascript"></script>
 </div>
 </body>

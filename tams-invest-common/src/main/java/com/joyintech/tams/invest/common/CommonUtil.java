@@ -13,9 +13,13 @@ package com.joyintech.tams.invest.common;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.base.intf.DataDictItem;
@@ -362,5 +366,58 @@ public static final BigDecimal getBigDecimal(Map<String, Object> map, String key
     public interface DoHelper<T> {
 
         T handle();
+    }
+
+    // add by zhangrui1 start
+    public static final <V> void removeNull(Map<String, V> mapData) {
+        if (CollectionUtils.isEmpty(mapData)) {
+            return;
+        }
+        Iterator<Entry<String, V>> it = mapData.entrySet().iterator();
+        while(it.hasNext()) {
+            Entry<String, V> en = it.next();
+            if (null == en.getValue()) {
+                it.remove();
+            }
+        }
+    }
+
+    /**
+     * 过滤Map记录
+     *
+     * @param map 数据源
+     * @param filter 过滤条件
+     * @return 过滤结果
+     */
+    public static final <T, P> Map<T, P> mapFilter(Map<T, P> map, Predicate<Entry<T, P>> filter) {
+        if (CollectionUtils.isEmpty(map) || filter == null) {
+            return map;
+        }
+        return map.entrySet().stream().filter(filter).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+    }
+
+    /**
+     * 分批次执行
+     *
+     * @param dtoList 对象
+     * @param offset 每次执行数量
+     * @param consumer 执行内容
+     */
+    public static final <V> void doBatchList(List<V> dtoList, int offset,
+                                             Consumer<List<V>> consumer) {
+        if (CollectionUtils.isEmpty(dtoList)) {
+            return;
+        }
+        // 按设定的offset分批次执行
+        int size = dtoList.size();
+        int tail = size % offset;
+        if (tail != 0) {
+            consumer.accept(dtoList.subList(0, tail));
+        }
+        int len = size / offset;
+        for (int i = 0; i < len; i++ ) {
+            int start = tail + i * offset;
+            consumer.accept(dtoList.subList(start, start + offset));
+        }
     }
 }

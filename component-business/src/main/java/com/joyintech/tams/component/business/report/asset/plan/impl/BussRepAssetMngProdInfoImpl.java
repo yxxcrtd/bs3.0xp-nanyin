@@ -27,6 +27,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * 资产管理计划报送信息组件实现类
@@ -48,19 +49,23 @@ public class BussRepAssetMngProdInfoImpl extends BaseService<BussRepAssetMngProd
         BussRepAssetMngProdInfoDto entity = new BussRepAssetMngProdInfoDto();
         RepAssetDept repAssetDept = new RepAssetDept();
         RepAssetMngPlan repAssetMngPlan = new RepAssetMngPlan();
-        BeanUtil.copyPropertiesIgnoreNull(repAssetDept, dto);
-        BeanUtil.copyPropertiesIgnoreNull(repAssetMngPlan, dto);
-        if(StringUtil.isNotEmpty(dto.getRepMaxRate())) {
-            repAssetMngPlan.setRepMaxRate(dto.getRepMaxRate());
+        // 20210720 增加判空校验 by caozhenming start
+        if (Objects.nonNull(dto)) {
+            BeanUtil.copyPropertiesIgnoreNull(repAssetDept, dto);
+            BeanUtil.copyPropertiesIgnoreNull(repAssetMngPlan, dto);
+            if(StringUtil.isNotEmpty(dto.getRepMaxRate())) {
+                repAssetMngPlan.setRepMaxRate(dto.getRepMaxRate());
+            }
+            if(StringUtil.isNotEmpty(dto.getRepMinRate())) {
+                repAssetMngPlan.setRepMinRate(dto.getRepMinRate());
+            }
+            repAssetMngPlan.setRepMgrFeeRate(dto.getRepMgrFeeRate());
+            repAssetMngPlan.setRepTruFeeRate(dto.getRepTruFeeRate());
+            repAssetMngPlan.setRepTradeFeeRate(dto.getRepTradeFeeRate());
+            repAssetMngPlan.setRepAgencyFeeRate(dto.getRepAgencyFeeRate());
+            repAssetMngPlan.setRepOtherFeeRate(dto.getRepOtherFeeRate());
         }
-        if(StringUtil.isNotEmpty(dto.getRepMinRate())) {
-            repAssetMngPlan.setRepMinRate(dto.getRepMinRate());
-        }
-        repAssetMngPlan.setRepMgrFeeRate(dto.getRepMgrFeeRate());
-        repAssetMngPlan.setRepTruFeeRate(dto.getRepTruFeeRate());
-        repAssetMngPlan.setRepTradeFeeRate(dto.getRepTradeFeeRate());
-        repAssetMngPlan.setRepAgencyFeeRate(dto.getRepAgencyFeeRate());
-        repAssetMngPlan.setRepOtherFeeRate(dto.getRepOtherFeeRate());
+        // 20210720 增加判空校验 by caozhenming start
         entity.setRepAssetDept(repAssetDept);
         entity.setRepAssetMngPlan(repAssetMngPlan);
         return entity;

@@ -10,25 +10,17 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.manualvoucher.controller;
 
-import java.util.List;
-
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher002Dto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher002Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher002Dto;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher001Service;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher002Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import java.util.List;
 
 /**
  * 模板示例<br>
@@ -88,5 +80,19 @@ public class ValManualVoucher002Controller extends BaseController {
 //        String tradeId = this.getParam("tradeId");
         return valManualVoucher002Service.searchList(tradeId);
     }
-    
+
+    /**
+     *
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param seqno
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getBySeqno")
+    public ValManualVoucher001Dto getBySeqno(@RequestBody String seqno) {
+        return valManualVoucher002Service.getBySeqno(seqno);
+    }
+
 }

@@ -10,15 +10,24 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001SearchDto;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher001Service;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import com.joyintech.tams.valuation.common.service.BaseCommonService;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,31 +37,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.system.constant.SystemGlobalConstant;
-import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001SearchDto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher001Service;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.service.BaseCommonService;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 模板示例<br>
@@ -93,9 +85,16 @@ public class ValManualVoucher001Controller extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.会计场景代码);
         this.setSelectOptionToModel(model, DictCode.凭证类型);
-     // 记账日期默认为系统平台日
-        model.addAttribute("sysDate",
-            DateUtil.format(baseCommonService.getSysDate(), "yyyy-MM-dd"));
+        /*modify by sunshuaishuai 20210304 start*/
+        // 记账日期默认为系统平台日
+        String sysDate = DateUtil.format(baseCommonService.getSysDate(),"yyyy-MM-dd");
+        if(StringUtil.isNotEmpty(sysDate)){
+            model.addAttribute("sysDate", sysDate+" - "+ sysDate);
+        }
+        else{
+            model.addAttribute("sysDate", "");
+        }
+        /*modify by sunshuaishuai 20210304 end*/
         model.addAttribute("bookType", DictCodeList.凭证类型_手工.getValue());
         this.setSelectOptionToModel(model, DictCode.金融产品类型);
         this.setSelectOptionToModel(model, DictCode.是否);
@@ -270,33 +269,51 @@ public class ValManualVoucher001Controller extends BaseController {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
+
+        List<ValManualVoucher001Dto> dtoList=dto.getSelectedItem();
+        List<ValManualVoucher001Dto> list=new ArrayList<>();
+        for(int i=0;i<dto.getSelectedItem().size()-1;i++){
+            if(dto.getSelectedItem().size()-1>1){
+                if(dtoList.get(i).getBookId().equals(dtoList.get(i+1).getBookId())
+                        && dtoList.get(i).getBooksetId().equals(dtoList.get(i+1).getBooksetId())
+                        && dtoList.get(i).getTradeId().equals(dtoList.get(i+1).getTradeId())){
+                    list.add(dtoList.get(i));
+                }
+            }
+        }
+        dtoList.removeAll(list);
+        for (int i = 0;i<dtoList.size();i++){
+            dtoList.get(i).setFinprodType(dtoList.get(i).getTableId());
+        }
+        dto.setSelectedItem(dtoList);
         
         // 启动流程
         ProcessParameter<ValManualVoucher001Dto> proParam = new ProcessParameter<>();
         WorkFlowParameter<ValManualVoucher001Dto> params = new WorkFlowParameter<>();
-        
+
         // 业务代码（凭证流水号）
-        params.setBusinessCode(dto.getSeqno());
+        params.setBusinessCode(item -> item.getSeqno());
         // 业务类型
         params.setBusinessType(DictCodeList.共通业务类型_手工凭证.getValue());
         // 页面id
         params.setPageId("ValManualVoucher002");
         // 元素id
         params.setElementId(this.getParam(GlobalConstant.ELEMENT_ID));
-        
+
         //设置流程业务说明, entity即传入的dto
         params.setComment(entity -> WorkFlowUtil.concatComment("手工凭证删除：",
-            dto.getBooksetId(),//账套代码
-            dto.getBookId(),//凭证编号
-            dto.getSeqno()//凭证流水号，即交易编号
+                entity.getBooksetId(),//账套代码
+                entity.getBookId(),//凭证编号
+                entity.getSeqno()//凭证流水号，即交易编号
             ));
         
-        // 塞入流程参数
+         //塞入流程参数
         proParam.setWorkFlowParameter(params);
         
         String msg = getMessage("COMMON_I_0001");
         try {
-            msg = valManualVoucher001Service.start(proParam, dto);
+            msg = valManualVoucher001Service.start(proParam,  dto.getSelectedItem().toArray(
+                    new ValManualVoucher001Dto[dto.getSelectedItem().size()]));
         }
         catch (Exception e) {
             getLogger().error("启动流程失败：", e);
@@ -320,16 +337,6 @@ public class ValManualVoucher001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("check")
    public AjaxResult check(@RequestBody @Valid ValManualVoucher001Dto dto, BindingResult result, String operateType) {
-//        if (StringUtil.equals(dto.ge, "revoke")) {
-//            if (!StringUtil.isNotEmpty(trdVouchDealMapper.selectByPrimaryKey(dto.getBookId()))) {
-//                ValidMessage validMessage = new ValidMessage("该条数据已删除");
-//                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-//                errorList.add(validMessage);
-//                AjaxResult ar = new AjaxResult();
-//                ar.setErrorList(errorList);
-//                return ar;
-//            }
-//        }
         return commonCheck(result, operateType);
     }
     

@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.EtrFinishStatus;
 import com.joyintech.tams.common.base.entity.FinProduct;
 
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade002Service;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections.CollectionUtils;
@@ -136,6 +138,22 @@ public class TrdProjectInvestTradeEditDtoValidator implements TradeCommonValidat
         			}
         		}
         	}
+        }
+
+
+        if ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())) &&
+                StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), DictCodeList.是否_否.getValue())){
+            //买入交易为自动生成   不可以页面提交，此处不校验，共通check会校验
+            if (DictCodeList.是否_是.getValue().equals(CacheUtil.getSysParam(BussinessConstant.IS_AUTO_GENERATE_NEGATE_DEAL))&&StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())) {
+
+            }else{
+                if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()) &&
+                        StringUtil.isEmpty(dto.getTurnInvAim()) &&
+                        DictCodeList.是否_是.getValue().equals(CacheUtil.getSysParam(BussinessConstant.IS_AUTO_GENERATE_NEGATE_DEAL))){
+                    ValidMessage validMessage = new ValidMessage("turnInvAim", "转仓投资目的必填！");
+                    errorList.add(validMessage);
+                }
+            }
         }
 
         // 项目类资产交易页面，本金金额大于可用持仓时，系统没有提示

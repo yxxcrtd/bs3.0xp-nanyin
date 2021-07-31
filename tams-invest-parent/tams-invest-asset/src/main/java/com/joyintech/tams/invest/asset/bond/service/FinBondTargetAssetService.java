@@ -245,7 +245,7 @@ implements BaseProcessService<FinBondTargetAssetDto>{
         // add by lizhi 判断系统参数ASSET_INFO_CHB_HIDE是否显示中债信息 2020-2-28
         if(!StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ASSET_INFO_CHB_HIDE), DictCodeListExt1.是或否_否.getValue())){
             // 资产负债报送信息的市场代码和金融产品名称设值
-            if (entity.getBaseRepAssetDeptInfoDto().getRepAssetDeptList() != null && entity.getBaseRepAssetDeptInfoDto().getRepAssetDeptList().size() > 0) {
+            if (entity.getBaseRepAssetDeptInfoDto()!=null && entity.getBaseRepAssetDeptInfoDto().getRepAssetDeptList() != null && entity.getBaseRepAssetDeptInfoDto().getRepAssetDeptList().size() > 0) {
                 entity.getBaseRepAssetDeptInfoDto().getRepAssetDeptList().get(0).setFinprodMarketId(entity.getFinprodMarketId());
                 entity.getBaseRepAssetDeptInfoDto().getRepAssetDeptList().get(0).setRepFinprodName(entity.getFinprodName());
             }
@@ -897,4 +897,18 @@ implements BaseProcessService<FinBondTargetAssetDto>{
                 ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/getFinPlanList?finprodId="+finprodId,
                 FinBondTargetAssetDto.class);
     }
+
+
+
+    /**
+     * 根据产品代码得到起息日和到期日
+     * @param oFinprodId 产品代码
+     * @return
+     */
+    public FinBondTargetAssetDto getMdateAndVdate(String oFinprodId){
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/getMdateAndVdate?oFinprodId="+oFinprodId,
+                FinBondTargetAssetDto.class);
+    }
+
 }

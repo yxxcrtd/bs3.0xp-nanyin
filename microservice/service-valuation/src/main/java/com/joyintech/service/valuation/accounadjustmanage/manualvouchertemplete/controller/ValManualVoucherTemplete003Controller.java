@@ -42,7 +42,7 @@ import java.util.Map;
  * @since 2.0
  */
 @RestController(value="serviceValManualVoucherTemplete003Controller")
-@RequestMapping("/ValManualVoucherTemplete003")
+@RequestMapping("ValManualVoucherTemplete003")
 public class ValManualVoucherTemplete003Controller extends BaseController {
 
     @Autowired

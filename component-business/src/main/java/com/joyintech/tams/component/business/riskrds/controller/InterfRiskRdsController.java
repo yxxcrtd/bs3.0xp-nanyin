@@ -16,11 +16,13 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +49,44 @@ public class InterfRiskRdsController {
 
     @Autowired
     private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
+
+    // add by zhangrui1 批量试算 Start
+    /**
+     * 批量风险试算
+     *
+     * @param dataList 批量数据
+     * @param eventType 事件类型
+     * @param assetType 资产类型
+     * @return 试算结果
+     * @throws Exception 异常
+     */
+    @ResponseBody
+    @RequestMapping("batchRiskTrialRds/{eventType}/{assetType}")
+    public String batchRiskTrialRds(@RequestBody List<Map<String, Object>> dataList,
+                                    @PathVariable("eventType") String eventType,
+                                    @PathVariable("assetType") String assetType)
+            throws Exception {
+        if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"),
+                BussinessDictCodeListRds.是否_是)) {
+            logger.info("==========批量试算接口<RSK011>事件类型:{} start==========", eventType);
+            // 报文体为空\事件类型为空
+            if (CollectionUtils.isEmpty(dataList) || StringUtil.isEmpty(eventType)) {
+                throw new NullPointerException("请求报文或者请求参数为空");
+            }
+            InterfRiskRdsDto infRdsDto = new InterfRiskRdsDto();
+            infRdsDto.setEventType(eventType);
+            infRdsDto.setInfCode(BussinessDictCodeListRds.接口系统ID_风险试算批量接口.getValue());
+            infRdsDto.setAssetType(assetType);
+            ClientData rsp = interfRiskRdsService.sendRiskRdsListData(infRdsDto, dataList, null);
+            logger.info("==========批量试算接口<RSK011>事件类型:{} end==========", eventType);
+            return JsonUtils.object2Json(rsp);
+        }
+        else {
+            logger.info("==========未启动风险试算==========");
+            return JsonUtils.object2Json(new ClientData());
+        }
+    }
+    // add by zhangrui1 批量试算 End
 
     /**
      * 风险接口统一调用入口(画面端)

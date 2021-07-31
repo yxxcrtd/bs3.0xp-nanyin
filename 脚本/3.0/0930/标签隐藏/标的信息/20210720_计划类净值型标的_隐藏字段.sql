@@ -1,7 +1,0 @@
-DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='FinPlanNetAsset002'and ELEMENT_ID = 'planNetCapiIncomeFeature';
-insert into EXPORT_TABLE (PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
-values ('FinPlanNetAsset002','planNetCapiIncomeFeature','capiIncomeFeature','保本标识','02','02','02',null);
-
-DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='FinPlanNetAsset002'and ELEMENT_ID = 'planNetTrustee';
-insert into EXPORT_TABLE (PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
-values ('FinPlanNetAsset002','planNetTrustee','trusteeId','托管人','02','02','02',null);

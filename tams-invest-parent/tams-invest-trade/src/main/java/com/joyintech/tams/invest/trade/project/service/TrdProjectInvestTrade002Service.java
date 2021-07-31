@@ -428,6 +428,9 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
             	}
             }
             inputDto.setTrdTradeFeeDetail(detail);
+
+            inputDto.setTurnInvAim(entity.getTurnInvAim());
+
             // <!-- 通道交易 新增 强成西 2019/03/26 end -->
             if(反向交易编号!=null){
                 inputDto.getTrdProductDeal().setTotleTradeId(反向交易编号);
@@ -480,6 +483,8 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
                 trdProductDealTotal.setPs(DictCodeList.交易方向_买入.getValue());
                 trdProductDealTotal.setPortfolioId(交易对手_子组合);//原来交易的交易对手
                 trdProductDealTotal.setIspayUnpaidint(null);//是否转让
+
+                trdProductDealTotal.setInvAim(entity.getTurnInvAim());
                 trdFinProductDealTotalMapper.insertSelective(trdProductDealTotal);
 
                 PaTrdFinProductDealTotal paTrdFinDealTotal1 = gen汇总交易扩展(entity);
@@ -2122,6 +2127,12 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
             ServiceApplication.TRADE_SERVICE_NAME + "/TrdProjectInvestTrade/findRevokeDeal", param,
             Integer.class);
         return i;
+    }
+
+    public String getReverseTradeDtoInvAim(String tradeId) {
+        return restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getReverseTradeDtoInvAim/" + tradeId, null,
+                String.class);
     }
     
 }

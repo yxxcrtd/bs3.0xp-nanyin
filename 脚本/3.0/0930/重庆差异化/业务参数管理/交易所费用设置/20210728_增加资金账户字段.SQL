@@ -1,0 +1,2 @@
+alter table TRD_FEE_CONFIG add (CAPITAL_ACCOUNT_NO VARCHAR2(60));
+comment on column TRD_FEE_CONFIG.CAPITAL_ACCOUNT_NO is '资金账户';

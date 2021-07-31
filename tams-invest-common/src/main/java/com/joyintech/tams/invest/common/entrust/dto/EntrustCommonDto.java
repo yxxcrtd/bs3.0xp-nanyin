@@ -4,6 +4,8 @@ import java.util.Date;
 
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.EtrEntrustWw;
+import com.joyintech.tams.common.base.entity.EtrEntrustWwDetail;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 
 /**
@@ -30,6 +32,10 @@ public class EntrustCommonDto {
     private EtrEntrustAdd etrEntrustAdd;
 
     private BussRepoSecDto bussRepoSecDto;
+
+    private EtrEntrustWw etrEntrustWw;
+
+    private EtrEntrustWwDetail etrEntrustWwDetail;
 
     public BussRepoSecDto getBussRepoSecDto() {
         return bussRepoSecDto;
@@ -70,6 +76,21 @@ public class EntrustCommonDto {
 	public void setSettleDate(Date settleDate) {
 		this.settleDate = settleDate;
 	}
-    
-    
+
+    public EtrEntrustWw getEtrEntrustWw() {
+        return etrEntrustWw;
+    }
+
+    public void setEtrEntrustWw(EtrEntrustWw etrEntrustWw) {
+        this.etrEntrustWw = etrEntrustWw;
+    }
+
+    public EtrEntrustWwDetail getEtrEntrustWwDetail() {
+        return etrEntrustWwDetail;
+    }
+
+    public void setEtrEntrustWwDetail(EtrEntrustWwDetail etrEntrustWwDetail) {
+        this.etrEntrustWwDetail = etrEntrustWwDetail;
+    }
+
 }

@@ -160,7 +160,9 @@
                 vdate:query('#vdate').val()
             }, function (result) {
             if (result ) {
-                document.getElementById('deviationDegree').innerHTML = JoyinUtil.formatNumber(result, 4, null, 2) + '%';
+                document.getElementById('deviationDegree').innerHTML ="<span style='color: red'>"+
+                    JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
+
             }
         });
     }
@@ -197,7 +199,7 @@
             // 根据净价计算可买数量
             var portfolioIds = [];
             portfolioIds.push(query("#portfolioId").val());
-            parent.EtrIbBondinfoHq.calCanBuyAmount(query("#portfolioId").val(),query('#ccy').val(),query('#vdate').val(),query('#price').val());
+            parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,query('#ccy').val(),query('#vdate').val(),query('#price').val());
             // 根据净价计算净价偏离度
             calDeviationDegree();
             //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 start
@@ -589,6 +591,7 @@
         query("#mdate").val(sysDate).trigger("change");
         query("#counterId1").val("").trigger("change");
         query("#counterId2").val("").trigger("change");
+        document.getElementById('deviationDegree').innerHTML = '';
         layui.form.render(); // reload layui
         pageModel = PAGE_MODEL_NEW;
     };

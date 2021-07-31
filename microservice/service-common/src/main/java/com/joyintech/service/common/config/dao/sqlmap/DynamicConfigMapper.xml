@@ -4,7 +4,7 @@
 	<resultMap id="mapwithClob" type="java.util.HashMap">
 		<result column="DYN_INFO" property="dynInfo" jdbcType="CLOB" typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
 	</resultMap>
-	
+
 	<select id="selectByDynId" parameterType="String" resultMap="mapwithClob">
 		SELECT DYN_INFO FROM DYN_CONFIG_INFO
 		WHERE DYN_ID = #{dynId}
@@ -22,4 +22,18 @@
 		</set>
 		where DYN_ID=#{dynId,jdbcType=VARCHAR} 
 	</update>
+
+	<select id="selectPage" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+		i.DYN_ID id,
+		p.REMARK text,
+		e.PAGE_URL object 
+		FROM DYN_CONFIG_INFO i, SYS_MENU p 
+		left join SYS_PAGE e on p.PAGE_ID=e.PAGE_ID
+		WHERE i.DYN_ID = p.PAGE_ID
+		<if test="search != null and search != ''" >
+			AND (p.PAGE_ID LIKE '%'|| #{search} ||'%' OR p.REMARK LIKE '%'|| #{search} ||'%')
+		</if>
+		order by i.DYN_ID
+	</select>
 </mapper>

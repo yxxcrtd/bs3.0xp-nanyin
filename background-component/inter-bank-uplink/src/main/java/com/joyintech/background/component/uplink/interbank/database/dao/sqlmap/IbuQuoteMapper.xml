@@ -304,7 +304,7 @@
 
 	<select id="selectEtrReHisListByQuoteId" resultType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto">
 		select c.QUOTE_ID,  c.VERSION , c.ENTRUST_ID , c.PORTFOLIO_ID , c.SHARE_AMT , c.FPRICE_AMT , c.REMARK  ,c.CREATE_USER ,
-		c.CREATE_TIME, c.CREATE_DEPT , c.UPDATE_USER , c.UPDATE_TIME,,c.CB_FPRICE_AMT,c.SC_FPRICE_AMT from IBU_QUOTE_ETR_RE_HIS c
+		c.CREATE_TIME, c.CREATE_DEPT , c.UPDATE_USER , c.UPDATE_TIME,c.CB_FPRICE_AMT,c.SC_FPRICE_AMT from IBU_QUOTE_ETR_RE_HIS c
 		where c.QUOTE_ID = #{I_Q_B_QUOTE_ID,jdbcType=VARCHAR} and c.VERSION = #{I_Q_B_VERSION,jdbcType=DECIMAL}
 	</select>
 
@@ -1382,5 +1382,47 @@
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
         UPDATE_TIME UPDATE_TIME
         from IBU_QUOTE_ENT_CREP_PLEDGE where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+	</select>
+
+	<!--针对做市方撤销  当所有报价全部撤回后  主报价终态应该为已新增 成功-->
+	<update id="updateBondQuoteFinalStatusForRevoke" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond">
+		update IBU_QUOTE_BOND
+		set TRADE_STATUS = #{tradeStatus},SEND_STATUS = {sendStatus},
+		<if test="version != null" >
+			VERSION = #{version,jdbcType=DECIMAL},
+		</if>
+		<if test="exeType != null" >
+			EXE_TYPE = #{exeType,jdbcType=VARCHAR},
+		</if>
+		<if test="pQuoteId != null" >
+			P_QUOTE_ID = #{pQuoteId,jdbcType=VARCHAR},
+		</if>
+		<if test="cfetsQuoteId != null" >
+			CFETS_QUOTE_ID = #{cfetsQuoteId,jdbcType=VARCHAR},
+		</if>
+		<if test="bVersion != null" >
+			B_VERSION = #{bVersion,jdbcType=DECIMAL},
+		</if>
+		UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+		UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+	</update>
+
+	<!--是否可以操作报价-->
+	<select id="isOpeQuotedPrice" resultType="java.lang.Integer">
+		SELECT
+		CASE WHEN exe_type IN ('19',
+		'20',
+		'46') THEN 1
+		ELSE DECODE(UPDATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0) + DECODE(CREATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0)
+		END quoteId
+		FROM
+		<if test="quoteIdTyep !=null and quoteIdTyep =='bond'">
+			IBU_QUOTE_BOND
+		</if>
+		<if test="quoteIdTyep !=null and quoteIdTyep =='rep'">
+			IBU_QUOTE_CREP
+		</if>
+		where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
 	</select>
 </mapper>

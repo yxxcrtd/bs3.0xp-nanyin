@@ -451,4 +451,11 @@ public class TrdFundInvestTradeController {
     public List<BussTrdTransfenpeiDto> selectTrdTransfenpeiList(@RequestBody Map<String, Object> param) {
         return trdFundInvestTradeService.selectTrdTransfenpeiList(param);
     }
+
+
+    @RequestMapping("getSpeedByFinprodId")
+    public Map<String, Object> getSpeedByFinprodId(@RequestBody Map<String, Object> param){
+        return trdFundInvestTradeService.getSpeedByFinprodId(param);
+    }
+
 }

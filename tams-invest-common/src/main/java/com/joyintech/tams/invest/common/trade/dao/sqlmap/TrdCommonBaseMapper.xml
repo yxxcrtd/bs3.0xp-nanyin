@@ -1207,4 +1207,27 @@
         where
             p.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
     </select>
+
+    <select id="queryRTradeIds" resultType="com.joyintech.tams.common.base.entity.TrdProductDeal">
+        SELECT TRADE_ID tradeId, NVL(TOTLE_TRADE_ID, R_TRADE_ID) rTradeId FROM TRD_PRODUCT_DEAL
+        WHERE (R_TRADE_ID IS NOT NULL
+        <if test="list != null and list.size() > 0">
+            AND TRADE_ID in
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        )
+        union all
+        SELECT TOTLE_TRADE_ID tradeId, NVL(TOTLE_TRADE_ID, R_TRADE_ID) rTradeId FROM TRD_PRODUCT_DEAL
+        WHERE (TRADE_ID IN (
+        SELECT RTRIM(R_TRADE_ID, 'R') FROM TRD_PRODUCT_DEAL WHERE R_TRADE_ID IS NOT NULL
+        <if test="list != null and list.size() > 0">
+            AND TOTLE_TRADE_ID in
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        ))
+    </select>
 </mapper>

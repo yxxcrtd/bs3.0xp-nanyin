@@ -498,6 +498,16 @@ public class TrdFundInvestTradeDto extends TrdProductDeal implements ProcessEnti
     private String counterType;
 
     /**
+     * 申购确认速度
+     */
+    private String purSpeed;
+
+    /**
+     * 赎回确认速度
+     */
+    private String redSpeed;
+
+    /**
      * 获取 counterType
      *
      * @return counterType
@@ -1362,5 +1372,21 @@ public class TrdFundInvestTradeDto extends TrdProductDeal implements ProcessEnti
 
     public void setBussTrdTransfenpeiDto(List<BussTrdTransfenpeiDto> bussTrdTransfenpeiDto) {
         this.bussTrdTransfenpeiDto = bussTrdTransfenpeiDto;
+    }
+
+    public String getPurSpeed() {
+        return purSpeed;
+    }
+
+    public void setPurSpeed(String purSpeed) {
+        this.purSpeed = purSpeed;
+    }
+
+    public String getRedSpeed() {
+        return redSpeed;
+    }
+
+    public void setRedSpeed(String redSpeed) {
+        this.redSpeed = redSpeed;
     }
 }

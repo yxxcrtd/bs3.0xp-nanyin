@@ -125,13 +125,13 @@ public class FinStockInfoService extends BaseService<FinStockInfoDto>{
     public Page<FinStockInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
         throws Exception {
         if(iPlatformDate != null){
-            pageParam.put("sysDate", iPlatformDate.getSysDate());
+            pageParam.put("sysDate", iPlatformDate.getSysDateStr());
         }
         return super.queryForPage(page, length, () -> finStockInfoMapper.queryForPage(pageParam));
     }
     public FinStockInfoDto getShares(Map<String, Object> Param) {
         if(iPlatformDate != null){
-            Param.put("sysDate", iPlatformDate.getSysDate());
+            Param.put("sysDate", iPlatformDate.getSysDateStr());
         }
         return finStockInfoMapper.getShares(Param);
     }
@@ -160,7 +160,7 @@ public class FinStockInfoService extends BaseService<FinStockInfoDto>{
      */
     public FinStockInfoDto findEntity(Map<String, Object> param) {
         if(iPlatformDate != null){
-            param.put("sysDate", iPlatformDate.getSysDate());
+            param.put("sysDate", iPlatformDate.getSysDateStr());
         }
         param.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         return finStockInfoMapper.findEntity(param);
@@ -342,7 +342,7 @@ public class FinStockInfoService extends BaseService<FinStockInfoDto>{
     public FinStockInfoDto selectByFinprodId(String finprodId) {
         Map<String,Object> param = new HashMap<String,Object>();
         if(iPlatformDate != null){
-            param.put("sysDate", DateUtil.getSysDate());
+            param.put("sysDate", iPlatformDate.getSysDateStr());
         }
         param.put("finprodId", finprodId);
         //  param.put("CASH_TYPE_2", DictCodeListExt1.现金流二级类型_利息.getValue());

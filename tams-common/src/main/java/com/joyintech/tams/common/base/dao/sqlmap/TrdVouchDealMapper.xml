@@ -21,14 +21,16 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_ORDER" property="accountOrder" jdbcType="VARCHAR" />
+	<result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADE_ID TRADE_ID, BOOKSET_ID BOOKSET_ID, RECORD_TYPE RECORD_TYPE, BOOK_DATE BOOK_DATE, 
         OFFSET_FLAG OFFSET_FLAG, BUSI_ID BUSI_ID, BUSI_DETAIL_TYPE BUSI_DETAIL_TYPE, BRANCH BRANCH, 
         BUSI_TYPE BUSI_TYPE, BOOK_ID BOOK_ID, BOOK_TYPE BOOK_TYPE, BOOK_REMARK BOOK_REMARK, 
         P_TRADE_ID P_TRADE_ID, INV_AIM INV_AIM, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME ,FINPROD_TYPE
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME ,ACCOUNT_ORDER ACCOUNT_ORDER
+	,FINPROD_TYPE FINPROD_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -126,6 +128,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+	    <if test="accountOrder != null" >
+                ACCOUNT_ORDER,
+            </if>
             <if test="finprodType != null" >
                 FINPROD_TYPE,
             </if>
@@ -188,6 +193,9 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+	    <if test="accountOrder != null" >
+                #{accountOrder,jdbcType=VARCHAR},
+            </if>
             <if test="finprodType != null" >
                 #{finprodType,jdbcType=VARCHAR},
             </if>
@@ -196,10 +204,10 @@
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDeal" >
         insert into TRD_VOUCH_DEAL(TRADE_ID, BOOKSET_ID, RECORD_TYPE, BOOK_DATE, OFFSET_FLAG, 
         BUSI_ID, BUSI_DETAIL_TYPE, BRANCH, BUSI_TYPE, BOOK_ID, BOOK_TYPE, BOOK_REMARK, P_TRADE_ID, 
-        INV_AIM, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,FINPROD_TYPE)
+        INV_AIM, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ACCOUNT_ORDER,FINPROD_TYPE)
         select TRADE_ID, BOOKSET_ID, RECORD_TYPE, BOOK_DATE, OFFSET_FLAG, 
             BUSI_ID, BUSI_DETAIL_TYPE, BRANCH, BUSI_TYPE, BOOK_ID, BOOK_TYPE, BOOK_REMARK, P_TRADE_ID, 
-            INV_AIM, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,FINPROD_TYPE
+            INV_AIM, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,ACCOUNT_ORDER,FINPROD_TYPE
              from TRD_VOUCH_DEAL
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </insert>
@@ -251,7 +259,10 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="VARCHAR != null" >
+            <if test="accountOrder != null" >
+                ACCOUNT_ORDER = #{accountOrder,jdbcType=VARCHAR},
+            </if>
+	    <if test="finprodType != null" >
                 FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
             </if>
         </set>
@@ -274,7 +285,8 @@
             INV_AIM = #{invAim,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+            ACCOUNT_ORDER = #{accountOrder,jdbcType=VARCHAR},
+	    FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
 </mapper>

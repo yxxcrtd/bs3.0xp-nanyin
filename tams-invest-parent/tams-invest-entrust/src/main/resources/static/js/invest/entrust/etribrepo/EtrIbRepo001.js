@@ -2,6 +2,20 @@
  * 持仓信息（右上）
  */
 (function(){
+    // 定制化配置信息控制页面展示====================================================
+    const ZLGL = $(".ZLGL").attr("title");
+    const ZYQGL = $(".ZYQGL").attr("title");
+    if(ZLGL !== 'true' || ZYQGL !== 'true'){
+        if(ZLGL === 'true'){
+            $(".ZYQGL").hide();
+            $(".ZLGL").show().trigger("click");
+        }else if (ZYQGL === 'true'){
+            $(".ZYQGL").show().trigger("click");
+            $(".ZLGL").hide();
+        }
+    }
+    $(".layui-tab").show();
+    // ==========================================================================
 	
     function getPositionsSearchParams(){
         var data = $.serializeToObject('#searchForm_cc');
