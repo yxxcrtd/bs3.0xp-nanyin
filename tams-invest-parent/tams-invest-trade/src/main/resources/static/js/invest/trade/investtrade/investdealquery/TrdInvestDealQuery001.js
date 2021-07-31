@@ -445,6 +445,8 @@ $(function(){
         	,{field:'tradeMarketVal', title: 'TrdInvestDealQuery001.tradeMarket',width:130,sortField:'tradeMarket'}
         	,{field:'tradeMarketModeVal',  title: 'TrdInvestDealQuery001.tradeMarketMode',width:100,sortField:'tradeMarketMode'}
         	,{field:'tradeAmt', title: 'TrdInvestDealQuery001.amt',width:150,type:'number'}
+        	,{field:'tradePrice', title: 'TrdInvestDealQuery001.tradePrice',width:150,type:'number'}
+        	,{field:'rate', title: 'TrdInvestDealQuery001.rate',width:150,type:'number'}
         	,{field:'ccyVal', title: 'TrdInvestDealQuery001.ccy',width:120,sortField:'ccy'}
         	,{field:'tradeDateVal', title: 'TrdInvestDealQuery001.tradeDate',width:100,sortField:'tradeDate'}
         	,{field:'settleDateVal', title: 'TrdInvestDealQuery001.settleDate',width:100,sortField:'settleDate'}
