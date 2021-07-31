@@ -41,6 +41,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1118,6 +1119,9 @@ public class FinProductBuild002Validator implements BeanValidator {
         if(!StringUtil.isNotEmpty(entity.getBussFinProductSaleParamDto().getToffStart())) {
         	validList.add(new ValidMessage("bussFinProductSaleParamDto.toffStart", getMessage("BUSS_COM_E_0038",
                     getMessage("BussFinProductSaleParam.toffStart"))));
+        }else if(entity.getBussFinProductSaleParamDto().getToffStart().compareTo(BigDecimal.ZERO)==0){
+            validList.add(new ValidMessage("bussFinProductSaleParamDto.toffStart",
+                    getMessage("BUSS_COM_E_0036", getMessage("BussFinProductSaleParam.toffStart"),"0")));
         }
         //收益型产品运作模式不可选净值型 add by yzg 20200309
         if(StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto()) && StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepOperateMode())) {

@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.productelement.netvalueproduct.validator;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -1428,6 +1429,9 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     	if(!StringUtil.isNotEmpty(entity.getBussFinProductSaleParamDto().getToffStart())) {
     		validList.add(new ValidMessage("bussFinProductSaleParamDto.toffStart", getMessage("BUSS_COM_E_0038",
     				getMessage("BussFinProductSaleParam.toffStart"))));
+    	}else if(entity.getBussFinProductSaleParamDto().getToffStart().compareTo(BigDecimal.ZERO)==0){
+            validList.add(new ValidMessage("bussFinProductSaleParamDto.toffStart",
+                    getMessage("BUSS_COM_E_0036", getMessage("BussFinProductSaleParam.toffStart"),"0")));
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
     	if (StringUtil.isNotEmpty(entity.getBussFinProductSaleParamDto().getInvestorType()) &&
