@@ -239,9 +239,29 @@ public class AssetInfoDetailUtil {
                 entity.setSvrBussRepPlacementInfoDto(getSvrBussRepPlacementInfoDto(messages , list));
             }else if (DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue().equals(entity.getAssetType())){
                 /**维护信息-债券类资产/理财直接融资工具/同业存单*/
-                if (dataList.get(1).size() != 24) {
+                /*if (dataList.get(1).size() != 24) {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-债券格式不正确！"));
                     return resultList;
+                }*/
+                //资产名称
+                entity.setAssetName(list.get(6));
+                //起息日
+                if (StringUtil.isNotEmpty(list.get(17))) {
+                    if (CommonUtil.isEnDateStr(list.get(17))){
+                        entity.setVdate(DateUtil.parse(list.get(17)));
+                    }else {
+                        entity.setVdate(new Date());
+                        messages.add(new ValidMessage("起息日必须为日期格式（yyyy-MM-dd）"));
+                    }
+                }
+                //到期日
+                if (StringUtil.isNotEmpty(list.get(18))) {
+                    if (CommonUtil.isEnDateStr(list.get(18))){
+                        entity.setMdate(DateUtil.parse(list.get(18)));
+                    }else {
+                        entity.setMdate(new Date());
+                        messages.add(new ValidMessage("到期日必须为日期格式（yyyy-MM-dd）"));
+                    }
                 }
                 entity.setSvrBussFinBondRepInfoDto(getSvrBussFinBondRepInfoDto(messages , list));
             }else if (DictCodeListExt2.资产_负债类别_非标准化债权类资产_信贷资产流转项目.getValue().equals(entity.getAssetType())){
@@ -967,6 +987,7 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(8))) {
             if (CommonUtil.isFloatNumeric(list.get(8))){
                 dto.setAssetValue(new BigDecimal(list.get(8)));
+                dto.setAmt(new BigDecimal(list.get(8)));
             }else {
                 dto.setAssetValue(new BigDecimal(0));
                 messages.add(new ValidMessage(rule.get(SVRBUSSREPOTHERINVESTTARGETINFODTO + GlobalConstant.POINT + "assetValue" + GlobalConstant.UNDER_LINE + ISNUMBER2 )));
@@ -1968,6 +1989,7 @@ public class AssetInfoDetailUtil {
             }
         }
         dto.setRepBasis(SysDataUtil.getZZDictCodeFromName(DictCode.计息基础_中债, list.get(11)));
+        dto.setBasis(SysDataUtil.getZZDictCodeFromName(DictCode.计息基础_中债, list.get(11)));
         dto.setRepDepoType(SysDataUtil.getZZDictCodeFromName(DictCode.存款类型, list.get(12)));
         if (StringUtil.isNotEmpty( list.get(13))){
             String[] repTargetTypes = list.get(13).split(GlobalConstant.COMMA);
@@ -2081,19 +2103,22 @@ public class AssetInfoDetailUtil {
                 messages.add(new ValidMessage(rule.get(SVRBUSSFINBONDREPINFODTO + GlobalConstant.POINT + "repMdate" + GlobalConstant.UNDER_LINE + ISVALIDDATE )));
             }
         }*/
-        //dto.setBankSecZxzq(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(18)));
-        //dto.setRepIsFbzb(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(19)));
+        dto.setBankSecZxzq(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(19)));
+        dto.setRepIsFbzb(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(20)));
+        dto.setRepBankSecCapital(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(21)));
+        dto.setRepBankSecPerpetual(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(22)));
+        dto.setIsPerpetual(SysDataUtil.getZZDictCodeFromName(DictCode.永续债属性, list.get(23)));
         //dto.setBankCapital(SysDataUtil.getZZDictCodeFromName(DictCode.银行资本补充工具,list.get(20)));
-        if (StringUtil.isNotEmpty(list.get(21)) && list.get(21).length()>2){
-            dto.setRepPbcAssetType1(list.get(21).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(24)) && list.get(24).length()>2){
+            dto.setRepPbcAssetType1(list.get(24).substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(22)) && list.get(22).length()>2){
-            dto.setRepPbcAssetType2(list.get(22).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(25)) && list.get(25).length()>2){
+            dto.setRepPbcAssetType2(list.get(25).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
 
-        if (StringUtil.isNotEmpty(list.get(23)) && list.get(23).length()>2){
-            dto.setRepPbcAssetType3(list.get(23).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(26)) && list.get(26).length()>2){
+            dto.setRepPbcAssetType3(list.get(26).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
         }
         return dto;
     }
@@ -2222,10 +2247,13 @@ public class AssetInfoDetailUtil {
         headList.add("*登记托管机构");
         headList.add("登记托管机构说明");
         headList.add("备注");
-        headList.add("到期日");
+        headList.add("*起息日");
+        headList.add("*到期日");
         headList.add("是否专项债券");
         headList.add("是否非标转标资产");
-        headList.add("银行资本补充工具");
+        headList.add("是否商业银行二级资本债");
+        headList.add("是否商业银行永续债");
+        headList.add("永续债属性");
         headList.add("新人行一级分类");
         headList.add("新人行二级分类");
         headList.add("新人行三级分类");

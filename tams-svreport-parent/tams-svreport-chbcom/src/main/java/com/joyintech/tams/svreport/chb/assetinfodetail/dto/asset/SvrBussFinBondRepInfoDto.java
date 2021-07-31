@@ -143,6 +143,18 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
      */
     private String repPbcAssetType3;
 
+    /**
+     * 是否非标转标资产
+     */
+    private String isFbzb;
+
+    private String repIsFbzb;
+    /**
+     * 是否专项债券
+     */
+    private String bankSecZxzq;
+
+
     public String getAssetType2() {
         return assetType2;
     }
@@ -345,5 +357,29 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
 
     public void setRepPbcAssetType3(String repPbcAssetType3) {
         this.repPbcAssetType3 = repPbcAssetType3;
+    }
+
+    public String getIsFbzb() {
+        return isFbzb;
+    }
+
+    public void setIsFbzb(String isFbzb) {
+        this.isFbzb = isFbzb;
+    }
+
+    public String getBankSecZxzq() {
+        return bankSecZxzq;
+    }
+
+    public void setBankSecZxzq(String bankSecZxzq) {
+        this.bankSecZxzq = bankSecZxzq;
+    }
+
+    public String getRepIsFbzb() {
+        return repIsFbzb;
+    }
+
+    public void setRepIsFbzb(String repIsFbzb) {
+        this.repIsFbzb = repIsFbzb;
     }
 }
