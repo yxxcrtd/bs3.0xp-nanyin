@@ -52,7 +52,7 @@ public class OrgNameManagementLogDetailController extends BaseController {
     @ResponseBody
     @RequestMapping("selectNameListLogDetail")
     public List<RskAccessListLogDto> selectNameListLogDetail()
-        throws Exception {
+         {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         List<RskAccessListLogDto> resultList = orgNameManagementService.selectNameListLogDetail(param);
         return resultList;
@@ -68,7 +68,7 @@ public class OrgNameManagementLogDetailController extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
       return orgNameManagementLogDetailService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
        

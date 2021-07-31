@@ -66,7 +66,7 @@ public class PtlDvpFundAllocationController {
     public Page<PtlDvpFundAllocationDto> selectAll(@RequestBody Map<String, Object> param,
                                                    @PathVariable("page") int page,
                                                    @PathVariable("length") int length)
-        throws Exception {
+    {
         return ptlDvpFundAllocationService.findPage(page, length, param);
     }
 

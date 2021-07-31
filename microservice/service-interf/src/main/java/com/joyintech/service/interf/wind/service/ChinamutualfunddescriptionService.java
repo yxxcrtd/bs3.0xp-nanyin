@@ -63,7 +63,7 @@ public class ChinamutualfunddescriptionService extends WindService<InfChinamutua
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InfChinamutualfunddescriptionWithBLOBs entity) throws Exception {
+	public int insert(InfChinamutualfunddescriptionWithBLOBs entity) {
 		// 删除接口表重复数据
 		infMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 数据登录接口表

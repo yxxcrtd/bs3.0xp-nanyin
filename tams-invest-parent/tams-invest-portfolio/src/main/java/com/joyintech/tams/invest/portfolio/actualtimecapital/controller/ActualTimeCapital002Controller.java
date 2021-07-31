@@ -89,12 +89,10 @@ public class ActualTimeCapital002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Valid ActualTimeCapital002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Valid ActualTimeCapital002Dto dto, BindingResult br){
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

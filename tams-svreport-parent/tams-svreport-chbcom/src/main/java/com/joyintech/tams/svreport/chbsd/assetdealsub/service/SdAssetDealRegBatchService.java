@@ -54,7 +54,7 @@ public class SdAssetDealRegBatchService{
 	@Autowired
 	private InvestTradeRegist001Service investTradeRegist001Service;
 	
-	public void sdAssetDealRegData(Date batchDate,List<String> prodList) throws Exception{
+	public void sdAssetDealRegData(Date batchDate,List<String> prodList) {
 		//1、报送数据检索,取得 List
 		logger.info("【资产交易信息登记】未报送数据检索开始------" +  df.format(new Date()));
 		List<InvestTradeRegist001Dto> resultList = selectDataByPart(DateUtil.format(batchDate), prodList);
@@ -145,7 +145,7 @@ public class SdAssetDealRegBatchService{
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbInvestTradeSubDto> dataList, SendDataCheckType sendDataCheckType) throws  Exception{
+	public void sendBatchCommon(List<ChbInvestTradeSubDto> dataList, SendDataCheckType sendDataCheckType) {
 		int dataCountPerTime = Integer.valueOf(
 				CacheUtil.getSysParam(ReportGlobalConstant.SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST));
 

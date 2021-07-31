@@ -91,14 +91,12 @@ public class PtlManualRelease001Controller extends BaseController{
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return ptlManualRelease001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
@@ -109,14 +107,12 @@ public class PtlManualRelease001Controller extends BaseController{
      * 证券账户账号联想文本框 <功能详细描述>
      * @param param String
      * @return List
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getSecAcctId")
-    public List<SuggestDto> getSecAcctId(String param)
-        throws Exception {
+    public List<SuggestDto> getSecAcctId(String param) {
         List<SuggestDto> temp = ptlManualRelease001Service.getSecAcctId(param);
         return temp;
     }
@@ -132,8 +128,7 @@ public class PtlManualRelease001Controller extends BaseController{
 
     @ResponseBody
     @RequestMapping("/getCounterId")
-    public List<SuggestDto> getCounterId(String param)
-        throws Exception {
+    public List<SuggestDto> getCounterId(String param) {
         List<SuggestDto> temp = ptlManualRelease001Service.getCounterId(param);
         return temp;
     }
@@ -142,40 +137,34 @@ public class PtlManualRelease001Controller extends BaseController{
     /**
      * 质押式正回购分页查询
      * @return Page<PtlManualRelease001Dto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/findPageRs")
-    public Page<PtlManualRelease001Dto> findPageRs()
-        throws Exception {
+    public Page<PtlManualRelease001Dto> findPageRs(){
         return ptlManualRelease001Service.selectForPageRs(RequestUtil.getParameters(getRequest()));
     }
     /**
      * 质押券查询
      * @return Page<PtlManualRelease001Dto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/findPageRepInfo")
-    public Page<PtlManualRelease001Dto> findPageRepInfo()
-        throws Exception {
+    public Page<PtlManualRelease001Dto> findPageRepInfo(){
         return ptlManualRelease001Service.findPageRepInfo(RequestUtil.getParameters(getRequest()));
     }
     /**
      * 质押式逆回购分页查询
      * @return Page<PtlManualRelease001Dto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/findPageRb")
-    public Page<PtlManualRelease001Dto> findPageRb()
-        throws Exception {
+    public Page<PtlManualRelease001Dto> findPageRb(){
         return ptlManualRelease001Service.selectForPageRb(RequestUtil.getParameters(getRequest()));
     }
     
@@ -196,7 +185,6 @@ public class PtlManualRelease001Controller extends BaseController{
     /**
      * @param dto 业务实体
      * @return 画面地址
-     * @throws Exception
      * @see
      * @since 1.0
      */

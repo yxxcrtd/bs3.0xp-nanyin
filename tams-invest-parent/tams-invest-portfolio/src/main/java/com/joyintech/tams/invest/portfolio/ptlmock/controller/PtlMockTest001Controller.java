@@ -4,6 +4,7 @@ package com.joyintech.tams.invest.portfolio.ptlmock.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -59,12 +60,10 @@ public class PtlMockTest001Controller extends BaseController {
      * 分页查询
      * 
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlMockTest001Dto> findPage()
-        throws Exception {
+    public Page<PtlMockTest001Dto> findPage(){
         return ptlMockTest001Service.selectForPage(RequestUtil.getPageParam());
     }
 
@@ -83,13 +82,11 @@ public class PtlMockTest001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlMockTest001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -100,15 +97,14 @@ public class PtlMockTest001Controller extends BaseController {
      * @param dto 业务实体
      * @param br br
      * @return AjaxResult
-     * @throws Exception Exception
+     * @throws WorkFlowException Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) PtlMockTest001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) PtlMockTest001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -32,7 +32,7 @@ public class ShadowPriceScheme002Controller extends BaseController {
 	
 
 	@PostMapping("insert")
-	public void insert(@RequestBody ShadowPriceScheme002Dto dto) throws Exception {
+	public void insert(@RequestBody ShadowPriceScheme002Dto dto) {
 		ShadowPriceScheme002Service.doComplete(dto, OperationType.NEW);
 	}
 
@@ -45,7 +45,7 @@ public class ShadowPriceScheme002Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@PostMapping("update")
-	public void update(@RequestBody ShadowPriceScheme002Dto dto) throws Exception {
+	public void update(@RequestBody ShadowPriceScheme002Dto dto) {
 		ShadowPriceScheme002Service.doComplete(dto, OperationType.MODIFY);
 	}
 
@@ -58,7 +58,7 @@ public class ShadowPriceScheme002Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@PostMapping("delete")
-	public void delete(@RequestBody ShadowPriceScheme002Dto dto) throws Exception {
+	public void delete(@RequestBody ShadowPriceScheme002Dto dto) {
 		ShadowPriceScheme002Service.doComplete(dto, OperationType.DELETE);
 	}
 

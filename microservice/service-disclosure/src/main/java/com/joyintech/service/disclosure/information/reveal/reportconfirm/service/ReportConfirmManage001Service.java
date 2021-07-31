@@ -102,7 +102,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ReportConfirmManage001Dto> findPage(int page, int length, Map<String, Object> params) throws Exception {
+    public Page<ReportConfirmManage001Dto> findPage(int page, int length, Map<String, Object> params) {
         
         //获取获取理财产品类型
         String finprodId = (String)params.get("finprodId");
@@ -276,7 +276,6 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 }
                 catch (IOException e) {
                     log.error("解析json异常，json=" + entity.getData());
-//                    e.printStackTrace();
                     logger.error("error:",e);
                 }
                 if(!StringUtil.isEmptyList(dtoList) && dtoList.get(0) != null  && StringUtil.isNotEmpty(dtoList.get(0).getSeqno())){
@@ -330,7 +329,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 // TODO
 				        	    String fileType=StringUtil.substring(report.getSysFilename(), report.getSysFilename().lastIndexOf("."));
 				        	    String reportName=report.getReportName()+fileType;
-				        	    if(StringUtil.isNotEmpty(report.getEndDate())&&report.getEndDate()!=null){
+				        	    if(report.getEndDate()!=null && StringUtil.isNotEmpty(report.getEndDate())){
 				        	        reportName=DateUtil.format(report.getEndDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)+GlobalConstant.UNDER_LINE+reportName;
 				        	    }
 				        	    if(StringUtil.isNotEmpty(report.getProdid())){
@@ -493,7 +492,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 						for(RepReveal report : reportList){
 						    // TODO
                             String reportName=report.getReportName();
-                            if(StringUtil.isNotEmpty(report.getEndDate())&&report.getEndDate()!=null){
+                            if(report.getEndDate()!=null && StringUtil.isNotEmpty(report.getEndDate())){
                                 reportName=DateUtil.format(report.getEndDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)+GlobalConstant.UNDER_LINE+reportName;
                             }
                             if(StringUtil.isNotEmpty(report.getProdid())){
@@ -627,11 +626,15 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 								downloadFile.delete();
 							}
 						}
-						zipOut.close();
+
 					} 
 					catch(Exception e) {
 			        	log.error("",e);
-			        }
+			        }finally {
+						if (zipOut != null){
+							zipOut.close();
+						}
+					}
 					
 				}
 			}
@@ -673,7 +676,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 					}
 				}catch (Exception e)
 				{
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 				finally {
 					if (bis != null){

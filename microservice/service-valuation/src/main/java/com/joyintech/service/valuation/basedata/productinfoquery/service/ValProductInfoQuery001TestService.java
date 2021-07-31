@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,11 @@ import com.joyintech.tams.common.base.entity.BokBooksetExt;
  */
 @Service(value="serviceValProductInfoQuery001TestService")
 public class ValProductInfoQuery001TestService extends CommonExportService<ValProductInfoQuery001TestDto> {
-	
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValProductInfoQuery001TestService.class);
+
     /**
      * ValProductInfoQuery001Mapper
      */
@@ -52,14 +58,9 @@ public class ValProductInfoQuery001TestService extends CommonExportService<ValPr
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValProductInfoQuery001TestDto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ValProductInfoQuery001TestDto> findPage(Map<String, Object> params) {
         return super.queryForPage(()->{
-			try {
 				this.findAll(params);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		});
     }
 
@@ -119,7 +120,7 @@ public class ValProductInfoQuery001TestService extends CommonExportService<ValPr
      * @since 1.0
      */
     @SuppressWarnings("static-access")
-	public List<ValProductInfoQuery001TestDto> findAll(Map<String, Object> params) throws Exception {
+	public List<ValProductInfoQuery001TestDto> findAll(Map<String, Object> params){
 //  	  String  prodId=(String)params.get("finprodId");
 //  	  String sDate=(String)params.get("vdateStart");
 //  	  String eDate=(String)params.get("vdateEnd");
@@ -130,8 +131,7 @@ public class ValProductInfoQuery001TestService extends CommonExportService<ValPr
 //		startDate = sim.parse(sDate);
 //	    endDate=sim.parse(eDate);
 //	} catch (ParseException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
+//		logger.error(e.getMessage(),e);
 //	}
 //  	  
 //  	  ValProductInfoQuery001TestDto  valDto=new ValProductInfoQuery001TestDto();

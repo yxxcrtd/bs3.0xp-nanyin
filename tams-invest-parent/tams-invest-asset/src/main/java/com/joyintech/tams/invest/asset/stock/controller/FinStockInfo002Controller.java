@@ -25,6 +25,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -255,8 +256,7 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
     public AjaxResult save(@RequestBody
                                @Validated({
         ValidateGroupEdit.class})
-                                   FinStockInfoDto dto, BindingResult br)
-        throws Exception {
+                                   FinStockInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -314,8 +314,7 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
      */
     @ResponseBody
     @RequestMapping("/getCustomerName")
-    public List<SuggestDto> getCustomerName()
-            throws Exception {
+    public List<SuggestDto> getCustomerName(){
         String param = super.getRequest().getParameter("param");
         List<SuggestDto> temp = finStockInfoService.getCustomerName(param);
         return temp;
@@ -329,7 +328,7 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
      */
     @ResponseBody
     @RequestMapping("/getCalendarId")
-    public AjaxResult getCalendarId(@RequestParam("tradeMarket") String tradeMarket) throws ParseException{
+    public AjaxResult getCalendarId(@RequestParam("tradeMarket") String tradeMarket) {
         AjaxResult ar = new AjaxResult();
         if(tradeMarket.equals("03")){
             tradeMarket = "04";

@@ -62,7 +62,7 @@ public class PtlPositionAnalysisController {
     @PostMapping("findPage/{page}/{length}")
     public Page<PtlPositionAnalysis001Dto> selectAll(@RequestBody Map<String, Object> param,
                                                                 @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ptlPositionAnalysisService.selectForPage(page,length,param);
     }
     /**
@@ -75,7 +75,7 @@ public class PtlPositionAnalysisController {
      */
     @PostMapping("findList")
     public List<PtlPositionAnalysis001Dto> selectAllData(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return ptlPositionAnalysisService.selectAllData(param);
     }
     /**
@@ -104,7 +104,7 @@ public class PtlPositionAnalysisController {
      */
     @PostMapping("findListForAsset")
     public List<PtlPositionAnalysis002Dto> findListForAsset(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return ptlPositionAnalysisService.selectAssetForList(param);
     }
     /**
@@ -131,7 +131,7 @@ public class PtlPositionAnalysisController {
     @PostMapping("findPageForExport/{page}/{length}")
     public Page<PtlPositionAnalysis001Dto> selectForExport(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length)
-                    throws Exception {
+    {
     	return ptlPositionAnalysisService.selectForExport(page, length, param);	
     }
     
@@ -147,7 +147,7 @@ public class PtlPositionAnalysisController {
     @PostMapping("findPageForExportNew/{page}/{length}")
     public Page<PtlPositionAnalysis001Dto> selectForExportNew(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length)
-                    throws Exception {
+    {
     	return ptlPositionAnalysisService.selectForExportNew(page, length, param);	
     }
 
@@ -197,7 +197,7 @@ public class PtlPositionAnalysisController {
     @PostMapping("secReportPage/{page}/{length}")
     public Page<PtlPositionAnalysis003Dto> secReportPage(@RequestBody Map<String, Object> param,
                                                          @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
 
         return ptlPositionReportService.secReportPage(page,length,param);
     }

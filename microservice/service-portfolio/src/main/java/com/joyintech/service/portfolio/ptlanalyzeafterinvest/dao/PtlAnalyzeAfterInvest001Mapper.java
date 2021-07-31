@@ -15,6 +15,8 @@ import com.joyintech.service.portfolio.ptlanalyzeafterinvest.dto.PtlAnalyzeAfter
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 /**
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
@@ -24,6 +26,7 @@ import java.util.Map;
  * @see
  * @since 1.0
  */
+@Repository
 public interface PtlAnalyzeAfterInvest001Mapper {
     List<PtlAnalyzeAfterInvest001Dto> selectForPage(Map<String,Object> map);
 

@@ -33,6 +33,7 @@ import com.joyintech.tams.invest.period.trdfundobversion.dto.TrdFundObversionDto
 import com.joyintech.tams.invest.period.trdfundobversion.service.TrdFundObversion001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -213,8 +214,7 @@ public class TrdFundObversion002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) TrdFundObversionDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) TrdFundObversionDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

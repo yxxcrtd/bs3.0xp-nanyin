@@ -1,7 +1,9 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.ChbBotAstPosition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbBotAstPositionMapper {
     int deleteByPrimaryKey(String posId);
 

@@ -100,7 +100,7 @@ public class ExcelUtil {
                try {
                    wb.close();
                } catch (IOException e) {
-                   e.printStackTrace();
+                   logger.error(e.getMessage(),e);
                }
            }
         }
@@ -170,7 +170,7 @@ public class ExcelUtil {
                 try {
                     wb.close();
                 }catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
@@ -231,45 +231,54 @@ public class ExcelUtil {
      */
     public static Workbook loadWorkbook(String fileName, File file, InputStream inputStream) 
             throws FileNotFoundException{
-        if (null == file && StringUtil.isEmpty(fileName)) {
-            return null;
-        }
-        if (inputStream == null) {
-            if (null == file) {
-                file = new SafelyFile(fileName);
-            }
-            if (StringUtil.isEmpty(fileName)) {
-                fileName = file.getName();
-            }
-            inputStream = new FileInputStream(file);
-        }
-
         Workbook wb = null;
-        if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
-            try {
-                POIFSFileSystem fs = new POIFSFileSystem(inputStream);
-                wb = new HSSFWorkbook(fs);
-                inputStream.close();
+        try {
+            if (null == file && StringUtil.isEmpty(fileName)) {
+                return null;
             }
-            catch (Exception e) {
-//                e.printStackTrace();
-                logger.error(e.getMessage(),e);
+            if (inputStream == null) {
+                if (null == file) {
+                    file = new SafelyFile(fileName);
+                }
+                if (StringUtil.isEmpty(fileName)) {
+                    fileName = file.getName();
+                }
+                inputStream = new FileInputStream(file);
             }
 
-        }
-        else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
-            try {
-                wb = new XSSFWorkbook(inputStream);
-                inputStream.close();
+            if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
+                try {
+                    POIFSFileSystem fs = new POIFSFileSystem(inputStream);
+                    wb = new HSSFWorkbook(fs);
+                    inputStream.close();
+                }
+                catch (Exception e) {
+                    logger.error(e.getMessage(),e);
+                }
+
             }
-            catch (Exception e) {
-//                e.printStackTrace();
-                logger.error(e.getMessage(),e);
+            else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
+                try {
+                    wb = new XSSFWorkbook(inputStream);
+                    inputStream.close();
+                }
+                catch (Exception e) {
+                    logger.error(e.getMessage(),e);
+                }
+            }
+            else {
+                throw new BusinessException("不是一个有效的Excel文件");
+            }
+        }finally {
+            if (inputStream != null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(),e);
+                }
             }
         }
-        else {
-            throw new BusinessException("不是一个有效的Excel文件");
-        }
+
         return wb;
     }
 

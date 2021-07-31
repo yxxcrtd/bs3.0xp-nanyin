@@ -16,24 +16,24 @@
 		</if>
 		<!-- 产品下挂的不规则的计提式费用 -->
 		union all
-		select DISTINCT MST_FEEINFO.FEE_ID id,
-		concat_ws('',MST_FEEINFO.FEE_ID, ':',MST_FEEINFO.FEE_NAME) text
-		from FIN_CASH_INFO,FIN_PRODUCT,MST_FEEINFO,FIN_PRODUCT_ADD ,FIN_CASH_PAY_RULE
-		where MST_FEEINFO.APPLY_TYPE in (#{relationProd}, #{relationOther})
-		and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-		and FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
-		and FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		and FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
-		and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
-		and FIN_CASH_PAY_RULE.PAY_CYCLE = #{payCycle}
-		and FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}
-		and MST_FEEINFO.CHARGE_TYPE = #{chargeType01}
-		AND (FIN_CASH_INFO.IS_CALC IS NULL OR FIN_CASH_INFO.IS_CALC = #{yes})
+		select DISTINCT MF.FEE_ID id,
+		concat_ws('',MF.FEE_ID, ':',MF.FEE_NAME) text
+		from FIN_CASH_INFO FCI,FIN_PRODUCT FP,MST_FEEINFO MF,FIN_PRODUCT_ADD FPA,FIN_CASH_PAY_RULE FCPR
+		where MF.APPLY_TYPE in (#{relationProd}, #{relationOther})
+		and FCI.FINPROD_ID = FP.FINPROD_ID
+		and FCI.FEE_ID = MF.FEE_ID
+		and FP.FINPROD_ID = FPA.FINPROD_ID
+		and FCI.CASH_ID = FCPR.CASH_ID
+		and FCI.CASH_TYPE_1 = #{cashType1}
+		and FCPR.PAY_CYCLE = #{payCycle}
+		and FPA.PORTFOLIO_ID = #{ptlId}
+		and MF.CHARGE_TYPE = #{chargeType01}
+		AND (FCI.IS_CALC IS NULL OR FCI.IS_CALC = #{yes})
 		<if test="search != null and search != ''">
-			and (MST_FEEINFO.FEE_ID like concat('%', #{search}, '%') or MST_FEEINFO.FEE_NAME like concat('%', #{search}, '%'))
+			and (MF.FEE_ID like concat('%', #{search}, '%') or MF.FEE_NAME like concat('%', #{search}, '%'))
 		</if>
 		<if test="initValue != null and initValue != ''">
-			and MST_FEEINFO.FEE_ID = #{initValue}
+			and MF.FEE_ID = #{initValue}
 		</if>
 		<!-- 产品没挂的计提的差额中收(收益型产品) -->
 		union all
@@ -43,10 +43,10 @@
 		where MST_FEEINFO.APPLY_TYPE in (#{relationProd}, #{relationOther})
 		and MST_FEEINFO.FEE_TYPE = #{feeType04}
 		and
-		(select FIN_PRODUCT.PROFIT_TYPE from FIN_PRODUCT_ADD,FIN_PRODUCT
-		where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		and FIN_PRODUCT.P_FINPROD_ID IS NULL
-		and FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}) = #{profitType02}
+		(select FP.PROFIT_TYPE from FIN_PRODUCT_ADD FPA,FIN_PRODUCT FP
+		where FP.FINPROD_ID = FPA.FINPROD_ID
+		and FP.P_FINPROD_ID IS NULL
+		and FPA.PORTFOLIO_ID = #{ptlId}) = #{profitType02}
 		<if test="search != null and search != ''">
 			and (MST_FEEINFO.FEE_ID like concat('%', #{search}, '%') or MST_FEEINFO.FEE_NAME like concat('%', #{search}, '%'))
 		</if>
@@ -58,28 +58,28 @@
     	select *from (
     		<choose>
     			<when test="flag != null and flag == 'N'.toString()">
-    				select distinct DATE_FORMAT(max(TRD_PRODUCT_DEAL.MDATE), '%Y-%m-%d')
-			    	  from TRD_FIN_PRODUCT_DEAL_TOTAL, TRD_PRODUCT_DEAL, TRD_TRADE_FEE_DETAIL
-			    	 where TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_PRODUCT_DEAL.TOTLE_TRADE_ID     
-			    	   and TRD_PRODUCT_DEAL.TRADE_ID = TRD_TRADE_FEE_DETAIL.TRADE_ID
-			    	   and TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID = #{ptlId}
-			    	   and TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL = #{isCancel}
-					   and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{tradeStatus}
-			    	   and TRD_TRADE_FEE_DETAIL.FEE_ID = #{feeId}
+    				select distinct DATE_FORMAT(max(TPD.MDATE), '%Y-%m-%d')
+			    	  from TRD_FIN_PRODUCT_DEAL_TOTAL TFPD, TRD_PRODUCT_DEAL TPD, TRD_TRADE_FEE_DETAIL TTFD
+			    	 where TFPD.TOTLE_TRADE_ID = TPD.TOTLE_TRADE_ID     
+			    	   and TPD.TRADE_ID = TTFD.TRADE_ID
+			    	   and TFPD.PORTFOLIO_ID = #{ptlId}
+			    	   and TFPD.IS_CANCEL = #{isCancel}
+					   and TFPD.TRADE_STATUS = #{tradeStatus}
+			    	   and TTFD.FEE_ID = #{feeId}
     			</when>
     			<otherwise>
-			    	 select distinct DATE_FORMAT(max(TRD_PRODUCT_DEAL.MDATE), '%Y-%m-%d')
-			    	  from TRD_FIN_PRODUCT_DEAL_TOTAL, TRD_PRODUCT_DEAL, TRD_TRADE_FEE_DETAIL,FIN_CASH_PAY_RULE
-			    	 where TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_PRODUCT_DEAL.TOTLE_TRADE_ID
-			    	 	AND TRD_PRODUCT_DEAL.Cash_Id=FIN_CASH_PAY_RULE.Cash_Id
+			    	 select distinct DATE_FORMAT(max(TPD.MDATE), '%Y-%m-%d')
+			    	  from TRD_FIN_PRODUCT_DEAL_TOTAL TFPD, TRD_PRODUCT_DEAL TPD, TRD_TRADE_FEE_DETAIL TTFD,FIN_CASH_PAY_RULE FCPR
+			    	 where TFPD.TOTLE_TRADE_ID = TPD.TOTLE_TRADE_ID
+			    	 	AND TPD.Cash_Id=FCPR.Cash_Id
 			   			<if test="flag != null and flag == 'Y'.toString()">
-					      	AND    FIN_CASH_PAY_RULE.PAY_CYCLE != #{payCycle}
+					      	AND    FCPR.PAY_CYCLE != #{payCycle}
 					    </if>     
-			    	   and TRD_PRODUCT_DEAL.TRADE_ID = TRD_TRADE_FEE_DETAIL.TRADE_ID
-			    	   and TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID = #{ptlId}
-			    	   and TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL = #{isCancel}
-					   and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{tradeStatus}
-			    	   and TRD_TRADE_FEE_DETAIL.FEE_ID = #{feeId}
+			    	   and TPD.TRADE_ID = TTFD.TRADE_ID
+			    	   and TFPD.PORTFOLIO_ID = #{ptlId}
+			    	   and TFPD.IS_CANCEL = #{isCancel}
+					   and TFPD.TRADE_STATUS = #{tradeStatus}
+			    	   and TTFD.FEE_ID = #{feeId}
     			</otherwise>
     		</choose>
     	)

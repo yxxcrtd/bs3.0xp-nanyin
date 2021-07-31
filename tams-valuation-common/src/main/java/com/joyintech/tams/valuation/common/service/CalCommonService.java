@@ -59,7 +59,7 @@ public class CalCommonService {
      * @return 分段明细列表 + 总利息金额
      */
     public CalCommonResult calCommon(Date startDate, Date endDate, List<PrincipalInfo> prinList,
-                                     List<QuoteInfo> quoteList) {
+                                     List<QuoteInfo> quoteList) throws IllegalAccessException, InstantiationException {
         // 1.分段区间计算，调用共通方法【分段区间计算】
         List<InvRateQuo> invRateQuoList = new ArrayList<>(quoteList.size());
         for (QuoteInfo quote : quoteList) {
@@ -165,7 +165,7 @@ public class CalCommonService {
                                                             List<InvRateQuo> liy,
                                                             List<InvRepaySchedule> lirs,
                                                             BigDecimal amt, String isUp,
-                                                            Class<T> class1) {
+                                                            Class<T> class1) throws InstantiationException, IllegalAccessException {
         // 【变量】本金 =
         BigDecimal papi = amt;
 

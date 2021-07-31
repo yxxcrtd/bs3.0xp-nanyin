@@ -80,7 +80,7 @@ public class InterfTcms002Service extends ReceivedEsbService<InterfTcms002OutEnt
      * {@inheritDoc}
      */
     @Override
-	public InterfTcms002OutEntity selectResponseData(InterfTcms002InEntity entity) throws Exception {
+	public InterfTcms002OutEntity selectResponseData(InterfTcms002InEntity entity) throws InterfException {
         // 产品状态
         String status = null;
         // 设置参数 金融产品类型_理财产品code
@@ -151,7 +151,7 @@ public class InterfTcms002Service extends ReceivedEsbService<InterfTcms002OutEnt
      * {@inheritDoc}
      */
     @Override
-	public int saveInterfData(InterfTcms002InEntity entity) throws Exception {
+	public int saveInterfData(InterfTcms002InEntity entity) {
         // 查询类接口，无登录操作
         return 0;
     }
@@ -160,7 +160,7 @@ public class InterfTcms002Service extends ReceivedEsbService<InterfTcms002OutEnt
      * {@inheritDoc}
      */
     @Override
-	public int saveBusinessData(InterfTcms002InEntity entity) throws Exception {
+	public int saveBusinessData(InterfTcms002InEntity entity) {
         // 查询类接口，无登录操作
         return 0;
     }

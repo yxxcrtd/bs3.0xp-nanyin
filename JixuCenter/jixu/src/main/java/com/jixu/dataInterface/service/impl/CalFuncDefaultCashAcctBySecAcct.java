@@ -30,7 +30,7 @@ public class CalFuncDefaultCashAcctBySecAcct extends AdditionValFunc{
 		return funcname;
 	}
 	
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		String secacct=genConvertFormula(inputValue, colcfgMap);
 		SecAcct sec=secAcctDao.loadEntity(SecAcct.class, Integer.valueOf(secacct));
 		return String.valueOf(sec.getDefaultCashAcct());
@@ -42,7 +42,7 @@ public class CalFuncDefaultCashAcctBySecAcct extends AdditionValFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+			{
 		// TODO Auto-generated method stub
 		return null;
 	}

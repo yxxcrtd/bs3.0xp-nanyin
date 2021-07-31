@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class BankBalanceQuery001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<BankBalanceQuery001Dto> findPage() throws Exception{
+    public Page<BankBalanceQuery001Dto> findPage(){
         return bankBalanceQuery001Service.findPage(RequestUtil.getPageParam());
     }
     /**
@@ -162,7 +163,7 @@ public class BankBalanceQuery001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
             String datas = this.getParam("datas");
             Map<String, Object> paraMap = RequestUtil.getPageParam();
             List<BankBalanceQuery001Dto> listdto;

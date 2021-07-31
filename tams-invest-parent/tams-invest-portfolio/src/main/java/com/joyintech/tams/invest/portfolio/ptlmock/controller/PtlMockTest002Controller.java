@@ -12,6 +12,8 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -63,6 +65,10 @@ import javax.servlet.http.HttpServletResponse;
 @PageId("PtlMockTest002")
 @RequestMapping("/invest/portfolio/ptlmock/PtlMockTest002")
 public class PtlMockTest002Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PtlMockTest002Controller.class);
 
     @Autowired(required = false)
     private BussTrdAvailableCashQueryService bussTrdAvailableCashQueryService;
@@ -263,7 +269,7 @@ public class PtlMockTest002Controller extends BaseController {
             return ptlMockTest002Service.calcYield(inputTradeDto, "01");
         }catch(CalculationException e){
             getLogger().error(e.getMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return null;
         }
     }
@@ -280,7 +286,7 @@ public class PtlMockTest002Controller extends BaseController {
             return ptlMockTest002Service.calcYield(inputTradeDto,"02");
         }catch(CalculationException e){
             getLogger().error(e.getMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return null;
         }
     }
@@ -297,7 +303,7 @@ public class PtlMockTest002Controller extends BaseController {
             return ptlMockTest002Service.calcYield(inputTradeDto,"03");
         }catch(CalculationException e){
             getLogger().error(e.getMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return null;
         }
     }
@@ -309,14 +315,13 @@ public class PtlMockTest002Controller extends BaseController {
      * @param inputDto PtlMockTest002Dto
      * @param result BindingResult
      * @return 处理结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("doMockTest")
     public AjaxResult doMockTest(@Validated({
-        ValidateGroupEdit.class}) @RequestBody PtlMockTest002Dto inputDto, BindingResult result) throws Exception {
+        ValidateGroupEdit.class}) @RequestBody PtlMockTest002Dto inputDto, BindingResult result) {
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -327,7 +332,7 @@ public class PtlMockTest002Controller extends BaseController {
         }
         catch (Exception e) {
             getLogger().error("模拟试算发生异常：" + e.getMessage()+"=========="+e);
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             ajaxResult.setData("exceptionOccured");
         }
         return ajaxResult;

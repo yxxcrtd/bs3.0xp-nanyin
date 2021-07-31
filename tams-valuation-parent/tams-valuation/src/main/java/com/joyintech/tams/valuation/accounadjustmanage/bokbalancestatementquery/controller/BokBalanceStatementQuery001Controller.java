@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.valuation.accounadjustmanage.bokbalancestatementquery.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -78,19 +79,18 @@ public class BokBalanceStatementQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<BokBalanceStatementQuery001Dto> selectBalanceStatement()
-        throws Exception {
+         {
         Page<BokBalanceStatementQuery001Dto> page = bokBalanceStatementQuery001Service.selectForPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() throws IOException {
         return bokBalanceStatementQuery001Service.exportExcel(RequestUtil.getParameters(getRequest()));
     }
     
@@ -106,14 +106,13 @@ public class BokBalanceStatementQuery001Controller extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2()
-        throws Exception {
+         {
 //        String param = super.getRequest().getParameter("param");
         return bokBalanceStatementQuery001Service.getBooksetId2(RequestUtil.getPageParam());
 //        return valAssetBook001Service.getBooksetId2(param);

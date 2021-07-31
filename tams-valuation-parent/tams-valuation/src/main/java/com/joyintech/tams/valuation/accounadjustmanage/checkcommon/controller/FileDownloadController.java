@@ -71,8 +71,10 @@ public class FileDownloadController extends BaseController {
         try {
             fis = new BufferedInputStream(new FileInputStream(path));
             byte[] buffer = new byte[fis.available()];
-            fis.read(buffer);
-            fis.close();
+            if(fis!=null) {
+                fis.read(buffer);
+                fis.close();
+            }
             response.reset();
             // filename = new String(filename.getBytes("UTF-8"), "iso-8859-1");// 为了解决中文名称乱码问题
             // 去掉filename的时间戳 add by 何阳阳 2017/01/04 start
@@ -147,7 +149,7 @@ public class FileDownloadController extends BaseController {
                 sftpTools.close();// 关闭登录
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
 
@@ -264,8 +266,10 @@ public class FileDownloadController extends BaseController {
                 try {
                     fis = new BufferedInputStream(new FileInputStream(new SafelyFile(path)));
                     byte[] buffer = new byte[fis.available()];
-                    fis.read(buffer);
-                    fis.close();
+                    if(fis!=null) {
+                        fis.read(buffer);
+                        fis.close();
+                    }
                     response.reset();
 
                     response.addHeader("Content-Disposition",
@@ -285,7 +289,7 @@ public class FileDownloadController extends BaseController {
                             toClient.close();
                         }
                         catch (IOException e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                     }
                     if (fis != null) {
@@ -293,7 +297,7 @@ public class FileDownloadController extends BaseController {
                             fis.close();
                         }
                         catch (IOException e) {
-                        	e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                     }
                 }
@@ -323,8 +327,10 @@ public class FileDownloadController extends BaseController {
         try {
             fis = new BufferedInputStream(new FileInputStream(path));
             byte[] buffer = new byte[fis.available()];
-            fis.read(buffer);
-            fis.close();
+            if(fis!=null) {
+                fis.read(buffer);
+                fis.close();
+            }
             response.reset();
             if (StringUtil.isEmpty(fileName)) {
                 fileName = file.getName();
@@ -351,7 +357,7 @@ public class FileDownloadController extends BaseController {
                     toClient.close();
                 }
                 catch (IOException e) {
-                	e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             if (fis != null) {
@@ -359,7 +365,7 @@ public class FileDownloadController extends BaseController {
                     fis.close();
                 }
                 catch (IOException e) {
-                	e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

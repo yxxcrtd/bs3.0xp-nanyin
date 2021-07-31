@@ -116,7 +116,7 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
      */
     public Page<TrdRepoTradeDto> selectForPage(int page, int length,
                                                Map<String, Object> pageParam)
-            throws Exception {
+    {
         pageParam.put("YES_NO_YES", DictCodeList.是否_是.getValue());
         pageParam.put("YES_NO_NO", DictCodeList.是否_否.getValue());
 

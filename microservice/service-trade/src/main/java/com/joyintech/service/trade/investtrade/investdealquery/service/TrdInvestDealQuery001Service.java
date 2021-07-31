@@ -54,7 +54,7 @@ public class TrdInvestDealQuery001Service extends BaseService<TrdInvestDealQuery
 	 * @throws Exception
 	 */
 	public Page<TrdInvestDealQuery001Dto> selectForPage(int page, int length,Map<String, Object> pageParam)
-			throws Exception {
+	{
 //		setParams(pageParam);
 		Page<TrdInvestDealQuery001Dto>  pageLimit = super.queryForPage(page, length, () -> trdInvestDealQuery001Mapper.selectForPage(pageParam));
 		finprodType2PinAn(pageLimit.getRoot());
@@ -70,7 +70,7 @@ public class TrdInvestDealQuery001Service extends BaseService<TrdInvestDealQuery
 	 * @throws Exception
 	 */
 	public Page<TrdInvestDealQuery001Dto> validSelectForPage(int page, int length,Map<String, Object> pageParam)
-			throws Exception {
+	{
 //		setParams(pageParam);
 	    Page<TrdInvestDealQuery001Dto>  pageLimit = super.queryForPage(page, length, () -> trdInvestDealQuery001Mapper.validSelectForPage(pageParam));
 	    finprodType2PinAn(pageLimit.getRoot());
@@ -85,7 +85,7 @@ public class TrdInvestDealQuery001Service extends BaseService<TrdInvestDealQuery
 	 * @throws Exception
 	 */
 	public Page<TrdInvestDealQuery001Dto> cancelSelectForPage(int page, int length,Map<String, Object> pageParam)
-			throws Exception {
+	{
 //		setParams(pageParam);
 	    Page<TrdInvestDealQuery001Dto>  pageLimit = super.queryForPage(page, length, () -> trdInvestDealQuery001Mapper.cancelSelectForPage(pageParam));
 	    finprodType2PinAn(pageLimit.getRoot());
@@ -100,7 +100,7 @@ public class TrdInvestDealQuery001Service extends BaseService<TrdInvestDealQuery
 	 * @throws Exception
 	 */
 	public Page<TrdInvestDealQuery001Dto> alllSelectForPage(int page, int length,Map<String, Object> pageParam)
-			throws Exception {
+	{
 //		setParams(pageParam);
 	    Page<TrdInvestDealQuery001Dto>  pageLimit = super.queryForPage(page, length, () -> trdInvestDealQuery001Mapper.allSelectForPage(pageParam));
 	    finprodType2PinAn(pageLimit.getRoot());

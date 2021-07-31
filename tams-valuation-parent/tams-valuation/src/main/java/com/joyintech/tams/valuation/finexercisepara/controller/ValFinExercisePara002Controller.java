@@ -103,7 +103,7 @@ public class ValFinExercisePara002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findFinprod")
     public Page<SelectOptionDto> findFinprod()
-        throws Exception {
+          {
         return valFinExercisePara002Service.findFinprod(RequestUtil.getPageParam());
     }
 
@@ -116,7 +116,7 @@ public class ValFinExercisePara002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getFinprodInfo")
     public FinProduct getFinprodInfo()
-        throws Exception {
+          {
         return valFinExercisePara002Service.getFinprodInfo(RequestUtil.getPageParam());
     }
 
@@ -133,7 +133,7 @@ public class ValFinExercisePara002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) ValFinExercisePara002Dto dto,
                             BindingResult bindingResult)
-        throws Exception {
+          {
 //        String msg = StringUtil.EMPTY;
         String operateType = dto.getOperateType();
 

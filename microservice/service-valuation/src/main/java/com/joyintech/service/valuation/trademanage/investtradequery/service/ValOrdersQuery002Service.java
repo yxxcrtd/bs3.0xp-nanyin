@@ -41,7 +41,7 @@ public class ValOrdersQuery002Service extends BaseService<ValOrdersDto>{
      * @see
      * @since 1.0
      */
-    public Page<ValOrdersDto> findBycondition(int page, int length, Map<String, Object> map) throws Exception{
+    public Page<ValOrdersDto> findBycondition(int page, int length, Map<String, Object> map) {
         return super.queryForPage(page, length,()->valOrdersQuery002Mapper.selectBycondition(map));
     }
     /**
@@ -52,7 +52,7 @@ public class ValOrdersQuery002Service extends BaseService<ValOrdersDto>{
     * @see
     * @since 1.0
     */
-   public Page<ValOrdersDto> findDepBycondition(int page, int length, Map<String, Object> map) throws Exception{
+   public Page<ValOrdersDto> findDepBycondition(int page, int length, Map<String, Object> map) {
        return super.queryForPage(page, length,()->valOrdersQuery002Mapper.depSelectBycondition(map));
    }
     /**
@@ -63,7 +63,7 @@ public class ValOrdersQuery002Service extends BaseService<ValOrdersDto>{
      * @see
      * @since 1.0
      */
-    public Page<ValOrdersDto> selectFeeBycondition(int page, int length, Map<String, Object> map) throws Exception{
+    public Page<ValOrdersDto> selectFeeBycondition(int page, int length, Map<String, Object> map) {
     	String feeType = (String)map.get("feeType");
         //交易方向多选，转为数组
         String[] feeTypeList = null;

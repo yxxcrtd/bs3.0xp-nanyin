@@ -68,7 +68,7 @@ public class ReportWorkMonitor002Contoller extends BaseController {
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
     public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+    {
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
         return prdInfoSelect;
     }
@@ -82,7 +82,7 @@ public class ReportWorkMonitor002Contoller extends BaseController {
      * @since 1.0
      */
 	@PostMapping("findPage/{page}/{length}")
-    public Page<ReportWorkMonitor002Dto> findPage(@RequestBody Map<String, Object> param,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<ReportWorkMonitor002Dto> findPage(@RequestBody Map<String, Object> param,@PathVariable("page") int page, @PathVariable("length") int length) {
         Page<ReportWorkMonitor002Dto> pageList = reportWorkMonitor002Service.findPage(page, length, param);
 //        pageList.getRoot().forEach(dto -> {
 //        	dto.setExecStatusName(systemToolService.getNameFromDataDict(DisclosureDictCode.执行结果, dto.getExecStatus()));

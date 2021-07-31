@@ -51,7 +51,7 @@ public class MstCommissionSetController {
     @PostMapping("findPage/{page}/{length}")
     public Page<MstCommissionSetDto> selectAll(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstCommissionSetService.selectForPage(page, length, param);
     }
 
@@ -103,7 +103,7 @@ public class MstCommissionSetController {
     @DTXTransaction
     @PostMapping("insert")
     public void insert(@RequestBody MstCommissionSetDto dto)
-        throws Exception {
+    {
         mstCommissionSetService.insert(dto);
     }
 
@@ -118,7 +118,7 @@ public class MstCommissionSetController {
     @DTXTransaction
     @PostMapping("update")
     public void update(@RequestBody MstCommissionSetDto dto)
-        throws Exception {
+    {
         mstCommissionSetService.update(dto);
     }
 
@@ -133,11 +133,11 @@ public class MstCommissionSetController {
     @DTXTransaction
     @PostMapping("delete")
     public int delete(@RequestBody MstCommissionSetDto dto)
-        throws Exception {
+    {
         return mstCommissionSetService.delete(dto);
     }
     @PostMapping("findTable")
-    public List<TrdFeeConfigDetail> findTable(@RequestBody Map<String, Object> param) throws Exception {
+    public List<TrdFeeConfigDetail> findTable(@RequestBody Map<String, Object> param) {
         return mstCommissionSetService.findTable(param);
     }
 }

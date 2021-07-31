@@ -37,7 +37,7 @@ public class Date2StringConvert extends AdditionFunc{
 	}
 	
 	@Override
-	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		String[] params=inputValue.split(",");
 		//日期不能转为字符型，不能用通用的genConvertFormula(inputValue, colcfgMap)来处理字符
 		String param1=params[0].replace("[", "");
@@ -63,7 +63,7 @@ public class Date2StringConvert extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

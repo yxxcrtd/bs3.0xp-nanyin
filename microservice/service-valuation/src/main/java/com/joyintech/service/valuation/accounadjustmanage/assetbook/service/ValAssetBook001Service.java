@@ -251,7 +251,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      * @see
      * @since 1.0
      */
-    public Page<ValAssetbook001Dto> getAllAssetbookPage(int page,int length,String type, String name) throws Exception {
+    public Page<ValAssetbook001Dto> getAllAssetbookPage(int page,int length,String type, String name) {
     	//add by hxy start 多级法人改造 20200616
     	//return super.queryForPage(page,length,()-> mapper.getBookSet02(type, name));
         Map<String, Object> param = new HashMap<String, Object>();
@@ -344,7 +344,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      * @since 1.0
      */
 	@DataSource(DataSourceType.OTHER)
-    public int workflowCheck(ValAssetbook001Dto dto) throws Exception {
+    public int workflowCheck(ValAssetbook001Dto dto) {
         //判断当前流程是否存在
         ProcessMark processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto);
         return valAssetBook002Mapper.getDataInWorklow(processMark);

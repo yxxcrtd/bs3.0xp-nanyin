@@ -8,7 +8,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.ChbBotAstPosition;
 import com.joyintech.tams.common.base.entity.ChbPrdFeeDeal;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbBotAstPosInterfMapper {
 	void selectByPosdate(Date batchTime);
 	

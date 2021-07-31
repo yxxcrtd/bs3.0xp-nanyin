@@ -55,7 +55,7 @@ public class MarketRiskSceneManage001Service extends BaseService<MarketRiskScene
     @DataSource(DataSourceType.STRESSTEST)
     @Transactional
     public Page<MarketRiskSceneManage001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) 
-        throws Exception{
+    {
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         pageParam.put("isTmpl", DictCodeList.是否_否.getValue());
         Page<MarketRiskSceneManage001Dto> pageData = super.queryForPage(page, length, () -> marketRiskSceneManage001Mapper.queryForPage(pageParam));

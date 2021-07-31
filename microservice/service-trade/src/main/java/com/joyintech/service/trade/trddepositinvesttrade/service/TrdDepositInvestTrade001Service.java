@@ -103,7 +103,7 @@ public class TrdDepositInvestTrade001Service extends BaseService<TrdDepositInves
      * @see
      * @since 1.0
      */
-    public Page<TrdDepositInvestTrade001Dto> selectForPage(int page,int length,Map<String,Object> map) throws Exception{
+    public Page<TrdDepositInvestTrade001Dto> selectForPage(int page,int length,Map<String,Object> map) {
         return super.queryForPage(page, length, () -> trdDepositInvestTrade001Mapper.selectForPage(map));
     }
     

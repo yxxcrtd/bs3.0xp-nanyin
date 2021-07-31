@@ -17,6 +17,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectbalancequery.dto.ValSubjectBalanceQuery001Dto;
 import com.joyintech.tams.valuation.trademanage.finprodtradequery.dao.ValFinprodTradeQuery001Mapper;
 import com.joyintech.tams.common.base.entity.BokBookset;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
@@ -26,6 +27,7 @@ import com.joyintech.tams.common.base.entity.BokBookset;
  * @see ValFinprodTradeQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValSubjectBalanceQuery001Mapper {
     
     /**

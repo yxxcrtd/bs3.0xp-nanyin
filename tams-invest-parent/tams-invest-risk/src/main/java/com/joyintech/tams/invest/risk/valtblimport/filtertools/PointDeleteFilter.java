@@ -15,7 +15,7 @@ public class PointDeleteFilter extends AbstractFilter {
 
 	private static final Integer subjectCodeCol =1;//科目代码列
 	@Override
-	public Workbook doFilter(Workbook workbook, int sheetIndex) throws Exception {
+	public Workbook doFilter(Workbook workbook, int sheetIndex)  {
 		org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(sheetIndex);
 		Integer rowNum_src = sheet.getLastRowNum();
 		

@@ -252,7 +252,7 @@
   		from PTL_CASH_POSITION
   		where
   			(HODING_TYPE=#{POSITION_TYPE_01} or HODING_TYPE=#{POSITION_TYPE_03}) and PORTFOLIO_ID=#{portfolioId}
-  			and CDATE=(select cur_date from sys_date) and CHL_FINPROD_ID=#{TongDao}
+  			and CDATE= #{platDate,jdbcType=DATE} and CHL_FINPROD_ID=#{TongDao}
   	</select>
     <select id="selectByKey" resultMap="selByKeyResult">
         SELECT

@@ -22,6 +22,8 @@ import com.joyintech.tams.invest.common.util.MapParseUtil;
 import com.joyintech.tams.invest.portfolio.ptlcashflow.dto.PartyInfoDto;
 import com.joyintech.tams.invest.portfolio.ptlcashflow.dto.PtlCashFlowInterfaceDto;
 import com.joyintech.tams.invest.portfolio.ptlcashflow.dto.SettleInfoDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +65,11 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto> 
     implements BaseProcessService<PtlCashFlowDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PtlCashFlowService.class);
+
     /**
      * 划款指令共同
      */
@@ -619,7 +626,7 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

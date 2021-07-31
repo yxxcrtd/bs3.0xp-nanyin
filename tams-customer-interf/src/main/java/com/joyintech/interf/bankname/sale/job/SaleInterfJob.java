@@ -123,7 +123,7 @@ public class SaleInterfJob{
      * @throws Exception 
      */
     @RequestMapping("receiveAlloFromSale")
-    public void receiveAlloFromSale() throws Exception{
+    public void receiveAlloFromSale() {
     	
     	Map<String, String> res = new HashMap<>();
     	
@@ -139,7 +139,7 @@ public class SaleInterfJob{
      * @throws Exception 
      */
     @RequestMapping("receiveRedeemFromSale")
-    public void receiveRedeemFromSale() throws Exception{
+    public void receiveRedeemFromSale() {
     	
     	Map<String, String> res = new HashMap<>();
     	
@@ -170,7 +170,7 @@ public class SaleInterfJob{
      * @throws Exception 
      */
     @RequestMapping("receiveBonusCollectSale")
-    public void receiveBonusCollectSale() throws Exception{
+    public void receiveBonusCollectSale() {
     	
     	Map<String, String> res = new HashMap<>();
     	

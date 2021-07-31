@@ -51,7 +51,7 @@ public class MstInterestRateQuotationInfoService extends BaseService<MstInterest
      * @since 1.0
      */
     public Page<MstInterestRateQuotationInfoDto> selectForPage(int page,int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("BENCHMARK_TYPE_04", DictCodeListExt1.基准类型_2_利率.getValue());
         return super.queryForPage(page,length,() -> myMstIntRateInfoMapper.select(pageParam));
     };

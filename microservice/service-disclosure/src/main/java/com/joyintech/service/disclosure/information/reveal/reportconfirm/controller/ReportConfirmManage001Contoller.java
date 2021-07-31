@@ -59,7 +59,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<ReportConfirmManage001Dto> findPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return reportConfirmManage001Service.findPage(page, length, param);
     }
 
@@ -73,7 +73,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
      */
     @PostMapping("/queryPageList")
     public List<ReportConfirmManage001Dto> queryPageList(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return reportConfirmManage001Service.queryPageList(param);
     }
 

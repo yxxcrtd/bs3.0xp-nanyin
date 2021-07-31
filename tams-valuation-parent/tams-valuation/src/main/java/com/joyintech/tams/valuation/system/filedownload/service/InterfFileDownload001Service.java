@@ -13,6 +13,8 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +69,7 @@ public class InterfFileDownload001Service {
      * @see
      * @since 1.0
      */
-    public  ResponseEntity<byte[]> exportFile(Map<String, Object> params) throws Exception {
+    public  ResponseEntity<byte[]> exportFile(Map<String, Object> params) throws JSchException, SftpException, IOException {
         ValRecvServerInfoEntity entity=new ValRecvServerInfoEntity();
         entity.setRsStatus("R");
         entity.setSystemID("ZG");
@@ -115,7 +117,7 @@ public class InterfFileDownload001Service {
      * @param entity
      * @throws Exception
      */
-    public void ftpService(ValRecvServerInfoEntity entity,Map<String, Object> params)throws Exception {
+    public void ftpService(ValRecvServerInfoEntity entity,Map<String, Object> params) throws IOException {
         String executeDate=String.valueOf(params.get("executeDate"));
         //先清理本地路径文件
         String localDir = entity.getLocalPath() + File.separator + entity.getSystemID()+ File.separator+ DateUtil.formatDate(executeDate);
@@ -148,7 +150,7 @@ public class InterfFileDownload001Service {
      * @see
      * @since 1.0
      */
-    public void sftpService(ValRecvServerInfoEntity entity,Map<String, Object> params)throws Exception {
+    public void sftpService(ValRecvServerInfoEntity entity,Map<String, Object> params) throws JSchException, SftpException {
         String executeDate=String.valueOf(params.get("executeDate"));
         // 本地路径
         String localDir = entity.getLocalPath() + File.separator + entity.getSystemID()+ File.separator+ DateUtil.formatDate(executeDate);
@@ -164,8 +166,8 @@ public class InterfFileDownload001Service {
         try {
             ftpUtil.login(entity.getUserName(), entity.getPassword(), entity.getServerIp(),
                 entity.getServerPort());
-        }catch (Exception e) {
-            throw new Exception("登录远程服务器失败！");
+        }catch (JSchException e) {
+            throw new JSchException("登录远程服务器失败！");
         }
 
         // 如果是空的列表，全部下载
@@ -194,7 +196,7 @@ public class InterfFileDownload001Service {
      * @see
      * @since 1.0
      */
-    public void sftpServiceDoRecvId(ValRecvServerInfoEntity entity,Map<String, Object> params)throws Exception {
+    public void sftpServiceDoRecvId(ValRecvServerInfoEntity entity,Map<String, Object> params) throws JSchException, SftpException {
         String executeDate=String.valueOf(params.get("executeDate"));
         // 本地路径
         String localDir = entity.getLocalPath() + File.separator + entity.getSystemID()+ File.separator+ DateUtil.formatDate(executeDate);
@@ -210,8 +212,8 @@ public class InterfFileDownload001Service {
         try {
             ftpUtil.loginById(entity.getUserName(), entity.getPassword(), entity.getServerIp(),
                 entity.getServerPort());
-        }catch (Exception e) {
-            throw new Exception("登录远程服务器失败！");
+        }catch (JSchException e) {
+            throw new JSchException("登录远程服务器失败！");
         }
         List<String> fileNames = ftpUtil.getSFtpFile(remotePath);
         if (fileNames.isEmpty()) {
@@ -234,7 +236,7 @@ public class InterfFileDownload001Service {
      * @param entity
      * @throws Exception
      */
-    public void localService(ValRecvServerInfoEntity entity,Map<String, Object> params)throws Exception {
+    public void localService(ValRecvServerInfoEntity entity,Map<String, Object> params) {
         String executeDate=String.valueOf(params.get("executeDate"));
         String localDir = entity.getLocalPath() + File.separator + entity.getSystemID()+ File.separator+ DateUtil.formatDate(executeDate);
         File localDirFile = new SafelyFile(localDir);
@@ -257,7 +259,7 @@ public class InterfFileDownload001Service {
         try {
             delAllFile(folderPath); // 删除完里面所有内容
             String filePath = folderPath;
-            filePath = filePath.toString();
+            //filePath = filePath;
             File myFilePath = new SafelyFile(filePath);
             boolean rec =myFilePath.delete(); // 删除空文件夹
             if(rec){
@@ -361,7 +363,7 @@ public class InterfFileDownload001Service {
                     bis.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             if (zipOut != null) {
@@ -369,7 +371,7 @@ public class InterfFileDownload001Service {
                     zipOut.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             if (stream != null) {
@@ -377,7 +379,7 @@ public class InterfFileDownload001Service {
                     stream.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

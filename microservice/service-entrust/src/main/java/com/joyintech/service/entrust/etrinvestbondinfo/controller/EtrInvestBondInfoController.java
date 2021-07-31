@@ -61,7 +61,8 @@ public class EtrInvestBondInfoController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<EtrInvestBondInfoDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrInvestBondInfoDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         String bondType = (String)param.get("bondType");
         if(StringUtil.isNotEmpty(bondType)){
             param.put("bondTypeList", StringUtil.split(bondType, GlobalConstant.COMMA));
@@ -79,7 +80,7 @@ public class EtrInvestBondInfoController {
      */
     @PostMapping("getentrustId")
     public List<SuggestDto> getentrustId(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         List<SuggestDto> temp = etrInvestBondInfoService.getentrustId(map);
         return temp;
     }
@@ -94,7 +95,7 @@ public class EtrInvestBondInfoController {
      */
     @GetMapping("getfinprodId")
     public List<SuggestDto> getfinprodId(String finprodId)
-        throws Exception {
+    {
         List<SuggestDto> temp = etrInvestBondInfoService.getfinprodId(finprodId);
         return temp;
     }
@@ -111,7 +112,7 @@ public class EtrInvestBondInfoController {
     @PostMapping("getfinprodIdForAdd/{page}/{length}")
     public Page<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<SelectOptionDto> temp = etrInvestBondInfoService.getfinprodIdForAdd(page,length,param);
         return temp;
     }

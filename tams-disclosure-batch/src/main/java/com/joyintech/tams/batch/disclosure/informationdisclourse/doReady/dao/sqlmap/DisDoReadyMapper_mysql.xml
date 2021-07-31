@@ -10,6 +10,7 @@
     <update id="updateReadybyAdapter" parameterType="String" >
     	UPDATE DIS_DATA_READY SET
     		DATA_DATE	=	str_to_date(#{date,jdbcType=VARCHAR},'%Y-%m-%d')
+    	WHERE 1=1
     </update>
 
     <select id="getValueId" resultType="java.lang.String">

@@ -78,7 +78,7 @@ public class RskValAssetCode001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskValtblAssetSubMapDto> selectForPage() throws Exception{
+    public Page<RskValtblAssetSubMapDto> selectForPage() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return rskValAssetCode001Service.selectForPage(param);
     }

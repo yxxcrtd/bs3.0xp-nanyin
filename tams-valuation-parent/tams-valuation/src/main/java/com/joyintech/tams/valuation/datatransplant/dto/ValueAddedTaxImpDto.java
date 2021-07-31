@@ -10,6 +10,9 @@
 
 package com.joyintech.tams.valuation.datatransplant.dto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -22,6 +25,10 @@ import java.util.Date;
  * @since 1.0
  */
 public class ValueAddedTaxImpDto implements Cloneable{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValueAddedTaxImpDto.class);
 
     /**
      * 账套代码
@@ -346,8 +353,7 @@ public class ValueAddedTaxImpDto implements Cloneable{
 		try {
 			object = (ValueAddedTaxImpDto)super.clone();
 		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		return object;
 	}

@@ -60,7 +60,6 @@ public class InfoDiscAutoConfirmMainService extends AutoSendCBBaseService{
     		logger.info("自动确认"+result+"条数据！");
     	}
     	catch(Exception e){
-//    		e.printStackTrace();
     		logger.error("error:", e);
     		logger.info("自动确认失败"+DateUtil.getCurrentDateTime());
     	}

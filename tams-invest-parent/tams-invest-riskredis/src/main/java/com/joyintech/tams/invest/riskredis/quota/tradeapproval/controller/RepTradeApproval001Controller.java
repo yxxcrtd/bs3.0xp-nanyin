@@ -46,12 +46,11 @@ public class RepTradeApproval001Controller extends BaseController  {
     /**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepTradeApprovalDto> selectAll()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RepTradeApprovalDto> page = repTradeApprovalService.selectForPage(map);
         return page;

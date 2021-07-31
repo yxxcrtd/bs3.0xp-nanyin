@@ -83,7 +83,7 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
      * @since 1.0
      */
     public Page<RskValtblAssetSubMapDtlDto> findPageDtl(int page, int length,
-                                                       Map<String, Object> pageParam) throws Exception {
+                                                       Map<String, Object> pageParam) {
              return super.queryForPage(page, length, () -> {
                  rskValAssetCodeMapper.selectDtl(pageParam);
              });
@@ -160,7 +160,7 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
      */
     public void saveAssetCodeDtl(RskValtblAssetSubMapDtlDto dto){
         if(StringUtil.isNotEmpty(dto.getSrcCode())){
-            List<String> srcCodeList = StringUtil.splitToList(null, dto.getSrcCode().toString());
+            List<String> srcCodeList = StringUtil.splitToList(null, dto.getSrcCode());
             for(String srcCode:srcCodeList){
                 RskValtblAssetSubMapDtl record = new RskValtblAssetSubMapDtl();
                 record.setId(dto.getId());

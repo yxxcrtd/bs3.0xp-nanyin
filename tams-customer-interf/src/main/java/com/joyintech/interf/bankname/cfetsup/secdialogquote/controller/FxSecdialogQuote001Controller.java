@@ -21,6 +21,8 @@ import com.joyintech.interf.bankname.cfetsup.secrequestquote.dto.FxSecRequestQuo
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @PageId("FxSecdialogQuote001")
 @RequestMapping("/interf/cfetsup/secdialogquote/FxSecdialogQuote001")
 public class FxSecdialogQuote001Controller extends BaseController {
-
+    private static final Logger logger = LoggerFactory.getLogger(FxSecdialogQuote001Controller.class);
     @Autowired
     private FxSecdialogQuote001Service fxSecdialogQuote001Service;
     @Autowired
@@ -63,7 +65,8 @@ public class FxSecdialogQuote001Controller extends BaseController {
         FxSecdialogQuote dto = fxSecdialogQuote001Service.selectByPrimaryKey(seqno);
         //发送接口
         CallReturn callReturn = clientService.send(dto,dto.getBusinessType(),dto.getBusinessType()+"Quote");
-        System.out.println(callReturn);
+//        System.out.println(callReturn);
+        logger.info(callReturn.toString());
         return  new AjaxResult();
     }
     @RequestMapping("revoke")

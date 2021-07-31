@@ -93,8 +93,7 @@ public class InvestFeePay003Service extends BaseService<InvestFeePay002Dto> impl
      * @see
      * @since 1.0
      */
-    public Page<InvestFeePay003Dto> selectDetail(Map<String, Object> pageParam)
-            throws Exception {
+    public Page<InvestFeePay003Dto> selectDetail(Map<String, Object> pageParam) {
         String workflowId = (String)pageParam.get("workflowId");
         if (StringUtil.isNotEmpty(workflowId)) {
             InvestFeePay002Dto entity = this.getBussinessEntityByWorkflowId(workflowId);

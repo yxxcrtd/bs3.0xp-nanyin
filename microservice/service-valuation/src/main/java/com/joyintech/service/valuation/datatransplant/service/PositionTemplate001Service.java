@@ -255,7 +255,7 @@ public class PositionTemplate001Service {
     // resultDate = formatter.parse(DateString);
     // }
     // catch (ParseException e) {
-    // e.printStackTrace();
+    // logger.error(e.getMessage(),e);
     // }
     // }
     //

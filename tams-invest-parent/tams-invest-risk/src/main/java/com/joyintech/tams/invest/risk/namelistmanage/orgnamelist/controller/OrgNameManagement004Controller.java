@@ -23,8 +23,11 @@ import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccess
 import com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.service.OrgNameManagementService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
+import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -130,7 +133,7 @@ public class OrgNameManagement004Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return orgNameManagementService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -144,8 +147,7 @@ public class OrgNameManagement004Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("importFile")
-    public AssetNameManagement004Dto importData(String fileName,String inputType,String listId,String revealFileId,String fileNo)
-        throws Exception{
+    public AssetNameManagement004Dto importData(String fileName,String inputType,String listId,String revealFileId,String fileNo) throws FileNotFoundException, IllegalAccessException, InvocationTargetException {
         if(StringUtil.isNotEmpty(fileName) && StringUtil.isNotEmpty(revealFileId)) {
             // 将附件和当前业务对象绑定（更新附件的业务代码）
             fileAttachmentProcess.updateBussinessNo(Arrays.asList(fileNo), revealFileId);
@@ -218,8 +220,7 @@ public class OrgNameManagement004Controller extends BaseController {
    @ResponseBody
    @RequestMapping(PAGE_SAVE)
    public AjaxResult save(@RequestBody @Validated({
-       ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult br)
-       throws Exception {
+       ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult br) throws WorkFlowException {
        if (br.hasErrors()) {
            return new AjaxResult(br);
        }

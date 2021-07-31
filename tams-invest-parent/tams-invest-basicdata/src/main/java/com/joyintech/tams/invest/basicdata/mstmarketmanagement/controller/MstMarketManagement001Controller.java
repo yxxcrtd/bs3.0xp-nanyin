@@ -69,8 +69,7 @@ public class MstMarketManagement001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstMarketManagementDto> selectAllMstMarketManagement()
-        throws Exception {
+    public Page<MstMarketManagementDto> selectAllMstMarketManagement(){
     	
             Page<MstMarketManagementDto> page = mstMarketManagement001Service.selectForPage(RequestUtil.getPageParam());
             return page;
@@ -86,8 +85,7 @@ public class MstMarketManagement001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinprodName")
-    public List<SuggestDto> getFinprodName()
-        throws Exception {
+    public List<SuggestDto> getFinprodName(){
     	  Map<String, Object> param = RequestUtil.getPageParam();
           // 获取根据输入值检索到的结果
           List<SuggestDto> temp = mstMarketManagement001Service.selectFinprodName(param); 
@@ -117,7 +115,7 @@ public class MstMarketManagement001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstMarketManagement001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

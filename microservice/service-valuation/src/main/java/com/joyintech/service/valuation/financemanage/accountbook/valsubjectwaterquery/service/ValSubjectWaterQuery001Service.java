@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -48,6 +50,10 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  */
 @Service(value="serviceValSubjectWaterQuery001Service")
 public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubjectWaterQuery001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValSubjectWaterQuery001Service.class);
 
     @Autowired
     private ValSubjectWaterQuery001Mapper valSubjectWaterQuery001Mapper;
@@ -94,14 +100,11 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
     /**
      * 科目流水查询
      * 
-     * @param vouchNum 凭证编号
-     * @param bookDate 入账日期
      * @return 科目流水List
      * @see
      * @since 1.0
      */
-    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto)
-        throws Exception {
+    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto){
         // 账套类别
         dto.setBooksetType(DictCodeList.账套类别_理财账套.getValue());
         return valSubjectWaterQuery001Mapper.getSubjectWater(dto);
@@ -116,8 +119,7 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
      * @return 表格信息
      * @throws Exception
      */
-    public Page<ValSubjectWaterQuery001Dto> findPage(int page, int length, Map<String, Object> params)
-        throws Exception {
+    public Page<ValSubjectWaterQuery001Dto> findPage(int page, int length, Map<String, Object> params) throws ParseException {
         ValSubjectWaterQuery001SearchDto dto = new ValSubjectWaterQuery001SearchDto();
         // 账套代码
         // String booksetId = (String)params.get("booksetId");
@@ -219,16 +221,14 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
             try {
 				dto.setBookDateBegin(DateUtil.parseDate(bookDateBegin, "yyyy-MM-dd"));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
         }
         if (StringUtil.isNotEmpty(bookDateEnd)) {
             try {
 				dto.setBookDateEnd(DateUtil.parseDate(bookDateEnd, "yyyy-MM-dd"));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
         }
         // 账套类别

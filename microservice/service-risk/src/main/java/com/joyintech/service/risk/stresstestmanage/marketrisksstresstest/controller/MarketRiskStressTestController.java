@@ -85,7 +85,7 @@ public class MarketRiskStressTestController {
 //    @DTXTransaction
 //    @DataSource(DataSourceType.STRESSTEST)
     @PostMapping("Asset")
-    public MarketRiskStressTest001Dto Asset(@RequestBody MarketRiskStressTest001Dto dto) throws Exception {
+    public MarketRiskStressTest001Dto Asset(@RequestBody MarketRiskStressTest001Dto dto) {
         return marketRiskStressTestService.asset(dto);
     }
     

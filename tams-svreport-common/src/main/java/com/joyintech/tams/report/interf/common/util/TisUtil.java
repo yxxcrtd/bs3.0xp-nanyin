@@ -112,11 +112,9 @@ public class TisUtil {
 					readStr = readStr + read + "\r\n";
 				}
 			} catch (IOException e) {
-//				e.printStackTrace();
 				logger.error(e.getMessage(),e);
 			}
 		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
 			logger.error(e.getMessage(),e);
 		}
 		finally {
@@ -153,12 +151,10 @@ public class TisUtil {
 				}
 				log.setTaskStatus(file+"读取文件成功！");
 			} catch (IOException e) {
-//				e.printStackTrace();
 				log.setTaskStatus(file+"读取文件失败！");
 				logger.error(e.getMessage(),e);
 			}
 		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
 			log.setTaskStatus(file+"读取文件失败！");
 			logger.error(e.getMessage(),e);
 		}
@@ -168,7 +164,6 @@ public class TisUtil {
 					fis.close();
 				}
 				catch (IOException e) {
-//                    e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -177,7 +172,6 @@ public class TisUtil {
 					read2.close();
 				}
 				catch (IOException e) {
-//                    e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -186,7 +180,6 @@ public class TisUtil {
 					bufread.close();
 				}
 				catch (IOException e) {
-//                    e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -211,7 +204,6 @@ public class TisUtil {
 			log.setTaskStatus("生成文件成功！");
 			log.setTaskStatus("文件内容是:" + "\r\n" + filein);
 		} catch (Exception e) {
-//			e.printStackTrace();
 			logger.error(e.getMessage(),e);
 			log.setTaskStatus("生成文件失败！");
 		} finally {
@@ -269,7 +261,6 @@ public class TisUtil {
 			fos.close();
 			pw.close();
 		} catch (IOException e) {
-//			e.printStackTrace();
 			logger.error(e.getMessage(),e);
 		}
 		finally{
@@ -278,7 +269,6 @@ public class TisUtil {
 					fis.close();
 				}
 				catch (IOException e) {
-//                    e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -287,7 +277,6 @@ public class TisUtil {
 					isr.close();
 				}
 				catch (IOException e) {
-//		            e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -296,7 +285,6 @@ public class TisUtil {
 					br.close();
 				}
 				catch (IOException e) {
-//		            e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -305,7 +293,6 @@ public class TisUtil {
 					fos.close();
 				}
 				catch (IOException e) {
-//                        e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -374,16 +361,16 @@ public class TisUtil {
 
 	}
 
-	/** */
-	/**
-	 * main方法测试
-	 *
-	 * @param s
-	 * @throws IOException
-	 */
-	public static void main(String[] s) throws IOException {
-
-	}
+//	/** */
+//	/**
+//	 * main方法测试
+//	 *
+//	 * @param s
+//	 * @throws IOException
+//	 */
+//	public static void main(String[] s) throws IOException {
+//
+//	}
 //	public static void main(String[] args) throws MalformedURLException,Exception{
 //		Service s=new ObjectServiceFactory().create(IHelloWorldService.class);
 //	}
@@ -471,6 +458,7 @@ public class TisUtil {
 		// 工作表对象
 		HSSFWorkbook wb = null;
 		InputStream inputStream = null;
+		FileOutputStream outputStream = null;
 		try {
 			// 原文件
 			File srcFile = new SafelyFile(template);
@@ -648,11 +636,10 @@ public class TisUtil {
 			if (!file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
 			}
-			FileOutputStream outputStream = new FileOutputStream(file);
+			outputStream = new FileOutputStream(file);
 
 			wb.write(outputStream);
-			outputStream.flush();
-			outputStream.close();
+
 			return file;
 		}
 		catch (Exception e) {
@@ -665,6 +652,10 @@ public class TisUtil {
 				}
 				if(inputStream != null) {
 					inputStream.close();
+				}
+				if (outputStream != null){
+					outputStream.flush();
+					outputStream.close();
 				}
 			}
 			catch (IOException e) {
@@ -722,7 +713,6 @@ public class TisUtil {
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 	}
 
@@ -732,11 +722,17 @@ public class TisUtil {
 	 * @param wb          Excel对象
 	 * @throws Exception
 	 */
-	public static void fileWrite(File targetFile,HSSFWorkbook wb) throws Exception{
-		FileOutputStream fileOut = new FileOutputStream(targetFile);
-		wb.write(fileOut);
-		fileOut.flush();
-		fileOut.close();
+	public static void fileWrite(File targetFile,HSSFWorkbook wb) throws IOException {
+		FileOutputStream fileOut = null;
+		try {
+			new FileOutputStream(targetFile);
+			wb.write(fileOut);
+		} finally {
+			if (fileOut != null){
+				fileOut.flush();
+				fileOut.close();
+			}
+		}
 	}
 
 

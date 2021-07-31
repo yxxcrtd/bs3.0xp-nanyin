@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -54,7 +56,11 @@ import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.service.PbcPrdIni
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class PbcReportFileManageService extends CommonExportService<PbcDataFile> {
-	
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(PbcReportFileManageService.class);
+
 	@Autowired
 	private PbcDataFileMapper pbcDataFileMapper;
 	@Autowired
@@ -160,7 +166,7 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 		try {
 			pbcDataFileList = JsonUtils.json2List(param.get("keyList").toString(), PbcDataFile.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
 			File file = new SafelyFile(pbcDataFile.getFilepath());
@@ -189,7 +195,7 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 		try {
 			pbcDataFileList = JsonUtils.json2List(param.get("keyList").toString(), PbcDataFile.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		List<File> sourceFiles = new ArrayList<File>(16);
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
@@ -214,7 +220,7 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 			try {
 				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new SafelyFile[] {}));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 //				// 压缩文件失败后，删除所有临时文件
 //				for (File file : sourceFiles) {
 //					if (file.exists()) {

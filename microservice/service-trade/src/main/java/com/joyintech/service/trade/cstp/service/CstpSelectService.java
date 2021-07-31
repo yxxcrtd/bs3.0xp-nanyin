@@ -47,7 +47,7 @@ public class CstpSelectService extends BaseService<CstpSelectDto>{
      * @see
      * @since 1.0
      */
-    public Page<CstpSelectDto> findPage(int page,int length,Map<String,Object> map) throws Exception{
+    public Page<CstpSelectDto> findPage(int page,int length,Map<String,Object> map) {
         return super.queryForPage(page, length, () -> cstpSelectMapper.findPage(map));
     }
     /**

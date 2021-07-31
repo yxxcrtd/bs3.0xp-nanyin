@@ -14,6 +14,7 @@ import javax.validation.Valid;
 
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -90,7 +91,7 @@ public class TrdSpotexInvestTrade001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TrdSpotexInvestTradeDto> findPage()
-        throws Exception {
+         {
         Page<TrdSpotexInvestTradeDto> resultDto = trdSpotexInvestTrade001Service.findPage(RequestUtil.getPageParam());
         return resultDto;
     }
@@ -136,8 +137,7 @@ public class TrdSpotexInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdSpotexInvestTradeDto inputDto)
-        throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdSpotexInvestTradeDto inputDto) throws WorkFlowException {
 
         List<TrdSpotexInvestTradeDto> selectedItems = inputDto.getSelectedItem();
         TrdSpotexInvestTradeDto spotexInvestTradeDto = selectedItems.get(0);
@@ -177,7 +177,7 @@ public class TrdSpotexInvestTrade001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return trdSpotexInvestTrade001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

@@ -433,7 +433,6 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 			try {
 				infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcPrdBaseinfoSub.class);
 			} catch (IOException e) {
-				e.printStackTrace();
 				logger.debug("数据转换异常",e.getMessage(),e);
 				return ;
 			}

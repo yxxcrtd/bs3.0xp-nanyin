@@ -110,7 +110,7 @@ public class TrdSecOverdueDurationController {
      */
     @PostMapping("selectNewBasicdata")
     public TrdSecOverdueDurationDto selectNewBasicdata(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return trdSecOverdueDurationService.selectNewBasicdata(param);
     }
     
@@ -124,7 +124,7 @@ public class TrdSecOverdueDurationController {
      */
     @PostMapping("selectNewInterestDetails")
     public List<FinAssetIntInfo> selectNewInterestDetails(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return trdSecOverdueDurationService.selectNewInterestDetails(param);
     }
 
@@ -132,7 +132,7 @@ public class TrdSecOverdueDurationController {
     public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-            throws Exception {
+    {
         return trdSecOverdueDurationService.getFinprodMarketId(page, length, param);
     }
     
@@ -144,7 +144,7 @@ public class TrdSecOverdueDurationController {
      * @return 匹配结果
      */
     @PostMapping("genAssetTfInfo")
-    public Map<String,Object> genAssetTfInfo(@RequestBody Map<String, Object> param) {
+    public Map<String,Object> genAssetTfInfo(@RequestBody Map<String, Object> param) throws IllegalAccessException, InstantiationException {
         return trdSecOverdueDurationService.genAssetTfInfo(param);
     }
 

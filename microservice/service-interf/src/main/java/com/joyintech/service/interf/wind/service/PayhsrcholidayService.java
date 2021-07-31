@@ -79,7 +79,7 @@ public class PayhsrcholidayService extends WindService<InterfPayhsrcholiday> {
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InterfPayhsrcholiday entity) throws Exception {
+	public int insert(InterfPayhsrcholiday entity) {
 		// 删除重复数据
 		insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 登陆接口表

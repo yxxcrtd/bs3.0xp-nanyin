@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.product.resultscovering.service.FinResultsCover
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class FinResultsCovering001Controller extends BaseController {
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
     public Page<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param)
-            throws Exception {
+	{
         return finResultsCovering001Service.queryProdIdInfo(param);
     }
 	
@@ -122,7 +123,7 @@ public class FinResultsCovering001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() {
 		return finResultsCovering001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
 	}
 
@@ -171,7 +172,7 @@ public class FinResultsCovering001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("doRevoke")
 	public AjaxResult doRevoke(@RequestBody @Validated({ ValidateGroupEdit.class }) FinResultsCovering002Dto dto,
-			BindingResult br) throws Exception {
+			BindingResult br) throws WorkFlowException {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}

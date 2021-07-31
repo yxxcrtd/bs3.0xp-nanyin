@@ -48,7 +48,7 @@ public class NonstProUplimitMainService extends BaseService<NonstProUplimitMainD
 	 * @return
 	 * @throws Exception
 	 */
-	public Page<NonstProUplimitMainDto> selectForPage(int page, int length, Map<String, Object> param)  throws Exception{
+	public Page<NonstProUplimitMainDto> selectForPage(int page, int length, Map<String, Object> param)  {
 		return super.queryForPage(page, length, () -> nonstProUplimitMainMapper.selectForPage(param));
 	}
 

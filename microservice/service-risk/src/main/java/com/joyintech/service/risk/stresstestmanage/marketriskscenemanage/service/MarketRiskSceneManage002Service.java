@@ -193,7 +193,7 @@ public class MarketRiskSceneManage002Service extends BaseService<MarketRiskScene
      * @see
      * @since 1.0
      */
-    public void insert(MarketRiskSceneManage002Dto dto) {
+    public void insert(MarketRiskSceneManage002Dto dto) throws IllegalAccessException {
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         //情景表新增
         SttScene sttSc = new SttScene();
@@ -264,7 +264,7 @@ public class MarketRiskSceneManage002Service extends BaseService<MarketRiskScene
      * @see
      * @since 1.0
      */
-    public void insertSceneFactor(List<MarketRiskSceneManage003Dto> mrkRiskSc003List, SttScene sttSc){
+    public void insertSceneFactor(List<MarketRiskSceneManage003Dto> mrkRiskSc003List, SttScene sttSc) throws IllegalAccessException {
     	//获取所有因子信息
     	if(mrkRiskSc003List == null){
     		return;
@@ -399,7 +399,7 @@ public class MarketRiskSceneManage002Service extends BaseService<MarketRiskScene
      * @see
      * @since 1.0
      */
-    public void update(MarketRiskSceneManage002Dto dto) {
+    public void update(MarketRiskSceneManage002Dto dto) throws IllegalAccessException {
       //情景表情景
         SttScene sttSce = new SttScene();
         sttSce.setSceneId(dto.getSceneId());//情景代码
@@ -486,7 +486,7 @@ public class MarketRiskSceneManage002Service extends BaseService<MarketRiskScene
      * @see
      * @since 1.0
      */
-    public void insertSceneFtrTipsByBatch(List<SttSceneFtrtips> scFtrTipList){
+    public void insertSceneFtrTipsByBatch(List<SttSceneFtrtips> scFtrTipList) throws IllegalAccessException {
         try (SqlSession session = sessionFactory.openSession(ExecutorType.BATCH, false)) {
             MarketRiskSceneManage002Mapper batchMapper = session.getMapper(MarketRiskSceneManage002Mapper.class);
 
@@ -498,9 +498,8 @@ public class MarketRiskSceneManage002Service extends BaseService<MarketRiskScene
             session.clearCache();
             SqlSessionUtils.closeSqlSession(session, sessionFactory);
         } catch (Exception e) {
-            //e.printStackTrace();
             log.error("批量插入情景因子标签出错");
-            throw e;
+            throw new IllegalAccessException();
         }
     }
 

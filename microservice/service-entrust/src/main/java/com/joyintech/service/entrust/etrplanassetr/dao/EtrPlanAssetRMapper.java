@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
@@ -27,6 +28,7 @@ import com.joyintech.service.entrust.etrplanassetr.dto.EtrPlanAssetRDto;
  * @see EtrPlanAssetRMapper
  * @since 1.0
  */
+@Repository
 public interface EtrPlanAssetRMapper {
     /**
      * 

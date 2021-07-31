@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -425,7 +425,7 @@ public class ProfitAndLossAccountingStep4Processor extends BaseProcessor<NeedOpe
             // 计提类：场景代码 + 发生日 + 账务明细代码 + 冲销标识
             String bookId = x.getBooksetId() + x.getTableId() + x.getHappenDate() + BookConstant.DEF_BOK_DETAIL_ID
                     + x.getOffsetFlag();
-            bookId = MD5Util.string2MD5(bookId);
+            bookId = EncryptUtil.getInstance().md5(bookId);
             x.setBookId(bookId);
         });
         ProfitAndLossAccountingResult result = new ProfitAndLossAccountingResult(list);

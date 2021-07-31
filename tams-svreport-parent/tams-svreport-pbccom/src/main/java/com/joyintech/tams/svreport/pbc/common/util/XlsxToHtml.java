@@ -62,7 +62,6 @@ public class XlsxToHtml {
                 htmlExcel = XlsxToHtml.getExcelInfo(hWb,isWithStyle,sheetNum,tableWidth);
             }
         } catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }finally{
             try {
@@ -76,7 +75,6 @@ public class XlsxToHtml {
                 	file.delete();//删除临时文件
                 }
             } catch (IOException e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
             }
          }
@@ -188,7 +186,7 @@ public class XlsxToHtml {
       */
      private static String getCellValue(Cell cell) {
  
-         String result = new String();  
+         String result = "";
 //         switch (cell.getCellType()) {
 //         case Cell.CELL_TYPE_NUMERIC:// 数字类型
          if (CellType.NUMERIC.equals(cell.getCellType())) {

@@ -45,7 +45,7 @@ public class FinInterestFactorController {
      * @since 1.0
      */
     @GetMapping("getFinInterestFactorByProductId")
-    public FinInterestFactorDto getFinInterestFactorByProductId(String finprodId,String vdate,String cashType) throws Exception {
+    public FinInterestFactorDto getFinInterestFactorByProductId(String finprodId,String vdate,String cashType) {
         return finInterestFactorService.getFinInterestFactorByProductId(finprodId,vdate,cashType);
     }
 }

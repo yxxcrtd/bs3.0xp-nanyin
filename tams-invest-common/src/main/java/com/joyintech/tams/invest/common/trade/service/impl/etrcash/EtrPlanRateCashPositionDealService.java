@@ -17,6 +17,7 @@ import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -32,6 +33,7 @@ import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCom
  * 计划型利率
  **/
 @Service
+@Lazy(false)
 public class EtrPlanRateCashPositionDealService{
 
     @Autowired

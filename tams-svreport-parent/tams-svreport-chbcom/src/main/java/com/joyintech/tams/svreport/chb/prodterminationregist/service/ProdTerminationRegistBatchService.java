@@ -64,7 +64,7 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
     /**
      * 日志
      */
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(ProdTerminationRegistBatchService.class);
     
 	public void generateRegistData(Date executeDate,List<String> prodIdList) {
 		// 设置批处理bean
@@ -522,8 +522,8 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
         tmpList.add(D);
         tmpList.add(E);
         Collections.sort(tmpList);
-        tmpList.forEach(x-> {
-            System.out.println(x);
+        tmpList.forEach(x-> {            
+            logger.info(x.toString());
         });
     }
 

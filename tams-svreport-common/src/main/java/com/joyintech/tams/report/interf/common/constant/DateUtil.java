@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -121,7 +122,7 @@ public class DateUtil extends DateUtils {
                             "yyyy-MM","yyyy/MM/dd HH:mm","yyyy-MM-dd HH:mm","yyyyMMdd HH:mm","yyyy-MM-dd HH:mm:ss","yyyyMMdd HH:mm:ss","yyyyMMddHHmm"});
         }
         catch (ParseException e) {
-            throw new RuntimeException("Date ParseException");
+            throw new BusinessException("Date ParseException");
         }
     }
 

@@ -81,7 +81,7 @@ public class SvrMstExchangeQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<SvrMstExchangeQuotationInfoDto> selectAll()
-        throws Exception {
+         {
         Page<SvrMstExchangeQuotationInfoDto> page = mstExchangeQuotationInfoMService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -141,7 +141,7 @@ public class SvrMstExchangeQuotationInfo001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	if(param.containsKey("keyList")){
         	String keyList = param.get("keyList").toString();

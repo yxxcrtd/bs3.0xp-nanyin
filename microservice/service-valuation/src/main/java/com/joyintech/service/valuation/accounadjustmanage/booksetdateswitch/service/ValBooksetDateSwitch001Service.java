@@ -56,7 +56,7 @@ public class ValBooksetDateSwitch001Service extends CommonExportService<ValBooks
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValBooksetDateSwitch001Dto> findPage(int page,int length ,Map<String, Object> params) throws Exception {
+    public Page<ValBooksetDateSwitch001Dto> findPage(int page,int length ,Map<String, Object> params) {
         params.put("booksetType", DictCodeList.账套类别_理财账套.getValue());
         Page<ValBooksetDateSwitch001Dto> pages = super.queryForPage(page,length,()-> mapper.queryPageList(params));
     	return pages;

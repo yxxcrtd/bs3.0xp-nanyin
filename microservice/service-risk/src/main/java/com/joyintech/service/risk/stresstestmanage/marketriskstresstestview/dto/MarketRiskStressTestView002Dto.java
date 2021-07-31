@@ -325,7 +325,7 @@ public class MarketRiskStressTestView002Dto extends BaseEntity implements ITable
 	}
 
 	public void setAllAssetsRate(String allAssetsRate) {
-		if(allAssetsRate !="" && allAssetsRate!=null){
+		if(allAssetsRate!=null && allAssetsRate !="" ){
 			allAssetsRate=(Double.valueOf(allAssetsRate)).toString();
     	}
 		this.allAssetsRate = allAssetsRate;
@@ -352,7 +352,7 @@ public class MarketRiskStressTestView002Dto extends BaseEntity implements ITable
 	}
 
 	public void setPriceChange(String priceChange) {
-		if(priceChange !="" && priceChange!=null){
+		if(priceChange!=null && priceChange !=""){
 			priceChange=(Double.valueOf(priceChange)).toString();
     	}
 		this.priceChange = priceChange;
@@ -371,7 +371,7 @@ public class MarketRiskStressTestView002Dto extends BaseEntity implements ITable
 	}
 
 	public void setAllAssetsRate2(String allAssetsRate2) {
-		if(allAssetsRate2 !="" && allAssetsRate2!=null){
+		if(allAssetsRate2!=null && allAssetsRate2 !=""){
 			allAssetsRate2=(Double.valueOf(allAssetsRate2)).toString();
     	}
 		this.allAssetsRate2 = allAssetsRate2;
@@ -390,7 +390,7 @@ public class MarketRiskStressTestView002Dto extends BaseEntity implements ITable
 	}
 
 	public void setProAndLosRat(String proAndLosRat) {
-		if(proAndLosRat !="" && proAndLosRat!=null){
+		if(proAndLosRat!=null && proAndLosRat !=""){
 			proAndLosRat=(Double.valueOf(proAndLosRat)).toString();
     	}
 		this.proAndLosRat = proAndLosRat;

@@ -9,7 +9,9 @@ import org.apache.ibatis.annotations.Param;
 import com.joyintech.tams.common.base.entity.ChbEquSub;
 import com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbEquHoldCheckDtoMapper {
     int insert(ChbEquHoldCheckDto record);
     

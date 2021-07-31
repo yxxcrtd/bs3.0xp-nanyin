@@ -39,7 +39,7 @@ public class FilterEqual extends AdditionFunc {
 	}
 	
 	@Override
-	public boolean filterField(Object field, String compareField) throws Exception{
+	public boolean filterField(Object field, String compareField) {
 		double data1=Double.parseDouble(field.toString());
 		double data2=Double.parseDouble(compareField);
 		if(data1 == data2){
@@ -55,14 +55,14 @@ public class FilterEqual extends AdditionFunc {
 	}
 
 	@Override
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception {
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -187,7 +187,7 @@ public class TradeCostManagement002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBookSetId2")
     public List<SuggestDto> getBookSetId2()
-            throws Exception {
+             {
         return valAssetBook001Service.getBooksetId2(RequestUtil.getPageParam());
     }
 

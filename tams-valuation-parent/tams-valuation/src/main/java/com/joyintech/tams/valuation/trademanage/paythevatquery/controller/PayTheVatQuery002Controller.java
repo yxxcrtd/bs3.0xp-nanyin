@@ -87,7 +87,7 @@ public class PayTheVatQuery002Controller extends BaseController{
      */
     @RequestMapping("search")
     @ResponseBody
-    public List<PayTheVatQuery002TableDto> search(Map<String, Object> params) throws Exception {
+    public List<PayTheVatQuery002TableDto> search(Map<String, Object> params){
         // 工作流ID
         String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);
         if (StringUtil.isNotEmpty(workflowId)) {
@@ -102,7 +102,7 @@ public class PayTheVatQuery002Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Valid PayTheVatQuery002Dto dto, BindingResult result, String operateType) throws Exception {
+    public AjaxResult check(@RequestBody @Valid PayTheVatQuery002Dto dto, BindingResult result, String operateType){
         return commonCheck(result, operateType);
     }
     /**
@@ -117,7 +117,7 @@ public class PayTheVatQuery002Controller extends BaseController{
     @RequestMapping(value = "docommit", method = RequestMethod.POST)
     @ResponseBody
     public AjaxResult docommit(@RequestBody PayTheVatQuery002Dto dto,
-                               BindingResult result) throws Exception {
+                               BindingResult result){
         
      // 启动流程
         ProcessParameter<PayTheVatQuery002Dto> proParam = new ProcessParameter<>();

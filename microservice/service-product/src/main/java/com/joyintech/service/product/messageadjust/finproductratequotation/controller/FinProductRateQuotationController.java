@@ -69,7 +69,7 @@ public class FinProductRateQuotationController {
      
     @PostMapping("selectForPage/{page}/{length}")
     public Page<FinProductRateQuotationDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception{
+    {
         return finProductRateQuotationService.selectForPage(page, length, param);
     }
     
@@ -133,7 +133,7 @@ public class FinProductRateQuotationController {
      */
     @PostMapping("selectOther/{page}/{length}")
     public Page<FinProductRateQuotationDto> selectOther(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception{
+    {
         return finProductRateQuotationService.selectOther(page, length, param);
     }
     

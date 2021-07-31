@@ -93,7 +93,6 @@ public class RskApproval001Controller extends RskApprovalController {
      * 画面查询方法
      * 
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
@@ -108,7 +107,6 @@ public class RskApproval001Controller extends RskApprovalController {
      * @param br br
      * @return 结果
      * @throws WorkFlowException
-     * @throws Exception 异常
      */
     @DTXTransaction
     @ResponseBody

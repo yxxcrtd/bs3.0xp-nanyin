@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.risk.valtblimport.service;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
@@ -26,6 +27,8 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +72,10 @@ import com.joyintech.tams.invest.risk.valtblimport.filtertools.filter.Filter;
  */
 @Service
 public class RskValTableImportService extends CommonExportService<RskValtblAssetSubDto>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskValTableImportService.class);
 
     /**
      * 指标结构映射
@@ -518,7 +525,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
      * @see
      * @since 1.0
      */
-   public List<RskValtblAssetSubDto> viewValTable(RskValTableImportParamDto dto) throws Exception{
+   public List<RskValtblAssetSubDto> viewValTable(RskValTableImportParamDto dto) throws ClassNotFoundException, FileNotFoundException, InstantiationException, IllegalAccessException {
        Map<String, Object> paramMap = new HashMap<String, Object>();
        List<RskValtblAssetSubDto> valList = new LinkedList<RskValtblAssetSubDto>();
        List<RskValtblAssetSubDto> valHand_oneList = new LinkedList<RskValtblAssetSubDto>();
@@ -714,6 +721,10 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
        List<RskValtblAssetSubDto> resultList = new LinkedList<RskValtblAssetSubDto>();
        Map<String,String> tempmap = new HashMap<String,String>();
        for(RskValtblAssetSubDto por:valList){
+               if(por.getSubCode().startsWith("120404")){
+//                   System.out.println(por.getSubCode());
+                   logger.info(por.getSubCode());
+               }
            String subSubjcode = StringUtil.EMPTY;
            String ccy = por.getCcy();
            BigDecimal exchangeRate = por.getExchangeRate();
@@ -755,6 +766,10 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                        }else{
                            if(flag==false){
                                for(RskValtblSubject dto:vtcountSubList){
+                                   if(dto.getSubCode().startsWith("120404")){
+//                                       System.out.println(por.getSubCode());
+                                       logger.info(por.getSubCode());
+                                   }
                                    if(dto.getSubCode().equals(subSubjcode)){
                                        flag=true;
                                        tempporDto.setSubName(dto.getSubName());
@@ -833,6 +848,12 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
    private List<RskValtblAssetSubDto> sum_handValList(List<RskValtblAssetSubDto> valList,Map<String,SubCodeEntry> vtaccountMap,List<RskValtblSubject>  vtcountSubList){
        try{ 
            List<RskValtblAssetSubDto> valHand_threeList = commonHandleSum(valList,vtcountSubList,"03");
+           for (RskValtblAssetSubDto rskValtblSubject : valHand_threeList) {
+               if(rskValtblSubject.getSubCode().startsWith("120404")){
+//                   System.out.println(rskValtblSubject.getSubCode());
+                   logger.info(rskValtblSubject.getSubCode());
+               }
+           }
            List<RskValtblAssetSubDto> valHand_twoList = commonHandleSum(valHand_threeList,vtcountSubList,"02");
            List<RskValtblAssetSubDto> valHand_oneList = commonHandleSum(valHand_twoList,vtcountSubList,"01");
            Collections.sort(valHand_oneList);
@@ -1038,7 +1059,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            Collections.sort(valHand_oneList);
            return valHand_oneList;*/
        }catch(Exception e){
-           e.printStackTrace();
+           logger.error(e.getMessage(),e);
        }
        return null;
    }
@@ -1381,7 +1402,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                        break;
                }
            }catch(Exception e){
-               e.printStackTrace();
+               logger.error(e.getMessage(),e);
            }
        }
        if ((Boolean) paramMap.get("isExistCcyCol")) {
@@ -1398,7 +1419,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @see
     * @since 1.0
     */
-	private List<List<String>> readExcelUtil(RskValTableImportParamDto dto) throws Exception {
+	private List<List<String>> readExcelUtil(RskValTableImportParamDto dto) throws FileNotFoundException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 		List<List<String>> resultList = new ArrayList<List<String>>();
 		Workbook wb = ExcelUtil.loadWorkbook(dto.getValTableFileName(), null, null);
         if (Objects.isNull(wb)) {
@@ -1445,7 +1466,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @since 1.0
     */
    private List<List<String>> readToList(int sheetIndex, int skipRows, int titleRow,Workbook wb)
-       throws Exception {
+        {
        List<List<String>> ls = new ArrayList<List<String>>();
        if (null != wb) {
            Sheet sh = wb.getSheetAt(sheetIndex);
@@ -1550,7 +1571,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @since 1.0
     */
    public Page<SelectOptionDto> getGroupIdInfo(Map<String, Object> param)
-       throws Exception {
+         {
        param.put("loginUserName", SecurityUtil.getLoginUser().getUserName());
        param.put("portfolioType", DictCodeListExt1.组合类型_委外组合.getValue());
        return restTemplate.postForPage(

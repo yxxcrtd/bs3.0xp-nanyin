@@ -41,7 +41,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓明细查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -63,7 +62,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓明细查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -85,7 +83,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓汇总查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -99,7 +96,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓汇总查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -146,7 +142,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -170,7 +165,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

@@ -60,7 +60,7 @@ public class ValBatchLog001Service extends CommonExportService<ValBatchLog001Dto
      * @throws Exception 异常
      */
     
-    public Page<ValBatchLog001Dto> selectForPage(Map<String, Object> pageParam) throws Exception {
+    public Page<ValBatchLog001Dto> selectForPage(Map<String, Object> pageParam) {
     	
     	//是否警告
     	String isWarn=  ((String)pageParam.get("isWarn")).equals("true")?DictCodeList.是否_否.getValue():DictCodeList.是否_是.getValue();

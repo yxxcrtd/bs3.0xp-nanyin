@@ -9,6 +9,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,7 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -134,8 +136,7 @@ public class DvpOrdersManagement001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         Map<String, Object> searchParams = RequestUtil.getPageParam();
         String datas = this.getParam("datas");
 
@@ -201,8 +202,7 @@ public class DvpOrdersManagement001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    public AjaxResult doRevoke(@RequestBody DvpOrdersProcessDto inputDto)
-        throws Exception {
+    public AjaxResult doRevoke(@RequestBody DvpOrdersProcessDto inputDto) throws WorkFlowException {
 
         ProcessParameter<DvpOrdersProcessDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<DvpOrdersProcessDto> workFlowParameter = new WorkFlowParameter<>();

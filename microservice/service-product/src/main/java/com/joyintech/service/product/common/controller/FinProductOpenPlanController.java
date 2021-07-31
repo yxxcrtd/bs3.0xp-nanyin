@@ -9,6 +9,7 @@
  */
 package com.joyintech.service.product.common.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.joyintech.framework.annotation.DTXTransaction;
@@ -108,7 +109,7 @@ public class FinProductOpenPlanController {
      * @throws Exception 
      */
     @GetMapping("selectOpenPlanInfoByFinprodId")
-    public List<BussFinProductOpenPlanDto> selectOpenPlanInfoByFinprodId(String finprodId) throws Exception {
+    public List<BussFinProductOpenPlanDto> selectOpenPlanInfoByFinprodId(String finprodId) throws InvocationTargetException, IllegalAccessException {
         return finProductOpenPlanService.selectOpenPlanInfoByFinprodId(finprodId);
     }
 

@@ -20,11 +20,10 @@ public class ValSztInterfBalance001Service extends CommonExportService<ValSztInt
      * <功能详细描述>
      * @param params
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
-	public Page<ValSztInterfBalance001Dto> findPage(Map<String, Object> params) throws Exception{
+	public Page<ValSztInterfBalance001Dto> findPage(Map<String, Object> params) {
 	    return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ValSztInterfBalance/findPage",
             params, ValSztInterfBalance001Dto.class);
 	}

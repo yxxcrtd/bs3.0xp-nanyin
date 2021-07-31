@@ -11,6 +11,8 @@ import com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagec
 import com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.dto.PoiReportModelManageChildren001Dto;
 import com.joyintech.tams.disclosure.information.config.dispoireportmodelmanagechildren.service.PoiReportModelManageChildren001Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -27,6 +29,10 @@ import java.util.Map;
  */
 @Component
 public class PoiReportModelManageChildren001Validator implements BeanValidator {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PoiReportModelManageChildren001Validator.class);
 
     @Autowired
     private PoiReportModelManageChildren001Mapper poiReportModelManageChildren001Mapper;
@@ -170,7 +176,7 @@ public class PoiReportModelManageChildren001Validator implements BeanValidator {
             try {
                 JsonUtils.json2Object(dto.getSubChartConf(), Map.class);
             }catch (Exception e){
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
                 errorList.add(new ValidMessage("图表配置文本格式错误，请检查！"));
             }
         }

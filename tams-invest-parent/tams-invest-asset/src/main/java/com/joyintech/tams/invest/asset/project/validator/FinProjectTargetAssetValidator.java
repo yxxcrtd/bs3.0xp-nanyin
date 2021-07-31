@@ -10,29 +10,23 @@
  
 package com.joyintech.tams.invest.asset.project.validator;
 
-import java.util.*;
-
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.tams.common.base.entity.MstBondCreditRating;
-import com.joyintech.tams.component.business.bond.dto.BusiFinBondRatingInfoDto;
-import com.joyintech.tams.invest.asset.project.service.FinProjectTargetAssetService;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.invest.asset.project.dto.FinProjectTargetAssetDto;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.asset.project.dto.FinProjectTargetAssetDto;
+import com.joyintech.tams.invest.asset.project.service.FinProjectTargetAssetService;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 /**
  *  项目类资产--业务验证
@@ -52,7 +46,7 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
     private FinProjectTargetAssetService finProjectTargetAssetService;
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private ChbDataCheckService chbDataCheckService;
 
     /**
      * {@inheritDoc}
@@ -226,7 +220,7 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
         }
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
+            resultList = chbDataCheckService.chbCheckCommon(resultList, dto, null, dto.getRepAssetType());
         }
         
         //校验融资人

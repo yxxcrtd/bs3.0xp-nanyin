@@ -1,5 +1,6 @@
 package com.jixu.adapter.service;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import com.jixu.common.exception.InterfaceException;
 import com.jixu.common.pojo.InterfaceColConfig;
 import com.jixu.common.util.RoundUtil;
 /** 
@@ -48,7 +50,7 @@ public abstract class AdditionFunc {
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception;
+	public abstract Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws InterfaceException, ScriptException, ParseException;
 	
 	/**
 	 * 功能模块的使用说明
@@ -106,11 +108,11 @@ public abstract class AdditionFunc {
 		return engine.eval(newInputValue);
 		
 	}	
-	public abstract boolean filterField(Object field, String compareField) throws Exception;
+	public abstract boolean filterField(Object field, String compareField);
 	
-	public abstract String groupCal(String key, List<HashMap<String, Object>> sourceData) throws Exception;;
+	public abstract String groupCal(String key, List<HashMap<String, Object>> sourceData) ;
 	
-	public List<HashMap<String, Object>> genGroupNewSourceData(List<HashMap<String, Object>> sourceHMList, String funcParams, List<InterfaceColConfig> groupFuncClassList) throws Exception{
+	public List<HashMap<String, Object>> genGroupNewSourceData(List<HashMap<String, Object>> sourceHMList, String funcParams, List<InterfaceColConfig> groupFuncClassList){
 		return null;
 	}
 	

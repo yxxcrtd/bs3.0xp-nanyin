@@ -49,7 +49,7 @@ public abstract class InterfMurexService<T, F> extends SendEsbService<T, F> {
     @Override
     @SuppressWarnings("unchecked")
     public T preparedLocalData(Object param)
-        throws Exception {
+    {
         Map<String, Object> sendMurex = (Map<String, Object>)param;
         if (sendMurex == null) {
             return null;
@@ -92,7 +92,7 @@ public abstract class InterfMurexService<T, F> extends SendEsbService<T, F> {
      */
     @Override
     public int saveInterfData(F entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -101,7 +101,7 @@ public abstract class InterfMurexService<T, F> extends SendEsbService<T, F> {
      */
     @Override
     public int saveBusinessData(F entity)
-        throws Exception {
+    {
         // 推送接口无登录业务
         return 0;
     }

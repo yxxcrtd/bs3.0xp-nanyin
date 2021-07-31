@@ -62,7 +62,7 @@ public class ValBokClawbackInfoQuery001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValBokClawbackInfoQuery001Dto> findPage()
-        throws Exception {
+          {
         return valBokClawbackInfoQuery001Service.findPage(RequestUtil.getPageParam());
 
     }
@@ -70,14 +70,14 @@ public class ValBokClawbackInfoQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public List<SuggestDto> getBooksetId()
-        throws Exception {
+         {
         return valBokClawbackInfoQuery001Service.getBooksetId(RequestUtil.getPageParam());
     }
 
     @ResponseBody
     @RequestMapping("/countVouchs")
     public int countVouchs()
-        throws Exception {
+         {
         ValBokClawbackInfoQuery002Dto dto = valBokClawbackInfoQuery002Service.findBokVouch(RequestUtil.getPageParam());
         return dto == null ? 0 : 1 ;
     }

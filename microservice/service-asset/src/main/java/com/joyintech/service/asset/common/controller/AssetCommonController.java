@@ -259,7 +259,7 @@ public class AssetCommonController {
      * 2020-04-14
      */
     @PostMapping("selectAsset")
-    public List<MockAssetInfoDto> selectAsset(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MockAssetInfoDto> selectAsset(@RequestBody Map<String, Object> param)  {
         return baseCommonAssetCommonService.selectAsset(param);
     }
 
@@ -271,7 +271,7 @@ public class AssetCommonController {
      * 2020-04-14
      */
     @PostMapping("selectAssetjb")
-    public List<MockAssetInfoDto> selectAssetjb(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MockAssetInfoDto> selectAssetjb(@RequestBody Map<String, Object> param){
         return baseCommonAssetCommonService.selectAssetjb(param);
     }
 
@@ -284,7 +284,7 @@ public class AssetCommonController {
      * 2020-04-14
      */
     @PostMapping("selectAssetxjl")
-    public List<FinCashCalcRule> selectAssetxjl(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FinCashCalcRule> selectAssetxjl(@RequestBody Map<String, Object> param) {
         return baseCommonAssetCommonService.selectAssetxjl(param);
     }
 
@@ -296,7 +296,7 @@ public class AssetCommonController {
      * 2020-04-14
      */
     @PostMapping("selectAssetjh")
-    public List<MockFinCashPlanDto> selectAssetjh(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MockFinCashPlanDto> selectAssetjh(@RequestBody Map<String, Object> param)  {
         return baseCommonAssetCommonService.selectAssetjh(param);
     }
 
@@ -309,7 +309,7 @@ public class AssetCommonController {
      * 2020-04-14
      */
     @PostMapping("selectAssetxq")
-    public List<FinExercisePlan> selectAssetxq(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FinExercisePlan> selectAssetxq(@RequestBody Map<String, Object> param) {
         return baseCommonAssetCommonService.selectAssetxq(param);
     }
 
@@ -322,7 +322,7 @@ public class AssetCommonController {
      * 2020-04-18
      */
     @PostMapping("selectAssetxqhs")
-    public List<FinExercisePlan> selectAssetxqhs(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FinExercisePlan> selectAssetxqhs(@RequestBody Map<String, Object> param) {
         return baseCommonAssetCommonService.selectAssetxqhs(param);
     }
 
@@ -334,7 +334,7 @@ public class AssetCommonController {
      * 2020-04-17
      */
     @PostMapping("selectxjlZf")
-    public List<FinCashPayRule> selectxjlZf(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FinCashPayRule> selectxjlZf(@RequestBody Map<String, Object> param) {
         return baseCommonAssetCommonService.selectxjlZf(param);
     }
 
@@ -347,7 +347,7 @@ public class AssetCommonController {
      * 2020-04-21
      */
     @PostMapping("selectFundOpenjh")
-    public List<FinOpenPlan> selectFundOpenjh(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FinOpenPlan> selectFundOpenjh(@RequestBody Map<String, Object> param) {
         return baseCommonAssetCommonService.selectFundOpenjh(param);
     }
 }

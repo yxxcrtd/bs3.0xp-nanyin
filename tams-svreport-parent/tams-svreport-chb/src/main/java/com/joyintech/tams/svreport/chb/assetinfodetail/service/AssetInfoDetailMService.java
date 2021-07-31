@@ -135,7 +135,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		return dtoList;
 	}
 
-	public void doSave(AssetInfoDetailDto dto) throws Exception {
+	public void doSave(AssetInfoDetailDto dto) {
 		//分别调用各自的setEntity方法
 		this.getDtoByPageMessgae(dto);
 		//赋值相关数据
@@ -165,7 +165,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	}
 
 
-	public void doDelete(AssetInfoDetailDto dto) throws Exception {
+	public void doDelete(AssetInfoDetailDto dto) {
 
 		restTemplate.postForObject(
 				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doDelete", dto, Integer.class);
@@ -226,8 +226,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		}catch (Exception e){
 			logger.info("实体转换错误,请检查数据类型",e);
 		}finally {
-			return null;
+//			return null;
 		}
+		return null;
 	}
 
 	/**

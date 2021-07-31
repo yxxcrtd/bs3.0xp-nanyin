@@ -64,18 +64,15 @@ public class PtlAnalyzeAfterInvest002Controller extends BaseController{
     /**
      * 获取行情波动图数据源
      * @return Page<PtlAnalyzeAfterInvest002Dto>
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("getSourceData")
-    public List<PtlAnalyzeAfterInvest002Dto> getSourceData(@RequestBody Map<String, Object> param)
-            throws Exception {
+    public List<PtlAnalyzeAfterInvest002Dto> getSourceData(@RequestBody Map<String, Object> param){
         return ptlAnalyzeAfterInvest002Service.getSourceData(param);
     }
     /**
      * 导出
      * @return ResponseEntity<byte[]>
-     * @throws Exception
      */
 //    @ResponseBody
 //    @RequestMapping("export")
@@ -84,8 +81,7 @@ public class PtlAnalyzeAfterInvest002Controller extends BaseController{
 //        return ptlAnalyzeAfterInvest002Service.export(RequestUtil.getParameters(getRequest()));
 //    }
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlAnalyzeAfterInvest002Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

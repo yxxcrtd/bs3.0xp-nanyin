@@ -1574,7 +1574,6 @@ public class CnBondInterfService extends InterfService {
             }
             catch (Exception e) {
                 logger.error("analysisData出现异常，异常内容：" + e.getMessage(),e);
-//                e.printStackTrace();
                 continue; // 当前报错跳过执行下一条
             }
         }
@@ -1588,7 +1587,6 @@ public class CnBondInterfService extends InterfService {
             }
             catch (Exception e) {
                 logger.error("getProdRecode出现异常，异常内容：" + e.getMessage(),e);
-//                e.printStackTrace();
                 continue; // 当前报错跳过执行下一条
             }
         }

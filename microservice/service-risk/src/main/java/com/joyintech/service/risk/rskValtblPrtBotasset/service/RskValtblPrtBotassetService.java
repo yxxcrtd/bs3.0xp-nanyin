@@ -54,7 +54,7 @@ public class RskValtblPrtBotassetService extends BaseService<RskValtblPrtBotasse
     private RskValtblPrtBotassetMapMapper rskValtblPrtBotassetMapMapper;
     
     public Page<RskValtblPrtBotassetMapDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> rskValtblPrtBotassetMapper.queryForPage(pageParam));
     }
     

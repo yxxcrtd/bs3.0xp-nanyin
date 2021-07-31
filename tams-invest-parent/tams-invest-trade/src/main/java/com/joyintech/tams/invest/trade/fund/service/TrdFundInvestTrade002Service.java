@@ -64,6 +64,8 @@ import com.joyintech.workflow.engine.listener.BusinessTaskListener;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -84,6 +86,10 @@ import java.util.*;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTradeDto> implements BaseProcessService<TrdFundInvestTradeDto>, BusinessTaskListener {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdFundInvestTrade002Service.class);
 
     /**
      * 附件信息共通Service
@@ -361,7 +367,7 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
                                 OperationType.NEW, false, confirmDto);
                     }
 					catch (Exception e) {
-						e.printStackTrace();
+                        logger.error(e.getMessage(),e);
 					}
 				}
 			//}
@@ -682,7 +688,7 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
 
             restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdFundInvestTrade/doUpdate", entity,

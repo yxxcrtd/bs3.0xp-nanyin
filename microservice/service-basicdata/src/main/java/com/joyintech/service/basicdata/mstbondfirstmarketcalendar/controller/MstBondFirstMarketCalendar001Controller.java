@@ -47,7 +47,7 @@ public class MstBondFirstMarketCalendar001Controller {
 	@PostMapping("findPage/{page}/{length}")
     public Page<MstBondFirstMarketCalendar001Dto> selectAll(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                    @PathVariable("length") int length)
-        throws Exception {
+	{
         return mstBondFirstMarketCalendar001Service.selectForPage(page, length, param);
     }
 	/**

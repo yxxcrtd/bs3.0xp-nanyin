@@ -31,11 +31,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -311,7 +313,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 					pageParam.put("reportuuid", astValueList.get(0).getReportuuid());
 				}
 			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(),e);
 	            logger.error(e.getMessage(),e);
 			}
 		} else {
@@ -792,12 +794,12 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 		}
 		
 		transformer.transformXLS(template, data, depositfilePath + File.separator +flieName);
-	    }catch(Exception e){
-	    	logger.info(exceltemplate+"生成失败！");
-	    	logger.error(e.getMessage(),e);
-	    	throw new RuntimeException(e);
-	    }
-		 return depositfile;
+	    }catch(InvalidFormatException|IOException e) {
+			logger.info(exceltemplate + "生成失败！");
+			logger.error(e.getMessage(), e);
+			throw new BusinessException(e);
+		}
+		return depositfile;
 	}
 	
 	public static String getXmlPath(String filename) {
@@ -929,7 +931,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 		try {
 			runSqlBySpringUtils();
 		} catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(),e);
             logger.error(e.getMessage(),e);
 		}
 		
@@ -945,7 +947,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 //			endDate = sdf.parse(endStr);
 //			
 //		} catch (ParseException e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(),e);
 //		}
  		
  	}
@@ -979,7 +981,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             EncodedResource er = new EncodedResource(rc1, "UTF-8");
             ScriptUtils.executeSqlScript(conn, er);
         } catch (Exception e) {
-//            e.printStackTrace();
+//           logger.error(e.getMessage(),e);
             logger.error(e.getMessage(),e);
             return;
 		} finally {
@@ -987,8 +989,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			if (sqlSession != null)
 				sqlSession.close();
@@ -1023,7 +1024,6 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
         			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
         		} catch (ParseException e) {
         			logger.error(e.getMessage(),e);
-        			e.printStackTrace();
         		}
         		// 调用检查方法
         		resultlist.addAll(check(cdate));

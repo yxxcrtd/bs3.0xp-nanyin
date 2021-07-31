@@ -73,7 +73,7 @@ public class FinNetProductBonusSchemeService extends BaseService<FinNetProductBo
      * @throws Exception 异常信息
      */
     public Page<FinNetProductBonusSchemeDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {        
+    {
         return super.queryForPage(page, length, () -> finNetProductBonusSchemeMapper.select(pageParam));
     }
 
@@ -327,7 +327,7 @@ public class FinNetProductBonusSchemeService extends BaseService<FinNetProductBo
     }
     
     public List<FinNetProductBonusSchemeDto> findCycleDataTableInfo(Map<String, Object> param) 
-    		throws Exception {
+    {
     	
     	String tradeId  = (String) param.get("tradeId");
     	List<FinNetProductBonusSchemeDto> list = new ArrayList<FinNetProductBonusSchemeDto>();

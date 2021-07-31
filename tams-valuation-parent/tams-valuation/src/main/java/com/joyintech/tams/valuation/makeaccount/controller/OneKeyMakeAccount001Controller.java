@@ -127,7 +127,7 @@ public class OneKeyMakeAccount001Controller extends BaseController{
     
     @RequestMapping("/findLogPage")
     @ResponseBody
-    public List<ValAccountHandle001Dto> findLogPage () throws Exception{
+    public List<ValAccountHandle001Dto> findLogPage () {
         Map<String,Object> map =RequestUtil.getPageParam();
         return oneKeyMakeAccount001Services.findLogPage(map);
     }

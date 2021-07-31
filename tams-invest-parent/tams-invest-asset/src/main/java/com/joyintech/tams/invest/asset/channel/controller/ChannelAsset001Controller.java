@@ -81,7 +81,7 @@ public class ChannelAsset001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<ChannelAssetDto> findPage() throws Exception{
+    public Page<ChannelAssetDto> findPage() {
         return channelAssetService.selectForPage(RequestUtil.getPageParam());
         
     }
@@ -93,8 +93,7 @@ public class ChannelAsset001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return channelAssetService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +71,10 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
      */
     @Autowired(required = false)
     private BasRiskMathCommService basRiskMathCommService;
+
+    @Autowired
+    private PlatformDateImpl platformDateImpl;
+
     /**
      * 日期相关
      */
@@ -315,6 +320,7 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
      * @return
      */
     public BigDecimal queryChlCash(Map<String, Object> map){
+        map.put("platDate",platformDateImpl.getSysDate());
         return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/queryChlCash", map,BigDecimal.class);
     }
 

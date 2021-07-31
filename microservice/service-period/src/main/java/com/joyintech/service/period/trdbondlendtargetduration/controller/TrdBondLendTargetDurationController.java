@@ -50,7 +50,7 @@ public class TrdBondLendTargetDurationController {
     @PostMapping("getSecManageAcctId/{page}/{length}")
     public Page<SelectOptionDto> getSecManageAcctId(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdBondLendTargetDurationService.getSecManageAcctId(page, length, param);
     }
 

@@ -1,7 +1,9 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.ChbPrdOpensch;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbPrdOpenschMapper {
     int deleteByPrimaryKey(String seqno);
 

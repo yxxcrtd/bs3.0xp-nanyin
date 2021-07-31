@@ -100,8 +100,8 @@ public class UUIDGenerator {
 				.append(format(getCount())).toString();
 	}
 	
-	public static void main(String[] args){
-		System.out.println(UUID.randomUUID().variant());
-	}
+//	public static void main(String[] args){
+//		System.out.println(UUID.randomUUID().variant());
+//	}
 
 }

@@ -33,7 +33,7 @@ public class FinProductFeaAnaService extends BaseService<FinProductFeaAnaDto> {
      * @return
      */
     public Page<FinProductFeaAnaDto> selectForPage(int page, int length,Map<String,Object> params)
-        throws Exception{
+    {
         params.put("STATUS_VALID",DictCodeListExt1.有效状态_有效.getValue());
         params.put("REVIEW_RESULT", DictCodeListExt1.初评结果_初评通过.getValue());
         return super.queryForPageForSelectReturn(page,length,()->finProductFeaAnaMapper.selectForPage(params));

@@ -72,7 +72,7 @@ public class ValProdSchemeConfig002Controller extends BaseController{
      * @see
      */
     @PostMapping("findPage")
-    public List<ValProdSchemeConfig002Dto> findPage(@RequestBody Map<String, Object> param) throws Exception {
+    public List<ValProdSchemeConfig002Dto> findPage(@RequestBody Map<String, Object> param) {
         return valProdSchemeConfig002Service.findPage(param);
     }
     

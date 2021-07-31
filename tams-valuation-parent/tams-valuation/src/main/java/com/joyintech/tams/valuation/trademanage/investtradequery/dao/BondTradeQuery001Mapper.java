@@ -17,6 +17,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.valuation.trademanage.investtradequery.dto.BondTradeDto;
 import com.joyintech.tams.valuation.trademanage.investtradequery.dto.TradeFeeDetailDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 债券交易查询
@@ -25,6 +26,7 @@ import com.joyintech.tams.valuation.trademanage.investtradequery.dto.TradeFeeDet
  * @see BondTradeQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface BondTradeQuery001Mapper {
     
     BondTradeDto selectByTradeId(Map<String, Object> params);

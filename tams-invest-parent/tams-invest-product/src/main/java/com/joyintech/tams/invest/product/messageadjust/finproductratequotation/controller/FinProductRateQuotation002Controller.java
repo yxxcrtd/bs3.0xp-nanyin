@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -144,7 +145,7 @@ public class FinProductRateQuotation002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinProductRateQuotationDto> selectOther() throws Exception{
+    public Page<FinProductRateQuotationDto> selectOther() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return finProductRateQuotationService.selectOther(param);
     }
@@ -171,13 +172,13 @@ public class FinProductRateQuotation002Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinProductRateQuotationDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinProductRateQuotationDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

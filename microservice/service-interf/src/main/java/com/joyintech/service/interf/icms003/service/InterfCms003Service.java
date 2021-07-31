@@ -53,7 +53,7 @@ public class InterfCms003Service extends SendEsbService<InterfCms003InEntity, In
      */
     @Override
     public InterfCms003InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         TradeClearDto dto = (TradeClearDto)param;
         inEntity = new InterfCms003InEntity();
         // 出账编号
@@ -83,7 +83,7 @@ public class InterfCms003Service extends SendEsbService<InterfCms003InEntity, In
      */
     @Override
     public int saveInterfData(InterfCms003InEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -92,7 +92,7 @@ public class InterfCms003Service extends SendEsbService<InterfCms003InEntity, In
      */
     @Override
     public int saveBusinessData(InterfCms003InEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 }

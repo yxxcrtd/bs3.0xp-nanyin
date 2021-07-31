@@ -51,7 +51,7 @@ public class ReportContentEnum001Service extends CommonExportService<ReportConte
 	 * @param pageParam
 	 * @return
 	 */
-	public Page<ReportContentEnum001Dto> findIndexByPage(Map<String, Object> pageParam) throws Exception {
+	public Page<ReportContentEnum001Dto> findIndexByPage(Map<String, Object> pageParam) {
 		
 		
 		return restTemplate.postForPage(
