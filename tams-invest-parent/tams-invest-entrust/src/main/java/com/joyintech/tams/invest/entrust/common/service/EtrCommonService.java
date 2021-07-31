@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
@@ -657,21 +658,21 @@ public class EtrCommonService extends BaseService<ITableRow> {
 
     public AjaxResult executeOccupyCreditLines(Object object, String status, String method) {
         AjaxResult ar = new AjaxResult();
-//        if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))){
-//            return ar;
-//        }
-//        List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
-//        if (object != null){
-//            // 构建接口参数
-//            generateInputDtoList(object,status,method,inputDtoList);
-//            if (inputDtoList.size() > 0){
-//                if ("check".equals(method)){
-//                    ar = AllTradeCommonUtil.checkBeforeTradeComplete(inputDtoList);
-//                }else {
-//                    AllTradeCommonUtil.handleBeforeTradeComplete(inputDtoList,DictCodeListRsk.授信占用类别_预占.getValue());
-//                }
-//            }
-//        }
+        if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))){
+            return ar;
+        }
+        List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+        if (object != null){
+            // 构建接口参数
+            generateInputDtoList(object,status,method,inputDtoList);
+            if (inputDtoList.size() > 0){
+                if ("check".equals(method)){
+                    ar = AllTradeCommonUtil.checkBeforeTradeComplete(inputDtoList);
+                }else {
+                    AllTradeCommonUtil.handleBeforeTradeComplete(inputDtoList,DictCodeListRsk.授信占用类别_预占.getValue());
+                }
+            }
+        }
         return ar;
     }
 

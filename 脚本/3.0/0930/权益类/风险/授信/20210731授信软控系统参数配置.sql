@@ -1,0 +1,2 @@
+delete from SYS_PARA where SYSTEM_CODE = 'RSK' and  PARA_CODE='credit_soft_skip_mode';
+INSERT INTO SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RSK', 'credit_soft_skip_mode', 'Y', '01', null, '����ռ�ö�ȿ����Ƿ�Ϊ���(Y �� N ��)', 'system', null, TIMESTAMP '2020-02-25 00:00:00', 'xx111', TIMESTAMP '2021-02-01 17:24:05');

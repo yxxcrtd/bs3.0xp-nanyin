@@ -348,16 +348,18 @@
 		WITH FIN_TYPE AS (
             SELECT T.OUTPUT_VALUE_1 TYPE_8,
                 T.OUTPUT_VALUE_2 TYPE_9,
-                T.OUTPUT_VALUE_3 TYPE_10
+                T.OUTPUT_VALUE_3 TYPE_10,
+				T.OUTPUT_VALUE_4 TYPE_11,
+				T.OUTPUT_VALUE_5 TYPE_12
             FROM FIN_PRODUCT_TYPE_CONFIG T
             INNER JOIN (
-                SELECT DECODE(FPT.TYPE_8,'F17','F01',FPT.TYPE_8) TYPE_8, FPT.TYPE_9, FPT.TYPE_10
+                SELECT DECODE(FPT.TYPE_8,'F17','F01',FPT.TYPE_8) TYPE_8, FPT.TYPE_9, FPT.TYPE_10,FPT.TYPE_11,FPT.TYPE_12
                 FROM FIN_PRODUCT FP
                 INNER JOIN FIN_PRODUCT_TYPE FPT
                 ON FP.FINPROD_ID = FPT.FINPROD_ID
                 WHERE FP.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} OR FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
                 UNION ALL
-                SELECT FPT.TYPE_8, FPT.TYPE_9, FPT.TYPE_10
+                SELECT FPT.TYPE_8, FPT.TYPE_9, FPT.TYPE_10,FPT.TYPE_11,FPT.TYPE_12
                 FROM FIN_TRADE_PRODUCT FP
                 INNER JOIN FIN_PRODUCT_TYPE FPT
                 ON FP.FINPROD_ID = FPT.FINPROD_ID
@@ -367,10 +369,10 @@
             AND T.INPUT_VALUE_1 = T1.TYPE_8
             AND (T.INPUT_VALUE_2 = T1.TYPE_9 OR T.INPUT_VALUE_2 IS NULL)
             AND (T.INPUT_VALUE_3 = T1.TYPE_10 OR T.INPUT_VALUE_3 IS NULL)
+			AND (T.INPUT_VALUE_4 = T1.TYPE_11 OR T.INPUT_VALUE_4 IS NULL)
+			AND (T.INPUT_VALUE_5 = T1.TYPE_12 OR T.INPUT_VALUE_5 IS NULL)
             WHERE T.CONFIG_TYPE = 'RISK_ASSET_TYPE'
         )
-		/**匹配到三级*/
-		<if test="level != null and level == '3'.toString()">
 			SELECT T1.CREDIT_TAG_ID,
 			T1.CREDIT_RULE_ID,
 			T1.DEDUCT_OBJ_TYPE,
@@ -385,10 +387,48 @@
 			INNER JOIN CREDIT_TAG_INFO T2
 			ON T1.CREDIT_TAG_ID = T2.CREDIT_TAG_ID
 			INNER JOIN FIN_TYPE T3
+		/**匹配到五级*/
+		<if test="level != null and level == '5'.toString()">
+			ON 1 = 1
+			AND T1.AST_TYPE_1 = T3.TYPE_8
+			AND T1.AST_TYPE_2 = T3.TYPE_9
+			AND T1.AST_TYPE_3 = T3.TYPE_10
+			AND T1.AST_TYPE_4 = T3.TYPE_11
+			AND T1.AST_TYPE_5 = T3.TYPE_12
+			<if test="isSus != null and isSus == 'Y'.toString()">
+				AND T2.IS_PERPETUAL_SEC = 'Y'
+			</if>
+			<if test="isSus == null or isSus == 'N'.toString()">
+				<if test="secBond != null and secBond != ''">
+					AND T1.IS_SUB_BOND = #{secBond,jdbcType=VARCHAR}
+				</if>
+			</if>
+		</if>
+		/**匹配到四级*/
+		<if test="level != null and level == '4'.toString()">
+			ON 1 = 1
+			AND T1.AST_TYPE_1 = T3.TYPE_8
+			AND T1.AST_TYPE_2 = T3.TYPE_9
+			AND T1.AST_TYPE_3 = T3.TYPE_10
+			AND T1.AST_TYPE_4 = T3.TYPE_11
+			AND T1.AST_TYPE_5 is null
+			<if test="isSus != null and isSus == 'Y'.toString()">
+				AND T2.IS_PERPETUAL_SEC = 'Y'
+			</if>
+			<if test="isSus == null or isSus == 'N'.toString()">
+				<if test="secBond != null and secBond != ''">
+					AND T1.IS_SUB_BOND = #{secBond,jdbcType=VARCHAR}
+				</if>
+			</if>
+		</if>
+		/**匹配到三级*/
+		<if test="level != null and level == '3'.toString()">
 			ON 1 = 1
             AND T1.AST_TYPE_1 = T3.TYPE_8
 			AND T1.AST_TYPE_2 = T3.TYPE_9
 			AND T1.AST_TYPE_3 = T3.TYPE_10
+			AND T1.AST_TYPE_4 is null
+			AND T1.AST_TYPE_5 is null
 			<if test="isSus != null and isSus == 'Y'.toString()">
 				AND T2.IS_PERPETUAL_SEC = 'Y'
 			</if>
@@ -400,47 +440,23 @@
 		</if>
 		/**匹配到二级*/
 		<if test="level != null and level == '2'.toString()">
-			SELECT T1.CREDIT_TAG_ID,
-			T1.CREDIT_RULE_ID,
-			T1.DEDUCT_OBJ_TYPE,
-			T2.RISK_RATIO,
-			T2.CREDIT_USING_TYPE,
-			T2.CREDIT_TYPE,
-			T2.DEDUCT_RULE,
-			T2.TERM_VALUE,
-			T2.TERM_UNIT
-			,T1.ORG_TYPE
-			FROM CREDIT_RULE_INFO T1
-			INNER JOIN CREDIT_TAG_INFO T2
-			ON T1.CREDIT_TAG_ID = T2.CREDIT_TAG_ID
-			INNER JOIN FIN_TYPE T3
 			ON 1 = 1
             AND T1.AST_TYPE_1 = T3.TYPE_8
 			AND T1.AST_TYPE_2 = T3.TYPE_9
 			AND T1.AST_TYPE_3 IS NULL
+			AND T1.AST_TYPE_4 is null
+			AND T1.AST_TYPE_5 is null
 			<if test="isSus != null and isSus == 'Y'.toString()">
 				AND T2.IS_PERPETUAL_SEC = 'Y'
 			</if>
 		</if>
 		/**匹配到一级*/
 		<if test="level != null and level == '1'.toString()">
-			SELECT T1.CREDIT_TAG_ID,
-			T1.CREDIT_RULE_ID,
-			T1.DEDUCT_OBJ_TYPE,
-			T2.RISK_RATIO,
-			T2.CREDIT_USING_TYPE,
-			T2.CREDIT_TYPE,
-			T2.DEDUCT_RULE,
-			T2.TERM_VALUE,
-			T2.TERM_UNIT
-			,T1.ORG_TYPE
-			FROM CREDIT_RULE_INFO T1
-			INNER JOIN CREDIT_TAG_INFO T2
-			ON T1.CREDIT_TAG_ID = T2.CREDIT_TAG_ID
-			INNER JOIN FIN_TYPE T3
 			ON T1.AST_TYPE_1 = T3.TYPE_8
 			AND T1.AST_TYPE_2 IS NULL
 			AND T1.AST_TYPE_3 IS NULL
+			AND T1.AST_TYPE_4 is null
+			AND T1.AST_TYPE_5 is null
 			<if test="isSus != null and isSus == 'Y'.toString()">
 				AND T2.IS_PERPETUAL_SEC = 'Y'
 			</if>
