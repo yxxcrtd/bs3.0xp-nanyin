@@ -198,7 +198,13 @@
 		RSK_VALTBL_PRT_BOTASSET_MAP T1
 		LEFT JOIN FIN_PRODUCT T2 ON T1.FINPROD_ID = T2.FINPROD_ID
 		LEFT JOIN SYS_DATADICT_LIST T3 ON T3.DICT_CODE='ASSET_SUBJECT_SORT' AND T3.ITEM_CODE = T1.SUB_CLASS
-		where  T1.FINPROD_ID is null
+		<!--筛选利息-->
+		where  not exists  (
+		select r2.sub_code from RSK_VALTBL_PRT_BOTASSET_MAP r2
+		join RSK_VALTBL_SUBRELATION r3 ON r2.SUB_CODE LIKE r3.int_subject||'%'
+		where T1.PTL_ID = r2.PTL_ID and T1.SUB_CODE = r2.SUB_CODE
+		)
+		and T1.FINPROD_ID is null
 		and T1.SUB_CLASS not in ('ZHG','NHG') /**回购资产无需做映射 **/
 		<if test="ptlId !=null and ptlId !=''">
 			and T1.PTL_ID = #{ptlId}

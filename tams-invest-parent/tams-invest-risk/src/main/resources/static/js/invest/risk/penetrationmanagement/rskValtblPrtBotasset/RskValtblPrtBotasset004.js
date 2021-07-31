@@ -98,6 +98,7 @@
         },
         //page:false,
         searchOnInit: true,
+        checkbox: false,
         /**
          * 定义表头
          */
@@ -106,7 +107,7 @@
             ,{field: 'subCode', title:'RskValtblPrtBotasset001.subCode',width:100}
             ,{field: 'subName', title:'RskValtblPrtBotasset001.subName',width:100}
             ,{field: 'subClass', title: 'RskValtblPrtBotasset001.subClass',width:100,visible: false}
-            ,{field: 'subClassName', title: 'RskValtblPrtBotasset001.subClass',width:100}
+            ,{field: 'subClassName', sortField:'subClass', title: 'RskValtblPrtBotasset001.subClass',width:100}
             ,{field: 'finprodId', title: 'RskValtblPrtBotasset001.finprodId',width:100}
             ,{field: 'finprodAbbr', title: 'RskValtblPrtBotasset001.finprodAbbr',width:100}
             ,{field: 'finprodMarketId', title: 'RskValtblPrtBotasset001.finprodMarketId',width:100}
