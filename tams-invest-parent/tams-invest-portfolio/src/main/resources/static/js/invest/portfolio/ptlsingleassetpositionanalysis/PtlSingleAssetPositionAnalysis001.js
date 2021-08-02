@@ -42,7 +42,7 @@ $(function () {
          ,{field:'parentInfo', visible: false}
          ,{field:'belongInstitutionNameNew', title: '机构名称',visible:AUTHORITY_TYPE=='02'}//组合名称
          // add by swwan [重庆银行] 增加资产占比，产品募集方式 2021年7月26日 start
-         ,{field:'assetRatio', title: '资产占比%',type: 'number',digit:2}//资产占比%
+         //,{field:'assetRatio', title: '资产占比%',type: 'number',digit:2}//资产占比%
          ,{field:'ptlIssueTypeStr',minWidth:50, width:'5%', title: '产品募集方式'}//产品募集方式
          // add by swwan [重庆银行] 增加资产占比，产品募集方式 2021年7月26日 end
          ]

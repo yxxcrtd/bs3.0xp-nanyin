@@ -47,6 +47,12 @@ public class CreditLinesInputDto extends BaseEntity {
      * 金融产品代码
      */
     private String finprodId;
+
+    /**
+     * 组合代码
+     */
+    private String portfolioId;
+
     /**
      * 委托类型/金融产品类型
      */
@@ -373,5 +379,13 @@ public class CreditLinesInputDto extends BaseEntity {
 
     public void setPledgeBondInfoDtoList(List<PledgeBondInfoDto> pledgeBondInfoDtoList) {
         this.pledgeBondInfoDtoList = pledgeBondInfoDtoList;
+    }
+
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
     }
 }

@@ -482,7 +482,7 @@ public class CalculationCommonService {
     public Date calcBasicDate(Date cdate, String calendarId, String dateType, String finprodId) {
         if (StringUtil.equals(dateType, DictCodeList.基数日期类型_上一开放日.getValue())) {
             // 调用共通 上一开放日（日期，交易日历，金融产品代码）
-            return this.getLastOpenDate(cdate, calendarId, finprodId);
+            return this.getLastOpenDate(cdate, finprodId);
         }
         else if (StringUtil.equals(dateType, DictCodeList.基数日期类型_前一工作日.getValue())) {
             // 查询上一工作日（参数.日期，参数.交易日历）
@@ -595,19 +595,26 @@ public class CalculationCommonService {
      * @see
      * @since 1.0
      */
-    @SuppressWarnings("unused")
-    public Date getLastOpenDate(Date cdate, String calendarId, String finprodId) {
-        if (true) {// 开放模式 == 高频
-            if (true) {// 节假日是否开放 = “是”
-                return DateUtil.addDay(cdate, -1);
-            }
-            else {
-                return this.getCDate(cdate, calendarId);
-            }
+    public Date getLastOpenDate(Date cdate, String finprodId) {
+//        if (true) {// 开放模式 == 高频
+//            if (true) {// 节假日是否开放 = “是”
+//                return DateUtil.addDay(cdate, -1);
+//            }
+//            else {
+//                return this.getCDate(cdate, calendarId);
+//            }
+//        }
+//        else {
+//            return calculationCommonMapper.getLastOpenDate(finprodId, cdate);
+//        }
+        // modify by weipeng：估值现不存开放计划，通过业绩报酬计提计划取值--魏鹏 start
+        Date lastOpenDate = calculationCommonMapper.getLastOpenDate(finprodId, cdate);
+        // 若无对应上一开放确认日期，则默认取产品起息日
+        if(lastOpenDate==null){
+            lastOpenDate =calculationCommonMapper.getVdDateByFinprodId(finprodId);
         }
-        else {
-            return calculationCommonMapper.getLastOpenDate(finprodId, cdate);
-        }
+        return lastOpenDate;
+        // modify by weipeng：估值现不存开放计划，通过业绩报酬计提计划取值--魏鹏 end
     }
 
     /**

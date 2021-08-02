@@ -389,4 +389,6 @@ public interface TrdFundInvestTradeMapper {
 	BigDecimal getPriceByTradeId(String tradeId);
 	
 	BigDecimal getPriceByWorkflowId(String workflowId);
+
+    Map<String, Object> getSpeedByFinprodId(Map<String, Object> param);
 }

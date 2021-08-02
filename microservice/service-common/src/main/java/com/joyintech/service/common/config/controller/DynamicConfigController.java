@@ -1,11 +1,10 @@
 package com.joyintech.service.common.config.controller;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.common.config.service.DynamicConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -27,4 +26,12 @@ public class DynamicConfigController {
     public Integer updateByParam(@RequestBody Map<String, Object> param){
         return dynamicConfigService.updateByParam(param);
     }
+
+    @RequestMapping("selectPage/{page}/{length}")
+    public Page<SelectOptionDto> selectPage(@PathVariable("page") int page,
+                                                    @PathVariable("length") int length,
+                                                    @RequestBody Map<String, Object> param) {
+        return dynamicConfigService.selectPage(page, length, param);
+    }
+    
 }

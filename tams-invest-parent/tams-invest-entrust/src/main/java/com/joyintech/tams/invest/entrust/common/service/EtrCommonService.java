@@ -5,35 +5,32 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.dao.SysPageDictlistMapper;
 import com.joyintech.system.base.entity.SysPageDictlist;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.FinProductConvertible;
-import com.joyintech.tams.common.base.entity.PtlPortfolio;
+import com.joyintech.system.user.dao.UserMapper;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.dto.EtrFinProductCommonDto;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTradeDto;
+import com.joyintech.tams.invest.entrust.etrautomanagementaccount.dto.EtrAutoManagementAccountDto;
 import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import com.joyintech.tams.invest.entrust.etrboutrepo.dto.EtrBoutRepoDto;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
@@ -50,6 +47,13 @@ import com.joyintech.tams.invest.entrust.etrprojectnet.dto.EtrProjectNetDto;
 import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
 import com.joyintech.tams.invest.entrust.etrseclend.dto.EtrSecLendDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.constant.ActivitiType;
+import com.joyintech.workflow.engine.dao.WorkflowMapper;
+import com.joyintech.workflow.engine.entity.FlowEntity;
+import com.joyintech.workflow.engine.entity.WorkflowEntity;
+import com.joyintech.workflow.engine.service.ProcessService;
+import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +64,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @program: 2.1.0
@@ -71,6 +76,11 @@ import java.util.*;
 public class EtrCommonService extends BaseService<ITableRow> {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+     * Map<当前处理人,List<下一节点处理人>>
+     */
+    public static Map<String, List<String>> userMap = new ConcurrentHashMap<>();
 
     @Autowired(required = false)
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
@@ -97,6 +107,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
 
     @Autowired
     private IPlatformDate iPlatformDate;
+
     @Autowired(required = false)
     private FinProductConvertibleMapper finProductConvertibleMapper;
 
@@ -105,6 +116,18 @@ public class EtrCommonService extends BaseService<ITableRow> {
 
     @Autowired
     private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
+
+    @Autowired
+    private WorkflowMapper workflowMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    /**
+     * 金融产品分类
+     */
+    @Autowired
+    private FinProductTypeMapper finProductTypeMapper;
     /**
      * 组合指令可用现金查询
      *
@@ -646,21 +669,21 @@ public class EtrCommonService extends BaseService<ITableRow> {
 
     public AjaxResult executeOccupyCreditLines(Object object, String status, String method) {
         AjaxResult ar = new AjaxResult();
-//        if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))){
-//            return ar;
-//        }
-//        List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
-//        if (object != null){
-//            // 构建接口参数
-//            generateInputDtoList(object,status,method,inputDtoList);
-//            if (inputDtoList.size() > 0){
-//                if ("check".equals(method)){
-//                    ar = AllTradeCommonUtil.checkBeforeTradeComplete(inputDtoList);
-//                }else {
-//                    AllTradeCommonUtil.handleBeforeTradeComplete(inputDtoList,DictCodeListRsk.授信占用类别_预占.getValue());
-//                }
-//            }
-//        }
+        if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))){
+            return ar;
+        }
+        List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+        if (object != null){
+            // 构建接口参数
+            generateInputDtoList(object,status,method,inputDtoList);
+            if (inputDtoList.size() > 0){
+                if ("check".equals(method)){
+                    ar = AllTradeCommonUtil.checkBeforeTradeComplete(inputDtoList);
+                }else {
+                    AllTradeCommonUtil.handleBeforeTradeComplete(inputDtoList,DictCodeListRsk.授信占用类别_预占.getValue());
+                }
+            }
+        }
         return ar;
     }
 
@@ -1249,7 +1272,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
         }
         return false;
     }
-    
+
     /**
      * 请求市场行情数据接口
      * @param url
@@ -1456,11 +1479,11 @@ public class EtrCommonService extends BaseService<ITableRow> {
         // 组合T日可用现金
         BigDecimal proAvailableCash = cash.get("cashT")==null?BigDecimal.ZERO: (BigDecimal)cash.get("cashT");
         // 净价
-        BigDecimal cprice = paramMap.get("price")==null?new BigDecimal(100): new BigDecimal(paramMap.get("price").toString());
+        BigDecimal cprice = !StringUtil.isNotEmpty(paramMap.get("price"))?new BigDecimal(100): new BigDecimal(paramMap.get("price").toString());
 
         // 可买数量
-        BigDecimal canBuyAmount = null;
-        if(cprice!=null&&BigDecimal.ZERO.compareTo(cprice)!=0){
+        BigDecimal canBuyAmount = BigDecimal.ZERO;
+        if(StringUtil.isNotEmpty(paramMap.get("price"))&&cprice!=null&&BigDecimal.ZERO.compareTo(cprice)!=0){
             canBuyAmount = ArithmeticUtil.divide(proAvailableCash,cprice,2,RoundingMode.HALF_UP);
         }
 
@@ -1468,5 +1491,304 @@ public class EtrCommonService extends BaseService<ITableRow> {
         return dto;
     }
 
+    public String checkAuthUser(WorkflowEntity workflowEntity, FlowEntity entity){
+        String processKey = entity.getProcessKey();
+        String authModuleName = CacheUtil.getSysParam(BussinessConstant.AUTH_MODULE_NAME);
+        if (StringUtil.equals(processKey, authModuleName)) {
+            List<String> allStatedUsers = new ArrayList<>();
+            // 流程ID
+            String workflowId = entity.getWorkflowId();
+            if (StringUtil.isNotEmpty(workflowId)) {
 
+                String processInstanceId = entity.getProcessInstanceId();
+                try {
+                    ProcessService processService = WorkflowContext.getProcessService();
+                    Task task = processService.getActiveTaskId(processInstanceId,LoginUserUtil.getUserName());
+                    // 业务变量
+                    Map<String, Object> variables = null;
+                    // 判断processKey是否有设置条件
+                    if (WorkflowContext.getWorkFlowService().isConditionModule(processKey)
+                            && ActivitiType.排他网关.getValue().equals(processService.getNextActType(processInstanceId))) {
+                        // 获取业务参数
+                        variables = WorkflowContext.getBusinessVariables(entity, task.getId());
+                    }
+                    String nextTaskId = processService.getNextTaskDefinitionId(task.getId(),variables);
+                    // checkEntrustAmt 是工作流配置中对应授权金额有权人审批节点的id
+                    if (!(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH) == null
+                            || BussinessConstant.ETRLIMIT_SWITCH.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH))
+                            || DictCodeListExt1.是或否_否.getValue().equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH)))
+                            && StringUtil.equals("checkEntrustAmt", nextTaskId)) {
+
+                        // 查询下一处理节点对应的所有处理人
+                        Map<String,Object> mapParam = new HashMap<>();
+                        mapParam.put("searchType","role");
+                        mapParam.put("nodeId",nextTaskId);
+                        mapParam.put("moduleId",processKey);
+                        allStatedUsers = userMapper.findAllUserByRole(workflowMapper.getValueByNodeId(mapParam), null);
+                        List<String> result = riskAuthFilter(workflowEntity, allStatedUsers);
+                        List<String> lastUser = userMap.get(entity.getNextUser()+entity.getBusinessType());
+                        // 当前处理人 存在处理集合
+                        if (StringUtil.isEmptyList(lastUser)){
+                            userMap.put(entity.getNextUser()+entity.getBusinessType(),result);
+                            return "";
+                        }
+                        // 校验当前指令和上一个指令的授权审批人是否是同一批人，是:返回 "" ,继续下一次验证
+                        if (lastUser.containsAll(result) && result.containsAll(lastUser)){
+                            return "";
+                        }else {
+                            // 不是: 返回错误信息，并清空当前处理人勾选的指令记录对应的 下一节点审批人
+                            return "审批金额存在跨区间审批人，不能批量审批，请调整。";
+                        }
+                    }
+                } catch (Exception ex) {
+                    logger.error("UserTaskHandlerUserSelectorImpl.selectHandlerUser error {templateKey:"+ processKey + ",function:riskAuthFilter,msg:审批人授权额度过滤方法错误}");
+                }
+            }
+        }
+        return "";
+    }
+
+    /**
+     * 授权额度过滤
+     *
+     * @param entity
+     * @param allStatedUsers
+     * @return
+     */
+    private List<String> riskAuthFilter(WorkflowEntity entity, List<String> allStatedUsers) {
+        if ((entity instanceof EtrEntrust)||(entity instanceof EtrEntrustWw)) {
+            EtrEntrust entrust =new EtrEntrust();
+            if(entity instanceof EtrEntrust){
+                entrust = (EtrEntrust) entity;
+            }else{
+                BeanUtil.copyPropertiesIgnoreNull(entrust, entity);
+            }
+            Map<String, Object> params = new HashMap<>();
+            BigDecimal amount = BigDecimal.ZERO;
+            String assetSecType = "";
+            // 查询组合权限用户
+            String portfolioId = entrust.getPortfolioId();
+            Map<String,Object> portMap = new HashMap<>();
+            portMap.put("portfolioIds", Collections.singletonList(portfolioId));
+            portMap.put("allStatedUsers", allStatedUsers);
+            List<String> result = restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME
+                            + "/common/etrApprovalAuth/getAllStatedUsers", portMap, List.class);
+            // 过滤掉当前登录用户
+            result.remove(SecurityUtil.getLoginUser().getUserName());
+            if (entity instanceof EtrInvestBondInfoDto) {// 债券二级指令
+                EtrInvestBondInfoDto bondInfoDto = (EtrInvestBondInfoDto) entity;
+                params.put("assetType", BussinessDictCodeList.平安资产类型_债券.getValue());
+                assetSecType = bondInfoDto.getAssetType1();
+                amount = bondInfoDto.getEntrustNum();
+            } else if (entity instanceof EtrBondFirstLBiddingDto) {// 债券一级指令
+                EtrBondFirstLBiddingDto dto = (EtrBondFirstLBiddingDto) entity;
+                amount = dto.getEntrustNum() == null ? dto.getEntrustAmt() : dto.getEntrustNum();
+                params.put("assetType", DictCodeListExt2.平安资产类型_一级市场债.getValue());
+                assetSecType = dto.getAssetType1();
+            } else if (entity instanceof EtrRepoDto) {// 质押式回购指令
+                EtrRepoDto dto = (EtrRepoDto) entity;
+                amount = dto.getEntrustAmt() == null ? dto.getEntrustNum() : dto.getEntrustAmt();
+                params.put("assetType", BussinessDictCodeList.平安资产类型_回购.getValue());
+                assetSecType = dto.getAssetType1();
+            } else if (entity instanceof EtrBrowDepoInfoDto) {// 存款类指令
+                EtrBrowDepoInfoDto dto = (EtrBrowDepoInfoDto) entity;
+                amount = dto.getEntrustAmt() == null ? dto.getEntrustNum() : dto.getEntrustAmt();
+                params.put("assetType", BussinessDictCodeList.平安资产类型_存款.getValue());
+                assetSecType = dto.getAssetType1();
+            } else if (entity instanceof EtrLendSpecInfoDto) {// 拆借指令
+                EtrLendSpecInfoDto dto = (EtrLendSpecInfoDto) entity;
+                amount = dto.getEntrustAmt() == null ? dto.getEntrustNum() : dto.getEntrustAmt();
+                params.put("assetType", BussinessDictCodeList.平安资产类型_拆借.getValue());
+                assetSecType = dto.getAssetType1();
+            } else if (entity instanceof EtrFundDto) {// 公募基金指令
+                EtrFundDto dto = (EtrFundDto) entity;
+                amount = dto.getEntrustAmt();
+                if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+                    amount = dto.getEntrustNum();
+                }
+                params.put("assetType", BussinessDictCodeList.平安资产类型_基金.getValue());
+                assetSecType = dto.getAssetType1();
+            } else if (entity instanceof EtrPlanAssetNDto) {// 计划类净值型指令
+                EtrPlanAssetNDto dto = (EtrPlanAssetNDto) entity;
+                amount = dto.getEntrustAmt() == null ? dto.getEntrustNum() : dto.getEntrustAmt();
+                params.put("assetType", BussinessDictCodeList.平安资产类型_计划类资产_净值型.getValue());
+                assetSecType = dto.getAssetType1();
+            } else if (entity instanceof EtrPlanAssetRDto) {// 计划类利率型指令
+                EtrPlanAssetRDto dto = (EtrPlanAssetRDto) entity;
+                amount = dto.getEntrustAmt();
+                if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+                    amount = dto.getEntrustNum();
+                }
+                params.put("assetType", BussinessDictCodeList.平安资产类型_计划类资产_利率型.getValue());
+                assetSecType = dto.getAssetType1();
+            } else if (entity instanceof EtrPlanAssetCDto) {// 计划类货币型指令
+                EtrPlanAssetCDto dto = (EtrPlanAssetCDto) entity;
+                amount = dto.getEntrustAmt();
+                if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())) {
+                    amount = dto.getEntrustAmt2();
+                }
+                if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+                    amount = dto.getEntrustNum();
+                }
+                if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())) {
+                    amount = dto.getEntrustNum2();
+                }
+                params.put("assetType", BussinessDictCodeList.平安资产类型_计划类资产_货币型.getValue());
+                assetSecType = dto.getFinprodType2();
+            } else if (entity instanceof EtrProjectDto) {// 非标债权指令
+                EtrProjectDto dto = (EtrProjectDto) entity;
+                amount = dto.getEntrustAmt();
+                if (amount == null) {
+                    amount = dto.getEntrustNum();
+                }
+                params.put("assetType", BussinessDictCodeList.平安资产类型_项目类资产.getValue());
+                assetSecType = dto.getAssetType1();
+            } else if (entity instanceof EtrBoutRepoDto) {// 买断式回购指令
+                EtrBoutRepoDto dto = (EtrBoutRepoDto) entity;
+                amount = dto.getEntrustAmt();
+                if (amount == null) {
+                    amount = dto.getEntrustNum();
+                }
+                params.put("assetType", BussinessDictCodeList.平安资产类型_买断式回购.getValue());
+                assetSecType = dto.getFinprodType2();
+            } else if (entity instanceof EtrProjectNetDto) {// 权益类指令
+                EtrProjectNetDto dto = (EtrProjectNetDto) entity;
+                amount = dto.getEntrustAmt();
+                if (amount == null) {
+                    amount = dto.getEntrustNum();
+                }
+                params.put("assetType", DictCodeListExt3.平安资产类型_权益类资产.getValue());
+                assetSecType = dto.getAssetType1();
+            } else if (entity instanceof EtrSecLendDto) {// 债券借贷指令
+                EtrSecLendDto dto = (EtrSecLendDto) entity;
+                amount = dto.getTotalAmt().multiply(new BigDecimal(10000));
+                params.put("assetType", DictCodeList.平安资产类型_债券.getValue());
+                // 根据资产类型取得授权类型
+                FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(dto.getFinprodId(), DictCodeList.平安资产类型_债券.getValue());
+                assetSecType = finProductTypeConfig == null ? "" : finProductTypeConfig.getOutputValue2();
+            } else if (entity instanceof EtrExchangeTrade001Dto) {//场内交易指令
+                EtrExchangeTrade001Dto dto = (EtrExchangeTrade001Dto) entity;
+                amount = dto.getEntrustAmt();
+                if (amount == null) {
+                    amount = dto.getEntrustNum();
+                }
+                //债券
+                if (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                    params.put("assetType", DictCodeList.平安资产类型_债券.getValue());
+                }
+                else if (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {//基金
+                    params.put("assetType", DictCodeList.平安资产类型_基金.getValue());
+                } else if (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {//股票
+                    params.put("assetType", DictCodeListExt2.平安资产类型_股票.getValue());
+                } else if (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())) {//权益类
+                    params.put("assetType", DictCodeListExt3.平安资产类型_权益类资产.getValue());
+                }
+                else {//非标债权
+                    params.put("assetType", DictCodeList.平安资产类型_质押式回购.getValue());
+                }
+                assetSecType = null;
+            }else if (entity instanceof EtrConBondDto) {// 可转债委托
+                EtrConBondDto etrConBondDto = (EtrConBondDto) entity;
+                params.put("assetType", BussinessDictCodeList.平安资产类型_债券.getValue());
+                assetSecType = etrConBondDto.getAssetType1();
+                amount = etrConBondDto.getPurchBondTotal();
+            }else if (entity instanceof EtrAutoManagementAccountDto) {//自主管理
+                EtrAutoManagementAccountDto dto = (EtrAutoManagementAccountDto) entity;
+                amount = dto.getEntrustAmt();
+                if (amount == null) {
+                    amount = dto.getEntrustNum();
+                }
+                if (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                    params.put("assetType", DictCodeList.平安资产类型_债券.getValue());
+                } else if (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+                    params.put("assetType", DictCodeList.平安资产类型_基金.getValue());
+                } else if (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+                    params.put("assetType", DictCodeListExt2.平安资产类型_股票.getValue());
+                } else {
+                    params.put("assetType", BussinessDictCodeList.平安资产类型_项目类资产.getValue());
+                }
+                assetSecType = null;
+            }
+            // add by etliu 20210112 start
+            // 授权分类应使用资产二级类型
+            // 根据指令中的金融产品代码查询该资产的分类，进而查询对应的授权分类
+            if (StringUtil.isNotBlank(entrust.getFinprodId())) {
+                // 根据资产类型取得授权类型
+                FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(
+                        entrust.getFinprodId(), null);
+                assetSecType = finProductTypeConfig == null ? "" : finProductTypeConfig.getOutputValue2();
+            }
+            // add by etliu 20210112 end
+            params.put("entrustAmt", amount);
+            params.put("assetSecType", assetSecType);
+            params.put("tradeMarket", StringUtil.isEmpty(
+                    entrust.getTradeMarket()) ? "999999" : entrust.getTradeMarket());
+            params.put("tradeDirection", entrust.getPs());
+            // {参数字典.授权类型.授权、参数字典.授权类型.无限授权}
+            params.put("AUTHORIZE_TYPE_02", DictCodeList.授权类型_授权.getValue());
+            params.put("AUTHORIZE_TYPE_03", DictCodeList.授权类型_无限授权.getValue());
+            params.put("allStatedUsers", result);
+            List<Map<String, Object>> limits = restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME
+                            + "/common/etrApprovalAuth/getAuthorizeLimitAmt", params, List.class);
+            if (!StringUtil.isEmptyList(limits)) {
+                List<String> users = new ArrayList<String>();
+                BigDecimal limit = new BigDecimal(
+                        limits.get(0).get("AUTHORIZE_LIMIT_AMT").toString());
+                for (Map<String, Object> map : limits) {
+                    BigDecimal limit1 = new BigDecimal(map.get("AUTHORIZE_LIMIT_AMT").toString());
+                    if (limit.compareTo(limit1) == 0) {
+                        users.add(map.get("USER_NAME").toString());
+                    }
+                }
+                return users;
+            } else {
+                return new ArrayList<>();
+            }
+        }
+        return allStatedUsers;
+    }
+
+    /**
+     * 根据资产类型取得授权类型
+     *
+     * @param assetType 资产类型
+     * @param assetId 资产代码
+     * @see
+     * @since 1.0
+     */
+    private FinProductTypeConfig getRskAuthorizeType(String assetId, String assetType) {
+        if (assetId != null && assetId.length() > 0) {
+            FinProductTypeKey finProductTypeKey = new FinProductTypeKey();
+            finProductTypeKey.setFinprodId(assetId);
+            finProductTypeKey.setBranch(0L);
+            FinProductType finProductType = finProductTypeMapper
+                    .selectByPrimaryKey(finProductTypeKey);
+            FinProductTypeConfig finProductTypeConfig = new FinProductTypeConfig();
+            finProductTypeConfig.setConfigType(DictCodeListExt2.配置类型_授权分类.getValue());
+            finProductTypeConfig.setInputValue1(finProductType.getType8());
+            finProductTypeConfig.setInputValue2(finProductType.getType9());
+            finProductTypeConfig.setInputValue3(finProductType.getType10());
+            finProductTypeConfig.setInputValue4(finProductType.getType11());
+            finProductTypeConfig.setInputValue5(finProductType.getType12());
+            finProductTypeConfig = restTemplate.postForObject(
+                    ServiceApplication.COMMON_SERVICE_NAME + "/core/getAssetFiveType",
+                    finProductTypeConfig, FinProductTypeConfig.class);
+            return finProductTypeConfig;
+        } else if (StringUtil.isNotEmpty(assetType)) {
+            FinProductTypeConfig finProductTypeConfig = new FinProductTypeConfig();
+            finProductTypeConfig.setConfigType(DictCodeListExt2.配置类型_授权分类.getValue());
+            finProductTypeConfig.setInputValue1(assetType);
+            finProductTypeConfig = restTemplate.postForObject(
+                    ServiceApplication.COMMON_SERVICE_NAME + "/core/getAssetFiveType",
+                    finProductTypeConfig, FinProductTypeConfig.class);
+            return finProductTypeConfig;
+        }
+        return null;
+    }
+
+    public void removeCheckAuthUser(String key) {
+        userMap.remove(key);
+    }
 }

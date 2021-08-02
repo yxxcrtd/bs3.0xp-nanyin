@@ -44,7 +44,17 @@ $(function() {
                     + "&quaryDate=" + $('#quaryDate').val() + "&pageModel=" + PAGE_MODEL_NEW + "&mdate=" + mdate
                     + "&orgId=" + orgId + "&orgName=" + orgName + "&dDate=" + ddate;
 
-            } else {
+            }else if (remType == 'R5S3') {
+                urlPara = "?paraName=" + id + "&feeId=" + feeId + "&remType=" + remType + "&days=" + days
+                    + "&quaryDate=" + $('#quaryDate').val() + "&pageModel=" + PAGE_MODEL_NEW + "&mdate=" + mdate
+                    + "&orgId=" + orgId + "&orgName=" + orgName + "&dDate=" + ddate;
+
+            }else if (remType == 'R10S1') {
+                urlPara = "?finprodId=" + id + "&feeId=" + feeId + "&remType=" + remType + "&days=" + days
+                    + "&quaryDate=" + $('#quaryDate').val() + "&pageModel=" + PAGE_MODEL_NEW + "&mdate=" + mdate
+                    + "&orgId=" + orgId + "&orgName=" + orgName + "&dDate=" + ddate;
+
+            }else {
                 urlPara = "?finprodId=" + id + "&feeId=" + feeId + "&remType=" + remType + "&days=" + days
                     + "&quaryDate=" + $('#quaryDate').val() + "&pageModel=" + PAGE_MODEL_NEW + "&mdate=" + mdate
                     + "&orgId=" + orgId + "&orgName=" + orgName;
@@ -55,6 +65,16 @@ $(function() {
             if(remType=='R6S1'){
             	urls = url+urlPara;
             }
+            //add by chenjiaxing 20210727 固定值参数更新提醒 start
+            if(remType == 'R5S3'){
+                urls = url+urlPara;
+            }
+            //add by chenjiaxing 20210727 固定值参数更新提醒 end
+            //add by chenjiaxing 20210728 债券分销缴款提醒 start
+            if(remType == 'R10S1'){
+                urls = url+urlPara;
+            }
+            //add by chenjiaxing 20210728 债券分销缴款提醒 end
             // 新窗口打开
             var newTab = {
                 pageId: lable,
@@ -588,6 +608,10 @@ $(function() {
      * 绑定查询按钮事件
      */
     $('#PaActiveRemind002_btn_search').on('click', function() {
+        if ($('#smallCategory').val() == null || $('#smallCategory').val() == '') {
+            Joyin.error(JoyinUtil.getMessage("请选择提醒类型（小分类）"));
+            return;
+        }
         if($('#mainCategory') && ($('#mainCategory').val() === 'R1'||$('#mainCategory').val() === 'R6')){
             $('#dataTableR2_div').toggle(false);
             $('#dataTableR3_div').toggle(false);
@@ -595,11 +619,19 @@ $(function() {
             $('#dataTableR1_div').toggle(true);
             tableR1.table? tableR1.reload() : tableR1.load();
         }else if($('#mainCategory') && $('#mainCategory').val() === 'R5'){
-	    	$('#dataTableR1_div').toggle(false);
-	    	$('#dataTableR3_div').toggle(true);
-	        $('#dataTableR2_div').toggle(false);
-	        $('#dataTableR9_div').toggle(false);
-	        tableR3.table? tableR3.reload() : tableR3.load();
+            if($('#smallCategory') && $('#smallCategory').val() === 'R5S3'){
+                $('#dataTableR1_div').toggle(false);
+                $('#dataTableR2_div').toggle(true);
+                $('#dataTableR3_div').toggle(false);
+                $('#dataTableR9_div').toggle(false);
+                tableR2.table? tableR2.reload() : tableR2.load();
+            }else{
+                $('#dataTableR1_div').toggle(false);
+                $('#dataTableR3_div').toggle(true);
+                $('#dataTableR2_div').toggle(false);
+                $('#dataTableR9_div').toggle(false);
+                tableR3.table? tableR3.reload() : tableR3.load();
+            }
         }else if($('#mainCategory') && $('#mainCategory').val() === 'R9'){
          	$('#dataTableR1_div').toggle(false);
          	$('#dataTableR3_div').toggle(false);
@@ -645,12 +677,17 @@ $(function() {
      * 处理按钮绑定事件
      */
     tableR2.bind('click','#PaActiveRemind002_btnDeal_action', function(row) {
-    	if(row.remType=='R7S1')
-    		dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.odateStr);
-        if(row.remType=='R3S5')
+    	if(row.remType=='R7S1'){
+            dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.odateStr);
+        }else if(row.remType=='R5S3'){
+            dealRemind(row.url, row.lable, row.assetName, row.remType, row.days, row.feeId, row.menuId, tableR2,row.odateStr);
+        }else if(row.remType=='R3S5'){
             dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.mdateStr,row.orgId,row.orgName,row.dDateStr);
-    	else
+        }else if(row.remType=='R10S1'){
+            dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.mdateStr,row.orgId,row.orgName,row.dDateStr);
+        }else{
             dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.mdateStr,row.orgId,row.orgName);
+        }
     });
 
     /**
@@ -669,11 +706,19 @@ $(function() {
             $('#dataTableR9_div').toggle(false);
             tableR1.table? tableR1.reload() : tableR1.load();
         }else if($('#mainCategory') && $('#mainCategory').val() === 'R5'){
-	    	$('#dataTableR1_div').toggle(false);
-	    	$('#dataTableR3_div').toggle(true);
-	        $('#dataTableR2_div').toggle(false);
-	        $('#dataTableR9_div').toggle(false);
-	        tableR3.table? tableR3.reload() : tableR3.load();
+            if($('#smallCategory') && $('#smallCategory').val() === 'R5S3'){
+                $('#dataTableR1_div').toggle(false);
+                $('#dataTableR2_div').toggle(true);
+                $('#dataTableR3_div').toggle(false);
+                $('#dataTableR9_div').toggle(false);
+                tableR2.table? tableR2.reload() : tableR2.load();
+            }else{
+                $('#dataTableR1_div').toggle(false);
+                $('#dataTableR3_div').toggle(true);
+                $('#dataTableR2_div').toggle(false);
+                $('#dataTableR9_div').toggle(false);
+                tableR3.table? tableR3.reload() : tableR3.load();
+            }
         }else if($('#mainCategory') && $('#mainCategory').val() === 'R9'){
             $('#dataTableR1_div').toggle(false);
             $('#dataTableR3_div').toggle(false);

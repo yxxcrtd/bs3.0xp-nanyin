@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.remind.service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -224,6 +226,10 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
             result.putAll(searchCountR8(param));
             //公共数据变更
             result.putAll(searchCountR9(param));
+            //add by chenjiaxing 分销缴款提醒 20210727 start
+            //分销缴款提醒
+            result.putAll(searchCountR10(param));
+            //add by chenjiaxing 分销缴款提醒 20210727 end
         }
         // 查询主动提醒数据表
         else {
@@ -444,8 +450,19 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
         if (StringUtil.isNotEmpty(param.get("institution"))) {
             List<String> institutionList = LoginUserUtil.getTreeInstCode(); 
             param.put("institutionList",institutionList); 
-        } 
-        return paActiveRemind001Mapper.searchCountR5(param);
+        }
+        Map<String, Object> temp = paActiveRemind001Mapper.searchCountR5(param);
+        //add by chenjiaxing 20200726 固定值参数更新提醒 start
+        Map<String, Object> tempS3 = paActiveRemind001Mapper.searchCountR5S3(param);
+        //查看是否具有菜单权限
+        boolean isShow = SecurityUtil.isPermitted("RskSupervisionIndicatorParam001_btn_gdz_create");
+        if(isShow){
+            temp.put("R5S3",tempS3.get("R5S3"));
+        }else{
+            temp.put("R5S3",BigDecimal.ZERO);
+        }
+        //add by chenjiaxing 20200726 固定值参数更新提醒 end
+        return temp;
     }
 
     /**
@@ -493,4 +510,34 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
         param.put("R9S1", BussinessDictCodeList.提醒类型_小分类_数据修改.getValue());
         return paActiveRemind001Mapper.searchCountR9S1(param);
     }
+
+    //add by chenjiaxing 分销缴款提醒 20210727 start
+    /**
+     * 实时查询主动提醒数量_分销缴款提醒
+     *
+     * @param param
+     */
+    public Map<String, Object> searchCountR10(Map<String, Object> param) {
+        param.put("R10S1", BussinessDictCodeList.提醒类型_小分类_分销缴款提醒.getValue());
+        boolean isShow010 = SecurityUtil.isPermitted("EtrBondBiddingResultIb001_btn_search");
+        boolean isShow020 = SecurityUtil.isPermitted("EtrBondBiddingResultEx001_btn_search");
+        String isShow01 = "false";
+        String isShow02 = "false";
+        if(isShow010){
+            isShow01 = "true";
+        }
+        if(isShow020){
+            isShow02 = "true";
+        }
+        param.put("isShow01", isShow01);
+        param.put("isShow02", isShow02);
+        Map<String, Object> temp = new HashMap<>();
+        if(StringUtil.equals(isShow01,"false") && StringUtil.equals(isShow02,"false")){
+            temp.put("R10S1", BigDecimal.ZERO);
+            return temp;
+        }else{
+            return paActiveRemind001Mapper.searchCountR10S1(param);
+        }
+    }
+    //add by chenjiaxing 分销缴款提醒 20210727 end
 }

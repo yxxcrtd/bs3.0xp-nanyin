@@ -17,6 +17,9 @@ import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+
+import java.math.BigDecimal;
+
 /**
  * 交易查询dto
  * 〈功能详细描述〉
@@ -66,6 +69,18 @@ public class TrdInvestDealQuery001Dto extends WflTrdProductDeal{
 	 */
 	private String counterName;
 	//add by 张年  2019/8/07 end
+
+	// add by caozhenming 20210730 start
+	/**
+	 * 交易价格
+	 */
+	private BigDecimal tradePrice;
+
+	/**
+	 * 利率
+	 */
+	private BigDecimal rate;
+	// add by caozhenming 20210730 end
 	/**
 	 * 得到有效状态
 	 * @return
@@ -250,5 +265,21 @@ public class TrdInvestDealQuery001Dto extends WflTrdProductDeal{
 		}else{
 			return DictCodeList.是否_否.getCodeName();
 		}
+	}
+
+	public BigDecimal getTradePrice() {
+		return tradePrice;
+	}
+
+	public void setTradePrice(BigDecimal tradePrice) {
+		this.tradePrice = tradePrice;
+	}
+
+	public BigDecimal getRate() {
+		return rate;
+	}
+
+	public void setRate(BigDecimal rate) {
+		this.rate = rate;
 	}
 }

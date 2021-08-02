@@ -111,8 +111,8 @@
             }
             ,{field:'finprodId', visible:false}
             ,{field:'finprodAbbr', title: 'EtrFund001.finprodAbbr', width:'10%',sortField:"finprodAbbr"}
-            ,{field:'trmFundTypeStr', title: 'EtrFund002.trmFundType', width:'10%',sortField:"trmFundType"}
-            ,{field:'tradeMarketStr', title: 'EtrFund002.tradePlat', width:'10%',sortField:"tradeMarket"}
+           /* ,{field:'trmFundTypeStr', title: 'EtrFund002.trmFundType', width:'10%',sortField:"trmFundType"}*/
+            /* ,{field:'tradeMarketStr', title: 'EtrFund002.tradePlat', width:'10%',sortField:"tradeMarket"}*/
             ,{field:'psStr', title: 'EtrFund001.ps', width:'10%',sortField:"ps"}
             /*,{field:'price', title: 'EtrFund001.price', width:'10%'}
             ,{field:'payFreq', title: 'EtrFund001.payFreq', width:'10%'}*/

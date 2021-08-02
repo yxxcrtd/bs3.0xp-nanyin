@@ -170,6 +170,10 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
                 param.put("ccy", ptlPortfolio.getCcy());
             }
         }
+        // 组合信息没有币种 导致入参币种为空 取不到现金  现如果为空 默认人民币
+        if(!StringUtil.isNotEmpty(param.get("ccy"))){
+            param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
+        }
         // 可用现金
         Map<String, Object> cash = etrCommonService.getProAvailableCash(param);
         //组合T日可用现金

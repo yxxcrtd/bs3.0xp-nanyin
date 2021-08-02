@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -221,8 +222,19 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             param.put("bondTypeList", bondTypeList);
         }
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/findPage",
+        //配置单位 edit by yeming 20210730 start
+        Page<EtrBondFirstLBiddingDto> page = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/findPage",
                 param, EtrBondFirstLBiddingDto.class);
+        for(EtrBondFirstLBiddingDto dto:page.getRoot()){
+            if(dto.getBidPriceTotal() != null) {
+                dto.setBidPriceTotal(dto.getBidPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(dto.getWinPriceTotal() != null) {
+                dto.setWinPriceTotal(dto.getWinPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+        }
+        return page;
+        //配置单位 edit by yeming 20210730 end
     }
 
 

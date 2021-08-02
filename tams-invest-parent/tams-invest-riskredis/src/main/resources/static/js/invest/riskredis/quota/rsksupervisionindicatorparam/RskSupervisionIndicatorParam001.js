@@ -145,6 +145,9 @@ var rsk = function() {
      */
     $(function() {
         // 绑定按钮事件
+        if(paraNameInit != '' && paraNameInit != null){
+            $('#paraName').val(paraNameInit);
+        }
         $('#RskSupervisionIndicatorParam001_btn_search').click(function() {
             table.load();
         });

@@ -466,6 +466,20 @@
                                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" >
                                     </div>
                                 </div>
+
+                                <div class="form-inline-wrap" id="capitalAccountNoInfo">
+                                    <label class="layui-form-label form-lable" data-th-text="#{MstCommissionSet002.capitalAccountNo}">资金账号</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select type="text" id="capitalAccountNo" name="capitalAccountNo"
+                                                class="layui-input  input-select" placeholder="请输入内容"
+                                                data-th-placeholder="#{SysCommon.placeholder}"
+                                                data-th-initvalue="${entity?.capitalAccountNo}"
+                                                parentIds="customerId"
+                                                data-th-data-url="@{/invest/basicdata/mstcommissionset/MstCommissionSet002/getMstAcctInfo}"
+                                                allowClear="true">
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

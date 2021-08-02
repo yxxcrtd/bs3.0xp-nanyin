@@ -6,17 +6,16 @@
 package com.joyintech.tams.invest.common.trade;
 
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.BasePtlRecePositionService;
 import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.dto.PtlRecePositionFlowDto;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
@@ -34,6 +33,8 @@ import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
+import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
+import com.joyintech.tams.invest.common.trade.dto.CreditLinesOutputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
@@ -2113,6 +2114,36 @@ public class AllTradeCommonUtil {
 	}
 	// add by lijie2 20200910 投资目的取值逻辑 end
 
+    // add by zahngrui1 20200703 批量抽取反向交易编号内部就交易对手 start
+    /**
+     * 批量抽取反向交易编号
+     *
+     * @param tradeIds 交易编号/汇总交易编号
+     * @return 反向交易编号
+     */
+    public static Map<String, TrdProductDeal> queryRTradeIds(List<String> tradeIds) {
+        if (!StringUtil.isEmptyList(tradeIds)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("list", tradeIds);
+            List<TrdProductDeal> resList = trdCommonBaseMapper.queryRTradeIds(map);
+            if (!StringUtil.isEmptyList(resList)) {
+                return resList.stream().collect(
+                        Collectors.toMap(TrdProductDeal::getTradeId, info -> info));
+            }
+        }
+        return new HashMap<>();
+    }
+
+    // add by zhangrui1 20200619 取得反向交易编号 start
+    public static String queryRTradeId(String tradeId) {
+        if (!StringUtil.isEmpty(tradeId)) {
+            return trdCommonBaseMapper.queryRTradeId(tradeId);
+        }
+        return tradeId;
+    }
+
+    // add by zhangrui1 20200619 取得反向交易编号 end
+
     /**
      * 批量抽取内部交易对手
      *
@@ -2187,5 +2218,63 @@ public class AllTradeCommonUtil {
             }
         }
         return false;
+    }
+
+    public static AjaxResult checkBeforeTradeComplete(List<CreditLinesInputDto> inputDtoList){
+        CreditLinesUpdate creditLinesUpdate = SpringContextUtil.getBean(CreditLinesUpdateImpl.class);
+        if (creditLinesUpdate != null) {
+            List<CreditLinesOutputDto> resultList = creditLinesUpdate.occupyCreditLinesCheck(inputDtoList);
+            if(resultList !=null && resultList.size()>0){
+                List<String> stringList = new ArrayList<>();
+                AjaxResult ar = new AjaxResult();
+                int index =0;
+                for (CreditLinesOutputDto item : resultList){
+                    index++;
+                    if (StringUtil.isNotEmpty(item.getErrMessage())){
+                        ValidMessage validMessage = new ValidMessage(item.getErrMessage());
+                        List<ValidMessage> validMessageList = new ArrayList<>();
+                        validMessageList.add(validMessage);
+                        ar.setErrorList(validMessageList);
+                        return ar;
+                    }else {
+                        if(resultList.size()>1){
+                            for(String confirmMessages :item.getConfirmMessages()){
+                                confirmMessages ="第"+index+"行:"+confirmMessages;
+                                if(stringList.contains(confirmMessages)){
+                                    continue;
+                                }
+                                stringList.add(confirmMessages);
+                            }
+                        }else{
+
+                            stringList.addAll(item.getConfirmMessages());
+                        }
+
+                    }
+                }
+                //系统软控提示信息
+                if (stringList.size() > 0){
+                    StringBuffer sb = new StringBuffer("");
+                    stringList.forEach(item -> {
+                        sb.append(item).append(BussinessConstant.MSG_SPLIT);
+                    });
+                    ar.setData(sb.toString());
+                }
+                return ar;
+            }
+        }
+        return null;
+    }
+    public static void handleBeforeTradeComplete(List<CreditLinesInputDto> inputDtoList,String occupyType){
+        CreditLinesUpdate creditLinesUpdate = SpringContextUtil.getBean(CreditLinesUpdateImpl.class);
+        if (creditLinesUpdate != null) {
+            // TODO 后续改成调用微服务
+            if (StringUtil.equals(occupyType, DictCodeListRsk.授信占用类别_实占.getValue())){
+                creditLinesUpdate.occupyCreditLinesTrd(inputDtoList,null);
+            }else {
+                creditLinesUpdate.occupyCreditLinesEtr(inputDtoList,null);
+            }
+
+        }
     }
 }

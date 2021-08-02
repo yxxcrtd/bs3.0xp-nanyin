@@ -1295,4 +1295,10 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
                 Integer.class);
     }
     /* add by msk 新增查询通道划款交易 TISHKBS-1038  20201111 end */
+
+
+    public Map<String, Object> getSpeedByFinprodId(Map<String, Object> param) {
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdFundInvestTrade/getSpeedByFinprodId", param,
+                Map.class);
+    }
 }

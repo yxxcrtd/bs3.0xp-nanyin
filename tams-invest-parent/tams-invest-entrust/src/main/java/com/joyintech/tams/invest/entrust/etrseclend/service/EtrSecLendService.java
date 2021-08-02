@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.entrust.etrseclend.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -118,9 +119,20 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
             param.put("entrustStatusList", entrustStatusList);
         }
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForPage(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/findPage", param,
-            EtrSecLendDto.class);
+//        配置单位 edit by yeming 20210802 start
+        Page<EtrSecLendDto> page = restTemplate.postForPage(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/findPage", param,
+                EtrSecLendDto.class);
+        for(EtrSecLendDto dto:page.getRoot()){
+            if(dto.getTotalAmt() != null) {
+                dto.setTotalAmt(dto.getTotalAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+        }
+        return page;
+//        return restTemplate.postForPage(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/findPage", param,
+//            EtrSecLendDto.class);
+        //配置单位 edit by yeming 20210802 end
     }
     /**
      * 资产代码：下拉框

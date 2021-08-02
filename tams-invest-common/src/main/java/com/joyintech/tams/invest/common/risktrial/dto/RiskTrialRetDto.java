@@ -433,4 +433,26 @@ public class RiskTrialRetDto extends BaseEntity{
 	public void setKriExpr(String kriExpr) {
 		this.kriExpr = kriExpr;
 	}
+
+	// add by zhangrui1 增加groupId start
+	private int groupId;
+
+	/**
+	 * 获取 groupId
+	 *
+	 * @return groupId.
+	 */
+	public int getGroupId() {
+		return groupId;
+	}
+
+	/**
+	 * 设置 groupId
+	 *
+	 * @param groupId groupId
+	 */
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
+	// add by zhangrui1 增加groupId end
 }

@@ -79,7 +79,7 @@
         		$('#effectDate').attr("disabled",true);
         		$('#basis').attr("disabled",true);
         		$('#rateType').attr("disabled",true);
-        		$('#rate').attr("disabled",true);
+        		$('#rate').attr("disabled",false);
         		
         		$('#indexId').attr("disabled",true);
         		$('#coefficient').attr("disabled",true);
@@ -183,7 +183,6 @@
     		
     	}
 
-    	
         star();
     };
         
@@ -239,7 +238,10 @@
 
             star();
         });
-        
+
+
+
+
         //当“账户性质”为非银行账户时，“开户网点/大额支付行号”非必填
         $('#accountNature').change(function(){
             var ccy = $('#ccy').val();
@@ -287,8 +289,9 @@
         		$('#coefficient_div').toggle(false);
         		$('#spreadRate_div').toggle(false);
         		
-        		//默认固定利率0.3
-        		$('#rate').val(RATE_DEF_DEFAULT);
+        		//默认固定利率
+        		$('#rate').val('');
+
         	} 
         	else if($('#rateType').val() === INT_TYPE_02){
             	$('#rate_div').toggle(false);
@@ -336,6 +339,27 @@
         	}
 
         });
+
+
+		//根据所属柜台获取第一次设置的利率 add by xxg start
+		$('#ownDept').change(function(){
+			var accountType = $('#accountType').val();
+			if(accountType != null){
+				var ownDept = $('#ownDept').val();
+				var rateType = $('#rateType').val();
+				if(rateType == INT_TYPE_01 && ownDept !=''){
+					Joyin.ajaxJson(basePath + 'invest/basicdata/mstcaptialaccount/MstCaptialAccount002/getFirstRateByOwnDept', ownDept, function(rate) {
+						if(rate != 0 && rate != ''){
+							$('#rate').val(rate);
+						}else{
+							$('#rate').val('');
+						}
+					})
+				}
+			}
+		});
+		//根据所属柜台获取第一次设置的利率 add by xxg end
+
         
         //双录校验
         JoyinWorkFlow.doCheckOnSubmit = function (object) {

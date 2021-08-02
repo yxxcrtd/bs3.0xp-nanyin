@@ -46,8 +46,8 @@
         {field: 'indexId', title: 'EtrRepo003.indexId', width: 80, sortable: false}
         , {field: 'vdateText', title: 'EtrRepo003.vdate', width: 120, sortable: false}
         , {field: 'mdateText', title: 'EtrRepo003.mdate', width: 120, sortable: false}
-        , {field: 'parentPortfolioId', title: 'EtrRepo003.portfolioId', width: 120, sortable: false}
-        , {field: 'portfolioId', title: '子组合代码', width: 120, sortable: false}
+        , {field: 'portfolioId', title: 'EtrRepo003.portfolioId', width: 120, sortable: false}
+        // , {field: 'portfolioId', title: '子组合代码', width: 120, sortable: false}
         , {field: 'busPs', title: 'EtrRepo003.ps', width: 150, sortable: false}
         , {field: 'busCcy', title: 'EtrRepo003.ccy', width: 150, sortable: false}
         , {field: 'settleSpreedName', title: 'EtrRepo003.settleSpreed', width: 150, sortable: false}
@@ -60,10 +60,10 @@
         , {field: 'repoTerm', title: 'EtrRepo003.repoTerm', type: 'number', width: 150, sortable: false}
         //, {field: 'calendarIdName', title: 'EtrRepo003.calendarId', width: 150, sortable: false}
         //, {field: 'securitiesCustName', title: 'EtrRepo003.securitiesCust', width: 150, sortable: false}
-        , {field: 'chlIdName', title: 'invest.channelId', width: 150, sortable: false}
+        // , {field: 'chlIdName', title: 'invest.channelId', width: 150, sortable: false}
         , {field: 'proAvailableCash', title: 'EtrRepo003.proAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'remark', title: 'EtrRepo003.remark', width: 150, sortable: false}
-        , {field: 'zyqk', title: 'EtrRepo003.zyqk', width: 150, sortable: false}
+        // , {field: 'zyqk', title: 'EtrRepo003.zyqk', width: 150, sortable: false}
         , {field: 'fileArray', width: 150, visible: false}
         , {field: 'businessId', width: 150, visible: false}
         , {field: 'fileArrayName', title: 'EtrRepo003.fileArray', type: 'text', width: 150, sortable: false}

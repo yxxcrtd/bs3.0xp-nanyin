@@ -10,9 +10,12 @@
  
 package com.joyintech.service.basicdata.mstcaptialaccount.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.tams.common.base.entity.FinInitrateDatadict;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -188,4 +191,25 @@ public class MstCaptialAccountController {
     public Page<SelectOptionDto> getOwnDept(@RequestBody Map<String,Object> map, @PathVariable int page, @PathVariable int length) {
         return mstCaptialAccountService.getOwnDept(map, page, length);
     }
+
+
+
+    /**
+     * add by xxg 20210726
+     * 根据所属柜台获取第一次设置的利率
+     * @param ownDept  所属柜台
+     * @return
+     */
+    @PostMapping("/getFirstRateByOwnDept")
+    public FinInitrateDatadict getFirstRateByOwnDept(@RequestBody String ownDept){
+        return mstCaptialAccountService.getFirstRateByOwnDept(ownDept);
+    }
+
+
+
+    @PostMapping("/getAcctInfo")
+    public List<SelectOptionDto> getAcctInfo(@RequestBody Map<String,Object> param){
+        return mstCaptialAccountService.getAcctInfo(param);
+    }
+
 }

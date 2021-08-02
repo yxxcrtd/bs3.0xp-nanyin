@@ -150,7 +150,7 @@ public class EtrInvestBondInfo002Controller extends BaseController {
             dto.setRiskTrialRetDto(null);
             //单位以万元展示
             //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
+            if(StringUtil.equals(entrustAmtUnit,"02")){
                 if(dto.getEntrustNum() != null) {
                     dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
                 }
@@ -176,7 +176,7 @@ public class EtrInvestBondInfo002Controller extends BaseController {
             etrInvestBondInfoService.calcAmt(dto);*/
             //单位以万元展示
             //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
+            if(StringUtil.equals(entrustAmtUnit,"02")){
                 if(dto.getEntrustNum() != null) {
                     dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
                 }
@@ -203,7 +203,7 @@ public class EtrInvestBondInfo002Controller extends BaseController {
             entity.setMdate(sysDate);
             entity.setEntrustStatus(DictCodeList.委托状态_新建.getValue());
             //配置单位 edit by yeming 20210721 start
-            if(entrustAmtUnit.equals("02")){
+            if(StringUtil.equals(entrustAmtUnit,"02")){
                 if(entity.getEntrustNum() != null) {
                     entity.setEntrustNum(entity.getEntrustNum().divide(new BigDecimal(10000)));
                 }

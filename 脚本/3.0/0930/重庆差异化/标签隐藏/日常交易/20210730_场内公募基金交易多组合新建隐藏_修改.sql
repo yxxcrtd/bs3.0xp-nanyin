@@ -1,0 +1,4 @@
+--场内公募基金交易多组合新建隐藏
+DELETE FROM SYS_ELEMENT_CONTROL WHERE PAGE_ID = 'TrdFundInvestTradeEx001' AND ELEMENT_ID ='TrdFundInvestTradeEx001_btn_dzhadd';
+INSERT INTO SYS_ELEMENT_CONTROL(PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
+VALUES('TrdFundInvestTradeEx001','TrdFundInvestTradeEx001_btn_dzhadd','TrdFundInvestTradeEx001_btn_dzhadd','多组合新建','02','02','02',null);

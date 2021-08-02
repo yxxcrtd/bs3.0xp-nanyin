@@ -35,6 +35,7 @@ $(
                 } else if (data.index == 1) {
                     changeFlg = "02";
                 }
+                window.EtrIbBondinfoHq.changeElement(changeFlg);
             });
         });
 

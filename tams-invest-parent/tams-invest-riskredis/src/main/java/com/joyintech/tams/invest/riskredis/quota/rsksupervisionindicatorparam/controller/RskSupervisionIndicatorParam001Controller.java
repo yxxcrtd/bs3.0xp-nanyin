@@ -75,6 +75,15 @@ public class RskSupervisionIndicatorParam001Controller extends BaseController {
     	model.addAttribute("SQL", BussinessDictCodeListRds.指标参数实现类型_SQL.getValue());
     	model.addAttribute("CUSTOM", BussinessDictCodeListRds.指标参数实现类型_自定义.getValue());
         model.addAttribute("ipatFormDate",commonPlatformDateService.getSysDateStr());
+        //add by chenjiaxing 主动提醒跳转初始化 start
+        Map<String, Object> map = RequestUtil.getPageParam();
+        if(StringUtil.isNotEmpty(map.get("remType"))) {
+            model.addAttribute("paraNameInit", (String)map.get("paraName"));
+            if(StringUtil.equals(map.get("remType"),"R5S3")){
+                model.addAttribute("paraType","FIX");
+            }
+        }
+        //add by chenjiaxing 主动提醒跳转初始化 end
         return super.init(model);
     }
     /**

@@ -301,6 +301,10 @@
         window.EtrInitAmount.calCanBuyAmount(portfolioId,ccy,sysDate,price);
     }
 
+    var changeElement = function(changeFlg) {
+        window.EtrInitAmount.changeElement(changeFlg);
+    }
+
     /**
      * 对外公开的接口
      */
@@ -310,6 +314,7 @@
         viewPositionInfo:viewPositionInfo,
         calCanBuyAmount:calCanBuyAmount,
         queryAmountInfoMuti:queryAmountInfoMuti,
+        changeElement:changeElement,
         zhkyxj_t: zhkyxj_t
     }
     

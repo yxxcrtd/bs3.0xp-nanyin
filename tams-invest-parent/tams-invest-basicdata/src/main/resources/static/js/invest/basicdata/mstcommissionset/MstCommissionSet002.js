@@ -192,6 +192,12 @@
             $('#isPayWithTrade').trigger('change');
             //$("#tradePlat").val('').trigger('change');
             //add by hudongyang 2020-08-04 end
+
+            // add by caozhenming 20200728 start
+            $('#capitalAccountNoInfo').hide();
+            $("#capitalAccountNo").prop('disabled',true).trigger('change');
+            // add by caozhenming 20200728 end
+
             displayStar();
         }else if($("#feeType").val() == FEE_TYPE_B05){
             //delete by hudongyang 默认为否 start
@@ -218,6 +224,11 @@
 
             $('#isPayWithTrade').prop("disabled", false).trigger('change');
             //add by hudongyang 2020-08-04 end
+
+            // add by caozhenming 20200728 start
+            $('#capitalAccountNoInfo').show();
+            $("#capitalAccountNo").prop('disabled',true).trigger('change');
+            // add by caozhenming 20200728 end
             displayStar();
         }else {
             // 是否随交易支付默认为是
@@ -244,6 +255,11 @@
             $('#isPayWithTrade').trigger('change');
             //$("#tradePlat").val('').trigger('change');
             //add by hudongyang 2020-08-04 end
+
+            // add by caozhenming 20200728 start
+            $('#capitalAccountNoInfo').hide();
+            $("#capitalAccountNo").prop('disabled',true).trigger('change');
+            // add by caozhenming 20200728 end
         }
     }
     //add by hudongyang 2020-08-04 start
@@ -311,6 +327,15 @@
     }
     //add by hudongyang 2020-08-04 end
 
+    // add by caozhenming 20210728 start
+    var customerIdChange = function () {
+        var customerId = $('#customerId').val();
+        var feeType = $("#feeType").val();
+        if (feeType == FEE_TYPE_B05 && customerId != "") {
+            $("#capitalAccountNo").val('').prop('disabled',false).trigger('change');
+        }
+    };
+    // add by caozhenming 20210728 end
     var init = function(){
         //delete by hudongyang 2020-08-04 start
         // var chargeType = $('#chargeType').val();
@@ -399,6 +424,16 @@
             $('#feeMini').prop("disabled",false);//最小值
         }
         //table?table.reload():table.load();//add by hudongyang
+
+        //add by caozhenming 20210728 start
+        var customerId = $('#customerId').val();
+        var feeType = $("#feeType").val();
+        if (feeType == FEE_TYPE_B05 && customerId != "") {
+            $('#capitalAccountNoInfo').show();
+        } else {
+            $('#capitalAccountNoInfo').hide();
+        }
+        //add by caozhenming 20210728 end
     };
 
     /**
@@ -512,6 +547,11 @@
         });
         //add by hudongyang 2020-08-03 end
 
+        // add by caozhenm 20210728 start
+        $("#customerId").on('change',function(){
+            customerIdChange();
+        });
+        // add by caozhenm 20210728 end
     });
 }());
 

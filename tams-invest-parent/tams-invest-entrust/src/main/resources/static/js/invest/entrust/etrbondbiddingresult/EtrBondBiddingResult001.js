@@ -75,6 +75,15 @@ $(function() {
         /**
          * 画面加载完成
          */
+        //add by chenjiaxing 主动提醒初始化 start
+        var a = finprodId;
+        var b = mdate;
+        if(finprodId && mdate){
+            $('#finprodId').val(finprodId);
+            $('#bidDate').val(mdate+' '+'-'+' '+mdate);
+            table.load();
+        }
+        //add by chenjiaxing 主动提醒初始化 end
         $('#'+pageId+"_btn_search").click(function () {
             // $(".ptl-table1").css("display","none");
             // $(".ptl-table").css("display","block");
