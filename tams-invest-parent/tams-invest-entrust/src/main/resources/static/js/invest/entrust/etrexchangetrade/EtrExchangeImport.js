@@ -115,7 +115,7 @@
         return riskdata;
     }
     var cols = [
-          {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 100, sortable: false}
+          {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 50, sortable: false}
         , {field: 'portfolioId', title: 'EtrBrowDepoInfo001.portfolioId', width: 120, sortable: false}
         , {field: 'stockId', title: 'EtrBrowDepoInfo001.finprodId', width: 150, sortable: false}
         , {field: 'psStr', title: 'EtrExchangeTrade001.ps', width: 150, sortable: false}
@@ -137,21 +137,81 @@
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//持仓成本
         , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//最新价
-//        , {
-//            field: 'operation1', title: 'SysCommon.operation', render: function (data, type, row, meta) {
-//                return '<a class="pro-link uploadFile">上传附件</a> ';
-//            }, width: 150, sortable: false
-//        }
     ];
+
+    //大宗交易指令
+    var dzCols = [
+        {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 50, sortable: false}
+        , {field: 'portfolioId', title: 'EtrExchangeTrade001.portfolioId', width: 120, sortable: false}
+        , {field: 'acctNo', title: 'EtrExchangeTrade001.acctNo', width: 150, sortable: false}
+        , {field: 'finprodId', title: 'EtrExchangeTrade001.finprodId', width: 120, sortable: false}
+        , {field: 'psStr', title: 'EtrExchangeTrade001.ps', width: 150, sortable: false}
+        , {field: 'priceModelStr', title: 'EtrExchangeTrade003.priceModel',sortable : false, width: 120,edit: false}
+        , {field: 'declaTypeStr', title: 'EtrExchangeTrade001.priceModel2',sortable : false, width: 120,edit: false}
+        , {field: 'entrustPrice', title: 'EtrExchangeTrade003.price', width:100, type:'number', digit : 3, sortable: false,
+            render: function(data, type, row, meta) {
+                if (row.priceModel == "PRM03") {
+                    return "0.00";//市价指令，价格默认显示0
+                } else {
+                    return row.entrustPrice;
+                }
+            }
+        }
+        , {field: 'fprice', title: 'EtrExchangeTrade001.fprice', width:100, type:'number', digit : 3, sortable: false}
+        , {field: 'yield', title: 'EtrExchangeImport.yield', width:100, type:'number', digit : 6, sortable: false}
+        , {field: 'entrustNum', title: 'EtrExchangeTrade001.entrustNum', width: 120, type:'number', digit : 0, sortable: false}
+        , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt', width: 120, type:'number',sortable: false}
+        , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
+        , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
+        , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false}
+        , {field: 'seatId', title: 'EtrExchangeTrade001.seatId', width: 120, sortable: false}
+        , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
+        , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
+        , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//委托开始日
+    ];
+
+    //固定收益指令
+    var gsCols = [
+        {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 50, sortable: false}
+        , {field: 'portfolioId', title: 'EtrExchangeTrade001.portfolioId', width: 120, sortable: false}
+        , {field: 'acctNo', title: 'EtrExchangeTrade001.acctNo', width: 150, sortable: false}
+        , {field: 'finprodId', title: 'EtrExchangeTrade001.finprodId', width: 120, sortable: false}
+        , {field: 'psStr', title: 'EtrExchangeTrade001.ps', width: 150, sortable: false}
+        , {field: 'priceModelStr', title: 'EtrExchangeTrade003.priceModel',sortable : false, width: 120,edit: false}
+        , {field: 'declaTypeStr', title: 'EtrExchangeTrade001.priceModel2',sortable : false, width: 120,edit: false}
+        , {field: 'entrustPrice', title: 'EtrExchangeTrade003.price', width:100, type:'number', digit : 3, sortable: false,
+            render: function(data, type, row, meta) {
+                if (row.priceModel == "PRM03") {
+                    return "0.00";//市价指令，价格默认显示0
+                } else {
+                    return row.entrustPrice;
+                }
+            }
+        }
+        , {field: 'fprice', title: 'EtrExchangeTrade001.fprice', width:100, type:'number', digit : 3, sortable: false}
+        , {field: 'yield', title: 'EtrExchangeImport.yield', width:100, type:'number', digit : 6, sortable: false}
+        , {field: 'entrustNum', title: 'EtrExchangeTrade001.entrustNum', width: 120, type:'number', digit : 0, sortable: false}
+        , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt', width: 120, type:'number',sortable: false}
+        , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
+        , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
+        , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false}
+        , {field: 'counterTrader', title: 'EtrExchangeTrade001.counterTrader', width: 120, sortable: false}
+        , {field: 'trader', title: 'EtrExchangeTrade001.traders', width: 120, sortable: false}
+        , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
+        , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
+        , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//委托开始日
+    ];
+
     var table =$("#dataTable").joyintable({
 		data: etrExchangeInfoDtoList,
-        cols:cols,
+        cols:SHARES_TRADE_PLATFORM_03==currentTab?gsCols:SHARES_TRADE_PLATFORM_04==currentTab?dzCols:cols,
         page: false,
         checkbox: false,
         filter: false,
         addbtn:false,
         addToLast:true,
-        searchOnInit: true
+        searchOnInit: true,
+        height:250
 	});
 	
     //绑定上传事件
@@ -258,9 +318,6 @@
      * 风险试算
      */
     $('#EtrBrowDepoInfo003_btn_riskcal').click(function(){
-    	//window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-        // add by zhangrui1 start
-        //$("#riskMathFlag").val("02");
         var object = $.serializeToObject('#searchForm').selectedItem;
         var checkParam = {};
         checkParam.data = getriskdataAll();

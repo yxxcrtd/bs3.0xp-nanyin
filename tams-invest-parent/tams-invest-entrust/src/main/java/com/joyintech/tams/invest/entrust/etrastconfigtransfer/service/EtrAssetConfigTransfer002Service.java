@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.entrust.etrastconfigtransfer.service;
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -10,10 +11,18 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.etrastconfigtransfer.dto.EtrAssetConfigDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTradeDzImportDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTradeGsImportDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -31,7 +40,10 @@ import java.util.*;
 @Service
 public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfigDto> {
 
-    private final static String[] KEY_ARRAY=new String[]{"valDate","portfolioId","entrustData"};
+    @Autowired
+    private EtrExchangeTrade001Service etrExchangeTrade001Service;
+
+    private final static String[] KEY_ARRAY=new String[]{"valDate","portfolioId","entrustData","prinAmt","ps","calculateField","yield","fprice"};
 
     public List<EtrAssetConfigDto> getAstPosition(Map<String, Object> param) {
         param.put(KEY_ARRAY[0],DateUtil.format(DateUtil.platDateFromCache()));
@@ -45,7 +57,8 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
      */
     public Map selectPortfolioInfo(Map<String, Object> paramMap) {
         paramMap.put(KEY_ARRAY[0],DateUtil.format(DateUtil.platDateFromCache()));
-        Map astMap=BeanUtil.object2Map(AssetCommonUtil.getAssetInfoDb(DictCodeListExt1.金融产品类型_投管用_理财产品.getValue()+ GlobalConstant.UNDER_LINE+ (StringUtil.isNotEmpty(paramMap.get(KEY_ARRAY[1]))?paramMap.get(KEY_ARRAY[1]).toString():null), obj->obj));
+        AssetGenerateEntry astEntry=AssetCommonUtil.getAssetInfoDb(DictCodeListExt1.金融产品类型_投管用_理财产品.getValue()+ GlobalConstant.UNDER_LINE+ (StringUtil.isNotEmpty(paramMap.get(KEY_ARRAY[1]))?paramMap.get(KEY_ARRAY[1]).toString():null), obj->obj);
+        Map astMap=null!=astEntry?BeanUtil.object2Map(astEntry):new HashMap<>();
         List<BigDecimal> 产品规模List=AssetCommonUtil.getAstNetVal(Arrays.asList(paramMap.get(KEY_ARRAY[1]).toString()),DateUtil.platDateFromCache(),null,item->(BigDecimal)item.get(AssetCommonUtil.产品净资产));
         astMap.put(AssetCommonUtil.产品净资产,!StringUtil.isEmptyList(产品规模List)?产品规模List.get(0):null);
         return astMap;
@@ -69,6 +82,8 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
             retDto.setNetCprice(估价净价);
             //价格偏离度
             retDto.setDeviation(ArithmeticUtil.divide(ArithmeticUtil.subtract(交易净价, 估价净价), 估价净价, 6));
+            //持有期收益率与全价
+            calYieldPrice(retDto);
         }
         //获取转入资产的登记托管机构
         String registOrg=AssetCommonUtil.getAssetInfoDb(paramDto.getFinprodId(), obj->obj.getRegistOrg());
@@ -100,7 +115,6 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
             int 序号=paramDto.getSelectedItem().indexOf(item)+1;
             item.setIndexId(String.valueOf(序号*2-1));
             item.setPs(DictCodeList.交易方向_买入.getValue());
-            item.setFinprodId(item.getFinprodId().replace(DictCodeListExt1.金融产品类型_投管用_债券.getValue()+ GlobalConstant.UNDER_LINE,StringUtil.EMPTY));
             jsonArrays.add(assembleCommonDataByTMK(item));
 
             EtrAssetConfigDto desItem=new EtrAssetConfigDto();
@@ -119,13 +133,23 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
 
     private  Object[] assembleCommonDataByTMK(EtrAssetConfigDto item){
         if(StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(),item.getTradeMarket())){
+            item.setFinprodId(item.getFinprodId().replace(DictCodeListExt1.金融产品类型_投管用_债券.getValue()+ GlobalConstant.UNDER_LINE,StringUtil.EMPTY));
             return assembleCommonDataByIB(item,EtrAssetConfigDto.class);
         }
         if(StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(),item.getTradeMarket())){
-            //todo
+            EtrExchangeTradeDzImportDto etrDto=new EtrExchangeTradeDzImportDto();
+            BeanUtil.copyPropertiesIgnoreNull(etrDto,item);
+            etrDto.setTradePlat(DictCodeList.交易平台_大宗交易平台.getValue());
+            etrDto.setDeclaType(DictCodeListExt3.申报类型_不指定.getValue());
+            return assembleCommonDataByDZGS(etrDto);
         }
         if(StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(),item.getTradeMarket())){
-            //todo
+            EtrExchangeTradeGsImportDto etrDto=new EtrExchangeTradeGsImportDto();
+            BeanUtil.copyPropertiesIgnoreNull(etrDto,item);
+             etrDto.setTradePlat(DictCodeList.交易平台_固定收益平台.getValue());
+            etrDto.setDeclaType(DictCodeListExt3.申报类型_指定对手方成交申报.getValue());
+            etrDto.setSettleSpeed(DictCodeList.清算速度_T_1.getValue());
+            return assembleCommonDataByDZGS(etrDto);
         }
         return null;
     }
@@ -136,6 +160,7 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
      * @param cls
      */
     private <T> Object[] assembleCommonDataByIB(T item,Class<T> cls){
+        //根据银行间指令导入模板excel来限定
         Object[] 组装数据=AssetCommonUtil.parseEntryToArray(new Object[21],item,cls);
         组装数据[1]=DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_DATE_FORMAT_EN);//委托开始日
         组装数据[2]=DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_DATE_FORMAT_EN);//委托终止日
@@ -147,6 +172,25 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
         组装数据[13]= DictCodeList.清算速度_T_0.getValue();//清算速度
         组装数据[16]= DictCodeList.交易平台_外汇交易中心.getValue();//交易平台
         return 组装数据;
+    }
+
+    /**
+     * 大宗与固收(深交所，上交所)指令字段
+     * @param item
+     */
+    private <T extends EtrExchangeTrade001Dto> Object[] assembleCommonDataByDZGS(T item){
+        Map<String, Object> param = new HashMap<>();
+        param.put(KEY_ARRAY[1], item.getPortfolioId());
+        List<SelectOptionDto> ptlSecAcctList = etrExchangeTrade001Service.getPtlSecAcctInfo(param);
+        item.setAcctNo(!StringUtil.isEmptyList(ptlSecAcctList)?ptlSecAcctList.get(0).getId():null);
+        item.setFinprodType2(AssetCommonUtil.getAssetInfoDb(item.getFinprodId(),obj->obj.getFinprodType2()));
+        item.setPriceModel(DictCodeListExt2.价格模式_限价指令.getValue());
+        item.setEntrustPrice(item.getPrice());
+        item.setTargetType(DictCodeListExt3.目标类型_数量.getValue());
+        item.setEntrustNum(ArithmeticUtil.divide(item.getEntrustAmt(),new BigDecimal(100),4));
+        etrExchangeTrade001Service.calEntrustNumOrPrice(item,null);//指令金额
+        //todo 组合券商与席位号
+        return Arrays.asList(item).toArray(new Object[Arrays.asList(item).size()]);
     }
 
     /**
@@ -167,6 +211,26 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
             }else{
                 return 买入成本;
             }
+        }
+    }
+
+    /**
+     * 计算到期收益率，全价等(跟需求确认即持有期收益率即到期收益率)
+     * @param t
+     * @return
+     */
+    private void calYieldPrice(EtrAssetConfigDto t){
+        if(!StringUtil.isNotEmpty(t)){
+            return;
+        }
+        Map<String, Object> param =  BeanUtil.object2Map(t);
+        param.put(KEY_ARRAY[3], AssetCommonUtil.getFaceVal(t.getFinprodId()));//面值
+        param.put(KEY_ARRAY[4], DictCodeList.交易方向_买入.getValue());
+        param.put(KEY_ARRAY[5], DictCodeListExt3.债券计算模式_单位净价.getValue());
+        Map<String, BigDecimal> result = etrExchangeTrade001Service.calcPriceAndYield(param);
+        if(!CollectionUtils.isEmpty(result)){
+            t.setYield(result.getOrDefault(KEY_ARRAY[6],null));
+            t.setFprice(result.getOrDefault(KEY_ARRAY[7],null));
         }
     }
 }

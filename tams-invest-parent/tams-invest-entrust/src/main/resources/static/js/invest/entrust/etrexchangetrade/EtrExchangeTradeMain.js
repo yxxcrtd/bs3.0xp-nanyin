@@ -323,8 +323,9 @@ function showLeftTopPanel(){
 
 // 指令导入
 var importEtr = function() {
-	Joyin.uploadFile({pageId : 'EtrExchangeImport'}, function(fileName) {
-        Joyin.ajax(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/checkImportData', {fileName: fileName}, function(checkResult) {
+    var currentTab=$('div.left_top_panel').find('iframe:eq(0)').contents().find("ul#tradePlatform_ul_tab li[class='layui-this']").attr('lay-id');
+	Joyin.uploadFile({pageId :SHARES_TRADE_PLATFORM_04==currentTab?'EtrExchangeDzImport':SHARES_TRADE_PLATFORM_03==currentTab?'EtrExchangeGsImport':'EtrExchangeImport'}, function(fileName) {
+        Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/checkImportData', {fileName: fileName,currentTab:currentTab}, function(checkResult) {
             setTimeout( function () {
                 if(checkResult.data.errorMsg){
                     Joyin.error(checkResult.data.errorMsg);
@@ -342,9 +343,10 @@ var importEtr = function() {
                     		correctData = data;
                     	}
                     }
-                    Joyin.dialog('场内竞价交易指令导入'/*JoyinUtil.getLabel("EtrBrowDepoInfo003")*/,
+                    var label=SHARES_TRADE_PLATFORM_04==currentTab?JoyinUtil.getLabel("EtrExchangeTradeImport.dzImport"):SHARES_TRADE_PLATFORM_03==currentTab?JoyinUtil.getLabel("EtrExchangeTradeImport.gsImport"):JoyinUtil.getLabel("EtrExchangeTradeImport.jjImport");
+                    Joyin.dialog(label,
                         JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
-                        "98%", "95%", {},
+                        "98%", "95%", {currentTab:currentTab},
                         function(){EtrExchangeTrade003.myrefresh();});
                 });
             },1000);
