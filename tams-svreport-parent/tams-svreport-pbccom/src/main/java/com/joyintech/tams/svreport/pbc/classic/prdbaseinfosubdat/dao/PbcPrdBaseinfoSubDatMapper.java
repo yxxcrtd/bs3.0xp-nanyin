@@ -50,7 +50,7 @@ public interface PbcPrdBaseinfoSubDatMapper {
 	 * @return 所有不是删除状态的人行产品信息
 	 */
 	List<PbcPrdBaseinfoSubDat> queryAllPbcPrdBaseInfo(Map<String, Object> param);
-	
+
 	List<PbcPrdAccountSub> selectAllRegisteAccountData(@Param("reglist") List<PbcPrdBaseinfoSubDat> reglist);
 	
 	List<String> selectRegistSeqnoList(@Param("list") List<PbcPrdBaseinfoSubDat> registList, @Param("flag") String flag);

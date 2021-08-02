@@ -33,13 +33,13 @@
     <result column="pbcProdIdShow" property="pbcProdIdShow" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    REGIST_SEQNO, PBC_PROD_ID, MDATE, CCY, PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, 
+    REGIST_SEQNO, PBC_PROD_ID, MDATE, CCY, PROD_ID,PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY,
     CUS_YEAR_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
     PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
     CREATE_TIME, UPDATE_USER, UPDATE_TIME
   </sql>
    <sql id="Base_Column_List2" >
-    HIS_NO, PBC_PROD_ID, MDATE, CCY, PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, 
+    HIS_NO, PBC_PROD_ID, MDATE, CCY, PROD_ID,PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY,
     CUS_YEAR_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
     PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
     CREATE_TIME, UPDATE_USER, UPDATE_TIME
@@ -65,7 +65,7 @@
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew" >
-    insert into PBC_PRD_BASEINFO_END_SUB_NEW (REGIST_SEQNO, PBC_PROD_ID, MDATE, 
+    insert into PBC_PRD_BASEINFO_END_SUB_NEW (REGIST_SEQNO, PBC_PROD_ID, MDATE, PROD_ID,
       CCY, PROFIT, PROFIT_CNY, 
       CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, CUS_YEAR_YIELD, 
       SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, 
@@ -73,7 +73,7 @@
       SUBMIT_DEADLINE, STATUS, CREATE_USER, 
       ORG_CODE, CREATE_DEPT, CREATE_TIME, 
       UPDATE_USER, UPDATE_TIME)
-    values (#{registSeqno,jdbcType=CHAR}, #{pbcProdId,jdbcType=VARCHAR}, #{mdate,jdbcType=TIMESTAMP}, 
+    values (#{registSeqno,jdbcType=CHAR}, #{pbcProdId,jdbcType=VARCHAR}, #{mdate,jdbcType=TIMESTAMP}, #{prodId,jdbcType=VARCHAR},
       #{ccy,jdbcType=CHAR}, #{profit,jdbcType=DECIMAL}, #{profitCny,jdbcType=DECIMAL}, 
       #{customProfit,jdbcType=DECIMAL}, #{customProfitCny,jdbcType=DECIMAL}, #{cusYearYield,jdbcType=DECIMAL}, 
       #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{submitFeedbackStatus,jdbcType=VARCHAR}, 
@@ -96,6 +96,9 @@
       </if>
       <if test="ccy != null" >
         CCY,
+      </if>
+      <if test="prodId != null">
+          PROD_ID,
       </if>
       <if test="profit != null" >
         PROFIT,
@@ -168,6 +171,9 @@
       <if test="ccy != null" >
         #{ccy,jdbcType=CHAR},
       </if>
+      <if test="prodId != null" >
+          #{prodId,jdbcType=VARCHAR},
+      </if>
       <if test="profit != null" >
         #{profit,jdbcType=DECIMAL},
       </if>
@@ -239,6 +245,9 @@
       <if test="ccy != null" >
         CCY = #{ccy,jdbcType=CHAR},
       </if>
+        <if test="prodId != null">
+            PROD_ID = #{prodId,jdbcType=CHAR},
+        </if>
       <if test="profit != null" >
         PROFIT = #{profit,jdbcType=DECIMAL},
       </if>
@@ -304,6 +313,7 @@
     set PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
       MDATE = #{mdate,jdbcType=TIMESTAMP},
       CCY = #{ccy,jdbcType=CHAR},
+      PROD_ID = #{prodId,jdbcType=CHAR},
       PROFIT = #{profit,jdbcType=DECIMAL},
       PROFIT_CNY = #{profitCny,jdbcType=DECIMAL},
       CUSTOM_PROFIT = #{customProfit,jdbcType=DECIMAL},
@@ -497,7 +507,7 @@
    <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
   	insert into PBC_PRD_BASEEND_SUB_NEW_HIS (<include refid="Base_Column_List2"></include>)
     select 
-      REGIST_SEQNO, PBC_PROD_ID, MDATE, CCY, PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, 
+      REGIST_SEQNO, PBC_PROD_ID, MDATE, CCY, PROD_ID,PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY,
     CUS_YEAR_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
     PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
     sysdate, UPDATE_USER, sysdate
@@ -512,7 +522,7 @@
   <insert id="insetBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
 	insert into PBC_PRD_BASEINFO_END_SUB_NEW
 	 (<include refid="Base_Column_List"></include>)
-    select  HIS_NO, PBC_PROD_ID, MDATE, CCY, PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, 
+    select  HIS_NO, PBC_PROD_ID, MDATE, CCY, PROD_ID,PROFIT, PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY,
     CUS_YEAR_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
     PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
     sysdate, UPDATE_USER, sysdate

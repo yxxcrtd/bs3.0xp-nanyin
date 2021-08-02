@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.classic.pbcNewDat.dao.PbcNewPrdDatFileMapper" >
+
+        <select id="getMaxZipCode" resultType="java.lang.String">
+                SELECT
+                    MAX(DAT_ZIP_CODE)
+                FROM PBC_SEND_ZIP_DAT_FILE A
+                WHERE A.DAT_ZIP_TYPE = #{zipType,jdbcType=VARCHAR}
+                AND A.STATUS_VDATE = #{statusDate,jdbcType=VARCHAR}
+                AND A.ZIP_SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
+                AND A.DAT_ZIP_STATUS = #{zipStatus,jdbcType=VARCHAR}
+        </select>
+
+
+        <select id="getPrdBaseinfoList" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew">
+            SELECT *
+            FROM PBC_PRD_BASEINFO_END_SUB_NEW
+            WHERE SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
+        </select>
+
+</mapper>
