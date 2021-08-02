@@ -58,7 +58,7 @@
             ,{field:'busCcy', title: 'EtrBoutRepo001.ccy', width:'10%',sortField:"ccy"}
             ,{field:'vdate', title: 'EtrBoutRepo001.vdate', width:'10%',type:'date',sortField:"vdate"}
             ,{field:'mdate', title: 'EtrBoutRepo001.mdate', width:'10%',type:'date',sortField:"mdate"}
-            ,{field:'entrustAmt',type:'number', title: 'EtrBoutRepo001.entrustAmt', width:'10%',sortField:"entrustAmt"}
+            ,{field:'entrustAmt',type:'number', title: 'EtrBoutRepo001.entrustAmt1', width:'10%', digit: 4, sortField:"entrustAmt"}
             ,{field:'finishAmt',type:'number', title: 'EtrBoutRepo001.finishAmt', width:'10%',sortField:"finishAmt"}
             ,{field: 'priceModelStr', title: 'EtrStock001.priceModel', width: '10%', sortField: "priceModel"} //新增价格模式	王贵奇	2019/10/10
             ,{field:'transactioncom', title: 'EtrBoutRepo001.transactioncom',render : function(data, type, row, meta){

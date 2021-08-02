@@ -101,7 +101,7 @@ $(function () {
                 },sortField:"shareId"
             }
             ,{field:'shareName', title: 'EtrBondToStock001.shareName', width:'10%',sortField:"shareName"}
-            ,{field:'entrustAmt', title: 'EtrBondToStock001.entrustAmt', width:'10%',sortField:"entrustAmt"}
+            ,{field:'entrustAmt', title: 'EtrBondToStock001.entrustAmt1', width:'10%',  digit: 4 , sortField:"entrustAmt"}
             ,{field:'conPrice', title:'EtrBondToStock001.conPrice',width:'10%',sortable:"conPrice"}
             ,{field:'prec', title:'EtrBondToStock001.prec',width:'10%',sortable:"prec"}
             ,{field:'preb', title:'EtrBondToStock001.preb',width:'10%',sortable:"preb"}
@@ -146,8 +146,8 @@ $(function () {
                 },sortField:"finprodMarketId"
             }
             ,{field:'finprodName', title: 'EtrBondToStock001.finprodName', width:'10%',sortField:"finprodName"}
-            ,{field:'holdetrPriceTotal', title: 'EtrBondToStock001.holdetrPriceTotal', width:'10%',sortField:"holdetrPriceTotal"}
-            ,{field:'conetrPriceTotal', title: 'EtrBondToStock001.conetrPriceTotal', width:'10%',sortField:"conetrPriceTotal"}
+            ,{field:'holdetrPriceTotal', title: 'EtrBondToStock001.holdetrPriceTotal1', width:'10%', digit: 4 , sortField:"holdetrPriceTotal"}
+            ,{field:'conetrPriceTotal', title: 'EtrBondToStock001.conetrPriceTotal1', width:'10%', digit: 4 , sortField:"conetrPriceTotal"}
             ,{field:'prec', title:'EtrBondToStock001.prec',width:'10%',type:'number', fixtype:2,sortable:"prec"}
             ,{field:'preb', title:'EtrBondToStock001.preb',width:'10%',type:'number', fixtype:2,sortable:"preb"}
             ,{field:'bondPrice', title:'EtrBondToStock001.bondPrice',width:'10%',sortable:"bondPrice"}

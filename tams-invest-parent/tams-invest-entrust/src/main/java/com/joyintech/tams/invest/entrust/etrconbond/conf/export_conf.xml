@@ -6,8 +6,8 @@
             <Cell order="2" name="组合名称">portfolioName</Cell>
             <Cell order="3" name="资产代码">finprodMarketId</Cell>
             <Cell order="4" name="资产名称">finprodName</Cell>
-            <Cell order="5" name="申购券面总额">purchBondTotal</Cell>
-            <Cell order="6" name="中签券面总额">winlotteryAmt</Cell>
+            <Cell order="5" name="申购券面总额/万元">purchBondTotal</Cell>
+            <Cell order="6" name="中签券面总额/万元">winlotteryAmt</Cell>
             <Cell order="7" name="申购日期">entrustDate</Cell>
             <!--delete by gaoshuqi 20210729 隐藏申购方式 start-->
             <!-- <Cell order="8" name="申购方式">purchModleStr</Cell>-->

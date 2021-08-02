@@ -16,12 +16,12 @@
             <Cell order="10" name="交易方向">busPs</Cell>
             <Cell order="11" name="交易场所">busTradeMarket</Cell>
             <Cell order="12" name="交易平台 ">busTradePlat</Cell>
-            <Cell order="13" name="券面总额">entrustNum</Cell>
-            <Cell order="13" name="本方券券面总额">entrustOwnNum</Cell>
-            <Cell order="13" name="融入/卖空购回券面总额">entrustIntegrateNum</Cell>
+            <Cell order="13" name="券面总额/万元">entrustNum</Cell>
+            <Cell order="13" name="本方券券面总额/万元">entrustOwnNum</Cell>
+            <Cell order="13" name="融入/卖空购回券面总额/万元">entrustIntegrateNum</Cell>
             <Cell order="14" name="币种">busCcy</Cell>
-            <Cell order="15" name="委托开始日">vdateText</Cell>
-            <Cell order="16" name="委托结束日">mdateText</Cell>
+            <Cell order="15" name="指令开始日">vdateText</Cell>
+            <Cell order="16" name="指令结束日">mdateText</Cell>
             <Cell order="17" name="已完成额度">finishAmt</Cell>
             <Cell order="18" name="交易完成度">transactioncom</Cell>
             <!-- add by zhangpuyu 2019/11/15 start-->

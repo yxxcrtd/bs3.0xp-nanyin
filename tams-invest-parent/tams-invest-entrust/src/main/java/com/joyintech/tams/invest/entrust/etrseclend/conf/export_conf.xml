@@ -9,10 +9,10 @@
             <Cell order="5" name="标的债券代码">targetFinprodId</Cell>
             <Cell order="6" name="借贷方向">busBusiPs</Cell>
             <Cell order="7" name="交易场所">busTradeMarket</Cell>
-            <Cell order="8" name="券面总额(万元)">totalAmt</Cell>
+            <Cell order="8" name="券面总额/万元">totalAmt</Cell>
             <Cell order="9" name="币种">busCcy</Cell>
-            <Cell order="10" name="委托开始日">vdate</Cell>
-            <Cell order="11" name="委托结束日">mdate</Cell>
+            <Cell order="10" name="指令开始日">vdate</Cell>
+            <Cell order="11" name="指令结束日">mdate</Cell>
             <Cell order="12" name="已完成额度">finishAmt</Cell>
             <Cell order="13" name="交易完成度">transactioncom</Cell>
             <Cell order="14" name="备注">remark</Cell>
