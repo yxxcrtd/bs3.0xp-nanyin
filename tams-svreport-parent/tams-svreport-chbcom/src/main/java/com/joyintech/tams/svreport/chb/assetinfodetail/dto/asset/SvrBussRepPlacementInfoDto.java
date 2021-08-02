@@ -100,7 +100,7 @@ public class SvrBussRepPlacementInfoDto extends RepAssetBond{
     /**
      * 对应资管计划代码
      */
-    private String planId;
+    private String checkCode;
 
 
     /**
@@ -227,12 +227,12 @@ public class SvrBussRepPlacementInfoDto extends RepAssetBond{
         this.remark = remark;
     }
 
-	public String getPlanId() {
-		return planId;
+	public String getCheckCode() {
+		return checkCode;
 	}
 
-	public void setPlanId(String planId) {
-		this.planId = planId;
+	public void setCheckCode(String checkCode) {
+		this.checkCode = checkCode;
 	}
 
     public String getPbcAssetType1() {

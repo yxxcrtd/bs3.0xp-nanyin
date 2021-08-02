@@ -1106,11 +1106,6 @@ public class RskAssetInfo extends BaseEntity {
     private String isFbzb;
 
     /**
-     * 对应资管计划代码
-     */
-    private String planId;
-
-    /**
      * 资产投资性质
      */
     private String investNature;
@@ -4515,22 +4510,6 @@ public class RskAssetInfo extends BaseEntity {
      */
     public void setIsFbzb(String isFbzb) {
         this.isFbzb = isFbzb == null ? null : isFbzb.trim();
-    }
-
-    /**
-     * 取得 对应资管计划代码
-     * @return 对应资管计划代码
-     */
-    public String getPlanId() {
-        return planId;
-    }
-
-    /**
-     * 设置 对应资管计划代码
-     * @param planId 对应资管计划代码
-     */
-    public void setPlanId(String planId) {
-        this.planId = planId == null ? null : planId.trim();
     }
 
     /**

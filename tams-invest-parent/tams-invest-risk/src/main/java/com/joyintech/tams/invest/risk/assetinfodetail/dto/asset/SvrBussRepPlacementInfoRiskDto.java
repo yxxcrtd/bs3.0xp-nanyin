@@ -96,12 +96,6 @@ public class SvrBussRepPlacementInfoRiskDto extends RepAssetBond{
     private BigDecimal targetAmt;
 
     /**
-     * 对应资管计划代码
-     */
-    private String planId;
-
-
-    /**
      * 备注
      */
     private String remark;
@@ -209,13 +203,5 @@ public class SvrBussRepPlacementInfoRiskDto extends RepAssetBond{
     public void setRemark(String remark) {
         this.remark = remark;
     }
-
-	public String getPlanId() {
-		return planId;
-	}
-
-	public void setPlanId(String planId) {
-		this.planId = planId;
-	}
 
 }

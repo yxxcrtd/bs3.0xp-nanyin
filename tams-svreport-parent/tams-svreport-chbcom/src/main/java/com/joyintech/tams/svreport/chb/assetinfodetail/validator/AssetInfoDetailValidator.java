@@ -95,15 +95,6 @@ public class AssetInfoDetailValidator implements BeanValidator{
         // add by zhangliang 20210126 中债check调用 start
         resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getAssetType2(), ValidMessage.class);
         // add by zhangliang 20210126 中债check调用 end
-        
-        //对应资管计划代码必填校验
-        if(StringUtil.equals(dto.getAssetType2(), "1107")||StringUtil.equals(dto.getAssetType2(), "1108")
-        		||StringUtil.equals(dto.getAssetType2(), "1901")||StringUtil.equals(dto.getAssetType2(), "1902")){
-        	if(!StringUtil.isNotEmpty(dto.getPlanId())) {
-        		resultList.add(new ValidMessage("planId",
-        				getMessage("COMMON_E_0057", getMessage("对应资管计划代码"))));      		
-        	}
-      }
          return resultList;
     }
 

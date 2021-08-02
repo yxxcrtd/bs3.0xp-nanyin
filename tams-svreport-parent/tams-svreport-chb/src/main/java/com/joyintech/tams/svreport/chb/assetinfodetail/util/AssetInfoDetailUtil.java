@@ -2059,7 +2059,7 @@ public class AssetInfoDetailUtil {
             }
         }
         dto.setRemark(list.get(14));
-        dto.setPlanId(list.get(15));
+        dto.setCheckCode(list.get(15));
         if (StringUtil.isNotEmpty(list.get(16)) && list.get(16).length()>2){
             dto.setPbcAssetType1(list.get(16).substring(0,3));
         }

@@ -265,7 +265,6 @@
 
         <result column="dataStatus" property="dataStatus" jdbcType="VARCHAR" />
         <result column="ERRMSG" property="errMsg" jdbcType="VARCHAR" />
-    <result column="PLAN_ID" property="planId" jdbcType="VARCHAR" />
 
     </resultMap>
 
@@ -529,7 +528,6 @@
         <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
         <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
         <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
-        <result column="PLAN_ID" property="planId" jdbcType="VARCHAR" />
         <result column="dataStatus" property="dataStatus" jdbcType="VARCHAR" />
 
     </resultMap>
@@ -603,7 +601,7 @@
         STATUS_DATE,
         CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE, SEC_MAIN_GRADE,
         BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,ORG_ASSET_TYPE1,
-        ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,BUY_PLACE,ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,PLAN_ID
+        ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,BUY_PLACE,ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3
     </sql>
     
     <sql id="Psbc_Base_Column_List">
@@ -649,7 +647,7 @@
         DATA_SOURCE, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, PPPFLAG,
         STATUS_DATE,
         CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE, SEC_MAIN_GRADE,
-        BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,ORG_ASSET_TYPE1,PLAN_ID,
+        BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,ORG_ASSET_TYPE1,
         ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3
     </sql>
     
@@ -706,7 +704,7 @@
         CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
         SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,ORG_ASSET_TYPE1,
         ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,BUY_PLACE,ASSET_TYPE3,
-        PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,PLAN_ID)
+        PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3)
         <foreach collection="insertList" item="item" index="index"
             separator="union all ">
             select
@@ -856,7 +854,6 @@
             #{item.pbcAssetType1,jdbcType=VARCHAR},
             #{item.pbcAssetType2,jdbcType=VARCHAR},
             #{item.pbcAssetType3,jdbcType=VARCHAR},
-            #{item.planId,jdbcType=VARCHAR},
             from dual
         </foreach>
     </insert>
@@ -914,7 +911,7 @@
         CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
         SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,ORG_ASSET_TYPE1,
         ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,ASSET_TYPE3,
-        PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,PLAN_ID)
+        PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3)
         <foreach collection="insertList" item="item" index="index"
             separator="union all ">
             select
@@ -1066,7 +1063,6 @@
             #{item.pbcAssetType1,jdbcType=VARCHAR},
             #{item.pbcAssetType2,jdbcType=VARCHAR},
             #{item.pbcAssetType3,jdbcType=VARCHAR},
-            #{item.planId,jdbcType=VARCHAR},
             from dual
         </foreach>
     </insert>
@@ -1549,9 +1545,6 @@
                 </if>
                 <if test="buyPlace != null">
                     BUY_PLACE = #{buyPlace,jdbcType=VARCHAR}
-                </if>
-                <if test="planId != null">
-                    PLAN_ID = #{planId,jdbcType=VARCHAR}
                 </if>
             </set>
             where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
@@ -2043,9 +2036,6 @@
                 <if test="buyPlace != null">
                     BUY_PLACE = #{buyPlace,jdbcType=VARCHAR}
                 </if>
-                <if test="planId != null">
-                    PLAN_ID = #{planId,jdbcType=VARCHAR}
-                </if>
             </set>
             where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
         </foreach>
@@ -2458,8 +2448,7 @@
             #{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
             #{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
             #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
-            #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB,
-            #{item.planId,jdbcType=VARCHAR} PLAN_ID
+            #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
 
 
             from dual
@@ -2685,8 +2674,7 @@
         CII.OPTION_FLAG=TEMP.OPTION_FLAG,
         CII.IS_BJSZQ=TEMP.IS_BJSZQ,
         CII.IS_PERPETUAL=TEMP.IS_PERPETUAL,
-        CII.IS_FBZB=TEMP.IS_FBZB,
-        CII.PLAN_ID=TEMP.PLAN_ID
+        CII.IS_FBZB=TEMP.IS_FBZB
 
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
@@ -2783,7 +2771,7 @@
         BANK_SEC_PERPETUAL,BANK_SEC_KZZQ,BANK_SEC_ZXZQ,ISUNLISTED,
         IS_BZHPJ,CHB_ISSUER_ID,CHB_MANAGER_ID,
         CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
-        IS_BJSZQ,IS_PERPETUAL,IS_FBZB,PLAN_ID
+        IS_BJSZQ,IS_PERPETUAL,IS_FBZB
         )
         values(
         TEMP.ASSET_UUID,
@@ -2993,7 +2981,7 @@
         TEMP.BANK_SEC_KZZQ,TEMP.BANK_SEC_ZXZQ,TEMP.ISUNLISTED,
         TEMP.IS_BZHPJ,TEMP.CHB_ISSUER_ID,TEMP.CHB_MANAGER_ID,
         TEMP.CHB_FINANCIER_ID,TEMP.PERPETUAL_FLAG,TEMP.OPTION_FLAG,
-        TEMP.IS_BJSZQ,TEMP.IS_PERPETUAL,TEMP.IS_FBZB,TEMP.PLAN_ID
+        TEMP.IS_BJSZQ,TEMP.IS_PERPETUAL,TEMP.IS_FBZB
         )
     </insert>
 
@@ -3296,8 +3284,7 @@
                     BANK_CAPITAL = #{item.bankCapital,jdbcType=VARCHAR},
                     HOLD_PURPOSE = #{item.holdPurpose},
                     UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
-                    UPDATE_TIME = #{item.updateTime,jdbcType=TIMESTAMP},
-                    PLAN_ID = #{item.planId,jdbcType=VARCHAR},
+                    UPDATE_TIME = #{item.updateTime,jdbcType=TIMESTAMP}
             </set>
             where ASSET_UUID = #{item.assetUuid}
         </foreach>

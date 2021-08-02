@@ -88,19 +88,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap"
-                           th:text="#{SvrBussRepPlacementInfo.planId}">对应资管计划代码</label>
-                    <div class="layui-input-inline input-inline">
-                        <select type="text" id="planId" name="planId"  required
-                                class="layui-input form-input input-select" placeholder="请输入内容"
-                                th:placeholder="#{SysCommon.placeholder}" th:initValue="${entity?.planId}"
-                                th:data-url="@{/invest/risk/penetrationmanagement/rskvalrelateimport/RskValRelateImport001/queryGroupIdInfo}"
-                                allowClear="true" ></select>
-                    </div>
-                </div>
-            </div>
+
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style="width:100%;">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepPlacementInfo.remark}"

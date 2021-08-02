@@ -91,15 +91,7 @@ public class AssetInfoDetailRiskValidator implements BeanValidator{
               		resultList.add(new ValidMessage("mdate",
               				getMessage("COMMON_E_0057", getMessage("到期日"))));      		
               	}          
-        }else {               
-        //对应资管计划代码必填校验
-        if(StringUtil.equals(dto.getAssetType2(), "1107")||StringUtil.equals(dto.getAssetType2(), "1108")
-        		||StringUtil.equals(dto.getAssetType2(), "1901")||StringUtil.equals(dto.getAssetType2(), "1902")){
-        	if(!StringUtil.isNotEmpty(dto.getPlanId())) {
-        		resultList.add(new ValidMessage("planId",
-        				getMessage("COMMON_E_0057", getMessage("对应资管计划代码"))));      		
-        	}
-      }            
+        }else {
        //权益类资产字段必填校验
         //股票代码必填校验
       if(StringUtil.equals(dto.getAssetType2(), "1305")||StringUtil.equals(dto.getAssetType2(), "1302")){

@@ -1103,11 +1103,6 @@ public class ChbAssetInfo extends BaseEntity {
      * 是否非标转标资产
      */
     private String isFbzb;
-    
-    /**
-     * 对应资管计划代码
-     */
-    private String planId;
 
     /**
      * 取得 资产要素uuid（为修改删除使用）
@@ -4530,12 +4525,4 @@ public class ChbAssetInfo extends BaseEntity {
     public void setIsFinLicence(String isFinLicence) {
         this.isFinLicence = isFinLicence;
     }
-
-	public String getPlanId() {
-		return planId;
-	}
-
-	public void setPlanId(String planId) {
-		this.planId = planId;
-	}
 }

@@ -578,7 +578,7 @@ GROUP BY asset.POS_DATE,
     <select id="selectRepAstByBatchDate" parameterType="java.util.Date" resultType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         SELECT
         ASSET_CODE assetCode,
-        plan_id planId,
+        CHECK_CODE checkCode,
         TARGET_AMT targetAmt,
         ASSET_TYPE2 assetType2,
         TRADE_MARKET tradeMarket
