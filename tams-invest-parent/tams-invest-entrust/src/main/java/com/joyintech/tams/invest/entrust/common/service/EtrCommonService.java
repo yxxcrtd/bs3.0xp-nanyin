@@ -507,7 +507,18 @@ public class EtrCommonService extends BaseService<ITableRow> {
             return addMessage;
         }
     }
-	
+
+    /**
+     * 错误消息拼接
+     * @param errorMsg 原错误信息
+     * @param addMsg 新增错误信息
+     * @since 1.0
+     */
+    public void spliceMessage(StringBuilder errorMsg, String addMsg) {
+        // 错误信息拼接
+        errorMsg.append(StringUtil.isEmpty(addMsg)||StringUtil.isEmpty(errorMsg.toString())?addMsg:"<br />"+addMsg );
+    }
+
 	    /***
      * 验证指令能否撤销(指令状态变更接口)
      * @param selectItem
