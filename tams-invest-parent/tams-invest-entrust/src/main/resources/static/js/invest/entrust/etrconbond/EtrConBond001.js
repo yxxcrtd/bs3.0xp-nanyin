@@ -48,8 +48,8 @@ $(function() {
                 },sortField:"finprodMarketId"
             }
             ,{field:'finprodName', title: 'EtrConBond001.finprodName', width:'10%'}
-            ,{field:'purchBondTotal', title:'EtrConBond001.purchBondTotal',width:'10%'}
-            ,{field:'winlotteryAmt', title:'EtrConBond001.winlotteryAmt',width:'10%'}
+            ,{field:'purchBondTotal', title:'EtrConBond001.purchBondTotal1', digit: 4 , width:'10%'}
+            ,{field:'winlotteryAmt', title:'EtrConBond001.winlotteryAmt1', digit: 4 , width:'10%'}
             ,{field:'entrustDate', title:'EtrConBond001.purchDate',width:'10%',type:'date'}
             ,{field:'purchModle',visible:false}
             ,{field:'purchModleStr', title:'EtrConBond001.purchModle',width:'10%',visible:false}
