@@ -76,7 +76,7 @@ public class EtrPlanAssetC002Controller extends BaseController {
 
     @Autowired
     private PlatformDate platformDate;
-    
+
     /**
      * {@inheritDoc}
      */
