@@ -1468,11 +1468,11 @@ public class EtrCommonService extends BaseService<ITableRow> {
         // 组合T日可用现金
         BigDecimal proAvailableCash = cash.get("cashT")==null?BigDecimal.ZERO: (BigDecimal)cash.get("cashT");
         // 净价
-        BigDecimal cprice = paramMap.get("price")==null?new BigDecimal(100): new BigDecimal(paramMap.get("price").toString());
+        BigDecimal cprice = !StringUtil.isNotEmpty(paramMap.get("price"))?new BigDecimal(100): new BigDecimal(paramMap.get("price").toString());
 
         // 可买数量
-        BigDecimal canBuyAmount = null;
-        if(cprice!=null&&BigDecimal.ZERO.compareTo(cprice)!=0){
+        BigDecimal canBuyAmount = BigDecimal.ZERO;
+        if(StringUtil.isNotEmpty(paramMap.get("price"))&&cprice!=null&&BigDecimal.ZERO.compareTo(cprice)!=0){
             canBuyAmount = ArithmeticUtil.divide(proAvailableCash,cprice,2,RoundingMode.HALF_UP);
         }
 
