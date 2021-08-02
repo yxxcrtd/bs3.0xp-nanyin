@@ -489,7 +489,7 @@ from
         inner join ptl_trade pt on pt.BUSI_NO = t.TRADE_ID
         where 1=1
         <if test="finprodId != null">
-            AND T3.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
+            AND T.finprod_id = #{finprodId,jdbcType=VARCHAR}
         </if>
         <if test="portfolioId != null ">
             AND tpda.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
