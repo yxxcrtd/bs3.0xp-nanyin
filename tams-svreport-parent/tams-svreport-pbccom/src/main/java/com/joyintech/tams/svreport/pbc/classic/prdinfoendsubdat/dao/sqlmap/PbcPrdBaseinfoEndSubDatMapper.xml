@@ -455,6 +455,11 @@
            and to_char(a.MDATE,'yyyy-MM-dd') &lt;= #{endDate}
         </if>
         <!-- 手工处理传入查询日期 实际到期日add by gaojian 2019-06-18 end -->
+
+
+        <if test="zipCode != null and zipCode != ''">
+            and DAT_ZIP_CODE = #{zipCode}
+        </if>
   	</where>
   	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
   	 ORDER BY A.PBC_SUBMIT_DEADLINE ASC, A.UPDATE_TIME DESC

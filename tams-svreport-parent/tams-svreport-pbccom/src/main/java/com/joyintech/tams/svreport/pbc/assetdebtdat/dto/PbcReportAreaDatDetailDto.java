@@ -3,7 +3,7 @@ package com.joyintech.tams.svreport.pbc.assetdebtdat.dto;
 import java.math.BigDecimal;
 
 /**
- * 描述:PBC_REPORT_AREA_DETAIL表的实体类
+ * 描述:PBC_REPORT_AREA_DETAIL_DAT表的实体类
  * @version
  * @author:  Administrator
  * @创建时间: 2019-03-04

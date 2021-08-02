@@ -1051,6 +1051,10 @@
            and to_char(VDATE,'yyyy-MM-dd') &lt;= #{endDate}
         </if>
 
+		<if test="zipCode != null and zipCode != ''">
+			and DAT_ZIP_CODE = #{zipCode}
+		</if>
+
 		<if test="allExport != null and allExport !=''">
 			and exists (
 			select 1 from PBC_INIT_PROD_RAISING_SUB pi where pi.Pbc_Prod_Id=T1.PBC_PROD_ID
