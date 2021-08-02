@@ -131,9 +131,9 @@
             ,{field:'busTradeMarket', title: 'EtrInvestBondInfo001.tradeMarket', width:'10%',sortField:"tradeMarket"}
             ,{field:'tradePlat',visible:false}
             ,{field:'busTradePlat', title: 'EtrInvestBondInfo001.tradePlat', width:'10%',sortField:"tradePlat"}
-            ,{field:'entrustNum',type:'number', title: 'EtrInvestBondInfo001.entrustAmt', width:'10%',sortField:"entrustNum"}
-            ,{field:'entrustOwnNum',type:'number', title: 'EtrInvestBondInfo002.entrustOwnNum', width:'10%',sortField:"entrustOwnNum"}
-            ,{field:'entrustIntegrateNum',type:'number', title: 'EtrInvestBondInfo002.entrustIntegrateNum', width:'10%',sortField:"entrustIntegrateNum"}
+            ,{field:'entrustNum',type:'number', title: 'EtrInvestBondInfo001.entrustAmt1', width:'10%', digit:4 , sortField:"entrustNum"}
+            ,{field:'entrustOwnNum',type:'number', title: 'EtrInvestBondInfo002.entrustOwnNum1', width:'10%', digit:4 , sortField:"entrustOwnNum"}
+            ,{field:'entrustIntegrateNum',type:'number', title: 'EtrInvestBondInfo002.entrustIntegrateNum1', width:'10%', digit:4 , sortField:"entrustIntegrateNum"}
             ,{field:'ccy',visible:false}
             ,{field:'busCcy', title: 'EtrInvestBondInfo001.ccy', width:'10%',sortField:"ccy"}
             ,{field:'vdate', title: 'EtrInvestBondInfo001.vdate', width:'10%',type:'date',sortField:"vdate"}
