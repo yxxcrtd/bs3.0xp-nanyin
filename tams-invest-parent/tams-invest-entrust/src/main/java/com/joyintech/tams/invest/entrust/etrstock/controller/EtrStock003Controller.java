@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -70,6 +72,9 @@ public class EtrStock003Controller extends BaseController {
     @Autowired(required = false)
     private BaseGetBusinessId bussGetBussinessIdService;
 
+    @Autowired
+    private PlatformDate platformDate;
+
     /**
      * 多对多指令界面入口
      */
@@ -86,7 +91,8 @@ public class EtrStock003Controller extends BaseController {
         }
         model.addAttribute("MY_SUP_TIME_TYPE_02", BussinessDictCodeList.监督时分_委托监控.getValue());
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
-        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+//        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+        Date sysDate = platformDate.getSysDate(LoginUserUtil.getUserName());
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         model.addAttribute("USE_STATUS_01", DictCodeListExt1.使用状态_启用.getValue());
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
