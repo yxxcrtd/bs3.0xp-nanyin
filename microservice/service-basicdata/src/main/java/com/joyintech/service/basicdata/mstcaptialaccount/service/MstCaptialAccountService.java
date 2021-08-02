@@ -225,7 +225,7 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
             //账户资金管理，所属柜台初始利率表
             //查询是否存在所属柜台对应利率，无记录，则新增  add by xxg start
             FinInitrateDatadict ft = finInitrateDatadictMapper.selectByPrimaryKey(entity.getOwnDept());
-            if(ft == null){
+            if(ft == null && "A07".equals(entity.getAccountType()) && "01".equals(entity.getRateType())){
                 FinInitrateDatadict finInitrateDatadict = new FinInitrateDatadict();
                 finInitrateDatadict.setRate(entity.getRate());
                 finInitrateDatadict.setOwnDept(entity.getOwnDept());
@@ -256,12 +256,14 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
             stlCapacctInfoMapper.updateByPrimaryKeySelective(entity);
 
             // 账户类型为“券商资金账户“时，支持修改利率 add by xxg start
-            String cashId = CommonUtil.generateCashFlowCode(entity.getLargePayno()+":"+entity.getBusiAcctNo(), DictCodeListExt1.现金流业务类型_资金账户.getValue(), 0L, DictCodeListExt1.现金流二级类型_利息.getValue());
-            FinRateInfo finRateInfo = new FinRateInfo();
-            finRateInfo.setEffDate(entity.getEffectDate());
-            finRateInfo.setCashId(cashId);
-            finRateInfo.setRate(entity.getRate().divide(new BigDecimal("100")));
-            finRateInfoMapper.updateByPrimaryKeySelective(finRateInfo);
+            if("01".equals(entity.getRateType())){
+                String cashId = CommonUtil.generateCashFlowCode(entity.getLargePayno()+":"+entity.getBusiAcctNo(), DictCodeListExt1.现金流业务类型_资金账户.getValue(), 0L, DictCodeListExt1.现金流二级类型_利息.getValue());
+                FinRateInfo finRateInfo = new FinRateInfo();
+                finRateInfo.setEffDate(entity.getEffectDate());
+                finRateInfo.setCashId(cashId);
+                finRateInfo.setRate(entity.getRate().divide(new BigDecimal("100")));
+                finRateInfoMapper.updateByPrimaryKeySelective(finRateInfo);
+            }
             // 账户类型为“券商资金账户“时，支持修改利率 add by xxg end
 
             //上传文件修改更新

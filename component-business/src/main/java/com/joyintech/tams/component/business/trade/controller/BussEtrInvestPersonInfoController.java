@@ -76,11 +76,13 @@ public class BussEtrInvestPersonInfoController extends BaseController {
             }
         }else{
             Map<String, Object> map = bussEtrInvestPersonInfoService.getUser(entity.getInvManagerId());
-            SysDepartmentDto deptDto = deptMap.get((String)map.get("DEPTCODE"));
-            if (deptDto != null) {
-                entity.setRoom(deptDto.getDeptName());
+            if(null!=map){
+                SysDepartmentDto deptDto = deptMap.get((String)map.get("DEPTCODE"));
+                if (deptDto != null) {
+                    entity.setRoom(deptDto.getDeptName());
+                }
+                entity.setRealName((String)map.get("REALNAME"));
             }
-            entity.setRealName((String)map.get("REALNAME"));
         }
         
         //获取交易对手下拉框

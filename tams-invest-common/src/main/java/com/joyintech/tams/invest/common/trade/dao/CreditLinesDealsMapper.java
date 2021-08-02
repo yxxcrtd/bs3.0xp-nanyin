@@ -6,6 +6,7 @@
 package com.joyintech.tams.invest.common.trade.dao;
 
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductCredit;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -126,4 +127,8 @@ public interface CreditLinesDealsMapper {
 	List<CreditLines> getCeLinesInfoforassetPierce(Map<String,Object> model);
 
 	BigDecimal getLastPrice(@Param("finprodId")String finprodId,@Param("sysDate")Date sysDate);
+
+	FinProductType selectByPrimaryKey(FinProductTypeKey key);
+
+	List<PledgeBondInfoDto> findPledgeBondInfo(Map<String, Object> param);
 }

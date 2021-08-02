@@ -61,8 +61,8 @@ $(function() {
             ,{field:'finprodAbbr', title: 'EtrInvestBondInfo001.finprodAbbr', width:'10%',sortField:"finprodAbbr"}
             ,{field:'tradeMarket', visible:false}
             ,{field:'busTradeMarket', title: 'EtrInvestBondInfo001.tradeMarket', width:'10%',sortField:"tradeMarket"}
-            ,{field:'bidPriceTotal', title:'EtrBondFirstLBidding001.bidPriceTotal',width:'10%',sortable:false}
-            ,{field:'winPriceTotal', title:'EtrBondFirstLBidding001.winPriceTotal',width:'10%',sortable:false}
+            ,{field:'bidPriceTotal', title:'EtrBondFirstLBidding001.bidPriceTotal',width:'10%', digit:4 , sortable:false}
+            ,{field:'winPriceTotal', title:'EtrBondFirstLBidding001.winPriceTotal',width:'10%', digit:4 , sortable:false}
             ,{field:'bidPrice', title:'EtrBondFirstLBidding001.bidPrice',width:'10%',sortable:false}
             ,{field:'winPriceStr', title:'EtrBondFirstLBidding001.winPrice',width:'10%',sortable:false}
             ,{field:'ccy',visible:false}

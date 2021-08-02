@@ -258,6 +258,20 @@ public interface BaseEtrInvestInfoService {
     boolean newDelegateFlow(BaseEtrInvestInfoDto entity);
 
     /**
+     * 录入指令流程中的数据
+     * @param entity
+     * @return
+     */
+    boolean newWwDelegateFlow(BaseEtrInvestInfoDto entity);
+
+    /**
+     * 删除指令流程中的数据
+     * @param param
+     * @return
+     */
+    boolean deleteWwDelegateFlow(Map<String, Object> param);
+
+    /**
      * 删除指令流程中的数据
      * @param param
      * @return

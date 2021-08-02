@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.background.component.uplink.interbank.business.dto.*;
+import com.joyintech.background.component.uplink.interbank.database.dao.IbuMainMapper;
+import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteMapper;
 import com.joyintech.system.base.entity.SysUserAdd;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -162,6 +164,9 @@ public class CfetsQuotedCommonService extends BaseService {
      */
     @Autowired
     private IbuMainService ibuMainService;
+
+    @Autowired
+    private IbuQuoteMapper ibuQuoteMapper;
     
 
     /**
@@ -1280,5 +1285,14 @@ public class CfetsQuotedCommonService extends BaseService {
         Page<SelectOptionDto> pageList = this.queryForPageForSelectReturn(page, length,
                 () -> cfetsQuotedCommonMapper.selectEntrustId(param));
         return pageList;
+    }
+
+    /**
+     * 是否可以操作报价
+     * @param param
+     * @return
+     */
+    public boolean isOpeQuotedPrice(Map<String,Object> param){
+        return ibuQuoteMapper.isOpeQuotedPrice(param)>0?true:false;
     }
 }

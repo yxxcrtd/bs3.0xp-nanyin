@@ -149,7 +149,7 @@ $(function () {
             , {field: 'assetSign', title: '资产标的'}
             , {field: 'cashFlow', title: '现金流', width: 200, type: 'number'}
             , {field: 'ccyStr', title: '币种', sortField: 'cashFlow'}
-            , {field: 'portfolioSeriesStr', title: '组合系列'}
+            , {field: 'portfolioSeriesStr', title: '组合系列', sortField: 'portfolioSeries'}
         ]
     });
     
@@ -172,7 +172,7 @@ $(function () {
             ,{field:'inCashflow',title:'流入现金流', width:200, type: 'number'}
             ,{field:'outCashflow',title:'流出现金流', width:200, type: 'number'}
             ,{field:'netCashflow',title:'净现金流', width:200, type: 'number'}
-            ,{field:'portfolioSeriesStr', title: '组合系列',  width:300}
+            ,{field:'portfolioSeriesStr', title: '组合系列', sortField: 'portfolioSeries', width:300}
         ],
     });
     

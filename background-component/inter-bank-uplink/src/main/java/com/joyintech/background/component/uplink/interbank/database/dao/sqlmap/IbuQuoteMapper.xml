@@ -1407,4 +1407,22 @@
 		UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 		where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
 	</update>
+
+	<!--是否可以操作报价-->
+	<select id="isOpeQuotedPrice" resultType="java.lang.Integer">
+		SELECT
+		CASE WHEN exe_type IN ('19',
+		'20',
+		'46') THEN 1
+		ELSE DECODE(UPDATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0) + DECODE(CREATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0)
+		END quoteId
+		FROM
+		<if test="quoteIdTyep !=null and quoteIdTyep =='bond'">
+			IBU_QUOTE_BOND
+		</if>
+		<if test="quoteIdTyep !=null and quoteIdTyep =='rep'">
+			IBU_QUOTE_CREP
+		</if>
+		where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+	</select>
 </mapper>

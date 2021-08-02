@@ -24,7 +24,6 @@
         <result column="ORI_TRADE_ID" property="oriTradeId" jdbcType="VARCHAR" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="AMOUNT_ADD" property="amountAdd" jdbcType="DECIMAL" />
-        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, FINPROD_ID FINPROD_ID, BRANCH BRANCH, CDATE CDATE, LAST_AMOUNT LAST_AMOUNT, 
@@ -32,7 +31,7 @@
         CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
         CREDIT_LINES_ID CREDIT_LINES_ID, CREDIT_OCCURE_TYPE CREDIT_OCCURE_TYPE, ENTRUST_ID ENTRUST_ID, 
         NET_PRICE NET_PRICE, SHARE_AMT SHARE_AMT, ORI_TRADE_ID ORI_TRADE_ID, STATUS STATUS, 
-        AMOUNT_ADD AMOUNT_ADD, PORTFOLIO_ID PORTFOLIO_ID
+        AMOUNT_ADD AMOUNT_ADD
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -63,7 +62,7 @@
             UPDATE_USER, UPDATE_TIME, CREDIT_LINES_ID, 
             CREDIT_OCCURE_TYPE, ENTRUST_ID, NET_PRICE, 
             SHARE_AMT, ORI_TRADE_ID, STATUS, 
-            AMOUNT_ADD, PORTFOLIO_ID)
+            AMOUNT_ADD)
         values (#{seqno,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
             #{cdate,jdbcType=DATE}, #{lastAmount,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, 
             #{newAmount,jdbcType=DECIMAL}, #{tradeId,jdbcType=VARCHAR}, #{isBottom,jdbcType=VARCHAR}, 
@@ -71,7 +70,7 @@
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{creditLinesId,jdbcType=VARCHAR}, 
             #{creditOccureType,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, #{netPrice,jdbcType=DECIMAL}, 
             #{shareAmt,jdbcType=DECIMAL}, #{oriTradeId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-            #{amountAdd,jdbcType=DECIMAL}, #{portfolioId,jdbcType=VARCHAR})
+            #{amountAdd,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CreditUsingAst" >
         insert into CREDIT_USING_AST
@@ -142,9 +141,7 @@
             <if test="amountAdd != null" >
                 AMOUNT_ADD,
             </if>
-            <if test="portfolioId != null" >
-                PORTFOLIO_ID,
-            </if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -213,20 +210,18 @@
             <if test="amountAdd != null" >
                 #{amountAdd,jdbcType=DECIMAL},
             </if>
-            <if test="portfolioId != null" >
-                #{portfolioId,jdbcType=VARCHAR},
-            </if>
+
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CreditUsingAst" >
         insert into CREDIT_USING_AST(SEQNO, FINPROD_ID, BRANCH, CDATE, LAST_AMOUNT, AMOUNT, 
         NEW_AMOUNT, TRADE_ID, IS_BOTTOM, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
         UPDATE_TIME, CREDIT_LINES_ID, CREDIT_OCCURE_TYPE, ENTRUST_ID, NET_PRICE, SHARE_AMT, 
-        ORI_TRADE_ID, STATUS, AMOUNT_ADD, PORTFOLIO_ID)
+        ORI_TRADE_ID, STATUS, AMOUNT_ADD)
         select SEQNO, FINPROD_ID, BRANCH, CDATE, LAST_AMOUNT, AMOUNT, 
             NEW_AMOUNT, TRADE_ID, IS_BOTTOM, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
             #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREDIT_LINES_ID, CREDIT_OCCURE_TYPE, ENTRUST_ID, NET_PRICE, SHARE_AMT, 
-            ORI_TRADE_ID, #{status,jdbcType=VARCHAR} STATUS, AMOUNT_ADD, PORTFOLIO_ID
+            ORI_TRADE_ID, #{status,jdbcType=VARCHAR} STATUS, AMOUNT_ADD
              from CREDIT_USING_AST
              where STATUS = 'E' and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -287,9 +282,6 @@
             <if test="amountAdd != null" >
                 AMOUNT_ADD = #{amountAdd,jdbcType=DECIMAL},
             </if>
-            <if test="portfolioId != null" >
-                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
-            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
@@ -312,8 +304,7 @@
             SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
             ORI_TRADE_ID = #{oriTradeId,jdbcType=VARCHAR},
             STATUS = #{status,jdbcType=VARCHAR},
-            AMOUNT_ADD = #{amountAdd,jdbcType=DECIMAL},
-            PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+            AMOUNT_ADD = #{amountAdd,jdbcType=DECIMAL}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 </mapper>

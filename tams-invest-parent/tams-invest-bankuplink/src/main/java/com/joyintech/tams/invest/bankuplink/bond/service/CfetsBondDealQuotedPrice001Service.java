@@ -24,6 +24,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.netflix.discovery.converters.Auto;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -126,6 +128,9 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
     
     @Autowired
     private FinProductMapper finProductMapper;
+
+    @Autowired
+    private CommonBusinessService commonBusinessService;
 
     /**
      * 根据查询条件查询委托列表
@@ -286,7 +291,15 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
             return Collections.emptyList();
         }
         param.put("loginUserId", user.getUserName());
-        param.put("isAdmin", user.isAdmin());
+        //add by zznn 20210730 start
+        //岗位信息 框架没有封装  单独处理
+        //交易主管(交易处长03)、超级管理员能够查询出所有的报价信息
+        Map<String,Object> paramUser = new HashMap<>();
+        paramUser.put("userId",user.getUserName());
+        paramUser.put("rolePos","03");
+        boolean traDirector = commonBusinessService.isTraDirector(paramUser);
+        param.put("isAdmin", user.isAdmin()||traDirector);
+        //add by zznn 20210730 end
         // 待回复报价是否所有交易员可见（01：不允许，02：允许）
         param.put("unAnswerFlag", CacheUtil.getSysParam("ibuFlag_allTraderCanShowUnAnswerQuote"));
         String keywords = "";

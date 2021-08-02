@@ -160,7 +160,9 @@
                 vdate:query('#vdate').val()
             }, function (result) {
             if (result ) {
-                document.getElementById('deviationDegree').innerHTML = JoyinUtil.formatNumber(result, 4, null, 2) + '%';
+                document.getElementById('deviationDegree').innerHTML ="<span style='color: red'>"+
+                    JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
+
             }
         });
     }
@@ -589,6 +591,7 @@
         query("#mdate").val(sysDate).trigger("change");
         query("#counterId1").val("").trigger("change");
         query("#counterId2").val("").trigger("change");
+        document.getElementById('deviationDegree').innerHTML = '';
         layui.form.render(); // reload layui
         pageModel = PAGE_MODEL_NEW;
     };

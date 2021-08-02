@@ -934,7 +934,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
     private List<CreditComInfoOneStepDto> getCreditInfoOneStep(CreditLinesInputDto creditLinesInputDto) {
         List <CreditComInfoOneStepDto> list = new ArrayList<>();
         // 根据资产分类获取额度标签，从第5层开始找，找不到再向上逐级找
-        int i = 3;
+        int i = 5;
         while (StringUtil.isEmptyList(list) && i > 0){
             boolean isFinProduct = false;
             if (StringUtils.isNotEmpty(creditLinesInputDto.getFinprodId())) {
