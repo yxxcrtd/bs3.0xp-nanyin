@@ -2757,8 +2757,9 @@ select #{R7S1} as remType,
              a.lable lable,
              a.dealF dealF,
              a.closF closF
-		from (/*银行间缴款查询*/
-		/*银行间缴款查询*/ select case when wtpd.trade_id is not null then '04' else '' end paymentStatus, /*缴款状态*/
+		from (
+		<if test="isShow01 == 'true' ">
+		select case when wtpd.trade_id is not null then '04' else '' end paymentStatus, /*缴款状态*/
                                ee.ENTRUST_STATUS                                         entrustStatus, /*委托状态*/
                                fp.FINPROD_MARKET_ID                                      assetCode, /*资产代码*/
                                fp.finprod_name                                           assetName, /*资产名称*/
@@ -2924,8 +2925,12 @@ select #{R7S1} as remType,
                           and bo.is_win = bobp.is_win
                           AND bobp.trade_id is not NULL
                           AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('01')
-                        union all
+		</if>
+		<if test="isShow02 == 'true' and isShow01 == 'true' ">
+			union all
+		</if>
                         /*场内债券缴款查询*/
+		<if test="isShow02 == 'true' ">
                         select case when wtpd.trade_id is not null then '04' else '' end paymentStatus, /*缴款状态*/
                                ee.ENTRUST_STATUS                                         entrustStatus, /*委托状态*/
                                fp.FINPROD_MARKET_ID                                      assetCode, /*资产代码*/
@@ -3091,7 +3096,9 @@ select #{R7S1} as remType,
                           and bobp.is_win = 'Y'
                           and bo.is_win = bobp.is_win
                           AND bobp.trade_id is not NULL
-                          AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('03', '04')) a
+                          AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in ('03', '04')
+		</if>
+                          ) a
 		where
 		a.entrustStatus != '06'
 		and a.paymentStatus != '04'
