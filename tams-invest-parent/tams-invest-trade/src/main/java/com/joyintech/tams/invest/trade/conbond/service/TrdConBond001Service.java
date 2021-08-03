@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.trade.conbond.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -130,6 +132,14 @@ public class TrdConBond001Service extends CommonExportService<TrdConBondDto> imp
         			tfitDto.setFlg("02");
         		}
             }
+            //配置单位 edit by yeming 20210802 start
+            if(tfitDto.getPrinAmt() != null) {
+                tfitDto.setPrinAmt(tfitDto.getPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(tfitDto.getWinlotteryAmt() != null) {
+                tfitDto.setWinlotteryAmt(tfitDto.getWinlotteryAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            //配置单位 edit by yeming 20210802 end
         }
 		
         
