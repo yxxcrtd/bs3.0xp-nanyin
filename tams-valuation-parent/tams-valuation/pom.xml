@@ -3,21 +3,30 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>tams-valuation</artifactId>
     <packaging>jar</packaging>
-
     <name>tams-valuation</name>
     <description>估值核算系统</description>
-    <version>1.0.0</version>
     <parent>
+        <artifactId>tams-valuation-parent</artifactId>
         <groupId>com.joyintech</groupId>
-        <artifactId>tams-parent</artifactId>
-        <version>0.0.4</version>
+        <version>3.0.1</version>
     </parent>
+    <version>3.0.1</version>
 
     <properties>
         <hibernate.version>5.3.6.Final</hibernate.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>tams-valuation-valmodel</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>tams-valuation-lossmodel</artifactId>
+            <version>3.0.1</version>
+        </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>tams-calculation</artifactId>
