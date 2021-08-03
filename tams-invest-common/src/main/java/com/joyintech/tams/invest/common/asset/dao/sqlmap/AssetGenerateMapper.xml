@@ -27,11 +27,12 @@
 	<select id="getBondValuation" resultType="Map">
 		SELECT SEC_ID,PRICE,NETPRICE,M_DURATION,BPYIELD,LAST_PERIOD FROM (
 		select
-		SEC_ID,PRICE,NETPRICE,M_DURATION,BPYIELD,LAST_PERIOD,rank() OVER(PARTITION BY SEC_ID ORDER BY VALUE_DATE DESC ) AS rowno
-		from MST_BOND_VALUATION_INFO
-		 WHERE VALUE_DATE &lt;= #{valDate, jdbcType=DATE}
+		MVI.SEC_ID,MVI.PRICE,MVI.NETPRICE,MVI.M_DURATION,MVI.BPYIELD,MVI.LAST_PERIOD,rank() OVER(PARTITION BY MVI.SEC_ID ORDER BY MVI.VALUE_DATE DESC ) AS rowno
+		from MST_BOND_VALUATION_INFO MVI
+		INNER JOIN FIN_PRODUCT FP ON MVI.SEC_ID=FP.FINPROD_MARKET_ID
+		 WHERE MVI.VALUE_DATE &lt;= #{valDate, jdbcType=DATE}
 		<if test="finprodIdList != null  and finprodIdList.size() > 0">
-			and #{FINPROD_TYPE_TG_01}||SEC_ID in
+			and FP.FINPROD_ID in
 			<foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>

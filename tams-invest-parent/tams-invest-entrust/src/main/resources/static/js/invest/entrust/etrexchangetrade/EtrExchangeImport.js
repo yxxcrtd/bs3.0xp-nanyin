@@ -115,7 +115,7 @@
         return riskdata;
     }
     var cols = [
-          {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 50, sortable: false}
+          {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 70, sortable: false}
         , {field: 'portfolioId', title: 'EtrBrowDepoInfo001.portfolioId', width: 120, sortable: false}
         , {field: 'stockId', title: 'EtrBrowDepoInfo001.finprodId', width: 150, sortable: false}
         , {field: 'psStr', title: 'EtrExchangeTrade001.ps', width: 150, sortable: false}
@@ -141,7 +141,7 @@
 
     //大宗交易指令
     var dzCols = [
-        {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 50, sortable: false}
+        {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 70, sortable: false}
         , {field: 'portfolioId', title: 'EtrExchangeTrade001.portfolioId', width: 120, sortable: false}
         , {field: 'acctNo', title: 'EtrExchangeTrade001.acctNo', width: 150, sortable: false}
         , {field: 'finprodId', title: 'EtrExchangeTrade001.finprodId', width: 120, sortable: false}
@@ -172,7 +172,7 @@
 
     //固定收益指令
     var gsCols = [
-        {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 50, sortable: false}
+        {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 70, sortable: false}
         , {field: 'portfolioId', title: 'EtrExchangeTrade001.portfolioId', width: 120, sortable: false}
         , {field: 'acctNo', title: 'EtrExchangeTrade001.acctNo', width: 150, sortable: false}
         , {field: 'finprodId', title: 'EtrExchangeTrade001.finprodId', width: 120, sortable: false}
@@ -313,43 +313,44 @@
                 });
         })
     }
-    
-    /**
-     * 风险试算
-     */
-    $('#EtrBrowDepoInfo003_btn_riskcal').click(function(){
-        var object = $.serializeToObject('#searchForm').selectedItem;
-        var checkParam = {};
-        checkParam.data = getriskdataAll();
-        var param = [];
-        if (checkParam.data.length > 0) {
-            for(var index in checkParam.data){
-                var item = checkParam.data[index];
-                item.data.ps = object[index].ps;
-                item.data.portfolioCode = object[index].portfolioId;
-                item.data.finprodId = object[index].finprodId;
-                item.data.assetCode = object[index].finprodId;
-                item.data.entrustAmt = item.data.tradeAmount;
-                if(item.data.ps == PS_03){
-                    item.data.assetType = FINPROD_TYPE_TG_F02;
-                    object[index].finprodType2 = FINPROD_TYPE_TG_F02;
-                }else if(item.data.ps == PS_04){
-                    item.data.assetType = FINPROD_TYPE_TG_F03;
-                    object[index].finprodType2 = FINPROD_TYPE_TG_F02;
-                }else{
-                    item.data.assetType = object[index].finprodType2;
+    $(function () {
+        /**
+         * 风险试算
+         */
+        $('#EtrBrowDepoInfo003_btn_riskcal').click(function () {
+            var object = $.serializeToObject('#searchForm').selectedItem;
+            var checkParam = {};
+            checkParam.data = getriskdataAll();
+            var param = [];
+            if (checkParam.data.length > 0) {
+                for (var index in checkParam.data) {
+                    var item = checkParam.data[index];
+                    item.data.ps = object[index].ps;
+                    item.data.portfolioCode = object[index].portfolioId;
+                    item.data.finprodId = object[index].finprodId;
+                    item.data.assetCode = object[index].finprodId;
+                    item.data.entrustAmt = item.data.tradeAmount;
+                    if (item.data.ps == PS_03) {
+                        item.data.assetType = FINPROD_TYPE_TG_F02;
+                        object[index].finprodType2 = FINPROD_TYPE_TG_F02;
+                    } else if (item.data.ps == PS_04) {
+                        item.data.assetType = FINPROD_TYPE_TG_F03;
+                        object[index].finprodType2 = FINPROD_TYPE_TG_F02;
+                    } else {
+                        item.data.assetType = object[index].finprodType2;
+                    }
+                    param.push(object[index]);
                 }
-                param.push(object[index]);
             }
-        }
-        window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskRdsTrial/interf/trialList/' + pageId + '/0', param, checkParam);
-        // add by zhangrui1 end
-    });
-    
-    /**
-     * 提交
-     */
-    $('#EtrBrowDepoInfo003_btn_submit').click(function() {
-        saveOrSubmit('submit');
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskRdsTrial/interf/trialList/' + pageId + '/0', param, checkParam);
+            // add by zhangrui1 end
+        });
+
+        /**
+         * 提交
+         */
+        $('#EtrBrowDepoInfo003_btn_submit').click(function () {
+            saveOrSubmit('submit');
+        });
     });
 }());
