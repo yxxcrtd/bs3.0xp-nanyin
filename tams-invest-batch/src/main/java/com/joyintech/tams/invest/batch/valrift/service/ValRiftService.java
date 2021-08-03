@@ -88,13 +88,6 @@ public class ValRiftService {
                 //回购利息是否是汇总的
                 boolean hgSum = false;
                 if (positionList != null && !positionList.isEmpty()) {
-                    //没有回购四级科目 add by lpf
-                    /*if(!(positionList.stream().filter(x->(StringUtil.startsWith(x.getSubCode(),"120410")
-                            ||StringUtil.startsWith(x.getSubCode(),"2231"))).collect(Collectors.toList()).size()>0)){
-                        hgSum =true;
-                        //回购利息汇总情况下查询，科目代码<=8 优先3级科目 没有就2级 再1级科目
-                        positionList.addAll(valRiftMapper.selectValtblAssetSubHg(paramMap));
-                    }*/
                     hgSum =true;
                     /*过滤回购利息取汇总*/
                     positionList = positionList.stream().filter(x->(!StringUtil.startsWith(x.getSubCode(),"120410") && !StringUtil.startsWith(x.getSubCode(),"2231"))).collect(Collectors.toList());
@@ -321,7 +314,7 @@ public class ValRiftService {
                 //add by lpf 剩余现金处理 start
                 if(StringUtil.startsWith(bean.getFinprodId(),"REMAININGCASH")){
                     if(mapAsset.containsKey(bean.getFinprodId())){
-                        PtlSecPierceValutionDto ptlSecPierceValutionDto  = (PtlSecPierceValutionDto)mapAsset.get(bean.getFinprodId());
+                        PtlSecPierceValutionDto ptlSecPierceValutionDto  = mapAsset.get(bean.getFinprodId());
                         //剩余现金
                         if(!StringUtil.startsWith(bean.getSubCode(),"120401") &&!StringUtil.startsWith(bean.getSubCode(),"120402")
                                 &&!StringUtil.startsWith(bean.getSubCode(),"120403")){
@@ -660,69 +653,6 @@ public class ValRiftService {
         return leafAssetPlan;
     }
     
-  /*  private void dealRiftByPtlId(List<ValtblAssetSubDto> leafAssetPlan,String portfolioId,Date vdate,BigDecimal shareAmt){
-        SubPtlQueue subPtlQueue = new SubPtlQueue();
-        SubPtlNode node = new SubPtlNode(portfolioId);
-        while(null!=node){
-            Map<String,Object> paramMap = new HashMap<String,Object>();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            paramMap.put("cdate", sdf.format(vdate));
-            paramMap.put("portfolioId", node.getCode());
-            List<ValtblAssetSubDto> positionList = valRiftMapper.selectValtblAssetSub(paramMap);//底层资产
-            if(null!=positionList&&!positionList.isEmpty()){
-                for(ValtblAssetSubDto valtblAssetSubDto : positionList){
-                	//-------add by 裴家俊  避免买了自身这个组合资产，陷入死循环-----start----------
-                	if(StringUtil.isNotEmpty(valtblAssetSubDto.getFinprodMarketId())&&StringUtil.equals(portfolioId, valtblAssetSubDto.getFinprodMarketId())){
-                		continue;
-                	}
-                	//-------add by 裴家俊  避免买了自身这个组合资产，陷入死循环-----end----------
-                    this.addSubNode(valtblAssetSubDto,vdate,subPtlQueue,node,shareAmt);
-                    valtblAssetSubDto.setPositionRatio(node.getPositionRatio());
-                    if(StringUtil.isEmpty(valtblAssetSubDto.getFinprodId())){
-                        valtblAssetSubDto.setFinprodId(Long.toString(node.getNextVirtAssetObjectId()));
-                    }
-                    if(StringUtil.equals(valtblAssetSubDto.getHasChildren(), DictCodeList.是否_否.getValue())){
-                        valtblAssetSubDto.setPtlId(portfolioId);
-                        leafAssetPlan.add(valtblAssetSubDto); // 添加到List中等待处理
-                    }
-                }
-            }
-            // 执行下一个
-            node = subPtlQueue.pop();
-        }
-    }*/
-    
-    /**
-     * 迭代node
-     * <功能详细描述>
-     * @param valtblAssetSubDto
-     * @param vdate
-     * @param subPtlQueue
-     * @param node
-     * @param shareAmt 理财产品数量
-     * @see
-     * @since 1.0
-     */
-/*    private void addSubNode(ValtblAssetSubDto valtblAssetSubDto,Date vdate,SubPtlQueue subPtlQueue,SubPtlNode parentNode,BigDecimal shareAmt){
-        String finprodId = valtblAssetSubDto.getFinprodMarketId();//更改为市场代码
-        if(StringUtil.isNotEmpty(finprodId)){
-            Map<String,Object> paramMap = new HashMap<String,Object>();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            paramMap.put("cdate", sdf.format(vdate));
-            paramMap.put("portfolioId", finprodId); //计划类资产市场代码作为组合代码入库
-            List<ValtblAssetSubDto> positionList = valRiftMapper.selectValtblAssetSub(paramMap);
-            if(null!=positionList&&!positionList.isEmpty()){
-                valtblAssetSubDto.setHasChildren(DictCodeList.是否_是.getValue());
-            }
-            //实收资本
-            BigDecimal valCapital = valRiftMapper.selectValCapital(paramMap);
-            if(null!=valCapital&&valCapital!= BigDecimal.ZERO){
-                SubPtlNode node = new SubPtlNode(finprodId);
-                node.setPositionRatio(ArithmeticUtil.divide(ArithmeticUtil.multiply(parentNode.getPositionRatio(),shareAmt), valCapital));
-                subPtlQueue.push(node);
-            }
-        }
-    }*/
     /**
      * 获取参加任务的组合数
      * <功能详细描述>
