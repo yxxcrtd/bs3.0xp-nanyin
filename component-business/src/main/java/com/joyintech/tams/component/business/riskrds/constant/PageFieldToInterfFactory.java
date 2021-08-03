@@ -9,6 +9,7 @@ import java.util.Map;
 import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -53,10 +54,14 @@ public class PageFieldToInterfFactory {
     public static final String INF_CODE = "infCode";
     public static final String INF_REVOKEFLG = "revokeFlg";
     public static final String INF_ISINNERTRD = "isInnerTrd";
+
     // 预占功能 add by zhangrui1 start
     public static final String INF_OCCUPYDATE = "occupyDate";
     // 预占功能 add by zhangrui1 end
     public static final String INF_TOTALFACEAMT = "totalFaceAmt";
+    public static final String INF_VARIETYCODE = "varietyCode";
+    public static final String INF_CALENDARCODE = "calendarCode";
+    public static final String INF_INVAIM = "invAim";
     /*************************************************************/
     /**                      *△接口字段区域△*                        */
     /*************************************************************/
@@ -70,7 +75,7 @@ public class PageFieldToInterfFactory {
     enum FieldStruct {
         PORTFOLIOID("portfolioId", INF_PORTFOLIOCODE),
         FINPRODID("finprodId", INF_ASSETCODE),
-        TOTLETRADEID("totleTradeId", INF_EVENTID),
+        BUSICODE("busiCode", INF_EVENTID),
         FINPRODTYPE2("finprodType2", INF_ASSETTYPE),
         PS("ps", INF_PS),
         PS2("ps2", INF_PS),
@@ -82,9 +87,19 @@ public class PageFieldToInterfFactory {
         CONNUM("conNum", INF_TRADENUM),
         CONPRICE("conPrice", INF_PRICEAMT),
         FINMDATE("finmdate", INF_MDATE),
-        CHANGETOFINPRODNAME("changeToFinprodName", INF_ASSETCODE),
+        CHANGETOFINPRODNAME("changeToFinprodId", INF_ASSETCODE),
         TRADEMARKET("tradeMarket", INF_TRADEPLACE),
         SHAREFINPRODID("shareFinprodId", INF_ASSETCODE),
+        TRADEID("tradeId", INF_EVENTID),
+        // 债券借贷 start
+        F12_MTRADEAMT("mTradeAmt", INF_AMOUNT),
+        F12_MTRADEAMT_NUM("mTradeAmt", INF_TRADENUM),
+        F12_PRINAMT("prinAmt", INF_AMOUNT),
+        F12_SHAREAMT("shareAmt", INF_TOTALFACEAMT),
+        F12_PLEDGEFINPRODID("pledgeFinprodId", INF_ASSETCODE),
+        F12_CALENDARID("calendarId", INF_CALENDARCODE),
+        F12_INVAIM(INF_INVAIM, INF_INVAIM),
+        // 债券借贷 end
         ;
         /**
          * 画面字段
@@ -107,14 +122,65 @@ public class PageFieldToInterfFactory {
      */
     private static final Map<String, List<FieldStruct>> ASSET_TRADE_MAP = new HashMap<>();
     static {
+        // 债券借贷-到期
+        add(concat(DictCodeListExt2.平安资产类型_债券借贷, DictCodeList.交易方向_到期),
+            // 债券借贷到期确认.组合代码-接口.组合代码
+            FieldStruct.PORTFOLIOID,
+            // 债券借贷到期确认.转债代码-接口.资产代码
+            FieldStruct.FINPRODID,
+            FieldStruct.FINPRODTYPE2,
+            // 债券借贷到期确认.业务编码-接口.事件代码
+            FieldStruct.BUSICODE,
+            // 债券借贷到期确认.交易方向-接口.交易方向
+            FieldStruct.PS,
+            // 债券借贷到期确认.币种-接口.币种
+            FieldStruct.CCY,
+            // 债券借贷到期确认.借贷费用-接口.金额
+            FieldStruct.F12_MTRADEAMT,
+            // 债券借贷到期确认.借贷费用-接口.数量
+            FieldStruct.F12_MTRADEAMT_NUM,
+            // 债券借贷到期确认.交易日历-接口.交易日历
+            FieldStruct.F12_CALENDARID);
+        // 债券借贷-融入-买入
+        add(concat(DictCodeListExt2.平安资产类型_债券借贷, DictCodeList.交易方向_到期, BussinessDictCodeList.交易方向_买入),
+            // 债券借贷到期确认.组合代码-接口.组合代码
+            FieldStruct.PORTFOLIOID,
+            // 债券借贷到期确认.转债代码-接口.资产代码
+            FieldStruct.F12_PLEDGEFINPRODID,
+            // 债券借贷到期确认.业务编码-接口.事件代码
+            FieldStruct.BUSICODE,
+            // 债券借贷到期确认.交易方向-接口.交易方向
+            FieldStruct.PS2,
+            // 债券借贷到期确认.币种-接口.币种
+            FieldStruct.CCY,
+            // 债券借贷到期确认.借贷费用-接口.金额
+            FieldStruct.F12_PRINAMT,
+            // 债券借贷到期确认.借贷费用-接口.数量
+            FieldStruct.F12_SHAREAMT);
+        // 债券借贷-融出-卖出
+        add(concat(DictCodeListExt2.平安资产类型_债券借贷, DictCodeList.交易方向_到期, BussinessDictCodeList.交易方向_卖出),
+            // 债券借贷到期确认.组合代码-接口.组合代码
+            FieldStruct.PORTFOLIOID,
+            // 债券借贷到期确认.转债代码-接口.资产代码
+            FieldStruct.F12_PLEDGEFINPRODID,
+            // 债券借贷到期确认.业务编码-接口.事件代码
+            FieldStruct.BUSICODE,
+            // 债券借贷到期确认.交易方向-接口.交易方向
+            FieldStruct.PS2,
+            // 债券借贷到期确认.币种-接口.币种
+            FieldStruct.CCY,
+            // 债券借贷到期确认.借贷费用-接口.金额
+            FieldStruct.F12_PRINAMT,
+            // 债券借贷到期确认.借贷费用-接口.数量
+            FieldStruct.F12_SHAREAMT);
         // 债券-债转股
         add(concat(BussinessDictCodeList.平安资产类型_债券, DictCodeListExt1.交易方向_债转股), 
                 // 债转股交易画面。组合代码-接口。组合代码
                 FieldStruct.PORTFOLIOID,
                 // 债转股交易画面。转债代码-接口。资产代码
                 FieldStruct.FINPRODID,
-                // 债转股交易画面。交易代码-接口。事件代码
-                FieldStruct.TOTLETRADEID,
+                // 债转股交易画面。业务编码-接口。事件代码
+                FieldStruct.BUSICODE,
                 // 债转股交易画面。金融产品类型（投管）-接口。系统资产大类
                 FieldStruct.FINPRODTYPE2,
                 // 债转股交易画面。交易方向-接口。交易方向
@@ -139,8 +205,8 @@ public class PageFieldToInterfFactory {
                 FieldStruct.FINPRODMARKETID,
                 // 债转股交易画面。交易场所-接口。交易场所
                 FieldStruct.TRADEMARKET,
-                // 债转股交易画面。交易代码-接口。事件代码
-                FieldStruct.TOTLETRADEID,
+                // 债转股交易画面。业务编码-接口。事件代码
+                FieldStruct.BUSICODE,
                 // 债转股交易画面。金融产品类型（投管）-接口。系统资产大类
                 FieldStruct.FINPRODTYPE2,
                 // 债转股交易画面。交易方向-接口。交易方向
@@ -163,8 +229,8 @@ public class PageFieldToInterfFactory {
                 FieldStruct.PORTFOLIOID,
                 // 基金交易画面。转入资产代码-接口。资产代码
                 FieldStruct.CHANGETOFINPRODNAME,
-                // 基金交易画面。交易代码-接口。事件代码
-                FieldStruct.TOTLETRADEID,
+                // 债转股交易画面。业务编码-接口。事件代码
+                FieldStruct.BUSICODE,
                 // 基金交易画面。金融产品类型（投管）-接口。系统资产大类
                 FieldStruct.FINPRODTYPE2,
                 // 基金交易画面。交易方向-接口。交易方向
@@ -183,8 +249,8 @@ public class PageFieldToInterfFactory {
                 FieldStruct.PORTFOLIOID,
                 // 基金交易画面。资产代码-接口。资产代码
                 FieldStruct.FINPRODID,
-                // 基金交易画面。交易代码-接口。事件代码
-                FieldStruct.TOTLETRADEID,
+                // 基金交易画面。业务编码-接口。事件代码
+                FieldStruct.BUSICODE,
                 // 基金交易画面。金融产品类型（投管）-接口。系统资产大类
                 FieldStruct.FINPRODTYPE2,
                 // 基金交易画面。交易方向-接口。交易方向
@@ -237,7 +303,7 @@ public class PageFieldToInterfFactory {
             Date dt = (Date)obj;
             infMap.put(field.infField, DateUtil.format(dt,DateUtil.DEFAULT_DATE_FORMAT_EN));
         }
-        else {
+        else if (obj != null) {
             infMap.put(field.infField, obj);
         }
     }

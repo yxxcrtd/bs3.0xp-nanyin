@@ -24,6 +24,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndicator;
 import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndicatorResult;
@@ -33,6 +34,7 @@ import com.joyintech.tams.invest.common.riskinfrds.prod.entity.IPtlIndicator;
 import com.joyintech.tams.invest.common.risktrialrds.dict.SupervisionStat;
 import com.joyintech.tams.invest.common.risktrialrds.dto.ExprTreeMath;
 import com.joyintech.tams.invest.common.risktrialrds.dto.PointDetail;
+import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
 
 /**
  * 指标计算服务
@@ -85,43 +87,29 @@ public class IndicatorCalcService {
             // 参与计算的参数值
             Map<String, Object> param = valMap.get(ptlCode);
             for (String ind : indList) {
-                if (isOld){
-                    try {
-                        // 指标信息
-                        calc(indMap.get(ind), isOld, param, ptlCode, assetCode);
-                    } catch (Exception e) {
-                        StringBuilder builder = new StringBuilder();
-                        param.entrySet().forEach(itemss -> builder.append(itemss.getKey()).append(GlobalConstant.COLON).append(itemss.getValue()).append(GlobalConstant.COMMA));
-                        String logStr = builder.toString();
-                        logger.info("指标参数详细【{}】", logStr);
-                        logger.error("指标计算异常,指标代码：{}", ind);
-                    } finally {
-                        // 线程计数
-                        countDown.countDown();
-                    }
-                }else {
-                    // 添加线程
-                    threadPoolTaskExecutor.execute(new Runnable() {
+                // 添加线程
+                threadPoolTaskExecutor.execute(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            try {
-                                // 指标信息
-                                calc(indMap.get(ind), isOld, param, ptlCode, assetCode);
-                            } catch (Exception e) {
-                                StringBuilder builder = new StringBuilder();
-                                param.entrySet().forEach(item -> builder.append(item.getKey()).append(GlobalConstant.COLON).append(item.getValue()).append(GlobalConstant.COMMA));
-                                String logStr = builder.toString();
-                                logger.info("指标参数详细【{}】", logStr);
-                                logger.error("指标计算异常,指标代码：{}", ind);
-                            } finally {
-                                // 线程计数
-                                countDown.countDown();
-                            }
+                    @Override
+                    public void run() {
+                        try {
+                            // 指标信息
+                            calc(indMap.get(ind), isOld, param, ptlCode, assetCode);
                         }
+                        catch (Exception e) {
+                        	StringBuilder builder = new StringBuilder();
+                        	param.entrySet().forEach(item->builder.append(item.getKey()).append(GlobalConstant.COLON).append(item.getValue()).append(GlobalConstant.COMMA));
+                    		String logStr = builder.toString();
+                    		logger.info("指标参数详细【{}】", logStr);
+                            logger.error("指标计算异常,指标代码：{}", ind);
+                        }
+                        finally {
+                            // 线程计数
+                            countDown.countDown();
+                        }
+                    }
 
-                    });
-                }
+                });
             }
         }
         try {
@@ -164,10 +152,12 @@ public class IndicatorCalcService {
 		}
         // 原指标计算
         if (isOld) {
+            res.setCalcOldExpr(exprMath);
             res.setIndicatorOldVal(val);
         }
         // 新指标计算
         else {
+            res.setCalcExpr(exprMath);
             res.setIndicatorVal(val);
             Map<String, IIndividLimit> limitMap = indcator.getIndividLimit(ptlCode);
             // 资产特定阈值信息
@@ -184,7 +174,11 @@ public class IndicatorCalcService {
                 indcator.getIndType());
             if (val != null) {
                 SupervisionStat supStat = pointDetail.check(val);
+                supStat=pointDetail.filterInnerType(supStat,exprTree.getParamList(),param);
                 res.setIndStatus(changeStatus(supStat));
+                // add by zhangrui1 指标结果绝对值显示 start
+                changeToAbs(res, pointDetail.isAbs(), indcator.getIndType());
+                // add by zhangrui1 指标结果绝对值显示 end
             }
             else {
                 res.setIndStatus(BussinessDictCodeListRds.指标状态_异常_除0.getValue());
@@ -221,4 +215,27 @@ public class IndicatorCalcService {
         return BussinessDictCodeListRds.指标状态_异常_除0.getValue();
     }
 
+    // add by zhangrui1 指标结果绝对值显示 start
+    /**
+     * 修改指标结果为绝对值显示
+     * 
+     * @param res 指标结果
+     * @param isAbs 是否绝对值
+     * @param indType 指标类型
+     */
+    private final void changeToAbs(IIndicatorResult res, boolean isAbs, String indType) {
+        // 结果不存在、非绝对值、枚举型指标排除
+        if (!isAbs || null == res || StringUtil.contains(indType, RiskUtil.FORBID)) {
+           return; 
+        }
+        Object val = res.getIndicatorVal();
+        if (null != val) {
+            res.setIndicatorVal(Math.abs(Double.parseDouble(val.toString())));
+        }
+        Object olcVal = res.getIndicatorOldVal();
+        if (null != olcVal) {
+            res.setIndicatorOldVal(Math.abs(Double.parseDouble(olcVal.toString())));
+        }
+    }
+    // add by zhangrui1 指标结果绝对值显示 end
 }

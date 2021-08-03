@@ -42,7 +42,7 @@ public abstract class BaseRiskInterfService<V extends IRiskRds> extends BaseServ
     }
 
     public interface IInfBatchRds<T,V>{
-        ClientData receive(T t, V v) throws Exception;
+        ClientData receive(T t,V v) throws Exception;
     }
 
     /**
@@ -56,24 +56,24 @@ public abstract class BaseRiskInterfService<V extends IRiskRds> extends BaseServ
         }
         Map<String, Object> header = new HashMap<>();
         header.put(InterfUtil.stdprocode,v.getInfCode());
-        header.put(InterfUtil.stdmsgtype, InterfUtil.MES_TYPE);
-        header.put(InterfUtil.std400bsys, StringUtil.defaultString(CacheUtil.getSysParam(InterfUtil.SYS_CODE), InterfUtil.systemcode));
-        header.put(InterfUtil.std400aqid, StringUtil.defaultString(CacheUtil.getSysParam(InterfUtil.SYS_CODE), InterfUtil.systemcode));
+        header.put(InterfUtil.stdmsgtype,InterfUtil.MES_TYPE);
+        header.put(InterfUtil.std400bsys,StringUtil.defaultString(CacheUtil.getSysParam(InterfUtil.SYS_CODE),InterfUtil.systemcode));
+        header.put(InterfUtil.std400aqid,StringUtil.defaultString(CacheUtil.getSysParam(InterfUtil.SYS_CODE),InterfUtil.systemcode));
         // 设置 发起方流水号
         String sysDate = DateUtil.getSysDate();
         sysDate = StringUtil.remove(sysDate, "-");
         long time = System.currentTimeMillis();
         String tail = "00000" + time;
-        header.put(InterfUtil.stdtermtrc, StringUtil.defaultString(CacheUtil.getSysParam(InterfUtil.SYS_CODE), InterfUtil.systemcode)+ sysDate+tail);
+        header.put(InterfUtil.stdtermtrc,StringUtil.defaultString(CacheUtil.getSysParam(InterfUtil.SYS_CODE),InterfUtil.systemcode)+ sysDate+tail);
         // 设置 发起方系统日期
         String curTime = DateUtil.getCurrentDateTime();
         String curDt = StringUtil.substring(curTime, 0, 10);
         String curhms = StringUtil.substring(curTime, 11);
-        header.put(InterfUtil.std400rbdt, StringUtil.remove(curDt, "-"));
+        header.put(InterfUtil.std400rbdt,StringUtil.remove(curDt, "-"));
         // 设置 发起方系统时间戳
         header.put(InterfUtil.std400rsts, DateUtil.getCurrentDateTime());
         // 设置 发起方系统时间
-        header.put(InterfUtil.std400rtim, StringUtil.remove(curhms, ":"));
+        header.put(InterfUtil.std400rtim,StringUtil.remove(curhms, ":"));
         return header;
     }
 
@@ -87,11 +87,11 @@ public abstract class BaseRiskInterfService<V extends IRiskRds> extends BaseServ
      * @return
      * @throws Exception
      */
-    public ClientData execRiskRds(V v, String eventType, String infCode, String assetType, IInfRds<V> iInfRds) throws Exception {
+    public ClientData execRiskRds(V v,String eventType,String infCode,String assetType,IInfRds<V> iInfRds) throws Exception {
         return iInfRds.receive(execBase(v,eventType,infCode,assetType));
     }
 
-    public <T> ClientData execBatchRiskRds(T t, V v, String eventType, String infCode, String assetType, IInfBatchRds<T,V> iInfRds) throws Exception {
+    public <T> ClientData execBatchRiskRds(T t,V v,String eventType,String infCode,String assetType,IInfBatchRds<T,V> iInfRds) throws Exception {
         return iInfRds.receive(t,execBase(v,eventType,infCode,assetType));
     }
 
@@ -107,7 +107,7 @@ public abstract class BaseRiskInterfService<V extends IRiskRds> extends BaseServ
         v.setInfCode(infCode);
         v.setAssetType(assetType);
         v.setEventType(eventType);
-        if(StringUtil.equals(eventType, BussinessDictCodeListRds.事件类型_投资交易_存续期.getValue())){
+        if(StringUtil.equals(eventType,BussinessDictCodeListRds.事件类型_投资交易_存续期.getValue())){
             v.setEventType(BussinessDictCodeListRds.事件类型_投资交易.getValue());
             v.setEventStatus(BussinessDictCodeListRds.事件类型_投资交易_存续期.getValue());
         }
@@ -143,7 +143,7 @@ public abstract class BaseRiskInterfService<V extends IRiskRds> extends BaseServ
      * @param message
      * @return
      */
-    public AjaxResult getAjaxResult(Object returnCli, String message, MessageType messageType){
+    public AjaxResult getAjaxResult(Object returnCli,String message,MessageType messageType){
         AjaxResult ar = new AjaxResult();
         ar.setData(returnCli);
         List<ValidMessage> warnList = new ArrayList<>();

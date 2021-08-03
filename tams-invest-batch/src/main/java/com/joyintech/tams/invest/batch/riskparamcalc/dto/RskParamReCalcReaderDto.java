@@ -10,41 +10,82 @@
 
 package com.joyintech.tams.invest.batch.riskparamcalc.dto;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.shiro.util.CollectionUtils;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 
 /**
  * 批处理-指标参数重新更新-ReaderDto
  * 
- * @author jjpei
- * @version 1.0 2020年7月24日
+ * @author 裴家俊
+ * @author zhangrui1
+ * @version 1.0 2020年4月17日
  * @see RskParamReCalcReaderDto
  * @since 1.0
  */
 public class RskParamReCalcReaderDto extends NeedOperateEntity {
 
     /**
-     * 实占信息
+     * 预占编号
      */
-    private List<Map<String, Object>> dataMapList;
+    private String preOccupyCode;
 
     /**
-     * 获取 实占信息
-     * 
-     * @return 实占信息.
+     * 报文内容
      */
-    public List<Map<String, Object>> getDataMapList() {
-        return dataMapList;
+    private List<RskInterfDataDto> dataList;
+
+    public RskParamReCalcReaderDto() {
+
     }
 
     /**
-     * 设置 实占信息
-     * 
-     * @param dataMapList 实占信息
+     * @param preOccupyCode
+     * @param dataList
      */
-    public void setDataMapList(List<Map<String, Object>> dataMapList) {
-        this.dataMapList = dataMapList;
+    public RskParamReCalcReaderDto(String preOccupyCode, List<RskInterfDataDto> dataList) {
+        setPreOccupyCode(preOccupyCode);
+        setDataList(dataList);
+    }
+
+    /**
+     * 获取 预占编号
+     * 
+     * @return 预占编号.
+     */
+    public String getPreOccupyCode() {
+        return preOccupyCode;
+    }
+
+    /**
+     * 设置 预占编号
+     * 
+     * @param preOccupyCode 预占编号
+     */
+    public void setPreOccupyCode(String preOccupyCode) {
+        this.preOccupyCode = preOccupyCode;
+    }
+
+    /**
+     * 获取 报文内容
+     * 
+     * @return 报文内容.
+     */
+    public List<RskInterfDataDto> getDataList() {
+        return dataList;
+    }
+
+    /**
+     * 设置 报文内容
+     * 
+     * @param dataList 报文内容
+     */
+    public void setDataList(List<RskInterfDataDto> dataList) {
+        this.dataList = CollectionUtils.isEmpty(dataList) ? dataList : dataList.stream().sorted(
+            Comparator.comparing(RskInterfDataDto::getOrderNo)).collect(Collectors.toList());
     }
 }

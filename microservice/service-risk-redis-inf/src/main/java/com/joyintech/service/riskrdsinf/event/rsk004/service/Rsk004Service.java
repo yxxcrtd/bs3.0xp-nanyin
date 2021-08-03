@@ -14,8 +14,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.riskrdsinf.common.service.OccupyReleasService;
 import com.joyintech.service.riskrdsinf.core.annotation.INF;
 import com.joyintech.service.riskrdsinf.core.client.ClientData;
@@ -47,14 +45,12 @@ public class Rsk004Service extends OccupyReleasService<Rsk004InEntity> {
     protected void saveData(Map<String, Object> mapData, boolean isApprove, String user)
         throws InterfException {
         try {
-            String portfolioCode = (String)mapData.get(PORTFOLIOCODE);
-            // 备份组合代码
-            mapData.put(PROD_ID, portfolioCode);
             Rsk004InEntity record = InfMapValUtil.mapDataToObject(mapData, Rsk004InEntity.class);
             // 设置备份数据
-            record.setProdId(StringUtil.isNotEmpty(portfolioCode)?portfolioCode:StringUtil.EMPTY); 
             record.setAmount(record.getAmountOld());
             record.setTradeNum(record.getTradeNumOld());
+            // 报文流水号
+            record.setSeqNo(getSeqNo());
             getBusiService().saveOcpInfo(record, isApprove, STATUS_RELEASE, user);
         }
         catch (Exception e) {

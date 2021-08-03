@@ -1,7 +1,7 @@
 package com.joyintech.tams.invest.common.risktrial;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import com.joyintech.tams.invest.common.risktrial.dto.InvestTradeTrialInput;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
@@ -32,6 +32,7 @@ public interface RiskTrialComm {
      * @date 2018/9/28
      */
     void afterRiskTrialDeal(TaskQueue taskQueue);
+
     /**
      * 流程中的实体获取多笔交易是否超审批线
      * @param riskMap  key值存的是workflowId

@@ -77,12 +77,18 @@ public interface RskRedisInitMapper {
     List<ImplEventParaRel> getRskEventParaResData();
 
     /**
-     * 获取风险参数明细值
+     * 获取风险参数明细值(所有类型参数)
      * @return ImplParam
      * @since 1.0
      */
     List<ImplParam> getRskIndParamDtlData(Map<String, Object> map);
 
+    /**
+     * 获取风险参数明细值(固定值参数)
+     * @return ImplParam
+     * @since 1.0
+     */
+    List<ImplParam> getFixParamDtlData(Map<String, Object> map);
     /**
      * 获取风险指标
      * @return ImplParam

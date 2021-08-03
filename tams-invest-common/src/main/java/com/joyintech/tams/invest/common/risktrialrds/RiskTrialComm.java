@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.common.risktrialrds;
 import com.joyintech.tams.invest.common.risktrialrds.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.risktrialrds.dto.Task;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -18,15 +19,19 @@ public interface RiskTrialComm {
 
     /**
      * 事后监控处理
-     * @param Map<String,Object>,TaskQueue,String
-     * @return List<RiskTrialRetDto>
-     * @date 2018/9/28
+     * @param mapIndivid
+     * @param taskQueue
+     * @param SupFrequency
+     * @return
      */
     RiskTrialRetDto afterRiskTrialDeal(Map<String, Object> mapIndivid, Task taskQueue, String SupFrequency);
+
     /**
      * 查询流程是撤销交易还是正常交易提交
      * @param seqNo
      * @return
      */
     String selectWorkflowActionType(String seqNo);
+
+
 }

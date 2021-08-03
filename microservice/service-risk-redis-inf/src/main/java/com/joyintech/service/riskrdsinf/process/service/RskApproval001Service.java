@@ -49,7 +49,7 @@ public class RskApproval001Service extends RskApprovalService<RskApproval001Dto>
     @DataSource(DataSourceType.OTHER)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void startProcess(RskApproval001Dto dto, String loginUser) throws WorkFlowException {
-		super.startProcessDtx(dto, loginUser);
+        super.startProcessDtx(dto, loginUser,null);
 	}
 
 	@Override

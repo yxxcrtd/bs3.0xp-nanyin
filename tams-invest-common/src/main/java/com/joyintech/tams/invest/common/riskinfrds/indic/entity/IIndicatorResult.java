@@ -129,4 +129,40 @@ public interface IIndicatorResult extends Serializable {
      * @since 1.0
      */
     void setIndividLimit(IIndividLimit limit);
+
+    /**
+     * 取得 计算表达式
+     *
+     * @return 计算表达式
+     * @see
+     * @since 1.0
+     */
+    String getCalcExpr();
+
+    /**
+     * 设置 计算表达式
+     *
+     * @param expr 计算表达式
+     * @see
+     * @since 1.0
+     */
+    void setCalcExpr(String expr);
+
+    /**
+     * 取得 计算表达式
+     *
+     * @return 原计算表达式
+     * @see
+     * @since 1.0
+     */
+    String getCalcOldExpr();
+
+    /**
+     * 设置 原计算表达式
+     *
+     * @param expr 计算表达式
+     * @see
+     * @since 1.0
+     */
+    void setCalcOldExpr(String expr);
 }

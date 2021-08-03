@@ -430,8 +430,29 @@ public class PrdCommonInfo extends BaseEntity implements IPtlProd {
 		return riskEnabled;
 	}
 
-	public void setRiskEnabled(String riskEnabled) {
-		this.riskEnabled = riskEnabled;
-	}
-	
+    public void setRiskEnabled(String riskEnabled) {
+        this.riskEnabled = riskEnabled;
+    }
+
+    /**
+     * 建仓期
+     */
+    private Long buildPeriod = 0L;
+
+    /**
+     * 取得 建仓期
+     * @return 建仓期
+     */
+    public Long getBuildPeriod() {
+        return buildPeriod;
+    }
+
+    /**
+     * 设置 建仓期
+     * @param buildPeriod 建仓期
+     */
+    @Index(86)
+    public void setBuildPeriod(Long buildPeriod) {
+        this.buildPeriod = buildPeriod;
+    }
 }

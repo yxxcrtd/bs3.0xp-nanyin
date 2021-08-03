@@ -1,12 +1,13 @@
 package com.joyintech.tams.common.base.entity;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
-import java.math.BigDecimal;
-import java.util.Date;
 
 public class RskOccupyInfo extends BaseEntity {
     /**
@@ -140,6 +141,11 @@ public class RskOccupyInfo extends BaseEntity {
      * 当前流程状态，待审批、审批退回、审批通过、直接通过
      */
     private String wflStatus;
+
+    /**
+     * 报文流水号
+     */
+    private String seqNo;
 
     /**
      * 取得 流水号
@@ -543,5 +549,21 @@ public class RskOccupyInfo extends BaseEntity {
      */
     public void setWflStatus(String wflStatus) {
         this.wflStatus = wflStatus == null ? null : wflStatus.trim();
+    }
+
+    /**
+     * 取得 报文流水号
+     * @return 报文流水号
+     */
+    public String getSeqNo() {
+        return seqNo;
+    }
+
+    /**
+     * 设置 报文流水号
+     * @param seqNo 报文流水号
+     */
+    public void setSeqNo(String seqNo) {
+        this.seqNo = seqNo == null ? null : seqNo.trim();
     }
 }

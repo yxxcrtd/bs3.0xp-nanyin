@@ -149,4 +149,29 @@ public class TradeBaseDto extends TrdProductDeal {
 	public void setmDate(String mDate) {
 		this.mDate = mDate;
 	}
+
+    // add by zhangrui1 拆借回购等没有资产的需要传日历代码 start
+    /**
+     * 日历代码
+     */
+    private String calendarId;
+
+    /**
+     * 获取 日历代码
+     * 
+     * @return 日历代码.
+     */
+    public String getCalendarId() {
+        return calendarId;
+    }
+
+    /**
+     * 设置 日历代码
+     * 
+     * @param calendarId 日历代码
+     */
+    public void setCalendarId(String calendarId) {
+        this.calendarId = calendarId;
+    }
+    // add by zhangrui1 拆借回购等没有资产的需要传日历代码 end
 }

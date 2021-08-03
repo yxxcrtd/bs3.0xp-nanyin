@@ -114,7 +114,7 @@ public abstract class RskApprovalService<V extends RskApprovalDto> extends BaseS
     }
     
     @SuppressWarnings("unchecked")
-	public void startProcessDtx(V dto, String loginUser)
+	public void startProcessDtx(V dto, String loginUser,String serviceName)
             throws WorkFlowException {
             logger.info("启动审批流程 处理开始...");
             ProcessParameter<V> processParameter = new ProcessParameter<>();
@@ -130,7 +130,11 @@ public abstract class RskApprovalService<V extends RskApprovalDto> extends BaseS
             // 画面元素ID
             params.setElementId(dto.getElementId());
             // 处理Service名
-            params.setServiceName(getServiceName());
+            if(serviceName!=null) {
+                params.setServiceName(serviceName);
+            } else {
+                params.setServiceName(getServiceName());
+            }
             //设置任务开始日期
             params.setCrtDate(sysDate);
             // 修改时为画面所选记录的委托编号。
@@ -140,11 +144,21 @@ public abstract class RskApprovalService<V extends RskApprovalDto> extends BaseS
             // 审批角色
            // String role = InterfCacheUtil.getSysParam("rskApprovalRole");
             TaskAuthentication.setCandidateUser(Arrays.asList(loginUser));
-            User user = authorizationService.getUser(users);
+
+            User user = SecurityUtil.getLoginUser();
+            if(user==null) {
+                User tradeuser = authorizationService.getUser(loginUser);
+                if(tradeuser==null) {
+                    user = authorizationService.getUser(users);
+                } else {
+                    user = tradeuser;
+                }
+            }
+
             // 将用户信息保存到session中
             SecurityUtil.addUserToSession(user);
             processParameter.setWorkFlowParameter(params);
-            dto.setWorkflowParameter("new|||0|"+dto.getPageId()+"|"+dto.getElementId()+"|true");
+            dto.setWorkflowParameter("new|"+users+"||1|"+dto.getPageId()+"|"+dto.getElementId()+"|true");
             // 启动工作流
             start(processParameter, dto);
             logger.info("启动审批流程 处理结束...");

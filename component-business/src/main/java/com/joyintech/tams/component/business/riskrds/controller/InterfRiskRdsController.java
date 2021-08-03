@@ -53,7 +53,7 @@ public class InterfRiskRdsController {
     // add by zhangrui1 批量试算 Start
     /**
      * 批量风险试算
-     *
+     * 
      * @param dataList 批量数据
      * @param eventType 事件类型
      * @param assetType 资产类型
@@ -65,9 +65,9 @@ public class InterfRiskRdsController {
     public String batchRiskTrialRds(@RequestBody List<Map<String, Object>> dataList,
                                     @PathVariable("eventType") String eventType,
                                     @PathVariable("assetType") String assetType)
-            throws Exception {
+        throws Exception {
         if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"),
-                BussinessDictCodeListRds.是否_是)) {
+            BussinessDictCodeListRds.是否_是)) {
             logger.info("==========批量试算接口<RSK011>事件类型:{} start==========", eventType);
             // 报文体为空\事件类型为空
             if (CollectionUtils.isEmpty(dataList) || StringUtil.isEmpty(eventType)) {
@@ -83,7 +83,7 @@ public class InterfRiskRdsController {
         }
         else {
             logger.info("==========未启动风险试算==========");
-            return JsonUtils.object2Json(new ClientData());
+            return null;
         }
     }
     // add by zhangrui1 批量试算 End
@@ -126,7 +126,7 @@ public class InterfRiskRdsController {
             return null;
         }
     }
-    
+
     /**
      * 风险接口统一调用入口(批量画面端)
      * @param dataMap
@@ -156,7 +156,6 @@ public class InterfRiskRdsController {
                 logger.info("==========调用共通方法sendRiskRdsDataCommon==========");
                 List<String> retList=new ArrayList<>();
                 List<Map<String, Object>> listMap=interfRiskRdsService.getBatchAllocation(dataMap,interfRiskRdsDto);
-                //多组合循环调用单组合
                 for(Map<String, Object> mapEntry:listMap){
                     retList.add(JsonUtils.object2Json(interfRiskRdsService.sendRiskRdsDataCommon(mapEntry, interfRiskRdsDto)));
                 }

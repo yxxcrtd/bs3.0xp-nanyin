@@ -128,4 +128,25 @@ public class ImplPortf extends PtlPortfolio implements IProdInfo {
     public void setRaiseType(String raiseType) {
         this.raiseType = raiseType;
     }
+
+    /**
+     * 建仓期
+     */
+    private Long buildPeriod;
+
+    /**
+     * 取得 建仓期
+     * @return 建仓期
+     */
+    public Long getBuildPeriod() {
+        return buildPeriod;
+    }
+
+    /**
+     * 设置 建仓期
+     * @param buildPeriod 建仓期
+     */
+    public void setBuildPeriod(Long buildPeriod) {
+        this.buildPeriod = buildPeriod;
+    }
 }
