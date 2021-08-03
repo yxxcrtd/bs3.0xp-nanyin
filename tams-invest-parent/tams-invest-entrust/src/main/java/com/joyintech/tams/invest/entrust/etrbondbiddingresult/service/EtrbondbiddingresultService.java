@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,9 +61,23 @@ public class EtrbondbiddingresultService extends CommonExportService<Etrbondbidd
 	 */
 	public Page<Etrbondbiddingresult001Dto> selectForPage(Map<String, Object> param) {
 		User user = SecurityUtil.getLoginUser();
-		return restTemplate.postForPage(
+		//配置单位 edit by yeming 20210802 start
+		Page<Etrbondbiddingresult001Dto> page = restTemplate.postForPage(
 				ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/findPage", param,
 				Etrbondbiddingresult001Dto.class);
+		for(Etrbondbiddingresult001Dto dto:page.getRoot()){
+			if(dto.getBidPrinAmt() != null) {
+				dto.setBidPrinAmt(dto.getBidPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+			}
+			if(dto.getWinPrinAmt() != null) {
+				dto.setWinPrinAmt(dto.getWinPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+			}
+		}
+		return page;
+		//配置单位 edit by yeming 20210802 end
+//		return restTemplate.postForPage(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/findPage", param,
+//				Etrbondbiddingresult001Dto.class);
 	}
 
 	public List<FinProduct> findFinProductByOFinprodId(Map<String, Object> param) {

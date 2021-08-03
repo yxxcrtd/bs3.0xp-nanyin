@@ -58,7 +58,7 @@
         	,{field:'finprodName', sortField:'FINPROD_NAME',width:140, title: 'TrdBondLendInvestTrade001.finprodName'}
         	,{field:'psText', sortField:'ps',width:100, title: 'TrdBondLendInvestTrade001.ps'}
         	,{field:'tradeMarketText', sortField:'',width:100, title: 'TrdBondLendInvestTrade001.tradeMarket'}
-        	,{field:'tradeAmt',sortField:'TRADE_AMT', width:120, title: 'TrdBondLendInvestTrade001.tradeAmt', type: 'money'}
+        	,{field:'tradeAmt',sortField:'TRADE_AMT', width:120, title: 'TrdBondLendInvestTrade001.tradeAmt1', digit: 4, type: 'money'}
             ,{field:'tradeDate', sortField:'TRADE_DATE',width:100, title: 'TrdBondLendInvestTrade001.tradeDate', type: 'date'}
             ,{field:'vdate',sortField:'VDATE', width:100, title: 'TrdBondLendInvestTrade001.vdate', type: 'date'}
             ,{field:'mdate',sortField:'MDATE', width:100, title: 'TrdBondLendInvestTrade001.mdate', type: 'date'}

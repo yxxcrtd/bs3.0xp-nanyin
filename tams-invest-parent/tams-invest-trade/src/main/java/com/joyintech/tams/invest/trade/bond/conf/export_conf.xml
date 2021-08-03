@@ -14,9 +14,9 @@
             <Cell order="10" name="交易场所">tradeMarketText</Cell>
             <Cell order="11" name="交易市场">tradeMarketModeText</Cell>
             <Cell order="12" name="交易平台">tradePlatText</Cell>
-            <Cell order="13" name="券面总额">tradeAmt</Cell>
-            <Cell order="14" name="本方券券面总额">ownTradeAmt</Cell>
-            <Cell order="15" name="融入券券面总额">integrateTradeAmt</Cell>
+            <Cell order="13" name="券面总额/万元">tradeAmt</Cell>
+            <Cell order="14" name="本方券券面总额/万元">ownTradeAmt</Cell>
+            <Cell order="15" name="融入券券面总额/万元">integrateTradeAmt</Cell>
             <Cell order="16" name="币种">ccyText</Cell>
             <Cell order="17" name="偏离度">deviation</Cell>
             <Cell order="18" name="净价">unitCprice</Cell>

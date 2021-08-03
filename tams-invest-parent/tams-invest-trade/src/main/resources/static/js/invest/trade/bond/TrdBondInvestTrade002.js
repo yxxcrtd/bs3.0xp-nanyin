@@ -1591,7 +1591,7 @@ var table;
             if (result && result.data) {
                 var data = result.data;
                 if(!$('#fTradeId').val()){
-                    $("#tradeAmt").val(JoyinMath.doDiv(data.tradeAmt,unitNum,2,JoyinMath.ROUND_HALF_UP)).change().trigger("blur");
+                    $("#tradeAmt").val(JoyinMath.doDiv(data.tradeAmt,unitNum,4,JoyinMath.ROUND_HALF_UP)).change().trigger("blur");
                 }
                 $("#unitCprice").val(data.unitCprice).trigger("blur");
                 $("#unitInt").val(data.unitInt).trigger("blur");
