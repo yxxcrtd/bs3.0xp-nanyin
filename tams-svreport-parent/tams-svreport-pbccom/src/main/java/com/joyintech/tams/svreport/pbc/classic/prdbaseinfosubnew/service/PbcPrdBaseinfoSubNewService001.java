@@ -70,13 +70,13 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
     private PbcBeforeSubErrorCheck pbcBeforeSubErrorCheck;
     @Autowired
     private PbcBeforeSubCheck pbcBeforeSubCheck;
-    
+
     @Autowired
     private PbcInitProdRaisingSubMapper pbcInitProdRaisingSubMapper;
-    
+
     @Autowired
 	private PbcPrdCashRaiseSubService001 pbcPrdCashRaiseSubService001;
-    
+
     private DecimalFormat df = new DecimalFormat("0.00000");
     private DecimalFormat dt = new DecimalFormat("0.00");
 	/**
@@ -86,7 +86,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 
 	/**
 	 * 查询产品资金募集信息
-	 * 
+	 *
 	 * @param searchParam
 	 * @return
 	 */
@@ -96,13 +96,13 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 //		if(CommonUtil.isBAmodel()){
 			searchParam.put("model_type", "01");
 //		}
-		
+
 		int pagenum = StringUtil.integerValueOf(""+searchParam.get(GlobalConstant.PARAM_PAGE), 1);
         int length = StringUtil.integerValueOf(""+searchParam.get(GlobalConstant.PARAM_LENGTH), GlobalConstant.DEFAULT_PAGE_SIZE);
 		Page<PbcPrdBaseinfoSubNew> page = queryForPage(pagenum,length,()->pbcPrdBaseinfoSubNewMapper.searchPage(searchParam));
 		dealResult(page);
 		return page;
-		
+
 	}
 	/**
 	 * 查询结果处理
@@ -197,10 +197,10 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
             }
 		}
 	}
-	
-	
+
+
 	private void dealResult(List<PbcPrdBaseinfoSubNew> listDetail) {
-		
+
 		for(PbcPrdBaseinfoSubNew result : listDetail){
 		    if (StringUtil.isNotEmpty(result.getIvstorientation())){
 		        result.setIvstorientation(
@@ -328,14 +328,14 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
             }*/
 		}
 	}
-	
+
 	public String getRaiseCcy(String raiseCcy){
 		String ccyStr="";
 		if(raiseCcy.indexOf(",") > 0){
         	//获取募集币种，以，分割
         	 String[] strArr = raiseCcy.split(",");
         	 for (int i = 0; i < strArr.length; i++) {
-        		 
+
         		 String ccy=SysDataUtil.getNameFromDataDict(DictCode.币种_中债,strArr[i]);
         		 //拼接币种，使用&分隔
         		 if(i==0){
@@ -355,7 +355,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 		String dateString = format.format(date);
 		return dateString;
 	}*/
-	
+
 	/**
 	 * 查询参数处理
 	 * @param searchParam
@@ -394,7 +394,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
             searchParam.put("pbcAccountIdList",null);
         }
 	}
-	
+
 	/**
 	 * 设置导出文件参数
 	 */
@@ -411,7 +411,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 	public Page<PbcPrdBaseinfoSubNew> selectPageData(Map<String, Object> selectParam) {
 			return searchPage(selectParam);
 	}
-	
+
 	/**
 	 * 手工处理
 	 * @param updateList
@@ -438,7 +438,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 				deaSearchParam(pageParam);
 				infoList = pbcPrdBaseinfoSubNewMapper.searchPage(pageParam);
 			}
-			
+
 		}
 		// His插入
 		Iterator<PbcPrdBaseinfoSubNew> it = infoList.iterator();
@@ -462,6 +462,8 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 				pbcPrdBaseinfoSubNewMapper.deleteBatchBySendStatus(list1);
 				// 原始表更新状态
 				pbcPrdBaseinfoSubNewMapper.doManul(list1,map.get("submitadd")==null?null:map.get("submitadd").toString());
+				//更新DAT 表
+				pbcPrdBaseinfoSubNewMapper.updateBaseSubDat(list1);
 			}
 			idx += 	PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		}
@@ -473,10 +475,12 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 			pbcPrdBaseinfoSubNewMapper.deleteBatchBySendStatus(list2);
 			// 原始表更新状态
 			pbcPrdBaseinfoSubNewMapper.doManul(list2,map.get("submitadd")==null?null:map.get("submitadd").toString());
+			//更新DAT 表
+			pbcPrdBaseinfoSubNewMapper.updateBaseSubDat(list2);
 		}
 		/* 手工处理数据批量进行 update by gaojian 2019-06-22 end */
 		logger.debug("手工处理结束:------------------------------"+new Date());
-		
+
 	}
 	/**
 	 * 取消手工处理
@@ -532,7 +536,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 		logger.debug("取消手工处理结束:------------------------------"+new Date());
 		return "success";
 	}
-	
+
     /**
      * 数据检查
      * @param checkKeys 检查数据的关键字
@@ -541,7 +545,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
      * @since 1.0
      */
     public List<ExcelValidDto> checkData(Map<String, Object> param){
-      
+
         List<PbcPrdBaseinfoSubNew> equityInfoRegistList = new ArrayList<PbcPrdBaseinfoSubNew>();
         param.put("submitStatus", DictCodeListExt2.报送状态_未报送.getValue());
         param.put("deptCode", CommonUtil.getDeptCode());
@@ -587,8 +591,8 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 					}
 				}
 			}
-		
-        
+
+
         return checkResult;
     }
     /**
@@ -626,9 +630,9 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 		}
 		return resultList;
 	}
-	
-	
-	
+
+
+
 	public List<PbcPrdBaseinfoSubNew> searchByCondition(Map<String, Object> searchParam) {
 		deaSearchParam(searchParam);
 		//searchParam.put("sendStatus", DictCodeListExt2.报送状态_未报送.getValue());
@@ -637,17 +641,17 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 		searchParam.put("allExport","01");
 		List<PbcPrdBaseinfoSubNew> reportList = pbcPrdBaseinfoSubNewMapper.searchPage(searchParam);
 		return reportList;
-		
+
 	}
-	
+
 	//导出人行Excel
 	@SuppressWarnings("unchecked")
 	public ResponseEntity<byte[]> download(String pageId, Map<String, Object> selectParam,String datas) throws IOException {
 
 		deaSearchParam(selectParam);
-    	// 导出文件 	
+    	// 导出文件
         List<File> sourceFiles = new ArrayList<>();
-        
+
     	@SuppressWarnings("unchecked")
     	List<PbcPrdBaseinfoSubNew> dataList=new ArrayList<PbcPrdBaseinfoSubNew>();
     	if (datas != null){
@@ -655,23 +659,25 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
     	}else{
     		//不选报表导出所有未报送的记录
     		dataList= searchByCondition(selectParam);
-    		
+
     	}
-    	
+
     	Map<String, PbcPrdBaseinfoSubNew> dataParam = new HashMap<String, PbcPrdBaseinfoSubNew>();
-    	// 处理勾选数据,用pbcProdId做key值存入  dataParam中 
+    	// 处理勾选数据,用pbcProdId做key值存入  dataParam中
     	for (int i =0 ;i < dataList.size();i++){
     		if(null!=dataParam.get(dataList.get(i).getPbcProdId())){
-				
+
 				String sendStatus=dataList.get(i).getSendStatus();
-				String status=dataList.get(i).getStatus();
-				if(sendStatus.equals(DictCodeListExt2.报送状态_未报送.getValue()) && status.equals(DictCodeListExt2.报送数据状态_修改.getValue())){
+				String status=dataList.get(i).getSubmitFeedbackStatus();
+				if(sendStatus.equals(DictCodeListExt2.报送状态_未报送.getValue())
+						&& (!status.equals(DictCodeListExt2.人行报送反馈状态_发送成功.getValue())
+							||!status.equals(DictCodeListExt2.人行报送反馈状态_人行通过.getValue()))){
 					dataParam.put(dataList.get(i).getPbcProdId(), dataList.get(i));
 				}
 			}else{
 					dataParam.put(dataList.get(i).getPbcProdId(), dataList.get(i));
 			}
-    		
+
     	}
     	// excel计数器
 		int count = 1;
@@ -680,7 +686,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
     	String template="";
     	//生成人行Excel
     	for(Entry<String, PbcPrdBaseinfoSubNew> dto : dataParam.entrySet()){
-			
+
     		Map<String,Object> data  = new HashMap<String,Object>();
 	    	Map<String,Object> param = new HashMap<String,Object>();
 	    	String pbcProdId = dto.getValue().getPbcProdId();
@@ -690,10 +696,10 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 	    		name = pbcProdId;
 	    	}
 	    	//param.put("registSeqno", dto.getRegistSeqno());
-	    	param.put("pbcProdId", dto.getValue().getPbcProdIdShow());	
+	    	param.put("pbcProdId", dto.getValue().getPbcProdIdShow());
 	    	param.put("sendStatus", dto.getValue().getSendStatus());	/*报送状态*/
 	    	param.put("status", dto.getValue().getStatus());			/*数据状态*/
-	    	param.put("statusDate", dto.getValue().getStatusDate());	
+	    	param.put("statusDate", dto.getValue().getStatusDate());
 	    	deaSearchParam(param);
 	    	List<PbcPrdBaseinfoSubNew> listDetail=new ArrayList<PbcPrdBaseinfoSubNew>();
 	    	listDetail=pbcPrdBaseinfoSubNewMapper.searchPage(param);
@@ -711,7 +717,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 	                data.put("data", detail);
 	            }
 	        }
-	    	
+
 	    	List<PbcInitProdRaisingSubVo> listDetailSheet2 = new ArrayList<PbcInitProdRaisingSubVo>();
 	    	//根据产品币种，判断使用人民币/外币模板
 	    	if(StringUtil.isNotEmpty(dto.getValue().getRaiseCcy())&&dto.getValue().getRaiseCcy().equals("CNY")){
@@ -735,7 +741,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 	                data.put(code, detailVo);
 	            }
 	        }
-	    	
+
 	    	//String fileName = "PIB_"+pbcProdId+"_"+DateUtil.format(new Date(), "yyyyMMdd")+"-"+f2.format(count)+".xls";
 	    	if (nameMap.get(name) != null) {
 	    		nameMap.put(name, nameMap.get(name) + 1);
@@ -748,7 +754,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 	    	sourceFiles.add(depositfile);
 	    	count++;
 		}
-    	
+
     	 // 如果没有未报送的记录，生成空模板
 		if (sourceFiles.isEmpty()){
 			//String fileName = "PIB_"+DateUtil.format(new Date(), "yyyyMMdd")+"-"+f2.format(count)+".xls";
@@ -757,7 +763,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 			File depositfile = TisUtil.createFile(data, "pbc/" +"PbcReport_PrdBaseinfo_CNY", fileName);
 			sourceFiles.add(depositfile);
 		}
-    	
+
 		File outFile = null;
 		//生成压缩包
 		if(sourceFiles.size() > 1) {
@@ -787,6 +793,6 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
         }
 		return ExportUtil.export(outFile.getName(), outFile, true);
     }
-	
-	
+
+
 }

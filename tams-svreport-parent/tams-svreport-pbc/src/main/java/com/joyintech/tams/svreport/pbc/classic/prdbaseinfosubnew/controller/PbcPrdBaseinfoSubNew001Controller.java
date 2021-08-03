@@ -25,9 +25,6 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.service.PbcPrdBaseinfoSubMService;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.service.PbcPrdBaseinfoSubService001;
 
 /**
  * 
@@ -36,9 +33,10 @@ import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.service.PbcPrdBase
  * @创建时间 2019年6月4日 下午4:57:28
  */
 @Controller
-@PageId("PbcPrdBaseinfoSubNew")
-@RequestMapping("/pbc/prdbaseinfosubnew/PbcPrdBaseinfoSubNew")
+@PageId("PbcPrdBaseinfoSubNew001")
+@RequestMapping("/pbc/prdbaseinfosubnew/PbcPrdBaseinfoSubNew001")
 public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
+
 	/**
 	 * 产品基本信息信息service
 	 */

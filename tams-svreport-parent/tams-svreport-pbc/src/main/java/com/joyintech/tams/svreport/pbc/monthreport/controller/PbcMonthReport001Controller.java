@@ -177,6 +177,7 @@ public class PbcMonthReport001Controller extends BaseController{
 		pbcMonthReportMService.updateSumStaus(map);
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
 	}
+
 	@ResponseBody
 	@RequestMapping("doBatch")
 	public AjaxResult doAssetbatch(@RequestBody Map<String, Object> map){
