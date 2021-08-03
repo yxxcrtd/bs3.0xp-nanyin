@@ -56,19 +56,6 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 	}
 
 
-    /**
-     *
-     * 业务画面查询事件
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public PbcSendZipDatFile searchPageBysubmitDate(Map<String, Object> param) {
-        return restTemplate.postForObject(
-        		SvrServiceApplication.PBC_SERVICE_NAME + "/PbcSendZipDatFile/searchPageBysubmitDate",param,
-				PbcSendZipDatFile.class);
-    }
 
 	/**
 	 *

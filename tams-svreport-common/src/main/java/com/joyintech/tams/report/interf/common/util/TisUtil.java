@@ -1124,10 +1124,7 @@ public class TisUtil {
 						String cellvalue = row.getCell(j).getStringCellValue();
 						if (StringUtil.isNotEmpty(cellvalue)) {
 							if (cellvalue.contains("${") && cellvalue.contains("}")) {
-								// 修改字体颜色为红色
-								Font ztFont = wb.createFont();
-								ztFont.setColor(Font.COLOR_RED); // 将字体设置为“红色”
-								replaceDataAndColor(row.getCell(j), paraMap,ztFont,redReportMap);
+								replaceDataAndColor(row.getCell(j), paraMap,redReportMap,wb);
 							}
 							if (cellvalue.contains("!{") && cellvalue.contains("}")) {
 								replaceData2(row.getCell(j), paraMap);
@@ -1193,6 +1190,19 @@ public class TisUtil {
 											newcell.setCellValue(value);
 										}
 									}else{
+										if(StringUtil.isNotEmpty(resultMap.get(valKey+"Diff"))){ //【DAT表、登记表】有数据的内容，并且不一致的内容红色标记
+											Integer keyDiff=Integer.parseInt(resultMap.get(valKey+"Diff").toString());
+											if(1==keyDiff) {
+												CellStyle newStyle = wb.createCellStyle();
+												newStyle.cloneStyleFrom(newcell.getCellStyle());
+												// 修改字体颜色为红色
+												Font ztFont1 = wb.createFont();
+												ztFont1.setColor(Font.COLOR_RED); // 将字体设置为“红色”
+												// 字体颜色设置
+												newStyle.setFont(ztFont1);
+												newcell.setCellStyle(newStyle);
+											}
+										}
 										newcell.setCellValue(value);
 									}
 								}else if(paraMap.get(key)==null){
@@ -1291,7 +1301,7 @@ public class TisUtil {
 		return null;
 	}
 
-	private static void replaceDataAndColor(Cell cell, Map<String, Object> datas,Font font,Map<String, Integer> redReportMap) {
+	private static void replaceDataAndColor(Cell cell, Map<String, Object> datas,Map<String, Integer> redReportMap,HSSFWorkbook wb) {
 		CellType cellType = cell.getCellType();
 		if (cellType != CellType.STRING) {
 			return;
@@ -1317,12 +1327,15 @@ public class TisUtil {
 		cell.setCellValue(result);
 		Integer isRedIndex=replaceInteger(key,redReportMap);
 		if(null!=isRedIndex&&1==isRedIndex){
-			CellStyle cellStyle = cell.getCellStyle();
-			cellStyle.setFont(font);
-			cell.setCellStyle(cellStyle);
+			CellStyle newStyle = wb.createCellStyle();
+			newStyle.cloneStyleFrom(cell.getCellStyle());
+			// 修改字体颜色为红色
+			Font ztFont1 = wb.createFont();
+			ztFont1.setColor(Font.COLOR_RED); // 将字体设置为“红色”
+			// 字体颜色设置
+			newStyle.setFont(ztFont1);
+			cell.setCellStyle(newStyle);
 		}
-
-//
 		if (result.contains("${") && result.contains("}")) {
 			replaceData(cell, datas);
 		}
