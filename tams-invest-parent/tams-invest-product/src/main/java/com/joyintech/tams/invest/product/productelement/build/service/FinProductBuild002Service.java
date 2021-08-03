@@ -17,7 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.workflow.engine.service.WorkFlowService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,11 +33,6 @@ import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.common.base.entity.PtlValParam;
@@ -128,6 +126,11 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
     
     @Autowired(required = false)
     private FinProductBuild002Service finProductBuild002Service;
+    /**
+     * 业务流程表service
+     */
+    @Autowired(required = false)
+    private WorkFlowService workflowService;
 
     /**
      * 处理其他信息（待处理的组合信息、费用信息）
@@ -770,6 +773,18 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
     
     @Override
     public void doUpdate(FinProductBuild002Dto entity) {
+        Map<String, Object> map = Maps.newConcurrentMap();
+        map.put("title",this.getMessage("FinProductBuild002.finprodMarketId") + "("
+                + entity.getFinprodMarketId() + ")"
+                + this.getMessage("FinProductBuild002.finprodAbbr") + "("
+                + entity.getFinprodAbbr() + ")" + this.getMessage("FinProductBuild002.vdate")
+                + "(" + DateUtil.format(entity.getVdate()) + ")"
+                + this.getMessage("FinProductBuild002.mdate") + "("
+                + DateUtil.format(entity.getMdate()) + ")");
+        map.put("workFlowId",entity.getWorkflowId());
+        map.put("updateUser", LoginUserUtil.getUserName());
+        map.put("updateTime",DateUtil.now());
+        workflowService.updateTitle(map);
     	updateFiles(entity);
     }
     
