@@ -578,13 +578,15 @@
                         AND fpt.TYPE_7 = '03' THEN
                         - 1 * psv.TDY_INTINCEXP ELSE psv.TDY_INTINCEXP
                         END AS tdyIntincexp,
-                       fpt.TYPE_8 as finprodType2,
+                       nvl(fpt.TYPE_8,RAI.ORG_ASSET_TYPE1) as finprodType2,
                        nvl(fp.FINPROD_MARKET_ID,psv.FINPROD_ID) as finprodMarketId,
                        NVL(fp.FINPROD_ID,psv.FINPROD_ID)   AS finprodId,
                        nvl(fp.FINPROD_ABBR, fp.FINPROD_NAME) as finprodAbbr,
                        decode(fpt.TYPE_8,'F07',fpt.TYPE_7,'F10',fpt.TYPE_7,fpt.TYPE_6) as type5
-                           from PTL_SEC_PIERCE_VALUTION psv
-                      left join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID
+                        from PTL_SEC_PIERCE_VALUTION psv
+                        left join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID
+                        LEFT join RSK_ASSET_INFO RAI
+                            ON psv.FINPROD_ID = RAI.ASSET_CODE
                        LEFT JOIN
                          PTL_PORTFOLIO pp
                         ON
@@ -597,12 +599,12 @@
                         FIN_PRODUCT FP1
                         ON
                         FPA.FINPROD_ID = FP1.FINPROD_ID
-                        INNER JOIN
+                        LEFT JOIN
                         FIN_PRODUCT_TYPE fpt
                         ON
                         fpt.FINPROD_ID=psv.FINPROD_ID
-                        AND fpt.TYPE_8 IS NOT NULL
-                           where  FP1.FINPROD_TYPE2 = 'F16'
+                       where  FP1.FINPROD_TYPE2 = 'F16'
+                            AND (fpt.TYPE_8 IS NOT NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
                             <if test="searchDate != null and searchDate != ''">
                                 and psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
                              </if>
@@ -1435,7 +1437,7 @@
         select * from (select A.finprodType2,A.marketValue,A.dscCostAmt,A.tdyIntincexp,
         round((nvl(A.marketValue,0)+nvl(A.tdyIntincexp,0))*100/B.typeMarketValue,2) as amtRation
         from (
-        select psv.CDATE as cdate,fpt.TYPE_8 as finprodType2,
+        select psv.CDATE as cdate,nvl(fpt.TYPE_8,RAI.ORG_ASSET_TYPE1) as finprodType2,
         CASE
         WHEN fpt.TYPE_8 = 'F08'
         AND fpt.TYPE_7 = '01'
@@ -1473,11 +1475,14 @@
         ELSE psv.MARKET_VALUE
         END                                      AS marketValue
         from PTL_SEC_PIERCE_VALUTION psv
+        LEFT join RSK_ASSET_INFO RAI
+            ON psv.FINPROD_ID = RAI.ASSET_CODE
         <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
-        inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
+        LEFT join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID
         left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID　 and fpa.lay_type is null
         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON psv.PORTFOLIO_ID = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
         where 1=1
+        AND (fpt.TYPE_8  IS NOT NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
         <if test="searchDate != null and searchDate != ''">
             and psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
         </if>
