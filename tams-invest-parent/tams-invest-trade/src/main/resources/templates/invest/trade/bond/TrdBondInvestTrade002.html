@@ -854,6 +854,28 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- 新增 返款费率 返款金额 by caozhenming 20210802 start-->
+                        <div class="layui-form-item" id="refundDiv">
+                            <div class="form-inline-wrap" id="refundRate_div" >
+                                <label class="layui-form-label form-label-wrap"  th:text="#{TrdBondInvestTrade002.refundRate}|">返款费率</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" id="refundRate" name="refundRate"
+                                           class="layui-input form-input text-number"
+                                           th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.refundRate}" />
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap" id="refundAmount_div" >
+                                <label class="layui-form-label form-label-wrap"  th:text="#{TrdBondInvestTrade002.refundAmount}|">返款金额</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" id="refundAmount" name="refundAmount"
+                                           class="layui-input form-input text-number"
+                                           th:placeholder="#{SysCommon.placeholder}"
+                                           th:value="${entity?.refundAmount}" disabled="disabled"/>
+                                    <span class="input-right-show unitNum">元</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 新增 返款费率 返款金额 by caozhenming 20210802 end-->
                     </div>
                 </div>
 

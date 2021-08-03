@@ -112,6 +112,8 @@ var table;
 	        object.settleAmt=$("#settleAmt").val();
 	        object.exchangeAmt=$("#exchangeAmt").val();
 	        object.commissionAmt=$("#commissionAmt").val();
+	        object.refundRate=$("#refundRate").val();
+	        object.refundAmount=$("#refundAmount").val();
 	        object.preTradeId = preTradeId;
 //	        object.fTradeId = fTradeId;
 	        object.entrustNum = entrustNum; // 指令时的券面总额
@@ -830,7 +832,21 @@ var table;
             $("#ownTradeAmt").val(entrustOwnNum).trigger("blur");
         }
     });
-   
+
+    // 绑定输入框失焦事件
+    $('#refundRate').change(function () {
+        var tradeAmt = $("#tradeAmt").val();
+        var refundRate = $("#refundRate").val();
+        var refundRateMulHundred = JoyinMath.doMul(refundRate, 100, 4, JoyinMath.ROUND_HALF_UP)
+        var refundAmount = JoyinMath.doMul(tradeAmt, refundRateMulHundred, 2, JoyinMath.ROUND_HALF_UP)
+        if(refundAmount < 0) {
+            $("#refundRate").val(refundRate).trigger("blur");
+            $("#refundAmount").val(0).trigger("blur");
+        } else {
+            $("#refundAmount").val(refundAmount).trigger("blur");
+        }
+    });
+
     /**
 
      * 本方券券面总额
