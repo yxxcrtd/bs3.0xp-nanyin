@@ -922,4 +922,17 @@ SELECT F.FINPROD_NAME,
 		<!--判断债券资产是否存在行权交易 zxp end 20201125-->
 	</select>
 
+	<select id = "isExistTransInAsset" resultType="java.lang.Integer">
+		SELECT
+			SUM (num)
+		FROM(
+				SELECT COUNT(TRADE_ID) num
+				FROM TRD_PRODUCT_DEAL
+				WHERE FINPROD_ID = #{finprodId} AND TRADE_STATUS = '01' AND (IS_CANCEL='N' or IS_CANCEL IS NULL)
+				UNION ALL
+				SELECT COUNT(TRADE_ID) num
+				FROM TRD_PRODUCT_TEMP_DEAL
+				WHERE FINPROD_ID = #{finprodId})
+	</select>
+
 </mapper>
