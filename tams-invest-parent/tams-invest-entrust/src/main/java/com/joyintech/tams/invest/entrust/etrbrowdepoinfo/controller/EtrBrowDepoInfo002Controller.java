@@ -255,7 +255,7 @@ public class EtrBrowDepoInfo002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrBrowDepoInfoDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody EtrBrowDepoInfoDto dto, BindingResult br) throws Exception{//保存时，去除校验 add by xxg 20210802
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

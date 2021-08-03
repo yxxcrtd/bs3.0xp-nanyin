@@ -76,18 +76,19 @@
 			object.chlId = $('#getChannelId').val();
 		}
 
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/checkAuthorization', object, function(result2) {
-	        Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/check',object,
-	          function(result) {
-	              Joyin.confirm(result.data,function() {
-	                   if (operateType === 'save') {
-	                       WorkFlow.doSaveList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_save");
-	                   } else {
-	                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_submit");
-	                   }
-	               });
-	           });
-        });
+        //保存时，去除校验
+		if(operateType === 'save'){
+			WorkFlow.doSaveList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_save");
+		}else{
+			Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/checkAuthorization', object, function(result2) {
+				Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/check',object,
+					function(result) {
+						Joyin.confirm(result.data,function() {
+							WorkFlow.doSubmitList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_submit");
+						});
+					});
+			});
+		}
     }
 
     //画面联动,通道带出通道可用现金

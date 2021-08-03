@@ -290,7 +290,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrPlanAssetRDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody EtrPlanAssetRDto dto, BindingResult br) throws Exception{//去除指令暂存校验 add by xxg 20210802
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

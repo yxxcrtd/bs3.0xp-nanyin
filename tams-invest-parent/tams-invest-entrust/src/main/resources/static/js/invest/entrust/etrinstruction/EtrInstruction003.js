@@ -50,13 +50,14 @@ var QueryFunc=function(){
         var object = $.serializeToObject('#submitForm');
         object.pageModel = '3';
         object.operateType = operateType;
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrinstruction/EtrInstruction003/check', object, function(result) {
-            if (operateType === 'save') {
-                WorkFlow.doSaveList(basePath + 'invest/entrust/etrinstruction/EtrInstruction003/save', object, "EtrInstruction003_btn_save");
-            } else {
+        //去除指令保存校验
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath + 'invest/entrust/etrinstruction/EtrInstruction003/save', object, "EtrInstruction003_btn_save");
+        }else {
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrinstruction/EtrInstruction003/check', object, function(result) {
                 WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinstruction/EtrInstruction003/save', object, "EtrInstruction003_btn_submit");
-            }
-        });
+            });
+        }
     };
 
     /**

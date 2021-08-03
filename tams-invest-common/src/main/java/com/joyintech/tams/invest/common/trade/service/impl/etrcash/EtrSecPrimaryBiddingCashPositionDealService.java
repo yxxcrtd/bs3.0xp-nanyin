@@ -15,6 +15,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,14 +33,14 @@ public class EtrSecPrimaryBiddingCashPositionDealService extends EtrCashPosition
 	private static PtlCashPositionFlowMapper ptlCashPositionFlowMapper;
 
 	public static void deal债券一级投标EntrustStart(EntrustCommonDto entrustCommonDto, EtrPositionHoldDto etrPositionHoldDto) {
-		EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();   
+		EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
 		// 委托生成的现金流水
         EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDtoFromEtr(
             entrustCommonDto);
         String acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(),
                 etrEntrust.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue());
-        // 减少投标券面总额对应的可用现金
-        etrCashPositionFlowDto.setAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), new BigDecimal(100)).negate());
+        // 减少投标券面总额对应的可用现金 add by xxg entrustNum 非空判断  20210802
+        etrCashPositionFlowDto.setAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum() ==null?new BigDecimal(0):etrEntrust.getEntrustNum(), new BigDecimal(100)).negate());
         etrCashPositionFlowDto.setAcctId(acctId);
         etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
 	}

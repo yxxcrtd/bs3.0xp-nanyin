@@ -71,35 +71,37 @@
                 });
             }
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-        	Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR002/checkAuthorization', object, function(result2) {
-	            Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR002/check',object,
-	                function(result) {
-	                    Joyin.confirm(result.data,function() {
-	                        if (operateType === 'save') {
-	                            WorkFlow.doSaveList(basePath+'invest/entrust/etrplanassetr/EtrPlanAssetR002/save',object,"EtrPlanAssetR002_btn_save");
-	                        } else {
-	                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetr/EtrPlanAssetR002/save',object,"EtrPlanAssetR002_btn_submit");
-	                        }
-	                    });
-	                },null,function (result) {
-                        var disabledFlag = $('#invAim').attr('disabled');
-                        if(disabledFlag) return;
-	                    var msg = result.errorList;
-	                    var message ="";
-                        for(var i=0;i<msg.length;i++){
-                            message = msg[i];
-                            if(message.field!=null && message.field=='invAim'){
-                                if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
-                                    $('#invAim').textSelect('setValue', "FVTPL");
-                                    break;
+
+        //指令暂存，去除校验  add by xxg 20210802
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrplanassetr/EtrPlanAssetR002/save',object,"EtrPlanAssetR002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR002/checkAuthorization', object, function(result2) {
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR002/check',object,
+                        function(result) {
+                            Joyin.confirm(result.data,function() {
+                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetr/EtrPlanAssetR002/save',object,"EtrPlanAssetR002_btn_submit");
+                            });
+                        },null,function (result) {
+                            var disabledFlag = $('#invAim').attr('disabled');
+                            if(disabledFlag) return;
+                            var msg = result.errorList;
+                            var message ="";
+                            for(var i=0;i<msg.length;i++){
+                                message = msg[i];
+                                if(message.field!=null && message.field=='invAim'){
+                                    if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
+                                        $('#invAim').textSelect('setValue', "FVTPL");
+                                        break;
+                                    }
                                 }
                             }
-                        }
 
-                    });
-        	});
-        });
+                        });
+                });
+            });
+        }
     }
   // 查询组合可用现金
     var getPtlCashPositionInfo = function(){

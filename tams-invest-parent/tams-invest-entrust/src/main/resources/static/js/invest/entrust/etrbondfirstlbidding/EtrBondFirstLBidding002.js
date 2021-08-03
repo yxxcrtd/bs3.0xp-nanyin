@@ -222,36 +222,39 @@
     	//风险试算 end
     	//校验数据  校验表格
     	var tableData  = table.getAllRows();
-    	if (tableData.length == 0) {
-    		Joyin.alert("投标标位至少有一条数据！", 2);
-			return false;
-		}
-    	for (var i = 0; i < tableData.length; i++) {
-    		if (!tableData[i].bidPrice ) {
-    			Joyin.alert("投标标位不能为空！", 2);
-				return false;
-			}
-            if (tableData[i].bidPrice > 100 || tableData[i].bidPrice <= 0) {
-                Joyin.alert("投标标位的值应大于0，小于等于100！", 2);
+        if(operateType != 'save'){
+            if (tableData.length == 0) {
+                Joyin.alert("投标标位至少有一条数据！", 2);
                 return false;
             }
-    		if (!tableData[i].bidPrinAmt) {
-    			Joyin.alert("投标券面总额不能为空！", 2);
-				return false;
-			}
-            if (tableData[i].bidPrinAmt.length > 16) {
-                Joyin.alert("投标券面总额的值不能超过16位！", 2);
-                return false;
+            for (var i = 0; i < tableData.length; i++) {
+                if (!tableData[i].bidPrice ) {
+                    Joyin.alert("投标标位不能为空！", 2);
+                    return false;
+                }
+                if (tableData[i].bidPrice > 100 || tableData[i].bidPrice <= 0) {
+                    Joyin.alert("投标标位的值应大于0，小于等于100！", 2);
+                    return false;
+                }
+                if (!tableData[i].bidPrinAmt) {
+                    Joyin.alert("投标券面总额不能为空！", 2);
+                    return false;
+                }
+                if (tableData[i].bidPrinAmt.length > 16) {
+                    Joyin.alert("投标券面总额的值不能超过16位！", 2);
+                    return false;
+                }
+                for (var j = i+1; j < tableData.length; j++) {
+                    if (Number(tableData[i].bidPrice) ==
+                        Number(tableData[j].bidPrice)) {
+                        Joyin.alert( tableData[j].bidPrice + "投标标位不能重复存在！", 2);
+                        return false;
+                    }
+
+                }
             }
-			for (var j = i+1; j < tableData.length; j++) {
-				if (Number(tableData[i].bidPrice) ==
-                    Number(tableData[j].bidPrice)) {
-					Joyin.alert( tableData[j].bidPrice + "投标标位不能重复存在！", 2);
-					return false;
-				}
-				
-			}
-		}
+        }
+
         /**
          * 获取列表参数
          */
@@ -297,33 +300,33 @@
             elementId = 'EtrBondFirstLBidding002_btn_total';
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-            Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/check',object,
-                function(result) {
-                    Joyin.confirm(result.data,function() {
-                        if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath+'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/save',object,elementId||"EtrBondFirstLBidding002_btn_save");
-                        } else {
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/save',object,elementId||"EtrBondFirstLBidding002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/check',object,
+                    function(result) {
+                        Joyin.confirm(result.data,function() {
                             WorkFlow.doSubmitList(basePath+'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/save',object,elementId||"EtrBondFirstLBidding002_btn_submit");
-                        }
-                    });
-                },false,function (result) {
-                    var disabledFlag = $('#invAim').attr('disabled');
-                    if(disabledFlag) return;
-                    var msg = result.errorList;
-                    var message ="";
-                    for(var i=0;i<msg.length;i++){
-                        message = msg[i];
-                        if(message.field!=null && message.field=='invAim'){
-                            if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
-                                $('#invAim').textSelect('setValue', "FVTPL");
-                                break;
+                        });
+                    },false,function (result) {
+                        var disabledFlag = $('#invAim').attr('disabled');
+                        if(disabledFlag) return;
+                        var msg = result.errorList;
+                        var message ="";
+                        for(var i=0;i<msg.length;i++){
+                            message = msg[i];
+                            if(message.field!=null && message.field=='invAim'){
+                                if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
+                                    $('#invAim').textSelect('setValue', "FVTPL");
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                });
-        });
+                    });
+            });
+        }
     }
     
     window.componentLoadCallback = function(isDone, pagePath, params){
