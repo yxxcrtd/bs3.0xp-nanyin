@@ -35,7 +35,7 @@
 									<label class="layui-form-label form-lable">资产名称</label>
 									<div class="layui-input-inline input-inline">
                                         <input type="text" id="isEdit" name="isEdit" class="layui-input form-input" data-th-value="${entity?.isEdit}"  disabled="disabled" style = "display:none;">
-    
+										<input type="text" id="entityType" name="entityType" class="layui-input form-input" data-th-value="${entity?.type1}"  disabled="disabled" style = "display:none;">
 										<input id="finprodName" name="finprodName"
 											class="layui-input form-input" data-th-required="true"
 											data-th-value="${entity?.finprodName}" data-th-disabled="${(!notEditOrgCode)&&newOrEdit}">

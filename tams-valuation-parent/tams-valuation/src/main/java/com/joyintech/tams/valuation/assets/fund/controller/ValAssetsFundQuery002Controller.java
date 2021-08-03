@@ -10,16 +10,25 @@
 
 package com.joyintech.tams.valuation.assets.fund.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.assets.fund.dto.ValAssetsFundQuery002Dto;
+import com.joyintech.tams.valuation.assets.fund.dto.ValCashPlanDto;
+import com.joyintech.tams.valuation.assets.fund.service.ValAssetsFundQuery001Service;
+import com.joyintech.tams.valuation.assets.fund.service.ValAssetsFundQuery002Service;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,23 +39,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.valuation.assets.fund.dto.ValAssetsFundQuery002Dto;
-import com.joyintech.tams.valuation.assets.fund.dto.ValCashPlanDto;
-import com.joyintech.tams.valuation.assets.fund.service.ValAssetsFundQuery001Service;
-import com.joyintech.tams.valuation.assets.fund.service.ValAssetsFundQuery002Service;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import javax.validation.Valid;
+import java.util.*;
 
 /**
  * 基金类资产详情页面
@@ -142,6 +136,8 @@ public class ValAssetsFundQuery002Controller extends BaseController {
             capiIncomeFeature = dto.getCapiIncomeFeature();
             payCycle = dto.getPayCycle();
             // tdayRule = dto.getTdayRule();
+            /** modify by yanya on 20210207 增加营业日准则**/
+            payTdayRule = dto.getPayTdayRule();
             calcRule = dto.getCalcRule();
             tradeMarket = dto.getTradeMarket();
             calendarId = dto.getCalendarId();
@@ -173,6 +169,8 @@ public class ValAssetsFundQuery002Controller extends BaseController {
             capiIncomeFeature = dto.getCapiIncomeFeature();
             payCycle = dto.getPayCycle();
             //tdayRule = dto.getTdayRule();
+            /** modify by yanya on 20210207 增加营业日准则**/
+            payTdayRule = dto.getPayTdayRule();
             calcRule = dto.getCalcRule();
             tradeMarket = dto.getTradeMarket();
             calendarId = dto.getCalendarId();
@@ -210,9 +208,13 @@ public class ValAssetsFundQuery002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.交易日历);
         this.setSelectOptionToModel(model, DictCode.申购确认速度);
         this.setSelectOptionToModel(model, DictCode.赎回确认速度);
-        //<!-- modify by huangjian on 20190116 start -->
-        this.setSelectOptionToModel(model, DictCode.交易流通场所);
-        //<!-- modify by huangjian on 20190116 end -->
+        /**
+         * modify by wujie on 20210220 start
+        this.setSelectOptionToModel(model, DictCode.交易流通场所);**/
+        
+        this.setSelectOptionToModel(model, DictCode.交易场所);
+        /**modify by wujie on 20210220 end**/
+        
         this.setSelectOptionToModel(model, DictCode.收益类型);
         model.addAttribute("profitType", profitType);
         model.addAttribute("fundType", fundType);
@@ -358,6 +360,17 @@ public class ValAssetsFundQuery002Controller extends BaseController {
             return new AjaxResult(e.getMessage());
         }
         return new AjaxResult(msg);
+    }
+
+    /**
+     * 获取交易日历信息
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("getCalendarInfo")
+    @ResponseBody
+    public Page<SelectOptionDto> getCalendarInfo() throws Exception {
+        return valAssetsFundQuery002Service.getCalendarInfo(RequestUtil.getPageParam());
     }
 
 }

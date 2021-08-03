@@ -47,6 +47,11 @@ public class ValAssetsFundQuery001Dto extends FinProduct implements ProcessEntit
      * 交易日历
      */
     private String calendarId;
+
+    /*
+     * 交易日历名称
+     */
+    private String calendarName;
     
     /**
      * 金融产品代码
@@ -140,8 +145,16 @@ public class ValAssetsFundQuery001Dto extends FinProduct implements ProcessEntit
         return SysDataUtil.getNameFromDataDict(DictCode.基金分红频率, payCycle);
     }
 
+//    public String getCalendarName() {
+//        return SysDataUtil.getNameFromDataDict(DictCode.交易日历, calendarId);
+//    }
+
     public String getCalendarName() {
-        return SysDataUtil.getNameFromDataDict(DictCode.交易日历, calendarId);
+        return calendarName;
+    }
+
+    public void setCalendarName(String calendarName) {
+        this.calendarName = calendarName;
     }
 
     public String getFundType() {
