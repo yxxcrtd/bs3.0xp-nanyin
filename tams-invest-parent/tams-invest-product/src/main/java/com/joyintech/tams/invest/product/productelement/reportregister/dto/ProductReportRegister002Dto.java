@@ -315,7 +315,7 @@ public class ProductReportRegister002Dto extends BaseEntity implements ProcessEn
      * 起点销售金额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    @Amount(fieldName = "BussRepFinProductInfo.repSaleAmtStr", maxIntBit = 13,groups = {ValidateGroupEdit.class})
+//    @Amount(fieldName = "BussRepFinProductInfo.repSaleAmtStr", maxIntBit = 13,groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName="BussRepFinProductInfo.repSaleAmtStr",groups = {ValidateGroupEdit.class})
     private BigDecimal repSaleAmtStr;
 
