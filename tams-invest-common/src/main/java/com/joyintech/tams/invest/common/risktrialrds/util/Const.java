@@ -61,6 +61,7 @@ public class Const {
     public static final String UNITE="UNITE";
 
     public static final String PROD_LIST="ProdList";
+
     /**
      * 金融产品代码
      */
@@ -80,6 +81,5 @@ public class Const {
      * 币种
      */
     public static final String CCY="ccy";
-    
     
 }

@@ -17,12 +17,10 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -74,7 +72,7 @@ public class RiskTrialCommImpl extends BaseService implements RiskTrialComm {
 
 	@Autowired
 	private RiskTrialCommCallable riskTrialCommCallable;
-	
+
 	/**
 	 * 按交易代码获取多笔交易是否超审批线
 	 * getRiskExceedApproveByTradeId(RiskTrialRetDto.class,{tradeId})
@@ -158,6 +156,7 @@ public class RiskTrialCommImpl extends BaseService implements RiskTrialComm {
 		}
 		return null;
 	}
+	
 	@Override
 	public List<RiskTrialRetDto> actualRiskTrialDeal(InvestTradeTrialInput inputDto) throws InterruptedException {
 		TradeCommUtil.tradeAmountDeal(inputDto);
@@ -372,6 +371,7 @@ public class RiskTrialCommImpl extends BaseService implements RiskTrialComm {
 		logdto.setLogTime(DateUtil.parse(sysParam.getValDate()));
 		supervisionCalcSvc.writeLog(logdto);
 	}
+
 	/**
 	 * 比较获取是否超审批线标识
 	 * @param riskList
@@ -387,5 +387,4 @@ public class RiskTrialCommImpl extends BaseService implements RiskTrialComm {
 		mapRet.put(com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil.APPROVE_LINE_THR, false);
 		return mapRet;
 	}
-
 }

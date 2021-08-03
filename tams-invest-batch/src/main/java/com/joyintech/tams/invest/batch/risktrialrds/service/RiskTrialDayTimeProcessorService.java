@@ -12,7 +12,6 @@ package com.joyintech.tams.invest.batch.risktrialrds.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.batch.common.util.BatchConstant;
 import com.joyintech.tams.invest.batch.risktrialrds.dto.RiskTrialDayTimeReaderResult;
 import com.joyintech.tams.invest.batch.risktrialrds.dto.RiskTrialDayTimeResult;
 import com.joyintech.tams.invest.common.risktrialrds.RiskTrialComm;
@@ -31,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * 日间批处理生成生成processor相关业务处理
@@ -69,6 +70,7 @@ public class RiskTrialDayTimeProcessorService extends BaseService {
         // 获取reader返回值
     	List<RiskTrialDayTimeResult> resultList=new ArrayList<>();
     	 final CountDownLatch countDown = new CountDownLatch(readerList.size());
+		List<Future<RiskTrialDayTimeResult>> futures = new ArrayList<>(readerList.size());
 		 for(final RiskTrialDayTimeReaderResult readerResult:readerList){
 			// 若reader传递的参数为空，不进行后续处理
 			if (readerResult == null) {
@@ -76,17 +78,17 @@ public class RiskTrialDayTimeProcessorService extends BaseService {
 				continue;
 			}
 
-			threadPoolTaskExecutor.execute(()->{
+			 futures.add(threadPoolTaskExecutor.submit(()->{
+			 	RiskTrialDayTimeResult resultDto = null;
 				try{
 					Map<String,Object> mapOther=new HashMap<>();
 					mapOther=readerResult.getMapOther();
 					RiskTrialRetDto retEntry=riskTrialComm.afterRiskTrialDeal(mapOther,readerResult.getTaskQueue(), param1.get(Const.SUP_FREQUENCY).toString());
 					if(StringUtil.isNotEmpty(retEntry)&&!StringUtil.isEmpty(retEntry.getIndId())&&!StringUtil.isEmpty(retEntry.getPortfolioId())&&!StringUtil.isEmpty(retEntry.getSupStat())){
-						RiskTrialDayTimeResult resultDto = new RiskTrialDayTimeResult();
+						resultDto = new RiskTrialDayTimeResult();
 						resultDto.setRiskTrialRetDto(retEntry);
-						resultList.add(resultDto);
+						//resultList.add(resultDto);
 					}
-
 				}
 				catch(Exception e){
 					logger.error(e.getMessage(),e);
@@ -94,8 +96,8 @@ public class RiskTrialDayTimeProcessorService extends BaseService {
 				finally{
 					countDown.countDown();
 				}
-			});
-
+				return resultDto;
+			}));
 		 }
 		try {
 			// 等待线程结束
@@ -104,6 +106,18 @@ public class RiskTrialDayTimeProcessorService extends BaseService {
 		catch (InterruptedException e) {
 			logger.error("线程池中断异常", e);
 			Thread.currentThread().interrupt();
+		}
+		for(Future<RiskTrialDayTimeResult> future : futures){
+			try {
+				RiskTrialDayTimeResult expFuture = future.get();
+				if(null != expFuture){
+					resultList.add(expFuture);
+				}
+			} catch (InterruptedException e) {
+				logger.error("线程池获取错误信息对象超时！", e);
+			} catch (ExecutionException e) {
+				logger.error("线程池获取错误信息对象执行异常！", e);
+			}
 		}
         return resultList;
     }

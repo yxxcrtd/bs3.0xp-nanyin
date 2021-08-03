@@ -134,4 +134,11 @@ public interface IProdInfo extends IBusiness {
      * @since 1.0
      */
     String getRiskEnabled();
+
+    /**
+     * 取得 建仓期
+     * 
+     * @return 建仓期
+     */
+    Long getBuildPeriod();
 }

@@ -11,35 +11,41 @@
 package com.joyintech.tams.component.business.riskrds.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.function.Consumer;
 
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
-import com.joyintech.tams.common.base.entity.FinProductConvertible;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.risktrialrds.util.Const;
 import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory; 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service; 
+import org.springframework.stereotype.Service;
+
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.exception.BusinessException;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
+import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
+import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.constant.PageFieldToInterfFactory;
 import com.joyintech.tams.component.business.riskrds.core.BaseRiskRdsService;
 import com.joyintech.tams.component.business.riskrds.dto.EntrustBaseDto;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.dto.TradeBaseDto;
+import com.joyintech.tams.component.business.util.CommonBusinessUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -57,8 +63,7 @@ import com.joyintech.tams.invest.common.redisinit.dto.IRiskRds;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IAssetInfo;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.AssetInfoRedisService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
-import java.util.*;
-import java.util.function.Consumer;
+import com.joyintech.framework.constant.GlobalConstant;
 
 /**
  * 接口组件Service
@@ -68,38 +73,9 @@ import java.util.function.Consumer;
  * @since 1.0
  */
 @Service
-public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService {
+public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService<V> {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private List<String> 申购确认_赎回申请=Arrays.asList(DictCodeList.交易方向_申购确认.getValue(),DictCodeList.交易方向_赎回.getValue(),DictCodeList.交易方向_赎回到账.getValue());
-
-    private List<String> 场内指令_质押券入库_质押券出库 = Arrays.asList(DictCodeListExt3.交易方向_质押券入库.getValue(),
-            DictCodeListExt3.交易方向_质押券出库.getValue());
-
-    private List<String> 产品端_认购赎回分红=Arrays.asList(DictCodeList.交易方向_产品认购.getValue(),DictCodeList.交易方向_产品申购.getValue()
-            ,DictCodeList.交易方向_产品赎回.getValue(),DictCodeList.交易方向_份额强增.getValue(),DictCodeList.交易方向_份额强减.getValue(),DictCodeList.交易方向_现金分红.getValue()
-            ,DictCodeList.交易方向_提前终止.getValue(),DictCodeList.交易方向_提前赎回.getValue(),DictCodeList.交易方向_产品付费.getValue(),DictCodeList.交易方向_税费缴税.getValue()
-            ,DictCodeList.交易方向_产品提前赎回.getValue(),DictCodeList.交易方向_产品现金分红.getValue());
-    /**
-     * 资产基本信息更新Redis服务
-     */
-    @Autowired
-    private AssetInfoRedisService assetInfoSrc;
-
-    @Autowired
-    private FinProductAddMapper finProductAddMapper;
-    
-    @Autowired
-    private FinTradeProductMapper finTradeProductMapper;
-
-    @Autowired
-    private FinProductConvertibleMapper finProductConvertibleMapper;
-
-    // add by zhangrui1 取基金净值 start
-    @Autowired
-    private FundNetService fundNetService;
-
+    // add by zhangrui1 正反同步交易特殊处理 start
     /**
      * 分组ID
      */
@@ -109,15 +85,88 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * 是否正反同步交易
      */
     public static final String IS_SYNC = "isSync";
+    // add by zhangrui1 正反同步交易特殊处理 end
+    // add by zhangrui1 取基金净值 start
+    @Autowired
+    private FundNetService fundNetService;
     // add by zhangrui1 取基金净值 end
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+    @Autowired
+    private FinProductConvertibleMapper finProductConvertibleMapper;
+
+    /**
+     * 交易类金融产品表
+     */
+    @Autowired
+    private FinTradeProductMapper finTradeProductMapper;
+    
+
+    private List<String> 申购确认_赎回申请 = Arrays.asList(DictCodeList.交易方向_赎回.getValue(),
+        DictCodeList.交易方向_申购确认.getValue(), DictCodeList.交易方向_赎回到账.getValue());
+    
+    private List<String> 场内指令_质押券入库_质押券出库 = Arrays.asList(DictCodeListExt3.交易方向_质押券入库.getValue(),
+        DictCodeListExt3.交易方向_质押券出库.getValue());
+
+    private List<String> 产品端_认购赎回分红=Arrays.asList(DictCodeList.交易方向_产品认购.getValue(),DictCodeList.交易方向_产品申购.getValue()
+            ,DictCodeList.交易方向_产品赎回.getValue(),DictCodeList.交易方向_份额强增.getValue(),DictCodeList.交易方向_份额强减.getValue(),DictCodeList.交易方向_现金分红.getValue()
+            ,DictCodeList.交易方向_提前终止.getValue(),DictCodeList.交易方向_提前赎回.getValue(),DictCodeList.交易方向_产品付费.getValue(),DictCodeList.交易方向_税费缴税.getValue()
+            ,DictCodeList.交易方向_产品提前赎回.getValue(),DictCodeList.交易方向_产品现金分红.getValue());
+
+    private List<String> 协议回购到期交易方向 = Arrays.asList(DictCodeListExt3.交易方向_提前购回.getValue(),DictCodeListExt3.交易方向_到期购回.getValue()
+            ,DictCodeListExt3.交易方向_解除质押.getValue());
+    /**
+     * 资产基本信息更新Redis服务
+     */
+    @Autowired
+    private AssetInfoRedisService assetInfoSrc;
+    
+    @Autowired
+    private DateCalService dateCalService;
+
+    // add by zhangrui1 设置关联方信息 start
+    protected void setRelatedParty(InterfRiskRdsDto interfRiskRdsDto,
+                                   Map<String, Object> dataMap) {
+        Object isRelatedParty = CommonUtil.findValue(dataMap,
+            CommonRelatedPartyService.ISRELATEDPARTY);
+        Object isRelatedPartyCeOrg = CommonUtil.findValue(dataMap,
+            CommonRelatedPartyService.ISRELATEDPARTYCEORG);
+        Object relatedParty = CommonUtil.findValue(dataMap,
+            CommonRelatedPartyService.RELATEDPARTY);
+        Object relatedPartyAmt = CommonUtil.findValue(dataMap,
+            CommonRelatedPartyService.RELATEDPARTYAMT);
+        if (StringUtil.equals(isRelatedParty, BussinessDictCodeList.是否_是.getValue())) {
+            interfRiskRdsDto.setIsRelatedParty(isRelatedParty.toString());
+            interfRiskRdsDto.setRelatedParty(relatedParty.toString());
+        }
+        if (StringUtil.equals(isRelatedPartyCeOrg, BussinessDictCodeList.是否_是.getValue())) {
+            interfRiskRdsDto.setIsRelatedPartyCeOrg(isRelatedPartyCeOrg.toString());
+            interfRiskRdsDto.setRelatedPartyAmt(new BigDecimal(relatedPartyAmt.toString()));
+        }
+    }
+
+    protected void setRelatedParty(Map<String, Object> infMap, Map<String, Object> dataMap,
+                                   String ps) {
+        Object isRelatedPartyCeOrg = CommonUtil.findValue(dataMap,
+            CommonRelatedPartyService.ISRELATEDPARTYCEORG + ps);
+        Object relatedPartyAmt = CommonUtil.findValue(dataMap,
+            CommonRelatedPartyService.RELATEDPARTYAMT + ps);
+        if (StringUtil.equals(isRelatedPartyCeOrg, BussinessDictCodeList.是否_是.getValue())) {
+            infMap.put(CommonRelatedPartyService.ISRELATEDPARTYCEORG,
+                isRelatedPartyCeOrg.toString());
+            infMap.put(CommonRelatedPartyService.RELATEDPARTYAMT,
+                new BigDecimal(relatedPartyAmt.toString()));
+        }
+    }
+    // add by zhangrui1 设置关联方信息 end
     public ClientData sendRiskRdsDataCommon(Map<String, Object> dataMap,V v) throws Exception {
         // add by zhangrui1 增加批量接口调用逻辑 start
         String infCode = v.getInfCode();
         boolean isInnerTrd =checkInnerCounter(dataMap);
         //是否是股票的分红送转 add by chendijun 20200523
-        boolean isStockFHSZ = (StringUtil.equals((String) dataMap.get(InterfUtil.ps), DictCodeList.股票分红类型_分红送转.getValue())
-                &&StringUtil.equals((String) dataMap.get("finprodType2"), DictCodeListExt1.金融产品类型_投管用_股票.getValue()));
+        boolean isStockFHSZ = (StringUtil.equals((String) dataMap.get(InterfUtil.ps), DictCodeList.股票分红类型_分红送转.getValue()) 
+            &&StringUtil.equals((String) dataMap.get("finprodType2"), DictCodeListExt1.金融产品类型_投管用_股票.getValue()));
         // add by zhangrui1 设置关联方信息 start
         if (!isInnerTrd && !isStockFHSZ) {
             CommonRelatedPartyService.doCredit(dataMap, v);
@@ -125,19 +174,22 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         // add by zhangrui1 设置关联方信息 end
         // 批量接口或者转仓或者是股票分红送转
         if(CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占批量接口)
-                || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占释放批量接口)
-                || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_风险试算批量接口)
-                // 预占功能 add by zhangrui1 start
-                || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占释放批量接口)
-                || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占批量接口)
-                // 预占功能 add by zhangrui1 end
-                || (isInnerTrd && CommonUtil.isType((String) dataMap.get(InterfUtil.ps), BussinessDictCodeList.交易方向_卖出))
-                || isStockFHSZ) {
+            || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占释放批量接口)
+            || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_风险试算批量接口)
+            // 预占功能 add by zhangrui1 start
+            || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占释放批量接口)
+            || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占批量接口)
+            // 预占功能 add by zhangrui1 end
+            // 交易所协议回购，到期续做 需要拆成两笔 走批量接口 start
+            || StringUtil.equals(CommonUtil.findValue(dataMap,"ps"),DictCodeList.交易方向_到期续做.getValue())
+            // 交易所协议回购，到期续做 需要拆成两笔 走批量接口 end
+            || (isInnerTrd && CommonUtil.isType((String) dataMap.get(InterfUtil.ps), BussinessDictCodeList.交易方向_卖出))
+            || isStockFHSZ) {
             // BSTOT-2419 by zhangrui1 Start
             //获取母组合
             exchangePortfolioBySub(dataMap);
             String counterId = (String) CommonUtil.findValue(dataMap, "counterId");
-            if (isInnerTrd) {
+            if (isInnerTrd || StringUtil.equals(CommonUtil.findValue(dataMap,"ps"),DictCodeList.交易方向_到期续做.getValue())) {
                 counterId = AllTradeCommonUtil.exchangePortfolio(counterId);
                 dataMap.put(PageFieldToInterfFactory.INF_COUNTERID, counterId);
                 // add by zhangrui1 非批量接口时改成批量接口 start
@@ -160,7 +212,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
             // BSTOT-2419 by zhangrui1 end
             List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-            //判断是否来自场内交易指令
+          //判断是否来自场内交易指令
             if(StringUtil.equals(dataMap.get("fromEtrExchange"), DictCodeList.是否_是.getValue())) {
                 list = prepareEtrExchangeRiskListEntity(dataMap, v);
             }
@@ -177,11 +229,11 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         }
         // add by zhangrui1 债券借贷存续期特别处理 start
         if ((CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
-                DictCodeListExt1.金融产品类型_投管用_债券借贷融入)
-                || CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
-                DictCodeListExt1.金融产品类型_投管用_债券借贷融出))
-                // 现金交割
-                && CommonUtil.isType((String)dataMap.get("isCashPay"), BussinessDictCodeList.是否_是)) {
+            DictCodeListExt1.金融产品类型_投管用_债券借贷融入)
+            || CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
+                 DictCodeListExt1.金融产品类型_投管用_债券借贷融出))
+            // 现金交割
+            && CommonUtil.isType((String)dataMap.get("isCashPay"), BussinessDictCodeList.是否_是)) {
             if (CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占接口)) {
                 v.setInfCode(BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue());
             }
@@ -189,7 +241,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 v.setInfCode(BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue());
             }
             dataMap.put("ps2", CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
-                    DictCodeListExt1.金融产品类型_投管用_债券借贷融入) ? BussinessDictCodeList.交易方向_买入.getValue() : BussinessDictCodeList.交易方向_卖出.getValue());
+                DictCodeListExt1.金融产品类型_投管用_债券借贷融入) ? BussinessDictCodeList.交易方向_买入.getValue() : BussinessDictCodeList.交易方向_卖出.getValue());
             List<Map<String, Object>> list = periodbondLend(dataMap, v);
             logger.info("==========调用共通方法sendListDataCommon==========");
             return this.sendListDataCommon(list, v.getInfCode());
@@ -211,9 +263,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             interfRiskRdsDto.setAssetType(v.getAssetType());
         }
         // add by zhangrui1 start
-        if (StringUtil.equals(BussinessDictCodeListRds.接口系统ID_预占释放接口.getValue(), v.getInfCode())
-                || StringUtil.equals(BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),
-                v.getInfCode())) {
+        if ((StringUtil.equals(BussinessDictCodeListRds.接口系统ID_预占释放接口.getValue(), v.getInfCode()) && !StringUtil.equals(dataMap.get("manualSettle"),"Y"))
+            || StringUtil.equals(BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),v.getInfCode())) {
             interfRiskRdsDto.setRevokeFlg(DictCodeList.是否_是.getValue());
         }
         // add by zhangrui1 end
@@ -229,25 +280,28 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             // add by zhangrui1 处理转仓反向交易的撤销 end
             if (StringUtil.isEmpty(interfRiskRdsDto.getAssetCode())) {
                 interfRiskRdsDto.setAssetCode(
-                        (String)CommonUtil.findValue(dataMap, InterfUtil.finprodId));
+                    (String)CommonUtil.findValue(dataMap, InterfUtil.finprodId));
             }
         }
+        // 可转债申购 申购时 金额根据预估中签比例（系统参数）计算
+        doCalcAmtWithB14(dataMap, interfRiskRdsDto);
+
         //暂不处理的交易方向
         if(StringUtil.isNotEmpty(interfRiskRdsDto.getPs())&&申购确认_赎回申请.contains(interfRiskRdsDto.getPs())){
             // 可转债申购确认需要进行实占
             if (doBondToStock(dataMap, interfRiskRdsDto)
-                    && !CommonUtil.isType(v.getEventType(), BussinessDictCodeListRds.事件类型_投资委托)) {
+                && !CommonUtil.isType(v.getEventType(), BussinessDictCodeListRds.事件类型_投资委托)) {
                 return null;
             }
         }
-
+        
         //场内交易指令暂不处理的交易方向
         if(StringUtil.equals(dataMap.get("fromEtrExchange"), DictCodeList.是否_是.getValue())
-                && StringUtil.isNotEmpty(interfRiskRdsDto.getPs())
-                && 场内指令_质押券入库_质押券出库.contains(interfRiskRdsDto.getPs())){
+            && StringUtil.isNotEmpty(interfRiskRdsDto.getPs())
+            && 场内指令_质押券入库_质押券出库.contains(interfRiskRdsDto.getPs())){
             return null;
         }
-
+        
         // add by zhangrui1 添加是否内部交易 Start
         interfRiskRdsDto.setIsInnerTrd(isInnerTrd ? BussinessDictCodeListRds.是否_是.getValue()
                 : BussinessDictCodeListRds.是否_否.getValue());
@@ -259,27 +313,43 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         return this.sendDataCommon(interfRiskRdsDto);
     }
 
+    /**
+     * 可转债申购 申购时 金额根据预估中签比例（系统参数）计算
+     *  暂时不需要实现具体内容
+     * @param dataMap 原始数据
+     * @param interfRiskRdsDto 报文数据
+     */
+    private void doCalcAmtWithB14(Map<String, Object> dataMap, InterfRiskRdsDto interfRiskRdsDto) {
+//        if(StringUtil.equals(CommonUtil.findValue(dataMap, "windtypeone"),DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())
+//                && DictCodeList.交易方向_申购.getValue().equals(interfRiskRdsDto.getPs())){
+//            if (StringUtil.equals(DictCodeListExt2.申购类型_普通申购.getValue(),CommonUtil.findValue(dataMap, "purchType"))
+//                    && StringUtil.isNotEmpty(CacheUtil.getSysParam(BussinessConstant.PREDICT_WIN_PERCENT))){
+//                BigDecimal percent = new BigDecimal(CacheUtil.getSysParam(BussinessConstant.PREDICT_WIN_PERCENT));
+//                interfRiskRdsDto.setAmount(percent.multiply(interfRiskRdsDto.getAmount()).divide(new BigDecimal(100),2, RoundingMode.HALF_UP));
+//            }
+//        }
+    }
 
     /**
      * 可转债申购确认需要进行实占<br>
      * 中签券面总额大于等于申购券面总额则不参与实占
-     *
+     * 
      * @param dataMap 原始数据
      * @param interfRiskRdsDto 报文数据
      * @return true:不需要实占
      */
     private boolean doBondToStock(Map<String, Object> dataMap, InterfRiskRdsDto interfRiskRdsDto) {
         if (StringUtil.equals(CommonUtil.findValue(dataMap, "windtypeone"),
-                DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())
-                && CommonUtil.isType(interfRiskRdsDto.getPs(), DictCodeList.交易方向_申购确认)) {
+            DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())
+            && CommonUtil.isType(interfRiskRdsDto.getPs(), DictCodeList.交易方向_申购确认)) {
             // 中签券面总额
             Object winlotteryAmtObj = CommonUtil.findValue(dataMap, "winlotteryAmt");
             BigDecimal winlotteryAmt = winlotteryAmtObj instanceof BigDecimal ? (BigDecimal)winlotteryAmtObj : new BigDecimal(
-                    winlotteryAmtObj.toString());
+                winlotteryAmtObj.toString());
             // 申购券面总额
             Object tradeAmtObj = CommonUtil.findValue(dataMap, "tradeAmt");
             BigDecimal tradeAmt = tradeAmtObj instanceof BigDecimal ? (BigDecimal)tradeAmtObj : new BigDecimal(
-                    tradeAmtObj.toString());
+                tradeAmtObj.toString());
             // 金额 = 中签券面总额 - 申购券面总额
             BigDecimal amount = winlotteryAmt.subtract(tradeAmt);
             // 中签券面总额大于等于申购券面总额则不参与实占
@@ -288,12 +358,14 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
             // 对前面申购的部分进行反向实占
             interfRiskRdsDto.setAmount(amount);
+            interfRiskRdsDto.setPreOccupyCode("");
+            // 可转债申购确认交易，忽略试算结果，直接更新指标参数值
+            interfRiskRdsDto.setIgnoreStatus("Y");
             interfRiskRdsDto.setPs(DictCodeList.交易方向_申购.getValue());
             return false;
         }
         return true;
     }
-
 
     /**
      * 保存或提交调用的实占预占逻辑(非画面端)
@@ -307,8 +379,218 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         logger.info("==========后端交易或委托类转换接口:{} start==========",v.getEventType()+v.getInfCode());
         Map<String,Object> dataMap=JsonUtils.object2Map(t);
         ClientData returnCli = this.sendRiskRdsDataCommon(dataMap,v);
+        logger.info("==========后端交易或委托类转换接口:{} end==========", v.getEventType() + v.getInfCode());
         return returnCli;
     }
+
+    // 多组合、多对多指令/交易处理共通 by zhangrui1 start
+    public void doListCommon(V v, Map<String, Object> dataMap,
+                             Map<String, String> portfolioIds, List<String> tradeIds,
+                             List<Map<String, Object>> targetList)
+        throws Exception {
+        String counterId = (String)CommonUtil.findValue(dataMap, "counterId");
+        String ps = (String)CommonUtil.findValue(dataMap, "ps");
+        boolean isInnerTrd = portfolioIds.containsKey(counterId);
+        String isInnerTrdStr = isInnerTrd ? BussinessDictCodeListRds.是否_是.getValue() : BussinessDictCodeListRds.是否_否.getValue();
+        dataMap.put(PageFieldToInterfFactory.INF_ISINNERTRD, isInnerTrdStr);
+        // 债转股、基金转换、转仓等特殊处理
+        if (CommonUtil.isType(ps, DictCodeListExt1.交易方向_债转股)
+            || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请)
+            || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)
+            || (isInnerTrd && CommonUtil.isType(ps, BussinessDictCodeList.交易方向_卖出))) {
+            // 设置内部交易对手
+            if (isInnerTrd) {
+                dataMap.put(PageFieldToInterfFactory.INF_COUNTERID, StringUtil.isEmpty(
+                    portfolioIds.get(counterId)) ? counterId : portfolioIds.get(counterId));
+            }
+            List<Map<String, Object>> singleRiskList=prepareRiskListEntity(dataMap, v);
+            if(!StringUtil.isEmptyList(singleRiskList)) {
+                targetList.addAll(singleRiskList);
+            }
+            return;
+        }
+        // 一般处理
+        InterfRiskRdsDto interfRiskRdsDto = this.prepareRiskEntity(dataMap, v);
+        if (!StringUtil.isNotEmpty(interfRiskRdsDto)) {
+            return;
+        }
+        // 可转债申购 申购时 金额根据预估中签比例（系统参数）计算
+        doCalcAmtWithB14(dataMap, interfRiskRdsDto);
+        // 暂不处理的交易方向
+        if (申购确认_赎回申请.contains(interfRiskRdsDto.getPs())
+            // 可转债申购确认需要进行实占
+            && (doBondToStock(dataMap, interfRiskRdsDto)
+                && !CommonUtil.isType(v.getEventType(), BussinessDictCodeListRds.事件类型_投资委托))) {
+            return;
+        }
+        // 设置事件类型
+        interfRiskRdsDto.setEventType(v.getEventType());
+        // 设置币种
+        Object ccy = dataMap.get(InterfUtil.CCY);
+        interfRiskRdsDto.setCcy(StringUtil.isNotEmpty(
+            ccy) ? ccy.toString() : BussinessDictCodeListRds.币种_人民币_CNY.getValue());
+        // 设置金融产品类型
+        if (!StringUtil.isNotEmpty(interfRiskRdsDto.getAssetType())) {
+            interfRiskRdsDto.setAssetType(v.getAssetType());
+        }
+        // 设置撤销标志
+        if (CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_预占释放批量接口)) {
+            interfRiskRdsDto.setRevokeFlg(DictCodeList.是否_是.getValue());
+        }
+        if (CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_实占释放批量接口)) {
+            interfRiskRdsDto.setRevokeFlg(DictCodeList.是否_是.getValue());
+            // 内部交易对手时取交易编号作为条件查询反向交易编号
+            if (isInnerTrd) {
+                String tradeId = interfRiskRdsDto.getEventId();
+                tradeIds.add(removeLasStr(tradeId));
+            }
+        }
+        // 设置是否内部交易
+        interfRiskRdsDto.setIsInnerTrd(
+            isInnerTrd ? BussinessDictCodeListRds.是否_是.getValue() : BussinessDictCodeListRds.是否_否.getValue());
+
+        // add by zhangrui1 设置关联方信息 start
+        setRelatedParty(interfRiskRdsDto, dataMap);
+        // add by zhangrui1 设置关联方信息 end
+        targetList.add(BeanUtil.object2Map(interfRiskRdsDto));
+    }
+
+    public void changeEventId(Map<String, Object> map) {
+        // SNSTZJY-1013 add by zhangrui1 start
+        boolean isInnerTrd = StringUtil.equals(map.get("isInnerTrd"),
+            BussinessDictCodeListRds.是否_是.getValue());
+        String tail = isInnerTrd ? (String)map.get(
+            PageFieldToInterfFactory.INF_PS) : StringUtil.EMPTY;
+        if (isNeedTail((String)map.get(PageFieldToInterfFactory.INF_PREOCCUPYCODE), tail)) {
+            map.put(PageFieldToInterfFactory.INF_PREOCCUPYCODE,
+                map.get(PageFieldToInterfFactory.INF_PREOCCUPYCODE) + tail);
+        }
+        // SNSTZJY-1013 add by zhangrui1 end
+        String eventId = (String)map.get(PageFieldToInterfFactory.INF_EVENTID);
+        if (isNeedTail(eventId, tail)) {
+            map.put(PageFieldToInterfFactory.INF_EVENTID, eventId + tail);
+        }
+    }
+
+    protected boolean isNeedTail(String str, String tail) {
+        return StringUtil.isNotEmpty(str) && StringUtil.isNotEmpty(tail)
+               && !StringUtil.endsWith(str, tail);
+    }
+
+    protected void doPreOccupy(Map<String, Object> map, String infCode) {
+        if (CollectionUtils.isEmpty(map)) {
+            return;
+        }
+        String ps = (String)map.get(PageFieldToInterfFactory.INF_PS);
+        String eventId = (String)map.get(PageFieldToInterfFactory.INF_EVENTID);
+        if (CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占接口)
+            || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占批量接口)) {
+            map.put(PageFieldToInterfFactory.INF_OCCUPYDATE,
+                map.get(PageFieldToInterfFactory.INF_EVENTDATE));
+        }
+        else if ((CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占接口)
+                  || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占批量接口))
+                 && StringUtil.isNotEmpty(map.get(PageFieldToInterfFactory.INF_PREOCCUPYCODE))) {
+            String tail = StringUtil.endsWith(eventId, ps) ? ps : StringUtil.EMPTY;
+            if (!StringUtil.endsWith((String)map.get(PageFieldToInterfFactory.INF_PREOCCUPYCODE),
+                ps)) {
+                map.put(PageFieldToInterfFactory.INF_PREOCCUPYCODE,
+                    map.get(PageFieldToInterfFactory.INF_PREOCCUPYCODE) + tail);
+            }
+        }
+    }
+
+    /**
+     * 批量处理
+     * 
+     * @param v 调用接口属性
+     * @param tList 内容
+     * @param consumer 自定义处理
+     * @return 风控计算结果
+     * @throws Exception 异常
+     */
+    public <T> ClientData sendRiskRdsListData(V v, Collection<T> tList,
+                                              Consumer<Map<String, Object>> consumer)
+        throws Exception {
+        logger.info("==========后端批量交易或批量委托类转换接口:{} {} start==========", v.getInfCode(),
+            v.getEventType());
+        if (CollectionUtils.isEmpty(tList)) {
+            logger.info("==========空的报文体==========");
+            return null;
+        }
+        if (consumer == null) {
+            consumer = map -> {
+                // nothing to do
+            };
+        }
+        Set<String> counterIdSet = new HashSet<>();
+        List<Map<String, Object>> sourcetList = new ArrayList<>();
+        // add by zhangrui1 基金转换申请取最新净值 start
+        List<String> assetList = new ArrayList<>();
+        // add by zhangrui1 基金转换申请取最新净值 end
+        // 取出所有的交易对手判断是否内部交易对手
+        for (T t : tList) {
+            Map<String, Object> dataMap = JsonUtils.object2Map(t);
+            // 个别处理
+            consumer.accept(dataMap);
+            // 交易对手
+            String counterId = (String)CommonUtil.findValue(dataMap,
+                PageFieldToInterfFactory.INF_COUNTERID);
+            if (!StringUtil.isEmpty(counterId)) {
+                counterIdSet.add(counterId);
+            }
+            sourcetList.add(dataMap);
+            // add by zhangrui1 基金转换申请取最新净值 start
+            String ps = (String)CommonUtil.findValue(dataMap, "ps");
+            if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请)) {
+                assetList.add((String)dataMap.get("finprodId"));
+            }
+            // add by zhangrui1 基金转换申请取最新净值 end
+        }
+        // add by zhangrui1 设置关联方信息 start
+        CommonRelatedPartyService.doCredit(sourcetList, v);
+        // add by zhangrui1 设置关联方信息 end
+        // 取出内部交易对手
+        Map<String, String> portfolioIds = selectInnerCounter(counterIdSet);
+        List<Map<String, Object>> targetList = new ArrayList<>();
+        List<String> tradeIds = new ArrayList<>();
+        // add by zhangrui1 基金转换申请取最新净值 start
+        Map<String, BigDecimal> valMap = fundNetService.getValuationMap(assetList);
+        // add by zhangrui1 基金转换申请取最新净值 end
+        for (Map<String, Object> dataMap : sourcetList) {
+            // add by zhangrui1 基金转换申请取最新净值 start
+            String ps = (String)CommonUtil.findValue(dataMap, "ps");
+            if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请)) {
+                dataMap.put("netPrice", valMap.get((String)dataMap.get("finprodId")));
+            }
+            // add by zhangrui1 基金转换申请取最新净值 end
+            // 报文结构处理
+            doListCommon(v, dataMap, portfolioIds, tradeIds, targetList);
+        }
+        // 取得交易的反向交易编号
+        Map<String, String> rTradeIdMap = selectRTradeIds(tradeIds);
+        // 替换反向交易编号
+        if (!CollectionUtils.isEmpty(targetList) && StringUtil.equals(
+            BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue(), v.getInfCode())) {
+            targetList.forEach(map -> {
+                String eventId = (String)map.get(PageFieldToInterfFactory.INF_EVENTID);
+                if (rTradeIdMap.containsKey(eventId)) {
+                    map.put(PageFieldToInterfFactory.INF_EVENTID, rTradeIdMap.get(eventId));
+                }
+            });
+        }
+        // add by zhangrui1 根据资产类型设置开关 start
+        if (isRskOpened(v.getAssetType())) {
+            return null;
+        }
+        // add by zhangrui1 根据资产类型设置开关 end
+        // 调用风险服务执行计算
+        ClientData res = sendListDataCommon(targetList, v.getInfCode());
+        logger.info("==========后端批量交易或批量委托类转换接口:{} {} end==========", v.getInfCode(),
+            v.getEventType());
+        return res;
+    }
+    // 多组合、多对多指令/交易处理共通 by zhangrui1 end
 
     /**
      * 某些场景不走AOP单调实占或实占释放，不计算指标
@@ -345,35 +627,43 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      */
     public AjaxResult checkRiskRds(V v,String eventType,String infCode,String assetType,IInfRds<V> iInfRds) throws Exception {
         ClientData returnCli=execRiskRds(v,eventType,infCode,assetType,iInfRds);
-        if (StringUtil.isNotEmpty(returnCli)) { 
+        if (StringUtil.isNotEmpty(returnCli)) {
             if(StringUtil.isNotEmpty(returnCli.getHead())){
                 if(StringUtil.equals(returnCli.getHead().get(InterfUtil.std400msgt),InterfUtil.E)){
                     return getAjaxResult(returnCli,returnCli.getHead().get(InterfUtil.stdrtninfo).toString(),MessageType.错误消息);
                 }else {
                     String statusRisk=StringUtil.isNotEmpty(returnCli.getBody())?StringUtil.isNotEmpty(returnCli.getBody().get("rskStatus"))?returnCli.getBody().get("rskStatus").toString():null:null;
-
-                    //增加软控硬控开关 add by jqq 20201216 start
-                    String institutionCode = "";
-                    if(MultilevelDataAuthorityUtil.isEnabled()){
-                        institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
-                    }
-                    String isSoft = CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode);
                     if(StringUtil.equals(statusRisk, BussinessDictCodeListRds.指标状态_禁止.getValue())){
-                        if("02".equals(isSoft)){//硬控
-                            return getAjaxResult(returnCli,InterfUtil.FORBID_MES,MessageType.错误消息);
-                        }
-                        return null;
+                        return getAjaxResult(returnCli,InterfUtil.FORBID_MES,MessageType.错误消息);
                     }
-                    //增加软控硬控开关 add by jqq 20201216 end
-//                    if(StringUtil.equals(statusRisk, BussinessDictCodeListRds.指标状态_禁止.getValue())){
-//                        return getAjaxResult(returnCli,InterfUtil.FORBID_MES,MessageType.错误消息);
-//                    }
                 }
             }
         }
         return null;
     }
 
+    /**
+     * 产品端交易，风险占用参数构建(接口)
+     * @param v
+     * @param eventType
+     * @param finprodId
+     * @param infCode
+     * @param iInfRds
+     * @throws Exception
+     */
+    public void occupyProductTrade(V v, String eventType, String finprodId, String infCode, IInfRds<V> iInfRds) throws Exception {
+        //在redis里查询资产类型
+        String assetType=StringUtil.EMPTY;
+        if(StringUtil.isNotEmpty(finprodId)){
+            Map<String, IAssetInfo> mapAsset = assetInfoSrc.getMapFromRedis(RedisKeyEnum.资产基本信息.key(), Collections.singletonList(finprodId));
+            if(StringUtil.isNotEmpty(mapAsset)&&StringUtil.isNotEmpty(mapAsset.values())) {
+                for (IAssetInfo iAst : mapAsset.values()) {
+                    assetType = StringUtil.isNotEmpty(iAst)?iAst.getAssetType():assetType;
+                }
+            }
+        }
+        iInfRds.receive(execBase(v,eventType,infCode,assetType));
+    }
     /**
      * 检查风险是否超限(多组合)
      * @param t
@@ -469,8 +759,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      */
     public <T extends IRiskRds> ClientData sendDataCommon(T bodyT) {
+        // add by zhangrui1 根据资产类型设置开关 start
+        if (isRskOpened(bodyT.getAssetType())) {
+            return null;
+        }
+        // add by zhangrui1 根据资产类型设置开关 end
         Map<String, Object> header = createHead(bodyT);
         Map<String, Object> body = JsonUtils.object2Map(bodyT);
+        // 预占功能 add by zhangrui1 start
+        doPreOccupy(body, bodyT.getInfCode());
+        // 预占功能 add by zhangrui1 end
         ClientData data = new ClientData();
         data.setHead(header);
         data.setBody(body);
@@ -560,7 +858,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         logger.info("==========调用微服务端风险批量接口 end==========");
         return result;
     }
-
+    
     /**
      * 场内交易指令批量接口的实体转换
      * @param dataMap
@@ -595,9 +893,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infMap = new HashMap<>();
             FinProductConvertible finProductConvertible = finProductConvertibleMapper.selectByPrimaryKey((String)dataMap.get("finprodId"));
             if(StringUtil.isNotEmpty(finProductConvertible)) {
-                dataMap.put("shareFinprodId", finProductConvertible.getConFinprodId());
+                dataMap.put("shareFinprodId", finProductConvertible.getConFinprodId()); 
             }
-
+           
             dataMap.put(InterfUtil.finprodType2, BussinessDictCodeList.平安资产类型_股票.getValue());
             PageFieldToInterfFactory.mapping(dataMap, infMap);
             infMap.put(InterfUtil.ps, BussinessDictCodeList.交易方向_买入.getValue());
@@ -614,20 +912,135 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             // add by zhangrui1 正反同步交易特殊处理 end
             result.add(infMap);
         }
-        return result;
+        //质押式回购
+        if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),v.getAssetType())) {
+            String assetType2 = String.valueOf(CommonUtil.findValue(dataMap,"assetType2"));
+            if (StringUtil.equals(assetType2,DictCodeList.回购类型_质押式协议回购.getValue())
+                && StringUtil.equals(CommonUtil.findValue(dataMap,"ps"),DictCodeList.交易方向_到期续做.getValue())){
+                InterfRiskRdsDto infRiskRdsDto = new InterfRiskRdsDto();
+                infRiskRdsDto.setInfCode(v.getInfCode());
+                infRiskRdsDto.setTradePlace(String.valueOf(CommonUtil.findValue(dataMap,"tradeMarket")));
+                infRiskRdsDto.setEventId(CommonUtil.findValue(dataMap, "entrustId") + DictCodeList.交易方向_到期.getValue());
+                infRiskRdsDto.setEventDate(DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_DATE_FORMAT_EN));
+                //设置母组合代码和子组合代码
+                String portfolioId = String.valueOf(CommonUtil.findValue(dataMap,"portfolioId"));
+                infRiskRdsDto.setPortfolioCode(AllTradeCommonUtil.exchangePortfolio(portfolioId));
+                // 原回购到期
+                String preTradeId = "";
+                if (CommonUtil.findValue(dataMap,"tradeId") != null){
+                    preTradeId = String.valueOf(CommonUtil.findValue(dataMap,"tradeId"));
+                }else {
+                    preTradeId = String.valueOf(CommonUtil.findValue(dataMap,"intiTradeId"));
+                }
+                FinTradeProductKey finTradeProductKey = new FinTradeProductKey();
+                finTradeProductKey.setBranch(0L);
+                finTradeProductKey.setFinprodId(preTradeId);
+                FinTradeProduct finTradeProduct = finTradeProductMapper.selectByPrimaryKey(finTradeProductKey);
+                // add by zhangrui1 正反同步交易特殊处理 start
+                String groupId = String.valueOf(System.nanoTime());
+                // add by zhangrui1 正反同步交易特殊处理 end
+                if (finTradeProduct != null){
+                    infRiskRdsDto.setPs(DictCodeList.交易方向_到期.getValue());
+                    infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+                    infRiskRdsDto.setAssetType2(String.valueOf(CommonUtil.findValue(dataMap,"busiPs")));
+                    infRiskRdsDto.setAmount(finTradeProduct.getmTradeAmt());
+                    infRiskRdsDto.setTradeNum(finTradeProduct.getPrin());
+                    infRiskRdsDto.setAssetRate(finTradeProduct.getIntRate());
+                    infRiskRdsDto.setAssetCode(null);
+                    infRiskRdsDto.setMarketCode(null);
+                    if(StringUtil.equals(infRiskRdsDto.getTradePlace(),DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                        infRiskRdsDto.setCalendarCode("04");
+                    }
+                    else {
+                        infRiskRdsDto.setCalendarCode("05");
+                    }
+                    infRiskRdsDto.setOneDay(finTradeProduct.getTerm());
+                    infRiskRdsDto.setMdate(finTradeProduct.getMdate());
+                    Map<String, Object> infMap = JsonUtils.object2Map(infRiskRdsDto);
+                    doCommon(infMap, v);
+                    infMap.put(GROUP_ID, groupId);
+                    infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+                    result.add(infMap);
+                }
+                // 新首期
+                infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
+                infRiskRdsDto.setEventId(CommonUtil.findValue(dataMap, "entrustId") + DictCodeList.交易方向_买入.getValue());
+                infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+                infRiskRdsDto.setAssetType2(String.valueOf(CommonUtil.findValue(dataMap,"busiPs")));
+                infRiskRdsDto.setAmount(CommonUtil.getBigDecimal(dataMap, "tradeAmt",BigDecimal.ZERO));
+                infRiskRdsDto.setTradeNum(CommonUtil.getBigDecimal(dataMap, "tradeAmt",BigDecimal.ZERO));
+                infRiskRdsDto.setAssetRate(ArithmeticUtil.divide(CommonUtil.getBigDecimal(dataMap, "yield",BigDecimal.ZERO), new BigDecimal(100),4));
+                infRiskRdsDto.setAssetCode(null);
+                infRiskRdsDto.setMarketCode(null);
+                if(StringUtil.equals(infRiskRdsDto.getTradePlace(),DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                    infRiskRdsDto.setCalendarCode("04");
+                }
+                else {
+                    infRiskRdsDto.setCalendarCode("05");
+                }
+                infRiskRdsDto.setOneDay(CommonUtil.getBigDecimal(dataMap, "term",BigDecimal.ZERO).longValue());
+                if(CommonUtil.findValue(dataMap,"mdate") instanceof String) {
+                    infRiskRdsDto.setMdate(DateUtil.addDay(DateUtil.parseDate(String.valueOf(CommonUtil.findValue(dataMap,"mdate")),DateUtil.DEFAULT_DATE_FORMAT_EN),CommonUtil.getBigDecimal(dataMap, "term",BigDecimal.ZERO).intValue()));
+                }
+                else if(CommonUtil.findValue(dataMap,"mdate") instanceof Long){
+                    infRiskRdsDto.setMdate(new Date((Long)CommonUtil.findValue(dataMap,"mdate")));
+                }
+
+                Map<String, Object> infMap = JsonUtils.object2Map(infRiskRdsDto);
+                doCommon(infMap, v);
+                infMap.put(GROUP_ID, groupId);
+                infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+                result.add(infMap);
+            }
+        }
+
+        return result;  
     }
 
-    @SuppressWarnings("unchecked")
     public List<Map<String, Object>> prepareRiskListEntity(Map<String, Object> dataMap, V v) throws Exception {
         List<Map<String, Object>> result = new ArrayList<>();
         String ps = (String) dataMap.get(InterfUtil.ps);
         if (CommonUtil.isType(ps, DictCodeListExt1.交易方向_债转股)) {
-            // 债券
             Map<String, Object> infMap = new HashMap<>();
+            //委托字段转化
+            if(StringUtil.equals(v.getEventType(),BussinessDictCodeListRds.事件类型_投资委托.getValue())){
+                dataMap.put("tradeDate",  DateUtil.format(DateUtil.platDateFromCache()));
+                dataMap.put("conNum",  dataMap.get("expConNum"));
+                dataMap.put("shareAmt", dataMap.get("stocketrPriceTotal"));
+                dataMap.put("busiCode", dataMap.get("entrustId"));
+                dataMap.put("finprodMarketId", dataMap.get("shareId"));
+            }
+            // 预占功能 add by zhangrui1 start
+            else {
+                String entrustId = (String)CommonUtil.findValue(dataMap, "entrustId");
+                if (StringUtil.isNotEmpty(entrustId)) {
+                infMap.put(PageFieldToInterfFactory.INF_ENTRUSTCODE, entrustId);
+                infMap.put(PageFieldToInterfFactory.INF_PREOCCUPYCODE,
+                    entrustId + BussinessDictCodeList.交易方向_卖出.getValue());
+                }
+            }
+            // 预占功能 add by zhangrui1 end
+            // 债券
             dataMap.put(InterfUtil.finprodType2, BussinessDictCodeList.平安资产类型_债券.getValue());
             PageFieldToInterfFactory.mapping(dataMap, infMap);
             infMap.put(InterfUtil.ps, BussinessDictCodeList.交易方向_卖出.getValue());
             doCommon(infMap, v);
+            // add by zhangrui1 债转股拼接事件编号 start
+            if (isNeedTail((String)infMap.get(PageFieldToInterfFactory.INF_EVENTID),
+                (String)infMap.get(PageFieldToInterfFactory.INF_PS))) {
+                infMap.put(PageFieldToInterfFactory.INF_EVENTID,
+                    (String)infMap.get(PageFieldToInterfFactory.INF_EVENTID) + (String)infMap.get(
+                        PageFieldToInterfFactory.INF_PS));
+            }
+            // add by zhangrui1 债转股拼接事件编号 end
+            // add by zhangrui1 正反同步交易特殊处理 start
+            String groupId = String.valueOf(System.nanoTime());
+            infMap.put(GROUP_ID, groupId);
+            infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+            // add by zhangrui1 正反同步交易特殊处理 end
+            // add by zhangrui1 设置关联方信息 start
+            setRelatedParty(infMap, dataMap, BussinessDictCodeList.交易方向_卖出.getValue());
+            // add by zhangrui1 设置关联方信息 end
             result.add(infMap);
             // 股票
             infMap = new HashMap<>();
@@ -635,33 +1048,148 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             PageFieldToInterfFactory.mapping(dataMap, infMap);
             infMap.put(InterfUtil.ps, BussinessDictCodeList.交易方向_买入.getValue());
             doCommon(infMap, v);
+            // add by zhangrui1 债转股拼接事件编号 start
+            if (isNeedTail((String)infMap.get(PageFieldToInterfFactory.INF_EVENTID),
+                (String)infMap.get(PageFieldToInterfFactory.INF_PS))) {
+                infMap.put(PageFieldToInterfFactory.INF_EVENTID,
+                    (String)infMap.get(PageFieldToInterfFactory.INF_EVENTID) + (String)infMap.get(
+                        PageFieldToInterfFactory.INF_PS));
+            }
+            // add by zhangrui1 债转股拼接事件编号 end
             // 金额=转股数*转股价格
             BigDecimal num = (BigDecimal)convert(dataMap.get("conNum"), BigDecimal.class, obj -> new BigDecimal(obj.toString()));
             BigDecimal pri = (BigDecimal)convert(dataMap.get("conPrice"), BigDecimal.class, obj -> new BigDecimal(obj.toString()));
             if (num != null && pri != null) {
                 infMap.put(PageFieldToInterfFactory.INF_AMOUNT, num.multiply(pri));
             }
+            // add by zhangrui1 正反同步交易特殊处理 start
+            infMap.put(GROUP_ID, groupId);
+            infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+            // add by zhangrui1 正反同步交易特殊处理 end
+            String entrustId = (String)CommonUtil.findValue(dataMap, "entrustId");
+            if (!StringUtil.isEmpty(entrustId)
+                && !CommonUtil.isType(v.getEventType(), BussinessDictCodeListRds.事件类型_投资委托)) {
+                infMap.put(PageFieldToInterfFactory.INF_ENTRUSTCODE, entrustId);
+                infMap.put(PageFieldToInterfFactory.INF_PREOCCUPYCODE,
+                    entrustId + BussinessDictCodeList.交易方向_买入.getValue());
+            }
+            // add by zhangrui1 设置关联方信息 start
+            setRelatedParty(infMap, dataMap, BussinessDictCodeList.交易方向_买入.getValue());
+            // add by zhangrui1 设置关联方信息 end
             result.add(infMap);
         }
-        else if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请)) {
+        else if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请) || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)) {
+            if(CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)) {
+                dataMap.put(InterfUtil.ps,DictCodeListExt2.交易方向_转换申请.getValue());
+                if(StringUtil.isNotEmpty(dataMap.get("totleTradeId"))) {
+                    dataMap.put("tradeId",dataMap.get("totleTradeId"));
+                }
+            }
             // 基金转入
             Map<String, Object> infMap = new HashMap<>();
             dataMap.put(InterfUtil.finprodType2, BussinessDictCodeList.平安资产类型_基金.getValue());
             dataMap.put(InterfUtil.ps + 2, BussinessDictCodeList.交易方向_卖出.getValue());
+            dataMap.put("busiCode", dataMap.get("tradeId"));
+            //委托字段转化
+            if(StringUtil.equals(v.getEventType(),BussinessDictCodeListRds.事件类型_投资委托.getValue())){
+                dataMap.put("tradeDate",  DateUtil.format(DateUtil.platDateFromCache()));
+                dataMap.put("changeToFinprodName", dataMap.get("changeToFinprodMarketId"));
+                
+                dataMap.put("tradeAmt",  dataMap.get("entrustAmt"));
+                dataMap.put("shareAmt", dataMap.get("entrustNum"));
+                dataMap.put("busiCode", dataMap.get("entrustId"));
+            }
+            // 预占功能 add by zhangrui1 start
+            else {
+                String entrustId = (String)CommonUtil.findValue(dataMap, "entrustId");
+                if (StringUtil.isNotEmpty(entrustId)) {
+                infMap.put(PageFieldToInterfFactory.INF_ENTRUSTCODE, entrustId);
+                infMap.put(PageFieldToInterfFactory.INF_PREOCCUPYCODE,
+                    entrustId + BussinessDictCodeList.交易方向_卖出.getValue());
+                }
+            }
+            // 预占功能 add by zhangrui1 end
+            
             // 市场代码转化成资产代码
-            String changeToFinprodName = (String) CommonUtil.findValue(dataMap, "changeToFinprodName");
+            // 市场代码取值变更 modify by yufei 20200826 start
+            String changeToFinprodName = (String) CommonUtil.findValue(dataMap, "changeToFinprodMarketId");
+            // 市场代码取值变更 modify by yufei 20200826 end
             String preFix = BussinessDictCodeList.金融产品类型_投管用_基金.getValue();
             changeToFinprodName = StringUtil.startsWith(changeToFinprodName, preFix) 
                     ? changeToFinprodName : (preFix + GlobalConstant.UNDER_LINE + changeToFinprodName);
             dataMap.put("changeToFinprodName", changeToFinprodName);
             PageFieldToInterfFactory.mapping(dataMap, infMap);
+            // add by zhangrui1 基金转换申请使用最新净值 start
+            if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请)
+                || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)) {
+                BigDecimal netPrice = CommonUtil.getBigDecimal(dataMap, "netPrice", null);
+                if (null == netPrice) {
+                    netPrice = fundNetService.getValuation(
+                        (String)infMap.get(PageFieldToInterfFactory.INF_ASSETCODE));
+                }
+                netPrice = null == netPrice ? BigDecimal.ONE : netPrice;
+                BigDecimal amount = ArithmeticUtil.multiply(
+                    CommonUtil.getBigDecimal(dataMap, "shareAmt", BigDecimal.ZERO), netPrice);
+                infMap.put(PageFieldToInterfFactory.INF_TRADENUM, dataMap.get("shareAmt"));
+                infMap.put(PageFieldToInterfFactory.INF_AMOUNT, amount);
+            }
+            // add by zhangrui1 基金转换申请使用最新净值 end
             doCommon(infMap, v);
+            if (isNeedTail((String)infMap.get(PageFieldToInterfFactory.INF_EVENTID),
+                (String)infMap.get(PageFieldToInterfFactory.INF_PS))) {
+                infMap.put(PageFieldToInterfFactory.INF_EVENTID,
+                    (String)infMap.get(PageFieldToInterfFactory.INF_EVENTID) + (String)infMap.get(
+                        PageFieldToInterfFactory.INF_PS));
+            }
+            // add by zhangrui1 正反同步交易特殊处理 start
+            String groupId = String.valueOf(System.nanoTime());
+            infMap.put(GROUP_ID, groupId);
+            infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+            infMap.put("fundConvertFlg",DictCodeList.是否_是.getValue());
+            // add by zhangrui1 正反同步交易特殊处理 end
+            // add by zhangrui1 设置关联方信息 start
+            setRelatedParty(infMap, dataMap, BussinessDictCodeList.交易方向_买入.getValue());
+            // add by zhangrui1 设置关联方信息 end
             result.add(infMap);
             // 基金转出
+            Object amount = infMap.get(PageFieldToInterfFactory.INF_AMOUNT);
             infMap = new HashMap<>();
             dataMap.put(InterfUtil.ps + 2, BussinessDictCodeList.交易方向_买入.getValue());
             PageFieldToInterfFactory.mapping(dataMap, infMap);
+            // add by zhangrui1 基金转换申请使用最新净值 start
+            if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请)
+                || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)) {
+                infMap.put(PageFieldToInterfFactory.INF_AMOUNT, amount);
+                infMap.put(PageFieldToInterfFactory.INF_TRADENUM, null);
+                Object rFinprodId = CommonUtil.findValue(dataMap, "rFinprodId");
+                if (!StringUtil.isNotEmpty(infMap.get(PageFieldToInterfFactory.INF_ASSETCODE))
+                    && StringUtil.isNotEmpty(rFinprodId)) {
+                    infMap.put(PageFieldToInterfFactory.INF_ASSETCODE, rFinprodId);
+                }
+            }
+            // add by zhangrui1 基金转换申请使用最新净值 end
             doCommon(infMap, v);
+            if (isNeedTail((String)infMap.get(PageFieldToInterfFactory.INF_EVENTID),
+                (String)infMap.get(PageFieldToInterfFactory.INF_PS))) {
+                infMap.put(PageFieldToInterfFactory.INF_EVENTID,
+                    (String)infMap.get(PageFieldToInterfFactory.INF_EVENTID) + (String)infMap.get(
+                        PageFieldToInterfFactory.INF_PS));
+            }
+            // add by zhangrui1 正反同步交易特殊处理 start
+            infMap.put(GROUP_ID, groupId);
+            infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+            infMap.put("fundConvertFlg",DictCodeList.是否_是.getValue());
+            // add by zhangrui1 正反同步交易特殊处理 end
+            String entrustId = (String)CommonUtil.findValue(dataMap, "entrustId");
+            if (!StringUtil.isEmpty(entrustId)
+                && !CommonUtil.isType(v.getEventType(), BussinessDictCodeListRds.事件类型_投资委托)) {
+                infMap.put(PageFieldToInterfFactory.INF_ENTRUSTCODE, entrustId);
+                infMap.put(PageFieldToInterfFactory.INF_PREOCCUPYCODE,
+                    entrustId + BussinessDictCodeList.交易方向_买入.getValue());
+            }
+            // add by zhangrui1 设置关联方信息 start
+            setRelatedParty(infMap, dataMap, BussinessDictCodeList.交易方向_买入.getValue());
+            // add by zhangrui1 设置关联方信息 end
             result.add(infMap);
         }
         else if (CommonUtil.isType(ps, BussinessDictCodeList.交易方向_卖出)) {
@@ -672,7 +1200,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             // 设置批量接口ID
             dto.setInfCode(changeInCode(v.getInfCode()));
             // 释放的场合设置撤销FLG为Y
-            if (CommonUtil.isType(dto.getInfCode(), BussinessDictCodeListRds.接口系统ID_实占释放批量接口)) {
+            if (CommonUtil.isType(dto.getInfCode(), BussinessDictCodeListRds.接口系统ID_实占释放批量接口)
+                || CommonUtil.isType(dto.getInfCode(), BussinessDictCodeListRds.接口系统ID_预占释放批量接口)) {
                 dto.setRevokeFlg(BussinessDictCodeList.是否_是.getValue());
             }
             dto.setIsInnerTrd((String) dataMap.get(PageFieldToInterfFactory.INF_ISINNERTRD));
@@ -687,21 +1216,33 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 logger.info("同一母组合下面的两个子组合交易不进行风控");
                 return null;
             }
-            result.add(BeanUtil.object2Map(dto));
+            Map<String, Object> map = BeanUtil.object2Map(dto);
+            changeEventId(map);
+            result.add(map);
+            String isAuto = CacheUtil.getSysParam("is_auto_generate_negate_deal");
+            if (CommonUtil.isType(isAuto, DictCodeList.是否_否)
+                || (CommonUtil.isType(dto.getInfCode(), BussinessDictCodeListRds.接口系统ID_实占释放批量接口)
+                    && StringUtil.equals(CommonUtil.findValue(dataMap, "operateType"),
+                        "revoke"))) {
+                return result;
+            }
             // 一笔买入交易
             InterfRiskRdsDto dtoBy = new InterfRiskRdsDto();
             BeanUtil.copyPropertiesIgnoreNull(dtoBy, dto);
             dtoBy.setPortfolioCode(dto.getCounterId());
             dtoBy.setCounterId(dto.getPortfolioCode());
             dtoBy.setPs(BussinessDictCodeList.交易方向_买入.getValue());
-            result.add(BeanUtil.object2Map(dtoBy));
+            map = BeanUtil.object2Map(dtoBy);
+            changeEventId(map);
+            result.add(map);
         } 
         //分红送转拆分成一笔现金分红一笔送转
         else if (StringUtil.equals(DictCodeList.股票分红类型_分红送转.getValue(),ps)) { 
-           
+            Map<String, Object> dataMapTmp = new HashMap<String, Object>();
+            dataMapTmp.putAll(dataMap);
             //现金分红交易
-            dataMap.put(InterfUtil.ps, DictCodeList.股票分红类型_现金分红.getValue());
-            InterfRiskRdsDto fhDto = periodEntityDev(dataMap, v);
+            dataMapTmp.put(InterfUtil.ps, DictCodeList.股票分红类型_现金分红.getValue());
+            InterfRiskRdsDto fhDto = periodEntityDev(dataMapTmp, v);
             fhDto.setEventType(v.getEventType());
             fhDto.setInfCode(changeInCode(v.getInfCode()));
             // 释放的场合设置撤销FLG为Y
@@ -710,8 +1251,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
             result.add(BeanUtil.object2Map(fhDto));
             //送转交易
-            dataMap.put(InterfUtil.ps, DictCodeList.股票分红类型_送转.getValue());
-            InterfRiskRdsDto szDto = periodEntityDev(dataMap, v);
+            dataMapTmp.put(InterfUtil.ps, DictCodeList.股票分红类型_送转.getValue());
+            InterfRiskRdsDto szDto = periodEntityDev(dataMapTmp, v);
             szDto.setEventType(v.getEventType());
             szDto.setInfCode(changeInCode(v.getInfCode()));
             // 释放的场合设置撤销FLG为Y
@@ -719,6 +1260,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 szDto.setRevokeFlg(BussinessDictCodeList.是否_是.getValue());
             }
             result.add(BeanUtil.object2Map(szDto));
+            // add by zhangrui1 事件编号+交易方向 start
+            result.forEach(map -> changeEventId(map));
+            // add by zhangrui1 事件编号+交易方向 end
         }
         return result;
     }
@@ -739,13 +1283,20 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         else if (CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占释放接口)) {
             return BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue();
         }
+        else if (CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占接口)) {
+            return BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+        }
+        else if (CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占释放接口)) {
+            return BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue();
+        }
         return infCode;
     }
 
     private void doCommon(Map<String, Object> infMap, V v) {
         String infCode = v.getInfCode();
         infMap.put(PageFieldToInterfFactory.INF_CODE, infCode);
-        if (CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占释放批量接口)) {
+        if (CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占释放批量接口)
+            || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占释放批量接口)) {
             infMap.put(PageFieldToInterfFactory.INF_REVOKEFLG, BussinessDictCodeList.是否_是.getValue());
         }
         infMap.put(PageFieldToInterfFactory.INF_EVENTTYPE, v.getEventType());
@@ -756,6 +1307,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infMap.put(PageFieldToInterfFactory.INF_CCY, BussinessDictCodeList.币种_人民币.getValue());
         }
         infMap.put(PageFieldToInterfFactory.INF_EVENTID, removeLasStr((String)infMap.get(PageFieldToInterfFactory.INF_EVENTID)));
+        // add by zhangrui1 事件编号+交易方向 start
+        changeEventId(infMap);
+        // add by zhangrui1 事件编号+交易方向 end
     }
     // add by zhangrui1 调用批量接口逻辑 end
 
@@ -780,7 +1334,12 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
             return tradeEntityDev(dataMap,v);
         }else{
-            return entrustEntityDev(dataMap,v);
+            //判断是否来自场内交易指令
+            if(StringUtil.equals(dataMap.get("fromEtrExchange"), DictCodeList.是否_是.getValue())) {
+                return entrustExchangeEntityDev(dataMap,v);
+            } else {                
+                return entrustEntityDev(dataMap,v);
+            }
         }
 
     }
@@ -810,13 +1369,25 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         infRiskRdsDto.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
         infRiskRdsDto.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
         infRiskRdsDto.setMdate(finDto.getMdate());
+        infRiskRdsDto.setInvAim(finDto.getInvAim());
+        // add by zhangrui1 拆借回购等没有资产的需要传日历代码 start
+        if (!StringUtil.isEmpty(finDto.getCalendarId())) {
+            infRiskRdsDto.setCalendarCode(finDto.getCalendarId());
+        }
+        // add by zhangrui1 拆借回购等没有资产的需要传日历代码 end
         if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())) {
-            infRiskRdsDto.setAmount(finDto.getEntrustNum());//债券为全价总额存款、计划类利率型、项目类资产：本金金额（元）基金（申购）、净值型计划类资产：申购金额（元）货币型计划类资产（申购）：申购金额（元）回购、拆借：本金金额（元）
-            infRiskRdsDto.setTradeNum(finDto.getEntrustNum());//债券：券面总额（张）基金（赎回）：赎回份额（份）货币型计划类资产（赎回）：赎回份额（份）正逆回购:首期结算金额
+            // modify by zhangrui1 20200803 start
+            // 债券金额更改为券面总额除以100乘以可用面值
+            //infRiskRdsDto.setAmount(finDto.getEntrustNum());//债券为全价总额存款、计划类利率型、项目类资产：本金金额（元）基金（申购）、净值型计划类资产：申购金额（元）货币型计划类资产（申购）：申购金额（元）回购、拆借：本金金额（元）
+            //infRiskRdsDto.setTradeNum(finDto.getEntrustNum());//债券：券面总额（张）基金（赎回）：赎回份额（份）货币型计划类资产（赎回）：赎回份额（份）正逆回购:首期结算金额
+            infRiskRdsDto.setAmount(StringUtil.isNotEmpty(finDto.getAvailableNum())?ArithmeticUtil.multiply(ArithmeticUtil.divide(finDto.getEntrustNum(),new BigDecimal(100),4),finDto.getAvailableNum()):finDto.getEntrustNum());
+            infRiskRdsDto.setTradeNum(ArithmeticUtil.divide(finDto.getEntrustNum(), new BigDecimal(100), 4));
+            // modify by zhangrui1 20200803 end
             infRiskRdsDto.setNetPrice(finDto.getPrice());//债券单位净价,其它不填
+            infRiskRdsDto.setTradeMarketMode(finDto.getTradeMarketMode());
             //将到期收益率除以100 update by zhangrui1 start
             Object obj = CommonUtil.findValue(dataMap, "matureYield");
-            if (obj != null && StringUtil.isNotEmpty(obj)) {
+            if (obj != null && !StringUtil.isEmpty((String)obj)) {
                 infRiskRdsDto.setYieldEndRate(ArithmeticUtil.divide(new BigDecimal(obj.toString()),new BigDecimal(100),4));//到期收益率
             }
             //将到期收益率除以100 update by zhangrui1 end
@@ -832,10 +1403,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infRiskRdsDto.setTradeNum(finDto.getEntrustNum());
             }
             //update by  zhangnian  20200326  end
+            // add by zhangrui1 增加券面总额（元） start
+            infRiskRdsDto.setTotalFaceAmt(infRiskRdsDto.getAmount());
+            // add by zhangrui1 增加券面总额（元） end
         }
         //基金，计划类
         if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_赎回.getValue()) && !StringUtil.equals(DictCodeList.平安资产类型_计划类资产_净值型.getValue(),v.getAssetType())){
+            /* del by zhangrui1 赎回指令净值不是1 start
             infRiskRdsDto.setAmount(finDto.getEntrustNum());
+               del by zhangrui1 赎回指令净值不是1 end */
+            infRiskRdsDto.setAmount(null);
         }
         if (StringUtil.equals(finDto.getPs(), DictCodeList.回购拆借方向_拆入.getValue())||
                 StringUtil.equals(finDto.getPs(), DictCodeList.回购拆借方向_拆出.getValue())) {
@@ -852,8 +1429,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetRate(StringUtil.isNotEmpty(dataMap.get("price"))?dataMap.get("price") instanceof BigDecimal ?ArithmeticUtil.divide((BigDecimal)dataMap.get("price"),new BigDecimal(100),4):ArithmeticUtil.divide(new BigDecimal(dataMap.get("price").toString()),new BigDecimal(100),4):null);
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-            infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
-            infRiskRdsDto.setDeadline(StringUtil.isNotEmpty(dataMap.get("repoTerm"))?new BigDecimal(dataMap.get("repoTerm").toString()):null);
         }
         if(StringUtil.equals(finDto.getBusiPs(), DictCodeList.回购拆借方向_融入.getValue())||
                 StringUtil.equals(finDto.getBusiPs(), DictCodeList.回购拆借方向_融出.getValue())){
@@ -864,8 +1439,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType2(finDto.getPs());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-            infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
-            infRiskRdsDto.setDeadline(StringUtil.isNotEmpty(dataMap.get("termDays"))?new BigDecimal(dataMap.get("termDays").toString()):null);
         }
         if(StringUtil.equals(DictCodeList.平安资产类型_买断式回购.getValue(),v.getAssetType())) {
             infRiskRdsDto.setAssetType2(finDto.getPs());
@@ -873,14 +1446,82 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetRate(StringUtil.isNotEmpty(dataMap.get("price"))?dataMap.get("price") instanceof BigDecimal ?ArithmeticUtil.divide((BigDecimal)dataMap.get("price"),new BigDecimal(100),4):ArithmeticUtil.divide(new BigDecimal(dataMap.get("price").toString()),new BigDecimal(100),4):null);
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-            infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
-            infRiskRdsDto.setDeadline(StringUtil.isNotEmpty(dataMap.get("repoTerm2"))?new BigDecimal(dataMap.get("repoTerm2").toString()):null);
         }
         if(StringUtil.equals(DictCodeListExt2.平安资产类型_一级市场债.getValue(),v.getAssetType())) {
+            // add by zhangrui1 start
+            // 中标结果确认及中标结果维护
+            if (CommonUtil.isType(v.getEventStatus(), BussinessDictCodeList.共同业务类型_中标结果确认)
+                || CommonUtil.isType(v.getEventStatus(), BussinessDictCodeList.共同业务类型_中标结果维护)) {
+                infRiskRdsDto.setIsDiffOccupy(DictCodeList.是否_是.getValue());
+                infRiskRdsDto.setDiffOccupyFlg((String)dataMap.get("bidId") + v.getEventStatus());
+                String amountKey = CommonUtil.isType(v.getEventStatus(),
+                    BussinessDictCodeList.共同业务类型_中标结果确认) ? "adjustBallotnum" : "winPrinAmt";
+                Object amountObj = dataMap.get(amountKey);
+                infRiskRdsDto.setAmount(
+                    amountObj != null ? new BigDecimal(amountObj.toString()) : BigDecimal.ZERO);
+                infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
+
+                // 一级市场债两个service用的DTO里的中标日字段不一样，大小写不一致。。
+                if (StringUtil.isNotEmpty(dataMap.get("biddate"))) {
+                    infRiskRdsDto.setEventDate(DateUtil.format(
+                        new Date(Long.parseLong(dataMap.get("biddate").toString())),
+                        DateUtil.DEFAULT_DATE_FORMAT_EN));
+                }
+                else if (StringUtil.isNotEmpty(dataMap.get("bidDate"))) {
+                    infRiskRdsDto.setEventDate(DateUtil.format(
+                        new Date(Long.parseLong(dataMap.get("bidDate").toString())),
+                        DateUtil.DEFAULT_DATE_FORMAT_EN));
+                }
+                else if (StringUtil.isNotEmpty(dataMap.get("payDate"))) {
+                    infRiskRdsDto.setEventDate(DateUtil.format(
+                        new Date(Long.parseLong(dataMap.get("payDate").toString())),
+                        DateUtil.DEFAULT_DATE_FORMAT_EN));
+                }
+                if (CommonUtil.isType(v.getEventStatus(), BussinessDictCodeList.共同业务类型_中标结果维护)
+                    && StringUtil.isEmpty(infRiskRdsDto.getPortfolioCode())) {
+                    List list = (List)dataMap.get("bidOrderBidPriceList");
+                    if (!StringUtil.isEmptyList(list)) {
+                        Object obj = list.get(0);
+                        Map<String, Object> temp = CommonUtil.toMap(obj);
+                        if (!CollectionUtils.isEmpty(temp)) {
+                            infRiskRdsDto.setPortfolioCode((String)temp.get("portfolioId"));
+                        }
+                        BigDecimal winPrimAmt = BigDecimal.ZERO;
+                        for (Object item : list) {
+                            Map<String, Object> tMap = CommonUtil.toMap(item);
+                            winPrimAmt = ArithmeticUtil.doAdd(winPrimAmt,
+                                CommonUtil.getBigDecimal(tMap, "winPrinAmt", BigDecimal.ZERO));
+                        }
+                        infRiskRdsDto.setAmount(winPrimAmt);
+                    }
+                }
+                infRiskRdsDto.setTotalFaceAmt(infRiskRdsDto.getAmount());
+                infRiskRdsDto.setTradeNum(ArithmeticUtil.divide(infRiskRdsDto.getTotalFaceAmt(),
+                    new BigDecimal(100), 4));
+            }
+            else {
+            // add by zhangrui1 end
             infRiskRdsDto.setAmount(finDto.getEntrustNum());//债券为全价总额存款、
-            infRiskRdsDto.setTradeNum(finDto.getEntrustNum());
+            infRiskRdsDto.setTradeNum(
+                ArithmeticUtil.divide(finDto.getEntrustNum(), new BigDecimal(100), 4));
             infRiskRdsDto.setAssetType(DictCodeListExt2.平安资产类型_一级市场债.getValue());
             infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
+            // add by zhangrui1 start
+                infRiskRdsDto.setTotalFaceAmt(infRiskRdsDto.getAmount());
+                Object isDiffOccupy = CommonUtil.findValue(dataMap, "isDiffOccupy");
+                if (StringUtil.isNotEmpty(isDiffOccupy)) {
+                    infRiskRdsDto.setIsDiffOccupy((String)isDiffOccupy);
+                }
+                Object diffOccupyFlg = CommonUtil.findValue(dataMap, "diffOccupyFlg");
+                if (StringUtil.isNotEmpty(diffOccupyFlg)) {
+                    infRiskRdsDto.setDiffOccupyFlg((String)diffOccupyFlg);
+                }
+                Object isReverseOccupy = CommonUtil.findValue(dataMap, "isReverseOccupy");
+                if (StringUtil.isNotEmpty(diffOccupyFlg)) {
+                    infRiskRdsDto.setIsReverseOccupy((String)isReverseOccupy);
+                }
+            }
+            // add by zhangrui1 end
         }
         if(StringUtil.equals(DictCodeListExt2.平安资产类型_利率互换.getValue(),v.getAssetType())) {
             infRiskRdsDto.setAmount(finDto.getEntrustAmt() == null ? BigDecimal.ZERO : finDto.getEntrustAmt().multiply(new BigDecimal(10000)));
@@ -905,7 +1546,224 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infRiskRdsDto.setTradeNum(ArithmeticUtil.divide(finDto.getEntrustAmt(), new BigDecimal((String)dataMap.get("price")), 2)); 
             }
         }
-        infRiskRdsDto.setTradeAmtReal(infRiskRdsDto.getAmount());
+        // add by zhangrui1 画面到期日是mdateAdd start
+        Object mdateAdd = dataMap.get("mdateAdd");
+        if ((CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_拆借)
+             || CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_拆借)
+             || CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
+                 BussinessDictCodeList.金融产品类型_投管用_拆出)
+             || CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
+                 BussinessDictCodeList.金融产品类型_投管用_拆入)
+             || CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
+                 BussinessDictCodeList.金融产品类型_投管用_特拆拆入))
+            && null != mdateAdd) {
+            if (mdateAdd instanceof Long) {
+                infRiskRdsDto.setMdate(new Date((long)mdateAdd));
+            }
+            else if (mdateAdd instanceof Date) {
+                infRiskRdsDto.setMdate((Date)mdateAdd);
+            }
+            else {
+                infRiskRdsDto.setMdate(DateUtil.parse(mdateAdd.toString()));
+            }
+        }
+        // 回购指令画面没有到期日的
+        else if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_买断式回购)
+                 || CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_买断式回购)
+                 || CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_质押式回购)
+                 || CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_质押式回购)
+                 || CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
+                     BussinessDictCodeList.金融产品类型_投管用_债券买断式正回购)
+                 || CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
+                     BussinessDictCodeList.金融产品类型_投管用_债券买断式逆回购)
+                 || CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
+                     BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购)
+                 || CommonUtil.isType((String)dataMap.get(InterfUtil.finprodType2),
+                     BussinessDictCodeList.金融产品类型_投管用_债券质押式逆回购)) {
+            Object vdate = dataMap.get("vdate");
+            String repoTerm = dataMap.get("repoTerm") == null ? "0" : dataMap.get("repoTerm").toString();
+            if (vdate instanceof Long) {
+                infRiskRdsDto.setMdate(DateUtil.addDay(new Date((long)vdate), Integer.valueOf(repoTerm)));
+            }
+            else if (mdateAdd instanceof Date) {
+                infRiskRdsDto.setMdate(DateUtil.addDay((Date)vdate, Integer.valueOf(repoTerm)));
+            }
+            else if (null != vdate) {
+                infRiskRdsDto.setMdate(DateUtil.addDay(DateUtil.parse(vdate.toString()), Integer.valueOf(repoTerm)));
+            }
+        }
+        if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_买断式回购)
+            || CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_质押式回购)) {
+            long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
+                DateUtil.parse(infRiskRdsDto.getMdate()));
+            infRiskRdsDto.setOneDay(oneDay);
+        }
+        // add by zhangrui1 画面到期日是mdateAdd end
+        // add by zhangrui1 基金申购使用净值1 start
+        if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_基金)
+            && CommonUtil.isType(finDto.getPs(), DictCodeList.交易方向_申购) && CommonUtil.isType(
+                (String)dataMap.get("assetType1"), BussinessDictCodeList.基金类资产类型_货币基金)) {
+            infRiskRdsDto.setTradeNum(infRiskRdsDto.getAmount());
+        }
+        // add by zhangrui1 基金申购使用净值1 end
+        // add by zhangrui1 计划类货币型卖出指令金额数量字段名不同（entrustAmt2,entrustNum2） start
+        if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_计划类资产_货币型)
+            && CommonUtil.isType(infRiskRdsDto.getPs(), BussinessDictCodeList.交易方向_卖出)) {
+            infRiskRdsDto.setAmount(CommonUtil.getBigDecimal(dataMap, "entrustAmt2", infRiskRdsDto.getAmount()));
+            infRiskRdsDto.setTradeNum(CommonUtil.getBigDecimal(dataMap, "entrustNum2", infRiskRdsDto.getTradeNum()));
+        }
+        if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_计划类资产_货币型)) {
+            if (null != infRiskRdsDto.getAmount() || null == infRiskRdsDto.getTradeNum()) {
+                infRiskRdsDto.setTradeNum(infRiskRdsDto.getAmount());
+            }
+            else if (null == infRiskRdsDto.getAmount() || null != infRiskRdsDto.getTradeNum()) {
+                infRiskRdsDto.setAmount(infRiskRdsDto.getTradeNum());
+            }
+        }
+        // add by zhangrui1 计划类货币型卖出指令金额数量字段名不同（entrustAmt2,entrustNum2） end
+        return infRiskRdsDto;
+    }
+    
+    /**
+     * 场内交易指令
+     * @param dataMap
+     * @param v
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    private InterfRiskRdsDto entrustExchangeEntityDev(Map<String, Object> dataMap,V v) throws Exception {
+        //定义返回实体
+        InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
+        EntrustBaseDto finDto=(EntrustBaseDto)JsonUtils.map2entity(dataMap,EntrustBaseDto.class);
+        infRiskRdsDto.setEventId(finDto.getEntrustId());
+        infRiskRdsDto.setEventDate( DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_DATE_FORMAT_EN));
+        //设置母组合代码和子组合代码
+        infRiskRdsDto.setPortfolioCode(AllTradeCommonUtil.exchangePortfolio(StringUtil.isNotEmpty(finDto.getPortfolioId())?finDto.getPortfolioId():finDto.getActPortfolioId()));
+        infRiskRdsDto.setAssetCode(finDto.getFinprodId());
+        infRiskRdsDto.setPs(finDto.getPs());
+        infRiskRdsDto.setAmount(finDto.getEntrustAmt());
+        infRiskRdsDto.setTradeNum(finDto.getEntrustNum());
+        infRiskRdsDto.setDeliveryDate(finDto.getMdate());
+        Object secIdObj = CommonUtil.findValue(dataMap, "secId");
+        if(StringUtil.isNotEmpty(secIdObj)) {
+            infRiskRdsDto.setMarketCode(secIdObj.toString());   
+        }
+        infRiskRdsDto.setTradePlace(finDto.getTradeMarket());
+        infRiskRdsDto.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
+        infRiskRdsDto.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
+        infRiskRdsDto.setMdate(finDto.getMdate());
+        infRiskRdsDto.setInvAim(finDto.getInvAim());
+        
+        //债券
+        if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())) {
+            if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_行权_回售.getValue())
+                || StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_申购.getValue())) {
+                Object obj = CommonUtil.findValue(dataMap, "entrustPrice");
+                if(StringUtil.isNotEmpty(obj)) {
+                    infRiskRdsDto.setNetPrice(new BigDecimal(obj.toString()));//指令价格
+                    infRiskRdsDto.setAmount(ArithmeticUtil.multiply(new BigDecimal(obj.toString()),infRiskRdsDto.getTradeNum()));
+                }
+            }
+            else {
+                //预占金额：全价*数量
+                Object fprice = CommonUtil.findValue(dataMap, "fprice");
+                if(StringUtil.isNotEmpty(fprice)) {
+                    infRiskRdsDto.setAmount(ArithmeticUtil.multiply(new BigDecimal(fprice.toString()),infRiskRdsDto.getTradeNum()));
+                }
+                infRiskRdsDto.setNetPrice(finDto.getPrice());//净价
+            }
+            
+           
+            
+            if(StringUtil.equals(finDto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {
+                infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
+            }
+           
+            
+            infRiskRdsDto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+            //将到期收益率除以100 
+            Object obj = CommonUtil.findValue(dataMap, "yield");
+            if (obj != null && !StringUtil.isEmpty((String)obj)) {
+                infRiskRdsDto.setYieldEndRate(ArithmeticUtil.divide(new BigDecimal(obj.toString()),new BigDecimal(100),4));//到期收益率
+            }
+            
+            //增加券面总额（元）
+            infRiskRdsDto.setTotalFaceAmt(infRiskRdsDto.getAmount());
+        }
+        
+        //质押式回购
+        if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),v.getAssetType())) {
+            String assetType2 = String.valueOf(CommonUtil.findValue(dataMap,"assetType2"));
+            if (StringUtil.equals(assetType2,DictCodeList.回购类型_质押式协议回购.getValue())){
+                infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
+                infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+                infRiskRdsDto.setAssetType2(finDto.getBusiPs());
+                infRiskRdsDto.setAmount(CommonUtil.getBigDecimal(dataMap, "tradeAmt",BigDecimal.ZERO));
+                infRiskRdsDto.setTradeNum(CommonUtil.getBigDecimal(dataMap, "tradeAmt",BigDecimal.ZERO));
+                infRiskRdsDto.setAssetRate(ArithmeticUtil.divide(CommonUtil.getBigDecimal(dataMap, "yield",BigDecimal.ZERO), new BigDecimal(100),4));
+                infRiskRdsDto.setAssetCode(null);
+                infRiskRdsDto.setMarketCode(null);
+                if(StringUtil.equals(infRiskRdsDto.getTradePlace(),DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                    infRiskRdsDto.setCalendarCode("04");
+                }
+                else {
+                    infRiskRdsDto.setCalendarCode("05");
+                }
+                infRiskRdsDto.setMdate(DateUtil.addDay(finDto.getMdate(),CommonUtil.getBigDecimal(dataMap, "term",BigDecimal.ZERO).intValue()));
+                infRiskRdsDto.setOneDay(CommonUtil.getBigDecimal(dataMap, "term",BigDecimal.ZERO).longValue());
+                return infRiskRdsDto;
+            }
+            infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
+            infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+            infRiskRdsDto.setAssetType2(finDto.getPs());
+            infRiskRdsDto.setAssetRate(StringUtil.isNotEmpty(CommonUtil.findValue(dataMap, "entrustPrice"))?
+                ArithmeticUtil.divide(new BigDecimal(CommonUtil.findValue(dataMap, "entrustPrice").toString()), new BigDecimal(100),4) :null);
+            infRiskRdsDto.setAssetCode(null);
+            infRiskRdsDto.setMarketCode(null);
+            
+            if(StringUtil.equals(infRiskRdsDto.getTradePlace(),DictCodeListExt1.交易场所_上海证券交易所.getValue())) {                
+                infRiskRdsDto.setCalendarCode("04");
+            } 
+            else {
+                infRiskRdsDto.setCalendarCode("05"); 
+            }
+            
+            //竞价回购需要 根据期限品种计算MDate,上农商暂时没有协议回购。暂不做处理
+            long term = CommonBusinessUtil.TERM_MAP.get(finDto.getFinprodId());
+            Object vdateObject = dataMap.get("vdate");
+            if(StringUtil.isNotEmpty(term) && StringUtil.isNotEmpty(vdateObject)) {
+                infRiskRdsDto.setOneDay(term);
+                
+                Date vdate = new Date();
+                //试算和提交时Vdate格式不一样
+                try{
+                  if(DateUtil.isDateStr((String)vdateObject))  {
+                      vdate = DateUtil.parse((String)vdateObject);  
+                  }
+                 
+                } catch (Exception e) {
+                    vdate =  new Date((long)vdateObject); 
+                }
+                Date mDate = DateUtil.addDays(vdate, (int)term);
+                List<String> holiday = dateCalService.getDealCalendarHoliday(vdate,
+                    mDate, infRiskRdsDto.getCalendarCode()); 
+                Date tradingDay = dateCalService.calculationTradingDay(mDate, 1, holiday, "1");
+                
+                infRiskRdsDto.setMdate(tradingDay);
+            }
+            
+
+        }
+        
+        //股票
+        if(StringUtil.equals(DictCodeListExt2.平安资产类型_股票.getValue(),v.getAssetType())) {
+            if(StringUtil.equals(finDto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
+                infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue()); 
+            }
+        }
+        
         return infRiskRdsDto;
     }
 
@@ -936,14 +1794,25 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         infRiskRdsDto.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
         infRiskRdsDto.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
         infRiskRdsDto.setMdate(finDto.getMdate());
+        infRiskRdsDto.setInvAim(finDto.getInvAim());
+        // add by zhangrui1 拆借回购等没有资产的需要传日历代码 start
+        if (!StringUtil.isEmpty(finDto.getCalendarId())) {
+            infRiskRdsDto.setCalendarCode(finDto.getCalendarId());
+        }
+        // add by zhangrui1 拆借回购等没有资产的需要传日历代码 end
         if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())) {
             infRiskRdsDto.setAmount(finDto.getFpriceAmt());//债券为全价总额存款、计划类利率型、项目类资产：实付金额（元）基金（申购）、净值型计划类资产：申购金额（元）货币型计划类资产（申购）：申购金额（元）回购、拆借：本金金额（元）
-            infRiskRdsDto.setTradeNum(finDto.getTradeAmt());//债券：券面总额（张）基金（赎回）：赎回份额（份）货币型计划类资产（赎回）：赎回份额（份）正逆回购:首期结算金额
+            // modify by zhangrui1 20200803 start
+            //infRiskRdsDto.setTradeNum(finDto.getTradeAmt());//债券：券面总额（张）基金（赎回）：赎回份额（份）货币型计划类资产（赎回）：赎回份额（份）正逆回购:首期结算金额
+            infRiskRdsDto.setTradeNum(
+                ArithmeticUtil.divide(finDto.getCpriceAmt(), finDto.getUnitCprice(), 4));
+            // modify by zhangrui1 20200803 start
             infRiskRdsDto.setNetPrice(finDto.getUnitCprice());//债券单位净价,其它不填
             infRiskRdsDto.setAllPrice(finDto.getUnitFprice());//债券单位全价,其它不填
             //将到期收益率除以100 update by wz 20200430
             infRiskRdsDto.setYieldEndRate(ArithmeticUtil.divide(finDto.getYield(),new BigDecimal(100),4));//到期收益率
             infRiskRdsDto.setDeliveryDate(finDto.getSettleDate());
+            infRiskRdsDto.setTradeMarketMode(finDto.getTradeMarketMode());
             //可转债
             if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_申购.getValue())){
                 infRiskRdsDto.setAmount(finDto.getTradeAmt());//可转债为申购券面总额
@@ -952,14 +1821,20 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             else if(StringUtil.equals(finDto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())){
                 infRiskRdsDto.setAmount(finDto.getShareAmt());//可转债为申购券面总额
             }
-            if (StringUtil.isNotEmpty(dataMap.get("windtypeone"))
-                    && StringUtil.equals(dataMap.get("windtypeone").toString(), DictCodeList.WIND一级分类_含债券一级分类等_优先股.getValue())) {
-                infRiskRdsDto.setTradeNum(ArithmeticUtil.divide(finDto.getTradeAmt(),100,10));//可转债为申购券面总额
-            }
+            // add by zhangrui1 增加券面总额（元） start
+            // 债券可用面值 * 交易数量
+            infRiskRdsDto.setTotalFaceAmt(
+                ArithmeticUtil.multiply(null == finDto.getParValue() ? new BigDecimal(100) : finDto.getParValue(), infRiskRdsDto.getTradeNum()));
+            // add by zhangrui1 增加券面总额（元） end
         }
         //存款类
         if(StringUtil.equals(DictCodeList.平安资产类型_存款.getValue(),v.getAssetType())){
             infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("tradeAmtAndFee"))?dataMap.get("tradeAmtAndFee") instanceof BigDecimal ?(BigDecimal)dataMap.get("tradeAmtAndFee"):new BigDecimal(dataMap.get("tradeAmtAndFee").toString()):null);
+        }
+        //固收类(非标)
+        if(StringUtil.equals(DictCodeList.平安资产类型_项目类资产.getValue(),v.getAssetType())){
+            infRiskRdsDto.setEventId(StringUtil.isNotEmpty(finDto.getTotleTradeId())?finDto.getTotleTradeId():StringUtil.isNotEmpty(dataMap.get("bizCode"))?dataMap.get("bizCode").toString():finDto.getTradeId());
+            infRiskRdsDto.setTradeNum(finDto.getPrinAmt());
         }
         //基金，计划类
         if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_赎回.getValue())){
@@ -982,8 +1857,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
             infRiskRdsDto.setAssetType2(finDto.getPs());
-            infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
-            infRiskRdsDto.setDeadline(StringUtil.isNotEmpty(dataMap.get("term"))?new BigDecimal(dataMap.get("term").toString()):null);
+            infRiskRdsDto.setCounterId(StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"counterId"))?CommonUtil.findValue(dataMap,"counterId").toString():null);
+			//添加期限品种 add by wz 20200509
+            //infRiskRdsDto.setVarietyCode(StringUtil.equals(finDto.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue())?"D"+(String) dataMap.get("termTypeReback"):(String) dataMap.get("termTypeReback"));
+            infRiskRdsDto.setVarietyCode((String) dataMap.get("termTypeReback"));
         }
         if(StringUtil.equals(finDto.getPs(), DictCodeList.回购拆借方向_融入.getValue())||
                 StringUtil.equals(finDto.getPs(), DictCodeList.回购拆借方向_融出.getValue())){
@@ -993,8 +1870,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType2(finDto.getPs());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-            infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
-            infRiskRdsDto.setDeadline(StringUtil.isNotEmpty(dataMap.get("term"))?new BigDecimal(dataMap.get("term").toString()):null);
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue(),v.getFinType())||
                 StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue(),v.getFinType())||
@@ -1009,13 +1884,37 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetRate(StringUtil.isNotEmpty(dataMap.get("repoRate"))?dataMap.get("repoRate") instanceof BigDecimal ?ArithmeticUtil.divide((BigDecimal)dataMap.get("repoRate"),new BigDecimal(100),4):ArithmeticUtil.divide(new BigDecimal(dataMap.get("repoRate").toString()),new BigDecimal(100),4):null);
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-            infRiskRdsDto.setCalendarCode((String)dataMap.get("dealCalId"));
-            infRiskRdsDto.setDeadline(StringUtil.isNotEmpty(dataMap.get("repoterm"))?new BigDecimal(dataMap.get("repoterm").toString()):null);
+			//添加期限品种 add by wz 20200509
+            //infRiskRdsDto.setVarietyCode(StringUtil.equals(finDto.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue())?"D"+(String) dataMap.get("termTypeReback"):(String) dataMap.get("termTypeReback"));
+            infRiskRdsDto.setVarietyCode((String) dataMap.get("termTypeReback"));
         }
         if(StringUtil.equals(DictCodeListExt2.平安资产类型_一级市场债.getValue(),v.getAssetType())) {
             infRiskRdsDto.setAmount(finDto.getFpriceAmt());//债券为全价总额存款
+            // add by zhangrui1 汇总确认 start
+            String winPrinAmtKey = "bidPrinAmt";
+            Object winPrinAmt = dataMap.get(winPrinAmtKey);
+            if (infRiskRdsDto.getAmount() == null && winPrinAmt != null) {
+                infRiskRdsDto.setAmount(
+                    winPrinAmt instanceof BigDecimal ? (BigDecimal)winPrinAmt : new BigDecimal(
+                        winPrinAmt.toString()));
+            }
+            infRiskRdsDto.setTradeNum(
+                ArithmeticUtil.divide(infRiskRdsDto.getAmount(), new BigDecimal(100), 4));
+            // add by zhangrui1 汇总确认 end
             infRiskRdsDto.setAssetType(DictCodeListExt2.平安资产类型_一级市场债.getValue());
             infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
+            
+            //一级市场债两个service用的DTO里的中标日字段不一样，大小写不一致。。
+            if(StringUtil.isNotEmpty(dataMap.get("biddate"))) {
+                infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("biddate").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));
+            }
+            else if(StringUtil.isNotEmpty(dataMap.get("bidDate"))) {
+                infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("bidDate").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));
+            }
+            else if(StringUtil.isNotEmpty(dataMap.get("payDate"))){
+                infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("payDate").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));
+            }
+            infRiskRdsDto.setEventId(StringUtil.isNotEmpty(dataMap.get("bidId"))?dataMap.get("bidId").toString():StringUtil.EMPTY);
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_利率互换.getValue(),v.getFinType())||
                 StringUtil.equals(DictCodeListExt2.平安资产类型_利率互换.getValue(),v.getAssetType())) {
@@ -1046,17 +1945,82 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType(DictCodeListExt2.平安资产类型_外汇即期.getValue());
             infRiskRdsDto.setAmount(finDto.getPrinAmt());
         }
-        if(StringUtil.equals(DictCodeListExt2.平安资产类型_一级市场债.getValue(),v.getAssetType())){
-            if(StringUtil.isNotEmpty(dataMap.get("biddate"))) {
-                infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("biddate").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));
-            }else if(StringUtil.isNotEmpty(dataMap.get("bidDate"))) {
-                infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("bidDate").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));
-            }else if(StringUtil.isNotEmpty(dataMap.get("payDate"))){
-                infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("payDate").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));
-            }
-            infRiskRdsDto.setEventId(StringUtil.isNotEmpty(dataMap.get("bidId"))?dataMap.get("bidId").toString():StringUtil.EMPTY);
+
+        // 2020-06-17 add by zhangrui1 start
+        // 卖出将本金金额设置为数量进行风险计算
+        if ((CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型) ||
+             CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_存款) ||
+                CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_项目类资产)) &&
+            (CommonUtil.isType(finDto.getPs(), DictCodeList.交易方向_卖出)
+             || CommonUtil.isType(finDto.getPs(), DictCodeList.交易方向_买入))) {
+            String returnAmtKey = "prinAmt";
+            Object obj = CommonUtil.findValue(dataMap, returnAmtKey);
+            if (StringUtil.isNotEmpty(obj)) infRiskRdsDto.setTradeNum(new BigDecimal(obj.toString()));
         }
-        infRiskRdsDto.setTradeAmtReal(infRiskRdsDto.getAmount());
+        // 2020-06-17 add by zhangrui1 end
+
+        // 预占功能 add by zhangrui1 start
+        // 设置委托编号
+        infRiskRdsDto.setEntrustCode(finDto.getEntrustId());
+        infRiskRdsDto.setPreOccupyCode(finDto.getEntrustId());
+        // 预占功能 add by zhangrui1 end
+        if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_买断式回购)
+            || CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_质押式回购)) {
+            long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
+                DateUtil.parse(infRiskRdsDto.getMdate()));
+            infRiskRdsDto.setOneDay(oneDay);
+        }
+        if (StringUtil.isEmpty(infRiskRdsDto.getEventDate())) {
+            infRiskRdsDto.setEventDate(
+                DateUtil.format(DateUtil.platDateFromCache(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+        }
+        // add by zhangrui1 一级分销缴款 start
+        if (StringUtil.isNotEmpty(CommonUtil.findValue(dataMap, "bondFirstSign"))) {
+            infRiskRdsDto.setPreOccupyCode(null);
+            if (CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_风险试算接口)
+                || CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_风险试算批量接口))
+                infRiskRdsDto.setIsDiffOccupy(BussinessDictCodeList.是否_是.getValue());
+        }
+        // add by zhangrui1 一级分销缴款 end
+        // add by zhangrui1 基金申购使用净值1 start
+        if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_基金)
+            && CommonUtil.isType(finDto.getPs(), DictCodeList.交易方向_申购) && CommonUtil.isType(
+                (String)dataMap.get("assetType1"), BussinessDictCodeList.基金类资产类型_货币基金)) {
+            infRiskRdsDto.setTradeNum(infRiskRdsDto.getAmount());
+        }
+        // add by zhangrui1 基金申购使用净值1 end
+        // add by zhangrui1 赎回确认日期不在指令日期时不使用指令编号 start
+        if (CommonUtil.isType(finDto.getPs(), DictCodeList.交易方向_赎回确认)) {
+            Date entrsutDate = DateUtil.parse(
+                (String)CommonUtil.findValue(dataMap, "entrustDate"));
+            Date tradeDate = DateUtil.parse(infRiskRdsDto.getEventDate());
+            Date sysDate = DateUtil.platDateFromCache();
+            // 指令日期不是当天且指令日期不等于交易日期
+            if (null != entrsutDate && DateUtil.compareDate(sysDate, entrsutDate) != 0
+                && DateUtil.compareDate(tradeDate, entrsutDate) != 0) {
+                infRiskRdsDto.setPreOccupyCode(null);
+            }
+            else if (null != entrsutDate
+                     && StringUtil.isEmpty(finDto.getEntrustId())) {
+                EtrEntrust entrust = AllTradeCommonUtil.findEntrustInfo(finDto.getbTradeId());
+                if (entrust == null || StringUtil.isEmpty(entrust.getEntrustId())) {
+                    throw new BusinessException("MSG:指令编号异常！");
+                }
+                infRiskRdsDto.setEntrustCode(entrust.getEntrustId());
+                infRiskRdsDto.setPreOccupyCode(entrust.getEntrustId());
+            }
+        }
+        // add by zhangrui1 赎回确认日期不在指令日期时不使用指令编号 end
+        // add by zhangrui1 货币型资产净值为1 start
+        if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_计划类资产_货币型)) {
+            if (null != infRiskRdsDto.getAmount() || null == infRiskRdsDto.getTradeNum()) {
+                infRiskRdsDto.setTradeNum(infRiskRdsDto.getAmount());
+            }
+            else if (null == infRiskRdsDto.getAmount() || null != infRiskRdsDto.getTradeNum()) {
+                infRiskRdsDto.setAmount(infRiskRdsDto.getTradeNum());
+            }
+        }
+        // add by zhangrui1 货币型资产净值为1 end
         return infRiskRdsDto;
     }
 
@@ -1069,7 +2033,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      */
     private InterfRiskRdsDto periodEntityDev(Map<String, Object> dataMap,V v) throws Exception {
         //定义返回实体
-        InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto(); 
+        InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
         TradeBaseDto finDto=(TradeBaseDto)JsonUtils.map2entity(dataMap,TradeBaseDto.class);
         finDto.setBusiCode(removeLasStr(finDto.getBusiCode()));
         finDto.setTotleTradeId(removeLasStr(finDto.getTotleTradeId()));
@@ -1093,31 +2057,56 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             if(finDto.getPs().equals(DictCodeList.交易方向_行权_赎回.getValue())){
                 infRiskRdsDto.setEventId(StringUtil.isNotEmpty(dataMap.get("bizCode"))?dataMap.get("bizCode").toString()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()):finDto.getTotleTradeId()+ trimInfStr(infRiskRdsDto.getPortfolioCode())+trimInfStr(finDto.getInvAim()));
                 infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("cPriceAmt"))?dataMap.get("cPriceAmt") instanceof BigDecimal ?(BigDecimal)dataMap.get("cPriceAmt"):new BigDecimal(dataMap.get("cPriceAmt").toString()):null);
-                if(StringUtil.isNotEmpty(dataMap.get("payDate"))) {
-                	if(dataMap.get("payDate") instanceof Date) {
-                		infRiskRdsDto.setEventDate(DateUtil.format((Date)dataMap.get("payDate")));
-                	}
-                	else {
-                		//时间戳
-                		String type = dataMap.get("payDate").getClass().toString();
-                		if("Long".equals(type.substring(type.lastIndexOf(".")+1,type.length()))) {
-                			infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("payDate"))));
-                		}
-                		else {
-                			infRiskRdsDto.setEventDate(dataMap.get("payDate").toString());
-                		}
-                	}
+                // add by zhangrui1 start
+                // 债券行权回售用券面总额作数量
+                Object tradeNumObj = dataMap.get("qty");
+                if (tradeNumObj != null) {
+                    infRiskRdsDto.setTradeNum(tradeNumObj instanceof BigDecimal ? (BigDecimal)tradeNumObj : new BigDecimal(tradeNumObj.toString()));
+                    infRiskRdsDto.setTradeNum(ArithmeticUtil.divide(infRiskRdsDto.getTradeNum(), new BigDecimal(100), 4));
+                }
+                // add by zhangrui1 end
+            }
+            // 到期也使用全面总额
+            else if (CommonUtil.isType(finDto.getPs(), DictCodeList.交易方向_到期)) {
+                Object tradeNumObj = dataMap.get("qty");
+                if (tradeNumObj != null) {
+                    infRiskRdsDto.setTradeNum(tradeNumObj instanceof BigDecimal ? (BigDecimal)tradeNumObj : new BigDecimal(tradeNumObj.toString()));
+                    infRiskRdsDto.setTradeNum(ArithmeticUtil.divide(infRiskRdsDto.getTradeNum(), new BigDecimal(100), 4));
                 }
             }
+            // add by zhangrui1 增加券面总额（元） start
+            Object tradeNumObj = dataMap.get("qty");
+            if (tradeNumObj != null) {
+                infRiskRdsDto.setTotalFaceAmt(tradeNumObj instanceof BigDecimal ? (BigDecimal)tradeNumObj : new BigDecimal(tradeNumObj.toString()));
+            }
+            // add by zhangrui1 增加券面总额（元） end
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_存款.getValue(),finDto.getFinprodType2())
                 &&StringUtil.equals(finDto.getPs(),DictCodeList.交易方向_中间付息.getValue())){
             infRiskRdsDto.setEventDate(DateUtil.format(finDto.getTradeDate()));
+            String intSettType  = (String)dataMap.get("intSettType");
+            if(StringUtil.isNotEmpty(intSettType)) {
+                if(StringUtil.equals(intSettType, DictCodeListExt3.结息方式_结转为本金.getValue())) {
+                    infRiskRdsDto.setPs(DictCodeList.交易方向_红利再投.getValue()); 
+                } 
+                else if (StringUtil.equals(intSettType, DictCodeListExt3.结息方式_现金结息.getValue())) {
+                    infRiskRdsDto.setPs(DictCodeList.交易方向_收息.getValue()); 
+                }
+            }
+        }
+        if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_存款.getValue(),finDto.getFinprodType2())
+                &&StringUtil.equals(finDto.getPs(),DictCodeList.交易方向_提前支取.getValue())){
+            infRiskRdsDto.setEventDate(DateUtil.format(finDto.getTradeDate()));
+            // add by zhangrui1 提前支取金额当作数量 start
+            Object earlyObject = dataMap.get("earlyWithdrawalAmt");
+            infRiskRdsDto.setTradeNum(earlyObject instanceof BigDecimal ? (BigDecimal)earlyObject : new BigDecimal(earlyObject.toString()));
+            infRiskRdsDto.setAmount(finDto.getFpriceAmt());
+            // add by zhangrui1 提前支取金额当作数量 end
         }
         if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_货币型.getValue(),v.getAssetType())
                 ||StringUtil.equals(DictCodeList.平安资产类型_计划类资产_净值型.getValue(),v.getAssetType())
                 ||StringUtil.equals(DictCodeList.平安资产类型_基金.getValue(),v.getAssetType())
-                || StringUtil.equals(DictCodeListExt3.平安资产类型_权益类资产.getValue(),v.getAssetType())) {
+                ||StringUtil.equals(DictCodeListExt3.平安资产类型_权益类资产.getValue(),v.getAssetType())) {
             if(finDto.getPs().equals(DictCodeListExt2.交易方向_份额折算.getValue())){
                 if(StringUtil.isNotEmpty(dataMap.get("conversionTime"))) {
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("conversionTime").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));
@@ -1129,7 +2118,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     && !StringUtil.equals(BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),v.getInfCode()))){
                 return null;
             }
-            //因为撤销操作使用的是除权登记的交易编号，正向分红交易时使用前置交易编号作为关联
+            //因为撤销操作使用的是除权登记的交易编号，正向分红交易时使用前置交易编号作为关联（非货币基金、权益类生成分红与除权，但货币只生成分红）
             if(StringUtil.equals(BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),v.getInfCode())) {
                 if((finDto.getPs().equals(DictCodeList.交易方向_现金分红.getValue())
                     ||(finDto.getPs().equals(DictCodeList.交易方向_除权登记.getValue())))
@@ -1155,33 +2144,35 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_拆借.getValue());
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_拆入.getValue())||StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue())?DictCodeList.回购拆借方向_拆入.getValue():DictCodeList.回购拆借方向_拆出.getValue());
             infRiskRdsDto.setPs(DictCodeList.交易方向_到期.getValue());
+            /* del by zhangrui1 start
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+             del by zhangrui1 end */
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())||
                 StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
             infRiskRdsDto.setAmount(finDto.getFpriceAmt());//回购、拆借：到期金额（元）
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())?DictCodeList.回购拆借方向_正回购.getValue():DictCodeList.回购拆借方向_逆回购.getValue());
+            /* del by zhangrui1 start
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+             del by zhangrui1 end */
             if(StringUtil.equals(DictCodeList.交易方向_到期续做.getValue(),finDto.getPs())){
                 infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("tradeAmtex"))?dataMap.get("tradeAmtex") instanceof BigDecimal ?(BigDecimal)dataMap.get("tradeAmtex"):new BigDecimal(dataMap.get("tradeAmtex").toString()):finDto.getFpriceAmt());
             }
-            List<String> calendars =  finTradeProductMapper.getCalendarByFinprodId((String)dataMap.get("finprodId"));
-            if(calendars.size()>0) {
-            	infRiskRdsDto.setCalendarCode(calendars.get(0));
-            }
-            if(StringUtil.isNotEmpty(dataMap.get("mDate"))) {
-            	infRiskRdsDto.setMdate(DateUtil.parse((String)dataMap.get("mDate")));
+            if (StringUtil.equals(finDto.getPs(),DictCodeListExt3.交易方向_投资端_提前终止.getValue())) {
+                infRiskRdsDto.setEventDate(DateUtil.format(finDto.getSettleDate()));
             }
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_期权.getValue())) {
             infRiskRdsDto.setAssetType(DictCodeListExt3.平安资产类型_期权.getValue());
             infRiskRdsDto.setAmount(finDto.getFpriceAmt());//回购、拆借：到期金额（元）
             infRiskRdsDto.setEventDate(DateUtil.format(finDto.getTradeDate()));
+            /* del by zhangrui1 start
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+             del by zhangrui1 end */
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())||
                 StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())){
@@ -1190,48 +2181,27 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType(DictCodeListExt2.平安资产类型_债券借贷.getValue());
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())?
                     DictCodeList.回购拆借方向_融入.getValue():DictCodeList.回购拆借方向_融出.getValue());
+            /* del by zhangrui1 start
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-            List<String> calendars =  finTradeProductMapper.getCalendarByFinprodId((String)dataMap.get("finprodId"));
-            if(calendars.size()>0) {
-            	infRiskRdsDto.setCalendarCode(calendars.get(0));
-            }
-            if(StringUtil.isNotEmpty(dataMap.get("mdate"))) {
-                if (dataMap.get("mdate") instanceof Long) {
-                    infRiskRdsDto.setMdate(new Date((long)dataMap.get("mdate")));
-                }
-                else if (dataMap.get("mdate") instanceof Date) {
-                    infRiskRdsDto.setMdate((Date)dataMap.get("mdate"));
-                }
-                else {
-                    infRiskRdsDto.setMdate(DateUtil.parse(dataMap.get("mdate").toString()));
-                }
-            }
+             del by zhangrui1 end */
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())||
                 StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())) {
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_买断式回购.getValue());
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())?DictCodeList.回购拆借方向_正回购.getValue():DictCodeList.回购拆借方向_逆回购.getValue());
             infRiskRdsDto.setPs(DictCodeList.交易方向_到期.getValue());
+            /* del by zhangrui1 start
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-            List<String> calendars =  finTradeProductMapper.getCalendarByFinprodId((String)dataMap.get("finprodId"));
-            if(calendars.size()>0) {
-            	infRiskRdsDto.setCalendarCode(calendars.get(0));
-            }
-            if(StringUtil.isNotEmpty(dataMap.get("mDate"))) {
-            	infRiskRdsDto.setMdate(DateUtil.parse((String)dataMap.get("mDate")));
-            }
+             del by zhangrui1 end */
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_利率互换.getValue(),finDto.getFinprodType2())) {
             if(StringUtil.equals(DictCodeList.交易方向_收取.getValue(),finDto.getPs())||StringUtil.equals(DictCodeList.交易方向_支付.getValue(),finDto.getPs())){
-                infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("beforeEndAmt")) ? 
-                    dataMap.get("beforeEndAmt") instanceof BigDecimal ? (BigDecimal) dataMap.get("beforeEndAmt") : new BigDecimal(dataMap.get("beforeEndAmt").toString()) : BigDecimal.ZERO);
+                infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("beforeEndAmt")) ? dataMap.get("beforeEndAmt") instanceof BigDecimal ? (BigDecimal) dataMap.get("beforeEndAmt") : new BigDecimal(dataMap.get("beforeEndAmt").toString()) : BigDecimal.ZERO);
             }
             else {
-                BigDecimal fixIntAmt = StringUtil.isNotEmpty(dataMap.get("fixIntAmt"))?new BigDecimal(dataMap.get("fixIntAmt").toString()):BigDecimal.ZERO;
-                BigDecimal floatIntAmt = StringUtil.isNotEmpty(dataMap.get("floatIntAmt"))?new BigDecimal(dataMap.get("floatIntAmt").toString()):BigDecimal.ZERO;
-                infRiskRdsDto.setAmount(ArithmeticUtil.doAdd(fixIntAmt,floatIntAmt));
+                infRiskRdsDto.setAmount(ArithmeticUtil.doAdd(StringUtil.isNotEmpty(dataMap.get("fixIntAmt"))?(BigDecimal)dataMap.get("fixIntAmt"):BigDecimal.ZERO,StringUtil.isNotEmpty(dataMap.get("floatIntAmt"))?(BigDecimal)dataMap.get("floatIntAmt"):BigDecimal.ZERO));
             }
             infRiskRdsDto.setAssetType(DictCodeListExt2.平安资产类型_利率互换.getValue());
             infRiskRdsDto.setAssetCode(null);
@@ -1239,11 +2209,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue(),finDto.getFinprodType2())) {
             infRiskRdsDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());
-            if (StringUtil.isNotEmpty(dataMap.get("tradeDateStr"))) {
-                infRiskRdsDto.setEventDate(dataMap.get("tradeDateStr").toString());
-            }else {
-                infRiskRdsDto.setEventDate(DateUtil.format(finDto.getTradeDate()));
-            } 
+            infRiskRdsDto.setEventDate(DateUtil.format(finDto.getTradeDate()));
             //分红送转相当于一笔现金分红一笔送转(送转不考虑)
             if(StringUtil.equals(DictCodeList.股票分红类型_现金分红.getValue(),finDto.getPs())
 //            ||StringUtil.equals(DictCodeList.股票分红类型_分红送转.getValue(),finDto.getPs())
@@ -1276,12 +2242,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         //产品端除这些交易方向的排除在外不调实占
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_理财产品.getValue(),finDto.getFinprodType2())){
             //产品端使用的是dealType存储交易方向的，这里需要转换一下
-            if(!StringUtil.isNotEmpty(infRiskRdsDto.getPortfolioCode()) && StringUtil.isNotEmpty(finDto.getFinprodId())){ 
-                FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(finDto.getFinprodId());
-                if(StringUtil.isNotEmpty(finProductAdd)){ 
-                    infRiskRdsDto.setPortfolioCode(finProductAdd.getPortfolioId());
-                }
-            }
             if(产品端_认购赎回分红.contains(finDto.getPs())){
                 //处理产品端各种场景内部实体给接口字段赋值
                 setProductInfColumn(infRiskRdsDto,finDto,dataMap);
@@ -1295,29 +2255,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         // 债券中间付息、还本、到期和相应的撤销，应该用实收本息总额
         repairSet(infRiskRdsDto, dataMap);
         // BUG BSTOT-2281 by zhangrui1 end
-        
-        infRiskRdsDto.setTradeAmtReal(infRiskRdsDto.getAmount());
-        //存款，债券，质押式回购取tradeAmt
-        if(CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_债券)|| 
-        	CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_存款)||
-            CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_质押式回购)){
-        	infRiskRdsDto.setTradeAmtReal(finDto.getTradeAmt());
-        }
-        
-        //ZGBSS-451 计划利率资产、项目类资产、买断式回购存续期交易金额取理论值start
-        if(CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_买断式回购)
-        	||CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型)
-            || CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_项目类资产)) {
-        	String key = "theoryAmt";
-        	if(CommonUtil.isType(infRiskRdsDto.getAssetType(), DictCodeList.平安资产类型_买断式回购)) {
-        		key = "fpriceAmt";
-        	}
-            Object obj = dataMap.get(key);
-            if (StringUtil.isNotEmpty(obj)) {
-            	infRiskRdsDto.setAmount(new BigDecimal(obj.toString()));
-            }
-        }
-        //ZGBSS-451 计划利率资产、项目类资产、买断式回购存续期交易金额取理论值end
         return infRiskRdsDto;
     }
 
@@ -1327,8 +2264,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         String eventDate = DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_DATE_FORMAT_EN);
         Map<String, Object> infMap = new HashMap<>();
         infMap.put(PageFieldToInterfFactory.INF_ASSETTYPE2, StringUtil.equals(
-                dataMap.get(InterfUtil.finprodType2),
-                DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue()) ? DictCodeList.回购拆借方向_融入.getValue() : DictCodeList.回购拆借方向_融出.getValue());
+            dataMap.get(InterfUtil.finprodType2),
+            DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue()) ? DictCodeList.回购拆借方向_融入.getValue() : DictCodeList.回购拆借方向_融出.getValue());
         // 债券借贷到期
         dataMap.put(InterfUtil.finprodType2, DictCodeListExt2.平安资产类型_债券借贷.getValue());
         String ps2Key = "ps2";
@@ -1345,19 +2282,18 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         doCommon(infMap, v);
         infMap.put(PageFieldToInterfFactory.INF_EVENTDATE, eventDate);
         infMap.put(PageFieldToInterfFactory.INF_TRADENUM,
-                ArithmeticUtil.divide(
-                        CommonUtil.getBigDecimal(infMap, PageFieldToInterfFactory.INF_TOTALFACEAMT, null),
-                        new BigDecimal(100), 4));
+            ArithmeticUtil.divide(
+                CommonUtil.getBigDecimal(infMap, PageFieldToInterfFactory.INF_TOTALFACEAMT, null),
+                new BigDecimal(100), 4));
         infMap.put(
-                PageFieldToInterfFactory.INF_EVENTID,
-                (String)infMap.get(PageFieldToInterfFactory.INF_EVENTID) + (String)infMap.get(
-                        PageFieldToInterfFactory.INF_PS));
+            PageFieldToInterfFactory.INF_EVENTID,
+            (String)infMap.get(PageFieldToInterfFactory.INF_EVENTID) + (String)infMap.get(
+                PageFieldToInterfFactory.INF_PS));
         infMap.put("isIgnoreFoul", DictCodeListExt2.是否_是.getValue());
         result.add(infMap);
         return result;
     }
     // add by zhangrui1 债券借贷存续期特别处理 end
-
     // BUG BSTOT-2281 by zhangrui1 start
     /**
      * 针对遗漏的场景进行字段设定
@@ -1369,11 +2305,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      */
     private void repairSet(InterfRiskRdsDto dto, Map<String, Object> dataMap) {
         // 债券中间付息、还本、到期和相应的撤销，应该用实收本息总额
-        if (( CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_债券)
-                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_存款)
-//                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型)
-//                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_项目类资产)
-                )
+        if ((CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_债券)
+                /*|| CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_存款)*/
+                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型)
+                || CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_项目类资产))
                 && (CommonUtil.isType(dto.getPs(), DictCodeList.交易方向_还本)
                         || CommonUtil.isType(dto.getPs(), DictCodeList.交易方向_到期)
                         || CommonUtil.isType(dto.getPs(), DictCodeList.交易方向_收息))) {
@@ -1382,7 +2317,22 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             if (StringUtil.isNotEmpty(obj)) {
                 dto.setAmount(new BigDecimal(obj.toString()));
             }
+            // 2020-06-17 add by zhangrui1 start
+            // 中间付息、还本、到期将还本金额设置为数量进行风险计算
+            if (CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_债券)
+                && CommonUtil.isType(dto.getPs(), DictCodeList.交易方向_到期)) {
+                return;
+            }
+            String returnAmtKey = CommonUtil.isType(dto.getAssetType(), DictCodeList.平安资产类型_债券) ? "prinAmtTheory" : "returnAmount";
+            obj = CommonUtil.findValue(dataMap, returnAmtKey);
+            if (StringUtil.isNotEmpty(obj)) dto.setTradeNum(new BigDecimal(obj.toString()));
+            // 2020-06-17 add by zhangrui1 end
         }
+        // add by zhangrui1 eventDate不能为空 start
+        if (StringUtil.isEmpty(dto.getEventDate())) {
+            dto.setEventDate(DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_DATE_FORMAT_EN));
+        }
+        // add by zhangrui1 eventDate不能为空 end
     }
     // BUG BSTOT-2281 by zhangrui1 end
 
@@ -1392,7 +2342,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @param v
      * @return
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<Map<String, Object>> getBatchAllocation(Map<String, Object> dataMap,V v){
         List<Map<String, Object>> retMap=new ArrayList<Map<String, Object>>();
         if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
@@ -1403,87 +2352,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 retMap.add(dataReMap);
             });
         }
-        else if(StringUtil.equals(DictCodeList.平安资产类型_拆借.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
-            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
-                Map<String, Object> dataReMap=new HashMap<>();
-                dataReMap.putAll(dataMap);
-                dataReMap.putAll((Map)en);
-                retMap.add(dataReMap);
-            });
-        }
-        else if(StringUtil.equals(DictCodeList.平安资产类型_基金.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
-            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
-                Map<String, Object> dataReMap=new HashMap<>();
-                dataReMap.putAll(dataMap);
-                dataReMap.putAll((Map)en);
-                retMap.add(dataReMap);
-            });
-        }
-        else if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_净值型.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
-            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
-                Map<String, Object> dataReMap=new HashMap<>();
-                dataReMap.putAll(dataMap);
-                dataReMap.putAll((Map)en);
-                retMap.add(dataReMap);
-            });
-        }
-        else if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_利率型.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
-            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
-                Map<String, Object> dataReMap=new HashMap<>();
-                dataReMap.putAll(dataMap);
-                dataReMap.putAll((Map)en);
-                retMap.add(dataReMap);
-            });
-        }else if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_货币型.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
-            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
-                Map<String, Object> dataReMap=new HashMap<>();
-                dataReMap.putAll(dataMap);
-                dataReMap.putAll((Map)en);
-                retMap.add(dataReMap);
-            });
-        }else if(StringUtil.equals(DictCodeList.平安资产类型_存款.getValue(),v.getAssetType())
-            || StringUtil.equals(DictCodeList.平安资产类型_项目类资产.getValue(),v.getAssetType())
-            &&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
-            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
-                Map<String, Object> dataReMap=new HashMap<>();
-                dataReMap.putAll(dataMap);
-                dataReMap.putAll((Map)en);
-                retMap.add(dataReMap);
-            });
-        }
-        else if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussRepoSecPtl"))){
-            Map bussRepoSecPtlMap = JsonUtils.object2Map(dataMap.get("bussRepoSecPtl")) ;
-            if(StringUtil.isNotEmpty(bussRepoSecPtlMap.get("pledgeBondList"))){
-                ((List)bussRepoSecPtlMap.get("pledgeBondList")).forEach(en->{
-                    Map<String, Object> dataReMap=new HashMap<>();
-                    dataReMap.putAll(dataMap);
-                    dataReMap.putAll((Map)en);
-                    retMap.add(dataReMap);
-                });
-            }
-        }
-        else if(StringUtil.equals(DictCodeList.平安资产类型_买断式回购.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("trdOutRightRepoTradePtl"))){
-            ((List)dataMap.get("trdOutRightRepoTradePtl")).forEach(en->{
-                Map<String, Object> dataReMap=new HashMap<>(); 
-                dataReMap.putAll(dataMap);
-                dataReMap.putAll((Map)en); 
-                if (StringUtil.isNotEmpty(dataReMap.get("firstSettleAmt"))) {
-                    dataReMap.put("fSettleAmt", dataReMap.get("firstSettleAmt"));
-                }
-                retMap.add(dataReMap);
-            });
-        }
-        if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussCombDistribtList"))){
-            ((List)dataMap.get("bussCombDistribtList")).forEach(en->{
-                Map<String, Object> dataReMap=new HashMap<>();
-                dataReMap.putAll(dataMap);
-                dataReMap.putAll((Map)en);
-                retMap.add(dataReMap);
-            });
-        }
         return retMap;
     }
-    
+
     /**
      * 处理产品端的实体构造
      * @param infRiskRdsDto
@@ -1504,35 +2375,31 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品认购.getValue())) {
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("subConfirmDate"))));
                     infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("subDealAmt")));
-                    infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("subDealNum")));
+                    infRiskRdsDto.setTradeNum(StringUtil.isNotEmpty((String)dataMap.get("subDealNum"))?new BigDecimal((String)dataMap.get("subDealNum")):BigDecimal.ZERO);
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品申购.getValue())) {
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("purConfirmDate"))));
                     infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("purDealAmt")));
-                    infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("purDealNum")));
+                    infRiskRdsDto.setTradeNum(StringUtil.isNotEmpty((String)dataMap.get("purDealNum"))?new BigDecimal((String)dataMap.get("purDealNum")):BigDecimal.ZERO);
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品赎回.getValue())
                         || StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品提前赎回.getValue())) {
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("redConfirmDate"))));
                     infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("redDealAmt")));
-                    infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("redDealNum")));
+                    infRiskRdsDto.setTradeNum(StringUtil.isNotEmpty((String)dataMap.get("redDealNum"))?new BigDecimal((String)dataMap.get("redDealNum")):BigDecimal.ZERO);
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_份额强增.getValue())
                         || StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
-
+                    
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("addReduceConfirmDate"))));
-                    //ZGBSS-49【待办事项】：审批份额强增流程报错 20210118 start
-                    if(dataMap.get("addReduceDealAmt") != null) {                    	
-                    	infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("addReduceDealAmt")));
+                    infRiskRdsDto.setAmount(StringUtil.isNotEmpty((String)dataMap.get("addReduceDealAmt"))?new BigDecimal((String)dataMap.get("addReduceDealAmt")):BigDecimal.ZERO);
+                    if(StringUtil.isNotEmpty(dataMap.get("addReduceUnitNetValue"))){
+                        BigDecimal addReduceDealNum = ArithmeticUtil.divide(new BigDecimal((String)dataMap.get("addReduceDealAmt")), new BigDecimal((String)dataMap.get("addReduceUnitNetValue")), 2);
+                        infRiskRdsDto.setTradeNum(StringUtil.isNotEmpty((String)dataMap.get("addReduceDealNum"))?new BigDecimal((String)dataMap.get("addReduceDealNum")):addReduceDealNum);
+                    } else {
+                        infRiskRdsDto.setTradeNum(StringUtil.isNotEmpty((String)dataMap.get("addReduceDealNum"))?new BigDecimal((String)dataMap.get("addReduceDealNum")):new BigDecimal((String)dataMap.get("addReduceDealAmt")));
                     }
-                    if(dataMap.get("addReduceDealNum") != null) {                    	
-                    	infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("addReduceDealNum")));
-                    }
-                    //ZGBSS-49【待办事项】：审批份额强增流程报错 20210118 end
-                    if(infRiskRdsDto.getAmount()==null) {
-                    	infRiskRdsDto.setAmount(BigDecimal.ZERO);
-                    	infRiskRdsDto.setNotCalcAmount(true);
-                    }
+
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())) {
 
@@ -1559,23 +2426,15 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品赎回.getValue())
                         || StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品提前赎回.getValue())) {
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("redConfirmDate03"))));
-                    infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("redDealAmt03")));
+                    infRiskRdsDto.setAmount(StringUtil.isNotEmpty((String)dataMap.get("redDealAmt03"))?new BigDecimal((String)dataMap.get("redDealAmt03")):BigDecimal.ZERO);
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_份额强增.getValue())
                         || StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
+
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("addReduceConfirmDate03"))));
-                    //ZGBSS-49【待办事项】：货币型产品审批份额强增流程报错 20210126 start
-                    if(dataMap.get("addReduceDealAmt03") != null) {                    	
-                    	infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("addReduceDealAmt03")));
-                    }
-                    if(dataMap.get("addReduceDealNum03") != null) {                    	
-                    	infRiskRdsDto.setTradeNum(new BigDecimal((String)dataMap.get("addReduceDealNum03")));
-                    }
-                    //ZGBSS-49【待办事项】：货币型产品审批份额强增流程报错 20210126 end
-                    if(infRiskRdsDto.getAmount()==null) {
-                    	infRiskRdsDto.setAmount(BigDecimal.ZERO);
-                    	infRiskRdsDto.setNotCalcAmount(true);
-                    }
+                    infRiskRdsDto.setAmount(StringUtil.isNotEmpty((String)dataMap.get("addReduceDealAmt03"))?new BigDecimal((String)dataMap.get("addReduceDealAmt03")):BigDecimal.ZERO);
+                    infRiskRdsDto.setTradeNum(StringUtil.isNotEmpty((String)dataMap.get("addReduceDealNum03"))?new BigDecimal((String)dataMap.get("addReduceDealNum03")):new BigDecimal((String)dataMap.get("addReduceDealAmt03")));
+
                 }
                 else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())) {
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("expireConfirmDate03"))));
@@ -1638,7 +2497,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
 
     }
-    
+
     /**
      * 查询组合包明细数据
      * @param bagId
@@ -1646,192 +2505,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @since 1.0
      */
     public List<String> queryPortfolioPackageDtlByBagId(String bagId) {
-          List<String>  list = restTemplate.getForObject(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionPortf003Point/queryPortfolioPackageDtlByBagId?bagId="+bagId
-           ,List.class);
-          return list;
-    }
-
-    /**
-     * 批量处理
-     *
-     * @param v 调用接口属性
-     * @param tList 内容
-     * @param consumer 自定义处理
-     * @return 风控计算结果
-     * @throws Exception 异常
-     */
-    public <T> ClientData sendRiskRdsListData(V v, Collection<T> tList,
-                                              Consumer<Map<String, Object>> consumer)
-            throws Exception {
-        logger.info("==========后端批量交易或批量委托类转换接口:{} {} start==========", v.getInfCode(),
-                v.getEventType());
-        if (CollectionUtils.isEmpty(tList)) {
-            logger.info("==========空的报文体==========");
-            return null;
-        }
-        if (consumer == null) {
-            consumer = map -> {
-                // nothing to do
-            };
-        }
-        Set<String> counterIdSet = new HashSet<>();
-        List<Map<String, Object>> sourcetList = new ArrayList<>();
-        // add by zhangrui1 基金转换申请取最新净值 start
-        List<String> assetList = new ArrayList<>();
-        // add by zhangrui1 基金转换申请取最新净值 end
-        // 取出所有的交易对手判断是否内部交易对手
-        for (T t : tList) {
-            Map<String, Object> dataMap = JsonUtils.object2Map(t);
-            // 个别处理
-            consumer.accept(dataMap);
-            // 交易对手
-            String counterId = (String)CommonUtil.findValue(dataMap,
-                    PageFieldToInterfFactory.INF_COUNTERID);
-            if (!StringUtil.isEmpty(counterId)) {
-                counterIdSet.add(counterId);
-            }
-            sourcetList.add(dataMap);
-            // add by zhangrui1 基金转换申请取最新净值 start
-            String ps = (String)CommonUtil.findValue(dataMap, "ps");
-            if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请)) {
-                assetList.add((String)dataMap.get("finprodId"));
-            }
-            // add by zhangrui1 基金转换申请取最新净值 end
-        }
-        // add by zhangrui1 设置关联方信息 start
-        CommonRelatedPartyService.doCredit(sourcetList, v);
-        // add by zhangrui1 设置关联方信息 end
-        // 取出内部交易对手
-        Map<String, String> portfolioIds = selectInnerCounter(counterIdSet);
-        List<Map<String, Object>> targetList = new ArrayList<>();
-        List<String> tradeIds = new ArrayList<>();
-        // add by zhangrui1 基金转换申请取最新净值 start
-        Map<String, BigDecimal> valMap = fundNetService.getValuationMap(assetList);
-        // add by zhangrui1 基金转换申请取最新净值 end
-        for (Map<String, Object> dataMap : sourcetList) {
-            // add by zhangrui1 基金转换申请取最新净值 start
-            String ps = (String)CommonUtil.findValue(dataMap, "ps");
-            if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请)) {
-                dataMap.put("netPrice", valMap.get((String)dataMap.get("finprodId")));
-            }
-            // add by zhangrui1 基金转换申请取最新净值 end
-            // 报文结构处理
-            doListCommon(v, dataMap, portfolioIds, tradeIds, targetList);
-        }
-        // 取得交易的反向交易编号
-        Map<String, String> rTradeIdMap = selectRTradeIds(tradeIds);
-        // 替换反向交易编号
-        if (!CollectionUtils.isEmpty(targetList) && StringUtil.equals(
-                BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue(), v.getInfCode())) {
-            targetList.forEach(map -> {
-                String eventId = (String)map.get(PageFieldToInterfFactory.INF_EVENTID);
-                if (rTradeIdMap.containsKey(eventId)) {
-                    map.put(PageFieldToInterfFactory.INF_EVENTID, rTradeIdMap.get(eventId));
-                }
-            });
-        }
-        // add by zhangrui1 根据资产类型设置开关 start
-        if (isRskOpened(v.getAssetType())) {
-            return null;
-        }
-        // add by zhangrui1 根据资产类型设置开关 end
-        // 调用风险服务执行计算
-        ClientData res = sendListDataCommon(targetList, v.getInfCode());
-        logger.info("==========后端批量交易或批量委托类转换接口:{} {} end==========", v.getInfCode(),
-                v.getEventType());
-        return res;
-    }
-    // 多组合、多对多指令/交易处理共通 by zhangrui1 end
-
-    // 多组合、多对多指令/交易处理共通 by zhangrui1 start
-    public void doListCommon(V v, Map<String, Object> dataMap,
-                             Map<String, String> portfolioIds, List<String> tradeIds,
-                             List<Map<String, Object>> targetList)
-            throws Exception {
-        String counterId = (String)CommonUtil.findValue(dataMap, "counterId");
-        String ps = (String)CommonUtil.findValue(dataMap, "ps");
-        boolean isInnerTrd = portfolioIds.containsKey(counterId);
-        String isInnerTrdStr = isInnerTrd ? BussinessDictCodeListRds.是否_是.getValue() : BussinessDictCodeListRds.是否_否.getValue();
-        dataMap.put(PageFieldToInterfFactory.INF_ISINNERTRD, isInnerTrdStr);
-        // 债转股、基金转换、转仓等特殊处理
-        if (CommonUtil.isType(ps, DictCodeListExt1.交易方向_债转股)
-                || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请)
-                || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)
-                || (isInnerTrd && CommonUtil.isType(ps, BussinessDictCodeList.交易方向_卖出))) {
-            // 设置内部交易对手
-            if (isInnerTrd) {
-                dataMap.put(PageFieldToInterfFactory.INF_COUNTERID, StringUtil.isEmpty(
-                        portfolioIds.get(counterId)) ? counterId : portfolioIds.get(counterId));
-            }
-            List<Map<String, Object>> singleRiskList=prepareRiskListEntity(dataMap, v);
-            if(!StringUtil.isEmptyList(singleRiskList)) {
-                targetList.addAll(singleRiskList);
-            }
-            return;
-        }
-        // 一般处理
-        InterfRiskRdsDto interfRiskRdsDto = this.prepareRiskEntity(dataMap, v);
-        if (!StringUtil.isNotEmpty(interfRiskRdsDto)) {
-            return;
-        }
-        // 暂不处理的交易方向
-        if (申购确认_赎回申请.contains(interfRiskRdsDto.getPs())
-                // 可转债申购确认需要进行实占
-                && (doBondToStock(dataMap, interfRiskRdsDto)
-                && !CommonUtil.isType(v.getEventType(), BussinessDictCodeListRds.事件类型_投资委托))) {
-            return;
-        }
-        // 设置事件类型
-        interfRiskRdsDto.setEventType(v.getEventType());
-        // 设置币种
-        Object ccy = dataMap.get(InterfUtil.CCY);
-        interfRiskRdsDto.setCcy(StringUtil.isNotEmpty(
-                ccy) ? ccy.toString() : BussinessDictCodeListRds.币种_人民币_CNY.getValue());
-        // 设置金融产品类型
-        if (!StringUtil.isNotEmpty(interfRiskRdsDto.getAssetType())) {
-            interfRiskRdsDto.setAssetType(v.getAssetType());
-        }
-        // 设置撤销标志
-        if (CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_预占释放批量接口)) {
-            interfRiskRdsDto.setRevokeFlg(DictCodeList.是否_是.getValue());
-        }
-        if (CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_实占释放批量接口)) {
-            interfRiskRdsDto.setRevokeFlg(DictCodeList.是否_是.getValue());
-            // 内部交易对手时取交易编号作为条件查询反向交易编号
-            if (isInnerTrd) {
-                String tradeId = interfRiskRdsDto.getEventId();
-                tradeIds.add(removeLasStr(tradeId));
-            }
-        }
-        // 设置是否内部交易
-        interfRiskRdsDto.setIsInnerTrd(
-                isInnerTrd ? BussinessDictCodeListRds.是否_是.getValue() : BussinessDictCodeListRds.是否_否.getValue());
-
-        // add by zhangrui1 设置关联方信息 start
-        setRelatedParty(interfRiskRdsDto, dataMap);
-        // add by zhangrui1 设置关联方信息 end
-        targetList.add(BeanUtil.object2Map(interfRiskRdsDto));
-    }
-
-    // add by zhangrui1 设置关联方信息 start
-    protected void setRelatedParty(InterfRiskRdsDto interfRiskRdsDto,
-                                   Map<String, Object> dataMap) {
-        Object isRelatedParty = CommonUtil.findValue(dataMap,
-                CommonRelatedPartyService.ISRELATEDPARTY);
-        Object isRelatedPartyCeOrg = CommonUtil.findValue(dataMap,
-                CommonRelatedPartyService.ISRELATEDPARTYCEORG);
-        Object relatedParty = CommonUtil.findValue(dataMap,
-                CommonRelatedPartyService.RELATEDPARTY);
-        Object relatedPartyAmt = CommonUtil.findValue(dataMap,
-                CommonRelatedPartyService.RELATEDPARTYAMT);
-        if (StringUtil.equals(isRelatedParty, BussinessDictCodeList.是否_是.getValue())) {
-            interfRiskRdsDto.setIsRelatedParty(isRelatedParty.toString());
-            interfRiskRdsDto.setRelatedParty(relatedParty.toString());
-        }
-        if (StringUtil.equals(isRelatedPartyCeOrg, BussinessDictCodeList.是否_是.getValue())) {
-            interfRiskRdsDto.setIsRelatedPartyCeOrg(isRelatedPartyCeOrg.toString());
-            interfRiskRdsDto.setRelatedPartyAmt(new BigDecimal(relatedPartyAmt.toString()));
-        }
+        List<String>  list = restTemplate.getForObject(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionPortf003Point/queryPortfolioPackageDtlByBagId?bagId="+bagId
+                ,List.class);
+        return list;
     }
 
     // add by zhangrui1 根据资产类型设置开关 start
@@ -1839,33 +2515,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         String openedAsset = CacheUtil.getSysParam("rsk_opened_asset");
         // 开关存在且资产类型不在开启风控资产的列表中则返回空结果
         return !StringUtil.isEmpty(openedAsset)
-                && !StringUtil.contains(openedAsset, assetType);
+               && !StringUtil.contains(openedAsset, assetType);
     }
     // add by zhangrui1 根据资产类型设置开关 end
-
-    protected void doPreOccupy(Map<String, Object> map, String infCode) {
-        if (CollectionUtils.isEmpty(map)) {
-            return;
-        }
-        String ps = (String)map.get(PageFieldToInterfFactory.INF_PS);
-        String eventId = (String)map.get(PageFieldToInterfFactory.INF_EVENTID);
-        if (CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占接口)
-                || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_预占批量接口)) {
-            map.put(PageFieldToInterfFactory.INF_OCCUPYDATE,
-                    //  map.get(PageFieldToInterfFactory.INF_EVENTDATE));
-                    StringUtil.isNotEmpty(map.get(PageFieldToInterfFactory.INF_MDATE))?map.get(PageFieldToInterfFactory.INF_MDATE):map.get(PageFieldToInterfFactory.INF_EVENTDATE));//update zhangweiqi 2021-1-6 支持跨日指令
-
-        }
-        else if ((CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占接口)
-                || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占批量接口))
-                && StringUtil.isNotEmpty(map.get(PageFieldToInterfFactory.INF_PREOCCUPYCODE))) {
-            String tail = StringUtil.endsWith(eventId, ps) ? ps : StringUtil.EMPTY;
-            if (!StringUtil.endsWith((String)map.get(PageFieldToInterfFactory.INF_PREOCCUPYCODE),
-                    ps)) {
-                map.put(PageFieldToInterfFactory.INF_PREOCCUPYCODE,
-                        map.get(PageFieldToInterfFactory.INF_PREOCCUPYCODE) + tail);
-            }
-        }
-    }
-
 }

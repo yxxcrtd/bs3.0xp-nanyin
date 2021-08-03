@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.common.riskinfrds.occupy.entity;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 预占实占存储结构
@@ -112,4 +113,31 @@ public class OccupyRelParam implements IOccupyRelParam {
 	public BigDecimal getNetPrice() {
 		return netPrice;
 	}
+
+    private Set<String> seqNoList;
+
+    @Override
+    public Set<String> getSeqNoList() {
+        return seqNoList;
+    }
+
+    @Override
+    public void setSeqNoList(Set<String> seqNoList) {
+        this.seqNoList = seqNoList;
+    }
+
+    /**
+     * 预占下的实占列表
+     */
+    private Set<String> ocpCodeList;
+
+    @Override
+    public Set<String> getOcpCodeList() {
+        return ocpCodeList;
+    }
+
+    @Override
+    public void setOcpCodeList(Set<String> ocpCodeList) {
+        this.ocpCodeList = ocpCodeList;
+    }
 }

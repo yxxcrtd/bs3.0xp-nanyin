@@ -10,22 +10,26 @@
 
 package com.joyintech.service.riskrdsinf.core.util;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import com.joyintech.framework.convert.DateConverter;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.riskrdsinf.cache.InterfCacheUtil;
 import com.joyintech.service.riskrdsinf.core.annotation.DictLink;
@@ -69,17 +73,47 @@ public class InfMapValUtil {
         return (V)dataMap.get(key.fieldName());
     }
 
+    // add by zhangrui1 start
+    /**
+     * 从报文体中取出列表参数
+     * 
+     * @param mapData 报文数据
+     * @param key key
+     * @return list内容
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static final List<Map> getList(Map<String, Object> mapData, String key) throws InterfException {
+        if (CollectionUtils.isEmpty(mapData)) {
+            return new ArrayList<>();
+        }
+        Object list = mapData.get(key);
+        if (list instanceof List) {
+            return (List<Map>) list;
+        }
+        if (list instanceof String) {
+            String listStr = (String) list;
+            try {
+                return JsonUtils.json2List(listStr, Map.class);
+            }
+            catch (IOException e) {
+                throw new InterfException(e);
+            }
+        }
+        return new ArrayList<>();
+    }
+    // add by zhangrui1 end
+
     public static <V> V mapDataToObject(Map<String, Object> mapData, Class<V> beanClass) {
-        if (mapData == null || mapData.keySet() == null) {
+        if (CollectionUtils.isEmpty(mapData)) {
             return null;
         }
-        Set<String> delSet = new HashSet<>();
-        mapData.entrySet().forEach(en->{
+        Iterator<Map.Entry<String,Object>> it = mapData.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String,Object> en = it.next();
             if (en.getValue() == null) {
-                delSet.add(en.getKey());
+                it.remove();
             }
-        });
-        delSet.forEach(key -> mapData.remove(key));
+        }
         DateConverter converter = new DateConverter();
         converter.setPattern(DateUtil.DEFAULT_DATE_FORMAT_EN);
         ConvertUtils.register(converter, Date.class);

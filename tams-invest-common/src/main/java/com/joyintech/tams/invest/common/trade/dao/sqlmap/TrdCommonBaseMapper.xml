@@ -1004,6 +1004,17 @@
         ))
     </select>
 
+    <select id="selectEntrustInfo" resultMap="com.joyintech.tams.common.base.dao.EtrEntrustMapper.BaseResultMap">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.EtrEntrustMapper.Base_Column_List" />
+        from ETR_ENTRUST
+        where ENTRUST_ID = (
+        select distinct tpda.ENTRUST_ID FROM TRD_PRODUCT_DEAL_ADD tpda
+        INNER JOIN TRD_PRODUCT_DEAL tpd ON tpd.B_TRADE_ID = tpda.trade_id OR tpd.TRADE_ID = tpda.trade_id
+        where (tpd.trade_id = #{tradeId,jdbcType=VARCHAR} or tpd.b_trade_id = #{tradeId,jdbcType=VARCHAR}) AND tpda.ENTRUST_ID IS NOT NULL
+        )
+    </select>
+
     <select id="getFundLatestValuation" resultType="java.math.BigDecimal">
         select
         fpv.VALUATION
@@ -1229,5 +1240,15 @@
             </foreach>
         </if>
         ))
+    </select>
+
+    <select id="queryFinprodIdByFinprodMarketId" resultType="java.lang.String">
+        SELECT
+            max(FINPROD_ID)
+        FROM
+            FIN_PRODUCT
+        WHERE
+            FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
+          AND FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
     </select>
 </mapper>

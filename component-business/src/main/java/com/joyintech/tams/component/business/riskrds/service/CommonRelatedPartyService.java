@@ -11,11 +11,19 @@
 package com.joyintech.tams.component.business.riskrds.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.trade.dao.CreditLinesUpdateMapper;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -23,22 +31,19 @@ import org.springframework.util.CollectionUtils;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseDictCodeList;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.FinProductTypeKey;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RskRelatedParty;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.constant.PageFieldToInterfFactory;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
-import com.joyintech.tams.component.business.riskrds.dto.TradeBaseDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -46,7 +51,7 @@ import com.joyintech.tams.invest.common.redisinit.dto.IRiskRds;
 import com.joyintech.tams.invest.common.riskinfrds.util.service.EntrustCompleteService;
 import com.joyintech.tams.invest.common.trade.CreditLinesUpdate;
 import com.joyintech.tams.invest.common.trade.CreditLinesUpdateImpl;
-import com.joyintech.tams.invest.common.trade.dao.CreditLinesUpdateMapper;
+import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 
 /**
  * 取得关联方信息
@@ -69,9 +74,6 @@ public class CommonRelatedPartyService {
 
     public static final BigDecimal NUM_100 = new BigDecimal(100);
 
-    public static final String[] IGNORE_PS = {DictCodeList.交易方向_收息.getValue(), DictCodeList.交易方向_现金分红.getValue(), DictCodeList.交易方向_除权登记.getValue(),
-                                                DictCodeList.回购拆借方向_拆入.getValue(),DictCodeList.回购拆借方向_正回购.getValue(),DictCodeList.回购拆借方向_融入.getValue()};
-
     private CommonRelatedPartyService() {
         // private the construct
     }
@@ -87,19 +89,19 @@ public class CommonRelatedPartyService {
         return service.getSysDate();
     }
 
-    /*public static final Map<String, String> getRelatedParty(Collection<String> arg) {
+    public static final Map<String, String> getRelatedParty(Collection<String> arg) {
         if (CollectionUtils.isEmpty(arg)) {
             return new HashMap<>();
         }
         return getRelatedParty(arg.toArray(new String[arg.size()]));
-    }*/
+    }
 
-    public static final Map<String, String> getRelatedParty(List<Map<String, Object>> paramList) {
-        if (paramList == null || paramList.size() == 0) {
+    public static final Map<String, String> getRelatedParty(String... arg) {
+        if (arg == null || arg.length == 0) {
             return new HashMap<>();
         }
         // 调用关联方管理服务查询关联方
-        List<RskRelatedParty> resList = queryInfoByPrimaryKey(paramList);
+        List<RskRelatedParty> resList = queryInfoByPrimaryKey(Arrays.asList(arg));
         if (CollectionUtils.isEmpty(resList)) {
             return new HashMap<>();
         }
@@ -108,13 +110,13 @@ public class CommonRelatedPartyService {
             RskRelatedParty::getInstituteCode));
     }
 
-    public static final List<RskRelatedParty> queryInfoByPrimaryKey(List<Map<String, Object>> paramList) {
+    public static final List<RskRelatedParty> queryInfoByPrimaryKey(List<String> paramList) {
         List<RskRelatedParty> resList = new ArrayList<>();
         // 分批次查询，每次20条
         CommonUtil.doBatchList(paramList, 20, list -> {
             // 调用关联方管理服务查询关联方
             List<RskRelatedParty> infoList = joyinRestTemplate().postForList(
-                ServiceApplication.RISK_SERVICE_NAME + "/RskRelatedParty/queryInfoByPrimaryKeyForRisk",
+                ServiceApplication.RISK_SERVICE_NAME + "/RskRelatedParty/queryInfoByPrimaryKey",
                 list, RskRelatedParty.class);
             if (!CollectionUtils.isEmpty(infoList)) {
                 resList.addAll(infoList);
@@ -136,17 +138,18 @@ public class CommonRelatedPartyService {
     /**
      * 机构授信目标机构
      */
-    public static final String CREDIT_ORG = "customerId";
+    public static final String CREDIT_ORG = "org";
 
     /**
      * 机构授信目标额度
      */
-    public static final String CREDIT_AMT = "amount";
+    public static final String CREDIT_AMT = "tradeAmt";
 
     /**
      * 计算机构授信额度信息
      * 
      * @param data 交易信息
+     * @param type 场景：委托/交易/存续期
      * @return 机构授信额度信息
      */
     public static final void doCredit(Map<String, Object> data, IRiskRds base) {
@@ -177,29 +180,8 @@ public class CommonRelatedPartyService {
         if (!CollectionUtils.isEmpty(creditList)) {
             creditList.forEach(credit -> orgSet.add((String)credit.get(CREDIT_ORG)));
         }
-        //获取所有交易对手以及相应的交易时间
-        List<Map<String, Object>> queryOrgset=getCounterIdAndTradeDate(data,base);
-        // 机构授信存在，取出所有授信机构
-        if(!CollectionUtils.isEmpty(creditList)){
-        	for(Map<String, Object> map:creditList){
-        		Map<String, Object> mapResult=new HashMap<String, Object>();
-                Object customerId = CommonUtil.findValue(map,CREDIT_ORG);
-                if (customerId != null) {
-                	mapResult.put("customerId", customerId);
-                }
-                Object queryDate = CommonUtil.findValue(map, "tradeDate");
-                if (queryDate != null) {
-                	if(queryDate instanceof Long){
-                		mapResult.put("queryDate", DateUtil.format(new Date(Long.parseLong(queryDate.toString()))));
-                	}else{
-                		mapResult.put("queryDate", queryDate);
-                	}
-                }
-                queryOrgset.add(mapResult);
-        	}
-        }
         // 取得机构中得关联方
-        Map<String, String> relatedPartyList = getRelatedParty(queryOrgset);
+        Map<String, String> relatedPartyList = getRelatedParty(orgSet);
         // 处理关联方相关信息
         doRelatedParty(data, creditList, relatedPartyList);
     }
@@ -300,28 +282,6 @@ public class CommonRelatedPartyService {
         }
         return relatedPartySet;
     }
-    public static final List<Map<String, Object>> getCounterIdAndTradeDate(List<Map<String, Object>> data, IRiskRds base) {
-        List<Map<String, Object>> list=new ArrayList<>();
-        if (!CollectionUtils.isEmpty(data)) {
-            for (Map<String, Object> map : data) {
-            	Map<String, Object> mapResult=new HashMap<String, Object>();
-                Object customerId = CommonUtil.findValue(map, PageFieldToInterfFactory.INF_COUNTERID);
-                if (customerId != null) {
-                	mapResult.put("customerId", customerId);
-                }
-                Object queryDate = CommonUtil.findValue(map, getTradeDateKey(map,base));
-                if (queryDate != null) {
-                	if(queryDate instanceof Long){
-                		mapResult.put("queryDate", DateUtil.format(new Date(Long.parseLong(queryDate.toString()))));
-                	}else{
-                		mapResult.put("queryDate", queryDate);
-                	}
-                }
-                list.add(mapResult);
-            }
-        }
-        return list;
-    }
 
     /**
      * 处理交易信息
@@ -334,7 +294,6 @@ public class CommonRelatedPartyService {
                                                          IRiskRds base) {
         List<Map<String, Object>> mapList = new ArrayList<>();
         Set<String> assetSet = new HashSet<>();
-        Map<String, BigDecimal> netPriceMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(data)) {
             data.forEach(map -> {
                 if (isAsset(base, DictCodeList.平安资产类型_债券)
@@ -345,27 +304,14 @@ public class CommonRelatedPartyService {
                     || isAsset(map, DictCodeListExt1.金融产品类型_投管用_债券)
                     || isAsset(map, DictCodeListExt1.金融产品类型_投管用_基金)) {
                     Object finprodId = map.get(InterfUtil.finprodId);
-                    if (StringUtil.isNotEmpty(finprodId) && map.get("netPrice") != null && !isAsset(base, DictCodeList.平安资产类型_债券)) {
-                        netPriceMap.put(finprodId.toString(),new BigDecimal(map.get("netPrice").toString()));
-                    }
-                    if (StringUtil.isNotEmpty(finprodId) && (map.get("netPrice") == null || isAsset(base, DictCodeList.平安资产类型_债券))) {
+                    if (StringUtil.isNotEmpty(finprodId)) {
                         assetSet.add((String)finprodId);
                     }
                 }
-                try {
-                    TradeBaseDto finDto = (TradeBaseDto) JsonUtils.map2entity(map,TradeBaseDto.class);
-                    map.put("tradeId",StringUtil.isNotEmpty(finDto.getTotleTradeId())?finDto.getTotleTradeId():StringUtil.isNotEmpty(finDto.getTradeId())?finDto.getTradeId():finDto.getBusiCode());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             });
-            netPriceMap.putAll(getNetPrice(new ArrayList<>(assetSet)));
+            Map<String, BigDecimal> netPriceMap = getNetPrice(
+                assetSet.stream().collect(Collectors.toList()));
             for (Map<String, Object> map : data) {
-                Object ps = CommonUtil.findValue(map,"ps");
-                Object pingAnCodeSin = CommonUtil.findValue(map,"pingAnCodeSin");
-                if (ps != null && Arrays.asList(IGNORE_PS).contains(ps.toString()) || pingAnCodeSin != null && Arrays.asList(IGNORE_PS).contains(pingAnCodeSin.toString())){
-                    continue;
-                }
                 mapList.addAll(doReverse(map, base, netPriceMap));
             }
         }
@@ -449,43 +395,15 @@ public class CommonRelatedPartyService {
     protected static Map<String, Object> doAny(Map<String, Object> map, IRiskRds base,
                                                Map<String, BigDecimal> netPriceMap) {
         BigDecimal value = netPriceMap.get(map.get(InterfUtil.finprodId));
-        Map<String, Object> creditMap = new CreditMap() //
-                .copyFromMap(CREDIT_KEY, map) // 主键
-                .copyTradeId(map)
-                .copyEntrustId(map)
-                .copyFinprodId(map) // 资产代码
-                .copyCounterId(map) // 交易对手
-                .copyTgBusiType(map)
-                .copyPsPayment(map)
-                .copySaleCode(map)
-                .copyTradeDate(map, getTradeDateKey(map, base)) // 设置交易日期
-                .putTradeAmt(getTradeAmt(map, base, value)) // 交易金额
-                .putShareAmt(map)
-                .putNetPrice(value)
-                .setTradeStatus(getTradeStatus(base)) // 交易状态
-                .copyPs(map) // 交易方向
-                .copyCreditCheckType(map)
-                .toMap();
-        Object finprodType2 = map.get(InterfUtil.finprodType2);
-        if ((isAsset(base, DictCodeList.平安资产类型_质押式回购) || StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))){
-            creditMap.put(CreditMap.KEY_FINPRODID,"");
-            creditMap.put("tgBusiType",DictCodeList.平安资产类型_质押式回购.getValue());
-            creditMap.put("psPayment",DictCodeList.回购类型_质押式协议回购.getValue());
-            creditMap.put("saleCode",DictCodeList.回购拆借方向_逆回购.getValue());
-        }else if ((isAsset(base, DictCodeList.平安资产类型_买断式回购) || StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue()))){
-            creditMap.put(CreditMap.KEY_FINPRODID,"");
-            creditMap.put("tgBusiType",DictCodeList.平安资产类型_买断式回购.getValue());
-            creditMap.put("psPayment",DictCodeList.回购拆借方向_逆回购.getValue());
-        }else if ((isAsset(base, DictCodeList.平安资产类型_拆借) || StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_拆出.getValue()))){
-            creditMap.put(CreditMap.KEY_FINPRODID,"");
-            creditMap.put("tgBusiType",DictCodeList.平安资产类型_拆借.getValue());
-            creditMap.put("psPayment",DictCodeList.回购拆借方向_拆出.getValue());
-        }else if ((isAsset(base, DictCodeListExt2.平安资产类型_债券借贷) || StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue()))){
-            creditMap.put(CreditMap.KEY_FINPRODID,"");
-            creditMap.put("tgBusiType",DictCodeListExt2.平安资产类型_债券借贷.getValue());
-            creditMap.put("psPayment",DictCodeList.回购拆借方向_融出.getValue());
-        }
-        return creditMap;
+        return new CreditMap() //
+            .copyFromMap(CREDIT_KEY, map) // 主键
+            .copyFinprodId(map) // 资产代码
+            .copyCounterId(map) // 交易对手
+            .copyPs(map) // 交易方向
+            .copyTradeDate(map, getTradeDateKey(map, base)) // 设置交易日期
+            .putTradeAmt(getTradeAmt(map, base, value)) // 交易金额
+            .setTradeStatus(getTradeStatus(base)) // 交易状态
+            .toMap();
     }
 
     /**
@@ -508,7 +426,7 @@ public class CommonRelatedPartyService {
      * 
      * @param map 画面内容
      * @param base 场景
-     * @param value 票面|净值等
+     * @param netPriceMap 票面|净值等
      * @return 金额
      */
     protected static BigDecimal getTradeAmt(Map<String, Object> map, IRiskRds base,
@@ -570,7 +488,7 @@ public class CommonRelatedPartyService {
             && (isPs(map, DictCodeList.交易方向_卖出) || isPs(map, DictCodeList.交易方向_行权_回售))) {
             return settleDate;
         }
-        if (isAsset(base, DictCodeList.平安资产类型_债券) &&  StringUtil.equals(map.get("windtypeone"),
+        if (isAsset(base, DictCodeList.平安资产类型_债券) || StringUtil.equals(map.get("windtypeone"),
             DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())) {
             return "purchDate";
         }
@@ -591,95 +509,12 @@ public class CommonRelatedPartyService {
      * 
      * @param map 画面内容
      * @param base 场景
+     * @param value 债券面值|基金净值
      * @return 机构授信接口调用参数-金额
      */
     protected static BigDecimal calcPeriodAmt(Map<String, Object> map, IRiskRds base) {
         Object tradeAmtObj = map.get(CreditMap.KEY_TRADEAMT);
         BigDecimal tradeAmt = StringUtil.isNotEmpty(tradeAmtObj) ? new BigDecimal(tradeAmtObj.toString()) : null;
-        Object finprodType2 = map.get(InterfUtil.finprodType2);
-        // 质押式回购
-        if (StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
-            CreditLinesUpdateMapper creditLinesUpdateMapper = SpringContextUtil.getBean(CreditLinesUpdateMapper.class);
-            FinProductAddMapper finProductAddMapper = SpringContextUtil.getBean(FinProductAddMapper.class);
-            Map<String,Object> bussMap = (Map<String, Object>)map.get("bussRepoSec");
-            List<Map<String,Object>> pledgeList;
-            if (bussMap != null && bussMap.get("pledgeBondList") != null) {
-                pledgeList = (List<Map<String, Object>>) bussMap.get("pledgeBondList");
-            }else {
-                //查询标的券券面总额及最新面值
-                Map<String,Object> param = new HashMap<>();
-                param.put("finprodId",map.get("finprodId"));
-                pledgeList = creditLinesUpdateMapper.findPledgeBondInfo(param);
-            }
-            if (!StringUtil.isEmptyList(pledgeList)){
-                List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
-                // 质押券面总额
-                BigDecimal totalAmt = BigDecimal.ZERO;
-                BigDecimal supAmt = BigDecimal.ZERO;
-                for (Map<String,Object> objMap : pledgeList){
-                    // 质押券面总额
-                    totalAmt = totalAmt.add(new BigDecimal(objMap.get("pledgePrin").toString()));
-                    // 统计需要扣减授信的券面总额
-                    String finprodId = String.valueOf(objMap.get("finprodId"));
-                    // 查询资产类型
-                    FinProductTypeKey key = new FinProductTypeKey();
-                    key.setFinprodId(finprodId);
-                    key.setBranch(0L);
-                    FinProductType finProductType = creditLinesUpdateMapper.selectByPrimaryKey(key);
-                    FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(finprodId);
-                    String astType = finProductType.getType10();
-                    if (StringUtil.equals(finProductAdd.getIsSecBond(),DictCodeList.是否_是.getValue())){
-                        astType = astType.concat("_") + DictCodeList.是否_是.getValue();
-                    }
-                    // 资产类型不在【不扣减授信参数】列表
-                    if (!assetTypeList.contains(astType)){
-                        supAmt = supAmt.add(new BigDecimal(objMap.get("pledgePrin").toString()));
-                    }
-
-                }
-                return  supAmt.multiply(CommonUtil.getBigDecimal(map, "theoryPrin", null)).divide(totalAmt, RoundingMode.HALF_UP).setScale(2,RoundingMode.HALF_UP);
-            }
-
-        }
-        if(StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())){
-            map.put("ps",DictCodeList.交易方向_到期.getValue());
-            // 先判断标的券类型是否需要扣减授信额度
-            List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
-            CreditLinesUpdateMapper creditLinesUpdateMapper = SpringContextUtil.getBean(CreditLinesUpdateMapper.class);
-            FinProductAddMapper finProductAddMapper = SpringContextUtil.getBean(FinProductAddMapper.class);
-            //查询标的券券面总额及最新面值
-            Map<String,Object> param = new HashMap<>();
-            param.put("finprodId",map.get("finprodId"));
-            List<Map<String,Object>> pledgeList = creditLinesUpdateMapper.findPledgeBondInfo(param);
-            if (!StringUtil.isEmptyList(pledgeList)){
-                // 查询资产类型
-                FinProductTypeKey key = new FinProductTypeKey();
-                key.setFinprodId(String.valueOf(pledgeList.get(0).get("finprodId")));
-                key.setBranch(0L);
-                FinProductType finProductType = creditLinesUpdateMapper.selectByPrimaryKey(key);
-                FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(String.valueOf(pledgeList.get(0).get("finprodId")));
-                String astType = finProductType.getType10();
-                if (StringUtil.equals(finProductAdd.getIsSecBond(),DictCodeList.是否_是.getValue())){
-                    astType = astType.concat("_") + DictCodeList.是否_是.getValue();
-                }
-                // 资产类型在【不扣减授信参数】列表
-                if (assetTypeList.contains(astType)){
-                    return BigDecimal.ZERO;
-                }
-                return CommonUtil.getBigDecimal(pledgeList.get(0), "pledgePrin", null);
-            }
-            return BigDecimal.ZERO;
-        }
-        // 债券借贷
-        if ((isAsset(base, DictCodeListExt2.平安资产类型_债券借贷) && isPs(map, DictCodeList.回购拆借方向_融出))
-                || StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())) {
-            return CommonUtil.getBigDecimal(map, CreditMap.KEY_SHAREAMT, null);
-        }
-        // 拆借
-        if ((isAsset(base, DictCodeList.平安资产类型_拆借) && StringUtil.equals(map.get("pingAnCodeSin"), DictCodeList.回购拆借方向_拆出.getValue()))
-                || StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_拆出.getValue())) {
-            return CommonUtil.getBigDecimal(map, "prinAmt", null);
-        }
         // 债券-还本到期
         if (isAsset(base, DictCodeList.平安资产类型_债券)
             && (isPs(map, DictCodeList.交易方向_还本) || isPs(map, DictCodeList.交易方向_到期))) {
@@ -688,6 +523,14 @@ public class CommonRelatedPartyService {
         // 债券-行权赎回
         if (isAsset(base, DictCodeList.平安资产类型_债券) && isPs(map, DictCodeList.交易方向_行权_赎回)) {
             return CommonUtil.getBigDecimal(map, "fPriceAmt", null);
+        }
+        Object finprodType2 = map.get(InterfUtil.finprodType2);
+        // 质押式回购
+        if ((isAsset(base, DictCodeList.平安资产类型_质押式回购) && StringUtil.equals(
+            finprodType2, DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
+            || (isAsset(base, DictCodeList.平安资产类型_买断式回购) && StringUtil.equals(
+            finprodType2, DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue()))) {
+            return CommonUtil.getBigDecimal(map, "theoryPrin", null);
         }
         // 存款
         if (isAsset(base, DictCodeList.平安资产类型_存款)
@@ -704,6 +547,15 @@ public class CommonRelatedPartyService {
              || isAsset(base, DictCodeList.平安资产类型_项目类资产))
             && (isPs(map, DictCodeList.交易方向_到期) || isPs(map, DictCodeList.交易方向_还本))) {
             return CommonUtil.getBigDecimal(map, "returnAmount", null);
+        }
+        // 债券借贷
+        if (isAsset(base, DictCodeListExt2.平安资产类型_债券借贷) && isPs(map, DictCodeList.回购拆借方向_融出)) {
+            return CommonUtil.getBigDecimal(map, CreditMap.KEY_SHAREAMT, null);
+        }
+        // 拆借
+        if (isAsset(base, DictCodeList.平安资产类型_拆借)
+            && StringUtil.equals(map.get("pingAnCodeSin"), DictCodeList.回购拆借方向_拆出.getValue())) {
+            return CommonUtil.getBigDecimal(map, "prinAmt", null);
         }
         return tradeAmt;
     }
@@ -741,93 +593,11 @@ public class CommonRelatedPartyService {
         BigDecimal lastPrice = null == value ? BigDecimal.ONE : value;
         Object tradeAmtObj = map.get(CreditMap.KEY_TRADEAMT);
         Object shareAmtObj = map.get(CreditMap.KEY_SHAREAMT);
-        Object prinAmtObj = map.get(CreditMap.KEY_PRINAMT);
         BigDecimal tradeAmt = StringUtil.isNotEmpty(tradeAmtObj) ? new BigDecimal(tradeAmtObj.toString()) : null;
         BigDecimal shareAmt = StringUtil.isNotEmpty(shareAmtObj) ? new BigDecimal(shareAmtObj.toString()) : null;
-        Object finprodType2 = map.get(InterfUtil.finprodType2);
-        // 质押式回购
-        if (StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()) || isAsset(base, DictCodeList.平安资产类型_质押式回购)) {
-            Map<String,Object> bussMap = (Map<String, Object>)map.get("bussRepoSec");
-            if (bussMap != null){
-                List<Map<String,Object>> pledgeList = (List<Map<String, Object>>) bussMap.get("pledgeBondList");
-                if (!StringUtil.isEmptyList(pledgeList)){
-                    List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
-                    // 质押券面总额
-                    BigDecimal totalAmt = BigDecimal.ZERO;
-                    BigDecimal supAmt = BigDecimal.ZERO;
-                    for (Map<String,Object> objMap : pledgeList){
-                        // 质押券面总额
-                        totalAmt = totalAmt.add(new BigDecimal(objMap.get("pledgePrin").toString()));
-                        // 统计需要扣减授信的券面总额
-                        String finprodId = String.valueOf(objMap.get("finprodId"));
-                        CreditLinesUpdateMapper creditLinesUpdateMapper = SpringContextUtil.getBean(CreditLinesUpdateMapper.class);
-                        FinProductAddMapper finProductAddMapper = SpringContextUtil.getBean(FinProductAddMapper.class);
-                        // 查询资产类型
-                        FinProductTypeKey key = new FinProductTypeKey();
-                        key.setFinprodId(finprodId);
-                        key.setBranch(0L);
-                        FinProductType finProductType = creditLinesUpdateMapper.selectByPrimaryKey(key);
-                        FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(finprodId);
-                        String astType = finProductType.getType10();
-                        if (StringUtil.equals(finProductAdd.getIsSecBond(),DictCodeList.是否_是.getValue())){
-                            astType = astType.concat("_") + DictCodeList.是否_是.getValue();
-                        }
-                        // 资产类型不在【不扣减授信参数】列表
-                        if (!assetTypeList.contains(astType)){
-                            supAmt = supAmt.add(new BigDecimal(objMap.get("pledgePrin").toString()));
-                        }
-
-                    }
-                    return  supAmt.multiply(CommonUtil.getBigDecimal(map, "prinAmt", null)).divide(totalAmt, RoundingMode.HALF_UP).setScale(2,RoundingMode.HALF_UP);
-                }
-            }
-        }
-        // 买断式回购
-        if(StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue()) || isAsset(base, DictCodeList.平安资产类型_买断式回购)){
-            // 先判断标的券类型是否需要扣减授信额度
-            List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
-            CreditLinesUpdateMapper creditLinesUpdateMapper = SpringContextUtil.getBean(CreditLinesUpdateMapper.class);
-            FinProductAddMapper finProductAddMapper = SpringContextUtil.getBean(FinProductAddMapper.class);
-            // 查询资产类型
-            FinProductTypeKey key = new FinProductTypeKey();
-            key.setFinprodId(String.valueOf(map.get("finprodId")));
-            key.setBranch(0L);
-            FinProductType finProductType = creditLinesUpdateMapper.selectByPrimaryKey(key);
-            FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(String.valueOf(map.get("finprodId")));
-            String astType = finProductType.getType10();
-            if (StringUtil.equals(finProductAdd.getIsSecBond(),DictCodeList.是否_是.getValue())){
-                astType = astType.concat("_") + DictCodeList.是否_是.getValue();
-            }
-            // 资产类型在【不扣减授信参数】列表
-            if (assetTypeList.contains(astType)){
-                return BigDecimal.ZERO;
-            }
-            tradeAmtObj = map.get("secTotalPrin");
-            tradeAmt = StringUtil.isNotEmpty(tradeAmtObj) ? new BigDecimal(tradeAmtObj.toString()) : null;
-            if (shareAmt != null) {
-                return ArithmeticUtil.multiply(faceValue, shareAmt);
-            }
-            else if (tradeAmt != null) {
-                return ArithmeticUtil.multiply(faceValue,
-                        ArithmeticUtil.divide(tradeAmt, NUM_100, 2));
-            }
-        }
-        // 债券借贷
-        if ((isAsset(base, DictCodeListExt2.平安资产类型_债券借贷) || StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue()))) {
-            return ArithmeticUtil.multiply(faceValue, shareAmt, NUM_100);
-        }
-        // 拆借
-        if ((isAsset(base, DictCodeList.平安资产类型_拆借) || StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_拆出.getValue()))) {
-            tradeAmtObj = CommonUtil.findValue(map, "prin");
-            return StringUtil.isNotEmpty(tradeAmtObj) ? new BigDecimal(tradeAmtObj.toString()) : null;
-        }
         // 债券
-        if (isAsset(base, DictCodeList.平安资产类型_债券) && null != shareAmt) {
-            return ArithmeticUtil.multiply(faceValue, shareAmt);
-        }else if (isAsset(base, DictCodeList.平安资产类型_债券) && null != prinAmtObj){
-            return new BigDecimal(prinAmtObj.toString());
-        }else if (isAsset(base, DictCodeList.平安资产类型_债券)){
-            return tradeAmt;
+        if (isAsset(base, DictCodeList.平安资产类型_债券) && null != tradeAmt) {
+            return ArithmeticUtil.multiply(faceValue, ArithmeticUtil.divide(tradeAmt, NUM_100, 2));
         }
         // 中标结果维护
         if (isAsset(base, DictCodeListExt2.平安资产类型_一级市场债)
@@ -850,19 +620,41 @@ public class CommonRelatedPartyService {
             tradeAmtObj = map.get("adjustBallotnum");
             return StringUtil.isNotEmpty(tradeAmtObj) ? new BigDecimal(tradeAmtObj.toString()) : null;
         }
+        // 债券借贷
+        if (isAsset(base, DictCodeListExt2.平安资产类型_债券借贷) && isPs(map, DictCodeList.回购拆借方向_融出)) {
+            return ArithmeticUtil.multiply(faceValue, shareAmt, NUM_100);
+        }
         // 基金
         if (isAsset(base, DictCodeList.平安资产类型_基金) && shareAmt != null) {
             return ArithmeticUtil.multiply(lastPrice, shareAmt);
         }
         // 非标债权类
         if (isAsset(base, DictCodeList.平安资产类型_项目类资产) || isAsset(base, DictCodeList.平安资产类型_存款)
-            || isAsset(base, DictCodeList.平安资产类型_计划类资产_利率型)) {
+            || isAsset(base, DictCodeList.平安资产类型_计划类资产_利率型)
+            || isAsset(base, DictCodeList.平安资产类型_质押式回购)) {
             tradeAmtObj = map.get("prinAmt");
             return StringUtil.isNotEmpty(tradeAmtObj) ? new BigDecimal(tradeAmtObj.toString()) : null;
         }
         // 权益类
         if (isAsset(base, DictCodeListExt3.平安资产类型_权益类资产)) {
-            return tradeAmt;
+            return ArithmeticUtil.multiply(lastPrice, shareAmt);
+        }
+        // 拆借
+        if (isAsset(base, DictCodeList.平安资产类型_拆借)) {
+            tradeAmtObj = CommonUtil.findValue(map, "prin");
+            return StringUtil.isNotEmpty(tradeAmtObj) ? new BigDecimal(tradeAmtObj.toString()) : null;
+        }
+        // 买断式回购
+        if (isAsset(base, DictCodeList.平安资产类型_买断式回购)) {
+            tradeAmtObj = map.get("secTotalPrin");
+            tradeAmt = StringUtil.isNotEmpty(tradeAmtObj) ? new BigDecimal(tradeAmtObj.toString()) : null;
+            if (shareAmt != null) {
+                return ArithmeticUtil.multiply(faceValue, shareAmt);
+            }
+            else if (tradeAmt != null) {
+                return ArithmeticUtil.multiply(faceValue,
+                    ArithmeticUtil.divide(shareAmt, NUM_100, 2));
+            }
         }
         return tradeAmt;
     }
@@ -902,34 +694,6 @@ public class CommonRelatedPartyService {
         }
         // 买断式回购
         else if (isAsset(base, DictCodeList.平安资产类型_买断式回购) && entrustAmt != null) {
-            // 先判断标的券类型是否需要扣减授信额度
-            List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
-            CreditLinesUpdateMapper creditLinesUpdateMapper = SpringContextUtil.getBean(CreditLinesUpdateMapper.class);
-            FinProductAddMapper finProductAddMapper = SpringContextUtil.getBean(FinProductAddMapper.class);
-            // 查询资产类型
-            FinProductTypeKey key = new FinProductTypeKey();
-            String finprodId = "";
-            if (map.get("finprodId") != null){
-                finprodId = String.valueOf(map.get("finprodId"));
-            }
-            if (StringUtil.isEmpty(finprodId) && map.get("finprodMarketId") != null){
-                finprodId = DictCodeListExt1.金融产品类型_投管用_债券.getValue()+ "_" + map.get("finprodMarketId");
-            }
-            key.setFinprodId(finprodId);
-            key.setBranch(0L);
-            FinProductType finProductType = creditLinesUpdateMapper.selectByPrimaryKey(key);
-            FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(finprodId);
-            if (finProductType == null || finProductAdd == null){
-                return BigDecimal.ZERO;
-            }
-            String astType = finProductType.getType10();
-            if (StringUtil.equals(finProductAdd.getIsSecBond(),DictCodeList.是否_是.getValue())){
-                astType = astType.concat("_") + DictCodeList.是否_是.getValue();
-            }
-            // 资产类型在【不扣减授信参数】列表
-            if (assetTypeList.contains(astType)){
-                return BigDecimal.ZERO;
-            }
             return ArithmeticUtil.multiply(faceValue,
                 ArithmeticUtil.divide(entrustAmt, NUM_100, 2));
         }
@@ -972,27 +736,11 @@ public class CommonRelatedPartyService {
 
         protected static final String KEY_SHAREAMT = "shareAmt";
 
-        protected static final String KEY_NETPRICE = "netPrice";
-
-        protected static final String KEY_PRINAMT = "prinAmt";
-
         protected static final String KEY_TRADEDATE = "tradeDate";
 
         protected static final String KEY_PS = "ps";
 
-        protected static final String CREDIT_CHECK_TYPE = "creditCheckType";
-
         protected static final String KEY_TRADESTATUS = "tradeStatus";
-
-        protected static final String TG_BUSI_TYPE = "tgBusiType";
-
-        protected static final String PS_PAYMENT = "psPayment";
-
-        protected static final String SALE_CODE = "saleCode";
-
-        protected static final String TRADE_ID = "tradeId";
-
-        protected static final String ENTRUST_ID = "entrustId";
 
         private Map<String, Object> toMap;
 
@@ -1057,9 +805,7 @@ public class CommonRelatedPartyService {
         CreditMap copyPs(Map<String, Object> fromMap) {
             return copyFromMap(KEY_PS, fromMap, KEY_PS);
         }
-        CreditMap copyCreditCheckType(Map<String, Object> fromMap) {
-            return copyFromMap(CREDIT_CHECK_TYPE, fromMap, CREDIT_CHECK_TYPE);
-        }
+
         @SuppressWarnings("unchecked")
         <V> V getFromMap(String toKey, Function<String, V> func) {
             Object obj = toMap.get(toKey);
@@ -1101,32 +847,9 @@ public class CommonRelatedPartyService {
         CreditMap putTradeAmt(Object value) {
             return putToMap(KEY_TRADEAMT, value);
         }
-        CreditMap putShareAmt(Map<String, Object> fromMap) {
-            return copyFromMap(KEY_SHAREAMT, fromMap,KEY_SHAREAMT);
-        }
 
-        CreditMap putNetPrice(Object value) {
-            return putToMap(KEY_NETPRICE, value);
-        }
-
-
-        CreditMap copyTgBusiType(Map<String, Object> fromMap) {
-            return copyFromMap(TG_BUSI_TYPE, fromMap, TG_BUSI_TYPE);
-        }
-        CreditMap copyPsPayment(Map<String, Object> fromMap) {
-            return copyFromMap(PS_PAYMENT, fromMap, PS_PAYMENT);
-        }
-        CreditMap copySaleCode(Map<String, Object> fromMap) {
-            return copyFromMap(SALE_CODE, fromMap, SALE_CODE);
-        }
         CreditMap setTradeStatus(String tradeStatus) {
             return putToMap(KEY_TRADESTATUS, tradeStatus);
-        }
-        CreditMap copyTradeId(Map<String, Object> fromMap){
-            return copyFromMap(TRADE_ID, fromMap,TRADE_ID);
-        }
-        CreditMap copyEntrustId(Map<String, Object> fromMap){
-            return copyFromMap(ENTRUST_ID, fromMap,ENTRUST_ID);
         }
 
         Map<String, Object> toMap() {

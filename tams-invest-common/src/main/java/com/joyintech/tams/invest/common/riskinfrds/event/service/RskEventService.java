@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constantrds.RedisKeyEnum;
 import com.joyintech.tams.invest.common.riskinfrds.base.service.RedisBaseService;
@@ -54,6 +55,16 @@ public class RskEventService extends RedisBaseService<EventMap> {
      * @since 1.0
      */
     public List<IEvent> matchEvent(Map<String, Object> mapData, ICalendar calendar) {
+        String key = "oneDay";
+        long onedayL = 1;
+        Object oneday = mapData.get(key);
+        if (StringUtil.isNotEmpty(oneday)) {
+            onedayL = Long.parseLong(oneday.toString());
+            if (onedayL == 0) {
+                onedayL = 1;
+            }
+        }
+        mapData.put(key, onedayL);
         List<String> fldList = new ArrayList<>();
         fldList.add(EventMap.ALL);
         // 从Redis中获取所有的风险事件信息
@@ -62,6 +73,9 @@ public class RskEventService extends RedisBaseService<EventMap> {
         List<IEvent> resList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(mapData) && !CollectionUtils.isEmpty(eMap)) {
             EventMap eventMap = eMap.get(EventMap.ALL);
+            if (eventMap == null || CollectionUtils.isEmpty(eventMap.values())) {
+                throw new BusinessException("MSG:风控事项列表为空");
+            }
             Collection<IEvent> eList = eventMap.values();
             // 循环所有风险事件信息匹配特征值
             eList.forEach(event -> {

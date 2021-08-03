@@ -29,7 +29,7 @@ public class RiskTrialCommService {
 	    LoginUserUtil.getInstCode();
 	    
  		String institution =  MultilevelDataAuthorityUtil.getOrganizationCode(userName); 
-		List<SupervisionParameterDto> IndicatorParamAll = riskTrialCommMapper.getIndicatorParamAll(valDate); 
+		List<SupervisionParameterDto> IndicatorParamAll = riskTrialCommMapper.getIndicatorParamAll(valDate, null, null);
 		for (SupervisionParameterDto surDto : IndicatorParamAll) {
             if (StringUtil.equals(surDto.getParaGranularity(), BussinessDictCodeListRds.指标参数实现类型_固定值.getValue())) {
                 if (StringUtil.equals(surDto.getInstitutionCode(), institution)) {

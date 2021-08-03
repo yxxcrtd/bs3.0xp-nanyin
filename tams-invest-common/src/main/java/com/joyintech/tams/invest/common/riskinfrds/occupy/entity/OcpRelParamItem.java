@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.common.riskinfrds.occupy.entity;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -137,4 +138,90 @@ public class OcpRelParamItem implements IOcpRelParamItem {
     public void setRedisFields(Set<String> redisFields) {
         this.redisFields = redisFields;
     }
+
+    private BigDecimal offsetVal;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public BigDecimal getOffsetVal() {
+        return offsetVal;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setOffsetVal(BigDecimal offsetVal) {
+        this.offsetVal = offsetVal;
+    }
+
+    // add by zhangrui1 差分预占 start
+    /**
+     * 差分预占列表
+     */
+    private Map<String, IOccupyDiff> diffOcpMap;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, IOccupyDiff> getDiffOcpMap() {
+        return diffOcpMap;
+    }
+
+    /**
+     * 设置 差分预占列表
+     * 
+     * @param diffOcpMap 差分预占列表
+     */
+    public void setDiffOcpMap(Map<String, IOccupyDiff> diffOcpMap) {
+        this.diffOcpMap = diffOcpMap;
+    }
+    // add by zhangrui1 差分预占 end
+
+    // add by zhangrui1 公式配置 start
+    /**
+     * 公式参数值
+     */
+    private BigDecimal formulaVal;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setFormulaVal(BigDecimal formulaVal) {
+        this.formulaVal = formulaVal;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public BigDecimal getFormulaVal() {
+        return formulaVal;
+    }
+
+    /**
+     * 公式操作符
+     */
+    private String formulaOpr;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setFormulaOpr(String formulaOpr) {
+        this.formulaOpr = formulaOpr;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getFormulaOpr() {
+        return formulaOpr;
+    }
+    // add by zhangrui1 公式配置 end
 }

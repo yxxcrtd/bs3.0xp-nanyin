@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.service.riskrdsinf.common.dao.RskAssetInfoMapper" >
     <insert id="insertAssetList" parameterType="java.util.List" >
         insert into FIN_PRODUCT (FINPROD_ID, FINPROD_ABBR, FINPROD_NAME, PROFIT_TYPE,
-            FINPROD_MARKET_ID, VDATE, MDATE, TRADE_MARKET, ISSUE_AMT,
+            FINPROD_MARKET_ID, VDATE, MDATE, TRADE_MARKET, ISSUE_AMT, ISSUER,
             CALENDAR_ID, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME
             )
@@ -12,7 +12,7 @@
             #{item.assetCode,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR},
             #{item.finprodType,jdbcType=VARCHAR},
             #{item.marketCode,jdbcType=VARCHAR}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE}, 
-            #{item.tradePlace,jdbcType=VARCHAR}, #{item.issueAmt,jdbcType=DECIMAL},
+            #{item.tradePlace,jdbcType=VARCHAR}, #{item.issueAmt,jdbcType=DECIMAL}, #{item.issuer,jdbcType=VARCHAR},
             #{item.calendarCode,jdbcType=VARCHAR}, 'INF', #{item.createDept,jdbcType=VARCHAR}, 
             #{item.createTime,jdbcType=TIMESTAMP}, 'INF', #{item.updateTime,jdbcType=TIMESTAMP}
         </foreach>

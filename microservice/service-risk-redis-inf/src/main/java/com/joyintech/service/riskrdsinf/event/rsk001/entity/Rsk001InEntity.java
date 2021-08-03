@@ -127,11 +127,11 @@ public class Rsk001InEntity extends RskPreOccupyInfo {
     /**
      * {@inheritDoc}
      */
-    @Override
-    @NotNull
-    public Date getOccupyDate() {
-        return super.getOccupyDate();
-    }
+    // @Override
+    // @NotNull
+    // public Date getOccupyDate() {
+    // return super.getOccupyDate();
+    // }
 
     /**
      * {@inheritDoc}

@@ -30,7 +30,6 @@
 				 (m.PORTFOLIO_ID =#{portfolioCode} or m.PORTFOLIO_ID in 
 				 (select PTL_BAG_ID from RSK_PORTFOLIO_PACKAGE_DTL where PORTFOLIO_ID=#{portfolioCode}))
 			</if>
-			
 			and ( ( (instr(n.SUP_DISPLAY_CLASSIFY,'01')>0 or n.SUP_DISPLAY_CLASSIFY is null)
 			<if test="valDate != null and valDate != '' "><![CDATA[
 				and m.START_DATE <= to_date('${valDate}','yyyy-MM-dd')
@@ -38,7 +37,6 @@
 				]]></if>
 
 			) or ((instr(n.SUP_DISPLAY_CLASSIFY,'02')>0
-			
 			<if test="investProporty != null and investProporty != ''">
 				and (case when  n.INVEST_PROPORTY is null then #{investProporty} else 
 				n.INVEST_PROPORTY  end ) like CONCAT(CONCAT('%',#{investProporty}),'%') 
@@ -117,12 +115,6 @@
 		</where>
 	</select>
 	<!-- add by 裴家俊 at 2019-07-17 start -->
-
-	<select id="selectAllBooksetsWithRisk" resultType="java.lang.Integer">
-        select count(1) as count
-        from BOK_BOOKSET
-    </select>
-
 
 	<select id="selectPageName" resultType="java.lang.String">
 		select

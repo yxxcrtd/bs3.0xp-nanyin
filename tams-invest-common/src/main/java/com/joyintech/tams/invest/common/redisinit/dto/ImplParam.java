@@ -33,6 +33,10 @@ public class ImplParam  extends RskIsupIndicatorParaDtl implements IParam{
 
     private String paramDataType;
 
+    private String paramMathType;
+
+    private String paramValueNone;
+
     private boolean isFreshCanTrdRedis;
 
     private boolean isEnumTypeRedis;
@@ -40,10 +44,6 @@ public class ImplParam  extends RskIsupIndicatorParaDtl implements IParam{
     private boolean isEnumUpRedis;
 
     private String[] fieldArrayRedis;
-
-    private String paramMathType;
-
-    private String paramValueNone;
 
     @Override
     public boolean isFreshCanTrd() {
@@ -136,30 +136,6 @@ public class ImplParam  extends RskIsupIndicatorParaDtl implements IParam{
     public void setParamDataType(String paramDataType) {
         this.paramDataType = paramDataType;
     }
-    
-    /**
-     * 机构号
-     */
-    private String institutionCode;
-
-    
-    /**
-     * 获取 institutionCode
-     * @return institutionCode.
-     */
-    public String getInstitutionCode() {
-        return institutionCode;
-    }
-
-    
-    /**
-     * 设置 institutionCode
-     * @param institutionCode institutionCode
-     */
-    public void setInstitutionCode(String institutionCode) {
-        this.institutionCode = institutionCode;
-    }
-
 
     @Override
     public String getParamMathType() {
@@ -178,5 +154,4 @@ public class ImplParam  extends RskIsupIndicatorParaDtl implements IParam{
     public void setParamValueNone(String paramValueNone) {
         this.paramValueNone = paramValueNone;
     }
-
 }

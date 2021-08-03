@@ -1,8 +1,11 @@
 package com.joyintech.tams.invest.common.risktrialrds.dto;
 
+import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -39,7 +42,7 @@ public class PointDetail {
 					forbidPointThreshold = new ForbidPointThreshold(wThreshold1Value,fbModel);
 				}
 			}
-		} else if(this.type.indexOf(RiskUtil.LIMIT)!=-1) {
+		} else if(this.type.indexOf(RiskUtil.LIMIT)!=-1||this.type.indexOf(RiskUtil.INNER)!=-1) {
 			limitPointThreshold = new LimitPointThreshold();
 
 			if(StringUtil.isNotEmpty(vdetailJson)) {
@@ -156,6 +159,30 @@ public class PointDetail {
 		}
 	}
 
+	/**
+	 * 过滤同反向指标，若出现为0或空的参数让其通过
+	 * @param supStat
+	 * @param paramSet
+	 * @param params
+	 * @return
+	 */
+	public SupervisionStat filterInnerType(SupervisionStat supStat,Set<String> paramSet, Map<String, Object> params){
+		if(this.type.indexOf(RiskUtil.INNER)>-1){
+			for(String key:paramSet){
+				if(StringUtil.isNotEmpty(params.get(key))){
+					if(params.get(key) instanceof BigDecimal && ArithmeticUtil.equals((BigDecimal)params.get(key),BigDecimal.ZERO)){
+						return SupervisionStat.NORMAL;
+					}
+					if(params.get(key) instanceof String && StringUtil.equals(new BigDecimal(params.get(key).toString()),BigDecimal.ZERO)){
+						return SupervisionStat.NORMAL;
+					}
+				}else {
+					return SupervisionStat.NORMAL;
+				}
+			};
+		}
+		return supStat;
+	}
 	public boolean isAbs() {
 		return isAbs;
 	}

@@ -28,7 +28,6 @@ public interface RiskTrialCommMapper {
 
 	List<String> getPortfolioIdInFinProduct(Map<String,Object> paramMap);
 
-	public int selectAllBooksetsWithRisk();
 	//获取组合包名称
 	List<String>   selectPageName(Map<String,Object> paramMap);
 

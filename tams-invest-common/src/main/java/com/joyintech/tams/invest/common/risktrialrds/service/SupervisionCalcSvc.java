@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ import com.joyintech.tams.invest.common.risktrialrds.dto.SupervisionParameterDto
 import com.joyintech.tams.invest.common.risktrialrds.dto.SystemParam;
 import com.joyintech.tams.invest.common.risktrialrds.util.Const;
 import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
-import com.joyintech.tools.collectors.JoyinCollectors;
 
 
 @Service("supervisionCalcSvcRds")
@@ -70,11 +68,13 @@ public class SupervisionCalcSvc {
 		        }
 				Object eathRst=getEachIndicatorParamValue(sql,sysParamMx,indType,detailJson,timePoint);
 				if(null!=eathRst){
-					if(indType.indexOf(RiskUtil.LIMIT)!=-1&&!"03".equals(timePoint)){
+					//添加内置阈值型，处理方式跟阈值型一样 add by wz 20200418
+					if((indType.indexOf(RiskUtil.LIMIT)!=-1 || indType.indexOf(RiskUtil.INNER)!=-1)&&!"03".equals(timePoint)){
 						initVal=ArithmeticUtil.doAdd(new  BigDecimal(eathRst.toString()),initVal);
 						retObj=initVal;
 					}
-					if(indType.indexOf(RiskUtil.LIMIT)!=-1&&"03".equals(timePoint)){
+					//添加内置阈值型，处理方式跟阈值型一样 add by wz 20200418
+					if((indType.indexOf(RiskUtil.LIMIT)!=-1 || indType.indexOf(RiskUtil.INNER)!=-1)&&"03".equals(timePoint)){
 						if(eathRst instanceof List){
 							 resultSet.addAll((List)eathRst);
 						}else{
@@ -84,7 +84,8 @@ public class SupervisionCalcSvc {
 					}
 				}
 			}
-		    if(indType.indexOf(RiskUtil.LIMIT)!=-1&&"03".equals(timePoint)&&resultSet.size()>0){
+		    //添加内置阈值型处理，与阈值型一致 add by wz 20200418
+		    if((indType.indexOf(RiskUtil.LIMIT)!=-1||indType.indexOf(RiskUtil.INNER)!=-1)&&"03".equals(timePoint)&&resultSet.size()>0){
 		    	resultSet=getAddRepeatAstCodeList(resultSet);//相同重复的合并
 		    	return resultSet;
 		    }
@@ -112,7 +113,8 @@ public class SupervisionCalcSvc {
 				return null;
 			}
 			if(row0.keySet().size()>1&&"03".equals(timePoint)){
-				if(indType.indexOf(RiskUtil.LIMIT)!=-1){
+				//添加内置阈值型处理，与阈值型一致
+				if(indType.indexOf(RiskUtil.LIMIT)!=-1||indType.indexOf(RiskUtil.INNER)!=-1){
 					return resultSet;
 				}
 			}
@@ -189,33 +191,15 @@ public class SupervisionCalcSvc {
 		Map<?, ?> violationMap = mapper.readValue(detailJson, Map.class);
 		Map<?, ?> vThreshold1Map = (Map<?, ?>)violationMap.get("threshold_1");
 		String vThreshold1Op = (String)vThreshold1Map.get("op");
-		boolean isAbs = vThreshold1Map.get("is_model")!=null?"01".equals((String)vThreshold1Map.get("is_model"))?true:false:false;
-		if(indType.indexOf(RiskUtil.LIMIT)!=-1){
+	   //添加内置阈值型，处理方式跟阈值型一样 add by wz 20200418
+		if(indType.indexOf(RiskUtil.LIMIT)!=-1||indType.indexOf(RiskUtil.INNER)!=-1){
 			if(sortList.size()>0){
 				if(vThreshold1Op.equals(">")||vThreshold1Op.equals(">=")){
-				    Double retDou = 0.0d;
-				    if (isAbs) {
-				        retDou = Collections.max(sortList.stream().map(item->Math.abs(item)).collect(Collectors.toList())); 
-				        if (!sortList.contains(retDou)) {
-				            BigDecimal retBd = new BigDecimal(Double.toString(retDou));  
-				            retDou = ArithmeticUtil.multiply(retBd,new BigDecimal(-1)).doubleValue();
-                        }
-                    }else {
-                        retDou = Collections.max(sortList);
-                    }  
+					Double retDou=Collections.max(sortList);
 					return retDou;
 				}
 				else{
-				    Double retDou = 0.0d; 
-				    if (isAbs) {
-                        retDou = Collections.min(sortList.stream().map(item->Math.abs(item)).collect(Collectors.toList()));
-                        if (!sortList.contains(retDou)) {
-                            BigDecimal retBd = new BigDecimal(Double.toString(retDou));  
-                            retDou = ArithmeticUtil.multiply(retBd,new BigDecimal(-1)).doubleValue();
-                        }
-                    }else {
-					    retDou = Collections.min(sortList);
-                    }
+					Double retDou=Collections.min(sortList);
 					return retDou;
 				}
 			}
@@ -237,9 +221,9 @@ public class SupervisionCalcSvc {
 	public void deletePointSupervisionValue(RiskTrialRetDto value) {
 		supervisionCalcDao.deletePointSupervisionValue(value);
 	}
-	public void deletePointValueWithoutInd(RiskTrialRetDto value) {
-		supervisionCalcDao.deletePointValueWithoutInd(value);
-	}
+    public void deletePointValueWithoutInd(RiskTrialRetDto value) {
+        supervisionCalcDao.deletePointValueWithoutInd(value);
+    }
 	public void addPointSupervisionValue(RiskTrialRetDto value) {
 		supervisionCalcDao.addPointSupervisionValue(value);
 	}

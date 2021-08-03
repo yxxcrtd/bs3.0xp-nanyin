@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -29,7 +30,10 @@ public interface SupervisionCalcDao {
 	
 	@Select("select type from ISUP_INDICATOR_PARAM where code=#{code}")
 	String getIndicatorParamType(@Param("code") String code);
-	
+
+	@Select("SELECT  DISTINCT PTL_BAG_ID  FROM RSK_PORTFOLIO_PACKAGE_DTL  WHERE PORTFOLIO_ID =#{portfolioId}")
+	List<String> getPtlBagIdWithPortCode(@Param("portfolioId") String portfolioId);
+
 	@Delete(
 			"delete from RSK_ISUP_POINT_VAL "
 			+ " where PORTFOLIO_ID=#{portfolioId} "
@@ -39,14 +43,14 @@ public interface SupervisionCalcDao {
 	)
 	void deletePointSupervisionValue(RiskTrialRetDto value);
 
-	@Delete(
-			"delete from RSK_ISUP_POINT_VAL "
-					+ " where PORTFOLIO_ID=#{portfolioId} "
-					+ " and  SUP_FREQUENCY= #{supFrequency} "
-					+ " and SUP_DATE=#{supDate}"
-	)
-	void deletePointValueWithoutInd(RiskTrialRetDto value);
-	
+    @Delete(
+            "delete from RSK_ISUP_POINT_VAL "
+                    + " where PORTFOLIO_ID=#{portfolioId} "
+                    + " and  SUP_FREQUENCY= #{supFrequency} "
+                    + " and SUP_DATE=#{supDate}"
+    )
+    void deletePointValueWithoutInd(RiskTrialRetDto value);
+
 	@Delete(
 			"delete from RSK_ISUP_POINT_DET_VAL "
 			+ " where PORTFOLIO_ID=#{portfolioId, jdbcType=VARCHAR} "
