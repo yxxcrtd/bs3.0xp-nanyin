@@ -10,50 +10,6 @@
 
 package com.joyintech.tams.report.submitmaintenance.equityinfo.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.math.BigDecimal;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
-import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.xml.sax.SAXException;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -61,14 +17,19 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.ChbEquHoldMapper;
 import com.joyintech.tams.common.base.dao.ChbEquSubMapper;
-import com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper;
+import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbEquHold;
 import com.joyintech.tams.common.base.entity.ChbEquSub;
 import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
+import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -80,11 +41,7 @@ import com.joyintech.tams.report.common.TxtParseUtil;
 import com.joyintech.tams.report.common.XmlParseUtil;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
-import com.joyintech.tams.report.common.util.DateCalcUtil;
-import com.joyintech.tams.report.common.util.ExcelUtil;
-import com.joyintech.tams.report.common.util.ReportGlobalConstant;
-import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.common.util.*;
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.interf.common.constant.InterfConstant;
 import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
@@ -109,6 +66,30 @@ import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInf
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * 投资者信息维护Service
@@ -721,56 +702,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 }
                 listU.add(equityInfo001DtoTemp);
             }
-//            if (("01".equals(statusType) && !"01".equals(map.get("flag")))
-//                || "03".equals(statusType)) {
-//                equityInfo001Dto.setCheckSeqno("0");
-//                listU.add(equityInfo001Dto);
-//            }
-//            else if ("02".equals(statusType)) {
-//                EquityInfo001Dto equityInfo001Dto1 = new EquityInfo001Dto();
-//                equityInfo001Dto1.setBankCode(equityInfo001Dto.getBankCode());
-//                equityInfo001Dto1.setIndentifyMark(
-//                    equityInfo001Dto.getIndentifyMark());
-//                equityInfo001Dto1.setOrgIndentifyMark(
-//                    equityInfo001Dto.getOrgIndentifyMark());
-//                equityInfo001Dto1.setType(statusType);
-//                equityInfo001Dto1.setOrgCode(CommonUtil.getOrgCode());
-//                equityInfo001Dto1.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                equityInfo001Dto1.setRemark(map.get("REMARK"));
-//                equityInfo001Dto1.setSumitSeq(equityInfo001Dto.getSumitSeq());
-//                equityInfo001Dto1.setSubmitDeadline(
-//                    equityInfo001Dto.getSubmitDeadline());
-//                equityInfo001Dto1.setChbSubmitDeadline(
-//                    equityInfo001Dto.getChbSubmitDeadline());
-//                equityInfo001Dto1.setDeptCode(CommonUtil.getDeptCode());
-//                equityInfo001Dto1.setDataSource("02");
-//                equityInfo001Dto1.setCheckSeqno("0");
-//                listU.add(equityInfo001Dto1);
-//            }
-//            else if ("04".equals(statusType)) {
-//                EquityInfo001Dto equityInfo001Dto1 = new EquityInfo001Dto();
-//                equityInfo001Dto1.setBankCode(equityInfo001Dto.getBankCode());
-//                equityInfo001Dto1.setIndentifyMark(
-//                    equityInfo001Dto.getIndentifyMark());
-//                equityInfo001Dto1.setType(statusType);
-//                equityInfo001Dto1.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                equityInfo001Dto1.setRemark(map.get("REMARK"));
-//                equityInfo001Dto1.setHolderRiskPrefer(EquityInfoCheckUtil.subDictcode(
-//                		equityInfo001Dto.getHolderRiskPrefer(), " "));
-//                equityInfo001Dto1.setHolderCellphone(equityInfo001Dto.getHolderCellphone());
-//                equityInfo001Dto1.setHolderTelephone(equityInfo001Dto.getHolderTelephone());
-//                equityInfo001Dto1.setHolderEmail(equityInfo001Dto.getHolderEmail());
-//                equityInfo001Dto1.setSumitSeq(equityInfo001Dto.getSumitSeq());
-//                equityInfo001Dto1.setOrgCode(CommonUtil.getOrgCode());
-//                equityInfo001Dto1.setDeptCode(CommonUtil.getDeptCode());
-//                equityInfo001Dto1.setSubmitDeadline(
-//                    equityInfo001Dto.getSubmitDeadline());
-//                equityInfo001Dto1.setDataSource("02");
-//                equityInfo001Dto1.setChbSubmitDeadline(
-//                    equityInfo001Dto.getChbSubmitDeadline());
-//                equityInfo001Dto1.setCheckSeqno("0");
-//                listU.add(equityInfo001Dto1);
-//            }
         }
         // 插入的权益人信息为空时,先插入登记维护表，再插入信息登记表
         if (listN != null && listN.size() > 0) {
@@ -1806,7 +1737,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         equityList.addAll(temList);
         // 解析成功或失败的标识
         //查询全部的已报送数据
-//      final Map<String, EquityInfoRegist001Dto> mapRegist = new HashMap<String,EquityInfoRegist001Dto>();
         List<EquityInfoRegist001Dto> registList=new ArrayList<EquityInfoRegist001Dto>();
         template.select("com.joyintech.tams.report.submitmanagement.equityinforegist.dao.EquityInfoRegist001Mapper.queryBatchForEquityInfoConStrast",
                 new ResultHandler() {
@@ -1815,7 +1745,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         registList.add((EquityInfoRegist001Dto) resultContext.getResultObject());
                     }
                 });
-//      List<EquityInfoRegist001Dto> registList =equityInfoRegist001Mapper.queryBatchForEquityInfoConStrast(null);  // 此处的xml要增加if条件判断
         Map<String, List<EquityInfoRegist001Dto>> mapRegist = registList.stream()
                 .collect(
                         JoyinCollectors.groupingBy(
@@ -2029,319 +1958,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
     public void deleteImportTmpData() {
         equityInfo001Mapper.deleteTmpTable();
     }
-
-//    public boolean excuteEquityInfoByStep(List<Map<String, String>> equityList, String interType,
-//                                          String tmpPath, ImpTable table, ImpTable subTable)
-//        throws ParserConfigurationException, SAXException, IOException {
-//
-//        Map<String, Integer> mapPrioty = new HashMap<String, Integer>();
-//        // 从配置文件中读取需要覆盖的配置项 01覆盖02不覆盖
-//        String[] result = this.getProPrity(interType, mapPrioty);
-//        // 新增数据list
-//        List<EquityInfo001Dto> listNA = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listNE = new ArrayList<EquityInfo001Dto>();
-//        // 待处理接口维护数据
-//        List<EquityInfo001Dto> listAA = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listAE = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listOA = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listOE = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listU = new ArrayList<EquityInfo001Dto>(); // 登记表数据
-//
-////        List<EquityInfoRegist001Dto> registList = equityInfoRegist001Mapper.queryBatchForEquityInfoRegist(
-////            equityList);
-//        logger.info("EquityInfo001Service queryBatchForEquityInfoRegistByPart处理开始 " + DateUtil.getCurrentDateTime());
-//        List<EquityInfoRegist001Dto> registList = this.queryBatchForEquityInfoRegistByPart(equityList);
-//        logger.info("EquityInfo001Service queryBatchForEquityInfoRegistByPart处理结束 " + DateUtil.getCurrentDateTime());
-//
-//        // 系统是否使用的db2数据库
-//        boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-//        //add by liubin start
-//        StringBuffer messageInfo = new StringBuffer();
-//        //add by liubin end
-//        if (equityList != null && equityList.size() > 0) {
-//            logger.info("EquityInfo001Service 首次check处理开始 " + DateUtil.getCurrentDateTime());
-//            for (Map<String, String> map : equityList) {
-//                EquityInfo001Dto tmp = new EquityInfo001Dto();
-//                Map<String, String> map1 = new HashMap<String, String>();
-//                EquityInfoMaintenanceService.maptoDto(map, tmp);
-//
-//                // 转化为key+空格+value格式
-//                equityInfoValid.checkInterfEquitySingle(tmp, registList, map1, true,messageInfo);
-//                map.put("TYPE", tmp.getType());
-//                map.put("ORG_INDENTIFY_MARK",
-//                    CommonUtil.getNotNullString(map.get("ORG_INDENTIFY_MARK")));
-//            }
-//            logger.info("EquityInfo001Service 首次check处理结束 " + DateUtil.getCurrentDateTime());
-//            // 将数据插入临时表
-//            logger.info("EquityInfo001Service 数据插入临时表处理开始 " + DateUtil.getCurrentDateTime());
-////            equityInfo001Mapper.insertIntoImportTable(equityList);
-//            this.insertIntoImportTableByPart(equityList);
-//            logger.info("EquityInfo001Service 数据插入临时表处理结束 " + DateUtil.getCurrentDateTime());
-//            // 批量查询出需要被check的数据
-//            logger.info("EquityInfo001Service 批量查询出需要被check的数据处理开始 " + DateUtil.getCurrentDateTime());
-//            List<EquityInfo001Dto> equityInfo001List = equityInfo001Mapper.selectEquityInfoForImpCheck();
-//            logger.info("EquityInfo001Service 批量查询出需要被check的数据处理结束 " + DateUtil.getCurrentDateTime());
-//            Map<String, List<EquityInfo001Dto>> equityInfo001Map = equityInfo001List.stream().collect(
-//                JoyinCollectors.groupingBy(
-//                    x -> x.getIndentifyMark() + GlobalConstant.UNDER_LINE
-//                         + CommonUtil.getNotNullString(
-//                             x.getOrgIndentifyMark())
-//                         + GlobalConstant.UNDER_LINE + x.getBankCode()));
-//            // 当前批次报送时点集合
-//            Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
-//            List<Date> dateList = null;
-//
-//            logger.info("EquityInfo001Service 数据检查、整理处理开始 " + DateUtil.getCurrentDateTime());
-//            for (Map<String, String> map : equityList) {
-//                EquityInfo001Dto equityInfo001Dto = new EquityInfo001Dto();
-//                Map<String, String> map1 = new HashMap<String, String>();
-//                EquityInfoMaintenanceService.maptoDto(map, equityInfo001Dto);
-//                // 转化为key+空格+value格式
-//                equityInfoValid.checkInterfEquitySingle(equityInfo001Dto, registList, map1, true,messageInfo);
-//                // 若上游接入的数据，与上次报送的数据，未发生改变，则不需要进行入库操作
-//                if ("01".equals(equityInfo001Dto.getType()) && "01".equals(map1.get("flag"))) {
-//                    continue;
-//                }
-//                String type = equityInfo001Dto.getType();
-//                if (!DictCodeListExt2.报送数据状态_新建.getValue().equals(type)) {
-//                    type = DictCodeListExt2.报送数据状态_修改.getValue();
-//                }
-//                equityInfo001Dto.setSubmitStatus(type);
-//                // equityInfo001Dto = EquityInfoCheckUtil.getChbEndDate(listTime, type,
-//                // equityInfo001Dto);
-//                // 报送时点通用方法
-//                dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_投资者身份信息登记.getValue(),
-//                    type, dateMap, DateUtil.now());
-//                if (CollectionUtils.isNotEmpty(dateList)) {
-//                    equityInfo001Dto.setChbSubmitDeadline(dateList.get(0));
-//                    equityInfo001Dto.setSubmitDeadline(dateList.get(1));
-//                }
-//
-//                equityInfo001Dto.setDataSource(interType);
-//                List<EquityInfo001Dto> equityInfoCheckList = equityInfo001Map.get(map.get(
-//                    "INDENTIFY_MARK") + GlobalConstant.UNDER_LINE + CommonUtil.getNotNullString(
-//                        map.get("ORG_INDENTIFY_MARK")) + GlobalConstant.UNDER_LINE + map.get(
-//                            "REGIST_BANK_CODE"));
-//                EquityInfo001Dto equityInfoCheck = null;
-//                if (null != equityInfoCheckList && !equityInfoCheckList.isEmpty()) {
-//                    equityInfoCheck = equityInfoCheckList.get(0);
-//                }
-//                if (!("01".equals(equityInfo001Dto.getType()) && "01".equals(map1.get("flag")))) {
-//                    if (equityInfoCheck == null && "A".equals(equityInfo001Dto.getStatus())) {
-//                        listNA.add(equityInfo001Dto);
-//                    }
-//                    else if (equityInfoCheck == null && "E".equals(equityInfo001Dto.getStatus())) {
-//                        if (tmpPath == null || isDB2DataBase) {
-//                            equityInfo001Dto.setSumitSeq(
-//                            		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                        }
-//                        listNE.add(equityInfo001Dto);
-//                    }
-//                    else if ("A".equals(equityInfoCheck.getStatus())
-//                             && "A".equals(equityInfo001Dto.getStatus())) {
-//                        this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                            result, listAA, interType, mapPrioty);
-//                    }
-//                    else if ("A".equals(equityInfoCheck.getStatus())
-//                             && "E".equals(equityInfo001Dto.getStatus())) {
-//                        this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                            result, listAE, interType, mapPrioty);
-//                    }
-//                    else if ("A".equals(equityInfo001Dto.getStatus())) {
-//                        this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                            result, listOA, interType, mapPrioty);
-//                    }
-//                    else if ("E".equals(equityInfo001Dto.getStatus())) {
-//                        this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                            result, listOE, interType, mapPrioty);
-//                    }
-//                }
-//                if (("01".equals(equityInfo001Dto.getType()) && !"01".equals(map1.get("flag")))
-//                    || "03".equals(equityInfo001Dto.getType())) {
-//                    if ("E".equals(equityInfo001Dto.getStatus())) {
-//                        if (equityInfoCheck == null) {
-//                            if (tmpPath == null || isDB2DataBase) {
-//                                equityInfo001Dto.setSumitSeq(
-//                                		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                            }
-//                            listU.add(equityInfo001Dto);
-//                        }
-//                        else if ("01".equals(equityInfoCheck.getDataSource())
-//                                 || "02".equals(equityInfoCheck.getDataSource())) {
-//                            EquityInfo001Dto equityInfo = new EquityInfo001Dto();
-//                            EquityInfoMaintenanceService.maptoSetDto(map, equityInfo, result);
-//                            equityInfo.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                            equityInfo.setType(equityInfo001Dto.getType());
-//                            equityInfo.setOrgCode(equityInfo001Dto.getOrgCode());
-//                            equityInfo.setSubmitDeadline(equityInfo001Dto.getSubmitDeadline());
-//                            equityInfo.setChbSubmitDeadline(
-//                                equityInfo001Dto.getChbSubmitDeadline());
-//                            if (tmpPath == null || isDB2DataBase) {
-//                                equityInfo.setSumitSeq(
-//                                		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                            }
-//                            listU.add(equityInfo);
-//                        }
-//                        else {
-//                            if (tmpPath == null || isDB2DataBase) {
-//                                equityInfo001Dto.setSumitSeq(
-//                                		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                            }
-//                            listU.add(equityInfo001Dto);
-//                        }
-//                    }
-//                }
-//                else if ("02".equals(equityInfo001Dto.getType())
-//                         && "E".equals(equityInfo001Dto.getStatus())) {
-//                    EquityInfo001Dto equityInfo001Dto1 = EquityInfoMaintenanceService.mapToSetProDto(
-//                        map, interType, mapPrioty, result, equityInfoCheck,
-//                        equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setBankCode(equityInfo001Dto.getBankCode());
-//                    equityInfo001Dto1.setIndentifyMark(equityInfo001Dto.getIndentifyMark());
-//                    equityInfo001Dto1.setOrgIndentifyMark(equityInfo001Dto.getOrgIndentifyMark());
-//                    equityInfo001Dto1.setType(equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setOrgCode(equityInfo001Dto.getOrgCode());
-//                    equityInfo001Dto1.setDeptCode(equityInfo001Dto.getDeptCode());
-//                    equityInfo001Dto1.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                    if (tmpPath == null || isDB2DataBase) {
-//                        equityInfo001Dto.setSumitSeq(
-//                        		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                    }
-//                    equityInfo001Dto1.setSubmitDeadline(equityInfo001Dto.getSubmitDeadline());
-//                    equityInfo001Dto1.setChbSubmitDeadline(
-//                        equityInfo001Dto.getChbSubmitDeadline());
-//                    listU.add(equityInfo001Dto1);
-//                }
-//                else if ("04".equals(equityInfo001Dto.getType())
-//                         && "E".equals(equityInfo001Dto.getStatus())) {
-//                    EquityInfo001Dto equityInfo001Dto1 = EquityInfoMaintenanceService.mapToSetProDto(
-//                        map, interType, mapPrioty, result, equityInfoCheck,
-//                        equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setBankCode(equityInfo001Dto.getBankCode());
-//                    equityInfo001Dto1.setIndentifyMark(equityInfo001Dto.getIndentifyMark());
-//                    equityInfo001Dto1.setType(equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setDeptCode(equityInfo001Dto.getDeptCode());
-//                    equityInfo001Dto1.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                    if (tmpPath == null || isDB2DataBase) {
-//                        equityInfo001Dto.setSumitSeq(
-//                        		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                    }
-//                    equityInfo001Dto1.setOrgCode(equityInfo001Dto.getOrgCode());
-//                    equityInfo001Dto1.setSubmitDeadline(equityInfo001Dto.getSubmitDeadline());
-//                    equityInfo001Dto1.setChbSubmitDeadline(
-//                        equityInfo001Dto.getChbSubmitDeadline());
-//                    listU.add(equityInfo001Dto1);
-//                }
-//            }
-//            logger.info("EquityInfo001Service 数据检查、整理处理结束 " + DateUtil.getCurrentDateTime());
-//            // 插入的权益人信息为空时,先插入登记维护表，再插入信息登记表
-//            if (CollectionUtils.isNotEmpty(listNA)) {
-//                logger.info("EquityInfo001Service listNA 入库或生成文件处理开始 " + DateUtil.getCurrentDateTime());
-//                if (tmpPath == null) {
-//                    // 插入维护信息表
-//                	//修改为分批插入
-//                    //equityInfo001Mapper.insertBtachInterfEquityInfo(listNA);
-//                	this.insertBtachInterfEquityInfoByPart(listNA);
-//                }
-//                else {
-//                    createDataFile(tmpPath + "/CHB_EQU_HOLD", listNA, table.getColumns());
-//                }
-//                logger.info("EquityInfo001Service listNA 入库或生成文件处理结束 " + DateUtil.getCurrentDateTime());
-//            }
-//            // 插入的权益人信息为空时,先插入登记维护表，再插入信息登记表
-//            if (CollectionUtils.isNotEmpty(listNE)) {
-//                logger.info("EquityInfo001Service listNE 入库或生成文件处理开始 " + DateUtil.getCurrentDateTime());
-//                if (tmpPath == null) {
-//                    // 插入维护信息表
-//                	//修改为分批插入
-//                    //equityInfo001Mapper.insertBtachInterfEquityInfo(listNA);
-//                	this.insertBtachInterfEquityInfoByPart(listNE);
-//                }
-//                else {
-//                    createDataFile(tmpPath + "/CHB_EQU_HOLD", listNE, table.getColumns());
-//                }
-//                logger.info("EquityInfo001Service listNA 入库或生成文件处理结束 " + DateUtil.getCurrentDateTime());
-//            }
-//            // 插入信息前为待处理时，先跟新维护表，在插入更新表
-//            if (CollectionUtils.isNotEmpty(listAA)) {
-//                logger.info("EquityInfo001Service listAA 入库处理开始 " + DateUtil.getCurrentDateTime());
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listAA);
-//            	this.updateBtachEquityInfoByPart(listAA,isDB2DataBase);
-//            	logger.info("EquityInfo001Service listAA 入库处理结束 " + DateUtil.getCurrentDateTime());
-//            }
-//            if (CollectionUtils.isNotEmpty(listAE)) {
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listAE);
-//                logger.info("EquityInfo001Service listAE updateBtachEquityInfoByPart处理开始 " + DateUtil.getCurrentDateTime());
-//            	this.updateBtachEquityInfoByPart(listAE, isDB2DataBase);
-//            	logger.info("EquityInfo001Service listAE updateBtachEquityInfoByPart处理结束 " + DateUtil.getCurrentDateTime());
-//                // 删除登记表中未报送数据(若数据由有效转为待处理后，又插入一条有效数据)
-//                //equityInfoRegist001Mapper.deleteBatchEquityRegist(listAE);
-//            	logger.info("EquityInfo001Service listAE deleteBatchEquityRegist处理开始 " + DateUtil.getCurrentDateTime());
-//            	this.deleteBatchEquityRegist(listAE);
-//                logger.info("EquityInfo001Service listAE deleteBatchEquityRegist处理结束 " + DateUtil.getCurrentDateTime());
-//            }
-//            // 当插入信息为有效或者删除是，先将信息迁移至履历表，再更新信息维护表，之后先统一删除登记表中报送中的数据，插入登记表
-//            if (CollectionUtils.isNotEmpty(listOA)) {
-//                // 首先将权益人信息表插入履历表中
-//                //equityInfo001Mapper.insertEquityHis(listOA);
-//                logger.info("EquityInfo001Service listOA insertEquityHis处理开始 " + DateUtil.getCurrentDateTime());
-//            	this.insertEquityHis(listOA);
-//                logger.info("EquityInfo001Service listOA insertEquityHis处理结束 " + DateUtil.getCurrentDateTime());
-//
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listOA);
-//                logger.info("EquityInfo001Service listOA updateBtachEquityInfoByPart处理开始 " + DateUtil.getCurrentDateTime());
-//            	this.updateBtachEquityInfoByPart(listOA, isDB2DataBase);
-//                logger.info("EquityInfo001Service listOA updateBtachEquityInfoByPart处理结束 " + DateUtil.getCurrentDateTime());
-//
-//                // 删除登记表中未报送数据
-//                //equityInfoRegist001Mapper.deleteBatchEquityRegist(listOA);
-//                logger.info("EquityInfo001Service listOA deleteBatchEquityRegist处理开始 " + DateUtil.getCurrentDateTime());
-//            	this.deleteBatchEquityRegist(listOA);
-//                logger.info("EquityInfo001Service listOA deleteBatchEquityRegist处理结束 " + DateUtil.getCurrentDateTime());
-//            }
-//            if (CollectionUtils.isNotEmpty(listOE)) {
-//                // 首先将权益人信息表插入履历表中
-//               // equityInfo001Mapper.insertEquityHis(listOE);
-//                logger.info("EquityInfo001Service listOE insertEquityHis处理开始 " + DateUtil.getCurrentDateTime());
-//            	this.insertEquityHis(listOE);
-//                logger.info("EquityInfo001Service listOE insertEquityHis处理结束 " + DateUtil.getCurrentDateTime());
-//
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listOE);
-//                logger.info("EquityInfo001Service listOE updateBtachEquityInfoByPart处理开始 " + DateUtil.getCurrentDateTime());
-//            	this.updateBtachEquityInfoByPart(listOE,isDB2DataBase);
-//                logger.info("EquityInfo001Service listOE updateBtachEquityInfoByPart处理结束 " + DateUtil.getCurrentDateTime());
-//
-//                // 删除登记表中未报送数据
-//                //equityInfoRegist001Mapper.deleteBatchEquityRegist(listOE);
-//                logger.info("EquityInfo001Service listOE deleteBatchEquityRegist处理开始 " + DateUtil.getCurrentDateTime());
-//                this.deleteBatchEquityRegist(listOE);
-//                logger.info("EquityInfo001Service listOE deleteBatchEquityRegist处理结束 " + DateUtil.getCurrentDateTime());
-//            }
-//            if (CollectionUtils.isNotEmpty(listU)) {
-//                logger.info("EquityInfo001Service listU 入库或生成文件处理开始 " + DateUtil.getCurrentDateTime());
-//                if (tmpPath == null) {
-//                    // 插入登记表
-//                    this.insertBatchEquityRegistByPart(listU);
-//                }
-//                else {
-////                    createDataFile(tmpPath + "/CHB_EQU_SUB", listNE, subTable.getColumns());
-//                    createDataFile(tmpPath + "/CHB_EQU_SUB", listU, subTable.getColumns());
-//                }
-//                logger.info("EquityInfo001Service listU 入库或生成文件处理结束 " + DateUtil.getCurrentDateTime());
-//            }
-//            // 数据解析完成，并导入数据库成功后，将ftp文件修改名称
-////            return (CollectionUtils.isNotEmpty(listNA) || CollectionUtils.isNotEmpty(listNE)
-////                    || CollectionUtils.isNotEmpty(listAA) || CollectionUtils.isNotEmpty(listAE)
-////                    || CollectionUtils.isNotEmpty(listOA) || CollectionUtils.isNotEmpty(listOE)
-////                    || CollectionUtils.isNotEmpty(listU));
-//            return true;
-//        }
-//        return false;
-//    }
 
     /**
      * 创建数据文件
@@ -2916,42 +2532,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             return Integer.parseInt(count);
         }
     }
-//    /**
-//     * 分批次执行queryBatchForEquityInfoConStrast
-//     *
-//     * @param dataList 数据
-//     * @param registList 目标数据
-//     * @see
-//     * @since 1.0
-//     */
-//    private void queryBatchForEquityInfoConStrastBatch(List<Map<String, String>> dataList ,List<EquityInfoRegist001Dto> registList) {
-//        if (StringUtil.isEmptyList(dataList)) {
-//            return ;
-//        }
-//
-//        int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCount,"2");
-//        int dataCount = dataList.size();
-//        if (dataCount <= maxDataCountOneTime) {
-//        	registList.addAll(equityInfoRegist001Mapper.queryBatchForEquityInfoConStrast(dataList));
-//            return;
-//        }
-//
-//        List<Map<String, String>> newDataList = new ArrayList<Map<String, String>>();
-//        newDataList.addAll(dataList);
-//
-//        // 分批处理
-//        int part = dataCount / maxDataCountOneTime; // 分批数
-//        for (int i = 0; i < part; i++ ) {
-//        	registList.addAll(equityInfoRegist001Mapper.queryBatchForEquityInfoConStrast(newDataList.subList(0, maxDataCountOneTime)));
-//            newDataList.subList(0, maxDataCountOneTime).clear();
-//        }
-//        // 最后剩下的数据
-//        if (CollectionUtils.isNotEmpty(newDataList)) {
-//        	registList.addAll(equityInfoRegist001Mapper.queryBatchForEquityInfoConStrast(newDataList));
-//        }
-//        dataList =null;
-//        newDataList =null;
-//    }
+
     /**
      * 分批次执行selectEquityInfoForCheck
      *
@@ -3038,14 +2619,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         Map<String, Integer> mapPrioty = new HashMap<String, Integer>();
         // 从配置文件中读取需要覆盖的配置项 01覆盖02不覆盖
         String[] result = this.getProPrity(interType, mapPrioty);
-        // 新增数据list
-//        List<EquityInfo001Dto> listNA = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listNE = new ArrayList<EquityInfo001Dto>();
-        // 待处理接口维护数据
-//        List<EquityInfo001Dto> listAA = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listAE = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listOA = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listOE = new ArrayList<EquityInfo001Dto>();
         List<EquityInfo001Dto> listU = new ArrayList<EquityInfo001Dto>(); // 登记表数据
         // 维护新增list
         List<EquityInfo001Dto> listN = new ArrayList<EquityInfo001Dto>();
@@ -3066,16 +2639,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         boolean isDB2DataBase = CommonUtil.isDB2DataBase();
 
         if (equityList != null && equityList.size() > 0) {
-//            for (Map<String, String> map : equityList) {
-//                EquityInfo001Dto tmp = new EquityInfo001Dto();
-//                Map<String, String> map1 = new HashMap<String, String>();
-//                EquityInfoMaintenanceService.maptoDto(map, tmp);
-//                // 转化为key+空格+value格式
-//                equityInfoValid.checkInterfEquitySingle(tmp, registList, map1);
-//                map.put("TYPE", tmp.getType());
-//                map.put("ORG_INDENTIFY_MARK",
-//                    CommonUtil.getNotNullString(map.get("ORG_INDENTIFY_MARK")));
-//            }
             logger.debug("EquityInfo001Service 数据插入临时表处理开始 " + DateUtil.getCurrentDateTime());
             // 将数据插入临时表
             equityInfo001Mapper.insertIntoImportTable(equityList);
@@ -3131,9 +2694,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 if (!DictCodeListExt2.报送数据状态_新建.getValue().equals(type)) {
                     type = DictCodeListExt2.报送数据状态_修改.getValue();
                 }
-//                equityInfo001Dto.setSubmitStatus(type);
-                // equityInfo001Dto = EquityInfoCheckUtil.getChbEndDate(listTime, type,
-                // equityInfo001Dto);
                 // 报送时点通用方法
                 dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_投资者身份信息登记.getValue(),
                         type, dateMap, DateUtil.now());
@@ -3143,14 +2703,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 }
 
                 equityInfo001Dto.setDataSource(interType);
-//                List<EquityInfo001Dto> equityInfoCheckList = equityInfo001Map.get(map.get(
-//                    "INDENTIFY_MARK") + GlobalConstant.UNDER_LINE + CommonUtil.getNotNullString(
-//                        map.get("ORG_INDENTIFY_MARK")) + GlobalConstant.UNDER_LINE + map.get(
-//                            "REGIST_BANK_CODE"));
-//                EquityInfo001Dto equityInfoCheck = null;
-//                if (null != equityInfoCheckList && !equityInfoCheckList.isEmpty()) {
-//                    equityInfoCheck = equityInfoCheckList.get(0);
-//                }
                 if (DictCodeList.是否_中债_是.getValue().equals(equityInfo001Dto.getIsNull())) {
                     listN.add(equityInfo001Dto);
                 }
@@ -3161,29 +2713,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 else{
                     listO.add(equityInfo001Dto);
                 }
-//                else if (equityInfoCheck == null && "E".equals(equityInfo001Dto.getStatus())) {
-//                	if (tmpPath == null || isDB2DataBase) {
-//                		equityInfo001Dto.setSumitSeq(
-//                				CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                		}
-//                        listNE.add(equityInfo001Dto);
-//                }
-//                else if ("A".equals(equityInfoCheck.getStatus())&& "A".equals(equityInfo001Dto.getStatus())) {
-//                        this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                            result, listAA, interType, mapPrioty);
-//                }
-//                else if ("A".equals(equityInfoCheck.getStatus()) && "E".equals(equityInfo001Dto.getStatus())) {
-//                	this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                			result, listAE, interType, mapPrioty);
-//                }
-//                else if ("A".equals(equityInfo001Dto.getStatus())) {
-//                     this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                            result, listOA, interType, mapPrioty);
-//                }
-//                else if ("E".equals(equityInfo001Dto.getStatus())) {
-//                	this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                            result, listOE, interType, mapPrioty);
-//                }
                 if(DictCodeListExt1.维护数据状态_有效.getValue().equals(equityInfo001Dto.getStatus())){
                 	BeanUtil.copyPropertiesIgnoreNull(equityInfo001DtoTemp, equityInfo001Dto);
                 	if (tmpPath == null || isDB2DataBase) {
@@ -3200,82 +2729,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                     }
                     listU.add(equityInfo001DtoTemp);
                 }
-//                if ("01".equals(equityInfo001Dto.getType())
-//                    || "03".equals(equityInfo001Dto.getType())) {
-//                    if ("E".equals(equityInfo001Dto.getStatus())) {
-//                        if (equityInfoCheck == null) {
-//                            if (tmpPath == null || isDB2DataBase) {
-//                                equityInfo001Dto.setSumitSeq(
-//                                		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                            }
-//                            listU.add(equityInfo001Dto);
-//                        }
-//                        else if ("01".equals(equityInfoCheck.getDataSource())
-//                                 || "02".equals(equityInfoCheck.getDataSource())) {
-//                            EquityInfo001Dto equityInfo = new EquityInfo001Dto();
-//                            EquityInfoMaintenanceService.maptoSetDto(map, equityInfo, result);
-//                            equityInfo.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                            equityInfo.setType(equityInfo001Dto.getType());
-//                            equityInfo.setOrgCode(equityInfo001Dto.getOrgCode());
-//                            equityInfo.setSubmitDeadline(equityInfo001Dto.getSubmitDeadline());
-//                            equityInfo.setChbSubmitDeadline(
-//                                equityInfo001Dto.getChbSubmitDeadline());
-//                            if (tmpPath == null || isDB2DataBase) {
-//                                equityInfo.setSumitSeq(
-//                                		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                            }
-//                            listU.add(equityInfo);
-//                        }
-//                        else {
-//                            if (tmpPath == null || isDB2DataBase) {
-//                                equityInfo001Dto.setSumitSeq(
-//                                		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                            }
-//                            listU.add(equityInfo001Dto);
-//                        }
-//                    }
-//                }
-//                else if ("02".equals(equityInfo001Dto.getType())
-//                         && "E".equals(equityInfo001Dto.getStatus())) {
-//                    EquityInfo001Dto equityInfo001Dto1 = EquityInfoMaintenanceService.mapToSetProDto(
-//                        map, interType, mapPrioty, result, equityInfoCheck,
-//                        equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setBankCode(equityInfo001Dto.getBankCode());
-//                    equityInfo001Dto1.setIndentifyMark(equityInfo001Dto.getIndentifyMark());
-//                    equityInfo001Dto1.setOrgIndentifyMark(equityInfo001Dto.getOrgIndentifyMark());
-//                    equityInfo001Dto1.setType(equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setOrgCode(equityInfo001Dto.getOrgCode());
-//                    equityInfo001Dto1.setDeptCode(equityInfo001Dto.getDeptCode());
-//                    equityInfo001Dto1.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                    if (tmpPath == null || isDB2DataBase) {
-//                        equityInfo001Dto.setSumitSeq(
-//                        		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                    }
-//                    equityInfo001Dto1.setSubmitDeadline(equityInfo001Dto.getSubmitDeadline());
-//                    equityInfo001Dto1.setChbSubmitDeadline(
-//                        equityInfo001Dto.getChbSubmitDeadline());
-//                    listU.add(equityInfo001Dto1);
-//                }
-//                else if ("04".equals(equityInfo001Dto.getType())
-//                         && "E".equals(equityInfo001Dto.getStatus())) {
-//                    EquityInfo001Dto equityInfo001Dto1 = EquityInfoMaintenanceService.mapToSetProDto(
-//                        map, interType, mapPrioty, result, equityInfoCheck,
-//                        equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setBankCode(equityInfo001Dto.getBankCode());
-//                    equityInfo001Dto1.setIndentifyMark(equityInfo001Dto.getIndentifyMark());
-//                    equityInfo001Dto1.setType(equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setDeptCode(equityInfo001Dto.getDeptCode());
-//                    equityInfo001Dto1.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                    if (tmpPath == null || isDB2DataBase) {
-//                        equityInfo001Dto.setSumitSeq(
-//                        		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                    }
-//                    equityInfo001Dto1.setOrgCode(equityInfo001Dto.getOrgCode());
-//                    equityInfo001Dto1.setSubmitDeadline(equityInfo001Dto.getSubmitDeadline());
-//                    equityInfo001Dto1.setChbSubmitDeadline(
-//                        equityInfo001Dto.getChbSubmitDeadline());
-//                    listU.add(equityInfo001Dto1);
-//                }
             }
             //add by liubin start 若为接口接入数据，则将错误日志输出到文件
             if(interType.equals(DictCodeListExt2.数据来源_销售系统.getValue()) || interType.equals(DictCodeListExt2.数据来源_资管系统.getValue())
@@ -3289,7 +2742,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                     osw.append(messageInfo.toString()).append("\n");
                     osw.flush();
                 } catch (Exception e1) {
-//        			e1.printStackTrace();
                     logger.error(e1.getMessage(),e1);
                 }
                 finally {
@@ -3297,7 +2749,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         try {
                             fout.close();
                         } catch (Exception e) {
-//        				e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -3306,7 +2757,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         try {
                             osw.close();
                         } catch (Exception e) {
-//        				e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -3352,68 +2802,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 this.deleteBatchEquityRegist(listO);
                 logger.info("EquityInfo001Service listO 入库或生成文件处理结束 " + DateUtil.getCurrentDateTime());
             }
-//            // 插入的权益人信息为空时,先插入登记维护表，再插入信息登记表
-//            if (CollectionUtils.isNotEmpty(listNA)) {
-//                if (tmpPath == null) {
-//                    // 插入维护信息表
-//                	//修改为分批插入
-//                    //equityInfo001Mapper.insertBtachInterfEquityInfo(listNA);
-//                	this.insertBtachInterfEquityInfoByPart(listNA);
-//                }
-//                else {
-//                    createDataFile(tmpPath + "/CHB_EQU_HOLD", listNA, table.getColumns());
-//                }
-//            }
-//            // 插入的权益人信息为空时,先插入登记维护表，再插入信息登记表
-//            if (CollectionUtils.isNotEmpty(listNE)) {
-//                if (tmpPath == null) {
-//                    // 插入维护信息表
-//                	//修改为分批插入
-//                    //equityInfo001Mapper.insertBtachInterfEquityInfo(listNA);
-//                	this.insertBtachInterfEquityInfoByPart(listNE);
-//                }
-//                else {
-//                    createDataFile(tmpPath + "/CHB_EQU_HOLD", listNE, table.getColumns());
-//                }
-//            }
-//            // 插入信息前为待处理时，先跟新维护表，在插入更新表
-//            if (CollectionUtils.isNotEmpty(listAA)) {
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listAA);
-//            	this.updateBtachEquityInfoByPart(listAA,isDB2DataBase);
-//            }
-//            if (CollectionUtils.isNotEmpty(listAE)) {
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listAE);
-//            	this.updateBtachEquityInfoByPart(listAE,isDB2DataBase);
-//                // 删除登记表中未报送数据(若数据由有效转为待处理后，又插入一条有效数据)
-//                //equityInfoRegist001Mapper.deleteBatchEquityRegist(listAE);
-//            	this.deleteBatchEquityRegist(listAE);
-//
-//            }
-//            // 当插入信息为有效或者删除是，先将信息迁移至履历表，再更新信息维护表，之后先统一删除登记表中报送中的数据，插入登记表
-//            if (CollectionUtils.isNotEmpty(listOA)) {
-//                // 首先将权益人信息表插入履历表中
-//                //equityInfo001Mapper.insertEquityHis(listOA);
-//            	this.insertEquityHis(listOA);
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listOA);
-//            	this.updateBtachEquityInfoByPart(listOA,isDB2DataBase);
-//                // 删除登记表中未报送数据
-//                //equityInfoRegist001Mapper.deleteBatchEquityRegist(listOA);
-//            	this.deleteBatchEquityRegist(listOA);
-//            }
-//            if (CollectionUtils.isNotEmpty(listOE)) {
-//                // 首先将权益人信息表插入履历表中
-//               // equityInfo001Mapper.insertEquityHis(listOE);
-//            	this.insertEquityHis(listOE);
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listOE);
-//            	this.updateBtachEquityInfoByPart(listOE,isDB2DataBase);
-//                // 删除登记表中未报送数据
-//                //equityInfoRegist001Mapper.deleteBatchEquityRegist(listOE);
-//                this.deleteBatchEquityRegist(listOE);
-//            }
             if (CollectionUtils.isNotEmpty(listU)) {
                 logger.info("EquityInfo001Service listU 入库或生成文件处理开始 " + DateUtil.getCurrentDateTime());
                 if (tmpPath == null) {
@@ -3428,11 +2816,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 }
                 logger.info("EquityInfo001Service listU 入库或生成文件处理结束 " + DateUtil.getCurrentDateTime());
             }
-            // 数据解析完成，并导入数据库成功后，将ftp文件修改名称
-//            return (CollectionUtils.isNotEmpty(listNA) || CollectionUtils.isNotEmpty(listNE)
-//                    || CollectionUtils.isNotEmpty(listAA) || CollectionUtils.isNotEmpty(listAE)
-//                    || CollectionUtils.isNotEmpty(listOA) || CollectionUtils.isNotEmpty(listOE)
-//                    || CollectionUtils.isNotEmpty(listU));
             return tempItem;
         }
         return tempItem;
@@ -3446,14 +2829,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         Map<String, Integer> mapPrioty = new HashMap<String, Integer>();
         // 从配置文件中读取需要覆盖的配置项 01覆盖02不覆盖
         String[] result = this.getProPrity(interType, mapPrioty);
-        // 新增数据list
-//        List<EquityInfo001Dto> listNA = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listNE = new ArrayList<EquityInfo001Dto>();
-        // 待处理接口维护数据
-//        List<EquityInfo001Dto> listAA = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listAE = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listOA = new ArrayList<EquityInfo001Dto>();
-//        List<EquityInfo001Dto> listOE = new ArrayList<EquityInfo001Dto>();
         List<EquityInfo001Dto> listU = new ArrayList<EquityInfo001Dto>(); // 登记表数据
         // 维护新增list
         List<EquityInfo001Dto> listN = new ArrayList<EquityInfo001Dto>();
@@ -3474,16 +2849,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         boolean isDB2DataBase = CommonUtil.isDB2DataBase();
 
         if (equityList != null && equityList.size() > 0) {
-//            for (Map<String, String> map : equityList) {
-//                EquityInfo001Dto tmp = new EquityInfo001Dto();
-//                Map<String, String> map1 = new HashMap<String, String>();
-//                EquityInfoMaintenanceService.maptoDto(map, tmp);
-//                // 转化为key+空格+value格式
-//                equityInfoValid.checkInterfEquitySingle(tmp, registList, map1);
-//                map.put("TYPE", tmp.getType());
-//                map.put("ORG_INDENTIFY_MARK",
-//                    CommonUtil.getNotNullString(map.get("ORG_INDENTIFY_MARK")));
-//            }
             logger.debug("EquityInfo001Service 数据插入临时表处理开始 " + DateUtil.getCurrentDateTime());
             // 将数据插入临时表
             equityInfo001Mapper.insertIntoImportTable(equityList);
@@ -3536,9 +2901,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 if (!DictCodeListExt2.报送数据状态_新建.getValue().equals(type)) {
                     type = DictCodeListExt2.报送数据状态_修改.getValue();
                 }
-//                equityInfo001Dto.setSubmitStatus(type);
-                // equityInfo001Dto = EquityInfoCheckUtil.getChbEndDate(listTime, type,
-                // equityInfo001Dto);
                 // 报送时点通用方法
                 dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_投资者身份信息登记.getValue(),
                         type, dateMap, DateUtil.now());
@@ -3548,14 +2910,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 }
 
                 equityInfo001Dto.setDataSource(interType);
-//                List<EquityInfo001Dto> equityInfoCheckList = equityInfo001Map.get(map.get(
-//                    "INDENTIFY_MARK") + GlobalConstant.UNDER_LINE + CommonUtil.getNotNullString(
-//                        map.get("ORG_INDENTIFY_MARK")) + GlobalConstant.UNDER_LINE + map.get(
-//                            "REGIST_BANK_CODE"));
-//                EquityInfo001Dto equityInfoCheck = null;
-//                if (null != equityInfoCheckList && !equityInfoCheckList.isEmpty()) {
-//                    equityInfoCheck = equityInfoCheckList.get(0);
-//                }
                 if (DictCodeList.是否_中债_是.getValue().equals(equityInfo001Dto.getIsNull())) {
                 	listN.add(equityInfo001Dto);
                 }
@@ -3566,29 +2920,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 else{
                     listO.add(equityInfo001Dto);
                 }
-//                else if (equityInfoCheck == null && "E".equals(equityInfo001Dto.getStatus())) {
-//                	if (tmpPath == null || isDB2DataBase) {
-//                		equityInfo001Dto.setSumitSeq(
-//                				CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                		}
-//                        listNE.add(equityInfo001Dto);
-//                }
-//                else if ("A".equals(equityInfoCheck.getStatus())&& "A".equals(equityInfo001Dto.getStatus())) {
-//                        this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                            result, listAA, interType, mapPrioty);
-//                }
-//                else if ("A".equals(equityInfoCheck.getStatus()) && "E".equals(equityInfo001Dto.getStatus())) {
-//                	this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                			result, listAE, interType, mapPrioty);
-//                }
-//                else if ("A".equals(equityInfo001Dto.getStatus())) {
-//                     this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                            result, listOA, interType, mapPrioty);
-//                }
-//                else if ("E".equals(equityInfo001Dto.getStatus())) {
-//                	this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
-//                            result, listOE, interType, mapPrioty);
-//                }
                 if(DictCodeListExt1.维护数据状态_有效.getValue().equals(equityInfo001Dto.getStatus())){
                 	BeanUtil.copyPropertiesIgnoreNull(equityInfo001DtoTemp, equityInfo001Dto);
                 	if (tmpPath == null || isDB2DataBase) {
@@ -3605,82 +2936,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                     }
                     listU.add(equityInfo001DtoTemp);
                 }
-//                if ("01".equals(equityInfo001Dto.getType())
-//                    || "03".equals(equityInfo001Dto.getType())) {
-//                    if ("E".equals(equityInfo001Dto.getStatus())) {
-//                        if (equityInfoCheck == null) {
-//                            if (tmpPath == null || isDB2DataBase) {
-//                                equityInfo001Dto.setSumitSeq(
-//                                		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                            }
-//                            listU.add(equityInfo001Dto);
-//                        }
-//                        else if ("01".equals(equityInfoCheck.getDataSource())
-//                                 || "02".equals(equityInfoCheck.getDataSource())) {
-//                            EquityInfo001Dto equityInfo = new EquityInfo001Dto();
-//                            EquityInfoMaintenanceService.maptoSetDto(map, equityInfo, result);
-//                            equityInfo.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                            equityInfo.setType(equityInfo001Dto.getType());
-//                            equityInfo.setOrgCode(equityInfo001Dto.getOrgCode());
-//                            equityInfo.setSubmitDeadline(equityInfo001Dto.getSubmitDeadline());
-//                            equityInfo.setChbSubmitDeadline(
-//                                equityInfo001Dto.getChbSubmitDeadline());
-//                            if (tmpPath == null || isDB2DataBase) {
-//                                equityInfo.setSumitSeq(
-//                                		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                            }
-//                            listU.add(equityInfo);
-//                        }
-//                        else {
-//                            if (tmpPath == null || isDB2DataBase) {
-//                                equityInfo001Dto.setSumitSeq(
-//                                		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                            }
-//                            listU.add(equityInfo001Dto);
-//                        }
-//                    }
-//                }
-//                else if ("02".equals(equityInfo001Dto.getType())
-//                         && "E".equals(equityInfo001Dto.getStatus())) {
-//                    EquityInfo001Dto equityInfo001Dto1 = EquityInfoMaintenanceService.mapToSetProDto(
-//                        map, interType, mapPrioty, result, equityInfoCheck,
-//                        equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setBankCode(equityInfo001Dto.getBankCode());
-//                    equityInfo001Dto1.setIndentifyMark(equityInfo001Dto.getIndentifyMark());
-//                    equityInfo001Dto1.setOrgIndentifyMark(equityInfo001Dto.getOrgIndentifyMark());
-//                    equityInfo001Dto1.setType(equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setOrgCode(equityInfo001Dto.getOrgCode());
-//                    equityInfo001Dto1.setDeptCode(equityInfo001Dto.getDeptCode());
-//                    equityInfo001Dto1.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                    if (tmpPath == null || isDB2DataBase) {
-//                        equityInfo001Dto.setSumitSeq(
-//                        		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                    }
-//                    equityInfo001Dto1.setSubmitDeadline(equityInfo001Dto.getSubmitDeadline());
-//                    equityInfo001Dto1.setChbSubmitDeadline(
-//                        equityInfo001Dto.getChbSubmitDeadline());
-//                    listU.add(equityInfo001Dto1);
-//                }
-//                else if ("04".equals(equityInfo001Dto.getType())
-//                         && "E".equals(equityInfo001Dto.getStatus())) {
-//                    EquityInfo001Dto equityInfo001Dto1 = EquityInfoMaintenanceService.mapToSetProDto(
-//                        map, interType, mapPrioty, result, equityInfoCheck,
-//                        equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setBankCode(equityInfo001Dto.getBankCode());
-//                    equityInfo001Dto1.setIndentifyMark(equityInfo001Dto.getIndentifyMark());
-//                    equityInfo001Dto1.setType(equityInfo001Dto.getType());
-//                    equityInfo001Dto1.setDeptCode(equityInfo001Dto.getDeptCode());
-//                    equityInfo001Dto1.setSubmitStatus(equityInfo001Dto.getSubmitStatus());
-//                    if (tmpPath == null || isDB2DataBase) {
-//                        equityInfo001Dto.setSumitSeq(
-//                        		CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//                    }
-//                    equityInfo001Dto1.setOrgCode(equityInfo001Dto.getOrgCode());
-//                    equityInfo001Dto1.setSubmitDeadline(equityInfo001Dto.getSubmitDeadline());
-//                    equityInfo001Dto1.setChbSubmitDeadline(
-//                        equityInfo001Dto.getChbSubmitDeadline());
-//                    listU.add(equityInfo001Dto1);
-//                }
             }
             //add by liubin start 若为接口接入数据，则将错误日志输出到文件
             if(interType.equals(DictCodeListExt2.数据来源_销售系统.getValue()) || interType.equals(DictCodeListExt2.数据来源_资管系统.getValue())
@@ -3694,7 +2949,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                     osw.append(messageInfo.toString()).append("\n");
                     osw.flush();
                 } catch (Exception e1) {
-//        			e1.printStackTrace();
                     logger.error(e1.getMessage(),e1);
                 }
                 finally{
@@ -3702,7 +2956,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         try {
                             fout.close();
                         } catch (Exception e) {
-//        				e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -3757,68 +3010,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 this.deleteBatchEquityRegist(listO);
                 logger.info("EquityInfo001Service listO 入库或生成文件处理结束 " + DateUtil.getCurrentDateTime());
             }
-//            // 插入的权益人信息为空时,先插入登记维护表，再插入信息登记表
-//            if (CollectionUtils.isNotEmpty(listNA)) {
-//                if (tmpPath == null) {
-//                    // 插入维护信息表
-//                	//修改为分批插入
-//                    //equityInfo001Mapper.insertBtachInterfEquityInfo(listNA);
-//                	this.insertBtachInterfEquityInfoByPart(listNA);
-//                }
-//                else {
-//                    createDataFile(tmpPath + "/CHB_EQU_HOLD", listNA, table.getColumns());
-//                }
-//            }
-//            // 插入的权益人信息为空时,先插入登记维护表，再插入信息登记表
-//            if (CollectionUtils.isNotEmpty(listNE)) {
-//                if (tmpPath == null) {
-//                    // 插入维护信息表
-//                	//修改为分批插入
-//                    //equityInfo001Mapper.insertBtachInterfEquityInfo(listNA);
-//                	this.insertBtachInterfEquityInfoByPart(listNE);
-//                }
-//                else {
-//                    createDataFile(tmpPath + "/CHB_EQU_HOLD", listNE, table.getColumns());
-//                }
-//            }
-//            // 插入信息前为待处理时，先跟新维护表，在插入更新表
-//            if (CollectionUtils.isNotEmpty(listAA)) {
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listAA);
-//            	this.updateBtachEquityInfoByPart(listAA,isDB2DataBase);
-//            }
-//            if (CollectionUtils.isNotEmpty(listAE)) {
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listAE);
-//            	this.updateBtachEquityInfoByPart(listAE,isDB2DataBase);
-//                // 删除登记表中未报送数据(若数据由有效转为待处理后，又插入一条有效数据)
-//                //equityInfoRegist001Mapper.deleteBatchEquityRegist(listAE);
-//            	this.deleteBatchEquityRegist(listAE);
-//
-//            }
-//            // 当插入信息为有效或者删除是，先将信息迁移至履历表，再更新信息维护表，之后先统一删除登记表中报送中的数据，插入登记表
-//            if (CollectionUtils.isNotEmpty(listOA)) {
-//                // 首先将权益人信息表插入履历表中
-//                //equityInfo001Mapper.insertEquityHis(listOA);
-//            	this.insertEquityHis(listOA);
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listOA);
-//            	this.updateBtachEquityInfoByPart(listOA,isDB2DataBase);
-//                // 删除登记表中未报送数据
-//                //equityInfoRegist001Mapper.deleteBatchEquityRegist(listOA);
-//            	this.deleteBatchEquityRegist(listOA);
-//            }
-//            if (CollectionUtils.isNotEmpty(listOE)) {
-//                // 首先将权益人信息表插入履历表中
-//               // equityInfo001Mapper.insertEquityHis(listOE);
-//            	this.insertEquityHis(listOE);
-//                // 插入维护信息表
-//                //equityInfo001Mapper.updateBatchEquityInfo(listOE);
-//            	this.updateBtachEquityInfoByPart(listOE,isDB2DataBase);
-//                // 删除登记表中未报送数据
-//                //equityInfoRegist001Mapper.deleteBatchEquityRegist(listOE);
-//                this.deleteBatchEquityRegist(listOE);
-//            }
             if (CollectionUtils.isNotEmpty(listU)) {
                 logger.info("EquityInfo001Service listU 入库或生成文件处理开始 " + DateUtil.getCurrentDateTime());
                 if (tmpPath == null) {
@@ -3833,11 +3024,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 }
                 logger.info("EquityInfo001Service listU 入库或生成文件处理结束 " + DateUtil.getCurrentDateTime());
             }
-            // 数据解析完成，并导入数据库成功后，将ftp文件修改名称
-//            return (CollectionUtils.isNotEmpty(listNA) || CollectionUtils.isNotEmpty(listNE)
-//                    || CollectionUtils.isNotEmpty(listAA) || CollectionUtils.isNotEmpty(listAE)
-//                    || CollectionUtils.isNotEmpty(listOA) || CollectionUtils.isNotEmpty(listOE)
-//                    || CollectionUtils.isNotEmpty(listU));
             return true;
         }
         return false;
