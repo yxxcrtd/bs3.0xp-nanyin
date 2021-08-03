@@ -15,7 +15,7 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: allinone
+    active: dev
   application:
     name: tams-server
     dfstype: 2
