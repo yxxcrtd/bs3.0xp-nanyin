@@ -1,4 +1,7 @@
 (function () {
+    if(entrustAmtUnit == '02' ){
+        $(".unitNum").text('万元');
+    }
     var avaPledgeBondDetailNeedInit = true;
     var pledgeBondDetailTblNeedInit = true;
     var getElementById = function (id) {
@@ -103,20 +106,22 @@
             , {
                 field: 'prin',
                 width: 150,
-                title: isDzh=='Y'?'券面总额(万元)':'BussRepoSec.avaPledgeBondDetailTBL.colmodel.prin',
+                // title: isDzh=='Y'?'券面总额(万元)':'BussRepoSec.avaPledgeBondDetailTBL.colmodel.prin',
+                title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.prin1',
                 sortable: false,
                 type: 'money',
-                digit: 2,
+                digit: 4,
                 visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
             }
             // 已质押券面总额
             , {
                 field: 'pledgePrin',
                 width: 150,
-                title: isDzh=='Y'?'已质押券面总额(万元)':'BussRepoSec.avaPledgeBondDetailTBL.colmodel.pledgePrin',
+                // title: isDzh=='Y'?'已质押券面总额(万元)':'BussRepoSec.avaPledgeBondDetailTBL.colmodel.pledgePrin',
+                title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.pledgePrin1',
                 sortable: false,
                 type: 'money',
-                digit: 2,
+                digit: 4,
                 visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
             }
             // 已质押券面总额（初始）
@@ -132,9 +137,10 @@
             , {
                 field: 'avaPledgePrin',
                 width: 150,
-                title: isDzh=='Y'?'可质押券面总额(万元)':'BussRepoSec.avaPledgeBondDetailTBL.colmodel.avaPledgePrin',
+                // title: isDzh=='Y'?'可质押券面总额(万元)':'BussRepoSec.avaPledgeBondDetailTBL.colmodel.avaPledgePrin',
+                title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.avaPledgePrin1',
                 sortable: false, type: 'money',
-                digit: 2,
+                digit: 4,
                 visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
             }
             // 可质押列表增加“债项评级”、“到期日”、“登记托管机构”、“剩余期限”字段 add by renping 20191012 start
@@ -236,18 +242,20 @@
             , {
                 field: 'avaPledgePrin',
                 width: 150,
-                title: isDzh=='Y'?'可质押券面总额(万元)':'BussRepoSec.pledgeBondDetailTbl.colmodel.avaPledgePrin',
+                // title: isDzh=='Y'?'可质押券面总额(万元)':'BussRepoSec.pledgeBondDetailTbl.colmodel.avaPledgePrin',
+                title: 'BussRepoSec.pledgeBondDetailTbl.colmodel.avaPledgePrin1',
                 type: 'money',
-                digit: 2,
+                digit: 4,
                 sortable: false
             }
             // 入库券面总额
             , {
                 field: 'pledgePrin',
                 width: 150,
-                title: isDzh=='Y'?'质押券面总额(万元)':'BussRepoSec.pledgeBondDetailTbl.colmodel.pledgePrin',
+                // title: isDzh=='Y'?'质押券面总额(万元)':'BussRepoSec.pledgeBondDetailTbl.colmodel.pledgePrin',
+                title: 'BussRepoSec.pledgeBondDetailTbl.colmodel.pledgePrin1',
                 type: 'money',
-                digit: 2,
+                digit: 4,
                 edit: true,
                 sortable: false
             }
@@ -351,8 +359,9 @@
             if (allRows[i].pledgePrin) {
                 pledgePrinVal = allRows[i].pledgePrin;
             }
-            if (isDzh == 'Y') {
+            // if (isDzh == 'Y') {
                 //多组合以万元为单位
+            if (entrustAmtUnit == '01') {
                 totalPrinAmt += pledgePrinVal * pledgeRatioVal * 100;
             } else {
                 totalPrinAmt += pledgePrinVal * pledgeRatioVal / 100;
