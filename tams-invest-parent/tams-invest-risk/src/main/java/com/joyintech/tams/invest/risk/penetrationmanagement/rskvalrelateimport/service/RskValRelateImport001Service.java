@@ -194,7 +194,8 @@ public class RskValRelateImport001Service extends CommonExportService<RskValRela
     }
 
     private void saveData(String pageId, List<File> fileList, List<ZipFileAssetInfoDto> list, List<ExcelValidDto> errorList,String filePath) {
-        Date supDate = iPlatformDate.getSysDate();
+        //Date supDate = iPlatformDate.getSysDate();
+        Date supDate=DateUtil.platDateFromCache();
         Date startDate = DateUtil.now();
         //默认最大的线程数
         int maxPoolCapacitySize = 50;
@@ -366,14 +367,15 @@ public class RskValRelateImport001Service extends CommonExportService<RskValRela
 
     private Boolean checkFile(File file, List<ExcelValidDto> errorList, List<ZipFileAssetInfoDto> list,String filePath) {
         Boolean isError=false;
-        Date supDate = iPlatformDate.getSysDate();
+       // Date supDate = iPlatformDate.getSysDate();
+        Date supDate =DateUtil.platDateFromCache();
         Date startDate = DateUtil.now();
         String fileName = file.getName();
         String chbValSplitStr = CacheUtil.getSysParam(BussinessConstant.CHB_VAL_SPLIT_STR);
         String[] arr = fileName.split(chbValSplitStr);
         if (arr.length != 2) {
             errorList.add(new ExcelValidDto(fileName, StringUtils.EMPTY, fileName + "，不符合格式要求"));
-            this.saveRskOutValtblImportHis(fileName, filePath, StringUtil.EMPTY, fileName, iPlatformDate.getSysDate(),
+            this.saveRskOutValtblImportHis(fileName, filePath, StringUtil.EMPTY, fileName, supDate,
                     DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件名异常组合or日期格式错误.getValue(),startDate,supDate);
             isError=true;
         } else {

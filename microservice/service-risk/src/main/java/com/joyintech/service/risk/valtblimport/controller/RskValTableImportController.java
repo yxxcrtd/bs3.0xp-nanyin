@@ -71,6 +71,8 @@ public class RskValTableImportController {
      * @see
      * @since 1.0
      */
+    @Transactional
+    @DTXTransaction
     @PostMapping("createRepoInfo")
     public void createRepoInfo(@RequestBody RskValtblAssetSubDto entity2){
         rskValTableImportService.createRepoInfo(entity2);

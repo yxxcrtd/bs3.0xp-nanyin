@@ -1,6 +1,6 @@
 delete from sys_para where PARA_CODE='CHB_VAL_SPLIT_STR';
 INSERT INTO sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
-VALUES ('SVR', 'CHB_VAL_SPLIT_STR', '估值表-', null, null, '中债导入估值表中文件名称拆分分隔符', 'system', '', sysdate, 'zyf', sysdate, null, '01');
+VALUES ('SVR', 'CHB_VAL_SPLIT_STR', '估值表', null, null, '中债导入估值表中文件名称拆分分隔符', 'system', '', sysdate, 'zyf', sysdate, null, '01');
 delete from sys_para where PARA_CODE='BATCH_IMPORT_VAL_MAX';
 INSERT INTO sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
 VALUES ('SVR', 'BATCH_IMPORT_VAL_MAX', '100', '01', null, '中债批量导入估值表最大文件数', 'system', '', sysdate, 'system', sysdate, null, '01');
@@ -11,7 +11,7 @@ VALUES ('SVR', 'BATCH_IMPORT_VAL_MAX_THREAD', '10', '01', null, '中债批量导
 --估值表底层资产映射与应用页面
 delete from sys_page where PAGE_ID='RskValtblPrtBotasset004';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RskValtblPrtBotasset004', 'RSK', '/invest/risk/penetrationmanagement/rskValtblPrtBotasset/RskValtblPrtBotasset004', 'invest/risk/penetrationmanagement/rskValtblPrtBotasset/RskValtblPrtBotasset004', null, null, null, '02', '01', '估值表底层资产映射与应用', 'system', null, '24-MAY-19 12.00.00.000000 AM', 'system', '24-MAY-19 12.00.00.000000 AM');
+values ('RskValtblPrtBotasset004', 'RSK', '/invest/risk/penetrationmanagement/rskValtblPrtBotasset/RskValtblPrtBotasset004', 'invest/risk/penetrationmanagement/rskValtblPrtBotasset/RskValtblPrtBotasset004', null, null, null, '02', '01', '估值表底层资产映射与应用', 'system', null, sysdate, 'system', sysdate);
 --草稿箱中不展示
 delete from SYS_TRASH_NOT_TARGET_PAGE where page_id='RskValtblPrtBotasset004';
 insert into SYS_TRASH_NOT_TARGET_PAGE (SEQ_NO,PAGE_ID)values('A96EA0A5372A043FE0538C5AA8C1234A','RskValtblPrtBotasset004');

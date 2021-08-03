@@ -10,6 +10,7 @@
  
 package com.joyintech.service.risk.valtblimport.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,13 @@ import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationInputParaDto;
+import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationOutputDto;
+import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
+import com.joyintech.tams.invest.common.util.xmlrelation.XmlRelationUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +54,29 @@ public class RskValTableImportService {
     private FinTradeProductMapper finTradeProductMapper;
     @Autowired
     private FinProductTypeMapper finProductTypeMapper;
+    /**
+     * 金融产品类型 投管分类
+     */
+    public static final String KEY_FINPROD_TYPE_TG = "FINPROD_TYPE_TG";
+
+    /**
+     * 交易场所
+     */
+    public static final String KEY_TRADE_PLACE = "TRADE_PLACE";
+    /**
+     * 估值 资产类型
+     */
+    public static final String KEY_TYPE1 = "TYPE1";
+
+    /**
+     * 估值 核算分类
+     */
+    public static final String KEY_ACCOUNTING_TYPE = "ACCOUNTING_TYPE";
+
+    /**
+     * 估值 税务分类
+     */
+    public static final String KEY_TAX_ASSET_TYPE = "TAX_ASSET_TYPE";
     /**
      * 估值表保存
      * <功能详细描述>
@@ -104,168 +134,168 @@ public class RskValTableImportService {
         if(StringUtil.isEmptyList(list)){
             //若不在，则生成新的数据
             String code=entity2.getSubCode().substring(0, 8);
-            String finprodType="";
-            String tradeMarket="";
-            String type1="";
-            String type2="";
-            String type3="";
-            String type6="";
-            String type7="";
-            String type8="";
-            String type9="";
-            String type10="";
-            String type11="";
-            String type12="";
+            String finprodType= null;
+            String tradeMarket = null;
+            String type1= null;
+            String type2= null;
+            String type3= null;
+            String type6= null;
+            String type7= null;
+            String type8= null;
+            String type9= null;
+            String type10= null;
+            String type11= null;
+            String type12= null;
             if(StringUtil.isNotEmpty(code)){
-                if(code.equals("12020101")){
+                if(StringUtil.equals(code,"12020101")){
                     //上交所质押式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();//F03
-                    tradeMarket="03";
-                    type1="02";
+                    tradeMarket=DictCodeListExt1.交易场所_上海证券交易所.getValue();
+                    type1="02";//回购标的类型 BONDREP_TYPE
                     type2="02";
                     type3="G03";
-                    type6="H04";
-                    type7="04";
-                    type8="F07";
+                    type6=DictCodeList.回购类型_质押式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_正回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_回购.getValue();
 
-                }else if(code.equals("12020102")){
+                }else if(StringUtil.equals(code,"12020102")){
                     //上交所买断式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue();//F05
-                    tradeMarket="03";
+                    tradeMarket=DictCodeListExt1.交易场所_上海证券交易所.getValue();
                     type1="04";
                     type2="02";
                     type3="G04";
-                    type6="H03";
-                    type7="04";
-                    type8="F10";
-                    type9="06";
-                    type10="44";
-                    type11="093";
-                    type12="095";
+                    type6=DictCodeList.回购类型_买断式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_逆回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_买断式回购.getValue();
+                    type9=DictCodeListExt1.行内资产二级分类_拆放同业及买入返售.getValue();
+                    type10=DictCodeListExt1.行内资产三级分类_买入返售.getValue();
+                    type11=DictCodeListExt1.行内资产四级分类_债券买断式回购.getValue();
+                    type12=DictCodeListExt1.行内资产五级分类_债券买断式回购.getValue();
 
-                }else if(code.equals("12020201")){
+                }else if(StringUtil.equals(code,"12020201")){
                     //银行间质押式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();//F03
-                    tradeMarket="01";
+                    tradeMarket=DictCodeListExt1.交易场所_银行间.getValue();
                     type1="02";
                     type2="01";
                     type3="G01";
-                    type6="H04";
-                    type7="04";
-                    type8="F07";
+                    type6= DictCodeList.回购类型_质押式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_逆回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_回购.getValue();
 
-                }else if(code.equals("12020202")){
+                }else if(StringUtil.equals(code,"12020202")){
                     //银行间买断式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue();//F05
-                    tradeMarket="01";
+                    tradeMarket=DictCodeListExt1.交易场所_银行间.getValue();
                     type1="04";
                     type2="01";
                     type3="G02";
-                    type6="H03";
-                    type7="04";
-                    type8="F10";
-                    type9="06";
-                    type10="44";
-                    type11="093";
-                    type12="095";
+                    type6=DictCodeList.回购类型_买断式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_逆回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_买断式回购.getValue();
+                    type9=DictCodeListExt1.行内资产二级分类_拆放同业及买入返售.getValue();
+                    type10=DictCodeListExt1.行内资产三级分类_买入返售.getValue();
+                    type11=DictCodeListExt1.行内资产四级分类_债券买断式回购.getValue();
+                    type12=DictCodeListExt1.行内资产五级分类_债券买断式回购.getValue();
 
-                }else if(code.equals("12020301")){
+                }else if(StringUtil.equals(code,"12020301")){
                     //深交所质押式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();//F03
-                    tradeMarket="04";
+                    tradeMarket=DictCodeListExt1.交易场所_深圳证券交易所.getValue();
                     type1="02";
                     type2="03";
                     type3="G03";
-                    type6="H04";
-                    type7="04";
-                    type8="F07";
-                }else if(code.equals("12020302")){
+                    type6=DictCodeList.回购类型_质押式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_逆回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_回购.getValue();
+                }else if(StringUtil.equals(code,"12020302")){
                     //深交所买断式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue();//F05
-                    tradeMarket="04";
+                    tradeMarket=DictCodeListExt1.交易场所_深圳证券交易所.getValue();
                     type1="04";
                     type2="03";
                     type3="G04";
-                    type6="H03";
-                    type7="04";
-                    type8="F10";
-                    type9="06";
-                    type10="44";
-                    type11="093";
-                    type12="095";
+                    type6=DictCodeList.回购类型_买断式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_逆回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_买断式回购.getValue();
+                    type9=DictCodeListExt1.行内资产二级分类_拆放同业及买入返售.getValue();
+                    type10=DictCodeListExt1.行内资产三级分类_买入返售.getValue();
+                    type11=DictCodeListExt1.行内资产四级分类_债券买断式回购.getValue();
+                    type12=DictCodeListExt1.行内资产五级分类_债券买断式回购.getValue();
 
-                }else if(code.equals("22020101")){
+                }else if(StringUtil.equals(code,"22020101")){
                     //上交所卖出质押式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue();//F02
-                    tradeMarket="03";
+                    tradeMarket=DictCodeListExt1.交易场所_上海证券交易所.getValue();
                     type1="01";
                     type2="02";
-                    type6="H04";
-                    type7="03";
-                    type8="F07";
+                    type6=DictCodeList.回购类型_质押式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_正回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_回购.getValue();
 
-                }else if(code.equals("22020102")){
+                }else if(StringUtil.equals(code,"22020102")){
                     //上交所卖出买断式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue();//F04
-                    tradeMarket="03";
+                    tradeMarket=DictCodeListExt1.交易场所_上海证券交易所.getValue();
                     type1="03";
                     type2="02";
-                    type6="H03";
-                    type7="03";
-                    type8="F10";
-                    type9="12";
-                    type10="45";
-                    type11="093";
-                    type12="095";
+                    type6=DictCodeList.回购类型_买断式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_正回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_买断式回购.getValue();
+                    type9=DictCodeListExt1.行内资产二级分类_同业拆入及卖出回购.getValue();
+                    type10=DictCodeListExt1.行内资产三级分类_卖出回购.getValue();
+                    type11=DictCodeListExt1.行内资产四级分类_债券买断式回购.getValue();
+                    type12=DictCodeListExt1.行内资产五级分类_债券买断式回购.getValue();
 
-                }else if(code.equals("22020201")){
+                }else if(StringUtil.equals(code,"22020201")){
                     //银行间卖出质押式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue();//F02
-                    tradeMarket="01";
+                    tradeMarket=DictCodeListExt1.交易场所_银行间.getValue();
                     type1="01";
                     type2="01";
-                    type6="H04";
-                    type7="03";
-                    type8="F07";
+                    type6=DictCodeList.回购类型_质押式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_正回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_回购.getValue();
 
-                }else if(code.equals("22020202")){
+                }else if(StringUtil.equals(code,"22020202")){
                     //银行间卖出买断式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue();//F04
-                    tradeMarket="01";
+                    tradeMarket=DictCodeListExt1.交易场所_银行间.getValue();
                     type1="03";
                     type2="01";
-                    type6="H03";
-                    type7="03";
-                    type8="F10";
-                    type9="12";
-                    type10="45";
-                    type11="093";
-                    type12="095";
+                    type6=DictCodeList.回购类型_买断式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_正回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_买断式回购.getValue();
+                    type9=DictCodeListExt1.行内资产二级分类_同业拆入及卖出回购.getValue();
+                    type10=DictCodeListExt1.行内资产三级分类_卖出回购.getValue();
+                    type11=DictCodeListExt1.行内资产四级分类_债券买断式回购.getValue();
+                    type12=DictCodeListExt1.行内资产五级分类_债券买断式回购.getValue();
 
 
-                }else if(code.equals("22020301")){
+                }else if(StringUtil.equals(code,"22020301")){
                     //深交所卖出质押式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue();//F02
-                    tradeMarket="04";
+                    tradeMarket=DictCodeListExt1.交易场所_深圳证券交易所.getValue();
                     type1="01";
                     type2="03";
-                    type6="H04";
-                    type7="03";
-                    type8="F07";
+                    type6=DictCodeList.回购类型_质押式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_正回购.getValue();
+                    type8=BussinessDictCodeList.平安资产类型_回购.getValue();
 
-                }else if(code.equals("22020302")){
+                }else if(StringUtil.equals(code,"22020302")){
                     //深交所卖出买断式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue();//F04
-                    tradeMarket="04";
+                    tradeMarket=DictCodeListExt1.交易场所_深圳证券交易所.getValue();
                     type1="03";
                     type2="03";
-                    type6="H03";
-                    type7="03";
-                    type8="F10";
-                    type9="12";
-                    type10="45";
-                    type11="093";
-                    type12="095";
+                    type6=DictCodeList.回购类型_买断式回购.getValue();
+                    type7=DictCodeList.回购拆借方向_正回购.getValue();
+                    type8= BussinessDictCodeList.平安资产类型_买断式回购.getValue();
+                    type9=DictCodeListExt1.行内资产二级分类_同业拆入及卖出回购.getValue();
+                    type10=DictCodeListExt1.行内资产三级分类_卖出回购.getValue();
+                    type11=DictCodeListExt1.行内资产四级分类_债券买断式回购.getValue();
+                    type12=DictCodeListExt1.行内资产五级分类_债券买断式回购.getValue();
 
                 }
                 FinTradeProduct ftp=new FinTradeProduct();
@@ -280,7 +310,34 @@ public class RskValTableImportService {
                 ftp.setCreateTime(DateUtil.now());
                 ftp.setUpdateTime(DateUtil.now());
                 finTradeProductMapper.insert(ftp);
+
                 FinProductType fpt=new FinProductType();
+                // 调用共通获取金融产品类型（估值核算）
+                List<XmlRelationInputParaDto> inputParamList = new ArrayList<XmlRelationInputParaDto>();
+                // 金融产品类型（投管分类）
+                XmlRelationInputParaDto inputParaDto = new XmlRelationInputParaDto();
+                inputParaDto.setDictCode(KEY_FINPROD_TYPE_TG);
+                inputParaDto.setItemCode(finprodType);
+                inputParamList.add(inputParaDto);
+                // 交易场所
+                if (StringUtil.isNotBlank(tradeMarket)) {
+                    inputParaDto = new XmlRelationInputParaDto();
+                    inputParaDto.setDictCode(KEY_TRADE_PLACE);
+                    inputParaDto.setItemCode(tradeMarket);
+                    inputParamList.add(inputParaDto);
+                }
+
+
+                XmlRelationOutputDto outputDto = XmlRelationUtil.getOutPut(inputParamList);
+                if (StringUtil.isBlank(fpt.getType1())) {
+                    fpt.setType1(XmlRelationUtil.getVALOutPutResultItemCode(outputDto, KEY_TYPE1));
+                }
+                if (StringUtil.isBlank(fpt.getType2())) {
+                    fpt.setType2(XmlRelationUtil.getVALOutPutResultItemCode(outputDto, KEY_ACCOUNTING_TYPE));
+                }
+                if (StringUtil.isBlank(fpt.getType3())) {
+                    fpt.setType3(XmlRelationUtil.getVALOutPutResultItemCode(outputDto, KEY_TAX_ASSET_TYPE));
+                }
                 fpt.setFinprodId(entity2.getFinprodId());
                 fpt.setBranch(0L);
                 fpt.setType1(type1);

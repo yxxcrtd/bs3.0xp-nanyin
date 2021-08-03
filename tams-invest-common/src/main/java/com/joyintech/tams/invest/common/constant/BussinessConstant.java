@@ -307,7 +307,7 @@ public interface BussinessConstant {
      */
     String FUND_DEAL_TYPE = "FUND_DEAL_TYPE";
     /**
-     * 中债导入估值表中文件名称拆分分隔符：估值表-
+     * 中债导入估值表中文件名称拆分分隔符：估值表
      */
     String CHB_VAL_SPLIT_STR = "CHB_VAL_SPLIT_STR";
 }
