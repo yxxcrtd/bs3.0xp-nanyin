@@ -34,6 +34,8 @@
         <result column="PRICE_OUTDEBT_VALUATION" property="priceOutdebtValuation" jdbcType="DECIMAL" />
         <result column="THEORY_PENALTY_INT" property="theoryPenaltyInt" jdbcType="DECIMAL" />
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="REFUND_RATE" property="refundRate" jdbcType="DECIMAL" />
+        <result column="REFUND_AMOUNT" property="refundAmount" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TOTLE_TRADE_ID TOTLE_TRADE_ID, BRANCH BRANCH, UNIT_INT UNIT_INT, UNIT_PRIN UNIT_PRIN, 
@@ -44,7 +46,7 @@
         PAY_TYPE PAY_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, IS_BREAK IS_BREAK, FEEAMT FEEAMT,
         YESTERDAY_DEBT_VALUATION YESTERDAY_DEBT_VALUATION, PRICE_OUTDEBT_VALUATION PRICE_OUTDEBT_VALUATION,
-        THEORY_PENALTY_INT THEORY_PENALTY_INT, DEPT_CODE DEPT_CODE
+        THEORY_PENALTY_INT THEORY_PENALTY_INT, DEPT_CODE DEPT_CODE,REFUND_RATE REFUND_RATE,REFUND_AMOUNT REFUND_AMOUNT,
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -77,7 +79,7 @@
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, IS_BREAK,
             FEEAMT, YESTERDAY_DEBT_VALUATION, PRICE_OUTDEBT_VALUATION,
-            THEORY_PENALTY_INT, DEPT_CODE)
+            THEORY_PENALTY_INT, DEPT_CODE,REFUND_RATE,REFUND_AMOUNT)
         values (#{totleTradeId,jdbcType=VARCHAR}, #{branch,jdbcType=VARCHAR}, #{unitInt,jdbcType=DECIMAL}, 
             #{unitPrin,jdbcType=DECIMAL}, #{prin,jdbcType=DECIMAL}, #{rate,jdbcType=DECIMAL}, 
             #{theoryAmt,jdbcType=DECIMAL}, #{theoryInt,jdbcType=DECIMAL}, #{theoryPrin,jdbcType=DECIMAL}, 
@@ -88,7 +90,7 @@
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{isBreak,jdbcType=VARCHAR},
             #{feeamt,jdbcType=DECIMAL}, #{yesterdayDebtValuation,jdbcType=DECIMAL}, #{priceOutdebtValuation,jdbcType=DECIMAL},
-            #{theoryPenaltyInt,jdbcType=DECIMAL}, #{deptCode,jdbcType=VARCHAR})
+            #{theoryPenaltyInt,jdbcType=DECIMAL}, #{deptCode,jdbcType=VARCHAR},#{refundRate,jdbcType=DECIMAL},#{refundAmount,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal" >
         insert into PA_TRD_FIN_PRODUCT_DEAL_TOTAL
@@ -189,6 +191,12 @@
             <if test="deptCode != null" >
                 DEPT_CODE,
             </if>
+            <if test="refundRate != null" >
+                REFUND_RATE,
+            </if>
+            <if test="refundAmount != null" >
+                REFUND_AMOUNT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="totleTradeId != null" >
@@ -287,6 +295,12 @@
             <if test="deptCode != null" >
                 #{deptCode,jdbcType=VARCHAR},
             </if>
+            <if test="refundRate != null" >
+                #{refundRate,jdbcType=DECIMAL},
+            </if>
+            <if test="refundAmount != null" >
+                #{refundAmount,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal" >
@@ -295,14 +309,14 @@
         CURRENT_SUB, LAST_AMT, LAST_RED, LAST_AMT_SUB, ACCOUNTING_AMT, REMAIN_PRIN_AMT, REG_DATE, 
         BONUS_CFM_DATE, PAY_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
         IS_BREAK, FEEAMT, YESTERDAY_DEBT_VALUATION, PRICE_OUTDEBT_VALUATION, THEORY_PENALTY_INT,
-        DEPT_CODE
+        DEPT_CODE,REFUND_RATE,REFUND_AMOUNT
         )
         select TOTLE_TRADE_ID, BRANCH, UNIT_INT, UNIT_PRIN, 
             PRIN, RATE, THEORY_AMT, THEORY_INT, THEORY_PRIN, THEORY_PAY_DATE, INTEREST, PA_BUSS_TYPE, 
             CURRENT_SUB, LAST_AMT, LAST_RED, LAST_AMT_SUB, ACCOUNTING_AMT, REMAIN_PRIN_AMT, REG_DATE, 
             BONUS_CFM_DATE, PAY_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
             IS_BREAK, FEEAMT, YESTERDAY_DEBT_VALUATION, PRICE_OUTDEBT_VALUATION, THEORY_PENALTY_INT,
-        DEPT_CODE
+        DEPT_CODE,REFUND_RATE,REFUND_AMOUNT
              from PA_TRD_FIN_PRODUCT_DEAL_TOTAL
              where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </insert>
@@ -393,6 +407,12 @@
             <if test="deptCode != null" >
                 DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
             </if>
+            <if test="refundRate != null" >
+                REFUND_RATE = #{refundRate,jdbcType=DECIMAL},
+            </if>
+            <if test="refundAmount != null" >
+                REFUND_AMOUNT = #{refundAmount,jdbcType=DECIMAL},
+            </if>
         </set>
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
@@ -425,7 +445,9 @@
             YESTERDAY_DEBT_VALUATION = #{yesterdayDebtValuation,jdbcType=DECIMAL},
             PRICE_OUTDEBT_VALUATION = #{priceOutdebtValuation,jdbcType=DECIMAL},
             THEORY_PENALTY_INT = #{theoryPenaltyInt,jdbcType=DECIMAL},
-            DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            REFUND_RATE = #{refundRate,jdbcType=DECIMAL},
+            REFUND_AMOUNT = #{refundAmount,jdbcType=DECIMAL}
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
 </mapper>

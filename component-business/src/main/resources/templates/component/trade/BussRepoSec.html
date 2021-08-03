@@ -31,7 +31,7 @@
                         <div class="layui-input-inline input-inline">
                             <input disabled type="text" th:id="|${entityNameBussRepoSec}_totalPrinAmt|"
                                    th:name="|${entityNameBussRepoSec}.totalPrinAmt|" maxlength="16"
-                                   class="layui-input form-input text-number" placeholder="请输入内容"
+                                   class="layui-input form-input text-number" placeholder="请输入内容" data-textrange="4"
                                    th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.totalPrinAmt==null?null:entity?.totalPrinAmt}">
                             <span class="input-right-show unitNum"
                                   data-th-utext="#{BussRepoSec.yuan}">元</span>
