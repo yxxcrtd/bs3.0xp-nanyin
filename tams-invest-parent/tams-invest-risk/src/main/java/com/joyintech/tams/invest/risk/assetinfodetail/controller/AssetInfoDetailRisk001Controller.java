@@ -137,7 +137,7 @@ public class AssetInfoDetailRisk001Controller extends BaseController {
 		File outFile = assetInfoDetailRisk001Service.makeFile(
 				"/com/joyintech/tams/invest/risk/assetinfodetail/conf/export_conf.xml", dtoList);
 		return ExportUtil.export(
-				"资产要素信息维护" + GlobalConstant.OPEN_PARENTHESIS
+				"资产要素信息" + GlobalConstant.OPEN_PARENTHESIS
 						+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
 						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 				outFile, true);
