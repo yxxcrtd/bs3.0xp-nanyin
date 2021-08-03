@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -130,9 +131,13 @@ public class EtrBoutRepo002Controller extends BaseController {
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             dto = etrBoutRepoService.getBussinessEntityByWorkflowId(workflowId);
             //配置单位 edit by yeming 20210723 start
-            if(entrustAmtUnit.equals("02")){
-                if(dto.getEntrustAmt() != null) {
-                    dto.setEntrustAmt(dto.getEntrustAmt().divide(new BigDecimal(10000)));
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(dto.getEntrustNum() != null) {
+                    dto.setEntrustAmt(dto.getEntrustNum().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }else {
+                if(dto.getEntrustNum() != null) {
+                    dto.setEntrustAmt(dto.getEntrustNum());
                 }
             }
             //配置单位 edit by yeming 20210723 end
@@ -153,10 +158,12 @@ public class EtrBoutRepo002Controller extends BaseController {
                 }
             }
             //配置单位 edit by yeming 20210723 start
-            if(entrustAmtUnit.equals("02")){
-                if(dto.getEntrustAmt() != null) {
-                    dto.setEntrustAmt(dto.getEntrustAmt().divide(new BigDecimal(10000)));
-                }else {
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(dto.getEntrustNum() != null) {
+                    dto.setEntrustAmt(dto.getEntrustNum().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }else {
+                if(dto.getEntrustNum() != null) {
                     dto.setEntrustAmt(dto.getEntrustNum());
                 }
             }
@@ -175,9 +182,13 @@ public class EtrBoutRepo002Controller extends BaseController {
             dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             dto.setEntrustStatus(DictCodeList.委托状态_新建.getValue());
             //配置单位 edit by yeming 20210723 start
-            if(entrustAmtUnit.equals("02")){
-                if(dto.getEntrustAmt() != null) {
-                    dto.setEntrustAmt(dto.getEntrustAmt().divide(new BigDecimal(10000)));
+            if(StringUtil.equals(entrustAmtUnit,"02")){
+                if(dto.getEntrustNum() != null) {
+                    dto.setEntrustAmt(dto.getEntrustNum().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }else {
+                if(dto.getEntrustNum() != null) {
+                    dto.setEntrustAmt(dto.getEntrustNum());
                 }
             }
             //配置单位 edit by yeming 20210723 end
@@ -339,10 +350,8 @@ public class EtrBoutRepo002Controller extends BaseController {
             entity -> this.getMessage("EtrBoutRepo001") + "(" + entity.getPortfolioId() + ")"
                       + "-" + this.getMessage("EtrBoutRepo002.ps") + "(" + SysDataUtil.getNameFromDataDict(DictCode.回购拆借方向,entity.getPs())  + ")"+"-" + "("
                       + this.getMessage("EtrBoutRepo002.vdate") + ":" +DateUtil.format(entity.getVdate())
-                      + ")-(" + this.getMessage("EtrBoutRepo002.mdate") + ":"
-                      +DateUtil.format(entity.getMdate())+ ")-"
-                      + this.getMessage("EtrBoutRepo002.entrustAmt") + ":"
-                      + entity.getEntrustAmt());
+                      + ")-(" + this.getMessage("EtrBoutRepo002.mdate") + ":"+DateUtil.format(entity.getMdate())+ ")-"
+                      + this.getMessage("EtrBoutRepo002.entrustAmt") + ":"+ entity.getEntrustAmt());
         processParameter.setWorkFlowParameter(params);
         String msg = etrBoutRepoService.start(processParameter, dto);
         return new AjaxResult(msg);

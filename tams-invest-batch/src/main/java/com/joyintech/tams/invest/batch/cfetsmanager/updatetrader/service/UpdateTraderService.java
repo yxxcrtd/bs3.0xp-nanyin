@@ -1,7 +1,9 @@
 package com.joyintech.tams.invest.batch.cfetsmanager.updatetrader.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,12 +65,39 @@ public class UpdateTraderService {
     	List<MstCfetsCustomerInfo> mstCfetsCustomerInfos = updateTraderMapper.selectCustomerNew(date);
     	if(!StringUtil.isEmptyList(mstCfetsCustomerInfos)) {
     		for(MstCfetsCustomerInfo mstCfetsCustomerInfo:mstCfetsCustomerInfos) {
-    			MstCounterParty mstCounterParty = new MstCounterParty();
+    			/*update by chenjiaxing 银行间交易对手信息录入之后需要生成对应的交易对手信息，如果是非法人机构默认为资管产品；
+    			如果是法人机构需要匹配机构信息是否已存在，不存在建立为市场机构交易对手，存在的话，则不再建立 20210730 start*/
+/*    			MstCounterParty mstCounterParty = new MstCounterParty();
     			mstCounterParty.setCounterId(baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(
                     bussinessCodeParameter) : IDGenerator.generate());
     			mstCounterParty.setCounterType(DictCodeListExt1.交易对手类型_非法人机构.getValue());
     			mstCounterParty.setCounterName(mstCfetsCustomerInfo.getPartyName());
-    			mstCounterPartyMapper.insertSelective(mstCounterParty);
+    			mstCounterPartyMapper.insertSelective(mstCounterParty);*/
+                /*判断当前当前机构客户类型 >0 非法人*/
+                Map<String, Object> map = new HashMap<>();
+                map.put("partyCustomerId", mstCfetsCustomerInfo.getPartyCustomerId());
+                int temp01 = updateTraderMapper.selectCustomer01(map);
+                int temp02 = updateTraderMapper.selectCustomer02(map);
+                if(temp01 > 0){
+                    //非法人相关处理
+                    MstCounterParty mstCounterParty = new MstCounterParty();
+                    mstCounterParty.setCounterId(baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(
+                            bussinessCodeParameter) : IDGenerator.generate());
+                    mstCounterParty.setCounterType(DictCodeListExt1.交易对手类型_资管产品.getValue());
+                    mstCounterParty.setCounterName(mstCfetsCustomerInfo.getPartyName());
+                    mstCounterPartyMapper.insertSelective(mstCounterParty);
+                }
+                if(temp02 > 0){
+                    //法人相关处理
+                    MstCounterParty mstCounterParty = new MstCounterParty();
+                    mstCounterParty.setCounterId(baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(
+                            bussinessCodeParameter) : IDGenerator.generate());
+                    mstCounterParty.setCounterType(DictCodeListExt1.交易对手类型_市场机构.getValue());
+                    mstCounterParty.setCounterName(mstCfetsCustomerInfo.getPartyName());
+                    mstCounterPartyMapper.insertSelective(mstCounterParty);
+                }
+    			/*update by chenjiaxing 银行间交易对手信息录入之后需要生成对应的交易对手信息，如果是非法人机构默认为资管产品；
+    			如果是法人机构需要匹配机构信息是否已存在，不存在建立为市场机构交易对手，存在的话，则不再建立 20210730 end*/
     		}
     	}	
     	

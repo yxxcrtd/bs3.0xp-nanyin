@@ -117,8 +117,9 @@ public class EtrExchangeImportController extends BaseController{
 			model.addAttribute("workflowId", workflowId);
 		}
         else{
-        	//String tempList = getParam("tempList");
-    		//EtrExchangeTrade001Dto dto = etrExchangeTrade001Service.getEntrustListData(tempList);
+			model.addAttribute("currentTab", getParam("currentTab"));
+        	/*String tempList = getParam("tempList");
+    		EtrExchangeTrade001Dto dto = etrExchangeTrade001Service.getEntrustListData(tempList);*/
     		//model.addAttribute(GlobalConstant.ENTITY, new EtrExchangeTrade001Dto());
     		//model.addAttribute("etrExchangeInfoDtoList",StringUtil.isEmptyList(dto.getSelectedItem()) ? null : JsonUtils.object2Json(dto.getSelectedItem()));
         }
@@ -144,6 +145,12 @@ public class EtrExchangeImportController extends BaseController{
         model.addAttribute("PS_T04", DictCodeList.交易方向_申购.getValue());
         model.addAttribute("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
         model.addAttribute("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+
+		// 交易平台
+		model.addAttribute("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());
+		model.addAttribute("SHARES_TRADE_PLATFORM_03", DictCodeList.交易平台_固定收益平台.getValue());
+		model.addAttribute("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
+		model.addAttribute("SHARES_TRADE_PLATFORM_05", DictCodeList.交易平台_综合协议交易平台.getValue());
 		// 如果是导入
 		return super.init(model);
 	}

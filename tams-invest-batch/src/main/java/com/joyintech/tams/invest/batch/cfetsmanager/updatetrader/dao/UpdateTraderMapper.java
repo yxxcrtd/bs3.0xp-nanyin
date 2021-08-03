@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.batch.cfetsmanager.updatetrader.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,16 @@ public interface UpdateTraderMapper {
 	 * @return
 	 */
 	List<MstCfetsCustomerInfo> selectCustomerNew(String batchDate);
+
+	/**
+	 * 查询在交易对手中的非法人机构
+	 * @return
+	 */
+	int selectCustomer01(Map<String, Object> map);
+
+	/**
+	 * 查询在交易对手中的法人机构
+	 * @return
+	 */
+	int selectCustomer02(Map<String, Object> map);
 }

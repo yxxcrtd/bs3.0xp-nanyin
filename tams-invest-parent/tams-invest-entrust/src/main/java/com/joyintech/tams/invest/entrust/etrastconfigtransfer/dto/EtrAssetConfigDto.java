@@ -76,6 +76,12 @@ public class EtrAssetConfigDto extends EtrEntrust {
     private BigDecimal radio;
 
     /**
+     * 持有期收益率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal yield;
+
+    /**
      * 转入组合信息
      */
     private List<PtlPortfolioValuation> portfolioValuationList;
@@ -94,6 +100,12 @@ public class EtrAssetConfigDto extends EtrEntrust {
      * 证券账户
      */
     private String secAcctId;
+
+    /**
+     * 全价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal fprice;
 
 
     @Number(3)
@@ -198,6 +210,14 @@ public class EtrAssetConfigDto extends EtrEntrust {
         this.deviation = deviation;
     }
 
+    public BigDecimal getYield() {
+        return yield;
+    }
+
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
+
     @Number(value=7,unit = DictCodeListExt1.单位_万元)
     public BigDecimal getEntrustNum() {
         return super.getEntrustNum();
@@ -265,6 +285,14 @@ public class EtrAssetConfigDto extends EtrEntrust {
         this.secAcctId = secAcctId;
     }
 
+    public BigDecimal getFprice() {
+        return fprice;
+    }
+
+    public void setFprice(BigDecimal fprice) {
+        this.fprice = fprice;
+    }
+
     public String getTradeMarketStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.交易场所,this.getTradeMarket());
     }
@@ -272,5 +300,7 @@ public class EtrAssetConfigDto extends EtrEntrust {
     public String getType6Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.WIND一级分类_含债券一级分类等,this.getType6());
     }
+
+
 }
 

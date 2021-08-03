@@ -172,7 +172,11 @@ public enum DictCodeListRsk implements BaseDictCodeList {
     授信占用类别_预占(DictCode.授信占用类别,"01","预占"),
     授信占用类别_实占(DictCode.授信占用类别,"02","实占"),
     授信占用来源_画面(DictCode.授信占用类别,"03","画面"),
-    授信占用来源_接口(DictCode.授信占用类别,"04","接口")
+    授信占用来源_接口(DictCode.授信占用类别,"04","接口"),
+
+    //上农商个性化_额度校验规则管理,添加数据字典 add by zhangpei 20210105 start
+    授信资产三级分类_政策银行债(DictCode.授信资产三级分类,"B001","政策银行债"),
+    //上农商个性化_额度校验规则管理,添加数据字典 add by zhangpei 20210105 end
 	;
     /**
      * 对应于数据字典code

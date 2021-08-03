@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.trade.bond.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,9 +62,24 @@ public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInv
         }
 
         pageParam.put("loginUserName", LoginUserUtil.getUserName());
-
-        return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/findPage",
-            pageParam,TrdBondInvestTradeDto.class);
+        //配置单位 edit by yeming 20210802 start
+        Page<TrdBondInvestTradeDto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/findPage",
+                pageParam,TrdBondInvestTradeDto.class);
+        for(TrdBondInvestTradeDto dto:page.getRoot()){
+            if(dto.getTradeAmt() != null) {
+                dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(dto.getOwnTradeAmt() != null) {
+                dto.setOwnTradeAmt(dto.getOwnTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(dto.getIntegrateTradeAmt() != null) {
+                dto.setIntegrateTradeAmt(dto.getIntegrateTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+        }
+        return page;
+        //配置单位 edit by yeming 20210802 end
+//        return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/findPage",
+//            pageParam,TrdBondInvestTradeDto.class);
     }
 
     @Override

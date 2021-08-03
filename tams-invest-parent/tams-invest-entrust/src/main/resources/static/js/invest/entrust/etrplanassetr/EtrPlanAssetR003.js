@@ -156,17 +156,18 @@
                 temp.elementId = 'EtrPlanAssetR002_btn_submit';
         }
 		}
-		Joyin.ajaxJson(basePath+ 'invest/entrust/etrplanassetr/EtrPlanAssetR003/check',objects,
-						function(result) {Joyin.confirm(
-											result.data,
-											function() {
-												if (operateType === 'save') {
-													WorkFlow.doSaveList(basePath+ 'invest/entrust/etrplanassetr/EtrPlanAssetR003/save',objects,"EtrPlanAssetR002_btn_save","EtrPlanAssetR002");
-												  }else {
-							                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR003/save', objects, "EtrPlanAssetR002_btn_submit", "EtrPlanAssetR002");
-								                  }
-											});
-						});
+
+		//指令暂存，去除校验  add by xxg 20210802
+		if (operateType === 'save') {
+			WorkFlow.doSaveList(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR003/save', objects, "EtrPlanAssetR002_btn_save", "EtrPlanAssetR002");
+		} else {
+			Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR003/check', objects,
+				function (result) {
+					Joyin.confirm(result.data, function () {
+						WorkFlow.doSubmitList(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR003/save', objects, "EtrPlanAssetR002_btn_submit", "EtrPlanAssetR002");
+					});
+				});
+		}
 	}
 	$(function() {
 		if (etrPlanAssetRDtoList) {

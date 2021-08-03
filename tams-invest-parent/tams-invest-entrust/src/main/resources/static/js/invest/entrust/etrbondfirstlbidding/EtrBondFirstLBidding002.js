@@ -81,7 +81,7 @@
         		var tableRows  = table.getAllRows();
             	$.each(tableRows, function(id, value){
                     // bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseInt(value.bidPrinAmt), 2)
-                    bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseFloat(value.bidPrinAmt), 4)
+                    bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseFloat(value.bidPrinAmt), entrustAmtUnit == '02' ? 4 : 2);
             	});
             	$('#entrustNum').val(bidPrinAmt);
             	return true;
@@ -93,7 +93,7 @@
     table.bind('click', '.delt', function(data, index) {
     	if (data.bidPrinAmt) {
         	// $('#entrustNum').val($('#entrustNum').val()-parseInt(data.bidPrinAmt));
-            $('#entrustNum').val(JoyinMath.doMinus($('#entrustNum').val(), parseFloat(data.bidPrinAmt), 4));
+            $('#entrustNum').val(JoyinMath.doMinus($('#entrustNum').val(), parseFloat(data.bidPrinAmt), entrustAmtUnit == '02' ? 4 : 2));
 		}
     	
     	table.deleteRow(index);
@@ -222,40 +222,48 @@
     	//风险试算 end
     	//校验数据  校验表格
     	var tableData  = table.getAllRows();
-    	if (tableData.length == 0) {
-    		Joyin.alert("投标标位至少有一条数据！", 2);
-			return false;
-		}
-    	for (var i = 0; i < tableData.length; i++) {
-    		if (!tableData[i].bidPrice ) {
-    			Joyin.alert("投标标位不能为空！", 2);
-				return false;
-			}
-            if (tableData[i].bidPrice > 100 || tableData[i].bidPrice <= 0) {
-                Joyin.alert("投标标位的值应大于0，小于等于100！", 2);
+        if(operateType != 'save'){
+            if (tableData.length == 0) {
+                Joyin.alert("投标标位至少有一条数据！", 2);
                 return false;
             }
-    		if (!tableData[i].bidPrinAmt) {
-    			Joyin.alert("投标券面总额不能为空！", 2);
-				return false;
-			}
-            if (tableData[i].bidPrinAmt.length > 16) {
-                Joyin.alert("投标券面总额的值不能超过16位！", 2);
-                return false;
+            for (var i = 0; i < tableData.length; i++) {
+                if (!tableData[i].bidPrice ) {
+                    Joyin.alert("投标标位不能为空！", 2);
+                    return false;
+                }
+                if (tableData[i].bidPrice > 100 || tableData[i].bidPrice <= 0) {
+                    Joyin.alert("投标标位的值应大于0，小于等于100！", 2);
+                    return false;
+                }
+                if (!tableData[i].bidPrinAmt) {
+                    Joyin.alert("投标券面总额不能为空！", 2);
+                    return false;
+                }
+                if (tableData[i].bidPrinAmt.length > 16) {
+                    Joyin.alert("投标券面总额的值不能超过16位！", 2);
+                    return false;
+                }
+                for (var j = i+1; j < tableData.length; j++) {
+                    if (Number(tableData[i].bidPrice) ==
+                        Number(tableData[j].bidPrice)) {
+                        Joyin.alert( tableData[j].bidPrice + "投标标位不能重复存在！", 2);
+                        return false;
+                    }
+
+                }
             }
-			for (var j = i+1; j < tableData.length; j++) {
-				if (Number(tableData[i].bidPrice) ==
-                    Number(tableData[j].bidPrice)) {
-					Joyin.alert( tableData[j].bidPrice + "投标标位不能重复存在！", 2);
-					return false;
-				}
-				
-			}
-		}
+        }
+
         /**
          * 获取列表参数
          */
         var object = $.serializeToObject('#searchForm',true);
+        //配置单位 add by yeming 20210730 start
+        for (var i=0;i<tableData.length;i++){
+            tableData[i].bidPrinAmt = JoyinMath.doMul(tableData[i].bidPrinAmt, entrustAmtUnit == '02' ? 10000 : 1, 2) ;
+        }
+        //配置单位 add by yeming 20210730 end
         object.bidPriceList = tableData;
         object.operateType = operateType;
         object.pageModel = pageModel;
@@ -292,33 +300,33 @@
             elementId = 'EtrBondFirstLBidding002_btn_total';
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-            Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/check',object,
-                function(result) {
-                    Joyin.confirm(result.data,function() {
-                        if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath+'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/save',object,elementId||"EtrBondFirstLBidding002_btn_save");
-                        } else {
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/save',object,elementId||"EtrBondFirstLBidding002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/check',object,
+                    function(result) {
+                        Joyin.confirm(result.data,function() {
                             WorkFlow.doSubmitList(basePath+'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/save',object,elementId||"EtrBondFirstLBidding002_btn_submit");
-                        }
-                    });
-                },false,function (result) {
-                    var disabledFlag = $('#invAim').attr('disabled');
-                    if(disabledFlag) return;
-                    var msg = result.errorList;
-                    var message ="";
-                    for(var i=0;i<msg.length;i++){
-                        message = msg[i];
-                        if(message.field!=null && message.field=='invAim'){
-                            if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
-                                $('#invAim').textSelect('setValue', "FVTPL");
-                                break;
+                        });
+                    },false,function (result) {
+                        var disabledFlag = $('#invAim').attr('disabled');
+                        if(disabledFlag) return;
+                        var msg = result.errorList;
+                        var message ="";
+                        for(var i=0;i<msg.length;i++){
+                            message = msg[i];
+                            if(message.field!=null && message.field=='invAim'){
+                                if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
+                                    $('#invAim').textSelect('setValue', "FVTPL");
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                });
-        });
+                    });
+            });
+        }
     }
     
     window.componentLoadCallback = function(isDone, pagePath, params){
@@ -341,16 +349,16 @@
         //配置单位 add by yeming 20210721 start
         if(entrustAmtUnit == '01' ) {
             $(".unitNum").text('元');
+            $("#entrustNum").attr("data-textrange",2);
         }
         //配置单位 add by yeming 20210721 end
     }
-
     $(function(){
         star();
         init();
 		if (bidPriceList) {
 			$.each(JSON.parse(bidPriceList), function(id, value){
-				bidPrinAmt += parseInt(value.bidPrinAmt);
+                bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseFloat(value.bidPrinAmt), entrustAmtUnit == '02' ? 4 : 2);
 			});
 			$('#entrustNum').val(bidPrinAmt);
             $('#entrustNum_old').val(bidPrinAmt);
@@ -400,5 +408,23 @@
         }else{
         	$('#assetType11Div').hide();
         }
-	})
+
+        /**
+         * 查看资产详情事件
+         */
+        $('#EtrBondFirstLBidding002_btn_search').click(function() {
+            var finprodId = $("#finprodId").val();
+            var url = "/invest/asset/tenderbond/FinTenderBondTargetAsset002/init";
+            if (finprodId != ""){
+                var params = {
+                    pageModel:PAGE_MODEL_REFERENCE,
+                    finprodId:finprodId
+                };
+                EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
+            } else {
+                Joyin.error("资产名称不能为空")
+            }
+        });
+
+    })
 }());

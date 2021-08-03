@@ -76,18 +76,19 @@
 			object.chlId = $('#getChannelId').val();
 		}
 
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/checkAuthorization', object, function(result2) {
-	        Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/check',object,
-	          function(result) {
-	              Joyin.confirm(result.data,function() {
-	                   if (operateType === 'save') {
-	                       WorkFlow.doSaveList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_save");
-	                   } else {
-	                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_submit");
-	                   }
-	               });
-	           });
-        });
+        //保存时，去除校验
+		if(operateType === 'save'){
+			WorkFlow.doSaveList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_save");
+		}else{
+			Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/checkAuthorization', object, function(result2) {
+				Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/check',object,
+					function(result) {
+						Joyin.confirm(result.data,function() {
+							WorkFlow.doSubmitList(basePath+'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/save',object,"EtrBrowDepoInfo002_btn_submit");
+						});
+					});
+			});
+		}
     }
 
     //画面联动,通道带出通道可用现金
@@ -286,6 +287,25 @@
 			}
         }
     }
+
+	/**
+	 * 查看资产详情事件
+	 */
+	$('#EtrBrowDepoInfo002_btn_search').click(function() {
+		var finprodMarketId = $("#finprodMarketId").val();
+		var url = "/invest/asset/depo/FinDepositTarget002/init";
+		if (finprodMarketId != ""){
+			var params = {
+				pageModel:PAGE_MODEL_REFERENCE,
+				isQuickInput:true,
+				finprodMarketId:finprodMarketId
+			};
+			EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
+		} else {
+			Joyin.error("资产名称不能为空")
+		}
+	});
+
     /**
      * 绑定事件
      */

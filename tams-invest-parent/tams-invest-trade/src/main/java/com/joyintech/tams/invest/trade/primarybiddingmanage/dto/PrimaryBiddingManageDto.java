@@ -99,6 +99,11 @@ public class PrimaryBiddingManageDto extends EtrEntrust implements ProcessEntity
      * 交易对手名称
      */
     private String counterIdText;
+
+    /**
+     * 投标量调整额
+     */
+    private BigDecimal adjustBallotnum;
     
     /**
      * 投标组合列表
@@ -481,5 +486,13 @@ public class PrimaryBiddingManageDto extends EtrEntrust implements ProcessEntity
      */
     public void setAdjustStrategy(String adjustStrategy) {
         this.adjustStrategy = adjustStrategy;
+    }
+
+    public BigDecimal getAdjustBallotnum() {
+        return adjustBallotnum;
+    }
+
+    public void setAdjustBallotnum(BigDecimal adjustBallotnum) {
+        this.adjustBallotnum = adjustBallotnum;
     }
 }

@@ -25,6 +25,8 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +53,18 @@ public class PrimaryBiddingManage001Service extends CommonExportService<PrimaryB
      */
 	public Page<PrimaryBiddingManageDto> findPage(Map<String, Object> pageParam) {
 		pageParam.put("loginUserName", LoginUserUtil.getUserName());
-		return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/PrimaryBiddingManage001/findPage",
-	            pageParam,PrimaryBiddingManageDto.class);
+		//配置单位 edit by yeming 20210802 start
+		Page<PrimaryBiddingManageDto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/PrimaryBiddingManage001/findPage",
+				pageParam,PrimaryBiddingManageDto.class);
+		for(PrimaryBiddingManageDto dto:page.getRoot()){
+			if(dto.getAllBidPrinAmt() != null) {
+				dto.setAllBidPrinAmt(dto.getAllBidPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+			}
+		}
+		return page;
+		//配置单位 edit by yeming 20210802 end
+//		return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/PrimaryBiddingManage001/findPage",
+//	            pageParam,PrimaryBiddingManageDto.class);
 	}
 
 	public List<PrimaryBiddingManageDto> findDataByFinprodIdAndCounterId(Map<String, Object> mapParam){

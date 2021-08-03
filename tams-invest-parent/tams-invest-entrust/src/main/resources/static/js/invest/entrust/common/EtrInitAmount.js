@@ -111,6 +111,17 @@
         $("#secAbbr").html(secAbbr);
     }
 
+    /**根据市场代码，查询行情信息，展示出来*/
+    var changeElement = function(changeFlg) {
+        if (changeFlg == "01") {
+            $("#costPrice_div").show();
+            $("#cashAmount_div").hide();
+        } else if (changeFlg == "02") {
+            $("#costPrice_div").hide();
+            $("#cashAmount_div").show();
+        }
+    }
+
 
     /**
      * 对外公开的接口
@@ -118,13 +129,15 @@
     parent.EtrInitAmount = {
         queryAmountInfo:queryAmountInfo,
         calCanBuyAmount:calCanBuyAmount,
-        queryAmountInfoMuti:queryAmountInfoMuti
+        queryAmountInfoMuti:queryAmountInfoMuti,
+        changeElement:changeElement
     }
 
 
     $(function() {
         dynview = new DynamicView("EtrInitAmount", "EtrInitAmount_dyn");
         dynview.init();
+        $("#cashAmount_div").hide();
     });
 
 }());

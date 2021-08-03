@@ -111,46 +111,40 @@
         if(object.ps != T04){
             object.assetAvailablePosition = $('#assetAvailablePosition').val();
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/checkAuthorization', object, function(result2) {
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/check',object,
-          function(result) {
-            if(object.ps == T04 || object.ps == T01){
-                if($('#proAvailableCash').val() != null && $('#proAvailableCash').val() != '' && $('#entrustAmt').val() != null && $('#entrustAmt').val() != ''){
-                    if(parseInt($('#entrustAmt').val()) > parseInt($('#proAvailableCash').val())&&ETR_CHECK_CASH_SWITCH == 01){
-                        Joyin.confirm("委托金额必须小于等于组合T日可用现金,确认保存或提交吗",function() {
-                            //Joyin.confirm(result.data,function() {
-                                if (operateType === 'save') {
-                                    WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
-                                } else {
-                                    WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+
+        //指令保存，不校验要素
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/checkAuthorization', object, function(result2) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/check',object,
+                    function(result) {
+                        if(object.ps == T04 || object.ps == T01){
+                            if($('#proAvailableCash').val() != null && $('#proAvailableCash').val() != '' && $('#entrustAmt').val() != null && $('#entrustAmt').val() != ''){
+                                if(parseInt($('#entrustAmt').val()) > parseInt($('#proAvailableCash').val())&&ETR_CHECK_CASH_SWITCH == 01){
+                                    Joyin.confirm("委托金额必须小于等于组合T日可用现金,确认保存或提交吗",function() {
+                                        //Joyin.confirm(result.data,function() {
+                                        WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+                                        //});
+                                    },function(){
+                                        return false;
+                                    })
                                 }
-                            //});
-                        },function(){
-                            return false;
-                        })
-                    }
-                    else{
-                        Joyin.confirm(result.data,function() {
-                            if (operateType === 'save') {
-                                WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
-                            } else {
-                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+                                else{
+                                    Joyin.confirm(result.data,function() {
+                                        WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+                                    });
+                                }
                             }
-                        });
-                    }
-                }
-            }
-            else{
-                Joyin.confirm(result.data,function() {
-                    if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
-                    } else {
-                        WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
-                    }
-                });
-            }
-           });
-        });
+                        }
+                        else{
+                            Joyin.confirm(result.data,function() {
+                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+                            });
+                        }
+                    });
+            });
+        }
     }
     
     //查询资产管理人

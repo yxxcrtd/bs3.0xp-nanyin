@@ -6,6 +6,8 @@ package com.joyintech.tams.component.business.common.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.SecurityUtil;
@@ -1453,6 +1455,12 @@ public class CommonBusinessService extends BaseService {
 	   map.put("fck", DictCodeList.平安资产类型_存款.getValue());
 	   map.put("fxml", DictCodeList.平安资产类型_项目类资产.getValue());
 	   return commonBusinessMapper.selectCustomer(map);
+   }
+
+
+   @DataSource(DataSourceType.OTHER)
+   public boolean isTraDirector(Map<String,Object> param){
+       return commonBusinessMapper.isTraDirector(param)>0?true:false;
    }
 
 }

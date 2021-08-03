@@ -518,6 +518,15 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      */
     private InterfTradSecdealDto interfTradSecdeal;
 
+    /**
+     * 返款费率
+     */
+    private BigDecimal refundRate;
+    /**
+     * 返款金额
+     */
+    private BigDecimal refundAmount;
+
     public String getPreTradeId() {
         return preTradeId;
     }
@@ -2295,5 +2304,21 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
 
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId;
+    }
+
+    public BigDecimal getRefundRate() {
+        return refundRate;
+    }
+
+    public void setRefundRate(BigDecimal refundRate) {
+        this.refundRate = refundRate;
+    }
+
+    public BigDecimal getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(BigDecimal refundAmount) {
+        this.refundAmount = refundAmount;
     }
 }

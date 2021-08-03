@@ -162,9 +162,23 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
         }
         //	新增债券二、三、四级分类	2019/7/26	王贵奇	结束
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForPage(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/findPage", param,
-            EtrInvestBondInfoDto.class);
+        //配置单位 edit by yeming 20210730 start
+        Page<EtrInvestBondInfoDto> page = restTemplate.postForPage(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/findPage", param,
+                EtrInvestBondInfoDto.class);
+        for(EtrInvestBondInfoDto dto:page.getRoot()){
+            if(dto.getEntrustNum() != null) {
+                dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(dto.getEntrustOwnNum() != null) {
+                dto.setEntrustOwnNum(dto.getEntrustOwnNum().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(dto.getEntrustIntegrateNum() != null) {
+                dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+        }
+        return page;
+        //配置单位 edit by yeming 20210730 end
     }
 
     /**

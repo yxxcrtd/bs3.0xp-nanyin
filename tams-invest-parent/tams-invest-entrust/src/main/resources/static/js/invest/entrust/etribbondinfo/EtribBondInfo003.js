@@ -811,6 +811,7 @@
         query("#counterId1").val("").trigger("change");
         query("#counterId2").val("").trigger("change");
         query("#tradeAmt").removeAttr("auto");// 劵面总额汇总方式
+        document.getElementById('deviationDegree').innerHTML = '';
         table.clear();
     }
 
@@ -1170,6 +1171,7 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
+        document.getElementById('deviationDegree').innerHTML ="";
         if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
             return;
         }
@@ -1180,7 +1182,8 @@
                 vdate:query('#vdate').val()
             }, function (result) {
                 if (result ) {
-                    document.getElementById('deviationDegree').innerHTML = JoyinUtil.formatNumber(result, 4, null, 2) + '%';
+                    document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
+                            JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
                 }
             });
     }

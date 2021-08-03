@@ -78,19 +78,21 @@
 				object.closePrice = result;
 			}, false);
 		}*/
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-        	Joyin.ajaxJson(basePath + 'invest/entrust/etrstock/EtrStock002/checkAuthorization', object, function(result2) {
-	            Joyin.ajaxJson(basePath + 'invest/entrust/etrstock/EtrStock002/check', object,function (result) {
-	                Joyin.confirm(result.data, function () {
-	                    if (operateType === 'save') {
-	                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrstock/EtrStock002/save', object, "EtrStock002_btn_save");
-	                    } else {
-	                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrstock/EtrStock002/save', object, "EtrStock002_btn_submit");
-	                    }
-	                });
-	            });
-        	});
-        });
+
+        //保存时，不校验 add by xxg 20210802
+        if(operateType === 'save'){
+            WorkFlow.doSaveList(basePath + 'invest/entrust/etrstock/EtrStock002/save', object, "EtrStock002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrstock/EtrStock002/checkAuthorization', object, function(result2) {
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrstock/EtrStock002/check', object,function (result) {
+                        Joyin.confirm(result.data, function () {
+                            WorkFlow.doSubmitList(basePath + 'invest/entrust/etrstock/EtrStock002/save', object, "EtrStock002_btn_submit");
+                        });
+                    });
+                });
+            });
+        }
     }
 
     //查询组合可用现金

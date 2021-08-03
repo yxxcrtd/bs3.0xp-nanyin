@@ -11,26 +11,17 @@
 package com.joyintech.service.basicdata.mstcaptialaccount.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
+import org.apache.commons.lang3.StringUtils;
+import org.jasig.cas.client.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.dao.FinCashCalcRuleMapper;
-import com.joyintech.tams.common.base.dao.FinCashInfoMapper;
-import com.joyintech.tams.common.base.dao.FinRateInfoMapper;
-import com.joyintech.tams.common.base.dao.StlCapacctInfoMapper;
-import com.joyintech.tams.common.base.dao.StlCapacctReInfoMapper;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinRateInfo;
-import com.joyintech.tams.common.base.entity.StlCapacctReInfo;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -96,7 +87,13 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
      */
     @Autowired
     private FinCashCalcRuleMapper finCashCalcRuleMapper;
-    
+
+    /**
+     * 新增资金账户管理，所属柜台与初始利率关系表
+     */
+    @Autowired
+    private FinInitrateDatadictMapper finInitrateDatadictMapper;
+
 
     /**
      * 使用给定的acctName检索分页数据。返回类型是Service的泛型。
@@ -223,6 +220,23 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
             if(StringUtil.equals(entity.getIsCalint(),DictCodeList.是否_是.getValue())) {
                 this.insertAccCurrentInterest(entity);
             }
+
+
+            //账户资金管理，所属柜台初始利率表
+            //查询是否存在所属柜台对应利率，无记录，则新增  add by xxg start
+            FinInitrateDatadict ft = finInitrateDatadictMapper.selectByPrimaryKey(entity.getOwnDept());
+            if(ft == null && "A07".equals(entity.getAccountType()) && "01".equals(entity.getRateType())){
+                FinInitrateDatadict finInitrateDatadict = new FinInitrateDatadict();
+                finInitrateDatadict.setRate(entity.getRate());
+                finInitrateDatadict.setOwnDept(entity.getOwnDept());
+                finInitrateDatadict.setCreateTime(new Date());
+                finInitrateDatadict.setCreateUser(entity.getCreateUser());
+                finInitrateDatadict.setCreateDept(entity.getCreateDept());
+                finInitrateDatadictMapper.insert(finInitrateDatadict);
+            }
+           //查询是否存在所属柜台对应利率，无记录，则新增 add by xxg end
+
+
         }
         else {
             //资金账户关联表更新
@@ -241,14 +255,16 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
 //            entity.setAcctNo(entity.getLargePayno()+":"+entity.getBusiAcctNo());
             stlCapacctInfoMapper.updateByPrimaryKeySelective(entity);
 
-            // 账户类型为“券商资金账户“时，支持修改利率
-            String cashId = CommonUtil.generateCashFlowCode(entity.getLargePayno()+":"+entity.getBusiAcctNo(), DictCodeListExt1.现金流业务类型_资金账户.getValue(), 0L, DictCodeListExt1.现金流二级类型_利息.getValue());
-            FinRateInfo finRateInfo = new FinRateInfo();
-            finRateInfo.setEffDate(entity.getEffectDate());
-            finRateInfo.setCashId(cashId);
-            finRateInfo.setRate(entity.getRate().divide(new BigDecimal("100")));
-            finRateInfoMapper.updateByPrimaryKeySelective(finRateInfo);
-
+            // 账户类型为“券商资金账户“时，支持修改利率 add by xxg start
+            if("01".equals(entity.getRateType())){
+                String cashId = CommonUtil.generateCashFlowCode(entity.getLargePayno()+":"+entity.getBusiAcctNo(), DictCodeListExt1.现金流业务类型_资金账户.getValue(), 0L, DictCodeListExt1.现金流二级类型_利息.getValue());
+                FinRateInfo finRateInfo = new FinRateInfo();
+                finRateInfo.setEffDate(entity.getEffectDate());
+                finRateInfo.setCashId(cashId);
+                finRateInfo.setRate(entity.getRate().divide(new BigDecimal("100")));
+                finRateInfoMapper.updateByPrimaryKeySelective(finRateInfo);
+            }
+            // 账户类型为“券商资金账户“时，支持修改利率 add by xxg end
 
             //上传文件修改更新
             MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
@@ -489,15 +505,19 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
     }
 
 
+
     /**
      * add by xxg 20210726
      * 根据所属柜台获取第一次设置的利率
      * @param ownDept  所属柜台
      * @return
      */
-    public MstCaptialAccountDto getFirstRateByownDept(String ownDept){
-        return basicMstCaptialAccountMapper.getFirstRateByownDept(ownDept);
+    public FinInitrateDatadict getFirstRateByOwnDept(String ownDept){
+        return finInitrateDatadictMapper.selectByPrimaryKey(ownDept);
     }
+
+
+
 
     /**
      * add by caozhenming 20210728

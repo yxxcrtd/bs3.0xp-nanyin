@@ -50,6 +50,7 @@ var table;
 	        var object = $.serializeToObject('#submitForm', true);
 	        object.pageModel = pageModel;
 	        object.operateType = operateType;
+            object.tradeAmt = JoyinMath.doMul($("#tradeAmt").val(), entrustAmtUnit == '02' ? 10000 : 1, 2, JoyinMath.ROUND_HALF_UP);
 	        if(FileCommon) {
 	            object.uploadFileList = FileCommon.getUploadFileInfo();
 	        }
@@ -272,11 +273,7 @@ var table;
                 //普通配售  有保证金 使用保证金
                 if ($("#purchType").val()==PURCH_TYPE_01) {
                     //配置单位 edit by yeming 20210723 start
-                    if(entrustAmtUnit == '02' ){
-                        data.tradeAmt = JoyinMath.doMul($("#tradeAmt").val(), 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
-                    }else {
-                        data.tradeAmt = $("#tradeAmt").val();
-                    }
+                    data.tradeAmt = JoyinMath.doMul($("#tradeAmt").val(), entrustAmtUnit == '02' ? 10000 : 1, 2, JoyinMath.ROUND_HALF_UP);
                     //配置单位 edit by yeming 20210723 end
                 }
                 else if($("#depositAmt").val()){
@@ -288,6 +285,7 @@ var table;
                 }
                 //交易场所为申购方式
                 data.tradeMarket = $("#purchModle").val();
+                // data.tradeMarket = '01';//网上申购
                 data.portfolioId = $('#portfolioId').val();
                 data.ps = $('#ps').val();
                 data.finprodId = selectData.finprodId;
