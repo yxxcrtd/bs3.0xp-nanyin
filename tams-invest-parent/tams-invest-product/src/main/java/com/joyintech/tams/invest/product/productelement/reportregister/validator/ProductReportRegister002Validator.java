@@ -272,12 +272,12 @@ public class ProductReportRegister002Validator implements BeanValidator {
 			}
 		}
 		// 业务联络人座机
-		if (StringUtil.isNotEmpty(entity.getRepLiaisonTel())) {
-			if (RepCheckUtil.checkByteLength(entity.getRepLiaisonTel(), 30)) {
-				validList.add(new ValidMessage("repLiaisonTel",
-						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepLiaisonTel())) {
+//			if (RepCheckUtil.checkByteLength(entity.getRepLiaisonTel(), 30)) {
+//				validList.add(new ValidMessage("repLiaisonTel",
+//						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
+//			}
+//		}
 		// 业务联络人手机
         if (StringUtil.isNotEmpty(entity.getRepLiaisonMobile())) {
             if(!RepCheckUtil.checkNum11(entity.getRepLiaisonMobile())){

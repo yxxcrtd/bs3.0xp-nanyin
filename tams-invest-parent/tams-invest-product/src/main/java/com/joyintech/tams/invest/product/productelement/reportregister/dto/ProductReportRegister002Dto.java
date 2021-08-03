@@ -147,7 +147,7 @@ public class ProductReportRegister002Dto extends BaseEntity implements ProcessEn
     /**
      * 业务联络人座机
      */
-    @OfficePhone(fieldName = "BussRepFinProductInfo.repLiaisonTel",groups = {ValidateGroupEdit.class})
+//    @OfficePhone(fieldName = "BussRepFinProductInfo.repLiaisonTel",groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName="BussRepFinProductInfo.repLiaisonTel",groups = {ValidateGroupEdit.class})
     private String repLiaisonTel;
 
