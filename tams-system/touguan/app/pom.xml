@@ -54,6 +54,14 @@
 					<groupId>com.joyintech</groupId>
 				</exclusion>
 				<exclusion>
+					<groupId>com.joyintech</groupId>
+					<artifactId>service-valuation-lossmodel</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.joyintech</groupId>
+					<artifactId>service-valuation-valmodel</artifactId>
+				</exclusion>
+				<exclusion>
 					<artifactId>service-valuation-basicdata</artifactId>
 					<groupId>com.joyintech</groupId>
 				</exclusion>

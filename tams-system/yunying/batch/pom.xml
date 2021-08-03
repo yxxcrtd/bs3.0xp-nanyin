@@ -80,6 +80,16 @@
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
+			<artifactId>tams-valuation-batch-lossmodel</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>tams-valuation-batch-valmodel</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.joyintech</groupId>
 			<artifactId>tams-svreport-batch-chb</artifactId>
 			<version>3.0.0</version>
 			<exclusions>
