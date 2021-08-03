@@ -129,7 +129,7 @@ public class PbcSendZipDatFile001Controller extends BaseController{
 
 	/**
 	 *
-	 * 业务画面导入检查事件
+	 * 业务画面基本信息和终止信息导入检查事件
 	 *
 	 * @return
 	 * @see
@@ -143,7 +143,7 @@ public class PbcSendZipDatFile001Controller extends BaseController{
 
 	/**
 	 *
-	 * 业务画面导入事件
+	 * 业务基本信息和终止信息导入事件
 	 *
 	 * @return
 	 * @see
@@ -153,6 +153,34 @@ public class PbcSendZipDatFile001Controller extends BaseController{
 	@RequestMapping("importBaseInfoSubDat")
 	public List<ExcelValidDto> importBaseInfoSubDat(String fileName) {
 		return pbcSendZipDatFileMService.importBaseInfoSubDat(fileName);
+	}
+
+	/**
+	 *
+	 * 业务画面14张报表导入检查事件
+	 *
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping("checkMonthReport")
+	public AjaxResult checkMonthReport(String fileName) {
+		return pbcSendZipDatFileMService.checkMonthReport(fileName);
+	}
+
+	/**
+	 *
+	 * 业务14张报表导入事件
+	 *
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping("importMonthReport")
+	public List<ExcelValidDto> importMonthReport(String fileName) {
+		return pbcSendZipDatFileMService.importMonthReport(fileName);
 	}
 
 

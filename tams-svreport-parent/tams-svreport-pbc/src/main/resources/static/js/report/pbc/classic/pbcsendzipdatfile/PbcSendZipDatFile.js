@@ -94,4 +94,16 @@ $(function() {
             });
         });
     });
+    // 导入统计模板数据
+    $('#PbcSendZipDatFile_btn_staticTemplateImport').click(function() {
+        Joyin.confirm("请确认是否要导入数据？", function() {
+            Joyin.uploadFile(function(fileName) {
+                Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/checkMonthReport', {fileName: fileName}, function() {
+                    Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/importMonthReport', {fileName: fileName});
+                });
+            },function() {
+                table.reload();
+            });
+        });
+    });
 }());

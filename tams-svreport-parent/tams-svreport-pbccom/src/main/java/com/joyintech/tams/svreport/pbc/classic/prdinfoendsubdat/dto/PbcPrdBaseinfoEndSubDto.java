@@ -32,6 +32,9 @@ public class PbcPrdBaseinfoEndSubDto  {
     //兑付客户收益折人民币
     @ExcelCellNumber(cellNumber = 6)
     private BigDecimal customProfitCny;
+    //内部产品代码
+    @ExcelCellNumber(cellNumber = 7)
+    private String prodId;
 
     public String getNumber() {
         return number;
@@ -87,5 +90,13 @@ public class PbcPrdBaseinfoEndSubDto  {
 
     public void setCustomProfitCny(BigDecimal customProfitCny) {
         this.customProfitCny = customProfitCny;
+    }
+
+    public String getProdId() {
+        return prodId;
+    }
+
+    public void setProdId(String prodId) {
+        this.prodId = prodId;
     }
 }
