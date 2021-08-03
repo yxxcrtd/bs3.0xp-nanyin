@@ -40,10 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -286,6 +283,38 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 				if (StringUtil.isNotEmpty(dto.getFinprodType2()) && dto.getFinprodType2().equals(DictCodeListExt3.金融产品类型_投管用_期权.getValue())) {
 					dto.setFinprodType2(DictCodeListExt3.平安资产类型_期权.getValue());
 				}
+
+				// add by caozhenming 20210730 start
+				String finprodType2 = dto.getFinprodType2();
+				// 交易价格
+				if (DictCodeList.交易市场_二级市场.getValue().equals(dto.getTradeMarketMode()) && DictCodeList.平安资产类型_债券.getValue().equals(finprodType2)){
+					// 债券二级交易取净价
+					dto.setTradePrice(dto.getUnitCprice());
+				} else if (DictCodeListExt2.平安资产类型_股票.getValue().equals(dto.getFinprodType2())){
+					// 股票展示交易价格
+					dto.setTradePrice(dto.getUnitCprice());
+				}
+
+				// 利率
+				if ( DictCodeList.平安资产类型_存款.getValue().equals(finprodType2)
+						|| DictCodeList.平安资产类型_计划类资产_利率型.getValue().equals(finprodType2)
+						|| DictCodeList.平安资产类型_项目类资产.getValue().equals(finprodType2)){
+					// 计提利率
+					dto.setRate(dto.getUnitInt());
+				} else if (DictCodeList.平安资产类型_质押式回购.getValue().equals(finprodType2)
+						|| DictCodeList.平安资产类型_买断式回购.getValue().equals(finprodType2)){
+					// 回购利率
+					dto.setRate(dto.getUnitInt());
+				} else if (DictCodeList.平安资产类型_债券.getValue().equals(finprodType2)){
+					// 到期收益率或行权收益率
+					BigDecimal yield = dto.getYield();
+					if (Objects.nonNull(yield)){
+						dto.setRate(yield);
+					} else {
+						dto.setRate(dto.getExerYield());
+					}
+				}
+				// add by caozhenming 20210730 end
 			}
 		}
 		return returnList;
@@ -372,7 +401,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    
 	    /**
 	     * 获取数据
-	     * @param selectParam
+	     * @param dto
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -463,8 +492,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 获取excel列表数据
 	     * 
-	     * @param prodDto
-	     * @param assetDto
+	     * @param daoList
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -657,7 +685,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 债券类交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -671,7 +699,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 存款类交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -684,7 +712,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 计划类利率型交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -697,7 +725,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 计划类净值型交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -710,7 +738,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 计划类货币型交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -723,7 +751,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 基金类交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -736,7 +764,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 项目类交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -749,7 +777,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * <一句话功能简述>
 	     * <功能详细描述>
-	     * @param map
+	     * @param dto
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -762,7 +790,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * <一句话功能简述>
 	     * <功能详细描述>
-	     * @param map
+	     * @param dto
 	     * @return
 	     * @see
 	     * @since 1.0

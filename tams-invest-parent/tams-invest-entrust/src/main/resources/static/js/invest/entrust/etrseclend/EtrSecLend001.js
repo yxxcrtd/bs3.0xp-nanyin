@@ -52,7 +52,7 @@
             ,{field:'targetFinprodName', title: 'EtrSecLend.targetFinprodName', width:'10%',sortField:"targetFinprodName"}
             ,{field:'busBusiPs', title: 'EtrSecLend.busiPs', width:'10%',sortField:"busiPs"}
             ,{field:'busTradeMarket', title: 'EtrSecLend.tradeMarket', width:'10%',sortField:"tradeMarket"}
-            ,{field:'totalAmt',type:'number',title: 'EtrSecLend.totalAmt', width:'10%',sortField:"totalAmt"}
+            ,{field:'totalAmt',type:'number',title: 'EtrSecLend.totalAmt1', width:'10%', digit: 4, sortField:"totalAmt"}
             ,{field:'busCcy', title: 'EtrSecLend.ccy', width:'10%',sortField:"ccy"}
             ,{field:'vdate', title: 'EtrSecLend.vdate', width:'10%',type:'date',sortField:"vdate"}
             ,{field:'mdate', title: 'EtrSecLend.mdate', width:'10%',type:'date',sortField:"mdate"}

@@ -3,11 +3,25 @@
 <mapper namespace="com.joyintech.tams.invest.batch.cfetsmanager.updatetrader.dao.UpdateTraderMapper">
 
 	<select id="selectCustomerNew" resultType="com.joyintech.tams.common.base.entity.MstCfetsCustomerInfo">
-        SELECT T1.PARTY_NAME partyName
+        SELECT T1.PARTY_NAME partyName,
+               T1.PARTY_CUSTOMER_ID partyCustomerId
         FROM MST_CFETS_CUSTOMER_INFO T1
         LEFT JOIN MST_COUNTER_PARTY T2 on T2.COUNTER_NAME = T1.PARTY_NAME
         WHERE to_char(T1.UPDATE_TIME,'yyyymmdd') = #{batchDate}
         and T2.COUNTER_NAME IS NULL
     </select>
-    
+
+    <select id="selectCustomer01" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM MST_CUSTOMER_INFO
+        where CUSTOMER_TYPE != '01'
+        and CUSTOMER_ID = #{partyCustomerId}
+    </select>
+
+    <select id="selectCustomer02" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM MST_CUSTOMER_INFO
+        where CUSTOMER_TYPE = '01'
+        and CUSTOMER_ID = #{partyCustomerId}
+    </select>
 </mapper>

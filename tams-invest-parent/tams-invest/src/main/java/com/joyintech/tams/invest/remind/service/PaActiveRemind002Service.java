@@ -14,6 +14,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -31,11 +32,9 @@ import com.joyintech.tams.invest.riskredis.quota.rsksupervisionriskanalyze.dto.R
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -496,7 +495,23 @@ public class PaActiveRemind002Service extends BaseService<PaActiveRemind001Dto> 
         String smallCategory = (String)param.get("smallCategory");
         param.put("R10S1", BussinessDictCodeList.提醒类型_小分类_分销缴款提醒.getValue());
         if(StringUtil.isEmpty(smallCategory) || StringUtil.equals(smallCategory, BussinessDictCodeList.提醒类型_小分类_分销缴款提醒.getValue())) {
-            dto.addAll(paActiveRemind002Mapper.selramindR10S1(param));
+            boolean isShow010 = SecurityUtil.isPermitted("EtrBondBiddingResultIb001_btn_search");
+            boolean isShow020 = SecurityUtil.isPermitted("EtrBondBiddingResultEx001_btn_search");
+            String isShow01 = "false";
+            String isShow02 = "false";
+            if(isShow010){
+                isShow01 = "true";
+            }
+            if(isShow020){
+                isShow02 = "true";
+            }
+            param.put("isShow01", isShow01);
+            param.put("isShow02", isShow02);
+            if(StringUtil.equals(isShow01,"false") && StringUtil.equals(isShow02,"false")){
+
+            }else{
+                dto.addAll(paActiveRemind002Mapper.selramindR10S1(param));
+            }
         }
     }
     //add by chenjiaxing 分销缴款提醒 20210727 start
@@ -733,8 +748,12 @@ public class PaActiveRemind002Service extends BaseService<PaActiveRemind001Dto> 
         String smallCategory = (String)param.get("smallCategory");
         //update by chenjiaxing 固定值参数更新提醒 20210726 start
         if(StringUtil.equals(smallCategory,"R5S3")){
-            List<PaActiveRemind001Dto> dto2 = paActiveRemind002Mapper.selramindR5S3(param);
-            dto.addAll(paActiveRemind002Mapper.selramindR5S3(param));
+            boolean isShow = SecurityUtil.isPermitted("RskSupervisionIndicatorParam001_btn_gdz_create");
+            if(isShow){
+                dto.addAll(paActiveRemind002Mapper.selramindR5S3(param));
+            }else{
+
+            }
         }else{
             List<String> supStatList = new ArrayList<>();
             if(StringUtil.isEmpty(smallCategory) || StringUtil.equals(smallCategory, BussinessDictCodeList.提醒类型_小分类_指标预警提醒.getValue())) {

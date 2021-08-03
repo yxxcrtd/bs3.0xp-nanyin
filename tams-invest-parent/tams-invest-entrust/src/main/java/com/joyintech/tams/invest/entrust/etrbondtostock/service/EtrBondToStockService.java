@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.entrust.etrbondtostock.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -77,8 +78,24 @@ public class EtrBondToStockService extends CommonExportService<EtrBondToStockDto
             pageParam.put("endDate", dateList.get(2));
         }
 		pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondToStock/findPage",
-        		pageParam, EtrBondToStockDto.class);
+        //配置单位 edit by yeming 20210802 start
+        Page<EtrBondToStockDto> page = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondToStock/findPage",
+                pageParam, EtrBondToStockDto.class);
+        for(EtrBondToStockDto dto:page.getRoot()){
+            if(dto.getEntrustAmt() != null) {
+                dto.setEntrustAmt(dto.getEntrustAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(dto.getHoldetrPriceTotal() != null) {
+                dto.setHoldetrPriceTotal(dto.getHoldetrPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(dto.getConetrPriceTotal() != null) {
+                dto.setConetrPriceTotal(dto.getConetrPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+        }
+        return page;
+        //配置单位 edit by yeming 20210802 end
+//        return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondToStock/findPage",
+//        		pageParam, EtrBondToStockDto.class);
 	}
 
     /**

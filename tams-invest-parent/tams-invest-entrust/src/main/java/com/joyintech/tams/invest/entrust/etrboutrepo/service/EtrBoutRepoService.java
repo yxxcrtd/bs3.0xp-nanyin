@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.entrust.etrboutrepo.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -129,9 +130,22 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
 //            param.put("ccyList", dateList);
 //        }
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForPage(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/findPage", param,
-            EtrBoutRepoDto.class);
+        //配置单位 edit by yeming 20210802 start
+        Page<EtrBoutRepoDto> page = restTemplate.postForPage(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/findPage", param,
+                EtrBoutRepoDto.class);
+        for(EtrBoutRepoDto dto:page.getRoot()){
+            if(dto.getEntrustAmt() != null) {
+                dto.setEntrustAmt(dto.getEntrustAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                System.out.println(dto.getEntrustAmt());
+            }
+        }
+
+        return page;
+        //配置单位 edit by yeming 20210802 end
+//        return restTemplate.postForPage(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/findPage", param,
+//            EtrBoutRepoDto.class);
     }
 
     /**

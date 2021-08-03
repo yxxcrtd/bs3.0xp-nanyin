@@ -93,6 +93,9 @@
         object.entrustStatus = $('#entrustStatus').val();
         object.finvdate = $('#finvdate').val();
         object.finmdate = $('#finmdate').val();
+        if($('#entrustAmt').val()){
+            object.entrustAmt = JoyinMath.doMul($('#entrustAmt').val(), entrustAmtUnit == '02' ? 10000 : 1, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+        }
         if(object.etrInvestPersonInfo.trader != null && object.etrInvestPersonInfo.trader != ''){
             object.etrInvestPersonInfo.trader = object.etrInvestPersonInfo.trader.join(",");
         }

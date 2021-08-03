@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
@@ -529,7 +530,18 @@ public class EtrCommonService extends BaseService<ITableRow> {
             return addMessage;
         }
     }
-	
+
+    /**
+     * 错误消息拼接
+     * @param errorMsg 原错误信息
+     * @param addMsg 新增错误信息
+     * @since 1.0
+     */
+    public void spliceMessage(StringBuilder errorMsg, String addMsg) {
+        // 错误信息拼接
+        errorMsg.append(StringUtil.isEmpty(addMsg)||StringUtil.isEmpty(errorMsg.toString())?addMsg:"<br />"+addMsg );
+    }
+
 	    /***
      * 验证指令能否撤销(指令状态变更接口)
      * @param selectItem
@@ -657,21 +669,21 @@ public class EtrCommonService extends BaseService<ITableRow> {
 
     public AjaxResult executeOccupyCreditLines(Object object, String status, String method) {
         AjaxResult ar = new AjaxResult();
-//        if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))){
-//            return ar;
-//        }
-//        List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
-//        if (object != null){
-//            // 构建接口参数
-//            generateInputDtoList(object,status,method,inputDtoList);
-//            if (inputDtoList.size() > 0){
-//                if ("check".equals(method)){
-//                    ar = AllTradeCommonUtil.checkBeforeTradeComplete(inputDtoList);
-//                }else {
-//                    AllTradeCommonUtil.handleBeforeTradeComplete(inputDtoList,DictCodeListRsk.授信占用类别_预占.getValue());
-//                }
-//            }
-//        }
+        if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))){
+            return ar;
+        }
+        List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+        if (object != null){
+            // 构建接口参数
+            generateInputDtoList(object,status,method,inputDtoList);
+            if (inputDtoList.size() > 0){
+                if ("check".equals(method)){
+                    ar = AllTradeCommonUtil.checkBeforeTradeComplete(inputDtoList);
+                }else {
+                    AllTradeCommonUtil.handleBeforeTradeComplete(inputDtoList,DictCodeListRsk.授信占用类别_预占.getValue());
+                }
+            }
+        }
         return ar;
     }
 
@@ -1467,11 +1479,11 @@ public class EtrCommonService extends BaseService<ITableRow> {
         // 组合T日可用现金
         BigDecimal proAvailableCash = cash.get("cashT")==null?BigDecimal.ZERO: (BigDecimal)cash.get("cashT");
         // 净价
-        BigDecimal cprice = paramMap.get("price")==null?new BigDecimal(100): new BigDecimal(paramMap.get("price").toString());
+        BigDecimal cprice = !StringUtil.isNotEmpty(paramMap.get("price"))?new BigDecimal(100): new BigDecimal(paramMap.get("price").toString());
 
         // 可买数量
-        BigDecimal canBuyAmount = null;
-        if(cprice!=null&&BigDecimal.ZERO.compareTo(cprice)!=0){
+        BigDecimal canBuyAmount = BigDecimal.ZERO;
+        if(StringUtil.isNotEmpty(paramMap.get("price"))&&cprice!=null&&BigDecimal.ZERO.compareTo(cprice)!=0){
             canBuyAmount = ArithmeticUtil.divide(proAvailableCash,cprice,2,RoundingMode.HALF_UP);
         }
 

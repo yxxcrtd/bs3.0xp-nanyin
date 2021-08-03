@@ -1171,6 +1171,7 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
+        document.getElementById('deviationDegree').innerHTML ="";
         if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
             return;
         }

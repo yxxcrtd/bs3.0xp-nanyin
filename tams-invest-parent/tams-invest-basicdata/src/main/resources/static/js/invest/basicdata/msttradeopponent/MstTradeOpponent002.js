@@ -337,11 +337,13 @@ $(function(){
     	
         var initType =  $(".counterType").val();
         chan(initType);
-        $('#pTypeOne').change(counterType1Change);
+        <!--update by chenjiaixng 交易对手改造 20210729 start-->
+/*        $('#pTypeOne').change(counterType1Change);
         $('#pTypeOne2').change(counterType2Change);
         $('#pTypeOne3').change(counterType3Change);
-        $('#pTypeOne4').change(counterType4Change);
+        $('#pTypeOne4').change(counterType4Change);*/
         //counterType1Change($('#pTypeOne').val());
+        <!--update by chenjiaixng 交易对手改造 20210729 end-->
         if(pageModel!=PAGE_MODEL_NEW){
             $(".counterType").attr("disabled",true);
             $(".counterId").attr("disabled",true);

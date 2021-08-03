@@ -95,12 +95,14 @@ public class MstTradeOpponent001Validator implements BeanValidator {
             }
             else if (StringUtil.isNotEmpty(dto.getOperateType())
                      && !StringUtil.equals(dto.getOperateType(), "delete")) {
-                //如果交易对手一级类型不为空，则二级必填 yjm start 20190808
+                /*update by chenjiaixng 交易对手改造 20210729 start*/
+/*                //如果交易对手一级类型不为空，则二级必填 yjm start 20190808
                 if (StringUtil.isNotEmpty(dto.getpTypeOne()) && StringUtil.isEmpty(dto.getpTypeTwo())){
                     errorList.add(new ValidMessage("pTypeTwo",
                             getMessage("BUSS_COM_E_0038", getMessage("MstTradeOpponent002.pTypeTwo"))));
                 }
-                //如果交易对手一级类型不为空，则二级必填 yjm end 20190808
+                //如果交易对手一级类型不为空，则二级必填 yjm end 20190808*/
+                /*update by chenjiaixng 交易对手改造 20210729 end*/
                 if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
                     if (mstTradeOpponent001Service.checkCounterId(dto.getCounterId()) > 0) {
                         errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0006",
@@ -290,7 +292,8 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                     }
                 }
             }
-         /*   交易对手性质必填校验 update by zhuyongkang 2019/09/19 start*/
+            /*update by chenjiaixng 交易对手改造 20210729 start*/
+/*         *//*   交易对手性质必填校验 update by zhuyongkang 2019/09/19 start*//*
             if (mDto.getpTypeOne() == null || mDto.getpTypeOne().isEmpty()) {
                 errorList.add(new ValidMessage("pTypeOne",
                         getMessage("FW_E_0006", getMessage("MstTradeOpponent002.pTypeOne"))));
@@ -299,7 +302,8 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                 errorList.add(new ValidMessage("pTypeTwo",
                         getMessage("FW_E_0006", getMessage("MstTradeOpponent002.pTypeTwo"))));
             }
-            /*   交易对手性质必填校验 update by zhuyongkang 2019/09/19 end*/
+            *//*   交易对手性质必填校验 update by zhuyongkang 2019/09/19 end*/
+            /*update by chenjiaixng 交易对手改造 20210729 end*/
         }
         else if (DictCodeListExt1.交易对手类型_资管产品.getValue().equals(mDto.getCounterType())) {
             // 判断交易对手名称是否为空
@@ -312,8 +316,8 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                 errorList.add(new ValidMessage("managerId",
                     getMessage("FW_E_0006", getMessage("MstTradeOpponent001.managerId"))));
             }
-            
-            // START  交易对手性质必填校验 update by wj 20200413
+            /*update by chenjiaixng 交易对手改造 20210729 start*/
+/*            // START  交易对手性质必填校验 update by wj 20200413
             if (mDto.getpTypeOne() == null || mDto.getpTypeOne().isEmpty()) {
                 errorList.add(new ValidMessage("pTypeOne",
                         getMessage("FW_E_0006", getMessage("MstTradeOpponent002.pTypeOne"))));
@@ -322,8 +326,8 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                 errorList.add(new ValidMessage("pTypeTwo",
                         getMessage("FW_E_0006", getMessage("MstTradeOpponent002.pTypeTwo"))));
             }
-            // END  交易对手性质必填校验 update by wj 20200413
-            
+            // END  交易对手性质必填校验 update by wj 20200413*/
+            /*update by chenjiaixng 交易对手改造 20210729 end*/
         }
         else if (DictCodeListExt1.交易对手类型_分行.getValue().equals(mDto.getCounterType())) {
             // 判断交易对手名称是否为空
@@ -336,8 +340,8 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                 errorList.add(new ValidMessage("headOffice",
                     getMessage("FW_E_0006", getMessage("MstTradeOpponent001.headOffice"))));
             }
-
-            // START  交易对手性质必填校验 update by wj 20200717
+            /*update by chenjiaixng 交易对手改造 20210729 start*/
+/*            // START  交易对手性质必填校验 update by wj 20200717
             if (mDto.getpTypeOne() == null || mDto.getpTypeOne().isEmpty()) {
                 errorList.add(new ValidMessage("pTypeOne",
                         getMessage("FW_E_0006", getMessage("MstTradeOpponent002.pTypeOne"))));
@@ -346,7 +350,8 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                 errorList.add(new ValidMessage("pTypeTwo",
                         getMessage("FW_E_0006", getMessage("MstTradeOpponent002.pTypeTwo"))));
             }
-            // END  交易对手性质必填校验 update by wj 20200717
+            // END  交易对手性质必填校验 update by wj 20200717*/
+            /*update by chenjiaixng 交易对手改造 20210729 end*/
         }
         else if (DictCodeListExt1.交易对手类型_内部交易对手.getValue().equals(mDto.getCounterType())) {
             // 判断交易对手名称是否为空

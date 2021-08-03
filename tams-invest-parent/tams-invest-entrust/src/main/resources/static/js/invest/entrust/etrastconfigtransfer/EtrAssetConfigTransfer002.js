@@ -1,3 +1,4 @@
+var correctData;
 /**
  * 资产配置快速转仓指令
  */
@@ -90,7 +91,7 @@
             {field: 'mdate', title: 'EtrAssetConfigTransfer002.mDate', width: 90, type: 'date'},
             {field: 'exerciseDate', title: 'EtrAssetConfigTransfer002.exerciseDate', width: 100, type: 'date'},
             {field: 'invAim', title: 'EtrAssetConfigTransfer002.invAim', width: 100,edit:true,editOption:{type:'select',formatoption:true,showField: 'text',result: INV_AIM}},
-            {field: 'periodYield', title: 'EtrAssetConfigTransfer002.periodYield',type: 'number',textrange:2,width: 130},
+            {field: 'yield', title: 'EtrAssetConfigTransfer002.periodYield',type: 'number',textrange:2,width: 130},
             {field: 'entrustNum', title: 'EtrAssetConfigTransfer002.outputNum',type: 'number',textrange:2,width:100,edit:true},
             {field: 'radio', title: 'EtrAssetConfigTransfer002.radio',type: 'number',textrange:4, width:120}
         ]
@@ -115,17 +116,23 @@
                 var tradeMarket=object.selectedItem[0].tradeMarket;
                 //银行间指令
                 if(TRADE_PLACE_01==tradeMarket){
-                    Joyin.dialog(JoyinUtil.getLabel("EtrInvestBondInfo004"),
+                    correctData = JSON.parse(result.tempList);
+                    Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.yhjImport"),
                         JoyinUtil.getRealPath("/invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/init"),
                         "98%", "95%", result);
                 }
-                //上交所指令
+                //上交所(固定收益)指令
                 if(TRADE_PLACE_03==tradeMarket){
-                    //todo
+                    correctData = JSON.parse(result.tempList);
+                    Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.gsImport"),
+                        JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
+                        "98%", "95%", {currentTab:SHARES_TRADE_PLATFORM_03});
                 }
-                //深交所指令
+                //深交所(大宗)指令
                 if(TRADE_PLACE_04==tradeMarket){
-                    //todo
+                    Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.dzImport"),
+                        JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
+                        "98%", "95%", {currentTab:SHARES_TRADE_PLATFORM_04});
                 }
             }
         });
