@@ -41,12 +41,14 @@
 	</select>
 
 	<select id="getAstNetVal" resultType="Map">
-        SELECT PORTFOLIO_ID,TDY_ASSET_NETVALUE,TDY_ASSET_VALUE FROM (
+		select PORTFOLIO_ID,sum(TDY_ASSET_NETVALUE) TDY_ASSET_NETVALUE,sum(TDY_ASSET_VALUE) TDY_ASSET_VALUE from
+		(
+		SELECT PORTFOLIO_ID,TDY_ASSET_NETVALUE,TDY_ASSET_VALUE FROM (
              SELECT
              PORTFOLIO_ID,TDY_ASSET_NETVALUE,TDY_ASSET_VALUE,
              RANK() OVER(PARTITION BY PORTFOLIO_ID ORDER BY CDATE desc) AS rowno
              FROM PTL_PORTFOLIO_VALUATION ppv
-             WHERE CDATE &lt;= #{valDate, jdbcType=DATE} and nvl(TDY_ASSET_NETVALUE,0)>0
+             WHERE CDATE &lt;= #{valDate, jdbcType=DATE}-1 and nvl(TDY_ASSET_NETVALUE,0)>0
              <if test="portfolioIdList != null  and portfolioIdList.size() > 0">
 				and PORTFOLIO_ID in
 				<foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
@@ -54,6 +56,20 @@
 				</foreach>
 			</if>
         ) WHERE ROWNO =1
+		union all
+		SELECT fp.finprod_market_id,trade_amt*decode(tpd.ps,'C04',-1,'C17',-1,'C6',-1,'C5',-1,'C20',-1,'C1',1,'C2',1,'C3',1,0) TDY_ASSET_NETVALUE
+		,trade_amt*decode(tpd.ps,'C04',-1,'C17',-1,'C6',-1,'C5',-1,'C20',-1,'C1',1,'C2',1,'C3',1,0) TDY_ASSET_VALUE FROM trd_product_deal tpd
+		left join fin_product fp on fp.finprod_id = tpd.finprod_id
+		where fp.finprod_type2 = 'F16'
+		and tpd.settle_date = #{valDate, jdbcType=DATE}
+		and tpd.trade_status = '01' and tpd.is_cancel = 'N'
+		<if test="portfolioIdList != null  and portfolioIdList.size() > 0">
+			and fp.finprod_market_id in
+			<foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		) group by PORTFOLIO_ID
     </select>
 
 	<select id="getStlAccount" resultType="Map">
