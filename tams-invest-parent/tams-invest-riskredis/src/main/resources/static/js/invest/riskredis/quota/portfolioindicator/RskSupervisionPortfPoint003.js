@@ -199,6 +199,25 @@
         var haveRightLi;
     	//初始化调用
     	init();
+
+        var proCodeArr="";
+        var proNameArr="";
+        $("#treeDepartmentYxuan").find('li').each(function(){
+        	proCodeArr+=$(this).data('id')+",";
+        	proNameArr+=$(this).text()+",";
+        });
+        if(proCodeArr!=""){
+            proCodeArr = proCodeArr.substring(0,proCodeArr.length-1);//去除逗号
+        }
+        if(proNameArr!=""){
+            proNameArr = proNameArr.substring(0,proNameArr.length-1);//去除逗号
+        }
+        var retArr=new Array();
+        if(proCodeArr!=''){
+            retArr[0]=proCodeArr;
+            retArr[1]=proNameArr;
+            haveRightLi=retArr;
+        }
         // 保存按钮执行事件
         $('#RskSupervisionPortfPoint003_btn_save').click(function(){
             onSaveOrSubmit("save");       
@@ -240,20 +259,21 @@
 	        			$("#treeDepartmentYxuan").append(trStr);
 	        		}
         		}*/
-        		
+        		haveRightLi[0] += "," + treeIdArray[i];
+        		haveRightLi[1] += "," + treeArray[i];
         	}
         	layui.form.render('checkbox')
-        	haveRightLi=treeArr;
+//        	haveRightLi=treeArr;
         })
         
         //移除点击事件
         $(".removePortf").click(function(){
-        	if(entity!=null&&entity.rskPortfolioPackageDtlDto!=null&&entity.rskPortfolioPackageDtlDto.rskPortfolioPackageDtlList!=null){
+        	/*if(entity!=null&&entity.rskPortfolioPackageDtlDto!=null&&entity.rskPortfolioPackageDtlDto.rskPortfolioPackageDtlList!=null){
         		var treeArray= entity.rskPortfolioPackageDtlDto.rskPortfolioPackageDtlList;
         		for (var i = 0; i < treeArray.length; i++){
-            		haveRightLi+=treeArray[i].portfolioId+","; 
-            	} 
-        	} 
+            		haveRightLi+=treeArray[i].portfolioId+",";
+            	}
+        	}*/
         	if (haveRightLi == null) {
 				return;
 			}
@@ -345,7 +365,7 @@
 	      })
 	      //add by wangzehui 2019-10-16 --组合名称查询
 	      $("#RskSupervisionPortfPoint003_btn_selQuery").click(function(){
-	    	  //var treeArr=treeLeftSelectNode("treeDataSingle_tree");
+//	    	  var treeArr=treeLeftSelectNode("treeDataSingle_tree");
 	    	  var treeArr=haveRightLi;
         	  //var havedLi=new Array();
         	  var portfolioName = $("#portfoliohaveSelName").val();
