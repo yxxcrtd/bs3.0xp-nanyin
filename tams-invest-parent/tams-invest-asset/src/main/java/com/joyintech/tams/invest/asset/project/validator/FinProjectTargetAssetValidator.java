@@ -226,6 +226,8 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
         }
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+            //信贷及非标资产报送信息
+            dto.getBussRepAssetCreditNonstdInfoDto().setRepPartRedemFlag(coverNo(dto.getBussRepAssetCreditNonstdInfoDto().getRepPartRedemFlag()));
             resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
         }
         
@@ -241,6 +243,22 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
         }
 
         return resultList;
+    }
+
+    /**
+     * 01 转换成 Y
+     * @param oriStr 原数据N
+     * @return
+     */
+    private String coverNo(String oriStr){
+        if (StringUtil.equals(oriStr, DictCodeList.是否_中债_否.getValue())){
+            return DictCodeList.是否_否.getValue();
+        }else if(StringUtil.equals(oriStr, DictCodeList.是否_中债_是.getValue())){
+            return DictCodeList.是否_是.getValue();
+        } else{
+            return oriStr;
+        }
+
     }
 
 }
