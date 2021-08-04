@@ -10,6 +10,7 @@
 
 package com.joyintech.service.risk.assetinfodetail.service;
 
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -35,13 +36,15 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.util.*;
 
 /**
  * 资产要素信息维护Service
  */
-@Service("backAssetInfoDetailRiskService")
+@Service("backAssetInfoDetailRiskService_dtx")
 public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDetailRiskDto> {
 
 	/**
@@ -109,32 +112,35 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 	 * @param dto
 	 * @return
 	 */
-	public Integer doSave(AssetInfoDetailRiskDto dto){
+	@Transactional
+	@DTXTransaction
+	public Integer doComplete(AssetInfoDetailRiskDto dto){
 		int  flag = 0;
-		List<RskAssetInfo> assetInfo = new ArrayList<>();
-		//数据保存.使用marge模式.避免出现老数据仍然出现的问题
-		if(StringUtil.isNotEmpty(dto)){
-			assetInfo.add(dto);
-			flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
-		}
-		//在金融产品附属表FinProductAdd存值,股票还要在FIN_PRODUCT_TYPE表存值
-			 if (dto.getFinProductAdd() != null) {
-				 String finprodId = dto.getFinProductAdd().getFinprodId();
-				 FinProductAdd finProductAdd = assetInfoDetailMapper.selectByFinprodId(finprodId);
-				 if(finProductAdd == null) {
-                 finProductAddMapper.insert(dto.getFinProductAdd());
-				 }else {
-				 finProductAddMapper.updateByPrimaryKeySelective(dto.getFinProductAdd());
-				 }
-             }
-		if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
-				||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
+		if (StringUtil.equals(dto.getOperateType(), "DELETE")) {//删除操作
+			flag = this.doDelete(dto);
+		}else {
+			List<RskAssetInfo> assetInfo = new ArrayList<>();
+			//数据保存.使用marge模式.避免出现老数据仍然出现的问题
+			if (StringUtil.isNotEmpty(dto)) {
+				assetInfo.add(dto);
+				flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
+			}
+			//在金融产品附属表FinProductAdd，金融产品分类表FIN_PRODUCT_TYPE存值
+			if (dto.getFinProductAdd() != null) {
+				String finprodId = dto.getFinProductAdd().getFinprodId();
+				FinProductAdd finProductAdd = assetInfoDetailMapper.selectByFinprodId(finprodId);
+				if (finProductAdd == null) {
+					finProductAddMapper.insert(dto.getFinProductAdd());
+				} else {
+					finProductAddMapper.updateByPrimaryKeySelective(dto.getFinProductAdd());
+				}
+			}
 			if (dto.getFinProductType() != null) {
 				String finprodId = dto.getFinProductType().getFinprodId();
 				FinProductType finProductType = assetInfoDetailMapper.selectByFinprodIdType(finprodId);
-				if(finProductType == null) {
+				if (finProductType == null) {
 					finProductTypeMapper.insert(dto.getFinProductType());
-				}else {
+				} else {
 					finProductTypeMapper.updateByPrimaryKeySelective(dto.getFinProductType());
 				}
 			}
@@ -160,16 +166,11 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 //		if(DictCodeListExt3.中债_处理状态_待处理.getValue().equals(dto.getDataStatus())){
 //			assetInfoDetailMapper.deleteError(dto.getAssetUuid());
 //		}
-			
-		//删除FinProductAdd、FIN_PRODUCT_TYPE表的值
-		   String finprodId = dto.getFinProductAdd().getFinprodId();
-		   finProductAddMapper.deleteByPrimaryKey(finprodId);
-		if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
-				||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
-		   assetInfoDetailMapper.deleteFinProductType(finprodId);
-				
-		}
 
+		//删除FinProductAdd、FIN_PRODUCT_TYPE表的值
+		   String finprodId = dto.getAssetCode();
+		   finProductAddMapper.deleteByPrimaryKey(finprodId);
+		   assetInfoDetailMapper.deleteFinProductType(finprodId);
 		return flag;
 	}
 
@@ -241,9 +242,9 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
    	public Integer selectDataCount(List<AssetInfoDetailRiskDto> dto){
 		return assetInfoDetailMapper.selectDataCount(dto);
 	}
-   	
-  
-	
+
+
+	@Transactional
 	public List<ExcelValidDto> importData(List<AssetInfoDetailRiskDto> dataList){	
 		List<ExcelValidDto> checkResult = new ArrayList<>();
 		if(!StringUtil.isEmptyList(dataList)){
@@ -252,29 +253,26 @@ public class AssetInfoDetailRiskService extends CommonExportService<AssetInfoDet
 				assetInfo.add(assetInfoDetailDto);				
 			});
 			assetInfoDetailMapper.mergeInfoListEx(assetInfo);
-			//在金融产品附属表FinProductAdd存值,股票还要在FIN_PRODUCT_TYPE表存值
 			dataList.forEach(dto -> {
-			if (dto.getFinProductAdd() != null) {
-				String finprodId = dto.getFinProductAdd().getFinprodId();
-				FinProductAdd finProductAdd = assetInfoDetailMapper.selectByFinprodId(finprodId);
-				if(finProductAdd == null) {
-					finProductAddMapper.insert(dto.getFinProductAdd());
-				}else {
-					finProductAddMapper.updateByPrimaryKeySelective(dto.getFinProductAdd());
+				//在金融产品附属表FinProductAdd，金融产品分类表FIN_PRODUCT_TYPE存值
+				if (dto.getFinProductAdd() != null) {
+					String finprodId = dto.getFinProductAdd().getFinprodId();
+					FinProductAdd finProductAdd = assetInfoDetailMapper.selectByFinprodId(finprodId);
+					if (finProductAdd == null) {
+						finProductAddMapper.insert(dto.getFinProductAdd());
+					} else {
+						finProductAddMapper.updateByPrimaryKey(dto.getFinProductAdd());
+					}
 				}
-			}
-			if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
-					||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
 				if (dto.getFinProductType() != null) {
 					String finprodId = dto.getFinProductType().getFinprodId();
 					FinProductType finProductType = assetInfoDetailMapper.selectByFinprodIdType(finprodId);
-					if(finProductType == null) {
+					if (finProductType == null) {
 						finProductTypeMapper.insert(dto.getFinProductType());
-					}else {
-						finProductTypeMapper.updateByPrimaryKeySelective(dto.getFinProductType());
+					} else {
+						finProductTypeMapper.updateByPrimaryKey(dto.getFinProductType());
 					}
 				}
-			}
 			});
 			return checkResult;
 		}

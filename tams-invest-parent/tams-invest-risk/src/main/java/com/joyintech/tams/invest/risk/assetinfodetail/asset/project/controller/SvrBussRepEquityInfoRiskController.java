@@ -43,6 +43,10 @@ public class SvrBussRepEquityInfoRiskController extends BaseController{
         String    dataStatus=requestPargram.getParameter("dataStatus");
         //资产二级类别
         String   assetType=requestPargram.getParameter("assetType");
+        //工作流代码
+        String workFlowId = requestPargram.getParameter("workflowId");
+
+        String entityName = requestPargram.getParameter("entityName");
 
         //1.赋值界面数据字典
         setSelectOptionToModel(model,   new DictCode[] {DictCode.股票类型,DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,
@@ -54,7 +58,7 @@ public class SvrBussRepEquityInfoRiskController extends BaseController{
         //2、当入参assetType2资产/负债二级类别 为【资产_负债类别_权益类资产】进行以下处理
         if(assetInfoDetailRisk001Service.getDataListLink().get(DictCodeListExt2.资产_负债类别_权益类资产.getValue()).contains(assetType)){
               //调用service
-            bussAssetInfoService.setModle(uuid, dataStatus, model);
+            bussAssetInfoService.setModle(uuid, dataStatus, model,workFlowId,entityName);
         }
         model.addAttribute("entityName",this.getParam("entityName"));
 

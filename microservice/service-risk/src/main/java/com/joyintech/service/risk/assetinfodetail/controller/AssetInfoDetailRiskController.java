@@ -10,6 +10,7 @@
 
 package com.joyintech.service.risk.assetinfodetail.controller;
 
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -20,6 +21,7 @@ import com.joyintech.tams.common.base.entity.RskAssetInfo;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +41,7 @@ import java.util.Map;
  * @see AssetInfoDetailRiskController
  * @since 1.0
  */
-@RestController("backAssetInfoDetailRiskController")
+@RestController
 @RequestMapping("/AssetInfoDetailRiskController")
 public class AssetInfoDetailRiskController extends BaseController {
 
@@ -96,23 +98,18 @@ public class AssetInfoDetailRiskController extends BaseController {
     public List<SelectOptionDto> selectAssetCodeList(@RequestBody Map<String, Object> param) {
         return assetInfoDetailRiskService.selectAssetCodeList(param);
     }
-    
-    /**
-	 * 数据维护
-	 * @return
-	 */
-	@PostMapping("doSave")
-	public Integer doSave(@RequestBody AssetInfoDetailRiskDto dto) {
-		return assetInfoDetailRiskService.doSave(dto);
-	}
-	
+
 	/**
-	 * 数据维护
-	 * @return
+	 *
+	 * 工作流完成操作
+	 * <功能详细描述>
+	 * @param map 业务实体
+	 * @see
+	 * @since 1.0
 	 */
-	@PostMapping("doDelete")
-	public Integer doDelete(@RequestBody AssetInfoDetailRiskDto dto) {
-		return assetInfoDetailRiskService.doDelete(dto);
+	@RequestMapping("/doComplete")
+	public Integer doComplete(@RequestBody AssetInfoDetailRiskDto dto) {
+		return assetInfoDetailRiskService.doComplete(dto);
 	}
 	
 	/**
@@ -174,8 +171,7 @@ public class AssetInfoDetailRiskController extends BaseController {
   	public Integer selectDataCount(@RequestBody List<AssetInfoDetailRiskDto> dto) {
   		return assetInfoDetailRiskService.selectDataCount(dto);
   	}
-  	
-  	@SuppressWarnings("unchecked")
+
 	@PostMapping("importData")
 	public List<ExcelValidDto> importData(@RequestBody List<AssetInfoDetailRiskDto> dataList ){
 		return assetInfoDetailRiskService.importData(dataList);

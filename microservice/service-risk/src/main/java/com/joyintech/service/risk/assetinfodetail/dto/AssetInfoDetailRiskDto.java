@@ -28,6 +28,8 @@ import com.joyintech.tams.common.base.entity.RskAssetInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.util.List;
+
 /**
  * 描述:CHB_ASSET_INFO_SUB表的实体类,用于前台分类展示
  * DateUtil
@@ -45,6 +47,21 @@ public class AssetInfoDetailRiskDto extends RskAssetInfo implements ITableRow,Pr
 	private String mDateStr;
 
 	private String  errMsg;
+
+	/**
+	 * 操作类型
+	 */
+	private String operateType;
+
+	/**
+	 * 选择数据
+	 */
+	private List<AssetInfoDetailRiskDto> selectedItem;
+
+	/**
+	 * 要素id
+	 */
+	private String elementId;
 
 	public String getErrMsg() {
 		return errMsg;
@@ -340,5 +357,29 @@ public class AssetInfoDetailRiskDto extends RskAssetInfo implements ITableRow,Pr
 	
 	public String getTradeMarketStr() {
 		 return SysDataUtil.getNameFromDataDict(DictCode.交易流通场所_中债, super.getTradeMarket());
+	}
+
+	public String getOperateType() {
+		return operateType;
+	}
+
+	public void setOperateType(String operateType) {
+		this.operateType = operateType;
+	}
+
+	public List<AssetInfoDetailRiskDto> getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(List<AssetInfoDetailRiskDto> selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	public String getElementId() {
+		return elementId;
+	}
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
 	}
 }

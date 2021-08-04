@@ -17,16 +17,25 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.invest.risk.assetinfodetail.dto.AssetInfoDetailRisk001Dto;
 import com.joyintech.tams.invest.risk.assetinfodetail.service.AssetInfoDetailRisk001Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -105,23 +114,6 @@ public class AssetInfoDetailRisk001Controller extends BaseController {
 		return assetList;
 	}
 
-
-	@ResponseBody
-	@RequestMapping("delete")
-	public AjaxResult doDelete(String assetUuid,String assetType2,String assetCode) {
-		AjaxResult result = new AjaxResult(this.getMessage("REPORT_COMMON_I_0007"));
-		AssetInfoDetailRisk001Dto dto = new AssetInfoDetailRisk001Dto();
-		dto.setAssetUuid(assetUuid);
-		dto.setAssetType2(assetType2);
-		dto.setAssetCode(assetCode);
-		try{
-			assetInfoDetailRisk001Service.doDelete(dto);
-		}catch(Exception e){
-			logger.info("删除数据错误",e);
-		}
-		return result;
-	}
-
     /**
      * 导出文件
      *
@@ -174,4 +166,30 @@ public class AssetInfoDetailRisk001Controller extends BaseController {
    	public List<ExcelValidDto> importData(String fileName){
    		return this.assetInfoDetailRisk001Service.importData(fileName);
    	}
+
+	/**
+	 *  页面删除
+	 * @param dto 费用品种
+	 * @param br br
+	 * @return 删除结果
+	 * @throws WorkFlowException WorkFlowException
+	 */
+	@ResponseBody
+	@RequestMapping(ACTION_DELETE)
+	public AjaxResult delete(@RequestBody @Validated({
+			ValidateGroupDelete.class}) AssetInfoDetailRisk001Dto dto, BindingResult br) throws WorkFlowException {
+		ProcessParameter<AssetInfoDetailRisk001Dto> processParameter = new ProcessParameter<AssetInfoDetailRisk001Dto>();
+		WorkFlowParameter<AssetInfoDetailRisk001Dto> params = new WorkFlowParameter<AssetInfoDetailRisk001Dto>();
+		params.setPageId("AssetInfoDetailRisk002");
+		params.setElementId(dto.getElementId());
+		params.setBusinessCode(item -> item.getAssetCode());
+		params.setBusinessType(DictCodeList.共通业务类型_资产要素信息维护.getValue());
+		// 设置流程业务说明, entity即传入的dto
+		params.setComment(entity -> "资产代码" + "(" + entity.getAssetCode() + ")" + "-" + "资产名称" + "("
+				+ entity.getAssetName() + ")");
+		processParameter.setWorkFlowParameter(params);
+		String msg = assetInfoDetailRisk001Service.start(processParameter,
+				dto.getSelectedItem().toArray(new AssetInfoDetailRisk001Dto[dto.getSelectedItem().size()]));
+		return new AjaxResult(msg);
+	}
 }

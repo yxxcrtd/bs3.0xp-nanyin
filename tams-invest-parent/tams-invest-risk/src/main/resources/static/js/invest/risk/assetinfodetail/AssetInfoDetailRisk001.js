@@ -57,21 +57,18 @@
 	table.bind('click', '.edit', function(data, index) {
 		data.operateType = "edit";
 		data.pageModel="edit";
-		Joyin.dialog(JoyinUtil.getLabel("资产要素信息修改"),
-			basePath + "invest/risk/assetinfodetail/AssetInfoDetailRisk002/init",
-			"95%", "90%", {pageModel:PAGE_MODEL_EDIT,
+		    Joyin.dialog(JoyinUtil.getLabel("资产要素信息修改"),
+			   basePath + "invest/risk/assetinfodetail/AssetInfoDetailRisk002/init",
+			   "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
 				assetUuid:data.assetUuid,dataStatus:data.dataStatus},function(){table.reload();});
-		// });
 	});
 	/**
 	 * 绑定删除事件
 	 */
 	table.bind('click', '.delt', function(data, index) {
-		var object = {assetUuid:data.assetUuid,assetType2:data.assetType2,assetCode:data.assetCode,operateType:"edit"};
-		Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-			Joyin.ajax(basePath +'invest/risk/assetinfodetail/AssetInfoDetailRisk001/delete',object, function(result){
-				table.reload();
-			});
+		var object = {selectedItem: [data],operateType:"delete"};
+			Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+				WorkFlow.doDeleteList(basePath + 'invest/risk/assetinfodetail/AssetInfoDetailRisk001/delete', object, "AssetInfoDetailRisk001_btn_delete", "AssetInfoDetailRisk002");
 		});
 	});
 

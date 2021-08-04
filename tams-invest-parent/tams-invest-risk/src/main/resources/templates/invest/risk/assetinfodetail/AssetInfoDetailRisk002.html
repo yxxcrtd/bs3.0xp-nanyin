@@ -17,7 +17,6 @@
 				   data-th-value="${entity?.dataStatus}" hidden>
 
 
-
 <!--			人行及其他公共数据.页面直接跳过修改直接保存数据-->
 			<input id="chbIssuerId" name="chbIssuerId"
 				   data-th-value="${entity?.chbIssuerId}" hidden>
@@ -252,7 +251,7 @@
 				<div class="businessDeptClass" id="svrBussRepFinanciallInfoRisk_div">
 					<div class="page-component"
 						 th:data-path="@{/invest/risk/assetinfodetail/asset/financiall/SvrBussRepFinanciallInfoRisk/init}"
-						 th:data-params="|{entityName: 'svrBussRepFinanciallInfoRiskDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+						 th:data-params="|{entityName: 'svrBussRepFinanciallInfoRiskDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',workflowId:'${entity?.workflowId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
 					</div>
 				</div>
@@ -334,7 +333,7 @@
 				<div class="businessDeptClass" id="svrBussRepEquityInfoRisk_div">
 					<div class="page-component"
 						 th:data-path="@{/invest/risk/assetinfodetail/asset/project/SvrBussRepEquityInfoRisk/init}"
-						 th:data-params="|{entityName: 'svrBussRepEquityInfoRiskDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+						 th:data-params="|{entityName: 'svrBussRepEquityInfoRiskDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',workflowId:'${entity?.workflowId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
 					</div>
 				</div>
@@ -384,7 +383,7 @@
 				<div class="businessDeptClass" id="svrBussQDIIBondRepInfoRisk_div">
 					<div class="page-component"
 						 th:data-path="@{/invest/risk/assetinfodetail/asset/qdiiBond/SvrBussQDIIBondRepInfoRisk/init}"
-						 th:data-params="|{entityName: 'svrBussRepQDIIBondInfoRiskDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+						 th:data-params="|{entityName: 'svrBussRepQDIIBondInfoRiskDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',workflowId:'${entity?.workflowId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 					</div>
 				</div>
 			</div>
@@ -393,20 +392,23 @@
 				<div class="businessDeptClass" id="svrBussQDIISharesInfoRisk_div">
 					<div class="page-component"
 						 th:data-path="@{/invest/risk/assetinfodetail/asset/qdiiShares/SvrBussQDIISharesInfoRisk/init}"
-						 th:data-params="|{entityName: 'svrBussQDIISharesInfoRiskDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
+						 th:data-params="|{entityName: 'svrBussQDIISharesInfoRiskDto',assetUuid:'${entity?.assetUuid}',dataStatus:'${entity?.dataStatus}',assetType:'${entity?.assetType2}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}',workflowId:'${entity?.workflowId}',svr_asset_type_second_level: '${SVR_ASSET_TYPE_SECOND_LEVEL}'}|">
 
 					</div>
 				</div>
 			</div>
-			<div class="row text-center stepbar"><a
-					id="AssetInfoDetailRisk002_btn_submit"
-					class="layui-btn layui-btn-sm btn-submit"
-					data-th-text="#{SysCommon.submit}">提交</a> <a
-					id="AssetInfoDetailRisk002_btn_cancel"
-					class="layui-btn layui-btn-sm btn-cancel"
-					data-th-text="#{SysCommon.cancel}">取消</a>
-			</div>
-		</form>
+				<div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">
+					<div class="row text-center" style="margin: 20px 0;">
+						<a id="AssetInfoDetailRisk002_btn_save" class="layui-btn layui-btn-sm btn-save"
+						   data-th-text="#{SysCommon.save}">保存</a>
+						<a id="AssetInfoDetailRisk002_btn_submit" class="layui-btn layui-btn-sm btn-submit"
+						   data-th-text="#{SysCommon.submit}">提交</a>
+						<a id="AssetInfoDetailRisk002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel"
+						   data-th-text="#{SysCommon.cancel}">取消</a>
+					</div>
+				</div>
+		</div>
+	</form>
 	</div>
 </div>
 
@@ -425,7 +427,7 @@
 		var CE_MODEL = /*[[${CE_MODEL}]]*/'02';
 		var IS_SHOW_TYPE = /*[[${isShowType}]]*/'01';
 		var INT_ASSET_TYPE = /*[[${INT_ASSET_TYPE}]]*/'F07';
-
+		var workflowId = /*[[${entity?.workflowId}]]*/'';
 		var AssetTypeListLink = [[${AssetTypeListLink}]];
 
 	</script>

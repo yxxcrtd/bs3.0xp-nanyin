@@ -26,9 +26,15 @@ import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.common.util.ReportGlobalConstant;
 import com.joyintech.tams.invest.risk.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.invest.risk.assetinfodetail.dto.AssetInfoDetailRisk001Dto;
+import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussQDIISharesInfoRiskDto;
+import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepEquityInfoRiskDto;
+import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepFinanciallInfoRiskDto;
+import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepQDIIBondInfoRiskDto;
 import com.joyintech.tams.invest.risk.assetinfodetail.util.AssetInfoDetailRiskUtil;
 import com.joyintech.tams.invest.risk.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +55,14 @@ import java.util.*;
  * @since 1.0
  */
 @Service
-public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfoDetailRisk001Dto> {
+public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfoDetailRisk001Dto> implements BaseProcessService<AssetInfoDetailRisk001Dto> {
 
 	protected static final Logger logger = LoggerFactory.getLogger(AssetInfoDetailRisk001Service.class);
 
 
 	static Map<String,Set<String>> map = null;
+
+	static Map<String,String> dict = new HashMap<>();
 	
 	@Autowired
 	private AssetInfoDetailRiskUtil assetInfoDetailUtil;
@@ -129,60 +137,81 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 		return dtoList;
 	}
 
-	public void doSave(AssetInfoDetailRisk001Dto dto) {
+	 @Override
+	 public String generateTitle(AssetInfoDetailRisk001Dto entity, OperationType type) {
+		 return  "资产代码" + "(" + entity.getAssetCode() + ")" + "-" + "资产名称" + "("
+				 + entity.getAssetName() + ")";
+	 }
+	/**
+	 * 工作流（留痕操作结束的时候执行的方法）
+	 */
+	@Override
+	public void doComplete(AssetInfoDetailRisk001Dto dto, OperationType type) {
+		dto.setOperateType(type.toString());
 		//分别调用各自的setEntity方法
 		this.getDtoByPageMessgae(dto);
 		//赋值相关数据
-		dto.setCreateUser(LoginUserUtil.getUserName());
-		dto.setUpdateUser(LoginUserUtil.getUserName());
 		dto.setIssuePartyId(CommonUtil.selectBankCode());
 		if(StringUtil.isEmpty(dto.getAssetUuid())){
 			dto.setAssetUuid(IDGenerator.generate(36));
 		}
-		//在金融产品附属表FinProductAdd存值,股票还要在FIN_PRODUCT_TYPE表存值
+		//在金融产品附属表FinProductAdd，金融产品分类表FIN_PRODUCT_TYPE存值 start
+		FinProductAdd finProductAdd = new FinProductAdd();
+		BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
+		finProductAdd.setFinprodId(dto.getAssetCode());
+		FinProductType finProductType = new FinProductType();
+		BeanUtil.copyPropertiesIgnoreNull(finProductType, dto);
+		finProductType.setFinprodId(dto.getAssetCode());
+		// 分支序号
+		Long branch = StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)) ? 0 : Long.parseLong(
+				CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
+		finProductType.setBranch(branch);
 		if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
-			||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
-            FinProductAdd finProductAdd = new FinProductAdd();
-            BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
-            finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
-            finProductAdd.setInvestNature(DictCodeList.投资性质_权益类.getValue());
-            dto.setFinProductAdd(finProductAdd);
-
-			FinProductType finProductType = new FinProductType();
-			BeanUtil.copyPropertiesIgnoreNull(finProductType, dto);
-			finProductType.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
-			// 分支序号
-			Long branch = StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)) ? 0 : Long.parseLong(
-					CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
-			finProductType.setBranch(branch);
+				||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
+			finProductAdd.setInvestNature(DictCodeList.投资性质_权益类.getValue());
 			finProductType.setType8(DictCodeListExt2.平安资产类型_股票.getValue());
-			finProductType.setType9("04");
-			finProductType.setType10("47");
-			finProductType.setType11("095");
-			finProductType.setType12("097");
-			dto.setFinProductType(finProductType);
-		}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_互换.getValue())
-		        ||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期货.getValue())
-				||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期权.getValue())
-		  ){
-			FinProductAdd finProductAdd = new FinProductAdd();
-			BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
-			finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+			finProductType.setType9(dto.getOrgAssetType2());
+			finProductType.setType10(dto.getOrgAssetType3());
+			finProductType.setType11(dto.getOrgAssetType4());
+			finProductType.setType12(dto.getOrgAssetType5());
+		}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_互换.getValue())){
 			finProductAdd.setInvestNature(DictCodeList.投资性质_商品及金融衍生品类.getValue());
-			dto.setFinProductAdd(finProductAdd);
+			finProductType.setType8(DictCodeListExt2.平安资产类型_利率互换.getValue());
+			finProductType.setType9(dto.getOrgAssetType2());
+			finProductType.setType10(dto.getOrgAssetType3());
+			finProductType.setType11(dto.getOrgAssetType4());
+			finProductType.setType12(dto.getOrgAssetType5());
+		}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期货.getValue())){
+			finProductAdd.setInvestNature(DictCodeList.投资性质_商品及金融衍生品类.getValue());
+			finProductType.setType8(DictCodeListExt2.平安资产类型_期货.getValue());
+			finProductType.setType9(dto.getOrgAssetType2());
+			finProductType.setType10(dto.getOrgAssetType3());
+			finProductType.setType11(dto.getOrgAssetType4());
+			finProductType.setType12(dto.getOrgAssetType5());
+		}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期权.getValue())){
+			finProductAdd.setInvestNature(DictCodeList.投资性质_商品及金融衍生品类.getValue());
+			finProductType.setType8(DictCodeListExt2.平安资产类型_期权.getValue());
+			finProductType.setType9(dto.getOrgAssetType2());
+			finProductType.setType10(dto.getOrgAssetType3());
+			finProductType.setType11(dto.getOrgAssetType4());
+			finProductType.setType12(dto.getOrgAssetType5());
 		}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_QDII债券.getValue())){
-			FinProductAdd finProductAdd = new FinProductAdd();
-			BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
-			finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
 			finProductAdd.setInvestNature(DictCodeList.投资性质_固定收益类.getValue());
-			dto.setFinProductAdd(finProductAdd);
+			finProductType.setType8(DictCodeList.平安资产类型_债券.getValue());finProductType.setType9(dto.getOrgAssetType2());
+			finProductType.setType10(dto.getOrgAssetType3());
+			finProductType.setType11(dto.getOrgAssetType4());
+			finProductType.setType12(dto.getOrgAssetType5());
 		}else{
-			FinProductAdd finProductAdd = new FinProductAdd();
-			BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
-			finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
 			finProductAdd.setInvestNature(dto.getSvrBussQDIISharesInfoRiskDto().getInvestNature());
-			dto.setFinProductAdd(finProductAdd);
+			finProductType.setType8(DictCodeList.平安资产类型_基金.getValue());
+			finProductType.setType9(dto.getOrgAssetType2());
+			finProductType.setType10(dto.getOrgAssetType3());
+			finProductType.setType11(dto.getOrgAssetType4());
+			finProductType.setType12(dto.getOrgAssetType5());
 		}
+		dto.setFinProductAdd(finProductAdd);
+		dto.setFinProductType(finProductType);
+		//在金融产品附属表FinProductAdd，金融产品分类表FIN_PRODUCT_TYPE存值 end
 		/***当资产为资管计划或者委外时,需要保存资管计划开始结束日**/
 		if(DictCodeListExt2.资产_负债类别_资产管理产品.getValue().equals(dto.getAssetType())
 		||DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue().equals(dto.getAssetType())){
@@ -196,19 +225,7 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 
 		restTemplate.postForObject(
 				ServiceApplication.RISK_SERVICE_NAME +
-	            "/AssetInfoDetailRiskController/doSave", dto, Integer.class);
-
-
-	}
-
-
-	public void doDelete(AssetInfoDetailRisk001Dto dto) throws Exception {
-		FinProductAdd finProductAdd = new FinProductAdd();      
-        finProductAdd.setFinprodId(commonBusinessService.getFinProdId(dto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));       
-        dto.setFinProductAdd(finProductAdd);
-		restTemplate.postForObject(
-				ServiceApplication.RISK_SERVICE_NAME +
-	            "/AssetInfoDetailRiskController/doDelete", dto, Integer.class);
+	            "/AssetInfoDetailRiskController/doComplete", dto, Integer.class);
 
 
 	}
@@ -403,51 +420,65 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 		List<List<String>> data = ExcelUtil.getDataList2(fileName);
 		List<AssetInfoDetailRisk001Dto> list = new ArrayList<>();
 		List<ExcelValidDto> resultList = assetInfoDetailUtil.convertToBean(list,data);
-		//在金融产品附属表FinProductAdd存值,股票还要在FIN_PRODUCT_TYPE表存值
-		list.forEach(assetInfoDetailDto -> {
-			if(StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
-					||StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
-				FinProductAdd finProductAdd = new FinProductAdd();
-				BeanUtil.copyPropertiesIgnoreNull(finProductAdd, assetInfoDetailDto);
-				finProductAdd.setFinprodId(commonBusinessService.getFinProdId(assetInfoDetailDto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+		list.forEach(dto -> {
+			//在金融产品附属表FinProductAdd，金融产品分类表FIN_PRODUCT_TYPE存值 start
+			FinProductAdd finProductAdd = new FinProductAdd();
+			BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
+			finProductAdd.setFinprodId(dto.getAssetCode());
+			FinProductType finProductType = new FinProductType();
+			BeanUtil.copyPropertiesIgnoreNull(finProductType, dto);
+			finProductType.setFinprodId(dto.getAssetCode());
+			// 分支序号
+			Long branch = StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)) ? 0 : Long.parseLong(
+					CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
+			finProductType.setBranch(branch);
+			if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())
+					||StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())){
 				finProductAdd.setInvestNature(DictCodeList.投资性质_权益类.getValue());
-				assetInfoDetailDto.setFinProductAdd(finProductAdd);
-
-				FinProductType finProductType = new FinProductType();
-				BeanUtil.copyPropertiesIgnoreNull(finProductType, assetInfoDetailDto);
-				finProductType.setFinprodId(commonBusinessService.getFinProdId(assetInfoDetailDto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
-				// 分支序号
-				Long branch = StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)) ? 0 : Long.parseLong(
-						CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
-				finProductType.setBranch(branch);
 				finProductType.setType8(DictCodeListExt2.平安资产类型_股票.getValue());
-				finProductType.setType9("04");
-				finProductType.setType10("47");
-				finProductType.setType11("095");
-				finProductType.setType12("097");
-				assetInfoDetailDto.setFinProductType(finProductType);
-			}else if(StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_互换.getValue())
-					||StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期货.getValue())
-					||StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期权.getValue())
-			){
-				FinProductAdd finProductAdd = new FinProductAdd();
-				BeanUtil.copyPropertiesIgnoreNull(finProductAdd, assetInfoDetailDto);
-				finProductAdd.setFinprodId(commonBusinessService.getFinProdId(assetInfoDetailDto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+				finProductType.setType9(dto.getOrgAssetType2());
+				finProductType.setType10(dto.getOrgAssetType3());
+				finProductType.setType11(dto.getOrgAssetType4());
+				finProductType.setType12(dto.getOrgAssetType5());
+			}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_互换.getValue())){
 				finProductAdd.setInvestNature(DictCodeList.投资性质_商品及金融衍生品类.getValue());
-				assetInfoDetailDto.setFinProductAdd(finProductAdd);
-			}else if(StringUtil.equals(assetInfoDetailDto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_QDII债券.getValue())){
-				FinProductAdd finProductAdd = new FinProductAdd();
-				BeanUtil.copyPropertiesIgnoreNull(finProductAdd, assetInfoDetailDto);
-				finProductAdd.setFinprodId(commonBusinessService.getFinProdId(assetInfoDetailDto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
+				finProductType.setType8(DictCodeListExt2.平安资产类型_利率互换.getValue());
+				finProductType.setType9(dto.getOrgAssetType2());
+				finProductType.setType10(dto.getOrgAssetType3());
+				finProductType.setType11(dto.getOrgAssetType4());
+				finProductType.setType12(dto.getOrgAssetType5());
+			}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期货.getValue())){
+				finProductAdd.setInvestNature(DictCodeList.投资性质_商品及金融衍生品类.getValue());
+				finProductType.setType8(DictCodeListExt2.平安资产类型_期货.getValue());
+				finProductType.setType9(dto.getOrgAssetType2());
+				finProductType.setType10(dto.getOrgAssetType3());
+				finProductType.setType11(dto.getOrgAssetType4());
+				finProductType.setType12(dto.getOrgAssetType5());
+			}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_期权.getValue())){
+				finProductAdd.setInvestNature(DictCodeList.投资性质_商品及金融衍生品类.getValue());
+				finProductType.setType8(DictCodeListExt2.平安资产类型_期权.getValue());
+				finProductType.setType9(dto.getOrgAssetType2());
+				finProductType.setType10(dto.getOrgAssetType3());
+				finProductType.setType11(dto.getOrgAssetType4());
+				finProductType.setType12(dto.getOrgAssetType5());
+			}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_QDII债券.getValue())){
 				finProductAdd.setInvestNature(DictCodeList.投资性质_固定收益类.getValue());
-				assetInfoDetailDto.setFinProductAdd(finProductAdd);
+				finProductType.setType8(DictCodeList.平安资产类型_债券.getValue());
+				finProductType.setType9(dto.getOrgAssetType2());
+				finProductType.setType10(dto.getOrgAssetType3());
+				finProductType.setType11(dto.getOrgAssetType4());
+				finProductType.setType12(dto.getOrgAssetType5());
 			}else{
-				FinProductAdd finProductAdd = new FinProductAdd();
-				BeanUtil.copyPropertiesIgnoreNull(finProductAdd, assetInfoDetailDto);
-				finProductAdd.setFinprodId(commonBusinessService.getFinProdId(assetInfoDetailDto.getAssetCode(), DictCodeListExt1.金融产品类型_投管用_股票.getValue(), null));
-				finProductAdd.setInvestNature(assetInfoDetailDto.getSvrBussQDIISharesInfoRiskDto().getInvestNature());
-				assetInfoDetailDto.setFinProductAdd(finProductAdd);
+				finProductAdd.setInvestNature(dto.getSvrBussQDIISharesInfoRiskDto().getInvestNature());
+				finProductType.setType8(DictCodeList.平安资产类型_基金.getValue());
+				finProductType.setType9(dto.getOrgAssetType2());
+				finProductType.setType10(dto.getOrgAssetType3());
+				finProductType.setType11(dto.getOrgAssetType4());
+				finProductType.setType12(dto.getOrgAssetType5());
 			}
+			dto.setFinProductAdd(finProductAdd);
+			dto.setFinProductType(finProductType);
+			//在金融产品附属表FinProductAdd，金融产品分类表FIN_PRODUCT_TYPE存值 end
 		});
 		if (StringUtil.isEmptyList(resultList)){
 			return restTemplate.postForList(
@@ -463,7 +494,7 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 			List<SysDatadictListLink> listLink = restTemplate.postForList(
 		            ServiceApplication.RISK_SERVICE_NAME +
 		            "/AssetInfoDetailRiskController/getDataListLinkData",param,
-		            SysDatadictListLink.class);			
+		            SysDatadictListLink.class);
 		return listLink;
 	}
 }

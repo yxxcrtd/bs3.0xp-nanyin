@@ -17,15 +17,20 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.risk.assetinfodetail.dto.AssetInfoDetailRisk001Dto;
+import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepEquityInfoRiskDto;
 import com.joyintech.tams.invest.risk.assetinfodetail.service.AssetInfoDetailRisk001Service;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +50,7 @@ import java.util.Map;
  * 〈功能详细描述〉
  * @author jiangsucheng
  * @version 1.0 2018年11月6日
- * @see ReportPageManage002Controller
+ * @see AssetInfoDetailRisk002Controller
  * @since 1.0BussFinBondRepInfo
  */
 @PageId("AssetInfoDetailRisk002")
@@ -67,24 +72,29 @@ public class AssetInfoDetailRisk002Controller extends BaseController {
     public String init(Model model){
         super.setSelectOptionToModel(model, DictCode.资产_负债类别, DictCode.资产_负债二级类别, DictCode.报送反馈状态,
                 DictCode.交易流通场所_中债,DictCode.币种_中债,
-                DictCode.中债_上游资产一级分类, DictCode.中债_上游资产二级分类,DictCode.中债_上游资产三级分类,DictCode.中债_上游资产四级分类,
+                DictCode.中债_上游资产一级分类, DictCode.中债_上游资产二级分类,DictCode.中债_上游资产三级分类,
+                DictCode.中债_上游资产四级分类,
                 DictCode.中债_上游资产五级分类);
 
         String assetUuid = this.getParam("assetUuid");
         String dataStatus = this.getParam("dataStatus");
         String issuepartyid= CommonUtil.selectBankCode();
-
-        //资产编号不为空则为修改.
-
-        String jsonObject= JSONObject.toJSONString(assetInfoDetailRisk001Service.getDataListLink());
+        String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        String jsonObject = JSONObject.toJSONString(assetInfoDetailRisk001Service.getDataListLink());
         model.addAttribute("AssetTypeListLink", jsonObject);
-
-        AssetInfoDetailRisk001Dto  dto=new   AssetInfoDetailRisk001Dto();
-        dto.setIssuePartyId(issuepartyid);
-        model.addAttribute(GlobalConstant.ENTITY, dto);
-        if(StringUtil.isNotEmpty(assetUuid)&&StringUtil.isNotEmpty(dataStatus)){
-              dto = assetInfoDetailRisk001Service.getAssetInfoDetail(assetUuid,dataStatus);
+        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {// 判断是否存在于工作流中
+            AssetInfoDetailRisk001Dto dto = assetInfoDetailRisk001Service.getBussinessEntityByWorkflowId(
+                    workflowId);
+            model.addAttribute("pageModel", dto.getPageModel());
             model.addAttribute(GlobalConstant.ENTITY, dto);
+        }else{
+            AssetInfoDetailRisk001Dto dto = new AssetInfoDetailRisk001Dto();
+            dto.setIssuePartyId(issuepartyid);
+            model.addAttribute(GlobalConstant.ENTITY, dto);
+            if (StringUtil.isNotEmpty(assetUuid) && StringUtil.isNotEmpty(dataStatus)) {
+                dto = assetInfoDetailRisk001Service.getAssetInfoDetail(assetUuid, dataStatus);
+                model.addAttribute(GlobalConstant.ENTITY, dto);
+            }
         }
         return super.init(model);
     }
@@ -106,14 +116,38 @@ public class AssetInfoDetailRisk002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) AssetInfoDetailRisk001Dto dto, BindingResult result) {
-        return commonCheck(result, "save");
+        return commonCheck(result, dto.getOperateType());
     }
+
+    /**
+     * 保存
+     *
+     * @param dto 实体类
+     * @param br 结果
+     * @return 结果集
+     * @throws WorkFlowException 异常
+     */
     @ResponseBody
-    @RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
-    public AjaxResult doAdd(@RequestBody AssetInfoDetailRisk001Dto dto) throws Exception {
-    	assetInfoDetailRisk001Service.doSave(dto);
-        return new AjaxResult("保存成功");
+    @RequestMapping("save")
+    public AjaxResult save(@RequestBody @Validated({
+            ValidateGroupEdit.class}) AssetInfoDetailRisk001Dto dto, BindingResult br) throws WorkFlowException {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+        ProcessParameter<AssetInfoDetailRisk001Dto> processParameter = new ProcessParameter<AssetInfoDetailRisk001Dto>();
+        WorkFlowParameter<AssetInfoDetailRisk001Dto> params = new WorkFlowParameter<AssetInfoDetailRisk001Dto>();
+        params.setPageId("AssetInfoDetailRisk002");
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(dto.getAssetCode());
+        params.setBusinessType(DictCodeList.共通业务类型_资产要素信息维护.getValue());
+        // 设置流程业务说明, entity即传入的dto
+        params.setComment(entity -> "资产代码" + "(" + entity.getAssetCode() + ")" + "-" + "资产名称" + "("
+                + entity.getAssetName() + ")");
+        processParameter.setWorkFlowParameter(params);
+        String msg = assetInfoDetailRisk001Service.start(processParameter, dto);
+        return new AjaxResult(msg);
     }
+
     @ResponseBody
     @RequestMapping("getValue")
     public BigDecimal getValue(@RequestBody Map<String, Object> param) {
@@ -136,8 +170,7 @@ public class AssetInfoDetailRisk002Controller extends BaseController {
         }else{
             if (StringUtil.isEmpty((String) params.get("orgAssetType2")) || "null".equals(params.get("orgAssetType2"))) {
                 params.put("orgAssetType2", null);
-            }
-            else if (StringUtil.isEmpty((String) params.get("orgAssetType3")) || "null".equals(params.get("orgAssetType3"))) {
+            }else if (StringUtil.isEmpty((String) params.get("orgAssetType3")) || "null".equals(params.get("orgAssetType3"))) {
                 params.put("orgAssetType3", null);
             }else if (StringUtil.isEmpty((String) params.get("orgAssetType4")) || "null".equals(params.get("orgAssetType4"))) {
                 params.put("orgAssetType4", null);

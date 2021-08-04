@@ -1607,6 +1607,7 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
     平安业务类型_债券借贷融入到期(DictCode.平安业务类型,"107","债券借贷融入到期"),
     平安业务类型_债券借贷融出到期(DictCode.平安业务类型,"108","债券借贷融出到期"),
     平安资产类型_期权(DictCode.平安资产类型,"F18","期权"),
+    平安资产类型_期货(DictCode.平安资产类型,"F19","期货"),
     // add by qmh 20190712  利率互换交易  start
     营业日准则_按实际天数调整(DictCode.营业日准则,"05","按实际天数调整"),
     共通业务类型_利率互换交易(DictCode.共通业务类型,"TRD53","利率互换交易"),

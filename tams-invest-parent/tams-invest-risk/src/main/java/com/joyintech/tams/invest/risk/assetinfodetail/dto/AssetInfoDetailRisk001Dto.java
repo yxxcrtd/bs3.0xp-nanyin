@@ -32,6 +32,8 @@ import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepQDIIde
 import com.joyintech.tams.invest.risk.assetinfodetail.validator.AssetInfoDetailRiskValidator;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.util.List;
+
 /**
  * 描述:CHB_ASSET_INFO_SUB表的实体类,用于前台分类展示
  * DateUtil
@@ -39,7 +41,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @author: Administrator
  * @创建时间: 2019-01-21
  */
-@PageId("AssetInfoRegist002")
+@PageId("AssetInfoDetailRisk002")
 @ValidLogic(targetClass = AssetInfoDetailRiskValidator.class, groups = { ValidateGroupEdit.class,
 		ValidateGroupDelete.class })
 public class AssetInfoDetailRisk001Dto extends RskAssetInfo implements ITableRow,ProcessEntity {
@@ -52,6 +54,26 @@ public class AssetInfoDetailRisk001Dto extends RskAssetInfo implements ITableRow
 	private String mDateStr;
 
 	private String  errMsg;
+
+	/**
+	 * 操作类型
+	 */
+	private String operateType;
+
+	/**
+	 * 要素id
+	 */
+	private String elementId;
+
+	/**
+	 * 目的和意义以及可能会用到的地方
+	 */
+	private String pageModel;
+
+	/**
+	 * 选择数据
+	 */
+	private List<AssetInfoDetailRisk001Dto> selectedItem;
 
 	public String getErrMsg() {
 		return errMsg;
@@ -349,5 +371,36 @@ public class AssetInfoDetailRisk001Dto extends RskAssetInfo implements ITableRow
 	public String getTradeMarketStr() {
 		 return SysDataUtil.getNameFromDataDict(DictCode.交易流通场所_中债, super.getTradeMarket());
 	}
-	
+
+	public String getOperateType() {
+		return operateType;
+	}
+
+	public void setOperateType(String operateType) {
+		this.operateType = operateType;
+	}
+
+	public String getElementId() {
+		return elementId;
+	}
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
+
+	public List<AssetInfoDetailRisk001Dto> getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(List<AssetInfoDetailRisk001Dto> selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	public String getPageModel() {
+		return pageModel;
+	}
+
+	public void setPageModel(String pageModel) {
+		this.pageModel = pageModel;
+	}
 }
