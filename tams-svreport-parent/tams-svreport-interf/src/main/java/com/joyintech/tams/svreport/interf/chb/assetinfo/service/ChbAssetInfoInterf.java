@@ -753,19 +753,14 @@ public class ChbAssetInfoInterf  extends BaseService{
      * @since 2.1.8
      * @version 2.1.8
      * @author：yjp 2021年7月26日
-     * @param chbSecRepayInfoList 债券还本信息
      *
      */
     public void generateChbSecRepayInfoData() {
         //删除债券还本付息a表里的数据
         chbAssetInfoInterfMapper.deleteAllChbSecRepayInfoData();
-        //查询债券的还本付息计划a
-        List<ChbSecRepayInfo> chbSecRepayInfoList = chbAssetInfoInterfMapper.selectChbSecRepayInfoData();
         //插入查询债券的还本付息计划a
-        if (CollectionUtils.isNotEmpty(chbSecRepayInfoList)) {
-            for (ChbSecRepayInfo chbSecRepayInfo : chbSecRepayInfoList) {
-                chbAssetInfoInterfMapper.insertChbSecRepayInfoData(chbSecRepayInfo);
-            }
-        }
+        ChbSecRepayInfo record = new ChbSecRepayInfo();
+        chbAssetInfoInterfMapper.insertChbSecRepayInfoData(record);
+
     }
 }

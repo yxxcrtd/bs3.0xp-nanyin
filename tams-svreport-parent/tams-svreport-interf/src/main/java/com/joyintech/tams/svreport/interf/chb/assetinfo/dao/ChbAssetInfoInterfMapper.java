@@ -157,8 +157,6 @@ public interface ChbAssetInfoInterfMapper {
 
     //	删除债券还本付息a表里的数据
 	void deleteAllChbSecRepayInfoData();
-	//	查询债券的还本付息计划
-	List<ChbSecRepayInfo> selectChbSecRepayInfoData();
 	//插入查询债券的还本付息计划a
 	int insertChbSecRepayInfoData(ChbSecRepayInfo record);
 }

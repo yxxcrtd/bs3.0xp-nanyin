@@ -16037,10 +16037,12 @@
       truncate table CHB_SEC_REPAY_INFO
     </delete>
 
-    <select id="selectChbSecRepayInfoData" resultType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo">
+    <insert id="insertChbSecRepayInfoData" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >
+        insert into CHB_SEC_REPAY_INFO(SEC_ID,REPAY_DT,SEC_NM,REPAY_RATE,REPAY_NET,TRADE_MARKET,
+        REPAY_CYCLE_DAY, REPAY_MODE)
         SELECT T1.FINPROD_MARKET_ID SEC_ID,
-        T1.FINPROD_ABBR SEC_NM,
         T3.VDATE REPAY_DT,
+        T1.FINPROD_ABBR SEC_NM,
         T3.PRIN_AMT REPAY_RATE,
         100 - (SELECT SUM(PRIN_AMT)
         FROM FIN_CASH_PLAN
@@ -16050,66 +16052,9 @@
         T3.MDATE REPAY_CYCLE_DAY,
         1 AS REPAY_MODE
         FROM FIN_PRODUCT T1, FIN_CASH_INFO T2, FIN_CASH_PLAN T3
-        WHERE T1.FINPROD_TYPE2 = 'F01' --债券
-        AND T3.CASH_TYPE IN ('02', '03') --中间还本、到期还本
+        WHERE T1.FINPROD_TYPE2 = 'F01' <!--债券-->
+        AND T3.CASH_TYPE IN ('02', '03') <!--中间还本、到期还本-->
         AND T1.FINPROD_ID = T2.FINPROD_ID
         AND T2.CASH_ID = T3.CASH_ID
-
-    </select>
-
-    <insert id="insertChbSecRepayInfoData" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >
-        insert into CHB_SEC_REPAY_INFO
-        <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="secId != null" >
-                SEC_ID,
-            </if>
-            <if test="repayDt != null" >
-                REPAY_DT,
-            </if>
-            <if test="secNm != null" >
-                SEC_NM,
-            </if>
-            <if test="repayRate != null" >
-                REPAY_RATE,
-            </if>
-            <if test="repayNet != null" >
-                REPAY_NET,
-            </if>
-            <if test="tradeMarket != null" >
-                TRADE_MARKET,
-            </if>
-            <if test="repayCycleDay != null" >
-                REPAY_CYCLE_DAY,
-            </if>
-            <if test="repayMode != null" >
-                REPAY_MODE,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="secId != null" >
-                #{secId,jdbcType=VARCHAR},
-            </if>
-            <if test="repayDt != null" >
-                #{repayDt,jdbcType=TIMESTAMP},
-            </if>
-            <if test="secNm != null" >
-                #{secNm,jdbcType=VARCHAR},
-            </if>
-            <if test="repayRate != null" >
-                #{repayRate,jdbcType=DECIMAL},
-            </if>
-            <if test="repayNet != null" >
-                #{repayNet,jdbcType=DECIMAL},
-            </if>
-            <if test="tradeMarket != null" >
-                #{tradeMarket,jdbcType=VARCHAR},
-            </if>
-            <if test="repayCycleDay != null" >
-                #{repayCycleDay,jdbcType=TIMESTAMP},
-            </if>
-            <if test="repayMode != null" >
-                #{repayMode,jdbcType=VARCHAR},
-            </if>
-        </trim>
     </insert>
 </mapper>
