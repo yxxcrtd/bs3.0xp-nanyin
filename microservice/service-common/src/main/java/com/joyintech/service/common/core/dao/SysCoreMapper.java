@@ -257,4 +257,6 @@ public interface SysCoreMapper {
 	 * @since 1.0
 	 */
 	int isBondExerciseAsset(String finprodId);
+
+	int isExistTransInAsset(String finprodId);
 }

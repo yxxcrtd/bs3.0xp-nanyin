@@ -32,11 +32,7 @@ import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.invest.common.redisinit.service.RiskRefreshRedisService;
 import com.joyintech.tams.invest.common.riskinfrds.base.service.RedisBaseService;
 import com.joyintech.tams.invest.common.riskinfrds.calendar.service.CalendarService;
-import com.joyintech.tams.invest.common.riskinfrds.info.service.AssetInfoRedisService;
-import com.joyintech.tams.invest.common.riskinfrds.info.service.ExchargeInfoService;
-import com.joyintech.tams.invest.common.riskinfrds.info.service.FundValuationService;
-import com.joyintech.tams.invest.common.riskinfrds.info.service.ProdAssetAmountService;
-import com.joyintech.tams.invest.common.riskinfrds.info.service.ProdInfoRedisService;
+import com.joyintech.tams.invest.common.riskinfrds.info.service.*;
 import com.joyintech.tams.invest.common.riskinfrds.occupy.service.OccupyRelParamService;
 import com.joyintech.tams.invest.common.riskinfrds.param.service.IndicatorParamService;
 import com.joyintech.tams.invest.common.riskinfrds.param.service.IndicatorParamValService;
@@ -53,12 +49,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -225,7 +216,7 @@ public class RiskRefreshRedisServiceImpl extends BaseService implements RiskRefr
      */
     private void dealRefreshRedis(IParaRds cond, Consumer<Map.Entry<String, List<RskBusinessRedisConfig>>> consumer){
         Map<String,Object> paraMap=new HashMap<>();
-        paraMap.put(COMMON_BUSINESS_TYPE, RiskUtil.convertPortfCode(cond.getCommonBusinessType()));
+        paraMap.put(COMMON_BUSINESS_TYPE,RiskUtil.convertPortfCode(cond.getCommonBusinessType()));
         paraMap.put(PARA_CODE,cond.getParaCode());
         paraMap.put(REDIS_MODEL,cond.getRedisModel());
         List<RskBusinessRedisConfig> rskBusinessRedisConfigList = rskRedisInitMapper.selectRedisParamConfig(paraMap);
@@ -292,13 +283,6 @@ public class RiskRefreshRedisServiceImpl extends BaseService implements RiskRefr
             redisWriter.dealProdAssetAmount(cond);
             return;
         }
-        if (StringUtil.equals(key, RedisKeyEnum.资产久期附属信息.key())) {
-            if (!StringUtil.isEmpty(filed)) {
-                cond.setAssetIdArray(filed);
-            }
-            redisWriter.dealAstCashDurationInfo(cond);
-            return;
-        }
     }
 
     private RedisBaseService<?> getRedisBaseService(String key) {
@@ -334,7 +318,7 @@ public class RiskRefreshRedisServiceImpl extends BaseService implements RiskRefr
      *
      * @param cond
      */
-    public void dealRiskIndParam(ICond cond, List<ImplParam> implIndParamList) {
+    public void dealRiskIndParam(ICond cond,List<ImplParam> implIndParamList) {
         if (!StringUtil.isNotEmpty(cond.getPlateDate())) {
             Date sysDate = platformDate.getSysDate();
             cond.setPlateDate(StringUtil.isNotEmpty(sysDate) ? sysDate : new Date());
@@ -382,8 +366,8 @@ public class RiskRefreshRedisServiceImpl extends BaseService implements RiskRefr
         implParmMap.keySet().forEach(key -> {
                 try {
                     implParmMap.get(key).forEach(item -> {
-                        if(StringUtil.equals(item.getParamMathType(), BussinessDictCodeListRds.指标参数计算方式_DB.getValue())
-                                || StringUtil.equals(item.getParamMathType(), BussinessDictCodeListRds.指标参数计算方式_PLUGIN.getValue())){
+                        if(StringUtil.equals(item.getParamMathType(),BussinessDictCodeListRds.指标参数计算方式_DB.getValue())
+                                ||StringUtil.equals(item.getParamMathType(),BussinessDictCodeListRds.指标参数计算方式_PLUGIN.getValue())){
                             return;
                         }
                         item.setFreshCanTrdRedis(item.getIsFreshCanTrd());
@@ -400,10 +384,10 @@ public class RiskRefreshRedisServiceImpl extends BaseService implements RiskRefr
                                     return;
                                 }
                                 //添加对于日期及禁可投非数字的处理
-                                if(item.getIsForbid().equals(BussinessDictCodeListRds.是否_是.getValue())|| StringUtil.equals(item.getParamDataType(), BussinessDictCodeListRds.参数数据类型_日期.getValue())){
+                                if(item.getIsForbid().equals(BussinessDictCodeListRds.是否_是.getValue())||StringUtil.equals(item.getParamDataType(),BussinessDictCodeListRds.参数数据类型_日期.getValue())){
                                     Value<Object> rValue = new Value<>(str -> str);
-                                    if(StringUtil.equals(item.getParamDataType(), BussinessDictCodeListRds.参数数据类型_日期.getValue())){
-                                        rValue = new Value<>(str -> DateUtil.format(DateUtil.parse(str), DateUtil.DEFAULT_DATE_FORMAT_EN));
+                                    if(StringUtil.equals(item.getParamDataType(),BussinessDictCodeListRds.参数数据类型_日期.getValue())){
+                                        rValue = new Value<>(str -> DateUtil.format(DateUtil.parse(str),DateUtil.DEFAULT_DATE_FORMAT_EN));
                                     }
                                     rValue.value(value.toString());
                                     mkParamValMap.put(rdsKey.toString(), rValue);
@@ -423,10 +407,17 @@ public class RiskRefreshRedisServiceImpl extends BaseService implements RiskRefr
                     });
                 }
                 catch (Exception e) {
-                    logger.error("指标参数："+key+ GlobalConstant.COMMA+e.getMessage(), e);
+                    logger.error("指标参数："+key+GlobalConstant.COMMA+e.getMessage(), e);
                 }
         });
-        paramValService.delParamVal(totalParamValMap);
+        //paramValService.delParamVal(totalParamValMap);
+        if (!CollectionUtils.isEmpty(totalParamValMap)) {
+            totalParamValMap.entrySet().forEach(en -> {
+                if (StringUtil.isNotEmpty(en.getKey())) {
+                    indicatorParamService.deleteInfoFromRedis(RedisKeyEnum.指标参数值.key() + en.getKey(), null);
+                }
+            });
+        }
         paramValService.setParamVal(totalParamValMap);
 
     }

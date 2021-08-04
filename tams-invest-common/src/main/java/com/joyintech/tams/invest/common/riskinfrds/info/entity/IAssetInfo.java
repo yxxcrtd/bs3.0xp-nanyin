@@ -170,8 +170,8 @@ public interface IAssetInfo extends IBusiness {
     String getBodyGradeType();
 
     /**
-     * 取得 发行方式
-     * @return 发行方式
+     * 取得 资产发行方式
+     * @return 资产发行方式(公开,非公开)
      */
     String getIssueType();
 
@@ -204,4 +204,59 @@ public interface IAssetInfo extends IBusiness {
      * @return
      */
     String getIsCorOrg();
+    // add by zhangrui1 增加资产属性 start
+    /**
+     * 取得 是否永续
+     * 
+     * @return 是否永续
+     */
+    String getIsSus();
+
+    /**
+     * 取得 是否含权
+     * 
+     * @return 是否含权
+     */
+    String getIsRight();
+
+    /**
+     * 取得 最终利率调整期开始日
+     * 
+     * @return 最终利率调整期开始日
+     */
+    Date getVdateLast();
+
+    /**
+     * 取得 利率类型
+     * 
+     * @return 利率类型
+     */
+    String getCalcType();
+    // add by zhangrui1 增加资产属性 end
+
+    // add by etliu 增加资产属性:是否可提前支取 20200821 start
+    /**
+     * 取得 是否可提前支取
+     *
+     * @return 是否可提前支取
+     */
+    String getIsCanDrawInAdvance();
+    // add by etliu 增加资产属性:是否可提前支取 20200821 end
+
+    // add by zhangrui1 增加资产属性:是否流动性受限资产 start
+    /**
+     * 获取 是否流动性受限
+     * 
+     * @return 是否流动性受限.
+     */
+    String getIsFlowLimited();
+    // add by zhangrui1 增加资产属性:是否流动性受限资产 end
+    // add by zhangrui1 增加资产属性:机构主体类型 start
+    /**
+     * 获取 机构主体类型
+     * 
+     * @return 机构主体类型.
+     */
+    String getCustomerObjType();
+    // add by zhangrui1 增加资产属性:机构主体类型 end
 }

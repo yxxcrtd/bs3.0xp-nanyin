@@ -34,6 +34,7 @@ public interface SupervisionCalcDao {
 	@Delete(
 			"delete from RSK_ISUP_POINT_VAL "
 			+ " where PORTFOLIO_ID=#{portfolioId} "
+			+ " and  IND_ID= #{indId} "
 			+ " and SUP_DATE=#{supDate}"
 	)
 	void deletePointSupervisionValue(RiskTrialRetDto value);

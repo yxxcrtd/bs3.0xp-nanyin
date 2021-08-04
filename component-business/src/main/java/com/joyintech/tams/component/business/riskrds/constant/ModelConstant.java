@@ -10,7 +10,12 @@
  
 package com.joyintech.tams.component.business.riskrds.constant;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.joyintech.tams.component.business.riskrds.dto.MtdSetting;
 import com.joyintech.tams.component.business.riskrds.dto.PageModel;

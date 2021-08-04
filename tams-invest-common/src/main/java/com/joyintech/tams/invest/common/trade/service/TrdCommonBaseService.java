@@ -1185,4 +1185,29 @@ public class TrdCommonBaseService extends BaseService {
     public String selectParentPortfolioIdByPortfolioId(String portfolioId) {
         return trdCommonBaseMapper.selectParentPortfolioIdByPortfolioId(portfolioId);
     }
+
+    /**
+     * 根据市场代码查询金融产品代码
+     *
+     * @param finprodMarketId 市场代码
+     * @return 金融产品代码
+     * @see
+     * @since 1.0
+     */
+    public String queryFinprodIdByFinprodMarketId(String finprodMarketId, String finprodType2) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("finprodMarketId", finprodMarketId);
+        param.put("finprodType2", finprodType2);
+        String finprodId = trdCommonBaseMapper.queryFinprodIdByFinprodMarketId(param);
+        if (StringUtil.isBlank(finprodId)) {
+            if (StringUtil.startsWith(finprodMarketId, finprodType2)) {
+                finprodId = finprodMarketId;
+            }
+            else {
+                finprodId = finprodType2 + "_" + finprodMarketId;
+            }
+        }
+
+        return finprodId;
+    }
 }

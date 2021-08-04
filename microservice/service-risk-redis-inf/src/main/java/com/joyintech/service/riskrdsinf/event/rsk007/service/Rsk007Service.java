@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.util.StringUtil;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.riskrdsinf.cache.InterfCacheUtil;
 import com.joyintech.service.riskrdsinf.common.service.EventBaseService;

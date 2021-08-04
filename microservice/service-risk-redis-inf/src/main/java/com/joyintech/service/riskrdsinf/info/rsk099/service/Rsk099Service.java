@@ -282,7 +282,10 @@ public class Rsk099Service extends InfBaseService<Rsk099Entity> {
                                 info.setWindType2(arr[15]);
                                 info.setInvestType(
                                     getInvestType(info.getAssetType(), info.getAssetType2()));
-                                info.setIssueAmt(StringUtil.isEmpty(arr[21]) ? BigDecimal.ZERO : new BigDecimal(arr[21]));
+                                BigDecimal issueAmt = StringUtil.isEmpty(arr[21]) ? BigDecimal.ZERO : new BigDecimal(arr[21]);
+                                // 债券发行总额-亿元
+                                issueAmt = issueAmt.multiply(new BigDecimal("100000000"));
+                                info.setIssueAmt(issueAmt);
                             });
                     }
                     else if (StringUtil.equals(fileCode, fileAssetInfoPlan)) {
@@ -319,6 +322,8 @@ public class Rsk099Service extends InfBaseService<Rsk099Entity> {
                                     info.setInvestType(
                                         getInvestType(info.getAssetType(), info.getAssetType2()));
                                 }
+                                // 发行规模
+                                info.setIssueAmt(arr.length > 17 && StringUtil.isEmpty(arr[16]) ? BigDecimal.ZERO : new BigDecimal(arr[16]));
                             });
                     }
                     if (!saveToTrdProduct(entityList)) {

@@ -101,10 +101,16 @@
                                         交易日历
                                     </label>
                                     <div class="layui-input-inline input-inline">
-                                        <input id="calendarId" name="calendarId"
+                                        <!-- modify by yanya on 20210207 交易日历改造-->
+                                       <!-- <input id="calendarId" name="calendarId"
                                             class="layui-input form-input input-select" placeholder=""
                                             data-th-data-result="${TRANSACTION_CALENDAR}" allowClear="true"
-                                            data-th-value="${calendarId}">
+                                            data-th-value="${calendarId}">-->
+                                        <select id="calendarId" name="calendarId" class="layui-input form-input input-select"
+                                                placeholder="请选择" data-th-initValue="${entity?.calendarId}"
+                                                data-th-data-url="@{/valuation/assets/fund/ValAssetsFundQuery002/getCalendarInfo}" allowClear="true"
+                                                data-th-placeholder="#{SysCommon.placeholder}">
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="layui-inline layui-col-md4">
@@ -127,7 +133,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <input id="tradeMarket" name="tradeMarket"
                                             class="layui-input form-input input-select" placeholder=""
-                                            data-th-data-result="${TRADE_MARKET}" allowClear="true"
+                                            data-th-data-result="${TRADE_PLACE}" allowClear="true"
                                             data-th-value="${tradeMarket}">
                                     </div>
                                 </div>
@@ -229,8 +235,8 @@
                                 <div class="layui-inline layui-col-md4">
                                     <label class="layui-form-label form-lable">营业日准则</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input id="tdayRule" name="tdayRule" class="layui-input form-input input-select"
-                                            data-th-value="${tdayRule}" allowClear="true"
+                                        <input id="tdayRule" name="payTdayRule" class="layui-input form-input input-select"
+                                            data-th-value="${payTdayRule}" allowClear="true"
                                             data-th-data-result="${TDAY_RULE}" disabled="">
                                     </div>
                                 </div>
@@ -294,6 +300,8 @@
             </fieldset> -->
         </form>
         <input type="text" id="workflowId" name="workflowId" class="layui-input form-input" data-th-value="${workflowId}" disabled="disabled" style = "display:none;">
+        <!-- modify by yanya on 20210207 trad隐藏属性-->
+        <input type="text" id="trade" name="trade" class="layui-input form-input" data-th-value="${trade}" disabled="disabled" style = "display:none;">
         <div class="layui-col-md11" style="margin: 10px 0 10px 0;">
             <div class="text-center">
                 <a id="ValAssetsFundQuery002_btn_save" class="layui-btn layui-btn-sm btn-save">保存</a>

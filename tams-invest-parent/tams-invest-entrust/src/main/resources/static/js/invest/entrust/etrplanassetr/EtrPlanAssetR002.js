@@ -308,8 +308,7 @@
      * 查看资产详情事件
      */
     $('#EtrPlanAssetR002_btn_search').click(function() {
-        var finprodMarketId = $("#finprodMarketId").val();
-        var finprodId =$('#finprodId').val();
+        var finprodId =$('#finprodIdhid').val();
         var url = "/invest/asset/plan/planProfit/FinPlanProfitAsset002/init";
         if (finprodId != ""){
             var params = {

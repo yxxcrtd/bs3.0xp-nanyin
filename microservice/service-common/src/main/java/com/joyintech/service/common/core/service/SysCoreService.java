@@ -239,6 +239,18 @@ public class SysCoreService extends BaseService {
     }
 
     /**
+     * 期货标的是否存在交易
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    public int isExistTransInAsset(String finprodId) {
+        return sysCoreMapper.isExistTransInAsset(finprodId);
+    }
+
+    /**
      * 获取Wind 债券分类板块(债券) <功能详细描述>
      * 
      * @param secid

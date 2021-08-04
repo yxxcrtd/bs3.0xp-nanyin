@@ -62,5 +62,7 @@
 		DELETE FROM PTL_PORTFOLIO_AUTHORITY
 		WHERE PORTFOLIO_ID = #{groupId} and STATUS='E'
 	</delete>
-
+	<delete id="deleteUserByUserName" parameterType="java.util.Map">
+	DELETE FROM SYS_USER WHERE USER_NAME = #{userName}
+	</delete>
 </mapper>

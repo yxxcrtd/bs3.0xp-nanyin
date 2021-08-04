@@ -1,5 +1,7 @@
 package com.joyintech.tams.invest.common.risk.dto;
 
+import java.util.Map;
+
 import com.joyintech.tams.common.base.entity.FinProduct;
 
 public class RiskNameListDto extends FinProduct {
@@ -41,6 +43,32 @@ public class RiskNameListDto extends FinProduct {
 
     //是否通过名单验证
     private  boolean isPass;
+
+    //无标的传参
+    private String inputValue1;
+    private String inputValue2;
+    private String inputValue3;
+
+    //交易对手
+    private String counterId;
+
+    /**
+     * 输出
+     */
+    private Map<String,Object> errorMap;
+
+    /**
+     * 不通过的白名单id
+     * @return
+     */
+    private  String nopassListId;
+
+    /**
+     * 不通过的黑名单id
+     * @return
+     */
+    private String nopassBlackListId;
+
     public String getListId() {
         return listId;
     }
@@ -103,5 +131,61 @@ public class RiskNameListDto extends FinProduct {
 
     public void setPass(boolean pass) {
         isPass = pass;
+    }
+
+    public String getInputValue1() {
+        return inputValue1;
+    }
+
+    public void setInputValue1(String inputValue1) {
+        this.inputValue1 = inputValue1;
+    }
+
+    public String getInputValue2() {
+        return inputValue2;
+    }
+
+    public void setInputValue2(String inputValue2) {
+        this.inputValue2 = inputValue2;
+    }
+
+    public String getInputValue3() {
+        return inputValue3;
+    }
+
+    public void setInputValue3(String inputValue3) {
+        this.inputValue3 = inputValue3;
+    }
+
+    public Map<String, Object> getErrorMap() {
+        return errorMap;
+    }
+
+    public void setErrorMap(Map<String, Object> errorMap) {
+        this.errorMap = errorMap;
+    }
+
+    public String getNopassListId() {
+        return nopassListId;
+    }
+
+    public void setNopassListId(String nopassListId) {
+        this.nopassListId = nopassListId;
+    }
+
+    public String getNopassBlackListId() {
+        return nopassBlackListId;
+    }
+
+    public void setNopassBlackListId(String nopassBlackListId) {
+        this.nopassBlackListId = nopassBlackListId;
+    }
+
+    public String getCounterId() {
+        return counterId;
+    }
+
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
     }
 }

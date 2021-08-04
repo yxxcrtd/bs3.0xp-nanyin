@@ -12,18 +12,24 @@ package com.joyintech.service.riskrdsinf.core.service;
 
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
+import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -126,7 +132,7 @@ public abstract class InfBaseService<V> {
      * 资产实时规模信息
      */
     @Autowired
-    private ProdAssetAmountService prodAssetAmtSrc;
+    protected ProdAssetAmountService prodAssetAmtSrc;
     // add by zhangrui1 end
 
     /**
@@ -208,6 +214,14 @@ public abstract class InfBaseService<V> {
     }
 
     /**
+     * 清除线程缓存数据
+     */
+    public void cleanServiceInfo() {
+        serviceInfo.remove();
+        serviceInfo.set(new HashMap<>());
+    }
+
+    /**
      * 设置 执行结果
      * 
      * @param handleOK 执行结果
@@ -286,6 +300,20 @@ public abstract class InfBaseService<V> {
     private void setOpType(ClientData request) {
         InfColumns infCol = InfColumns.COM_OPTYPE;
         setServiceInfo(infCol, request.getBodyField(infCol.fieldName()));
+    }
+
+    /**
+     * 取得 报文流水号
+     * 
+     * @return 报文流水号
+     */
+    protected String getSeqNo() {
+        return (String)getServiceInfo(InfColumns.COM_SEQ_NO);
+    }
+
+    private void setSeqNo(ClientData request) {
+        InfColumns infCol = InfColumns.COM_SEQ_NO;
+        setServiceInfo(infCol, request.getHeadField(infCol.fieldName()));
     }
 
     /**
@@ -382,6 +410,8 @@ public abstract class InfBaseService<V> {
         writeLog(request, response, resStr);
         String rspStr = JsonUtils.object2Json(response);
     	getLogger().debug("应答报文:{}", rspStr);
+        // 清除线程缓存
+        cleanServiceInfo();
         return response.convertToMap();
     }
 
@@ -406,12 +436,97 @@ public abstract class InfBaseService<V> {
     protected static final String INF_EPS_PS_NUM = "infEpsPsNum";
     protected static final String ASSET_AMT_VAL = "assetAmtVal";
     protected static final String ASSET_AMT_INFO = "assetAmtInfo";
+
+    /**
+     * 更新实时资产规模
+     * 
+     * @param preCode 预占代码
+     * @param num 本次实占数量/金额
+     * @param consumer 处理函数
+     * @param ocpList 历史实占列表
+     * @return 实占超过预占的部分
+     */
+    protected BigDecimal ocpSurplusNum(String preCode, BigDecimal num,
+                                       Function<String, BigDecimal> consumer,
+                                       Set<String> ocpList) {
+        // 无预占的场合
+        if (consumer == null || StringUtil.isEmpty(preCode)) {
+            return num;
+        }
+        // 预占的数量/金额
+        BigDecimal allPreNum = consumer.apply(preCode);
+        // 实占的数量/金额
+        BigDecimal allOcpNum = num == null ? BigDecimal.ZERO : num;
+        // 实时资产规模存在且实占的预占信息存在
+        if (!CollectionUtils.isEmpty(ocpList)) {
+            for (String ocp : ocpList) {
+                allOcpNum = ArithmeticUtil.doAdd(allOcpNum,
+                    consumer.apply(StringUtil.remove(ocp, GlobalConstant.COLON + "2")));
+            }
+        }
+        // 实占超过预占的部分
+        return allOcpNum.subtract(allPreNum);
+    }
+
+    /**
+     * 计算占比金额
+     * 
+     * @param info 实时资产规模
+     * @param num 资产数量
+     * @param preOcpCode 预占编号
+     */
+    protected void calcMixAmount(ImplProdAssetAmount info, BigDecimal num, String preOcpCode) {
+/**        if (StringUtil.isEmpty(preOcpCode)) { */
+            // 占比金额
+            setServiceInfo(ASSET_AMT_VAL, calcMixAmount(info.getAmount(), info.getNum(), num));
+/**        }*/
+/**        else {
+            // 占比金额
+            setServiceInfo(ASSET_AMT_VAL,
+                calcMixAmount(info.ocpAmount(preOcpCode), info.ocpNum(preOcpCode), num));
+        }*/
+    }
+
+    /**
+     * 计算占比金额【目标数量 * 原金额 / 原数量】
+     * 
+     * @param oldAmt 原金额
+     * @param oldNum 原数量
+     * @param newNum 目标数量
+     * @return 目标金额
+     */
+    protected BigDecimal calcMixAmount(BigDecimal oldAmt, BigDecimal oldNum, BigDecimal newNum) {
+        BigDecimal newAmt = ArithmeticUtil.multiply(2, RoundingMode.HALF_UP, newNum, oldAmt);
+        return CommonUtil.math(newAmt, oldNum, BussinessDictCodeListRds.操作符_除.getValue());
+    }
+
     /**
      * 计算占比金额
      * 
      * @param request 报文
+     * @param isRevoke 是否撤销
+     * @param isPreOcp 是否预占释放
+     * @param ocpList 预占下的实占列表
      */
-    protected void calcMixAmount(Map<String, Object> request, boolean isRevoke) {
+    protected void calcMixAmount(Map<String, Object> request, boolean isRevoke, boolean isPreOcp,
+                                 Set<String> ocpList) {
+        calcMixAmount(request, isRevoke, isPreOcp, ocpList, false);
+    }
+
+    /**
+     * 计算占比金额
+     * 
+     * @param request 报文
+     * @param isRevoke 是否撤销
+     * @param isPreOcp 是否预占释放
+     * @param ocpList 预占下的实占列表
+     * @param isRelease 是否释放
+     */
+    protected void calcMixAmount(Map<String, Object> request, boolean isRevoke, boolean isPreOcp,
+                                 Set<String> ocpList, boolean isRelease) {
+        if (isPreOcp) {
+            return;
+        }
         Object amountObj = request.get(AMOUNTKEY);
         Object trdNumObj = request.get(TRDNUMKEY);
         String buyPsAmt = InterfCacheUtil.getSysParam(INF_BUY_PS_AMT);
@@ -422,41 +537,147 @@ public abstract class InfBaseService<V> {
         String epsPsNum = InterfCacheUtil.getSysParam(INF_EPS_PS_NUM);
         String portfolioCode = (String) request.get("portfolioCode");
         String assetCode = (String) request.get("assetCode");
-        // 取出资产实时规模
-        ImplProdAssetAmount info = (ImplProdAssetAmount) prodAssetAmtSrc.getProdAssetAmount(portfolioCode, assetCode);
-        if (info == null) {
+        if (StringUtil.isEmpty(assetCode)) {
             return;
         }
-        // 当数量存在时，计算占比金额
-        if (trdNumObj != null && StringUtil.isNotEmpty(info)) {
-            BigDecimal num = new BigDecimal(trdNumObj.toString());
-            BigDecimal temp = num.multiply(info.getAmount());
-            setServiceInfo(ASSET_AMT_VAL, CommonUtil.math(temp, info.getNum(), BussinessDictCodeListRds.操作符_乘.getValue()));
+        // 取出资产实时规模
+        ImplProdAssetAmount info = getProdAssetAmount(portfolioCode, assetCode);
+        String ocpCode = (String) request.get("eventId");
+        // 预占编号
+        String preCode = (String)request.get("preOccupyCode");
+        if (info == null) {
+            info = new ImplProdAssetAmount();
+            info.setPortfolioCode(portfolioCode);
+            info.setAssetCode(assetCode);
+            info.setNum(BigDecimal.ZERO);
+            info.setAmount(BigDecimal.ZERO);
+        }
+        ocpList = new HashSet<>();
+        if (isRelease && isRevoke) {
+            // 预占不需要计算实时规模
+            ocpList.add(ocpCode);
+            releaseMixAmount(info, isPreOcp, ocpCode, isPreOcp ? ocpCode : preCode, ocpList);
+            return;
         }
         String ps = (String)request.get("ps");
-        BigDecimal amount = amountObj == null ? BigDecimal.ZERO : new BigDecimal(amountObj.toString());
-        amount = isRevoke ? amount.negate() : amount;
-        BigDecimal num = trdNumObj == null ? BigDecimal.ZERO : new BigDecimal(trdNumObj.toString());
-        num = isRevoke ? num.negate() : num;
         String assetType = request.get("assetType") + GlobalConstant.COMMA + ps;
+        BigDecimal amount = amountObj == null ? BigDecimal.ZERO : new BigDecimal(
+            amountObj.toString());
+        BigDecimal num = trdNumObj == null ? BigDecimal.ZERO : new BigDecimal(
+            trdNumObj.toString());
+        // 当数量存在时，计算占比金额
+        if (trdNumObj != null && (isNumChanged(ps, buyPsNum, epsPsNum, assetType) 
+                || isNumChanged(ps, salPsNum, epsPsNum, assetType))) {
+            // 计算占比金额
+            calcMixAmount(info, num, preCode);
+            request.put(MIXAMOUNTKEY, getServiceInfo(ASSET_AMT_VAL));
+        }
+        else {
+            setServiceInfo(ASSET_AMT_VAL, null);
+        }
+        BigDecimal ocpAmt = null;
+        BigDecimal ocpNum = null;
+        final ImplProdAssetAmount infoBk = info;
         // 买入方向影响金额则加
-        if (StringUtil.contains(buyPsAmt, ps) && StringUtil.contains(epsPsAmt, assetType)) {
-            info.setAmount(CommonUtil.math(info.getAmount(), amount, BussinessDictCodeListRds.操作符_加.getValue()));
+        if (StringUtil.contains(buyPsAmt, ps) && !StringUtil.contains(epsPsAmt, assetType)) {
+            if (isRelease) {
+                info.setAmount(CommonUtil.math(info.getAmount(), amount.negate(),
+                    BussinessDictCodeListRds.操作符_加.getValue()));
+            }
+            else {
+                BigDecimal amt = ocpSurplusNum(preCode, amount, code -> infoBk.ocpAmount(code), ocpList);
+                info.setAmount(CommonUtil.math(info.getAmount(),amt,BussinessDictCodeListRds.操作符_加.getValue()));
+            }
+            ocpAmt = amount;
         }
         // 卖出方向影响金额则减
-        else if (StringUtil.contains(salPsAmt, ps) && StringUtil.contains(epsPsAmt, assetType)) {
-            info.setAmount(CommonUtil.math(info.getAmount(), amount, BussinessDictCodeListRds.操作符_减.getValue()));
+        if (StringUtil.contains(salPsAmt, ps) && !StringUtil.contains(epsPsAmt, assetType)) {
+            BigDecimal mixAmt = getMixAmount();
+            mixAmt = StringUtil.isNotEmpty(mixAmt) ? mixAmt : amount;
+            if (isRelease) {
+                info.setAmount(CommonUtil.math(info.getAmount(), mixAmt.negate(),
+                    BussinessDictCodeListRds.操作符_减.getValue()));
+                ocpAmt = mixAmt.negate();
+            }
+            else {
+            info.setAmount(CommonUtil.math(info.getAmount(),
+                BigDecimal.ZERO.max(
+                    ocpSurplusNum(preCode, mixAmt, code -> infoBk.ocpAmount(code), ocpList)),
+                BussinessDictCodeListRds.操作符_减.getValue()));
+                ocpAmt = mixAmt.negate();
+            }
         }
         // 买入方向影响数量则减
-        else if (StringUtil.contains(buyPsNum, ps) && StringUtil.contains(epsPsNum, assetType)) {
-            info.setNum(CommonUtil.math(info.getNum(), num, BussinessDictCodeListRds.操作符_加.getValue()));
+        if (StringUtil.contains(buyPsNum, ps) && !StringUtil.contains(epsPsNum, assetType)) {
+            if (isRelease) {
+                info.setNum(CommonUtil.math(info.getNum(), num.negate(),
+                    BussinessDictCodeListRds.操作符_加.getValue()));
+            }
+            else {
+                BigDecimal changeNum = ocpSurplusNum(preCode, num, code -> infoBk.ocpAmount(code), ocpList);
+                info.setNum(CommonUtil.math(info.getNum(),changeNum,BussinessDictCodeListRds.操作符_加.getValue()));
+            }
+            ocpNum = num;
         }
         // 卖出方向影响数量则减
-        else if (StringUtil.contains(salPsNum, ps) && StringUtil.contains(epsPsNum, assetType)) {
-            info.setNum(CommonUtil.math(info.getNum(), num, BussinessDictCodeListRds.操作符_减.getValue()));
+        if (StringUtil.contains(salPsNum, ps) && !StringUtil.contains(epsPsNum, assetType)) {
+            if (isRelease) {
+                info.setNum(CommonUtil.math(info.getNum(), num.negate(),
+                    BussinessDictCodeListRds.操作符_减.getValue()));
+            }
+            else {
+            info.setNum(CommonUtil.math(info.getNum(),
+                BigDecimal.ZERO.max(
+                    ocpSurplusNum(preCode, num, code -> infoBk.ocpAmount(code), ocpList)),
+                BussinessDictCodeListRds.操作符_减.getValue()));
+            }
+            ocpNum = num.negate();
+        }
+        if (isRelease && !isRevoke) {
+            info.subOcp(ocpCode, ocpAmt, ocpNum);
+        }
+        else {
+            info.addOcp(ocpCode, ocpAmt, ocpNum);
         }
         // 将资产实时规模保存在本地缓存中
         setServiceInfo(ASSET_AMT_INFO, info);
+    }
+
+    protected void releaseMixAmount(ImplProdAssetAmount info, boolean isPreOcp, String ocpCode,
+                                    String preCode,
+                                    Set<String> ocpList) {
+        if (info == null || CollectionUtils.isEmpty(info.getOcpList())) {
+            return;
+        }
+        // 实占预占金额的差额
+        BigDecimal temp = StringUtil.isEmpty(preCode) ? info.ocpAmount(ocpCode) : ocpSurplusNum(
+            preCode, BigDecimal.ZERO, code -> info.ocpAmount(code), ocpList);
+        // 预占时，|实占-预占|.取反 作为撤销的实时规模，实占时，(实占-预占).取反 作为撤销的实时规模（实占超过预占的部分）
+        BigDecimal amount = temp.negate();
+        // 实占预占数量的差额
+        temp = StringUtil.isEmpty(preCode) ? info.ocpNum(ocpCode) : ocpSurplusNum(preCode,
+            BigDecimal.ZERO, code -> info.ocpNum(code), ocpList);
+        BigDecimal num = temp.negate();
+        info.setAmount(info.getAmount().add(amount));
+        info.setNum(info.getNum().add(num));
+        info.removeOcp(ocpCode);
+        // 将资产实时规模保存在本地缓存中
+        setServiceInfo(ASSET_AMT_INFO, info);
+    }
+
+    /**
+     * 取得实时资产规模信息
+     * 
+     * @param portfolioCode 组合代码
+     * @param assetCode 资产代码
+     * @return 实时资产规模信息
+     */
+    protected ImplProdAssetAmount getProdAssetAmount(String portfolioCode, String assetCode) {
+        return (ImplProdAssetAmount) prodAssetAmtSrc.getProdAssetAmount(portfolioCode, assetCode);
+    }
+
+    protected boolean isNumChanged(String ps, String psNum, String eps, String assetType) {
+        return StringUtil.contains(psNum, ps) && !StringUtil.contains(eps, assetType);
     }
 
     protected BigDecimal getMixAmount() {
@@ -469,6 +690,10 @@ public abstract class InfBaseService<V> {
      */
     protected void refreshAssetAmout() {
         IProdAssetAmount info = (IProdAssetAmount) getServiceInfo(ASSET_AMT_INFO);
+        if (info != null) prodAssetAmtSrc.saveToRedis(info);
+    }
+
+    protected void saveAssetAmount(IProdAssetAmount... info) {
         if (info != null) prodAssetAmtSrc.saveToRedis(info);
     }
     // add by zhangrui1 end
@@ -489,11 +714,6 @@ public abstract class InfBaseService<V> {
     			&& BigDecimal.ZERO.compareTo(new BigDecimal(trdNumObj.toString())) != 0) {
     		return;
     	}
-    	//是否需要跳过-对单次计算匹配
-    	if(request.get("notCalcAmount")!=null&&request.get("notCalcAmount")instanceof Boolean &&(Boolean)request.get("notCalcAmount")) {
-    		return ;
-    	}
-    	
     	String assetCode = (String) request.get("assetCode");
 		BigDecimal unitNet = consumer == null ? BigDecimal.ONE : consumer.handle();
 		if (unitNet == null) {
@@ -564,7 +784,7 @@ public abstract class InfBaseService<V> {
             Object obj = request.getBodyField(key);
             BigDecimal val = null;
             if (!StringUtil.isNotEmpty(obj)) {
-                request.setBodyField(key, BigDecimal.ZERO);
+//                request.setBodyField(key, BigDecimal.ZERO);
                 return;
             }
             if (obj instanceof BigDecimal) {
@@ -683,6 +903,8 @@ public abstract class InfBaseService<V> {
         setSendTimestamp(request);
         // 设置是否不需要资产代码
         setAssetNoNeeds(request);
+        // 设置报文流水号
+        setSeqNo(request);
     }
 
     /**
@@ -883,5 +1105,14 @@ public abstract class InfBaseService<V> {
      */
     protected Logger getLogger() {
         return logger;
+    }
+
+    /**
+     * 是否释放接口
+     * 
+     * @return true:是
+     */
+    protected boolean isReleaseOcp(){
+        return false;
     }
 }

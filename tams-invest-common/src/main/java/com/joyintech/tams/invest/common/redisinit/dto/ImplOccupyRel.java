@@ -10,13 +10,12 @@
 
 package com.joyintech.tams.invest.common.redisinit.dto;
 
-import com.joyintech.tams.common.base.entity.FinProduct;
+import java.util.Map;
+import java.util.Set;
+
 import com.joyintech.tams.common.base.entity.RskOccupyInfo;
-import com.joyintech.tams.invest.common.riskinfrds.info.entity.IAssetInfo;
 import com.joyintech.tams.invest.common.riskinfrds.occupy.entity.IOccupyRelParam;
 import com.joyintech.tams.invest.common.riskinfrds.occupy.entity.IOcpRelParamItem;
-
-import java.util.Map;
 
 /**
  * 资产信息实现类
@@ -49,5 +48,41 @@ public class ImplOccupyRel extends RskOccupyInfo implements IOccupyRelParam {
 
     public void setOccupyType(int occupyType) {
         this.occupyType = occupyType;
+    }
+
+    private Set<String> seqNoList;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<String> getSeqNoList() {
+        return seqNoList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setSeqNoList(Set<String> seqNoList) {
+        this.seqNoList = seqNoList;
+    }
+
+    private Set<String> ocpCodeList;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<String> getOcpCodeList() {
+        return ocpCodeList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setOcpCodeList(Set<String> ocpCodeList) {
+        this.ocpCodeList = ocpCodeList;
     }
 }

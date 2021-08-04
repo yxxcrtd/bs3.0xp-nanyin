@@ -2277,4 +2277,10 @@ public class AllTradeCommonUtil {
 
         }
     }
+
+    // add by zhangrui1 根据交易代码查询指令代码 start
+    public static EtrEntrust findEntrustInfo(String tradeId) {
+        return trdCommonBaseMapper.selectEntrustInfo(tradeId);
+    }
+    // add by zhangrui1 根据交易代码查询指令代码 end
 }

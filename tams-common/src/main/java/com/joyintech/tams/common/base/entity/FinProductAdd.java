@@ -10,6 +10,27 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FinProductAdd extends BaseEntity {
+
+    /**
+     * 期货合约标的
+     */
+    private String futuresContractId;
+
+    /**
+     * 最后交易日
+     */
+    private Date lastTradeDate;
+
+    /**
+     * 最后交割日
+     */
+    private Date lastSettleDate;
+
+    /**
+     * 交割方式
+     */
+    private String deliveryMethod;
+
     /**
      * 金融产品代码
      */
@@ -1583,4 +1604,69 @@ public class FinProductAdd extends BaseEntity {
         this.fundMangerName = fundMangerName;
     }
 
+    /**
+     * 取得 期货合约标的
+     * @return 期货合约标的
+     */
+    public String getFuturesContractId() {
+        return futuresContractId;
+    }
+
+    /**
+     * 设置 期货合约标的
+     * @param futuresContractId 期货合约标的
+     */
+    public void setFuturesContractId(String futuresContractId) {
+        this.futuresContractId = futuresContractId == null ? null : futuresContractId.trim();
+    }
+
+    /**
+     * 取得 最后交易日
+     * @return 最后交易日
+     */
+    public Date getLastTradeDate() {
+        return lastTradeDate;
+    }
+
+    /**
+     * 设置 最后交易日
+     * @param lastTradeDate 最后交易日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setLastTradeDate(Date lastTradeDate) {
+        this.lastTradeDate = lastTradeDate;
+    }
+
+    /**
+     * 取得 最后交割日
+     * @return 最后交割日
+     */
+    public Date getLastSettleDate() {
+        return lastSettleDate;
+    }
+
+    /**
+     * 设置 最后交割日
+     * @param lastSettleDate 最后交割日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setLastSettleDate(Date lastSettleDate) {
+        this.lastSettleDate = lastSettleDate;
+    }
+
+    /**
+     * 取得 交割方式
+     * @return 交割方式
+     */
+    public String getDeliveryMethod() {
+        return deliveryMethod;
+    }
+
+    /**
+     * 设置 交割方式
+     * @param deliveryMethod 交割方式
+     */
+    public void setDeliveryMethod(String deliveryMethod) {
+        this.deliveryMethod = deliveryMethod == null ? null : deliveryMethod.trim();
+    }
 }

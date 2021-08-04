@@ -42,7 +42,7 @@ public interface RiskTrialCommMapper {
 
 	List<RskIndividAssetDel> getRiskIndividAstDel(@Param(value = "valDate") String valDate);
 
-	List<SupervisionParameterDto>  getIndicatorParamAll(@Param(value = "valDate") String valDate);
+	List<SupervisionParameterDto>  getIndicatorParamAll(@Param(value = "valDate") String valDate,@Param(value = "paramCode") String paramCode,@Param(value = "supFrequency") String supFrequency);
 
 	List<RiskTrialRetDto> getRiskTrialRetInfo(@Param(value = "supFrequency") String supFrequency, @Param(value = "valDate") String valDate);
 
@@ -51,8 +51,18 @@ public interface RiskTrialCommMapper {
 	void deleteMxPointWithoutInd(RiskTrialRetDto list);
 
 	void insertMxPointSupervisionBatch(List<RiskTrialRetDetailDto> list);
-	
+
 	String selectWorkflowActionType(@Param(value = "seqNo") String seqNo);
 
-	String getPortfolioInstCode(@Param(value = "portfolioId") String portfolioId);
+	/**
+	 * 批量删除
+	 * @param list
+	 */
+	void deleteRiskValBatchData(List<RiskTrialRetDto> list);
+	/**
+	 * 批量删除
+	 * @param list
+	 */
+	void deleteRiskValDetBatchData(List<RiskTrialRetDto> list);
+
 }

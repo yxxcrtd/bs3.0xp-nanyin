@@ -67,7 +67,6 @@ public class IndicatorParamValService {
             changeKey(paraValList, true));
         return changeKey(res, false);
     }
-
     /**
      * 删除 删除指标参数值
      *
@@ -82,6 +81,7 @@ public class IndicatorParamValService {
         // 删除Redis参数值
         valWriteSrv.deleteList(changeKey(paraValMap, true));
     }
+
 
     /**
      * 更新 所有指标参数值
@@ -140,6 +140,7 @@ public class IndicatorParamValService {
     }
 
     public List<String> allHKeys(String key, String field) {
-        return valReadSrv.allHKeys(key, RedisConstant.STAR + field);
+        String header = RedisKeyEnum.指标参数值.key();
+        return valReadSrv.allHKeys(header + key, RedisConstant.STAR + field + RedisConstant.STAR);
     }
 }

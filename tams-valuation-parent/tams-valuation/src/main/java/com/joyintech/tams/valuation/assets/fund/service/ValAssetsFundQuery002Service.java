@@ -10,14 +10,17 @@
 
 package com.joyintech.tams.valuation.assets.fund.service;
 
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.assets.fund.dto.ValAssetsFundQuery002Dto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /***
  * 基金类资产查询
@@ -606,16 +609,25 @@ public class ValAssetsFundQuery002Service extends CommonExportService<ValAssetsF
 //        }
 
     }
-    
-    
-public boolean checkFindprodId(String finprodId) {
 
-    	
-    	
-    	boolean flag= restTemplate.getForObject(
+
+    public boolean checkFindprodId(String finprodId) {
+        boolean flag= restTemplate.getForObject(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValAssetsFundQuery002/checkFindprodId?finprodId="+finprodId,
                 boolean.class);
-    	 
-        return flag;}
+        return flag;
+    }
+
+    /**
+     * 获取交易日历信息
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public Page<SelectOptionDto> getCalendarInfo(Map<String, Object> params)throws Exception {
+        return restTemplate.postForPage(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ValAssetsFundQuery002/getCalendarInfo",
+                params, SelectOptionDto.class);
+    }
 
 }

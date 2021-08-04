@@ -21,7 +21,8 @@ public interface HttpReceiveJsonDao {
     int selectUserGroupById(Map<String, Object> cons);
     int insertUserGroup(Map<String, Object> cons);
     int updateUserGroup(Map<String, Object> cons);
-    int deleteUserGroup(Map result);
+    @SuppressWarnings("rawtypes")
+	int deleteUserGroup(Map result);
 	String getUserName(String userId);
 	@SuppressWarnings("rawtypes")
 	int deleteAllUserRole(Map result);
@@ -29,4 +30,5 @@ public interface HttpReceiveJsonDao {
 	String selectUserName(Map result);
 	@SuppressWarnings("rawtypes")
 	int updateUserName(Map result);
+	int deleteUserByUserName(Map<String, Object> cons);
 }
