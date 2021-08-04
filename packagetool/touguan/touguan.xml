@@ -66,6 +66,7 @@
         <module>../../microservice/service-valuation</module>
         <module>../../microservice/service-valuation-basicdata</module>
 
+        <module>../../microservice/tams-svreport-chbcom</module>
 		<module>../../microservice/tams-service-container</module>
 
         <!-- 批处理 -->
