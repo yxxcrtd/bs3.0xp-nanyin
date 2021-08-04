@@ -12,11 +12,11 @@
         FP.FINPROD_ABBR finprodAbbr,
         T4.TYPE_9 secType1,
         TEMP.AMOUNT amount,
-        NVL(TEMP.AMOUNT/10000, 0) / 100 shareAmt,
-        NVL(TEMP.AMOUNT04/10000, 0) / 100 avaPledgePrin,
-        NVL(t7.amount/10000, 0) / 100 avaShareAmt,
+        NVL(TEMP.AMOUNT, 0) / 100 shareAmt,
+        NVL(TEMP.AMOUNT04, 0) / 100 avaPledgePrin,
+        NVL(t7.amount, 0) / 100 avaShareAmt,
         MBVI.NETPRICE price,
-        NVL(MBVI.NETPRICE, 0) * NVL(TEMP.AMOUNT/10000, 0)/10000 positionsPrice,
+        NVL(MBVI.NETPRICE, 0) * NVL(TEMP.AMOUNT, 0)/10000 positionsPrice,
         atd.COST_POSITION,
         atd.COST_POSITION_NUM
         ,tchl.SEC_ACCT_ID
