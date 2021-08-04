@@ -1373,7 +1373,15 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     是否开通港股通_否(DictCode.是否开通港股通,"02","否"),
 
     共通业务类型_港股通投资委托(DictCode.共通业务类型,"ETR_HKSE","港股通投资委托"),
-
+    //20210803 by yuzj start
+    共通业务类型_评级PD维护信息(DictCode.共通业务类型,"MOD07","评级PD维护信息"),
+    共通业务类型_资产重分类交易(DictCode.共通业务类型,"TRD77","资产重分类交易"),
+    共通业务类型_资产大类评级配置(DictCode.共通业务类型,"MOD01","资产大类评级配置"),
+    共通业务类型_特殊资产评级配置(DictCode.共通业务类型,"MOD02","特殊资产评级配置"),
+    共通业务类型_LGD违约损失率维护(DictCode.共通业务类型,"MOD05","LGD违约损失率维护"),
+    共通业务类型_现金流折现模型曲线配置(DictCode.共通业务类型,"MOD06","现金流折现模型曲线配置"),
+    共通业务类型_二叉树模型参数配置(DictCode.共通业务类型,"MOD09","二叉树模型参数配置"),
+    //20210803 by yuzj end
     ;
     /**
      * 对应于数据字典code

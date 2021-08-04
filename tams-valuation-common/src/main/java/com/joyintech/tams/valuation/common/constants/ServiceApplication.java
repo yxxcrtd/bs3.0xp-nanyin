@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct;
 
 /**
  * 微服务访问路径定义
- * 
+ *
  * @author 何阳阳
  * @version 2.0 2018年9月8日
  * @see ServiceApplication
@@ -30,25 +30,30 @@ import javax.annotation.PostConstruct;
 @Configuration("valuationServiceApplication")
 public class ServiceApplication {
 
-    /**
-     * 共通服务
-     */
-    public static String VALUATION_SERVICE_NAME = "http://valuationService";
-    
-    /**
-     * 自定义接口服务
-     */
-    public static String CUSTOMER_INTERF_NAME = "http://customerInterfService";
+	/**
+	 * 共通服务
+	 */
+	public static String VALUATION_SERVICE_NAME = "http://valuationService";
+
+	/**
+	 * 自定义接口服务
+	 */
+	public static String CUSTOMER_INTERF_NAME = "http://customerInterfService";
 
 	/**
 	 * 自定义接口服务
 	 */
 	public static String VALUATION_BASICDATA_SERVICE_NAME = "http://valuationBasicdataService";
-	
-    /**
-     * 报表管理
-     */
-    public static String REPORT_SERVICE_NAME = "http://reportService";
+
+	/**
+	 * 报表管理
+	 */
+	public static String REPORT_SERVICE_NAME = "http://reportService";
+
+	/**
+	 * 减值模型微服务
+	 */
+	public static String LOSS_MODEL_SERVICE_NAME = "http://lossModelService";
 
 	@Configuration
 	@ConditionalOnProperty(prefix = "application.micorservice.contextPath", name = "valuationService")
@@ -64,11 +69,13 @@ public class ServiceApplication {
 				VALUATION_SERVICE_NAME = VALUATION_SERVICE_NAME + config.getValuationService();
 				CUSTOMER_INTERF_NAME = CUSTOMER_INTERF_NAME + config.getCustomerInterfService();
 				VALUATION_BASICDATA_SERVICE_NAME = VALUATION_BASICDATA_SERVICE_NAME + config.getValuationBasicdataService();
+				LOSS_MODEL_SERVICE_NAME = LOSS_MODEL_SERVICE_NAME + config.getLossModelService();
 			}
 			else {
 				VALUATION_SERVICE_NAME = config.getValuationService();
 				CUSTOMER_INTERF_NAME = config.getCustomerInterfService();
 				VALUATION_BASICDATA_SERVICE_NAME = config.getValuationBasicdataService();
+				LOSS_MODEL_SERVICE_NAME = config.getLossModelService();
 			}
 		}
 	}
@@ -76,9 +83,9 @@ public class ServiceApplication {
 
 
 	@ConfigurationProperties(prefix = "application.micorservice.contextPath")
-    class ContextPathConfiguration {
+	class ContextPathConfiguration {
 
-        private boolean single;
+		private boolean single;
 
 		private String valuationService;
 
@@ -86,14 +93,16 @@ public class ServiceApplication {
 
 		private String valuationBasicdataService;
 
-        public String getCustomerInterfService() {
-            return customerInterfService;
-        }
+		private String lossModelService;
 
-        public void setCustomerInterfService(String customerInterfService) {
-            this.customerInterfService = customerInterfService;
-        }
-        
+		public String getCustomerInterfService() {
+			return customerInterfService;
+		}
+
+		public void setCustomerInterfService(String customerInterfService) {
+			this.customerInterfService = customerInterfService;
+		}
+
 		public boolean isSingle() {
 			return single;
 		}
@@ -116,6 +125,14 @@ public class ServiceApplication {
 
 		public void setValuationBasicdataService(String valuationBasicdataService) {
 			this.valuationBasicdataService = valuationBasicdataService;
+		}
+
+		public String getLossModelService() {
+			return lossModelService;
+		}
+
+		public void setLossModelService(String lossModelService) {
+			this.lossModelService = lossModelService;
 		}
 	}
 
