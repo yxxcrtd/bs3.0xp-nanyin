@@ -1387,7 +1387,7 @@
 	<!--针对做市方撤销  当所有报价全部撤回后  主报价终态应该为已新增 成功-->
 	<update id="updateBondQuoteFinalStatusForRevoke" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond">
 		update IBU_QUOTE_BOND
-		set TRADE_STATUS = #{tradeStatus},SEND_STATUS = {sendStatus},
+		set TRADE_STATUS = #{tradeStatus},SEND_STATUS = #{sendStatus},
 		<if test="version != null" >
 			VERSION = #{version,jdbcType=DECIMAL},
 		</if>
