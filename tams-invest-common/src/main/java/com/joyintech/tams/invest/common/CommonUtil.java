@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.common;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -472,4 +473,34 @@ public static final BigDecimal getBigDecimal(Map<String, Object> map, String key
             consumer.accept(dtoList.subList(start, start + offset));
         }
     }
+
+    // add by zhangrui1 start
+    /**
+     * 从报文体中取出列表参数
+     *
+     * @param mapData 报文数据
+     * @param key key
+     * @return list内容
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static final List<Map> getList(Map<String, Object> mapData, String key) {
+        if (CollectionUtils.isEmpty(mapData)) {
+            return new ArrayList<>();
+        }
+        Object list = mapData.get(key);
+        if (list instanceof List) {
+            return (List<Map>)list;
+        }
+        if (list instanceof String) {
+            String listStr = (String)list;
+            try {
+                return JsonUtils.json2List(listStr, Map.class);
+            }
+            catch (IOException e) {
+                //
+            }
+        }
+        return new ArrayList<>();
+    }
+    // add by zhangrui1 end
 }
