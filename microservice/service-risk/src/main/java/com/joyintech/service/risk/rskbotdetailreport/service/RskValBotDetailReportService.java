@@ -3,6 +3,7 @@ package com.joyintech.service.risk.rskbotdetailreport.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -55,6 +56,9 @@ public class RskValBotDetailReportService extends BaseService<RskValBotDetailRep
             //按照资产二级分类升序排序
             result = result.stream().sorted(Comparator.comparing(RskValBotDetailReportDto::getAssettype2)).collect(Collectors.toList());
             pg.setRoot(result);
+            pg.setRecords(result.size());
+            Double totle = ArithmeticUtil.divide(new BigDecimal(result.size()),new BigDecimal(length)).doubleValue();
+            pg.setTotal((int) Math.ceil(totle));
         }
         return pg;
     }
