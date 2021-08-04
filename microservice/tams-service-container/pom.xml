@@ -65,18 +65,18 @@
 		</dependency>
 
 		<!-- 中债一期 -->
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>service-chb</artifactId>
-			<version>3.1.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.joyintech</groupId>-->
+<!--			<artifactId>service-chb</artifactId>-->
+<!--			<version>3.1.0</version>-->
+<!--		</dependency>-->
 
 		<!-- 中债三期 -->
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>service-chb3</artifactId>
-			<version>3.1.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.joyintech</groupId>-->
+<!--			<artifactId>service-chb3</artifactId>-->
+<!--			<version>3.1.0</version>-->
+<!--		</dependency>-->
 
 		<!-- 共通服务 -->
 		<dependency>
@@ -86,11 +86,11 @@
 		</dependency>
 
 		<!-- 信批服务 -->
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>service-disclosure</artifactId>
-			<version>2.1.1</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.joyintech</groupId>-->
+<!--			<artifactId>service-disclosure</artifactId>-->
+<!--			<version>2.1.1</version>-->
+<!--		</dependency>-->
 
 		<!-- 文档管理 -->
 		<dependency>
@@ -114,11 +114,11 @@
 		</dependency>
 
 		<!-- 人行报表服务 -->
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>service-pbc</artifactId>
-			<version>3.1.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.joyintech</groupId>-->
+<!--			<artifactId>service-pbc</artifactId>-->
+<!--			<version>3.1.0</version>-->
+<!--		</dependency>-->
 
 		<!-- 存续期管理 -->
 		<dependency>
@@ -170,11 +170,11 @@
 		</dependency>
 
 		<!-- 中债共通服务 -->
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>service-svrcom</artifactId>
-			<version>3.1.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.joyintech</groupId>-->
+<!--			<artifactId>service-svrcom</artifactId>-->
+<!--			<version>3.1.0</version>-->
+<!--		</dependency>-->
 
 		<!-- 投资交易 -->
 		<dependency>
@@ -184,11 +184,11 @@
 		</dependency>
 
 		<!-- 估值核算 -->
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>service-valuation</artifactId>
-			<version>2.1.1</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.joyintech</groupId>-->
+<!--			<artifactId>service-valuation</artifactId>-->
+<!--			<version>2.1.1</version>-->
+<!--		</dependency>-->
 		
 		<dependency>
 			<groupId>com.joyintech</groupId>
