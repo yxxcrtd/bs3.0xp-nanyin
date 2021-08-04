@@ -93,7 +93,7 @@ $(function() {
              }
         }
         if(goTo){
-           Joyin.confirm("请先维护资产科目的映射后再完成估值表导入,本次是否保存",function() {
+           Joyin.confirm("请先维护资产科目的映射后再完成估值表导入,确认本次是否保存?",function() {
                 var object = {selectedItem: selArr,ptlId:$('#ptlId').val(),valDate:$('#valDate').val(),operateType:operateType};
                  Joyin.ajaxJson(basePath + 'invest/risk/valtblimport/RskValTableImport002/check',object, function(result) {
                       if(result.valCount>0){
