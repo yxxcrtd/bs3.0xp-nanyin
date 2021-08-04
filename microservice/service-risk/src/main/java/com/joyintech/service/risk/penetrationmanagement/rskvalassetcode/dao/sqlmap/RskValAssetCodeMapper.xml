@@ -85,4 +85,25 @@
 		select count(*) from RSK_VALTBL_PRT_IMP_MAP
 		where ASSET_SUB_MAP_ID = #{assetSubMapId}
 	</select>
+
+	<!-- 查询目标科目代码 -->
+	<select id="selecctRskValtblSubjectSumCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+		SUB_CODE as id,
+		SUB_NAME　as text
+		FROM
+		RSK_VALTBL_SUBJECT
+		<where>
+			<if test="subType != null and subType != ''">
+				AND SUB_TYPE = #{subType}
+			</if>
+			<if test="search != null and search != ''">
+				AND (
+				SUB_CODE LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR
+				SUB_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				)
+			</if>
+		</where>
+	</select>
 </mapper>

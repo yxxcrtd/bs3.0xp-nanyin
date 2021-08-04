@@ -13,6 +13,8 @@ package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.contr
 
 import java.util.List;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -149,7 +151,7 @@ public class RskValSumname003Controller  extends BaseController {
     }
     @ResponseBody
     @RequestMapping("selecctRskValtblSubjectCodeList")
-    public List<SelectOptionDto> selecctRskValtblSubjectCodeList(){
-        return rskValSumname003Service.selecctRskValtblSubjectCodeList();
+    public Page<SelectOptionDto> selecctRskValtblSubjectCodeList(){
+        return rskValSumname003Service.selecctRskValtblSubjectCodeList(RequestUtil.getPageParam());
     }
 }
