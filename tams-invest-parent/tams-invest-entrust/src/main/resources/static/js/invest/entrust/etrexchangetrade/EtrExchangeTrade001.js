@@ -1406,7 +1406,12 @@
         var ps = $("#ps_" + currentTab).val();
         if(ps == PS_T49) {
             var finprodId = $("#finprodId_" + currentTab).val();
-            var entrustNum = $("#entrustNum_" + currentTab).val();
+            var entrustNum = $("#entrustNum_" + currentTab).val()
+            //债券交易数量单位 add by yeming 20210729 start
+            if(bond_traded_unit == '02' && finprodType2 == FINPROD_TYPE_TG_F01){
+                entrustNum = entrustNum * 10;
+            }
+            //债券交易数量单位 add by yeming 20210729 end
             var entrustPrice = $("#entrustPrice_" + currentTab).val();
             // 如果金融产品类型不是“债券”，则可以不需要投资目的
             if(finprodId && entrustNum && entrustPrice && entrustPrice != 0) {
@@ -1748,10 +1753,22 @@
         else if(finprodType2 == FINPROD_TYPE_TG_F01) {
             if(currentTab == 'dz' && tradeMarket == TRADE_PLACE_03) {
 //                $("#entrustNumUnit_" + currentTab).text("手");
-                $("#entrustNumUnit_" + currentTab).text("张");
+                 //债券交易数量单位 edit by yeming 20210729 start
+                if(bond_traded_unit == '02'){
+                    $("#entrustNumUnit_" + currentTab).text("手");
+                }else{
+                    $("#entrustNumUnit_" + currentTab).text("张");
+                }
+                //债券交易数量单位 edit by yeming 20210729 end
             }
             else {
-                $("#entrustNumUnit_" + currentTab).text("张");
+                //债券交易数量单位 edit by yeming 20210729 start
+                if(bond_traded_unit == '02'){
+                    $("#entrustNumUnit_" + currentTab).text("手");
+                }else{
+                    $("#entrustNumUnit_" + currentTab).text("张");
+                }
+                //债券交易数量单位 edit by yeming 20210729 end
             }
         }
         // if 画面.金融产品类型（债券） = 质押式回购
@@ -1787,6 +1804,11 @@
         var tradeMarket = $("#tradeMarket_" + currentTab).val();
         var priceModel = $("#priceModel_" + currentTab).val();
         var entrustNum = $("#entrustNum_" + currentTab).val();
+        //债券交易数量单位 add by yeming 20210729 start
+        if(bond_traded_unit == '02' && finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)){
+            entrustNum = entrustNum * 10;
+        }
+        //债券交易数量单位 add by yeming 20210729 end
         var entrustAmt = $("#entrustAmt_" + currentTab).val();
         var entrustPrice = $("#entrustPrice_" + currentTab).val();
         var ps = $("#ps_" + currentTab).val();
@@ -1867,8 +1889,6 @@
             return;
         }
         Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/calcEntrustNumAndAmt', param, function(result) {
-            $("#entrustAmt_" + currentTab).val(result.entrustAmt).trigger('blur');
-            $("#entrustNum_" + currentTab).val(result.entrustNum).trigger('blur');
             if(param.targetType == TARGET_CLASS_01 && param.availableNum && param.availableNum > 0){
                 var stockNum = param.availableNum - result.entrustNum;
                 if(result.minNum){
@@ -1880,6 +1900,13 @@
                     }
                 }
             }
+            //债券交易数量单位 add by yeming 20210729 start
+            if(bond_traded_unit == '02' && $("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && isStandardPs($("#ps_" + currentTab).val())){
+                result.entrustNum = JoyinMath.doDiv(result.entrustNum, 10, 0, JoyinMath.ROUND_DOWN);//转成手配置
+            }
+            //债券交易数量单位 add by yeming 20210729 end
+            $("#entrustAmt_" + currentTab).val(result.entrustAmt).trigger('blur');
+            $("#entrustNum_" + currentTab).val(result.entrustNum).trigger('blur');
         }, false);
     }
 

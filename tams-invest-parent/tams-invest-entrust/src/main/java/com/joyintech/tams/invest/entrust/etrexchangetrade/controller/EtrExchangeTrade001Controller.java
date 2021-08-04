@@ -109,7 +109,12 @@ public class EtrExchangeTrade001Controller extends BaseController{
         this.setConstSelectOption(model);
         Date platformDate = DateUtil.platDateFromCache();
         model.addAttribute("iPlatformDate", DateUtil.format(platformDate));
-        
+
+        //配置单位 add by yeming 20210728 start
+        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
+        model.addAttribute("bond_traded_unit", bondTradedUnit );
+        //配置单位 add by yeming 20210728 end
+
         //流程id
         String workflowId = "null".equals(getParam(GlobalConstant.WORKFLOW_ID))?null:getParam(GlobalConstant.WORKFLOW_ID);
         model.addAttribute("workflowId", workflowId);
