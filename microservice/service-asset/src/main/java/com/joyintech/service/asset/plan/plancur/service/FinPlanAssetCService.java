@@ -382,13 +382,17 @@ public class FinPlanAssetCService extends BaseService<FinPlanAssetCDto> {
         repAssetDept.setRepCcy(dto.getCcy());
         /*FXZG-6 【阜新银行】REP_ASSET_DEPT部分字段未存值 end*/
         repAssetDept.setRepFinprodName(dto.getFinprodName());
-        BeanUtil.copyPropertiesIgnoreNull(repAssetDept,
-            bussRepAssetMngProdInfoDto.getRepAssetDept());
+        if(bussRepAssetMngProdInfoDto!=null){
+            BeanUtil.copyPropertiesIgnoreNull(repAssetDept,
+                    bussRepAssetMngProdInfoDto.getRepAssetDept());
+        }
         //资产管理计划报送信息
         RepAssetMngPlan repAssetMngPlan = new RepAssetMngPlan();
         repAssetMngPlan.setRepFinprodId(finProduct.getFinprodId());
-        BeanUtil.copyPropertiesIgnoreNull(repAssetMngPlan,
-            bussRepAssetMngProdInfoDto.getRepAssetMngPlan());
+        if(bussRepAssetMngProdInfoDto!=null){
+            BeanUtil.copyPropertiesIgnoreNull(repAssetMngPlan,
+                bussRepAssetMngProdInfoDto.getRepAssetMngPlan());
+        }
         repAssetMngPlan.setRepManagerId(dto.getManager());
         repAssetMngPlan.setRepTrusteeId(dto.getTrusteeId());
         repAssetMngPlan.setRepSetDate(dto.getVdate());
@@ -396,7 +400,9 @@ public class FinPlanAssetCService extends BaseService<FinPlanAssetCDto> {
         //中债资产其他要素 by zhuyongkang start
         RepAssetOther repAssetOther = new RepAssetOther();
         repAssetOther.setRepFinprodId(finProduct.getFinprodId());
-        repAssetOther.setRepPrivateprdFlag(dto.getBussRepAssetMngProdInfo().getRepPrivateprdFlag());
+        if(dto.getBussRepAssetMngProdInfo()!=null){
+            repAssetOther.setRepPrivateprdFlag(dto.getBussRepAssetMngProdInfo().getRepPrivateprdFlag());
+        }
         dto.setRepAssetOther(repAssetOther);
         repAssetOtherMapper.deleteByPrimaryKey(dto.getRepAssetOther().getRepFinprodId());
         repAssetOtherMapper.insert(dto.getRepAssetOther());
