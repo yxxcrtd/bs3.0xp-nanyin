@@ -1366,7 +1366,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
             etrSecPositionDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
 
             etrSecPositionDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-            result.put("canSellAmount", this.getAssetAvailablePosition(etrSecPositionDto).divide(new BigDecimal(100)));
+            result.put("canSellAmount", this.getAssetAvailablePosition(etrSecPositionDto));
             // 资产持仓券面总额
             PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
             ptlSecPositionFlowDto.setCdate(tradeDate);
@@ -1376,11 +1376,11 @@ public class EtrCommonService extends BaseService<ITableRow> {
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
             ptlSecPositionFlowDto.setFinprodId((String)paramMap.get("finprodId"));
             ptlSecPositionFlowDto.setEntrust(true);
-            BigDecimal amount03 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto).divide(new BigDecimal(100));
+            BigDecimal amount03 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_融入.getValue());
-            BigDecimal amount05 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto).divide(new BigDecimal(100));
+            BigDecimal amount05 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_融出.getValue());
-            BigDecimal amount06 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto).divide(new BigDecimal(100));
+            BigDecimal amount06 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             BigDecimal assetPositionEntrustAmt = ArithmeticUtil.doAdd(amount03, amount05);
             assetPositionEntrustAmt = ArithmeticUtil.subtract(assetPositionEntrustAmt, amount06);
             result.put("positionAmount", assetPositionEntrustAmt);
@@ -1393,6 +1393,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
         dto.setCostPrice(costPrice);
         dto.setPositionAmount(result.get("positionAmount") == null ? BigDecimal.ZERO : (BigDecimal) result.get("positionAmount"));
         dto.setCanSellAmount(result.get("canSellAmount") == null ? BigDecimal.ZERO : (BigDecimal) result.get("canSellAmount"));
+        dto.setCashAmount(proAvailableCash);
         return dto;
     }
 
