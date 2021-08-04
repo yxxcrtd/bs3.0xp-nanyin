@@ -11,6 +11,7 @@
 
     <artifactId>tams-valuation-batch-lossmodel</artifactId>
     <version>3.0.1</version>
+	<description>减值模型系统</description>
 
 
 </project>
