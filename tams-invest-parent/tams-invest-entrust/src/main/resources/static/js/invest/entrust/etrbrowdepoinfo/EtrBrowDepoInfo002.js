@@ -4,10 +4,16 @@
 (function() {
 
 	var getriskdata = function () {
-        var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
-        var object = {assetCode: ['finprodMarketId', 'EtrBrowDepoInfo001.finprodId'],tradeDirection:['ps','EtrBrowDepoInfo001.ps'],portfolioCode:['portfolioId','EtrBrowDepoInfo001.portfolioId'],tradeAmount:['entrustAmt','EtrBrowDepoInfo001.entrustAmt'],assetType:['finprodType2','EtrBrowDepoInfo001.finprodType2'],data:obj}
-        return object;
-    }
+		var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()};
+		// add by zhangrui1 交易对手影响风险试算 start
+		obj.counterId = $('#bussEtrInvestPersonInfoDto_counterId').val();
+		// add by zhangrui1 交易对手影响风险试算 end
+		var object = {assetCode: ['finprodMarketId', 'EtrBrowDepoInfo001.finprodId'],tradeDirection:['ps','EtrBrowDepoInfo001.ps'],portfolioCode:['portfolioId','EtrBrowDepoInfo001.portfolioId'],tradeAmount:['entrustAmt','EtrBrowDepoInfo001.entrustAmt'],assetType:['finprodType2','EtrBrowDepoInfo001.finprodType2'],data:obj};
+		// add by zhangrui1 交易对手影响风险试算 start
+		object.counterId = ['counterId', 'BussEtrInvestPersonInfoDto.counterId'];
+		// add by zhangrui1 交易对手影响风险试算 end
+		return object;
+	}
     /**
      * 保存或提交
      * 
@@ -279,13 +285,18 @@
     window.componentLoadCallback = function(isDone, pagePath, params) {
         if (isDone) {
 			if(typeof(BaseRiskMathComm) != 'undefined') {
-            var riskparam = getriskdata();
-            if (pageModel==PAGE_MODEL_NEW){
-                riskparam.data =null;
-            }
-            window.BaseRiskMathComm.getparam(riskparam);
+				var riskparam = getriskdata();
+				if (pageModel==PAGE_MODEL_NEW){
+					riskparam.data =null;
+				}
+				window.BaseRiskMathComm.getparam(riskparam);
 			}
         }
+		// add by zhangrui1 SNSTZJY-857 start
+		if ($("#finprodType2").val() == 'D03') {
+			$("#bussEtrInvestPersonInfoDto_counterId").attr("disabled", true);
+		}
+		// add by zhangrui1 SNSTZJY-857 end
     }
 
 	/**
