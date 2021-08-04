@@ -413,12 +413,12 @@
          * 查看资产详情事件
          */
         $('#EtrBondFirstLBidding002_btn_search').click(function() {
-            var finprodId = $("#finprodId").val();
+            var finprodIdhid = $('#finprodIdhid').val();
             var url = "/invest/asset/tenderbond/FinTenderBondTargetAsset002/init";
-            if (finprodId != ""){
+            if (finprodIdhid != ""){
                 var params = {
                     pageModel:PAGE_MODEL_REFERENCE,
-                    finprodId:finprodId
+                    finprodId:finprodIdhid
                 };
                 EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
             } else {

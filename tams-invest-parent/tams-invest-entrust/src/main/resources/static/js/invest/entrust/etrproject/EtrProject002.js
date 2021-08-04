@@ -137,14 +137,13 @@
      * 查看资产详情事件
      */
     $('#EtrProject002_btn_search').click(function() {
-        // var finprodMarketId = $("#finprodMarketId").val();
-        var finprodMarketId = $("#finprodId").val();
+        var finprodId = $("#finprodIdhid").val();
         var url = "/invest/asset/project/FinProjectTargetAsset002/init";
-        if (finprodMarketId != ""){
+        if (finprodId != ""){
             var params = {
                 pageModel:PAGE_MODEL_REFERENCE,
                 isQuickInput:true,
-                finprodMarketId:finprodMarketId
+                finprodId:finprodId
             };
             EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
         } else {

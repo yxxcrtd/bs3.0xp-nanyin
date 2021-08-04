@@ -484,6 +484,22 @@
             $('#proAvailableCash1_div').hide();
             $('#tradeMarketAccAvailableCash_div').hide();
         }
-        
+        /**
+         * 查看资产详情事件
+         */
+        $('#EtrStock002_btn_search').click(function() {
+            var finprodId = $("#finprodIdhid").val();
+            var url = "/invest/asset/stock/FinStockInfo002/init";
+            if (finprodId != ""){
+                var params = {
+                    pageModel:PAGE_MODEL_REFERENCE,
+                    isQuickInput:true,
+                    finprodId:finprodId
+                };
+                EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
+            } else {
+                Joyin.error("资产名称不能为空")
+            }
+        });
     });
 }());
