@@ -293,12 +293,13 @@
 	 */
 	$('#EtrBrowDepoInfo002_btn_search').click(function() {
 		var finprodMarketId = $("#finprodMarketId").val();
+		var finprodIdhid = $('#finprodIdhid').val();
 		var url = "/invest/asset/depo/FinDepositTarget002/init";
-		if (finprodMarketId != ""){
+		if (finprodIdhid != ""){
 			var params = {
 				pageModel:PAGE_MODEL_REFERENCE,
 				isQuickInput:true,
-				finprodMarketId:finprodMarketId
+				finprodId:finprodIdhid
 			};
 			EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
 		} else {
