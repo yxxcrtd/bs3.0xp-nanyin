@@ -13,16 +13,15 @@
 			</if>
 			<if test="productIdList != null and !productIdList.isEmpty()">
 				AND (
-				PORTFOLIO_ID in (select PORTFOLIO_ID from FIN_PRODUCT_ADD where FIN_PRODUCT_ADD.FINPROD_ID in <foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
+				PORTFOLIO_ID in (select PORTFOLIO_ID from FIN_PRODUCT_ADD where FIN_PRODUCT_ADD.FINPROD_ID in
+									<foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
 				<if test="(index % 500) == 499">
 					null) OR PORTFOLIO_ID IN (
 				</if>
 				#{obj}
 			</foreach>
 				)
-
 				OR
-
 				PORTFOLIO_ID in
 				<foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
 					<if test="(index % 500) == 499">
@@ -152,7 +151,7 @@
 		left join RSK_VALTBL_PRT_BOTASSET_MAP T3
 			ON T1.PTL_ID = T3.PTL_ID
 			AND T1.SUB_CODE = T3.SUB_CODE
-		where T1.SUB_CODE like '_________%'
+		where LENGTH(T1.SUB_CODE) &gt; 8
 		<if test="cdate != null and cdate != ''">
 			<!-- TISHKBS-621 【批处理-估值穿透逻辑问题】目前系统跑批逻辑为只能取导入底层估值日的数据，期望，跑批日无底层数据时，取跑批日前最新的底层数据 modify by lizhi 20200629 start -->
 			<!-- AND T1.VAL_DATE = TO_DATE(#{cdate},'YYYY-MM-DD') -->
@@ -160,7 +159,7 @@
 		      ( select
 		          max(val_date) val_date
 		        from RSK_VALTBL_ASSET_SUB
-		        where SUB_CODE like '_________%'
+		        where LENGTH(T1.SUB_CODE) &gt; 8  
 		          and PTL_ID = #{portfolioId,jdbcType=VARCHAR}
 		          <![CDATA[and VAL_DATE <=  TO_DATE(#{cdate},'YYYY-MM-DD')]]>
 		        )
@@ -251,41 +250,42 @@
 	<!--add by lpf 增加对剩余现金处理逻辑-->
 	<select id="selectValtblAssetSubCash" resultType="com.joyintech.tams.invest.batch.valrift.dto.ValtblAssetSubDto">
 		SELECT
-		T1.VAL_DATE VAL_DATE,
-		T1.PTL_ID PTL_ID,
-		T1.SUB_CODE SUB_CODE,
-		'REMAININGCASH_'||decode(T1.SUB_CODE,'120401','1002','120402','1021','120403','1031',T1.SUB_CODE) FINPROD_ID,
-		T1.SECURITY_QUANTITY SECURITY_QUANTITY,
-		T1.UNIT_COST UNIT_COST,
-		T1.SECURITY_COST SECURITY_COST,
-		T1.CTNWR CTNWR,
-		T1.MCP MCP,
-		T1.SMV SMV,
-		T1.MCR MCR,
-		T1.VALUE_ADDED VALUE_ADDED,
-		T1.SUSPENSION_INFO SUSPENSION_INFO,
-		T1.EQUITY_INFO EQUITY_INFO,
-		T1.IMP_MODE IMP_MODE,
-		T1.CREATE_USER CREATE_USER,
-		T1.CREATE_DEPT CREATE_DEPT,
-		T1.CREATE_TIME CREATE_TIME,
-		T1.UPDATE_USER UPDATE_USER,
-		T1.UPDATE_TIME UPDATE_TIME,
-		T2.FINPROD_TYPE2,
-		T2.FINPROD_MARKET_ID
+			T1.VAL_DATE VAL_DATE,
+			T1.PTL_ID PTL_ID,
+			T1.SUB_CODE SUB_CODE,
+			CONCAT('REMAININGCASH_',decode(T1.SUB_CODE,'120401','1002','120402','1021','120403','1031',T1.SUB_CODE)) FINPROD_ID,
+			T1.SECURITY_QUANTITY SECURITY_QUANTITY,
+			T1.UNIT_COST UNIT_COST,
+			T1.SECURITY_COST SECURITY_COST,
+			T1.CTNWR CTNWR,
+			T1.MCP MCP,
+			T1.SMV SMV,
+			T1.MCR MCR,
+			T1.VALUE_ADDED VALUE_ADDED,
+			T1.SUSPENSION_INFO SUSPENSION_INFO,
+			T1.EQUITY_INFO EQUITY_INFO,
+			T1.IMP_MODE IMP_MODE,
+			T1.CREATE_USER CREATE_USER,
+			T1.CREATE_DEPT CREATE_DEPT,
+			T1.CREATE_TIME CREATE_TIME,
+			T1.UPDATE_USER UPDATE_USER,
+			T1.UPDATE_TIME UPDATE_TIME,
+			T2.FINPROD_TYPE2,
+			T2.FINPROD_MARKET_ID
 		FROM
-		RSK_VALTBL_ASSET_SUB T1
+			RSK_VALTBL_ASSET_SUB T1
 		INNER JOIN (
-		SELECT
-		PTL_ID ,
-		MAX(VAL_DATE) VAL_DATE
-		FROM
-		RSK_VALTBL_ASSET_SUB
-		GROUP BY
-		PTL_ID ) TT2 ON
-		T1.VAL_DATE = TT2.VAL_DATE
+			SELECT
+			PTL_ID ,
+			MAX(VAL_DATE) VAL_DATE
+			FROM
+			RSK_VALTBL_ASSET_SUB
+			GROUP BY
+			PTL_ID
+			) TT2 ON T1.VAL_DATE = TT2.VAL_DATE
 		AND T1.PTL_ID = TT2.PTL_ID
-		left join FIN_PRODUCT T2 on T1.FINPROD_ID = T2.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT T2
+			ON T1.FINPROD_ID = T2.FINPROD_ID
 		where T1.SUB_CODE IN ('1002','1021','1031','120401','120402','120403','3003')
 		<if test="portfolioId != null and portfolioId != ''">
 			AND T1.PTL_ID = #{portfolioId,jdbcType=VARCHAR}
@@ -295,42 +295,43 @@
 	<select id="selectValtblAssetSubHg" resultType="com.joyintech.tams.invest.batch.valrift.dto.ValtblAssetSubDto">
 		SELECT * FROM(
 		SELECT
-		row_number() over (partition by T1.PTL_ID,substr(T1.SUB_CODE,0,4) order by LENGTH(T1.SUB_CODE) desc) as num,
-		T1.VAL_DATE VAL_DATE,
-		T1.PTL_ID PTL_ID,
-		T1.SUB_CODE SUB_CODE,
-		T1.FINPROD_ID FINPROD_ID,
-		T1.SECURITY_QUANTITY SECURITY_QUANTITY,
-		T1.UNIT_COST UNIT_COST,
-		T1.SECURITY_COST SECURITY_COST,
-		T1.CTNWR CTNWR,
-		T1.MCP MCP,
-		T1.SMV SMV,
-		T1.MCR MCR,
-		T1.VALUE_ADDED VALUE_ADDED,
-		T1.SUSPENSION_INFO SUSPENSION_INFO,
-		T1.EQUITY_INFO EQUITY_INFO,
-		T1.IMP_MODE IMP_MODE,
-		T1.CREATE_USER CREATE_USER,
-		T1.CREATE_DEPT CREATE_DEPT,
-		T1.CREATE_TIME CREATE_TIME,
-		T1.UPDATE_USER UPDATE_USER,
-		T1.UPDATE_TIME UPDATE_TIME,
-		T2.FINPROD_TYPE2,
-		T2.FINPROD_MARKET_ID
+			row_number() over (partition by T1.PTL_ID,substr(T1.SUB_CODE,0,4) order by LENGTH(T1.SUB_CODE) desc) as num,
+			T1.VAL_DATE VAL_DATE,
+			T1.PTL_ID PTL_ID,
+			T1.SUB_CODE SUB_CODE,
+			T1.FINPROD_ID FINPROD_ID,
+			T1.SECURITY_QUANTITY SECURITY_QUANTITY,
+			T1.UNIT_COST UNIT_COST,
+			T1.SECURITY_COST SECURITY_COST,
+			T1.CTNWR CTNWR,
+			T1.MCP MCP,
+			T1.SMV SMV,
+			T1.MCR MCR,
+			T1.VALUE_ADDED VALUE_ADDED,
+			T1.SUSPENSION_INFO SUSPENSION_INFO,
+			T1.EQUITY_INFO EQUITY_INFO,
+			T1.IMP_MODE IMP_MODE,
+			T1.CREATE_USER CREATE_USER,
+			T1.CREATE_DEPT CREATE_DEPT,
+			T1.CREATE_TIME CREATE_TIME,
+			T1.UPDATE_USER UPDATE_USER,
+			T1.UPDATE_TIME UPDATE_TIME,
+			T2.FINPROD_TYPE2,
+			T2.FINPROD_MARKET_ID
 		FROM
-		RSK_VALTBL_ASSET_SUB T1
+			RSK_VALTBL_ASSET_SUB T1
 		INNER JOIN (
-		SELECT
-		PTL_ID ,
-		MAX(VAL_DATE) VAL_DATE
-		FROM
-		RSK_VALTBL_ASSET_SUB
-		GROUP BY
-		PTL_ID ) TT2 ON
-		T1.VAL_DATE = TT2.VAL_DATE
+			SELECT
+			PTL_ID ,
+			MAX(VAL_DATE) VAL_DATE
+			FROM
+			RSK_VALTBL_ASSET_SUB
+			GROUP BY
+			PTL_ID
+			) TT2 ON T1.VAL_DATE = TT2.VAL_DATE
 		AND T1.PTL_ID = TT2.PTL_ID
-		left join FIN_PRODUCT T2 on T1.FINPROD_ID = T2.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT T2
+			ON T1.FINPROD_ID = T2.FINPROD_ID
 		where T1.SUB_CODE IN ('120410','12041001','2231','22301','22310101')
 		<if test="portfolioId != null and portfolioId != ''">
 			AND T1.PTL_ID = #{portfolioId,jdbcType=VARCHAR}

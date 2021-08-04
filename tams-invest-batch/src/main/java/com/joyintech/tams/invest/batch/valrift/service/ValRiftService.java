@@ -287,7 +287,7 @@ public class ValRiftService {
 
     private void writeDetailValRift(List<PtlSecPierceValutionDetailDto> resultDetailRep) {
         for(PtlSecPierceValutionDetailDto ptlSecPierceValutionDetailDto : resultDetailRep){
-            ptlSecPierceValutionDetailMapper.insert(ptlSecPierceValutionDetailDto);
+            ptlSecPierceValutionDetailMapper.insertSelective(ptlSecPierceValutionDetailDto);
         }
     }
 
@@ -301,14 +301,7 @@ public class ValRiftService {
     private List<PtlSecPierceValutionDto> calValIndex(List<PtlSecPierceValutionDto> result){
     	List<PtlSecPierceValutionDto> resultRep = new ArrayList<PtlSecPierceValutionDto>();
         Map<String,PtlSecPierceValutionDto> mapAsset = new HashMap<String,PtlSecPierceValutionDto>();
-        Collections.sort(result, new Comparator<PtlSecPierceValutionDto>() {
-            @Override
-            public int compare(PtlSecPierceValutionDto o1, PtlSecPierceValutionDto o2) {
-                return (StringUtil.isEmpty(o1.getSubCode()) ? "":o1.getSubCode()).compareTo(
-                        (StringUtil.isEmpty(o2.getSubCode())  ? "":o2.getSubCode())
-                );
-            }
-        });
+        Collections.sort(result, Comparator.comparing(o -> (StringUtil.defaultString(o.getSubCode(),""))));
         for(PtlSecPierceValutionDto bean : result){
             if(StringUtil.isNotEmpty(bean.getFinprodId())){
                 //add by lpf 剩余现金处理 start
@@ -366,7 +359,7 @@ public class ValRiftService {
                                 bean.setTdyIntincexp(ArithmeticUtil.multiply(ptlSecPierceValutionDto.getTdyIntincexp(),ptlSecPierceValutionDto.getPositionRatio()));
                             }
                         }
-                        bean.setPositionRatio(new BigDecimal(1));//重置持仓比例
+                        bean.setPositionRatio(BigDecimal.ONE);//重置持仓比例
                         mapAsset.put(bean.getFinprodId(), bean);
                     }
                     else{
@@ -376,7 +369,7 @@ public class ValRiftService {
                 ////add by lpf 剩余现金处理 end
                 else{
                     if(mapAsset.containsKey(bean.getFinprodId())){
-                        PtlSecPierceValutionDto ptlSecPierceValutionDto  = (PtlSecPierceValutionDto)mapAsset.get(bean.getFinprodId());
+                        PtlSecPierceValutionDto ptlSecPierceValutionDto  = mapAsset.get(bean.getFinprodId());
                         //数量
                         if(StringUtil.isNotEmpty(ptlSecPierceValutionDto.getShareAmt())){
                             if(StringUtil.isNotEmpty(bean.getShareAmt())){
@@ -469,7 +462,11 @@ public class ValRiftService {
             //市值单独计算
             // 市值= 摊销总成本+isnull(公允价值变动,当日应计利息)
 			if (entry.getValue().getMarketValue() == null) {
-				entry.getValue().setMarketValue(ArithmeticUtil.multiply(ArithmeticUtil.doAdd(ArithmeticUtil.doAdd(null!=entry.getValue().getDscCostAmt()?entry.getValue().getDscCostAmt():BigDecimal.ZERO,null!=entry.getValue().getTdyFloatIngpl()?entry.getValue().getTdyFloatIngpl():BigDecimal.ZERO),null!=entry.getValue().getTdyIntincexp()?entry.getValue().getTdyIntincexp():BigDecimal.ZERO)
+				entry.getValue().setMarketValue(ArithmeticUtil.multiply(
+				        ArithmeticUtil.doAdd(
+				                null!=entry.getValue().getDscCostAmt()?entry.getValue().getDscCostAmt():BigDecimal.ZERO
+                                ,null!=entry.getValue().getTdyFloatIngpl()?entry.getValue().getTdyFloatIngpl():BigDecimal.ZERO
+                                ,null!=entry.getValue().getTdyIntincexp()?entry.getValue().getTdyIntincexp():BigDecimal.ZERO)
 						,entry.getValue().getPositionRatio()));
 			}else{
                 entry.getValue().setMarketValue(ArithmeticUtil.multiply(entry.getValue().getMarketValue()
@@ -686,7 +683,7 @@ public class ValRiftService {
      */
     private void  writeValRift(List<PtlSecPierceValutionDto> result){
         for(PtlSecPierceValutionDto ptlSecPierceValutionDto : result){
-            ptlSecPierceValutionMapper.insert(ptlSecPierceValutionDto);
+            ptlSecPierceValutionMapper.insertSelective(ptlSecPierceValutionDto);
         }
     }
     
