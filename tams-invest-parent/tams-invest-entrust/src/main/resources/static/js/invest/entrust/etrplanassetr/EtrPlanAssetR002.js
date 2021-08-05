@@ -9,17 +9,32 @@
         var ps = $('#ps').val();
         if(entrustAmt){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustAmt','EtrPlanAssetR002.entrustAmt'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
         }else if(entrustNum){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustNum').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustNum','EtrPlanAssetR002.entrustNum'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
         }else if('T01'==ps){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustAmt','EtrPlanAssetR002.entrustAmt'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
         }else{
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustNum').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustNum','EtrPlanAssetR002.entrustNum'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
     /**

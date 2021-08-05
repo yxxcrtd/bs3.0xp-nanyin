@@ -20,6 +20,9 @@
         if(object.portfolioId != null && object.portfolioId != ''){
             object.portfolioId = object.portfolioId.join(",");
         }
+        if(object.entrustStatus != null && object.entrustStatus != ''){
+            object.entrustStatus = object.entrustStatus.join(",");
+        }
         return object;
     };
     /** 
@@ -66,6 +69,9 @@
             ,{field:'assetType11Str', title: 'EtrPlanAssetR001.assetType11', width:'10%',sortField:"assetType11",visible:IS_SHOW_TYPE == '01'?true:false}
             /*zhuyongkang 2019/7/29  end*/
             ,{field:'finprodId', visible:false}
+            // add by zhangrui1 start
+            ,{field:'counterId', visible:false}
+            // add by zhangrui1 end
             ,{field:'finprodMarketId', title: 'EtrPlanAssetR001.finprodId', width:'10%',
                 render : function(data, type, row, meta) {
                     return "<a  class='pro-link finprodIdLink' style='cursor: pointer;'>"+data+"</ a>";
@@ -226,6 +232,12 @@
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
+            }
+            for(var index in selArr){
+                if(selArr[index].entrustStatus == '08'){
+                    Joyin.error("流程中的数据不允许撤回");
+                    return ;
+                }
             }
 //            else if(selArr && selArr.length>1){
 //                Joyin.error(JoyinUtil.getMessage("ETR_COM_X"));
