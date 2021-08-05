@@ -463,13 +463,13 @@ public class BondRequestQuoteSubServiceImpl extends BaseService<IbuQuoteBond> im
                     }
                     else {
                         //add by zznn 20210726 start
-                        //针对做市方撤销  当所有报价全部撤回后  主报价终态应该为已新增 成功
-                        //非做市方接收已过期  当所有报价全部已过期  主报价终态应该为已新增 成功
+                        //针对做市方撤销  当所有报价全部撤回后  主报价终态应该为待回复 成功
+                        //非做市方接收已过期  当所有报价全部已过期  主报价终态应该为待回复 成功
                         if(detStatusMap != null && detStatusMap.size() == 1&&(StringUtil.equals(inputBean.getExeTypeIBU(),DictCodeList.银行间上行操作类型_本方请求报价撤回成功.getValue())
-                            ||StringUtil.equals(inputBean.getExeTypeIBU(),DictCodeList.银行间上行操作类型_接收已过期.getValue()))){
-                                inputBean.getIbuQuoteBondDto().setTradeStatus(DictCodeList.银行间上行报价状态_已新增.getValue());
-                                inputBean.getIbuQuoteBondDto().setSendStatus(DictCodeList.银行间上行发送状态_成功.getValue());
-                                affectRows +=ibuQuoteMapper.updateBondQuoteFinalStatusForRevoke(inputBean.getIbuQuoteBondDto());
+                                ||StringUtil.equals(inputBean.getExeTypeIBU(),DictCodeList.银行间上行操作类型_接收已过期.getValue()))){
+                            inputBean.getIbuQuoteBondDto().setTradeStatus(DictCodeList.银行间上行报价状态_待回复.getValue());
+                            inputBean.getIbuQuoteBondDto().setSendStatus(DictCodeList.银行间上行发送状态_成功.getValue());
+                            affectRows +=ibuQuoteMapper.updateBondQuoteFinalStatusForRevoke(inputBean.getIbuQuoteBondDto());
                         }
                         //add by zznn 20210726 end
                         else{

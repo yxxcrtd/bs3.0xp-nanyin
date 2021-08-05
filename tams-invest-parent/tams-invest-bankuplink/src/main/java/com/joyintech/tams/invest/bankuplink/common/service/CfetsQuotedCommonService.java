@@ -343,7 +343,7 @@ public class CfetsQuotedCommonService extends BaseService {
                 BussinessDictCodeList.银行间上行本方角色_非做市方.getValue())) {
                 CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = cfetsBondDealQuotedPrice003Service.getBondRequestQuote(
                     bondQuoteInfoDto.getQuoteId(),null);
-                if (this.checkQuoteStatusChange(bondQuoteInfoDto, cfetsBondDealRequestQuoteDto)) {
+                /*if (this.checkQuoteStatusChange(bondQuoteInfoDto, cfetsBondDealRequestQuoteDto)) {
                     statusChangeFlag = true;
                     if ((StringUtil.equals(bondQuoteInfoDto.getTradeStatus(),
                         BussinessDictCodeList.银行间上行报价状态_已回复.getValue())
@@ -354,6 +354,17 @@ public class CfetsQuotedCommonService extends BaseService {
                                 BussinessDictCodeList.银行间上行发送状态_成功.getValue()))) {
                         validFlag = true;
                     }
+                }*/
+                //请求报价撤回  只需要查报价表的状态,无需查看子报价的状态
+                if ((StringUtil.equals(cfetsBondDealRequestQuoteDto.getTradeStatus(),
+                        BussinessDictCodeList.银行间上行报价状态_已回复.getValue())
+                        && !StringUtil.isNotEmpty(cfetsBondDealRequestQuoteDto.getSendStatus()))
+                        || (StringUtil.equals(cfetsBondDealRequestQuoteDto.getTradeStatus(),
+                        BussinessDictCodeList.银行间上行报价状态_待回复.getValue())
+                        && StringUtil.equals(cfetsBondDealRequestQuoteDto.getSendStatus(),
+                        BussinessDictCodeList.银行间上行发送状态_成功.getValue()))) {
+                    statusChangeFlag = true;
+                    validFlag = true;
                 }
                 msg ="本方角色为非做市方，交易状态和发送状态分别为待回复/成功，已回复/空的请求报价，才能执行撤回操作！";
             }
