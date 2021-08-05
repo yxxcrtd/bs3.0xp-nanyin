@@ -12,7 +12,12 @@ package com.joyintech.tams.invest.entrust.etrproject.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -141,12 +146,16 @@ public class EtrProject001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("recall")
-    public AjaxResult recallDelegate(@RequestBody EtrProjectDto dto) {
+    public AjaxResult recallDelegate(@RequestBody EtrProjectDto dto) throws Exception{
         List<EtrProjectDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrProjectDto entity : dtolist){
                 etrProjectService.recallDelegate(entity);
             }
+            // add by yushilong 批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_项目类资产.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by yushilong 批量撤销预占 end
             return new AjaxResult(this.getMessage("ETR_X_001"));
         }
         return new AjaxResult(this.getMessage("ETR_X_002"));
@@ -161,12 +170,18 @@ public class EtrProject001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("close")
-    public AjaxResult closeDelegate(@RequestBody EtrProjectDto dto) {
+    public AjaxResult closeDelegate(@RequestBody EtrProjectDto dto) throws Exception{
         List<EtrProjectDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrProjectDto entity : dtolist){
                 etrProjectService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
             }
+            // add by zhangrui1 批量委托关闭 start
+            // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
+            List<String> entrustIdList = dtolist.stream().map(EtrProjectDto::getEntrustId).collect(
+                    Collectors.toList());
+            EntrustCompleteUtil.doComplete(entrustIdList);
+            // add by zhangrui1 批量委托关闭 end
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }
         return new AjaxResult(this.getMessage("ETR_X_004"));
@@ -176,20 +191,24 @@ public class EtrProject001Controller extends BaseController {
      * 
      * 删除投资委托
      * <功能详细描述>
-     * @param entrustId
+     * @param dto
      * @return
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult deleteDelegate(@RequestBody EtrProjectDto dto) {
+    public AjaxResult deleteDelegate(@RequestBody EtrProjectDto dto) throws Exception{
         List<EtrProjectDto> list = dto.getSelectedItem();
         if(list!=null && list.size()>0){
             for(EtrProjectDto entity : list){
                 String entrustId = entity.getEntrustId();
                 etrProjectService.deleteDelegate(entrustId);
             }
+            // add by yushilong 批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(list, DictCodeList.平安资产类型_项目类资产.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by yushilong 批量撤销预占 end
             return new AjaxResult("删除成功");
         }
         return new AjaxResult("删除失败");
