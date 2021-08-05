@@ -1,12 +1,17 @@
 package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.service.PbcPrdBaseinfoSubNewMService;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.service.PbcPrdBaseinfoSubNewService001;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.service.PbcPrdBaseinfoSubNew001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +26,6 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 
@@ -41,7 +44,7 @@ public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
 	 * 产品基本信息信息service
 	 */
 	@Autowired
-	private PbcPrdBaseinfoSubNewService001 pbcPrdRaiseSubService001;
+	private PbcPrdBaseinfoSubNew001Service pbcPrdRaiseSub001Service;
 	
 	/**
 	 * 微服务service
@@ -70,6 +73,18 @@ public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
     	super.setSelectOptionToModel(model,	DictCode.报送数据状态,DictCode.报送状态,DictCode.人行报送反馈状态,DictCode.人行产品类型,DictCode.人行产品运作模式);
         return super.init(model);
     }
+
+
+	/**
+	 * 生成产品代码列表
+	 * @return 产品代码下拉框初始值
+	 */
+	@ResponseBody
+	@RequestMapping("/getPbcProdId")
+	public List<SelectOptionDto> getPbcProdId() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		return pbcPrdBaseinfoSubMService.getPbcProdId(param);
+	}
     
     /**
      * 产品基本信息信息查询
@@ -107,7 +122,7 @@ public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("export")
 	public ResponseEntity<byte[]> export() {
-		return pbcPrdRaiseSubService001.export(this.getPageId(), RequestUtil.getPageParam());
+		return pbcPrdRaiseSub001Service.export(this.getPageId(), RequestUtil.getPageParam());
 	}
 	
 	/**
@@ -148,8 +163,26 @@ public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("download")
 	public ResponseEntity<byte[]> download() throws IOException {
+
 		String datas = this.getParam("datas");
-		return pbcPrdRaiseSubService001.download(this.getPageId(), RequestUtil.getPageParam(),datas);
+		Map<String, Object> paraMap = RequestUtil.getPageParam();
+		List<PbcPrdBaseinfoSubNew> dtoList;
+
+		if(null==datas){
+			dtoList = pbcPrdRaiseSub001Service.searchByCondition(paraMap);
+		}else{
+			dtoList = JsonUtils.json2List(datas, PbcPrdBaseinfoSubNew.class);
+		}
+
+		File outFile = pbcPrdRaiseSub001Service.makeFile(
+				"/com/joyintech/tams/svreport/pbc/classic/prdbaseinfosubnew/conf/export_confNew.xml",
+				dtoList);
+		return ExportUtil.export(
+				"产品终止信息报送内容_"
+						+ DateUtil.format(new Date())
+						+ SystemGlobalConstant.POINT
+						+ ".xls",
+				outFile, true);
 	}
 
 }

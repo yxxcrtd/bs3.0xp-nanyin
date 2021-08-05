@@ -479,12 +479,12 @@
 
 
     <update id="updateDoMannultSendZipDatFile" parameterType="java.util.Map">
-        update PBC_SEND_ZIP_DAT_FILE set SEND_STATUS = '03',SUBMIT_FEEDBACK_STATUS = '03'
+        update PBC_SEND_ZIP_DAT_FILE set ZIP_SEND_STATUS = '03',DAT_ZIP_STATUS = '03'
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                REPORTUUID = #{regist.reportuuid,jdbcType=CHAR}
+                REPORTUUID = #{regist.reportuuid,jdbcType=VARCHAR}
                 AND DAT_ZIP_TYPE = 'MIT'
-                AND STATUS_VDATE =#{regist.statusDate,jdbcType=VARCHAR2}
+                AND STATUS_VDATE =#{regist.statusDate,jdbcType=VARCHAR}
             </foreach>
         </where>
     </update>

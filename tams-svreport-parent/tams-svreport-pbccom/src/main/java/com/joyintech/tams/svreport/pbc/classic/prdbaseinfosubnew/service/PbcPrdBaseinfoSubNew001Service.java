@@ -6,6 +6,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -56,7 +57,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBaseinfoSubNew> {
+public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBaseinfoSubNew> {
 	/**
 	 * 产品基本信息mapper
 	 */
@@ -103,6 +104,25 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 		dealResult(page);
 		return page;
 
+	}
+
+
+	/**
+	 * 人行产品代码下拉框初始值
+	 * @param param
+	 *
+	 * @return 人行产品代码下拉框初始值
+	 */
+	public List<SelectOptionDto> getPbcProdId(Map<String, Object> param) {
+		List<PbcPrdBaseinfoSubNew> bcPrdBaseinfoSubList = pbcPrdBaseinfoSubNewMapper.queryAllPbcPrdBaseInfo(param);
+		List<SelectOptionDto> resultList = new ArrayList<>();
+		for (PbcPrdBaseinfoSubNew pbcPrdBaseinfoSub : bcPrdBaseinfoSubList) {
+			SelectOptionDto resultDto = new SelectOptionDto();
+			resultDto.setId(pbcPrdBaseinfoSub.getPbcProdId());
+			resultDto.setText(pbcPrdBaseinfoSub.getProdName());
+			resultList.add(resultDto);
+		}
+		return resultList;
 	}
 	/**
 	 * 查询结果处理
@@ -638,7 +658,7 @@ public class PbcPrdBaseinfoSubNewService001 extends CommonExportService<PbcPrdBa
 		//searchParam.put("sendStatus", DictCodeListExt2.报送状态_未报送.getValue());
 		/**TISHKBS-2373  CLONE - UAT-人行产品基本信息,不勾选数据导出，导出全部数据，应该只导出有起始募集的数据***/
 		/**当全选时.直接连接查询起始募集信息.如果没有.则不导出***/
-		searchParam.put("allExport","01");
+
 		List<PbcPrdBaseinfoSubNew> reportList = pbcPrdBaseinfoSubNewMapper.searchPage(searchParam);
 		return reportList;
 

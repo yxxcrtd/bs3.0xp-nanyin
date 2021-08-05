@@ -18,7 +18,7 @@
         <a id="PbcPrdBaseinfoSubNew001_btn_chbexport"
            class="layui-btn layui-btn-sm btn-export btn-default">导出</a>
         <a id="PbcPrdBaseinfoSubNew001_btn_chbexportxls"
-           class="layui-btn layui-btn-sm btn-export btn-default">导出人行Excel</a>
+           class="layui-btn layui-btn-sm btn-export btn-default">导出待修复数据</a>
     </div>
     <div class="joyin-form-wrap joyin-filter-form condition-area">
         <form class="layui-form" id="searchForm">
@@ -27,7 +27,7 @@
                     <label class="layui-form-label form-lable">产品代码</label>
                     <div class="layui-input-inline input-inline">
                         <select id="pbcProdId" name="prodId"
-                                data-th-data-url='@{/pbc/classic/manuallygeneratingpbcdata/ManuallyGeneratingPbcData001/getPbcProdId}'
+                                data-th-data-url='@{/pbc/prdbaseinfosubnew/PbcPrdBaseinfoSubNew001/getPbcProdId}'
                                 data-th-data-formatoption=true class="input-select" placeholder="请选择"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true"
                                 multiple="multiple">

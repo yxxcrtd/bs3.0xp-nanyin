@@ -198,7 +198,9 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 //						String key = res.getCcy();
 						boolean iszero = false;
 	                	if(!CollectionUtils.isEmpty(listDeal)){
-	                		iszero = isZeroBalance(listDeal.get(0).getCdate(), res.getProdId());
+	                		//需求调整为老人行不变.新人行不再判断是否1002科目归零   leipeng 20210805
+							iszero = true;
+//	                		iszero = isZeroBalance(listDeal.get(0).getCdate(), res.getProdId());
 	                	}
 						if (CollectionUtils.isEmpty(regMap.keySet())) {// 没有已报送的
 							// 若业务数据状态为删除则不生成登记数据

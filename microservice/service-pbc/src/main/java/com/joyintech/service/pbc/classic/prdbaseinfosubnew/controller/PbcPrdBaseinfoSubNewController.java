@@ -1,11 +1,10 @@
 package com.joyintech.service.pbc.classic.prdbaseinfosubnew.controller;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.service.PbcPrdBaseinfoSubService001;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.service.PbcPrdBaseinfoSubNewService001;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.service.PbcPrdBaseinfoSubNew001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +31,7 @@ public class PbcPrdBaseinfoSubNewController {
      * 产品基本信息service
      */
     @Autowired
-    private PbcPrdBaseinfoSubNewService001 pbcPrdBaseinfoSubService001;
+    private PbcPrdBaseinfoSubNew001Service pbcPrdBaseinfoSubService001;
     /**
     *
     * 业务画面查询事件
@@ -46,6 +45,16 @@ public class PbcPrdBaseinfoSubNewController {
        Page<PbcPrdBaseinfoSubNew> page = pbcPrdBaseinfoSubService001.searchPage(param);
        return page;
    }
+
+    /**
+     * 产品代码下拉框初始值
+     *
+     * @return 产品代码下拉框初始值
+     */
+    @PostMapping("getPbcProdId")
+    public List<SelectOptionDto> getPbcProdId(@RequestBody Map<String, Object> param) {
+        return pbcPrdBaseinfoSubService001.getPbcProdId(param);
+    }
    /**
     * 手工处理功能
     *

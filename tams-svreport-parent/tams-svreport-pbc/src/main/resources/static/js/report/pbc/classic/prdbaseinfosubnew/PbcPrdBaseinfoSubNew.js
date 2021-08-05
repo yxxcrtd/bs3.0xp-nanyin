@@ -385,20 +385,20 @@ $(function () {
                         statuFlag = true;
                     }
 
-                    var pbcProd = expArr[i].pbcProdIdShow;
-                    p.pbcProdId = pbcProd;
-                    Joyin.ajaxSync(basePath + 'pbc/prdinitraisesub/PbcPrdInitRaiseSub/searchPage', p, function (result) {
-
-                        if (!result || result.root.length == 0) {
-                            message = message + "&nbsp;&nbsp;" + pbcProd;
-                            count++;
-
-                            //当
-                            expArr1 = expArr1.filter(function (item) {
-                                return item.pbcProdId != pbcProd
-                            });
-                        }
-                    })
+                    // var pbcProd = expArr[i].pbcProdIdShow;
+                    // p.pbcProdId = pbcProd;
+                    // Joyin.ajaxSync(basePath + 'pbc/prdinitraisesub/PbcPrdInitRaiseSub/searchPage', p, function (result) {
+                    //
+                    //     if (!result || result.root.length == 0) {
+                    //         message = message + "&nbsp;&nbsp;" + pbcProd;
+                    //         count++;
+                    //
+                    //         //当
+                    //         expArr1 = expArr1.filter(function (item) {
+                    //             return item.pbcProdId != pbcProd
+                    //         });
+                    //     }
+                    // })
 
                 }
             }
