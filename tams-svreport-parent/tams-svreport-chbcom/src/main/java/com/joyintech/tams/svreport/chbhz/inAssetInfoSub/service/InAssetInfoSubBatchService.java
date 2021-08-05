@@ -276,7 +276,7 @@ public class InAssetInfoSubBatchService extends FileImpService {
 			// 当前批次报送时点集合
 			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 			List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产要素信息登记.getValue(),
-					DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, batchDate);
+					sub.getStatus(), dateMap, batchDate);
 			// 报送时点设置
 			if (CollectionUtils.isNotEmpty(dateList)) {
 				sub.setChbSubmitDeadline(dateList.get(0));

@@ -296,8 +296,8 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 				}
 			}*/
 			if(sub.getDealdate()!=null){ 
-                List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(), 
-													                     DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
+                List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),
+																			sub.getStatus(), dateMap,
 													                     sub.getDealdate());
                 if (CollectionUtils.isNotEmpty(dateList)) {
                     sub.setChbSubmitDeadline(dateList.get(0));
