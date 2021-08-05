@@ -753,8 +753,7 @@ public class EquityInfoValid {
             }
             else {
                 // 风险偏好
-                if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderRiskPrefer())
-                        && !equityInfo001Dto.getHolderRiskPrefer().equals(
+                if (!equityInfo001Dto.getHolderRiskPrefer().equals(
                         equityInfoRegist001Dto.getHolderRiskPrefer())) {
                     map.put("HOLDER_RISK_PREFER", equityInfo001Dto.getHolderRiskPrefer());
                     type = "04";
