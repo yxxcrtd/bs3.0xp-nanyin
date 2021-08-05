@@ -10,14 +10,12 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.valuationstatementquery.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,20 +75,19 @@ public class ValValuationStatementQuery001Controller extends BaseController {
 	 * 导出信息excel
 	 * 
 	 * @return excel
-	 * @throws Exception
 	 *             异常
 	 * @see
 	 * @since 1.0
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> exportt() throws Exception {
+	public ResponseEntity<byte[]> exportt() throws IOException {
 		String datas = this.getParam("datas");
 		List<ValValuationStatementQuery001Dto> val001dto = JsonUtils.json2List(datas,
 				ValValuationStatementQuery001Dto.class);
 		// 如果当前画面的模板不存在，则下载所有模板
 		String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		String zipFileName = FileNameUtil.createFileName("zip");
-		File zipFile = new File(exportFilePath + File.separator + zipFileName);
+		File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
 		FileOutputStream stream = null;
 		ZipOutputStream zipOut = null;
 		try {
@@ -116,7 +113,7 @@ public class ValValuationStatementQuery001Controller extends BaseController {
     		for (int i = 0; i < val001dto.size(); i++) {
     			filepath1 = val001dto.get(i).getFilePath();
     			filename = val001dto.get(i).getFileName();
-    			File file = new File(filepath1);
+    			File file = new SafelyFile(filepath1);
     			String remotePath = CacheUtil.getSysParam("FILESERVER_REMOTE_PATH");
     			String remoteFile = CacheUtil.getSysParam("FILESERVER_REMOTE_PATH") + "/" + filename;
     			try {
@@ -157,13 +154,12 @@ public class ValValuationStatementQuery001Controller extends BaseController {
 	 * 查询数据获得
 	 *
 	 * @return 记账凭证数据
-	 * @throws Exception
 	 *             异常
 	 * @see
 	 */
 	@RequestMapping("findPage")
 	@ResponseBody
-	public Page<ValValuationStatementQuery001Dto> findPage() throws Exception {
+	public Page<ValValuationStatementQuery001Dto> findPage() {
 		return valValuationStatementQuery001Service.findPage(RequestUtil.getPageParam());
 
 	}

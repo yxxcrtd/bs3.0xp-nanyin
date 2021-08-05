@@ -1,0 +1,1 @@
+delete from sys_datadict_list a where a.dict_code='REVEAL_CHANNEL' and a.item_code='02';

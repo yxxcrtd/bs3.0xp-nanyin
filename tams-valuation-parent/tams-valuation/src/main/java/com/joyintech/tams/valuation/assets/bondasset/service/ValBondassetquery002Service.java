@@ -286,7 +286,7 @@ public class ValBondassetquery002Service extends CommonExportService<ValBondasse
      * @see
      * @since 1.0
      */
-    public AjaxResult doUpdateCheck(BindingResult result, ValBondassetquery002Dto dto) throws Exception {
+    public AjaxResult doUpdateCheck(BindingResult result, ValBondassetquery002Dto dto) {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -333,7 +333,7 @@ public class ValBondassetquery002Service extends CommonExportService<ValBondasse
      * @see
      * @since 1.0
      */
-    public int workflowCheck(ValBondassetquery002Dto dto) throws Exception {
+    public int workflowCheck(ValBondassetquery002Dto dto) {
         //判断当前流程是否存在
         ProcessMark processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto);
         return restTemplate.postForObject(

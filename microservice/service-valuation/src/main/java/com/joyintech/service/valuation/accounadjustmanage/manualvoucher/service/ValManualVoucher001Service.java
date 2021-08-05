@@ -113,7 +113,7 @@ public class ValManualVoucher001Service extends CommonExportService<ValManualVou
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValManualVoucher001Dto> findPage(int page,int length,ValManualVoucher001SearchDto dto) throws Exception {
+    public Page<ValManualVoucher001Dto> findPage(int page,int length,ValManualVoucher001SearchDto dto) {
     	String booksetId = dto.getBooksetId();
         String[] bookSetIdArr = null;
         if(StringUtil.isNotEmpty(booksetId)){

@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,6 +34,7 @@ import java.util.List;
  * 债券借贷交易
  */
 @Service
+@Lazy(false)
 public class EtrSecLendCashPositionDealService  {
 
     @Autowired

@@ -26,6 +26,8 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -104,6 +106,11 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondInfoDto> implements BaseProcessService<EtrInvestBondInfoDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(EtrInvestBondInfoService.class);
+
     /**
      * 风险试算组件Service
      */
@@ -513,7 +520,7 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                 BeanUtil.copyProperties(dto, nullDto);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             return;
         }
@@ -944,7 +951,7 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         if (dto.getMatureYield() != null) {
@@ -1009,13 +1016,8 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                 }
             }else {
                 DictCodeListExt3 basisDict3 = DictCodeListExt3.from(DictCode.计息基础, basis);
-                if (basisDict3 != null){
-                    switch (basisDict3) {
-                        case 计息基础_30U_360:
-                            secInfoModel.setBasis(Basis._30U_360);
-                            break;
-                    }
-
+                if (basisDict3 != null && basisDict3.equals(DictCodeListExt3.计息基础_30U_360)){
+                    secInfoModel.setBasis(Basis._30U_360);
                 }
             }
         }
@@ -1221,6 +1223,22 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
 	            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getClosePriceByPara", paramMap,
 	            BigDecimal.class);
 	}
+
+    /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    public BigDecimal getLastPriceByPara(Map<String, Object> paramMap) {
+        if (StringUtil.isEmpty((String) paramMap.get("sysdate"))) {
+            paramMap.put("sysdate", iPlatformDate.getSysDateStr());
+        }
+        String sysdate = (String) paramMap.get("sysdate");
+        paramMap.put("sysdate", DateUtil.addDay(sysdate, -1));
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getLastPriceByPara", paramMap,
+                BigDecimal.class);
+    }
 
     /**
      * 导入数据文件

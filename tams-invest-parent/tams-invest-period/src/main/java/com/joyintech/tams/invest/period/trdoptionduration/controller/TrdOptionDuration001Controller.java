@@ -35,6 +35,7 @@ import com.joyintech.tams.invest.period.trdstockbonus.service.TrdStockBonus002Se
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -178,8 +179,7 @@ public class TrdOptionDuration001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return trdOptionDuration001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -209,8 +209,7 @@ public class TrdOptionDuration001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult revoke(@RequestBody @Validated({
-            ValidateGroupDelete.class}) TrdOptionDurationDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupDelete.class}) TrdOptionDurationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

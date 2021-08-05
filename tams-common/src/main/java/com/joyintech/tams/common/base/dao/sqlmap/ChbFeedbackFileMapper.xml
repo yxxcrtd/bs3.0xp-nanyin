@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbFeedbackFileMapper" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbFeedbackFile" >
+    <id column="RTN_REP_MES_NO" property="rtnRepMesNo" jdbcType="VARCHAR" />
+    <result column="SEND_REP_MES_NO" property="sendRepMesNo" jdbcType="VARCHAR" />
+    <result column="REPORT_SEND_DATE" property="reportSendDate" jdbcType="TIMESTAMP" />
+    <result column="REPORT_ACCEPT_DATE" property="reportAcceptDate" jdbcType="TIMESTAMP" />
+    <result column="BUSINESS_GROUP_TYPE" property="businessGroupType" jdbcType="VARCHAR" />
+    <result column="REPORT_ETR_TYPE" property="reportEtrType" jdbcType="VARCHAR" />
+    <result column="FILE_ID" property="fileId" jdbcType="VARCHAR" />
+    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+    <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
+    <result column="HANDLE_STATUS" property="handleStatus" jdbcType="VARCHAR" />
+    <result column="MOVE_FLAG" property="moveFlag" jdbcType="VARCHAR" />
+    <result column="MOVE_PATH" property="movePath" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ChbFeedbackFile" extends="BaseResultMap" >
+    <result column="FEEDBACK_MSG" property="feedbackMsg" jdbcType="CLOB" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RTN_REP_MES_NO, SEND_REP_MES_NO, REPORT_SEND_DATE, REPORT_ACCEPT_DATE, BUSINESS_GROUP_TYPE, 
+    REPORT_ETR_TYPE, FILE_ID, FILE_NAME, FILE_PATH, HANDLE_STATUS, MOVE_FLAG, MOVE_PATH, 
+    CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <sql id="Blob_Column_List" >
+    FEEDBACK_MSG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from CHB_FEEDBACK_FILE
+    where RTN_REP_MES_NO = #{rtnRepMesNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_FEEDBACK_FILE
+    where RTN_REP_MES_NO = #{rtnRepMesNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbFeedbackFile" >
+    insert into CHB_FEEDBACK_FILE (RTN_REP_MES_NO, SEND_REP_MES_NO, REPORT_SEND_DATE, 
+      REPORT_ACCEPT_DATE, BUSINESS_GROUP_TYPE, 
+      REPORT_ETR_TYPE, FILE_ID, FILE_NAME, 
+      FILE_PATH, HANDLE_STATUS, MOVE_FLAG, 
+      MOVE_PATH, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+      FEEDBACK_MSG)
+    values (#{rtnRepMesNo,jdbcType=VARCHAR}, #{sendRepMesNo,jdbcType=VARCHAR}, #{reportSendDate,jdbcType=TIMESTAMP}, 
+      #{reportAcceptDate,jdbcType=TIMESTAMP}, #{businessGroupType,jdbcType=VARCHAR}, 
+      #{reportEtrType,jdbcType=VARCHAR}, #{fileId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, 
+      #{filePath,jdbcType=VARCHAR}, #{handleStatus,jdbcType=VARCHAR}, #{moveFlag,jdbcType=VARCHAR}, 
+      #{movePath,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{feedbackMsg,jdbcType=CLOB})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbFeedbackFile" >
+    insert into CHB_FEEDBACK_FILE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="rtnRepMesNo != null" >
+        RTN_REP_MES_NO,
+      </if>
+      <if test="sendRepMesNo != null" >
+        SEND_REP_MES_NO,
+      </if>
+      <if test="reportSendDate != null" >
+        REPORT_SEND_DATE,
+      </if>
+      <if test="reportAcceptDate != null" >
+        REPORT_ACCEPT_DATE,
+      </if>
+      <if test="businessGroupType != null" >
+        BUSINESS_GROUP_TYPE,
+      </if>
+      <if test="reportEtrType != null" >
+        REPORT_ETR_TYPE,
+      </if>
+      <if test="fileId != null" >
+        FILE_ID,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH,
+      </if>
+      <if test="handleStatus != null" >
+        HANDLE_STATUS,
+      </if>
+      <if test="moveFlag != null" >
+        MOVE_FLAG,
+      </if>
+      <if test="movePath != null" >
+        MOVE_PATH,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="feedbackMsg != null" >
+        FEEDBACK_MSG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="rtnRepMesNo != null" >
+        #{rtnRepMesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="sendRepMesNo != null" >
+        #{sendRepMesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="reportSendDate != null" >
+        #{reportSendDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reportAcceptDate != null" >
+        #{reportAcceptDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessGroupType != null" >
+        #{businessGroupType,jdbcType=VARCHAR},
+      </if>
+      <if test="reportEtrType != null" >
+        #{reportEtrType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileId != null" >
+        #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="handleStatus != null" >
+        #{handleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="moveFlag != null" >
+        #{moveFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="movePath != null" >
+        #{movePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="feedbackMsg != null" >
+        #{feedbackMsg,jdbcType=CLOB},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbFeedbackFile" >
+    update CHB_FEEDBACK_FILE
+    <set >
+      <if test="sendRepMesNo != null" >
+        SEND_REP_MES_NO = #{sendRepMesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="reportSendDate != null" >
+        REPORT_SEND_DATE = #{reportSendDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reportAcceptDate != null" >
+        REPORT_ACCEPT_DATE = #{reportAcceptDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessGroupType != null" >
+        BUSINESS_GROUP_TYPE = #{businessGroupType,jdbcType=VARCHAR},
+      </if>
+      <if test="reportEtrType != null" >
+        REPORT_ETR_TYPE = #{reportEtrType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileId != null" >
+        FILE_ID = #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="handleStatus != null" >
+        HANDLE_STATUS = #{handleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="moveFlag != null" >
+        MOVE_FLAG = #{moveFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="movePath != null" >
+        MOVE_PATH = #{movePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="feedbackMsg != null" >
+        FEEDBACK_MSG = #{feedbackMsg,jdbcType=CLOB},
+      </if>
+    </set>
+    where RTN_REP_MES_NO = #{rtnRepMesNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ChbFeedbackFile" >
+    update CHB_FEEDBACK_FILE
+    set SEND_REP_MES_NO = #{sendRepMesNo,jdbcType=VARCHAR},
+      REPORT_SEND_DATE = #{reportSendDate,jdbcType=TIMESTAMP},
+      REPORT_ACCEPT_DATE = #{reportAcceptDate,jdbcType=TIMESTAMP},
+      BUSINESS_GROUP_TYPE = #{businessGroupType,jdbcType=VARCHAR},
+      REPORT_ETR_TYPE = #{reportEtrType,jdbcType=VARCHAR},
+      FILE_ID = #{fileId,jdbcType=VARCHAR},
+      FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      FILE_PATH = #{filePath,jdbcType=VARCHAR},
+      HANDLE_STATUS = #{handleStatus,jdbcType=VARCHAR},
+      MOVE_FLAG = #{moveFlag,jdbcType=VARCHAR},
+      MOVE_PATH = #{movePath,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      FEEDBACK_MSG = #{feedbackMsg,jdbcType=CLOB}
+    where RTN_REP_MES_NO = #{rtnRepMesNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbFeedbackFile" >
+    update CHB_FEEDBACK_FILE
+    set SEND_REP_MES_NO = #{sendRepMesNo,jdbcType=VARCHAR},
+      REPORT_SEND_DATE = #{reportSendDate,jdbcType=TIMESTAMP},
+      REPORT_ACCEPT_DATE = #{reportAcceptDate,jdbcType=TIMESTAMP},
+      BUSINESS_GROUP_TYPE = #{businessGroupType,jdbcType=VARCHAR},
+      REPORT_ETR_TYPE = #{reportEtrType,jdbcType=VARCHAR},
+      FILE_ID = #{fileId,jdbcType=VARCHAR},
+      FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      FILE_PATH = #{filePath,jdbcType=VARCHAR},
+      HANDLE_STATUS = #{handleStatus,jdbcType=VARCHAR},
+      MOVE_FLAG = #{moveFlag,jdbcType=VARCHAR},
+      MOVE_PATH = #{movePath,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where RTN_REP_MES_NO = #{rtnRepMesNo,jdbcType=VARCHAR}
+  </update>
+</mapper>

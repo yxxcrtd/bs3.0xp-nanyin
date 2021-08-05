@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.chbreport.codecheck.service.CommonCodeCheckTmpBatchService;
@@ -339,7 +340,7 @@ public class InProdEndInfoBatchService extends FileImpService {
 	public boolean compareRegData(ProdTerminationRegist001Dto dto, ProdTerminationRegist001Dto regdto) {
 		ProdTerminationRegist001Dto compare1 = genDeclareDto(dto);
 		ProdTerminationRegist001Dto compare2 = genDeclareDto(regdto);
-		if (JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))) {
+		if (JSON.toJSONString(compare1,SerializerFeature.WriteNullStringAsEmpty).equals(JSON.toJSONString(compare2,SerializerFeature.WriteNullStringAsEmpty))) {
 			return true;
 		} else {
 			return false;

@@ -13,6 +13,6 @@ public interface PluginClass {
 
 		void setSysParameter(SystemParam sysPass, PluginClassDao assetDao, InvestTradeTrialInput investTradeTrialInput);
 		
-		Object getParamterValue() throws Exception;
+		Object getParamterValue();
 
 }

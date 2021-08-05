@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +71,10 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
      */
     @Autowired(required = false)
     private BasRiskMathCommService basRiskMathCommService;
+
+    @Autowired
+    private PlatformDateImpl platformDateImpl;
+
     /**
      * 日期相关
      */
@@ -315,6 +320,7 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
      * @return
      */
     public BigDecimal queryChlCash(Map<String, Object> map){
+        map.put("platDate",platformDateImpl.getSysDate());
         return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/queryChlCash", map,BigDecimal.class);
     }
 
@@ -752,41 +758,44 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                 etrRepoDto.setChlId(rowData.get(17).toString());
             }
             // check18~20
-            String bondCode = rowData.get(19).toString();
-            // 债券代码非空
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                etrCommonService.checkIsBlank(bondCode, "EtrRepo003.bondCode", lineNo));
-            // 债券代码存在且可添加
-            if (StringUtil.isNotEmpty(bondCode) && StringUtil.isNotEmpty(etrRepoDto.getPs())
-                && StringUtil.isNotEmpty(etrRepoDto.getPortfolioId())) {
-                List<PledgeBondInfoDto> list = selectAvaPledgeBondDetailList(bondCode, etrRepoDto);
-                if (StringUtil.isEmptyList(list)) {
-                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        getMessage("ETR_E_0018", getMessage("EtrRepo003.bondCode"), lineNo));
+            //竞价回购导入时,不需要验证质押券信息
+            if(isEntrust && !(rowData.get(7).toString().contains("H02:质押式竞价回购"))){
+                String bondCode = rowData.get(19).toString();
+                // 债券代码非空
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsBlank(bondCode, "EtrRepo003.bondCode", lineNo));
+                // 债券代码存在且可添加
+                if (StringUtil.isNotEmpty(bondCode) && StringUtil.isNotEmpty(etrRepoDto.getPs())
+                        && StringUtil.isNotEmpty(etrRepoDto.getPortfolioId())) {
+                    List<PledgeBondInfoDto> list = selectAvaPledgeBondDetailList(bondCode, etrRepoDto);
+                    if (StringUtil.isEmptyList(list)) {
+                        confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                                getMessage("ETR_E_0018", getMessage("EtrRepo003.bondCode"), lineNo));
+                    }
                 }
-            }
-            String pledgePrin = rowData.get(20).toString();
-            // 质押券面总额(元)非空
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                etrCommonService.checkIsBlank(pledgePrin, "EtrRepo003.pledgePrin", lineNo));
-            // 质押券面总额(元)是数值
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                etrCommonService.checkIsNumber(pledgePrin, "EtrRepo003.pledgePrin", lineNo));
-            // 质押券面总额(元)是大于0
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                etrCommonService.checkIsGtZero(pledgePrin, "EtrRepo003.pledgePrin", lineNo));
-            String pledgeRatio = rowData.get(21).toString();
-            // 折算比例非空
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                etrCommonService.checkIsBlank(pledgeRatio, "EtrRepo003.pledgeRatio", lineNo));
-            // 折算比例是数值
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                etrCommonService.checkIsNumber(pledgeRatio, "EtrRepo003.pledgeRatio", lineNo));
-            // 折算比例是大于0
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                etrCommonService.checkIsGtZero(pledgeRatio, "EtrRepo003.pledgeRatio", lineNo));
-            if (StringUtil.isBlank(confirmMsg)) {
-                itemJsonArrays.add(rowData);
+                String pledgePrin = rowData.get(20).toString();
+                // 质押券面总额(元)非空
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsBlank(pledgePrin, "EtrRepo003.pledgePrin", lineNo));
+                // 质押券面总额(元)是数值
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsNumber(pledgePrin, "EtrRepo003.pledgePrin", lineNo));
+                // 质押券面总额(元)是大于0
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsGtZero(pledgePrin, "EtrRepo003.pledgePrin", lineNo));
+                String pledgeRatio = rowData.get(21).toString();
+                // 折算比例非空
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsBlank(pledgeRatio, "EtrRepo003.pledgeRatio", lineNo));
+                // 折算比例是数值
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsNumber(pledgeRatio, "EtrRepo003.pledgeRatio", lineNo));
+                // 折算比例是大于0
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsGtZero(pledgeRatio, "EtrRepo003.pledgeRatio", lineNo));
+                if (StringUtil.isBlank(confirmMsg)) {
+                    itemJsonArrays.add(rowData);
+                }
             }
         }
         // 最后一条特殊处理

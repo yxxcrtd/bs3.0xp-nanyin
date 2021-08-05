@@ -61,7 +61,7 @@ public class ValBokClawbackInfoQuery001Service extends BaseService<ValBokClawbac
      * @throws Exception
      */
     public Page<ValBokClawbackInfoQuery001Dto> findPage(Map<String, Object> map)
-        throws Exception {
+         {
     	map.put("busiType", DictCodeList.业务类型_产品回补交易.getValue());
     	map.put("anapleroticType02", DictCodeList.回补方式_自动回补.getValue());
     	map.put("anapleroticType01", DictCodeList.回补方式_手动回补.getValue());

@@ -75,10 +75,24 @@ $(function() {
               { field: 'status',visible:false},
               { title: "数据状态", field: 'statusStr',width:100,sortField:'status'},
               { title: "数据日期", field: 'statusDate', type: 'datetime',sortField:'statusDate'},
-              { title: "报送状态", field: 'sendStatusStr',width:100 ,sortField:'sendStatus'},
+              { title: "报送状态", field: 'sendStatusStr',width:100 ,sortField:'sendStatus',
+                  render:function (value,visible,row,options) {
+                      if(value == "接口报送"){
+                          return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+                      }else{
+                          return value;
+                      }
+                  }},
               { title: "报送日期", field: 'submitTime', type: 'datetime',sortField:'submitTime'},
               { title: "报送截止日", field: 'chbSubmitDeadline', type: 'datetime',sortField:'chbSubmitDeadline'},
-              { title: "反馈状态", field: 'submitFeedbackStatus',width:100,sortField:'submitFeedbackStatus'},
+              { title: "反馈状态", field: 'submitFeedbackStatus',width:100,sortField:'submitFeedbackStatus',
+                  render:function (value,visible,row,options) {
+                      if(value == "发送中" || value == "发送异常"){
+                          return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+                      }else{
+                          return value;
+                      }
+                  }},
               {title: '行内资产/负债编码',field:'assetCode', width:200,sortField:'assetCode'},
               {title: '发行机构代码', field:'issuePartyId', width:100,sortField:'issuePartyId'},
               {title: '估值日期',field:'valDate', width:150, type: 'date',sortField:'valDate'},
@@ -102,6 +116,28 @@ $(function() {
                   table.load();
               });
           });
+      });
+
+      //绑定点击跳转反馈文件管理页面
+      table.bind('click', '.feedbackStatusClass', function(data, index) {
+          Joyin.dialog(JoyinUtil.getLabel("中债反馈文件管理"),
+              basePath + "svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001/init",
+              "95%", "96%", {       //pageModel:PAGE_MODEL_REFERENCE,
+                  reportEtrType:SVR_REPORT_CODE,    //报表类型
+                  handleStatus:FILE_HANDLE_STATUS,       //处理状态-未处理
+                  repSeqNo:data.sumitSeq,       //报送流水号
+                  // reportSendDate:'',
+                  // reportAcceptDate:''
+              });
+      });
+      //绑定点击跳转发送状态信息查询页面
+      table.bind('click', '.sendStatusClass', function(data, index) {
+          Joyin.dialog(JoyinUtil.getLabel("发送状态信息查询"),
+              basePath + "svreport/system/reportstatusinfo/ReportStatusInfo001/init",
+              "95%", "96%", {       //pageModel:PAGE_MODEL_REFERENCE,
+                  repType:SVR_REPORT_CODE,    //报表类型
+                  registSeqNo:data.registSeqno,       //报送流水号
+              });
       });
       
       //导出所有查询结果
@@ -233,13 +269,25 @@ $(function() {
        */
       var confirmExport = function(param, expArr) {
           Joyin.exportExcel('export', param);
-          Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
-              layui.layer.open({type:3});
-              Joyin.ajaxJson('doManual', {keyList : JSON.stringify(expArr)}, function() {
-                  table.load();
-                  layui.layer.closeAll();
+    		//判断所选导出的数据是否已经报送送成功，若报送成功，则无需"手工处理"，只对报送失败的数据进行处理
+            var isNotSendData = false;
+    		for(var j=expArr.length-1;j>=0;j--){
+    		    if(expArr[j].sendStatus=="01" || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回'))) {
+                      isNotSendData = true;//有未报送成功的数据
+                }
+                if(!(expArr[j].sendStatus == '01' || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回')))){
+                       expArr.splice(j,1);
+                }
+            }
+    		if (isNotSendData){
+             Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+                 layui.layer.open({type:3});
+                 Joyin.ajaxJson('doManual', {keyList : JSON.stringify(expArr)}, function() {
+                     table.load();
+                     layui.layer.closeAll();
+                 });
               });
-          });
+    	    }
       };
 
     /**start   中债一二期直连新加  add  by wangzehui  20201012  */

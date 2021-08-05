@@ -27,6 +27,7 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import org.aspectj.lang.JoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public abstract class AopBaseService<V extends IRiskRds>  {
     private FinProductMapper finProductMapper;
 
     public interface IInfCallback<V>{
-        ClientData receive(Map<String,Object> t, V v) throws Exception;
+        ClientData receive(Map<String,Object> t, V v) throws IOException, InstantiationException;
     }
 
     /**

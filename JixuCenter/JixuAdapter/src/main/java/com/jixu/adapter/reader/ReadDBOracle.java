@@ -2,6 +2,7 @@ package com.jixu.adapter.reader;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,8 @@ public class ReadDBOracle extends ReadDBAbstract {
 	/**
 	 * 建立数据库连接
 	 */
-	public Connection getConnection(String urlpath, String userName, String password) throws Exception{
+	public Connection getConnection(String urlpath, String userName, String password)
+			throws ClassNotFoundException, SQLException {
 		String dBDriver = "oracle.jdbc.driver.OracleDriver";
 		Class.forName(dBDriver);
 		

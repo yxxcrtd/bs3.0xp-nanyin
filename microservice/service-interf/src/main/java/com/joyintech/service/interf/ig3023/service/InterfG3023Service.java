@@ -36,7 +36,7 @@ public class InterfG3023Service extends SendEsbService<InterfG3023InEntity, Inte
      */
     @Override
     public InterfG3023InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         TradeClearDto dto = (TradeClearDto)param;
         // 取得参数
         String tranSeqNo = dto.getOrderOrTradeNo();
@@ -52,7 +52,7 @@ public class InterfG3023Service extends SendEsbService<InterfG3023InEntity, Inte
      */
     @Override
     public int saveInterfData(InterfG3023OutEntity entity)
-        throws Exception {
+    {
         // 推送接口无登录业务
         return 0;
     }
@@ -62,7 +62,7 @@ public class InterfG3023Service extends SendEsbService<InterfG3023InEntity, Inte
      */
     @Override
     public int saveBusinessData(InterfG3023OutEntity entity)
-        throws Exception {
+    {
         // 推送接口无登录业务
         return 0;
     }

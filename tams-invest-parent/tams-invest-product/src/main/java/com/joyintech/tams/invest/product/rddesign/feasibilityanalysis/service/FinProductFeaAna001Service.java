@@ -20,7 +20,6 @@ public class FinProductFeaAna001Service extends CommonExportService<FinProductFe
     /**
      * 画面查询
      * @param pageParam
-     * @throws Exception Exception
      * @return
      */
     public Page<FinProductFeaAna001Dto> selectForPage(Map<String, Object> pageParam){

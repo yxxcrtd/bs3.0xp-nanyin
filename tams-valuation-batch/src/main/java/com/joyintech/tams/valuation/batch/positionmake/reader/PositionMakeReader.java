@@ -217,11 +217,11 @@ public class PositionMakeReader extends BaseReader<PositionMakeReaderResult> {
             if (CollectionUtils.isNotEmpty(ptlSecValutionListWithNoTd)) {
                 Map<String, PtlSecValutionWithOtherFieldDto> dtoMap = new HashMap<>();
                 ptlSecValutionListWithNoTd.forEach(item -> {
-                    dtoMap.put(item.getPortfolioId() + item.getFinprodId(), item);
+                    dtoMap.put(item.getPortfolioId() + item.getFinprodId()+item.getInvAim(), item);
                 });
                 for (PtlSecValutionWithOtherFieldDto item : listCostInfoC) {
                     // 如果该组合代码+资产代码在组合资产信息A中不存在，则A.add(B);
-                    String key =item.getPortfolioId()+item.getFinprodId();
+                    String key =item.getPortfolioId()+item.getFinprodId()+item.getInvAim();
                     if(!dtoMap.containsKey(key)){
                         ptlSecValutionListWithNoTd.add(item);
                     }

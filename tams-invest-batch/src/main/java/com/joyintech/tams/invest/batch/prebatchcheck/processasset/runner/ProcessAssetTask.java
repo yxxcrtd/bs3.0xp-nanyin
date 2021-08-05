@@ -26,8 +26,8 @@ import com.joyintech.tams.invest.batch.prebatchcheck.processasset.service.Proces
 
 /**
  * 批前检查-流程中的资产定义
- * @author Administrator
- *
+ * @author yantianyuan
+ * 创建日期：2021-05-13
  */
 @Service("processAssetTask")
 @Scope("prototype")
@@ -44,22 +44,25 @@ public class ProcessAssetTask extends BatchBaseService{
     @Autowired
     private ProcessAssetService processAssetService;
     
-	
+	/**
+	 * 批任务接口
+	 */
 	@Override
 	public JobExecution execute() throws BatchException {
 
+		//1.获取批任务信息
         JobExecution result = new JobExecution(1l);
         result.setStatus(BatchStatus.FAILED);
-
-
         SysBatchExecInfo batchExecuteInfo = this.getBatchExecuteInfo();
         SysBatchgrpExecInfo batchExecuteDetail = this.getBatchExecuteDetail();
 
+        //2.空值处理
         if (batchExecuteInfo == null) {
             logger.info("无启动参数，批处理退出。");
             return null;
         }
-
+        
+        //3. 自动跑批处理
         if(StringUtil.equals(BatchDictCodeList.批处理启动模式_自动.getValue(),batchExecuteInfo.getStartMode())){
 
             // 先删除 已经存在的结果 根据 taskId 及日期  自动跑批 所有机构 结果都删除。
@@ -94,20 +97,21 @@ public class ProcessAssetTask extends BatchBaseService{
             return result;
         }
 
+        //4. 非自动跑批处理
         String instCode = batchExecuteDetail.getOtherParam4();
-
+        //4.1 设置查询参数
         SysPrebatchResultDto paramdto = new SysPrebatchResultDto();
         paramdto.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
         paramdto.setTaskId(batchExecuteInfo.getTaskId());
-
+        //4.2 获取SysPrebatchResultDto
         SysPrebatchResultDto dto = prebatchCheckCommonService.selAndUpdPrebatchResult(paramdto);
-
+        //4.3 空值处理
         if(dto==null || StringUtil.isEmpty(dto.getSeqNo())){
             logger.info("此次批前检查未找到该启动任务id。");
             return null;
         }
 
-        // 执行查询 并记录 错误日志  并记录最终处理时间 处理状态等等
+        //4.4 执行查询 并记录 错误日志  并记录最终处理时间 处理状态等等
         try {
         	processAssetService.execute(batchExecuteInfo,dto,instCode);
             result.setStatus(BatchStatus.COMPLETED);
@@ -117,7 +121,7 @@ public class ProcessAssetTask extends BatchBaseService{
             logger.error(e.getMessage());
         }
 
-        // 更新 最终处理状态
+        //4.5 更新 最终处理状态
         dto.setStartTime(null);
         dto.setEndTime(new Date());
         prebatchCheckCommonService.updateSysPrebatchResult(dto);

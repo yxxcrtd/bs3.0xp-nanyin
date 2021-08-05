@@ -45,7 +45,7 @@ public class BussPostInvestInfoController {
      * @since 1.0
      */
     @GetMapping("getBussPostInvestInfoByProductId")
-    public FinPostInvestInfo getBussPostInvestInfoByProductId(String finprodId,String vdate,String cashType) throws Exception {
+    public FinPostInvestInfo getBussPostInvestInfoByProductId(String finprodId,String vdate,String cashType) {
         return bussPostInvestInfoService.getBussPostInvestInfoByProductId(finprodId);
     }
 }

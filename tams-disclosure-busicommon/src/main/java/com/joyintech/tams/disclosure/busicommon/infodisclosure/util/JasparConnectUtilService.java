@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -15,7 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
+import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,7 @@ import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.Repor
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import org.xml.sax.SAXException;
 
 /**
  * jaspar连接公共类
@@ -76,7 +80,7 @@ public class JasparConnectUtilService {
 	 * @throws Exception
 	 */
 	public UploadFile connectJasparAndDownload_old(String strUrl, String fileName,// 修改为old方法，不使用 zhangyf 20190219
-			String fileType, String repId, String prodId) throws Exception{
+			String fileType, String repId, String prodId) throws IOException {
 		logger.info("连接报表服务器开始=====");
 		URL connUrl = new URL(strUrl);
 		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -93,7 +97,7 @@ public class JasparConnectUtilService {
         
         String path = FileNameUtil.createUploadFilePath("");
         logger.info("判断是否有指定文件夹开始=====");
-        File localFile = new File(path+ File.separator+filePathName);
+        File localFile = new SafelyFile(path+ File.separator+filePathName);
         File dir = localFile.getParentFile();
         if (!dir.exists()) {
             dir.mkdirs();
@@ -108,7 +112,7 @@ public class JasparConnectUtilService {
 			logger.info("写文件结束=====");
 		}catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			if (fos != null) {
@@ -137,7 +141,7 @@ public class JasparConnectUtilService {
 	}
 	
 	public UploadFile connectJasparAndDownload(String strUrl, String fileName,
-			String fileType, String repId, String prodId,Map<String,Object> params) throws Exception{
+			String fileType, String repId, String prodId,Map<String,Object> params) {
 		if(null!=params.get("endDate")){
     		Date endDate = DateUtil.parse(params.get("endDate").toString());
     		params.put("endDate", new java.sql.Date(endDate.getTime()));
@@ -152,7 +156,7 @@ public class JasparConnectUtilService {
 		ReportInfo r1 = reportManager.getReportByURI(templateId);
 		reportManager.setDataSource(master);
 		String path = FileNameUtil.createUploadFilePath("");
-		File filepath = new File(path);
+		File filepath = new SafelyFile(path);
 		if(!filepath.exists()){
 			filepath.mkdirs();
 		}
@@ -160,7 +164,7 @@ public class JasparConnectUtilService {
 				+ DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
 		reportManager.exportReport(r1, params, fileType, path+ File.separator+filePathName);
 		fileName =fileName+GlobalConstant.POINT+fileType;
-		File localFile = new File(path+ File.separator+filePathName);
+		File localFile = new SafelyFile(path+ File.separator+filePathName);
 		logger.info("UploadFile fileName= "  + path+ File.separator+filePathName);
 		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
                 localFile);
@@ -185,13 +189,11 @@ public class JasparConnectUtilService {
 	 * @param strUrl 连接url
 	 * @param fileName 需要下载的文件名
 	 * @param fileType 下载文件类型
-	 * @param repId 报表id
-	 * @param prodId 产品id
 	 * @return
 	 * @throws Exception
 	 */
 	public UploadFile connectJasparAndExport_old(String strUrl, String fileName,// 修改为old方法，不使用 zhangyf 20190219
-			String fileType) throws Exception{
+			String fileType) throws IOException {
 		
 		URL connUrl = new URL(strUrl);
 		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -207,7 +209,7 @@ public class JasparConnectUtilService {
         
         String path = FileNameUtil.createUploadFilePath("");
         
-        File localFile = new File(path+ File.separator+fileName);
+        File localFile = new SafelyFile(path+ File.separator+fileName);
         File dir = localFile.getParentFile();
         if (!dir.exists()) {
             dir.mkdirs();
@@ -220,7 +222,7 @@ public class JasparConnectUtilService {
 			fos.write(getData);
 		}catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			if (fos != null) {
@@ -247,7 +249,7 @@ public class JasparConnectUtilService {
 		return uploadFile;
 	}
 	public UploadFile connectJasparAndExport(String strUrl, String fileName,
-			String fileType,String repId,Map<String,Object> params) throws Exception{
+			String fileType,String repId,Map<String,Object> params) {
 		if(null!=params.get("endDate")){
     		Date endDate = DateUtil.parse(params.get("endDate").toString());
     		params.put("endDate", new java.sql.Date(endDate.getTime()));
@@ -272,7 +274,7 @@ public class JasparConnectUtilService {
 		ReportInfo r1 = reportManager.getReportByURI(repId);
 		reportManager.setDataSource(master);
 		String path = FileNameUtil.createUploadFilePath("");
-		File filepath = new File(path);
+		File filepath = new SafelyFile(path);
 		if(!filepath.exists()){
 			filepath.mkdirs();
 		}
@@ -280,7 +282,7 @@ public class JasparConnectUtilService {
 		fileName = fileName + GlobalConstant.UNDER_LINE + System.currentTimeMillis() +GlobalConstant.POINT+ fileType;
 		reportManager.exportReport(r1, params, fileType, path+ File.separator+fileName);
 
-		File localFile = new File(path+ File.separator+fileName);
+		File localFile = new SafelyFile(path+ File.separator+fileName);
 		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
 				localFile);
 		//存入SYS_UPLOAD_FILE_INFO表
@@ -325,7 +327,7 @@ public class JasparConnectUtilService {
     	 
         StringBuffer tStringBuffer = new StringBuffer();
 
-        String sTempOneLine = new String("");
+        String sTempOneLine = "";
 
         while ((sTempOneLine = tBufferedReader.readLine()) != null){
 
@@ -337,12 +339,10 @@ public class JasparConnectUtilService {
     /**
 	 * 连接Jaspar并将url上的连接下载到本地固定位置
 	 * @param strUrl 连接url
-	 * @param fileName 需要下载的文件名
-	 * @param fileType 下载文件类型
 	 * @return
 	 * @throws Exception
 	 */
-	public String  connectJasparAndGenHtml(String strUrl) throws Exception{
+	public String  connectJasparAndGenHtml(String strUrl) throws IOException {
 		
 		URL connUrl = new URL(strUrl);
 //		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -351,36 +351,36 @@ public class JasparConnectUtilService {
 		// 防止屏蔽程序抓取而返回403错误
         conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        InputStream inputStream = conn.getInputStream();
-        
-        // 获取自己数组
-        String getData = readInputStreamToString(inputStream);
-        
+        InputStream inputStream = null;
+        try	{
+			inputStream = conn.getInputStream();
+			// 获取自己数组
+			String getData = readInputStreamToString(inputStream);
 //        String s = getData.toString();
 //        String path = FileNameUtil.createUploadFilePath("");
-        
+
 //        File localFile = new File(path+ File.separator+fileName);
 //        File dir = localFile.getParentFile();
 //        if (!dir.exists()) {
 //            dir.mkdirs();
 //        }
-//            
 //        FileOutputStream fos = new FileOutputStream(localFile);
 //        fos.write(getData);
 //        if (fos != null) {
 //            fos.close();
 //        }
-        if (inputStream != null) {
-            inputStream.close();
-        }
 //        UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
 //                localFile);
 //        //存入SYS_UPLOAD_FILE_INFO表
 //        if(null != fileAttachmentProcess) {
 //            fileAttachmentProcess.upload(uploadFile);
 //        }
-        
-		return getData;
+			return getData;
+		}finally {
+			if (inputStream != null) {
+				inputStream.close();
+			}
+		}
 	}
 	/**
 	 * 连接Jaspar并将url上的xml解析成list格式
@@ -389,7 +389,9 @@ public class JasparConnectUtilService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws Exception{
+
+	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws ParserConfigurationException, SAXException, IOException {
+
 		
 		URL connUrl = new URL(strUrl);
 //		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -398,53 +400,53 @@ public class JasparConnectUtilService {
 		// 防止屏蔽程序抓取而返回403错误
         conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        InputStream inputStream = conn.getInputStream();
-        
-        // 获取自己数组
+        InputStream inputStream = null;
+        try{
+			inputStream = conn.getInputStream();
+			// 获取自己数组
 //        String getData = readInputStreamToString(inputStream);
 //        List<Map<String,String>> list = InfoXmlParseUtil.parse(inputStream);
 //        if(StringUtil.isEmptyList(list)){
-          List<Map<String,String>> list  = new ArrayList<Map<String,String>>();
-          if(flag){
-        	  list = InfoXmlInputParseUtil.parse(inputStream);
-          }
-          else{
-        	  list = InfoXmlParseUtil.parse(inputStream);
-          }
+			List<Map<String,String>> list  = new ArrayList<Map<String,String>>();
+			if(flag){
+				list = InfoXmlInputParseUtil.parse(inputStream);
+			}
+			else{
+				list = InfoXmlParseUtil.parse(inputStream);
+			}
 //        }
 //        String s = getData.toString();
 //        String path = FileNameUtil.createUploadFilePath("");
-        
+
 //        File localFile = new File(path+ File.separator+fileName);
 //        File dir = localFile.getParentFile();
 //        if (!dir.exists()) {
 //            dir.mkdirs();
 //        }
-//            
+//
 //        FileOutputStream fos = new FileOutputStream(localFile);
 //        fos.write(getData);
 //        if (fos != null) {
 //            fos.close();
 //        }
-        if (inputStream != null) {
-            inputStream.close();
-        }
 //        UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
 //                localFile);
 //        //存入SYS_UPLOAD_FILE_INFO表
 //        if(null != fileAttachmentProcess) {
 //            fileAttachmentProcess.upload(uploadFile);
 //        }
-        
-		return list;
+			return list;
+		} finally {
+        	if(inputStream != null){
+				inputStream.close();
+			}
+		}
 	}
     /**
      * 获取报表全路径
      * @param serverUrl 服务器url
      * @param serverUser 用户
      * @param serverPwd  密码
-     * @param infoDisclosureGenAndSendEntity 批处理配置
-     * @param check 与报表服务器通信时是否发送完整文件校验字段
      * @return
      */
     public String getAllHtmlUrl(String serverUrl, String serverUser, String serverPwd, String  path, String uri, RepReveal repReveal){
@@ -472,10 +474,10 @@ public class JasparConnectUtilService {
      */
     public String getReportsUrl(String serverUrl, String serverUser, String serverPwd, String  path){
     	String url= serverUrl + "/rest_v2/resources";
-    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser +
-    			ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd
-    			+ReportGlobalConstant.AMPERS_AND +"folderUri="+path+ReportGlobalConstant.AMPERS_AND +"type=reportUnit";
-    	url = url+ paramStr;
+//    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser +
+//    			ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd
+//    			+ReportGlobalConstant.AMPERS_AND +"folderUri="+path+ReportGlobalConstant.AMPERS_AND +"type=reportUnit";
+//    	url = url+ paramStr;
     	return url;
     }
     /**
@@ -488,9 +490,9 @@ public class JasparConnectUtilService {
      */
     public String getReportsInputsUrl(String serverUrl, String serverUser, String serverPwd, String  path){
     	String url= serverUrl + "/rest_v2/reports"+path+"/inputControls";
-    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser +
-    			ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd;
-    	url = url+ paramStr;
+//    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser +
+//    			ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd;
+//    	url = url+ paramStr;
     	return url;
     }
 }

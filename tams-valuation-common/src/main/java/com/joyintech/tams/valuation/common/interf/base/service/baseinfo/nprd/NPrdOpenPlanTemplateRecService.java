@@ -10,28 +10,23 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.nprd;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.dto.NPrdBaseInfoValCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
+import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdOpenPlanN;
-import com.joyintech.framework.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 净值型产品开放计划表(Val_PRD_OPEN_PLAN_N) 〈功能详细描述〉
@@ -131,6 +126,8 @@ public class NPrdOpenPlanTemplateRecService {
 //		开放计划表-->开放计划（FIN_VAL_OPEN_PLAN---FIN_OPEN_PLAN）
         valOpenPlan.setCashId(cashId);
         valOpenPlan.setOpenType("03");
+        // add by tanxuan on 20210406 从vas3.0.1移植：募集结束日不能为空
+        valOpenPlan.setOpenDateEndUn(dto.getProdVdate());
         return valOpenPlan;
     }
 }

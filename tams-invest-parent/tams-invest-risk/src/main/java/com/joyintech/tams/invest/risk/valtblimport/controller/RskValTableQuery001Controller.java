@@ -53,7 +53,7 @@ public class RskValTableQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskValtblAssetSumDto> selectAll()
-            throws Exception {
+             {
         Page<RskValtblAssetSumDto> page = rskValTableQueryService.selectForPage(
                 RequestUtil.getParameters(getRequest()));
         return page;
@@ -99,7 +99,7 @@ public class RskValTableQuery001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         return rskValTableQueryService.export(this.getPageId(),param);
     }

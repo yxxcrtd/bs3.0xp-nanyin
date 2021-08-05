@@ -115,7 +115,7 @@ public class FinStockInfoService extends BaseService<FinStockInfoDto>{
      * @since 1.0
      */
     public Page<FinStockInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> finStockInfoMapper.queryForPage(pageParam));
     }
     public FinStockInfoDto getShares(Map<String, Object> Param) {

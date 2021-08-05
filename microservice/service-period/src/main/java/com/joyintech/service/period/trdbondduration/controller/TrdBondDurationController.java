@@ -53,7 +53,7 @@ public class TrdBondDurationController {
     @PostMapping("getSecManageAcctId/{page}/{length}")
     public Page<SelectOptionDto> getSecManageAcctId(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdBondDurationService.getSecManageAcctId(page, length, param);
     }
 
@@ -66,7 +66,7 @@ public class TrdBondDurationController {
     @PostMapping("getFinprodMarketId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdBondDurationService.getFinprodMarketId(page, length, param);
     }
 
@@ -219,5 +219,20 @@ public class TrdBondDurationController {
     @PostMapping("findWorkflowProcessDtos")
     public List<String> findWorkflowProcessDtos(@RequestBody Map<String, Object> params) {
         return trdBondDurationService.findWorkflowProcessDtos(params);
+    }
+
+    /**
+     * 资产代码：下拉框
+     *
+     * @param param 画面参数
+     * @return 资产代码：下拉框
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getFinprodId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
+                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+        return trdBondDurationService.getFinprodId(page, length, param);
     }
 }

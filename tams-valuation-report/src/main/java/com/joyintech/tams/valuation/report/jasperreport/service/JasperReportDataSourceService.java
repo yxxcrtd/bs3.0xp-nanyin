@@ -23,13 +23,13 @@ public class JasperReportDataSourceService implements JRDataSource {
 	private Map<String, Object> data = new HashMap<String, Object>();
 	int index = -1;
 	Map<String, Object> parameters=new HashMap<String, Object>();
-	public JasperReportDataSourceService(String prodId, Date startDate, Date endDate,String reportType) throws Exception {
-		this.parameters.put("prodId", prodId);
-		this.parameters.put("startDate", startDate);
-		this.parameters.put("endDate", endDate);
-		this.parameters.put("reportType", reportType);
-		fetchData();
-	}
+//	public JasperReportDataSourceService(String prodId, Date startDate, Date endDate,String reportType) throws Exception {
+//		this.parameters.put("prodId", prodId);
+//		this.parameters.put("startDate", startDate);
+//		this.parameters.put("endDate", endDate);
+//		this.parameters.put("reportType", reportType);
+//		fetchData();
+//	}
 	
 	public Map<String, Object> getData() {
 		return data;
@@ -39,23 +39,26 @@ public class JasperReportDataSourceService implements JRDataSource {
 		this.data = data;
 	}
 
-	private void fetchData() throws Exception {
-		TargetIndexService t = new TargetIndexService();
-		String reportType=String.valueOf(parameters.get("reportType"));
-		String startDate=String.valueOf(parameters.get("startDate"));
-		String endDate=String.valueOf(parameters.get("endDate"));
-		String prodId=String.valueOf(parameters.get("prodId"));
-		Connection  conn=Dao.getConnection(reportType);
-		if(ReportGlobalConstant.pAjZ_TWO.equals(reportType)){
-			data = t.printTargetNetTypeTbTwo(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId,conn);
-		}else if(ReportGlobalConstant.pAzb_TWO.equals(reportType)){
-			data = t.printTargetCurrencyTypeTbTwo(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId,conn);
-		}
-
-		if(conn!=null){
-			conn.close();
-		}
-	}
+//	private void fetchData() throws Exception {
+//		TargetIndexService t = new TargetIndexService();
+//		String reportType=String.valueOf(parameters.get("reportType"));
+//		String startDate=String.valueOf(parameters.get("startDate"));
+//		String endDate=String.valueOf(parameters.get("endDate"));
+//		String prodId=String.valueOf(parameters.get("prodId"));
+//		Connection  conn= null;
+//		try {
+//			conn =Dao.getConnection(reportType);
+//			if(ReportGlobalConstant.pAjZ_TWO.equals(reportType)){
+//				data = t.printTargetNetTypeTbTwo(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId,conn);
+//			}else if(ReportGlobalConstant.pAzb_TWO.equals(reportType)){
+//				data = t.printTargetCurrencyTypeTbTwo(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId,conn);
+//			}
+//		}finally {
+//			if(conn!=null){
+//				conn.close();
+//			}
+//		}
+//	}
 	public boolean next() throws JRException {
 		index++;
 		if (data != null && index < data.size()) {

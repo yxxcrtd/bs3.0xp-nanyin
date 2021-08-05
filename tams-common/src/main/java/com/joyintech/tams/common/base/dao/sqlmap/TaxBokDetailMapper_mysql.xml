@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TaxBokDetailMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TaxBokDetail" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="BOOKSET_DATE" property="booksetDate" jdbcType="DATE" />
+        <result column="BOK_SEQNO" property="bokSeqno" jdbcType="VARCHAR" />
+        <result column="BOK_DETAIL_ID" property="bokDetailId" jdbcType="VARCHAR" />
+        <result column="HAPPEN_DATE" property="happenDate" jdbcType="DATE" />
+        <result column="BOOK_DATE" property="bookDate" jdbcType="DATE" />
+        <result column="BOOK_ID" property="bookId" jdbcType="VARCHAR" />
+        <result column="BOOK_ORDER" property="bookOrder" jdbcType="DECIMAL" />
+        <result column="O_CCY" property="oCcy" jdbcType="VARCHAR" />
+        <result column="HAPPEN_AMT" property="happenAmt" jdbcType="DECIMAL" />
+        <result column="TAX_AMT" property="taxAmt" jdbcType="DECIMAL" />
+        <result column="BAL_AMT" property="balAmt" jdbcType="DECIMAL" />
+        <result column="CARRY_AMT" property="carryAmt" jdbcType="DECIMAL" />
+        <result column="VAT_TYPE" property="vatType" jdbcType="VARCHAR" />
+        <result column="TAX_P_TYPE" property="taxPType" jdbcType="VARCHAR" />
+        <result column="CALC_TYPE" property="calcType" jdbcType="VARCHAR" />
+        <result column="TAX_RATE" property="taxRate" jdbcType="DECIMAL" />
+        <result column="TAX_REG_ID" property="taxRegId" jdbcType="VARCHAR" />
+        <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+        <result column="INCOME_SOURCE" property="incomeSource" jdbcType="VARCHAR" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
+        <result column="HAPPEN_AMT_B" property="happenAmtB" jdbcType="DECIMAL" />
+        <result column="TAX_AMT_B" property="taxAmtB" jdbcType="DECIMAL" />
+        <result column="BAL_AMT_B" property="balAmtB" jdbcType="DECIMAL" />
+        <result column="CARRY_AMT_B" property="carryAmtB" jdbcType="DECIMAL" />
+        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
+        <result column="INCOME_ACCR_AMT" property="incomeAccrAmt" jdbcType="DECIMAL" />
+        <result column="INCOME_CARRY_AMT" property="incomeCarryAmt" jdbcType="DECIMAL" />
+        <result column="INCOME_ACCR_AMT_B" property="incomeAccrAmtB" jdbcType="DECIMAL" />
+        <result column="INCOME_CARRY_AMT_B" property="incomeCarryAmtB" jdbcType="DECIMAL" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, BOOKSET_ID BOOKSET_ID, BOOKSET_DATE BOOKSET_DATE, BOK_SEQNO BOK_SEQNO, 
+        BOK_DETAIL_ID BOK_DETAIL_ID, HAPPEN_DATE HAPPEN_DATE, BOOK_DATE BOOK_DATE, BOOK_ID BOOK_ID, 
+        BOOK_ORDER BOOK_ORDER, O_CCY O_CCY, HAPPEN_AMT HAPPEN_AMT, TAX_AMT TAX_AMT, BAL_AMT BAL_AMT, 
+        CARRY_AMT CARRY_AMT, VAT_TYPE VAT_TYPE, TAX_P_TYPE TAX_P_TYPE, CALC_TYPE CALC_TYPE, 
+        TAX_RATE TAX_RATE, TAX_REG_ID TAX_REG_ID, FEE_TYPE FEE_TYPE, INCOME_SOURCE INCOME_SOURCE, 
+        MDATE MDATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, SUBJECT_NO SUBJECT_NO, HAPPEN_AMT_B HAPPEN_AMT_B, 
+        TAX_AMT_B TAX_AMT_B, BAL_AMT_B BAL_AMT_B, CARRY_AMT_B CARRY_AMT_B, B_CCY B_CCY, INCOME_ACCR_AMT INCOME_ACCR_AMT, 
+        INCOME_CARRY_AMT INCOME_CARRY_AMT, INCOME_ACCR_AMT_B INCOME_ACCR_AMT_B, INCOME_CARRY_AMT_B INCOME_CARRY_AMT_B, 
+        BRANCH BRANCH
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TaxBokDetailMapper.Base_Column_List" />
+        from TAX_BOK_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TaxBokDetailMapper.Base_Column_List" />
+        from TAX_BOK_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TaxBokDetailMapper.Base_Column_List" />
+        from TAX_BOK_DETAIL
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TAX_BOK_DETAIL
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TaxBokDetail" >
+        insert into TAX_BOK_DETAIL (SEQ_NO, BOOKSET_ID, BOOKSET_DATE, 
+            BOK_SEQNO, BOK_DETAIL_ID, HAPPEN_DATE, 
+            BOOK_DATE, BOOK_ID, BOOK_ORDER, 
+            O_CCY, HAPPEN_AMT, TAX_AMT, 
+            BAL_AMT, CARRY_AMT, VAT_TYPE, 
+            TAX_P_TYPE, CALC_TYPE, TAX_RATE, 
+            TAX_REG_ID, FEE_TYPE, INCOME_SOURCE, 
+            MDATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            SUBJECT_NO, HAPPEN_AMT_B, TAX_AMT_B, 
+            BAL_AMT_B, CARRY_AMT_B, B_CCY, 
+            INCOME_ACCR_AMT, INCOME_CARRY_AMT, INCOME_ACCR_AMT_B, 
+            INCOME_CARRY_AMT_B, BRANCH)
+        values (#{seqNo,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, #{booksetDate,jdbcType=DATE}, 
+            #{bokSeqno,jdbcType=VARCHAR}, #{bokDetailId,jdbcType=VARCHAR}, #{happenDate,jdbcType=DATE}, 
+            #{bookDate,jdbcType=DATE}, #{bookId,jdbcType=VARCHAR}, #{bookOrder,jdbcType=DECIMAL}, 
+            #{oCcy,jdbcType=VARCHAR}, #{happenAmt,jdbcType=DECIMAL}, #{taxAmt,jdbcType=DECIMAL}, 
+            #{balAmt,jdbcType=DECIMAL}, #{carryAmt,jdbcType=DECIMAL}, #{vatType,jdbcType=VARCHAR}, 
+            #{taxPType,jdbcType=VARCHAR}, #{calcType,jdbcType=VARCHAR}, #{taxRate,jdbcType=DECIMAL}, 
+            #{taxRegId,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, #{incomeSource,jdbcType=VARCHAR}, 
+            #{mdate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{subjectNo,jdbcType=VARCHAR}, #{happenAmtB,jdbcType=DECIMAL}, #{taxAmtB,jdbcType=DECIMAL}, 
+            #{balAmtB,jdbcType=DECIMAL}, #{carryAmtB,jdbcType=DECIMAL}, #{bCcy,jdbcType=VARCHAR}, 
+            #{incomeAccrAmt,jdbcType=DECIMAL}, #{incomeCarryAmt,jdbcType=DECIMAL}, #{incomeAccrAmtB,jdbcType=DECIMAL}, 
+            #{incomeCarryAmtB,jdbcType=DECIMAL}, #{branch,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TaxBokDetail" >
+        insert into TAX_BOK_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE,
+            </if>
+            <if test="bokSeqno != null" >
+                BOK_SEQNO,
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID,
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE,
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE,
+            </if>
+            <if test="bookId != null" >
+                BOOK_ID,
+            </if>
+            <if test="bookOrder != null" >
+                BOOK_ORDER,
+            </if>
+            <if test="oCcy != null" >
+                O_CCY,
+            </if>
+            <if test="happenAmt != null" >
+                HAPPEN_AMT,
+            </if>
+            <if test="taxAmt != null" >
+                TAX_AMT,
+            </if>
+            <if test="balAmt != null" >
+                BAL_AMT,
+            </if>
+            <if test="carryAmt != null" >
+                CARRY_AMT,
+            </if>
+            <if test="vatType != null" >
+                VAT_TYPE,
+            </if>
+            <if test="taxPType != null" >
+                TAX_P_TYPE,
+            </if>
+            <if test="calcType != null" >
+                CALC_TYPE,
+            </if>
+            <if test="taxRate != null" >
+                TAX_RATE,
+            </if>
+            <if test="taxRegId != null" >
+                TAX_REG_ID,
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE,
+            </if>
+            <if test="incomeSource != null" >
+                INCOME_SOURCE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO,
+            </if>
+            <if test="happenAmtB != null" >
+                HAPPEN_AMT_B,
+            </if>
+            <if test="taxAmtB != null" >
+                TAX_AMT_B,
+            </if>
+            <if test="balAmtB != null" >
+                BAL_AMT_B,
+            </if>
+            <if test="carryAmtB != null" >
+                CARRY_AMT_B,
+            </if>
+            <if test="bCcy != null" >
+                B_CCY,
+            </if>
+            <if test="incomeAccrAmt != null" >
+                INCOME_ACCR_AMT,
+            </if>
+            <if test="incomeCarryAmt != null" >
+                INCOME_CARRY_AMT,
+            </if>
+            <if test="incomeAccrAmtB != null" >
+                INCOME_ACCR_AMT_B,
+            </if>
+            <if test="incomeCarryAmtB != null" >
+                INCOME_CARRY_AMT_B,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetDate != null" >
+                #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="bokSeqno != null" >
+                #{bokSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="bokDetailId != null" >
+                #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="happenDate != null" >
+                #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="bookId != null" >
+                #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookOrder != null" >
+                #{bookOrder,jdbcType=DECIMAL},
+            </if>
+            <if test="oCcy != null" >
+                #{oCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="happenAmt != null" >
+                #{happenAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="taxAmt != null" >
+                #{taxAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="balAmt != null" >
+                #{balAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="carryAmt != null" >
+                #{carryAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="vatType != null" >
+                #{vatType,jdbcType=VARCHAR},
+            </if>
+            <if test="taxPType != null" >
+                #{taxPType,jdbcType=VARCHAR},
+            </if>
+            <if test="calcType != null" >
+                #{calcType,jdbcType=VARCHAR},
+            </if>
+            <if test="taxRate != null" >
+                #{taxRate,jdbcType=DECIMAL},
+            </if>
+            <if test="taxRegId != null" >
+                #{taxRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeSource != null" >
+                #{incomeSource,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="subjectNo != null" >
+                #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="happenAmtB != null" >
+                #{happenAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="taxAmtB != null" >
+                #{taxAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="balAmtB != null" >
+                #{balAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="carryAmtB != null" >
+                #{carryAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="bCcy != null" >
+                #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeAccrAmt != null" >
+                #{incomeAccrAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="incomeCarryAmt != null" >
+                #{incomeCarryAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="incomeAccrAmtB != null" >
+                #{incomeAccrAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="incomeCarryAmtB != null" >
+                #{incomeCarryAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TaxBokDetail" >
+        insert into TAX_BOK_DETAIL(SEQ_NO, BOOKSET_ID, BOOKSET_DATE, BOK_SEQNO, BOK_DETAIL_ID, 
+        HAPPEN_DATE, BOOK_DATE, BOOK_ID, BOOK_ORDER, O_CCY, HAPPEN_AMT, TAX_AMT, BAL_AMT, 
+        CARRY_AMT, VAT_TYPE, TAX_P_TYPE, CALC_TYPE, TAX_RATE, TAX_REG_ID, FEE_TYPE, INCOME_SOURCE, 
+        MDATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBJECT_NO, 
+        HAPPEN_AMT_B, TAX_AMT_B, BAL_AMT_B, CARRY_AMT_B, B_CCY, INCOME_ACCR_AMT, INCOME_CARRY_AMT, 
+        INCOME_ACCR_AMT_B, INCOME_CARRY_AMT_B, BRANCH)
+        select SEQ_NO, BOOKSET_ID, BOOKSET_DATE, BOK_SEQNO, BOK_DETAIL_ID, 
+            HAPPEN_DATE, BOOK_DATE, BOOK_ID, BOOK_ORDER, O_CCY, HAPPEN_AMT, TAX_AMT, BAL_AMT, 
+            CARRY_AMT, VAT_TYPE, TAX_P_TYPE, CALC_TYPE, TAX_RATE, TAX_REG_ID, FEE_TYPE, INCOME_SOURCE, 
+            MDATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SUBJECT_NO, 
+            HAPPEN_AMT_B, TAX_AMT_B, BAL_AMT_B, CARRY_AMT_B, B_CCY, INCOME_ACCR_AMT, INCOME_CARRY_AMT, 
+            INCOME_ACCR_AMT_B, INCOME_CARRY_AMT_B, BRANCH
+             from TAX_BOK_DETAIL
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TaxBokDetail" >
+        update TAX_BOK_DETAIL
+        <set >
+            <if test="booksetId != null" >
+                BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="bokSeqno != null" >
+                BOK_SEQNO = #{bokSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE = #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE = #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="bookId != null" >
+                BOOK_ID = #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookOrder != null" >
+                BOOK_ORDER = #{bookOrder,jdbcType=DECIMAL},
+            </if>
+            <if test="oCcy != null" >
+                O_CCY = #{oCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="happenAmt != null" >
+                HAPPEN_AMT = #{happenAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="taxAmt != null" >
+                TAX_AMT = #{taxAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="balAmt != null" >
+                BAL_AMT = #{balAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="carryAmt != null" >
+                CARRY_AMT = #{carryAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="vatType != null" >
+                VAT_TYPE = #{vatType,jdbcType=VARCHAR},
+            </if>
+            <if test="taxPType != null" >
+                TAX_P_TYPE = #{taxPType,jdbcType=VARCHAR},
+            </if>
+            <if test="calcType != null" >
+                CALC_TYPE = #{calcType,jdbcType=VARCHAR},
+            </if>
+            <if test="taxRate != null" >
+                TAX_RATE = #{taxRate,jdbcType=DECIMAL},
+            </if>
+            <if test="taxRegId != null" >
+                TAX_REG_ID = #{taxRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeSource != null" >
+                INCOME_SOURCE = #{incomeSource,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="happenAmtB != null" >
+                HAPPEN_AMT_B = #{happenAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="taxAmtB != null" >
+                TAX_AMT_B = #{taxAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="balAmtB != null" >
+                BAL_AMT_B = #{balAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="carryAmtB != null" >
+                CARRY_AMT_B = #{carryAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="bCcy != null" >
+                B_CCY = #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeAccrAmt != null" >
+                INCOME_ACCR_AMT = #{incomeAccrAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="incomeCarryAmt != null" >
+                INCOME_CARRY_AMT = #{incomeCarryAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="incomeAccrAmtB != null" >
+                INCOME_ACCR_AMT_B = #{incomeAccrAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="incomeCarryAmtB != null" >
+                INCOME_CARRY_AMT_B = #{incomeCarryAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TaxBokDetail" >
+        update TAX_BOK_DETAIL
+        set BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            BOK_SEQNO = #{bokSeqno,jdbcType=VARCHAR},
+            BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR},
+            HAPPEN_DATE = #{happenDate,jdbcType=DATE},
+            BOOK_DATE = #{bookDate,jdbcType=DATE},
+            BOOK_ID = #{bookId,jdbcType=VARCHAR},
+            BOOK_ORDER = #{bookOrder,jdbcType=DECIMAL},
+            O_CCY = #{oCcy,jdbcType=VARCHAR},
+            HAPPEN_AMT = #{happenAmt,jdbcType=DECIMAL},
+            TAX_AMT = #{taxAmt,jdbcType=DECIMAL},
+            BAL_AMT = #{balAmt,jdbcType=DECIMAL},
+            CARRY_AMT = #{carryAmt,jdbcType=DECIMAL},
+            VAT_TYPE = #{vatType,jdbcType=VARCHAR},
+            TAX_P_TYPE = #{taxPType,jdbcType=VARCHAR},
+            CALC_TYPE = #{calcType,jdbcType=VARCHAR},
+            TAX_RATE = #{taxRate,jdbcType=DECIMAL},
+            TAX_REG_ID = #{taxRegId,jdbcType=VARCHAR},
+            FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            INCOME_SOURCE = #{incomeSource,jdbcType=VARCHAR},
+            MDATE = #{mdate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR},
+            HAPPEN_AMT_B = #{happenAmtB,jdbcType=DECIMAL},
+            TAX_AMT_B = #{taxAmtB,jdbcType=DECIMAL},
+            BAL_AMT_B = #{balAmtB,jdbcType=DECIMAL},
+            CARRY_AMT_B = #{carryAmtB,jdbcType=DECIMAL},
+            B_CCY = #{bCcy,jdbcType=VARCHAR},
+            INCOME_ACCR_AMT = #{incomeAccrAmt,jdbcType=DECIMAL},
+            INCOME_CARRY_AMT = #{incomeCarryAmt,jdbcType=DECIMAL},
+            INCOME_ACCR_AMT_B = #{incomeAccrAmtB,jdbcType=DECIMAL},
+            INCOME_CARRY_AMT_B = #{incomeCarryAmtB,jdbcType=DECIMAL},
+            BRANCH = #{branch,jdbcType=DECIMAL}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

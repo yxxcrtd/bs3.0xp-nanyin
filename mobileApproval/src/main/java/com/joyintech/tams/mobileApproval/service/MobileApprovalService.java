@@ -2,12 +2,16 @@ package com.joyintech.tams.mobileApproval.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.PasswordHelper;
 import com.joyintech.framework.security.SecurityUtil;
@@ -199,7 +203,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
 
     }
 
-    public String getNewTodoList( Map<String, Object> param) throws Exception {
+    public String getNewTodoList( Map<String, Object> param) throws WorkFlowException, IllegalAccessException, InvocationTargetException{
         Map<String, Object> para = new HashMap<>();
         para.put("userName", param.get("userId")+"");
 //        para.put("status", "A");
@@ -306,7 +310,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     }
     
     
-    public String getDoneList( Map<String, Object> param) throws Exception {
+    public String getDoneList( Map<String, Object> param) {
         Map<String, Object> para = new HashMap<>();
         para.put("userId", param.get("userId")+"");
 //        para.put("status", "A");
@@ -413,7 +417,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
      * <b>参数：</b>[userName]<br>
      * <b>返回值：</b>java.lang.String<br>
      */
-    public String getAuditTypeList(String userName) throws Exception {
+    public String getAuditTypeList(String userName) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         Map<String, Object> para = new HashMap<>();
         para.put("userName", userName);
 //        para.put("status", "A");
@@ -522,7 +526,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
      * <b>参数：</b>[userName]<br>
      * <b>返回值：</b>java.lang.String<br>
      */
-    public String getAuditTypeDoneList(String userName) throws Exception {
+    public String getAuditTypeDoneList(String userName) {
         Map<String, Object> para = new HashMap<>();
         para.put("userId", userName);
         List<ReturnTodoDto> workflowIds = mobileApprovalMapper.getMyWorkflowId(para);
@@ -611,7 +615,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     }
     
 
-    public int getMarkNum(String userName) throws Exception {
+    public int getMarkNum(String userName) {
         Map<String, Object> para = new HashMap<>();
         para.put("userName", userName);
         //汇总出资产预审批的当前核审人
@@ -630,7 +634,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     }
 
 
-    public String getWorkflowInfo(Map<String, Object> param) throws Exception {
+    public String getWorkflowInfo(Map<String, Object> param) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //查询流程中数据实体
     	
         String str="";
@@ -748,7 +752,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
 
     @DTXTransaction
     @Transactional(rollbackFor = {Exception.class})
-    public ReturnTodoDto getNextWorkFlowInfo(String workFlowId) throws Exception {
+    public ReturnTodoDto getNextWorkFlowInfo(String workFlowId) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //查询下一节点信息
         Map<String, Object> variables = null;
         Map<String, Object> param = new HashMap<>();
@@ -762,9 +766,15 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
 //	        if (WorkflowContext.getWorkFlowService().isConditionModule(processKey) && ActivitiType.排他网关.getValue().equals(processService.getNextActType(workFlowInfoDto.getProcessInstanceId()))) {
 //	            variables = WorkflowContext.getBusinessVariables(flowEntity, workFlowInfoDto.getCurTaskId());
 //	        }
-	        nextTaskId = processService.getNextTaskDefinitionId(workFlowInfoDto.getCurTaskId(), variables);
-	        
-	        //ajax请求下一核审信息
+            try {
+                nextTaskId = processService.getNextTaskDefinitionId(workFlowInfoDto.getCurTaskId(), variables);
+            } catch (Exception e) {
+//                e.printStackTrace();
+                LOGGER.error(e.getMessage());
+                throw new WorkFlowException(e);
+            }
+
+            //ajax请求下一核审信息
 	        //AjaxResult result = restTemplate.postForObject(ServiceApplication.PINGAN_SERVICE_NAME + "/workflow/nextTask",param,AjaxResult.class);
 	        Map<String, String> data = new HashMap<>();
 	        data.put("nodeId", nextTaskId);
@@ -839,7 +849,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
 
 
  
-    public String dealMobileApproval(Map<String, Object> param) throws Exception {
+    public String dealMobileApproval(Map<String, Object> param) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         ResultDto resultDto = new ResultDto();
         //获取移动端操作类型
         String operationType = param.get("operationType").toString();
@@ -867,7 +877,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     }
 
     //根据工作流代码获取当前流程信息
-    private WorkFlowInfoDto getCurrentInfo(String workFlowId,Map<String, Object> param) throws Exception {
+    private WorkFlowInfoDto getCurrentInfo(String workFlowId,Map<String, Object> param) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         WorkFlowInfoDto workFlowInfoDto = null;
         //根据工作流代码查询当前处理人信息
         String curUser = mobileApprovalMapper.queryCurUser(workFlowId);
@@ -885,7 +895,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     }
     
   //获取我的工作数据
-    private List<WorkFlowInfoDto> getMyWorkData(Map<String, Object> param) throws Exception {
+    private List<WorkFlowInfoDto> getMyWorkData(Map<String, Object> param) {
     	param.put("SING_N", Whether.N);
     	param.put("SING_Y", Whether.Y);
     	List<WorkFlowInfoDto> works=mainMapper.selectMyWorkData(param);
@@ -918,7 +928,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     //提交流程
 
 
-    private ResultDto dosubmit(WorkFlowInfoDto workFlowInfoDto, String user, String comment,String loginUserId) throws Exception {
+    private ResultDto dosubmit(WorkFlowInfoDto workFlowInfoDto, String user, String comment,String loginUserId) throws WorkFlowException {
         ResultDto resultDto = new ResultDto();
         String taskId = workFlowInfoDto.getCurTaskId();
         String processInstanceId = workFlowInfoDto.getProcessInstanceId();
@@ -973,7 +983,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     }
 
     //回退任务
-    private ResultDto doBack(WorkFlowInfoDto workFlowInfoDto, String comment,String operatorUserId) throws Exception {
+    private ResultDto doBack(WorkFlowInfoDto workFlowInfoDto, String comment,String operatorUserId) throws WorkFlowException {
         ResultDto resultDto = new ResultDto();
         if (!workFlowInfoDto.getProcessInstanceId().isEmpty()) {
             WorkflowContext.getProcessService().rollbackProcess(workFlowInfoDto.getProcessInstanceId(), operatorUserId, comment, "", "");
@@ -990,7 +1000,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     }
     
     //作废任务
-    private ResultDto doCancel(WorkFlowInfoDto workFlowInfoDto) throws Exception {
+    private ResultDto doCancel(WorkFlowInfoDto workFlowInfoDto) throws WorkFlowException {
         ResultDto resultDto = new ResultDto();
         if(!workFlowInfoDto.getWorkflowId().isEmpty()) {
         	WorkFlowUtil.deleteProcess(workFlowInfoDto.getWorkflowId(), workFlowInfoDto.getProcessInstanceId());
@@ -1005,7 +1015,8 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
         return resultDto;
     }
 
-    private void doUpdate(FlowEntity flowEntity, boolean flag) throws Exception {
+    private void doUpdate(FlowEntity flowEntity, boolean flag)
+            throws WorkFlowException,IOException, JsonParseException, JsonMappingException,IllegalAccessException, InvocationTargetException {
         boolean skip = false;
         WorkflowMethodInterceptor interceptor = WorkflowContext.getInterceptor();
         if (null != interceptor) {
@@ -1019,7 +1030,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
             ProcessMark businessEntity = getBusinessObjectForUpdate(flowEntity, businessService);
             try{
                 Object a = JsonUtils.OBJECT_MAPPER.readValue(
-                    businessEntity.getBusinessData(), GenericsUtils.getSuperClassGenricType(
+                        JsonSanitizer.sanitize(businessEntity.getBusinessData()), GenericsUtils.getSuperClassGenricType(
                         ProxyUtil.getTargetClass(businessService.getClass())));
                 WorkflowEntity entity = (WorkflowEntity)a;
                 //未获取到工作流id
@@ -1037,7 +1048,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
                 }
 //                if (!flag) {
                     ProcessMark processMark = WorkflowContext.getBusinessEntity(flowEntity);
-                    Object oldObject = JsonUtils.OBJECT_MAPPER.readValue(processMark.getBusinessData(),
+                    Object oldObject = JsonUtils.OBJECT_MAPPER.readValue(JsonSanitizer.sanitize(processMark.getBusinessData()),
                         GenericsUtils.getSuperClassGenricType(
                             ProxyUtil.getTargetClass(businessService.getClass())));
                     WorkflowEntity entityOld = (WorkflowEntity)oldObject;
@@ -1058,7 +1069,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
 //                }
             }
             catch(Exception e){
-                throw new RuntimeException(e);
+                throw new WorkFlowException(e);
             }
             finally {
                 if(null != interceptor) {
@@ -1069,7 +1080,8 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
 
     }
 
-    private ProcessMark getBusinessObjectForUpdate(FlowEntity flowEntity, BusinessService<WorkflowEntity> businessService) throws Exception {
+    private ProcessMark getBusinessObjectForUpdate(FlowEntity flowEntity, BusinessService<WorkflowEntity> businessService)
+            throws WorkFlowException,IOException, JsonParseException, JsonMappingException,IllegalAccessException, InvocationTargetException {
         ProcessMark businessEntity = WorkflowContext.getBusinessEntity(flowEntity);
         this.checkBusinessObject(businessEntity, businessService.getClass());
         Class<?> clz = WorkFlowUtil.getClassByBusinessServiceName(flowEntity.getBusinessService());
@@ -1082,7 +1094,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     
     
     public ProcessMark getBusinessObjectFromRequest(Class<?> businessEntityClass, boolean extendProp,FlowEntity flowEntity)
-            throws Exception {
+            throws IOException, JsonParseException, JsonMappingException,IllegalAccessException, InvocationTargetException {
 //            HttpServletRequest request = RequestUtil.getCurrentRequest();
 //            if (null != request) {
 //                Map<String, Object> params = RequestUtil.getParameters(request);
@@ -1094,7 +1106,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
                     // request参数转为业务对象
     	ProcessMark make =  WorkflowContext.getProcessMarkService().getBusinessInfo(flowEntity.getWorkflowId());
                     WorkflowEntity newEntity = (WorkflowEntity)JsonUtils.OBJECT_MAPPER.readValue(
-                    make.getBusinessData(), businessEntityClass);
+                            JsonSanitizer.sanitize(make.getBusinessData()), businessEntityClass);
                     if(extendProp) {
                         BeanUtil.setProperty(newEntity, GlobalConstant.STATUS,
                         		make.getStatus());
@@ -1157,7 +1169,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
         List<File> fileList = new ArrayList<>();
         SysUploadFileInfo fileInfo = mobileApprovalMapper.queryFileInfo(param.get("fileNo").toString());
         if (fileInfo != null) {
-            File file = new File(fileInfo.getPath());
+            File file = new SafelyFile(fileInfo.getPath());
             //下载附件
             if (!file.exists()) {
 //                throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");
@@ -1166,8 +1178,15 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
             	if(!"pdf".equals(fileInfo.getFileName().substring(fileInfo.getFileName().indexOf(".")+1, fileInfo.getFileName().length()).toLowerCase())) {
             		file=Office2PDFUtils.officeToPdf(fileInfo.getPath());
             	}
-                InputStream in = new FileInputStream(file);
-                return ExportUtil.export(fileInfo.getFileName().substring(0,fileInfo.getFileName().indexOf("."))+".pdf", in);
+                InputStream in = null;
+            	try{
+                    in =  new FileInputStream(file);
+                    return ExportUtil.export(fileInfo.getFileName().substring(0,fileInfo.getFileName().indexOf("."))+".pdf", in);
+                }finally {
+            	    if (in != null){
+                        in.close();
+                    }
+                }
             }
         }
         return MobileUtils.Objetc2Json("",null,"文件不存在");
@@ -1177,14 +1196,22 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
         List<File> fileList = new ArrayList<>();
         SysUploadFileInfo fileInfo = mobileApprovalMapper.queryFileInfo(param.get("fileNo").toString());
         if (fileInfo != null) {
-            File file = new File(fileInfo.getPath());
+            File file = new SafelyFile(fileInfo.getPath());
             //下载附件
             if (!file.exists()) {
 //                throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");
 //                return MobileUtils.Objetc2Json("",null,"文件不存在");
             } else {
-                InputStream in = new FileInputStream(file);
-                return ExportUtil.export(fileInfo.getFileName(), in);
+                InputStream in = null;
+                try{
+                    in = new FileInputStream(file);
+                    return ExportUtil.export(fileInfo.getFileName(), in);
+                }finally {
+                    if (in != null){
+                        in.close();
+                    }
+                }
+
             }
         }
         return MobileUtils.Objetc2Json("",null,"文件不存在");
@@ -1193,13 +1220,20 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     public Object getFileUrl(Map<String, Object> param) throws IOException {
         SysUploadFileInfo fileInfo = mobileApprovalMapper.queryFileInfo(param.get("fileNo").toString());
         if (fileInfo != null) {
-            File file = new File(fileInfo.getPath());
+            File file = new SafelyFile(fileInfo.getPath());
             //下载附件
             if (!file.exists()) {
                 throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");
             } else {
-                InputStream in = new FileInputStream(file);
-                return ExportUtil.export(fileInfo.getFileName(), in);
+                InputStream in = null;
+                try {
+                    in = new FileInputStream(file);
+                    return ExportUtil.export(fileInfo.getFileName(), in);
+                }finally {
+                    if (in != null){
+                        in.close();
+                    }
+                }
             }
         }
         return "文件名传入错误，未找到该文件";

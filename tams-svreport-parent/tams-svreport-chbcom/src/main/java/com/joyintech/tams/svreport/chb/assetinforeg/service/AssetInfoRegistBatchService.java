@@ -113,6 +113,8 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 		paramMap.put("assetList", assetCodeList);
 		paramMap.put("isChlBtm", isChlBtm);
         paramMap.put("InstitutionCode",InstitutionCode);
+        //通道投资资产管理产品是否穿透报送
+        paramMap.put("isChlBtmStr",isChlBtm);
 		List<ChbAssetInfoSub001Dto> assetInfoRegList = assetInfoRegist001Mapper.selectAssetInfoForRegist(paramMap);
 		// 登记插入列表
 		List<ChbAssetInfoSub001Dto> insertDataList = new ArrayList<ChbAssetInfoSub001Dto>();
@@ -316,7 +318,7 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 	    	catch(Exception e){
 	    		logger.error(e.getMessage(),e);
 	    		session.rollback();
-	    		throw e;
+	    		throw new BusinessException(e);
 	    	}
 	    	finally {
 	    		session.close();

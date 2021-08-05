@@ -258,13 +258,21 @@
   
   <select id="selectByValuedate" parameterType="java.lang.String" resultMap="BaseResultMap"
   resultSetType="FORWARD_ONLY" fetchSize="1000">
-  select * from (
-  select  
-    psv1.PROD_ID as PROD_ID,
-    psv1.FINPROD_ID  as ASSET_ID,
-    psv1.ccy,
+	  select * from (
+	  select aa.PROD_ID,aa.ASSET_ID,aa.VALUE_DATE,aa.MDATE,aa.ccy,sum(aa.POS_AMT) POS_AMT,
+	  sum(aa.TDY_COST_AMT) TDY_COST_AMT,
+	  sum(aa.TDY_FLOAT_INGPL) TDY_FLOAT_INGPL,
+	  sum(aa.TDY_INTINCEXP) TDY_INTINCEXP,
+	  sum(aa.DELAY_PAY_AMT) DELAY_PAY_AMT,
+	  max(aa.UPDATE_TIME) UPDATE_TIME,
+	  max(aa.CREATE_TIME) CREATE_TIME
+	  from (
+	  select
+	  psv1.PROD_ID as PROD_ID,
+	  psv1.FINPROD_ID as ASSET_ID,
+	  psv1.ccy,
 	  psv1.VALUE_DATE as VALUE_DATE,
-    nvl(fp1.MDATE,fp2.MDATE) as MDATE,
+	  nvl(fp1.MDATE,fp2.MDATE) as MDATE,
 	  sum(psv1.POS_AMT) as POS_AMT,
 	  sum(psv1.TDY_COST_AMT) as TDY_COST_AMT,
 	  sum(psv1.TDY_FLOAT_INGPL) as TDY_FLOAT_INGPL,
@@ -273,9 +281,8 @@
 	  -- psv.DELAY_PAY_AMT as DELAY_PAY_AMT,
 	  max(psv1.UPDATE_TIME) UPDATE_TIME,
 	  max(psv1.CREATE_TIME) CREATE_TIME
-	
-from (
-select 
+	  from (
+	  select
 	  psv.PORTFOLIO_ID as PROD_ID,
 	  nvl(NVL(fpf.FINPROD_MARKET_ID,fp.FINPROD_MARKET_ID), fp2.FINPROD_ID) as FINPROD_ID,
 	  psv.ccy,
@@ -287,22 +294,65 @@ select
 	  psv.DELAY_PAY_AMT as DELAY_PAY_AMT,
 	  nvl(psv.UPDATE_TIME,psv.CREATE_TIME) UPDATE_TIME,
 	  nvl(psv.CREATE_TIME,psv.UPDATE_TIME) CREATE_TIME
-	from PTL_SEC_VALUTION psv
-  left join FIN_PRODUCT fp on fp.FINPROD_ID = psv.FINPROD_ID
-  left join FIN_PRODUCT fpf on fpf.FINPROD_ID = fp.P_FINPROD_ID
-  left join FIN_TRADE_PRODUCT fp2 on fp2.FINPROD_ID = psv.FINPROD_ID and fp2.branch = 0
-	 where to_char(CDATE,'yyyy-MM-dd')= #{batchTime,jdbcType=VARCHAR}
-	 and (fp.IS_CHL !='Y' or fp.IS_CHL is null)
-	 and exists(
-     select  1
-     from FIN_PRODUCT_ADD fp3
-     where fp3.PORTFOLIO_ID = psv.PORTFOLIO_ID)
-) psv1
-left join FIN_PRODUCT fp1 on fp1.FINPROD_MARKET_ID = psv1.FINPROD_ID 
-left join FIN_TRADE_PRODUCT fp2 on fp2.FINPROD_ID = psv1.FINPROD_ID and fp2.branch = 0
-  group by psv1.PROD_ID,fp1.FINPROD_MARKET_ID,psv1.VALUE_DATE,fp1.MDATE,fp2.MDATE,psv1.FINPROD_ID,psv1.ccy
-  ) a
-  where a.ASSET_ID is not null
+	  from PTL_SEC_VALUTION psv
+	  left join FIN_PRODUCT fp on fp.FINPROD_ID = psv.FINPROD_ID
+	  left join FIN_PRODUCT fpf on fpf.FINPROD_ID = fp.P_FINPROD_ID
+	  left join FIN_TRADE_PRODUCT fp2 on fp2.FINPROD_ID = psv.FINPROD_ID and fp2.branch = 0
+	  where to_char(CDATE,'yyyy-MM-dd')= #{batchTime,jdbcType=VARCHAR}
+	  and (fp.IS_CHL !='Y' or fp.IS_CHL is null)
+	  and exists(
+	  select 1
+	  from FIN_PRODUCT_ADD fp3
+	  where fp3.PORTFOLIO_ID = psv.PORTFOLIO_ID)
+	  ) psv1
+	  left join FIN_PRODUCT fp1 on fp1.FINPROD_MARKET_ID = psv1.FINPROD_ID
+	  left join FIN_TRADE_PRODUCT fp2 on fp2.FINPROD_ID = psv1.FINPROD_ID and fp2.branch = 0
+	  group by psv1.PROD_ID,fp1.FINPROD_MARKET_ID,psv1.VALUE_DATE,fp1.MDATE,fp2.MDATE,psv1.FINPROD_ID,psv1.ccy
+	  union
+	  select unqixi.PROD_ID,
+	  unqixi.ASSET_ID,
+	  unqixi.ccy,
+	  unqixi.VALUE_DATE,
+	  unqixi.MDATE,
+	  sum(unqixi.POS_AMT),
+	  sum(unqixi.TDY_COST_AMT),
+	  sum(unqixi.TDY_FLOAT_INGPL),
+	  sum(unqixi.TDY_INTINCEXP),
+	  sum(unqixi.DELAY_PAY_AMT),
+	  max(unqixi.UPDATE_TIME),
+	  max(unqixi.CREATE_TIME)
+	  from (select tpda.portfolio_id as PROD_ID,
+	  fp.finprod_market_id as ASSET_ID,
+	  tpd.ccy,
+	  tpd.trade_date as VALUE_DATE,
+	  fp.MDATE as MDATE,
+	  tpd.share_amt*100 as POS_AMT,
+	  tpd.fprice_amt as TDY_COST_AMT,
+	  0 as TDY_FLOAT_INGPL,
+	  0 as TDY_INTINCEXP,
+	  0 as DELAY_PAY_AMT,
+	  nvl(tpd.UPDATE_TIME, tpd.CREATE_TIME) UPDATE_TIME,
+	  nvl(tpd.CREATE_TIME, tpd.UPDATE_TIME) CREATE_TIME
+	  from trd_product_deal tpd
+	  inner join fin_product fp
+	  on tpd.finprod_id = fp.finprod_id
+	  inner join trd_product_deal_add tpda
+	  on tpd.trade_id = tpda.trade_id
+	  left join PTL_PORTFOLIO pp
+	  on pp.portfolio_id = tpda.portfolio_id
+	  where tpd.finprod_type2 = 'F01'
+	  and tpd.inv_aim = 'AC'
+	  and tpd.ps = 'T01'
+	  and tpd.trade_date <![CDATA[<]]> fp.vdate
+	  and to_char(tpd.trade_date,'yyyy-MM-dd') = #{batchTime,jdbcType=VARCHAR}
+	  and pp.portfolio_id is not null) unqixi
+	  group by unqixi.PROD_ID,
+	  unqixi.ASSET_ID,
+	  unqixi.VALUE_DATE,
+	  unqixi.MDATE,
+	  unqixi.ccy)aa group by aa.PROD_ID,aa.ASSET_ID,aa.VALUE_DATE,aa.MDATE,aa.ccy
+	  ) a
+	  where a.ASSET_ID is not null
   </select>
   
   <delete id="deleteByUpdateTime">

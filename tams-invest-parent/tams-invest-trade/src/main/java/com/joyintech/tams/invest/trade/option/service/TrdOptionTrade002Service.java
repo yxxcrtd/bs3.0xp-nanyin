@@ -668,9 +668,11 @@ public class TrdOptionTrade002Service extends BaseService<TrdOptionTrade002Dto> 
                 
                 for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()) {
                     BeanUtil.copyPropertiesIgnoreNull(stlPayOrders, dto);
-                    stlPayOrders.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
-                    stlPayOrders.setTradeId(entity.getTotleTradeId());
-                    stlPayOrders.setWorkflowId(entity.getWorkflowId());
+                    if (stlPayOrders != null){
+                        stlPayOrders.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
+                        stlPayOrders.setTradeId(entity.getTotleTradeId());
+                        stlPayOrders.setWorkflowId(entity.getWorkflowId());
+                    }
                     stlPayOrdersMapper.insertSelective(stlPayOrders);
                 }
                 if (StringUtil.isNotEmpty(entity.getActPortfolioId())

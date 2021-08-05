@@ -50,7 +50,7 @@ public class AssetsTransfer001Service extends BaseService<AssetsTransfer001Dto> 
      * @since 1.0
      */
     public List<TreeNode> getPortfolioIdTree(String portfolioId,Date mdate)
-            throws Exception {
+             {
         List<TreeNode> result = new ArrayList<TreeNode>();
         List<TreeNode> treeProList = new ArrayList<TreeNode>();
         Map<String,Object> paramMap = new HashMap<>();

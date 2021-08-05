@@ -122,7 +122,7 @@
         if (checkData.ps == 'T01' && checkData.finprodId != null && checkData.ccy != null && checkData.tradeDate != null){
             ajaxJsonSync(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade003/getIssueAmt', checkData, function(resultc) {
                 if(resultc.data != null && resultc.data != ''){
-                    if(resultc.data <= checkData.prinAmt){
+                    if(Number(resultc.data) <= Number(checkData.prinAmt)){
                         isOver = true;
                     }
                 }
@@ -157,6 +157,11 @@
 	                return;
 	            }
 	        }
+            }
+            //在检查指令参数是否变化之前增加对组合分配是否为空的判断
+            if(table.getAllRows().length == 0){
+                Joyin.error(JoyinUtil.getMessage("FIN_PROD_E_0123","组合分配"));
+                return ;
             }
 	        // 检查生成划款指令参数是否发生变化
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {

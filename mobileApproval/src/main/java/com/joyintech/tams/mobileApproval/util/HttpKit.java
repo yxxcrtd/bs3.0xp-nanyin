@@ -1,11 +1,14 @@
 package com.joyintech.tams.mobileApproval.util;
 
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -43,12 +46,12 @@ public class HttpKit {
         return HttpClients.custom().setConnectionManager(cm).build();
     }
 
-    public static String get(String url) throws Exception {
+    public static String get(String url) throws IOException{
         HttpGet httpGet = new HttpGet(url);
         return getResult(httpGet);
     }
 
-    public static String get(String url, Map<String, Object> params) throws Exception {
+    public static String get(String url, Map<String, Object> params) throws IOException,URISyntaxException {
         URIBuilder ub = new URIBuilder();
         ub.setPath(url);
 
@@ -59,7 +62,7 @@ public class HttpKit {
         return getResult(httpGet);
     }
 
-    public static String get(String url, Map<String, Object> headers, Map<String, Object> params) throws Exception {
+    public static String get(String url, Map<String, Object> headers, Map<String, Object> params) throws IOException,URISyntaxException {
         URIBuilder ub = new URIBuilder();
         ub.setPath(url);
 
@@ -73,7 +76,7 @@ public class HttpKit {
         return getResult(httpGet);
     }
 
-    public static String post(String url) throws Exception {
+    public static String post(String url) throws IOException{
         HttpPost httpPost = new HttpPost(url);
         return getResult(httpPost);
     }
@@ -85,7 +88,7 @@ public class HttpKit {
         return getResult(httpPost);
     }
 
-    public static String post(String url, String json) throws Exception {
+    public static String post(String url, String json) throws IOException{
         HttpPost httpPost = new HttpPost(url);
         StringEntity entity = new StringEntity(json, "UTF-8");
         entity.setContentType("application/json");
@@ -94,7 +97,7 @@ public class HttpKit {
 
     }
 
-    public static String post(String url, Map<String, Object> headers, Map<String, Object> params) throws Exception {
+    public static String post(String url, Map<String, Object> headers, Map<String, Object> params) throws IOException{
         HttpPost httpPost = new HttpPost(url);
 
         for (Map.Entry<String, Object> param : headers.entrySet()) {
@@ -123,7 +126,7 @@ public class HttpKit {
      * @param request
      * @return
      */
-    private static String getResult(HttpRequestBase request) throws Exception{
+    private static String getResult(HttpRequestBase request) throws IOException{
         // CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpClient httpClient = getHttpClient();
         CloseableHttpResponse response = httpClient.execute(request);

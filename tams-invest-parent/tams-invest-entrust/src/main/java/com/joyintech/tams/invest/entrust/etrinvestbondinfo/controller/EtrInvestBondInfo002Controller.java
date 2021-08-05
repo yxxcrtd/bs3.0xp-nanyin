@@ -10,13 +10,30 @@
 
 package com.joyintech.tams.invest.entrust.etrinvestbondinfo.controller;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
+import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
+import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,37 +43,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
-import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
-import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
-import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 债券投资委托新建 〈功能详细描述〉
@@ -81,13 +72,6 @@ public class EtrInvestBondInfo002Controller extends BaseController {
      */
     @Autowired
     private EtrInvestBondInfoService etrInvestBondInfoService;
-    // 行权方式check add by renping 20191020 start
-    /**
-     * 行权计划共通service
-     */
-    @Autowired
-    private BusiFinExercisePlanService busiFinExercisePlanService;
-    // 行权方式check add by renping 20191020 end
     /**
      * 初始化002新建页面
      */
@@ -205,8 +189,7 @@ public class EtrInvestBondInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         Page<SelectOptionDto> temp = etrInvestBondInfoService.getfinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -347,41 +330,6 @@ public class EtrInvestBondInfo002Controller extends BaseController {
                 confirmMsg = this.getMessage("ETR_BOND_002");
             }
         }
-        
-        if (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
-            || StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs())) {
-            Map<String, Object> p = new HashMap<>();
-            p.put("finprodId", dto.getFinprodId());
-            p.put("psT03", DictCodeList.交易方向_行权_回售.getValue());
-            p.put("cashType2", DictCodeListExt1.现金流二级类型_本金.getValue());
-            p.put("execType01", DictCodeList.行权状态_未行权.getValue());
-            p.put("execType02", DictCodeList.行权状态_已行权.getValue());
-            List<FinExercisePlan> planList = busiFinExercisePlanService.getfinExercisePlanByProductId(
-                p);
-            boolean checkFlag = true;
-            Date vdate = dto.getVdate();
-            Date mdate = dto.getMdate();
-            if (!StringUtil.isEmptyList(planList)) {
-                for (FinExercisePlan planDto : planList) {
-                    if (planDto.getExerciseDate().compareTo(vdate) >= 0 && planDto.getExerciseDate().compareTo(mdate) <= 0) {
-                        if ((StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
-                             && StringUtil.equals(DictCodeList.行权方式_回售.getValue(),
-                                 planDto.getExerciseType()))
-                            || (StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs())
-                                && StringUtil.equals(DictCodeList.行权方式_赎回.getValue(),
-                                    planDto.getExerciseType()))) {
-                            checkFlag = false;
-                        }
-                    }
-                }
-            }
-            if (checkFlag) {
-                if (StringUtil.isNotBlank(confirmMsg)) {
-                    confirmMsg += changeLineMark;
-                }
-                confirmMsg += this.getMessage("债券行权计划中没有满足所选交易方向和日期的行权数据，请确认是否继续？");
-            }
-        }
         if (StringUtil.isNotBlank(confirmMsg)) {
             AjaxResult ajaxResult = new AjaxResult();
             ajaxResult.setData(confirmMsg);
@@ -461,5 +409,18 @@ public class EtrInvestBondInfo002Controller extends BaseController {
     @RequestMapping("getClosePriceByPara")
     public BigDecimal getClosePriceByPara(@RequestBody Map<String, Object> param){
         return etrInvestBondInfoService.getClosePriceByPara(param);
+    }
+
+    /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    @ResponseBody
+    @RequestMapping("getLastPriceByPara")
+    public AjaxResult getLastPriceByPara(@RequestBody Map<String, Object> param){
+        AjaxResult result = new AjaxResult();
+        result.setData(etrInvestBondInfoService.getLastPriceByPara(param));
+        return result;
     }
 }

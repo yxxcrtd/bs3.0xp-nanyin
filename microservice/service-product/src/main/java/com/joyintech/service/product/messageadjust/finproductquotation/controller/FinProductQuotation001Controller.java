@@ -1,5 +1,6 @@
 package com.joyintech.service.product.messageadjust.finproductquotation.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -74,9 +75,9 @@ public class FinProductQuotation001Controller {
      * @throws Exception
      *             异常
      */
-    @PostMapping("queryProdIdInfoIssueSuc")
-    public List<SelectOptionDto> queryProdIdInfoIssueSuc(@RequestBody Map<String, Object> param) {
-        return finProductQuotation001Service.queryProdIdInfoIssueSuc(param);
+    @PostMapping("queryProdIdInfoIssueSuc/{page}/{length}")
+    public Page<SelectOptionDto> queryProdIdInfoIssueSuc(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) {
+        return finProductQuotation001Service.queryProdIdInfoIssueSuc(page, length,param);
     }
 
     /**
@@ -92,7 +93,7 @@ public class FinProductQuotation001Controller {
      */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<FinProductQuotation001Dto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
-    		throws Exception{
+    {
     	return finProductQuotation001Service.selectForPage(page, length, param);
     }
     /**
@@ -196,7 +197,7 @@ public class FinProductQuotation001Controller {
     @Transactional
     @DTXTransaction
     @PostMapping("doInsert")
-    public void doInsert(@RequestBody FinProductQuotation002Dto dto) throws Exception{
+    public void doInsert(@RequestBody FinProductQuotation002Dto dto) throws InvocationTargetException, IllegalAccessException {
         finProductQuotation001Service.doInsert(dto);
     }
 
@@ -211,7 +212,7 @@ public class FinProductQuotation001Controller {
     @Transactional
     @DTXTransaction
     @PostMapping("doUpdate")
-    public void doUpdate(@RequestBody FinProductQuotation002Dto dto) throws Exception{
+    public void doUpdate(@RequestBody FinProductQuotation002Dto dto) throws InvocationTargetException, IllegalAccessException {
         finProductQuotation001Service.doUpdate(dto);
     }
 
@@ -226,7 +227,7 @@ public class FinProductQuotation001Controller {
     @Transactional
     @DTXTransaction
     @PostMapping("doDelete")
-    public void doDelete(@RequestBody FinProductQuotation002Dto dto) throws Exception{
+    public void doDelete(@RequestBody FinProductQuotation002Dto dto) {
         finProductQuotation001Service.doDelete(dto);
     }
 

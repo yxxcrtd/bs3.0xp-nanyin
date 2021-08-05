@@ -200,4 +200,17 @@ public class TrdBondMarketTradeController {
     public List<Map<String,Object>> getSaveParam(@RequestBody TrdBondMarketTradeDto entity){
         return trdBondMarketTradeService.getSaveParam(entity);
     }
+
+    /**
+     * 根据资产代码查询是否是存在上市流通交易的发行标的
+     *
+     * @param finprodId
+     * @return 大于0则为是
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("selectIssueAsset")
+    public int selectIssueAsset(String finprodId) {
+        return trdBondMarketTradeService.selectIssueAsset(finprodId);
+    }
 }

@@ -1,14 +1,18 @@
 package com.joyintech.tams.svreport.pbc.common.util;
 
 import java.io.*;
-import java.security.SecureRandom;
-
+import javax.annotation.PostConstruct;
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
 
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import com.joyintech.framework.exception.BusinessException;
 import com.thoughtworks.xstream.core.util.Base64Encoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * Base64 编码和解码。
@@ -16,19 +20,22 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
  * @author liushuai
  * @date 2019年08月29日
  */
+@Component
 public class Base64 {
-	private static String KEY = "HF*ts303";
-	public static void main(String[] args) {
-		String s = "HF*ts303";
-		String enc1;
-		String dec1;
-		//加密
-		enc1 = encryptData(s);
-		System.out.println(enc1);
-		//解密
-		dec1 = decryptData(enc1);
-		System.out.println(dec1);
-	}
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(Base64.class);
+
+    @Value("${application.chb.base64Key}")
+    private String base64Key;
+
+    private static String KEY;
+
+    @PostConstruct
+    public void setEndkey(){
+        this.KEY = base64Key;
+    }
 
 	public Base64() {
 	}
@@ -40,20 +47,26 @@ public class Base64 {
 	 */
 	public static String encryptData(String input) {
 		try {
-			SecureRandom sr = new SecureRandom();
-			byte rawKeyData[] = KEY.getBytes();
-			DESKeySpec dks = new DESKeySpec(rawKeyData);
-
-			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-			SecretKey key = keyFactory.generateSecret(dks);
-
-			Cipher c = Cipher.getInstance("DES");
-			c.init(Cipher.ENCRYPT_MODE, key, sr);
-			byte[] cipherByte = c.doFinal(input.getBytes());
-			String dec = new Base64Encoder().encode(cipherByte);
-			return dec;
-
+			if (KEY == null) {
+//				System.out.print("Key为空null");
+				logger.info("Key为空null");
+				return null;
+			}
+			// 判断Key是否为16位
+			if (KEY.length() != 16) {
+//				System.out.print("Key长度不是16位");
+				logger.info("Key长度不是16位");
+				return null;
+			}
+			byte[] raw = KEY.getBytes("utf-8");
+			SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");//"算法/模式/补码方式"
+			IvParameterSpec iv = new IvParameterSpec(KEY.getBytes());//使用CBC模式，需要一个向量iv，可增加加密算法的强度
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+			byte[] encrypted = cipher.doFinal(input.getBytes());
+			return new Base64Encoder().encode(encrypted);//此处使用BASE64做转码功能，同时能起到2次加密的作用。
 		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}
@@ -65,21 +78,35 @@ public class Base64 {
 	 */
 	public static String decryptData(String input) {
 		try {
-			byte[] dec = new Base64Encoder().decode(input);
-
-			SecureRandom sr = new SecureRandom();
-			byte rawKeyData[] = KEY.getBytes();
-
-			DESKeySpec dks = new DESKeySpec(rawKeyData);
-			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-			SecretKey key = keyFactory.generateSecret(dks);
-
-			Cipher c = Cipher.getInstance("DES");
-			c.init(Cipher.DECRYPT_MODE, key, sr);
-			byte[] clearByte = c.doFinal(dec);
-
-			return new String(clearByte);
+			// 判断Key是否正确
+			if (KEY == null) {
+//				System.out.print("Key为空null");
+				logger.info("Key为空null");
+				return null;
+			}
+			// 判断Key是否为16位
+			if (KEY.length() != 16) {
+//				System.out.print("Key长度不是16位");
+				logger.info("Key长度不是16位");
+				return null;
+			}
+			byte[] raw = KEY.getBytes("utf-8");
+			SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			IvParameterSpec iv = new IvParameterSpec(KEY.getBytes());
+			cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+			byte[] encrypted1 = new Base64Encoder().decode(input);;//先用base64解密
+			try {
+				byte[] original = cipher.doFinal(encrypted1);
+				String originalString = new String(original);
+				return originalString;
+			} catch (Exception e) {
+//				System.out.println(e.toString());
+				logger.info(e.toString());
+				return null;
+			}
 		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
 		}
 		return input;
 	}
@@ -178,7 +205,7 @@ public class Base64 {
 			}
 		}
 		if (index != out.length) {
-			throw new Error("Miscalculated data length (wrote " + index
+			throw new BusinessException("Miscalculated data length (wrote " + index
 					+ " instead of " + out.length + ")");
 		}
 		return out;
@@ -270,7 +297,8 @@ public class Base64 {
 				if (baos != null)
 					baos.close();
 			} catch (Exception e) {
-				System.out.println(e);
+//				System.out.println(e);
+				logger.info(e.toString());
 			}
 		}
 		return b;
@@ -299,7 +327,8 @@ public class Base64 {
 				if (fr != null)
 					fr.close();
 			} catch (Exception e) {
-				System.out.println(e);
+//				System.out.println(e);
+				logger.info(e.toString());
 			}
 		}
 		return caw.toCharArray();
@@ -319,7 +348,8 @@ public class Base64 {
 				if (fos != null)
 					fos.close();
 			} catch (Exception e) {
-				System.out.println(e);
+//				System.out.println(e);
+				logger.info(e.toString());
 			}
 		}
 	}
@@ -338,7 +368,7 @@ public class Base64 {
 				if (fos != null)
 					fos.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 	}

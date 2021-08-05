@@ -23,7 +23,7 @@ var AutoCoupon = function(){
 					Joyin.ajaxSync(basePath + 'component/common/CommonAutoCoupon/autoBondTradeCoupon?finprodMarketId=' 
 							+ finprodMarketId,'',
 							function(result) {
-								autoResult= result;
+								autoResult= result.data;
 							});
 				return autoResult;
 				}

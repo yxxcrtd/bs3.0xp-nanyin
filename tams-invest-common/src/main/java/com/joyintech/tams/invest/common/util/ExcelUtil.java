@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.common.util;
 
 import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -220,7 +221,7 @@ public class ExcelUtil {
 			}
 			if (inputStream == null) {
 			    if (null == file) {
-			        file = new File(fileName);
+			        file = new SafelyFile(fileName);
 			    }
 			    if (StringUtil.isEmpty(fileName)) {
 			        fileName = file.getName();
@@ -234,7 +235,6 @@ public class ExcelUtil {
 			        inputStream.close();
 			    }
 			    catch (Exception e) {
-//                e.printStackTrace();
 			        logger.error(e.getMessage(),e);
 			    }
 
@@ -245,7 +245,6 @@ public class ExcelUtil {
 			        inputStream.close();
 			    }
 			    catch (Exception e) {
-//                e.printStackTrace();
 			        logger.error(e.getMessage(),e);
 			    }
 			}

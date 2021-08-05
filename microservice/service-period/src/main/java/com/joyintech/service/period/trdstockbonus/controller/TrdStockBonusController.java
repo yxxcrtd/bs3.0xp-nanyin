@@ -66,7 +66,7 @@ public class TrdStockBonusController {
     @PostMapping("getBusiCode/{page}/{length}")
     public Page<SelectOptionDto> getBusiCode(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                              @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdStockBonusService.getBusiCode(page, length, param);
     }
 
@@ -84,7 +84,7 @@ public class TrdStockBonusController {
     @PostMapping("getSecManageAcctId/{page}/{length}")
     public Page<SelectOptionDto> getSecManageAcctId(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdStockBonusService.getSecManageAcctId(page, length, param);
     }
 
@@ -102,7 +102,7 @@ public class TrdStockBonusController {
     @PostMapping("getFinprodMarketId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdStockBonusService.getFinprodMarketId(page, length, param);
     }
 
@@ -117,7 +117,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("revokeCheck")
     public int revokeCheck(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return trdStockBonusService.revokeCheck(param);
     }
 
@@ -131,7 +131,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("findEffectiveInfo")
     public TrdStockBonusDto findEffectiveInfo(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return trdStockBonusService.findEffectiveInfo(param);
     }
 
@@ -143,7 +143,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("findEffectiveT13Deal")
     public List<BaseTradeProductDealDto> findEffectiveT13Deal(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return trdStockBonusService.findEffectiveT13Deal(param);
     }
 
@@ -157,7 +157,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("findProcessInfo")
     public TrdStockBonusDto findProcessInfo(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return trdStockBonusService.findProcessInfo(param);
     }
 
@@ -172,7 +172,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("finPrdDealInfo")
     public List<TrdProductDeal> finPrdDealInfo(@RequestBody String busiCode)
-        throws Exception {
+    {
         return trdStockBonusService.finPrdDealInfo(busiCode);
     }
 
@@ -187,7 +187,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("findPtlTradeInfo")
     public PtlTrade findPtlTradeInfo(@RequestBody String tradeId)
-        throws Exception {
+    {
         return trdStockBonusService.findPtlTradeInfo(tradeId);
     }
 
@@ -202,7 +202,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("findPrdDealAddInfo")
     public TrdProductDealAdd findPrdDealAddInfo(@RequestBody String tradeId)
-        throws Exception {
+    {
         return trdStockBonusService.findPrdDealAddInfo(tradeId);
     }
 
@@ -217,7 +217,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("findStlPayOrdInfo")
     public List<StlPayOrders> findStlPayOrdInfo(@RequestBody String tradeId)
-        throws Exception {
+    {
         return trdStockBonusService.findStlPayOrdInfo(tradeId);
     }
 
@@ -231,7 +231,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("findDividDetailInfo")
     public List<FinAssetIntInfo> findDividDetailInfo(@RequestBody String busiCode)
-        throws Exception {
+    {
         return trdStockBonusService.findDividDetailInfo(busiCode);
     }
 
@@ -244,7 +244,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("findProcessDividInfo")
     public List<FinAssetIntInfo> findProcessDividInfo(@RequestBody String busiCode)
-        throws Exception {
+    {
         return trdStockBonusService.findProcessDividInfo(busiCode);
     }
 
@@ -258,7 +258,7 @@ public class TrdStockBonusController {
      */
     @PostMapping("findividInfo")
     public List<FinAssetIntInfo> findividInfo(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return trdStockBonusService.findividInfo(param);
     }
 

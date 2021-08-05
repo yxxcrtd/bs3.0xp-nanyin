@@ -10,6 +10,7 @@
  
 package com.joyintech.service.product.messageadjust.finfloatmgtexpquotation.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -53,9 +54,11 @@ public class FinFloatMgtExpQuotationController {
      * @see
      * @since 1.0
      */
-    @PostMapping("getFinprodId")
-    public List<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param) {
-        return finFloatMgtExpQuotationService.getFinprodId(param);
+    @PostMapping("getFinprodId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
+                                              @PathVariable("page") int page,
+                                              @PathVariable("length") int length) {
+        return finFloatMgtExpQuotationService.getFinprodId(page, length, param);
     }
     /**
      * 浮动管理费报价 分页查询
@@ -70,7 +73,7 @@ public class FinFloatMgtExpQuotationController {
      */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<FinFloatMgtExpQuotationDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception{
+    {
         return finFloatMgtExpQuotationService.selectForPage(page, length, param);
     }
     
@@ -87,7 +90,7 @@ public class FinFloatMgtExpQuotationController {
      */
     @PostMapping("selectForList")
     public List<FinFloatMgtExpQuotationDto> selectForList(@RequestBody Map<String, Object> param)
-            throws Exception{
+    {
         return finFloatMgtExpQuotationService.selectForList(param);
     }
     /**
@@ -101,7 +104,7 @@ public class FinFloatMgtExpQuotationController {
     @Transactional
     @DTXTransaction
     @PostMapping("doComplete")
-    public void doComplete(@RequestBody FinFloatMgtExpQuotationDto dto) throws Exception{
+    public void doComplete(@RequestBody FinFloatMgtExpQuotationDto dto) throws InvocationTargetException, IllegalAccessException {
         finFloatMgtExpQuotationService.doComplete(dto);
     }
     /**

@@ -41,8 +41,7 @@ public class ValMstCapAcctInfoService extends CommonExportService<ValMstCapAcctI
      * @throws Exception 
      */
     @DataSource(DataSourceType.MASERT)
-    public Page<ValMstCapAcctInfoDto> findPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    public Page<ValMstCapAcctInfoDto> findPage(int page, int length, Map<String, Object> pageParam){
     	 return super.queryForPage(page, length, ()-> valMstCapAcctInfoMapper.queryPageList(pageParam));
     }
     
@@ -54,8 +53,7 @@ public class ValMstCapAcctInfoService extends CommonExportService<ValMstCapAcctI
      * @throws Exception 
      */
     @DataSource(DataSourceType.MASERT)
-    public boolean deleteValMatAcctInfoByAcctno(ValMstCapAcctInfoDto dto)
-        throws Exception {
+    public boolean deleteValMatAcctInfoByAcctno(ValMstCapAcctInfoDto dto){
     	 boolean flag = false;
     	 String acctNo = dto.getAcctNo();
     	 int num = valMstCapAcctInfoMapper.deleteValMatAcctInfoByAcctno(acctNo);

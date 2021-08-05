@@ -972,6 +972,11 @@
      * 画面加载完成
      */
     $(function() {
+        //通过来账分拣初始化的页面交易金额不可改变
+        if(pageModel==PAGE_MODEL_NEW&&isFromCheck&&isFromCheck=='true'){
+            $("#tradeAmt").attr("disabled",true);
+        }
+
         // 1.资产代码下拉框选择后，联动带出 币种、资产类型、资产名称、金融产品代码、发行人
         $('#finprodMarketId')
                 .change(
@@ -1106,6 +1111,28 @@
         $('#TrdFundDuration002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
+        //add by jiangpeng on 20210522 start TISHKBS-1803
+        $("#arriveDate").change(function () {
+            if(isTodo){
+                var index = layer.open({
+                    type: 1,
+                    icon : 16,
+                    area: ['200px', '100px'],
+                    content: '数据加载中',closeBtn: 0
+                });
+                var orderTabel = table.getAllRows();
+                for (var i = 0; i < orderTabel.length; i++) {
+                    orderTabel[i].settleDateText = $("#arriveDate").val();
+                    orderTabel[i].settleDate = $("#arriveDate").val();
+                }
+                table.clear(function () {
+                    layui.layer.close(index);
+                    table.addRow(orderTabel)
+                });
+
+            }
+        });
+        //add by jiangpeng on 20210522 end TISHKBS-1803
         setTimeout(function(){init();},0);
     });
 }());

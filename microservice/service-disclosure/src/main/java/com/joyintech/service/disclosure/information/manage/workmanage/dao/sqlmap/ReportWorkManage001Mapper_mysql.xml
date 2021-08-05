@@ -21,7 +21,7 @@
 		from
 (
 		select
-		@rownum:=@rownum+1 rownum, JOB_ID,START_DATE,
+		@rownum:=@rownum+1 rownum, a.JOB_ID,a.START_DATE,
 		if(@JOB_ID=a.JOB_ID,@rank:=@rank+1,@rank:=1) as Sequence,
 		@JOB_ID:=a.JOB_ID
 		from(SELECT * from (select * from REP_INSTALL_LOG where  START_DATE  is not null)c order by JOB_ID,START_DATE DESC)a,

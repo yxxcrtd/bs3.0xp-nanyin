@@ -54,7 +54,7 @@ public class ValProfitQuery002Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/findPageAll")
-    public List<ValProfitQuery001Dto> findPageAll(@RequestBody Map<String, Object> parameters) throws Exception {
+    public List<ValProfitQuery001Dto> findPageAll(@RequestBody Map<String, Object> parameters) throws CloneNotSupportedException {
         //update yanya 20190912 根据账套组账套ID获取账套
         // 全账套
         //List<SuggestDto> accountList = valAssetBook001Service.getBooksetId2(null);

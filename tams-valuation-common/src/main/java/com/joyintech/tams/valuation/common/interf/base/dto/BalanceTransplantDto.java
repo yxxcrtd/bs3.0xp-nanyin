@@ -18,8 +18,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BalanceTransplantDto extends BaseEntity implements Cloneable {
+    private static Logger logger = LoggerFactory.getLogger(BalanceTransplantDto.class);
 
     /**
 	 * 
@@ -430,7 +433,7 @@ public class BalanceTransplantDto extends BaseEntity implements Cloneable {
 		try {
 			p = (BalanceTransplantDto) super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		return p;
 	}

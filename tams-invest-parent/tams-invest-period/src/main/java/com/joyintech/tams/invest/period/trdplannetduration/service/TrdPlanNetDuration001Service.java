@@ -38,6 +38,8 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +61,10 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
  */
 @Service
 public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNetDuration001Dto> implements BaseProcessService<TrdPlanNetDuration001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdPlanNetDuration001Service.class);
 
     /**
      * 业务编号
@@ -150,7 +156,7 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, false);
     }
@@ -189,7 +195,8 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
         restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdPlanNetDuration/doComplete", entity,
             String.class);
         // 除权登记生成总集复核数据
-        if (!StringUtil.equals(entity.getMode(), "revoke") && StringUtil.equals(entity.getType(), "02")) {
+        if (!(StringUtil.equals(entity.getMode(), "revoke") || StringUtil.equals(entity.getMode(), "REVOKE"))
+                && StringUtil.equals(entity.getType(), "02")) {
             // 设置工作流代码
             entity.setWorkflowId(null);
             if (StringUtil.equals(entity.getBonusMode(), DictCodeList.分红方式_现金分红.getValue())) {
@@ -210,13 +217,14 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
                 periodCommonService.autoDealQtyForSubmit(entity.getFinAssetIntInfoList(), entity.getRegistShare(),
                     entity.getQty());
                 entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
+                entity.setCreateUser(entity.getFinAssetIntInfoList().get(0).getCreateUser());
                 try {
                     // 启动流程
                     WorkFlowUtil.startProcess(param,"","", entity.getCreateUser(),OperationType.NEW,false,entity);
                     // 设置为提交 插入流程表
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

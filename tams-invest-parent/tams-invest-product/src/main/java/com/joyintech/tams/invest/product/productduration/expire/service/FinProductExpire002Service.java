@@ -15,7 +15,6 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
-import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -40,6 +39,8 @@ import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +57,10 @@ import java.util.*;
  */
 @Service
 public class FinProductExpire002Service extends BaseService<FinProductExpire002Dto> implements BaseProcessService<FinProductExpire002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinProductExpire002Service.class);
 
     /**
      * {@linkplain}
@@ -124,8 +129,9 @@ public class FinProductExpire002Service extends BaseService<FinProductExpire002D
     @Override
     public void doUpdate(FinProductExpire002Dto entity) {
         entity.setPs(entity.getDealType());
-        if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
+        if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType()) && StringUtil.isEmpty(entity.getRevokeReason())) {
             // 先删除流程中数据
+            AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getBusiNo());
             this.doDelete(entity.getWorkflowId());
             // 2.0改造
             this.setFinProductExpireBaseTrdDto(entity);
@@ -142,7 +148,7 @@ public class FinProductExpire002Service extends BaseService<FinProductExpire002D
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
            // entity.setOperateType(OperationType.MODIFY.toString());
             // 重新insert

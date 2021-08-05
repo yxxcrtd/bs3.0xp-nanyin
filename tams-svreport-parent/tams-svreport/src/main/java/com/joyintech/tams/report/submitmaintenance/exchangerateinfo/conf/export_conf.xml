@@ -9,6 +9,7 @@
 			<Cell order="5" name="中间价（元）">midPrice</Cell><!-- 中间价（元）-->
 			<Cell order="6" name="最高价（元）">highPrice</Cell><!-- 最高价（元） -->
 			<Cell order="7" name="最低价（元）">lowPrice</Cell><!-- 最低价（元） -->
+			<Cell order="8" name="报价单位（元）">quotUnit</Cell><!-- 报价单位（元） -->
 			
 		</Row>
 	</Worksheet>

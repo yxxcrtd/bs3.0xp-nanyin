@@ -48,7 +48,7 @@ public class NonstProUplimitMainController extends BaseService<NonstProUplimitMa
 	 */
 	@PostMapping("selectForPage/{page}/{length}")
 	public Page<NonstProUplimitMainDto> selectForPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return nonstProUplimitMainService.selectForPage(page, length, param);
 	}
     /**

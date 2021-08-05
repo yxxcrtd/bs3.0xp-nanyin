@@ -115,11 +115,11 @@ public class MstFeeVarietiesValidator implements BeanValidator {
 
 			if (DictCodeList.收费类型_计提式费用.getValue().equals(dto.getChargeType())) {
 				if (!StringUtils.equalsIgnoreCase(DictCodeList.费用品种类型_浮动差额中收.getValue(), dto.getFeeType())) {
-					if ("".equals(dto.getBasicBill()) || dto.getBasicBill() == null) {
+					if (dto.getBasicBill() == null || "".equals(dto.getBasicBill())) {
 						resultList.add(new ValidMessage(
 								this.getMessage("FW_E_0006", getMessage("MstFeeVarieties002.basicBill"))));
 					}
-					if ("".equals(dto.getBasis()) || dto.getBasis() == null) {
+					if (dto.getBasis() == null || "".equals(dto.getBasis())) {
 						resultList.add(
 								new ValidMessage(this.getMessage("FW_E_0006", getMessage("MstFeeVarieties002.basis"))));
 					}

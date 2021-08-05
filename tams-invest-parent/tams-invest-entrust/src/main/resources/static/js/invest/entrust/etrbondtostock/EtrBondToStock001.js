@@ -183,11 +183,41 @@ $(function () {
      * 导出事件
      */
     var entrustExportExcel = function () {
-        Joyin.exportExcel('export', getPageParams());
+//        Joyin.exportExcel('export', getPageParams());
+
+        if (table != null && table != '') {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getPageParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas,
+                isPosi : false
+            });
+        }
+
     };
 
     var positionExportExcel = function () {
-        Joyin.exportExcel('export', getPositionFormParams());
+//        Joyin.exportExcel('export', getPositionFormParams());
+
+        if (othertable != null && othertable != '') {
+            var selArr = othertable.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getPositionFormParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas,
+                isPosi : true
+            });
+        }
+
     };
     //自动刷新时间
 

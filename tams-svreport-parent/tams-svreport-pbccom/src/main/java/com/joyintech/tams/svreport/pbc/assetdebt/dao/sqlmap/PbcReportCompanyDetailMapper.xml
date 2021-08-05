@@ -185,7 +185,10 @@
           </if> 
           <if test="deptCode != null" >
 	         and DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
-	       </if> 
+	       </if>
+          <if test="deptCode == null" >
+            and DEPT_CODE is null
+          </if>
        and pr.send_status = '01'/*只删除未报送数据*/)
   </delete>
 </mapper>

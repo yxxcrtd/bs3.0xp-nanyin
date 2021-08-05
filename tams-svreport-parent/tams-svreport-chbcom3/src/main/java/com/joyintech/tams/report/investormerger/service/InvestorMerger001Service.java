@@ -92,7 +92,7 @@ public class InvestorMerger001Service extends CommonExportService<ChbEquHoldChec
 						ChbEquHoldCheckDto.class);
 				pageParam.put("investorList", investList);
 			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(),e);
 	            logger.error(e.getMessage(),e);
 			}
 		}else{
@@ -144,7 +144,7 @@ public class InvestorMerger001Service extends CommonExportService<ChbEquHoldChec
 //					record = investList.get(0);
 //				}
 //			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(),e);
 //			}
 //		}
 		record = chbEquHoldCheckDtoMapper.selectByPrimarykey((String)pageParam.get("indentifyMark"));
@@ -351,7 +351,7 @@ public class InvestorMerger001Service extends CommonExportService<ChbEquHoldChec
 //		登记序号
 		holdSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 //		登记银行代码
-		holdSub.setRegistBankCode(CommonUtil.getUserBankCode());
+		holdSub.setRegistBankCode(CommonUtil.getUserBankCode(null));
 //		机构代码
 		holdSub.setOrgCode(CommonUtil.getOrgCode());
 //		部门代码

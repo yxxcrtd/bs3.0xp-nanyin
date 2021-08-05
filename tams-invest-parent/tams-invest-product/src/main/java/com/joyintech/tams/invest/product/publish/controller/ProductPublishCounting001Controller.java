@@ -73,7 +73,7 @@ public class ProductPublishCounting001Controller extends BaseController {
      */
     @RequestMapping("findPrdPage")
     @ResponseBody
-    public Page<ProductPublishCounting001Dto> findPrdPage() throws Exception {
+    public Page<ProductPublishCounting001Dto> findPrdPage() {
     	return productPublishCounting001Service.findPrdPage(RequestUtil.getPageParam());
     }
     /**
@@ -83,7 +83,7 @@ public class ProductPublishCounting001Controller extends BaseController {
      */
     @RequestMapping("findAssetPage")
     @ResponseBody
-    public Page<ProductPublishCounting001Dto> findAssetPage() throws Exception {
+    public Page<ProductPublishCounting001Dto> findAssetPage() {
     	
     	return productPublishCounting001Service.findAssetPage(RequestUtil.getPageParam());
     }
@@ -140,7 +140,7 @@ public class ProductPublishCounting001Controller extends BaseController {
     
     @ResponseBody
     @RequestMapping("/getPrdIssueplanCode")
-    public Page<SelectOptionDto> getPrdIssueplanCode() throws Exception{
+    public Page<SelectOptionDto> getPrdIssueplanCode() {
     	return productPublishCounting001Service.getPrdIssueplanCode(RequestUtil.getPageParam());
     }
     /**
@@ -151,7 +151,7 @@ public class ProductPublishCounting001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
     	return productPublishCounting001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

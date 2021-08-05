@@ -157,14 +157,15 @@
 			star();
 			layui.form.render();
 	    });
-		$('#' + BussRepFundInfoentityName + '_' + 'repPartyType1').on('change', function () {
+		// add by jiangpeng on 20210629 人行机构规模 字段 废弃了，页面隐藏,人行月报改成用贷款明细信息进行统计了
+		/*$('#' + BussRepFundInfoentityName + '_' + 'repPartyType1').on('change', function () {
 			if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F18&&$('#' + BussRepFundInfoentityName + '_' + 'repPartyType1').val()==SVR_PARTY_TYPE1_01){
 				$('#' + BussRepFundInfoentityName + '_' + 'repInstitSize_div').show();
 			}else{
 				$('#' + BussRepFundInfoentityName + '_' + 'repInstitSize_div').val('').trigger("change");
 				$('#' + BussRepFundInfoentityName + '_' + 'repInstitSize_div').hide();
 			}
-		});
+		});*/
 		// 投资资产种类及比例
         getElementById('repFundInvestAsset_showRule').click(function(){
             Joyin.alert(JoyinUtil.getLabel("BussRepFinProductInfo.repInvTypeRat.showRule"));

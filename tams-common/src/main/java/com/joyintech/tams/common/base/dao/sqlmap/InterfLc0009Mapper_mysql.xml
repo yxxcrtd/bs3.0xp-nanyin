@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfLc0009Mapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfLc0009" >
+        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <result column="SHORTNAME" property="shortname" jdbcType="VARCHAR" />
+        <result column="PRODNAME" property="prodname" jdbcType="VARCHAR" />
+        <result column="PRODMODE" property="prodmode" jdbcType="VARCHAR" />
+        <result column="REDEMODE" property="redemode" jdbcType="VARCHAR" />
+        <result column="INCOMEMODE" property="incomemode" jdbcType="VARCHAR" />
+        <result column="PROXYSALEPRODID" property="proxysaleprodid" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="VARCHAR" />
+        <result column="MDATE" property="mdate" jdbcType="VARCHAR" />
+        <result column="RDATE" property="rdate" jdbcType="VARCHAR" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="ACCOUNTID" property="accountid" jdbcType="VARCHAR" />
+        <result column="REDEAMT" property="redeamt" jdbcType="DECIMAL" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="REINTEREST" property="reinterest" jdbcType="DECIMAL" />
+        <result column="SUBCCY" property="subccy" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfLc0009" >
+        insert into INTERF_LC0009 (PRODID, SHORTNAME, PRODNAME, 
+            PRODMODE, REDEMODE, INCOMEMODE, 
+            PROXYSALEPRODID, BRANCH, VDATE, 
+            MDATE, RDATE, BASIS, 
+            ACCOUNTID, REDEAMT, YIELD, 
+            REINTEREST, SUBCCY, REMARK, 
+            CDATE, CREATE_TIME)
+        values (#{prodid,jdbcType=VARCHAR}, #{shortname,jdbcType=VARCHAR}, #{prodname,jdbcType=VARCHAR}, 
+            #{prodmode,jdbcType=VARCHAR}, #{redemode,jdbcType=VARCHAR}, #{incomemode,jdbcType=VARCHAR}, 
+            #{proxysaleprodid,jdbcType=VARCHAR}, #{branch,jdbcType=VARCHAR}, #{vdate,jdbcType=VARCHAR}, 
+            #{mdate,jdbcType=VARCHAR}, #{rdate,jdbcType=VARCHAR}, #{basis,jdbcType=VARCHAR}, 
+            #{accountid,jdbcType=VARCHAR}, #{redeamt,jdbcType=DECIMAL}, #{yield,jdbcType=DECIMAL}, 
+            #{reinterest,jdbcType=DECIMAL}, #{subccy,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{cdate,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfLc0009" >
+        insert into INTERF_LC0009
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                PRODID,
+            </if>
+            <if test="shortname != null" >
+                SHORTNAME,
+            </if>
+            <if test="prodname != null" >
+                PRODNAME,
+            </if>
+            <if test="prodmode != null" >
+                PRODMODE,
+            </if>
+            <if test="redemode != null" >
+                REDEMODE,
+            </if>
+            <if test="incomemode != null" >
+                INCOMEMODE,
+            </if>
+            <if test="proxysaleprodid != null" >
+                PROXYSALEPRODID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="rdate != null" >
+                RDATE,
+            </if>
+            <if test="basis != null" >
+                BASIS,
+            </if>
+            <if test="accountid != null" >
+                ACCOUNTID,
+            </if>
+            <if test="redeamt != null" >
+                REDEAMT,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="reinterest != null" >
+                REINTEREST,
+            </if>
+            <if test="subccy != null" >
+                SUBCCY,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="shortname != null" >
+                #{shortname,jdbcType=VARCHAR},
+            </if>
+            <if test="prodname != null" >
+                #{prodname,jdbcType=VARCHAR},
+            </if>
+            <if test="prodmode != null" >
+                #{prodmode,jdbcType=VARCHAR},
+            </if>
+            <if test="redemode != null" >
+                #{redemode,jdbcType=VARCHAR},
+            </if>
+            <if test="incomemode != null" >
+                #{incomemode,jdbcType=VARCHAR},
+            </if>
+            <if test="proxysaleprodid != null" >
+                #{proxysaleprodid,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=VARCHAR},
+            </if>
+            <if test="rdate != null" >
+                #{rdate,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="accountid != null" >
+                #{accountid,jdbcType=VARCHAR},
+            </if>
+            <if test="redeamt != null" >
+                #{redeamt,jdbcType=DECIMAL},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="reinterest != null" >
+                #{reinterest,jdbcType=DECIMAL},
+            </if>
+            <if test="subccy != null" >
+                #{subccy,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfLc0009" >
+        insert into INTERF_LC0009(PRODID, SHORTNAME, PRODNAME, PRODMODE, REDEMODE, INCOMEMODE, 
+        PROXYSALEPRODID, BRANCH, VDATE, MDATE, RDATE, BASIS, ACCOUNTID, REDEAMT, YIELD, REINTEREST, 
+        SUBCCY, REMARK, CDATE, CREATE_TIME)
+        select PRODID, SHORTNAME, PRODNAME, PRODMODE, REDEMODE, INCOMEMODE, 
+            PROXYSALEPRODID, BRANCH, VDATE, MDATE, RDATE, BASIS, ACCOUNTID, REDEAMT, YIELD, REINTEREST, 
+            SUBCCY, REMARK, CDATE, CREATE_TIME
+             from INTERF_LC0009
+             where 1 = 1
+    </insert>
+</mapper>

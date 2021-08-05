@@ -51,7 +51,6 @@ public class MstYieldCurveInfoService extends CommonExportService<MstYieldCurveI
      * <功能详细描述>
      * @param pageParam Map<String, Object>
      * @return Page<MstYieldCurveInfoDto>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */

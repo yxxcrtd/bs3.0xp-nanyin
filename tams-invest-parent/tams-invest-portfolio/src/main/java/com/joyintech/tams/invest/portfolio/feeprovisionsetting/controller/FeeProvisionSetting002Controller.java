@@ -19,6 +19,7 @@ import com.joyintech.tams.invest.portfolio.feeprovisionsetting.dto.FeeProvisionS
 import com.joyintech.tams.invest.portfolio.feeprovisionsetting.service.FeeProvisionSetting002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -86,8 +87,7 @@ public class FeeProvisionSetting002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<TrdAccountmfConfigdetailDto> selectDetail()
-            throws Exception {
+    public Page<TrdAccountmfConfigdetailDto> selectDetail() throws Exception {
         Page<TrdAccountmfConfigdetailDto> page = feeProvisionSetting002Service.selectDetail(RequestUtil.getPageParam());
         return page;
     }
@@ -178,8 +178,7 @@ public class FeeProvisionSetting002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FeeProvisionSetting001Dto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody FeeProvisionSetting001Dto dto, BindingResult br) throws WorkFlowException {
 
         dto.setActPositionEndDate(dto.getPositionEndDate());
         dto.setDealStatus(DictCodeListExt1.有效状态_流程中.getValue());

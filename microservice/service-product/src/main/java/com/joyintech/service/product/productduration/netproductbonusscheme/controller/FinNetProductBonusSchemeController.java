@@ -70,9 +70,10 @@ public class FinNetProductBonusSchemeController {
      * @see
      * @since 1.0
      */
-    @PostMapping("getFinprodMarketId")
-    public List<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String,Object> map){
-        return finNetProductBonusSchemeService.getFinprodMarketId(map);
+    @PostMapping("getFinprodMarketId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String, Object> map,
+                                                    @PathVariable("page") int page, @PathVariable("length") int length) {
+        return finNetProductBonusSchemeService.getFinprodMarketId(page, length, map);
     }
 
     /**
@@ -86,7 +87,7 @@ public class FinNetProductBonusSchemeController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<FinNetProductBonusSchemeDto> selectAll(@RequestBody Map<String, Object> param,
-                                                       @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                       @PathVariable("page") int page, @PathVariable("length") int length) {
         return finNetProductBonusSchemeService.selectForPage(page, length, param);
     }
 
@@ -112,9 +113,11 @@ public class FinNetProductBonusSchemeController {
      * @see
      * @since 1.0
      */
-    @PostMapping("getFinprodMarketIdList")
-    public List<SelectOptionDto> getFinprodMarketIdList(@RequestBody Map<String,Object> map){
-        return finNetProductBonusSchemeService.getFinprodMarketIdList(map);
+    @PostMapping("getFinprodMarketIdList/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketIdList(@RequestBody Map<String,Object> map,
+                                                        @PathVariable("page") int page,
+                                                        @PathVariable("length") int length){
+        return finNetProductBonusSchemeService.getFinprodMarketIdList(page, length, map);
     }
 
     /**
@@ -139,7 +142,7 @@ public class FinNetProductBonusSchemeController {
     @DTXTransaction
     @PostMapping("insert")
     public int insert(@RequestBody FinNetProductBonusSchemeDto dto)
-            throws Exception {
+    {
         return finNetProductBonusSchemeService.insert(dto);
     }
 
@@ -152,7 +155,7 @@ public class FinNetProductBonusSchemeController {
     @DTXTransaction
     @PostMapping("update")
     public int update(@RequestBody FinNetProductBonusSchemeDto dto)
-            throws Exception {
+    {
         return finNetProductBonusSchemeService.update(dto);
     }
 
@@ -318,7 +321,7 @@ public class FinNetProductBonusSchemeController {
     }
 
     @PostMapping("queryBonusDetail")
-    public List<FinNetProductBonusDealDto> queryBonusDetail(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FinNetProductBonusDealDto> queryBonusDetail(@RequestBody Map<String, Object> param) {
         return finNetProductBonusSchemeService.queryBonusDetail(param);
     }
 
@@ -373,7 +376,7 @@ public class FinNetProductBonusSchemeController {
     }
     
     @PostMapping("findCycleDataTableInfo")
-    public List<FinNetProductBonusSchemeDto> findCycleDataTableInfo(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FinNetProductBonusSchemeDto> findCycleDataTableInfo(@RequestBody Map<String, Object> param) {
         
     	List<FinNetProductBonusSchemeDto> list = finNetProductBonusSchemeService.findCycleDataTableInfo(param);
     	return list;

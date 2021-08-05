@@ -10,10 +10,13 @@
 
 package com.joyintech.tams.invest.product.paythevatquery.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +46,10 @@ import com.joyintech.tams.invest.product.paythevatquery.dto.PayTheVatQuery001Dto
  */
 @Service("FinproductPayTheVatQuery001Service")
 public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery001Dto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(PayTheVatQuery001Service.class);
 
 	@Autowired
 	private PayTheVatQuery001Mapper payTheVatQuery001Mapper;
@@ -53,10 +60,8 @@ public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery
      *
      * @param param 过滤参数
      * @return 下拉框列表
-     * @throws Exception Exception
      */
-    public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> param)
-        throws Exception {
+    public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> param){
         //收益型产品 下拉选项过滤净值型产品 lijun add SHBS-518
         //param.put("PROFIT_TYPE", BussinessDictCodeList.收益类型_预期收益.getValue());
         return restTemplate.postForList(
@@ -69,10 +74,8 @@ public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery
      *
      * @param param 过滤参数
      * @return 下拉框列表
-     * @throws Exception Exception
      */
-    public Page<SelectOptionDto> queryChannelIdInfo(Map<String, Object> param)
-        throws Exception {
+    public Page<SelectOptionDto> queryChannelIdInfo(Map<String, Object> param){
         
         param.put("finprodType2_F28", BussinessDictCodeList.金融产品类型_投管用_通道.getValue());
         return super.queryForPageForSelectReturn(() -> payTheVatQuery001Mapper.queryChannelIdInfo(param));
@@ -84,7 +87,7 @@ public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery
 	 * @return
 	 * @throws Exception
 	 */
-	public Page<PayTheVatQuery001Dto> selectForPage(Map<String, Object> params) throws Exception {
+	public Page<PayTheVatQuery001Dto> selectForPage(Map<String, Object> params) throws IOException {
 
 		// 产品代码多选
 		if (StringUtil.isNotEmpty(params.get("portfolioId"))) {
@@ -141,8 +144,7 @@ public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery
         try {
 			return selectForPage(selectParam);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
     }
@@ -151,9 +153,8 @@ public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery
 	 * 
 	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	public List<PayTheVatQuery001Dto> findByList(Map<String, Object> params) throws Exception {
+	public List<PayTheVatQuery001Dto> findByList(Map<String, Object> params){
 
 		// 产品代码多选
 		if (StringUtil.isNotEmpty(params.get("portfolioId"))) {

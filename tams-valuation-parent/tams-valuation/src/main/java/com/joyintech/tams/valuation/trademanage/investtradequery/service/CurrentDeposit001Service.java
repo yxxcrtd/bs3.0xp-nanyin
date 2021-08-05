@@ -71,7 +71,7 @@ public class CurrentDeposit001Service extends CommonExportService<CurrentDeposit
      * @since 1.0
      */
     public Page<CurrentDepositDto> selectByTradeId3(String tradeId)
-        throws Exception {
+         {
         Map<String, Object> map = Maps.newHashMap();
         map.put("tradeId", tradeId);
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/CurrentDeposit001/findPage", map,
@@ -88,7 +88,7 @@ public class CurrentDeposit001Service extends CommonExportService<CurrentDeposit
      * @since 1.0
      */
     public List<CurrentDepositDto> selectByTradeId4(String tradeId)
-        throws Exception {
+         {
         // return currentDeposit001Mapper.selectByTradeId3(tradeId);
         Map<String, Object> map = Maps.newHashMap();
         map.put("tradeId", tradeId);

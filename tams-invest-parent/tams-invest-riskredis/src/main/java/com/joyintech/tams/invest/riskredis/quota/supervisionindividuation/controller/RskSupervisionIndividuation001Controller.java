@@ -11,6 +11,7 @@ import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.Rs
 import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividSpecialAssetDto;
 import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividSpecialStageDto;
 import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividUniteDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -203,8 +204,7 @@ public class RskSupervisionIndividuation001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) RskSupervisionIndividuationDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) RskSupervisionIndividuationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

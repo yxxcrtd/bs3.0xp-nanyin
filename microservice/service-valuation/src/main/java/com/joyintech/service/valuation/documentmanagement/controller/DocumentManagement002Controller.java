@@ -11,6 +11,7 @@
 package com.joyintech.service.valuation.documentmanagement.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.json.JsonSanitizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,8 +95,7 @@ public class DocumentManagement002Controller extends BaseController {
     @Transactional
     @DTXTransaction
 	@PostMapping("/uploadFile")
-	public AjaxResult uploadFile(DocumentManagement001Dto dto,HttpServletResponse response, ModelMap model)
-			throws Exception {
+	public AjaxResult uploadFile(DocumentManagement001Dto dto,HttpServletResponse response, ModelMap model)  {
 		 AjaxResult res = new AjaxResult();
 		 String fileType = dto.getFileType();
 		 if(StringUtil.isNotEmpty(fileType)){			 
@@ -130,10 +131,9 @@ public class DocumentManagement002Controller extends BaseController {
     @RequestMapping(value = "fileUpload", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
     @ResponseBody
     public String fileUpload(HttpServletRequest request, HttpServletResponse response,
-                             ModelMap model)
-        throws Exception {
+                             ModelMap model) throws IOException {
         // 画面ID
-        String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID));
+        String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID)==null?"":request.getParameter(GlobalConstant.PAGE_ID));
         // 初始化进度条
         progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0D, true);
         String uploadFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
@@ -187,7 +187,7 @@ public class DocumentManagement002Controller extends BaseController {
             }
         }
 //        progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0.5D, true);
-        return JsonUtils.object2Json(result);
+        return JsonSanitizer.sanitize(JsonUtils.object2Json(result));
     }
 	    
 	    /**

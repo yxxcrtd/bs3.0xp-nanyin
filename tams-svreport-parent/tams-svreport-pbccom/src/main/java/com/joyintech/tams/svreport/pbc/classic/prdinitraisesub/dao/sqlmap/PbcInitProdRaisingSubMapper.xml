@@ -939,7 +939,8 @@
   <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub" flushCache="true" useCache="false">
   	select 
 	    a.REGIST_SEQNO registSeqno,
-	    nvl(t2.pbc_code,a.pbc_prod_id) PBC_PROD_ID,
+	    <!--nvl(t2.pbc_code,a.pbc_prod_id) PBC_PROD_ID,-->
+        a.pbc_prod_id PBC_PROD_ID,
 	    a.BUY_PLACE buyPlace,
 	    a.CUSTOMER_TYPE1 customerType1,
 	    a.CCY ccy,

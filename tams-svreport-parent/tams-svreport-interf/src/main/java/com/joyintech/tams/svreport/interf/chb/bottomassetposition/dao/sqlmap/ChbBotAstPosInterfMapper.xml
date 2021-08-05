@@ -41,8 +41,10 @@ FROM
     sub.PTL_ID PLAN_ASSET_ID,
     info.FINPROD_MARKET_ID ASSET_CODE,
     info2.REP_CCY CCY,
-    NVL(SUM(sub.SECURITY_QUANTITY),0)*DECODE(fp.FINPROD_TYPE2,'F01',100,1) POS_NUM,
-    NVL(SUM(sub.SMV),0) POS_AMT,
+    /***调整 资产涉及2开头的科目要减，不是全加（科目名称是资产名称，科目代码2开头）**/
+    NVL(SUM(decode(substr(sub.SUB_CODE,0,1),'2',0,sub.SECURITY_QUANTITY)),0)*DECODE(fp.FINPROD_TYPE2,'F01',100,1) POS_NUM,
+    NVL(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV)),0) POS_AMT,
+    /***调整 资产涉及2开头的科目要减，不是全加（科目名称是资产名称，科目代码2开头）**/
     sumsub.TOTAL_NUM TOTAL_NUM,
     max(nvl(sub.CREATE_TIME,sub.UPDATE_TIME)) UPDATE_TIME1,
     sumsub.UPDATE_TIME UPDATE_TIME2
@@ -87,7 +89,7 @@ FROM
 LEFT JOIN RSK_VALTBL_ASSET_SUB sub
 ON sub.VAL_DATE   = asset.POS_DATE
 AND sub.PTL_ID    = asset.PLAN_ASSET_ID
-AND sub.SUB_CODE IN ('10020101','1031','1021')
+AND (sub.SUB_CODE IN ('1002','1031','1021') or  (sub.SUB_CODE like '3003__'))
 GROUP BY asset.POS_DATE,
   asset.PLAN_ASSET_ID,
   asset.ASSET_CODE,
@@ -328,15 +330,14 @@ GROUP BY asset.POS_DATE,
   select * from (
       select val.cdate as POS_DATE,
       dept.FINPROD_MARKET_ID as PLAN_ASSET_ID,
-      dept1.FINPROD_MARKET_ID as ASSET_CODE,
+      nvl(dept1.FINPROD_MARKET_ID,ftp.finprod_id) as ASSET_CODE,
       sum(nvl(bok.O_AMT,0)) as TOTAL_NUM,
       sum(nvl(bok.O_AMT,0)*decode(nvl(info.ccy,trd.ccy),'CNY',1,nvl(rate.yeid,0))) as ISSUE_AMT,
       sum(nvl(pos.UNINVEST_CASH,0)) as UNINVEST_CASH,
 <!--       sum(nvl(val.SHARE_AMT,0)) as POS_NUM, -->
       SUM(nvl(val.share_amt,0)*decode(info1.finprod_type2,'F01',100,1))AS POS_NUM,<!-- 如果是债券则需要乘以100 -->
       sum((nvl(val.TDY_FLOAT_INGPL,0)+nvl(val.DSC_COST_AMT,0)+nvl(val.TDY_INTINCEXP,0)+nvl(val.DELAY_PAY_AMT,0))*decode(
-<!--       	nvl(info1.ccy,trd1.ccy) -->
-      	info1.ccy
+      nvl(info1.ccy,ftp.ccy)
       	,'CNY',1,nvl(rate1.yeid,0))) as POS_AMT,
       '02' as ISCHL,
       GREATEST(max(nvl(val.UPDATE_TIME,val.CREATE_TIME)),max(nvl(bok.UPDATE_TIME,date'1900-01-01'))) UPDATE_TIME
@@ -347,6 +348,8 @@ GROUP BY asset.POS_DATE,
 	  on dept.REP_FINPROD_ID=val.SEC_ACCT_ID
 	  left join rep_asset_dept dept1
 	  on dept1.REP_FINPROD_ID=nvl(fp1.P_FINPROD_ID,fp1.FINPROD_ID)
+      left join fin_trade_product ftp
+      on ftp.finprod_id = val.FINPROD_ID
       left join bok
       on bok.SEC_ACCT_ID=val.SEC_ACCT_ID
       left join pos
@@ -359,23 +362,19 @@ GROUP BY asset.POS_DATE,
       on trd.FINPROD_ID=val.SEC_ACCT_ID
       left join fin_product info1
       on info1.FINPROD_ID=val.FINPROD_ID
-<!--       left join FIN_TRADE_PRODUCT trd1 
-      on trd1.FINPROD_ID=val.FINPROD_ID-->
       left join rate
       on rate.ccyOriginal=nvl(info.ccy,trd.ccy)
       left join rate rate1
-      on rate1.ccyOriginal=
-<!--       	nvl(info1.ccy,trd1.ccy) -->
-      	info1.ccy
+      on rate1.ccyOriginal=nvl(info1.ccy,ftp.ccy)
       where val.sec_acct_id!='999999'
       and stl.sec_acct_id is null
-      and dept1.FINPROD_MARKET_ID is not null
+      and (dept1.FINPROD_MARKET_ID is not null or (ftp.finprod_type2 in ('F02','F03','F04','F05') and ftp.finprod_id is not null))
       and to_char(val.cdate,'yyyy-mm-dd') = #{batchTime,jdbcType=VARCHAR}
       and exists(
         select  1
         from FIN_PRODUCT_ADD fp3
         where fp3.PORTFOLIO_ID = val.PORTFOLIO_ID)
-      group by val.cdate,dept.FINPROD_MARKET_ID,dept1.FINPROD_MARKET_ID
+      group by val.cdate,dept.FINPROD_MARKET_ID,nvl(dept1.FINPROD_MARKET_ID,ftp.finprod_id)
       )
 	</select>
 	

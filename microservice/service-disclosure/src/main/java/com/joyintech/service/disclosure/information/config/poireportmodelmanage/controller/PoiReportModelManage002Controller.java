@@ -22,6 +22,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,23 +106,23 @@ public class PoiReportModelManage002Controller extends BaseController {
 	}
 
 	 @PostMapping("selectRepIdAndUri")
-	    public int selectRepIdAndUri(@RequestBody ReportModelManage002Dto dto) throws Exception {
+	    public int selectRepIdAndUri(@RequestBody ReportModelManage002Dto dto)  {
 		 return reportModelManage002Service.selectRepIdAndUri(dto);
 	    }
 	 
 	 @PostMapping("insertDisPoiTab")
-	    public void insert(@RequestBody DisPoiTab dto) throws Exception {
+	    public void insert(@RequestBody DisPoiTab dto) {
 		 poireportModelManage002Service.insertDisPoiTab(dto);
 	    }
 	 
 	 @PostMapping("insertDisPraamsSub")
-	 public void insertDisPraamsSub(@RequestBody List<DisPraamsSub> list) throws Exception {
+	 public void insertDisPraamsSub(@RequestBody List<DisPraamsSub> list) {
 		 poireportModelManage002Service.insertDisPraamsSub(list);
 	    }
 	 
 	 
 	 @PostMapping("update")
-	    public void update(@RequestBody ReportModelManage002Dto dto) throws Exception {
+	    public void update(@RequestBody ReportModelManage002Dto dto) {
 		 reportModelManage002Service.update(dto);
 	    }
 		
@@ -139,15 +140,14 @@ public class PoiReportModelManage002Controller extends BaseController {
 		 */
 		@RequestMapping(value = "/uploadFile")
 		@ResponseBody
-		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-				throws Exception {
+		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws IOException {
 			 AjaxResult res = new AjaxResult();
 //			 if(request.getParameter("size")>1048576){}
 			 if(StringUtil.isEmpty(this.getParam("folder"))){
 				//进度条消除
 				 reportModelManage002Service.removePercent(request);
 				 String sourcePath=this.getParam("fileName");
-				 File sourceFile=new File(sourcePath);
+				 File sourceFile=new SafelyFile(sourcePath);
 				 if(sourceFile.exists()){
 					 sourceFile.delete();
 				 }
@@ -173,8 +173,8 @@ public class PoiReportModelManage002Controller extends BaseController {
 				}}
 			 //判断目标目镜是否存在
 			 String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH); 
-			 File filepath = new File(uploadFilePath);///home/tamsuser/jasper
-		     File filepath2=new File(uploadFilePath+this.getParam("folder"));///NB/GLJY
+			 File filepath = new SafelyFile(uploadFilePath);///home/tamsuser/jasper
+		     File filepath2=new SafelyFile(uploadFilePath+this.getParam("folder"));///NB/GLJY
 			 if(!filepath.exists()){
 				 filepath.mkdirs();
 			 }
@@ -183,15 +183,16 @@ public class PoiReportModelManage002Controller extends BaseController {
 			 }
 			 if(filepath.exists()&&filepath.isDirectory()){
 				 //获取已经下载的文件，并且转化为文件流
-				 File uploadfile = new File(this.getParam("fileName"));///home/tamsuser/upload/.txt
-				 FileInputStream fis = new FileInputStream(uploadfile);
+				 File uploadfile = new SafelyFile(this.getParam("fileName"));///home/tamsuser/upload/.txt
+				 FileInputStream fis = null;
 				 //要存放的文件名称，并且用输出流降读取的文件流内容输出
 
 				 FileOutputStream fos = null;
 				 BufferedInputStream bis = null;
 				 BufferedOutputStream bos = null;
 			  try {
-				  File downFile = new File(uploadFilePath+this.getParam("folder")+"/"+this.getParam("uploadFileName"));
+				  fis = new FileInputStream(uploadfile);
+				  File downFile = new SafelyFile(uploadFilePath+this.getParam("folder")+"/"+this.getParam("uploadFileName"));
 				   fos= new FileOutputStream(downFile);
 				   bis=new BufferedInputStream(fis);
 				   bos=new BufferedOutputStream(fos);
@@ -201,20 +202,23 @@ public class PoiReportModelManage002Controller extends BaseController {
 				  }
 			  }catch (Exception e)
 			  {
-			  	e.printStackTrace();
+				  logger.error(e.getMessage(),e);
 			  }
 			  finally {
-			  	fos.close();
-			  	bis.close();
-			  	bos.close();
+			  	if (fos != null){
+					fos.close();
+				}
+			  	if (bis != null){
+					bis.close();
+			  	}
+			    if (bos != null){
+					bos.close();
+			    }
+			    if (fis != null){
+					fis.close();
+				}
 			  }
-
-				 
 		 }
-//			 
-			
-			
-			 
 				return res;
 		}
 		

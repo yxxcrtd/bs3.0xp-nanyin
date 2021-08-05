@@ -33,8 +33,7 @@ public class PrdRiskLevel001Service extends CommonExportService<PrdRiskLevel001D
     /**
      * 产品设计编码下拉框
      */
-    public Page<SelectOptionDto> productDesignCode(Map<String, Object> param)
-        throws Exception {
+    public Page<SelectOptionDto> productDesignCode(Map<String, Object> param){
         return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/PrdRiskLevel/productDesignCode", param,
             SelectOptionDto.class);

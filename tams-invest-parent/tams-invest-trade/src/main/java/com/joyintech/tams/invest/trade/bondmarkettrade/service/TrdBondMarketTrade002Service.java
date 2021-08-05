@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.trade.bondmarkettrade.dto.TrdBondMarketTradeDto;
+import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,12 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
 
+    /**
+     * 标的类金融产品扩展表mapper
+     */
+    @Autowired
+    private FinProductMapper finProductMapper;
+
     @Override
     public void doComplete(TrdBondMarketTradeDto entity, OperationType operationType) {
         
@@ -132,6 +139,9 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                         baseTradeInfoDto.getTrdProductDeal().setShareAmt(null);
                         inputDto.setProdid(baseTradeInfoDto.getTrdProductDealAdd().getPortfolioId());
                         inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+                        if(inputDto.getProdid().contains("F28_")){
+                            inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_通道.getValue());
+                        }
                         inputDto.setTrdProductDeal(baseTradeInfoDto.getTrdProductDeal());
                         inputDto.setTrdProductDealAdd(baseTradeInfoDto.getTrdProductDealAdd());
                         allTradeCommonInputDtos.add(inputDto);
@@ -347,6 +357,12 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
                 trdProductDealAdd.setTradeId(ptlSecPositionFlowDto.getTradeId());
                 trdProductDealAdd.setPortfolioId(ptlSecPositionFlowDto.getPortfolioId());
+                //如果是通过投资，则组合换成通道的账套
+                FinProduct finProduct = finProductMapper.selectByPrimaryKey(ptlSecPositionFlowDto.getSecAcctId());
+                if(finProduct !=null && StringUtil.equals(finProduct.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_通道.getValue())){
+                    String TempPortfolioId = DictCodeListExt1.金融产品类型_投管用_理财产品.getValue()+FinalString.LAYERING_SPLIT+ptlSecPositionFlowDto.getPortfolioId();
+                    trdProductDealAdd.setPortfolioId(TempPortfolioId + FinalString.LAYERING_SPLIT+ptlSecPositionFlowDto.getSecAcctId());
+                }
                 trdProductDealAdd.setrFinprodId(dto.getFinprodId());
                 //根据生成方式设置值
                 trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
@@ -597,7 +613,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
         //获取撤销entity
         dto = restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/getRevokeEntity", inputDto,
                 TrdBondMarketTradeDto.class);    
-        
+        inputDto.setPs(DictCodeList.交易方向_上市流通.getValue());
         inputDto.setBaseTradeInfoDtos(dto.getBaseTradeInfoDtos());
     }
     

@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.period.trdlendduration.service.TrdLendDuration0
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -161,8 +162,7 @@ public class TrdLendDuration001Controller extends BaseController {
 
     @RequestMapping("/revoke")
     @ResponseBody
-    public AjaxResult revoke(@RequestBody @Validated({ValidateGroupDelete.class}) TrdLendDuration001Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult revoke(@RequestBody @Validated({ValidateGroupDelete.class}) TrdLendDuration001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -202,8 +202,7 @@ public class TrdLendDuration001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return trdLendDuration001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
 

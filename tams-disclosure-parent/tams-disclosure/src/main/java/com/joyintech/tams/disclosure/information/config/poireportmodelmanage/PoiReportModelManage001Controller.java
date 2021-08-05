@@ -106,7 +106,7 @@ public class PoiReportModelManage001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<DisPoiTab> findIndexId() throws Exception {
+	public Page<DisPoiTab> findIndexId() {
 		Page<DisPoiTab> page = reportModelManage001Service.findByPage(RequestUtil.getPageParam());
 		return page;
 	}
@@ -157,14 +157,18 @@ public class PoiReportModelManage001Controller extends BaseController {
         // 目标文件
         File  targetFile=new  File(tempPath+"/"+tempName);
         InputStream in = null;
-        if (!targetFile.exists()) {
-            throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
-        }
-        else {
-            in = new FileInputStream(targetFile);
-        }
-        return ExportUtil.export(targetFile.getName(), in);
+        try {
+			if (!targetFile.exists()) {
+				throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
+			}
+			else {
+				in = new FileInputStream(targetFile);
+			}
+			return ExportUtil.export(targetFile.getName(), in);
+		}finally {
+        	if(in != null){
+        		in.close();
+			}
+		}
     }
-	
-	
 }

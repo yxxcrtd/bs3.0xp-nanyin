@@ -35,7 +35,7 @@ public class FinProductPlanningEstablishController {
      * @return 基准日,目标资产规模
      */
     @RequestMapping("getTargetSize")
-    public  List<FinProductPlanning3Dto> getTargetSize(@RequestBody Map<String,Object> map)  throws Exception{
+    public  List<FinProductPlanning3Dto> getTargetSize(@RequestBody Map<String,Object> map)  {
       return  finProductPlanningEstablishService.getTargetSize(map);
     }
 
@@ -51,7 +51,7 @@ public class FinProductPlanningEstablishController {
     public Page<FinProductPlanningDto> findPageAll(@RequestBody Map<String, Object> pageParam,
                                                    @PathVariable("page") int page,
                                                    @PathVariable("length") int length)
-            throws Exception {
+    {
         return finProductPlanningEstablishService.queryPageAll(page, length, pageParam);
     }
 
@@ -67,7 +67,7 @@ public class FinProductPlanningEstablishController {
     public Page<FinProductPlanning2DetailDto> findPage(@RequestBody Map<String, Object> pageParam,
                                                        @PathVariable("page") int page,
                                                        @PathVariable("length") int length)
-            throws Exception {
+    {
         return finProductPlanningEstablishService.findPage(page, length, pageParam);
     }
 
@@ -106,7 +106,7 @@ public class FinProductPlanningEstablishController {
     @Transactional
     @DTXTransaction
     @RequestMapping("/updateOrAdd")
-    public Integer updateOrAdd(@RequestBody FinProductPlanning2Dto finProductPlanning2Dto) throws Exception{
+    public Integer updateOrAdd(@RequestBody FinProductPlanning2Dto finProductPlanning2Dto) {
         return finProductPlanningEstablishService.updateOrAdd(finProductPlanning2Dto);
     }
     /**

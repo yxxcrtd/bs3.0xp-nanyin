@@ -15,6 +15,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import com.joyintech.framework.file.SafelyFile;
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,7 +257,7 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 								builder.append("\r\n");
 								builder.append("Column Value: ");
 								builder.append(colcfg.getFilterFieldValue());
-								container.setErrorMsg(builder.toString() + "		" + e.toString());
+								container.setErrorMsg(builder.toString() + "		" + "系统异常,请联系管理员");
 								return container;
 							}
 						}
@@ -284,7 +286,7 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 				container.setErrorMsg(e.toString());
 			} else {
 				StringBuilder sb = new StringBuilder();
-				sb.append(e.toString());
+				sb.append("系统异常,请联系管理员");
 				sb.append("		\r\n");
 				sb.append(addExe.getFuncName());
 				sb.append(":	");
@@ -415,7 +417,7 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 				// 自定义处理逻辑
 				container = adapterComFunction.executeCustom(true, sourceID, outParams, ilog);
 				if (!container.isCorrectFlag()) {
-					throw new Exception(container.getErrorMsg());
+					throw new ServiceException(container.getErrorMsg());
 				}
 
 				logger.info(source.getSourceName() + "		开始运行适配器");
@@ -449,7 +451,7 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 									// 获取文件路径和文件大小
 									String filepath = container.getEntityObj().toString();
 									ExeRecordInfo record = new ExeRecordInfo();
-									File file = new File(filepath);
+									File file = new SafelyFile(filepath);
 									record.setFilePath(filepath);
 									record.setFileSize(file.length());
 									ilog.setRecordInfo(JSONObject.toJSONString(record));
@@ -487,11 +489,11 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 
 			} catch (Exception e) {
 				container.setCorrectFlag(false);
-				String errormsg = e.toString() + " | " + e.getMessage();
-				if (e.getCause() != null) {
-					errormsg = e.getCause().getMessage() + " | " + errormsg;
-				}
-				container.setErrorMsg(errormsg);
+//				String errormsg = e.toString() + " | " + e.getMessage();
+//				if (e.getCause() != null) {
+//					errormsg = e.getCause().getMessage() + " | " + errormsg;
+//				}
+				container.setErrorMsg("系统异常,请联系管理员");
 				logger.error("Error", e);
 			} finally {
 				PreparedStatement ps = dataCounter.getPreparedStatement();
@@ -602,7 +604,7 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 		ExeRecordInfo record = JSONObject.parseObject(ilog.getRecordInfo(), ExeRecordInfo.class);
 		Map<String, Object> params = new HashMap<>();
 		if (record != null) {
-			File file = new File(record.getFilePath());
+			File file = new SafelyFile(record.getFilePath());
 			params.put("outFileName", file.getName());
 			params.put("outFilePath", file.getParentFile().getPath());
 			if (isplatedate) {

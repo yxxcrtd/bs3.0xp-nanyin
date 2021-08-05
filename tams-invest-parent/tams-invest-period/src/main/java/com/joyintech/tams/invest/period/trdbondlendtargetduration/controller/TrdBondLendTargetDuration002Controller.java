@@ -19,6 +19,7 @@ import com.joyintech.tams.invest.period.trdbondlendtargetduration.dto.TrdBondLen
 import com.joyintech.tams.invest.period.trdbondlendtargetduration.service.TrdBondLendTargetDuration002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -134,8 +135,7 @@ public class TrdBondLendTargetDuration002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBondLendTargetDuration002ProcessDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBondLendTargetDuration002ProcessDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

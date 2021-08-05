@@ -42,11 +42,10 @@ public class FinProductValuation001Controller extends BaseController {
 	 * 分页查询
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@PostMapping("/selectForPage")
-	public Page<FinProductValuation001Dto> selectForPage() throws Exception {
+	public Page<FinProductValuation001Dto> selectForPage() {
 		return finProductValuation001Service.selectForPage(RequestUtil.getPageParam());
 	}
 

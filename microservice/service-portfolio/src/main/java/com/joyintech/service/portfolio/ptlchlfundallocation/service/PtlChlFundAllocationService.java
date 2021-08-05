@@ -120,7 +120,7 @@ public class PtlChlFundAllocationService extends BaseService<PtlChlFundAllocatio
      * @throws Exception 异常
      */
     public Page<PtlChlFundAllocationDto> findPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
 
         // 组合代码
         if (map.get("portfolioId") != null && StringUtil.isNotEmpty((String)map.get("portfolioId"))) {

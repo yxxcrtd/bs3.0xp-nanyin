@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.basedata.marketdata.finproductvaluation.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class ValFinProductValuation001Controller extends BaseController {
      */
     @RequestMapping("tableLoading")
     @ResponseBody
-    public Page<ResultDto> tableLoad() throws Exception {
+    public Page<ResultDto> tableLoad() {
 //        String finprodId = this.getParam("finprodId");
 //        String fundtype = this.getParam("fundtype");
 //        String fundAbbr = this.getParam("fundAbbr");
@@ -104,8 +105,7 @@ public class ValFinProductValuation001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         String finprodId = this.getParam("finprodId");
         String fundtype = this.getParam("fundtype");

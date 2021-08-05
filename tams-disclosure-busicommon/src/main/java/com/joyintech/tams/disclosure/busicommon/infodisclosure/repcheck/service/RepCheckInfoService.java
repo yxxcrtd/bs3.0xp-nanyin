@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -80,7 +81,7 @@ public class RepCheckInfoService {
      * @since 1.0
      */
     public String replaceForString(String sql, String reg, String replacement) {
-        return sql.replaceAll("\\$" + reg.trim() + "", "'" + replacement + "'");
+        return sql.replaceAll(Pattern.quote("\\$" + reg.trim() + ""), "'" + replacement + "'");
     }
 
     /**
@@ -145,7 +146,7 @@ public class RepCheckInfoService {
      */
     public void notNullCheck(CheckConfirmMessage ccm, Object obj, RepCheckInfoDto checkInfo) {
         // 如果校验数据为空则设置校验结果
-        if (!StringUtil.isNotEmpty(obj) || obj == null) {
+        if (obj == null || !StringUtil.isNotEmpty(obj)) {
             ccm.setFlag(false);
             ccm.setMsg((StringUtil.isNotEmpty(ccm.getMsg()) ? ccm.getMsg() + ";" : "")
                        + checkInfo.getQueryContenDescr() + "数据为空");
@@ -163,7 +164,7 @@ public class RepCheckInfoService {
      */
     public void nullCheck(CheckConfirmMessage ccm, Object obj, RepCheckInfoDto checkInfo) {
         // 如果校验数据为非空则设置校验结果
-        if (StringUtil.isNotEmpty(obj) && obj != null) {
+        if (obj != null && StringUtil.isNotEmpty(obj)) {
             ccm.setFlag(false);
             ccm.setMsg((StringUtil.isNotEmpty(ccm.getMsg()) ? ccm.getMsg() + ";" : "")
                        + checkInfo.getQueryContenDescr() + "数据不为空");
@@ -189,8 +190,8 @@ public class RepCheckInfoService {
     public void compare(CheckConfirmMessage ccm, Object obj, RepCheckInfoDto checkInfo,
                         Object prod, Class<?> T)
         throws NoSuchFieldException, SecurityException, IllegalAccessException,
-        IllegalArgumentException, InvocationTargetException, IntrospectionException,Exception {
-        if (StringUtil.isNotEmpty(obj) && obj != null) {
+        IllegalArgumentException, InvocationTargetException, IntrospectionException {
+        if (obj != null && StringUtil.isNotEmpty(obj)) {
             Object data = new Object();
             Object data2 = new Object();
             // 如果校验对象是dto字段，则从dto中获取待比较值
@@ -224,7 +225,7 @@ public class RepCheckInfoService {
             	
             	if(StringUtil.isEmpty((String)obj) || StringUtil.isEmpty((String)data)){
             		logger.error("日期为空，不能进行比较");
-            		throw new Exception("日期为空，不能进行比较");
+            		throw new IllegalArgumentException("日期为空，不能进行比较");
             	}
             	
                 if (StringUtil.equals(checkInfo.getQueryType(),
@@ -422,7 +423,7 @@ public class RepCheckInfoService {
      */
     public void regularCheck(CheckConfirmMessage ccm, Object obj, RepCheckInfoDto checkInfo) {
         if (obj != null && StringUtil.isNotEmpty(obj)) {
-            if (!((String)obj).matches(checkInfo.getParamValue1())) {
+            if (!((String)obj).matches(Pattern.quote(checkInfo.getParamValue1()))) {
                 ccm.setFlag(false);
                 ccm.setMsg((StringUtil.isNotEmpty(ccm.getMsg()) ? ccm.getMsg() + ";" : "")
                            + checkInfo.getQueryContenDescr() + "正则验证" + checkInfo.getParamValue1()
@@ -522,7 +523,7 @@ public class RepCheckInfoService {
 			ccm.setFlag(false);
 			ccm.setMsg(ccm.getMsg()+e.getMessage());
 			logger.error(e.getMessage());
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
     	
     }
@@ -581,7 +582,7 @@ public class RepCheckInfoService {
         catch (Exception e) {
             msg.setFlag(false);
             msg.setMsg("阀值校验出现异常,请联系管理员!");
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return msg;
     }

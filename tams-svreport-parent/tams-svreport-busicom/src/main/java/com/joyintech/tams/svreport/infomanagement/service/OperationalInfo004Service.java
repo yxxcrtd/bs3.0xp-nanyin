@@ -23,6 +23,8 @@ import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.entity.FilterInformationDetailDto;
 import com.joyintech.tams.svreport.infomanagement.dao.OperationalInfo004Mapper;
 import org.apache.commons.collections4.map.HashedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +53,11 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class OperationalInfo004Service extends CommonExportService<ChbInfoMgrResultConfig> {
-	
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(OperationalInfo004Service.class);
+
 	@Autowired
 	private ChbInfoMgrResultConfigMapper chbInfoMgrResultConfigMapper;
 	
@@ -390,7 +396,7 @@ public class OperationalInfo004Service extends CommonExportService<ChbInfoMgrRes
 				chbInfoMgrResultConfigMapper.insertBatch(chbInfoMgrResultConfigList);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			flag = "fail";
 		} 
 		return flag;

@@ -14,6 +14,8 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.jcraft.jsch.JSchException;
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
@@ -153,8 +155,7 @@ public class ExecuteService {
      * @throws Exception 错误
      * @since 1.0
      */
-    public List<String> execute(List<ConfirmPaDto> paDtoList)
-        throws Exception {
+    public List<String> execute(List<ConfirmPaDto> paDtoList) throws IOException {
         // 错误信息
         List<String> errorMsgList = new ArrayList<String>();
 
@@ -198,8 +199,7 @@ public class ExecuteService {
      * @throws Exception 错误
      * @since 1.0
      */
-    private List<String> executeOneProduct(ConfirmPaDto confirmPaDto)
-        throws Exception {
+    private List<String> executeOneProduct(ConfirmPaDto confirmPaDto) throws IOException {
 
         // 错误信息
         List<String> errorMsgList = new ArrayList<String>();
@@ -415,8 +415,7 @@ public class ExecuteService {
      * @see
      * @since 1.0
      */
-    private List<List<String>> readerFileContent(String filePath, int sheetIndex, int skipRows, Boolean IsFromFtp)
-        throws Exception {
+    private List<List<String>> readerFileContent(String filePath, int sheetIndex, int skipRows, Boolean IsFromFtp) throws JSchException, IOException {
         // 读取本方文件和对方文件excel内容
         List<List<String>> contentList = null;
 
@@ -456,7 +455,7 @@ public class ExecuteService {
         }
 
         // 文件下载到客户端
-        File file = new File(path);
+        File file = new SafelyFile(path);
         // 从ftp下载到服务器后，判断该文件是否存在
         if (file.isFile() && file.exists()) {
             // 读取excel文件转换为list
@@ -621,7 +620,7 @@ public class ExecuteService {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         return fileDataMap;
@@ -2018,7 +2017,7 @@ public class ExecuteService {
                 resultDate = formatter.parse(DateString);
             }
             catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
 
@@ -2391,7 +2390,7 @@ public class ExecuteService {
             String tplPath = CacheUtil.getSysParam("BATCH_TPL_OUT") + SEPARATOR_NOW + tempName;
 
             // 获取模版文件
-            File templeteFile = new File(tplPath);
+            File templeteFile = new SafelyFile(tplPath);
             // 检查模版是否存在
             if (!templeteFile.exists()) {
                 String errorInfo = "产品：" + prodName + "(" + prodId + ") " + "估值表余额表生成对账文件失败：未找到对应的"
@@ -2431,7 +2430,7 @@ public class ExecuteService {
             });
 
             // 判断是否生成,若未生成，直接返回
-            File file = new File(outputFilepathTemp);
+            File file = new SafelyFile(outputFilepathTemp);
             if (!(file.isFile() && file.exists())) {
                 String errorInfo = "产品：" + prodName + "(" + prodId + ") " + "估值表余额表生成对账文件失败："
                                    + SysDataUtil.getNameFromDataDict(DictCode.文件类型, valBalFlag) + "服务器生成临时对比文件失败。";
@@ -2448,7 +2447,6 @@ public class ExecuteService {
             logger.error(errorInfo + "错误信息：" + e.getMessage());
             mapReturn.put(errorKey, errorInfo);// 错误信息
             mapReturn.put(pathKey, null);// 上传SFTP后的路径
-            e.printStackTrace();
             return mapReturn;
         }
         finally {
@@ -2457,15 +2455,15 @@ public class ExecuteService {
 					stream.close();
 				}
 				catch (IOException e) {
-					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
 				}
 			}
         }
 
         // 临时保存文件，名称格式化修改。
         outputFilepathTemp = FileNameUtil.formatFileName(outputFilepathTemp);
-        File fileNow = new File(outputFilepathTemp);
-        boolean rec = fileNow.renameTo(new File(outputFilepathTemp));
+        File fileNow = new SafelyFile(outputFilepathTemp);
+        boolean rec = fileNow.renameTo(new SafelyFile(outputFilepathTemp));
         if (rec) {
             logger.info("产品：" + prodName + "(" + prodId + ") " + "对账，服务器生成对比文件处理成功。");
         }
@@ -2492,7 +2490,6 @@ public class ExecuteService {
         }
         catch (Exception e) {
             sftpTools.close();// 关闭登录
-            e.printStackTrace();
             String errorInfo = "产品：" + prodName + "(" + prodId + ") " + "估值表余额表生成对账文件失败："
                                + SysDataUtil.getNameFromDataDict(DictCode.文件类型, valBalFlag) + "上传sftp失败。";
             logger.error(errorInfo + "错误信息：" + e.getMessage());
@@ -2502,7 +2499,7 @@ public class ExecuteService {
         }
         finally {
             // 删除存放的临时文件
-            File file = new File(outputFilepathTemp);
+            File file = new SafelyFile(outputFilepathTemp);
             if (file.isFile() && file.exists()) {
                 file.delete();
             }
@@ -2599,7 +2596,7 @@ public class ExecuteService {
             result = sdf.parse(DateString);
         }
         catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         return result;
@@ -2711,7 +2708,7 @@ public class ExecuteService {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         return obj;

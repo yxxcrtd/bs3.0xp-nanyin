@@ -206,6 +206,17 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal repAmt ;
+    
+    /**
+     * 管理人
+     */
+    private String repManagerId;
+    
+    /**
+     * 托管人
+     */
+    private String repTrusteeId;
+    
     /**
      * 备注
      */
@@ -360,7 +371,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      *
      * @return repCapUseIndu
      */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repCapUseInduLevel2",groups={ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repCapUseInduStr",groups={ValidateGroupEdit.class})
     public String getRepCapUseIndu() {
         if (needValid) {
             return repCapUseIndu;
@@ -383,7 +394,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      *
      * @return repCapUseInduLevel2
      */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repCapUseIndu",groups={ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repCapUseInduLevel2Str",groups={ValidateGroupEdit.class})
     public String getRepCapUseInduLevel2() {
         if (needValid) {
             return repCapUseInduLevel2;
@@ -452,7 +463,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      *
      * @return repMaxRate
      */
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repMaxRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
+    @Amount(fieldName = "BussRepAssetMngProdInfo.repMaxRate", maxDecBit = 8,groups={ValidateGroupEdit.class})
     public BigDecimal getRepMaxRate() {
         return repMaxRate;
     }
@@ -471,7 +482,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      *
      * @return repMinRate
      */
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repMinRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
+    @Amount(fieldName = "BussRepAssetMngProdInfo.repMinRate",maxDecBit = 8,groups={ValidateGroupEdit.class})
     public BigDecimal getRepMinRate() {
         return repMinRate;
     }
@@ -560,7 +571,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      * @return repMgrFeeRate
      */
     @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repMgrFeeRate",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repMgrFeeRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
+    @Amount(fieldName = "BussRepAssetMngProdInfo.repMgrFeeRate", maxDecBit = 8,groups={ValidateGroupEdit.class})
     public BigDecimal getRepMgrFeeRate() {
         if (needValid) {
             return repMgrFeeRate;
@@ -584,7 +595,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      * @return repTruFeeRate
      */
     @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repTruFeeRate",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repTruFeeRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
+    @Amount(fieldName = "BussRepAssetMngProdInfo.repTruFeeRate", maxDecBit = 8,groups={ValidateGroupEdit.class})
     public BigDecimal getRepTruFeeRate() {
         if (needValid) {
             return repTruFeeRate;
@@ -608,7 +619,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      * @return repTradeFeeRate
      */
     @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repTradeFeeRate",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repTradeFeeRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
+    @Amount(fieldName = "BussRepAssetMngProdInfo.repTradeFeeRate", maxDecBit = 8,groups={ValidateGroupEdit.class})
     public BigDecimal getRepTradeFeeRate() {
         if (needValid) {
             return repTradeFeeRate;
@@ -633,7 +644,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      * @return repAgencyFeeRate
      */
     @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repAgencyFeeRate",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repAgencyFeeRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
+    @Amount(fieldName = "BussRepAssetMngProdInfo.repAgencyFeeRate", maxDecBit = 8,groups={ValidateGroupEdit.class})
     public BigDecimal getRepAgencyFeeRate() {
         if (needValid) {
             return repAgencyFeeRate;
@@ -657,7 +668,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      * @return repOtherFeeRate
      */
     @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repOtherFeeRate",groups={ValidateGroupEdit.class})
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repOtherFeeRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
+    @Amount(fieldName = "BussRepAssetMngProdInfo.repOtherFeeRate", maxDecBit = 8,groups={ValidateGroupEdit.class})
     public BigDecimal getRepOtherFeeRate() {
         if (needValid) {
             return repOtherFeeRate;
@@ -748,4 +759,20 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
     public void setRepBondtostockFlag(String repBondtostockFlag) {
         this.repBondtostockFlag = repBondtostockFlag;
     }
+    
+    public String getRepManagerId() {
+		return repManagerId;
+	}
+
+	public void setRepManagerId(String repManagerId) {
+		this.repManagerId = repManagerId;
+	}
+    
+	public String getRepTrusteeId() {
+		return repTrusteeId;
+	}
+
+	public void setRepTrusteeId(String repTrusteeId) {
+		this.repTrusteeId = repTrusteeId;
+	}
 }

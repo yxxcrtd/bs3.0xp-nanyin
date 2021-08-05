@@ -31,15 +31,26 @@
 		  AND B.ACCT_NO = C.ACCT_NO
 		  AND B.CCY = C.CCY
 	</select>
-
+	<!-- add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳 -->
+	<select id="selectChlAcctNoInfoList" resultType="com.joyintech.tams.common.base.entity.StlCapacctInfo">
+		SELECT DISTINCT B.ACCT_NO   as acctNo,
+						C.ACCT_NAME as acctName
+		FROM stl_fin_product_acct B
+		left join STL_CAPACCT_INFO C on B.ACCT_NO = c.ACCT_NO and B.CCY = C.CCY
+        left join FIN_PRODUCT fp on fp.FINPROD_ID = B.FINPROD_ID
+		WHERE fp.FINPROD_MARKET_ID = #{chlId}
+		  and B.ACCT_TYPE=#{capacctType}
+		  AND B.CCY = #{ccy}
+	</select>
+	<!-- add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳 -->
 
 
 	<!--ͨ通道交易 新增 强成西 2019/03/26 start-->
 	<select id="selectChlCapacctInfoList" resultType="com.joyintech.tams.common.base.entity.StlCapacctInfo">
 		SELECT DISTINCT B.ACCT_NO   as acctNo,
-						ACCT_NAME as acctName
+						C.ACCT_NAME as acctName
 		FROM stl_fin_product_acct B, STL_CAPACCT_INFO C
-		WHERE b.ACCT_NO = c.ACCT_NO and FINPROD_ID = #{chlId}
+		WHERE b.ACCT_NO = c.ACCT_NO and B.FINPROD_ID = #{chlId}
 	</select>
 	<!--ͨ通道交易 新增 强成西 2019/03/26 end-->
 

@@ -7,6 +7,7 @@ package com.joyintech.tams.valuation.report.common.util;
 import java.io.*;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -16,6 +17,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.slf4j.Logger;
@@ -33,8 +35,7 @@ public class OfficeMergeUtil {
      * @see
      * @since 1.0
      */
-    public static void mergeWord(String destFile,List<String> srcFile)
-        throws Exception {
+    public static void mergeWord(String destFile,List<String> srcFile) throws IOException, InvalidFormatException, XmlException {
         OPCPackage srcPackage = null;
         XWPFDocument srcDocument = null;
         CTBody srcBody = null;
@@ -64,7 +65,7 @@ public class OfficeMergeUtil {
                 srcBody = srcDocument.getDocument().getBody();
                 appendBody(srcBodyTmp, srcBody);
             }
-            catch (IOException | InvalidFormatException e) {
+            catch (IOException | InvalidFormatException | XmlException e) {
                 throw e;
             }
             finally {
@@ -90,8 +91,10 @@ public class OfficeMergeUtil {
         }
         OutputStream dest = null;
         try {
-            dest = new FileOutputStream(destFile);
-            srcDocumentTmp.write(dest);
+            dest = new FileOutputStream(new SafelyFile(destFile));
+            if (dest != null){
+                srcDocumentTmp.write(dest);
+            }
         }
         catch (IOException e) {
             throw e;
@@ -114,7 +117,7 @@ public class OfficeMergeUtil {
      * @since 1.0
      */
     private static CTBody appendBody(CTBody src, CTBody append)
-        throws Exception {
+            throws XmlException {
         if(null == src){
             return append;
         }
@@ -157,7 +160,7 @@ public class OfficeMergeUtil {
                 @SuppressWarnings("resource")
                 Workbook inputExcel = null;
                 try {
-                    inputExcel = new XSSFWorkbook(new FileInputStream(new File(fileName)));
+                    inputExcel = new XSSFWorkbook(new FileInputStream(new SafelyFile(fileName)));
                     // 获取excel文件工作簿的工作表数量sheets
                     Sheet sheet = null;
                     for (int i = 0; i < inputExcel.getNumberOfSheets(); i++ ) {// 获取每个Sheet表
@@ -171,14 +174,15 @@ public class OfficeMergeUtil {
                     //每个文件增加n行空行
                     index = index + 2;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 } finally {
-                    inputExcel.close();
+                    if (inputExcel !=null){
+                        inputExcel.close();
+                    }
                 }
-
             }
             /** **********将以上缓存中的内容写到EXCEL文件中******** */
-            File outputFile = new File(outputFileName);
+            File outputFile = new SafelyFile(outputFileName);
             File dir = outputFile.getParentFile();
             if (!dir.exists()) {
                 dir.mkdirs();
@@ -189,8 +193,9 @@ public class OfficeMergeUtil {
         catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            System.out.println(sw.toString());
+            logger.error(pw.toString() + "_" + e.getMessage(), e);
+//            System.out.println(sw.toString());
+            logger.info(sw.toString());
         }
         finally {
             /** *********关闭文件************* */
@@ -199,7 +204,7 @@ public class OfficeMergeUtil {
                     fos.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             if (outputExcel != null) {
@@ -207,7 +212,7 @@ public class OfficeMergeUtil {
                     outputExcel.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

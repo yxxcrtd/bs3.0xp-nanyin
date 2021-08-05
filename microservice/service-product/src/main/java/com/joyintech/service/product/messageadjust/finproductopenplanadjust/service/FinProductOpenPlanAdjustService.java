@@ -56,12 +56,12 @@ public class FinProductOpenPlanAdjustService extends BaseService<FinProductOpenP
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodId(Map<String, Object> pageParam){
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> pageParam){
       //数据字典缓存.开放模式.高频开放  
         //数据字典缓存.开放类型.开放式
         pageParam.put("openType", DictCodeList.开放类型_开放式.getValue());
         pageParam.put("openMode", DictCodeList.开放模式_高频开放.getValue());
-        return finProductOpenPlanMapper.getFinprodId(pageParam);
+        return this.queryForPageForSelectReturn(page, length, () -> finProductOpenPlanMapper.getFinprodId(pageParam));
     }
     
     /**
@@ -77,7 +77,7 @@ public class FinProductOpenPlanAdjustService extends BaseService<FinProductOpenP
      * @since 1.0
      */
     public Page<FinProductOpenPlanAdjustDto> selectForPage(int page, int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
             pageParam.put("openDateStrStart", DateUtil.parse((String)pageParam.get("openDateStrStart")));
             pageParam.put("openDateStrEnd", DateUtil.parse((String)pageParam.get("openDateStrEnd")));
             return super.queryForPage(page, length, () -> finProductOpenPlanMapper.selectForPage(pageParam));

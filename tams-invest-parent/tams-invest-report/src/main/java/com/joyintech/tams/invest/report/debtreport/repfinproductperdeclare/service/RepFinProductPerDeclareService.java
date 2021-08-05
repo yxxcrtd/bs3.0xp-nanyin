@@ -25,7 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import com.joyintech.framework.file.SafelyFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -65,7 +67,11 @@ import freemarker.template.Template;
  */
 @Service
 public class RepFinProductPerDeclareService extends CommonExportService<RepFinProductPerDeclareDto>{
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RepFinProductPerDeclareService.class);
+
     /**
      * 理财产品排期
      */
@@ -128,7 +134,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                 selectParam, RepFinProductPerDeclareDto.class);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }
@@ -142,7 +148,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
      * @see
      * @since 1.0
      */
-    public ResponseEntity<byte[]> createDeclaration(Map<String, Object> param) throws Exception {
+    public ResponseEntity<byte[]> createDeclaration(Map<String, Object> param) throws IOException {
         RepFinProductPerDeclareDto temp = JsonUtils.json2Object((String)param.get("dtoStr"),RepFinProductPerDeclareDto.class);
         List<RepFinProductPerDeclareDto> selectedItem = temp.getSelectedItem();
         //申报附件方案
@@ -183,7 +189,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                
                 String exportPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
                 if(suffix.equalsIgnoreCase("ftl")){
-                	configuration.setDirectoryForTemplateLoading(new File(dirPath));
+                	configuration.setDirectoryForTemplateLoading(new SafelyFile(dirPath));
                     // 设置默认编码
                     configuration.setDefaultEncoding("UTF-8");
                     
@@ -255,24 +261,26 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                     // 加载模板
                     if (ftlName != null) {
                         Template template = configuration.getTemplate(ftlName, "UTF-8");
-                        File f = new File(exportPath+"/"+ftlName);
+                        File f = new SafelyFile(exportPath+"/"+ftlName);
                         w = new OutputStreamWriter(new FileOutputStream(f), "utf-8");
                         template.process(dataMap, w);
-                        arrFileTemp.add(new File(exportPath+"/"+ftlName));
+                        arrFileTemp.add(new SafelyFile(exportPath+"/"+ftlName));
                     }
                 }
                 else{
                 	BufferedInputStream bis =null;
                 	OutputStream os=null;
                     try {
-						bis = new BufferedInputStream(new FileInputStream(templetFileFullPath));
-						byte[] bytes = new byte[bis.available()];
-						os = new FileOutputStream(exportPath+"/"+ftlName);
-						bis.read(bytes);
-						os.write(bytes);
-						bis.close();
-						os.close();
-						arrFileTemp.add(new File(exportPath+"/"+ftlName));
+						bis = new BufferedInputStream(new FileInputStream(new SafelyFile(templetFileFullPath)));
+                        if(bis!=null) {
+						    byte[] bytes = new byte[bis.available()];
+						    os = new FileOutputStream(new SafelyFile(exportPath+"/"+ftlName));
+                            bis.read(bytes);
+                            os.write(bytes);
+                            bis.close();
+                            os.close();
+                        }
+						arrFileTemp.add(new SafelyFile(exportPath+"/"+ftlName));
 					} finally {
 	                    if (bis != null) {
 	                    	bis.close();
@@ -285,7 +293,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                 
             }
             catch (Exception e) {
-            	e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             finally {
                 // 关闭流
@@ -300,9 +308,9 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
             }
         }
         String strFileName = "申报附件";
-        ZipFileUtil.compressZip(new File(CacheUtil.getSysParam(
-            GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+selectedItem.get(0).getRepFinprodInsId()+strFileName+".zip"), 
-            false, arrFileTemp.toArray(new File[arrFile.size()]));
+        ZipFileUtil.compressZip(new SafelyFile(CacheUtil.getSysParam(
+            GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+File.separator+selectedItem.get(0).getRepFinprodInsId()+strFileName+".zip"),
+            false, arrFileTemp.toArray(new SafelyFile[arrFile.size()]));
         
         
         //生成附件至浏览器

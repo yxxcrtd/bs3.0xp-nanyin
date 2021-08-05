@@ -289,12 +289,13 @@ public class BussFinProductOpenPlanCommonRateController extends BaseController {
             }
         }
         if(StringUtil.equals("02", dto.getOpenType())){
-        	/*赎回的净值日准则已隐藏不需要校验 add by menghongwei 20190624
+        	//赎回的净值日准则已隐藏不需要校验 add by menghongwei 20190624
 	        if (!StringUtil.isNotEmpty(dto.getCpriceRule()) && !StringUtil.equals("FinProductBuild002",dto.getPageId())) {
-	            wr.appendMessage(new ValidMessage("bussFinProductOpenPlanRedDto_cpriceRule",
-	                getMessage("BUSS_COM_E_0038", getMessage("FinProductOpenRule.cpriceRule"))));
+	            if(StringUtil.isNotEmpty(dto.getProfitType()) && StringUtil.equals("01",dto.getProfitType())){
+                    wr.appendMessage(new ValidMessage("bussFinProductOpenPlanRedDto_cpriceRule",
+                            getMessage("BUSS_COM_E_0038", getMessage("FinProductOpenRule.cpriceRule"))));
+                }
 	        }
-	        */
         }else{
         	if (!StringUtil.equals(dto.getProfitType(),"03") && !StringUtil.isNotEmpty(dto.getCpriceRule()) && !StringUtil.equals("FinProductBuild002",dto.getPageId())) {
 	            wr.appendMessage(new ValidMessage("bussFinProductOpenPlanDto_cpriceRule",

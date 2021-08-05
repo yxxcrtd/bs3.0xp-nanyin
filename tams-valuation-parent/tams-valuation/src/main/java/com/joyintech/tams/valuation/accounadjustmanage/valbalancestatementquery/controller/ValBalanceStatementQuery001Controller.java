@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.valuation.accounadjustmanage.valbalancestatementquery.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -36,13 +37,9 @@ import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAsse
 import com.joyintech.tams.valuation.accounadjustmanage.valbalancestatementquery.dto.ValBalanceStatementQuery001Dto;
 import com.joyintech.tams.valuation.accounadjustmanage.valbalancestatementquery.service.ValBalanceStatementQuery001Service;
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valaccounthandle.service.ValAccountHandle001Service;
-import com.joyintech.tams.common.base.dao.BokBooksetExtMapper;
 import com.joyintech.tams.common.base.entity.BokBooksetExt;
 import com.joyintech.tams.common.base.entity.BokBooksetExtKey;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 
 /**
  * 估值余额表查询Controller
@@ -100,25 +97,24 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValBalanceStatementQuery001Dto> selectBalanceStatement()
-        throws Exception {
+          {
         Page<ValBalanceStatementQuery001Dto> page = valBalanceStatementQuery001Service.selectForPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
     @ResponseBody
     @RequestMapping("selectSum")
     public Page<ValBalanceStatementQuery001Dto> selectSum()
-        throws Exception {
+          {
         return valBalanceStatementQuery001Service.selectSum(RequestUtil.getParameters(getRequest()));
     }
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() throws IOException {
         return valBalanceStatementQuery001Service.exportExcel(RequestUtil.getParameters(getRequest()));
         
     }
@@ -126,7 +122,7 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
     @ResponseBody
     public String checkBokkSetDate(){
         Map<String,Object> map = RequestUtil.getPageParam();
-        return valBalanceStatementQuery001Service.checkBokkSetDate(map);
+        return StringUtil.trimHtmlTag(valBalanceStatementQuery001Service.checkBokkSetDate(map));
 //        String msg=valAccountHandle001Service.checkBokkSetDateForVluTab(map);//modify by dongjun on 20181207
 //        return msg;
     }
@@ -134,14 +130,13 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2()
-        throws Exception {
+         {
 //        String param = super.getRequest().getParameter("param");
         return valAssetBook001Service.getBooksetId2(RequestUtil.getPageParam());
     }

@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.pbc.common.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Properties;
@@ -27,21 +28,31 @@ public class PbccomUtil {
 	public String getConfig(String key) {
 		String ret = "";
 		Properties prop = new Properties();
+		InputStream in = null;
 		try {
-			InputStream in = PbccomUtil.class .getResourceAsStream(file_name);
+			in = PbccomUtil.class .getResourceAsStream(file_name);
 			prop.load(in); // /加载属性列表
 			Iterator<String> it = prop.stringPropertyNames().iterator();
 			while (it.hasNext()) {
 				String key2 = it.next();
 				if (key.equals(key2)) {
-					ret = prop.getProperty(key);
+					if(prop!=null) {
+						ret = prop.getProperty(key);
+					}
 					in.close();
 					return ret.trim();
 				}
 			}
-			in.close();
 		} catch (Exception e) {
 			log.error("", e);
+		}finally {
+			if (in != null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					log.error(e.getMessage(),e);
+				}
+			}
 		}
 		return ret.trim();
 	}

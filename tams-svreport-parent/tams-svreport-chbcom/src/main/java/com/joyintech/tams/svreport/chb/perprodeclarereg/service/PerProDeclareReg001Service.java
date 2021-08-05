@@ -8,7 +8,9 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.ExportParam;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -32,10 +34,12 @@ import com.joyintech.tams.svreport.chb.perprodeclarereg.dao.ChbPrdDeclareSubHisM
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dao.PerProDeclareReg001Mapper;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.ChbPrdDeclareRegFileCode;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto;
+import com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +51,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.BindException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -97,10 +102,10 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		dealSearchParam(pageParam);
 		pageParam.put("flag", "2");
 		//add by leipeng 20200628
-//		if(CommonUtil.isBAmodel()){
+		if(CommonUtil.isBAmodel()){
 			pageParam.put("model_type", "01");
 
-//		}
+		}
 		if (null != pageParam.get(GlobalConstant.PARAM_PAGE)
 				&& null != pageParam.get(GlobalConstant.PARAM_LENGTH)) {
 			int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
@@ -128,7 +133,6 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 						PerProDeclareRegDto.class);
 				pageParam.put("perProDeclareList", perProDeclareList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {
@@ -428,6 +432,11 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
         com.joyintech.framework.grid.Page<PerProDeclareRegDto> page = new com.joyintech.framework.grid.Page<PerProDeclareRegDto>();
         page.setRoot(data);
         //page.setTotal(data.size());
+		if(!CollectionUtils.isEmpty(page.getRoot())){
+			for(PerProDeclareRegDto dto : page.getRoot()){
+				dto.setBelongInstitutionCode(null);
+			}
+		}
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
 		if(data!=null){
@@ -590,10 +599,10 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
  		String srcName=(String) map.get("param[0][srcName]");
 		String fileNo=(String) map.get("param[0][fileNo]");
 		String fileProdId=srcName.substring(0, srcName.lastIndexOf("."));
-		String targetFileSTR=(String) map.get("param[0][targetFile]");
+		String targetFileSTR=(String) map.get("param[0][targetFile][absoluteFile]");
 		String registSeqno=(String) map.get("registSeqno");
 		String prodId=(String) map.get("prodId");
-		File file=new File(targetFileSTR);
+		File file=new SafelyFile(targetFileSTR);
 
 		// add by zhangliang 20201015 验证九大附件 start
 		// 1、校验各个文件夹是否有文档，根据“必填、选填”那一项校验；
@@ -610,7 +619,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		Map<String, List<String>> fileExistsMap = new HashMap<>();
 
 		try (
-			ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+			ZipFile zipFile=new ZipFile(new SafelyFile(targetFileSTR),Charset.forName("GBK"));
 		){
 			List<String> folderNoList = ChbPrdDeclareRegFileCode.genFolderNoList();
 
@@ -682,7 +691,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			}
 
 		} catch (Exception e) {
-			throw e;
+			throw new BusinessException(e);
 		}
 
 		if (fileCheckMsg.length() > 0){
@@ -879,14 +888,14 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 	 */
 	public AjaxResult nineFileUploadCheck(Map<String, Object> map) throws IOException {
 		String fileNo=(String) map.get("param[0][fileNo]");
-		String targetFileSTR=(String) map.get("param[0][targetFile]");
-		File file=new File(targetFileSTR);
+		String targetFileSTR=(String) map.get("param[0][targetFile][absoluteFile]");
+		File file=new SafelyFile(targetFileSTR);
 		// 记录错误信息
 		StringBuffer fileCheckMsg = new StringBuffer();
 		// 记录文件信息
 		Map<String, Map<String, List<String>>> prodFileExistsMap = new HashMap<>();
 		// 获取上传的压缩文件
-		ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+		ZipFile zipFile=new ZipFile(new SafelyFile(targetFileSTR),Charset.forName("GBK"));
 		// 记录共同文件
 		Map<String, List<String>> commonFileMap = new HashMap();
 
@@ -1063,7 +1072,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		// 记录文件信息
 		Map<String, Map<String, List<String>>> prodFileExistsMap = new HashMap<>();
 		// 获取上传的压缩文件
-		ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+		ZipFile zipFile=new ZipFile(new SafelyFile(targetFileSTR),Charset.forName("GBK"));
 		// 记录共同文件
 		Map<String, List<String>> commonFileMap = new HashMap();
 
@@ -1137,14 +1146,14 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		// 本地路径
 		String localPath = CacheUtil.getSysParam("upload_file_path") + File.separator;
 		// 第一步：解压上传的压缩包
-		ZipUtil.unzip(zipFile, new File(localPath + "nineAttachFile"));
+		ZipUtil.unzip(zipFile, new SafelyFile(localPath + "nineAttachFile"));
 
 		// 第二步：循环产品代码生成需要的文件及文件夹
 		for (String prodId : prodFileExistsMap.keySet()){
 			Map<String, List<String>> foldNameMap = prodFileExistsMap.get(prodId);
 			List<File> zipFiles = new ArrayList<>();
 			for (String folderName : foldNameMap.keySet()){
-				File folder = new File(localPath + "nineAttachFile" + File.separator + folderName);
+				File folder = new SafelyFile(localPath + "nineAttachFile" + File.separator + folderName);
 				//  生成文件夹
 				if (!folder.exists()){
 					folder.mkdir();
@@ -1155,17 +1164,17 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				}
 				// 解压的文件复制到各文件夹下
 				for (String sonFile : foldNameMap.get(folderName)){
-					FileUtil.copyFile(new File(localPath + "nineAttachFile" + File.separator + sonFile), folder);
+					FileUtil.copyFile(new SafelyFile(localPath + "nineAttachFile" + File.separator + sonFile), folder);
 				}
 				zipFiles.add(folder);
 			}
 			// 第三步：根据产品代码生成压缩包
-			File [] zipFilesArr = zipFiles.toArray(new File[zipFiles.size()]);
-			ZipUtil.zip(new File(localPath + prodId  + ChbConstant.FILE_ZIP), CharsetUtil.defaultCharset(), true, null, zipFilesArr);
+			File [] zipFilesArr = zipFiles.toArray(new SafelyFile[zipFiles.size()]);
+			ZipUtil.zip(new SafelyFile(localPath + prodId  + ChbConstant.FILE_ZIP), CharsetUtil.defaultCharset(), true, null, zipFilesArr);
 		}
 
 		// 第四步：刪除第一步和第二步生成的文件
-		this.deleteFile(new File(localPath + "nineAttachFile" + File.separator), true);
+		this.deleteFile(new SafelyFile(localPath + "nineAttachFile" + File.separator), true);
 
 		// 第五步：记录文件路径
 		for (String prodId : prodFileExistsMap.keySet()){
@@ -1198,7 +1207,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			perProDeclareReg001Mapper.updateFileNo(perProDeclareRegDto);
 			// 记录文件关联表
 			UploadFile fileInfo = new UploadFile();
-			fileInfo.setTargetFile(new File(localPath + prodId  + ChbConstant.FILE_ZIP));
+			fileInfo.setTargetFile(new SafelyFile(localPath + prodId  + ChbConstant.FILE_ZIP));
 			fileInfo.setFileNo(sonFileNo);
 			uploadListener.upload(fileInfo);
 		}
@@ -1233,5 +1242,211 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		if (flag){
 			file.delete();
 		}
+	}
+	
+	/**
+	 * 附件批量上传-产品版本（徽商合并过来）
+	 * @param file 文件列表
+	 */
+	public AjaxResult nineFileUploadBatch(List<Map<String, Object>> fileList) throws ZipException, IOException{
+		StringBuffer fileCheckMsg = new StringBuffer();
+		for(Map<String, Object> map:fileList){
+			String srcName=(String) map.get("srcName");
+			String fileNo=(String) map.get("fileNo");
+			String fileProdId=srcName.substring(0, srcName.lastIndexOf("."));
+			String targetFileSTR=(String) map.get("targetFileSTR");
+			List<String> prodidList=(List<String>) map.get("prodList");
+//			String registSeqno=(String) map.get("registSeqno");
+//			String prodId=(String) map.get("prodId");
+			File file=new File(targetFileSTR);
+			StringBuffer fileCheckMsg1 = new StringBuffer();
+			//校验文件名与所选产品代码是否匹配
+			Boolean flag=false;
+			for(String prodid :prodidList){
+				if(fileProdId.equals(prodid)){
+					flag=true;
+				}
+			}
+			if(!flag){
+				fileCheckMsg1.append("文件名"+srcName+"与所选产品代码不匹配！");
+				fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+			}
+			int fileNum=0;
+			// 记录文件信息
+			Map<String, List<String>> fileExistsMap = new HashMap<>();
+			try (
+					ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+				){
+				List<String> folderNoList = ChbPrdDeclareRegFileCode.genFolderNoList();
+				for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
+					ZipEntry entry=e.nextElement();
+					//    aaa.doc:表示文件
+					if (entry.getName().indexOf("/") < 0){
+						fileCheckMsg1.append("包含不必要的文件或文件夹"+ entry.getName() + "！");
+						fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+						continue;
+					}
+						//    09/bbb/aaa.doc:表示文件夹下存在文件夹
+					if (entry.getName().indexOf("/") != entry.getName().lastIndexOf("/")){
+						fileCheckMsg1.append("包含不必要的文件或文件夹"+ entry.getName() + "！");
+						fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+						continue;
+					}
+					//    09/:表示文件夹
+					String folderName = entry.getName().substring(0, entry.getName().indexOf("/"));
+					if (entry.getName().indexOf("/") + 1== entry.getName().length()){
+						if (!folderNoList.contains(folderName)){
+							fileCheckMsg1.append("包含不必要的文件夹"+ folderName + "！");
+							fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+						}
+						continue;
+					}
+					//    09/aaa.doc:表示文件夹下文件
+					if (entry.getName().indexOf("/") == entry.getName().lastIndexOf("/")){
+						ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderName);
+						if (chbPrdDeclareRegFileCode != null && entry.getSize() > chbPrdDeclareRegFileCode.getFileSize() * 1024 * 1024){
+							fileCheckMsg1.append("文件（" + entry.getName() + "）大小超过" + chbPrdDeclareRegFileCode.getFileSize() + "M。");
+							fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+						}
+						String fileType = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().length());
+						if (chbPrdDeclareRegFileCode != null && chbPrdDeclareRegFileCode.getFileType().indexOf(fileType) < 0){
+							fileCheckMsg1.append("文件（" + entry.getName() + "）扩展名不对。必须为以下的一种：" + chbPrdDeclareRegFileCode.getFileType() + "。" );
+							fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+						}
+						// add by zhangliang 20210315 上传九大附件时，需要对每个附件的名称进行白名单检查 start
+						String fileName = entry.getName().substring(entry.getName().lastIndexOf("/") + 1, entry.getName().lastIndexOf("."));
+						if (!fileName.matches(whitePattern)){
+							fileCheckMsg1.append("文件（" + fileName + "）必须填写白名单中的文字。");
+							fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+						}
+						// add by zhangliang 20210315 上传九大附件时，需要对每个附件的名称进行白名单检查 end
+						if (fileExistsMap.containsKey(folderName)){
+							List<String> folderNameList = new ArrayList<>(fileExistsMap.get(folderName));
+							folderNameList.add(entry.getName().substring(folderName.length() + 1));
+							fileExistsMap.put(folderName, folderNameList);
+						}
+						else{
+							fileExistsMap.put(folderName, Arrays.asList(entry.getName().substring(folderName.length() + 1)));
+						}
+					}
+					// 统计文件个数
+					if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
+						fileNum++;
+					}
+				}
+				for (String folderNo : folderNoList){
+					if (!fileExistsMap.containsKey(folderNo) || StringUtil.isEmptyList(fileExistsMap.get(folderNo))){
+						ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderNo);
+						if (chbPrdDeclareRegFileCode.isNend()){
+							fileCheckMsg1.append(chbPrdDeclareRegFileCode.getFolderName() + "不可为空。");
+							fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+						}
+					}
+				}
+
+			} catch (Exception e) {
+				throw new BusinessException(e);
+			}
+			if(fileCheckMsg1.length() > 0){
+				if(file.exists()){
+					file.delete();
+				}
+				uploadListener.remove(fileNo);
+				fileCheckMsg.append(fileCheckMsg1);
+			}
+		}
+		if(fileCheckMsg.length()>0){
+			fileCheckMsg.append("上传失败！");
+			return new AjaxResult(fileCheckMsg.toString(), MessageType.错误消息);
+		}
+		//校验通过，保存文件
+		for(Map<String, Object> filemap:fileList){
+			String srcName=(String) filemap.get("srcName");
+			
+			String fileNo=(String) filemap.get("fileNo");
+			String fileProdId=srcName.substring(0, srcName.lastIndexOf("."));
+			String targetFileSTR=(String) filemap.get("targetFileSTR");
+//			String registSeqno=(String) map.get("registSeqno");
+//			String prodId=(String) map.get("prodId");
+			int fileNum=0;
+			// 记录文件信息
+			Map<String, List<String>> fileExistsMap1 = new HashMap<>();
+			try (
+				ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+			){
+				List<String> folderNoList1 = ChbPrdDeclareRegFileCode.genFolderNoList();
+				for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
+					ZipEntry entry=e.nextElement();
+					//    09/:表示文件夹
+					String folderName = entry.getName().substring(0, entry.getName().indexOf("/"));
+					//    09/aaa.doc:表示文件夹下文件
+					if (entry.getName().indexOf("/") == entry.getName().lastIndexOf("/")){
+						ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderName);
+						if (fileExistsMap1.containsKey(folderName)){
+							List<String> folderNameList = new ArrayList<>(fileExistsMap1.get(folderName));
+							folderNameList.add(entry.getName().substring(folderName.length() + 1));
+							fileExistsMap1.put(folderName, folderNameList);
+						}
+						else{
+							fileExistsMap1.put(folderName, Arrays.asList(entry.getName().substring(folderName.length() + 1)));
+						}
+					}
+					// 统计文件个数
+					if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
+						fileNum++;
+					}
+				}
+				for (String folderNo : folderNoList1){
+					if (!fileExistsMap1.containsKey(folderNo) || StringUtil.isEmptyList(fileExistsMap1.get(folderNo))){
+						ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderNo);
+						if (chbPrdDeclareRegFileCode.isNend()){
+							fileCheckMsg.append(chbPrdDeclareRegFileCode.getFolderName() + "不可为空。");
+							fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+						}
+					}
+				}
+
+			} catch (Exception e) {
+				throw new BusinessException(e);
+			}
+			StringBuffer fileSb = new StringBuffer();
+			for (String key : fileExistsMap1.keySet()){
+				fileSb.append(key);
+				fileSb.append(GlobalConstant.COMMA);
+				List<String> fileInfoList = fileExistsMap1.get(key);
+				for (String fileInfo : fileInfoList){
+					/**ZGBSSE-854  【中债直连】：申报登记，9大附件上传入库信息多余逗号导致直连报文有误***/
+					if(StringUtil.isNotEmpty(fileInfo)){
+						fileSb.append(fileInfo);
+						fileSb.append(GlobalConstant.COMMA);
+					}
+				}
+				fileSb = new StringBuffer(fileSb.substring(0, fileSb.length() - GlobalConstant.COMMA.length()));
+				fileSb.append(GlobalConstant.SEMICOLON);
+			}
+			fileSb = new StringBuffer(fileSb.substring(0, fileSb.length() - GlobalConstant.SEMICOLON.length()));
+			PerProDeclareRegDto  perProDeclareRegDto=new PerProDeclareRegDto();
+//			perProDeclareRegDto.setRegistSeqno(registSeqno);
+			perProDeclareRegDto.setProdId(fileProdId);
+			perProDeclareRegDto.setFileNo(fileNo);
+			perProDeclareRegDto.setFileNum(new BigDecimal(fileNum));
+			perProDeclareRegDto.setNineFile(fileSb.toString());
+
+			// 先查历史数据文件  将 历史文件删除
+			String path = "";
+			if(StringUtils.isNotEmpty(fileProdId)) {
+				path = perProDeclareReg001Mapper.selectFileInfo(perProDeclareRegDto);
+			}
+			perProDeclareReg001Mapper.updateFileNo(perProDeclareRegDto);
+
+			// 如果存在历史文件  将文件删除
+			if(StringUtils.isNotEmpty(fileProdId) && StringUtil.isNotEmpty(path)){
+				File file = new SafelyFile(path);
+				if(file.exists()){
+					file.delete();
+				}
+			}
+		}
+		return new AjaxResult("附件上传成功！");
 	}
 }

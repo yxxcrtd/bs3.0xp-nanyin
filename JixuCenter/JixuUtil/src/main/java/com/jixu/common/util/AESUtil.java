@@ -1,23 +1,53 @@
 package com.jixu.common.util;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.jixu.common.tool.SFTPTool;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Wang Zhongyuan
  */
+@Component
 public class AESUtil {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(SFTPTool.class);
+	@Value("${jixu.aesKey}")
+	private String aesKey;
 
-	private static String key = "123456789012jixu";
-	private static String endkey="_%^&*)wWw(*&^%";
+	@Value("${jixu.aesEndKey}")
+	private String aesEndKey;
+	
+//	private static String key = "123456789012jixu";
+//	private static String endkey="_%^&*)wWw(*&^%";
+	
+	private static String endkey;
 
+	private static String key;
+
+	@PostConstruct
+	public void setEndkey(){
+		this.endkey = aesEndKey;
+	}
+
+	@PostConstruct
+	public void setKey(){
+		this.key = aesKey;
+	}
+	
 	/**
 	 * AES加密--BASE64二次加密
 	 * 
 	 * @param pwd 明文
-	 * @param key 密匙
 	 * @return String类型的密文
 	 */
 	public static String Encrypt(String pwd) {
@@ -26,8 +56,9 @@ public class AESUtil {
 		try {
 			byte[] raw = key.getBytes("utf-8");
 			SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");// "算法/模式/补码方式"
-			cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");// "算法/模式/补码方式"
+			IvParameterSpec iv = new IvParameterSpec(key.getBytes());
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec,iv);
 			byte[] encrypted = cipher.doFinal(pwd.getBytes("utf-8"));
 	
 			String newpwd=new Base64().encodeToString(encrypted);// 此处使用BASE64做转码功能，同时能起到2次加密的作用。
@@ -35,7 +66,7 @@ public class AESUtil {
 			newpwd=newpwd+endkey;
 			return newpwd;
 		}catch(Exception e) {
-			e.printStackTrace();
+		    logger.error(e.getMessage(),e);
 			return "Error Password";
 		}
 	}
@@ -44,7 +75,6 @@ public class AESUtil {
 	 * BASE64解密--AES解密
 	 * 
 	 * @param pwd 密文
-	 * @param key 密匙
 	 * @return String类型的明文
 	 */
 	public static String Decrypt(String pwd) {
@@ -58,29 +88,30 @@ public class AESUtil {
 		try {
 			byte[] raw = key.getBytes("utf-8");
 			SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-			cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			IvParameterSpec iv = new IvParameterSpec(key.getBytes());
+			cipher.init(Cipher.DECRYPT_MODE, skeySpec,iv);
 			byte[] encrypted1 = new Base64().decode(pwd);// 先用base64解密
 			byte[] original = cipher.doFinal(encrypted1);
 			String originalString = new String(original, "utf-8");
 			return originalString;
 		}catch(Exception e) {
-			e.printStackTrace();
+		    logger.error(e.getMessage(),e);
 			return "Error Password";
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		// 此处使用AES-128-ECB加密模式，key需要为16位。
-		// 需要加密的字串
-		String pwd = null;
-		// 加密
-		System.out.println("输入的字符串是: " + pwd);
-		String enString = AESUtil.Encrypt(pwd);
-		System.out.println("加密后字符串是: " + enString);
-
-		// 解密
-		String DeString = AESUtil.Decrypt(enString);
-		System.out.println("解密后字符串是: " + DeString);
-	}
+//	public static void main(String[] args){
+//		// 修改为使用AES-CBC加密模式，key需要为16位。
+//		// 需要加密的字串
+//		String pwd = null;
+//		// 加密
+//		System.out.println("输入的字符串是: " + pwd);
+//		String enString = AESUtil.Encrypt(pwd);
+//		System.out.println("加密后字符串是: " + enString);
+//
+//		// 解密
+//		String DeString = AESUtil.Decrypt(enString);
+//		System.out.println("解密后字符串是: " + DeString);
+//	}
 }

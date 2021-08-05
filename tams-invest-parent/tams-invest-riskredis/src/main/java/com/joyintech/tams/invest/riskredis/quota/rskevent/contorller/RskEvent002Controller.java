@@ -6,6 +6,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.riskredis.quota.rskevent.dto.RskEvent002Dto;
 import com.joyintech.tams.invest.riskredis.quota.rskevent.service.RskEvent002Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,7 +90,7 @@ public class RskEvent002Controller extends BaseController {
 	@DTXTransaction
 	@ResponseBody
 	@RequestMapping(PAGE_SAVE)
-	public AjaxResult save(@RequestBody RskEvent002Dto dto, BindingResult result) throws Exception {
+	public AjaxResult save(@RequestBody RskEvent002Dto dto, BindingResult result) throws WorkFlowException {
 		if (result.hasErrors()) {
 			return new AjaxResult(result);
 		}

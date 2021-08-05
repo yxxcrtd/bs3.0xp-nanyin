@@ -14,7 +14,7 @@
         t8.qty * 100 qty,
         to_char(t8.PAY_DATE, 'yyyy-MM-dd') PAY_DATE,
         ROUND(SUM(t8.fpriceAmt), 2) tradeAmt
-        ,'债券存续期-账户/通道'||SAI.SEC_ACCT_NAME|| fp.FINPROD_NAME remark
+        ,'债券存续期-'||SAI.SEC_ACCT_NAME|| fp.FINPROD_NAME remark
         from (
         select T6.FINPROD_ID,
         SUM(T6.AMOUNT) QTY,
@@ -160,8 +160,10 @@
         to_char(T4.VDATE, 'yyyy-MM-dd') vDate ,
         to_char(T4.MDATE, 'yyyy-MM-dd') mDate ,
         T1.PRIN_AMT THEORY_PRIN ,
-        FCP.INT_AMT THEORY_INT ,
-        T1.PRIN_AMT + FCP.INT_AMT tradeAmt ,
+<!--        FCP.INT_AMT THEORY_INT ,-->
+<!--        T1.PRIN_AMT + FCP.INT_AMT tradeAmt ,-->
+        T4.M_INT_AMT THEORY_INT,
+        T1.PRIN_AMT + T4.M_INT_AMT tradeAmt ,
         T1.PS
         ,'质押式回购存续期-'||SAI.SEC_ACCT_NAME|| fp1.FINPROD_NAME remark
         FROM TRD_PRODUCT_DEAL T1
@@ -360,7 +362,7 @@
         t8.qty remainPrinAmt,
         SUM(t8.fpriceAmt)  tradeAmt,
         t8.PAY_DATE payDate
-        , '存款存续期_'||nvl( TC4.FINPROD_NAME ,'直投') remark
+        , '存款存续期-'||nvl( TC4.FINPROD_NAME ,'直投') remark
         from (select T7.FINPROD_ID,
         t7.CASH_TYPE,
         t7.CASH_ID,
@@ -403,10 +405,12 @@
     <select id="selectCJDurationList"
             resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
 
-        SELECT         T1.TRADE_ID tradeId,
-        T1.TRADE_ID totleTradeId,
+        SELECT
+<!--        T1.TRADE_ID tradeId,-->
+<!--        T1.TRADE_ID totleTradeId,-->
         T3.PORTFOLIO_ID portfolioId,
         T2.PORTFOLIO_NAME portfolioName,
+        T1.TRADE_ID finprodId,
         T1.FINPROD_TYPE2 finprodType2,
         T4.MDATE,
         T1.PRIN_AMT prinAmt,
@@ -644,8 +648,8 @@
 
         SELECT
         T4.FINPROD_ID finprodId,
-        SUBT2.PORTFOLIO_ID portfolioId,
-        SUBT2.PORTFOLIO_NAME portfolioName,
+<!--        SUBT2.PORTFOLIO_ID portfolioId,-->
+<!--        SUBT2.PORTFOLIO_NAME portfolioName,-->
         T1.FINPROD_TYPE2,
         T4.VDATE,
         T4.MDATE,
@@ -707,7 +711,7 @@
         ROUND(SUM(T8.QTY), 4) qty,
         to_char(t8.PAY_DATE, 'yyyy-MM-dd') payDay,
         ROUND(SUM(T8.fpriceAmt), 4) tradeAmt
-        ,'项目类存续期'||NVL(T5.FINPROD_ABBR, '直投') remark
+        ,'项目类存续期-'||NVL(T5.FINPROD_ABBR, '直投') remark
         from (select T7.FINPROD_ID,
         T7.AMOUNT QTY,
         SUM(decode(T7.dqprinamt,
@@ -939,14 +943,14 @@
         WFL_ORDERS.SETTLE_AMT tradeAmt,
         WFL_ORDERS.SETTLE_DATE,
         T3.SEC_MANAGE_ACCT_ID,
-        decode(T5.PA_BUSS_TYPE,'54','货币基金现金分红-'||SSAI.Sec_Acct_Name,
-        '56','非货币基金现金分红-'||SSAI.Sec_Acct_Name,
-        '58','净值型计划现金分红-'||SSAI.Sec_Acct_Name,
-        '80','货币型计划现金分红-'||SSAI.Sec_Acct_Name,
-        '66','货币基金赎回到账-'||SSAI.Sec_Acct_Name,
-        '67','非货币基金赎回到账-'||SSAI.Sec_Acct_Name,
-        '68','净值型计划赎回到账-'||SSAI.Sec_Acct_Name,
-        '73','货币型计划赎回到账-'||SSAI.Sec_Acct_Name
+        decode(T5.PA_BUSS_TYPE,'54','货币基金现金分红-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '56','非货币基金现金分红-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '58','净值型计划现金分红-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '80','货币型计划现金分红-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '66','货币基金赎回到账-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '67','非货币基金赎回到账-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '68','净值型计划赎回到账-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '73','货币型计划赎回到账-'||NVL(SSAI.Sec_Acct_Name, '直投')
         ) remark
         FROM WFL_TRD_PRODUCT_DEAL T3
         LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD T4
@@ -980,16 +984,31 @@
         T5.PA_BUSS_TYPE IN
         ('58', '54', '56', '80', '66', '67', '73', '68')
         AND PT.TRADE_ID IS NULL
-        AND T3.WORKFLOW_ID IS NULL
+        AND(
+        (T3.WORKFLOW_ID IS NULL  and
+        (T10.NODE_ID IS NULL OR T10.NODE_ID = 'BACK_OPERATOR' OR
+        T10.NODE_ID = 'BACK_CHECKER')
+        AND
+        ( T9.PROCESS_STATE != 'END' or T9.PROCESS_STATE is null)
+        ) or (
+        T3.WORKFLOW_ID IS not NULL
+        and T10.NODE_ID IS not NULL
+        and T9.PROCESS_STATE = 'BACK'
+        and  exists (
+                select temp.* from (
+                select a.*,rank() over(partition by a.SEQ_NO order by a.HIS_NO desc) as rank
+                from sys_wfl_business_node A
+                ) temp where rank = 2 and temp.seq_no = T9.SEQ_NO
+                and temp.node_id = t10.node_id
+                )
+            )
+        )
         AND WFL_ORDERS.SETTLE_DATE <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
         AND NOT EXISTS
         (SELECT 1
         FROM SYS_WFL_BUSINESS_NODE TT
         WHERE TT.SEQ_NO = T9.SEQ_NO
-        AND TT.HIS_NO > T10.HIS_NO) and
-        (T10.NODE_ID IS NULL OR T10.NODE_ID = 'BACK_OPERATOR' OR
-        T10.NODE_ID = 'BACK_CHECKER') AND
-        (T9.PROCESS_STATE != 'END' or T9.PROCESS_STATE is null) AND
+        AND TT.HIS_NO > T10.HIS_NO)  AND
         (T3.TRADE_STATUS = '01' AND T3.IS_CANCEL = 'N') AND
         (WFL_ORDERS.COUNTER_ACCT_NO IS NULL OR
         WFL_ORDERS.MY_ACCT_NO != WFL_ORDERS.COUNTER_ACCT_NO) AND

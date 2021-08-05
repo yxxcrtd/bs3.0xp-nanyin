@@ -99,7 +99,7 @@ public class ValueAddedTax001Service extends CommonExportService<ValueAddedTax00
     private FinProductMapper finProductMapper;
 
     public Page<ValueAddedTax001Dto> selectForPage(int page, int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("acctSubjectType", DictCodeListExt1.金融产品类型_理财产品.getValue());
         return super.queryForPage(page,length,() -> valueAddedTax001Mapper.selectAll(pageParam));
     }

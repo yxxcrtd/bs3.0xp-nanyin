@@ -66,8 +66,7 @@ public class Interf150005Service extends SendEsbService<Interf150005InEntity, In
      * {@inheritDoc}
      */
     @Override
-    public Interf150005InEntity preparedLocalData(Object param)
-        throws Exception {
+    public Interf150005InEntity preparedLocalData(Object param) throws ParseException {
         InterfFinProdDto dto = (InterfFinProdDto)param;
         Interf150005InEntity inEntity = null;
         if (dto == null) {
@@ -172,7 +171,7 @@ public class Interf150005Service extends SendEsbService<Interf150005InEntity, In
      */
     @Override
     public int saveInterfData(Interf150005OutEntity entity)
-        throws Exception {
+    {
         // 推送接口无登录操作
         return 0;
     }
@@ -182,7 +181,7 @@ public class Interf150005Service extends SendEsbService<Interf150005InEntity, In
      */
     @Override
     public int saveBusinessData(Interf150005OutEntity entity)
-        throws Exception {
+    {
         // 推送接口无登录操作
         return 0;
     }

@@ -134,7 +134,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
      * @see
      * @since 1.0
      */
-    public Page<PayTheVatQuery002Dto> search(Map<String, Object> pageParam) throws Exception {
+    public Page<PayTheVatQuery002Dto> search(Map<String, Object> pageParam){
         //产品多选
         if (StringUtil.isNotEmpty(pageParam.get("portfolioId"))) {
             String portfolioId = (String) pageParam.get("portfolioId");
@@ -373,6 +373,11 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
                 ptlCashPositionFlowDto.setCcy(dto.getCcy());
                 ptlCashPositionFlowDto.setAmount(stlpayorder.getSettleAmt().negate());
                 ptlCashPositionFlowDto.setOrderId(stlpayorder.getOrderId());
+                // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
+                if (StringUtil.isNotEmpty(dto.getChannelId()) && StringUtil.equals(dto.getPayType(), DictCodeListExt2.划款方式_一次性划款.getValue())) {
+                    ptlCashPositionFlowDto.setChlFinprodId("F28_" + dto.getChannelId());
+                }
+                // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
                 ptlCashPositionFlows.add(ptlCashPositionFlowDto);
 
                 PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
@@ -475,6 +480,9 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
 //        币种
         trdProductDeal.setCcy(entity.getCcy());
         trdProductDeal.setPortfolioId(entity.getPortfolioId());
+        // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
+        trdProductDeal.setChlId(temp.getChannelId());
+        // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
 
         return trdProductDeal;
     }
@@ -502,6 +510,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
                     param.setPortfolioId(dto.getPortfolioId());
                     param.setDeal(deal);
                     BussTrdTransferOrderDto ret = bussTrdTransferOrderService.generateOrder(param);
+                    ret.setIsNeedSend(DictCodeList.是否_否.getValue());//add by jiangpeng on 20210513 ZGBSSE-379
 
                     stlPayOrdersList.add(ret);
                 }
@@ -857,9 +866,31 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
     /**
      * 查询币种
      */
-    public List<String> searchCurrency(Map<String, Object> pageParam) throws Exception {
+    public List<String> searchCurrency(Map<String, Object> pageParam) {
     	pageParam.put("finprodType2_F28", BussinessDictCodeList.金融产品类型_投管用_通道.getValue());
         return payTheVatQuery002Mapper.searchCurrency(pageParam);
+    }
+
+
+    /**
+     * 查询通道下的产品已跑批日期小于纳税结束日
+     *
+     * @param params
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<String> searchChlPtlBookSet(Map<String, Object> params){
+        if(StringUtil.isNotEmpty(params.get("portfolioId"))){
+            String portfolioId = (String) params.get("portfolioId");
+            String [] portfolioIdArr = portfolioId.split(",");
+            params.put("portfolioIdArr", portfolioIdArr);
+        }
+        List<String> strList = payTheVatQuery002Mapper.searchChlPtlBookSet(params);
+        if (strList == null) {
+            strList = new ArrayList<>();
+        }
+        return strList;
     }
 }
 

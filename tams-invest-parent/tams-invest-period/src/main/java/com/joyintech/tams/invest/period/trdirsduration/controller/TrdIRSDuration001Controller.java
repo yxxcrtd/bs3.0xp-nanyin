@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.period.trdirsduration.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -121,8 +122,7 @@ public class TrdIRSDuration001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return trdIRSDuration001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -135,8 +135,7 @@ public class TrdIRSDuration001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult revoke(@Validated({
-        ValidateGroupDelete.class}) TrdIRSDuration002ProcessDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) TrdIRSDuration002ProcessDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

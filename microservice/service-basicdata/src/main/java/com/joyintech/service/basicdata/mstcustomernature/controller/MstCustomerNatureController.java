@@ -50,7 +50,7 @@ public class MstCustomerNatureController  {
      */
     @PostMapping("/getCustomerName")
     public List<SuggestDto> getCustomerName(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         List<SuggestDto> list = mstCustomerNatureService.getCustomerName(param);
         return list;
     }
@@ -87,7 +87,8 @@ public class MstCustomerNatureController  {
      * @since 1.0
      */
     @PostMapping("/searchMstCustomerNature/{page}/{length}")
-    public Page<MstCustomerNatureDto> searchMstCustomerNature(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<MstCustomerNatureDto> searchMstCustomerNature(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return mstCustomerNatureService.searchMstCustomerNature(page,length,pageParam);
     }
     /**
@@ -100,7 +101,7 @@ public class MstCustomerNatureController  {
      */
     @PostMapping("/selectCustomerInfo/{page}/{length}")
     public Page<MstCustomerNatureDto> selectCustomerInfo(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstCustomerNatureService.selectCustomerInfo(page,length,pageParam);
     }
     /**

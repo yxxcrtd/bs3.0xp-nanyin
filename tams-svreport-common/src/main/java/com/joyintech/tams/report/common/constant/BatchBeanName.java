@@ -102,6 +102,8 @@ public enum BatchBeanName {
 	产品分红交易接口数据接入("3077","svrProdDiviendBasisInfoTaskService","chbPrdDividendBasisImpMainService","产品分红交易接口数据接入"),
     产品利率基本信息接口数据接入("4100","svrProdRateInfoInterfTaskService","SvrProdRateInfoImpMainService","产品利率基本信息接口数据接入"),
     资产利率基本信息接口数据接入("4101","svrAssetRateInfoInterfTaskService","SvrAssetRateInfoImpMainService","资产利率基本信息接口数据接入"),
+	投资者身份信息登记导出("3083","equityInfoExportService","equityInfoExportMainService","投资者身份信息登记导出"),
+	投资者持有信息登记导出("3084","investorsHoldInfoExportService","investorsHoldInfoExportMainService","投资者持有信息登记导出"),
 
             ;
 	/**

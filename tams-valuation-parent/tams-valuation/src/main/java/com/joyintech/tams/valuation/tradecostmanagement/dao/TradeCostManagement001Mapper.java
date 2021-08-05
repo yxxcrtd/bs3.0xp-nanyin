@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.tradecostmanagement.dao;
 
 import com.joyintech.tams.valuation.tradecostmanagement.dto.TradeCostManagement001Dto;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Map;
  * @Author wangXiaoYong
  * @create 2019/11/19
  */
+@Repository
 public interface TradeCostManagement001Mapper {
 
 

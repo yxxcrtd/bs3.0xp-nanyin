@@ -25,6 +25,8 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,6 +48,11 @@ import java.util.*;
 @Controller
 @RequestMapping("/invest/trade/transfer/common/ResoluteRiskMathComm")
 public class ResoluteRiskMathCommController extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ResoluteRiskMathCommController.class);
+
     /**
      * 风险试算接口
      */
@@ -272,8 +279,7 @@ public class ResoluteRiskMathCommController extends BaseController {
                 resultList = riskTrialComm.actualRiskTrialDeal(param);
             }
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return resultList;
     }

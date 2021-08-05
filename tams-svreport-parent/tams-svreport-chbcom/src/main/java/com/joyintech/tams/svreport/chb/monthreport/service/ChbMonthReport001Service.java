@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.constant.DictCodeList;
@@ -136,7 +138,6 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 						ChbMonthReport.class);
 				pageParam.put("reportList", astValueList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {
@@ -469,13 +470,13 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 //            String zipFileName = FileNameUtil.createFileName("zip");
             String zipFileName = "G06非保本理财业务月度统计表"+"_"+termname+".zip";
-            outFile = new File(exportFilePath + File.separator + zipFileName);
+            outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
             try {
-                ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+                ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new SafelyFile[] {}));
             }
             catch (Exception e) {
                 // 压缩文件失败后，删除所有临时文件
@@ -586,7 +587,7 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 		String depositfilePath = SvrDataUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		
-		depositfile = new File(depositfilePath + File.separator + flieName);
+		depositfile = new SafelyFile(depositfilePath + File.separator + flieName);
 		if (!depositfile.getParentFile().exists()) {
 			depositfile.getParentFile().mkdirs();
 		}
@@ -595,9 +596,9 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 		byte[] buffer = new byte[1024];
 		String temp = depositfilePath + "ptl.xls";
 		// 原文件
-		File srcFile = new File(template);
+		File srcFile = new SafelyFile(template);
 		// 目标文件
-		File destFile = new File(temp);
+		File destFile = new SafelyFile(temp);
 		if (srcFile.exists()) {
 			fis = new FileInputStream(srcFile);
 		} else {
@@ -617,21 +618,19 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 	    }catch(Exception e){
 	    	logger.info(exceltemplate+"生成失败！");
 	    	logger.error(e.getMessage(),e);
-	    	throw new RuntimeException(e);
+	    	throw new BusinessException(e);
 	    }finally{
 	    	if(fos !=null){
 	    		try {
 					fos.close();
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
-					e.printStackTrace();
 				}
 		    	if(fis !=null){
 		    		try {
 		    			fis.close();
 					} catch (IOException e) {
 						logger.error(e.getMessage(),e);
-						e.printStackTrace();
 					}
 		    	}
 	    	}

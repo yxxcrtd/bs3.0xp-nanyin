@@ -17,6 +17,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.valuation.trademanage.paythevatquery.dto.PayTheVatQuery002Dto;
 import com.joyintech.tams.valuation.trademanage.paythevatquery.dto.PayTheVatQuery002TableDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 纳税增值税新建
@@ -25,6 +26,7 @@ import com.joyintech.tams.valuation.trademanage.paythevatquery.dto.PayTheVatQuer
  * @see PayTheVatQuery002Mapper
  * @since 1.0
  */
+@Repository
 public interface PayTheVatQuery002Mapper {
     
     /**

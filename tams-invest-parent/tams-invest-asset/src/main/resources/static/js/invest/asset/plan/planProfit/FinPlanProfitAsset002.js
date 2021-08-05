@@ -207,7 +207,8 @@ var QueryFunc=function(){
                     }
                 })
             }else{
-                if(FinPayInterestStdInfo &&FinPayInterestStdInfo.check()&& FinPayInterestStdInfo.comfirmCheck()&&BussFinRepayment.isComfirmCheck()){
+                if (FinPayInterestStdInfo && FinPayInterestStdInfo.check() && FinPayInterestStdInfo.isSureCheck()
+                    && FinPayInterestStdInfo.comfirmCheck() && BussFinRepayment.isComfirmCheck()) {
                     Joyin.ajaxJson(basePath + 'invest/asset/common/isHoliday', {
                         mdate: object.mdate,
                         calendarId: object.calendarId

@@ -10,21 +10,21 @@
 
 package com.joyintech.tams.invest.basicdata.mstmarketinstitutions.validator;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.joyintech.tams.common.base.entity.MstBondCreditRating;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.MstBondCreditRating;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.basicdata.mstmarketinstitutions.dto.MstMarketInstitutionsDto;
 import com.joyintech.tams.invest.basicdata.mstmarketinstitutions.service.MstMarketInstitutionsService;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -42,6 +42,9 @@ public class MstMarketInstitutionsValidator implements BeanValidator {
      */
     @Autowired
     private MstMarketInstitutionsService mstMarketInstitutionsService;
+
+    @Autowired
+    private ChbDataCheckService chbDataCheckService;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -122,6 +125,12 @@ public class MstMarketInstitutionsValidator implements BeanValidator {
                                 errorList.add(new ValidMessage("同一评级日期、同一评级机构只能添加一条记录！"));
                             }
                         }
+                    }
+                    //是否集团客户为是，必填所属集团客户名称
+                    if(StringUtil.isNotBlank(dto.getIsGroupCustomer())
+                        && StringUtil.equals(dto.getIsGroupCustomer(),DictCodeList.是否_是.getValue())
+                            && StringUtil.isBlank(dto.getParentCustomerName())){
+                        errorList.add(new ValidMessage("是否集团客户为是,所属集团客户名称不能为空！"));
                     }
                 }
                 else if (StringUtil.equals(dto.getPageModel(),
@@ -258,7 +267,11 @@ public class MstMarketInstitutionsValidator implements BeanValidator {
                 }
             }
         }
-        
+
+        if (!StringUtil.equals(dto.getOperateType(), "delete")) {
+            errorList = chbDataCheckService.chbCheckCommon(errorList, dto, "MstMarketInstitutions002", null);
+        }
+
         return errorList;
     }
 

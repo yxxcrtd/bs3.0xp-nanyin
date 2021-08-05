@@ -12,6 +12,7 @@ package com.joyintech.tams.valuation.basedata.marketdata.valshareprice.controlle
 
 import com.joyintech.tams.valuation.basedata.marketdata.valshareprice.dto.ValSharePriceDto;
 import com.joyintech.tams.valuation.basedata.marketdata.valshareprice.service.ValSharePriceService;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -73,7 +74,7 @@ public class ValSharePrice001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValSharePriceDto> findPage()
-        throws Exception {
+         {
         Page<ValSharePriceDto> page = ValSharePriceService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -87,7 +88,7 @@ public class ValSharePrice001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getFinprodIdForAdd")
     public Page<SelectOptionDto> getFinprodIdForAdd() 
-        throws Exception {
+         {
         Page<SelectOptionDto> temp = ValSharePriceService.getFinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -121,8 +122,7 @@ public class ValSharePrice001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) ValSharePriceDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) ValSharePriceDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -154,7 +154,7 @@ public class ValSharePrice001Controller extends BaseController{
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return ValSharePriceService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

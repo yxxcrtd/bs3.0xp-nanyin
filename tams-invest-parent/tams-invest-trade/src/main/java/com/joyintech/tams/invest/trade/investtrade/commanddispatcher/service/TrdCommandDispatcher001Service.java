@@ -206,6 +206,7 @@ public class TrdCommandDispatcher001Service extends CommonExportService<TrdComma
     public List<SuggestDto> getEntrustId(Map<String, Object> pageParam) {
         pageParam.put("entrustAwait", DictCodeList.委托状态_待接收.getValue());
         pageParam.put("entrustReceive", DictCodeList.委托状态_已接收.getValue());
+		pageParam.put("entrustFinish", DictCodeList.委托状态_已完成.getValue());
         pageParam.put("entrustUntread", DictCodeList.委托状态_已退回.getValue());
         pageParam.put("entrustClose", DictCodeList.委托状态_已关闭.getValue());
     	return restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
@@ -319,7 +320,7 @@ public class TrdCommandDispatcher001Service extends CommonExportService<TrdComma
 	 * @return
 	 * @throws Exception
 	 */
-	public int addAutoTime(TrdCommandDispatcher001Dto dto) throws Exception{
+	public int addAutoTime(TrdCommandDispatcher001Dto dto) {
 		PaEtrAutoDispenseTime record=new PaEtrAutoDispenseTime();
 		record.setVdate(dto.getVdate());
 		record.setMdate(dto.getMdate());

@@ -7,6 +7,7 @@ package com.joyintech.service.trade.fund.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -259,7 +260,7 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
      * @since 1.0
      */
     public Page<TrdFundInvestTradeDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.交易流程状态_流程中.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.交易流程状态_有效.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());
@@ -1295,7 +1296,25 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
      * @return
      */
     public BigDecimal getcarryAmt(Map<String, Object> map) {
-        return trdFundInvestTradeMapper.getcarryAmt(map);
+        //待结转份额 = （上日的头寸+ 最新公布日的前台计算的收益- 当天红利再投）的方式
+        BigDecimal carryAmt = trdFundInvestTradeMapper.getcarryAmt(map);
+        map.put("finprodType", "F06_");
+        BigDecimal lastNewWfsy = trdFundInvestTradeMapper.getcarryAmtNew(map);
+        BigDecimal carryAmtNew =BigDecimal.ZERO;
+        if(StringUtil.isNotEmpty(map.get("shuhuishareAmt"))){
+            carryAmtNew = new BigDecimal(map.get("shuhuishareAmt").toString());
+            carryAmtNew = ArithmeticUtil.round(ArithmeticUtil.multiply(carryAmtNew,lastNewWfsy),2, RoundingMode.HALF_UP);
+        }
+        if(carryAmt != null){
+            carryAmt = carryAmt.add(carryAmtNew);
+        }else{
+            carryAmt = BigDecimal.ZERO;
+        }
+        //待结转份额若小于0，则按0处理
+        if(carryAmt.compareTo(BigDecimal.ZERO) <= 0){
+            carryAmt =BigDecimal.ZERO;
+        }
+        return carryAmt;
     }
 
     /**

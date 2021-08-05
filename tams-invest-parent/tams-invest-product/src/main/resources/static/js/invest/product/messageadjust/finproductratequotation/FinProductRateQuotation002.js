@@ -17,12 +17,16 @@ $(function() {
         object.remark = $("#remark").val();
         object.finprodId = finprodId;
         object.operateType = operateType;
-        if (!tableCheckData || tableCheckData.length == 0) {
+		if ((!tableCheckData || tableCheckData.length == 0) && operateType === 'submit') {
             Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
             return;
         }
         else{
-        	object.selectedItem = tableCheckData;
+			if ((!tableCheckData || tableCheckData.length == 0) && operateType === 'save') {
+				object.selectedItem = table.getAllRows();
+			}else {
+				object.selectedItem = tableCheckData;
+			}
         	$.each(object.selectedItem,function(index,obj){
         		obj.finprodId = object.finprodId;
         		obj.relaeseDate = object.relaeseDate;
@@ -37,7 +41,7 @@ $(function() {
     				return;
     			}
     		}else{
-    			Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+    			Joyin.error(JoyinUtil.getMessage("FIN_PROD_E_0225","费率"));
 	            return;
     		}
 		}
@@ -148,7 +152,7 @@ $(function() {
     };
 	//产品代码画面联动
 	$("#finprodMarketId").change(function(){
-		$("#finprodAbbr").val($('#finprodMarketId').select2('data')[0].text);
+		$("#finprodAbbr").val($('#finprodMarketId').select2('data')[0].text.split(":")[1]);
 		$("#prodStyle").val('').trigger('change');
 		//分档
 		if($('#finprodMarketId').select2('data')[0].col == 'Y'){
@@ -173,7 +177,7 @@ $(function() {
 	//
 	var workflowId = $("#workflowId").val();
 	if(workflowId){
-	    $("#finprodAbbr").val($('#finprodMarketId').select2('data')[0].text);
+	    $("#finprodAbbr").val($('#finprodMarketId').select2('data')[0].text.split(":")[1]);
 	}
     
     /*

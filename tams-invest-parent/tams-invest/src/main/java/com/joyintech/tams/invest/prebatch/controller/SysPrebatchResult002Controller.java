@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName SysPrebatchResult002Controller.java
+ * @Description 批前检查002 页面对应
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.prebatch.controller;
 
 import com.joyintech.framework.annotation.PageId;
@@ -70,6 +77,13 @@ public class SysPrebatchResult002Controller extends BaseController {
         return sysPrebatchResult002Service.queryPortfolioIdInfo(RequestUtil.getPageParam());
     }
 
+    /**
+     * @title 查询下拉框
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 11:08 
+     * @throws 
+     */
     @ResponseBody
     @RequestMapping("queryFinprodIdInfo")
     public Page<SelectOptionDto> queryFinprodIdInfo() {

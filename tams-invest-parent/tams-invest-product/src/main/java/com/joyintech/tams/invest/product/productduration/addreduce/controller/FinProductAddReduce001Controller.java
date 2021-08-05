@@ -10,6 +10,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -88,8 +89,7 @@ public class FinProductAddReduce001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinProductAddReduce001Dto> selectForPage()
-        throws Exception {
+    public Page<FinProductAddReduce001Dto> selectForPage() {
         return finProductAddReduce001Service.selectForPage(RequestUtil.getPageParam());
     }
 
@@ -97,13 +97,11 @@ public class FinProductAddReduce001Controller extends BaseController {
      * 导出
      *
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finProductAddReduce001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
 
@@ -114,8 +112,7 @@ public class FinProductAddReduce001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(FinProductAddReduce002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult revoke(FinProductAddReduce002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -183,8 +180,7 @@ public class FinProductAddReduce001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getProdId01")
-    public Page<SelectOptionDto> getProdId01()
-        throws Exception {
+    public Page<SelectOptionDto> getProdId01(){
         return finProductAddReduce001Service.getProdId01(RequestUtil.getPageParam());
     }
 

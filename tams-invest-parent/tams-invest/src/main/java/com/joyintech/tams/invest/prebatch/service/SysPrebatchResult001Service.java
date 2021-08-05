@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName SysPrebatchResult001Service.java
+ * @Description 批前检查001 页面对应
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.prebatch.service;
 
 import com.joyintech.framework.base.entity.SysBatchgrpExecInfo;
@@ -169,19 +176,25 @@ public class SysPrebatchResult001Service extends CommonExportService<SysPrebatch
     }
 
     private void insertIntoDataBase(List<SysBatchgrpExecInfo> infoList, List<SysPrebatchResult001Dto> resultList) {
-        if(!StringUtil.isEmptyList(infoList)){
-
-            sysPrebatchResult001Mapper.insertBatchExecList(infoList);
-
-        }
 
         if (!StringUtil.isEmptyList(resultList)){
 
-            sysPrebatchResult001Mapper.insertBatchPrebatchResultList(resultList);
+            int singleInsert = 50;
+            for(int i=0;i*singleInsert<resultList.size();i++) {
+                int endIndex = (i+1)*singleInsert;
+                if(endIndex>resultList.size()) {
+                    endIndex = resultList.size();
+                }
+                sysPrebatchResult001Mapper.insertBatchPrebatchResultList(resultList.subList(i*singleInsert, endIndex));
+            }
         }
 
+        if(!StringUtil.isEmptyList(infoList)){
+            sysPrebatchResult001Mapper.insertBatchExecList(infoList);
+        }
 
     }
+
 
     private SysBatchgrpExecInfo packageSysBatchgrpExecInfo(String seqId, String prebatchGroupId, Date plateFormDate, String userName, String instCode) {
         SysBatchgrpExecInfo sysBatchgrpExecInfo = new SysBatchgrpExecInfo();
@@ -197,7 +210,22 @@ public class SysPrebatchResult001Service extends CommonExportService<SysPrebatch
         sysBatchgrpExecInfo.setCreateUser(userName);
         sysBatchgrpExecInfo.setUpdateUser(userName);
 
-        sysBatchgrpExecInfo.setDetailName("批前检查-"+DateUtil.format(plateFormDate));
+        String instName = "";
+        if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isNotEmpty(instCode)){
+            Object institutionCodeName = CacheUtil.getAppCacheInstitutionCodeName(instCode);
+            if(institutionCodeName!=null){
+                instName = (String)institutionCodeName;
+            }
+        }
+
+        if(StringUtil.isNotEmpty(instName)){
+            sysBatchgrpExecInfo.setDetailName(instName+":批前检查-"+ DateUtil.format(plateFormDate) );
+
+        }else{
+            sysBatchgrpExecInfo.setDetailName("批前检查-"+ DateUtil.format(plateFormDate) );
+
+        }
+
         sysBatchgrpExecInfo.setOtherParam4(instCode);
         return sysBatchgrpExecInfo;
     }

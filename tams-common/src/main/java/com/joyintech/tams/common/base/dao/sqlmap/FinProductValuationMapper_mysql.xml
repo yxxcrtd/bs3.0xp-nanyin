@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinProductValuationMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinProductValuation" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="VAL_DATE" property="valDate" jdbcType="DATE" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="PUBLISH_DATE" property="publishDate" jdbcType="DATE" />
+        <result column="VALUATION" property="valuation" jdbcType="DECIMAL" />
+        <result column="DAY7_YEAR_YIELD" property="day7YearYield" jdbcType="DECIMAL" />
+        <result column="YEAR_YIELD" property="yearYield" jdbcType="DECIMAL" />
+        <result column="TOTAL_VALUE" property="totalValue" jdbcType="DECIMAL" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="REST_NET_VALUE" property="restNetValue" jdbcType="DECIMAL" />
+        <result column="C_SHARES" property="cShares" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, VAL_DATE VAL_DATE, FINPROD_TYPE FINPROD_TYPE, FINPROD_TYPE2 FINPROD_TYPE2, 
+        PUBLISH_DATE PUBLISH_DATE, VALUATION VALUATION, DAY7_YEAR_YIELD DAY7_YEAR_YIELD, 
+        YEAR_YIELD YEAR_YIELD, TOTAL_VALUE TOTAL_VALUE, INPUT_TYPE INPUT_TYPE, REMARK REMARK, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, REST_NET_VALUE REST_NET_VALUE, C_SHARES C_SHARES
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinProductValuationMapper.Base_Column_List" />
+        from FIN_PRODUCT_VALUATION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinProductValuationMapper.Base_Column_List" />
+        from FIN_PRODUCT_VALUATION
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinProductValuationKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinProductValuationMapper.Base_Column_List" />
+        from FIN_PRODUCT_VALUATION
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinProductValuationKey" >
+        delete from FIN_PRODUCT_VALUATION
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinProductValuation" >
+        insert into FIN_PRODUCT_VALUATION (FINPROD_ID, VAL_DATE, FINPROD_TYPE, 
+            FINPROD_TYPE2, PUBLISH_DATE, VALUATION, 
+            DAY7_YEAR_YIELD, YEAR_YIELD, TOTAL_VALUE, 
+            INPUT_TYPE, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, REST_NET_VALUE, C_SHARES
+            )
+        values (#{finprodId,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{finprodType,jdbcType=VARCHAR}, 
+            #{finprodType2,jdbcType=VARCHAR}, #{publishDate,jdbcType=DATE}, #{valuation,jdbcType=DECIMAL}, 
+            #{day7YearYield,jdbcType=DECIMAL}, #{yearYield,jdbcType=DECIMAL}, #{totalValue,jdbcType=DECIMAL}, 
+            #{inputType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{restNetValue,jdbcType=DECIMAL}, #{cShares,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductValuation" >
+        insert into FIN_PRODUCT_VALUATION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="valDate != null" >
+                VAL_DATE,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2,
+            </if>
+            <if test="publishDate != null" >
+                PUBLISH_DATE,
+            </if>
+            <if test="valuation != null" >
+                VALUATION,
+            </if>
+            <if test="day7YearYield != null" >
+                DAY7_YEAR_YIELD,
+            </if>
+            <if test="yearYield != null" >
+                YEAR_YIELD,
+            </if>
+            <if test="totalValue != null" >
+                TOTAL_VALUE,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="restNetValue != null" >
+                REST_NET_VALUE,
+            </if>
+            <if test="cShares != null" >
+                C_SHARES,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="valDate != null" >
+                #{valDate,jdbcType=DATE},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="publishDate != null" >
+                #{publishDate,jdbcType=DATE},
+            </if>
+            <if test="valuation != null" >
+                #{valuation,jdbcType=DECIMAL},
+            </if>
+            <if test="day7YearYield != null" >
+                #{day7YearYield,jdbcType=DECIMAL},
+            </if>
+            <if test="yearYield != null" >
+                #{yearYield,jdbcType=DECIMAL},
+            </if>
+            <if test="totalValue != null" >
+                #{totalValue,jdbcType=DECIMAL},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="restNetValue != null" >
+                #{restNetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="cShares != null" >
+                #{cShares,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProductValuation" >
+        insert into FIN_PRODUCT_VALUATION(FINPROD_ID, VAL_DATE, FINPROD_TYPE, FINPROD_TYPE2, 
+        PUBLISH_DATE, VALUATION, DAY7_YEAR_YIELD, YEAR_YIELD, TOTAL_VALUE, INPUT_TYPE, REMARK, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REST_NET_VALUE, 
+        C_SHARES)
+        select FINPROD_ID, VAL_DATE, FINPROD_TYPE, FINPROD_TYPE2, 
+            PUBLISH_DATE, VALUATION, DAY7_YEAR_YIELD, YEAR_YIELD, TOTAL_VALUE, INPUT_TYPE, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REST_NET_VALUE, 
+            C_SHARES
+             from FIN_PRODUCT_VALUATION
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and VAL_DATE = #{valDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinProductValuation" >
+        update FIN_PRODUCT_VALUATION
+        <set >
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="publishDate != null" >
+                PUBLISH_DATE = #{publishDate,jdbcType=DATE},
+            </if>
+            <if test="valuation != null" >
+                VALUATION = #{valuation,jdbcType=DECIMAL},
+            </if>
+            <if test="day7YearYield != null" >
+                DAY7_YEAR_YIELD = #{day7YearYield,jdbcType=DECIMAL},
+            </if>
+            <if test="yearYield != null" >
+                YEAR_YIELD = #{yearYield,jdbcType=DECIMAL},
+            </if>
+            <if test="totalValue != null" >
+                TOTAL_VALUE = #{totalValue,jdbcType=DECIMAL},
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="restNetValue != null" >
+                REST_NET_VALUE = #{restNetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="cShares != null" >
+                C_SHARES = #{cShares,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinProductValuation" >
+        update FIN_PRODUCT_VALUATION
+        set FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            PUBLISH_DATE = #{publishDate,jdbcType=DATE},
+            VALUATION = #{valuation,jdbcType=DECIMAL},
+            DAY7_YEAR_YIELD = #{day7YearYield,jdbcType=DECIMAL},
+            YEAR_YIELD = #{yearYield,jdbcType=DECIMAL},
+            TOTAL_VALUE = #{totalValue,jdbcType=DECIMAL},
+            INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            REST_NET_VALUE = #{restNetValue,jdbcType=DECIMAL},
+            C_SHARES = #{cShares,jdbcType=DECIMAL}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </update>
+</mapper>

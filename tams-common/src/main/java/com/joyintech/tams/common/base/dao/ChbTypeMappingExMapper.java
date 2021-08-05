@@ -3,7 +3,9 @@ package com.joyintech.tams.common.base.dao;
 import java.util.List;
 
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbTypeMappingExMapper {
     int deleteByPrimaryKey(String mappingid);
 

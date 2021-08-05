@@ -1508,14 +1508,16 @@ public class FinProductCommonService {
     	//double amount = 0;
     	//变量.剩余券面
     	double surplusSec = 0;
-    	for(TargetCashPlan listRedinfo : listRedinfoList) {
-    		for(Date queryDate : queryDateList) {
-    			if(listRedinfo.getMdate().compareTo(queryDate)==-1 || listRedinfo.getMdate().compareTo(queryDate)==0) {
-    				surplusSec = resultMap.get(queryDate)-listRedinfo.getPrinAmt().doubleValue();
-    				resultMap.put(queryDate, surplusSec);
-    			}
-    		}
-    	}
+    	if (listRedinfoList != null){
+            for(TargetCashPlan listRedinfo : listRedinfoList) {
+                for(Date queryDate : queryDateList) {
+                    if(listRedinfo.getMdate().compareTo(queryDate)==-1 || listRedinfo.getMdate().compareTo(queryDate)==0) {
+                        surplusSec = resultMap.get(queryDate)-listRedinfo.getPrinAmt().doubleValue();
+                        resultMap.put(queryDate, surplusSec);
+                    }
+                }
+            }
+        }
     	//返回 出参.百元券面结果集
 		return resultMap;
     	
@@ -1675,5 +1677,13 @@ public class FinProductCommonService {
      */
     public TrdFinProductBarterDto selectTrdFinProductBarter(Map<String, Object> map) {
         return finProductCommonMapper.selectTrdFinProductBarter(map);
+    }
+    /**
+     * 公共方法：标的类共通方法 - 标的信息查询，查询标的金融产品类型（投管分类）
+     * @param finprodId 标的代码【必输项】
+     * @return　返回值获取，直接查询标的金融产品类型（投管分类）
+     */
+    public String getfinprodType2(String finprodId) {
+        return  finProductCommonMapper.getfinprodType2(finprodId);
     }
 }

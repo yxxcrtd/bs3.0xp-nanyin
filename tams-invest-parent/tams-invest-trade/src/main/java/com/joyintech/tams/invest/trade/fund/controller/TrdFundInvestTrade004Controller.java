@@ -41,6 +41,7 @@ import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade003Service
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,6 +53,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -371,8 +374,7 @@ public class TrdFundInvestTrade004Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    public AjaxResult save(@RequestBody TrdFundInvestTradeDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody TrdFundInvestTradeDto dto, BindingResult br) throws InvocationTargetException, IllegalAccessException, IOException, InstantiationException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

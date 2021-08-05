@@ -25,7 +25,7 @@ public class FinNCProductBuild003Service extends BaseService<ValProductInfoFeeDt
      * @return
 	 * @throws Exception 
      */
-	public void adjustRate(ValProductInfoFeeDto dto) throws Exception {
+	public void adjustRate(ValProductInfoFeeDto dto)  {
 		restTemplate.postForObject(
    	            ServiceApplication.VALUATION_SERVICE_NAME + "/FinNCProductBuild001/adjustRate", dto,
    	            Integer.class);

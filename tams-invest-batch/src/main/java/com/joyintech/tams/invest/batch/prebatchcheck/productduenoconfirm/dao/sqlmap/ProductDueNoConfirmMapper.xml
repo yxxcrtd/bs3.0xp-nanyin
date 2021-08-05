@@ -15,7 +15,7 @@
         inner join FIN_PRODUCT_ADD C on A.FINPROD_ID = C.FINPROD_ID
         where A.FINPROD_TYPE2 = 'F16'
         AND A.PROFIT_TYPE = '02'
-        and C.ISSUE_STATUS IN ('01','03')
+        and C.ISSUE_STATUS IN ('01')
         and a.mdate  <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
         AND NOT EXISTS (
         SELECT DEAL.FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL DEAL
@@ -40,7 +40,7 @@
         ) maxdate  on A.FINPROD_ID = maxdate.FINPROD_ID
         where A.FINPROD_TYPE2 = 'F16'
         AND A.PROFIT_TYPE in ('01','03')
-        and C.ISSUE_STATUS IN ('01','03')
+        and C.ISSUE_STATUS IN ('01')
         and nvl(maxdate.eaccrdate,a.mdate)  <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
         AND NOT EXISTS (
         SELECT DEAL.FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL DEAL

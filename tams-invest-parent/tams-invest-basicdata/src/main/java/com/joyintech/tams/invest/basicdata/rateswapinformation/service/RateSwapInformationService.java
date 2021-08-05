@@ -18,6 +18,8 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,7 @@ import java.util.Map;
 
 @Service
 public class RateSwapInformationService extends CommonExportService<RateSwapInformationDto> implements BaseProcessService<RateSwapInformationDto> {
-
+    private static final Logger logger = LoggerFactory.getLogger(RateSwapInformationService.class);
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
 
@@ -79,7 +81,8 @@ public class RateSwapInformationService extends CommonExportService<RateSwapInfo
      */
     @Override
     public void doInsert(RateSwapInformationDto entity, OperationType type) {
-        System.out.println("-------------------");
+//        System.out.println("-------------------");
+        logger.info("-------------------");
     }
 
     /**

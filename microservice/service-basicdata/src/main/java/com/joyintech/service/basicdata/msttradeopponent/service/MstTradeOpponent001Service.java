@@ -82,7 +82,8 @@ public class MstTradeOpponent001Service extends BaseService<MstTradeOpponentDto>
      * @see
      * @since 1.0
      */
-    public Page<MstTradeOpponentDto> selectForPage(int page,int length,Map<String, Object> pageParam) throws Exception{
+    public Page<MstTradeOpponentDto> selectForPage(int page,int length,Map<String, Object> pageParam)
+    {
         return super.queryForPage(page,length,() -> selectAllForPage(pageParam));
     }
     

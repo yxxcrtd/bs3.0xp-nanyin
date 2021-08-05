@@ -107,13 +107,11 @@ public class FinProductDurDeal001Service extends CommonExportService<FinProductD
      *
      * @param param 过滤参数
      * @return 下拉框列表
-     * @throws Exception Exception
      */
-    public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> param)
-        throws Exception {
+    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> param) {
         // 收益型产品 下拉选项过滤净值型产品 lijun add SHBS-518
         // param.put("PROFIT_TYPE", DictCodeList.收益类型_收益型.getValue());
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductDurDeal/queryProdIdInfo", param,
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductDurDeal/queryProdIdInfo", param,
             SelectOptionDto.class);
     }
 
@@ -161,7 +159,7 @@ public class FinProductDurDeal001Service extends CommonExportService<FinProductD
     protected void buildExportParam(ExportParam exportParam) {
         Map<String, Object> param = exportParam.getSelectParam();
         String tableId = (String)param.get("tableId");
-        if (StringUtil.equals(tableId, "total")) {
+        if (StringUtil.equals(tableId, "dataTable")) {
             exportParam.config("/com/joyintech/tams/invest/product/durdeal/conf/export_conf.xml").dataSource(
                 DataSourceType.MASERT);
         }
@@ -178,7 +176,7 @@ public class FinProductDurDeal001Service extends CommonExportService<FinProductD
     @Override
     public Page<FinProductDurDeal001Dto> selectPageData(Map<String, Object> selectParam) {
         String tableId = (String)selectParam.get("tableId");
-        if (StringUtil.equals(tableId, "total")) {
+        if (StringUtil.equals(tableId, "dataTable")) {
             Page<FinProductDurDeal001Dto> result = findPage(selectParam);
             return result;
         }

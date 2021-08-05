@@ -10,6 +10,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +57,11 @@ import com.orm.obj.TranClo;
 
 @Controller
 public class MarketController extends ExceptionControl{
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(MarketController.class);
+
 	
 	@Resource(name="marketDataService")
 	private MarketDataService marketDataService;
@@ -797,8 +804,8 @@ public class MarketController extends ExceptionControl{
 	}
 	
 	@RequestMapping(value="/market/smfType.do", method = RequestMethod.POST)
-	public void smfType(@RequestParam(value = "id", required =true) String smfID, HttpServletResponse response){
-		System.out.println("Get smf type for " + smfID);
+	public void smfType(@RequestParam(value = "id", required =true) String smfID, HttpServletResponse response){		
+		logger.info("Get smf type for " + smfID);
 		JsonUtil.writeObjToResponse(response, "stock");
 	}
 	

@@ -17,7 +17,7 @@ $(function() {
                 Joyin.error(JoyinUtil.getMessage("MST_CUSTOMER_NATURE_0001", JoyinUtil.getLabel("MstCustomerNature003.customerCharater")));
                 return; 
                 } else if (selectedItemArray[i]==selectedItemArray[j+1]){
-                    Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0006", JoyinUtil.getLabel("MstCustomerNature003.customerCharater")));
+                    Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0064", JoyinUtil.getLabel("MstCustomerNature003.customerCharater")));
                     return; 
             }
             }

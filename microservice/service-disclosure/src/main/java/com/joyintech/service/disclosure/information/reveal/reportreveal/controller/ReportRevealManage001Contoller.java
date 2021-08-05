@@ -10,6 +10,7 @@
 
 package com.joyintech.service.disclosure.information.reveal.reportreveal.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +59,7 @@ public class ReportRevealManage001Contoller extends BaseController {
     @RequestMapping("/getPrdInfoSelect/{page}/{length}")
     public Page<SelectOptionDto> getPrdInfoSelect(@RequestBody Map<String, Object> param,
                                                   @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         // return getPrdInfoSelectService.getPrdInfoSelect(page, length, param); // TODO
         return getPrdInfoSelectService.getPrdInfoSelect(param);
     }
@@ -74,7 +75,7 @@ public class ReportRevealManage001Contoller extends BaseController {
     @PostMapping("findPage/{page}/{length}")
     public Page<ReportConfirmManage001Dto> findPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return reportRevealManage001Service.findPage(page, length, param);
     }
 
@@ -88,7 +89,7 @@ public class ReportRevealManage001Contoller extends BaseController {
      */
     @PostMapping("/queryPageList")
     public List<ReportConfirmManage001Dto> queryPageList(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return reportRevealManage001Service.queryPageList(param);
     }
 
@@ -100,8 +101,7 @@ public class ReportRevealManage001Contoller extends BaseController {
     @Transactional
     @DTXTransaction
     @PostMapping("/updateRevealStatus")
-    public boolean updateRevealStatus(@RequestBody ReportConfirmManageParamDto dto)
-        throws Exception {
+    public boolean updateRevealStatus(@RequestBody ReportConfirmManageParamDto dto) throws IOException {
         return reportRevealManage001Service.updateRevealStatus(dto);
     }
 
@@ -111,8 +111,7 @@ public class ReportRevealManage001Contoller extends BaseController {
      * @throws Exception
      */
     @PostMapping("/updateConfirmStatusWithGoBack")
-    public boolean updateConfirmStatusWithGoBack(@RequestBody ReportConfirmManageParamDto dto)
-        throws Exception {
+    public boolean updateConfirmStatusWithGoBack(@RequestBody ReportConfirmManageParamDto dto) throws IOException {
         return reportRevealManage001Service.updateConfirmStatusWithGoBack(dto);
     }
 

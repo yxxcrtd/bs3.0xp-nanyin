@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.EtrSecPriorityMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.EtrSecPriority" >
+        <id column="CONFIG_ID" property="configId" jdbcType="VARCHAR" />
+        <result column="YES_OR_NO" property="yesOrNo" jdbcType="VARCHAR" />
+        <result column="LAST_PERIOD_PRI" property="lastPeriodPri" jdbcType="VARCHAR" />
+        <result column="SEC_GRADE_PRI" property="secGradePri" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CONFIG_ID CONFIG_ID, YES_OR_NO YES_OR_NO, LAST_PERIOD_PRI LAST_PERIOD_PRI, SEC_GRADE_PRI SEC_GRADE_PRI,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.EtrSecPriorityMapper.Base_Column_List" />
+        from ETR_SEC_PRIORITY
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.EtrSecPriorityMapper.Base_Column_List" />
+        from ETR_SEC_PRIORITY
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.EtrSecPriorityMapper.Base_Column_List" />
+        from ETR_SEC_PRIORITY
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from ETR_SEC_PRIORITY
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.EtrSecPriority" >
+        insert into ETR_SEC_PRIORITY (CONFIG_ID, YES_OR_NO, LAST_PERIOD_PRI,
+            SEC_GRADE_PRI, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{configId,jdbcType=VARCHAR}, #{yesOrNo,jdbcType=VARCHAR}, #{lastPeriodPri,jdbcType=VARCHAR},
+            #{secGradePri,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrSecPriority" >
+        insert into ETR_SEC_PRIORITY
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="configId != null" >
+                CONFIG_ID,
+            </if>
+            <if test="yesOrNo != null" >
+                YES_OR_NO,
+            </if>
+            <if test="lastPeriodPri != null" >
+                LAST_PERIOD_PRI,
+            </if>
+            <if test="secGradePri != null" >
+                SEC_GRADE_PRI,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="configId != null" >
+                #{configId,jdbcType=VARCHAR},
+            </if>
+            <if test="yesOrNo != null" >
+                #{yesOrNo,jdbcType=VARCHAR},
+            </if>
+            <if test="lastPeriodPri != null" >
+                #{lastPeriodPri,jdbcType=VARCHAR},
+            </if>
+            <if test="secGradePri != null" >
+                #{secGradePri,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrSecPriority" >
+        insert into ETR_SEC_PRIORITY(CONFIG_ID, YES_OR_NO, LAST_PERIOD_PRI, SEC_GRADE_PRI,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select CONFIG_ID, YES_OR_NO, LAST_PERIOD_PRI, SEC_GRADE_PRI,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from ETR_SEC_PRIORITY
+             where 1 = 1 and CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.EtrSecPriority" >
+        update ETR_SEC_PRIORITY
+        <set >
+            <if test="yesOrNo != null" >
+                YES_OR_NO = #{yesOrNo,jdbcType=VARCHAR},
+            </if>
+            <if test="lastPeriodPri != null" >
+                LAST_PERIOD_PRI = #{lastPeriodPri,jdbcType=VARCHAR},
+            </if>
+            <if test="secGradePri != null" >
+                SEC_GRADE_PRI = #{secGradePri,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.EtrSecPriority" >
+        update ETR_SEC_PRIORITY
+        set YES_OR_NO = #{yesOrNo,jdbcType=VARCHAR},
+            LAST_PERIOD_PRI = #{lastPeriodPri,jdbcType=VARCHAR},
+            SEC_GRADE_PRI = #{secGradePri,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.product.productduration.establish.service.FinPr
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -111,8 +112,7 @@ public class FinProductEstablish001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finProductEstablish001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -133,7 +133,14 @@ public class FinProductEstablish001Controller extends BaseController {
 		List<ValidMessage> errorList = new ArrayList<ValidMessage>();
 		// TISHKBS-1688 add by jiangpeng on 20210429 start
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("portfolioId", finProductEstablishDto.getPortfolioId());
+        String portfolioId = finProductEstablishDto.getPortfolioId();
+        if(!StringUtil.isNotEmpty(portfolioId)) {
+        	portfolioId = finProductEstablishDto.getPtlId();
+        }
+        if(!StringUtil.isNotEmpty(portfolioId)&&StringUtil.isNotEmpty(finProductEstablishDto.getFinprodId())) {
+        	portfolioId =  finProductEstablishDto.getFinprodId().substring(4);
+        }
+        paramMap.put("portfolioId", portfolioId);
         paramMap.put("ccy", finProductEstablishDto.getCcy());
         paramMap.put("capacctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
         List<StlCapacctInfo> capacctList = bussSettleOrderCommService.selectProdCapacctInfoList(paramMap);
@@ -177,14 +184,13 @@ public class FinProductEstablish001Controller extends BaseController {
      * 
      * @param inputDto 画面输入参数dto
      * @return 撤销结果
-     * @throws Exception 异常信息
+     * @throws WorkFlowException 异常信息
      * @see
      * @since 1.0
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody FinProductEstablish002Dto inputDto)
-        throws Exception {
+    AjaxResult doRevoke(@RequestBody FinProductEstablish002Dto inputDto) throws WorkFlowException {
 
         ProcessParameter<FinProductEstablish002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<FinProductEstablish002Dto> workFlowParameter = new WorkFlowParameter<>();

@@ -12,12 +12,13 @@ package com.joyintech.tams.invest.trade.bond.controller;
 
 import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
-import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -25,8 +26,8 @@ import com.joyintech.tams.invest.trade.pretrdbondtrade.dto.PreTrdBondInvestTrade
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -59,7 +60,6 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.trade.bond.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.trade.bond.dto.SecCpriceInfoDto;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeCSTPDto;
@@ -471,7 +471,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("isExerYieldDivShow")
     @ResponseBody
     public String isExerYieldDivShow(@RequestParam Map<String, Object> paramMap) {
-        return trdBondInvestTrade002Service.isExerYieldDivShow(paramMap);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.isExerYieldDivShow(paramMap));
     }
 
     /**
@@ -500,7 +500,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("getProfitType")
     @ResponseBody
     public String getProfitType(@RequestParam Map<String, Object> params) {
-        return trdBondInvestTrade002Service.getProfitType(params);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.getProfitType(params));
     }
    //货币型产品投资目的默认显示摊余成本 add by liupeilin 2020-01-15 end
 
@@ -515,7 +515,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("calcDeviationDegree")
     @ResponseBody
     public String calcDeviationDegree(@RequestParam Map<String, Object> params) {
-        return trdBondInvestTrade002Service.calcDeviationDegree(params);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.calcDeviationDegree(params));
     }
 
     /**
@@ -725,8 +725,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto) throws InvocationTargetException, IllegalAccessException, IOException, InstantiationException, WorkFlowException {
     	if(flag) {
 			if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());

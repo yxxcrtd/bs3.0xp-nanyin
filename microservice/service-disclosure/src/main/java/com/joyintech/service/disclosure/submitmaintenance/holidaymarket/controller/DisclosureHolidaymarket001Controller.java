@@ -10,6 +10,7 @@
  
 package com.joyintech.service.disclosure.submitmaintenance.holidaymarket.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -68,18 +69,18 @@ public class DisclosureHolidaymarket001Controller extends BaseController{
     @PostMapping("findPage/{page}/{length}")
     public Page<DisclosureHolidaymarket001Dto> findPage(@RequestBody Map<String, Object> param,
 			@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return holidaymarket001Service.searchForPage(page, length, param);
     }
     @GetMapping("importData")
-    public List<ExcelValidDto> importData (String fileName) throws Exception{
+    public List<ExcelValidDto> importData (String fileName) throws IOException {
     	
     	  return this.holidaymarket001Service.importData(fileName);
     }
     
     
     @PostMapping("setDateByType")
-    public int setDateByType (@RequestBody Map<String, Object> param) throws Exception{
+    public int setDateByType (@RequestBody Map<String, Object> param) {
     	
     	  return holidaymarket001Service.setDateByType(param);
     }
@@ -116,7 +117,7 @@ public class DisclosureHolidaymarket001Controller extends BaseController{
 //        return list;
 //    }
     @PostMapping("/initHolid")
-    public List<DisclosureHolidaymarket001Dto> initHolid(@RequestBody Map<String, Object> param) throws Exception{
+    public List<DisclosureHolidaymarket001Dto> initHolid(@RequestBody Map<String, Object> param) {
     	
     	  return holidaymarket001Service.initHolid(param);
     }

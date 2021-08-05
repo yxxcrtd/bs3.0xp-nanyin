@@ -88,7 +88,15 @@ RskValAssetCode003 = function(){
             , {field: 'tgtCode', title: 'RskValAssetCode004.tgtCode',sortField:'TGT_CODE'}
             , {field: 'allowSumName', title: 'RskValAssetCode004.allowSum',sortField:'ALLOW_SUM'}
             , {field: 'memo', title: 'RskValAssetCode004.memo'}
-        ]
+        ],
+        done:function() {
+            if ($('#assetCodeType').val() != ''
+                && $('#startRow').val() != ''
+                && $('#assetCodeColIndexLetter').val()!='') {
+                //加载源科目树、目标树
+                reloadTree();
+            }
+        }
     });
     
     /**

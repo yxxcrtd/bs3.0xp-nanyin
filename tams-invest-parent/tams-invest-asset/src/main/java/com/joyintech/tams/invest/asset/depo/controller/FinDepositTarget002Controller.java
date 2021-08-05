@@ -24,6 +24,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -34,21 +35,29 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.asset.depo.dto.FinDepositTargetDto;
 import com.joyintech.tams.invest.asset.depo.service.FinDepositTargetService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
+import com.joyintech.tools.util.ListUtils;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -182,7 +191,21 @@ public class FinDepositTarget002Controller extends BaseController{
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupEdit.class}) FinDepositTargetDto dto, BindingResult result) {
-        return commonCheck(result, dto.getOperateType());
+        //modify by mashukai 当系统参数【存款类标的是否以借款利率计提】为01时不校验净投资收益率的信息 ZGBSSE-553 20210622 start
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult = commonCheck(result, dto.getOperateType());
+        List<ValidMessage> errorList = ajaxResult.getErrorList();
+        if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE),"01") && errorList != null){
+            ListIterator<ValidMessage> fieldErrorIterator = errorList.listIterator();
+            while (fieldErrorIterator.hasNext()){
+                ValidMessage fieldError = fieldErrorIterator.next();
+                if(StringUtil.equals(fieldError.getField(),"finInterestFactorDto.investRate")){
+                    fieldErrorIterator.remove();
+                }
+            }
+        }
+        return ajaxResult;
+        //modify by mashukai 当系统参数【存款类标的是否以借款利率计提】为01时不校验净投资收益率的信息 ZGBSSE-553 20210622 end
     }
     
     /**
@@ -197,8 +220,7 @@ public class FinDepositTarget002Controller extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinDepositTargetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinDepositTargetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -246,8 +268,7 @@ public class FinDepositTarget002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getTradeOpponent")
-    public List<SuggestDto> getTradeOpponent()
-        throws Exception {
+    public List<SuggestDto> getTradeOpponent(){
         String param = super.getRequest().getParameter("param");
         String counterType = super.getRequest().getParameter("counterType");
         List<SuggestDto> temp = finDepositTargetService.getTradeOpponent(param,counterType);
@@ -263,8 +284,7 @@ public class FinDepositTarget002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getTradeCalendarName")
-    public List<SuggestDto> getTradeCalendarName()
-        throws Exception {
+    public List<SuggestDto> getTradeCalendarName(){
         String param = super.getRequest().getParameter("param");
         String isTradeCalendar = super.getRequest().getParameter("isTradeCalendar");
         List<SuggestDto> temp = finDepositTargetService.getTradeCalendarName(param, isTradeCalendar);

@@ -157,8 +157,7 @@ public class ReportRevealManage001Contoller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+    public Page<SelectOptionDto> getPrdInfoSelect() {
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
         return prdInfoSelect;
     }
@@ -173,7 +172,7 @@ public class ReportRevealManage001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ReportConfirmManage001Dto> findPage() throws Exception{
+    public Page<ReportConfirmManage001Dto> findPage(){
 	  String workflowId =this.getParam("workflowId");
     	
     	Page<ReportConfirmManage001Dto> page;
@@ -213,7 +212,7 @@ public class ReportRevealManage001Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("downloadReport")
-	public ResponseEntity<byte[]> downloadReport() throws Exception {
+	public ResponseEntity<byte[]> downloadReport() throws IOException {
 		String id = RequestUtil.getParam("id");
 		List<String> idList = new ArrayList<String>();
 		if(StringUtil.isNotEmpty(id)){
@@ -339,7 +338,7 @@ public class ReportRevealManage001Contoller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@Valid ReportConfirmManageParamDto dto, BindingResult result, String operateType) throws Exception{
+    public AjaxResult check(@Valid ReportConfirmManageParamDto dto, BindingResult result, String operateType) {
         return commonCheck(result, operateType);
 //    	 return  new AjaxResult();
     }
@@ -360,7 +359,6 @@ public class ReportRevealManage001Contoller extends BaseController {
 			boolean result1 =  reportRevealManage001Service.updateRevealStatus(dto);
         }
         catch (IOException e) {
-//            e.printStackTrace();
         	logger.error("error:",e);
             return new AjaxResult(e.getMessage());
         }
@@ -375,7 +373,6 @@ public class ReportRevealManage001Contoller extends BaseController {
 			boolean result1 =  reportRevealManage001Service.updateConfirmStatusWithGoBack(dto);
         }
         catch (IOException e) {
-//            e.printStackTrace();
         	logger.error("error:",e);
             return new AjaxResult(e.getMessage());
         }
@@ -391,7 +388,7 @@ public class ReportRevealManage001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	 String datas = this.getParam("datas");
          Map<String, Object> paraMap = RequestUtil.getPageParam();
          List<ReportConfirmManage001Dto> dtoList;

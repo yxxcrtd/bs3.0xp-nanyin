@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -123,12 +125,10 @@ public class FinProductBmQuotationController002 extends BaseController {
     /**
      * 新建产品代码联想框 
      * @return List List
-     * @throws Exception Exception
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketIdToNew")
-    public List<SelectOptionDto> getFinprodMarketIdToNew()
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodMarketIdToNew(){
         return finProductBmQuotationService.getFinprodMarketIdToNew(RequestUtil.getPageParam());
     }
     /**
@@ -156,8 +156,7 @@ public class FinProductBmQuotationController002 extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-    	ValidateGroupEdit.class}) FinProductBmQuotationDto dto, BindingResult br)
-        throws Exception {
+    	ValidateGroupEdit.class}) FinProductBmQuotationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

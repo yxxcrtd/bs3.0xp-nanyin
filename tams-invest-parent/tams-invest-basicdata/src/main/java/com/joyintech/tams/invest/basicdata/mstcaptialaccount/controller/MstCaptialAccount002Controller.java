@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,7 +75,7 @@ public class MstCaptialAccount002Controller extends BaseController{
      */
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model,DictCode.币种,DictCode.资产来源);
+        this.setSelectOptionToModel(model,DictCode.币种,DictCode.资产来源,DictCode.账户性质);/*add by lpf 2021-04-27 增加字段 账户性质*/
         //网点号/大额支付系统号
         String acctNo = getParam("acctNo");
         //币种
@@ -131,13 +132,13 @@ public class MstCaptialAccount002Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstCaptialAccountDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstCaptialAccountDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

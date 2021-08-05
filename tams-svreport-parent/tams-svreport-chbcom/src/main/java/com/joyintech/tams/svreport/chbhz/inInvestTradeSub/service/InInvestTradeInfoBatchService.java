@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.chbreport.codecheck.service.CommonCodeCheckTmpBatchService;
@@ -140,7 +141,7 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 		// 3.2.2 将已存在报送中的数据放入map中
 		// modify by dubaojun 2020-10-17 业务主键设置不正确修改 start
 		Map<String, InvestTradeRegist001Dto> mapSub = chbInvestTradeSubListin.stream().collect(
-				Collectors.toMap(dto -> getBusinessKeyStr(dto), investTradeRegist001Dto -> investTradeRegist001Dto, (v1, v2) -> v1));
+				Collectors.toMap(dto -> getBusinessKeyStrEX(dto), investTradeRegist001Dto -> investTradeRegist001Dto, (v1, v2) -> v1));
 		// modify by dubaojun 2020-10-17 业务主键设置不正确修改 end
 
 		// 报送时点
@@ -337,7 +338,7 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 	public boolean compareInvestTradeRegData(InvestTradeRegist001Dto dto, InvestTradeRegist001Dto regdto) {
 		InvestTradeRegist001Dto compare1 = genInvestTradeDto(dto);
 		InvestTradeRegist001Dto compare2 = genInvestTradeDto(regdto);
-		if (JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))) {
+		if (JSON.toJSONString(compare1,SerializerFeature.WriteNullStringAsEmpty).equals(JSON.toJSONString(compare2,SerializerFeature.WriteNullStringAsEmpty))) {
 			return true;
 		} else {
 			return false;
@@ -378,7 +379,7 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 		gendto.setUnitPriceNet((dto.getUnitPriceNet() == null ? BigDecimal.ZERO : dto.getUnitPriceNet()).setScale(6,
 				BigDecimal.ROUND_HALF_UP));
 		//到期收益率
-		gendto.setEndRate((dto.getEndRate() == null ? BigDecimal.ZERO : dto.getUnitPriceNet()).setScale(6,
+		gendto.setEndRate((dto.getEndRate() == null ? BigDecimal.ZERO : dto.getEndRate()).setScale(6,
 				BigDecimal.ROUND_HALF_UP));
 		//成交编号/合同号
 		gendto.setContractCode(dto.getContractCode());
@@ -462,5 +463,29 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 		return buffer.toString();
 	}
 	// add by dubaojun 2020-10-17 业务主键设置不正确修改 start
+	
+	/**
+	 * 获取业务主键拼接的字符串[资产代码为空的数据，赋值为null]
+	 * add by zhouqiang
+	 * @param sub
+	 *            数据
+	 * @return 业务主键
+	 */
+	
+	private String getBusinessKeyStrEX(InvestTradeRegist001Dto sub) {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(sub.getProdId());
+		buffer.append("|");
+		buffer.append(sub.getTradeCode()==null?"":sub.getTradeCode());
+		buffer.append("|");
+		if(sub.getAssetCode()==null){
+			buffer.append("");
+		}else{
+			buffer.append(sub.getAssetCode());
+		}
+		buffer.append("|");
+		buffer.append(sub.getCurAssetType());
+		return buffer.toString();
+	}
 
 }

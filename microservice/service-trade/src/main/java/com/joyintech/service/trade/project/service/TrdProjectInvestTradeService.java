@@ -51,7 +51,7 @@ public class TrdProjectInvestTradeService extends BaseService<TrdProjectInvestTr
     }
 
     public Page<TrdProjectInvestTradeDto> findPage(int page, int length, Map<String, Object> param)
-        throws Exception {
+    {
         setParams(param);
         return super.queryForPage(page, length, () -> trdProjectInvestTradeMapper.findTotalPage(param));
     }

@@ -37,7 +37,7 @@ public class HaifutongFilter extends AbstractFilter {
 	
 	
 	@Override
-	public Workbook doFilter(Workbook workbook,int sheetIndex) throws Exception {
+	public Workbook doFilter(Workbook workbook,int sheetIndex) {
 		String cost = null; String smv=null;
 		org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(sheetIndex);
 		Integer rowNum_src = sheet.getLastRowNum();

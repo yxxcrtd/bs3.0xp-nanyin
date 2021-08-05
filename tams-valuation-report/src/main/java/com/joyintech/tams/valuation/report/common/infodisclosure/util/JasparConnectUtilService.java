@@ -1,9 +1,11 @@
 package com.joyintech.tams.valuation.report.common.infodisclosure.util;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +41,7 @@ public class JasparConnectUtilService {
 	 * @throws Exception
 	 */
 	public UploadFile connectJasparAndDownload(String strUrl, String fileName,
-			String fileType) throws Exception{
+			String fileType) throws IOException{
 		
 		URL connUrl = new URL(strUrl);
 		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -58,7 +60,7 @@ public class JasparConnectUtilService {
 
             String path = FileNameUtil.createUploadFilePath("");
 
-            localFile = new File(path + File.separator + fileName);
+            localFile = new SafelyFile(path + File.separator + fileName);
             File dir = localFile.getParentFile();
             if (!dir.exists()) {
                 dir.mkdirs();
@@ -135,7 +137,7 @@ public class JasparConnectUtilService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String  connectJasparAndGenHtml(String strUrl) throws Exception{
+	public String  connectJasparAndGenHtml(String strUrl) throws IOException {
 		
 		URL connUrl = new URL(strUrl);
 		
@@ -164,7 +166,7 @@ public class JasparConnectUtilService {
     	 
         StringBuffer tStringBuffer = new StringBuffer();
 
-        String sTempOneLine = new String("");
+        String sTempOneLine = "";
 
         while ((sTempOneLine = tBufferedReader.readLine()) != null){
 

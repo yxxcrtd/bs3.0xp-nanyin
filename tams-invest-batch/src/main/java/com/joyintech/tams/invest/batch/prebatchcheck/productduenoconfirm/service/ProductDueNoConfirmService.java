@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName ProductDueNoConfirmService.java
+ * @Description 批前检查 产品到期未确认service
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.batch.prebatchcheck.productduenoconfirm.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
@@ -25,6 +32,13 @@ public class ProductDueNoConfirmService {
     @Autowired
     private ProductDueNoConfirmMapper productDueNoConfirmMapper;
 
+    /**
+     * @title 执行
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 11:02 
+     * @throws 
+     */
     public void execute(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, String instCode) {
 
         Map<String,Object> param = new HashMap<>();
@@ -55,6 +69,13 @@ public class ProductDueNoConfirmService {
 
     }
 
+    /**
+     * @title 组装
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 11:02 
+     * @throws 
+     */
     private void setResultDetail(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, SysPrebatchResultDetail item) {
         item.setResultSeqNo(dto.getSeqNo());
         item.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());

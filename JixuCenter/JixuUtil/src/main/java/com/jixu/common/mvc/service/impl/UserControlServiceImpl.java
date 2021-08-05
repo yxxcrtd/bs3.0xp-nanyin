@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import com.joyintech.framework.util.EncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -104,7 +105,7 @@ public class UserControlServiceImpl implements UserControlService{
 	public ResultContainer login(String useracct, String pwd, String ip) {
 		Users user=usersDao.getUserAccount(useracct);
 		ResultContainer container=new ResultContainer();
-		pwd=Md5Util.md5(pwd);
+		pwd= EncryptUtil.getInstance().md5(pwd);
 		if(user==null){
 			container.setCorrectFlag(false);
 			container.setErrorMsg(ReturnResult.getDicHM().get(ReturnResult.user_notexist_chinese));
@@ -159,56 +160,57 @@ public class UserControlServiceImpl implements UserControlService{
 					break;
 				}
 			}
-			Iterator<Entry<RequestMappingInfo, HandlerMethod>> handleIter=handleMap.getHandlerMethods().entrySet().iterator();
-			boolean roleExist=false;
-			
-			List<String> roleURLList=new ArrayList<String>();
-			String roleURL="";
-			while(handleIter.hasNext()){
-				Entry<RequestMappingInfo, HandlerMethod> entry=handleIter.next();
-				RequestMappingInfo key=entry.getKey();
-				if(key.getName()!=null){
-					roleExist=false;
-					roleURL=key.getPatternsCondition().toString().replace("[", "");
-					roleURL=roleURL.replace("]", "");
-					//查找是否存在该权限
-					for(RoleType role:roleList){
-						if(roleURL.equals(role.getRoleURLPath())){
-							roleExist=true;
-							if(!key.getName().equals(role.getRoleName())){
-								role.setRoleName(key.getName());
-								userRoleDao.updateEntityBean(role);
+			if (handleMap != null){
+				Iterator<Entry<RequestMappingInfo, HandlerMethod>> handleIter=handleMap.getHandlerMethods().entrySet().iterator();
+				boolean roleExist=false;
+
+				List<String> roleURLList=new ArrayList<String>();
+				String roleURL="";
+				while(handleIter.hasNext()){
+					Entry<RequestMappingInfo, HandlerMethod> entry=handleIter.next();
+					RequestMappingInfo key=entry.getKey();
+					if(key.getName()!=null){
+						roleExist=false;
+						roleURL=key.getPatternsCondition().toString().replace("[", "");
+						roleURL=roleURL.replace("]", "");
+						//查找是否存在该权限
+						for(RoleType role:roleList){
+							if(roleURL.equals(role.getRoleURLPath())){
+								roleExist=true;
+								if(!key.getName().equals(role.getRoleName())){
+									role.setRoleName(key.getName());
+									userRoleDao.updateEntityBean(role);
+								}
+								roleTypeHM.put(role.getRoleID(), role.getRoleName());
 							}
+						}
+
+						if(!roleExist){
+							//该权限在数据库不存在
+							RoleType role=new RoleType();
+							role.setRoleName(key.getName());
+							role.setRoleURLPath(roleURL);
+							roleTypeDao.saveEntityBean(role);
 							roleTypeHM.put(role.getRoleID(), role.getRoleName());
 						}
-					}
-					
-					if(!roleExist){
-						//该权限在数据库不存在
-						RoleType role=new RoleType();
-						role.setRoleName(key.getName());
-						role.setRoleURLPath(roleURL);
-						roleTypeDao.saveEntityBean(role);
-						roleTypeHM.put(role.getRoleID(), role.getRoleName());
-					}
-					
-					
-					roleURLList.add(roleURL);
-				}
-			}
-			
-			//删除数据库中存在，但文件中不存在的权限
-			boolean urlExist=false;
-			for(RoleType role:roleList){
-				urlExist=false;
-				for(String fileURL:roleURLList){
-					if(fileURL.equals(role.getRoleURLPath())){
-						urlExist=true;
-						break;
+
+
+						roleURLList.add(roleURL);
 					}
 				}
-				if(!urlExist){
-					roleTypeDao.deleteEntity(role);
+				//删除数据库中存在，但文件中不存在的权限
+				boolean urlExist=false;
+				for(RoleType role:roleList){
+					urlExist=false;
+					for(String fileURL:roleURLList){
+						if(fileURL.equals(role.getRoleURLPath())){
+							urlExist=true;
+							break;
+						}
+					}
+					if(!urlExist){
+						roleTypeDao.deleteEntity(role);
+					}
 				}
 			}
 			return roleTypeHM;

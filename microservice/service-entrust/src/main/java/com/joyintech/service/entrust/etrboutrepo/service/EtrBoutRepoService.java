@@ -120,7 +120,7 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
      * @see
      * @since 1.0
      */
-    public Page<EtrBoutRepoDto> selectForPage(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<EtrBoutRepoDto> selectForPage(int page, int length, Map<String, Object> param) {
         param.put("FINPROD_TYPE2_Z", DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue());
         param.put("FINPROD_TYPE2_N", DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue());
         String portfolioId = (String)param.get("portfolioId");
@@ -451,6 +451,16 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
      * @since 1.0
      */
     public List<SuggestDto> getSecManageAcctId(Map<String, Object> param) {
+        Object finprodIdTemp = param.get("finprodId");
+        String finProdType = DictCodeListExt1.金融产品类型_投管用_债券.getValue();
+        //部分页面没有finprodId特殊处理
+        if(finprodIdTemp == null){
+            if(param.get("finprodMarketId") != null){
+                String finprodMarketId = param.get("finprodMarketId").toString();
+                finprodMarketId = finProdType.concat(GlobalConstant.UNDER_LINE).concat(finprodMarketId);
+                param.put("finprodId",finprodMarketId);
+            }
+        }
         return this.queryForSuggest(() -> etrBoutRepoMapper.getSecManageAcctId(param),
             null);
     }

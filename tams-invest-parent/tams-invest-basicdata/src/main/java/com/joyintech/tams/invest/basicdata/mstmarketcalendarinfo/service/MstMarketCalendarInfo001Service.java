@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.basicdata.mstmarketcalendarinfo.service;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -113,8 +114,7 @@ public class MstMarketCalendarInfo001Service extends CommonExportService<MstMark
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public List<ExcelValidDto> importData(String flieName)
-        throws Exception {
+    public List<ExcelValidDto> importData(String flieName) throws FileNotFoundException, ParseException {
         // 检查文件名是否为空
         if (StringUtil.isNotEmpty(flieName)) {
             // 检查文件名是否包含市场日历信息导入
@@ -409,7 +409,7 @@ public class MstMarketCalendarInfo001Service extends CommonExportService<MstMark
             date = list==null?null:sdf.parse(list.get(0));
             // 获取平台日期
             Date sysDate = DateUtil.platDateFromCache();
-            if (date.before(sysDate)) {
+            if (date != null && date.before(sysDate)) {
                 // 验证导入数据日期是否小于平台日期
                 ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i),
                     this.getMessage("BUSS_COM_E_0003", "平台日期", "导入数据的日期"));

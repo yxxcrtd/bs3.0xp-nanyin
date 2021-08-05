@@ -1,6 +1,7 @@
 package com.joyintech.tams.common;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,7 @@ public class ProdFeeDealInterfImpService extends AbstractFileImpService{
 							FileImpService service = serviceList.get(i);
 							tasks.add(new Callable<Boolean>() {
 								@Override
-								public Boolean call() {
+								public Boolean call() throws ParseException {
 									String success = "success";
 									success  = service.importDB(service.copyDataList(dataList),interfile);
 									return "success".equals(success)?true:false;

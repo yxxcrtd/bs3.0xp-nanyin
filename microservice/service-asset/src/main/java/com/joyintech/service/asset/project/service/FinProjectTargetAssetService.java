@@ -222,7 +222,7 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
      * @since 1.0
      */
     public Page<FinProjectTargetAssetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> finProjectTargetAssetMapper.queryForPage(pageParam));
     }
     
@@ -271,10 +271,10 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
         if(null!=baseRepAssetAstBillInfoService){
             if(null!=entity.getBaseRepAssetAstBillInfoDto()){
                 List<RepAssetAstBill> bills = entity.getBaseRepAssetAstBillInfoDto().getRepAssetAstBillList();
-                for (RepAssetAstBill r: bills) {  
-                    r.setRepIndustry(entity.getPaFinProduct().getProjInvestIndustry());
-                    r.setRepIndustryLevel2(entity.getPaFinProduct().getProjInvestIndustry2());
-                }
+//                for (RepAssetAstBill r: bills) {  
+//                    r.setRepIndustry(entity.getPaFinProduct().getProjInvestIndustry());
+//                    r.setRepIndustryLevel2(entity.getPaFinProduct().getProjInvestIndustry2());
+//                }
                 baseRepAssetAstBillInfoService.insert(bills);
             }
         }
@@ -318,9 +318,9 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
             if(null!=entity.getBaseRepOtherInvestTargetInfoDto()){
             	if(StringUtil.equals(entity.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他非标准化债权类投资.getValue())
             			|| StringUtil.equals(entity.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他新增可投资资产.getValue())){
-            		RepOtherInvestTarget racnDto= entity.getBaseRepOtherInvestTargetInfoDto().getRepOtherInvestTargetList().get(0);
-            		racnDto.setRepIndustryFlag(null);
-            		racnDto.setRepContainExpectedYield2(null);
+            		//RepOtherInvestTarget racnDto= entity.getBaseRepOtherInvestTargetInfoDto().getRepOtherInvestTargetList().get(0);
+            		//racnDto.setRepIndustryFlag(null);
+            		//racnDto.setRepContainExpectedYield2(null);
             	}
                 baseRepOtherInvestTargetInfoService.insert(entity.getBaseRepOtherInvestTargetInfoDto().getRepOtherInvestTargetList());
             }
@@ -478,10 +478,10 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
         if(null!=baseRepAssetAstBillInfoService){
         	if(null!=entity.getBaseRepAssetAstBillInfoDto()){
                 List<RepAssetAstBill> bills = entity.getBaseRepAssetAstBillInfoDto().getRepAssetAstBillList();
-                for (RepAssetAstBill r : bills) {
-                    r.setRepIndustry(entity.getPaFinProduct().getProjInvestIndustry());
-                    r.setRepIndustryLevel2(entity.getPaFinProduct().getProjInvestIndustry2());
-                }
+//                for (RepAssetAstBill r : bills) {
+//                    r.setRepIndustry(entity.getPaFinProduct().getProjInvestIndustry());
+//                    r.setRepIndustryLevel2(entity.getPaFinProduct().getProjInvestIndustry2());
+//                }
                 entity.getBaseRepAssetAstBillInfoDto().setRepAssetAstBillList(bills);
                 baseRepAssetAstBillInfoService.update(entity.getBaseRepAssetAstBillInfoDto());
             }
@@ -529,9 +529,9 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
             if(null!=entity.getBaseRepOtherInvestTargetInfoDto()){
             	if(StringUtil.equals(entity.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他非标准化债权类投资.getValue())
             			|| StringUtil.equals(entity.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他新增可投资资产.getValue())){
-            		RepOtherInvestTarget racnDto= entity.getBaseRepOtherInvestTargetInfoDto().getRepOtherInvestTargetList().get(0);
-            		racnDto.setRepIndustryFlag(null);
-            		racnDto.setRepContainExpectedYield2(null);
+            		//RepOtherInvestTarget racnDto= entity.getBaseRepOtherInvestTargetInfoDto().getRepOtherInvestTargetList().get(0);
+            		//racnDto.setRepIndustryFlag(null);
+            		//racnDto.setRepContainExpectedYield2(null);
             	}
                 baseRepOtherInvestTargetInfoService.update(entity.getBaseRepOtherInvestTargetInfoDto());
             }

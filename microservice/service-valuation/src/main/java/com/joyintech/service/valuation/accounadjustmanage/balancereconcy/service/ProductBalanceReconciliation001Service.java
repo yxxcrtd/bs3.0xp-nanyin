@@ -46,7 +46,7 @@ public class ProductBalanceReconciliation001Service extends CommonExportService<
      * @throws Exception
      */
     public Page<ProductBalanceReconciliation001Dto> findPage(int page,int length,Map<String, Object> params)
-        throws Exception {
+    {
 
         // 所选产品
         String productIds = (String)params.get("productIds");

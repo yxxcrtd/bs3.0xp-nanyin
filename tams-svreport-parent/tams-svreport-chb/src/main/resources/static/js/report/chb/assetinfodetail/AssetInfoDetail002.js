@@ -166,8 +166,38 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").val('').trigger("change");
                 $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").attr("disabled",true);
                 //还本付息情况
-                $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").val('').trigger("change");
-                $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",true);
+                //$("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").val('').trigger("change");
+                //$("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",true);
+
+                //浮动因子
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactor").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactor").attr("disabled",true);
+                //担保方式
+                $("#svrBussRepAssetCreditNonstdInfoDto_repGuaType").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repGuaType").attr("disabled",true);
+                //抵质押物类型
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeType").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeType").attr("disabled",true);
+                //抵质押物价值
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeValue").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeValue").attr("disabled",true);
+                //担保性质
+                $("#svrBussRepAssetCreditNonstdInfoDto_repNatureGuarantee").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repNatureGuarantee").attr("disabled",true);
+                //担保人与融资人关系
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRelationFinan").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRelationFinan").attr("disabled",true);
+                //行权价格
+                $("#svrBussRepAssetCreditNonstdInfoDto_repExercisePrice").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repExercisePrice").attr("disabled",true);
+                //递延利息是否计息
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestInt").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestInt").attr("disabled",true);
+                //部分赎回比例%
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemRate").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemRate").attr("disabled",true);
+
+
                 //是否有浮动因子
                 $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").val('').trigger("change");
                 $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").attr("disabled",true);
@@ -220,7 +250,27 @@ var QueryFunc=function(){
                 //利息发布方式
                 $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").attr("disabled",false);
                 //还本付息情况
-                $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",false);
+              //  $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",false);
+
+               //浮动因子
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactor").attr("disabled",false);
+                //担保方式
+                $("#svrBussRepAssetCreditNonstdInfoDto_repGuaType").attr("disabled",false);
+                //抵质押物类型
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeType").attr("disabled",false);
+                //抵质押物价值
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeValue").attr("disabled",false);
+                //担保性质
+                $("#svrBussRepAssetCreditNonstdInfoDto_repNatureGuarantee").attr("disabled",false);
+                //担保人与融资人关系
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRelationFinan").attr("disabled",false);
+                //行权价格
+                $("#svrBussRepAssetCreditNonstdInfoDto_repExercisePrice").attr("disabled",false);
+                //递延利息是否计息
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestInt").attr("disabled",false);
+                //部分赎回比例%
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemRate").attr("disabled",false);
+
                 //是否有浮动因子
                 $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").attr("disabled",false);
                 //结构档次

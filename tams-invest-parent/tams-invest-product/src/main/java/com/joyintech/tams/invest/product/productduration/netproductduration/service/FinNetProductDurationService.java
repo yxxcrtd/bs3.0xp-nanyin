@@ -7,13 +7,12 @@ package com.joyintech.tams.invest.product.productduration.netproductduration.ser
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.common.base.dao.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,24 +25,6 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.FinBaseRuleInfoMapper;
-import com.joyintech.tams.common.base.dao.FinCashCalcRuleMapper;
-import com.joyintech.tams.common.base.dao.FinCashInfoMapper;
-import com.joyintech.tams.common.base.dao.FinFloatCalcRuleDetailMapper;
-import com.joyintech.tams.common.base.dao.FinFloatCalcRuleMapper;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.PaTrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.PrdSaleParamMapper;
-import com.joyintech.tams.common.base.dao.PtlTradeMapper;
-import com.joyintech.tams.common.base.dao.StlPayOrdersMapper;
-import com.joyintech.tams.common.base.dao.TrdAsynHandleStatusMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
 import com.joyintech.tams.common.base.entity.BokPositionPrd;
 import com.joyintech.tams.common.base.entity.FinBaseRuleInfo;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
@@ -110,6 +91,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class FinNetProductDurationService extends CommonExportService<FinNetProductDurationDto> implements BaseProcessService<FinNetProductDurationDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(FinNetProductDurationService.class);
 
     @Autowired
     private TradeProductDealCommService baseTradeProductDealCommServiceImpl;
@@ -185,6 +170,9 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
 	
 	@Autowired
 	private FinBaseRuleInfoMapper finBaseRuleInfoMapper;
+
+	@Autowired
+	private PrdMdateAdjustMapper prdMdateAdjustMapper;
 	
 	 @Autowired
 	private BasePtlCashPositionInfoMapper basePtlCashPositionInfoMapper;
@@ -441,7 +429,7 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
     				 }
     			 }
     		}catch (Exception e) {
-    			e.printStackTrace();
+				logger.error(e.getMessage(),e);
     		}
     		 this.handleBussFlowData(dto);
     	}
@@ -2005,7 +1993,8 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                     trdProductDealInt.setPs(DictCodeList.交易方向_赎回收益确认.getValue());
 
                     trdProductDealInt.setVdate(dto.getvDate());
-                    trdProductDealInt.setMdate(dto.getmDate());
+//                    trdProductDealInt.setMdate(dto.getmDate());
+					trdProductDealInt.setMdate(dto.getRedConfirmDate03());
 
                     // trdProductDealInt.setPrinAmt(dto.getRedPrinAmt03());
                     trdProductDealInt.setFpriceAmt(dto.getRedProfit03());
@@ -3223,7 +3212,13 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
             list.add(DictCodeList.交易方向_份额强减);
 
             if (StringUtil.equals(prdSaleParam.getBeforeendFlag(), DictCodeList.是否_是.getValue())) {
-                list.add(DictCodeList.交易方向_提前终止);
+				Map<String, Object> param = new HashMap<>();
+				param.put("finprodId", finprodId);
+				param.put("adjustType", DictCodeListExt2.调整类型_提前终止.getValue());
+				Date mdate = prdMdateAdjustMapper.selectMdate(param);
+				if (StringUtil.equals(DateUtil.format(mdate, "yyyy-MM-dd"), DateUtil.getSysDate())) {
+					list.add(DictCodeList.交易方向_提前终止);
+				}
             }
 
             if (DictCodeList.收益类型_净值型.getValue().equals(profitType)) {
@@ -3429,6 +3424,19 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
         return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductDuration/getFinprodMarketIdList",
             map, SelectOptionDto.class);
     }
+
+	/**
+	 * <一句话功能简述> <功能详细描述>
+	 *
+	 * @param map
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public Page<SelectOptionDto> getFinprodMarketIdListForPgae(Map<String, Object> map) {
+		return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductDuration/getFinprodMarketIdListForPgae",
+				map, SelectOptionDto.class);
+	}
 
     /**
      * <一句话功能简述> <功能详细描述>

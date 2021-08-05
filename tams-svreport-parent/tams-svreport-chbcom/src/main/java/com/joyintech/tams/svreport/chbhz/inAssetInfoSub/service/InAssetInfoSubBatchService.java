@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.chbhz.inAssetInfoSub.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -354,7 +357,7 @@ public class InAssetInfoSubBatchService extends FileImpService {
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				session.rollback();
-				throw e;
+				throw new BusinessException(e);
 			} finally {
 				session.close();
 			}
@@ -378,7 +381,7 @@ public class InAssetInfoSubBatchService extends FileImpService {
 		if (assetInfoCompare == null || assetInfoToCompare == null) {
 			return false;
 		} else {
-			return JSON.toJSONString(assetInfoCompare).equals(JSON.toJSONString(assetInfoToCompare));
+			return JSON.toJSONString(assetInfoCompare,SerializerFeature.WriteNullStringAsEmpty).equals(JSON.toJSONString(assetInfoToCompare,SerializerFeature.WriteNullStringAsEmpty));
 		}
 	}
 

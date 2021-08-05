@@ -1,17 +1,15 @@
 package com.joyintech.tams.invest.asset.plan.planNet.validator;
 
-//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.plan.planNet.dto.FinPlanNetAssetDto;
 import com.joyintech.tams.invest.asset.plan.planNet.service.FinPlanNetAssetService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,8 +31,8 @@ public class FinPlanNetAssetValidator implements BeanValidator {
     @Autowired
     private CommonBusinessService commonBusinessService;
 
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    @Autowired
+    private ChbDataCheckService chbDataCheckService;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -71,7 +69,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
         //modify by mashukai ZGBS-32 计划类净值型标的，点击删除按钮，提示请输入发行金额 20201126 end
         if (WorkFlowUtil.isNotFromToDoList()) {
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
-                if(dto.getSelectedItem()!=null||dto.getSelectedItem().size()>0){
+                if(dto.getSelectedItem()!=null&&dto.getSelectedItem().size()>0){
                     for(FinPlanNetAssetDto dto1:dto.getSelectedItem()) {
                         if (commonBusinessService.isTransInAsset(dto1.getFinprodId())>0){
                             errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0043")));
@@ -133,9 +131,9 @@ public class FinPlanNetAssetValidator implements BeanValidator {
 		// 增加法审编号和合同号的必填check by 赵东东 2019.10.14 end
 		//注释掉多余的check by 赵东东 2019.10.15 end
 
-//        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-//            errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, dto.getRepAssetType(), ValidMessage.class);
-//        }
+        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+            errorList = chbDataCheckService.chbCheckCommon(errorList, value, null, dto.getRepAssetType());
+        }
 
         return errorList;
     }

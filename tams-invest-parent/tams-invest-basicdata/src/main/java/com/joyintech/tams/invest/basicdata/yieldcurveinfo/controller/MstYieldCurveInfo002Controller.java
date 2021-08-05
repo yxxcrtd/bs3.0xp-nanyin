@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -112,13 +113,12 @@ public class MstYieldCurveInfo002Controller  extends BaseController{
      * @param dto MstYieldCurveInfoDto
      * @param br br
      * @return AjaxResult
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstYieldCurveInfoDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstYieldCurveInfoDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -135,7 +135,7 @@ public class MstYieldCurveInfo002Controller  extends BaseController{
             //修改流程中的曲线名称和曲线类型 modified by lishuping 20191008 start
             entity ->"曲线名称"+"("+ String.format(entity.getCurveCode()) + ")"
                     +"-"+"曲线日期" + "(" + DateUtil.format(entity.getCurveDate()) + ")"
-                +"-"+"区线类型"+"("+SysDataUtil.getNameFromDataDict(DictCode.曲线利率类型,
+                +"-"+"曲线类型"+"("+SysDataUtil.getNameFromDataDict(DictCode.曲线利率类型,
                     entity.getCurveType())+")");
         //修改流程中的曲线名称和曲线类型 modified by lishuping 20191008 end
         //给参数变成ProcessParameter而非WorkFlowParameter

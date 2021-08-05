@@ -9,16 +9,15 @@
  */
 package com.joyintech.service.product.productelement.scheduling.dao;
 
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.PaPrdIssueSchedule;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.PaPrdIssueSchedule;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 理财产品排期信息管理
@@ -108,4 +107,12 @@ public interface FinProductSchedulingMapper {
                            @Param("finprodName") String finprodName,
                            @Param("finprodId") String finprodId,
                            @Param("finprodType2") String finprodType2);
+
+    /**
+     * 查询是否是否存在组合代码与产品代码相同的组合
+     * @param finprodMarketId 产品代码
+     * @return
+     */
+    int chekPortfolExist(@Param("finprodMarketId") String finprodMarketId,
+                         @Param("pageId") String pageId);
 }

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,9 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.JasparConnec
 import com.joyintech.tams.disclosure.common.common.util.OfficeMergeUtil;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.reportmodelmanage.ReportModelManage001Dto;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * 记账凭证查询service
@@ -90,7 +94,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             String exportFilePath = CacheUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String zipFileName = FileNameUtil.createFileName("zip");
-            File zipFile = new File(exportFilePath + File.separator + zipFileName);
+            File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             FileOutputStream stream = null;
             ZipOutputStream  zipOut =null;
             try{
@@ -107,7 +111,6 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
                              zipOut.write(tmp);
                          }
                       }catch (Exception e) {
- //                         e.printStackTrace();
                           logger.error("error:",e);
                       }finally{
                           if(input!=null){
@@ -130,7 +133,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             return ExportUtil.export(zipFileName, zipFile, true);
     }
 
-    public void createExcel(ReportModelManage001Dto dto) throws IOException {
+    public void createExcel(ReportModelManage001Dto dto){
         
         
        // URL url = new URL(dto.getUrl());
@@ -200,7 +203,6 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             }
 
         } catch (Exception e) {
- //           e.printStackTrace();
         	logger.error("error:",e);
         }
         
@@ -234,7 +236,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
          * @see
          * @since 1.0
          */
-        public ResponseEntity<byte[]> mergeExport(List<ReportModelManage001Dto> list) throws Exception {
+        public ResponseEntity<byte[]> mergeExport(List<ReportModelManage001Dto> list) {
             List<String> srcFileList = new ArrayList<String>();
             for (ReportModelManage001Dto reportModelManage001Dto : list) {
                 createExcel(reportModelManage001Dto);
@@ -243,7 +245,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             String fileType = list.get(0).getFileType();
             String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String mergeExportFileName = FileNameUtil.createFileName(fileType);
-            File exportFile = new File(exportFilePath + File.separator + mergeExportFileName);
+            File exportFile = new SafelyFile(exportFilePath + File.separator + mergeExportFileName);
             if("docx".equals(fileType)){
                 OfficeMergeUtil.mergeWord(exportFilePath + File.separator + mergeExportFileName, srcFileList);
             }else if("xls".equals(fileType) || "xlsx".equals(fileType)){
@@ -262,7 +264,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
          * @see
          * @since 1.0
          */
-        public ResponseEntity<byte[]> mergeExportSingle(ReportModelManage001Dto reportModelManage001Dto) throws Exception {
+        public ResponseEntity<byte[]> mergeExportSingle(ReportModelManage001Dto reportModelManage001Dto) throws IOException {
         	//提前获取模板中文名称，用以获取下载文件名称，如果中文名称没有，就用英文名称
         	
         	Map<String,String> resultMap = new HashMap<>() ;
@@ -302,18 +304,23 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
         	if(resultMap.entrySet().size()>1){
         		String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH); 
         		fileName = FileNameUtil.createFileName("zip");
-        		exportFile = new File(uploadFilePath+fileName);
-        		zipOut = new ZipOutputStream(new FileOutputStream(exportFile));
-//    			zipOut.setEncoding(ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE);
-    			for (Map.Entry<String, String> val : resultMap.entrySet()) {
-            		reportModelManage001Dto.getParam().put("portnum", val.getKey());
-    				compressFile2(zipOut, new File(val.getValue()),buildFileName(reportModelManage001Dto));
-				}
-    			zipOut.close();
-            	
+        		exportFile = new SafelyFile(uploadFilePath+fileName);
+        		zipOut = null;
+        		try {
+	        		zipOut = new ZipOutputStream(new FileOutputStream(exportFile));
+	//    			zipOut.setEncoding(ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE);
+	    			for (Map.Entry<String, String> val : resultMap.entrySet()) {
+	            		reportModelManage001Dto.getParam().put("portnum", val.getKey());
+	    				compressFile2(zipOut, new SafelyFile(val.getValue()),buildFileName(reportModelManage001Dto));
+					}
+                }finally {
+        		    if(zipOut != null){
+                        zipOut.close();
+                    }
+                }
             }else{
             	fileName = buildFileName(reportModelManage001Dto);
-            	exportFile=new File(reportModelManage001Dto.getTemLoad());///NB/GLJY
+            	exportFile=new SafelyFile(reportModelManage001Dto.getTemLoad());///NB/GLJY
             }
       
             
@@ -353,7 +360,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
         }
         
         
-        public List<Map<String,String>> searchReports(Map<String,Object> params) throws Exception{
+        public List<Map<String,String>> searchReports(Map<String,Object> params) throws IOException, SAXException, ParserConfigurationException {
         	//后台批处理报表地址单独啦出来
     		String serverUrl = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_SERVER_URL);
     		//用户名
@@ -369,7 +376,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
     		return result;
         }
         
-        public List<ReportModelManage001Dto> searchReportsNew(Map<String,Object> params) throws Exception{
+        public List<ReportModelManage001Dto> searchReportsNew(Map<String,Object> params) {
 //    		List<ReportModelManage001Dto> result = reportModelManage001Mapper.searchReports(params);
     		
         	List<ReportModelManage001Dto> result =restTemplate.postForList(
@@ -385,7 +392,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
     	 * @param pageParam
     	 * @return
     	 */
-    	public Page<ReportModelManage001Dto> findByPage(Map<String, Object> pageParam) throws Exception {
+    	public Page<ReportModelManage001Dto> findByPage(Map<String, Object> pageParam) {
 //    		return super.queryForPage(() -> reportModelManage001Mapper.searchReports(pageParam));
     		
     		return restTemplate.postForPage(

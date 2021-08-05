@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName ProcessProductTask.java
+ * @Description 批前检查 流程中产品定义
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.batch.prebatchcheck.processproduct.runner;
 
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
@@ -41,6 +48,13 @@ public class ProcessProductTask extends BatchBaseService {
     private ProcessProductService processProductService;
 
 
+    /**
+     * @title 执行
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 10:58 
+     * @throws 
+     */
     @Override
     public JobExecution execute() throws BatchException {
 

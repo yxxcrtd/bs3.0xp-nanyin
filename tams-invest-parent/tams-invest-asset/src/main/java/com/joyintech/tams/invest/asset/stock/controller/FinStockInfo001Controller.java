@@ -34,6 +34,7 @@ import com.joyintech.tams.invest.asset.stock.service.FinStockInfoService;
 
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -81,16 +82,14 @@ public class FinStockInfo001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinStockInfoDto> selectAll()
-        throws Exception {
+    public Page<FinStockInfoDto> selectAll(){
        Page<FinStockInfoDto> page = finStockInfoService.selectForPage(
                  RequestUtil.getParameters(getRequest()));
                return page;
     }
     @ResponseBody
     @RequestMapping("/getFinprodMarketIdList")
-    public List<SuggestDto> getFinprodMarketIdList(String param)
-        throws Exception{
+    public List<SuggestDto> getFinprodMarketIdList(String param){
         return finStockInfoService.getFinprodMarketIdList(param);
     }
 
@@ -173,8 +172,7 @@ public class FinStockInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) FinStockInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) FinStockInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -206,8 +204,7 @@ public class FinStockInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finStockInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

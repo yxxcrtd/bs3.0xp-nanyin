@@ -29,6 +29,16 @@ $(function() {
             $('#finProdMarketId').attr("disabled",true);
             $('#valDate').attr("disabled",true);
             $('#profitType').attr("disabled",true);
+
+            // add by zoujiamin  TISHKBS-2216  先给ul元素新加disabled的样式 start
+            document.getElementsByTagName("ul")[0].className += ' disabled'
+            // li元素不能点击需要单独新增style pointerEvents=none
+            var li = document.getElementsByTagName("li");//取得所有的li元素
+            console.log('li',li);
+            for(var i=0;i<li.length;i++){ //循环对每一个li进行处理
+                li[i].style.pointerEvents="none";//
+            }
+            // add by zoujiamin  TISHKBS-2216  先给ul元素新加disabled的样式 end
         }
     };
     //画面联动：输入资产代码，联动显示资产名称和管理人
@@ -68,6 +78,7 @@ $(function() {
         //收益标识联动事件
         $('#profitType').change(function() {
         	$('#finProdMarketId option').remove();
+        	console.log('哈？')
         	finprodIdChange()
         });
     });

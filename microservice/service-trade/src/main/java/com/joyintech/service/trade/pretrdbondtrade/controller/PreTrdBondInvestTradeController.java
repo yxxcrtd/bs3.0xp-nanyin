@@ -63,7 +63,7 @@ public class PreTrdBondInvestTradeController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<PreTrdBondInvestTrade001Dto> queryForPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return preBondInvestTradeService.selectForPage(page, length, param);
     }
 
@@ -118,7 +118,7 @@ public class PreTrdBondInvestTradeController {
      */
     @RequestMapping("getFinprodId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length) {
         return preBondInvestTradeService.getFinprodId(page, length, param);
     }
     /**
@@ -132,7 +132,7 @@ public class PreTrdBondInvestTradeController {
      */
     @RequestMapping("getacctNo/{page}/{length}")
     public Page<SelectOptionDto> getacctNo(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length) {
         return preBondInvestTradeService.getacctNo(page, length, param);
     }
     /**
@@ -146,7 +146,7 @@ public class PreTrdBondInvestTradeController {
      */
     @RequestMapping("getsecAcctId/{page}/{length}")
     public Page<SelectOptionDto> getsecAcctId(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length) {
         return preBondInvestTradeService.getsecAcctId(page, length, param);
     }
     

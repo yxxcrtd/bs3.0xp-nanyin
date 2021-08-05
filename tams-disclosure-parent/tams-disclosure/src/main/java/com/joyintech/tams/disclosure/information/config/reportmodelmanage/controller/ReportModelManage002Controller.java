@@ -22,6 +22,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,15 +198,14 @@ public class ReportModelManage002Controller extends BaseController {
 		 */
 		@RequestMapping(value = "/uploadFile")
 		@ResponseBody
-		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-				throws Exception {
+		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws IOException {
 			 AjaxResult res = new AjaxResult();
 //			 if(request.getParameter("size")>1048576){}
 			 if(StringUtil.isEmpty(this.getParam("folder"))){
 				//进度条消除
 				 reportModelManage002Service.removePercent(request);
 				 String sourcePath=this.getParam("fileName");
-				 File sourceFile=new File(sourcePath);
+				 File sourceFile=new SafelyFile(sourcePath);
 				 if(sourceFile.exists()){
 					 sourceFile.delete();
 				 }
@@ -231,8 +231,8 @@ public class ReportModelManage002Controller extends BaseController {
 				}}
 			 //判断目标目镜是否存在
 			 String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH); 
-			 File filepath = new File(uploadFilePath);///home/tamsuser/jasper
-		     File filepath2=new File(uploadFilePath+this.getParam("folder"));///NB/GLJY
+			 File filepath = new SafelyFile(uploadFilePath);///home/tamsuser/jasper
+		     File filepath2=new SafelyFile(uploadFilePath+this.getParam("folder"));///NB/GLJY
 			 if(!filepath.exists()){
 				 filepath.mkdirs();
 			 }
@@ -253,7 +253,7 @@ public class ReportModelManage002Controller extends BaseController {
 			 if(filepath.exists()&&filepath.isDirectory()){
 				 
 			//调用解压工具,并解压至指定目录
-			 boolean deczip =  FileUtil.decompressZip(new File(this.getParam("fileName")), filepath2.getPath());
+			 boolean deczip =  FileUtil.decompressZip(new SafelyFile(this.getParam("fileName")), filepath2.getPath());
 			 
 			 if(!deczip){
 				 String msg = "文件上传并解压失败,请检查文件是否完好!";
@@ -285,7 +285,7 @@ public class ReportModelManage002Controller extends BaseController {
 		 */
 		@ResponseBody
 		@RequestMapping("downloadReport")
-		public ResponseEntity<byte[]> downloadReport() throws Exception {
+		public ResponseEntity<byte[]> downloadReport() throws IOException {
 			
 			
 			return reportModelManage002Service.downLoadReportInfo(this.getParam("folder"));

@@ -15,17 +15,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.framework.config.JasyptConfiguration;
 
+import java.util.Locale;
+
 @Import({JasyptConfiguration.class})
 @SpringBootApplication(exclude=SecurityAutoConfiguration.class)
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableEurekaClient
 @EnableCaching
 @EnableAsync
-@ComponentScan(basePackages ="com.joyintech.jixu", includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {
+@ComponentScan(basePackages = {"com.joyintech.jixu"}, includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {
     RestController.class}))
 public class AdapterApplication extends SpringBootServletInitializer{
 	
-	public static void main(String[] args) throws Exception{
+	public static void main(String[] args){
+		Locale local = new Locale("zh", "CN");
+		Locale.setDefault(local);
 		SpringApplication.run(AdapterApplication.class, args);
 	}
 }

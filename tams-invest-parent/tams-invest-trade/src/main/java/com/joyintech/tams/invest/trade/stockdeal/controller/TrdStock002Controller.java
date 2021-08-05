@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.trade.stockdeal.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +31,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeCSTPDto;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -150,7 +152,11 @@ public class TrdStock002Controller extends BaseController {
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdStock002Service.getBussinessEntityByWorkflowId(
                 workflowId);
-			dto.setPortfolioId(dto.getActPortfolioId());
+            // add by jiangpeng on 20210512 start ZGBSSE-344
+            if(StringUtil.isNotEmpty(dto.getActPortfolioId())) {
+				dto.setPortfolioId(dto.getActPortfolioId());
+			}
+			// add by jiangpeng on 20210512 start ZGBSSE-344
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
             model.addAttribute("workflowId",workflowId);
         }
@@ -426,7 +432,7 @@ public class TrdStock002Controller extends BaseController {
 	 */
 	@RequestMapping("save")
 	@ResponseBody
-	public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdStockDto dto, BindingResult br) throws Exception {
+	public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdStockDto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException {
 		if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -529,7 +535,7 @@ public class TrdStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getTongDaoCash")
-    public BigDecimal getTongDaoCash(@RequestBody Map<String,Object> map) throws Exception{
+    public BigDecimal getTongDaoCash(@RequestBody Map<String,Object> map) {
         return trdStock002Service.getTongDaoCash(map);
     }
     

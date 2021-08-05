@@ -40,9 +40,9 @@
           B.Finprod_abbr finprodAbbr,
            A.cash_id cashId,
           A.ACCR_DATE accrDate,
-          ACCR_STR_DATE accrStrDate,
-          ACCR_END_DATE accrEndDate,
-          VAL_DATE valDate,
+          A.ACCR_STR_DATE accrStrDate,
+          A.ACCR_END_DATE accrEndDate,
+          A.VAL_DATE valDate,
           case
             when (select count(1)
                     from (select bookset_id finprod_id, happen_date trade_date
@@ -68,7 +68,7 @@
       and c.finprod_id = B.finprod_id
       and B.finprod_id = #{finprodId,jdbcType = VARCHAR}
       and C.Cash_Type_1 = #{CASH_TYPE_1_06, jdbcType = VARCHAR}
-    order by ACCR_STR_DATE
+    order by A.ACCR_STR_DATE
 	</select>
 	<select id="getcycleTdayRule" resultType="java.lang.String">
 	select ACCR_TDAY_RULE  from (select ROW_NUMBER() over() rownum,ACCR_TDAY_RULE from Fin_Float_Counting_Rule where cash_id=#{cashId,jdbcType = VARCHAR}  order by eff_date desc) where  rownum=1

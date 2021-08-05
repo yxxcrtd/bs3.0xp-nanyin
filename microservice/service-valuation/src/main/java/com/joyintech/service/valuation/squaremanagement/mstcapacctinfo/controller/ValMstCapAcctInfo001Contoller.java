@@ -54,15 +54,14 @@ public class ValMstCapAcctInfo001Contoller extends BaseController {
     
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValMstCapAcctInfoDto> queryPage(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         return valMstCapAcctInfoService.findPage(page, length, param);
     }
     
     @Transactional
     @DTXTransaction
     @PostMapping("/delete")
-    public boolean delete(@RequestBody ValMstCapAcctInfoDto dto) 
-		throws Exception{
+    public boolean delete(@RequestBody ValMstCapAcctInfoDto dto) {
         return valMstCapAcctInfoService.deleteValMatAcctInfoByAcctno(dto);
     }
 

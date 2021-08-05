@@ -1138,7 +1138,13 @@ public class BussSettleOrderCommService {
         	}
         	dto.setCounterCapacctInfoList(bussSettleOrderCommMapper.selectProdCapacctInfoList(inputDto.getPortfolioId(), deal.getCcy(), DictCodeListExt1.资金账户类型_增值税账户.getValue()));
         }
-        dto.setMyCapacctInfoList(bussSettleOrderCommMapper.selectProdCapacctInfoList(inputDto.getPortfolioId(), deal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue()));
+        // modify by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
+        if(StringUtil.isNotEmpty(deal.getChlId())){
+            dto.setMyCapacctInfoList(bussSettleOrderCommMapper.selectChlAcctNoInfoList(deal.getChlId(), deal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue()));
+        }else {
+            dto.setMyCapacctInfoList(bussSettleOrderCommMapper.selectProdCapacctInfoList(inputDto.getPortfolioId(), deal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue()));
+        }
+        // modify by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳
 //        if (StringUtil.equals(deal.getFinprodType2(), DictCodeList.业务类型_增值税交易.getValue())
 //                && StringUtil.equals(DictCodeList.交易方向_税费退税.getValue(), deal.getPs())) {
 //                dto.setPs(DictCodeListExt1.收支方向_收入.getValue());

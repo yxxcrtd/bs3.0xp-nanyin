@@ -242,7 +242,7 @@ var assetColList1 = [ //标题栏
                   	{field: 'ASSET_NAME14', align: 'center', title: '*名称', width: 150},
                   	{field: 'IN_ASSET_TYPE14', align: 'center', title: '*行内资产类别', width: 150},
                   	{field: 'IN_ASSET_TYPE_CMM14', align: 'center', title: '行内资产类别说明', width: 150},
-                  	{field: 'ASSET_VALUE14', align: 'center', title: '*资产价值', width: 150},
+                  	{field: 'AMT14', align: 'center', title: '*金额', width: 150},
                   	{field: 'VDATE14', align: 'center', title: '*起息日', width: 150},
                   	{field: 'MDATE14', align: 'center', title: '*到期日', width: 150},
                   	{field: 'COUNTRY_AREA14', align: 'center', title: '*所属国家或地区', width: 150},

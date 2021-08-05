@@ -25,8 +25,8 @@ import com.joyintech.tams.invest.batch.prebatchcheck.common.service.PrebatchChec
 import com.joyintech.tams.invest.batch.prebatchcheck.processassettrade.service.ProcessAssetTradeService;
 /**
  * 批前检查-流程中的投资交易（含存续期交易）
- * @author Administrator
- *
+ * @author yantianyuan
+ * 创建日期：2021-05-13
  */
 @Service("processAssetTradeTask")
 @Scope("prototype")
@@ -43,13 +43,16 @@ public class ProcessAssetTradeTask extends BatchBaseService{
 	@Autowired
 	private ProcessAssetTradeService processAssetTradeService;
 	
+	/**
+	 * 批任务接口
+	 */
 	@Override
 	public JobExecution execute() throws BatchException {
 
+		//1. 获取批信息
         JobExecution result = new JobExecution(1l);
         result.setStatus(BatchStatus.FAILED);
-
-
+        
         SysBatchExecInfo batchExecuteInfo = this.getBatchExecuteInfo();
         SysBatchgrpExecInfo batchExecuteDetail = this.getBatchExecuteDetail();
 
@@ -57,7 +60,7 @@ public class ProcessAssetTradeTask extends BatchBaseService{
             logger.info("无启动参数，批处理退出。");
             return null;
         }
-
+        //2. 自动跑批特殊处理
         if(StringUtil.equals(BatchDictCodeList.批处理启动模式_自动.getValue(),batchExecuteInfo.getStartMode())){
 
             // 先删除 已经存在的结果 根据 taskId 及日期  自动跑批 所有机构 结果都删除。
@@ -72,6 +75,7 @@ public class ProcessAssetTradeTask extends BatchBaseService{
             if(!StringUtil.isEmptyList(resultList)) {
                 for (SysPrebatchResultDto dto : resultList) {
                     try {
+                    	//调用service进行处理
                     	processAssetTradeService.execute(batchExecuteInfo,dto,dto.getInstitutionCode());
                         result.setStatus(BatchStatus.COMPLETED);
                     }
@@ -91,9 +95,10 @@ public class ProcessAssetTradeTask extends BatchBaseService{
             result.setStatus(BatchStatus.COMPLETED);
             return result;
         }
-
+        //3. 非自动跑批处理
         String instCode = batchExecuteDetail.getOtherParam4();
 
+        //3.1 构造查询dto，获取对应的SysPrebatchResultDto dto
         SysPrebatchResultDto paramdto = new SysPrebatchResultDto();
         paramdto.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
         paramdto.setTaskId(batchExecuteInfo.getTaskId());

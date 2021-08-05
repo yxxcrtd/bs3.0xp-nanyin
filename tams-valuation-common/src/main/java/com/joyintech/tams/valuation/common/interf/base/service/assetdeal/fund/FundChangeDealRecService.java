@@ -322,10 +322,11 @@ public class FundChangeDealRecService {
         result.setPrinAmt(dto.getPrinAmt());
         // 随交易支付费用 = IF  I.通道费是否随交易支付 =“是” I.交易费 + I.通道费  ELSE I.交易费
         BigDecimal chlFeeAmt = (dto.getChlFeeAmt() == null) ? BigDecimal.ZERO : dto.getChlFeeAmt();
+        BigDecimal feeAmt = (dto.getFeeAmt() == null) ? BigDecimal.ZERO : dto.getFeeAmt();
         if(DictCodeList.是否_是.getValue().equals(dto.getIsChlFeeAmt())){
-        	result.setFeeAmtPay(dto.getFeeAmt().add(chlFeeAmt));
+        	result.setFeeAmtPay(feeAmt.add(chlFeeAmt));
         }else{
-        	result.setFeeAmtPay(dto.getFeeAmt());
+        	result.setFeeAmtPay(feeAmt);
         }
         // 交易金额 = I.交易金额
         result.setTradeAmt(dto.getTradeAmt());
@@ -334,7 +335,7 @@ public class FundChangeDealRecService {
         	result.setFeeAmtPay(dto.getChlFeeAmt());
         }
         // 总交易费用 =  I.交易费 + I.通道费
-        result.setFeeAmt(dto.getFeeAmt().add(chlFeeAmt));
+        result.setFeeAmt(feeAmt.add(chlFeeAmt));
         // 交易方向 = I.交易方向
         result.setPs(dto.getPs());
         // 交易状态 = I.数据动作标志

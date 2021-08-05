@@ -85,7 +85,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	@ResponseBody
     @RequestMapping("queryPbcAssetType")
     public String queryAssetType() {
-        return operationalLoanInfo001Service.queryPbcAssetType(RequestUtil.getPageParam());
+        return StringUtil.trimHtmlTag(operationalLoanInfo001Service.queryPbcAssetType(RequestUtil.getPageParam()));
     }
 	
 	
@@ -120,7 +120,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getLoanCounties")
-    public List<SelectOptionDto> getLoanCounties() throws Exception {
+    public List<SelectOptionDto> getLoanCounties() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_市.getValue());
         param.put("item_code_child", param.get("loanContractOrgCity"));
@@ -135,7 +135,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getBorrowerCounties")
-    public List<SelectOptionDto> getBorrowerCounties() throws Exception {
+    public List<SelectOptionDto> getBorrowerCounties() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_市.getValue());
         param.put("item_code_child", param.get("borrowerCity"));
@@ -150,7 +150,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getBorrowerCities")
-    public List<SelectOptionDto> getBorrowerCities() throws Exception {
+    public List<SelectOptionDto> getBorrowerCities() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_省.getValue());
         param.put("item_code_child", param.get("borrowerProvince"));
@@ -165,7 +165,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getLoanCities")
-    public List<SelectOptionDto> getLoanCities() throws Exception {
+    public List<SelectOptionDto> getLoanCities() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_省.getValue());
         param.put("item_code_child", param.get("loanContractOrgProvince"));

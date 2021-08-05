@@ -64,9 +64,11 @@ public class FinPayPlanAdjustmentController {
      * @see
      * @since 1.0
      */
-    @PostMapping("/getFinprodId")
-    public List<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param){
-        return finPayPlanAdjustmentService.getFinprodId(param);
+    @PostMapping("/getFinprodId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
+                                              @PathVariable("page") int page,
+                                              @PathVariable("length") int length){
+        return finPayPlanAdjustmentService.getFinprodId(page, length, param);
     }
     
     /**
@@ -111,7 +113,7 @@ public class FinPayPlanAdjustmentController {
      */
     @PostMapping("selectForPage")
     public List<FinPayPlanAdjustmentDto> selectForPage(@RequestBody Map<String, Object> param)
-            throws Exception{
+    {
         return finPayPlanAdjustmentService.selectForPage(param);
     }
     
@@ -205,7 +207,7 @@ public class FinPayPlanAdjustmentController {
     @DTXTransaction
     @Transactional
     @PostMapping("insertFinProductFeeInfo")
-    public void insertFinProductFeeInfo(@RequestBody FinPayRuleAdjustmentDto finPayRuleAdjustmentDto) throws Exception{
+    public void insertFinProductFeeInfo(@RequestBody FinPayRuleAdjustmentDto finPayRuleAdjustmentDto) throws InvocationTargetException, IllegalAccessException {
     	finPayRuleAdjustmentService.insertFinProductFeeInfo(finPayRuleAdjustmentDto);
     }
     

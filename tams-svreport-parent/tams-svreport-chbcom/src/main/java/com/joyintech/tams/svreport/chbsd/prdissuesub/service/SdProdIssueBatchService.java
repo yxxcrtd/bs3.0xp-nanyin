@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chbsd.prdissuesub.service;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdIssueSubDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -19,6 +20,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,7 +56,7 @@ public class SdProdIssueBatchService {
 	@Autowired
 	private ProdPersonIssue001Service prodPersonIssue001Service;
 	
-	public void sendIssueInfoMsg(Date batchDate, List<String> prodIdList) throws Exception  {
+	public void sendIssueInfoMsg(Date batchDate, List<String> prodIdList) throws InvocationTargetException, IllegalAccessException {
 		logger.debug("产品发行信息登记未报送数据检索开始------" + df.format(new Date()));
 		// 1、报送数据检索,取得 List
 		List<SdProdPersonIssueDto> listSub = sdprodIssueSvrMapper.selcteDataByIds(DateUtil.format(batchDate), prodIdList);
@@ -95,7 +97,7 @@ public class SdProdIssueBatchService {
 			dataList.add(target);
 		}
 
-		this.sendBatchCommon(dataList);
+		this.sendBatchCommon(dataList, SendDataCheckType.报送);
 	}
 
 	private void dealData(List<SdProdPersonIssueDto> listSub) {
@@ -128,7 +130,7 @@ public class SdProdIssueBatchService {
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbPrdIssueSubDto> dataList) throws Exception{
+	public void sendBatchCommon(List<ChbPrdIssueSubDto> dataList, SendDataCheckType sendDataCheckType) {
 		// 报文发送
 		logger.debug("产品发行信息登记报文报送开始------" + df.format(new Date()));
 		//获取单批次发送条目数
@@ -144,14 +146,14 @@ public class SdProdIssueBatchService {
 		//分批处理数据报送
 		if (dataCount <= dataCountPerTime) {
 			sdProdIssueBatchServiceOneService
-					.handleDataPerTime(handleIndex, dataCountPerTime,dataList,sendResult);
+					.handleDataPerTime(handleIndex, dataCountPerTime,dataList,sendResult, sendDataCheckType);
 		}else{
 			// 分批次数
 			int part = dataCount / dataCountPerTime;
 			for (int i = 0; i < part; i++ ) {
 				sdProdIssueBatchServiceOneService
 						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList.subList(0, dataCountPerTime),
-								sendResult);
+								sendResult, sendDataCheckType);
 				newDataList.subList(0, dataCountPerTime).clear();
 				handleIndex ++;
 
@@ -159,7 +161,7 @@ public class SdProdIssueBatchService {
 			// 最后剩下的数据
 			if (!StringUtil.isEmptyList(newDataList)) {
 				sdProdIssueBatchServiceOneService
-						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList,sendResult);
+						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList,sendResult, sendDataCheckType);
 			}
 		}
 		//ChbMsgReturnInfoDto returnMsg = msgSend.sendChbPrdIssueSubMsgs(dataList);

@@ -106,9 +106,9 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 		
 		//add by leipeng 20200628
 		String model_type = null;
-//		if(CommonUtil.isBAmodel()){
+		if(CommonUtil.isBAmodel()){
 			pageParam.put("model_type", "01");
-//		}
+		}
 		
 		if(pageParam.get(GlobalConstant.PARAM_PAGE)!=null){
 			int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
@@ -184,7 +184,6 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 						ProdDurationReg001Dto.class);
 				pageParam.put("prodDurationList", prodDurationList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {
@@ -286,7 +285,11 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 //            page = selectForPage(pageParam);
 
 			page = selectForPage(pageParam);
-
+			if(!CollectionUtils.isEmpty(page.getRoot())){
+				for(ProdDurationReg001Dto dto : page.getRoot()){
+					dto.setBelongInstitutionCode(null);
+				}
+			}
         }  else {
             @SuppressWarnings("unchecked")
             List<ProdDurationReg001Dto> dataList =  (List<ProdDurationReg001Dto>) pageParam.get("prodDurationList");

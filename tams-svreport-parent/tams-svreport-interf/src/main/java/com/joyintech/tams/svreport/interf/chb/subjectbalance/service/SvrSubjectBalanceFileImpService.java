@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -112,7 +113,6 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 				insertData(bokBalanceList);
 			}catch(Exception e){
 				logger.error(e.getMessage(),e);
-				e.printStackTrace();
 				success = false;
 			}
 			
@@ -123,7 +123,7 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 			ImpTable table = new ImpTable(SUBJECTBALANCETableName);
 			table.setColumns(ImportGenerator.createImpTableColumns(SUBJECTBALANCETableName));
 			success = excuteSubjectBalanceDataByStep(bokBalanceList, type, tmpPath, table);
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/BOK_BALANCE/"), new String[] { "tmp" }, false);
+			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/BOK_BALANCE/"), new String[] { "tmp" }, false);
 			List<String> content = new ArrayList<>(listData.size());
 			String result = "";
 			for (File f : files) {
@@ -235,7 +235,6 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 			session.clearCache();
 		}catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		} finally {
 			session.close();
 		}

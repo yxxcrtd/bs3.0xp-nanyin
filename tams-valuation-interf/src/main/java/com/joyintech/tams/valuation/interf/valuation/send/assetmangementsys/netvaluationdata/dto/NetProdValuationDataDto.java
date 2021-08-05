@@ -10,17 +10,16 @@
  
 package com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+
+import java.math.BigDecimal;
 
 /**
  * 净值型产品估值数据Dto
  * @author chendong
  * @version 1.0 2018年11月20日
- * @see NetValuationDataDto
+ * @see NetProdValuationDataDto
  * @since 1.0
  */
 public class NetProdValuationDataDto {
@@ -262,4 +261,120 @@ public class NetProdValuationDataDto {
 	public void setProdAllAmt(BigDecimal prodAllAmt) {
 		this.prodAllAmt = prodAllAmt;
 	}
+
+	/**
+	 * 产品总份额
+	 */
+	private String prodAllAmtStr;
+
+	/**
+	 * 累计净值
+	 */
+	private String totalValueStr;
+
+	/**
+	 * 每日资产总价值
+	 */
+	private String dailyAssetAllValueStr;
+
+	/**
+	 * 每日总负债
+	 */
+	private String dailyAllDebtStr;
+
+	/**
+	 * 单位净值
+	 */
+	private String unitValueStr;
+
+	/**
+	 * 获取 prodAllAmtStr
+	 *
+	 * @return prodAllAmtStr.
+	 */
+	public String getProdAllAmtStr() {
+		return prodAllAmtStr;
+	}
+
+	/**
+	 * 设置 prodAllAmtStr
+	 *
+	 * @param prodAllAmtStr prodAllAmtStr
+	 */
+	public void setProdAllAmtStr(String prodAllAmtStr) {
+		this.prodAllAmtStr = prodAllAmtStr;
+	}
+
+	/**
+	 * 获取 totalValueStr
+	 *
+	 * @return totalValueStr.
+	 */
+	public String getTotalValueStr() {
+		return totalValueStr;
+	}
+
+	/**
+	 * 设置 totalValueStr
+	 *
+	 * @param totalValueStr totalValueStr
+	 */
+	public void setTotalValueStr(String totalValueStr) {
+		this.totalValueStr = totalValueStr;
+	}
+
+	/**
+	 * 获取 dailyAssetAllValueStr
+	 *
+	 * @return dailyAssetAllValueStr.
+	 */
+	public String getDailyAssetAllValueStr() {
+		return dailyAssetAllValueStr;
+	}
+
+	/**
+	 * 设置 dailyAssetAllValueStr
+	 *
+	 * @param dailyAssetAllValueStr dailyAssetAllValueStr
+	 */
+	public void setDailyAssetAllValueStr(String dailyAssetAllValueStr) {
+		this.dailyAssetAllValueStr = dailyAssetAllValueStr;
+	}
+
+	/**
+	 * 获取 dailyAllDebtStr
+	 *
+	 * @return dailyAllDebtStr.
+	 */
+	public String getDailyAllDebtStr() {
+		return dailyAllDebtStr;
+	}
+
+	/**
+	 * 设置 dailyAllDebtStr
+	 *
+	 * @param dailyAllDebtStr dailyAllDebtStr
+	 */
+	public void setDailyAllDebtStr(String dailyAllDebtStr) {
+		this.dailyAllDebtStr = dailyAllDebtStr;
+	}
+
+	/**
+	 * 获取 unitValueStr
+	 *
+	 * @return unitValueStr.
+	 */
+	public String getUnitValueStr() {
+		return unitValueStr;
+	}
+
+	/**
+	 * 设置 unitValueStr
+	 *
+	 * @param unitValueStr unitValueStr
+	 */
+	public void setUnitValueStr(String unitValueStr) {
+		this.unitValueStr = unitValueStr;
+	}
+
 }

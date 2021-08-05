@@ -127,6 +127,23 @@ public class Rsk012Service extends OccupyReleasService<Rsk004InEntity> {
 				Map<String, Map<String, IValue<Object>>> hashList = makeHashList(items, mapData);
 				// 取得所有指标参数的值
 				Map<String, Map<String, IValue<Object>>> paraValMap = paramValSrv.getParamVal(hashList);
+				/*
+				 *使用新计算的值替换redis中的值 
+				 */
+				for(String key:paraValMap.keySet()) {
+					Map<String, IValue<Object>> valMap = paraValMap.get(key);
+					for(int i=0;i<paraValMapList.size();i++) {
+						Map<String, Map<String, IValue<Object>>> tempParaValMap = paraValMapList.get(i);
+						if(tempParaValMap.containsKey(key)) {
+							Map<String, IValue<Object>> tempValMap = tempParaValMap.get(key);
+							for(String field:tempValMap.keySet()) {
+								if(valMap.containsKey(field)) {
+									valMap.put(field, tempValMap.get(field));
+								}
+							}
+						}
+					}	
+				}
 				// 若指标参数值未初始化到Redis则抛出异常
 				if (CollectionUtils.isEmpty(paraValMap)) {
 					throw new InterfException("指标参数值不存在");

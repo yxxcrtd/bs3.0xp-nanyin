@@ -43,7 +43,7 @@
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}" disabled="disabled"
                                                 th:data-url="@{/business/common/CommonSelect/selectPortfolioId}"
-                                                th:initvalue="${entity?.portfolioId}">
+                                                th:initvalue="${entity?.actPortfolioId==null?entity?.portfolioId:entity?.actPortfolioId}">
                                             </select>
                                         </div>
                                     </div>

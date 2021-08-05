@@ -454,41 +454,42 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 					}
 				}
 			}
-
-		}else if(!CollectionUtils.isEmpty(poslist)){
-			for(ChbPrdPosition posmodel : poslist){
+		}else {
+			if(!CollectionUtils.isEmpty(poslist)) {
+				for (ChbPrdPosition posmodel : poslist) {
 //				BigDecimal chaAmt = ChbCcyConvertUtil.exchangeMoney(posmodel.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), posmodel.getBalanceAmt(), rateMap, exchangeSource);
 //				//实际募集金额
 //				totAmt = totAmt.add(chaAmt);
 //				//募集总份额
 //				totQty = totQty.add(posmodel.getBalanceQty());
-				//是否有其他机构代销,代销总金额
-//				if(posmodel.getConsignamt()!=null&&posmodel.getConsignamt().compareTo(BigDecimal.ZERO)>0){
-//					isagency=true;
-//					BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(posmodel.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), posmodel.getConsignamt(), rateMap, exchangeSource);
-//					isagencyAmt = isagencyAmt.add(amt);
-//				}
-
-//				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", posmodel.getCustomerType2());
-//				if(SINGLE_PERSON.equals(customerType)){
-//					//个人
-//					singleTotal+=posmodel.getCustCounts().intValue();
-//				}else if(LEGAL_PERSON.equals(customerType)){
-//					//法人
-//					legalTotal+=posmodel.getCustCounts().intValue();
-//				}else if(UNLEGAL_PERSON.equals(customerType)){
-//					//非法人
-//					unlegalTotal+=posmodel.getCustCounts().intValue();
-//				}
-//				singleTotal=singleTotal+(posmodel.getSingletotal()==null?BigDecimal.ZERO:posmodel.getSingletotal()).intValue();
-//				legalTotal=legalTotal+(posmodel.getLegaltotal()==null?BigDecimal.ZERO:posmodel.getLegaltotal()).intValue();
-//				unlegalTotal=unlegalTotal+(posmodel.getUnlegaltotal()==null?BigDecimal.ZERO:posmodel.getUnlegaltotal()).intValue();
+					//是否有其他机构代销,代销总金额
+				/*if(posmodel.getConsignamt()!=null&&posmodel.getConsignamt().compareTo(BigDecimal.ZERO)>0){
+					isagency=true;
+					BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(posmodel.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), posmodel.getConsignamt(), rateMap, exchangeSource);
+					isagencyAmt = isagencyAmt.add(amt);
+				}
+				*/
+					String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", posmodel.getCustomerType2());
+					if (SINGLE_PERSON.equals(customerType)) {
+						//个人
+						singleTotal += posmodel.getCustCounts().intValue();
+					} else if (LEGAL_PERSON.equals(customerType)) {
+						//法人
+						legalTotal += posmodel.getCustCounts().intValue();
+					} else if (UNLEGAL_PERSON.equals(customerType)) {
+						//非法人
+						unlegalTotal += posmodel.getCustCounts().intValue();
+					}
+					singleTotal = singleTotal + (posmodel.getSingletotal() == null ? BigDecimal.ZERO : posmodel.getSingletotal()).intValue();
+					legalTotal = legalTotal + (posmodel.getLegaltotal() == null ? BigDecimal.ZERO : posmodel.getLegaltotal()).intValue();
+					unlegalTotal = unlegalTotal + (posmodel.getUnlegaltotal() == null ? BigDecimal.ZERO : posmodel.getUnlegaltotal()).intValue();
+				}
 			}
 		}
 		dto.setSingleTotal(singleTotal==0?0:singleTotal);//个人
 		dto.setLegalTotal(legalTotal==0?0:legalTotal);//法人
 		dto.setUnlegalTotal(unlegalTotal==0?0:unlegalTotal);//非法人
-		dto.setTotalAmt(totAmt);//实际募集金额
+		dto.setTotalAmt(totAmt.setScale(2,BigDecimal.ROUND_HALF_UP));//实际募集金额
 		dto.setRaiseQty(totQty);//募集总额
 		StringBuffer place = new StringBuffer();
 		Iterator<Map.Entry<String, BigDecimal>> entries = placeMap.entrySet().iterator();

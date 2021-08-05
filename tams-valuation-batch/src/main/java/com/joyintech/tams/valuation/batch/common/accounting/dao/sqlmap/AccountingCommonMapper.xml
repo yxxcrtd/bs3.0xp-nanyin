@@ -535,8 +535,8 @@
     		b.BASE_SUBJECT_NATURE,
     		ROW_NUMBER() OVER(PARTITION BY b.BASE_SUBJECT_NATURE
 	                ORDER BY b.SUBJECT_NO ASC) AS rowno
-    	FROM BOK_SCENESUBJECT a,TMP,BOK_SUBJECT b
-    	WHERE a.SCENE_NODE_ID = TMP.SCENE_NODE_ID
+    	FROM BOK_SCENESUBJECT a,TMP c,BOK_SUBJECT b
+    	WHERE a.SCENE_NODE_ID = c.SCENE_NODE_ID
     	AND a.BOOKSET_ID = #{booksetId}
     	AND a.BOOKSET_ID = b.BOOKSET_ID
     	AND a.SUBJECT_NO = b.SUBJECT_NO
@@ -1267,7 +1267,7 @@ FROM
 		WHERE 1 =1
 		<if test="booksetId != null and booksetId != ''"> AND crt.bookset_id = #{booksetId}  </if>
 		<if test="tableId != null and tableId != ''"> AND crt.TABLE_ID = #{tableId}  </if>
-		<if test="beginHappenCycDate != null"> AND crt.book_date <![CDATA[>=]]> #{beginHappenCycDate} </if>
+		<if test="beginHappenCycDate != null"> AND crt.book_date <![CDATA[>]]> #{beginHappenCycDate} </if>
 		<if test="baseSubjectNature != null and baseSubjectNature != ''">
 			/**科目性质**/
 			AND crt.BASE_SUBJECT_NATURE =#{baseSubjectNature}

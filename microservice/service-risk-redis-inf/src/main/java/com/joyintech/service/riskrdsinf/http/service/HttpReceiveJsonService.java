@@ -1,5 +1,16 @@
 package com.joyintech.service.riskrdsinf.http.service;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.PasswordHelper;
+import com.joyintech.framework.security.User;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.riskrdsinf.common.dto.HttpResult;
+import com.joyintech.service.riskrdsinf.http.InterfUser;
+import com.joyintech.service.riskrdsinf.http.dao.HttpReceiveJsonDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,17 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.PasswordHelper;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.riskrdsinf.common.dto.HttpResult;
-import com.joyintech.service.riskrdsinf.http.dao.HttpReceiveJsonDao;
-import com.joyintech.system.user.dto.SysUserDto;
 
 import java.util.HashMap;
 import java.util.List;
@@ -173,7 +173,7 @@ public class HttpReceiveJsonService {
         if(SYS_USER.equals(interfType)){
             logger.info("正在处理用户信息数据");
             if (httpReceiveJsonDao.selectUserByUserId(result) <= 0){
-            	SysUserDto user = new SysUserDto();
+            	User user = new InterfUser();
             	String password = CacheUtil.getSysParam(GlobalConstant.INIT_PASSWORD);
             	user.setPassword(password);
             	PasswordHelper.encryptPassword(user);

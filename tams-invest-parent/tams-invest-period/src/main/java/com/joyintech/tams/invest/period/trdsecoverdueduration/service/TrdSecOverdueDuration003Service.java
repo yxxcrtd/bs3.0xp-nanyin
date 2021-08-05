@@ -45,6 +45,8 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,6 +65,11 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
  */
 @Service
 public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDuration003Dto> implements BaseProcessService<TrdSecOverdueDuration003Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdSecOverdueDuration003Service.class);
+
     /**
      * 业务编号生成共通
      */
@@ -192,7 +199,7 @@ public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDu
                 // 操作留痕表
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             saveDataWhenStartWorkflow(entity, OperationType.MODIFY);
         }
@@ -541,7 +548,9 @@ public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDu
             利息应收款标的 = basePtlReceInfoService.genPtlReceInfo(mapReceInfo);
         }
         应收款标的dto = 本金应收款标的 != null ? 本金应收款标的:利息应收款标的;
-        dto.setMdate(应收款标的dto.getMdate());
+        if (应收款标的dto != null){
+            dto.setMdate(应收款标的dto.getMdate());
+        }
         List<BaseTradeInfoDto> baseTotalTradeInfoDtoList = new ArrayList<>();
         result.setBaseTradeInfoDtoList(baseTotalTradeInfoDtoList);
 //        转出汇总
@@ -602,8 +611,9 @@ public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDu
         List<BaseTradeInfoDto> 利息转出BaseTradeInfo = new ArrayList<>();
 //        本金转出entity
         if(dto.getPrinAmt()!=null&&BigDecimal.ZERO.compareTo(dto.getPrinAmt()) != 0){
-            //
-            mapReceInfo.put("branch",本金应收款标的.getBranch());
+            if (本金应收款标的 != null){
+                mapReceInfo.put("branch",本金应收款标的.getBranch());
+            }
             List<PtlRecePosition> 应收款持仓信息 = basePtlRecePositionService.genPtlPeceAvailableIntPosition(mapReceInfo);
             if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),dto.getType8())){
                 BigDecimal 累计扣减本金 = BigDecimal.ZERO;
@@ -616,18 +626,22 @@ public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDu
                         }
                     }
                     累计扣减本金 = ArithmeticUtil.doAdd(本金,累计扣减本金);
-                    BaseTradeInfoDto 交易个体本金  = 生成交易个体本金(dto,total转出,本金,本金应收款标的.getCcy(),temp.getInvAim(),total转出.getSecManageAcctId());
-                    交易个体本金.getTrdProductDeal().setBranch(本金应收款标的.getBranch());
-                    交易个体本金.getTrdProductDeal().setStatus(DictCodeListExt3.应收款类型_逾期未收本金.getValue());
-                    本金转出BaseTradeInfo.add(交易个体本金);
+                    if (本金应收款标的 != null){
+                        BaseTradeInfoDto 交易个体本金  = 生成交易个体本金(dto,total转出,本金,本金应收款标的.getCcy(),temp.getInvAim(),total转出.getSecManageAcctId());
+                        交易个体本金.getTrdProductDeal().setBranch(本金应收款标的.getBranch());
+                        交易个体本金.getTrdProductDeal().setStatus(DictCodeListExt3.应收款类型_逾期未收本金.getValue());
+                        本金转出BaseTradeInfo.add(交易个体本金);    
+                    }
                 }
 
             }
             else{
-                BaseTradeInfoDto 交易个体本金  =生成交易个体本金(dto,total转出,dto.getPrinAmt(),本金应收款标的.getCcy(),"999999",total转出.getSecManageAcctId());
-                交易个体本金.getTrdProductDeal().setBranch(本金应收款标的.getBranch());
-                交易个体本金.getTrdProductDeal().setStatus(DictCodeListExt3.应收款类型_逾期未收本金.getValue());
-                本金转出BaseTradeInfo.add(交易个体本金);
+                if (本金应收款标的 != null){
+                    BaseTradeInfoDto 交易个体本金  =生成交易个体本金(dto,total转出,dto.getPrinAmt(),本金应收款标的.getCcy(),"999999",total转出.getSecManageAcctId());
+                    交易个体本金.getTrdProductDeal().setBranch(本金应收款标的.getBranch());
+                    交易个体本金.getTrdProductDeal().setStatus(DictCodeListExt3.应收款类型_逾期未收本金.getValue());
+                    本金转出BaseTradeInfo.add(交易个体本金);    
+                }
             }
         }
 //        利息转出entity
@@ -682,7 +696,9 @@ public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDu
 //                      其他字段同本金转出
                     BaseTradeInfoDto 本金罚息TradeInfo =genDumpBaseTradeInfoDto(本金TradeInfo,本金罚息交易Id,null);
                     本金罚息TradeInfo.getTrdProductDeal().setBusiType(DictCodeList.业务类型_逾期交易.getValue());
-                    本金罚息TradeInfo.getTrdProductDeal().setBranch(本金应收款标的.getBranch());
+                    if (本金应收款标的 != null){
+                        本金罚息TradeInfo.getTrdProductDeal().setBranch(本金应收款标的.getBranch());
+                    }
                     BigDecimal 罚息 =ArithmeticUtil.multiply(dto.getPenaltyInt(),ArithmeticUtil.divide(
                     本金罚息TradeInfo.getTrdProductDeal().getPrinAmt(),ArithmeticUtil.doAdd(dto.getPrinAmt(),dto.getIntAmt()),4));
                     if(ArithmeticUtil.subtract(dto.getPenaltyInt(),ArithmeticUtil.doAdd(已转让罚息,罚息)).compareTo(BigDecimal.ZERO)<0){

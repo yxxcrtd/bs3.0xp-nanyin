@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.plannet.dto.TrdPlanNetInvestTradeDto;
@@ -30,7 +31,7 @@ import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
  * @see TrdPlanNetInvestTradeMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface TrdPlanNetInvestTradeMapper {
     /**
      * 
@@ -282,4 +283,6 @@ public interface TrdPlanNetInvestTradeMapper {
 	BigDecimal getPriceByTradeId(String tradeId);
 	
 	BigDecimal getPriceByWorkflowId(String workflowId);
+
+    String getSysDateMark(@Param("workflowId") String workflowId);
 }

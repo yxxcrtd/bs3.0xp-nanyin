@@ -17,6 +17,7 @@ import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.service.InvestDateCalService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -1074,6 +1075,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
         // 价格模式_市价指令(DictCode.价格模式,"PRM03","市价指令"),
         if (StringUtil.equals(entrustCommonDto.getEtrEntrust().getPriceModel(), DictCodeListExt2.价格模式_指定价格.getValue())
             || StringUtil.equals(entrustCommonDto.getEtrEntrust().getPriceModel(), DictCodeListExt2.价格模式_限价指令.getValue())) {
+            // modify by etliu 20210517 债券二级指令T+1场景全价计算错误问题修正 start
             BigDecimal 委托净价 = entrustCommonDto.getEtrEntrust().getPrice();
             BigDecimal 委托全价 = null;
             if(委托净价==null){
@@ -1102,11 +1104,20 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
 //                    }
                 }
               //交易所债券特殊处理end----------------------------------------------------------------
+                if (entrustCommonDto.getEtrEntrustAdd() != null && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed() != null
+                        && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue() != 0) {
+                    InvestDateCalService dateCalService = SpringContextUtil.getBean(InvestDateCalService.class);
+                    List<String> holiday = dateCalService.getDealCalendarHoliday(dealDate,
+                            DateUtil.addDays(dealDate, 31), entrustCommonDto.getEtrEntrust().getCalendarId());
+                    dealDate = dateCalService.calculationTradingDay(dealDate, entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue(), holiday, "1");
+                }
+
                 EtrCommonCashPositionDealService etrCommonCashPositionDealService = SpringContextUtil.getBean(EtrCommonCashPositionDealService.class);
                 BigDecimal 单位应计利息 = etrCommonCashPositionDealService.gen应计利息(entrustCommonDto.getEtrEntrust().getFinprodId(),dealDate);
                 委托全价 = ArithmeticUtil.doAdd(单位应计利息,委托净价);
             }
             return 委托全价;
+            // modify by etliu 20210517 债券二级指令T+1场景全价计算错误问题修正 end
         }
         else {
             // 金融产品代码

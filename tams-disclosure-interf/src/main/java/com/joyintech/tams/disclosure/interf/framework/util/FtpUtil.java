@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.interf.framework.util;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -37,7 +38,7 @@ public class FtpUtil {
     /**
      * 编码
      */
-    private static String ENCODING = System.getProperty("file.encoding");
+    private static String ENCODING = System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding");
 
     /**
      * 路径分隔符
@@ -88,7 +89,7 @@ public class FtpUtil {
                 LOGGER.info("上传成功");
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+        	logger.error(ex.getMessage(),ex);
         } finally {
             input.close();
         }
@@ -105,7 +106,7 @@ public class FtpUtil {
                 LOGGER.info("上传成功");
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+        	logger.error(ex.getMessage(),ex);
         } finally {
             input.close();
         }
@@ -146,7 +147,8 @@ public class FtpUtil {
                 result = FTP_CLIENT.storeFile(
                         new String(filename.getBytes(ENCODING), "iso-8859-1"), input);
                 if (result) {
-                    System.out.println("上传成功!");
+//                    System.out.println("上传成功!");
+                    logger.info("上传成功!");
                 }
             }
             input.close();
@@ -189,7 +191,8 @@ public class FtpUtil {
                 result = ftpClient.storeFile(
                         new String(filename.getBytes(ENCODING), "iso-8859-1"), input);
                 if (result) {
-                    System.out.println("上传成功!");
+//                    System.out.println("上传成功!");
+                    logger.info("上传成功!");
                 }
             }
             input.close();
@@ -225,7 +228,7 @@ public class FtpUtil {
             FTPFile[] fs = FTP_CLIENT.listFiles();
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(fileName)) {
-                    File localFile = new File(localPath + SEPARATOR + ff.getName());
+                    File localFile = new SafelyFile(localPath + SEPARATOR + ff.getName());
                     OutputStream is = null;
                     try {
                         is = new FileOutputStream(localFile);
@@ -233,7 +236,7 @@ public class FtpUtil {
                     }
                     catch (Exception e)
                     {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     finally {
                         if(is!=null)
@@ -460,14 +463,14 @@ public class FtpUtil {
                         FTPFile[] fs = FTP_CLIENT.listFiles();
                         for (FTPFile ff : fs) {
                             if (ff.getName().equals(dataFileName)) {
-                                File localFile = new File(localPath + SEPARATOR + ff.getName());
+                                File localFile = new SafelyFile(localPath + SEPARATOR + ff.getName());
                                 OutputStream is = null;
                                 try {
                                     is = new FileOutputStream(localFile);
                                     FTP_CLIENT.retrieveFile(ff.getName(), is);
                                 }catch (Exception e)
                                 {
-                                    e.printStackTrace();
+                                    logger.error(e.getMessage(),e);
                                 }
                                 finally {
                                     if(is!=null)
@@ -535,7 +538,7 @@ public class FtpUtil {
                 if (!ff.isDirectory() && CollectionUtils.exists(containsFile, name -> {
                     return ff.getName().contains((String) name);
                 })) {
-                    File localFile = new File(localPath + SEPARATOR + ff.getName());
+                    File localFile = new SafelyFile(localPath + SEPARATOR + ff.getName());
                     if (!localFile.exists()) {
                         localFile.createNewFile();
 
@@ -545,7 +548,7 @@ public class FtpUtil {
                             FTP_CLIENT.retrieveFile(ff.getName(), out);
                         }catch (Exception e)
                         {
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }finally {
                             if(out!=null)
                             {
@@ -604,7 +607,8 @@ public class FtpUtil {
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(fileName)) {
                     boolean flag = FTP_CLIENT.rename(fileName, newFlieName);
-                    System.out.println(flag);
+//                    System.out.println(flag);
+                    logger.info(String.valueOf(flag));
                 }
             }
             FTP_CLIENT.logout();

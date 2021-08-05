@@ -161,11 +161,15 @@ public class PtlManagementInfo001Validator implements BeanValidator{
             List<String> acctList = new ArrayList<String>();
             //资金账户账号
             for(FundAccountInfoDto fundDto : dto.getFundAccountInfoDto()){
-                acctList.add(fundDto.getAcctNo());
+                if(StringUtil.isNotEmpty(fundDto.getAcctNo())) {
+                    acctList.add(fundDto.getAcctNo());
+                }
             }
             //证券账户账号
             for(SecuritiesAccountInfoDto secDto : dto.getSecuritiesAccountInfoDto()){
-                acctList.add(secDto.getTrdAcctId());
+                if(StringUtil.isNotEmpty(secDto.getTrdAcctId())) {
+                    acctList.add(secDto.getTrdAcctId());
+                }
             }
             param.put("busiAcctNoList", acctList);
             param.put("F28", DictCodeListExt1.金融产品类型_投管用_通道.getValue());
@@ -206,8 +210,24 @@ public class PtlManagementInfo001Validator implements BeanValidator{
             }*/
             //账户信息不能重复
             //update by leipeng 现状：产品要素界面挂资金账户，不同的账户类型挂了同一个资金账户，组合审批时，提示资金账户重复                                    期望：如果不同的账户类型挂了同一个资金账户，在建产品要素的时候提示资金账户重复，不要在组合审批的时候提示
+            //针对募集户和兑付户，可能是同一个资金账户，放开限制
             if(set.size() < dto.getFundAccountInfoDto().size()){
-                errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("BUSS_COM_E_0006",getMessage("PtlManagementInfo001.funInfo"),getMessage("FundAccountInfo.acctNo"))));
+                //针对募集户和兑付户，可能是同一个资金账户，这时,dto.getFundAccountInfoDto().size()数量需要减1
+                int size=dto.getFundAccountInfoDto().size();
+                List<String> list = new ArrayList<>();
+                for(FundAccountInfoDto item:dto.getFundAccountInfoDto()){
+                    if(StringUtil.isNotEmpty(item.getAcctType()) && (item.getAcctType().equals("B14") || item.getAcctType().equals("B15")) && StringUtil.isNotEmpty(item.getAcctNo())){
+                        if(list.contains(item.getAcctNo())){
+                            size=size-1;
+                        }else{
+                            list.add(item.getAcctNo());
+                        }
+                    }
+                }
+                if(set.size() <size){
+                    //errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("BUSS_COM_E_0006",getMessage("PtlManagementInfo001.funInfo"),getMessage("FundAccountInfo.acctNo"))));
+                    errorList.add(new ValidMessage("资金账户信息中除募集户和兑付户资金账户账号之间允许重复外，其他资金账户账号数据不能重复。"));
+                }
             }
             // modify by jiangpeng on 20210422 start TISHKBS-1688 存在产品创建时未申请托管户的情况,故取消组合创建时校验托管户
             //必须存在托管账户

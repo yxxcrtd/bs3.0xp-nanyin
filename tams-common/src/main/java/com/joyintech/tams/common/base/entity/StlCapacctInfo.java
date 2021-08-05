@@ -55,6 +55,11 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
      * 增加seqNo
      */
     private String seqNo;
+	
+	/**
+     * 账户性质
+     */
+    private String accountNature;
 
     /**
      * 取得 账号
@@ -223,4 +228,19 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
 	public void setSeqNo(String seqNo) {
 		this.seqNo = seqNo;
 	}
+	
+	/**
+     * 取得 账户性质
+     * @return 账户性质
+     */
+    public String getAccountNature() {
+        return accountNature;
+    }
+    /**
+     * 设置 账户性质
+     * @param accountNature 账户性质
+     */
+    public void setAccountNature(String accountNature) {
+        this.accountNature = accountNature;
+    }
 }

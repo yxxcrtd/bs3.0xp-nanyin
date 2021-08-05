@@ -10,6 +10,8 @@
 
 package com.joyintech.service.interf.i190011.dao;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.tams.common.base.entity.InterfBonusInfo;
 
 /**
@@ -20,6 +22,7 @@ import com.joyintech.tams.common.base.entity.InterfBonusInfo;
  * @see Interf190011Mapper
  * @since 1.0
  */
+@Repository
 public interface Interf190011Mapper {
 
     /**

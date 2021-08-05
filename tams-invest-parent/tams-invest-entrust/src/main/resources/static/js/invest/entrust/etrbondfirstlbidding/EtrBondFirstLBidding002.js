@@ -255,7 +255,7 @@
         object.finmdate = $('#finmdate').val();
         object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
         if(object.etrInvestPersonInfo.trader != null && object.etrInvestPersonInfo.trader != ''){
-            object.etrInvestPersonInfo.trader = object.etrInvestPersonInfo.trader;//.join(",");
+            object.etrInvestPersonInfo.trader = object.etrInvestPersonInfo.trader.join(",");
         }
         if(FileCommon) {
             object.fileArray = FileCommon.getUploadFileInfo();

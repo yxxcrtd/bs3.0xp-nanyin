@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
-		<version>0.0.3</version>
+		<version>0.0.3-BOOTVIS</version>
 	</parent>
 	
     <artifactId>tams-integration</artifactId>
@@ -80,5 +80,6 @@
         
         <module>../microservice/tams-service-container</module>
         <module>../tams/app</module>
+        <module>../tams-batch-common</module>
     </modules>
 </project>

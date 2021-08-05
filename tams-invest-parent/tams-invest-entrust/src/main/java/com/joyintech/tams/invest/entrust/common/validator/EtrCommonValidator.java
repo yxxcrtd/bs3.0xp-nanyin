@@ -549,7 +549,7 @@ public interface EtrCommonValidator extends BeanValidator {
                             // 交易本金金额超过副总裁/总裁助理授权额度，无法发起交易!
                             ValidMessage validMessage = new ValidMessage(
                                     // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 start
-                                    getMessage("ETR_E_0014","副总裁/总裁助理"));
+                                    getMessage("TRD_E_0016","领导"));
                                     // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 end
                             validMessageList.add(validMessage);
                         }
@@ -599,8 +599,7 @@ public interface EtrCommonValidator extends BeanValidator {
             }
             catch (Exception e) {
                 logger.info("执行风险相关交易共通check出现异常，异常信息如下：");
-                logger.info(e.getMessage());
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
 

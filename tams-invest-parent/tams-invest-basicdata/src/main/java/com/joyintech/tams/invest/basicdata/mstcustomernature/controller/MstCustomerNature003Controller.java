@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -114,15 +115,14 @@ public class MstCustomerNature003Controller extends BaseController {
      * @param dto 实体类
      * @param br 结果集
      * @return AjaxResult
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstCustomerNatureDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstCustomerNatureDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -208,6 +208,9 @@ public class MstCustomerNature003Controller extends BaseController {
                 String  customerCharater =  DictCodeList.客户性质_发行人.getValue();
 
                 if (customerCharater.equals(entity.getCustomerCharater())) {
+                    if (StringUtil.equals(dto.getCustomerType(), DictCodeList.客户类型_自然人.getValue())) {
+                        return new AjaxResult("客户性质为发行人时，选择数据的客户类型不能为自然人！", MessageType.错误消息);
+                    }
                     String isFinLicenceStr = mstCustomerNatureService.checkIsFinLicenceStr(dto.getCustomerId());
                     if(StringUtil.isEmpty(isFinLicenceStr)) {
                         return new AjaxResult("客户性质为发行人时，机构信息中的“是否持有金融牌照”字段不可以为空！", MessageType.错误消息);

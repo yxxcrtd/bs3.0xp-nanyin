@@ -64,12 +64,15 @@ import com.joyintech.workflow.engine.listener.BusinessTaskListener;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -83,6 +86,10 @@ import java.util.*;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTradeDto> implements BaseProcessService<TrdFundInvestTradeDto>, BusinessTaskListener {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdFundInvestTrade002Service.class);
 
     /**
      * 附件信息共通Service
@@ -346,13 +353,21 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
 					confirmDto.setTradeDate(entity.getPurCfmDate());
 					confirmDto.setChannelAmt(confirmDto.getFeeAmtPay());
 					confirmDto.setFeeAmtPay(null);
+					if(StringUtil.equals(entity.getPs(), DictCodeList.交易方向_申购.getValue())){
+					    //生成的申购确认记录需要带出交易份额
+                        confirmDto.setShareAmt(confirmDto.getTradeAmt());
+                        if(confirmDto.getType6().equals(DictCodeList.基金类资产类型_非货币基金.getValue())
+                                && confirmDto.getUnitCprice() !=null){
+                            confirmDto.setShareAmt(confirmDto.getTradeAmt().divide(confirmDto.getUnitCprice(),2, RoundingMode.HALF_UP));
+                        }
+                    }
 					ProcessParameter<TrdFundInvestTradeConfirmDto> workFlowPatameter = getWorkFlowPatameter(confirmDto);
 					try {
                         WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(), "", "", confirmDto.getTrader(),
                                 OperationType.NEW, false, confirmDto);
                     }
 					catch (Exception e) {
-						e.printStackTrace();
+                        logger.error(e.getMessage(),e);
 					}
 				}
 			//}
@@ -673,7 +688,7 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
 
             restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdFundInvestTrade/doUpdate", entity,

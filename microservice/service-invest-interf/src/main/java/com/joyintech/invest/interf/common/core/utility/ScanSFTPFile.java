@@ -7,9 +7,15 @@ import java.util.Properties;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ScanSFTPFile implements Runnable{
-	
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(ScanSFTPFile.class);
+
 	private ScanSFTPEntity entity;
 	
 	public ScanSFTPFile(ScanSFTPEntity entity) {
@@ -23,7 +29,7 @@ public class ScanSFTPFile implements Runnable{
 		//sftp用户名
 		String sftpUserName ="";
 		//sftp密码
-		String sftpPassWord ="";
+		String sftpWord = "";
 		//读取配置文件，获取请求资管的接口地址
 		//sftp服务ip
 		String sftpIp ="";
@@ -37,48 +43,52 @@ public class ScanSFTPFile implements Runnable{
 				prop = WebserviceIntefUtil.getProperties("webservice.properties");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				logger.error(e1.getMessage(),e1);
 			}
-			sftpUserName = prop.getProperty("sftpUserName");
-			sftpPassWord= prop.getProperty("sftpPassWord");
-			sftpIp = prop.getProperty("sftpIp");
-			sftpPort = prop.getProperty("sftpPort");
-			int port = Integer.parseInt(sftpPort);
+			if (prop != null){
+				if(prop!=null) {
+					sftpUserName = prop.getProperty("sftpUserName");
+					sftpWord = prop.getProperty("sftpWord");
+					sftpIp = prop.getProperty("sftpIp");
+					sftpPort = prop.getProperty("sftpPort");
+				}
+				int port = Integer.parseInt(sftpPort);
 
-			// 创建sftp工具类对象
-			SFTPTool sftptool = new SFTPTool(sftpUserName, sftpPassWord, sftpIp, port);
-			String sftpFilePath = entity.getSftpFilePath();
-			
-			while(true){
-				try {
-					//获取sftp服务该路径下的文件
-					List<String> sFtpFileList = sftptool.getSFtpFile(sftpFilePath);
-					if(sFtpFileList != null && sFtpFileList.size()>0){//如果扫描到文件，则为entity对象赋值成功
-						entity.setScanCode("1");
-						entity.setScanStatus("成功");
-						entity.setEndTime(new Date().getTime());
-						break;
-					}else{
-						try {
-							
+				// 创建sftp工具类对象
+				SFTPTool sftptool = new SFTPTool(sftpUserName, sftpWord, sftpIp, port);
+				String sftpFilePath = entity.getSftpFilePath();
+
+				while(true){
+					try {
+						//获取sftp服务该路径下的文件
+						List<String> sFtpFileList = sftptool.getSFtpFile(sftpFilePath);
+						if(sFtpFileList != null && sFtpFileList.size()>0){//如果扫描到文件，则为entity对象赋值成功
+							entity.setScanCode("1");
+							entity.setScanStatus("成功");
 							entity.setEndTime(new Date().getTime());
-							entity.setScanCode("0");
-							entity.setScanStatus("失败");
-							 if((entity.getEndTime() - entity.getStartTime()) > 6*60*1000){//如果6分钟还未扫描到文件，则跳出循环
-								 break;
-							 }
-							//如果没有扫描的文件，则睡1秒
-							Thread.currentThread().sleep(1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
+							break;
+						}else{
+							try {
+
+								entity.setEndTime(new Date().getTime());
+								entity.setScanCode("0");
+								entity.setScanStatus("失败");
+								if((entity.getEndTime() - entity.getStartTime()) > 6*60*1000){//如果6分钟还未扫描到文件，则跳出循环
+									break;
+								}
+								//如果没有扫描的文件，则睡1秒
+								Thread.currentThread().sleep(1000);
+							} catch (InterruptedException e) {
+								logger.error(e.getMessage(),e);
+							}
 						}
+					} catch (SftpException e) {
+						logger.error(e.getMessage(),e);
 					}
-				} catch (SftpException e) {
-					e.printStackTrace();
 				}
 			}
 		} catch (JSchException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		
 	}

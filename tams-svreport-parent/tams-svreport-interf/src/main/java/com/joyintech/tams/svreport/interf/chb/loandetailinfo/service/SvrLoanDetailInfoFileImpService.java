@@ -29,6 +29,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -146,7 +147,7 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
                 ChbLoanDetailInfoInterfMapper batchMapper = session.getMapper(ChbLoanDetailInfoInterfMapper.class);
                 Map<String,String> typeMap = batchMapper.selectPbcAssetType(loanInfo.get("ASSET_CODE"));
                 if (typeMap!=null){
-                    if(!"".equals(typeMap.get("pbcAssetType1"))&&typeMap.get("pbcAssetType1")!=null&&!"".equals(typeMap.get("pbcAssetType2"))&&typeMap.get("pbcAssetType2")!=null){
+                    if(typeMap.get("pbcAssetType1")!=null&&!"".equals(typeMap.get("pbcAssetType1"))&&typeMap.get("pbcAssetType2")!=null&&!"".equals(typeMap.get("pbcAssetType2"))){
                         loanInfo.put("PBC_ASSET_TYPE1",typeMap.get("pbcAssetType1"));
                         loanInfo.put("PBC_ASSET_TYPE2",typeMap.get("pbcAssetType2"));
                     }
@@ -266,7 +267,7 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
                             if (value != null&&""!=value) {
                                 field.set(chbLoanDetailInfo, DateUtil.parse(value));
                             }
-                        } catch ( IllegalAccessException e) {
+                        } catch (IllegalAccessException e) {
                             logger.error(e.getMessage(),e);
                             return entities;
                         }

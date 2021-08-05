@@ -82,6 +82,9 @@ public class PtlCashFlowValidator implements BeanValidator{
             }
             if(!StringUtil.equals(dto.getType(),"getBussTrdTransferOrder") && (dto.getBussTrdTransferOrder() == null || dto.getBussTrdTransferOrder().size() ==0)){
                 resultList.add(new ValidMessage(this.getMessage("PTL_COM_E_0007")));
+            }if(StringUtil.isEmpty(dto.getCounterId())){
+                resultList.add(new ValidMessage("",
+                        getMessage("COMMON_E_0009", getMessage("PtlCashFlow001.counterId"))));
             }
         }
         

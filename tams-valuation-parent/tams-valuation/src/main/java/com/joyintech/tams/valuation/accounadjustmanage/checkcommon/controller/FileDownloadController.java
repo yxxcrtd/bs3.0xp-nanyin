@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,15 +64,17 @@ public class FileDownloadController extends BaseController {
         throws IOException {
         Map<String, Object> paramMap = RequestUtil.getPageParam();
         String path = (String)paramMap.get("path");
-        File file = new File(path);
+        File file = new SafelyFile(path);
         String filename = file.getName();
         InputStream fis = null;
         OutputStream toClient = null;
         try {
             fis = new BufferedInputStream(new FileInputStream(path));
             byte[] buffer = new byte[fis.available()];
-            fis.read(buffer);
-            fis.close();
+            if(fis!=null) {
+                fis.read(buffer);
+                fis.close();
+            }
             response.reset();
             // filename = new String(filename.getBytes("UTF-8"), "iso-8859-1");// 为了解决中文名称乱码问题
             // 去掉filename的时间戳 add by 何阳阳 2017/01/04 start
@@ -146,7 +149,7 @@ public class FileDownloadController extends BaseController {
                 sftpTools.close();// 关闭登录
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
 
@@ -154,7 +157,7 @@ public class FileDownloadController extends BaseController {
         path = localdir + SEPARATOR_NOW + fileNameFromPath;
 
         // 文件下载到客户端
-        File file = new File(path);
+        File file = new SafelyFile(path);
         // 从ftp下载到服务器后，判断该文件是否存在
         if (file.isFile() && file.exists()) {
             // 获取文件名称
@@ -245,7 +248,7 @@ public class FileDownloadController extends BaseController {
             // 文件服务器路径
             String path = executeService.replaceStringForPath(exportFileDto.getFilePath());
             // 文件下载到客户端
-            File file = new File(path);
+            File file = new SafelyFile(path);
             // 从ftp下载到服务器后，判断该文件是否存在
             if (file.isFile() && file.exists()) {
                 // 获取文件名称
@@ -261,10 +264,12 @@ public class FileDownloadController extends BaseController {
                 InputStream fis = null;
                 OutputStream toClient = null;
                 try {
-                    fis = new BufferedInputStream(new FileInputStream(path));
+                    fis = new BufferedInputStream(new FileInputStream(new SafelyFile(path)));
                     byte[] buffer = new byte[fis.available()];
-                    fis.read(buffer);
-                    fis.close();
+                    if(fis!=null) {
+                        fis.read(buffer);
+                        fis.close();
+                    }
                     response.reset();
 
                     response.addHeader("Content-Disposition",
@@ -284,7 +289,7 @@ public class FileDownloadController extends BaseController {
                             toClient.close();
                         }
                         catch (IOException e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                     }
                     if (fis != null) {
@@ -292,7 +297,7 @@ public class FileDownloadController extends BaseController {
                             fis.close();
                         }
                         catch (IOException e) {
-                        	e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                     }
                 }
@@ -315,15 +320,17 @@ public class FileDownloadController extends BaseController {
         Map<String, Object> paramMap = RequestUtil.getPageParam();
         String path = (String)paramMap.get("path");
         String fileName = (String)paramMap.get("fileName");
-        File file = new File(path);
+        File file = new SafelyFile(path);
 
         InputStream fis = null;
         OutputStream toClient = null;
         try {
             fis = new BufferedInputStream(new FileInputStream(path));
             byte[] buffer = new byte[fis.available()];
-            fis.read(buffer);
-            fis.close();
+            if(fis!=null) {
+                fis.read(buffer);
+                fis.close();
+            }
             response.reset();
             if (StringUtil.isEmpty(fileName)) {
                 fileName = file.getName();
@@ -350,7 +357,7 @@ public class FileDownloadController extends BaseController {
                     toClient.close();
                 }
                 catch (IOException e) {
-                	e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             if (fis != null) {
@@ -358,7 +365,7 @@ public class FileDownloadController extends BaseController {
                     fis.close();
                 }
                 catch (IOException e) {
-                	e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

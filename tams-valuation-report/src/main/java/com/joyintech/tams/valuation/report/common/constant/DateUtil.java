@@ -103,7 +103,7 @@ public class DateUtil extends DateUtils {
      * @param dateString 日期字符串
      * @return 日期
      */
-    public static Date parse(String dateString) {
+    public static Date parse(String dateString) throws ParseException {
         // 外围系统有用C开发的，他们的日期如果是空的话给的是0
         if (StringUtil.isEmpty(dateString) || "0".equals(dateString) || "00000000".equals(dateString)) {
             return null;
@@ -116,7 +116,7 @@ public class DateUtil extends DateUtils {
                             "yyyy-MM","yyyy/MM/dd HH:mm","yyyy-MM-dd HH:mm","yyyyMMdd HH:mm","yyyyMMddHHmm"});
         }
         catch (ParseException e) {
-            throw new RuntimeException("Date ParseException");
+            throw new ParseException("Date ParseException",0);
         }
     }
 
@@ -307,7 +307,7 @@ public class DateUtil extends DateUtils {
      * @param date2 日期2
      * @return 比较结果
      */
-    public static int compareDate(Date date1, Date date2) {
+    public static int compareDate(Date date1, Date date2) throws ParseException{
         int result;
         if (date1 == null && date2 == null) {
             result = 0;
@@ -337,7 +337,7 @@ public class DateUtil extends DateUtils {
      * @param d2 日期2
      * @return 比较结果
      */
-    public static int compareDate(String d1, String d2) {
+    public static int compareDate(String d1, String d2) throws ParseException{
         Date date1 = null;
         Date date2 = null;
         date1 = parse(d1);

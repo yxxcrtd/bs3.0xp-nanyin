@@ -10,6 +10,7 @@
 package com.joyintech.tams.invest.basicdata.mstcustomernature.controller;
 import java.util.*;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -114,14 +115,12 @@ public class MstCustomerNature002Controller extends BaseController {
     /**
      * 代码的联想文本框的查询方法
      * @return List<SuggestDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getCustomerId")
-    public List<SuggestDto> getCustomerId()
-        throws Exception {
+    public List<SuggestDto> getCustomerId() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("customerId", super.getRequest().getParameter("param"));
         List<SuggestDto> list = mstCustomerNatureService.getCustomerId(param);;
@@ -131,14 +130,12 @@ public class MstCustomerNature002Controller extends BaseController {
     /**
      * 名称的联想文本框的查询方法
      * @return List<SuggestDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getName")
-    public List<SuggestDto> getName()
-        throws Exception {
+    public List<SuggestDto> getName() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("customerName", super.getRequest().getParameter("param"));
         List<SuggestDto> list = mstCustomerNatureService.getName(param);;
@@ -150,14 +147,12 @@ public class MstCustomerNature002Controller extends BaseController {
      * <一句话功能简述> 
      * <功能详细描述>
      * @return Page<MstCustomerNatureDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("searchMstCustomerNature")
-    public Page<MstCustomerNatureDto> search()
-        throws Exception {
+    public Page<MstCustomerNatureDto> search() {
         Page<MstCustomerNatureDto> page = mstCustomerNatureService.searchMstCustomerNature(
             RequestUtil.getPageParam());
         return page;
@@ -170,15 +165,14 @@ public class MstCustomerNature002Controller extends BaseController {
      * @param dto 实体类
      * @param br 接口
      * @return AjaxResult
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstCustomerNatureDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstCustomerNatureDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -252,10 +246,10 @@ public class MstCustomerNature002Controller extends BaseController {
                 listCustomerCharater.add((String)map.get("flag_09"));
             }
             //将客户代码加入list中，不能重复
-            if (!listCustomerId.contains(mstCustomerNatureDto.getCustomerId())) {
+            if (listCustomerId.size()<=7 &&  !listCustomerId.contains(mstCustomerNatureDto.getCustomerId()) ) {
                 listCustomerId.add(mstCustomerNatureDto.getCustomerId());
             }
-            if (!listCustomerName.contains(mstCustomerNatureDto.getCustomerName())) {
+            if (listCustomerName.size()<=7 && !listCustomerName.contains(mstCustomerNatureDto.getCustomerName())) {
                 listCustomerName.add(mstCustomerNatureDto.getCustomerName());
             }
             //将客户类型code值改成name值
@@ -306,8 +300,12 @@ public class MstCustomerNature002Controller extends BaseController {
     	String  customerCharater =  DictCodeList.客户性质_发行人.getValue();
     	for(MstCustomerNatureDto entity: dto.getSelectedItem())
     	{
+            if (customerCharater.equals(entity.getCustomerCharater())
+                    && StringUtil.equals(entity.getCustomerType(), DictCodeList.客户类型_自然人.getValue())) {
+                return new AjaxResult("客户性质为发行人时，选择数据的客户类型不能为自然人！", MessageType.错误消息);
+            }
 	    	String isFinLicenceStr =  mstCustomerNatureService.checkIsFinLicenceStr(entity.getCustomerId());
-	    	
+
 	    	if( customerCharater.equals(entity.getCustomerCharater()) && (isFinLicenceStr == null || " ".equals(isFinLicenceStr))){
 	    		 return new AjaxResult("客户性质为发行人时，机构信息中的“是否持有金融牌照”字段不可以为空！", MessageType.错误消息);
 	    	}

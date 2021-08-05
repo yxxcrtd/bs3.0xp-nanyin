@@ -50,6 +50,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,6 +62,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -354,7 +356,7 @@ public class TrdSpotexInvestTrade002Controller extends BaseController {
      */
     @RequestMapping(PAGE_SAVE)
     @ResponseBody
-    public AjaxResult save(@RequestBody TrdSpotexInvestTradeDto dto,BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody TrdSpotexInvestTradeDto dto,BindingResult br) throws IOException, InstantiationException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

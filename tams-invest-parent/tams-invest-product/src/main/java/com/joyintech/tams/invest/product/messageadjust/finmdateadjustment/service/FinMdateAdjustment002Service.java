@@ -16,9 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.valuation.api.constant.BussinessJixuConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +70,11 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment001Dto> implements BaseProcessService<FinMdateAdjustment001Dto> {
-
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinMdateAdjustment002Service.class);
+    
     @Autowired
     private FinProductMapper finProductMapper;
     @Autowired
@@ -144,8 +151,8 @@ public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryAdjustProdIdList(Map<String, Object> param) {
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinMdateAdjustment/queryAdjustProdIdList",
+    public Page<SelectOptionDto> queryAdjustProdIdList(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinMdateAdjustment/queryAdjustProdIdList",
             param, SelectOptionDto.class);
     }
 
@@ -200,7 +207,7 @@ public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment
             try {
                 BeanUtil.copyProperties(finMdateAdjustment001Dto, prdMdateAdjust);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
 //            finMdateAdjustment001Dto.setFinprodAbbr(
 //                    finProduct != null ? finProduct.getFinprodAbbr() : null);

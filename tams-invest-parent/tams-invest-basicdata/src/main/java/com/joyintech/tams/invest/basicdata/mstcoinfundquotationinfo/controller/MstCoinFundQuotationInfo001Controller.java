@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.basicdata.mstcoinfundquotationinfo.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -82,8 +83,7 @@ public class MstCoinFundQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstCoinFundQuotationInfo001Dto> selectAllCurrencyFund()
-        throws Exception {
+    public Page<MstCoinFundQuotationInfo001Dto> selectAllCurrencyFund() {
         Page<MstCoinFundQuotationInfo001Dto> page = mstCoinFundQuotationInfo001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -112,8 +112,7 @@ public class MstCoinFundQuotationInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstCoinFundQuotationInfo001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -147,8 +146,7 @@ public class MstCoinFundQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstCoinFundQuotationInfo001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstCoinFundQuotationInfo001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -158,13 +156,13 @@ public class MstCoinFundQuotationInfo001Controller extends BaseController {
         params.setPageId("MstCoinFundQuotationInfo002");
         params.setElementId(dto.getElementId());
         // finprodId基金代码进行设置工作流代码
-        params.setBusinessCode(item -> item.getFinprodId());
+        params.setBusinessCode(item -> item.getFinprodMarketId());
         params.setBusinessType(DictCodeList.共通业务类型_基金类估值行情信息.getValue());
         // 设置流程业务说明, entity即传入的流程信息
         // "基金代码"+"("+基金代码+")"+"-""估值日"
         // +"("+估值日+")"
         params.setComment(entity -> this.getMessage("MstCoinFundQuotationInfo001.finprodId") + "("
-                                    + entity.getFinprodId() + ")"
+                                    + entity.getFinprodMarketId() + ")"
                                     + this.getMessage("MstCoinFundQuotationInfo001.valDate") + "("
                                     + DateUtil.format(entity.getValDate()) + ")");
         processParameter.setWorkFlowParameter(params);// 设置工作流注解
@@ -184,8 +182,7 @@ public class MstCoinFundQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getCodeName")
-    public List<SuggestDto> getSuggestDataByName()
-        throws Exception {
+    public List<SuggestDto> getSuggestDataByName(){
         // 画面的输入值param前台的输入值，为了进行模糊查询
         Map<String, Object> param = RequestUtil.getPageParam();
         // 获取根据输入值检索到的结果
@@ -203,8 +200,7 @@ public class MstCoinFundQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getManagement") // 获取基金管理人的名称
-    public List<SuggestDto> getManagement()
-        throws Exception {
+    public List<SuggestDto> getManagement() {
         // 画面的输入值
         Map<String, Object> param = RequestUtil.getPageParam();
         // 获取根据输入值检索到的结果

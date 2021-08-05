@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.svreport.chb.common.SvrDataStatusUtil;
@@ -52,9 +53,9 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 @Transactional(rollbackFor = Exception.class)
 public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    
+
 	@Autowired
     private ChbPrdDurationRegMapper chbPrdDurationRegMapper;
 	@Autowired
@@ -66,26 +67,26 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
      */
     @Autowired
     private ChbCommonCheckService chbCommonCheckService;
-	
+
 	@Autowired
     private SvrDBUtil svrDBUtil;
 
 
 //    @Value("${application.reportSelectOrDeleteCount}")
 //    public  int reportSelectOrDeleteCount;
-    
+
     public void generateDurationRegData(Date batchDate,List<String> prodIdList){
-    	
+
     	logger.debug("获取当日要报备的交易信息:----开始------" + df.format(new Date()));
     	//1、根据跑批日获取当日要报备的交易信息
     	List<ChbPrdDurationDeal> resultList = getDealListByDate(batchDate,prodIdList);
     	logger.debug("获取当日要报备的交易信息:----结束------" + df.format(new Date()));
-    	
+
     	logger.debug("处理当日要报备的交易信息:----开始------" + df.format(new Date()));
     	//2、对交易数据进行详细处理，比如汇率换算，金额计算等逻辑操作
         HashMap<String,List<ChbPrdDealSub>> map = calDealData(batchDate,resultList);
         logger.debug("处理当日要报备的交易信息:----结束------" + df.format(new Date()));
-    	
+
     	//3、持久化到存续登记表
         List<ChbPrdDealSub> dataList = map.get("INSERT");
         List<ChbPrdDealSub> delList = map.get("DELETE");
@@ -93,20 +94,20 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
         	deleteBatch(delList);
         }
     	if(!StringUtil.isEmptyList(dataList)){
-    		
-    		
+
+
     		//update by leipeng 插入的数据获取表 内的实际登记编码
 	       if(CommonUtil.isBAmodel()){
 	           Map<String,String> data = svrDBUtil.getAllRegCode();
-	           
+
 	           for (ChbPrdDealSub dto : dataList) {
 	        	   dto.setIssuePartyId(data.get(dto.getProdId()));
 	           }
 	   		}
 			// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
-    	    dataList = chbCommonCheckService.checkData(dataList, ChbCheckTableInfo.产品存续登记表SUB);
+			dataList = chbCommonCheckService.checkData(dataList, ChbCheckTableInfo.产品存续登记表SUB);
             // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
-    		
+
 			insertBatch(dataList);
 //			if(totalCount>0){
 //				if(totalCount<=singalCount){
@@ -126,7 +127,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 //				}
 //			}
     	}
-    	
+
 //    	if(!StringUtil.isEmptyList(map.get("UPDATE"))){
 //    		chbPrdDurationRegMapper.updateBatch(map.get("UPDATE"));
 //    	}
@@ -142,7 +143,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 		}
 		logger.debug("未报送登记信息批量删除:----结束------" + df.format(new Date()));
 	}
-    
+
     private void insertBatch(List<ChbPrdDealSub> dataList) {
     	logger.debug("登记信息入库:----开始------" + df.format(new Date()));
 		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
@@ -159,12 +160,12 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
         		}
         	}
 			session.commit();
-    		session.clearCache();	
+    		session.clearCache();
 		}
 //		catch (Exception e) {
 //            logger.debug("批量登记信息出错:" + e.getMessage());
 //			session.rollback();
-//        } 
+//        }
 		finally {
     		session.close();
     	}
@@ -276,11 +277,11 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 		        List<ChbPrdDurationDeal> singleclolist = chbPrdDurationRegMapper.getProdIdsByDealSub(pageParamCol);
 		      if(!StringUtil.isEmptyList(singleopenList)){
 		    	  if(singleopenList.size()>1){
-		    		  single.setStatus("M");  
+		    		  single.setStatus("M");
 		    	  }
 		      }else{
 		    	  if(singleclolist.size()>1){
-		    		  single.setStatus("M");  
+		    		  single.setStatus("M");
 		    	  }
 		      }
         	}
@@ -336,14 +337,14 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
                         feeListTemp.add(chbPrdFeeDeal);
                     }
                 }
-				
+
                 chbPrdDurationDeal.setDealList(dealListTemp);
                 chbPrdDurationDeal.setFeeList(feeListTemp);
             }
         }
         return reallist;
 	}
-	
+
 	/**
      * 处理登记信息，金额计算
      * @param resultList
@@ -354,7 +355,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 		List<ChbPrdDealSub> delList = new ArrayList<ChbPrdDealSub>();
 		List<ChbPrdDealSub> updateList = new ArrayList<ChbPrdDealSub>();
         HashMap<String,List<ChbPrdDealSub>> map = new HashMap<String,List<ChbPrdDealSub>>();
-        String amtSumType = SvrDataUtil.getSysParam(SVReportGlobalConstant.DEALSUB_BALANCEAMT_SUM_TYPE);        
+        String amtSumType = SvrDataUtil.getSysParam(SVReportGlobalConstant.DEALSUB_BALANCEAMT_SUM_TYPE);
 		ChbPrdDealSub result = null;
 		for(ChbPrdDurationDeal model : resultList){
 			result = new ChbPrdDealSub();
@@ -409,10 +410,10 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 			 */
 	        result.setMdate(DateUtil.format(model.getOpenEnd(),"yyyy-MM-dd"));//数据日期
 			result.setStatusDate(batchDate);
-			
+
 	        // 细分类
 	        String typeDetail = "";
-	        
+
 	        // 产品存续期登记中是否有未报送数据
 	        if (StringUtil.isNotEmpty(model.getRegSeq1())) {
 	        	result.setRegistSeqno(model.getRegSeq1());
@@ -467,7 +468,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
                         }
                         else if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
                                 || DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(
-                                        chbPrdDeal.getTradeType()) 
+                                        chbPrdDeal.getTradeType())
                         		|| DictCodeListExt2.产品存续期登记交易类型_份额减弱.getValue().equals(
                                      chbPrdDeal.getTradeType())
                                 || DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(
@@ -496,7 +497,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
                 	reaYield = yieldModel.getProdValue();
                 }
 	            result.setReaYield(ArithmeticUtil.multiply(reaYield, new BigDecimal(100)).setScale(5, RoundingMode.HALF_UP));
-	            
+
 	            // 最新收益率
 	            BigDecimal newExpYield = BigDecimal.ZERO;
 	            if(cnt > 0){
@@ -563,7 +564,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
                 // 累计单位分红
 				BigDecimal totalUnitBonusAmount = chbPrdDurationRegMapper.getTotalUnitBonusAmount(model.getProdId(),quotationDate)==null?BigDecimal.ZERO:chbPrdDurationRegMapper.getTotalUnitBonusAmount(model.getProdId(),quotationDate);
                 result.setTotalValue(totalUnitBonusAmount);
-                
+
 	            //折算人民币初始净值
 	            result.setCnyOrlValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getOriginalValue(),
 		                model.getOpenEnd(), rateMap).setScale(5, RoundingMode.HALF_UP));
@@ -575,14 +576,14 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 				// 累计人民币净值
 				result.setCnyTalValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getTotalValue(),
 						model.getOpenEnd(), rateMap).setScale(5, RoundingMode.HALF_UP));
-		         
+
 	        }
-	        
+
 	        // 产品余额份额获取
             List<ChbPrdPosition> list = chbPrdDurationRegMapper.getBalance(model.getProdId(),quotationDate);
         	//产品余额
         	BigDecimal balance = BigDecimal.ZERO;
-            //产品份额 
+            //产品份额
         	BigDecimal balanceQty = BigDecimal.ZERO;
             if(!StringUtil.isEmptyList(list)){
             	for(ChbPrdPosition pos : list){
@@ -591,14 +592,14 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
             		balanceQty = balanceQty.add(pos.getBalanceQty());
             	}
             }
-        	
+
             /**  add 产品余额以持有者信息进行汇总的分支处理追加  by  wudebao  20210308  start  */
             if("01".equals(amtSumType)) {
             	//当汇总方式（DEALSUB_BALANCEAMT_SUM_TYPE）  ==    ‘01：投资端持有汇总  的情况下进行以下处理
                 //取得本产品的持有明细汇总
         		BigDecimal balanceAmt = chbPrdDurationRegMapper.getBalanceAmt(model.getProdId(),quotationDate);
-        		result.setBalanceAmt(balanceAmt);                       	
-            	
+        		result.setBalanceAmt(balanceAmt);
+
             }else {
             	if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
          	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
@@ -608,9 +609,9 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
             		result.setBalanceAmt(balanceQty.multiply(result.getCnyPrdValue()).setScale(2, RoundingMode.HALF_UP));
             	}
             }
-        	
+
         	/**  add 产品余额以持有者信息进行汇总的分支处理追加  by  wudebao  20210308  start  */
-            
+
             result.setPrdQty(balanceQty);
 
 	        // 银行端收益
@@ -621,7 +622,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
             		result.setBankImpInt(((null == result.getBankImpInt())?BigDecimal.ZERO:result.getBankImpInt()).add(bankImpInt));
             	}
             }
-	        
+
 	        //币种及申购兑付金额
 	        StringBuffer sb = new StringBuffer();
 	        for(Map.Entry<String, String> entry: ccyMap.entrySet()){
@@ -630,9 +631,11 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	        if(sb.length() > 1){
 	        	result.setCcyPurchase(sb.deleteCharAt(sb.length() - 1).toString());
 	        }else{
-	        	result.setCcyPurchase("CNY,0.00,0.00,0.00");
-	        }
-	        
+//	        	result.setCcyPurchase("CNY,0.00,0.00,0.00");//delete by lingxiaoqing on 2021-06-03 for 按照交易币种来报送
+				String ccy = (null == result.getValueCcy() ? "CNY" : result.getValueCcy());
+				result.setCcyPurchase(ccy + ",0.00,0.00,0.00");//add by lingxiaoqing on 2021-06-03 for 按照交易币种来报送
+			}
+
 	        // 报送截止日生成
 	        Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 	        HashMap<String,List<Date>> submitDateMap = new HashMap<String,List<Date>>();
@@ -643,11 +646,11 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	        	dateList = submitDateMap.get(key);
 	        }else{
 	        	dateList = ChbDeadlineUtil.getChbEndDate(
-	    	            DictCodeListExt2.报表名称_产品存续期登记.getValue(), typeDetail, 
+	    	            DictCodeListExt2.报表名称_产品存续期登记.getValue(), typeDetail,
 	    	            DictCodeListExt2.报送数据状态_新建.getValue(),dateMap, model.getOpenEnd() == null ? batchDate : model.getOpenEnd());
 	        	submitDateMap.put(key, dateList);
 	        }
-	        
+
 	        if (StringUtil.isNotEmpty(dateList)) {
 	            result.setChbSubmitDeadline(dateList.get(0));
 	            result.setSubmitDeadline(dateList.get(1));
@@ -662,9 +665,17 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	        	for(ProdDurationReg001Dto  sub:lsitsub){
 	        	    // modify by dubaojun 2020-10-26 每万份份额分红和每万份现金分红保留5位小数 start
 	        		//04 现金分红
-	        		if(sub.getTradeType().equals("04") && sub.getCashAmtWan() != null){
-	        			 result.setCashAmtWan(sub.getCashAmtWan().setScale(5, RoundingMode.HALF_UP));
-	        		}
+					if(sub.getTradeType().equals("04") && sub.getCashAmtWan() != null){
+//						result.setCashAmtWan(sub.getCashAmtWan().setScale(5, RoundingMode.HALF_UP));//delete by lingxq on 2021-06-03 for 折算人民币
+						//----add by lingxq on 2021-06-03 for 折算人民币 ---->>>>>
+						BigDecimal cashAmt = sub.getCashAmtWan();
+						if (!StringUtil.equals(sub.getValueCcy(), DictCodeListExt1.币种_中债_人民币.getValue())){
+							cashAmt = ChbCcyConvertUtil.changeCnyMoney(sub.getValueCcy(), sub.getCashAmtWan(),
+									DateUtil.parse(result.getMdate()), rateMap);
+						}
+						result.setCashAmtWan(cashAmt.setScale(5, RoundingMode.HALF_UP));
+						//----add by lingxq on 2021-06-03 for 折算人民币 ----<<<<<
+					}
 	        		//05 红利再投
 	        		if(sub.getTradeType().equals("05") && sub.getShareAmtWan() != null){
 	        			result.setShareAmtWan(sub.getShareAmtWan().setScale(5, RoundingMode.HALF_UP));
@@ -760,7 +771,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	        result.setVdate(DateUtil.format(model.getOpenStart()));
 	        result.setMdate(DateUtil.format(model.getOpenEnd()));//数据日期
 			result.setStatusDate(batchDate);
-			
+
 			/**
 			 * update by xr  对与开放式产品，开放周期日为取周期结束日，取得确认日处理，
 			 * 修改BUG时，为减少对原逻辑影响，取了原model中得openend1字段，为周期结束日在，交易查询结束后
@@ -783,7 +794,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 		}
 		return map;
 	}
-	
+
 	/**
 	 * 拼接申购赎回信息
 	 * @param ccyMap
@@ -792,7 +803,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	 * @param calAvgIntamtList
 	 */
 	@SuppressWarnings("deprecation")
-	private void getDealCcy(HashMap<String,String> ccyMap, 
+	private void getDealCcy(HashMap<String,String> ccyMap,
 			               ChbPrdDeal chbPrdDeal,
 			               ChbPrdDurationDeal model,
 			               List<String> calAvgIntamtList) {
@@ -821,14 +832,14 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 						||DictCodeListExt2.产品存续期登记交易类型_份额减弱.getValue().equals(chbPrdDeal.getTradeType())) {
             	    if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
             	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
-            	    	
+
             	    	redAmt = redAmt.add(ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
                 				            chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap)
 //		            	    		   .add(null == chbPrdDeal.getIntAmt() ? BigDecimal.ZERO :
 //		            	    				ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 //		            				        chbPrdDeal.getIntAmt(), model.getOpenEnd(), rateMap))
 		            	    		   );
-            	    	
+
             	    	intAmt = intAmt.add(null == chbPrdDeal.getIntAmt()?BigDecimal.ZERO:
 				            	    		ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 				            				        chbPrdDeal.getIntAmt(), model.getOpenEnd(), rateMap));
@@ -863,18 +874,18 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	                		ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 	    				        chbPrdDeal.getIntAmt(), model.getOpenEnd(), rateMap));
                 	}
-               
+
                 }
                 else if (DictCodeListExt2.产品存续期登记交易类型_收益分配.getValue().equals(
                     chbPrdDeal.getTradeType())) {
-                	
+
                 	redAmt = redAmt.add(null == chbPrdDeal.getIntAmt()?BigDecimal.ZERO:
 				                		ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 				    				        chbPrdDeal.getIntAmt(), model.getOpenEnd(), rateMap));
-                	
+
                 	if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
             	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
-                    	//兑付金额 
+                    	//兑付金额
                 		intAmt = intAmt.add(null == chbPrdDeal.getIntAmt()?BigDecimal.ZERO:
 				            	    		ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 				            				        chbPrdDeal.getIntAmt(), model.getOpenEnd(), rateMap));
@@ -888,10 +899,10 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
             	    	}
             	    }
                 }
-                
+
             	value = joinAmt(purAmt, redAmt, intAmt);
             	ccyMap.put(chbPrdDeal.getCcy(), value);
-            	
+
             }else{
             	String value = "";
 				if (DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(chbPrdDeal.getTradeType())
@@ -906,18 +917,18 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 						||DictCodeListExt2.产品存续期登记交易类型_份额减弱.getValue().equals(chbPrdDeal.getTradeType())) {
             	   if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
            	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
-            		   
+
             		   redAmt = redAmt.add(ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
        	    								chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap)
 //            				          .add(null == chbPrdDeal.getIntAmt()?BigDecimal.ZERO:
 //            				        	    ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 //             	    								chbPrdDeal.getIntAmt(), model.getOpenEnd(), rateMap))
-            				          ); 
-            		   
+            				          );
+
             		   intAmt = intAmt.add(null == chbPrdDeal.getIntAmt()?BigDecimal.ZERO:
 				            			   ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 												chbPrdDeal.getIntAmt(), model.getOpenEnd(), rateMap));
-            		   
+
 	           	   }else{
 		           		//同一天既有赎回(到期)又有现金分红,收益只取一次
 		           		String key = model.getProdId() + "-" + chbPrdDeal.getPayDate() + "-" + chbPrdDeal.getCcy();
@@ -926,11 +937,11 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	            	    	intAmt = intAmt.add(avgIntamt);
 	            	    	calAvgIntamtList.add(key);
 	        	    	}
-	       	    		
+
 	           	    	redAmt = redAmt.add(ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 	       	    							chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap));
 	           	   }
-                   
+
                 }
                 else if (DictCodeListExt2.产品存续期登记交易类型_收益再投资.getValue().equals(
                        chbPrdDeal.getTradeType())) {
@@ -951,18 +962,18 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	                		ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 	    				        chbPrdDeal.getIntAmt(), model.getOpenEnd(), rateMap));
                 	}
-                
+
                 }
                 else if (DictCodeListExt2.产品存续期登记交易类型_收益分配.getValue().equals(
                     chbPrdDeal.getTradeType())) {
-                	
+
                 	redAmt = redAmt.add(null == chbPrdDeal.getIntAmt()?BigDecimal.ZERO:
 			                		    ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 										chbPrdDeal.getIntAmt(), model.getOpenEnd(), rateMap));
-                	
+
                 	if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
                	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
-                		
+
                 		intAmt = intAmt.add(null == chbPrdDeal.getIntAmt()?BigDecimal.ZERO:
 				                			ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
 					    								chbPrdDeal.getIntAmt(), model.getOpenEnd(), rateMap));
@@ -1006,7 +1017,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
     	       	    							chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap));
 		           	    }
 	            	}
-	            	intAmt = new BigDecimal(value.split(",")[2]);	
+	            	intAmt = new BigDecimal(value.split(",")[2]);
 	            	if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
 	           	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
 	            		intAmt = intAmt.add(null == chbPrdDeal.getIntAmt()?BigDecimal.ZERO:
@@ -1016,10 +1027,10 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	           	    	BigDecimal avgIntamt = calAvgIntamt(model,chbPrdDeal.getInterestCcy(),chbPrdDeal.getPayDate());
             	    	intAmt = intAmt.add(avgIntamt);
 	           	    }
-	            	
+
 	            	value = joinAmt(purAmt, redAmt, intAmt);
 	            	ccyMap.put(chbPrdDeal.getInterestCcy(), value);
-	            	
+
 	            }else{
 	            	String value = "";
 	            	if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
@@ -1039,7 +1050,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 
 
 	/**
-	 * 
+	 *
 	 * @param purAmt
 	 * @param redAmt
 	 * @param intAmt
@@ -1052,7 +1063,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 				+ (BigDecimal.ZERO.compareTo(intAmt)==0? "0.00" :intAmt.setScale(2, RoundingMode.HALF_UP).toString());
 		return value;
 	}
-	
+
 	/**
 	 * 初始值
 	 * @param result
@@ -1074,7 +1085,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	 * @return
 	 */
 	private BigDecimal calAvgYield(ChbPrdDurationDeal model,Date quotationDate,String type) {
-		BigDecimal avgYield = BigDecimal.ZERO; 
+		BigDecimal avgYield = BigDecimal.ZERO;
 		//所有子产品认购交易
 		 List<ChbPrdDeal> subList = chbPrdDurationRegMapper.getSubPrdDeal(model.getProdId());
 		 if(!StringUtil.isEmptyList(subList)){
@@ -1097,7 +1108,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 		 }
 		return avgYield;
 	}
-	
+
 	/**
 	 * 净值类产品按照头寸移动平均计算后的利息处理
 	 * @param model
@@ -1117,14 +1128,12 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 			intamt = intamt.add(ChbCcyConvertUtil.changeCnyMoney(pos.getCcy(),
 	                pos.getTdaddIntamt(), model.getOpenEnd(), rateMap));
 		}
-		
+
 		return intamt;
 	}
-	
+
 	/**
 	 * 将集合均分成几个大小一致的子集合
-	 * @param 集合
-	 * @param 子集合大小
 	 * @return
 	 */
 	public static List<List<ChbPrdDealSub>>  createPrdDealSubList(List<ChbPrdDealSub> targe,int size) {
@@ -1168,7 +1177,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 		}
 		return dateString;
 	}
-	
+
 	@Override
 	public void execute(Date executeDate, List<String> prodList, List<String> assetList, Map<String, List<String>> param) throws BusinessException {
 
@@ -1190,7 +1199,9 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	private ChbPrdDealSub genDto(ChbPrdDealSub dto){
 		ChbPrdDealSub genDto = new ChbPrdDealSub();
 		genDto.setProdId(dto.getProdId());
-		genDto.setIssuePartyId(dto.getIssuePartyId());
+		if(!MultilevelDataAuthorityUtil.isEnabled()){
+			genDto.setIssuePartyId(dto.getIssuePartyId());
+		}
 		genDto.setProdRegistCode(dto.getProdRegistCode());
 		genDto.setVdate(dto.getVdate());
 		genDto.setMdate(dto.getMdate());

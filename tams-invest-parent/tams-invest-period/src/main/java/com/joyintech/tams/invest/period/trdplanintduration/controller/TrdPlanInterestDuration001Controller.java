@@ -18,6 +18,7 @@ import com.joyintech.tams.invest.period.trdplanintduration.service.TrdPlanIntere
 
 import static com.joyintech.tams.invest.period.trdplanintduration.service.TrdPlanInterestDuration002Service.genParams;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -103,8 +104,7 @@ public class TrdPlanInterestDuration001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return trdPlanInterestDuration001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
 
@@ -115,8 +115,7 @@ public class TrdPlanInterestDuration001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(@Validated({ValidateGroupDelete.class}) TrdPlanInterestDurationProcessDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult revoke(@Validated({ValidateGroupDelete.class}) TrdPlanInterestDurationProcessDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

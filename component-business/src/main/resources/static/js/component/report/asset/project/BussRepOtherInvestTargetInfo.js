@@ -20,6 +20,29 @@
             getElementById('repMonitType').attr('disabled',true);
         }
     }
+    //担保方式事件
+    function byRepGuaType() {
+  　　　　if (getElementById('repGuaType').val() == SVR_GUA_TYPE_03 || getElementById('repGuaType').val() == SVR_GUA_TYPE_04) {
+                //抵质押物类型
+                getElementById('repPledgeType').attr('disabled', false).trigger('change');
+                //抵质押物价值（元）
+                getElementById('repPledgeValue').attr('disabled', false).trigger('change');
+                getElementById('repNatureGuarantee').val('').attr('disabled', true).trigger('change');
+                getElementById('repRelationFinan').val('').attr('disabled', true).trigger('change');
+            } else if (getElementById('repGuaType').val() == SVR_GUA_TYPE_01 || getElementById('repGuaType').val() == SVR_GUA_TYPE_02) {
+                //担保性质
+                getElementById('repNatureGuarantee').attr('disabled', false).trigger('change');
+                //担保人与融资人关系
+                getElementById('repRelationFinan').attr('disabled', false).trigger('change');
+                getElementById('repPledgeType').val('').attr('disabled', true).trigger('change');
+                getElementById('repPledgeValue').val('').attr('disabled', true).trigger('change');
+            }else{
+                getElementById('repPledgeType').val('').attr('disabled', true).trigger('change');
+                getElementById('repPledgeValue').val('').attr('disabled', true).trigger('change');
+                getElementById('repNatureGuarantee').val('').attr('disabled', true).trigger('change');
+                getElementById('repRelationFinan').val('').attr('disabled', true).trigger('change');
+            }
+    }
     $(function() {
         layui.form.on('switch(repIndustryFlag)',function(){
             repIndustryFlagChange();
@@ -32,6 +55,9 @@
                 getElementById('repInstitSize_div').val('').trigger("change");
                 getElementById('repInstitSize_div').hide();
             }
+        });
+        getElementById('repGuaType').change(function(){
+            byRepGuaType();
         });
     });
     /*getElementById('repAssetType').change(function(){

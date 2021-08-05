@@ -10,9 +10,10 @@
  
 package com.joyintech.tams.component.business.core.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,10 @@ import java.util.Map;
  */
 @Service("componentMstWorkflowCommonService")
 public class MstWorkflowCommonServiceImpl implements MstWorkflowCommonService{
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(MstWorkflowCommonServiceImpl.class);
 	
     @Autowired
     private JoyinRestTemplate restTemplate;
@@ -85,6 +90,19 @@ public class MstWorkflowCommonServiceImpl implements MstWorkflowCommonService{
             ServiceApplication.COMMON_SERVICE_NAME + "/core/getDataStatusFromProcessMark", wflValidInputParameter,
             String.class);
 	}
+	/**
+	 * 通过留痕表查询流程中数据,返回list
+	 * add by jiangpeng on 20210514 ZGBSSE-388
+	 * @param wflValidInputParameter 查询条件
+	 * @return list
+	 */
+	@Override
+	public List<ProcessMark> getDataStatusFromProcessMarkList(WflValidInputParameter wflValidInputParameter) {
+		// 获取数据状态
+		return restTemplate.postForList(
+				ServiceApplication.COMMON_SERVICE_NAME + "/core/getDataEntityFromProcessMarkList", wflValidInputParameter,
+				ProcessMark.class);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -117,7 +135,7 @@ public class MstWorkflowCommonServiceImpl implements MstWorkflowCommonService{
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+			logger.error(e.getMessage(),e);
         }
         return null;
 	}

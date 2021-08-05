@@ -10,22 +10,6 @@
 
 package com.joyintech.tams.valuation.basedata.marketdata.valcoinfundquotationinfo.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -35,14 +19,29 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.basedata.marketdata.valcoinfundquotationinfo.dto.ValCoinFundQuotationInfo001Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.valcoinfundquotationinfo.service.ValCoinFundQuotationInfo001Service;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 货币型基金行情信息新建
@@ -56,6 +55,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("ValCoinFundQuotationInfo002")
 @RequestMapping("/valuation/basedata/marketdata/valcoinfundquotationinfo/ValCoinFundQuotationInfo002")
 public class ValCoinFundQuotationInfo002Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValCoinFundQuotationInfo002Controller.class);
 
     /**
      * 向service注值
@@ -99,7 +102,7 @@ public class ValCoinFundQuotationInfo002Controller extends BaseController {
                 model.addAttribute("entity", dto1);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
         // 初始化
@@ -111,7 +114,6 @@ public class ValCoinFundQuotationInfo002Controller extends BaseController {
      * 
      * @param dto dto
      * @param result BindingResult
-     * @param  操作类型
      * @return check结果
      * @see
      * @since 1.0
@@ -135,8 +137,7 @@ public class ValCoinFundQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping(OPERATE_TYPE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) ValCoinFundQuotationInfo001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) ValCoinFundQuotationInfo001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -190,7 +191,7 @@ public class ValCoinFundQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/queryFinprod")
     public List<SuggestDto> queryFinprod()
-        throws Exception {
+         {
         // 画面的输入值param前台的输入值，为了进行模糊查询
         Map<String, Object> param = RequestUtil.getPageParam();
         // 获取根据输入值检索到的结果
@@ -201,6 +202,6 @@ public class ValCoinFundQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getIplatDate")
     public String getIplatDate(){
-        return valCoinFundQuotationInfo001Service.getIplatDate();
+        return StringUtil.trimHtmlTag(valCoinFundQuotationInfo001Service.getIplatDate());
     }
 }

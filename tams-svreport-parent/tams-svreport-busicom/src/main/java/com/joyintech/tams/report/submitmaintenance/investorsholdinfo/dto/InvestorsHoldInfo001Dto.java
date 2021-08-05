@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.Length;
@@ -37,7 +38,7 @@ import com.joyintech.tams.constant.DictCode;
  * @since 1.0
  */
 @ValidLogic(targetClass = InvestorsHoldInfoValidator.class, groups = {ValidateGroupEdit.class,
-    ValidateGroupDelete.class})
+        ValidateGroupDelete.class})
 public class InvestorsHoldInfo001Dto extends ChbInvestholdInfo implements ITableRow{
     /**
      * 检查序列号
@@ -70,7 +71,7 @@ public class InvestorsHoldInfo001Dto extends ChbInvestholdInfo implements ITable
      * 币种（导出用）
      */
     private String ccyCodeForExport;
-    
+
     /**
      * 中债反馈信息 导出中债反馈页面使用
      */
@@ -84,7 +85,7 @@ public class InvestorsHoldInfo001Dto extends ChbInvestholdInfo implements ITable
      * 接入检查结果
      */
     private String interfCheckResult;
-    
+
     /**
      * 选中的数据
      */
@@ -241,16 +242,16 @@ public class InvestorsHoldInfo001Dto extends ChbInvestholdInfo implements ITable
     public void setCcyCode(String ccyCode) {
         this.ccyCode = ccyCode;
     }
-    
-    
+
+
 
     public String getRepFailedInfo() {
-		return repFailedInfo;
-	}
-	public void setRepFailedInfo(String repFailedInfo) {
-		this.repFailedInfo = repFailedInfo;
-	}
-	/**
+        return repFailedInfo;
+    }
+    public void setRepFailedInfo(String repFailedInfo) {
+        this.repFailedInfo = repFailedInfo;
+    }
+    /**
      * 获取 rowId
      * @return rowId.
      */
@@ -305,9 +306,9 @@ public class InvestorsHoldInfo001Dto extends ChbInvestholdInfo implements ITable
      * @return ccyCodeForExport.
      */
     public String getCcyCodeForExport() {
-    	return StringUtil.getOrElse(this.getCcy(), "") + " " + SysDataUtil.getNameFromDataDict(DictCode.币种_中债,
-    			StringUtil.getOrElse(this.getCcy(), ""));
- //       return StringUtil.getOrElse(this.getCcy(), "") + " " + StringUtil.getOrElse(this.getCcyCode(), "");
+        return StringUtil.getOrElse(this.getCcy(), "") + " " + SysDataUtil.getNameFromDataDict(DictCode.币种_中债,
+                StringUtil.getOrElse(this.getCcy(), ""));
+        //       return StringUtil.getOrElse(this.getCcy(), "") + " " + StringUtil.getOrElse(this.getCcyCode(), "");
     }
 
     /**
@@ -317,7 +318,7 @@ public class InvestorsHoldInfo001Dto extends ChbInvestholdInfo implements ITable
     public void setCcyCodeForExport(String ccyCodeForExport) {
         this.ccyCodeForExport = ccyCodeForExport;
     }
-    
+
     /**
      * 获取 checkSeqno
      * @return checkSeqno.
@@ -325,7 +326,7 @@ public class InvestorsHoldInfo001Dto extends ChbInvestholdInfo implements ITable
     public String getCheckSeqno() {
         return checkSeqno;
     }
-    
+
     /**
      * 设置 checkSeqno
      * @param checkSeqno checkSeqno
@@ -333,21 +334,33 @@ public class InvestorsHoldInfo001Dto extends ChbInvestholdInfo implements ITable
     public void setCheckSeqno(String checkSeqno) {
         this.checkSeqno = checkSeqno;
     }
-    
+
     /**
      * 获取 interfCheckResult
      * @return interfCheckResult.
      */
-	public String getInterfCheckResult() {
-		return interfCheckResult;
-	}
-	/**
+    public String getInterfCheckResult() {
+        return interfCheckResult;
+    }
+    /**
      * 设置 interfCheckResult
      * @param interfCheckResult interfCheckResult
      */
-	public void setInterfCheckResult(String interfCheckResult) {
-		this.interfCheckResult = interfCheckResult;
-	}
+    public void setInterfCheckResult(String interfCheckResult) {
+        this.interfCheckResult = interfCheckResult;
+    }
 
+    // 导出报错新添加的 （徽商） njl  start
+
+    public String getHoldDStr() {
+        return DateUtil.format(super.getHoldDate());
+    }
+
+    public BigDecimal getQqtyStr() {
+        return super.getQty();
+    }
+
+
+    // 导出报错新添加的 （徽商） njl  end
 
 }

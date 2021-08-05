@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.asset.common.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -205,8 +207,7 @@ public class FinStageManagementController extends BaseController{
    @ResponseBody
    @RequestMapping(PAGE_SAVE)
    public AjaxResult save(@RequestBody @Validated({
-       ValidateGroupEdit.class}) FinStageManagementDto dto, BindingResult br)
-       throws Exception {
+       ValidateGroupEdit.class}) FinStageManagementDto dto, BindingResult br) throws WorkFlowException {
        if (br.hasErrors()) {
            return new AjaxResult(br);
        }
@@ -241,8 +242,7 @@ public class FinStageManagementController extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<FinStageManagementDto> dtoList =new ArrayList<FinStageManagementDto>();
         if(StringUtil.isNotEmpty(datas)){

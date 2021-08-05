@@ -45,16 +45,20 @@ import com.joyintech.tams.invest.common.dto.*;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.dto.PreTrdCommonDto;
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.invest.interf.service.InterfComponentService;
 import com.joyintech.tams.invest.interf.service.InterfComponentService.OrderCaller;
@@ -68,6 +72,8 @@ import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -79,8 +85,14 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
+
 @Service
 public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> implements BaseProcessService<TrdRepoTrade002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdRepoTrade002Service.class);
 
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
@@ -95,6 +107,9 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
 
     @Autowired
     private FinTradeProductMapper finTradeProductMapper;
+
+    @Autowired
+    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
 
     /**
      * 附件上传类
@@ -2365,7 +2380,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                     interfComponentService.sendMurexRequest(OrderCaller.REPO002, sendData);
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
@@ -2673,13 +2688,14 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
         if (null != entity.getTradeId() && !StringUtil.isNotEmpty(entity.getRevokeReason())){
             riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
         }
+        doBackUpdateEtrPosition(entity);
     }
 
     @Override
     public void doRevoke(TrdRepoTrade002Dto entity) {
         uodateCstpMessage(entity.getWorkflowId());
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTradeId());
-        
+
         //删除授信占用
         if (null != entity.getTradeId() && !StringUtil.isNotEmpty(entity.getRevokeReason())){
             riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
@@ -2751,4 +2767,24 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                 Integer.class);
     }
     /* add by msk 新增查询通道划款交易 20201111 end */
+
+    /**
+     * 委托竞价式正回购退回时,标准券持仓更新
+     * @param entity
+     */
+    private void doBackUpdateEtrPosition(TrdRepoTrade002Dto entity) {
+        if (StringUtil.isNotEmpty(entity.getEntrustId())
+                && StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_正回购.getValue())
+                && StringUtil.equals(entity.getRepoType(), DictCodeList.回购类型_质押式竞价回购.getValue())) {
+            // 指令持仓和现金流水处理
+            List<EtrSecPositionFlowDto> etrFlows = baseAssetCashPositionCommMapper.selectAllEtrPosition(entity.getTradeId());
+            if (etrFlows != null) {
+                etrFlows.forEach(
+                        etrSecPositionFlowDto -> etrSecPositionFlowDto.setSeqno(getSeqNo()));
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                etrPositionHoldDto.setPtlSecPositionFlows(etrFlows);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+            }
+        }
+    }
 }

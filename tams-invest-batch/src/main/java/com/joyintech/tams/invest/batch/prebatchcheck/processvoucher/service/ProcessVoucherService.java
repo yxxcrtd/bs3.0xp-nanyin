@@ -15,6 +15,11 @@ import com.joyintech.tams.invest.batch.prebatchcheck.common.service.PrebatchChec
 import com.joyintech.tams.invest.batch.prebatchcheck.processvoucher.dao.ProcessVoucherMapper;
 import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail;
 
+/**
+ * 流程中手工凭证
+ * @author yantianyuan
+ * 创建日期：2021-05-13
+ */
 @Service
 public class ProcessVoucherService {
 
@@ -24,16 +29,23 @@ public class ProcessVoucherService {
     @Autowired
     private PrebatchCheckCommonService prebatchCheckCommonService;
     
+    /**
+     * 执行方法
+     * @param batchExecuteInfo
+     * @param dto
+     * @param instCode
+     */
     public void execute(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, String instCode){
         Map<String,Object> param = new HashMap<>();
         if(StringUtil.isNotEmpty(instCode)){
-            // 固定key 勿修改
+            // 机构代码，框架用该字段进行数据隔离
             param.put("PRE_INST_CODE",instCode);
         }
-
+        //设置检查日期
         param.put("checkDate",dto.getCheckDate());
-
+        //执行检查
         List<SysPrebatchResultDetail> details = processVoucherMapper.selectProcessVoucherList(param);
+        //错误信息设置批信息
         if(!StringUtil.isEmptyList(details)){
             details.forEach(item -> setResultDetail(batchExecuteInfo,dto,item));
         }

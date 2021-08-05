@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.common.base.dao.ChbLoanDetailContractDtoMapper;
 import com.joyintech.tams.common.base.dao.MstBondCreditRatingMapper;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
@@ -161,7 +162,7 @@ public class SvrLoanDetailContractFileImpService extends FileImpService {
 			}
 			// 任务结束，停止线程池的所有线程
 			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/CHB_LOAN_DETAIL_CONTRACT/"), new String[] { "tmp" }, false);
+			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_LOAN_DETAIL_CONTRACT/"), new String[] { "tmp" }, false);
 			logger.debug("获取债券评级sqlloder文件个数"+files.size());
 			List<String> content = new ArrayList<>(listData.size());
 			String result = "";

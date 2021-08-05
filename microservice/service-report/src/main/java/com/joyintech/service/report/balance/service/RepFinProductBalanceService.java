@@ -52,7 +52,7 @@ public class RepFinProductBalanceService extends BaseService<RepFinProductBalanc
      * @since 1.0
      */
     public Page<RepFinProductBalanceDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         if(pageParam.get("isLayer").equals(DictCodeList.是否_是.getValue())){
             return super.queryForPage(page, length, () -> repFinProductBalanceMapper.queryForPage2(pageParam));
         }

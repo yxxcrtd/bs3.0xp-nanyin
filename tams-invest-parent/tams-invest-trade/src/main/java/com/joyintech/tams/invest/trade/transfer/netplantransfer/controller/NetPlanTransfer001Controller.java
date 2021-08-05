@@ -16,6 +16,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.netplantransfer.dto.NetPlanTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.netplantransfer.dto.NetPlanTransfer002Dto;
 import com.joyintech.tams.invest.trade.transfer.netplantransfer.service.NetPlanTransfer001Service;
@@ -23,6 +24,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,6 +65,8 @@ public class NetPlanTransfer001Controller extends BaseController {
     @Autowired(required=false)
     private BaseGetBusinessId baseGetBusinessId;
 
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
@@ -236,6 +240,26 @@ public class NetPlanTransfer001Controller extends BaseController {
         else if (StringUtil.equalsIgnoreCase(OPERATE_TYPE_SUBMIT, dto.getOperateType())) {
             btnName = "SysCommon.submit";
         }
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<>();
+            for (NetPlanTransfer002Dto ptl : dto.getNetPlanTransfer002DtoList()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    if (!StringUtil.equals(str, "")) {
+                        str += "</br>";
+                    }
+                    str += "交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！";
+                }
+            }
+            if(StringUtil.isNotEmpty(str)){
+                ar.setMessage(str, MessageType.错误消息);
+                return ar;
+            }
+        }
         if (!result.hasErrors()) {
             if (StringUtil.isEmptyList(dto.getNetPlanTransfer002DtoList())) {
                 return new AjaxResult("转仓列表不能为空！",MessageType.错误消息);
@@ -298,8 +322,7 @@ public class NetPlanTransfer001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody NetPlanTransfer001Dto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody NetPlanTransfer001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

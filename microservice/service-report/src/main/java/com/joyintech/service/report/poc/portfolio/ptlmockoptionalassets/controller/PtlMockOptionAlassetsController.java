@@ -42,7 +42,7 @@ public class PtlMockOptionAlassetsController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<PtlMockOptionAlassetsDto> selectAll(@RequestBody Map<String, Object> param, 
-                                                @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                @PathVariable("page") int page, @PathVariable("length") int length) {
         return ptlmockoptionalassetsService.selectForPage(page,length,param);
     }
     

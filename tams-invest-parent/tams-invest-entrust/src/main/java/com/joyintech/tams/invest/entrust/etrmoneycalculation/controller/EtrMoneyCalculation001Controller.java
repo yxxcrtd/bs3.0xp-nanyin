@@ -11,13 +11,12 @@
 package com.joyintech.tams.invest.entrust.etrmoneycalculation.controller;
 
 
-import com.joyintech.framework.grid.Page;
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
-
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.entrust.etrmoneycalculation.dto.EtrMoneyCalculationDto;
 import com.joyintech.tams.invest.entrust.etrmoneycalculation.service.EtrMoneyCalculationService;
@@ -73,8 +72,8 @@ public class EtrMoneyCalculation001Controller extends BaseController{
 
         List<SelectOptionDto> finprodList = etrMoneyCalculationService.getFinprodByType(
                 "F01");
-        model.addAttribute("FINPROD", JsonUtil.objToString(finprodList));
-        model.addAttribute("FINPROD_TYPE", JsonUtil.objToString(codeList));
+        model.addAttribute("FINPROD", JsonUtils.object2Json(finprodList));
+        model.addAttribute("FINPROD_TYPE", JsonUtils.object2Json(codeList));
         model.addAttribute("FINPROD_TYPE_DEFUALT", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         return super.init(model);
     }
@@ -138,8 +137,7 @@ public class EtrMoneyCalculation001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export(EtrMoneyCalculationDto dto)
-        throws Exception {
+    public ResponseEntity<byte[]> export(EtrMoneyCalculationDto dto){
         return etrMoneyCalculationService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

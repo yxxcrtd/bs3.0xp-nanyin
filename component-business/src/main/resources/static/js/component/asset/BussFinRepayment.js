@@ -22,6 +22,11 @@
      * false:重新生成计划
      */ 
     var isAgainCalIntRepay = false;
+    /**
+     * 是否修改 还本信息
+     * @type {boolean}
+     */
+    var isEditRepayTable = false;
     var getElementById = function(id,type) {
         if(type=='div'){
             return $('#' + entityName_BussFinRepayment + '_' + id+'_'+type);
@@ -259,6 +264,7 @@
             }
             row.maxTradeDate = _row ? _row.maxTradeDate : '';
             row.updateFlg = '01';
+            isEditRepayTable = true;
         },
         done:function(table, allData){
             //项目类资产还本计划维护 计算剩余本金
@@ -289,6 +295,7 @@
                     doneFlag = false;
                     calSurplusAmt();
                 }
+                isEditRepayTable = true;
             }else{
                 if(field=='prinAmt'||field=='intAmt'){
                     var rowData = {};
@@ -297,6 +304,7 @@
                     rowData.payDate = "";
                     table.renderRow(data.LAY_TABLE_INDEX, rowData);
                 }
+                isEditRepayTable = true;
             }
             if(field=='mdate'){
                 
@@ -306,7 +314,8 @@
                         rowData.mdate  = data.oldMdate;
                         table.renderRow(data.LAY_TABLE_INDEX, rowData);
                     });
-        }
+                }
+                isEditRepayTable = true;
             }
         }
     });
@@ -316,6 +325,7 @@
      */
     table.bind('click', '.delt', function(data, index) {
         table.removeRow(data);
+        isEditRepayTable = true;
     });
     
     var getAllRows = function(){
@@ -359,9 +369,15 @@
         }else{
             if(iscallbackRepayByPay||flag){
                 initGenerationPlan(flag,iscallbackPay,callIntPlan); 
+            }else if(isEditRepayTable){
+                Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0098','还本计划'),function(){
+                    initGenerationPlan(flag,iscallbackPay,callIntPlan);
+                    isEditRepayTable = false;
+                });
             }else{
                 Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0047'),function(){
                     initGenerationPlan(flag,iscallbackPay,callIntPlan);
+                    isEditRepayTable = false;
                 });
             }
         }
@@ -680,9 +696,8 @@
      * 保存验证
      */
     function check() {
-        debugger;
         // 付息计划列表为空时
-        var list = getAllRows();debugger;
+        var list = getAllRows();
         if(!list || list.length == 0) {
             getElementById('btn_preview').trigger('click');
         }
@@ -777,7 +792,7 @@
                 msg = JoyinUtil.getMessage('COMMON_E_0057',"还本计划");
              }
              //还本计划条数增加或减少，应点击确定按钮
-             if(list && list.length > 0 && list.length !=previewParams.invRepayList.length ) {
+             if(list && list.length > 0 && previewParams.invRepayList && previewParams.invRepayList.length>0 && list.length !=previewParams.invRepayList.length ) {
                     msg = JoyinUtil.getMessage("还本计划已变更,请点击确认,重新计算应计利息!");
              }
             if(msg) {

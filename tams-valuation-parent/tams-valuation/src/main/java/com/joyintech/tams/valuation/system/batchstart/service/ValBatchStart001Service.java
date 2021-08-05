@@ -102,7 +102,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 	@Value("${spring.activemq.active:true}")
 	private Boolean isActivemqActive;
 
-	public Page<SysBatchTask> findAllTask(Map<String, Object> pageParam) throws Exception {
+	public Page<SysBatchTask> findAllTask(Map<String, Object> pageParam) {
 		return super.queryForPage(new ISelect() {
 
 			@Override
@@ -297,8 +297,10 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		if (doBatchDispatch) {
 			dates.add(start);
 		} else {
-			for (Date date = start; !date.after(end); date = DateUtil.addDay(date, 1)) {
-				dates.add(date);
+			if (start != null){
+				for (Date date = start; !date.after(end); date = DateUtil.addDay(date, 1)) {
+					dates.add(date);
+				}
 			}
 		}
 		for (Date exeDate : dates) {
@@ -483,7 +485,12 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 
 				if(MultilevelDataAuthorityUtil.isEnabled()){
 
-					List<String> listCodes = MultilevelDataAuthorityUtil.getChildrenOrgCode(MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
+//					List<String> listCodes = MultilevelDataAuthorityUtil.getSelfAndChildrenOrgCode(MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
+					List<String> listCodes = new ArrayList<>();
+					String  myinstCode = MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+					if(StringUtil.isNotEmpty(myinstCode)) {
+						listCodes.add(myinstCode);
+					}
 					param.put("instCodes",listCodes);
 
 				}

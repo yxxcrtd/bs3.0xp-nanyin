@@ -49,7 +49,7 @@ public class FinCreditProjectService extends BaseService<InterfCreditItemInfoDto
      * @since 1.0
      */
     public Page<InterfCreditItemInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> finCreditProjectMapper.queryForPage(pageParam));
     }
     

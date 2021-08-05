@@ -564,7 +564,11 @@
 	        FROM PTL_SEC_ACCT A
 	        INNER JOIN STL_SEC_ACCT_INFO B
 	            ON A.ACCT_NO = B.SEC_ACCT_ID
-	        <where>
+            <if test="finprodId !=null and finprodId !='' ">
+                LEFT JOIN FIN_PRODUCT FP
+                ON FP.FINPROD_ID =#{finprodId,jdbcType=VARCHAR}
+            </if>
+            <where>
 	            <if test="portfolioId !=null and portfolioId !='' ">
                     PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
                 </if>
@@ -587,7 +591,52 @@
                     AND TRADE_PLACE = #{tradeMarket, jdbcType=VARCHAR}
                 </if>
                 <!--根据交易场所筛选 add by lishuping  20190924 end-->
+                <if test="finprodId !=null and finprodId !='' ">
+                    AND FP.REGIST_ORG = B.REGIST_ORG
+                </if>
 	        </where>
+
+            UNION
+
+            SELECT distinct
+            A.ACCT_NO hidCode,
+            A.ACCT_NO code,
+            B.SEC_ACCT_NAME name,
+            B.SEC_ACCT_NAME shortName
+            FROM PTL_SEC_ACCT A
+            INNER JOIN STL_SEC_ACCT_INFO B
+            ON A.ACCT_NO = B.SEC_ACCT_ID
+            <if test="finprodId !=null and finprodId !='' ">
+                LEFT JOIN interf_payhsrcsecinfo FP
+                ON CONCAT('F01_',FP.SECID) =#{finprodId,jdbcType=VARCHAR}
+            </if>
+            <where>
+                <if test="portfolioId !=null and portfolioId !='' ">
+                    PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
+                </if>
+
+                <if test="search != null and search != ''">
+                    AND
+                    (
+                    A.ACCT_NO LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    OR
+                    B.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    )
+                </if>
+                <if test="initValue != null and initValue != ''">
+                    AND (A.ACCT_NO = #{initValue, jdbcType=VARCHAR} OR
+                    (PORTFOLIO_ID || A.ACCT_NO) = #{initValue, jdbcType=VARCHAR}
+                    )
+                </if>
+                <!--根据交易场所筛选 add by lishuping  20190924 start-->
+                <if test="tradeMarket !=null and tradeMarket !='' ">
+                    AND TRADE_PLACE = #{tradeMarket, jdbcType=VARCHAR}
+                </if>
+                <!--根据交易场所筛选 add by lishuping  20190924 end-->
+                <if test="finprodId !=null and finprodId !='' ">
+                    AND FP.INSTITUTION = B.REGIST_ORG
+                </if>
+            </where>
         </if>
          <if test="zhilingtype != null and zhilingtype == '02'">
            	SELECT
@@ -609,7 +658,7 @@
 	            </if>
 	       </where>
         </if>
-        
+
     </select>
 
     <select id="getChannelInfo" resultType="String">
@@ -1006,6 +1055,8 @@
         B.MDATE mdate,
         B.VDATE_UNADJUST vdateUnadjust,
         B.MDATE_UNADJUST mdateUnadjust,
+        B.VDATE_TERM vdateTerm,
+        B.MDATE_TERM mdateTerm,
         B.PRIN_AMT prinAmt,
         B.INT_AMT intAmt,
         B.IS_PAY_INT isPayInt
@@ -1235,7 +1286,7 @@
         from PTL_CASH_POSITION
         where
          (HODING_TYPE=#{POSITION_TYPE_01} or HODING_TYPE=#{POSITION_TYPE_03}) and PORTFOLIO_ID=#{portfolioId}
-         and CDATE=(select cur_date from sys_date) and CHL_FINPROD_ID=#{TongDao}
+         and CDATE= #{platDate,jdbcType=DATE} and CHL_FINPROD_ID=#{TongDao}
     </select>
 
     <select id="getTrdProductDealByFTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">

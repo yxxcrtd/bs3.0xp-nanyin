@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -314,7 +315,7 @@ public class SvrCprodBalanceFileImpService extends FileImpService{
 			}
 			// 任务结束，停止线程池的所有线程
 			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/CHB_CPROD_BALANCE/"), new String[] { "tmp" }, false);
+			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_CPROD_BALANCE/"), new String[] { "tmp" }, false);
 			List<String> content = new ArrayList<>(posList.size());
 			String result = "";
 			for (File f : files) {
@@ -381,7 +382,6 @@ public class SvrCprodBalanceFileImpService extends FileImpService{
 				rs = (String) parseResult.get("remoteDir");
 			} catch (FileNotFoundException e) {
 				logger.error(e.getMessage(),e);
-				e.printStackTrace();
 			}
 		}
 		

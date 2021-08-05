@@ -11,7 +11,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,14 +166,14 @@ public class PoiReportService {
 				if (StringUtils.isEmpty(configMap.get("picPathName"))) {
 					continue;
 				}
-				File echartsPicture = new File(configMap.get("picPathName").toString());
+				File echartsPicture = new SafelyFile(configMap.get("picPathName").toString());
 				int waitTimes = 10;
 				while (echartsPicture.exists() && echartsPicture.length() == 0 && 0 < waitTimes) {
 					try {
 						logger.debug("等待生成echarts图片1000毫秒");
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 					waitTimes--;
 				}
@@ -203,7 +205,7 @@ public class PoiReportService {
 		String tempSuffix = disPoiTab.getTempName().substring(disPoiTab.getTempName().lastIndexOf("."));
 		// 文件全路径名
 		String path = FileNameUtil.createUploadFilePath("");
-		File pathFile = new File(path);
+		File pathFile = new SafelyFile(path);
 		if(!pathFile.exists()) {
 			pathFile.mkdirs();
 		}
@@ -211,7 +213,7 @@ public class PoiReportService {
 				+ GlobalConstant.UNDER_LINE + DateUtil.format(new Date(), DateUtil.DATETIME_FORMAT_WITH_SSS_YEAR1) + tempSuffix;
 		// 生成文件
 		template.writeToFile(filename);
-		File report = new File(filename);
+		File report = new SafelyFile(filename);
 		return report;
 	}
 	
@@ -291,41 +293,50 @@ public class PoiReportService {
 			conn = jdbcTemplate.getDataSource().getConnection();
 			ps = conn.prepareStatement(sql);
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(),e1);
 		}
-		ResultSet rs;
+		ResultSet rs = null;
 		try {
-			rs = ps.executeQuery();
-			// 子表的一行数据
-			List<String> row = new ArrayList<>();
-			while (rs.next()) {
-				row = new ArrayList<>();
-				// 遍历获取每列数据
-				for (int i = 1; i < 50; i++) {
-					try {
-						// 遍历超越列数则异常，跳出for循环
-						row.add(rs.getString(i));
-					} catch (Exception e) {
-						break;
+			if(ps != null){
+				rs = ps.executeQuery();
+				// 子表的一行数据
+				List<String> row = new ArrayList<>();
+				while (rs.next()) {
+					row = new ArrayList<>();
+					// 遍历获取每列数据
+					for (int i = 1; i < 50; i++) {
+						try {
+							// 遍历超越列数则异常，跳出for循环
+							row.add(rs.getString(i)==null?"":rs.getString(i));
+						} catch (Exception e) {
+							break;
+						}
 					}
+					rows.add(row);
 				}
-				rows.add(row);
 			}
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(),e1);
 		} finally {
 			if(null != ps) {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if (null != conn) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if (null != rs) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -340,7 +351,7 @@ public class PoiReportService {
 	 */
 	private String replaceSqlParams(String sql, Map<String, Object> params) {
 		for (String key : params.keySet()) {
-			sql = sql.replaceAll("@" + key.trim(), "'" + params.get(key) + "'");
+			sql = sql.replaceAll(Pattern.quote("@" + key.trim()), "'" + params.get(key) + "'");
 		}
 		return sql;
 	}

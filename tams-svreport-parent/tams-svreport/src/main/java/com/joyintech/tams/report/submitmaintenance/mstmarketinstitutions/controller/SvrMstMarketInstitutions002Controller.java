@@ -134,7 +134,7 @@ public class SvrMstMarketInstitutions002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<SvrPaRskCustomerRatingDto> selectAllMstCaptialAccount()
-        throws Exception {
+         {
         Page<SvrPaRskCustomerRatingDto> page = paRskCustomerRatingMService.selectPaRskCustomerPage(RequestUtil.getPageParam());
         return page;
     }
@@ -166,7 +166,7 @@ public class SvrMstMarketInstitutions002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(SvrMstMarketInstitutionsDto dto) throws Exception{
+    public AjaxResult save(SvrMstMarketInstitutionsDto dto) {
     	String msg = this.getMessage("REPORT_COMMON_I_0006");
     	if(dto.getPaRskCustomerStr()!=null){
     		dto.setPaRskCustomer(JSON.parseArray(dto.getPaRskCustomerStr(), SvrPaRskCustomerRatingDto.class));
@@ -191,7 +191,7 @@ public class SvrMstMarketInstitutions002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getCity")
     public List<SelectOptionDto> getCity()
-        throws Exception {
+         {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",SystemDictCode.行政区划_省.getValue());
         param.put("item_code_child", param.get("province"));
@@ -209,7 +209,7 @@ public class SvrMstMarketInstitutions002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getCounties")
     public List<SelectOptionDto> getCounties()
-        throws Exception {
+         {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",SystemDictCode.行政区划_市.getValue());
         param.put("item_code_child", param.get("city"));

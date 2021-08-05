@@ -42,7 +42,7 @@ public class FinAssetRateAdjController {
     
     
     @PostMapping("getfinAssetRateAdjByProductId")
-    public List<RateAdjDto> getfinAssetRateAdjByProductId(@RequestBody Map<String, Object> param) throws Exception {
+    public List<RateAdjDto> getfinAssetRateAdjByProductId(@RequestBody Map<String, Object> param) {
         return finAssetRateAdjService.getfinAssetRateAdjByProductId(param);
     }
     
@@ -79,7 +79,7 @@ public class FinAssetRateAdjController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody RateAdjDto dto) throws Exception {
+    public void insert(@RequestBody RateAdjDto dto) {
         finAssetRateAdjService.insert(dto);
     }
     

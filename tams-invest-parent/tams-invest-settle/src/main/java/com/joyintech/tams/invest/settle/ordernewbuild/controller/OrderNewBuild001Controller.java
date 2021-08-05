@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.settle.ordernewbuild.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,7 +85,7 @@ public class OrderNewBuild001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("/revoke")
-	public AjaxResult delete(@RequestBody OrderNewBuild001Dto dto, BindingResult br) throws Exception {
+	public AjaxResult delete(@RequestBody OrderNewBuild001Dto dto, BindingResult br) throws WorkFlowException {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}
@@ -154,7 +155,7 @@ public class OrderNewBuild001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() {
 		return orderNewBuild001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
 	}
 }

@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,6 +53,7 @@ import com.joyintech.service.riskrdsinf.tool.service.RefreshCacheService;
  * @see InfBaseController
  * @since 1.0
  */
+@Component
 @RestController
 @RequestMapping("/interf")
 public class InfBaseController {
@@ -68,8 +71,8 @@ public class InfBaseController {
     protected static final String PROXY_CLIENT_IP = "Proxy-Client-IP";
 
     protected static final String WL_PROXY_CLIENT_IP = "WL-Proxy-Client-IP";
-
-    protected static final String LOCALHOST = "127.0.0.1";
+    @Value("${infBaseController.localhost}")
+    protected String LOCALHOST;
 
     /**
      * 日志

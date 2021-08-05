@@ -641,6 +641,13 @@
 			<!--add by qmh 角色岗位控制权限  end-->
 		</where>)
 		ORDER BY tradeDate DESC
+		)T
+		WHERE 1=1
+		AND NOT EXISTS (
+			SELECT WTPDP.TRADE_ID
+			FROM WFL_TRD_PRODUCT_DEAL_PRE WTPDP
+			WHERE
+			(WTPDP.TRADE_ID = T.TRADEID OR WTPDP.TOTLE_TRADE_ID = T.TRADEID)
 		)
 	</select>
 	<!-- 有效查询 -->
@@ -953,7 +960,14 @@
 			<!--add by qmh 角色岗位控制权限  end-->
 		</where>)
 		ORDER BY tradeDate DESC
-		)		
+		)T
+		WHERE 1=1
+		AND NOT EXISTS (
+			SELECT TPDP.TRADE_ID
+			FROM TRD_PRODUCT_DEAL_PRE TPDP
+			WHERE
+			(TPDP.TRADE_ID = T.TRADEID OR TPDP.TOTLE_TRADE_ID = T.TRADEID)
+		)
 	</select>
 	<!-- 撤销的查询 -->
 	<select id="cancelSelectForPage" resultType="com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQuery001Dto">
@@ -1254,7 +1268,20 @@
 			<!--add by qmh 角色岗位控制权限  end-->
 		</where>
 		)
-		ORDER BY tradeDate DESC)		
+		ORDER BY tradeDate DESC)T
+		WHERE 1=1
+		AND NOT EXISTS (
+		SELECT WTPDP.TRADE_ID
+		FROM WFL_TRD_PRODUCT_DEAL_PRE WTPDP
+		WHERE
+		(WTPDP.TRADE_ID = T.TRADEID OR WTPDP.TOTLE_TRADE_ID = T.TRADEID)
+		)
+		AND NOT EXISTS (
+		SELECT TPDP.TRADE_ID
+		FROM TRD_PRODUCT_DEAL_PRE TPDP
+		WHERE
+		(TPDP.TRADE_ID = T.TRADEID OR TPDP.TOTLE_TRADE_ID = T.TRADEID)
+		)
 	</select>
 	<!-- 无有效状态时的查询 -->
 	<select id="allSelectForPage" resultType="com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQuery001Dto">
@@ -2163,8 +2190,20 @@
 			<!--add by qmh 角色岗位控制权限  end-->
 		</where>
 		)
-		
-		ORDER BY tradeDate DESC)
+		ORDER BY tradeDate DESC)T
+		WHERE 1=1
+		AND NOT EXISTS (
+			SELECT WTPDP.TRADE_ID
+			FROM WFL_TRD_PRODUCT_DEAL_PRE WTPDP
+			WHERE
+			(WTPDP.TRADE_ID = T.TRADEID OR WTPDP.TOTLE_TRADE_ID = T.TRADEID)
+		)
+		AND NOT EXISTS (
+			SELECT TPDP.TRADE_ID
+			FROM TRD_PRODUCT_DEAL_PRE TPDP
+			WHERE
+			(TPDP.TRADE_ID = T.TRADEID OR TPDP.TOTLE_TRADE_ID = T.TRADEID)
+		)
 	</select>
 	<!-- 委托代码模糊查询 -->
 	<select id="getEntrustId" resultType="com.joyintech.framework.select.SuggestDto">

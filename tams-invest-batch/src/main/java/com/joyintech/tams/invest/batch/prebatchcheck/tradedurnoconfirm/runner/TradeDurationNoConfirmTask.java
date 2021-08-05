@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName TradeDurationNoConfirmTask.java
+ * @Description 批前检查 交易/存续期 未确认
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.batch.prebatchcheck.tradedurnoconfirm.runner;
 
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
@@ -38,6 +45,13 @@ public class TradeDurationNoConfirmTask extends BatchBaseService {
     @Autowired
     private TradeDurationNoConfirmService tradeDurationNoConfirmService;
 
+    /**
+     * @title 执行
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 11:03 
+     * @throws 
+     */
     @Override
     public JobExecution execute() throws BatchException {
         JobExecution result = new JobExecution(1l);
@@ -84,6 +98,7 @@ public class TradeDurationNoConfirmTask extends BatchBaseService {
             return result;
         }
 
+        // 手动开始执行
         String instCode = batchExecuteDetail.getOtherParam4();
 
         SysPrebatchResultDto paramdto = new SysPrebatchResultDto();
@@ -109,9 +124,12 @@ public class TradeDurationNoConfirmTask extends BatchBaseService {
 
         // 更新 最终处理状态
         dto.setStartTime(null);
+        // 设置 结束时间
         dto.setEndTime(new Date());
+        // 更新结果
         prebatchCheckCommonService.updateSysPrebatchResult(dto);
 
+        // 返回结果
         return result;
     }
 

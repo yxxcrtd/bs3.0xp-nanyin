@@ -24,6 +24,16 @@
      * 是否还本计划生成计划回调付息计划
      */
     var iscallbackPayByRepay = false;
+    /**
+     * 是否修改 付息信息
+     * @type {boolean}
+     */
+    var isEditPayByRepay = false;
+    /**
+     * 是否 点击确认
+     * @type {boolean}
+     */
+    var isClickSure = false;
     var generationPlanTable = [];
     var getElementById = function(id,type) {
         if(type=="div"){
@@ -468,6 +478,8 @@
             var _row = generationPlanTable.getRow(0);
             row.maxTradeDate = _row ? _row.maxTradeDate : '';
             row.updateFlg = '01';
+            isEditPayByRepay = true;
+            isClickSure = true;
         },
         beforeEditCell:function(preVal, field, rowData){
             if(rowData.updateFlg=='02'){
@@ -517,6 +529,8 @@
         editCell: function(value, data, field, cell, column){
         	if(value&&column.editOption.type=='date') {
         	    data[field] = value;//lijun modify 修改入库带时分数据
+                isEditPayByRepay = true;
+                isClickSure = true;
         	}
             if(new Date(value).DateDiff('d',data.maxTradeDate)>0){
                 var rowData = {};
@@ -537,8 +551,12 @@
             if(field == "mdate"){
                 var oldData = generationPlanTable.getRow(data.LAY_TABLE_INDEX+1);
                 oldData.vdate = value;
-                generationPlanTable.renderRow(data.LAY_TABLE_INDEX+1,oldData);   
-                generationPlan(true);
+                generationPlanTable.renderRow(data.LAY_TABLE_INDEX+1,oldData);
+                if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F07){
+                      generationPlan(true);
+                }
+                isEditPayByRepay = true;
+                isClickSure = true;
             }
             if(field == "vdate"){
                 if(data.LAY_TABLE_INDEX-1<0){
@@ -546,12 +564,14 @@
                 }else{
                     var oldData = generationPlanTable.getRow(data.LAY_TABLE_INDEX-1);
                     oldData.mdate = value;
-                    generationPlanTable.renderRow(data.LAY_TABLE_INDEX-1,oldData);  
-                    generationPlan(true);
+                    generationPlanTable.renderRow(data.LAY_TABLE_INDEX-1,oldData);
+                    if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F07){
+                         generationPlan(true);
+                    }
+                    isEditPayByRepay = true;
+                    isClickSure = true;
                 }
-                  
             }
-            
         },
         done:function (tables, allData) {
             var obj = $('#generationPlanTable_div').find("td[data-field='operation']");
@@ -614,7 +634,6 @@
      * 明细查看
      */
     generationPlanTable.bind('click', '.config', function(data, index) {
-        //debugger;
         if(data.vdate==''|| data.vdate==null ||typeof data.vdate == 'undefined'||
                 data.mdate==''|| data.mdate==null ||typeof data.mdate == 'undefined'){
             Joyin.error('无法查看！');
@@ -664,6 +683,8 @@
         }
         generationPlanTable.removeRow(data);
         generationPlan(true);
+        isEditPayByRepay = true;
+        isClickSure = true;
     });
 
     /**
@@ -894,15 +915,24 @@
             }else{
                 if(iscallback||flag){
                     initGenerationPlan(flag,callFinRepayment);
+                }else if(isEditPayByRepay){
+                    Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0098','付息计划'),function(){
+                        //callFinRepayment 调用还本计划公开接口方法
+                        initGenerationPlan(flag,callFinRepayment);
+                        isEditPayByRepay = false;
+                        isClickSure = false;
+                    });
                 }else{
                     Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0047'),function(){
                         //callFinRepayment 调用还本计划公开接口方法
                         initGenerationPlan(flag,callFinRepayment);
+                        isEditPayByRepay = false;
+                        isClickSure = false;
                     }); 
                 }
             }
         }
-        iscallbackPayByRepay = false; 
+        iscallbackPayByRepay = false;
     }
     /**
      * 生成计划前台check(js)
@@ -1176,7 +1206,7 @@
             }
             else {
                 //付息计划条数增加或减少，应点击确定按钮
-                if(list && list.length > 0 && list.length !=previewParams.invScheduleList.length ) {
+                if(list && list.length > 0 && previewParams.invScheduleList && previewParams.invScheduleList.length>0 && list.length !=previewParams.invScheduleList.length ) {
                       msg = JoyinUtil.getMessage("付息计划已变更,请点击确认!");
                 }
 
@@ -1187,7 +1217,31 @@
              }
             return true;
         }
+    /**
+     * 维护付息计划后，是否点击确认
+     * 可以通过支付日是否为空判断是否重新计算利息
+     * 添加标志 isClickSure 当修改付息计划时为true,点击确认后为false
+     */
+    var isSureCheck = function(){
+        var list = getAllRows();var msg;
 
+        if(!list || list.length == 0) {
+            msg = JoyinUtil.getMessage('COMMON_E_0057',"付息计划");
+        }
+
+        if(list){
+            $.each(list,function(index,obj){
+                if (obj.payDate == null || obj.payDate == '' || typeof obj.payDate == 'undefined' || isClickSure) {
+                    msg = JoyinUtil.getMessage("付息计划已变更,请点击确认,重新计算应计利息!");
+                }
+            })
+        }
+        if(msg) {
+            Joyin.error(msg);
+            return false;
+        }
+        return true;
+    }
 
     /**
      * 确认按钮check(js)
@@ -1195,7 +1249,6 @@
     var comfirmCheck = function(){
         var listSortBefore = getAllRows(),msg;
         var breakflag = true;
-        debugger;
         if(listSortBefore){
             $.each(listSortBefore,function(index,obj){
                 //支付日是否为空 判断该数据是新增还是原始数据
@@ -1298,7 +1351,7 @@
         list.sort(function(a,b){
             return -(new Date(a.vdate).DateDiff('d',b.vdate));
         })
-        generationPlanTable.reload({data:list, url:null})
+        generationPlanTable.reload({data:list, url:null});
     }
 
     function checkObjectDiff(currentDealObj, backupDealObj) {
@@ -1315,6 +1368,17 @@
             }
         }
         else if (currentDealObj != backupDealObj) {
+            // add by jiangpeng on 20210708 start
+            // TISHKBS-2450 mdate vdate 传值为number格式,表格reload后,转为string格式,导致判断不相等 此处转化为日期格式对比
+            if(typeof currentDealObj !== typeof backupDealObj){
+                var currentDealObjDate = new Date(currentDealObj);
+                var backupDealObjDate = new Date(backupDealObj);
+                var dsadf = new Date('dsadf');
+                if (currentDealObjDate.DateDiff('d', backupDealObjDate) === 0) {
+                    return false;
+                }
+            }
+            // add by jiangpeng on 20210708 end
             return true;
         }
         return result;
@@ -1343,6 +1407,7 @@
     // 公开接口
     window.FinPayInterestStdInfo = {
         comfirmCheck: comfirmCheck,
+        isSureCheck: isSureCheck,
         getAllRows:getAllRows,
         check:check,
         generationPlan:generationPlan,
@@ -1397,7 +1462,6 @@
         //生成计划按钮
         getElementById("btn_generationPlan").click(function(){
             // modify by  20200903
-            generationPlanTable.clear();
 
             if(generationPlanCheck()){
                 Joyin.ajaxJson('/component/asset/FinPayInterestStdInfo/check', getPreviewParams(), function(result) {
@@ -1417,11 +1481,13 @@
                         Joyin.ajaxJson('/component/asset/BussFinRepayment/check', getPreviewParams(), function(result) {
                             Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0013'),function(){
                                 generationPlan(true);
+                                isClickSure = false;
                             });
                         });
                     }else{
                         Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0013'),function(){
                             generationPlan(true);
+                            isClickSure = false;
                         });
                     }
                 });

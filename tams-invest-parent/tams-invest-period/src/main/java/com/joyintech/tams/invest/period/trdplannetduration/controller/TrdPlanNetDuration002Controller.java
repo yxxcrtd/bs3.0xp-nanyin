@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.period.trdplannetduration.dto.TrdPlanNetDuratio
 import com.joyintech.tams.invest.period.trdplannetduration.service.TrdPlanNetDuration001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,11 @@ public class TrdPlanNetDuration002Controller extends BaseController {
         // 获取业务类型
         String type = (String)param.get("type");
         String workflowId = (String)param.get(GlobalConstant.WORKFLOW_ID);
+
+        //用于判断是否来自来账分拣
+        String isFromCheck = (String)param.get("isFromCheck");
+        model.addAttribute("isFromCheck",isFromCheck);
+
         // 交易人
         String trader = SecurityUtil.getLoginUser().getUserName();
         setSelectOptionToModel(model, DictCode.分红方式, DictCode.是否, DictCode.平安划款类型, DictCode.币种, DictCode.是否);
@@ -212,8 +218,7 @@ public class TrdPlanNetDuration002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdPlanNetDuration001Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdPlanNetDuration001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -504,12 +504,12 @@ public class ESBInterfaceUtil {
 		return DateUtil.format(new Date(),sTimeFormat6);
 	}
 
-	public static void main(String[] args) {
-		Map<String, String> map = new HashMap<String, String>();
-		Connection conn = null;
-		CompositeData bodyData = new CompositeData();
-		CompositeData reqData = ESBInterfaceUtil
-				.createEsbReqData(map, bodyData);
-		System.out.println("aaa=" + PackUtil.packXmlStr(reqData));
-	}
+//	public static void main(String[] args) {
+//		Map<String, String> map = new HashMap<String, String>();
+//		Connection conn = null;
+//		CompositeData bodyData = new CompositeData();
+//		CompositeData reqData = ESBInterfaceUtil
+//				.createEsbReqData(map, bodyData);
+//		System.out.println("aaa=" + PackUtil.packXmlStr(reqData));
+//	}
 }

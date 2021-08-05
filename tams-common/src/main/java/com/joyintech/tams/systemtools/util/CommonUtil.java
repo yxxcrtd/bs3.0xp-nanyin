@@ -25,6 +25,7 @@ import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -51,6 +52,7 @@ import com.joyintech.tams.systemtools.listener.TamsAuthorizationListener;
 import com.joyintech.tams.systemtools.service.SystemToolService;
 import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 
+@Lazy(false)
 @Component
 public class CommonUtil {
 	
@@ -216,17 +218,19 @@ public class CommonUtil {
 	 * @see
 	 * @since 1.0
 	 */
-	public static String getUserBankCode() {
-		User userInfo = SecurityUtil.getLoginUser();
-		// if(userInfo.isAdmin()){
-		// return null;
-		// }
-		if (StringUtil.isEmpty(userInfo.getOrgCode())) {
-			return null;
+	public static String getUserBankCode(String orgCode) {
+		if(StringUtil.isBlank(orgCode)){
+			User userInfo = SecurityUtil.getLoginUser();
+			if (StringUtil.isEmpty(userInfo.getOrgCode())) {
+				return null;
+			}
+			orgCode = userInfo.getOrgCode();
 		}
-		String bankCode = baseMapper.selectBankCode(userInfo.getOrgCode());
+		String bankCode = baseMapper.selectBankCode(orgCode);
 		return bankCode;
 	}
+
+
 
 
 
@@ -559,7 +563,7 @@ public class CommonUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		return false;

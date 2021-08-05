@@ -141,7 +141,7 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
      * @throws Exception 异常信息
      */
     public Page<FinPlanNetAssetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         pageParam.put("PROFIT_TYPE_01", DictCodeList.收益类型_净值型.getValue());
         if(StringUtil.isNotEmpty(pageParam.get("category"))){
@@ -255,6 +255,7 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
         CreditLines creditLines = new CreditLines();
         creditLines.setCustomerId(dto.getFinprodId());
         assetCommonService.deleteCredit(creditLines);
+        repAssetOtherMapper.deleteByPrimaryKey(dto.getFinprodId());
       //删除委外组合 add wangpeng 2019.07.23
         if(StringUtil.isNotEmpty(dto.getFinprodMarketId())){
         	 ptlPortfolioMapper.deleteByPrimaryKey(dto.getFinprodMarketId());

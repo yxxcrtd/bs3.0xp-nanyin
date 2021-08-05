@@ -55,7 +55,7 @@ public class MstSecuritiesAccountController {
     @PostMapping("findPage/{page}/{length}")
     public Page<MstSecuritiesAccountDto> selectAll(@RequestBody Map<String, Object> param,
         @PathVariable("page")int page,@PathVariable("length")int length)
-        throws Exception {
+    {
         return mstSecuritiesAccountService.selectForPage(page,length,param);
     }
     
@@ -69,7 +69,7 @@ public class MstSecuritiesAccountController {
          */
     @GetMapping("selectBySecAcctId")
         public StlSecAcctInfo selectBySecAcctId(String secAcctId)
-            throws Exception {
+        {
             return mstSecuritiesAccountService.selectBySecAcctId(secAcctId);
         }
 
@@ -83,7 +83,7 @@ public class MstSecuritiesAccountController {
      */
     @GetMapping("getSecAcctId")
     public List<SuggestDto> getSecAcctId(String secAcctId)
-        throws Exception {
+    {
         List<SuggestDto> temp = mstSecuritiesAccountService.getSecAcctId(secAcctId);
         return temp;
     }
@@ -109,7 +109,7 @@ public class MstSecuritiesAccountController {
      */
     @GetMapping("getBusiAcctNo")
     public List<SelectOptionDto> getBusiAcctNo(String busiAcctNo)
-        throws Exception {
+    {
         List<SelectOptionDto> temp = mstSecuritiesAccountService.getBusiAcctNo(busiAcctNo);
         return temp;
     }
@@ -127,7 +127,8 @@ public class MstSecuritiesAccountController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody StlSecAcctInfo dto) throws Exception {
+    public int delete(@RequestBody StlSecAcctInfo dto)
+    {
         return mstSecuritiesAccountService.delete(dto);
     }
     /**
@@ -144,7 +145,8 @@ public class MstSecuritiesAccountController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody MstSecuritiesAccountDto dto) throws Exception {
+    public int insert(@RequestBody MstSecuritiesAccountDto dto)
+    {
         return mstSecuritiesAccountService.insert(dto);
     }
     /**
@@ -161,7 +163,8 @@ public class MstSecuritiesAccountController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody MstSecuritiesAccountDto dto) throws Exception {
+    public int update(@RequestBody MstSecuritiesAccountDto dto)
+    {
         return mstSecuritiesAccountService.update(dto);
     }
     /**
@@ -175,7 +178,7 @@ public class MstSecuritiesAccountController {
      */
     @PostMapping("checkBySecAcctId")
     public int checkBySecAcctId(@RequestBody MstSecuritiesAccountDto dto)
-        throws Exception {
+    {
         int count = mstSecuritiesAccountService.checkBySecAcctId(dto);
         return count;
     }
@@ -190,7 +193,7 @@ public class MstSecuritiesAccountController {
      */
     @PostMapping("checkBySecAcctName")
     public int checkBySecAcctName(@RequestBody MstSecuritiesAccountDto dto)
-        throws Exception {
+    {
         int count = mstSecuritiesAccountService.checkBySecAcctName(dto);
         return count;
     }
@@ -205,7 +208,7 @@ public class MstSecuritiesAccountController {
      */
     @PostMapping("checkByTrdAcctId")
     public int checkByTrdAcctId(@RequestBody MstSecuritiesAccountDto dto)
-        throws Exception {
+    {
         int count = mstSecuritiesAccountService.checkByTrdAcctId(dto);
         return count;
     }
@@ -220,7 +223,7 @@ public class MstSecuritiesAccountController {
      */
     @PostMapping("checkCodeIsUse")
     public int checkCodeIsUse(@RequestBody MstSecuritiesAccountDto dto)
-        throws Exception {
+    {
         int count = mstSecuritiesAccountService.checkCodeIsUse(dto);
         return count;
     }
@@ -235,7 +238,7 @@ public class MstSecuritiesAccountController {
      */
     @PostMapping("checkAllCodeIsUse")
     public List<MstSecuritiesAccountDto> checkAllCodeIsUse(@RequestBody List<MstSecuritiesAccountDto> item)
-        throws Exception {
+    {
         return mstSecuritiesAccountService.checkAllCodeIsUse(item);
     }
 //        /**

@@ -1,7 +1,6 @@
 package com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
@@ -21,6 +20,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.assetstransfer.dto.AssetsTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.dto.FinDealPledgeDto;
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.dto.TrdRolloverPledgedRepo001Dto;
@@ -30,6 +30,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +70,9 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
      */
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     @Override
     public String init(Model model){
         Map<String ,Object> param = RequestUtil.getPageParam();
@@ -185,7 +190,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         else{
             List<FinDealPledgeDto> fdpdlist = new ArrayList<>();
             if(StringUtil.isNotEmpty(param.get("pledgedRepoRolloverList"))){
-                fdpdlist = JsonUtils.json2List(JsonUtil.objToString(param.get("pledgedRepoRolloverList")),FinDealPledgeDto.class);
+                fdpdlist = JsonUtils.json2List(JsonUtils.object2Json(param.get("pledgedRepoRolloverList")),FinDealPledgeDto.class);
                 if(StringUtil.isNotEmpty(ps) && ps.equals(DictCodeList.回购拆借方向_正回购.getValue())){
                     if(sumRolloverPrinAmt.compareTo(BigDecimal.valueOf(0))==0){
                         errorList.add(new ValidMessage("【转仓交易汇总券面总额】不能为0"));
@@ -228,7 +233,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
             if(StringUtil.isNotEmpty(param.get("ps")) && StringUtil.equals(param.get("ps"),DictCodeList.回购拆借方向_逆回购.getValue())){
                 BussTrdAvailableCashQuery bs = new BussTrdAvailableCashQuery();
                 if(StringUtil.isNotEmpty(param.get("bussTrdAvailableCashQuery"))){
-                    bs = JsonUtils.json2Object(JsonUtil.objToString(param.get("bussTrdAvailableCashQuery")),BussTrdAvailableCashQuery.class);
+                    bs = JsonUtils.json2Object(JsonUtils.object2Json(param.get("bussTrdAvailableCashQuery")),BussTrdAvailableCashQuery.class);
                 }
                 //转仓交易金额不能大于组合剩余本金
                 if(StringUtil.isNotEmpty(rolloverTradeAmt)&&StringUtil.isNotEmpty(bs)&&StringUtil.isNotEmpty(bs.getAvalibleCash())){
@@ -358,6 +363,19 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
 //                }
             }
         }
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<>();
+            for (TrdRolloverPledgedRepo001Dto ptl : dto.getPledgedRepoInfoList()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    errorList.add(new ValidMessage("交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！"));
+                }
+            }
+        }
         if(errorList.size()>0){
             result.setErrorList(errorList);
             return result;
@@ -380,8 +398,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdRolloverPledgedRepo001Dto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdRolloverPledgedRepo001Dto dto) throws WorkFlowException {
         for (TrdRolloverPledgedRepo001Dto listDto:dto.getPledgedRepoInfoList()) {
             if(StringUtil.isBlank(listDto.getTradeId())) {
                 if (baseGetBusinessId != null) {

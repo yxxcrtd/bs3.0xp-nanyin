@@ -15,6 +15,11 @@ import com.joyintech.tams.invest.batch.prebatchcheck.common.service.PrebatchChec
 import com.joyintech.tams.invest.batch.prebatchcheck.processsettleorder.dao.ProcessSettleOrderMapper;
 import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail;
 
+/**
+ * 批前检查-流程中清算指令service
+ * @author yantianyuan
+ * 创建日期：2021-05-13
+ */
 @Service
 public class ProcessSettleOrderService {
 	
@@ -24,16 +29,23 @@ public class ProcessSettleOrderService {
     @Autowired
     private ProcessSettleOrderMapper processSettleOrderMapper;
     
+    /**
+     * 执行方法
+     * @param batchExecuteInfo
+     * @param dto
+     * @param instCode
+     */
     public void execute(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, String instCode){
         Map<String,Object> param = new HashMap<>();
         if(StringUtil.isNotEmpty(instCode)){
-            // 固定key 勿修改
+            //设置机构代码，多级法人模式下框架会根据该字段进行数据隔离
             param.put("PRE_INST_CODE",instCode);
         }
-
+        //设置检查日期
         param.put("checkDate",dto.getCheckDate());
-
+        //调用mapper，执行检查
         List<SysPrebatchResultDetail> details = processSettleOrderMapper.selectProcessSettleOrderList(param);
+        //错误信息设置批信息
         if(!StringUtil.isEmptyList(details)){
             details.forEach(item -> setResultDetail(batchExecuteInfo,dto,item));
         }

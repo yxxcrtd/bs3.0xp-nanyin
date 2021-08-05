@@ -74,7 +74,7 @@ public class InterfCotroller {
             step++ ;
             rspData = this.doDispatcher(reqData, uuid);
             if (rspData == null) {
-                throw new NullPointerException("响应数据为空");
+                throw new IllegalArgumentException("响应数据为空");
             }
 
             // 4、组包

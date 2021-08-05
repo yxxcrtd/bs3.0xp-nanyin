@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +56,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class FinNetValueProductBuild003Service extends BaseService<FinNetValueProductBuild003Dto> implements BaseProcessService<FinNetValueProductBuild003Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinNetValueProductBuild003Service.class);
 
     /**
      * 业务流程表service
@@ -126,7 +132,7 @@ public class FinNetValueProductBuild003Service extends BaseService<FinNetValuePr
              workflowService.updateTitle(map);
           }
           catch (Exception e) {
-              e.printStackTrace();
+              logger.error(e.getMessage(),e);
           }
 //        ProcessMark newEntity;
 //        try {
@@ -140,7 +146,6 @@ public class FinNetValueProductBuild003Service extends BaseService<FinNetValuePr
 //            WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
 //        }
 //        catch (Exception e) {
-//            e.printStackTrace();
 //        }
 //        if (StringUtil.equals(entity.getOperateType(), "submit")) {
 //           Map<String, Object> map = Maps.newConcurrentMap();
@@ -156,6 +161,7 @@ public class FinNetValueProductBuild003Service extends BaseService<FinNetValuePr
 //           restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME
 //                  + "/FinProductBuild/updateWflTitleByWorkflowId", map, Integer.class);
 //        }   
-        System.out.println("方法完成");
+//        System.out.println("方法完成");
+        logger.info("方法完成");
     } 
 }

@@ -16,6 +16,7 @@ import java.util.Map;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,7 +125,7 @@ public class FinPlanAssetC002Controller extends BaseController{
             dto.setVdate(iPlatformDate!=null?iPlatformDate.getSysDate():DateUtil.now());
 //            dto.setMdate(iPlatformDate!=null?iPlatformDate.getSysDate():DateUtil.now());
             dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
-            dto.setInvestmentAttributes(DictCodeList.投资性质_固定收益类.getValue());
+//            dto.setInvestmentAttributes(DictCodeList.投资性质_固定收益类.getValue());//modify by jiangpeng on 20210522 TISHKBS-1373
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
             dto.setFjId("fj" + System.currentTimeMillis());
             model.addAttribute("workflowId", workflowId);
@@ -226,8 +227,7 @@ public class FinPlanAssetC002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) FinPlanAssetCDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) FinPlanAssetCDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

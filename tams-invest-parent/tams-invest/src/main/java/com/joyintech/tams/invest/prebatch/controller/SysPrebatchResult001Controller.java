@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName SysPrebatchResult001Controller.java
+ * @Description 批前检查001 页面对应
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.prebatch.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -55,6 +62,13 @@ public class SysPrebatchResult001Controller extends BaseController {
     }
 
 
+    /**
+     * @title 点击启动
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 11:07 
+     * @throws 
+     */
     @RequestMapping(value = "executePreBatch")
     @ResponseBody
     public AjaxResult executePreBatch() {

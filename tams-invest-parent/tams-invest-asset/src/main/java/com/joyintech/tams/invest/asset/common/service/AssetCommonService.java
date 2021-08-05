@@ -775,8 +775,8 @@ public class AssetCommonService extends BaseService{
         repAssetAstBill.setRepVdate(finProduct.getVdate());
         //到期日
         repAssetAstBill.setRepMdate(finProduct.getMdate());
-        //金额
-        repAssetAstBill.setRepAmtSum(finProduct.getIssueAmt());         
+//        // 金额
+//        repAssetAstBill.setRepAmtSum(finProduct.getIssueAmt());         
         repAssetAstBillList.add(repAssetAstBill);
         repFinprodIdList.add(finProduct.getFinprodId());
         baseRepAssetAstBillInfoDto.setRepAssetAstBillList(repAssetAstBillList);
@@ -1278,7 +1278,7 @@ public class AssetCommonService extends BaseService{
 		mstCounterParty=mstCounterPartyMapper.selectPType(counterId);
         if(null!=mstCounterParty && StringUtil.isNotEmpty(mstCounterParty.getCounterName())){
         	//判断交易对手表中是否存在
-			int flag=trdFinProductDealTotalMapper.selectCounterName(mstCounterParty.getCounterName().toString());
+			int flag=trdFinProductDealTotalMapper.selectCounterName(mstCounterParty.getCounterName());
 			if(flag == 0){
 				//根据管理人，查询机构基本性质
 				BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();

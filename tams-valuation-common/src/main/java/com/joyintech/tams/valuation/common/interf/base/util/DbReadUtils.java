@@ -93,15 +93,18 @@ public class DbReadUtils {
     	String cdatestr = new SimpleDateFormat("yyyyMMdd").format(acctEntity.getResovleDate());
     	List list = hqTemplateCommonService.queryData(acctEntity.getTmpEName(),cdatestr);
     	if(list==null || list.size()==0){
-    		System.out.println(acctEntity.getTmpEName()+":今日临时表中未有最新数据...");
+//    		System.out.println(acctEntity.getTmpEName()+":今日临时表中未有最新数据...");
+    		logger.info(acctEntity.getTmpEName()+":今日临时表中未有最新数据...");
 			return null;
 		}
     	Class<?> obj_clazz = hqTemplateCommonService.getDBEntityClass(acctEntity.getTmpEName());
 		if(obj_clazz==null){
-			System.out.println("实体类"+acctEntity.getTmpEName()+"不存在或路径映射错误...");
+//			System.out.println("实体类"+acctEntity.getTmpEName()+"不存在或路径映射错误...");
+			logger.info("实体类"+acctEntity.getTmpEName()+"不存在或路径映射错误...");
 			return null;
 		}
-    	System.out.println(acctEntity.getTmpEName()+"-本次同步数据："+list.size());
+//    	System.out.println(acctEntity.getTmpEName()+"-本次同步数据："+list.size());
+		logger.info(acctEntity.getTmpEName()+"-本次同步数据："+list.size());
     	for(int i = 0;i< list.size();i++){
     		Object obj = list.get(i);
     		

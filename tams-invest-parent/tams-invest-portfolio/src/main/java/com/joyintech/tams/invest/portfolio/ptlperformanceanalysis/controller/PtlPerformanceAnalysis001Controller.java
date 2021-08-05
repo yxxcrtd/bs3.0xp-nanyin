@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,6 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.dto.PtlPerformanceAnalysis001Dto;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.dto.PtlPerformanceLineDto;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.service.PtlPerformanceAnalysis001Service;
-import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis001Dto;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.service.PtlPositionAnalysis001Service;
 
 @Controller
@@ -108,12 +108,10 @@ public class PtlPerformanceAnalysis001Controller extends BaseController  {
     /**
      * 组合持仓明细查询
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlPerformanceAnalysis001Dto> selectAll()
-            throws Exception {
+    public Page<PtlPerformanceAnalysis001Dto> selectAll(){
         
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<PtlPerformanceAnalysis001Dto> list = ptlPerformanceAnalysis001Service.selectForPage(map);
@@ -125,19 +123,17 @@ public class PtlPerformanceAnalysis001Controller extends BaseController  {
     /**
      * 组合持仓明细查询
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findLineData")
-    public PtlPerformanceLineDto findLineData()
-            throws Exception {
+    public PtlPerformanceLineDto findLineData(){
         Map<String,Object> map = RequestUtil.getParameters(super.getRequest());
     	return ptlPerformanceAnalysis001Service.findLineData(map);
 
     }
     
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> exportNew() throws Exception{
+    public ResponseEntity<byte[]> exportNew() {
         return ptlPerformanceAnalysis001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -145,21 +141,18 @@ public class PtlPerformanceAnalysis001Controller extends BaseController  {
     /**
      * 获取动态列结果
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("getTableCols")
-    public String getTableCols()
-            throws Exception {
+    public String getTableCols(){
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
-      return ptlPerformanceAnalysis001Service.getDataTableCols(map);
+      return StringUtil.trimHtmlTag(ptlPerformanceAnalysis001Service.getDataTableCols(map));
     }
     
     @ResponseBody
     @RequestMapping("getShowDataTableCols")
-    public String getShowDataTableCols()
-            throws Exception {
+    public String getShowDataTableCols(){
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
-      return ptlPerformanceAnalysis001Service.getShowDataTableCols(map);
+      return StringUtil.trimHtmlTag(ptlPerformanceAnalysis001Service.getShowDataTableCols(map));
     } 
 }
