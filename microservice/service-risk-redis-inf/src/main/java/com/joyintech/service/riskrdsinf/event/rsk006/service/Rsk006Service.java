@@ -11,10 +11,9 @@
 package com.joyintech.service.riskrdsinf.event.rsk006.service;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
@@ -109,6 +107,8 @@ public class Rsk006Service extends EventBaseService<Rsk006InEntity> {
             if (isCalcAmount()) {
             	calcAmount(item, ()->getUnitPrice((String) item.get(ASSETCODE)));
             }
+            // 金额*上调系数
+            factor(item);
             item.put(InfColumns.COM_SYSDATE.fieldName(),
                 bodyMap.get(InfColumns.COM_SYSDATE.fieldName()));
             item.put(EVENT_TYPE, "3");
@@ -131,11 +131,9 @@ public class Rsk006Service extends EventBaseService<Rsk006InEntity> {
             String assetCode = (String)item.get(ASSETCODE);
             assetCode = StringUtil.isEmpty(assetCode) ? "ALL" : assetCode;
         	String astCode = assetCode;
-            threadPoolTaskExecutor.execute(new Runnable() {
-
-                @Override
-                public void run() {
+            threadPoolTaskExecutor.execute(() -> {
                     try {
+                        setServiceInfo(getInfId() + "_PROD", prodInfo);
                         calc(item, rsp);
                         List<Map<String,Object>> rskList = (List<Map<String, Object>>) rsp.getBodyField(RSK_LIST);
                         if (!StringUtil.isEmptyList(rskList)) {
@@ -150,12 +148,10 @@ public class Rsk006Service extends EventBaseService<Rsk006InEntity> {
                         doException(rsp, "模糊委托试算异常", e);
                     }
                     finally {
+                        groupMap.put(astCode, rsp);
                         // 线程计数
                         countDown.countDown();
-                        groupMap.put(astCode, rsp);
                     }
-                }
-
             });
         }
         try {
@@ -170,14 +166,7 @@ public class Rsk006Service extends EventBaseService<Rsk006InEntity> {
         setResponse(groupMap, response);
         // 更新DB
         final List<Map> dataList = mapList;
-        threadPoolTaskExecutor.execute(new Runnable() {
-
-            @Override
-            public void run() {
-                saveData(dataList, response);
-            }
-
-        });
+        threadPoolTaskExecutor.execute(() -> saveData(dataList, response));
 
         return null;
     }
@@ -191,14 +180,20 @@ public class Rsk006Service extends EventBaseService<Rsk006InEntity> {
         if (StringUtil.isEmptyList(mapList)) {
             return;
         }
+        Date now = new Date();
         mapList.forEach(map -> {
         	Rsk006ItemEntity dto = BeanUtil.mapToObject(map, Rsk006ItemEntity.class);
             if (dto != null && !StringUtil.isEmpty(dto.getEventId())) {
-                dto.setProdId((String) map.get(PORTFOLIOCODE));
+                dto.setProdId((String) map.get(PROD_ID));
                 dto.setWflStatus(BussinessDictCodeListRds.有效状态_待处理.getValue());
                 // 设置备份数据
                 dto.setAmount(dto.getAmountOld());
                 dto.setTradeNum(dto.getTradeNumOld());
+                // 设置报文流水号
+                dto.setCreateUser(getInfId());
+                dto.setUpdateUser(getInfId());
+                dto.setCreateTime(now);
+                dto.setUpdateTime(now);
                 dimMapper.insertSelective(dto);
             }
         });
@@ -302,18 +297,6 @@ public class Rsk006Service extends EventBaseService<Rsk006InEntity> {
         // 风险事件相关参数与指标相关参数糅合去重(并集)
         Map<String, Set<String>> ptlIndMap = ptlInd.getPtlIndicator();
         unionParamId(indMap, paraIdList, ptlIndMap);
-        //wangyang1 风险二级法人改造 start
-        if (MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isNotEmpty(mapData.get("instCode"))) {
-            String instCode = mapData.get("instCode").toString();
-            Set<String> paraIdListChd = new HashSet<>();
-            paraIdList.forEach(item->{
-                if (item.indexOf(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue())!=-1) { 
-                    paraIdListChd.add(item.replace(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue(),instCode));
-                }
-            });
-            paraIdList.addAll(paraIdListChd);
-        } 
-        //wangyang1 风险二级法人改造 end 
         // 取得所有指标参数信息
         Map<String, IParam> paramMap = getParam(paraIdList);
         // 若指标参数不存在则抛出异常
@@ -351,19 +334,41 @@ public class Rsk006Service extends EventBaseService<Rsk006InEntity> {
             Map<String, Map<String, IValue<Object>>> newValMap = calcParamVal(eveList,
                 paraValMap, null, details);
             // 固定值参数
-            Map<String, Object> map = getFixedParaVal(paramMap,mapData);
+            Map<String, Object> map = getFixedParaVal(paramMap);
+            Map<String, IIndicator> leftIndMap = getIndTrendCalcSrc().execute(indMap, paramMap,
+                getIndTrendCalcSrc().filterValMap(new HashMap<>(), paraValMap), eveList, mapData,
+                (newIndMap, indValMap, newIndValMap) -> {
+                    IPtlIndicator newPtlInd = getIndTrendCalcSrc().newPtlInd(ptlInd, newIndMap);
+                    // 指标参数原值
+                    Map<String, Map<String, Object>> pValMap = getIndTrendCalcSrc().parseParaVal(
+                        ptlParamMap, indValMap);
+                    // 加入固定值
+                    unionParaVal(pValMap, map);
+                    // 指标计算原值
+                    calcIndicator(newPtlInd, newIndMap, mapData, pValMap, true);
+                    // 指标参数新值
+                    pValMap = getIndTrendCalcSrc().parseParaVal(ptlParamMap, newIndValMap);
+                    // 加入固定值
+                    unionParaVal(pValMap, map);
+                    // 指标计算原值
+                    calcIndicator(newPtlInd, newIndMap, mapData, pValMap, false);
+                });
+            if (CollectionUtils.isEmpty(leftIndMap)) {
+                return null;
+            }
+            IPtlIndicator newPtlInd = getIndTrendCalcSrc().newPtlInd(ptlInd, leftIndMap);
             // 指标参数原值
-            Map<String, Map<String, Object>> pValMap = parseParaVal(ptlParamMap, paraValMap);
+            Map<String, Map<String, Object>> pValMap = parseParaVal(ptlParamMap, paraValMap,paramMap);
             // 加入固定值
             unionParaVal(pValMap, map);
             // 指标计算原值
-            calcIndicator(ptlInd, indMap, mapData, pValMap, true);
+            calcIndicator(newPtlInd, indMap, mapData, pValMap, true);
             // 指标参数新值
-            pValMap = parseParaVal(ptlParamMap, calcValWithoutEvt(getParamIdList(eveList), eveList, newValMap));
+            pValMap = parseParaVal(ptlParamMap, calcValWithoutEvt(getParamIdList(eveList), eveList, newValMap),paramMap);
             // 加入固定值
             unionParaVal(pValMap, map);
             // 指标计算新值
-            calcIndicator(ptlInd, indMap, mapData, pValMap, false);
+            calcIndicator(newPtlInd, indMap, mapData, pValMap, false);
             return null;
         });
         indMap.entrySet().forEach(en -> checkIndTrend(en.getValue()));

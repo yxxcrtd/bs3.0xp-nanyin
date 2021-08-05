@@ -1,14 +1,24 @@
 package com.joyintech.tams.invest.common.risktrialrds.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.jdbc.datasource.DynamicDataSource;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
+import com.joyintech.redis.common.entity.IValue;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
+import com.joyintech.tams.invest.common.risktrialrds.reflect.PluginClass;
+import com.joyintech.tams.invest.common.risktrialrds.reflect.REF;
+import org.apache.shiro.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -25,6 +35,11 @@ import java.util.stream.Collectors;
  */
 public class RiskUtil {
 
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(RiskUtil.class);
+
 	public static final String redisKey = "RKEY";
 	public static final String redisVal = "RVALUE";
 	public static final String paramPref = "${";
@@ -32,9 +47,11 @@ public class RiskUtil {
 	public static final String paramSuff = "}";
 	public static final String LIMIT = "LIMIT_";
 	public static final String FORBID = "FORBID_";
+	//添加内置阈值型 add by wz 20200418
+	public static final String INNER = "INNER_";
 	public static final String AND = "AND";
 	public static final String OR = "OR";
-	public static final String COMMON_PLUGIN_REFLECT="pluginClassDao";
+	public static final String COMMON_PLUGIN_REFLECT="pluginClassRdsDao";
 	public static final String COMMON_PLUGIN_NAME="com.joyintech.tams.invest.common.risktrialrds.reflect.impl.";
 	public static final String MAX = "MAX";
 	public static final String MIN = "MIN";
@@ -50,10 +67,61 @@ public class RiskUtil {
     public static final String APPROVE_LINE_TWO="APPROVE_LINE_TWO";
     public static final String APPROVE_LINE_THR="APPROVE_LINE_THR";
 
-    /*合并模拟测算代码 panbin 2020-8-11 start*/
+	public static final String DURATION_SERVICE = "riskManageCommonService";
+
+	public static final String RSK_PORT_INFO="RSK_PORT_INFO";
+	public static final String RSK_CONDITION_INFO="RSK_CONDITION_INFO";
+	public static final String RSK_VALUATION_INFO="RSK_STAGE_INFO";
+	public static final String RSK_ASTRULECASH_INFO="RSK_ASTRULECASH_INFO";
+	public static final String RSK_STAGE_INFO="RSK_STAGE_INFO";
+	public static final String RSK_STAGEAST_INFO="RSK_STAGEAST_INFO";
+	public static final String RSK_ASTDEL_INFO="RSK_ASTDEL_INFO";
 	public static final String PAGE_REDIS_FLAG="pageRedisFlag";
 	/*合并模拟测算代码 panbin 2020-8-11 end*/
 	public static final String IS_DISPLAY_PEND_PERIOD="IS_DISPLAY_PEND_PERIOD";
+
+	private static Map<String, PluginClass<?>> pluginMap = new HashMap<>();
+
+	/**
+	 * 初始化指标参数利用反射类模块Service列表
+	 *
+	 * @see
+	 * @since 1.0
+	 */
+	private static void init() {
+		ApplicationContext context = SpringContextUtil.getApplicationContext();
+		if (context == null) {
+			return;
+		}
+		Map<String, Object> beans = context.getBeansWithAnnotation(REF.class);
+		if (beans == null || beans.isEmpty()) {
+			return;
+		}
+		beans.entrySet().forEach(en -> {
+			Object obj = en.getValue();
+			if (obj instanceof PluginClass) {
+				PluginClass<?> svc = (PluginClass<?>)obj;
+				String refId = svc.getRefId();
+				pluginMap.put(refId, svc);
+			}
+		});
+	}
+
+	/**
+	 * 根据反射类ID取得反射实现类模块
+	 *
+	 * @param id 接口ID
+	 * @return 反射实现模块
+	 * @see
+	 * @since 1.0
+	 */
+	public static final PluginClass<?> getBean(String id) {
+		if (pluginMap == null || pluginMap.isEmpty()) {
+			init();
+		}
+		return pluginMap.get(id);
+	}
+
 	/**
 	 * @param str
 	 * @return
@@ -137,14 +205,11 @@ public class RiskUtil {
 	}
 	
     public static String transferWarnFoul(String value, String indCellType) {
-        
         String wg = StringUtil.EMPTY;
-
-
         if (StringUtil.isNotEmpty(value)) {
 			Map<?, ?> detailJson =JsonUtils.json2Object(value,Map.class);
 			Map<?, ?> vThreshold1Map = (Map<?, ?>)detailJson.get("threshold_1");
-            if (indCellType.indexOf("LIMIT_") != -1) {
+            if (indCellType.indexOf(RiskUtil.LIMIT) != -1||indCellType.indexOf(RiskUtil.INNER) != -1) {
                     if (StringUtil.isNotEmpty(vThreshold1Map.get("value"))) {
                         wg = (String)vThreshold1Map.get("op") + vThreshold1Map.get("value")
                              + valueConvertUnit((String)vThreshold1Map.get("unit"));
@@ -208,48 +273,57 @@ public class RiskUtil {
 	 */
 	public static String getParamWithMode(Set<String> fixParamList,String exp,String cond){
 		Map<String,String> expMap=new HashMap<>();
+		if(!StringUtil.isNotEmpty(exp)){
+			return exp;
+		}
+		String[] expArr=new String[]{exp};
 		if(cond.indexOf(">")>-1||cond.indexOf(">=")>-1){
-			expMap=dealParamMinMax(fixParamList,exp,expMap,RiskUtil.MAX);
-		}else if(cond.indexOf("<")>-1||cond.indexOf("<=")>-1){
-			expMap=dealParamMinMax(fixParamList,exp,expMap,RiskUtil.MIN);
-		}else{
-			expMap=dealParamMinMax(fixParamList,exp,expMap,RiskUtil.MAX);
+			expMap=dealParamMinMax(fixParamList,expArr,expMap,RiskUtil.MAX);
 		}
-		List<String> expArray=new ArrayList<String>();
+		if(cond.indexOf("<")>-1||cond.indexOf("<=")>-1){
+			expMap=dealParamMinMax(fixParamList,expArr,expMap,RiskUtil.MIN);
+		}
 		for (Map.Entry<String, String> entry : expMap.entrySet()) {
-			exp=exp.replaceAll(entry.getKey(),entry.getValue());
+			expArr[0]=expArr[0].replaceAll(entry.getKey()+RiskUtil.paramSuff,entry.getValue()+RiskUtil.paramSuff);
 		}
-		return exp;
+		return expArr[0];
 	}
 
 	/**
 	 * 处理参数的MAX及Min
-	 * @param exp
+	 * @param expArr
 	 * @param expMap
 	 * @return
 	 */
-	private static Map<String,String> dealParamMinMax(Set<String> fixParamList,String exp,Map<String,String> expMap,String direction){
-		if(exp.indexOf("/")>-1){
-			String fenZi=exp.substring(0,exp.indexOf("/"));
-			String fenMu=exp.substring(exp.indexOf("/")+1,exp.length());
+	private static Map<String,String> dealParamMinMax(Set<String> fixParamList,String[] expArr,Map<String,String> expMap,String direction){
+		if(expArr[0].indexOf("/")>-1){
+			String fenZi=expArr[0].substring(0,expArr[0].indexOf("/"));
+			String fenMu=expArr[0].substring(expArr[0].indexOf("/")+1,expArr[0].length());
 			dealMinMax(fixParamList,fenZi,expMap,direction.equals(RiskUtil.MAX)?RiskUtil.MAX:RiskUtil.MIN);
+			for (Map.Entry<String, String> entry : expMap.entrySet()) {
+				expArr[0]=expArr[0].substring(0,expArr[0].indexOf("/")).replaceAll(entry.getKey(),entry.getValue())+"/"+fenMu;
+			}
 			if(fenMu.indexOf("/")>-1){
-				dealParamMinMax(fixParamList,fenMu,expMap,direction);
+				dealParamMinMax(fixParamList,new String[]{fenMu},expMap,direction);
 			}
 			dealMinMax(fixParamList,fenMu,expMap,direction.equals(RiskUtil.MAX)?RiskUtil.MIN:RiskUtil.MAX);
 			return expMap;
 		}
-		if(exp.indexOf("*")>-1){
-			String fenZi=exp.substring(0,exp.indexOf("*"));
-			String fenMu=exp.substring(exp.indexOf("*")+1,exp.length());
+		if(expArr[0].indexOf("*")>-1){
+			String fenZi=expArr[0].substring(0,expArr[0].indexOf("*"));
+			String fenMu=expArr[0].substring(expArr[0].indexOf("*")+1,expArr[0].length());
 			dealMinMax(fixParamList,fenZi,expMap,direction.equals(RiskUtil.MAX)?RiskUtil.MAX:RiskUtil.MIN);
-			if(fenMu.indexOf("*")>-1){
-				dealParamMinMax(fixParamList,fenMu,expMap,direction);
+			for (Map.Entry<String, String> entry : expMap.entrySet()) {
+				expArr[0]=expArr[0].substring(0,expArr[0].indexOf("*")).replaceAll(entry.getKey(),entry.getValue())+"*"+fenMu;
 			}
+			if(fenMu.indexOf("*")>-1){
+				dealParamMinMax(fixParamList,new String[]{fenMu},expMap,direction);
+			}
+			dealMinMax(fixParamList,fenMu,expMap,direction.equals(RiskUtil.MAX)?RiskUtil.MAX:RiskUtil.MIN);
 			return expMap;
 		}
 		//处理即没有除法也没有乘法的表达式
-		dealMinMax(fixParamList,exp,expMap,direction);
+		dealMinMax(fixParamList,expArr[0],expMap,direction);
 		return expMap;
 	}
 
@@ -419,6 +493,48 @@ public class RiskUtil {
 	}
 
 	/**
+	 * 取指标状态中最大的状态
+	 * @param supState
+	 * @return
+	 */
+	public static String getMaxState(List<String> supState){
+		List<Integer> supStateNum=new ArrayList<>();
+		supState.forEach(item->{
+			if(item.equals(BussinessDictCodeListRds.监督状态_正常.getValue())){
+				supStateNum.add(0);
+			}
+			if(item.equals(BussinessDictCodeListRds.监督状态_触发预警.getValue())){
+				supStateNum.add(1);
+			}
+			if(item.equals(BussinessDictCodeListRds.监督状态_触发审批.getValue())){
+				supStateNum.add(2);
+			}
+			if(item.equals(BussinessDictCodeListRds.监督状态_触发超限.getValue())){
+				supStateNum.add(3);
+			}
+			if(item.equals(BussinessDictCodeListRds.监督状态_异常.getValue())){
+				supStateNum.add(4);
+			}
+		});
+		if(Collections.max(supStateNum)==0){
+			return BussinessDictCodeListRds.监督状态_正常.getValue();
+		}
+		if(Collections.max(supStateNum)==1){
+			return BussinessDictCodeListRds.监督状态_触发预警.getValue();
+		}
+		if(Collections.max(supStateNum)==2){
+			return BussinessDictCodeListRds.监督状态_触发审批.getValue();
+		}
+		if(Collections.max(supStateNum)==3){
+			return BussinessDictCodeListRds.监督状态_触发超限.getValue();
+		}
+		if(Collections.max(supStateNum)==4){
+			return BussinessDictCodeListRds.监督状态_异常.getValue();
+		}
+		return Collections.max(supStateNum).toString();
+	}
+
+	/**
 	 * 获取列的SQL
 	 * @param linkSign
 	 * @param column
@@ -505,7 +621,7 @@ public class RiskUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 特殊字符转换
 	 * @param item
@@ -522,6 +638,7 @@ public class RiskUtil {
 		}
 		return item;
 	}
+
 	/**
 	 * check是否是日期
 	 * @param param 参数
@@ -537,5 +654,106 @@ public class RiskUtil {
 			return false;
 		}
 		return false;
+	}
+
+	/**
+	 * 实体转Map
+	 * @param obj
+	 * @return
+	 */
+	public static Map<String,Object> getObjectToMap(Object obj){
+		Map<String, Object> mapTrd = new HashMap<>();
+		try {
+			mapTrd = JsonUtils.stringToMap(JsonUtils.object2Json(obj));
+		}catch (Exception e){
+			mapTrd =JsonUtils.object2Map(obj);
+		}
+		return mapTrd;
+	}
+
+	/**
+	 * 从redis获取值转成map类型
+	 * @param map
+	 * @return
+	 */
+	public static Map<String, Map<String, Object>> changeRedisValueToMap(Map<String, Map<String, IValue<Object>>> map) {
+		Map<String, Map<String, Object>> resMap = new HashMap<>();
+		if (!CollectionUtils.isEmpty(map)) {
+			map.entrySet().forEach(en -> {
+				String key = en.getKey();
+				Map<String, Object> vMap = new HashMap<>();
+				Map<String, IValue<Object>> value = en.getValue();
+				if (!CollectionUtils.isEmpty(value)) {
+					value.entrySet().forEach(mp -> {
+						String field = mp.getKey();
+						IValue<Object> obj = mp.getValue();
+						if (obj != null) {
+							vMap.put(field, obj.value());
+						}
+					});
+					resMap.put(key, vMap);
+				}
+			});
+		}
+		return resMap;
+	}
+
+	/**
+	 * 数据插入数据库
+	 *
+	 * @param tableName
+	 *            表名
+	 * @param sqlList
+	 *            输入语句列表
+	 * @param basicDataSource
+	 *            DB信息
+	 */
+	public static void insertBatchData(String tableName, List<String> sqlList, DynamicDataSource basicDataSource) {
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+			conn = basicDataSource.getConnection();
+
+			// 关闭数据库连接 自动提交事务
+			conn.setAutoCommit(false);
+
+			stmt = conn.createStatement();
+			for (int i = 0; i < sqlList.size(); i++) {
+				if (StringUtil.isNotEmpty(sqlList.get(i))) {
+					stmt.addBatch(sqlList.get(i));
+				}
+				try {
+						if (i > 0 && i % 10000 == 0) {
+							stmt.executeBatch();
+							// 提交事务
+							conn.commit();
+							stmt.clearBatch();
+						} else if (i == sqlList.size() - 1) {
+							stmt.executeBatch();
+							// 提交事务
+							conn.commit();
+							stmt.clearBatch();
+						}
+				} catch (SQLException e) {
+					logger.error("数据插入数据出错...表名：" + tableName,e);
+					continue;
+				}
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			logger.error("数据插入数据出错...表名：" + tableName,e);
+		} finally {
+			try {
+				if(stmt!=null)
+				{
+					stmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				logger.error(e.getMessage(),e);
+			}
+		}
 	}
 }

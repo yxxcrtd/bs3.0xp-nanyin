@@ -5,6 +5,7 @@
         insert into FIN_PRODUCT (FINPROD_ID, FINPROD_ABBR, FINPROD_NAME, FINPROD_TYPE, PROFIT_TYPE,
             FINPROD_MARKET_ID, VDATE, MDATE, 
             ISSUE_TYPE, OPERATION_TYPE, CCY,
+            BUILD_PERIOD,
             CALENDAR_ID, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME
             ) values
@@ -14,6 +15,7 @@
             'F16', #{item.prodType,jdbcType=VARCHAR}, 
             #{item.prodId,jdbcType=VARCHAR}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE}, 
             #{item.raiseType,jdbcType=VARCHAR}, #{item.openType,jdbcType=VARCHAR}, #{item.ccy,jdbcType=VARCHAR},
+            #{item.buildPeriod,jdbcType=VARCHAR},
             #{item.calendarCode,jdbcType=VARCHAR}, 'INF', #{item.createDept,jdbcType=VARCHAR}, 
             #{item.createTime,jdbcType=TIMESTAMP}, 'INF', #{item.updateTime,jdbcType=TIMESTAMP}
         )

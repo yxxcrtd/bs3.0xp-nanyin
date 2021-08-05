@@ -112,6 +112,7 @@ var correctData;
         Joyin.ajaxJson(basePath + 'invest/entrust/etrastconfigtransfer/EtrAssetConfigTransfer002/assembleImportData', object, function(assembleResult) {
             if (assembleResult) {
                 var result = {};
+                correctData=new Array();
                 result.tempList = assembleResult.entrustData;
                 var tradeMarket=object.selectedItem[0].tradeMarket;
                 //银行间指令
@@ -122,17 +123,22 @@ var correctData;
                         "98%", "95%", result);
                 }
                 //上交所(固定收益)指令
-                if(TRADE_PLACE_03==tradeMarket){
-                    correctData = JSON.parse(result.tempList);
-                    Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.gsImport"),
-                        JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
-                        "98%", "95%", {currentTab:SHARES_TRADE_PLATFORM_03});
-                }
-                //深交所(大宗)指令
-                if(TRADE_PLACE_04==tradeMarket){
-                    Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.dzImport"),
-                        JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
-                        "98%", "95%", {currentTab:SHARES_TRADE_PLATFORM_04});
+                if($.inArray(tradeMarket,[TRADE_PLACE_03,TRADE_PLACE_04])>=0){
+                    var retArray=JSON.parse(result.tempList);
+                    $.each(retArray,function (i,v) {
+                        correctData.push(v[0])
+                    })
+                    if(TRADE_PLACE_03==tradeMarket) {
+                        Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.gsImport"),
+                            JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
+                            "98%", "95%", {currentTab: SHARES_TRADE_PLATFORM_03});
+                    }
+                    //深交所(大宗)指令
+                    if(TRADE_PLACE_04==tradeMarket){
+                        Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.dzImport"),
+                            JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
+                            "98%", "95%", {currentTab:SHARES_TRADE_PLATFORM_04});
+                    }
                 }
             }
         });

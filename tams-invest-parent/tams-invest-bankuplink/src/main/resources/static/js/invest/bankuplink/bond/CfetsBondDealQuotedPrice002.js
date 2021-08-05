@@ -553,12 +553,13 @@
     	}
     	// 含权、资产一级类型
     	var isRight = $('#CfetsBondDealQuotedPrice002_hidden_isRight').val();
-        if (isRight == yesNoFlag_yes){
+        /*if (isRight == yesNoFlag_yes){
             $('#CfetsBondDealQuotedPrice002_div_exerYield').toggle(true);
         }
         else{
             $('#CfetsBondDealQuotedPrice002_div_exerYield').toggle(false);
-        }
+        }*/
+        exerYieldDivContrl();
         var assetType1 = $('#CfetsBondDealQuotedPrice002_hidden_assetTypeOne').val();
         if (assetType1 == assetTypeOne_abs){
             $('#CfetsBondDealQuotedPrice002_div_abs1').toggle(true);
@@ -717,6 +718,26 @@
     var counterIdChangeAction = function(){
         $('#CfetsBondDealQuotedPrice002_counterTrader').val('').trigger('change');
     }
+
+    /**
+     * 控制显示行权收益率
+     */
+    var exerYieldDivContrl = function() {
+        // 是否含权债为是，且未来有行权计划时，行权收益率显示，其余情况不显示；
+        var param = {};
+        param.finprodId = $('#CfetsBondDealQuotedPrice002_hidden_finprodId').val();
+        param.tradeDate = $('#CfetsBondDealQuotedPrice002_settleDate').val();
+        if(param.finprodId&&param.tradeDate){
+            Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/isExerYieldDivShow', param, function (data) {
+                if (data == yesNoFlag_yes) {
+                    $("#CfetsBondDealQuotedPrice002_div_exerYield").show();
+                } else {
+                    $("#CfetsBondDealQuotedPrice002_div_exerYield").hide();
+                }
+            });
+        }
+    };
+
     window.CfetsBondDealQuotedPrice002 = {
             saveEntrustSelectData: saveEntrustSelectData
         };

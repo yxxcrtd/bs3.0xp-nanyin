@@ -268,6 +268,18 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
      */
     private BigDecimal tradeMarketCash;
 
+    /**
+     * 返款费率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal refundRate;
+
+    /**
+     * 返款金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal refundAmount;
+
     public WflTrdProductDealAdd getWflTrdProductDealAdd() {
         return wflTrdProductDealAdd;
     }
@@ -993,4 +1005,20 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
 	public void setTradeMarketCash(BigDecimal tradeMarketCash) {
 		this.tradeMarketCash = tradeMarketCash;
 	}
+
+    public BigDecimal getRefundRate() {
+        return refundRate;
+    }
+
+    public void setRefundRate(BigDecimal refundRate) {
+        this.refundRate = refundRate;
+    }
+
+    public BigDecimal getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(BigDecimal refundAmount) {
+        this.refundAmount = refundAmount;
+    }
 }

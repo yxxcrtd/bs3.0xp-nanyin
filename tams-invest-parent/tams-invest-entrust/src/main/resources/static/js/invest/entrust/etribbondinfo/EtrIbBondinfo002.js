@@ -163,7 +163,9 @@
             if (result ) {
                 document.getElementById('deviationDegree').innerHTML ="<span style='color: red'>"+
                     JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
-
+            }else{
+                document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
+                    '0.0000%' +"</span>";
             }
         });
     }

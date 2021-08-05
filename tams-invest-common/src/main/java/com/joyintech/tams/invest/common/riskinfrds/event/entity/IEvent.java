@@ -15,8 +15,10 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.redis.common.entity.IValue;
 import com.joyintech.tams.invest.common.constantrds.BussinessConstantRds;
 import com.joyintech.tams.invest.common.riskinfrds.calendar.entity.ICalendar;
 
@@ -72,10 +74,52 @@ public interface IEvent extends Serializable {
             //进行自定义列判断
             if(StringUtil.equals(BussinessConstantRds.CUSTOM,epr.getRelItem())){
                 epr.setRelValue(StringUtil.isNotEmpty(epr.getCustomVal())?epr.getCustomVal():BigDecimal.ZERO);
+            // add by zhangrui1 公式配置 start
+            } else if (epr.isFormula()) {
+                epr.setRelValue(new BigDecimal(
+                    mapData.getOrDefault(epr.formulaRelItem(), BigDecimal.ZERO).toString()));
+            // add by zhangrui1 公式配置 end
             }else {
                 epr.setRelValue(new BigDecimal(mapData.getOrDefault(epr.getRelItem(), BigDecimal.ZERO).toString()));
             }
         });
+    }
+
+    default void setFormulaParaVal(Map<String, BigDecimal> paraValMap) {
+        List<IEventParaRel> eprList = getEventParaRel();
+        if (StringUtil.isEmptyList(eprList)) {
+            return;
+        }
+        eprList.forEach(epr -> {
+            if (epr.isFormula()) {
+                String code = epr.formulaParaCode();
+                // 固定值的场合
+                if (StringUtil.endsWith(code, "FIX")) {
+                    epr.setFormulaParaVal(new BigDecimal(epr.formulaRdsField()));
+                }
+                // 非固定值的场合
+                else {
+                    epr.setFormulaParaVal(paraValMap.getOrDefault(code, null));
+                }
+            }
+        });
+    }
+
+    default Map<String, Map<String, IValue<Object>>> getParaValMap(Function<String, String> getField) {
+        Map<String, Map<String, IValue<Object>>> resMap = new HashMap<>();
+        List<IEventParaRel> eprList = getEventParaRel();
+        if (StringUtil.isEmptyList(eprList) || getField == null) {
+            return resMap;
+        }
+        eprList.forEach(epr -> {
+            String code = epr.formulaParaCode();
+            if (epr.isFormula() && !StringUtil.endsWith(code, "FIX")) {
+                Map<String, IValue<Object>> temp = resMap.getOrDefault(code, new HashMap<>());
+                temp.put(getField.apply(epr.formulaRdsField()), null);
+                resMap.put(code, temp);
+            }
+        });
+        return resMap;
     }
 
     /**

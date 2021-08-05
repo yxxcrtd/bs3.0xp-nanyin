@@ -91,18 +91,18 @@ public class RiskTrialProducerTask extends BatchBaseService {
 			InvestTradeTrialInput investTradeTrialInput = new InvestTradeTrialInput();
 			investTradeTrialInput.setIsEnabled(DictCodeListExt1.使用状态_启用.getValue());
 			investTradeTrialInput.setTimePoint(DictCodeListExt1.监督时分_事后监控.getValue());
-			if(batchPortList.size()>0&&batchPortList.size()!=riskTrialCommMapper.selectAllBooksetsWithRisk()){
-				Map<String,Object> paramMap = new HashMap<String,Object>();
-				paramMap.put("productIdList", batchPortList);
-				List<String> newPortList=riskTrialCommMapper.getPortfolioIdInFinProduct(paramMap);
-				for(String portCodeSg:newPortList) {
-					investTradeTrialInput.setPortfolioCode(portCodeSg);
-					dealBasicProducer(investTradeTrialInput);
-				}
-			}
-			else{
+//			if(batchPortList.size()>0&&batchPortList.size()!=riskTrialCommMapper.selectAllBooksetsWithRisk()){
+//				Map<String,Object> paramMap = new HashMap<String,Object>();
+//				paramMap.put("productIdList", batchPortList);
+//				List<String> newPortList=riskTrialCommMapper.getPortfolioIdInFinProduct(paramMap);
+//				for(String portCodeSg:newPortList) {
+//					investTradeTrialInput.setPortfolioCode(portCodeSg);
+//					dealBasicProducer(investTradeTrialInput);
+//				}
+//			}
+//			else{
 				dealBasicProducer(investTradeTrialInput);
-			}
+//			}
 			result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {

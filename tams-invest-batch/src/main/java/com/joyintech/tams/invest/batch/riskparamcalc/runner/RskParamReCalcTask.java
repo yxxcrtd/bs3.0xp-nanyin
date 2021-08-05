@@ -33,8 +33,8 @@ import com.joyintech.batch.batchbase.exception.BatchException;
 /**
  * 批处理-指标参数重新更新redis
  * 
- * @author jjpei
- * @version 1.0 2020年7月23日
+ * @author 裴家俊
+ * @version 1.0 2020年4月17日
  * @see RskParamReCalcTask
  * @since 1.0
  */
@@ -71,8 +71,8 @@ public class RskParamReCalcTask extends BatchBaseService {
     @Autowired
     private RskParamReCalcWriter step1Writer;
 
-    @Autowired(required = false)
-    private IPlatformDate platDataUtil;
+    @Autowired
+    private IPlatformDate iPlatformDate;
 
     /**
      * {@inheritDoc}
@@ -80,10 +80,10 @@ public class RskParamReCalcTask extends BatchBaseService {
     @Override
     public JobExecution execute()
         throws BatchException {
-        logger.info("批处理-指标参数重新更新redis开始");
+        logger.info("批处理-预占重计算开始");
         Map<String, Object> params = new HashMap<>();
         params.put(BatchConstant.KEY_PRODID_LIST, this.getProductIdList());
-        params.put("sysDate", platDataUtil.getSysDate());
+        params.put("sysDate", iPlatformDate.getSysDate());
         step1Reader.setParams(params);
         step1Processor.setParams(params);
         step1Writer.setParams(params);

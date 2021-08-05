@@ -145,5 +145,42 @@ public class ImplIndicator extends RskIsupIndicator implements IIndicator {
         return !CommonUtil.isType(getIsExcpWhenDivZero(), BussinessDictCodeListRds.除0通过条件_无条件通过);
     }
 
+    private String isPassWhenBuildPeriod;
 
+    /**
+     * 获取 isPassWhenBuildPeriod
+     * @return isPassWhenBuildPeriod.
+     */
+    public String getIsPassWhenBuildPeriod() {
+        return isPassWhenBuildPeriod;
+    }
+
+    /**
+     * 设置 isPassWhenBuildPeriod
+     * @param isPassWhenBuildPeriod isPassWhenBuildPeriod
+     */
+    public void setIsPassWhenBuildPeriod(String isPassWhenBuildPeriod) {
+        this.isPassWhenBuildPeriod = isPassWhenBuildPeriod;
+    }
+
+    @Override
+    public boolean isPassWhenBuild(IProdInfo prodInfo) {
+        // 建仓期指标是否无条件通过未设置时
+        if (CommonUtil.isType(getIsPassWhenBuildPeriod(), BussinessDictCodeListRds.是否_否)) {
+            return false;
+        }
+        // 建仓期指标是否无条件通过设置时
+        Date sysDate = DateUtil.parse(DateUtil.getSysDate());
+        // 建仓期
+        Long buildPeriod = prodInfo.getBuildPeriod();
+        // 起息日
+        Date start = prodInfo.getVdate();
+        if (buildPeriod != null) {
+            // 建仓期结束日期
+            Date end = DateUtil.addDay(start, buildPeriod.intValue());
+            // 平台日是否在建仓期内
+            return DateUtil.compareDate(start, sysDate) <= 0 && DateUtil.compareDate(sysDate, end) <= 0;
+        }
+        return false;
+    }
 }

@@ -10,31 +10,32 @@
 
 package com.joyintech.tams.invest.batch.risktrialrds.service;
 
+import org.apache.commons.lang.StringUtils;
 import com.joyintech.batch.core.dto.SysBatchExecInfoDto;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.PtlPortfolioValuation;
 import com.joyintech.tams.common.base.entity.RskIndividAssetDel;
 import com.joyintech.tams.common.base.entity.RskIndividSpecialStage;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplIndicator;
+import com.joyintech.tams.invest.common.redisinit.service.RiskIndConditionLineService;
+import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndividLimit;
 import com.joyintech.tams.invest.batch.common.util.BatchConstant;
 import com.joyintech.tams.invest.batch.risktrialrds.dto.RiskTrialDayTimeReaderResult;
 import com.joyintech.tams.invest.common.risktrialrds.dao.RiskTrialCommMapper;
 import com.joyintech.tams.invest.common.risktrialrds.dto.*;
-import com.joyintech.tams.invest.common.risktrialrds.service.RiskTrialCommService;
 import com.joyintech.tams.invest.common.risktrialrds.util.Const;
 import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -58,11 +59,12 @@ public class RiskTrialDayTimeReaderService extends BaseService {
     @Autowired(required = false)
     private RiskTrialCommMapper riskTrialCommMapper;
 
-    @Autowired(required = false)
-    private RiskTrialCommService riskTrialCommService;
-    
     private Date supDate;
 
+    // add by zhangrui1 自定义条件阈值 start
+    @Autowired
+    private RiskIndConditionLineService lineService;
+    // add by zhangrui1 自定义条件阈值 end
 
     /**
      * 获取待处理数据
@@ -95,12 +97,71 @@ public class RiskTrialDayTimeReaderService extends BaseService {
         }
         else{
             dealBasicProducer(investTradeTrialInput,resultList);
-        }  
-        List<SupervisionParameterDto> supervisionParameterDtoList=riskTrialCommMapper.getIndicatorParamAll(investTradeTrialInput.getValDate());
+        }
+        //获取所要计算指标的指标参数，减少查询参数时间，提交效率
+       String paramCode=StringUtil.EMPTY;
+       Set<String> paramSetList=new HashSet<>();
+       if(!StringUtil.isEmptyList(resultList)){
+           resultList.stream().forEach(item->{
+               // 调用基础算法运算符
+               if(StringUtil.isNotEmpty(item.getTaskQueue())&&StringUtil.isNotEmpty(item.getTaskQueue().getPoint())) {
+                   ExprTreeMath exprTree = new ExprTreeMath(item.getTaskQueue().getPoint().getExpr());
+                   Set<String> paramNames = exprTree.getParamList();
+                   paramSetList.addAll(paramNames);
+               }
+           });
+           paramCode=paramSetList.size()>0?RiskUtil.convertPortfCode(StringUtils.join(paramSetList,",")):StringUtil.EMPTY;
+       }else {
+           return resultList;
+       }
+       List<SupervisionParameterDto> supervisionParameterDtoList = riskTrialCommMapper.getIndicatorParamAll(investTradeTrialInput.getValDate(),paramCode,StringUtil.equals(investTradeTrialInput.getSupFrequency(),BussinessDictCodeListRds.监督频率_日终.getValue())?BussinessDictCodeListRds.参数粒度_事后_日终.getValue():BussinessDictCodeListRds.参数粒度_事后_日间.getValue());
+
         //查询个性化设置相关信息start--
         List<RskIndividSpecialStage> rskIndividSpecialStageList=riskTrialCommMapper.getRiskIndividSpecialStage(investTradeTrialInput.getValDate(), BussinessDictCodeListRds.阶段类型_特殊阶段.getValue());
         List<RskIndividSpecialStage> rskIndividSpecialStageAstList=riskTrialCommMapper.getRiskIndividSpecialStage(investTradeTrialInput.getValDate(), BussinessDictCodeListRds.阶段类型_特殊资产阶段.getValue());
         List<RskIndividAssetDel> rskIndividAssetDelList=riskTrialCommMapper.getRiskIndividAstDel(investTradeTrialInput.getValDate());
+        // add by zhangrui1 自定义条件阈值 start
+        Map<String, Map<String, IIndividLimit>> limitMap = lineService.getRiskIndConditionLine(
+            DateUtil.parse(investTradeTrialInput.getValDate()), null);
+        List<RskIndividSpecialStage> temp = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(limitMap)) {
+            limitMap.forEach((key, value) -> {
+                if (!CollectionUtils.isEmpty(value)) {
+                    value.entrySet().forEach(en -> {
+                        IIndividLimit limit = en.getValue();
+                        if (null != limit) {
+                            RskIndividSpecialStage stage = new RskIndividSpecialStage();
+                            stage.setApproveCond(limit.getApproveCond());
+                            stage.setWarnCond(limit.getWarnCond());
+                            stage.setFoulCond(limit.getFoulCond());
+                            stage.setIndId(key);
+                            stage.setPrtBagId(en.getKey());
+                            temp.add(stage);
+                        }
+                    });
+                }
+            });
+        }
+        if (StringUtil.isEmptyList(rskIndividSpecialStageList)) {
+            rskIndividSpecialStageList = temp;
+        }
+        else if (!StringUtil.isEmptyList(temp)) {
+            for (RskIndividSpecialStage stage : rskIndividSpecialStageList) {
+                Iterator<RskIndividSpecialStage> it = temp.iterator();
+                while (it.hasNext()) {
+                    RskIndividSpecialStage item = it.next();
+                    if (null == item
+                        || (StringUtil.equals(item.getIndId(), stage.getIndId())
+                            && StringUtil.equals(item.getPrtBagId(), stage.getPrtBagId()))) {
+                        it.remove();
+                    }
+                }
+            }
+            if (!StringUtil.isEmptyList(temp)) {
+                rskIndividSpecialStageList.addAll(temp);
+            }
+        }
+        // add by zhangrui1 自定义条件阈值 end
         for(RiskTrialDayTimeReaderResult riskTrialDto:resultList){
             riskTrialDto.setMapOther(Const.SUP_PARAM,supervisionParameterDtoList);
             riskTrialDto.setMapOther(Const.IND_SPE_STAGE,rskIndividSpecialStageList);
@@ -139,8 +200,8 @@ public class RiskTrialDayTimeReaderService extends BaseService {
             Task task = new Task();
             task.setDate(supDate);
             task.setPortfolioId(portfolioPoint.getPortfolioId());
-            task.setPoint(portfolioPoint); 
-            task.setInstitutionCode(riskTrialCommMapper.getPortfolioInstCode(portfolioPoint.getPortfolioId()));
+            task.setPoint(portfolioPoint);
+
             //判断是否设置条件设置,排除组合包
            if(portfolioPoint.getPortfolioLevel().equals(BussinessDictCodeListRds.组合层次_单组合.getValue())) {
                List<RiskIndividConditionDto>  riskIndividCondSubList =riskIndividConditionDtoList.stream().filter(item->item.getPrtBagId().equals(portfolioPoint.getPortfolioId())&&item.getIndId().equals(portfolioPoint.getIndId())).collect(Collectors.toList()) ;

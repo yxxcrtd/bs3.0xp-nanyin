@@ -10,14 +10,13 @@
 
 package com.joyintech.tams.invest.common;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -25,6 +24,8 @@ import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
+import com.joyintech.redis.common.entity.IValue;
+import com.joyintech.redis.common.entity.Value;
 import com.joyintech.redis.lock.Locker;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndicator;
@@ -396,6 +397,58 @@ public static final BigDecimal getBigDecimal(Map<String, Object> map, String key
         return map.entrySet().stream().filter(filter).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 
+    public static final <K, V> Map<K, V> copyToNew(Map<K, V> map, Function<V, V> toNewV) {
+        Map<K, V> newMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(map)) {
+            map.entrySet().forEach(en -> {
+                K key = en.getKey();
+                V v = en.getValue();
+                if (v == null) {
+                    return;
+                }
+                V newV = toNewV.apply(v);
+                if (newV == null) {
+                    return;
+                }
+                newMap.put(key, newV);
+            });
+        }
+        return newMap;
+    }
+
+    public static final Map<String, Map<String, IValue<BigDecimal>>> copyToNew(Map<String, Map<String, IValue<BigDecimal>>> valMap) {
+        return copyToNew(valMap, map -> {
+            if (CollectionUtils.isEmpty(map)) {
+                return null;
+            }
+            return copyToNew(map, val -> {
+                IValue<BigDecimal> newVal = new Value<>(
+                        str -> StringUtil.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
+                newVal.set(val.value());
+                return newVal;
+            });
+        });
+    }
+
+    public static final <T, P extends Collection<T>> Collection<T> filter(Collection<T> list,
+                                                                          Class<P> beanClass,
+                                                                          Predicate<T> filter) {
+        if (CollectionUtils.isEmpty(list) || null == filter) {
+            return list;
+        }
+        return list.stream().filter(filter).collect(
+                Collectors.toCollection(() -> newInstance(beanClass)));
+    }
+
+    public static final <P> P newInstance(Class<P> beanClass) {
+        try {
+            return beanClass.newInstance();
+        }
+        catch (InstantiationException | IllegalAccessException e) {
+            return null;
+        }
+    }
+
     /**
      * 分批次执行
      *
@@ -420,4 +473,34 @@ public static final BigDecimal getBigDecimal(Map<String, Object> map, String key
             consumer.accept(dtoList.subList(start, start + offset));
         }
     }
+
+    // add by zhangrui1 start
+    /**
+     * 从报文体中取出列表参数
+     *
+     * @param mapData 报文数据
+     * @param key key
+     * @return list内容
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static final List<Map> getList(Map<String, Object> mapData, String key) {
+        if (CollectionUtils.isEmpty(mapData)) {
+            return new ArrayList<>();
+        }
+        Object list = mapData.get(key);
+        if (list instanceof List) {
+            return (List<Map>)list;
+        }
+        if (list instanceof String) {
+            String listStr = (String)list;
+            try {
+                return JsonUtils.json2List(listStr, Map.class);
+            }
+            catch (IOException e) {
+                //
+            }
+        }
+        return new ArrayList<>();
+    }
+    // add by zhangrui1 end
 }

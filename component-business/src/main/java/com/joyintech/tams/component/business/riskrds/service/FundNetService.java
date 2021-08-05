@@ -11,7 +11,12 @@
 package com.joyintech.tams.component.business.riskrds.service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
@@ -86,7 +91,7 @@ public class FundNetService {
     /**
      * 取得截至指定日期的最新基金净值
      * 
-     * @param assetList 基金代码
+     * @param assetCode 基金代码
      * @param valDate 指定日期
      * @return 截至指定日期的最新基金净值
      */

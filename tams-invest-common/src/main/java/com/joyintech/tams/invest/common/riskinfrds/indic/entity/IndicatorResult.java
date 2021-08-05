@@ -144,4 +144,34 @@ public class IndicatorResult implements IIndicatorResult {
     public void setIndividLimit(IIndividLimit limit) {
         individLimit = limit;
     }
+
+    /**
+     * 计算表达式
+     */
+    private String calcExpr;
+
+    @Override
+    public String getCalcExpr() {
+        return calcExpr;
+    }
+
+    @Override
+    public void setCalcExpr(String calcExpr) {
+        this.calcExpr = calcExpr;
+    }
+
+    /**
+     * 原计算表达式
+     */
+    private String calcOldExpr;
+
+    @Override
+    public String getCalcOldExpr() {
+        return calcOldExpr;
+    }
+
+    @Override
+    public void setCalcOldExpr(String calcOldExpr) {
+        this.calcOldExpr = calcOldExpr;
+    }
 }

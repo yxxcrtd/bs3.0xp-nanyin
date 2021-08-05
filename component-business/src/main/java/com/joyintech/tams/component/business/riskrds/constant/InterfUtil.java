@@ -74,6 +74,7 @@ public class InterfUtil{
      *发起方系统时间戳
      */
     public static final String std400rsts="std400rsts";
+
     /**
      * 发起方系统时间
      */
@@ -102,12 +103,12 @@ public class InterfUtil{
      * 金融产品分类_投管
      */
     public static final String finprodType2="finprodType2";
-    
+
     /**
      * 交易方向
      */
     public static final String ps="ps";
-   
+
     /**
      * 币种
      */
@@ -122,6 +123,7 @@ public class InterfUtil{
      * 异常状态
      */
     public static final String E="E";
+
     /**
      * 多组合返回画面标识
      */

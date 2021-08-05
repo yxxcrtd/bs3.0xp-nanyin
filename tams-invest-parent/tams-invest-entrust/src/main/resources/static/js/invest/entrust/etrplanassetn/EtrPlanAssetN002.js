@@ -181,11 +181,12 @@
      */
     $('#EtrPlanAssetN002_btn_search').click(function() {
         var finprodId =$('#finprodIdhid').val();
+        var finprodIdhid =$('#finprodIdhid').val();
         var url = "/invest/asset/plan/planNet/FinPlanNetAsset002/init";
-        if (finprodId != ""){
+        if (finprodIdhid != ""){
             var params = {
                 pageModel:PAGE_MODEL_REFERENCE,
-                finprodId:finprodId
+                finprodId:finprodIdhid
             };
             EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
         } else {

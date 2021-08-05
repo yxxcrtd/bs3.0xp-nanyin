@@ -26,8 +26,8 @@ import java.util.List;
 /**
  * 批处理-指标参数重新更新-Writer
  * 
- * @author jjpei
- * @version 1.0 2020年7月23日
+ * @author 裴家俊
+ * @version 1.0 2020年4月17日
  * @see RskParamReCalcWriter
  * @since 1.0
  */
@@ -49,13 +49,11 @@ public class RskParamReCalcWriter extends BaseWriter<NeedToWriteEntity> {
         }
         List<RskIndicatorParaCalcdetail> details = new ArrayList<>();
         writeList.forEach(entity -> {
-        	if (entity == null) {
-        		return;
-        	}
-            RskParamReCalcWriterDto dto = (RskParamReCalcWriterDto)entity;
-            if (!StringUtil.isEmptyList(dto.getParaCalList())) {
-                details.addAll(dto.getParaCalList());
+            if (entity == null) {
+                return;
             }
+            RskParamReCalcWriterDto dto = (RskParamReCalcWriterDto)entity;
+            details.addAll(dto.getParaCalList());
         });
         // 参数计算流水
         if (!StringUtil.isEmptyList(details)) {

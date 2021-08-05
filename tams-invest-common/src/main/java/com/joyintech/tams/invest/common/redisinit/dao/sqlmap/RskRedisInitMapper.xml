@@ -40,10 +40,28 @@
         left join (SELECT ORG_NO,COUNT(COR_ORGID) AS CORORG FROM INF_ORG_CORRELATION WHERE ORG_NO
         <![CDATA[ <> COR_ORGID GROUP BY ORG_NO) b ON a.org_code=b.ORG_NO ]]>
         )
+        <!-- add by zhangrui1 增加资产属性 start -->
+        ,CASH_INFO AS (
+             SELECT max(EFF_DATE) EFF_DATE,FINPROD_ID,CALC_TYPE FROM FIN_CASH_CALC_RULE 
+             GROUP BY FINPROD_ID,CALC_TYPE
+        )
+        <!-- add by zhangrui1 增加资产属性 end -->
+        <!-- add by zhangrui1 增加资产属性:是否流动性受限 start -->
+        , FLOW_LIMITED_ASSET AS (
+            -- 流动性受限资产
+            SELECT FPT.FINPROD_ID, 'Y' IS_FLOW_LIMITED FROM FIN_PRODUCT_TYPE FPT
+            WHERE EXISTS (
+                SELECT 1 FROM RSK_SPECIFIC_ASSET_TYPE RSAT WHERE RSAT.IS_FLOW_LIMITED = 'Y' 
+                AND (REGEXP_INSTR(RSAT.TYPE_1||'_'||RSAT.TYPE_2||'_'||RSAT.TYPE_3||'_'||RSAT.TYPE_4 ,
+                FPT.TYPE_9||'_'||FPT.TYPE_10||'_'||FPT.TYPE_11||'_'||FPT.TYPE_12) &gt;= 1
+                OR FPT.FINPROD_ID = RSAT.FINPROD_ID)
+            ) AND FPT.TYPE_9||'_'||FPT.TYPE_10||'_'||FPT.TYPE_11||'_'||FPT.TYPE_12 != '___'
+        )
+        <!-- add by zhangrui1 增加资产属性:是否流动性受限 end -->
         select
         m.FINPROD_ID  finprodId,
         m.FINPROD_ABBR finprodAbbr,
-        m.FINPROD_NAME finprodName,
+        nvl(m.FINPROD_NAME,m.FINPROD_ABBR) finprodName,
         m.VDATE,
         m.MDATE,
         m.PROFIT_TYPE profitType,
@@ -63,17 +81,42 @@
         ZxPingji.GRADE_RESULT  bondGradeType,
         m.ISSUER_CODE as issuerCode,
         Mingdan.LIST_LEVEL listLevel,
-        DYGLF.CORORG as isCorOrg,
-        decode(n.IS_INADVANCE,null,'N',n.IS_INADVANCE) isInAdvance
+        DYGLF.CORORG as isCorOrg
+        <!-- add by zhangrui1 增加资产属性 start -->
+        , m.IS_SUS isSus
+        , m.IS_RIGHT isRight
+        , cash.EFF_DATE vdateLast
+        , cash.CALC_TYPE calcType
+        <!-- add by zhangrui1 增加资产属性 start -->
+        <!-- add by etliu 增加资产属性:是否可提前支取 20200821 start -->
+        , PFP.IS_CAN_DRAW_IN_ADVANCE isCanDrawInAdvance
+        <!-- add by etliu 增加资产属性:是否可提前支取 20200821 end -->
+        <!-- add by zhangrui1 增加资产属性:是否流动性受限 start -->
+        , NVL(RSAT.IS_FLOW_LIMITED, 'N') isFlowLimited
+        <!-- add by zhangrui1 增加资产属性:是否流动性受限 end -->
+        <!-- add by zhangrui1 增加资产属性:机构主体类型 start -->
+        , MCIA.CUSTOMER_OBJ_TYPE customerObjType
+        <!-- add by zhangrui1 增加资产属性:机构主体类型 end -->
         from (select FIN_PRODUCT.* ,case  FINPROD_TYPE2 WHEN  'F01' THEN ISSUER
                 WHEN 'F06' THEN manager
                 WHEN 'F07' THEN ISSUER
                 WHEN 'F10' THEN ISSUER
                 WHEN 'F18' THEN financier
                 WHEN 'F17' THEN manager
+                WHEN 'F32' THEN ISSUER
+                WHEN 'F37' THEN financier
                 ELSE null end as ISSUER_CODE from  FIN_PRODUCT) m
         inner join FIN_PRODUCT_ADD n on m.FINPROD_ID=n.FINPROD_ID
         inner join FIN_PRODUCT_TYPE y on m.FINPROD_ID=y.FINPROD_ID and y.BRANCH='0'
+        <!-- add by etliu 增加资产属性:是否可提前支取 20200821 start -->
+        left join PA_FIN_PRODUCT PFP on m.FINPROD_ID = PFP.FINPROD_ID
+        <!-- add by etliu 增加资产属性:是否可提前支取 20200821 end -->
+        <!-- add by zhangrui1 增加资产属性:是否流动性受限 start -->
+        left join FLOW_LIMITED_ASSET RSAT on m.FINPROD_ID = RSAT.FINPROD_ID
+        <!-- add by zhangrui1 增加资产属性:是否流动性受限 end -->
+        <!-- add by zhangrui1 增加资产属性:机构主体类型 start -->
+        LEFT JOIN MST_CUSTOMER_INFO_ADD MCIA ON MCIA.CUSTOMER_ID = m.ISSUER_CODE
+        <!-- add by zhangrui1 增加资产属性:机构主体类型 end -->
         left join REP_ASSET_DEPT s on m.FINPROD_ID=s.REP_FINPROD_ID
         <![CDATA[ left join (SELECT LIST_LEVEL,LIST_DETAIL_ID FROM (SELECT n.LIST_LEVEL,m.LIST_DETAIL_ID,rank() over( partition BY LIST_DETAIL_ID ORDER BY LIST_LEVEL) AS rowno
         FROM  RSK_ACCESS_LIST_DETAIL m INNER JOIN RSK_ACCESS_LIST n ON m.LIST_ID =n.LIST_ID AND m.LIST_DETAIL_ID IS NOT null
@@ -82,13 +125,15 @@
         LEFT JOIN (SELECT tempData.O_CODE,tempData.GRADE_RESULT FROM (SELECT
         A41.O_CODE,A41.GRADE_RESULT,rank() over( partition by A41.O_CODE order by  A41.GRADE_DATE desc, A41.GRADE_RESULT DESC) AS rowNo
         FROM MST_BOND_CREDIT_RATING A41 WHERE  O_TYPE='01' AND GRADE_DATE &lt;=to_date('${valDate}','yyyy-MM-dd')) tempData WHERE tempData.rowNo=1
-        <!-- ) ZtPingji ON ZtPingji.O_CODE=m.ISSUER_CODE -->
-        ) ZtPingji ON ZtPingji.O_CODE=m.ISSUER
+        ) ZtPingji ON ZtPingji.O_CODE=m.ISSUER_CODE
         LEFT JOIN (SELECT tempData.O_CODE,tempData.GRADE_RESULT FROM (SELECT
         A41.O_CODE,A41.GRADE_RESULT,rank() over( partition by A41.O_CODE order by  A41.GRADE_DATE desc, A41.GRADE_RESULT DESC) AS rowNo
         FROM MST_BOND_CREDIT_RATING A41 WHERE  O_TYPE='02' AND GRADE_DATE &lt;=to_date('${valDate}','yyyy-MM-dd')) tempData WHERE tempData.rowNo=1
         ) ZxPingji ON ZxPingji.O_CODE=m.FINPROD_MARKET_ID
         left join DYGLF on m.FINPROD_ID=DYGLF.FINPROD_ID
+        <!-- add by zhangrui1 增加资产属性 start -->
+        left join CASH_INFO cash on cash.FINPROD_ID = m.FINPROD_ID
+        <!-- add by zhangrui1 增加资产属性 end -->
         <where>
             <if test="paramIdList != null and paramIdList.size() > 0">
                 m.FINPROD_ID in
@@ -123,15 +168,28 @@
         null as bondGradeType,
         null as relOrgCode,
         null as listLevel,
-        null as isCorOrg,
-        'N' as isInAdvance
+        null as isCorOrg
+        <!-- add by zhangrui1 增加资产属性 start -->
+        , null isSus
+        , null isRight
+        , null vdateLast
+        , null calcType
+        <!-- add by zhangrui1 增加资产属性 start -->
+        <!-- add by etliu 增加资产属性:是否可提前支取 20200821 start -->
+        , null isCanDrawInAdvance
+        <!-- add by etliu 增加资产属性:是否可提前支取 20200821 end -->
+        <!-- add by zhangrui1 增加资产属性:是否流动性受限 start -->
+        , null isFlowLimited
+        <!-- add by zhangrui1 增加资产属性:是否流动性受限 end -->
+        <!-- add by zhangrui1 增加资产属性:机构主体类型 start -->
+        , null customerObjType
+        <!-- add by zhangrui1 增加资产属性:机构主体类型 end -->
         from FIN_TRADE_PRODUCT m
         <![CDATA[ inner join FIN_PRODUCT_TYPE y on m.FINPROD_ID=y.FINPROD_ID and m.BRANCH='0' and y.BRANCH='0' and m.FINPROD_TYPE <> 'F21' ]]>
         left join REP_ASSET_DEPT s on m.FINPROD_ID=s.REP_FINPROD_ID
         <where>
-          mdate &gt;= to_date('${valDate}','yyyy-MM-dd')
             <if test="paramIdList != null and paramIdList.size() > 0">
-               and m.FINPROD_ID in
+               m.FINPROD_ID in
                 <foreach collection="paramIdList" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
@@ -159,22 +217,24 @@
 
     <select id="selectFundVal" resultType="com.joyintech.tams.invest.common.redisinit.dto.ImplFundValuation">
         select
-        m.FINPROD_ID  assetCode,
+        DISTINCT
+        n.FINPROD_ID  assetCode,
         m.VAL_DATE valDate,
         m.VALUATION valuation
         from FIN_PRODUCT_VALUATION m
+        inner join FIN_PRODUCT n on m.FINPROD_ID=n.FINPROD_MARKET_ID and m.FINPROD_TYPE2=n.FINPROD_TYPE2
         <where>
           m.VAL_DATE IN (
               select max(VAL_DATE) from FIN_PRODUCT_VALUATION where VAL_DATE &lt;= #{valDate, jdbcType=DATE}
               and FINPROD_ID = m.FINPROD_ID
-              <if test="paramIdList != null and paramIdList.size() > 0">
-                   and FINPROD_ID in
-                   <foreach collection="paramIdList" item="item" open="(" close=")" separator=",">
-                       #{item}
-                   </foreach>
-              </if>
               group by FINPROD_ID
           )
+            <if test="condList != null and condList.size() > 0">
+                and n.FINPROD_ID in
+                <foreach collection="condList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </select>
 
@@ -265,6 +325,7 @@
                 PARA_GRANULARITY paraGranularity,
                 REL_TYPE relType,
                 REL_ITEM relItem,
+                FORMULA_VAL formulaVal,
                 CUSTOM_VAL customVal
                 from RSK_EVENT_PARA_REL
     </select>
@@ -279,29 +340,49 @@
                 m.IS_FRESH_CAN_TRD isFreshCanTrd,
                 n.IS_UP_REDIS isUpRedis,
                 n.PARAM_DATA_TYPE paramDataType,
-                n.IS_FORBID isForbid,
-                '' institutionCode
+                n.PARAM_MATH_TYPE paramMathType,
+                n.PARAM_VALUE_NONE paramValueNone,
+                n.IS_FORBID isForbid
                 from RSK_ISUP_INDICATOR_PARA_DTL m
                 inner join  RSK_ISUP_INDICATOR_PARA n on m.PARA_CODE=n.PARA_CODE
                 <where>
-                    m.PARA_GRANULARITY in ('01','02','03')
+            <![CDATA[  ((n.PARAM_MATH_TYPE = 'PLUGIN' and m.PARA_GRANULARITY in ('01','02','03','04','05')) OR
+                    (n.PARAM_MATH_TYPE <> 'PLUGIN' and m.PARA_GRANULARITY in ('01','02','03'))) ]]>
                     <if test="paramIdList != null and paramIdList.size() > 0">
                        and m.PARA_CODE in
                         <foreach collection="paramIdList" item="item" open="(" close=")" separator=",">
-                            #{item}
+                            '${item}'
                         </foreach>
                     </if>
-                </where> 
-        union all 
-        select m.PARA_CODE,y.PARA_NAME paraName, m.INSTITUTION_CODE as PARA_GRANULARITY,'FIX' AS PARA_DISPLAY_TYPE,m.CONTENT,null as redisField ,'N' as isFreshCanTrd,'N' as isUpRedis,'String' as paramDataType, y.IS_FORBID isForbid
-        ,m.INSTITUTION_CODE as institutionCode   from RSK_ISUP_FIX_RECODE m
-        inner join 	 (select MAX(RSK_ISUP_FIX_RECODE.VALID_DATE) as VALID_DATE,PARA_CODE,INSTITUTION_CODE from RSK_ISUP_FIX_RECODE
-        <![CDATA[ where RSK_ISUP_FIX_RECODE.VALID_DATE<=to_date('${valDate}','yyyy-MM-dd') group by PARA_CODE,INSTITUTION_CODE) n 
-        on m.PARA_CODE=n.PARA_CODE and m.VALID_DATE=n.VALID_DATE and m.INSTITUTION_CODE=n.INSTITUTION_CODE
+                </where>
+
+        union all
+
+        select m.PARA_CODE,y.PARA_NAME paraName,'FIX' as PARA_GRANULARITY,'FIX' AS PARA_DISPLAY_TYPE,m.CONTENT,
+        null as redisField ,'N' as isFreshCanTrd,'N' as isUpRedis,'String' as paramDataType,
+        null as paramMathType,null as paramValueNone, y.IS_FORBID isForbid  from RSK_ISUP_FIX_RECODE m
+        inner join 	 (select MAX(RSK_ISUP_FIX_RECODE.VALID_DATE) as VALID_DATE,PARA_CODE from RSK_ISUP_FIX_RECODE
+        <![CDATA[ where RSK_ISUP_FIX_RECODE.VALID_DATE<=to_date('${valDate}','yyyy-MM-dd') group by PARA_CODE) n on m.PARA_CODE=n.PARA_CODE and m.VALID_DATE=n.VALID_DATE
 		inner join RSK_ISUP_INDICATOR_PARA y on m.PARA_CODE=y.PARA_CODE ]]>
         <where>
             <if test="paramIdList != null and paramIdList.size() > 0">
                  m.PARA_CODE in
+                <foreach collection="paramIdList" item="item" open="(" close=")" separator=",">
+                    '${item}'
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getFixParamDtlData" parameterType="Map" resultType="com.joyintech.tams.invest.common.redisinit.dto.ImplParam" flushCache="true" useCache="false">
+        select m.PARA_CODE,y.PARA_NAME paraName,'FIX' as PARA_GRANULARITY,'FIX' AS PARA_DISPLAY_TYPE,m.CONTENT,null as redisField ,'N' as isFreshCanTrd,'N' as isUpRedis,'String' as paramDataType,null as paramMathType, y.IS_FORBID isForbid  from RSK_ISUP_FIX_RECODE m
+        inner join 	 (select MAX(RSK_ISUP_FIX_RECODE.VALID_DATE) as VALID_DATE,PARA_CODE from RSK_ISUP_FIX_RECODE
+        <![CDATA[ where RSK_ISUP_FIX_RECODE.VALID_DATE<=to_date('${valDate}','yyyy-MM-dd') group by PARA_CODE) n on m.PARA_CODE=n.PARA_CODE and m.VALID_DATE=n.VALID_DATE
+		inner join RSK_ISUP_INDICATOR_PARA y on m.PARA_CODE=y.PARA_CODE ]]>
+        <where>
+            <if test="paramIdList != null and paramIdList.size() > 0">
+                m.PARA_CODE in
                 <foreach collection="paramIdList" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
@@ -309,6 +390,7 @@
         </where>
 
     </select>
+
     <select id="getRskIndicatorData" parameterType="Map" resultType="com.joyintech.tams.invest.common.redisinit.dto.ImplIndicator">
          select IND_ID  indId,
                 IND_NAME indName,
@@ -319,6 +401,7 @@
                 SUP_FREQUENCY supFrequency,
                 SUP_DIRECTION supDirection,
                 IS_EXCP_WHEN_DIV_ZERO isExcpWhenDivZero,
+                IS_DISPLAY_ORIGINAL isDisplayOriginal,
                 WARN_COND warnCond,
                 APPROVE_COND approveCond,
                 FOUL_COND foulCond
@@ -457,22 +540,31 @@
 
     <select id="selectProdAssetAmount" resultType="com.joyintech.tams.invest.common.redisinit.dto.ImplProdAssetAmount">
         select 
-            portfolio_id portfolioCode,
-            finprod_id assetCode,
-            nvl(sum(nvl(DSC_COST_AMT,0)+nvl(TDY_FLOAT_INGPL,0)+nvl(TDY_INTINCEXP, 0)),0) amount,
-            sum(share_amt) num 
-        from PTL_SEC_VALUTION 
-        where cdate = (select max(cdate) from PTL_SEC_VALUTION where cdate &lt; #{valDate, jdbcType=DATE})
+            ptl.portfolio_id portfolioCode,
+            ptl.finprod_id assetCode,
+            nvl(sum(
+            case when fin.FINPROD_TYPE2 = 'F06' or (fin.FINPROD_TYPE2 = 'F17' and fin.PROFIT_TYPE in ('01','03'))
+                then nvl(ptl.DSC_COST_AMT,0)+nvl(ptl.TDY_FLOAT_INGPL,0)+nvl(ptl.TDY_INTINCEXP, 0)+nvl(ptl.DELAY_PAY_AMT, 0)
+            else nvl(ptl.DSC_COST_AMT,0)+nvl(ptl.TDY_FLOAT_INGPL,0)+nvl(ptl.TDY_INTINCEXP, 0) end
+            ),0) amount,
+            sum(
+            case when fin.FINPROD_TYPE2 = 'F06' or (fin.FINPROD_TYPE2 = 'F17' and fin.PROFIT_TYPE in ('01','03'))
+                then nvl(ptl.share_amt, 0)+nvl(ptl.DELAY_PAY_AMT, 0)
+            else nvl(ptl.share_amt, 0) end
+            )*decode(substr(ptl.finprod_id,1,3), 'F01', 100, 1) num 
+        from PTL_SEC_VALUTION  ptl
+        left join FIN_PRODUCT fin on fin.FINPROD_ID = ptl.FINPROD_ID
+        where ptl.cdate = (select max(cdate) from PTL_SEC_VALUTION where cdate &lt; #{valDate, jdbcType=DATE})
+        
         <if test="condList != null and condList.size() > 0">
-            and (portfolio_id||':'||finprod_id) in
+            and (ptl.portfolio_id||':'||ptl.finprod_id) in
             <foreach collection="condList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
-        group by portfolio_id,finprod_id
+        group by ptl.portfolio_id,ptl.finprod_id
     </select>
 
-    <!--合并模拟测算代码 panbin 2020-8-11 start-->
     <select id="selectRedisParamConfig" parameterType="Map" resultType="com.joyintech.tams.common.base.entity.RskBusinessRedisConfig">
         select
         COMMON_BUSINESS_TYPE commonBusinessType,

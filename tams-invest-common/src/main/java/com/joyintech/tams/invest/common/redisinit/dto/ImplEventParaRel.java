@@ -10,9 +10,7 @@
 
 package com.joyintech.tams.invest.common.redisinit.dto;
 
-import com.joyintech.tams.common.base.entity.RskEventItemRule;
 import com.joyintech.tams.common.base.entity.RskEventParaRel;
-import com.joyintech.tams.invest.common.riskinfrds.event.entity.IEventItem;
 import com.joyintech.tams.invest.common.riskinfrds.event.entity.IEventParaRel;
 
 import java.math.BigDecimal;
@@ -38,4 +36,27 @@ public class ImplEventParaRel extends RskEventParaRel implements IEventParaRel {
     public BigDecimal getRelValue() {
         return rekValue;
     }
+
+    // add by zhangrui1 公式配置 start
+    /**
+     * 公式中的参数值
+     */
+    private BigDecimal formulaParaVal;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setFormulaParaVal(BigDecimal formulaParaVal) {
+        this.formulaParaVal = formulaParaVal;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public BigDecimal getFormulaParaVal() {
+        return formulaParaVal;
+    }
+    // add by zhangrui1 公式配置 end
 }

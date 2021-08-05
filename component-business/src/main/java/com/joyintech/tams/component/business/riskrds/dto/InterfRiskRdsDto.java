@@ -14,8 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.redisinit.dto.IRiskRds;
 
@@ -155,6 +154,36 @@ public class InterfRiskRdsDto implements IRiskRds {
     private BigDecimal assetRate;
 
     /**
+     * 资产到期日(为非标的所用)
+     */
+    private String mdate;
+ /**
+     * 投资目的
+     */
+    private String invAim;
+ /**
+     * 期限品种 add by wz 20200509
+     */
+    private String varietyCode;
+
+    /**
+     * 是否忽略试算状态（可转债申购确认用）
+     */
+    private String ignoreStatus;
+
+    /**
+     * 期限品种 add by wz 20200509
+     * @return
+     */
+    public String getVarietyCode() {
+        return varietyCode;
+    }
+
+    public void setVarietyCode(String varietyCode) {
+        this.varietyCode = varietyCode;
+    }
+
+    /**
      * 交易员
      */
     private String trader;
@@ -165,19 +194,29 @@ public class InterfRiskRdsDto implements IRiskRds {
     private String manager;
 
     /**
+     * 经办人
+     */
+    private String createUser;
+
+    /**
+     * 复核人
+     */
+    private String approveUser;
+
+    /**
      * 交割日
      */
-    private Date deliveryDate;
+    private String deliveryDate;
 
     /**
      * 委托开始日
      */
-    private Date startDate;
+    private String startDate;
 
     /**
      * 委托结束日
      */
-    private Date endDate;
+    private String endDate;
 
     /**
      * 状态，预占、释放
@@ -225,19 +264,9 @@ public class InterfRiskRdsDto implements IRiskRds {
     private String tradePlace;
 
     /**
-     * 交易币种
+     * 交易市场
      */
-    private String ccy= BussinessDictCodeListRds.币种_人民币_CNY.getValue();
-
-    /**
-     * 撤销实占标识
-     */
-    private String revokeFlg= BussinessDictCodeListRds.是否_否.getValue();
-
-    /**
-     * 资产到期日(为非标的所用)
-     */
-    private Date mdate;
+    private String tradeMarketMode;
 
     /**
      * 产品总资产(虚拟组合所用)
@@ -260,75 +289,60 @@ public class InterfRiskRdsDto implements IRiskRds {
     private String prdMdate;
 
     /**
-     * 投资性质(虚拟组合所用)
-     */
-    private String investNature;
-
-    /**
-     * 是否非标(虚拟组合所用)
-     */
-    private String isStandard;
-
-    /**
-     * 发行规模(虚拟组合所用)
-     */
-    private String publicAmount;
-
-    /**
-     * 分组代码(多对多指令，为了区分是哪一笔计算的指标，格式[类型_委托/交易_序号])
-     */
-    private String groupCode;
-
-    /**
      * 是否虚拟资产(是/否)
      */
     private String isVirtual;
 
-    /**
-     * 投资目的
-     */
-    private String invAim;
-
-    /**
-     * 是否非标（项目类理财直熔工具根据该字段判断是否非标资产）
-     */
-    private String isNonstandard;
-
-    public String getIsNonstandard() {
-        return isNonstandard;
+    public BigDecimal getTdyAssetValue() {
+        return tdyAssetValue;
     }
 
-    public void setIsNonstandard(String isNonstandard) {
-        this.isNonstandard = isNonstandard;
+    public void setTdyAssetValue(BigDecimal tdyAssetValue) {
+        this.tdyAssetValue = tdyAssetValue;
     }
 
+    public BigDecimal getTdyAssetNetValue() {
+        return tdyAssetNetValue;
+    }
+
+    public void setTdyAssetNetValue(BigDecimal tdyAssetNetValue) {
+        this.tdyAssetNetValue = tdyAssetNetValue;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public String getPrdMdate() {
+        return prdMdate;
+    }
+
+    public void setPrdMdate(String prdMdate) {
+        this.prdMdate = prdMdate;
+    }
+
+    public String getIsVirtual() {
+        return isVirtual;
+    }
+
+    public void setIsVirtual(String isVirtual) {
+        this.isVirtual = isVirtual;
+    }
 
     /**
-     * 机构代码
+     * 交易币种
      */
-    private String instCode;
-
-    // add by zhangrui1 关联方信息 start
-    /**
-     * 关联方
-     */
-    private String relatedParty;
+    private String ccy= BussinessDictCodeListRds.币种_人民币_CNY.getValue();
 
     /**
-     * 是否关联方
+     * 撤销实占标识
      */
-    private String isRelatedParty;
+    private String revokeFlg= BussinessDictCodeListRds.是否_否.getValue();
 
-    /**
-     * 关联方是否授信机构
-     */
-    private String isRelatedPartyCeOrg;
-
-    /**
-     * 关联方机构授信额度
-     */
-    private BigDecimal relatedPartyAmt;
-    // add by zhangrui1 关联方信息 end
 
     /**
      * 取得 流水号
@@ -650,7 +664,7 @@ public class InterfRiskRdsDto implements IRiskRds {
      * 取得 交割日
      * @return 交割日
      */
-    public Date getDeliveryDate() {
+    public String getDeliveryDate() {
         return deliveryDate;
     }
 
@@ -660,14 +674,14 @@ public class InterfRiskRdsDto implements IRiskRds {
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setDeliveryDate(Date deliveryDate) {
-        this.deliveryDate = deliveryDate;
+        this.deliveryDate = DateUtil.format(deliveryDate);
     }
 
     /**
      * 取得 委托开始日
      * @return 委托开始日
      */
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
@@ -677,14 +691,14 @@ public class InterfRiskRdsDto implements IRiskRds {
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+        this.startDate = DateUtil.format(startDate);
     }
 
     /**
      * 取得 委托结束日
      * @return 委托结束日
      */
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
@@ -694,7 +708,7 @@ public class InterfRiskRdsDto implements IRiskRds {
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+        this.endDate = DateUtil.format(endDate);
     }
 
     /**
@@ -839,12 +853,20 @@ public class InterfRiskRdsDto implements IRiskRds {
         this.yieldEndRate = yieldEndRate;
     }
 
-    public Date getMdate() {
-        return mdate;
+    public String getCreateUser() {
+        return createUser;
     }
 
-    public void setMdate(Date mdate) {
-        this.mdate = mdate;
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getApproveUser() {
+        return approveUser;
+    }
+
+    public void setApproveUser(String approveUser) {
+        this.approveUser = approveUser;
     }
 
     // add by zhangrui1 添加是否内部交易 Start
@@ -860,146 +882,48 @@ public class InterfRiskRdsDto implements IRiskRds {
     public void setIsInnerTrd(String isInnerTrd) {
         this.isInnerTrd = isInnerTrd;
     }
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode;
+    }
+
+    public String getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = DateUtil.format(mdate);
+    }
+
     // add by zhangrui1 添加是否内部交易 end
- 
+    // add by zhangrui1 添加债券券面总额（元） start
     /**
-     * 获取 instCode
-     * @return instCode.
+     * 券面总额（元）
      */
-    public String getInstCode() {
-        return instCode;
-    }
- 
+    private BigDecimal totalFaceAmt;
+
     /**
-     * 设置 instCode
-     * @param instCode instCode
+     * 获取 券面总额（元）
+     * 
+     * @return 券面总额（元）.
      */
-    public void setInstCode(String instCode) {
-        this.instCode = instCode;
-    } 
-    
-	/**
-     * 交易日历，资产不存在时作为资产日历
+    public BigDecimal getTotalFaceAmt() {
+        return totalFaceAmt;
+    }
+
+    /**
+     * 设置 券面总额（元）
+     * 
+     * @param totalFaceAmt 券面总额（元）
      */
-    private String calendarCode;
+    public void setTotalFaceAmt(BigDecimal totalFaceAmt) {
+        this.totalFaceAmt = totalFaceAmt;
+    }
+    // add by zhangrui1 添加债券券面总额（元） end
     
-    public String getCalendarCode() {
-		return calendarCode;
-	}
-
-	public void setCalendarCode(String calendarCode) {
-		this.calendarCode = calendarCode;
-	}
-	
-	public BigDecimal getDeadline() {
-		return deadline;
-	}
-
-	public void setDeadline(BigDecimal deadline) {
-		this.deadline = deadline;
-	}
-	
-	public BigDecimal getTradeAmtReal() {
-		return tradeAmtReal;
-	}
-
-	public void setTradeAmtReal(BigDecimal tradeAmtReal) {
-		this.tradeAmtReal = tradeAmtReal;
-	}
-
-	public Boolean getNotCalcAmount() {
-		return notCalcAmount;
-	}
-
-	public void setNotCalcAmount(Boolean notCalcAmount) {
-		this.notCalcAmount = notCalcAmount;
-	}
-
-	/**
-	 * 设置期限变量，非标用此变量作为资产的存续时长
-	 */
-	private BigDecimal deadline;
-	
-	/**
-	 * 实付本息，区别于金额
-	 */
-	@JsonSerialize(using=BigDecimalSerializer.class)
-	private BigDecimal tradeAmtReal;
-	
-	private Boolean notCalcAmount;
-
-	public BigDecimal getTdyAssetValue() {
-        return tdyAssetValue;
-    }
-
-    public void setTdyAssetValue(BigDecimal tdyAssetValue) {
-        this.tdyAssetValue = tdyAssetValue;
-    }
-
-    public BigDecimal getTdyAssetNetValue() {
-        return tdyAssetNetValue;
-    }
-
-    public void setTdyAssetNetValue(BigDecimal tdyAssetNetValue) {
-        this.tdyAssetNetValue = tdyAssetNetValue;
-    }
-
-    public String getAssetName() {
-        return assetName;
-    }
-
-    public void setAssetName(String assetName) {
-        this.assetName = assetName;
-    }
-
-    public String getPrdMdate() {
-        return prdMdate;
-    }
-
-    public void setPrdMdate(String prdMdate) {
-        this.prdMdate = prdMdate;
-    }
-
-    public String getInvestNature() {
-        return investNature;
-    }
-
-    public void setInvestNature(String investNature) {
-        this.investNature = investNature;
-    }
-
-    public String getIsStandard() {
-        return isStandard;
-    }
-
-    public void setIsStandard(String isStandard) {
-        this.isStandard = isStandard;
-    }
-
-    public String getPublicAmount() {
-        return publicAmount;
-    }
-
-    public void setPublicAmount(String publicAmount) {
-        this.publicAmount = publicAmount;
-    }
-
-    public String getGroupCode() {
-        return groupCode;
-    }
-
-    public void setGroupCode(String groupCode) {
-        this.groupCode = groupCode;
-    }
-
-    public String getIsVirtual() {
-        return isVirtual;
-    }
-
-    public void setIsVirtual(String isVirtual) {
-        this.isVirtual = isVirtual;
-    }
-
     public String getInvAim() {
         return invAim;
     }
@@ -1008,9 +932,148 @@ public class InterfRiskRdsDto implements IRiskRds {
         this.invAim = invAim;
     }
 
+    // add by zhangrui1 拆借回购等没有资产的需要传日历代码 start
+    /**
+     * 日历代码
+     */
+    private String calendarCode;
+
+    /**
+     * 获取 日历代码
+     * 
+     * @return 日历代码.
+     */
+    public String getCalendarCode() {
+        return calendarCode;
+    }
+
+    /**
+     * 设置 日历代码
+     * 
+     * @param calendarCode 日历代码
+     */
+    public void setCalendarCode(String calendarCode) {
+        this.calendarCode = calendarCode;
+    }
+    // add by zhangrui1 拆借回购等没有资产的需要传日历代码 end
+    // add by zhangrui1 回购交易计算剩余期限 start
+    /**
+     * 剩余期限
+     */
+    private long oneDay;
+
+    /**
+     * 获取 剩余期限
+     * 
+     * @return 剩余期限.
+     */
+    public long getOneDay() {
+        return oneDay;
+    }
+
+    /**
+     * 设置 剩余期限
+     * 
+     * @param oneDay 剩余期限
+     */
+    public void setOneDay(long oneDay) {
+        this.oneDay = oneDay;
+    }
+    // add by zhangrui1 回购交易计算剩余期限 end
+    // add by zhangrui1 差分预占 start
+    /**
+     * 是否差分预占
+     */
+    private String isDiffOccupy;
+
+    /**
+     * 差分标识
+     */
+    private String diffOccupyFlg;
+
+    /**
+     * 是否逆占
+     */
+    private String isReverseOccupy;
+
+    /**
+     * 获取 是否差分预占
+     * 
+     * @return 是否差分预占.
+     */
+    public String getIsDiffOccupy() {
+        return isDiffOccupy;
+    }
+
+    /**
+     * 设置 是否差分预占
+     * 
+     * @param isDiffOccupy 是否差分预占
+     */
+    public void setIsDiffOccupy(String isDiffOccupy) {
+        this.isDiffOccupy = isDiffOccupy;
+    }
+
+    /**
+     * 获取 差分标识
+     * 
+     * @return 差分标识.
+     */
+    public String getDiffOccupyFlg() {
+        return diffOccupyFlg;
+    }
+
+    /**
+     * 设置 差分标识
+     * 
+     * @param diffOccupyFlg 差分标识
+     */
+    public void setDiffOccupyFlg(String diffOccupyFlg) {
+        this.diffOccupyFlg = diffOccupyFlg;
+    }
+
+    /**
+     * 获取 是否逆占
+     * 
+     * @return 是否逆占.
+     */
+    public String getIsReverseOccupy() {
+        return isReverseOccupy;
+    }
+
+    /**
+     * 设置 是否逆占
+     * 
+     * @param isReverseOccupy 是否逆占
+     */
+    public void setIsReverseOccupy(String isReverseOccupy) {
+        this.isReverseOccupy = isReverseOccupy;
+    }
+    // add by zhangrui1 差分预占 end
+    // add by zhangrui1 关联方信息 start
+    /**
+     * 关联方
+     */
+    private String relatedParty;
+
+    /**
+     * 是否关联方
+     */
+    private String isRelatedParty;
+
+    /**
+     * 关联方是否授信机构
+     */
+    private String isRelatedPartyCeOrg;
+
+    /**
+     * 关联方机构授信额度
+     */
+    private BigDecimal relatedPartyAmt;
+
     /**
      * 获取 关联方
-     *
+     * 
      * @return 关联方.
      */
     public String getRelatedParty() {
@@ -1019,7 +1082,7 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     /**
      * 设置 关联方
-     *
+     * 
      * @param relatedParty 关联方
      */
     public void setRelatedParty(String relatedParty) {
@@ -1028,7 +1091,7 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     /**
      * 获取 是否关联方
-     *
+     * 
      * @return 是否关联方.
      */
     public String getIsRelatedParty() {
@@ -1037,7 +1100,7 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     /**
      * 设置 是否关联方
-     *
+     * 
      * @param isRelatedParty 是否关联方
      */
     public void setIsRelatedParty(String isRelatedParty) {
@@ -1046,7 +1109,7 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     /**
      * 获取 关联方是否授信机构
-     *
+     * 
      * @return 关联方是否授信机构.
      */
     public String getIsRelatedPartyCeOrg() {
@@ -1055,7 +1118,7 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     /**
      * 设置 关联方是否授信机构
-     *
+     * 
      * @param isRelatedPartyCeOrg 关联方是否授信机构
      */
     public void setIsRelatedPartyCeOrg(String isRelatedPartyCeOrg) {
@@ -1064,7 +1127,7 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     /**
      * 获取 关联方机构授信额度
-     *
+     * 
      * @return 关联方机构授信额度.
      */
     public BigDecimal getRelatedPartyAmt() {
@@ -1073,10 +1136,20 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     /**
      * 设置 关联方机构授信额度
-     *
+     * 
      * @param relatedPartyAmt 关联方机构授信额度
      */
     public void setRelatedPartyAmt(BigDecimal relatedPartyAmt) {
         this.relatedPartyAmt = relatedPartyAmt;
+    }
+    // add by zhangrui1 关联方信息 end
+
+
+    public String getIgnoreStatus() {
+        return ignoreStatus;
+    }
+
+    public void setIgnoreStatus(String ignoreStatus) {
+        this.ignoreStatus = ignoreStatus;
     }
 }

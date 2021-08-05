@@ -572,4 +572,70 @@ public class InterfAssetInfo extends BaseEntity implements IAssetInfo {
     public String getIsCorOrg() {
         return null;
     }
+
+    // add by zhangrui1 增加资产属性 start
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getIsSus() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getIsRight() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Date getVdateLast() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getCalcType() {
+        return null;
+    }
+    // add by zhangrui1 增加资产属性 end
+
+    // add by etliu 增加资产属性:是否可提前支取 20200821 start
+    /**
+     * 取得 是否可提前支取
+     *
+     * @return 是否可提前支取
+     */
+    @Override
+    public String getIsCanDrawInAdvance() {
+        return null;
+    }
+    // add by etliu 增加资产属性:是否可提前支取 20200821 end
+
+    // add by zhangrui1 增加资产属性:是否流动性受限 start
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getIsFlowLimited() {
+        return null;
+    }
+    // add by zhangrui1 增加资产属性:是否流动性受限 end
+
+    // add by zhangrui1 增加资产属性:机构主体类型 start
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getCustomerObjType() {
+        return null;
+    }
+    // add by zhangrui1 增加资产属性:机构主体类型 end
 }
