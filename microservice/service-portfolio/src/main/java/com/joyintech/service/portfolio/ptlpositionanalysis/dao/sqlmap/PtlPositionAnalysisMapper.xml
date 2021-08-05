@@ -3262,7 +3262,8 @@
         P.PORTFOLIO_ID  AS portfolioId,
         '01' hasChildren,
         'SYXJ' pinanAssetType,
-        nvl(A.COST,0)         AS posValue
+        decode(A.SUBJECT_NO,'120401',nvl(A.COST,0),'120402',nvl(A.COST,0),'120403',nvl(A.COST,0),0) AS tdyIntincexp,
+        decode(A.SUBJECT_NO,'1002',nvl(A.COST,0),'1021',nvl(A.COST,0),'1031',nvl(A.COST,0),0) AS posValue
         FROM PTL_PORTFOLIO P
         INNER JOIN BOK_VAL_TABLE_DATA A ON ('F16_'||P.PORTFOLIO_ID = A.BOOKSET_ID OR P.PORTFOLIO_ID = A.BOOKSET_ID)
         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
@@ -3286,7 +3287,7 @@
         </if>
         AND A.DETAIL_DIST = '01'
         AND DECODE (A.FSUBJECT_ID, NULL, 'root', DECODE (A.FSUBJECT_ID, ' ', 'root', A.FSUBJECT_ID)) = 'root'
-        and subject_no in ('120401','1002','120402','1021','120403','1031')
+        and A.SUBJECT_NO in ('120401','1002','120402','1021','120403','1031')
 
         <if test="pass != null and pass != null and pass == '02'.toString() ">
             /* 穿透后剩余现金数据查询*/
@@ -3296,6 +3297,7 @@
             A.PORTFOLIO_ID AS portfolioId,
             '01' hasChildren,
             'SYXJ' pinanAssetType,
+            nvl(A.TDY_INTINCEXP,0)  tdyIntincexp,
             nvl(A.MARKET_VALUE,0)  AS posValue
             FROM PTL_SEC_PIERCE_VALUTION A
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
@@ -3317,7 +3319,7 @@
                     #{item}
                 </foreach>
             </if>
-            AND A.FINPROD_ID like 'REMAININGCASH_%'
+            AND A.FINPROD_ID like 'REMAININGCASH_BJ%'
         </if>
     </select>
 
@@ -3325,6 +3327,7 @@
         /* 穿透后剩余现金数据查询*/
         SELECT
         A.PORTFOLIO_ID AS portfolioId,
+        nvl(A.TDY_INTINCEXP,0) AS tdyIntincexp
         nvl(A.MARKET_VALUE,0)  AS marketValue
         FROM PTL_SEC_PIERCE_VALUTION A
         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
@@ -3346,6 +3349,6 @@
                 #{item}
             </foreach>
         </if>
-        AND A.FINPROD_ID like 'REMAININGCASH_%'
+        AND A.FINPROD_ID like 'REMAININGCASH_BJ%'
     </select>
 </mapper>

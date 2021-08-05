@@ -101,12 +101,15 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
             List<PtlPositionAnalysis003Dto> remainList = this.selectRemain(map);
             BigDecimal dzhCash = BigDecimal.ZERO;
+            BigDecimal dzhLx = BigDecimal.ZERO;
             Map<String, BigDecimal> dzhMap = new HashMap<String, BigDecimal>();
+            Map<String, BigDecimal> dzhLxMap = new HashMap<String, BigDecimal>();
             if (displayType.equals(DictCodeListExt3.展示方式_多组合汇总.getValue())){
                 //多组合汇总汇总剩余现金数据
                 if (remainList != null){
                     for (PtlPositionAnalysis003Dto ptlPositionAnalysis003Dto : remainList) {
                         dzhCash = dzhCash.add(ptlPositionAnalysis003Dto.getPosValue() == null? BigDecimal.ZERO: ptlPositionAnalysis003Dto.getPosValue());
+                        dzhLx =  dzhCash.add(ptlPositionAnalysis003Dto.getTdyIntincexp() == null? BigDecimal.ZERO: ptlPositionAnalysis003Dto.getTdyIntincexp());
                     }
                 }
             }else{
@@ -115,6 +118,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                         //同一个组合的剩余现金汇总  存入map
                         if (item.getPosValue() != null){
                             dzhMap.put(item.getPortfolioId(), dzhMap.get(item.getPortfolioId()) == null?item.getPosValue() : dzhMap.get(item.getPortfolioId()).add(item.getPosValue()));
+                            dzhLxMap.put(item.getPortfolioId(), dzhMap.get(item.getPortfolioId()) == null?item.getTdyIntincexp() : dzhMap.get(item.getPortfolioId()).add(item.getTdyIntincexp()));
                         }
                     });
                 }
@@ -142,7 +146,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                         if(pageList != null && pageList.size()>0){
                             //多组合剩余现金处理
-                            this.allPortfolio(pageList,dzhCash);
+                            this.allPortfolio(pageList,dzhCash,dzhLx);
                         }
                     }
                 } else {
@@ -184,7 +188,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                         if(pageList != null && pageList.size()>0){
                             //单组合剩余现金处理
-                            this.onePortfolio(pageList,dzhMap);
+                            this.onePortfolio(pageList,dzhMap,dzhLxMap);
                         }
                     }
                 }
@@ -236,7 +240,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                         if(pageList != null && pageList.size()>0){
                             //多组合剩余现金处理
-                            this.allPortfolio(pageList,dzhCash);
+                            this.allPortfolio(pageList,dzhCash,dzhLx);
                         }
                     }
                 } else {
@@ -294,7 +298,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                         if(pageList != null && pageList.size()>0){
                             //单组合剩余现金处理
-                            this.onePortfolio(pageList,dzhMap);
+                            this.onePortfolio(pageList,dzhMap,dzhLxMap);
                         }
                     }
                 }
@@ -366,7 +370,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                         if(pageList != null && pageList.size()>0){
                             //多组合剩余现金处理
-                            this.allPortfolio(pageList,dzhCash);
+                            this.allPortfolio(pageList,dzhCash,dzhLx);
                         }
                     }
                 } else {
@@ -450,7 +454,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                         if(pageList != null && pageList.size()>0){
                             //单组合剩余现金处理
-                            this.onePortfolio(pageList,dzhMap);
+                            this.onePortfolio(pageList,dzhMap,dzhLxMap);
                         }
                     }
 
@@ -552,7 +556,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                         if(pageList != null && pageList.size()>0){
                             //多组合剩余现金处理
-                            this.allPortfolio(pageList,dzhCash);
+                            this.allPortfolio(pageList,dzhCash,dzhLx);
                         }
                     }
                 } else {
@@ -658,7 +662,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                         if(pageList != null && pageList.size()>0){
                             //单组合剩余现金处理
-                            this.onePortfolio(pageList,dzhMap);
+                            this.onePortfolio(pageList,dzhMap,dzhLxMap);
                         }
                     }
                 }
@@ -779,7 +783,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                         if(pageList != null && pageList.size()>0){
                             //多组合剩余现金处理
-                            this.allPortfolio(pageList,dzhCash);
+                            this.allPortfolio(pageList,dzhCash,dzhLx);
                         }
                     }
                 } else {
@@ -903,7 +907,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                         if(pageList != null && pageList.size()>0){
                             //单组合剩余现金处理
-                            this.onePortfolio(pageList,dzhMap);
+                            this.onePortfolio(pageList,dzhMap,dzhLxMap);
                         }
                     }
 
@@ -1673,7 +1677,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
      * @param pageList 查询结果List
      * @param dzhMap 单组合剩余现金Map
      */
-    public void onePortfolio(List<PtlPositionAnalysis003Dto> pageList,Map<String, BigDecimal> dzhMap){
+    public void onePortfolio(List<PtlPositionAnalysis003Dto> pageList,Map<String, BigDecimal> dzhMap,Map<String, BigDecimal> dzhLxMap){
         List<PtlPositionAnalysis003Dto> addList = new ArrayList<PtlPositionAnalysis003Dto>();
         pageList.forEach(item->{
             //当一级节点且有剩余现金时
@@ -1681,12 +1685,14 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                 //一级节点总持仓增加剩余现金
                 item.setPosValue(item.getPosValue().add(dzhMap.get(item.getPortfolioId())));
                 item.setPosCost(item.getPosCost().add(dzhMap.get(item.getPortfolioId())));
+                item.setTdyIntincexp(item.getTdyIntincexp().add(dzhLxMap.get(item.getPortfolioId())));
                 PtlPositionAnalysis003Dto addDto = new PtlPositionAnalysis003Dto();
                 addDto.setParentInfo(item.getPortfolioId());
                 addDto.setPortfolioId("剩余金额");
                 addDto.setTypeName("剩余金额");
                 addDto.setHasChildren("01");
                 addDto.setChildInfo("SYJE");
+                addDto.setTdyIntincexp(dzhLxMap.get(item.getPortfolioId()));
                 addDto.setPosValue(dzhMap.get(item.getPortfolioId()));
                 addDto.setPosCost(dzhMap.get(item.getPortfolioId()));
                 addList.add(addDto);
@@ -1701,7 +1707,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
      * @param pageList 查询结果List
      * @param dzhCash 多组合汇总剩余现金
      */
-    public void allPortfolio(List<PtlPositionAnalysis003Dto> pageList, BigDecimal dzhCash){
+    public void allPortfolio(List<PtlPositionAnalysis003Dto> pageList, BigDecimal dzhCash, BigDecimal dzhLx){
         List<PtlPositionAnalysis003Dto> addList = new ArrayList<PtlPositionAnalysis003Dto>();
         //生成汇总剩余现金子节点数据
         PtlPositionAnalysis003Dto addDto = new PtlPositionAnalysis003Dto();
@@ -1712,6 +1718,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
         addDto.setChildInfo("SYJE");
         addDto.setPosValue(dzhCash);
         addDto.setPosCost(dzhCash);
+        addDto.setTdyIntincexp(dzhLx);
         addList.add(addDto);
         pageList.addAll(addList);
     }
