@@ -8,6 +8,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -219,6 +221,8 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
     * @Date: 2020/1/13 0013
     **/
     public void saveTrdMatchInfoByCstp(CstpTrdMatchInfoDto cstpTrdMatchInfoDto){
+    	//cstpSelectDtoList  cstp下行数据
+		//trdCommandReceive001DtoList 系统内的交易数据
     	if(StringUtil.isEmptyList(cstpTrdMatchInfoDto.getCstpSelectDtoList())
     			&&StringUtil.isEmptyList(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList())){
     		//委托列表及cstp列表为空
@@ -639,4 +643,343 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 		return result;
 	}
 
+	/**
+	 * 获取回购天数枚举值
+	 */
+	private String calcTradelimitdays(int teDays,String tradeDateStr){
+		String termDateStr = "";
+		if (StringUtil.isNotEmpty(teDays)) {
+			try {
+				BigDecimal checkTeDays = new BigDecimal(teDays);
+				String ipDateStr = tradeDateStr;
+				Date ipDate1 = DateUtil.getLastDay(DateUtil.parse(ipDateStr));
+				int days = DateUtil.getDayOfMonth(DateUtil.format(ipDate1));
+				Date ipDatex2 = DateUtil.addMonthDateStr(ipDateStr, 2);
+				Date ipDate2 = DateUtil.getLastDay(ipDatex2);
+				int days2 = days + DateUtil.getDayOfMonth(DateUtil.format(ipDate2));
+				Date ipDatex3 = DateUtil.addMonthDateStr(ipDateStr, 3);
+				Date ipDate3 = DateUtil.getLastDay(ipDatex3);
+				int days3 = days2 + DateUtil.getDayOfMonth(DateUtil.format(ipDate3));
+				Date ipDatex4 = DateUtil.addMonthDateStr(ipDateStr, 4);
+				Date ipDate4 = DateUtil.getLastDay(ipDatex4);
+				int days4 = days3 + DateUtil.getDayOfMonth(DateUtil.format(ipDate4));
+				Date ipDatex5 = DateUtil.addMonthDateStr(ipDateStr, 5);
+				Date ipDate5 = DateUtil.getLastDay(ipDatex5);
+				int days5 = days4 + DateUtil.getDayOfMonth(DateUtil.format(ipDate5));
+				Date ipDatex6 = DateUtil.addMonthDateStr(ipDateStr, 6);
+				Date ipDate6 = DateUtil.getLastDay(ipDatex6);
+				int days6 = days5 + DateUtil.getDayOfMonth(DateUtil.format(ipDate6));
+				Date ipDatex7 = DateUtil.addMonthDateStr(ipDateStr, 7);
+				Date ipDate7 = DateUtil.getLastDay(ipDatex7);
+				int days7 = days6 + DateUtil.getDayOfMonth(DateUtil.format(ipDate7));
+				Date ipDatex8 = DateUtil.addMonthDateStr(ipDateStr, 8);
+				Date ipDate8 = DateUtil.getLastDay(ipDatex8);
+				int days8 = days7 + DateUtil.getDayOfMonth(DateUtil.format(ipDate8));
+				Date ipDatex9 = DateUtil.addMonthDateStr(ipDateStr, 9);
+				Date ipDate9 = DateUtil.getLastDay(ipDatex9);
+				int days9 = days8 + DateUtil.getDayOfMonth(DateUtil.format(ipDate9));
+				Date ipDatex10 = DateUtil.addMonthDateStr(ipDateStr, 10);
+				Date ipDate10 = DateUtil.getLastDay(ipDatex10);
+				int days10 = days9 + DateUtil.getDayOfMonth(DateUtil.format(ipDate10));
+				Date ipDatex11 = DateUtil.addMonthDateStr(ipDateStr, 11);
+				Date ipDate11 = DateUtil.getLastDay(ipDatex11);
+				int days11 = days10 + DateUtil.getDayOfMonth(DateUtil.format(ipDate11));
+				Date ipDatex12 = DateUtil.addMonthDateStr(ipDateStr, 12);
+				Date ipDate12 = DateUtil.getLastDay(ipDatex12);
+				int days12 = days11 + DateUtil.getDayOfMonth(DateUtil.format(ipDate12));
+
+				if (checkTeDays.compareTo(BigDecimal.ONE) == 0) {
+					termDateStr = "R001";
+				} else if (checkTeDays.compareTo(BigDecimal.ONE) > 0 && checkTeDays.compareTo(new BigDecimal(7)) <= 0) {
+					termDateStr = "R007";
+				} else if (checkTeDays.compareTo(new BigDecimal(7)) > 0 && checkTeDays.compareTo(new BigDecimal(14)) <= 0) {
+					termDateStr = "R014";
+				} else if (checkTeDays.compareTo(new BigDecimal(14)) > 0 && checkTeDays.compareTo(new BigDecimal(21)) <= 0) {
+					termDateStr = "R021";
+				} else if (checkTeDays.compareTo(new BigDecimal(days)) <= 0) {
+					termDateStr = "R1M";
+				} else if (checkTeDays.compareTo(new BigDecimal(days2)) <= 0) {
+					termDateStr = "R2M";
+				} else if (checkTeDays.compareTo(new BigDecimal(days3)) <= 0) {
+					termDateStr = "R3M";
+				} else if (checkTeDays.compareTo(new BigDecimal(days4)) <= 0) {
+					termDateStr = "R4M";
+				} else if (checkTeDays.compareTo(new BigDecimal(days6)) <= 0) {
+					termDateStr = "R6M";
+				} else if (checkTeDays.compareTo(new BigDecimal(days9)) <= 0) {
+					termDateStr = "R9M";
+				} else if (checkTeDays.compareTo(new BigDecimal(days12)) <= 0) {
+					termDateStr = "R1Y";
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return termDateStr;
+	}
+
+	/**
+	 * 获取证券账户托管机构
+	 */
+	private String getOurdepositaccountnumber(String accountnumber){
+/*		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("accountnumber",accountnumber);
+		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/CSTPTrdMatchInfo/getOurdepositaccountnumber",
+				map, String.class);*/
+		String temp = "";
+		if(StringUtil.equals(BussinessDictCodeList.登记托管机构_中央国债登记结算有限责任公司.getCodeName(),accountnumber)){
+			temp = BussinessDictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue();
+		}
+		if(StringUtil.equals(BussinessDictCodeList.登记托管机构_上海清算所.getCodeName(),accountnumber)){
+			temp = BussinessDictCodeList.登记托管机构_上海清算所.getValue();
+		}
+		return temp;
+	}
+
+	/**
+	 * 获取转化资产类型枚举值
+	 */
+	private String codeToCode(String code){
+		String toCode = "";
+		if(StringUtil.equals(code,"BOND")){
+			toCode = "F01";
+		}
+		if(StringUtil.equals(code,"REPO")){
+			toCode = "F07";
+		}
+		return toCode;
+	}
+
+	/**
+	 * 获取银行间费用信息
+	 */
+	private CstpTrdMatchInfoDto getFeeSetting(String fAssetType,String fTradeSide,String fTremStr,String fAccountNumber,String feeType,String tradeDateStr){
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("fAssetType",fAssetType);
+		map.put("fTradeSide",fTradeSide);
+		map.put("fTremStr",fTremStr);
+		map.put("fAccountNumber",fAccountNumber);
+		map.put("feeType",feeType);
+		map.put("tradeDateStr",tradeDateStr);
+		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/CSTPTrdMatchInfo/getFeeSetting",
+				map, CstpTrdMatchInfoDto.class);
+	}
+
+	/**
+	 * 获取交易手续费/结算手续费
+	 */
+	private BigDecimal getFeeByTypeAndInfo(CstpTrdMatchInfoDto cstpTrdMatchInfoDto,String feeType,int i){
+		BigDecimal feeInfo = new BigDecimal("0");
+		//获取资产类型
+		String fAssetType = codeToCode(cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getBusinesstype());
+		//获取交易方向
+		String fTradeSide = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getSide();
+		//获取回购期限
+		String fTremStr = calcTradelimitdays(cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradelimitdays(),
+				cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradeDateStr());
+		//获取成交日期
+		String tradeDateStr = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradeDateStr();
+		//获取证券账户托管机构  参数托管账号
+		String fAccountNumber = getOurdepositaccountnumber(cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getOurdepositinstitution());
+		//获取银行间交易费用设置信息 要素 资产类型 交易方向 回购期限 托管机构
+		CstpTrdMatchInfoDto feeDto = new CstpTrdMatchInfoDto();
+		feeDto = getFeeSetting(fAssetType,fTradeSide,fTremStr,fAccountNumber,feeType,tradeDateStr);
+		if(StringUtil.equals(fAssetType,"F01")){
+			if(StringUtil.equals(feeDto.getChargeType(),BussinessDictCodeList.计费类型_固定费率.getValue())){
+				//有最大值，最小值
+				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_券面总额)){
+					//获取券面总额
+					BigDecimal lastQty = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getLastqty();
+					//计算金额
+					feeInfo = lastQty.multiply(feeDto.getChargeRate());
+				}
+				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_成交金额)){
+					//获取成交金额
+					BigDecimal tradecashamt = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradecashamt();
+					feeInfo = tradecashamt.multiply(feeDto.getChargeRate());
+				}
+				//最小值比较
+				if(!(feeDto.getFeeMini() == null)){
+					if(feeInfo.compareTo(feeDto.getFeeMini()) == -1){
+						feeInfo = feeDto.getFeeMini();
+					}
+				}
+				//最大值比较
+				if(!(feeDto.getFeeMaxi() == null)){
+					if(feeInfo.compareTo(feeDto.getFeeMaxi()) == 1){
+						feeInfo = feeDto.getFeeMaxi();
+					}
+				}
+			}
+			if(StringUtil.equals(feeDto.getChargeType(),BussinessDictCodeList.计费类型_固定金额.getValue())){
+				feeInfo = feeDto.getChargeValue();
+			}
+		}
+		if(StringUtil.equals(fAssetType,"F07")){
+			if(StringUtil.equals(feeDto.getChargeType(),BussinessDictCodeList.计费类型_固定费率.getValue())){
+				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_成交金额)){
+					//有最大值，最小值
+					//获取成交金额
+					cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradecashamt();
+					BigDecimal tradecashamt = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradecashamt();
+					feeInfo = tradecashamt.multiply(feeDto.getChargeRate());
+					//最小值比较
+					if(!(feeDto.getFeeMini() == null)){
+						if(feeInfo.compareTo(feeDto.getFeeMini()) == -1){
+							feeInfo = feeDto.getFeeMini();
+						}
+					}
+					//最大值比较
+					if(!(feeDto.getFeeMaxi() == null)){
+						if(feeInfo.compareTo(feeDto.getFeeMaxi()) == 1){
+							feeInfo = feeDto.getFeeMaxi();
+						}
+					}
+
+				}
+			}
+			if(StringUtil.equals(feeDto.getChargeType(),BussinessDictCodeList.计费类型_固定金额.getValue())){
+				feeInfo = feeDto.getChargeValue();
+			}
+		}
+		return feeInfo;
+	}
+
+	/** @MethodName: cstp交易手续费/结算手续费计算
+	 * @Description: TODO
+	 * @Param: []
+	 * @Return: void
+	 * @Author: wangxuelei
+	 * @Date: 2020/1/13 0013
+	 **/
+	public void calcProcedureAmtAndSettleAmt(CstpTrdMatchInfoDto cstpTrdMatchInfoDto){
+		//cstpSelectDtoList  cstp下行数据
+		//trdCommandReceive001DtoList 系统内的交易数据
+		if(StringUtil.isEmptyList(cstpTrdMatchInfoDto.getCstpSelectDtoList())
+				&&StringUtil.isEmptyList(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList())){
+			//委托列表及cstp列表为空
+			return ;
+		}
+		if(cstpTrdMatchInfoDto.getCstpSelectDtoList().size()==1){
+			//cstp匹配多委托
+			if(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size()==1){
+				//1=1
+				String execId = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(0).getExecid();
+				String entrustId = cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().get(0).getEntrustId();
+				Map<String,Object> map = new HashMap<String,Object>();
+				map.put("execId",execId);
+				map.put("entrustId",entrustId);
+				List<CstpTrdMatchInfoDto> cstpSelectDtoList = restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
+						+ "/CSTPTrdMatchInfo/getCstpInfo", map, CstpTrdMatchInfoDto.class);
+				setValue2(cstpSelectDtoList);
+				//获取当前信息
+				TrdMatchInfo infoDto = trdMatchInfoMapper.selectByPrimaryKey(cstpSelectDtoList.get(0).getSeqno());
+				//处理交易结算费，手续费
+				infoDto.setProcedureAmt(
+						getFeeByTypeAndInfo(cstpTrdMatchInfoDto,BussinessDictCodeList.费用类型_交易手续费.getValue(),0));
+				infoDto.setSettleAmt(
+						getFeeByTypeAndInfo(cstpTrdMatchInfoDto,BussinessDictCodeList.费用类型_结算手续费.getValue(),0));
+				trdMatchInfoMapper.updateByPrimaryKeySelective(infoDto);
+
+			}else{
+				//1=n
+				//先计算出相关费用
+				BigDecimal procedureAmtS = getFeeByTypeAndInfo(cstpTrdMatchInfoDto,BussinessDictCodeList.费用类型_交易手续费.getValue(),0);
+				BigDecimal settleAmtS = getFeeByTypeAndInfo(cstpTrdMatchInfoDto,BussinessDictCodeList.费用类型_结算手续费.getValue(),0);
+				//交易手续费尾差
+				BigDecimal procedureAmtTail = new BigDecimal(0);
+				//多组合条件下，结算手续费平均分配到每个组合，尾数计到成交额最大的一个组合；
+				BigDecimal settleAmt = settleAmtS.divide(new BigDecimal(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size()),2,BigDecimal.ROUND_DOWN);
+				//计算结算手续费尾差Tail
+				BigDecimal settleAmtTail = settleAmtS.subtract(settleAmt.multiply(new BigDecimal(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size()))).setScale(2);
+				//记录券面总额的和（用于计算交易手续费）
+				BigDecimal prinAmtS = new BigDecimal(0);
+				//记录券面总额最大的数据的流水号
+				String newSeqno = "";
+				//券面总额prinAmt
+				BigDecimal prinAmt = new BigDecimal(0);
+				List<CstpTrdMatchInfoDto> cstpSelectDtoListTemp = new ArrayList<CstpTrdMatchInfoDto>();
+				List<TrdMatchInfo> TrdMatchInfoTemp = new ArrayList<TrdMatchInfo>();
+				for(int i = 0; i < cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size(); i++){
+					String execId = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(0).getExecid();
+					String entrustId = cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().get(i).getEntrustId();
+					Map<String,Object> map = new HashMap<String,Object>();
+					map.put("execId",execId);
+					map.put("entrustId",entrustId);
+					List<CstpTrdMatchInfoDto> cstpSelectDtoList = restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
+							+ "/CSTPTrdMatchInfo/getCstpInfo", map, CstpTrdMatchInfoDto.class);
+					setValue2(cstpSelectDtoList);
+					prinAmtS = prinAmtS.add(cstpSelectDtoList.get(0).getPrinAmt());
+					if(cstpSelectDtoList.get(0).getPrinAmt().compareTo(prinAmt) == 1){
+						prinAmt = cstpSelectDtoList.get(0).getPrinAmt();
+						newSeqno = cstpSelectDtoList.get(0).getSeqno();
+					}
+					cstpSelectDtoListTemp.add(cstpSelectDtoList.get(0));
+				}
+				for(int i = 0;i<cstpSelectDtoListTemp.size();i++){
+					//获取当前信息
+					TrdMatchInfo infoDto = trdMatchInfoMapper.selectByPrimaryKey(cstpSelectDtoListTemp.get(i).getSeqno());
+					//计算比例，计算交易手续费
+					BigDecimal procedureAmt = procedureAmtS.multiply((cstpSelectDtoListTemp.get(i).getPrinAmt())
+							.divide(prinAmtS,2,BigDecimal.ROUND_DOWN)).setScale(2,BigDecimal.ROUND_DOWN);
+					infoDto.setProcedureAmt(procedureAmt);
+					infoDto.setSettleAmt(settleAmt);
+					TrdMatchInfoTemp.add(infoDto);
+				}
+				//计算交易手续费尾差
+				BigDecimal procedureAmtSum = new BigDecimal(0);
+				for(int i = 0;i<TrdMatchInfoTemp.size();i++){
+					procedureAmtSum = procedureAmtSum.add(TrdMatchInfoTemp.get(i).getProcedureAmt());
+				}
+				procedureAmtTail = procedureAmtS.subtract(procedureAmtSum).setScale(2);
+				//组装尾差入库
+				for(int i = 0;i<TrdMatchInfoTemp.size();i++){
+					TrdMatchInfo infoDtos = TrdMatchInfoTemp.get(i);
+					if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),newSeqno)){
+						infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
+						infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
+					}
+					trdMatchInfoMapper.updateByPrimaryKeySelective(infoDtos);
+				}
+			}
+		}
+		if(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size()==1 && cstpTrdMatchInfoDto.getCstpSelectDtoList().size()>1){
+			//n=1
+			for(int i = 0; i < cstpTrdMatchInfoDto.getCstpSelectDtoList().size() ; i++){
+				String execId = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getExecid();
+				String entrustId = cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().get(0).getEntrustId();
+				Map<String,Object> map = new HashMap<String,Object>();
+				map.put("execId",execId);
+				map.put("entrustId",entrustId);
+				List<CstpTrdMatchInfoDto> cstpSelectDtoList = restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
+						+ "/CSTPTrdMatchInfo/getCstpInfo", map, CstpTrdMatchInfoDto.class);
+				setValue2(cstpSelectDtoList);
+				//获取当前信息
+				TrdMatchInfo infoDto = trdMatchInfoMapper.selectByPrimaryKey(cstpSelectDtoList.get(0).getSeqno());
+				//处理交易结算费，手续费
+				infoDto.setProcedureAmt(
+						getFeeByTypeAndInfo(cstpTrdMatchInfoDto,BussinessDictCodeList.费用类型_交易手续费.getValue(),i));
+				infoDto.setSettleAmt(
+						getFeeByTypeAndInfo(cstpTrdMatchInfoDto,BussinessDictCodeList.费用类型_结算手续费.getValue(),i));
+				trdMatchInfoMapper.updateByPrimaryKeySelective(infoDto);
+			}
+
+		}
+	}
+	private void setValue2( List<CstpTrdMatchInfoDto> cstpSelectDtoPage){
+		if(cstpSelectDtoPage.size() > 0){
+			for (CstpTrdMatchInfoDto dto:cstpSelectDtoPage) {
+				if(StringUtil.equals(dto.getTradeType(),"02")&&StringUtil.equals(dto.getFinprodType(),"F07")){
+					if(dto.getPrinAmt()!=null && dto.getUnitCprice()!=null &&dto.getActCapDays()!=null){
+						BigDecimal multiply = ArithmeticUtil.multiply(dto.getPrinAmt(), dto.getUnitCprice());
+						BigDecimal multiply1 = ArithmeticUtil.multiply(ArithmeticUtil.divide(multiply, new BigDecimal(100), 8), new BigDecimal(dto.getActCapDays()));
+						BigDecimal divide = ArithmeticUtil.divide(multiply1, 365, 2);
+						dto.setUnitInt(divide);
+						dto.setIntAmt(divide);
+						dto.setMdateSettleAmt(ArithmeticUtil.doAdd(divide,dto.getPrinAmt()));
+					}
+				}
+			}
+		}
+	}
 }

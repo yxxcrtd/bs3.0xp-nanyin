@@ -136,6 +136,12 @@ public class CstpSelectDto extends InterfCstpTrade{
      * @since 1.0
      */
     public String getBusinesstypeStr(){
+        if(StringUtil.equals("BOND",super.getBusinesstype())){
+            return SysDataUtil.getNameFromDataDict(DictCode.交易类型_CSTP, "T01");
+        }
+        if(StringUtil.equals("REPO",super.getBusinesstype())){
+            return SysDataUtil.getNameFromDataDict(DictCode.交易类型_CSTP, "T02");
+        }
         return SysDataUtil.getNameFromDataDict(DictCode.交易类型_CSTP, super.getBusinesstype());
     }
     /**
