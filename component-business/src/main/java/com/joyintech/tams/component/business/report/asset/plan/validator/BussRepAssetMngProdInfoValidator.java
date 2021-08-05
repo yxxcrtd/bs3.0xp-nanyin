@@ -44,9 +44,9 @@ public class BussRepAssetMngProdInfoValidator implements BeanValidator {
             if(!StringUtil.isNotEmpty(dto.getRepMaxRate())){
                 errorList.add(new ValidMessage("repMaxRate",getMessage("BUSS_COM_E_0038", getMessage("BussRepAssetMngProdInfo.repMaxRate"))));
             }
-            if(!StringUtil.isNotEmpty(dto.getRepMinRate())){
-                errorList.add(new ValidMessage("repMinRate",getMessage("BUSS_COM_E_0038", getMessage("BussRepAssetMngProdInfo.repMinRate"))));
-            }
+//            if(!StringUtil.isNotEmpty(dto.getRepMinRate())){
+//                errorList.add(new ValidMessage("repMinRate",getMessage("BUSS_COM_E_0038", getMessage("BussRepAssetMngProdInfo.repMinRate"))));
+//            }
         }
         if(StringUtil.isNotEmpty(dto.getRepMaxRate())&&StringUtil.isNotEmpty(dto.getRepMinRate())){
             if(dto.getRepMaxRate().compareTo(dto.getRepMinRate())<0){
