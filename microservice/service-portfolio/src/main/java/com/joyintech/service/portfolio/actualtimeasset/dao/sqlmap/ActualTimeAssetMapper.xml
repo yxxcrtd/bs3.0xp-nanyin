@@ -259,10 +259,10 @@
 				'cash' as type8,
 				null as type7,
 				null as type6,
-				cashBalance AS actualPositionAmount,
-				tradeCash AS tradePositionAmount,
-				cashAvailable AS instructionsAmount,
-				preReductionCash AS pledgeAmount,
+				SUM(cashBalance) AS actualPositionAmount,
+				SUM(tradeCash) AS tradePositionAmount,
+				SUM(cashAvailable) AS instructionsAmount,
+				SUM(preReductionCash) AS pledgeAmount,
 				0 AS preReductionAmount,
 				0 AS marketValue
 			FROM
@@ -450,6 +450,7 @@
 						) z
 					) zz
 				) nn
+				GROUP BY portfolioId,portfolioName
 			<!-- add by swwan 增加现金资产 20210719 end -->
 		) tt
         where (<![CDATA[  actualPositionAmount <> 0 or tradePositionAmount <> 0 or instructionsAmount <> 0 or pledgeAmount <> 0 or preReductionAmount <> 0  ]]>)
