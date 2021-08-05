@@ -5,6 +5,8 @@ import com.google.common.collect.Lists;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.RskOutValtblImportHisMapper;
@@ -13,16 +15,9 @@ import com.joyintech.tams.common.base.dao.RskValtblPrtBotassetMapMapper;
 import com.joyintech.tams.common.base.dao.RskValtblPrtImpMapMapper;
 import com.joyintech.tams.common.base.dao.RskValtblSumAssetSubMapper;
 import com.joyintech.tams.common.base.dao.RskValtblSumsubMapMapper;
+import com.joyintech.tams.common.base.dao.ValtblImportDateTraceMapper;
 import com.joyintech.tams.common.base.dao.ValtblImportHisTraceMapper;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
-import com.joyintech.tams.common.base.entity.RskOutValtblImportHisKey;
-import com.joyintech.tams.common.base.entity.RskValtblAssetSub;
-import com.joyintech.tams.common.base.entity.RskValtblPrtBotassetMap;
-import com.joyintech.tams.common.base.entity.RskValtblPrtImpMap;
-import com.joyintech.tams.common.base.entity.RskValtblSubject;
-import com.joyintech.tams.common.base.entity.RskValtblSumAssetSub;
-import com.joyintech.tams.common.base.entity.RskValtblSumsubMap;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.dto.InterfStockInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -108,6 +103,9 @@ public class ValBatchImportService {
 
     @Autowired
     private AssetCommonMapper assetCommonMapper;
+
+    @Autowired
+    private ValtblImportDateTraceMapper valtblImportDateTraceMapper;
 
     /**
      * 底层资产映射
@@ -1406,6 +1404,16 @@ public class ValBatchImportService {
             rskOutValtblImportHisMapper.insertSelective(dto);
         }
         valtblImportHisTraceMapper.insert(dto);
+        //处理成功的文件入库估值表导入日期记录表
+
+        if (StringUtil.equals(dto.getImportType(),DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue())){
+            ValtblImportDateTrace dateDto = new ValtblImportDateTrace();
+            dateDto.setUuid(IDGenerator.generate());
+            dateDto.setImpdate(DateUtil.parse(DateUtil.getSysDate()));
+            dateDto.setPortfolioId(dto.getPortfolioId());
+            dateDto.setValdate(dto.getValdate());
+            valtblImportDateTraceMapper.insert(dateDto);
+        }
     }
 
     /**

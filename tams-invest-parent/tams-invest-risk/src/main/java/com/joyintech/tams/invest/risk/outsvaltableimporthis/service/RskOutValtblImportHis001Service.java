@@ -7,11 +7,14 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.RskOutValtblImportHisMapper;
+import com.joyintech.tams.common.base.dao.ValtblImportDateTraceMapper;
 import com.joyintech.tams.common.base.dao.ValtblImportHisTraceMapper;
 import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
 import com.joyintech.tams.common.base.entity.RskValtblPrtImpMap;
+import com.joyintech.tams.common.base.entity.ValtblImportDateTrace;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -50,6 +53,8 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
     @Autowired
     private ValtblImportHisTraceMapper valtblImportHisTraceMapper;
 
+    @Autowired
+    private ValtblImportDateTraceMapper valtblImportDateTraceMapper;
     // 平台日期
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
@@ -287,6 +292,16 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
         dto.setTimedTaskStatus("S");
         rskOutValtblImportHisMapper.updateByPrimaryKey(dto);
         valtblImportHisTraceMapper.insert(dto);
+        //处理成功的文件入库估值表导入日期记录表
+        if (StringUtil.equals(dto.getImportType(),DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue())){
+            ValtblImportDateTrace dateDto = new ValtblImportDateTrace();
+            dateDto.setUuid(IDGenerator.generate());
+            dateDto.setImpdate(DateUtil.parse(DateUtil.getSysDate()));
+            dateDto.setPortfolioId(dto.getPortfolioId());
+            dateDto.setValdate(dto.getValdate());
+            valtblImportDateTraceMapper.insert(dateDto);
+        }
+
         return dto;
     }
 

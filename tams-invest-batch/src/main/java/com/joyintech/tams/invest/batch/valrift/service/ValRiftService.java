@@ -17,12 +17,15 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.base.dao.PtlSecPierceValutionDetailMapper;
 import com.joyintech.tams.invest.batch.valrift.dto.PtlSecPierceValutionDetailDto;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
+import com.joyintech.tools.util.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
@@ -84,6 +87,7 @@ public class ValRiftService {
                 paramMap.put("portfolioId", portfolioId);
                 List<ValtblAssetSubDto> positionList = valRiftMapper.selectValtblAssetSub(paramMap);//底层资产
                 //剩余现金 finprodId = REMAININGCASH_+"成本科目号"
+                List<ValtblAssetSubDto> cashList =  valRiftMapper.selectValtblAssetSubCash(paramMap);
                 positionList.addAll(valRiftMapper.selectValtblAssetSubCash(paramMap));
                 //回购利息是否是汇总的
                 boolean hgSum = false;
@@ -448,6 +452,14 @@ public class ValRiftService {
 
             }
         }
+        if (mapAsset.get("REMAININGCASH_BJ")!= null && mapAsset.get("REMAININGCASH_LX")!= null){
+            //处理结束后将利息放入现金数据中
+            PtlSecPierceValutionDto bjDto = mapAsset.get("REMAININGCASH_BJ");
+            PtlSecPierceValutionDto lxDto = mapAsset.get("REMAININGCASH_LX");
+            bjDto.setTdyIntincexp(lxDto.getTdyIntincexp());
+            mapAsset.put("REMAININGCASH_BJ",bjDto);
+        }
+
         //-----add by 裴家俊  2019/04/03----重新构造避免重复金融产品代码---start----
     	for (Entry<String, PtlSecPierceValutionDto> entry : mapAsset.entrySet()) {
 			if (entry.getValue().getShareAmt() != null
@@ -719,6 +731,7 @@ public class ValRiftService {
         param.put("dateMin",dateMin);
         param.put("dateMax",supDate);
         param.put("isReport",isReport);
+        param.put("deptCode", LoginUserUtil.getDeptCode());     //TODO 查看是否能找到跑批的机构代码
         List<Map<String,Object>> resultList = new ArrayList<>();
         //防止语句过长
         if(productIdList == null || productIdList.size()<800) {
