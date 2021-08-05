@@ -54,14 +54,14 @@ $(function() {
                 return;
             }
         }
-        if($('#type12').val() == "013" && !$('#bussFinBondRepInfoDto_bankSecKzzq').val()){
-        	Joyin.error("是否商业银行可转债数据不能为空。")
-            return;
-        }
-        if($('#repAssetType').val() == "1110" && !$('#bussFinBondRepInfoDto_bankSecZxzq').val()){
-        	Joyin.error("是否专项债券数据不能为空。")
-            return;
-        }
+        // if($('#type12').val() == "013" && !$('#bussFinBondRepInfoDto_bankSecKzzq').val()){
+        // 	Joyin.error("是否商业银行可转债数据不能为空。")
+        //     return;
+        // }
+        // if($('#repAssetType').val() == "1110" && !$('#bussFinBondRepInfoDto_bankSecZxzq').val()){
+        // 	Joyin.error("是否专项债券数据不能为空。")
+        //     return;
+        // }
         var text = $('#isRight').next().find('em').text();
         if(text==='否'){
             $('#isRight').val('N');
