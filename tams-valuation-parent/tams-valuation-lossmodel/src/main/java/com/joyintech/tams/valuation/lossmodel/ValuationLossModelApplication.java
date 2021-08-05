@@ -1,5 +1,5 @@
 /*
- * 文件名：ValuationLossModelApplication.java
+ * 文件名：ValuationValModelApplication.java
  * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
  * 描述：理财资管管理系统V2.0
  * 修改人：何阳阳

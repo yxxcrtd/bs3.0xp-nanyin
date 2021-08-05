@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
-	<localRepository>D:\maven_repository</localRepository>
+	<localRepository>D:\repo</localRepository>
 	<mirrors>
 		<mirror>
 			<id>nexus</id>

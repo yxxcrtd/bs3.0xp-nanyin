@@ -9,6 +9,15 @@
 	<artifactId>tams-disclosure-parent</artifactId>
 	<version>3.0.0</version>
 	<packaging>pom</packaging>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi</artifactId>
+				<version>4.1.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<modules>
 		<module>tams-disclosure</module>
 	</modules>

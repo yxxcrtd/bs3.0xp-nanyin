@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.valmodel.convertibleorexchangeableassets.bintreeconfig.dao.ModBintreeConfigDtoMapper">
+  <resultMap id="BaseResultMap" type="com.joyintech.service.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto">
+    <id column="SEQNO" jdbcType="VARCHAR" property="seqno" />
+    <result column="FINPROD_ID" jdbcType="VARCHAR" property="finprodId" />
+    <result column="FINPROD_NAME" jdbcType="VARCHAR" property="finprodName" />
+    <result column="STOCK_BORDSTTUS" jdbcType="VARCHAR" property="stockBordsttus" />
+    <result column="STOCK_ID" jdbcType="VARCHAR" property="stockId" />
+    <result column="COMP_ORG" jdbcType="VARCHAR" property="compOrg" />
+    <result column="COMP_ORGNAME" jdbcType="VARCHAR" property="compOrgname" />
+    <result column="COMP_STOCKID" jdbcType="VARCHAR" property="compStockid" />
+    <result column="MARKET_MULTI" jdbcType="VARCHAR" property="marketMulti" />
+    <result column="FINPROD_PROIT" jdbcType="DECIMAL" property="finprodProit" />
+    <result column="FINPROD_NETASSET" jdbcType="DECIMAL" property="finprodNetasset" />
+    <result column="SMOOTHSECTION" jdbcType="DECIMAL" property="smoothsection" />
+    <result column="BINTREE_STEP" jdbcType="DECIMAL" property="bintreeStep" />
+    <result column="CURVE_CODE" jdbcType="DECIMAL" property="curveCode" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    SEQNO, FINPROD_ID, FINPROD_NAME, STOCK_BORDSTTUS, STOCK_ID, COMP_ORG, COMP_ORGNAME, 
+    COMP_STOCKID, MARKET_MULTI,FINPROD_PROIT, FINPROD_NETASSET, SMOOTHSECTION, BINTREE_STEP, CURVE_CODE, 
+    CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from MOD_BINTREE_CONFIG
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByFinprodId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from MOD_BINTREE_CONFIG
+    where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+  </select>
+   <select id="selectForPage" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from MOD_BINTREE_CONFIG
+    where 1=1
+     <if test="stockBordsttus != null">
+        and STOCK_BORDSTTUS=#{stockBordsttus,jdbcType=VARCHAR}
+     </if>
+     <if test="finprodIds != null and finprodIds.size()>0 ">
+     AND FINPROD_ID IN(
+        <foreach item="item" index="index" collection="finprodIds" separator=",">
+				#{item}
+		</foreach>
+     )
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from MOD_BINTREE_CONFIG
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByFinprodId" parameterType="java.lang.String">
+    delete from MOD_BINTREE_CONFIG
+    where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.service.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto">
+    insert into MOD_BINTREE_CONFIG (SEQNO, FINPROD_ID, FINPROD_NAME, 
+      STOCK_BORDSTTUS, STOCK_ID, COMP_ORG, 
+      COMP_ORGNAME, MARKET_MULTI,COMP_STOCKID, FINPROD_PROIT, 
+      FINPROD_NETASSET, SMOOTHSECTION, BINTREE_STEP, 
+      CURVE_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME
+      )
+    values (#{seqno,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, 
+      #{stockBordsttus,jdbcType=VARCHAR}, #{stockId,jdbcType=VARCHAR}, #{compOrg,jdbcType=VARCHAR}, 
+      #{compOrgname,jdbcType=VARCHAR}, #{marketMulti,jdbcType=VARCHAR},#{compStockid,jdbcType=VARCHAR}, #{finprodProit,jdbcType=DECIMAL}, 
+      #{finprodNetasset,jdbcType=DECIMAL}, #{smoothsection,jdbcType=DECIMAL}, #{bintreeStep,jdbcType=DECIMAL}, 
+      #{curveCode,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.service.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto">
+    insert into MOD_BINTREE_CONFIG
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="seqno != null">
+        SEQNO,
+      </if>
+      <if test="finprodId != null">
+        FINPROD_ID,
+      </if>
+      <if test="finprodName != null">
+        FINPROD_NAME,
+      </if>
+      <if test="stockBordsttus != null">
+        STOCK_BORDSTTUS,
+      </if>
+      <if test="stockId != null">
+        STOCK_ID,
+      </if>
+      <if test="compOrg != null">
+        COMP_ORG,
+      </if>
+      <if test="compOrgname != null">
+        COMP_ORGNAME,
+      </if>
+      <if test="compStockid != null">
+        COMP_STOCKID,
+      </if>
+      <if test="finprodProit != null">
+        FINPROD_PROIT,
+      </if>
+      <if test="finprodNetasset != null">
+        FINPROD_NETASSET,
+      </if>
+      <if test="smoothsection != null">
+        SMOOTHSECTION,
+      </if>
+      <if test="bintreeStep != null">
+        BINTREE_STEP,
+      </if>
+      <if test="curveCode != null">
+        CURVE_CODE,
+      </if>
+      <if test="createUser != null">
+        CREATE_USER,
+      </if>
+      <if test="createDept != null">
+        CREATE_DEPT,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null">
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="seqno != null">
+        #{seqno,jdbcType=VARCHAR},
+      </if>
+      <if test="finprodId != null">
+        #{finprodId,jdbcType=VARCHAR},
+      </if>
+      <if test="finprodName != null">
+        #{finprodName,jdbcType=VARCHAR},
+      </if>
+      <if test="stockBordsttus != null">
+        #{stockBordsttus,jdbcType=VARCHAR},
+      </if>
+      <if test="stockId != null">
+        #{stockId,jdbcType=VARCHAR},
+      </if>
+      <if test="compOrg != null">
+        #{compOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="compOrgname != null">
+        #{compOrgname,jdbcType=VARCHAR},
+      </if>
+      <if test="compStockid != null">
+        #{compStockid,jdbcType=VARCHAR},
+      </if>
+      <if test="finprodProit != null">
+        #{finprodProit,jdbcType=DECIMAL},
+      </if>
+      <if test="finprodNetasset != null">
+        #{finprodNetasset,jdbcType=DECIMAL},
+      </if>
+      <if test="smoothsection != null">
+        #{smoothsection,jdbcType=DECIMAL},
+      </if>
+      <if test="bintreeStep != null">
+        #{bintreeStep,jdbcType=DECIMAL},
+      </if>
+      <if test="curveCode != null">
+        #{curveCode,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null">
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto">
+    update MOD_BINTREE_CONFIG
+    <set>
+      <if test="finprodId != null">
+        FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+      </if>
+      <if test="finprodName != null">
+        FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+      </if>
+      <if test="stockBordsttus != null">
+        STOCK_BORDSTTUS = #{stockBordsttus,jdbcType=VARCHAR},
+      </if>
+      <if test="stockId != null">
+        STOCK_ID = #{stockId,jdbcType=VARCHAR},
+      </if>
+      <if test="compOrg != null">
+        COMP_ORG = #{compOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="compOrgname != null">
+        COMP_ORGNAME = #{compOrgname,jdbcType=VARCHAR},
+      </if>
+      <if test="compStockid != null">
+        COMP_STOCKID = #{compStockid,jdbcType=VARCHAR},
+      </if>
+      <if test="marketMulti != null">
+        MARKET_MULTI = #{marketMulti,jdbcType=VARCHAR},
+      </if>
+      <if test="finprodProit != null">
+        FINPROD_PROIT = #{finprodProit,jdbcType=DECIMAL},
+      </if>
+      <if test="finprodNetasset != null">
+        FINPROD_NETASSET = #{finprodNetasset,jdbcType=DECIMAL},
+      </if>
+      <if test="smoothsection != null">
+        SMOOTHSECTION = #{smoothsection,jdbcType=DECIMAL},
+      </if>
+      <if test="bintreeStep != null">
+        BINTREE_STEP = #{bintreeStep,jdbcType=DECIMAL},
+      </if>
+      <if test="curveCode != null">
+        CURVE_CODE = #{curveCode,jdbcType=DECIMAL},
+      </if>
+      <if test="updateUser != null">
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.service.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto">
+    update MOD_BINTREE_CONFIG
+    set FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+      FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+      STOCK_BORDSTTUS = #{stockBordsttus,jdbcType=VARCHAR},
+      STOCK_ID = #{stockId,jdbcType=VARCHAR},
+      COMP_ORG = #{compOrg,jdbcType=VARCHAR},
+      COMP_ORGNAME = #{compOrgname,jdbcType=VARCHAR},
+      COMP_STOCKID = #{compStockid,jdbcType=VARCHAR},
+      FINPROD_PROIT = #{finprodProit,jdbcType=DECIMAL},
+      FINPROD_NETASSET = #{finprodNetasset,jdbcType=DECIMAL},
+      SMOOTHSECTION = #{smoothsection,jdbcType=DECIMAL},
+      BINTREE_STEP = #{bintreeStep,jdbcType=DECIMAL},
+      CURVE_CODE = #{curveCode,jdbcType=DECIMAL},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where SEQNO = #{seqno,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1373,13 +1373,23 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     是否开通港股通_否(DictCode.是否开通港股通,"02","否"),
 
     共通业务类型_港股通投资委托(DictCode.共通业务类型,"ETR_HKSE","港股通投资委托"),
+
+    /**add by fanyunhan on 20210804 start**/
+    平滑区间_3个月(DictCode.平滑区间,"02","3个月"),
+    收益率曲线类型_SP即期(DictCode.收益率曲线类型,"01","SP即期"),
+    共通业务类型_现金流折现模型曲线配置(DictCode.共通业务类型,"MOD06","现金流折现模型曲线配置"),
+    共通业务类型_风险溢价调整配置(DictCode.共通业务类型,"MOD12","风险溢价调整配置"),
+    资产四级分类_优先股(DictCode.资产四级分类,"023","优先股"), // add by zhangfei 2021年6月30日18:00:24
+    共通业务类型_预期股息增长率配置(DictCode.共通业务类型,"STCOKDIVITRATE","预期股息增长率配置"),
+
+    /**add by fanyunhan on 20210804 end**/
+
     //20210803 by yuzj start
     共通业务类型_评级PD维护信息(DictCode.共通业务类型,"MOD07","评级PD维护信息"),
     共通业务类型_资产重分类交易(DictCode.共通业务类型,"TRD77","资产重分类交易"),
     共通业务类型_资产大类评级配置(DictCode.共通业务类型,"MOD01","资产大类评级配置"),
     共通业务类型_特殊资产评级配置(DictCode.共通业务类型,"MOD02","特殊资产评级配置"),
     共通业务类型_LGD违约损失率维护(DictCode.共通业务类型,"MOD05","LGD违约损失率维护"),
-    共通业务类型_现金流折现模型曲线配置(DictCode.共通业务类型,"MOD06","现金流折现模型曲线配置"),
     共通业务类型_二叉树模型参数配置(DictCode.共通业务类型,"MOD09","二叉树模型参数配置"),
     //20210803 by yuzj end
     ;

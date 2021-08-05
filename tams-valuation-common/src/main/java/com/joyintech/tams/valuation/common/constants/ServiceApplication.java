@@ -55,6 +55,11 @@ public class ServiceApplication {
 	 */
 	public static String LOSS_MODEL_SERVICE_NAME = "http://lossModelService";
 
+	/**
+	 * 估值模型微服务
+	 */
+	public static String VAL_MODEL_SERVICE_NAME = "http://valModelService";
+
 	@Configuration
 	@ConditionalOnProperty(prefix = "application.micorservice.contextPath", name = "valuationService")
 	@EnableConfigurationProperties(ContextPathConfiguration.class)
@@ -70,12 +75,15 @@ public class ServiceApplication {
 				CUSTOMER_INTERF_NAME = CUSTOMER_INTERF_NAME + config.getCustomerInterfService();
 				VALUATION_BASICDATA_SERVICE_NAME = VALUATION_BASICDATA_SERVICE_NAME + config.getValuationBasicdataService();
 				LOSS_MODEL_SERVICE_NAME = LOSS_MODEL_SERVICE_NAME + config.getLossModelService();
+				VAL_MODEL_SERVICE_NAME = VAL_MODEL_SERVICE_NAME + config.getValModelService();
+
 			}
 			else {
 				VALUATION_SERVICE_NAME = config.getValuationService();
 				CUSTOMER_INTERF_NAME = config.getCustomerInterfService();
 				VALUATION_BASICDATA_SERVICE_NAME = config.getValuationBasicdataService();
 				LOSS_MODEL_SERVICE_NAME = config.getLossModelService();
+				VAL_MODEL_SERVICE_NAME = config.getValModelService();
 			}
 		}
 	}
@@ -94,6 +102,11 @@ public class ServiceApplication {
 		private String valuationBasicdataService;
 
 		private String lossModelService;
+
+
+
+		private String valModelService;
+
 
 		public String getCustomerInterfService() {
 			return customerInterfService;
@@ -133,6 +146,13 @@ public class ServiceApplication {
 
 		public void setLossModelService(String lossModelService) {
 			this.lossModelService = lossModelService;
+		}
+		public String getValModelService() {
+			return valModelService;
+		}
+
+		public void setValModelService(String valModelService) {
+			this.valModelService = valModelService;
 		}
 	}
 

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dao.CashFlowDiscount001Mapper">
+    <insert id="insert" parameterType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto" >
+        insert into MOD_CURVE_CONFIG (SEQNO,SEC_TYPE_MODEL,SEC_DETAIL_TYPE_MODEL,FINPROD_ID,FINPROD_NAME,CURVE_GROUP_CODE,CURVE_TYPE,ISSMOOTH,SMOOTHSECTION,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{secTypeModel,jdbcType=VARCHAR}, #{secDetailTypeModel,jdbcType=VARCHAR},
+        #{finprodId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, #{curveGroupCode,jdbcType=VARCHAR},#{curveType,jdbcType=VARCHAR},#{isSmooth,jdbcType=VARCHAR},#{smoothSection,jdbcType=VARCHAR},
+        #{createUser,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+        #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="update" parameterType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto" >
+        update MOD_CURVE_CONFIG
+        set CURVE_GROUP_CODE = #{curveGroupCode,jdbcType=VARCHAR},
+        CURVE_TYPE = #{curveType,jdbcType=VARCHAR},
+        ISSMOOTH = #{isSmooth,jdbcType=VARCHAR},
+        SMOOTHSECTION = #{smoothSection,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where
+        SEC_TYPE_MODEL = #{secTypeModel,jdbcType=VARCHAR}
+        AND  SEC_DETAIL_TYPE_MODEL = #{secDetailTypeModel,jdbcType=VARCHAR}
+        <if test="finprodId!=null and finprodId != ''">
+            AND  FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+        AND  SEQNO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from MOD_CURVE_CONFIG
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="checkData" resultType="int" parameterType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto" >
+        select COUNT(1)
+        from MOD_CURVE_CONFIG
+        where 1=1
+        <if test="secTypeModel!=null and secTypeModel != ''">
+            AND  SEC_TYPE_MODEL = #{secTypeModel,jdbcType=VARCHAR}
+        </if>
+        <if test="secDetailTypeModel!=null and secDetailTypeModel != ''">
+            AND  SEC_DETAIL_TYPE_MODEL = #{secDetailTypeModel,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodId!=null and finprodId != ''">
+            AND  FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="getCashFlowDiscountList"  resultType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto">
+        SELECT
+        A.SEQNO AS seqNo,
+        A.SEC_TYPE_MODEL AS secTypeModel,
+        A.SEC_DETAIL_TYPE_MODEL AS secDetailTypeModel,
+        A.FINPROD_ID AS finprodId,
+        A.FINPROD_NAME AS finprodName,
+        A.CURVE_GROUP_CODE AS curveGroupCode,
+        A.CURVE_TYPE AS curveType,
+        A.ISSMOOTH AS isSmooth,
+        A.SMOOTHSECTION AS smoothSection,
+        A.CREATE_USER AS createUser,
+        A.CREATE_DEPT AS createDept,
+        A.CREATE_TIME AS createTime,
+        A.UPDATE_USER AS updateUser,
+        A.UPDATE_TIME AS updateTime
+        FROM
+        MOD_CURVE_CONFIG A
+        WHERE
+        1=1
+        <if test="secTypeModel!=null and secTypeModel != ''">
+            AND  SEC_TYPE_MODEL = #{secTypeModel,jdbcType=VARCHAR}
+        </if>
+        <if test="secDetailTypeModel!=null and secDetailTypeModel != ''">
+            AND  SEC_DETAIL_TYPE_MODEL = #{secDetailTypeModel,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodId!=null and finprodId != ''">
+            AND  FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+        <if test="seqNo!=null and seqNo != ''">
+            AND  SEQNO = #{seqNo,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="getForExcel" resultType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto">
+        SELECT
+        A.SEQNO AS seqNo,
+        A.SEC_TYPE_MODEL AS secTypeModel,
+        A.SEC_DETAIL_TYPE_MODEL AS secDetailTypeModel,
+        A.FINPROD_ID AS finprodId,
+        A.FINPROD_NAME AS finprodName,
+        A.CURVE_GROUP_CODE AS curveGroupCode,
+        A.CURVE_TYPE AS curveType,
+        A.ISSMOOTH AS isSmooth,
+        A.SMOOTHSECTION AS smoothSection,
+        A.CREATE_USER AS createUser,
+        A.CREATE_DEPT AS createDept,
+        A.CREATE_TIME AS createTime,
+        A.UPDATE_USER AS updateUser,
+        A.UPDATE_TIME AS updateTime
+        FROM
+        MOD_CURVE_CONFIG A
+        WHERE
+        1=1
+        <if test="secTypeModel!=null and secTypeModel != ''">
+            AND  SEC_TYPE_MODEL = #{secTypeModel,jdbcType=VARCHAR}
+        </if>
+        <if test="secDetailTypeModel!=null and secDetailTypeModel != ''">
+            AND  SEC_DETAIL_TYPE_MODEL = #{secDetailTypeModel,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodId!=null and finprodId != ''">
+            AND  FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+</mapper>

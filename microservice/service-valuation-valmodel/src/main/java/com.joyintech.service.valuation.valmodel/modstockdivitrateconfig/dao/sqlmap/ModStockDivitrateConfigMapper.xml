@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dao.ModStockDivitrateConfigMapper">
+    <select id="selectForPage"
+            resultType="com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto">
+        SELECT 
+			A.SEQNO seqno,
+			A.FINPROD_ID finprodId,
+			A.FINPROD_NAME finProdName,
+			A.SEC_TYPE_MODEL secTypeModel,
+			A.SEC_DETAIL_TYPE_MODEL secDetailTypeModel,
+			A.STOCK_INTRATE*100 stockIntarte
+		FROM MOD_STOCKDIVITRATE_CONFIG A WHERE 1=1 
+        <if test="finprodId != null and finprodId != ''">
+            AND A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultType="com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto">
+        SELECT 
+			A.SEQNO seqno,
+			A.FINPROD_ID finprodId,
+			A.FINPROD_NAME finProdName,
+			A.SEC_TYPE_MODEL secTypeModel,
+			A.SEC_DETAIL_TYPE_MODEL secDetailTypeModel,
+			A.STOCK_INTRATE*100 stockIntarte
+		FROM MOD_STOCKDIVITRATE_CONFIG A WHERE 1=1 
+		AND A.SEQNO = #{seqno}
+    </select>
+    
+    
+    <insert id="insertSelective" parameterType="com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto" >
+        insert into MOD_STOCKDIVITRATE_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finProdName != null" >
+                FINPROD_NAME,
+            </if>
+            <if test="secTypeModel != null" >
+                SEC_TYPE_MODEL,
+            </if>
+            <if test="secDetailTypeModel != null" >
+                SEC_DETAIL_TYPE_MODEL,
+            </if>
+            <if test="stockIntarte != null" >
+                STOCK_INTRATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finProdName != null" >
+                #{finProdName,jdbcType=VARCHAR},
+            </if>
+            <if test="secTypeModel != null" >
+                #{secTypeModel,jdbcType=VARCHAR},
+            </if>
+            <if test="secDetailTypeModel != null" >
+                #{secDetailTypeModel,jdbcType=VARCHAR},
+            </if>
+            <if test="stockIntarte != null" >
+                #{stockIntarte,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto" >
+        update MOD_STOCKDIVITRATE_CONFIG
+        set STOCK_INTRATE = #{stockIntarte,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where  SEQNO= #{seqno,jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto" >
+        delete from MOD_STOCKDIVITRATE_CONFIG
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    
+    <!--判断前瞻因子是否被使用-->
+	<select id="checkByFinprodId" parameterType="com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto" resultType="java.lang.Integer">
+		select count(1)
+        	from MOD_STOCKDIVITRATE_CONFIG A
+        WHERE
+        	A.FINPROD_ID=#{finprodId,jdbcType=VARCHAR}
+	</select>
+</mapper>
