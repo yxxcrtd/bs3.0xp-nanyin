@@ -21,6 +21,10 @@ public class PbcReportProdDatDto {
      * 属性代码
      */
     private String propertyCode;
+    /**
+     * 压缩包编号
+     */
+    private String datZipCode;
 
     /**
      * 报表类型：MJYE-募集余额报表,MJDF-募集兑付报表,ZSQK-只数情况报表,MJYEFDQ-募集余额报表分地区报表,TQJYQDF-提前及延期兑付报表,DQWDF-到期未兑付报表
@@ -460,5 +464,13 @@ public class PbcReportProdDatDto {
     public PbcReportProdDatDto setTotalDiff(Integer totalDiff) {
         this.totalDiff = totalDiff;
         return this;
+    }
+
+    public String getDatZipCode() {
+        return datZipCode;
+    }
+
+    public void setDatZipCode(String datZipCode) {
+        this.datZipCode = datZipCode;
     }
 }

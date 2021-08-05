@@ -192,6 +192,13 @@
        and pr.send_status = '01'/*只删除未报送数据*/)
   </delete>
 
+  <delete id="deleteByUUIDAndType"  parameterType="java.util.Map" >
+    delete
+    from PBC_REPORT_COMPANY_DAT
+    where REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+      AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
+  </delete>
+
   <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportCompanyDatDetailDto"
           parameterType="java.lang.String" >
     select

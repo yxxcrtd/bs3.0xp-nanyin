@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Repository
@@ -36,5 +37,7 @@ public interface PbcReportAssetIncomeDatDetailMapper {
     int deleteByReportDate(@Param("reportStartDate") String reportEndDate, @Param("reportEndDate") String reportStartDate, @Param("reporttype") String reporttype, @Param("deptCode") String deptCode);
 
     List<PbcReportAssetIncomeDatDetail> selectDatDiffByReport(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
+
+    int deleteByUUIDAndType(Map<String,Object> paramsMap);
 
 }

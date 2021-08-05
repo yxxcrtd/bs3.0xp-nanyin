@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface PbcReportProdDatMapper {
@@ -27,4 +28,6 @@ public interface PbcReportProdDatMapper {
             , @Param("deptCode") String deptCode);
 
 	List<PbcReportProdDatDto> selectPbcReportPrdDatDiff(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
+
+	int deleteByUUIDAndType(Map<String,Object> paramsMap);
 }

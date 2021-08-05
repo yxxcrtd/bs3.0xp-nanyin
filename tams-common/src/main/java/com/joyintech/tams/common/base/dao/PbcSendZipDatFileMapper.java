@@ -1,6 +1,7 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface PbcSendZipDatFileMapper {
     int insertBasicByBasicInfo(PbcSendZipDatFile record);
 
     List<PbcSendZipDatFile> searchPage(Map<String,Object> map);
+
+    List<PbcSendZipDatFile> selectByZipTypeAndStatusVdate(Map<String,Object> map);
+
+    int deleteByUUIDAndType(Map<String,Object> paramsMap);
 }

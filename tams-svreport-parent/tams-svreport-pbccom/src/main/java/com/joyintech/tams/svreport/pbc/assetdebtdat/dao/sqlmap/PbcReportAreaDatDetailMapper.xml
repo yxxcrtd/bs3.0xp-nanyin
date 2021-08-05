@@ -95,7 +95,7 @@
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAreaDatDetailDto" >
-    update PBC_REPORT_AREA_NEW
+    update PBC_REPORT_AREA_DAT
     set REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
       GROUPTYPE = #{grouptype,jdbcType=VARCHAR},
       PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
@@ -107,7 +107,7 @@
   <select id="selectByReportuuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from PBC_REPORT_AREA_NEW
+    from PBC_REPORT_AREA_DAT
     where REPORTUUID = #{reportuuid,jdbcType=CHAR}
   </select>
   
@@ -134,6 +134,13 @@
       </if>
        and pr.send_status = '01'/*只删除未报送数据*/
     )
+  </delete>
+
+  <delete id="deleteByUUIDAndType"  parameterType="java.util.Map" >
+    delete
+    from PBC_REPORT_AREA_DAT
+    where REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+      AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
   </delete>
 
   <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAreaDatDetailDto"

@@ -375,5 +375,11 @@
     where ppd.REPORTUUID = #{reportuuid,jdbcType=CHAR}
       and ppd.REPORTTYPE=#{reporttype,jdbcType=CHAR}
   </select>
-  
+
+  <delete id="deleteByUUIDAndType"  parameterType="java.util.Map" >
+    delete
+    from PBC_REPORT_BALANCE_DAT
+    where REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+      AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
+  </delete>
 </mapper>

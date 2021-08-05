@@ -7,13 +7,12 @@ import com.joyintech.tams.svreport.pbc.common.constants.PbcMonthReportGroupConst
 import java.math.BigDecimal;
 
 /**
- * 描述:报表表1-1资管产品募集余额 的实体类
- * @version
+ * 描述:报表表1-4的实体类
  * @author:  Jason.Jin
  * @创建时间: 2021年8月3日10:14:50
  */
-@ReportGroup(group = PbcMonthReportGroupConstants.PBC_REPORT_1_1_1)
-public class ExcelPbcReportProdDatDto {
+@ReportGroup(group = PbcMonthReportGroupConstants.PBC_REPORT_1_4_1)
+public class ExcelPbcReportProdDat1_4Dto {
     /**
      * 属性代码
      */
@@ -35,43 +34,43 @@ public class ExcelPbcReportProdDatDto {
     /**
      * 人民币
      */
-    @ExcelCell(columnNumber = 3)
+    @ExcelCell(columnNumber = 2)
     private BigDecimal cny;
 
     /**
      * 美元折人民币
      */
-    @ExcelCell(columnNumber = 4)
+    @ExcelCell(columnNumber = 3)
     private BigDecimal usdToCny;
 
     /**
      * 欧元折人民币
      */
-    @ExcelCell(columnNumber = 5)
+    @ExcelCell(columnNumber = 4)
     private BigDecimal eurToCny;
 
     /**
      * 英镑折人民币
      */
-    @ExcelCell(columnNumber = 6)
+    @ExcelCell(columnNumber = 5)
     private BigDecimal gbpToCny;
 
     /**
      * 日元折人民币
      */
-    @ExcelCell(columnNumber = 7)
+    @ExcelCell(columnNumber = 6)
     private BigDecimal jpyToCny;
 
     /**
      * 其他币种(外币)折人民币
      */
-    @ExcelCell(columnNumber = 8)
+    @ExcelCell(columnNumber = 7)
     private BigDecimal othToCny;
 
     /**
      * 合计		
      */
-    @ExcelCell(columnNumber = 9)
+    @ExcelCell(columnNumber = 8)
     private BigDecimal total;
 
     public String getPropertyCode() {

@@ -1,6 +1,13 @@
 package com.joyintech.tams.svreport.pbc.classic.newpbcreport.service;
 
-public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthReport{
+import cn.hutool.core.lang.UUID;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
+import com.joyintech.tams.svreport.pbc.classic.newpbcreport.dto.ReportDealParamDto;
+
+import java.util.Date;
+
+public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthReport {
+
     /**
      * 人行导出模版sheet页名称
      */
@@ -31,4 +38,21 @@ public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthR
     public final static String SHEET_3_2 = "表3-2新发产品分期限募集金额";
 
     public final static String SHEET_3_3 = "表3-3资产负债剩余期限";
+
+    public PbcSendZipDatFile newPbcSendZipDatFile(ReportDealParamDto paramDto, int size){
+        PbcSendZipDatFile sendZipDatFile = new PbcSendZipDatFile();
+        sendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
+        sendZipDatFile.setDatZipCode(paramDto.getDatZipCode());
+        sendZipDatFile.setDatZipPath(null);
+        sendZipDatFile.setDatZipType("MI");
+        sendZipDatFile.setDatZipStatus("01");
+        sendZipDatFile.setStatusVdate(paramDto.getStatusVdate());
+        sendZipDatFile.setReportuuid(paramDto.getReportUUID());
+        sendZipDatFile.setPibDetailCnt(size);
+        sendZipDatFile.setSubmitTime(new Date());
+        sendZipDatFile.setZipSendStatus("01");
+        sendZipDatFile.setOrgCode(paramDto.getOrgCode());
+        return sendZipDatFile;
+    }
+
 }

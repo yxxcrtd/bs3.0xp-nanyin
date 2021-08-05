@@ -7,9 +7,16 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.svreport.pbc.common.annotation.ExcelCell;
 import com.joyintech.tams.svreport.pbc.common.annotation.ReportGroup;
 import com.joyintech.tams.svreport.pbc.common.enums.PbcReportEnums;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.reflect.Constructor;
@@ -22,7 +29,7 @@ import java.util.List;
 
 public class MonthReportUtil {
 
-    public static <T> List<T> createDataFromExcel(Sheet sheet, String reportType,Class<T> clazz) throws Exception {
+    public static <T> List<T> createDataFromExcel(HSSFSheet sheet, String reportType, Class<T> clazz) throws Exception {
         List<T> instanceList = new ArrayList<>();
        //1.获取报表统计的分组信息
         ReportGroup reportGroup = AnnotationUtils.findAnnotation(clazz, ReportGroup.class);
@@ -35,25 +42,26 @@ public class MonthReportUtil {
                 for (PbcReportEnums pbcReportEnums : propertiesByType) {
                     //行号
                     int rowNumber = pbcReportEnums.getRowNumber();
-                    String propertyCode = pbcReportEnums.getPropertyCode();
                     T newInstance = declaredConstructor.newInstance();
                     for (Field declaredField : declaredFields) {
                         ExcelCell excelCell = AnnotationUtils.findAnnotation(declaredField, ExcelCell.class);
                         if(excelCell != null){
                             if(excelCell.isPropertyCode()){
-                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,propertyCode,clazz);
+                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,pbcReportEnums.getPropertyCode(),clazz);
                             }else if(excelCell.isReportType()){
                                 //TODO
-                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,"propertyCode",clazz);
+                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,pbcReportEnums.getReportGroup(),clazz);
                             }else if(excelCell.isGroupType()){
                                 //TODO
                                 setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,"propertyCode",clazz);
                             }else{
                                 //列号
                                 int columnNumber = excelCell.columnNumber();
-                                Row row = sheet.getRow(rowNumber);
-                                Cell cell = row.getCell(columnNumber);
-                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,cell.getStringCellValue(),clazz);
+                                HSSFRow row = sheet.getRow(rowNumber);
+                                HSSFCell cell = row.getCell(columnNumber);
+                                cell.setCellType(CellType.STRING);
+                                String stringCellValue = cell.getStringCellValue();
+                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,stringCellValue,clazz);
                             }
 
                         }

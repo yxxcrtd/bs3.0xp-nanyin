@@ -7,19 +7,26 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.svreport.pbc.classic.pbcNewDat.service.PbcDatUtil;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDto;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
 import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
+import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +50,9 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
 
     @Autowired
     private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
+
+    @Autowired
+    private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
 
     /**
      *
@@ -120,7 +130,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                         //设置报送状态为未报送
                         baseinfoSubDat.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
                         //设置数据状态为新建
-                        baseinfoSubDat.setStatus(DictCodeList.数据状态_新建.getValue());
+                        baseinfoSubDat.setStatus(DictCodeListExt2.报表数据状态_新建.getValue());
                         //设置报送流水号为查询的流水号
                         baseinfoSubDat.setSumitSeq(pbcPrdBaseinfoSubDat.getSumitSeq());
                         //设置压缩包编码
@@ -144,7 +154,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                         //设置报送状态为未报送
                         baseinfoSubDat.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
                         //设置数据状态为修改
-                        baseinfoSubDat.setStatus(DictCodeList.数据状态_修改.getValue());
+                        baseinfoSubDat.setStatus(DictCodeListExt2.报表数据状态_新建.getValue());
                         //设置报送流水号   重新生成报送流水号
                         baseinfoSubDat.setSumitSeq(null);
                         //设置压缩包编码为空
@@ -177,19 +187,53 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                     baseinfoSubDatsNew.add(baseinfoSubDat);
                 }
             }
-            //删除未报送有修改的记录 并重新插入
+            //删除未报送有修改的记录
             if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendProdIds)){
                 pbcPrdBaseinfoSubDatMapper.deleteByProdid(baseinfoSubDatsNoSendProdIds);
-                pbcPrdBaseinfoSubDatMapper.insertBatch(baseinfoSubDatsNoSend);
             }
-            //更新已报送有修改数据
+            for (PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat : baseinfoSubDatsNew) {
+                pbcPrdBaseinfoSubDatMapper.insert(pbcPrdBaseinfoSubDat);
+            }
+            //1:分配不生成压缩文件
+            String zipType = "1";
+            //获取系统参数 1:按照业务日期进行压缩；  2：整体压缩
+            String pbc_send_zip_model = CacheUtil.getSysParam("PBC_SEND_ZIP_MODEL");
+            String zipModel = StrUtil.isEmpty(pbc_send_zip_model) ? "2" : pbc_send_zip_model;
+            //登录用户的机构代码
+            String orgCode = SecurityUtil.getLoginUser().getOrgCode();
+            List<PbcPrdBaseinfoSubDat> prdListAll = new ArrayList<>();
+            //加入新建的数据
+            prdListAll.addAll(baseinfoSubDatsNew);
+            //加入未报送的数据
+            prdListAll.addAll(baseinfoSubDatsNoSend);
+            Map<String,ArrayList> resultMap = new HashMap<>(); //PbcDatUtil.genDatZipList();
+            List<PbcPrdBaseinfoSubDat> prdList = resultMap.get("prdList");
+            List<PbcSendZipDatFile> zipList = resultMap.get("zipList");
+            //插入新的数据
+            if(CollectionUtil.isNotEmpty(prdList)){
+                for (PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat : prdList) {
+                    pbcPrdBaseinfoSubDatMapper.insert(pbcPrdBaseinfoSubDat);
+                }
+            }
+            //插入新的数据
+            if(CollectionUtil.isNotEmpty(zipList)){
+                for (PbcSendZipDatFile pbcSendZipDatFile : zipList) {
+                    pbcSendZipDatFileMapper.insert(pbcSendZipDatFile);
+                }
+            }
             if(CollectionUtil.isNotEmpty(baseinfoSubDatsSend)){
-                pbcPrdBaseinfoSubDatMapper.updateBatchByPrimaryKey(baseinfoSubDatsSend);
+                List<ExcelValidDto> warnList = new ArrayList<>();
+                for (PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat : baseinfoSubDatsSend) {
+                    ExcelValidDto excelValidDto = new ExcelValidDto();
+                    excelValidDto.setWarnInfo("已报送的数据，不支持修改。请在人行客户端直接修复！");
+                    excelValidDto.setValidKey(pbcPrdBaseinfoSubDat.getProdId());
+                    excelValidDto.setCheckResult(excelValidDto.getCheckResult());
+                    warnList.add(excelValidDto);
+                }
+                return warnList;
+
             }
-            //插入新建的数据
-            if(CollectionUtil.isNotEmpty(baseinfoSubDatsNew)){
-                pbcPrdBaseinfoSubDatMapper.insertBatch(baseinfoSubDatsNew);
-            }
+
             return errorList;
         }else{
             ExcelValidDto excelValidDto = new ExcelValidDto();
@@ -219,10 +263,10 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 int row = 0;
                 //序号
                 String number = rowsData.get(row++);
-                dto.setNumber(number);
+                dto.setNumber(StrUtil.isEmpty(number) ? null : number);
                 //产品代码
                 String pbcProdId = rowsData.get(row++);
-                dto.setPbcProdId(pbcProdId);
+                dto.setPbcProdId(StrUtil.isEmpty(pbcProdId) ? null : pbcProdId);
                 //发行机构代码
                 String issuePartyId = rowsData.get(row++);
                 if(checkIsNotEmpty(issuePartyId,rowNumber,"发行机构代码",errorMessage)){
@@ -245,7 +289,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 }
                 //产品品牌
                 String prodBrand = rowsData.get(row++);
-                dto.setProdBrand(prodBrand);
+                dto.setProdBrand(StrUtil.isEmpty(prodBrand) ? null : prodBrand);
                 //产品期次
                 String prodStage = rowsData.get(row++);
                 if(StrUtil.isNotEmpty(prodStage)){
@@ -312,13 +356,13 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 }
                 //境内托管机构代码
                 String inDepCode = rowsData.get(row++);
-                dto.setInDepCode(inDepCode);
+                dto.setInDepCode(StrUtil.isEmpty(inDepCode) ? null : inDepCode);
                 //境外托管机构国别
                 String outDepCtry = rowsData.get(row++);
-                dto.setOutDepCtry(outDepCtry);
+                dto.setOutDepCtry(StrUtil.isEmpty(outDepCtry) ? null : outDepCtry);
                 //境外托管机构名称
                 String inDepName = rowsData.get(row++);
-                dto.setInDepName(inDepName);
+                dto.setInDepName(StrUtil.isEmpty(inDepName) ? null : inDepName);
                 //产品起始日期
                 String vdate = rowsData.get(row++);
                 if(checkIsNotEmpty(vdate,rowNumber,"产品起始日期",errorMessage)){
@@ -359,13 +403,13 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 }
                 //其他产品标识1
                 String transferType2 = rowsData.get(row++);
-//                dto.setTransferType2(transferType2);
+//                dto.setTransferType2(StrUtil.isEmpty(transferType2) ? null : transferType2);
                 //其他产品标识2
                 String transferType3 = rowsData.get(row++);
-//                dto.setTransferType3(transferType3);
+//                dto.setTransferType3(StrUtil.isEmpty(transferType3) ? null : transferType3);
                 //其他产品标识3
                 String transferType4 = rowsData.get(row++);
-//                dto.setTransferType1(transferType4);
+//                dto.setTransferType1(StrUtil.isEmpty(transferType4) ? null : transferType4);
                 //募集资金币种
                 String raiseCcy = rowsData.get(row++);
                 if(checkIsNotEmpty(raiseCcy,rowNumber,"募集资金币种",errorMessage)){
@@ -442,7 +486,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
      */
     private boolean checkDate(String date) {
         boolean flag = true;
-        if(!DateUtil.isDateStr(date, DateUtil.DEFAULT_DATE_FORMAT_EN)){
+        if(!DateUtil.isDateStr(date, DateUtil.DEFAULT_DATE_FORMAT_EN,DateUtil.DEFAULT_ANOTHER_FORMAT)){
             flag = false;
         }else{
             date = date.replace("-", "").replace("/", "");
