@@ -778,6 +778,11 @@ $(function(){
             ,{field:'market', visible: false}
             ,{field:'prinamt', visible: false}
             ,{field:'repoamt', visible: false}
+            //add by chenjiaxing 20210804 费用拆分改造 start
+            ,{field:'side', visible: false}
+            ,{field:'businesstype', visible: false}
+            ,{field:'ourdepositinstitution', visible: false}
+            //add by chenjiaxing 20210804 费用差分改造 end
             // , {
             //     field: 'market', width:100, sortField:'market', title: '匹配明细',
             //     render: function (data, type, row, meta) {
@@ -1440,6 +1445,8 @@ $(function(){
                 ,{  field:'assetType1', visible: false}
                 ,{  field:'priceMode', visible: false}
                 ,{  field:'totleTradeId', visible: false}
+                ,{  field:'procedureAmt', visible: false}
+                ,{  field:'settleAmt', visible: false}
             ],
             done: function (tables, allData) {
                 $.each(tables, function (index, obj) {
@@ -2033,7 +2040,9 @@ $(function(){
                 fTradeId: rows[0].cstpTradeId,
                 isCstp: 'true',
                 isCstpSure: 'true',
-                isSubmit:'true'
+                isSubmit:'true',
+                procedureAmt: rows[0].procedureAmt,
+                settleAmt: rows[0].settleAmt
             };
             if (param.entrustId == undefined) {
             	param.entrustId = '';
@@ -2043,6 +2052,12 @@ $(function(){
             }
             if (param.cstpTradeId == undefined) {
             	param.cstpTradeId = '';
+            }
+            if (param.procedureAmt == undefined) {
+                param.procedureAmt = '';
+            }
+            if (param.settleAmt == undefined) {
+                param.settleAmt = '';
             }
             //转到相应的投资交易录入界面
             var pagePath = "";

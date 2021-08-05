@@ -172,6 +172,14 @@ public class TrdRepoTrade002Controller extends BaseController {
             model.addAttribute("workflowId", dto.getWorkflowId());
         }
         model.addAttribute("noBranchNoValue", CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
+        //add by chenjiaxing 银行间下行交易费用匹配展示 start
+        if(StringUtils.isNotBlank(this.getParam("procedureAmt")) && StringUtils.isNotBlank(this.getParam("fTradeId"))){
+            dto.setProcedureAmt(new BigDecimal(this.getParam("procedureAmt")));
+        }
+        if(StringUtils.isNotBlank(this.getParam("settleAmt")) && StringUtils.isNotBlank(this.getParam("fTradeId"))){
+            dto.setSettleAmt(new BigDecimal(this.getParam("settleAmt")));
+        }
+        //add by chenjiaxing 银行间下行交易费用匹配展示 end
         model.addAttribute("entity", dto);
         // 人员信息
         model.addAttribute("entity_trdInvestPersonInfo",
@@ -192,6 +200,10 @@ public class TrdRepoTrade002Controller extends BaseController {
         model.addAttribute("formatDate",formatDate);
         if(StringUtils.isNotBlank(this.getParam("fTradeId"))){
             model.addAttribute("fTradeId",this.getParam("fTradeId"));
+            //add by chenjiaxing 银行间下行交易费用匹配展示 start
+            model.addAttribute("procedureAmt",this.getParam("procedureAmt"));
+            model.addAttribute("settleAmtSS",this.getParam("settleAmt"));
+            //add by chenjiaxing 银行间下行交易费用匹配展示 end
             model.addAttribute("repoamt",repoamt);
         }
         model.addAttribute("isCstp",isCstp);

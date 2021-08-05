@@ -17,12 +17,15 @@
         <result column="F_SYS_ID" property="fSysId" jdbcType="VARCHAR" />
         <result column="MATCH_NUM_CB" property="matchNumCb" jdbcType="DECIMAL" />
         <result column="MATCH_NUM_SC" property="matchNumSc" jdbcType="DECIMAL" />
+        <result column="PROCEDURE_AMT" property="procedureAmt" jdbcType="DECIMAL" />
+        <result column="SETTLE_AMT" property="settleAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, CSTP_TRADE_ID CSTP_TRADE_ID, PRE_TRADE_ID PRE_TRADE_ID, ENTRUST_ID ENTRUST_ID, 
         MATCH_NUM MATCH_NUM, MATCH_TYPE MATCH_TYPE, TRADE_DATE TRADE_DATE, CREATE_USER CREATE_USER, 
         CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        F_SYS_ID F_SYS_ID, MATCH_NUM_CB MATCH_NUM_CB, MATCH_NUM_SC MATCH_NUM_SC
+        F_SYS_ID F_SYS_ID, MATCH_NUM_CB MATCH_NUM_CB, MATCH_NUM_SC MATCH_NUM_SC,PROCEDURE_AMT PROCEDURE_AMT,
+        SETTLE_AMT SETTLE_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -49,13 +52,13 @@
             ENTRUST_ID, MATCH_NUM, MATCH_TYPE, 
             TRADE_DATE, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            F_SYS_ID, MATCH_NUM_CB, MATCH_NUM_SC
+            F_SYS_ID, MATCH_NUM_CB, MATCH_NUM_SC,PROCEDURE_AMT,SETTLE_AMT
             )
         values (#{seqno,jdbcType=VARCHAR}, #{cstpTradeId,jdbcType=VARCHAR}, #{preTradeId,jdbcType=VARCHAR}, 
             #{entrustId,jdbcType=VARCHAR}, #{matchNum,jdbcType=DECIMAL}, #{matchType,jdbcType=VARCHAR}, 
             #{tradeDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{fSysId,jdbcType=VARCHAR}, #{matchNumCb,jdbcType=DECIMAL}, #{matchNumSc,jdbcType=DECIMAL}
+            #{fSysId,jdbcType=VARCHAR}, #{matchNumCb,jdbcType=DECIMAL}, #{matchNumSc,jdbcType=DECIMAL},#{procedureAmt,jdbcType=DECIMAL},#{settleAmt,jdbcType=DECIMAL}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdMatchInfo" >
@@ -106,6 +109,12 @@
             <if test="matchNumSc != null" >
                 MATCH_NUM_SC,
             </if>
+            <if test="procedureAmt != null" >
+                PROCEDURE_AMT,
+            </if>
+            <if test="settleAmt != null" >
+                SETTLE_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -153,15 +162,21 @@
             <if test="matchNumSc != null" >
                 #{matchNumSc,jdbcType=DECIMAL},
             </if>
+            <if test="procedureAmt != null" >
+                #{procedureAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="settleAmt != null" >
+                #{settleAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdMatchInfo" >
         insert into TRD_MATCH_INFO(SEQNO, CSTP_TRADE_ID, PRE_TRADE_ID, ENTRUST_ID, MATCH_NUM, 
         MATCH_TYPE, TRADE_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-        F_SYS_ID, MATCH_NUM_CB, MATCH_NUM_SC)
+        F_SYS_ID, MATCH_NUM_CB, MATCH_NUM_SC,PROCEDURE_AMT,SETTLE_AMT)
         select SEQNO, CSTP_TRADE_ID, PRE_TRADE_ID, ENTRUST_ID, MATCH_NUM, 
             MATCH_TYPE, TRADE_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
-            F_SYS_ID, MATCH_NUM_CB, MATCH_NUM_SC
+            F_SYS_ID, MATCH_NUM_CB, MATCH_NUM_SC,PROCEDURE_AMT,SETTLE_AMT
              from TRD_MATCH_INFO
              where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -201,6 +216,12 @@
             <if test="matchNumSc != null" >
                 MATCH_NUM_SC = #{matchNumSc,jdbcType=DECIMAL},
             </if>
+            <if test="procedureAmt != null" >
+                PROCEDURE_AMT = #{procedureAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="settleAmt != null" >
+                SETTLE_AMT = #{settleAmt,jdbcType=DECIMAL},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
@@ -216,7 +237,9 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             F_SYS_ID = #{fSysId,jdbcType=VARCHAR},
             MATCH_NUM_CB = #{matchNumCb,jdbcType=DECIMAL},
-            MATCH_NUM_SC = #{matchNumSc,jdbcType=DECIMAL}
+            MATCH_NUM_SC = #{matchNumSc,jdbcType=DECIMAL},
+            PROCEDURE_AMT = #{procedureAmt,jdbcType=DECIMAL},
+            SETTLE_AMT = #{settleAmt,jdbcType=DECIMAL}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 </mapper>

@@ -250,6 +250,14 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         Date sysDate = DateUtil.platDateFromCache();
         String formatDate = DateUtil.format(sysDate);
         model.addAttribute("formatDate",formatDate);
+        //add by chenjiaxing 银行间下行交易费用匹配展示 start
+        if(StringUtils.isNotBlank(this.getParam("procedureAmt")) && StringUtils.isNotBlank(this.getParam("fTradeId"))){
+            dto.setProcedureAmt(new BigDecimal(this.getParam("procedureAmt")));
+        }
+        if(StringUtils.isNotBlank(this.getParam("settleAmt")) && StringUtils.isNotBlank(this.getParam("fTradeId"))){
+            dto.setSettleAmt(new BigDecimal(this.getParam("settleAmt")));
+        }
+        //add by chenjiaxing 银行间下行交易费用匹配展示 end
         model.addAttribute("entity", dto);
         model.addAttribute("entity_trdInvestPersonInfo",
             dto.getTrdInvestPersonInfo() == null ? null : JsonUtils.object2Json(

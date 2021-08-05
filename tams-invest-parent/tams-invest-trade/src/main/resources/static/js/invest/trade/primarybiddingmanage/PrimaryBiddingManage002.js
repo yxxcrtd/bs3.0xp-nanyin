@@ -41,7 +41,7 @@
                {field:'entrustId',  title: 'PrimaryBiddingManage002.entrustId',sortable:false}
               ,{field:'portfolioId',  title: 'PrimaryBiddingManage002.portfolioId',width:250,sortable:false}
               ,{field:'portfolioName',  title: 'PrimaryBiddingManage002.portfolioName',width:260,sortable:false}
-              ,{field:'bidPrinAmt',  title: 'PrimaryBiddingManage002.bidPrinAmt',type:'number',width:250,sortable:false}
+              ,{field:'bidPrinAmt',  title: 'PrimaryBiddingManage002.bidPrinAmt1',type:'number',width:250,sortable:false}
               ,{field:'bidPrice',  title: 'PrimaryBiddingManage002.bidprice',type:'number',width:250,sortable:false}
           ],
         searchOnInit: true,
@@ -56,7 +56,7 @@
     	data:ENTITY==null?[]:ENTITY.primaryBiddingAllDtolist,
     	cols:[  
     	         {field:'bidPrice',  title: 'PrimaryBiddingManage002.bidprice',type:'number',sortable:false,width:650}
-    	        ,{field:'hzallBidPrinAmt',  title: 'PrimaryBiddingManage002.allBidPrinAmt',type:'number',sortable:false,width:620}
+    	        ,{field:'hzallBidPrinAmt',  title: 'PrimaryBiddingManage002.allBidPrinAmt1',type:'number',sortable:false,width:620}
     	    ],
         searchOnInit: true,
         checkbox:false,
