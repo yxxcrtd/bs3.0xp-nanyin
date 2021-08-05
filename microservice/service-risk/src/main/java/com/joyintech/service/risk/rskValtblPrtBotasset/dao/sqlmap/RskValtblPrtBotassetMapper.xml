@@ -20,9 +20,10 @@
 	<!--筛选利息-->
 	where not exists  (
 		 select t2.sub_code from RSK_VALTBL_PRT_BOTASSET_MAP T2
-		 join RSK_VALTBL_SUBRELATION T3 ON T2.SUB_CODE LIKE T3.int_subject||'%'
+		 join RSK_VALTBL_SUBRELATION T3 ON T2.SUB_CODE LIKE concat(T3.int_subject,'%')
 		 where T1.PTL_ID = T2.PTL_ID and T1.SUB_CODE = T2.SUB_CODE
 		 )
+	and (T1.SUB_CODE not like '2%' or T1.SUB_CODE like '2701%')
     and T1.SUB_CLASS not in ('ZHG','NHG') /**回购资产无需做映射 **/
 	<if test="ptlId !=null and ptlId !=''">
 		and T1.PTL_ID = #{ptlId}
@@ -94,7 +95,7 @@
 			 and (SUB_CODE = #{subCode}
 			 <!-- TISHKBS-1172 [估值表资产科目映射]映射完资产信息后，rsk_valtbl_asset_sub入表数据不正确 add by hpp 2020-09-27 -->
 			 <!--OR SUB_NAME in (SELECT SUB_NAME FROM RSK_VALTBL_ASSET_SUB WHERE SUB_CODE = #{subCode} AND PTL_ID = #{ptlId})-->
-		 		OR SUB_CODE like '%'||substr(#{subCode},8)
+		 		OR SUB_CODE like concat('%',substr(#{subCode},8))
 			 )
 			and FINPROD_ID is null
 	 </update>
@@ -141,7 +142,8 @@
 		SELECT
 		REP_FINPROD_ID id,
 		REP_FINPROD_NAME text,
-		'01'||','||FINPROD_MARKET_ID  object
+		<!--'01'||','||FINPROD_MARKET_ID  object-->
+		concat('01,',FINPROD_MARKET_ID) object
 		FROM REP_ASSET_DEPT
 		WHERE REP_ASSET_TYPE IN('1107','1108','1901','1902')
 		<if test="search != null and search != ''">
@@ -173,9 +175,10 @@
 		<!--筛选利息-->
 		where not exists  (
 		select r2.sub_code from RSK_VALTBL_PRT_BOTASSET_MAP r2
-		join RSK_VALTBL_SUBRELATION r3 ON r2.SUB_CODE LIKE r3.int_subject||'%'
+		join RSK_VALTBL_SUBRELATION r3 ON r2.SUB_CODE LIKE concat(r3.int_subject,'%')
 		where T1.PTL_ID = r2.PTL_ID and T1.SUB_CODE = r2.SUB_CODE
 		)
+		and (T1.SUB_CODE not like '2%' or T1.SUB_CODE like '2701%')
 		and T1.SUB_CLASS not in ('ZHG','NHG') /**回购资产无需做映射 **/
 		AND T1.FINPROD_ID is null
 		<if test="ptlId !=null and ptlId !=''">
@@ -201,9 +204,10 @@
 		<!--筛选利息-->
 		where  not exists  (
 		select r2.sub_code from RSK_VALTBL_PRT_BOTASSET_MAP r2
-		join RSK_VALTBL_SUBRELATION r3 ON r2.SUB_CODE LIKE r3.int_subject||'%'
+		join RSK_VALTBL_SUBRELATION r3 ON r2.SUB_CODE LIKE concat(r3.int_subject,'%')
 		where T1.PTL_ID = r2.PTL_ID and T1.SUB_CODE = r2.SUB_CODE
 		)
+		and (T1.SUB_CODE not like '2%' or T1.SUB_CODE like '2701%')
 		and T1.FINPROD_ID is null
 		and T1.SUB_CLASS not in ('ZHG','NHG') /**回购资产无需做映射 **/
 		<if test="ptlId !=null and ptlId !=''">
@@ -228,7 +232,7 @@
 		left join RSK_ASSET_INFO T3 on T1.FINPROD_ID = T3.ASSET_CODE and T3.status in ('E', 'M')
 		where  not exists  (
 		select r2.sub_code from RSK_VALTBL_PRT_BOTASSET_MAP r2
-		join RSK_VALTBL_SUBRELATION r3 ON r2.SUB_CODE LIKE r3.int_subject||'%'
+		join RSK_VALTBL_SUBRELATION r3 ON r2.SUB_CODE LIKE concat(r3.int_subject,'%')
 		where T1.PTL_ID = r2.PTL_ID and T1.SUB_CODE = r2.SUB_CODE
 		)
 		and T1.SUB_CLASS not in ('ZHG','NHG') /**回购资产无需做映射 **/
@@ -313,7 +317,8 @@
 		SELECT
 		ASSET_CODE id,
 		nvl(ASSET_NAME,ASSET_CODE) text,
-		'01'||','||ASSET_CODE  object
+		<!--'01'||','||ASSET_CODE  object-->
+		concat('01,',ASSET_CODE) object
 		FROM
 		RSK_ASSET_INFO /**资产要素表**/
 		WHERE status in ('E', 'M')
