@@ -952,7 +952,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                        handval.setIsMatch(DictCodeListExt1.是否_否.getValue());
                        unMatchList.add(handval);
                    }else if(!isMatch && handval.getValType() == ValType.ASSET && (handval.getSubCode().substring(0, 1).equals(TAX_SECTION_BEGIN))
-                       && ((handval.getSubCode().length() >= 4 && handval.getSubCode().substring(0, 4).equals(KEY_ZHGB_STR))
+                       && ((handval.getSubCode().length() >= 4 && handval.getSubCode().substring(0, 4).equals("2202"))
                            ||(handval.getSubCode().length() >= 6 && handval.getSubCode().substring(0, 6).equals("223101")))){
                        handval.setIsMatch(DictCodeListExt1.是否_否.getValue());
                        unMatchList.add(handval);
@@ -1117,7 +1117,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            case SUM:
                if(ValDataType.NULL == (sumNameCodeEntry==null?null:sumNameCodeEntry.getNextColType())) break;
                Double cellNum = null;
-               if(StringUtil.isNotEmpty(subjName)){
+               if(StringUtil.isNotEmpty(subjName) && subjName.trim().length()!=0){
                    subjName = subjName.replaceAll(",", "");
                    if(sumNameCodeEntry != null && ValDataType.STRING == sumNameCodeEntry.getNextColType()){
                        cellNum = null;
