@@ -60,7 +60,7 @@ public class RskValTableImportCommonService extends BaseService {
                 assetName = arr[arr.length - 1];
             }
             String finalAssetName = assetName;
-            List<SelectOptionDto> list = selectOptionDtoList.stream().filter((assetInfo) -> (finalAssetName.equals(assetInfo.getText()) || finalAssetName.equals(assetInfo.getId()))).collect(Collectors.toList());
+            List<SelectOptionDto> list = selectOptionDtoList.stream().filter((assetInfo) -> (StringUtil.equals(finalAssetName,assetInfo.getText()) || StringUtil.equals(finalAssetName,assetInfo.getId()))).collect(Collectors.toList());
             if (!StringUtil.isEmptyList(list)) {
                 return list.get(0);
             }
