@@ -1,5 +1,7 @@
 package com.joyintech.tams.invest.trade.primarybiddingmanage.controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +73,21 @@ public class PrimaryBiddingManage002Controller extends BaseController {
             entity = primaryBiddingManage002Service.getMyEntity(map);
             // 人员信息
             EtrInvestInfoDto etrInvestInfoDto = tradeCommonService.findEtrInfo(
-                entity.getPrimaryBiddingPortfolioDtolist().get(0).getEntrustId());
+                    entity.getPrimaryBiddingPortfolioDtolist().get(0).getEntrustId());
+            //配置单位 add by yeming 20210802 start
+            List<PrimaryBiddingPortfolioDto> primaryBiddingPortfolioDtolist = entity.getPrimaryBiddingPortfolioDtolist();
+            for (PrimaryBiddingPortfolioDto dto : primaryBiddingPortfolioDtolist) {
+                if(dto.getBidPrinAmt() != null) {
+                    dto.setBidPrinAmt(dto.getBidPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }
+            List<PrimaryBiddingPortfolioDto> primaryBiddingAllDtolist = entity.getPrimaryBiddingAllDtolist();
+            for (PrimaryBiddingPortfolioDto dto : primaryBiddingAllDtolist) {
+                if(dto.getHzallBidPrinAmt() != null) {
+                    dto.setHzallBidPrinAmt(dto.getHzallBidPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+            }
+            //配置单位 add by yeming 20210802 end
             if (etrInvestInfoDto != null) {
                 TrdInvestPersonInfo002Dto info002Dto = new TrdInvestPersonInfo002Dto();
                 info002Dto.setCounterId(etrInvestInfoDto.getEtrEntrust().getCounterId());
