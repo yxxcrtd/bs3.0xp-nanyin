@@ -507,9 +507,9 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
      *
      * @return
      */
-    public String getCounterName(String counterId) {
+    public String getCounterName(String counterName) {
         return restTemplate.getForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/getCounterName?counterId=" + counterId,
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/isCounterName?counterName=" + counterName,
                 String.class);
     }
 

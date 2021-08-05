@@ -10,17 +10,15 @@
  
 package com.joyintech.service.entrust.etrbondfirstlbidding.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
+import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
+import com.joyintech.tams.common.base.entity.MstCounterParty;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 债券一级投标委托 查询mapper
@@ -113,5 +111,13 @@ public interface EtrBondFirstLBiddingMapper {
      * @since 1.0
      */
     List<SelectOptionDto> getMainConsignee(Map<String, Object> param);
+
+
+    /**
+     * 根据交易对手名称判断是否存在
+     * @param counterName
+     * @return
+     */
+    MstCounterParty isCounterName(String counterName);
 
 }
