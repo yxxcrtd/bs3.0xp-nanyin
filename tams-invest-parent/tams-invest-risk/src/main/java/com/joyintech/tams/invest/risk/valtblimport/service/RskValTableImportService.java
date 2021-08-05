@@ -680,7 +680,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            }
        }
 
-       valHand_oneList.sort(Comparator.comparing(RskValtblAssetSubDto::getIsMatch,Comparator.nullsLast(String::compareTo)).thenComparing(RskValtblAssetSubDto::getSubCode));
+       valHand_oneList.sort(Comparator.comparing(RskValtblAssetSubDto::getIsMatch,Comparator.nullsLast(String::compareTo)).thenComparing(RskValtblAssetSubDto::getValType).thenComparing(RskValtblAssetSubDto::getSubCode));
 
        return valHand_oneList;
    }
@@ -947,16 +947,16 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                }
                //统计未匹配的红字展示
                //“1” “3”开头或者 ”2“开头回购融入
-               if (!(fplist.contains(handval.getSubCode()))) {
-                   if (!isMatch && handval.getValType() == ValType.ASSET  && (!(handval.getSubCode().substring(0, 1).equals(TAX_SECTION_BEGIN)))) {
-                       handval.setIsMatch(DictCodeListExt1.是否_否.getValue());
-                       unMatchList.add(handval);
-                   }else if(!isMatch && handval.getValType() == ValType.ASSET && (handval.getSubCode().substring(0, 1).equals(TAX_SECTION_BEGIN))
-                       && ((handval.getSubCode().length() >= 4 && handval.getSubCode().substring(0, 4).equals("2202"))
-                           ||(handval.getSubCode().length() >= 6 && handval.getSubCode().substring(0, 6).equals("223101")))){
-                       handval.setIsMatch(DictCodeListExt1.是否_否.getValue());
-                       unMatchList.add(handval);
-                   }
+               if(!handval.getSubName().contains("估值增值") && !(fplist.contains(handval.getSubCode()))){
+                       if (!isMatch && handval.getValType() == ValType.ASSET  && (!(handval.getSubCode().substring(0, 1).equals(TAX_SECTION_BEGIN)))) {
+                           handval.setIsMatch(DictCodeListExt1.是否_否.getValue());
+                           unMatchList.add(handval);
+                       }else if(!isMatch && handval.getValType() == ValType.ASSET && (handval.getSubCode().substring(0, 1).equals(TAX_SECTION_BEGIN))
+                               && ((handval.getSubCode().length() >= 4 && (handval.getSubCode().substring(0, 4).equals("2202") || handval.getSubCode().substring(0, 4).equals("2701")))
+                               ||(handval.getSubCode().length() >= 6 && handval.getSubCode().substring(0, 6).equals("223101")))){
+                           handval.setIsMatch(DictCodeListExt1.是否_否.getValue());
+                           unMatchList.add(handval);
+                       }
                }
                //统计未匹配的红字展示
            }

@@ -1842,18 +1842,18 @@
     <!-- 根据groupby 条件获取对象下的分类-->
     <select   id="getFinpordType" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis003Dto">
         select a.*,b.posCost as posCost,b.posValue as posValue,b.tdyIntincexp tdyIntincexp  from (select portfolioId,
-        pinanAssetType,
-        customAssetTypeTwo,
-        customAssetTypeThree,
-        customAssetTypeFour,
-        customAssetTypeFive,
+        NVL(pinanAssetType,'null') pinanAssetType,
+        NVL(customAssetTypeTwo,'null') customAssetTypeTwo,
+        NVL(customAssetTypeThree,'null') customAssetTypeThree,
+        NVL(customAssetTypeFour,'null') customAssetTypeFour,
+        NVL(customAssetTypeFive,'null') customAssetTypeFive,
         belongInstitutionCode belongInstitutionNameNew
         from (select atd.portfolio_id as portfolioId,
         nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)  AS pinanAssetType,
-        nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2)   AS customAssetTypeTwo,
-        nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3) AS customAssetTypeThree,
-        nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4)  AS customAssetTypeFour,
-        nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE5)  AS customAssetTypeFive,
+        nvl(atd.custom_asset_type_two,NVL(RAI.ORG_ASSET_TYPE2,'null'))   AS customAssetTypeTwo,
+        nvl(atd.custom_asset_type_three,NVL(RAI.ORG_ASSET_TYPE3,'null')) AS customAssetTypeThree,
+        nvl(atd.custom_asset_type_four,NVL(RAI.ORG_ASSET_TYPE4,'null'))  AS customAssetTypeFour,
+        nvl(atd.custom_asset_type_five,NVL(RAI.ORG_ASSET_TYPE5,'null'))  AS customAssetTypeFive,
         DATAINST.BELONG_INSTITUTION_CODE belongInstitutionCode,
         <if test="displayType != null and displayType != '' and displayType=='01'">
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
@@ -1910,7 +1910,7 @@
         </if>
 
         <if test="type != null and type != ''">
-            and atd.pinan_asset_type= #{type}
+            and (atd.pinan_asset_type= #{type} OR RAI.ORG_ASSET_TYPE1 = #{type})
         </if>
         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
             AND DATAINST.INSTITUTION_CODE IN
@@ -1969,16 +1969,16 @@
                 nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1) as pinanAssetType,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2) as customAssetTypeTwo,
+                nvl(atd.custom_asset_type_two,NVL(RAI.ORG_ASSET_TYPE2,'null')) as customAssetTypeTwo,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3) as customAssetTypeThree,
+                nvl(atd.custom_asset_type_three,NVL(RAI.ORG_ASSET_TYPE3,'null')) as customAssetTypeThree,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4)  as customAssetTypeFour,
+                nvl(atd.custom_asset_type_four,NVL(RAI.ORG_ASSET_TYPE4,'null'))  as customAssetTypeFour,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE5) as customAssetTypeFive,
+                nvl(atd.custom_asset_type_five,NVL(RAI.ORG_ASSET_TYPE5,'null')) as customAssetTypeFive,
             </if>
         </if>
         <if test="displayType != null and displayType != '' and displayType=='02'">
@@ -1986,16 +1986,16 @@
                 nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1) as pinanAssetType,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2) as customAssetTypeTwo,
+                nvl(atd.custom_asset_type_two,NVL(RAI.ORG_ASSET_TYPE2,'null')) as customAssetTypeTwo,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3)  as customAssetTypeThree,
+                nvl(atd.custom_asset_type_three,NVL(RAI.ORG_ASSET_TYPE3,'null'))  as customAssetTypeThree,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4) as customAssetTypeFour,
+                nvl(atd.custom_asset_type_four,NVL(RAI.ORG_ASSET_TYPE4,'null')) as customAssetTypeFour,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE5) as customAssetTypeFive,
+                nvl(atd.custom_asset_type_five,NVL(RAI.ORG_ASSET_TYPE5,'null')) as customAssetTypeFive,
             </if>
         </if>
 
@@ -2053,7 +2053,7 @@
         </if>
 
         <if test="type != null and type != ''">
-            and atd.pinan_asset_type= #{type}
+            and (atd.pinan_asset_type= #{type} OR RAI.ORG_ASSET_TYPE1 = #{type})
         </if>
         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
             AND dani.INSTITUTION_CODE IN
@@ -2075,16 +2075,16 @@
                 nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2)
+                nvl(atd.custom_asset_type_two,NVL(RAI.ORG_ASSET_TYPE2,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3)
+                nvl(atd.custom_asset_type_three,NVL(RAI.ORG_ASSET_TYPE3,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4)
+                nvl(atd.custom_asset_type_four,NVL(RAI.ORG_ASSET_TYPE4,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE5)
+                nvl(atd.custom_asset_type_five,NVL(RAI.ORG_ASSET_TYPE5,'null'))
             </if>
         </if>
         <if test="displayType != null and displayType != '' and displayType=='02'">
@@ -2092,16 +2092,16 @@
                 nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2)
+                nvl(atd.custom_asset_type_two,NVL(RAI.ORG_ASSET_TYPE2,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3)
+                nvl(atd.custom_asset_type_three,NVL(RAI.ORG_ASSET_TYPE3,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4)
+                nvl(atd.custom_asset_type_four,NVL(RAI.ORG_ASSET_TYPE4,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE5)
+                nvl(atd.custom_asset_type_five,NVL(RAI.ORG_ASSET_TYPE5,'null'))
             </if>
         </if>
         )lx
@@ -2206,7 +2206,7 @@
             </if>
 
             <if test="deepLevel!= null and deepLevel != ''">
-                CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),'') childInfo,
+                CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVL(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),'') childInfo,
                 row_number() over(partition by atd.portfolio_id order by atd.cdate desc) row_number,
             </if>
             'root' parentInfo
@@ -2389,32 +2389,32 @@
             <choose>
                 <!-- 下钻层级 1级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='01'">
-                    CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),'')  parentInfo,
-                    CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'), nvl(atd.pinan_asset_type, 'null')), nvl(atd.custom_asset_type_two, 'null')), nvl(atd.finprod_id, 'null')),'') childInfo
+                    CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),'')  parentInfo,
+                    CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')), nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')), nvl(atd.finprod_id, 'null')),'') childInfo
 
                 </when>
                 <!-- 下钻层级 2级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='02'">
-                    CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),'') parentInfo,
-                    CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),'') childInfo
+                    CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),'') parentInfo,
+                    CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),'') childInfo
 
                 </when>
                 <!-- 下钻层级 3级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='03'">
-                    CONCAT( CONCAT(  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'), nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),'') parentInfo,
-                    CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),'') childInfo
+                    CONCAT( CONCAT(  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),'') parentInfo,
+                    CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),'') childInfo
 
                 </when>
                 <!-- 下钻层级 4级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='04'">
-                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')  parentInfo,
-                    CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),'') childInfo
+                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')  parentInfo,
+                    CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),'') childInfo
 
                 </when>
                 <!-- 下钻层级 5级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='05'">
-                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')  parentInfo,
-                    CONCAT( CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),nvl(atd.FINPROD_ID,'null')),'') childInfo
+                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')  parentInfo,
+                    CONCAT( CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),nvl(atd.FINPROD_ID,'null')),'') childInfo
 
                 </when>
             </choose>
@@ -2474,23 +2474,23 @@
 
             <!-- 下钻层级 1级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='01'">
-                and  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),'')= #{parentId}
+                and  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 2级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='02'">
-                and   CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 3级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='03'">
-                and   CONCAT( CONCAT(  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'), nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT(  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 4级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='04'">
-                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 5级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='05'">
-                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')= #{parentId}
             </if>
             group by 
              <!-- 多级法人改造 add by hxy 20200629 start-->
@@ -2593,7 +2593,7 @@
             <choose>
                 <!-- 下钻层级 1级-->
                 <when test="deepLevel!= null and deepLevel != '' ">
-                    CONCAT( nvl(atd.pinan_asset_type, 'null'),'') childInfo,
+                    CONCAT( nvl(NVL(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),'') childInfo,
                     row_number() over(partition by atd.pinan_asset_type order by atd.cdate desc) row_number,
                 </when>
 
@@ -2760,13 +2760,13 @@
                     atd.branch,
                     atd.is_perne as isPerne,
                     atd.cdate,
-                    atd.finprod_market_id as finprodMarketId,
-                    atd.finprod_name as finprodName,
-                    atd.pinan_asset_type as pinanAssetType,
-                    atd.custom_asset_type_two as customAssetTypeTwo,
-                    atd.custom_asset_type_three as customAssetTypeThree,
-                    atd.custom_asset_type_four as customAssetTypeFour,
-                    atd.custom_asset_type_five as customAssetTypeFive,
+                    nvl(atd.finprod_market_id,RAI.ASSET_CODE) as finprodMarketId,
+                    nvl(atd.finprod_name,RAI.ASSET_NAME) as finprodName,
+                    nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)  AS pinanAssetType,
+                    nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2)   AS customAssetTypeTwo,
+                    nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3) AS customAssetTypeThree,
+                    nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4)  AS customAssetTypeFour,
+                    nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE4)  AS customAssetTypeFive,
                     atd.issue_party as issueParty,
                     atd.is_soe as isSoe,
                     atd.is_listed_company as isListedCompany,
@@ -2810,55 +2810,57 @@
             <choose>
                 <!-- 下钻层级 1级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='01'">
-                    CONCAT( nvl(atd.pinan_asset_type, 'null'),'') parentInfo,
-                    CONCAT(CONCAT(CONCAT(nvl(atd.pinan_asset_type,'null'),nvl(atd.finprod_id,'null')),nvl(custom_asset_type_two,'null')),'')
+                    CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),'') parentInfo,
+                    CONCAT(CONCAT(CONCAT(nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null'),nvl(atd.finprod_id,'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),'')
                     childInfo
 
                 </when>
                 <!-- 下钻层级 2级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='02'">
-                    CONCAT( CONCAT(nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two,
+                    CONCAT( CONCAT(nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),
                     'null')),'') parentInfo,
                     CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')),
-                    nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),'')
+                    nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),'')
                     childInfo
 
                 </when>
                 <!-- 下钻层级 3级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='03'">
-                    CONCAT( CONCAT( CONCAT( nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two,
+                    CONCAT( CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),
                     'null')),nvl(atd.custom_asset_type_three, 'null')),'') parentInfo,
                     CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')),
-                    nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),'')
+                    nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),'')
                     childInfo
 
                 </when>
                 <!-- 下钻层级 4级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='04'">
-                    CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.pinan_asset_type,
-                    'null'),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three,
+                    CONCAT( CONCAT( CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),
+                    'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three,
                     'null')),nvl(atd.custom_asset_type_four, 'null')),'') parentInfo,
                     CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID,
                     'null'),nvl(atd.finprod_id,'null')),
-                    nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),'')
+                    nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),'')
                     childInfo
 
                 </when>
                 <!-- 下钻层级 5级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='05'">
-                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.pinan_asset_type,
-                    'null'),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three,
+                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),
+                    'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three,
                     'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five,
                     'null')),'') parentInfo,
                     CONCAT( CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID,
                     'null'),nvl(atd.finprod_id,'null')),
-                    nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),nvl(atd.FINPROD_ID,'null')),'')
+                    nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),nvl(atd.FINPROD_ID,'null')),'')
                     childInfo
 
                 </when>
             </choose>
             ,row_number() over(partition by atd.finprod_id order by atd.cdate desc) row_number
-            from ASSET_TARGET_DB atd 
+            from ASSET_TARGET_DB atd
+            LEFT join RSK_ASSET_INFO RAI
+                ON atd.FINPROD_ID = RAI.ASSET_CODE
              <!-- 多级法人改造 add by hxy 20200629 start-->
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                inner join data_auth_notify_inst dani 
@@ -2907,34 +2909,44 @@
                 </foreach>
             </if>
 
-            <if test="pass != null and pass != ''">
+            <if test="pass != null and pass != '' and pass == '02'.toString()">
+                and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+            </if>
+            <if test="pass != null and pass != '' and pass == '01'.toString()">
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
             <!-- 下钻层级 1级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='01'">
-                and  CONCAT(nvl(atd.pinan_asset_type, 'null'),'')= #{parentId}
+                and  CONCAT(nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),'')= #{parentId}
             </if>
             <!-- 下钻层级 2级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='02'">
-                and    CONCAT( CONCAT( nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two, 'null')),'')= #{parentId}
+                and    CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 3级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='03'">
-                and  CONCAT(  CONCAT( CONCAT(  nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),'')= #{parentId}
+                and  CONCAT(  CONCAT( CONCAT(  nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 4级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='04'">
-                and   CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT( CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 5级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='05'">
-                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')= #{parentId}
             </if>
             group by atd.portfolio_id,
             atd.finprod_id ,
             atd.branch,
             atd.is_perne ,
             atd.cdate,
+            RAI.ASSET_CODE,
+            RAI.ASSET_NAME,
+            RAI.ORG_ASSET_TYPE1,
+            RAI.ORG_ASSET_TYPE2,
+            RAI.ORG_ASSET_TYPE3,
+            RAI.ORG_ASSET_TYPE4,
+            RAI.ORG_ASSET_TYPE5,
             atd.finprod_market_id ,
             atd.finprod_name ,
             atd.pinan_asset_type ,
@@ -2998,6 +3010,8 @@
                     THEN SUM(atd.tdy_intincexp)*-1
                     ELSE SUM(atd.tdy_intincexp) end tdyIntincexp
             from ASSET_TARGET_DB atd
+            LEFT join RSK_ASSET_INFO RAI
+                ON atd.FINPROD_ID = RAI.ASSET_CODE
             LEFT JOIN FIN_TRADE_PRODUCT FTP ON atd.FINPROD_ID = FTP.FINPROD_ID AND FTP.BRANCH='0'
              <!-- 多级法人改造 add by hxy 20200629 start-->
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
@@ -3045,7 +3059,10 @@
                 </foreach>
             </if>
 
-            <if test="pass != null and pass != ''">
+            <if test="pass != null and pass != '' and pass == '02'.toString()">
+                and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+            </if>
+            <if test="pass != null and pass != '' and pass == '01'.toString()">
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
             group by
