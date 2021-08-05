@@ -30,8 +30,8 @@ public interface PbcNewPrdDatFileMapper {
      */
     int deleteEndBatchByProdId(@Param("deleteList") List<String> list);
 
-    int updateZipSendCount(@Param("OrgCode")String OrgCode,@Param("List") List<String> list);
+    int updateZipSendCount(@Param("OrgCode") String OrgCode,@Param("List") List<String> list);
 
-    int deleteZipData(String OrgCode);
+    int deleteZipData(@Param("OrgCode") String OrgCode);
 
 }

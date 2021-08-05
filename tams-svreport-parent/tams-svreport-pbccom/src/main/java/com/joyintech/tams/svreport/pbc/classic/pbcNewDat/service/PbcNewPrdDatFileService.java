@@ -17,6 +17,8 @@ import com.joyintech.framework.util.ZipFileUtil;
 import com.joyintech.system.institution.dto.SysInstitutionDto;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -49,10 +51,11 @@ import com.joyintech.tams.svreport.pbc.common.util.SftpUtil;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,6 +90,12 @@ public class PbcNewPrdDatFileService {
 	@Autowired
 	private PbcNewPrdDatFileMapper pbcNewPrdDatFileMapper;
 
+	/**
+	 * 数据批量一次性insert条数(单条数据字段较多)
+	 */
+	@Value("${application.reportInsertLongCount}")
+	private int reportInsertLongCount;
+
     /**
      * 生成数据文件
      * @param reportType，报表类型，如果为空，则生成所有
@@ -95,7 +104,7 @@ public class PbcNewPrdDatFileService {
      * @see
      * @since 1.0
      */
-    public void genDataFile(String reportType,  List<String> listProds,Date genDate, Map<String, Object> param,String OrgCode) throws UnsupportedEncodingException {
+    public void genDataFile(String reportType,  List<String> listProds,Date genDate, Map<String, Object> param,String OrgCodenull) throws UnsupportedEncodingException {
 		String sendStatus = DictCodeListExt2.报送状态_未报送.getValue();
 		Map<String,Object> searchParam = new HashMap<>();
 		searchParam.put("sendStatusList",Arrays.asList(sendStatus));
@@ -105,25 +114,71 @@ public class PbcNewPrdDatFileService {
     	/***2、取得产品终止信息待处理数据*/
 		List<PbcPrdBaseinfoEndSubDat> endList = getPrdEndList(searchParam);
 
+		Map<String,List<PbcPrdBaseinfoSubDat>> orgPrdBaseMap = prdList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoSubDat::getOrgCode));
+		Map<String,List<PbcPrdBaseinfoEndSubDat>> orgPrdEndMap = endList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoEndSubDat::getOrgCode));
 
-		/**3、调用共通处理【DAT生成共通处理-产品端】**/
-		Map<String, ArrayList> resultMap = PbcDatUtil.genDatZipList(DictCodeListExt3.是否压缩_不生成压缩文件.getValue(),"1", DictCodeList.是否_中债_否.getValue(),OrgCode,
-				prdList,endList);
+		Set<String> dateSet = new HashSet<>();
 
-		/***4、数据入库*/
+		dateSet.addAll(orgPrdBaseMap.keySet());
+		dateSet.addAll(orgPrdEndMap.keySet());
+
+		for(String OrgCode : dateSet){
+			/**3、调用共通处理【DAT生成共通处理-产品端】**/
+			Map<String, ArrayList> resultMap = PbcDatUtil.genDatZipList(DictCodeListExt3.是否压缩_不生成压缩文件.getValue(),"1", DictCodeList.是否_中债_否.getValue(),OrgCode,
+					orgPrdBaseMap.get(OrgCode),orgPrdEndMap.get(OrgCode));
+			/***4、数据入库*/
 			/***5.1、清除DAT表中的未报送数据*/
 			deleteDatData(listProds,OrgCode);
 			/***5.2、文件管理表入库*/
+
+			int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
 			if(null!=resultMap.get("zipList")){
-				pbcNewPrdDatFileMapper.insertBatchZipData(resultMap.get("zipList"));
+				List<PbcSendZipDatFile> zipList = resultMap.get("zipList");
+				int batchLastIndex = batchCount;//每批最后一个的下标
+				for(int index = 0; index < zipList.size();){
+					if(batchLastIndex > zipList.size()-1){
+						batchLastIndex = zipList.size();
+						pbcNewPrdDatFileMapper.insertBatchZipData(zipList.subList(index, batchLastIndex));
+						break;
+					}else{
+						pbcNewPrdDatFileMapper.insertBatchZipData(zipList.subList(index, batchLastIndex));
+						index = batchLastIndex;//设置下一批下标
+						batchLastIndex = index + batchCount;
+					}
+				}
 			}
 			/**5.2、报送信息入库*/
 			if(null!=resultMap.get("prdList")){
-				pbcPrdBaseinfoSubDatMapper.insertBatch(resultMap.get("prdList"));
+				List<PbcPrdBaseinfoSubDat> zipList = resultMap.get("prdList");
+				int batchLastIndex = batchCount;//每批最后一个的下标
+				for(int index = 0; index < zipList.size();){
+					if(batchLastIndex > zipList.size()-1){
+						batchLastIndex = zipList.size();
+						pbcPrdBaseinfoSubDatMapper.insertBatch(zipList.subList(index, batchLastIndex));
+						break;
+					}else{
+						pbcPrdBaseinfoSubDatMapper.insertBatch(zipList.subList(index, batchLastIndex));
+						index = batchLastIndex;//设置下一批下标
+						batchLastIndex = index + batchCount;
+					}
+				}
 			}
 			if(null!=resultMap.get("endList")){
-				pbcPrdBaseinfoEndSubDatMapper.insertBatch(resultMap.get("endList"));
+				List<PbcPrdBaseinfoEndSubDat> zipList = resultMap.get("endList");
+				int batchLastIndex = batchCount;//每批最后一个的下标
+				for(int index = 0; index < zipList.size();){
+					if(batchLastIndex > zipList.size()-1){
+						batchLastIndex = zipList.size();
+						pbcPrdBaseinfoEndSubDatMapper.insertBatch(zipList.subList(index, batchLastIndex));
+						break;
+					}else{
+						pbcPrdBaseinfoEndSubDatMapper.insertBatch(zipList.subList(index, batchLastIndex));
+						index = batchLastIndex;//设置下一批下标
+						batchLastIndex = index + batchCount;
+					}
+				}
 			}
+		}
     }
 
 	/**

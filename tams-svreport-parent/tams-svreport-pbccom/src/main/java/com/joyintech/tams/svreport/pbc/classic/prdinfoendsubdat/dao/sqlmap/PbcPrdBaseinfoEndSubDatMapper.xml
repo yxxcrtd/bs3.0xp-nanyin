@@ -896,17 +896,16 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
             SUBMIT_DEADLINE, STATUS, CREATE_USER,
             ORG_CODE, CREATE_DEPT, CREATE_TIME,
             UPDATE_USER, UPDATE_TIME,PROD_ID,DAT_ZIP_CODE)
-        values
-        <foreach collection="list" open="(" close=")" separator="," item="item">
-            (
-            #{item.registSeqno,jdbcType=CHAR}, #{item.pbcProdId,jdbcType=VARCHAR}, #{item.mdate,jdbcType=TIMESTAMP},
+        <foreach collection="list" item="item" separator=" from dual union all select " open="select * from (select "
+                 close="from dual)">
+            sys_guid(), #{item.pbcProdId,jdbcType=VARCHAR}, #{item.mdate,jdbcType=TIMESTAMP},
             #{item.ccy,jdbcType=CHAR}, #{item.profit,jdbcType=DECIMAL}, #{item.profitCny,jdbcType=DECIMAL},
             #{item.customProfit,jdbcType=DECIMAL}, #{item.customProfitCny,jdbcType=DECIMAL}, #{item.cusYearYield,jdbcType=DECIMAL},
             #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitTime,jdbcType=TIMESTAMP}, #{item.submitFeedbackStatus,jdbcType=VARCHAR},
             #{item.sumitSeq,jdbcType=VARCHAR}, sysdate, #{item.pbcSubmitDeadline,jdbcType=TIMESTAMP},
             #{item.submitDeadline,jdbcType=TIMESTAMP}, #{item.status,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
-            #{item.orgCode,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, sysdate,
-            #{item.updateUser,jdbcType=VARCHAR}, sysdate,#{item.prodId,jdbcType=VARCHAR},#{item.datZipCode,jdbcType=VARCHAR})
+            #{item.orgCode,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+            ,#{item.updateUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},#{item.prodId,jdbcType=VARCHAR},#{item.datZipCode,jdbcType=VARCHAR}
         </foreach>
 
     </insert>

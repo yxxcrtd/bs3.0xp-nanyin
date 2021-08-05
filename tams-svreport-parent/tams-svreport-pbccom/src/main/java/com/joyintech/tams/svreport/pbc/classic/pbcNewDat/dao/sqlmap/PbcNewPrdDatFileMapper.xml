@@ -22,8 +22,7 @@
                 CREATE_USER, ORG_CODE, CREATE_DEPT,
                 CREATE_TIME, UPDATE_USER, UPDATE_TIME
                 )
-            values
-            <foreach collection="dataList" open="(" close=")" separator="," item="item">
+            <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
                 sys_guid(), #{item.datZipCode,jdbcType=VARCHAR}, #{item.datZipPath,jdbcType=VARCHAR},
                 #{item.datZipType,jdbcType=VARCHAR}, #{item.datZipDatType,jdbcType=VARCHAR}, #{item.datZipStatus,jdbcType=VARCHAR},
                 #{item.zipDownloadTime,jdbcType=DATE}, #{item.statusVdate,jdbcType=VARCHAR}, #{item.reportuuid,jdbcType=CHAR},
@@ -31,8 +30,9 @@
                 #{item.returnZipSendStatus,jdbcType=VARCHAR}, #{item.returnZipCode,jdbcType=VARCHAR}, #{item.returnTime,jdbcType=DATE},
                 #{item.returnMsg,jdbcType=VARCHAR}, #{item.returnErrorCnt,jdbcType=DECIMAL}, #{item.returnPassCnt,jdbcType=DECIMAL},
                 #{item.createUser,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
-                sysdate, #{item.updateUser,jdbcType=VARCHAR}, sysdate
+                #{item.updateTime,jdbcType=TIMESTAMP},#{item.updateUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}
             </foreach>
+
         </insert>
 
 
