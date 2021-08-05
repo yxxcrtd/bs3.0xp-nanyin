@@ -197,18 +197,18 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
 //                        this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
 //            }
 //        }
-        if (StringUtil.isNotEmpty(dto.getRepRuleComment())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepRuleComment(), 256)) {
-                resultList.add(new ValidMessage("repRuleComment", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repRuleComment"))));
-            }
-        }
-        if (StringUtil.isNotEmpty(dto.getRepOpenBussRemark())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepOpenBussRemark(), 256)) {
-                resultList.add(new ValidMessage("repOpenBussRemark", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repOpenBussRemark"))));
-            }
-        }
+//        if (StringUtil.isNotEmpty(dto.getRepRuleComment())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepRuleComment(), 256)) {
+//                resultList.add(new ValidMessage("repRuleComment", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repRuleComment"))));
+//            }
+//        }
+//        if (StringUtil.isNotEmpty(dto.getRepOpenBussRemark())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepOpenBussRemark(), 256)) {
+//                resultList.add(new ValidMessage("repOpenBussRemark", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repOpenBussRemark"))));
+//            }
+//        }
         if (StringUtil.isNotEmpty(dto.getRepRemark())) {
             if (RepCheckUtil.checkByteLength(dto.getRepRemark(), 256)) {
                 resultList.add(new ValidMessage("repRemark", this.getMessage("FW_E_0002",

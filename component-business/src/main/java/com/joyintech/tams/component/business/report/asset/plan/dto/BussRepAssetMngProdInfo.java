@@ -524,7 +524,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      *
      * @return repManageType
      */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repManageType",groups={ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repManageType",groups={ValidateGroupEdit.class})
     public String getRepManageType() {
         if (needValid) {
             return repManageType;
