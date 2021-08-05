@@ -372,7 +372,6 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      * 取得 起息日
      * @return 起息日
      */
-    @NotEmpty(fieldName = "FinStockInfo002.vDate",groups={ValidateGroupEdit.class})//非空校验
     public Date getVdate() {
         return super.getVdate();
     }
