@@ -56,21 +56,12 @@ public class RskValTableImportCommonService extends BaseService {
      */
     public SelectOptionDto getAssetInfoFromName(String assetName) {
         List<SelectOptionDto> selectOptionDtoList =rskValRelateImport001Service.queryProdIdInfo(RequestUtil.getPageParam());
-        logger.info("解析资管计划1"+assetName);
-        System.out.println("解析资管计划2"+assetName);
         if (StringUtil.isNotEmpty(assetName)) {
-           /* if (assetName.contains("\\")) {
-                String[] arr = StringUtil.split(assetName, "\\");
-                assetName = arr[arr.length - 1];
-            }*/
             if (assetName.contains(File.separator)) {
                 String[] arr = StringUtil.split(assetName, File.separator);
                 assetName = arr[arr.length - 1];
             }
             String finalAssetName = assetName;
-
-            logger.info("解析资管计划1111111111111"+finalAssetName);
-            System.out.println("解析资管计划222222"+finalAssetName);
             List<SelectOptionDto> list = selectOptionDtoList.stream().filter((assetInfo) -> (StringUtil.equals(finalAssetName,assetInfo.getText()) || StringUtil.equals(finalAssetName,assetInfo.getId()))).collect(Collectors.toList());
             if (!StringUtil.isEmptyList(list)) {
                 return list.get(0);
