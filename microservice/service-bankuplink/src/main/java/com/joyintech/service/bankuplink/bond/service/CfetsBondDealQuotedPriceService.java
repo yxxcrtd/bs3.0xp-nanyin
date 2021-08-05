@@ -582,7 +582,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
     							|| StringUtil.equals(dto.getTradeStatus(), com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已终止.getValue())
     							|| StringUtil.equals(dto.getTradeStatus(), com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已过期.getValue())
     							|| StringUtil.equals(dto.getTradeStatus(), com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_新增中.getValue())
-    							||(StringUtil.equals(dto.getTradeStatus(),com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_已新增.getValue())&&StringUtil.equals(dto.getSendStatus(),com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行发送状态_成功.getValue()))
+    							||(StringUtil.equals(dto.getTradeStatus(),com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行报价状态_待回复.getValue())&&StringUtil.equals(dto.getSendStatus(),com.joyintech.background.component.uplink.interbank.common.DictCodeList.银行间上行发送状态_成功.getValue()))
                                 || dto.getTradeStatus() == null) {
     						IbuQuoteBondDetDto newDto = new IbuQuoteBondDetDto();
     						BeanUtil.copyPropertiesIgnoreNull(newDto, dto.getIbuQuoteBondDetList().get(0));
