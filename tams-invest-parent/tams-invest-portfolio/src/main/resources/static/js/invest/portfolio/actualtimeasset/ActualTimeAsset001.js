@@ -82,9 +82,9 @@ $(function() {
         // 绑定查询按钮
         $('#ActualTimeAsset001_btn_search').click(function() {
         	var strError = '';
-            if(!$('#portfolioId').val()){
-                strError = "请输入"+JoyinUtil.getLabel("ActualTimeAsset001.portfolioId")+"<br>";
-            }
+            // if(!$('#portfolioId').val()){
+            //     strError = "请输入"+JoyinUtil.getLabel("ActualTimeAsset001.portfolioId")+"<br>";
+            // }
             if(!$('#cdate').val()){
                 strError = strError + "请输入"+JoyinUtil.getLabel("ActualTimeAsset001.cdate");
             }
