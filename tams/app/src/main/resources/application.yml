@@ -356,13 +356,13 @@ spring:
 #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0702ls
-  sqldirpassword: zgtams0702ls_123
+  sqldiruserName: zgtams217_v0630_renhang
+  sqldirpassword: zgtams217_v0630_renhang
 shiro:
   ssoEnable: false
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -375,18 +375,18 @@ shiro:
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl

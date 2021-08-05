@@ -1422,7 +1422,7 @@
 			parameterType="java.lang.String">
 		select
 			rownum as rowIndex,
-		 dat.*,
+		 dat.*,dat.
 		prd.pbc_prod_id pbcProdIdPrd,
 		prd.ISSUE_PARTY_ID issuePartyIdPrd,
 		prd.PBC_PROD_TYPE pbcProdTypePrd,
@@ -1474,7 +1474,8 @@
 		prd.CREATE_USER createUserPrd,
 		prd.ORG_CODE orgCodePrd,
 		prd.CREATE_DEPT createDeptPrd,
-		prd.CREATE_TIME createTimePrd
+		prd.CREATE_TIME createTimePrd,
+		prd.IS_MARKET_FUND isMarketFundPrd
 		from PBC_PRD_BASEINFO_SUB_DAT dat
 		left join PBC_PRD_BASEINFO_SUB  prd on dat.prod_id=prd.prod_id
 		where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}

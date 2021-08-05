@@ -39,6 +39,10 @@ public class PbcPrdBaseinfoEndSubDatDiff extends BaseEntity {
      * 产品实际终止日期
      */
     private Date mdate;
+    /**
+     * 产品实际终止日期
+     */
+    private String mdate01;
 
     /**
      * 币种
@@ -204,19 +208,22 @@ public class PbcPrdBaseinfoEndSubDatDiff extends BaseEntity {
 
 
     private String pbcProdIdPrd;
-    private String mdatePrd;
+    private String prodIdPrd;
+    private Date mdatePrd;
     private String cusYearYieldPrd;
     private String ccyPrd;
     private String customProfitPrd;
     private String customProfitCnyPrd;
+    private String mdate01Prd;
 
-    private Integer pbcProdIdDiff;
-    private Integer mdateDiff;
-    private Integer cusYearYieldDiff;
-    private Integer ccyDiff;
-    private Integer customProfitDiff;
-    private Integer customProfitCnyDiff;
-
+    private Integer pbcProdIdDiff=0;
+    private Integer prodIdDiff=0;
+    private Integer mdateDiff=0;
+    private Integer cusYearYieldDiff=0;
+    private Integer ccyDiff=0;
+    private Integer customProfitDiff=0;
+    private Integer customProfitCnyDiff=0;
+    private Integer mdate01Diff=0;
 
     public String getDatZipCode() {
         return datZipCode;
@@ -779,11 +786,11 @@ public class PbcPrdBaseinfoEndSubDatDiff extends BaseEntity {
         this.pbcProdIdPrd = pbcProdIdPrd;
     }
 
-    public String getMdatePrd() {
+    public Date getMdatePrd() {
         return mdatePrd;
     }
 
-    public void setMdatePrd(String mdatePrd) {
+    public void setMdatePrd(Date mdatePrd) {
         this.mdatePrd = mdatePrd;
     }
 
@@ -873,5 +880,27 @@ public class PbcPrdBaseinfoEndSubDatDiff extends BaseEntity {
 
     public void setRowIndex(Integer rowIndex) {
         this.rowIndex = rowIndex;
+    }
+    public String getMdate01() {
+        return DateUtil.format(mdate,"yyyy-MM-dd");
+    }
+    public String getMdate01Prd() {
+        return DateUtil.format(mdatePrd,"yyyy-MM-dd");
+    }
+
+    public String getProdIdPrd() {
+        return prodIdPrd;
+    }
+
+    public void setProdIdPrd(String prodIdPrd) {
+        this.prodIdPrd = prodIdPrd;
+    }
+
+    public Integer getProdIdDiff() {
+        return prodIdDiff;
+    }
+
+    public void setProdIdDiff(Integer prodIdDiff) {
+        this.prodIdDiff = prodIdDiff;
     }
 }

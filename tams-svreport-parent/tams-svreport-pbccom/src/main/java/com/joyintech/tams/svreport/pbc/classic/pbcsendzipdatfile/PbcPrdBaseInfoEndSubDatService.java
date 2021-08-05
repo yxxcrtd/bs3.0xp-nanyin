@@ -1,6 +1,9 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDatDiff;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
@@ -46,16 +49,32 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
             for(PbcPrdBaseinfoEndSubDatDiff detail : listDetail){
                 //登记表和DAT表数据差异比较
                 dealPbcPrdBaseinfoEndSubDatDiff(detail);
+                dealPbcPrdBaseinfoEndSubDat(detail);
             }
         }
         data.put("report", listDetail);
         return data;
     }
 
+
+
     @SuppressWarnings("unchecked")
     @Override
     public Map<Object, Object> createDataMS(Map<String,Object> param){
         return createData(param);
+    }
+    /**
+     * 功能:处理查询出的产品报表明细数据
+     * @since 1.6.0
+     * @version 1.6.0
+     * @param result
+     * @return
+     * PbcPrdBaseinfoSubDat
+     */
+    public void dealPbcPrdBaseinfoEndSubDat(PbcPrdBaseinfoEndSubDatDiff result) {
+        if (StringUtil.isNotEmpty(result.getCcy())) {
+            result.setCcy(SysDataUtil.getNameFromDataDict(DictCode.币种_中债, result.getCcy()));
+        }
     }
     /**
      * 功能:登记表和DAT表差异
@@ -68,6 +87,9 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
     public void dealPbcPrdBaseinfoEndSubDatDiff(PbcPrdBaseinfoEndSubDatDiff result){
         if (!StringUtil.equals(result.getPbcProdId(),result.getPbcProdIdPrd())){
             result.setPbcProdIdDiff(1);
+        }
+        if (!StringUtil.equals(result.getProdId(),result.getProdIdPrd())){
+            result.setProdIdDiff(1);
         }
         if (!StringUtil.equals(result.getMdate(),result.getMdatePrd())){
             result.setMdateDiff(1);

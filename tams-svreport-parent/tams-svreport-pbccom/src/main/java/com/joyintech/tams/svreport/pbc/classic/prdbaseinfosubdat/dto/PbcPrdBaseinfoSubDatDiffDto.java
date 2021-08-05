@@ -426,6 +426,7 @@ public class PbcPrdBaseinfoSubDatDiffDto {
     private String 	mdate01Prd;
     private String 	fiduciaryDutyPrd;
     private String 	isConstractePrd;
+    private String isMarketFundPrd;
     private String 	transferTypePrd;
     private String 	transferType1Prd;
     private String 	transferType2Prd;
@@ -2167,5 +2168,11 @@ public class PbcPrdBaseinfoSubDatDiffDto {
         return DateUtil.format(mdatePrd,"yyyy-MM-dd");
     }
 
+    public String getIsMarketFundPrd() {
+        return isMarketFundPrd;
+    }
 
+    public void setIsMarketFundPrd(String isMarketFundPrd) {
+        this.isMarketFundPrd = isMarketFundPrd;
+    }
 }

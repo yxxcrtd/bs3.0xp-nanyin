@@ -165,6 +165,10 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
         if(result.getInDepName()!=null){
             result.setInDepName(result.getInDepName().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.境内托管机构名称, result.getInDepName()));
         }
+        // 境内托管机构名称
+        if(result.getIsMarketFund()!=null){
+            result.setIsMarketFund(SvrDataUtil.getNameFromDataDict(DictCode.是否_中债, result.getIsMarketFund()));
+        }
         return result;
     }
     /**
@@ -194,7 +198,7 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
         if (!StringUtil.equals(result.getProdBrand(),result.getProdBrandPrd())){
             result.setProdBrandDiff(1);
         }
-        if (null!=result.getProdStage()&&result.getProdStage().compareTo(result.getProdStagePrd())!=0){
+        if (null!=result.getProdStage()&&null!=result.getProdStagePrd()&&result.getProdStage().compareTo(result.getProdStagePrd())!=0){
             result.setProdStageDiff(1);
         }
         if (!StringUtil.equals(result.getInsideProdId(),result.getInsideProdIdPrd())){

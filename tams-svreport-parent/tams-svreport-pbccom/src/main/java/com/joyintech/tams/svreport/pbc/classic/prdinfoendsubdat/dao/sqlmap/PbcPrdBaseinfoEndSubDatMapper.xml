@@ -959,17 +959,19 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
         select
             rownum as rowIndex,
             dat.PBC_PROD_ID,
+            dat.PROD_ID,
             dat.MDATE,
             dat.CUS_YEAR_YIELD,
             dat.ccy,
             dat.CUSTOM_PROFIT,
             dat.CUSTOM_PROFIT_CNY,
-            dat.PBC_PROD_ID as pbcProdIdPrd,
-            dat.MDATE as mdatePrd,
-            dat.CUS_YEAR_YIELD as cusYearYieldPrd,
-            dat.ccy as ccyPrd,
-            dat.CUSTOM_PROFIT as customProfitPrd,
-            dat.CUSTOM_PROFIT_CNY as customProfitCnyPrd
+            prd.PBC_PROD_ID as pbcProdIdPrd,
+            prd.PROD_ID as prodIdPrd,
+            prd.MDATE as mdatePrd,
+            prd.CUS_YEAR_YIELD as cusYearYieldPrd,
+            prd.ccy as ccyPrd,
+            prd.CUSTOM_PROFIT as customProfitPrd,
+            prd.CUSTOM_PROFIT_CNY as customProfitCnyPrd
         from PBC_PRD_BASEINFO_END_SUB_DAT dat
             left join PBC_PRD_BASEINFO_END_SUB  prd on dat.prod_id=prd.prod_id
         where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
