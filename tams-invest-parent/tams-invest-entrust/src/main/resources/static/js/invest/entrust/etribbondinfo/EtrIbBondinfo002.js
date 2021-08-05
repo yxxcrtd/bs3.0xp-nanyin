@@ -150,7 +150,8 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
-        document.getElementById('deviationDegree').innerHTML ="";
+        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
+            '0.0000%' +"</span>";
         if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
             return;
         }
@@ -163,9 +164,6 @@
             if (result ) {
                 document.getElementById('deviationDegree').innerHTML ="<span style='color: red'>"+
                     JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
-            }else{
-                document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-                    '0.0000%' +"</span>";
             }
         });
     }
@@ -282,7 +280,11 @@
             });
         }
     };
-
+    window.componentLoadCallback = function(isDone, pagePath, params) {
+        if (isDone) {
+            getLeftZHinfo();
+        }
+    };
 
     /**
      * 初始化
@@ -564,8 +566,8 @@
         if (todoList == false) {
             var rs = parent.EtrIbBondinfoHq.queryPositionInfo(finprodIdhid,portfolioId,chlFinprodId,ccy,vdate,calId);
             getPtlCashPositionInfo(rs);
-            window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
         }
+        window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
     }
     /**
      * 取消,清空指令数据
@@ -669,6 +671,8 @@
      * 绑定事件
      */
     $(function () {
+        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
+            '0.0000%' +"</span>";
 
         // 绑定提交按钮
         $('#EtrIbBondinfo002_btn_submit').click(function () {
