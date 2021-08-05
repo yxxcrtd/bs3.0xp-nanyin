@@ -272,12 +272,12 @@ public class ProductReportRegister002Validator implements BeanValidator {
 			}
 		}
 		// 业务联络人座机
-		if (StringUtil.isNotEmpty(entity.getRepLiaisonTel())) {
-			if (RepCheckUtil.checkByteLength(entity.getRepLiaisonTel(), 30)) {
-				validList.add(new ValidMessage("repLiaisonTel",
-						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepLiaisonTel())) {
+//			if (RepCheckUtil.checkByteLength(entity.getRepLiaisonTel(), 30)) {
+//				validList.add(new ValidMessage("repLiaisonTel",
+//						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
+//			}
+//		}
 		// 业务联络人手机
         if (StringUtil.isNotEmpty(entity.getRepLiaisonMobile())) {
             if(!RepCheckUtil.checkNum11(entity.getRepLiaisonMobile())){
@@ -303,25 +303,25 @@ public class ProductReportRegister002Validator implements BeanValidator {
 						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repOutDepName"))));
 			}
 		}
-		// 实际管理人名称
-		if (StringUtil.isNotEmpty(entity.getRepMname())) {
-			if (RepCheckUtil.checkByteLength(entity.getRepMname(), 120)) {
-				validList.add(new ValidMessage("repMname",
-						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repMname"))));
-			}
-		}
+//		// 实际管理人名称
+//		if (StringUtil.isNotEmpty(entity.getRepMname())) {
+//			if (RepCheckUtil.checkByteLength(entity.getRepMname(), 120)) {
+//				validList.add(new ValidMessage("repMname",
+//						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repMname"))));
+//			}
+//		}
 		// 境内托管机构名称
 		if (StringUtil.isNotEmpty(entity.getRepInDepName())
 				&& RepCheckUtil.checkByteLength(entity.getRepInDepName(), 120)) {
 			validList.add(new ValidMessage("repInDepName",
 					this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repInDepName"))));
 		}
-		if (StringUtil.isNotEmpty(entity.getRepCoopName())) {
-			if (RepCheckUtil.checkByteLength(entity.getRepCoopName(), 120)) {
-				validList.add(new ValidMessage("repCoopName",
-						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repCoopName"))));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepCoopName())) {
+//			if (RepCheckUtil.checkByteLength(entity.getRepCoopName(), 120)) {
+//				validList.add(new ValidMessage("repCoopName",
+//						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repCoopName"))));
+//			}
+//		}
 		// 投资资产种类及比例
 		if (StringUtil.isNotEmpty(entity.getRepInvTypeRat())) {
 			if (RepCheckUtil.checkByteLength(entity.getRepInvTypeRat(), 300)) {

@@ -127,12 +127,12 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
             }
         }
         // 业务联络人座机
-        if (StringUtil.isNotEmpty(dto.getRepLiaisonTel())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepLiaisonTel(), 30)) {
-                resultList.add(new ValidMessage("repLiaisonTel", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
-            }
-        }
+//        if (StringUtil.isNotEmpty(dto.getRepLiaisonTel())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepLiaisonTel(), 30)) {
+//                resultList.add(new ValidMessage("repLiaisonTel", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
+//            }
+//        }
         // 业务联络人手机
         if (StringUtil.isNotEmpty(dto.getRepLiaisonMobile())) {
         	if(!RepCheckUtil.checkNum11(dto.getRepLiaisonMobile())){

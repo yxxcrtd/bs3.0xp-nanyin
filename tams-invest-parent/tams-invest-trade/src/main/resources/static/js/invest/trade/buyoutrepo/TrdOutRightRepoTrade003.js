@@ -1089,6 +1089,7 @@
                   data:TrdOutRightRepoTradePtl==null?[]:TrdOutRightRepoTradePtl,
                   searchOnInit:true,
                   height:'225px',
+                  page:false,
                   cols:[
                       {field:'entrustId',  width:100,title: 'TrdOutRightRepoTrade003.entrustId',edit:false, sortable:false,type:'text'}
                       ,{field:'portfolioId', width:100,  title: 'TrdOutRightRepoTrade003.busiId',edit:true,sortable: false,

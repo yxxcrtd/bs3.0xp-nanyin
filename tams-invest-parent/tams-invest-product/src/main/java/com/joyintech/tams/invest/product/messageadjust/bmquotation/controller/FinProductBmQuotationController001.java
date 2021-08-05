@@ -164,7 +164,7 @@ public class FinProductBmQuotationController001 extends BaseController {
             map.put("finprodId", dto.getFinprodId());
             map.put("effDate", dto.getEffDateStr());
             map.put("baseRuleId", dto.getBaseRuleId());
-            map.put("baseRuleType", DictCodeListExt2.业绩基准类型_披露业绩基准.getValue());
+            map.put("baseRuleType", DictCodeListExt1.业绩基准类型_产品披露.getValue());
             if (StringUtil.isNotEmpty(dto.getFinprodId()) && null != bussBenchMarketInfoService) {
                 BussBenchMarkInfoDto bussBenchMarkInfoDto = bussBenchMarketInfoService.getByFinprodIdAndEffDate(map);
                 dto.setBussBenchMarkInfoDto(bussBenchMarkInfoDto);

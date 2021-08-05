@@ -231,7 +231,7 @@ $(function() {
             }
             else{
                 triValueChange('ccy');
-                triValueChange('finprodMarketName');
+                $('#finprodMarketName').val('').trigger("change");
                 triValueChange('vdate');
                 triValueChange('mdate');
                 /*triValueChange('vdateProd');*/
@@ -263,7 +263,7 @@ $(function() {
                 });
             }
             else{
-                triValueChange('portfolioName');
+                $('#portfolioName').val('').trigger("change");
             }
             calResiPrincipal();
             calTheoryIntDemand();
