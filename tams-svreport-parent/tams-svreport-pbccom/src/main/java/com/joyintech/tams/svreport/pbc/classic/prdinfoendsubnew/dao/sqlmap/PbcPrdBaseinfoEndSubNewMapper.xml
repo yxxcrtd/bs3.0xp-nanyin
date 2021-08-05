@@ -492,7 +492,7 @@
         a.SUBMIT_DEADLINE submitDeadline,
         a.STATUS status,
         a.CREATE_USER createUser,
-        a.ORG_CODE orgCode,
+         CB.REG_CODE orgCode,
         a.CREATE_DEPT createDept,
         a.CREATE_TIME createTime,
         a.UPDATE_USER updateUser,
@@ -516,6 +516,8 @@
         status='E'
         AND code_type='01'
         )t2 ON t2.inside_prod_id=b.PROD_ID
+        LEFT JOIN CHB_PRD_BASEINFO CB
+        ON CB.PROD_ID = B.PROD_ID
         <where>
             <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
                 <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">

@@ -1140,7 +1140,7 @@
             t1.SUBMIT_DEADLINE submitDeadline,
             t1.STATUS status,
             t1.CREATE_USER createUser,
-            t1.ORG_CODE orgCode,
+             CB.REG_CODE orgCode,
             t1.CREATE_DEPT createDept,
             t1.CREATE_TIME createTime,
             t1.UPDATE_USER updateUser,
@@ -1174,6 +1174,8 @@
             ON CORBC.REGIST_BANK_CODE = t1.ISSUE_PARTY_ID
             LEFT JOIN SYS_INSTITUTION SI
             ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
+            LEFT JOIN CHB_PRD_BASEINFO CB
+            ON CB.PROD_ID = T1.PROD_ID
             <where>
                 t1.STATUS !='04'
                 <if test="pbcProdIdList != null and pbcProdIdList.size > 0">

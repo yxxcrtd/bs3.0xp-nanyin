@@ -1260,11 +1260,10 @@
 		STATUS, CREATE_USER, ORG_CODE,DAT_ZIP_CODE,
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
 		UPDATE_TIME)
-		values
-		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+		<foreach collection="list" item="item" separator=" from dual union all select " open="select * from (select "
 				 close="from dual)">
 			#{item.subProdId,jdbcType=VARCHAR},
-			#{item.registSeqno,jdbcType=CHAR}, #{item.pbcProdId,jdbcType=VARCHAR},
+			sys_guid(), #{item.pbcProdId,jdbcType=VARCHAR},
 			#{item.issuePartyId,jdbcType=VARCHAR},
 			#{item.pbcProdType,jdbcType=CHAR}, #{item.prodName,jdbcType=VARCHAR}, #{item.prodBrand,jdbcType=VARCHAR},
 			#{item.prodStage,jdbcType=DECIMAL}, #{item.prodId,jdbcType=VARCHAR},
@@ -1290,9 +1289,8 @@
 			#{item.pbcSubmitDeadline,jdbcType=TIMESTAMP},
 			#{item.submitDeadline,jdbcType=TIMESTAMP},
 			#{item.status,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR},#{item.datZipCode,jdbcType=VARCHAR},
-			#{item.createDept,jdbcType=VARCHAR}, sysdate,
-			#{item.updateUser,jdbcType=VARCHAR},
-			sysdate
+			#{item.createDept,jdbcType=VARCHAR},#{item.updateTime,jdbcType=TIMESTAMP},
+			#{item.updateUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}
 		</foreach>
 
 	</insert>

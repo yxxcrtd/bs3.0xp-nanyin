@@ -80,7 +80,7 @@ public class PbcDatUtil {
 			baseMap = prdList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoSubDat::getVdate));
 			endMap = endList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoEndSubDat::getMdate));
 			//获取所有开始终止的业务日期
-			dateSet = baseMap.keySet();
+			dateSet.addAll(baseMap.keySet());
 			dateSet.addAll(endMap.keySet());
 		}else{
 			//1.2、【1.1】以外的情况下，调用2的处理   默认传入当前日期
@@ -285,6 +285,13 @@ public class PbcDatUtil {
 	}
 
 	public static void  main(String args[] ) {
+		Set<Date> date = new HashSet<>();
+		date.add(DateUtil.parse("2021-05-03"));
+		date.add(DateUtil.parse("2021-05-04"));
 
+		Set<Date> date1 = new HashSet<>();
+		date.add(DateUtil.parse("2021-05-03"));
+
+		date.addAll(date1);
 	}
 }
