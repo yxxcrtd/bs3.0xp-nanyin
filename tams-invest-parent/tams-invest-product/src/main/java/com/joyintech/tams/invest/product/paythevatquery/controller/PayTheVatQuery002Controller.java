@@ -381,10 +381,11 @@ public class PayTheVatQuery002Controller extends BaseController{
     		payTheVatQuery002Dto.setListpayTheVatQuery002TableDto(new ArrayList<PayTheVatQuery002TableDto>());
     		payTheVatQuery002Dto.getListpayTheVatQuery002TableDto().add(tabledto);
     		Date payment1 =  DateUtil.parse(payTheVatQuery002Dto.getPayment1());
-    		String year = DateUtil.getYearStr(payTheVatQuery002Dto.getPayment1());
-    		String season = DateUtil.getSeason(payment1)+"";
-    		String remark = year+"年"+season+"季度销项税金结转金额:"+tabledto.getTaxTotal();
-    		payTheVatQuery002Dto.setRemark(remark);
+			//重复添加remark备注信息，导致修改后的备注信息被覆盖。
+//    		String year = DateUtil.getYearStr(payTheVatQuery002Dto.getPayment1());
+//    		String season = DateUtil.getSeason(payment1)+"";
+//    		String remark = year+"年"+season+"季度销项税金结转金额:"+tabledto.getTaxTotal();
+//    		payTheVatQuery002Dto.setRemark(remark);
     		try {
     			msg = payTheVatQuery002Service.start(proParam, payTheVatQuery002Dto);
     		}
