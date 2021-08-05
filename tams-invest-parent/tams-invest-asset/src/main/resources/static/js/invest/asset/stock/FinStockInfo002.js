@@ -436,6 +436,10 @@ var QueryFunc = function () {
                $('#calendarId').textSelect("setValue",'13');
            } else if($("#shOrZh").val()=='02'){
                $('#calendarId').textSelect("setValue",'14');
+           }else if($("#shOrZh").val()){
+                   Joyin.ajax(basePath + 'invest/asset/stock/FinStockInfo002/getShOrZhCalendarId','' , function(result){
+                       $('#calendarId').textSelect("setValue",result.data[0].code);
+               });
            }else{
                $("#calendarId").empty();
            }

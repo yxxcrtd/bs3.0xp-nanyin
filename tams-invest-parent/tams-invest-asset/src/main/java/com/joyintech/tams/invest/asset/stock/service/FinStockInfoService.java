@@ -531,5 +531,18 @@ public class FinStockInfoService extends CommonExportService<FinStockInfoDto> im
         finStockInfoDto.setRepAssetEquity(baseInfoDto.getRepAssetEquity()); 
         return finStockInfoDto;
     }
+
+    /**
+     * 沪港通&深港通交易日历
+     *
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getShOrZhCalendarId() {
+        return restTemplate.getForList(ServiceApplication.ASSET_SERVICE_NAME + "/FinStockInfo/getShOrZhCalendarId",
+                SuggestDto.class);
+    }
     
 }

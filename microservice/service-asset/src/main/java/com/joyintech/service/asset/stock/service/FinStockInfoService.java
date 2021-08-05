@@ -371,4 +371,14 @@ public class FinStockInfoService extends BaseService<FinStockInfoDto>{
 		}
 		return username;
 	}
+
+    /**
+     * 沪港通&深港通交易日历
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getShOrZhCalendarId(){
+        return finStockInfoMapper.getShOrZhCalendarId();
+    }
 }

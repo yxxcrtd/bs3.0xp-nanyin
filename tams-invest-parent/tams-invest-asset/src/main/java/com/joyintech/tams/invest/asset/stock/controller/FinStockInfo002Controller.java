@@ -340,5 +340,21 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
         ar.setData(temp);
         return ar;
     }
+
+    /**
+     * 沪港通&深港通交易日历
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getShOrZhCalendarId")
+    public AjaxResult getShOrZhCalendarId() {
+        AjaxResult ar = new AjaxResult();
+        List<SuggestDto> temp =  finStockInfoService.getShOrZhCalendarId();
+        ar.setData(temp);
+        return ar;
+    }
 }
 
