@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,18 +35,17 @@ public class PbcNewDatFileCBMainService extends AutoSendCBBaseService{
     @Autowired
     private PbcNewPrdDatFileService pbcNewPrdDatFileService;
     
-	public Map<String, List<String>> generatePbcDatFile(Date batchDate,List<String> prodList) {
+	public Map<String, List<String>> generatePbcDatFile(Date batchDate,List<String> prodList,String OrgCode){
 		Map<String, List<String>> mapPara = new HashMap<String, List<String>>();
 		// 设置批处理bean
 		setBatchBeanName(BatchBeanName.人行单产品dat文件生成批处理);
 		logInfoBatchStart();
 		try {
 			//生成全部类型的dat文件，产品listProds暂为空
-			pbcNewPrdDatFileService.genDataFile(null, prodList, batchDate, null);
+			pbcNewPrdDatFileService.genDataFile(null, prodList, batchDate, null,null);
 			
 		} catch (Exception e) {
 			logger.error("人行报表dat文件生成批处理Error",e);
-			throw e;
 		}
 		logInfoBatchEnd();
 		return mapPara;

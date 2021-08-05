@@ -1082,6 +1082,210 @@
         <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
     </select>
 
+
+    <select id="searchDat" resultType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        select
+            t1.REGIST_SEQNO registSeqno,
+            t1.pbc_prod_id pbcProdId,
+            t1.ISSUE_PARTY_ID issuePartyId,
+            SI.INSTITUTION_NAME issuePartyName,
+            t1.PBC_PROD_TYPE pbcProdType,
+            t1.PROD_NAME prodName,
+            t1.PROD_BRAND prodBrand,
+            t1.PROD_STAGE prodStage,
+            t1.PROD_ID prodId,
+            t1.SUB_PROD_ID subProdId,
+            t1.RAISE_CCY raiseCcy,
+            t1.CASH_PRIN_CCY cashPrinCcy,
+            t1.CASH_PROF_CCY cashProfCcy,
+            t1.CUSTOMER_TYPE customerType,
+            t1.RAISE_TYPE raiseType,
+            t1.MANAGE_TYPE manageType,
+            t1.FIDUCIARY_DUTY fiduciaryDuty,
+            t1.CONT_MODE contMode,
+            t1.OPERATE_MODE operateMode,
+            t1.IVSTORIENTATION ivstorientation,
+            t1.BUSI_MODEL busiModel,
+            t1.INCOME_GUARAN_IDENT incomeGuaranIdent,
+            t1.PRIN_GUARAN_IDENT prinGuaranIdent,
+            t1.HIGH_YIELD_ISSUE highYieldIssue,
+            t1.LOW_YIELD_ISSUE lowYieldIssue,
+            t1.RAISE_VDATE raiseVdate,
+            t1.RAISE_ENDDATE raiseEnddate,
+            t1.TERM_RIGHT_FLAG termRightFlag,
+            t1.CUS_REDEEM_FLAG cusRedeemFlag,
+            t1.CREDIT_FLAG creditFlag,
+            t1.CREDIT_TYPE creditType,
+            t1.CREDIT_MODE creditMode,
+            t1.IN_DEP_NAME inDepName,
+            t1.IN_DEP_CODE inDepCode,
+            t1.OUT_DEP_CTRY outDepCtry,
+            t1.OUT_DEP_NAME outDepName,
+            t1.VDATE vdate,
+            t1.MDATE mdate,
+            <!-- modify by zhangliang 20210220 工单号:YHZGCPB20210129004 start -->
+            <!-- t1.ACCOUNT_ID accountId, -->
+            NVL(t3.PBC_CODE, t1.ACCOUNT_ID) accountId,
+            <!-- modify by zhangliang 20210220 工单号:YHZGCPB20210129004 end -->
+            t1.IS_CONSTRACTE isConstracte,
+            t1.TRANSFER_TYPE transferType,
+            t1.IDENTI_FLAG identiFlag,
+            t1.SEND_STATUS sendStatus,
+            t1.SUBMIT_TIME submitTime,
+            t1.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+            t1.SUMIT_SEQ sumitSeq,
+            t1.STATUS_DATE statusDate,
+            t1.IS_MARKET_FUND isMarketFund,
+            t1.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
+            t1.SUBMIT_DEADLINE submitDeadline,
+            t1.STATUS status,
+            t1.CREATE_USER createUser,
+            t1.ORG_CODE orgCode,
+            t1.CREATE_DEPT createDept,
+            t1.CREATE_TIME createTime,
+            t1.UPDATE_USER updateUser,
+            t1.UPDATE_TIME updateTime,
+            t2.PBC_CODE pbcCode,
+            t1.PBC_PROD_ID pbcProdIdShow
+            from PBC_PRD_BASEINFO_SUB_NEW t1
+            LEFT JOIN(
+            SELECT
+            inside_prod_id,
+            pbc_code
+            FROM
+            pbc_prod_assetpool_code
+            WHERE
+            status='E'
+            AND code_type='01'
+            )t2 ON t2.inside_prod_id=t1.PROD_ID
+            <!-- add by zhangliang 20210220 工单号:YHZGCPB20210129004 start -->
+            LEFT JOIN(
+            SELECT
+            inside_prod_id,
+            pbc_code
+            FROM
+            pbc_prod_assetpool_code
+            WHERE
+            status='E'
+            AND code_type='02'
+            )t3 ON t3.inside_prod_id=t1.PROD_ID
+            <!-- add by zhangliang 20210220 工单号:YHZGCPB20210129004 end -->
+            LEFT JOIN CHB_ORG_REGIST_BANK_CODE CORBC
+            ON CORBC.REGIST_BANK_CODE = t1.ISSUE_PARTY_ID
+            LEFT JOIN SYS_INSTITUTION SI
+            ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
+            <where>
+                t1.STATUS !='04'
+                <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+                    <foreach collection="pbcProdIdList" item="items" open="and PBC_PROD_ID in (" separator="," close=")">
+                        #{items,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
+                <if test="prodIdList != null and prodIdList.size > 0">
+                    <foreach collection="prodIdList" item="items" open="and PROD_ID in (" separator="," close=")">
+                        #{items,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
+                <if test="issuePartyId != null and issuePartyId !=''">
+                    and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
+                </if>
+                <if test="statusList != null and statusList.size > 0">
+                    and t1.STATUS in
+                    <foreach collection="statusList" open="(" close=")" separator="," item="item">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="keyList != null and keyList.size > 0">
+                    and trim(REGIST_SEQNO) in
+                    <foreach collection="keyList" open="(" close=")" separator="," item="item">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="sendStatusList != null and sendStatusList.size > 0">
+                    and SEND_STATUS in
+                    <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+                    and SUBMIT_FEEDBACK_STATUS in
+                    <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="operateModeList != null and operateModeList.size > 0">
+                    and OPERATE_MODE in
+                    <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="ivstorientationList != null and ivstorientationList.size > 0">
+                    and IVSTORIENTATION in
+                    <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="statusDateStart != null and statusDateStart != ''">
+                    and to_char(STATUS_DATE,'yyyy-MM-dd') &gt;= #{statusDateStart}
+                </if>
+                <if test="statusDateEnd != null and statusDateEnd != ''">
+                    and to_char(STATUS_DATE,'yyyy-MM-dd') &lt;= #{statusDateEnd}
+                </if>
+                <if test="submitTimeStart != null and submitTimeStart != ''">
+                    and to_char(SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitTimeStart}
+                </if>
+                <if test="submitTimeEnd != null and submitTimeEnd != ''">
+                    and to_char(SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitTimeEnd}
+                </if>
+                <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+                    and to_char(PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{pbcSubmitDeadlineDateStart}
+                </if>
+                <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+                    and to_char(PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{pbcSubmitDeadlineDateEnd}
+                </if>
+                <if test="vdateStart != null and vdateStart != ''">
+                    and to_char(VDATE,'yyyy-MM-dd') &gt;= #{vdateStart}
+                </if>
+                <if test="vdateEnd != null and vdateEnd != ''">
+                    and to_char(VDATE,'yyyy-MM-dd') &lt;= #{vdateEnd}
+                </if>
+                <if test="updateTime != null and updateTime != ''">
+                    and to_char(UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
+                </if>
+                <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
+                <if test="startDate != null and startDate != ''">
+                    and to_char(VDATE,'yyyy-MM-dd') &gt;= #{startDate}
+                </if>
+                <if test="endDate != null and endDate != ''">
+                    and to_char(VDATE,'yyyy-MM-dd') &lt;= #{endDate}
+                </if>
+
+                <if test="allExport != null and allExport !=''">
+                    and exists (
+                    select 1 from PBC_INIT_PROD_RAISING_SUB pi where pi.Pbc_Prod_Id=T1.PBC_PROD_ID
+                    )
+                    and (
+                    t1.SEND_STATUS = '01'
+                    and t1.SUBMIT_FEEDBACK_STATUS != '01'
+                    and t1.SUBMIT_FEEDBACK_STATUS != '03'
+                    )
+                </if>
+
+                <if test="registList!=null and registList.size()!=0">
+                    <foreach collection="registList" item="items"
+                             open=" AND TRIM(REGIST_SEQNO) IN (" close=")" separator=",">
+                        #{items,jdbcType=CHAR}
+                    </foreach>
+                </if>
+                <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
+            </where>
+            <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
+            ORDER BY t1.PBC_SUBMIT_DEADLINE ASC, t1.UPDATE_TIME DESC
+            <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
+    </select>
+
     <select id="selectPbcBankCodeName" parameterType="java.lang.String" resultType="java.lang.String">
         select corb.PBC_BANK_CODE
         from CHB_ORG_REGIST_BANK_CODE corb

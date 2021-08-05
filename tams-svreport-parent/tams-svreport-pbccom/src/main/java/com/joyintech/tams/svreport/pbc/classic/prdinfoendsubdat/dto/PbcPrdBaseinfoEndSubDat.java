@@ -732,4 +732,25 @@ public class PbcPrdBaseinfoEndSubDat extends BaseEntity {
 	public String getCcyStr(){
 		return SysDataUtil.getNameFromDataDict(DictCode.币种,getCcy());
 	}
+
+
+    public String toPbcString(String split){
+        if(null==split){
+            split = "";
+        }
+        StringBuffer sb = new StringBuffer();
+        sb.append(this.getPbcProdId());  //产品代码
+        sb.append(split).append(this.getMdateStr()); //产品实际终止日期
+        sb.append(split).append(this.getCusYearYield());//兑付客户收益率
+        sb.append(";");
+
+
+
+        sb.append(this.getPbcProdId());  //产品代码
+        sb.append(split).append(this.getCcy()); //币种代码
+        sb.append(split).append(this.getCustomProfit());//兑付客户收益
+        sb.append(split).append(this.getCustomProfitCny());//兑付客户收益转人民币
+        sb.append(";");
+       return sb.toString();
+    }
 }

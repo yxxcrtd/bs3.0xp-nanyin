@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -26,6 +27,9 @@ public interface PbcPrdBaseinfoEndSubNewMapper {
     int updateByPrimaryKey(PbcPrdBaseinfoEndSubNew record);
     
     List<PbcPrdBaseinfoEndSubNew> searchPage(Map<String, Object> map);
+
+	List<PbcPrdBaseinfoEndSubDat> searchDat(Map<String, Object> map);
+
 
 	int doManul(@Param("list") List<PbcPrdBaseinfoEndSubNew> updateList, @Param("submitadd") String submitadd);
 

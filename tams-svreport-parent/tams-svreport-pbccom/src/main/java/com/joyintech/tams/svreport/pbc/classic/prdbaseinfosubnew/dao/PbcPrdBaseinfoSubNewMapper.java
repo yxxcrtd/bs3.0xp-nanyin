@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dao;
 
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,6 +31,8 @@ public interface PbcPrdBaseinfoSubNewMapper {
     void deleteByProdid(@Param("deleteList") List<PbcPrdBaseinfoSubNew> subList);
 
     List<PbcPrdBaseinfoSubNew> searchPage(Map<String, Object> searchParam);
+
+    List<PbcPrdBaseinfoSubDat> searchDat(Map<String, Object> searchParam);
 
     int cancelManul(List<PbcPrdBaseinfoSubNew> updateList);
 

@@ -18,7 +18,9 @@ import com.joyintech.system.institution.dto.SysInstitutionDto;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode001Dto;
 import com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportAssetDebtDetailDto;
@@ -27,14 +29,18 @@ import com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFile;
 import com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFileDetail;
 import com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation;
 import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsDataFileHelper;
+import com.joyintech.tams.svreport.pbc.classic.pbcNewDat.dao.PbcNewPrdDatFileMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
 import com.joyintech.tams.svreport.pbc.classic.prdaccountendsub.dto.PbcPrdAccountEndSub;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dao.PbcPrdBaseinfoSubNewMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dao.PbcPrdBaseinfoEndSubNewMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew;
 import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub;
@@ -50,6 +56,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -75,42 +82,48 @@ public class PbcNewPrdDatFileService {
 	@Autowired
 	private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
 	@Autowired
-	private PbcPrdBaseinfoEndSubNewMapper pbcPrdBaseinfoEndSubDatMapper;
+	private PbcPrdBaseinfoEndSubDatMapper pbcPrdBaseinfoEndSubDatMapper;
 
 	@Autowired
-	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
+	private PbcNewPrdDatFileMapper pbcNewPrdDatFileMapper;
 
     /**
      * 生成数据文件
      * @param reportType，报表类型，如果为空，则生成所有
      * @param listProds，产品列表，如果为空，则生成所有
-     * @param genDte，生成日期，如果为空，则为当前平台时间
+     * @param genDate，生成日期，如果为空，则为当前平台时间
      * @see
      * @since 1.0
      */
-    public void genDataFile(String reportType,  List<String> listProds,Date genDate, Map<String, Object> param) {
+    public void genDataFile(String reportType,  List<String> listProds,Date genDate, Map<String, Object> param,String OrgCode) throws UnsupportedEncodingException {
 		String sendStatus = DictCodeListExt2.报送状态_未报送.getValue();
 		Map<String,Object> searchParam = new HashMap<>();
 		searchParam.put("sendStatusList",Arrays.asList(sendStatus));
+		searchParam.put("prodIdList",listProds);
     	/****1、产品基本信息处理*/
-    	List<PbcPrdBaseinfoSubNew> prdList = getPrdBaseinfoList(searchParam);
+    	List<PbcPrdBaseinfoSubDat> prdList = getPrdBaseinfoList(searchParam);
     	/***2、取得产品终止信息待处理数据*/
-		List<PbcPrdBaseinfoEndSubNew> endList = getPrdEndList(searchParam);
+		List<PbcPrdBaseinfoEndSubDat> endList = getPrdEndList(searchParam);
+
 
 		/**3、调用共通处理【DAT生成共通处理-产品端】**/
-
-
+		Map<String, ArrayList> resultMap = PbcDatUtil.genDatZipList(DictCodeListExt3.是否压缩_不生成压缩文件.getValue(),"1", DictCodeList.是否_中债_否.getValue(),OrgCode,
+				prdList,endList);
 
 		/***4、数据入库*/
 			/***5.1、清除DAT表中的未报送数据*/
-			deleteDatData();
-
+			deleteDatData(listProds,OrgCode);
 			/***5.2、文件管理表入库*/
-
+			if(null!=resultMap.get("zipList")){
+				pbcNewPrdDatFileMapper.insertBatchZipData(resultMap.get("zipList"));
+			}
 			/**5.2、报送信息入库*/
-
-			pbcPrdBaseinfoSubDatMapper.insertBatch(null);
-			pbcPrdBaseinfoEndSubDatMapper.insertHisBatchBySendStatus(null);
+			if(null!=resultMap.get("prdList")){
+				pbcPrdBaseinfoSubDatMapper.insertBatch(resultMap.get("prdList"));
+			}
+			if(null!=resultMap.get("endList")){
+				pbcPrdBaseinfoEndSubDatMapper.insertBatch(resultMap.get("endList"));
+			}
     }
 
 	/**
@@ -119,8 +132,8 @@ public class PbcNewPrdDatFileService {
 	 * @param searchParam
 	 * @return
 	 */
-	public List<PbcPrdBaseinfoSubNew> getPrdBaseinfoList(Map<String,Object> searchParam){
-		List<PbcPrdBaseinfoSubNew> list = pbcPrdBaseinfoSubNewMapper.searchPage(searchParam);
+	public List<PbcPrdBaseinfoSubDat> getPrdBaseinfoList(Map<String,Object> searchParam){
+		List<PbcPrdBaseinfoSubDat> list = pbcPrdBaseinfoSubNewMapper.searchDat(searchParam);
 		return list;
 	}
 
@@ -129,19 +142,25 @@ public class PbcNewPrdDatFileService {
 	 * @param searchParam
 	 * @return
 	 */
-	public List<PbcPrdBaseinfoEndSubNew> getPrdEndList(Map<String,Object> searchParam){
-		List<PbcPrdBaseinfoEndSubNew> list = pbcPrdBaseinfoEndSubNewMapper.searchPage(searchParam);
+	public List<PbcPrdBaseinfoEndSubDat> getPrdEndList(Map<String,Object> searchParam){
+		List<PbcPrdBaseinfoEndSubDat> list = pbcPrdBaseinfoEndSubNewMapper.searchDat(searchParam);
 		return list;
 	}
 
 	/**
 	 * 5.1、清除DAT表中的未报送数据
 	 */
-	public void deleteDatData(){
+	public void deleteDatData(List<String> listProds,String OrgCode){
 		//删除所有未报送基本信息
-		pbcPrdBaseinfoSubDatMapper.deleteByProdid(null);
+		pbcNewPrdDatFileMapper.deletePrdBatchByProdId(listProds);
 		//删除所有未报送终止信息
-		pbcPrdBaseinfoEndSubDatMapper.deleteBatchBySendStatus(null);
+		pbcNewPrdDatFileMapper.deleteEndBatchByProdId(listProds);
+
+		/**根据机构将zipSend表中的数据进行修改**/
+		pbcNewPrdDatFileMapper.updateZipSendCount(OrgCode,listProds);
+		/**删除所有不包含未报送数据的dat文件*/
+		pbcNewPrdDatFileMapper.deleteZipData(OrgCode);
+
 	}
 
 }

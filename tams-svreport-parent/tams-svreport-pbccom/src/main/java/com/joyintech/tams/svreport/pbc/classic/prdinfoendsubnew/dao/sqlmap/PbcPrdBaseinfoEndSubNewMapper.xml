@@ -470,6 +470,143 @@
   	 ORDER BY A.PBC_SUBMIT_DEADLINE ASC, A.UPDATE_TIME DESC
   	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
   </select>
+
+    <!-- 根据条件查询 -->
+    <select id="searchDat" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat" flushCache="true" useCache="false">
+        select
+        a.REGIST_SEQNO registSeqno,
+        a.PBC_PROD_ID PBC_PROD_ID,
+        a.MDATE mdate,
+        a.CCY ccy,
+        a.PROFIT profit,
+        a.PROFIT_CNY profitCny,
+        a.CUSTOM_PROFIT customProfit,
+        a.CUSTOM_PROFIT_CNY customProfitCny,
+        <if test="nyield  == null">a.CUS_YEAR_YIELD cusYearYield,</if>
+        a.SEND_STATUS sendStatus,
+        a.SUBMIT_TIME submitTime,
+        a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        a.SUMIT_SEQ sumitSeq,
+        a.STATUS_DATE statusDate,
+        a.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
+        a.SUBMIT_DEADLINE submitDeadline,
+        a.STATUS status,
+        a.CREATE_USER createUser,
+        a.ORG_CODE orgCode,
+        a.CREATE_DEPT createDept,
+        a.CREATE_TIME createTime,
+        a.UPDATE_USER updateUser,
+        a.UPDATE_TIME updateTime,
+        b.PROD_ID prodId,
+        b.OPERATE_MODE operateMode,
+        b.IVSTORIENTATION ivstorientation,
+        b.VDATE vdate,
+        t2.PBC_CODE pbcCode,
+        a.PBC_PROD_ID pbcProdIdShow
+        from PBC_PRD_BASEINFO_END_SUB_NEW a
+        left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID
+        <!-- and a.ORG_CODE = b.ORG_CODE -->
+        LEFT JOIN(
+        SELECT
+        inside_prod_id,
+        pbc_code
+        FROM
+        pbc_prod_assetpool_code
+        WHERE
+        status='E'
+        AND code_type='01'
+        )t2 ON t2.inside_prod_id=b.PROD_ID
+        <where>
+            <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+                <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+                    #{items,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
+            <if test="prodIdList != null and prodIdList.size > 0">
+                AND b.PROD_ID IN
+                <foreach collection="prodIdList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
+            <if test="statusList != null and statusList.size > 0">
+                and a.STATUS in
+                <foreach collection="statusList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="keyList != null and keyList.size > 0">
+                and trim(a.REGIST_SEQNO) in
+                <foreach collection="keyList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="sendStatusList != null and sendStatusList.size > 0">
+                and a.SEND_STATUS in
+                <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+                and a.SUBMIT_FEEDBACK_STATUS in
+                <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="operateModeList != null and operateModeList.size > 0">
+                and b.OPERATE_MODE in
+                <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="ivstorientationList != null and ivstorientationList.size > 0">
+                and b.IVSTORIENTATION in
+                <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="statusDateStart != null and statusDateStart != ''">
+                and to_char(a.STATUS_DATE,'yyyy-MM-dd') &gt;= #{statusDateStart}
+            </if>
+            <if test="statusDateEnd != null and statusDateEnd != ''">
+                and to_char(a.STATUS_DATE,'yyyy-MM-dd') &lt;= #{statusDateEnd}
+            </if>
+            <if test="submitTimeStart != null and submitTimeStart != ''">
+                and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitTimeStart}
+            </if>
+            <if test="submitTimeEnd != null and submitTimeEnd != ''">
+                and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitTimeEnd}
+            </if>
+            <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+                and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{pbcSubmitDeadlineDateStart}
+            </if>
+            <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+                and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{pbcSubmitDeadlineDateEnd}
+            </if>
+            <if test="mdateStart != null and mdateStart != ''">
+                and to_char(a.MDATE,'yyyy-MM-dd') &gt;= #{mdateStart}
+            </if>
+            <if test="mdateEnd != null and mdateEnd != ''">
+                and to_char(a.MDATE,'yyyy-MM-dd') &lt;= #{mdateEnd}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and to_char(a.UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
+            </if>
+            <!-- 手工处理传入查询日期 实际到期日add by gaojian 2019-06-18 begin -->
+            <if test="startDate != null and startDate != ''">
+                and to_char(a.MDATE,'yyyy-MM-dd') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and to_char(a.MDATE,'yyyy-MM-dd') &lt;= #{endDate}
+            </if>
+            <!-- 手工处理传入查询日期 实际到期日add by gaojian 2019-06-18 end -->
+        </where>
+        <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
+        ORDER BY A.PBC_SUBMIT_DEADLINE ASC, A.UPDATE_TIME DESC
+        <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
+    </select>
+
   <!-- 手工处理 -->
   <update id="doManul" parameterType="map">
   	update PBC_PRD_BASEINFO_END_SUB_NEW 

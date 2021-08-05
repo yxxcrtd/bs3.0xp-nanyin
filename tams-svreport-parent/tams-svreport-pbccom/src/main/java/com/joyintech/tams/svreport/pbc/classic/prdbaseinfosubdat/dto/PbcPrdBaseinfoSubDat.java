@@ -4,8 +4,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.component.svrreport.chb.contant.DictCodeListExt;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
@@ -388,7 +392,7 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
     private  String subProdId;
 
     /**
-     * 定义人行的枚举值
+     * 货币市场基金标识
      */
     private String  isMarketFund;
     /**
@@ -794,16 +798,16 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
     }
 
     /**
-     * 产品类型，007-固定收益类/008-权益类/009-商品及金融衍生品类/010-混合类
-     * @return IVSTORIENTATION 产品类型，007-固定收益类/008-权益类/009-商品及金融衍生品类/010-混合类
+     * 产品类型，1-固定收益类 2-权益类 3-商品及金融衍生品类4-混合类
+     * @return IVSTORIENTATION 产品类型，
      */
     public String getIvstorientation() {
         return ivstorientation;
     }
 
     /**
-     * 产品类型，007-固定收益类/008-权益类/009-商品及金融衍生品类/010-混合类
-     * @param ivstorientation 产品类型，007-固定收益类/008-权益类/009-商品及金融衍生品类/010-混合类
+     * 产品类型 1-固定收益类 2-权益类 3-商品及金融衍生品类4-混合类
+     * @param ivstorientation 产品类型
      */
     public void setIvstorientation(String ivstorientation) {
         this.ivstorientation = ivstorientation == null ? null : ivstorientation.trim();
@@ -1453,5 +1457,68 @@ public class PbcPrdBaseinfoSubDat extends BaseEntity{
 	public void setIssuePartyName(String issuePartyName) {
 		this.issuePartyName = issuePartyName;
 	}
+
+
+    /***
+     *
+     * @param split
+     * @return
+     */
+	public String toPbcString(String split){
+	    if(null==split){
+	        split = "";
+        }
+        StringBuffer sb = new StringBuffer();
+        sb.append(this.getPbcProdId());  //产品代码
+        sb.append(split).append(this.getIssuePartyId()); //发行机构代码
+        sb.append(split).append(this.getProdName());//产品名称
+        sb.append(split).append("1");//产品品种 默认为  1-银行非保本理财
+        sb.append(split).append(this.getIvstorientation());//产品类型
+        sb.append(split).append(this.getProdBrand());//产品品牌
+        sb.append(split).append(this.getProdStage());//产品期次
+        sb.append(split).append(this.getInsideProdId());//产品品牌
+        sb.append(split).append(this.getRaiseType());//募集方式
+        sb.append(split).append(this.getManageType());//管理方式
+        sb.append(split).append(this.getOperateMode());//运行方式
+        sb.append(split).append(DateUtil.format(this.getRaiseVdate()));//募集起始日期
+        sb.append(split).append(DateUtil.format(this.getRaiseEnddate()));//募集结束日期
+        sb.append(split).append(this.getTermRightFlag());//发行机构提前终止权标识
+        sb.append(split).append(this.getCusRedeemFlag());//客户赎回权标识
+        sb.append(split).append(this.getCreditFlag());//产品增信标识
+        sb.append(split).append(this.getInDepCode());//境内托管机构代码
+        sb.append(split).append(this.getOutDepCtry());//境外托管机构国别
+        sb.append(split).append(this.getOutDepName());//境外托管机构名称
+        sb.append(split).append(DateUtil.format(this.getVdate()));//产品起始日期
+        sb.append(split).append(DateUtil.format(this.getMdate()));//产品预计终止日期
+        sb.append(split).append(this.getFiduciaryDuty());//受托职责
+        sb.append(split).append(this.getIsConstracte());//分级产品标识
+        sb.append(split).append(this.getTransferType());//收益权转让产品标识
+        sb.append(split).append(this.getIsMarketFund());//货币市场基金标识
+        sb.append(split).append(this.getTransferType());//其他产品标识1
+        sb.append(split).append(this.getTransferType());//其他产品标识2
+        sb.append(split).append(this.getTransferType());//其他产品标识3
+        sb.append(";");//数据分割
+
+        //产品代码  / 币种种类 / 币种代码
+        sb.append(this.getPbcProdId()).append(split).append("1").append(split).append(this.getRaiseCcy()).append(";");//募集资金币种
+        sb.append(this.getPbcProdId()).append(split).append("2").append(split).append(this.getCashPrinCcy()).append(";");//兑付本金币种
+        sb.append(this.getPbcProdId()).append(split).append("3").append(split).append(this.getCashProfCcy()).append(";");//兑付收益币种
+        //若“产品增信标识”选择是，则此处必填
+        if(DictCodeList.是否_中债_是.getValue().equals(this.getCreditFlag())){
+            //产品信息—增信机构类型。
+            //产品代码  / 增信机构类型
+            for(String  code : this.getCreditType().split(",")){
+                sb.append(this.getPbcProdId()).append(split).append(code).append(";");
+            }
+
+            //产品信息—增信形式。
+            //产品代码  / 增信形式
+            for(String  code : this.getCreditMode().split(",")){
+                sb.append(this.getPbcProdId()).append(split).append(code).append(";");
+            }
+        }
+
+        return sb.toString();
+    }
 	
 }

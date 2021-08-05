@@ -12,11 +12,114 @@
                 AND A.DAT_ZIP_STATUS = #{zipStatus,jdbcType=VARCHAR}
         </select>
 
+        <insert id="insertBatchZipData" parameterType="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
+            insert into PBC_SEND_ZIP_DAT_FILE (REGIST_SEQNO, DAT_ZIP_CODE, DAT_ZIP_PATH,
+                DAT_ZIP_TYPE, DAT_ZIP_DAT_TYPE, DAT_ZIP_STATUS,
+                ZIP_DOWNLOAD_TIME, STATUS_VDATE, REPORTUUID,
+                PIB_DETAIL_CNT, SUBMIT_TIME, ZIP_SEND_STATUS,
+                RETURN_ZIP_SEND_STATUS, RETURN_ZIP_CODE, RETURN_TIME,
+                RETURN_MSG, RETURN_ERROR_CNT, RETURN_PASS_CNT,
+                CREATE_USER, ORG_CODE, CREATE_DEPT,
+                CREATE_TIME, UPDATE_USER, UPDATE_TIME
+                )
+            values
+            <foreach collection="dataList" open="(" close=")" separator="," item="item">
+                sys_guid(), #{item.datZipCode,jdbcType=VARCHAR}, #{item.datZipPath,jdbcType=VARCHAR},
+                #{item.datZipType,jdbcType=VARCHAR}, #{item.datZipDatType,jdbcType=VARCHAR}, #{item.datZipStatus,jdbcType=VARCHAR},
+                #{item.zipDownloadTime,jdbcType=DATE}, #{item.statusVdate,jdbcType=VARCHAR}, #{item.reportuuid,jdbcType=CHAR},
+                #{item.pibDetailCnt,jdbcType=DECIMAL}, #{item.submitTime,jdbcType=DATE}, #{item.zipSendStatus,jdbcType=VARCHAR},
+                #{item.returnZipSendStatus,jdbcType=VARCHAR}, #{item.returnZipCode,jdbcType=VARCHAR}, #{item.returnTime,jdbcType=DATE},
+                #{item.returnMsg,jdbcType=VARCHAR}, #{item.returnErrorCnt,jdbcType=DECIMAL}, #{item.returnPassCnt,jdbcType=DECIMAL},
+                #{item.createUser,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+                sysdate, #{item.updateUser,jdbcType=VARCHAR}, sysdate
+            </foreach>
+        </insert>
 
-        <select id="getPrdBaseinfoList" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew">
-            SELECT *
-            FROM PBC_PRD_BASEINFO_END_SUB_NEW
-            WHERE SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
+
+        <delete id="deletePrdBatchByProdId" parameterType="list">
+            delete from PBC_PRD_BASEINFO_SUB_DAT
+            where SEND_STATUS = '01'
+            <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+                #{item.prodId,jdbcType=VARCHAR}
+            </foreach>
+        </delete>
+
+
+        <delete id="deleteEndBatchByProdId" parameterType="list">
+            delete from PBC_PRD_BASEINFO_END_SUB_DAT
+            where SEND_STATUS = '01'
+            <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+                #{item.prodId,jdbcType=VARCHAR}
+            </foreach>
+        </delete>
+
+        <select id="getDatZipNum" resultType="Map">
+            SELECT
+             DAT_ZIP_CODE,SUM(aNum) aNum
+                FROM (
+                SELECT DAT_ZIP_CODE,COUNT(1) aNum
+                  FROM PBC_PRD_BASEINFO_SUB_DAT
+                  WHERE 1=1
+                  and SEND_STATUS IN ('02','03')
+                    <foreach collection="List" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+                        #{item.prodId,jdbcType=VARCHAR}
+                    </foreach>
+                  group by DAT_ZIP_CODE
+                 UNION ALL
+                SELECT DAT_ZIP_CODE,COUNT(1) aNum
+                  FROM PBC_PRD_BASEINFO_END_SUB_DAT
+                  WHERE 1=1
+                  and SEND_STATUS IN ('02','03')
+                    <foreach collection="List" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+                        #{item.prodId,jdbcType=VARCHAR}
+                    </foreach>
+                  group by DAT_ZIP_CODE)
+              group by DAT_ZIP_CODE
         </select>
+
+        <update id="updateZipSendCount">
+               UPDATE PBC_SEND_ZIP_DAT_FILE F
+                    SET PIB_DETAIL_CNT = (
+                    select aNum
+                    from (SELECT
+                         DAT_ZIP_CODE,SUM(nvl(aNum,0)) aNum
+                        FROM (
+                        SELECT DAT_ZIP_CODE,COUNT(1) aNum
+                          FROM PBC_PRD_BASEINFO_SUB_DAT
+                          WHERE 1=1
+                          and SEND_STATUS IN ('02','03')
+                            <foreach collection="List" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+                                #{item.prodId,jdbcType=VARCHAR}
+                            </foreach>
+                          group by DAT_ZIP_CODE
+                         UNION ALL
+                        SELECT DAT_ZIP_CODE,COUNT(1) aNum
+                          FROM PBC_PRD_BASEINFO_END_SUB_DAT
+                          WHERE 1=1
+                          and SEND_STATUS IN ('02','03')
+                            <foreach collection="List" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+                                #{item.prodId,jdbcType=VARCHAR}
+                            </foreach>
+                          group by DAT_ZIP_CODE)
+                          group by DAT_ZIP_CODE) d
+                          where d.DAT_ZIP_CODE = f.DAT_ZIP_CODE)
+               WHERE DAT_ZIP_TYPE = 'PI' AND ZIP_SEND_STATUS = '01'
+                <if test="OrgCode != null and OrgCode != ''">
+                    and ORG_CODE = #{OrgCode,jdbcType=VARCHAR}
+                </if>
+        </update>
+
+        <delete id="deleteZipData">
+           DELETE FROM PBC_SEND_ZIP_DAT_FILE F
+                WHERE F.DAT_ZIP_TYPE = 'PI' AND F.ZIP_SEND_STATUS = '01'
+                    <if test="null!=OrgCode">
+                        and ORG_CODE = #{OrgCode,jdbcType=VARCHAR}
+                    </if>
+                AND (
+                not exists (SELECT 1 FROM PBC_PRD_BASEINFO_SUB_DAT PD WHERE PD.DAT_ZIP_CODE=F.DAT_ZIP_CODE AND PD.SEND_STATUS IN ('02','03'))
+                and
+                not exists (SELECT 1 FROM PBC_PRD_BASEINFO_END_SUB_DAT PD WHERE PD.DAT_ZIP_CODE=F.DAT_ZIP_CODE AND PD.SEND_STATUS IN ('02','03'))
+                )
+        </delete>
 
 </mapper>
