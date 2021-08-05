@@ -587,6 +587,19 @@ public class CommonBusinessService extends BaseService {
         if (portfolio != null) {
             return false;
         }
+
+        // modify by wj 20200620  五个特殊参数 修改 为特殊取值方法
+        String institutionCode = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+        }
+        String paraAuthorizeLimit = CacheUtil.getSpecialSysParam(BussinessConstant.AUTHORIZE_LIMIT, institutionCode);
+
+        if (paraAuthorizeLimit == null || BussinessConstant.AUTHORIZE_LIMIT.equals(paraAuthorizeLimit)
+                || DictCodeListExt1.是或否_否.getValue().equals(paraAuthorizeLimit)) {
+            return false;
+        }
+
         // 根据资产类型取得授权类型
         FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(assetId, assetType);
         BigDecimal authorizeLimitAmt = null;
@@ -674,6 +687,20 @@ public class CommonBusinessService extends BaseService {
             variables.put(BussinessConstant.是否需要上级审批, false);
             return variables;
         }
+
+        // modify by wj 20200620 二级法人改造 五个特殊参数 修改 为特殊取值方法
+        String institutionCode = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+        }
+        String paraAuthorizeLimit = CacheUtil.getSpecialSysParam(BussinessConstant.AUTHORIZE_LIMIT, institutionCode);
+
+        if (paraAuthorizeLimit == null || BussinessConstant.AUTHORIZE_LIMIT.equals(paraAuthorizeLimit)
+                || DictCodeListExt1.是或否_否.getValue().equals(paraAuthorizeLimit)) {
+            variables.put(BussinessConstant.是否需要上级审批, false);
+            return variables;
+        }
+
         // 根据资产类型取得授权类型
         FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(assetId, assetType);
         Map<String, Object> authorizeLimitAmt = null;
@@ -932,6 +959,19 @@ public class CommonBusinessService extends BaseService {
         if (portfolio != null) {
             return false;
         }
+
+        // modify by wj 20200620  五个特殊参数 修改 为特殊取值方法
+        String institutionCode = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+        }
+        String paraAuthorizeLimit = CacheUtil.getSpecialSysParam(BussinessConstant.AUTHORIZE_LIMIT, institutionCode);
+
+        if (paraAuthorizeLimit == null || BussinessConstant.AUTHORIZE_LIMIT.equals(paraAuthorizeLimit)
+                || DictCodeListExt1.是或否_否.getValue().equals(paraAuthorizeLimit)) {
+            return false;
+        }
+
         // 资产类型改为授权类型 modify by renping 2019-08-06  start
         // 根据资产类型取得授权类型
         FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(assetId, assetType);
