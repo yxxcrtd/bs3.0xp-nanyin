@@ -298,6 +298,20 @@ public class SysCoreController {
     }
 
     /**
+     * 期货标的是否存在交易
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("isExistTransInAsset")
+    public int isExistTransInAsset(String finprodId) {
+        return sysCoreService.isExistTransInAsset(finprodId);
+    }
+
+
+    /**
      * 获取WIND_中国债券特殊条款(债券) <功能详细描述>
      *
      * @param sInfoWindcode

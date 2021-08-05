@@ -1,6 +1,5 @@
 package com.joyintech.service.riskrdsinf.http.service;
 
-import com.joyintech.system.user.dto.SysUserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.riskrdsinf.common.dto.HttpResult;
 import com.joyintech.service.riskrdsinf.http.dao.HttpReceiveJsonDao;
+import com.joyintech.system.user.dto.SysUserDto;
 
 import java.util.HashMap;
 import java.util.List;
@@ -168,11 +168,16 @@ public class HttpReceiveJsonService {
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	@DataSource(DataSourceType.OTHER)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void handleSysUserInfo(Map result,String interfType){
+    private void handleSysUserInfo(Map result,String interfType){
         // 处理用户信息数据
         if(SYS_USER.equals(interfType)){
             logger.info("正在处理用户信息数据");
+            //如果userId不重复，则是新建
             if (httpReceiveJsonDao.selectUserByUserId(result) <= 0){
+            	//删除与新建用户的用户名相同的用户，防止用户名重复
+            	httpReceiveJsonDao.deleteUserByUserName(result);
+            	//删除用户角色关系表中用户名相同的用户角色关系，防止用户角色关系重复
+            	httpReceiveJsonDao.deleteAllUserRole(result);
             	SysUserDto user = new SysUserDto();
             	String password = CacheUtil.getSysParam(GlobalConstant.INIT_PASSWORD);
             	user.setPassword(password);

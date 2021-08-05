@@ -22,10 +22,10 @@
         ,{field:'portfolioName',  title: '组合名称'}
         ,{field:'invManagerId',  title: '投资经理'}
         ,{field:'bidPriceStr',  title: '投标标位（%）'}
-        ,{field:'bidPrinAmt',  title: '投标券面总额'}
+        ,{field:'bidPrinAmt',  title: '投标券面总额/万元'}
         ,{field:'winPrice',  title: '中标标位（%）'}
-        ,{field:'theWinPrinAmt',  title: '理论中标券面总额'}
-        ,{field:'winPrinAmt',  title: '实际中标券面总额',edit: true,type: 'number',render: function (data, type, row, meta) {
+        ,{field:'theWinPrinAmt',  title: '理论中标券面总额/万元'}
+        ,{field:'winPrinAmt',  title: '实际中标券面总额/万元',edit: true,type: 'number',render: function (data, type, row, meta) {
                 if(null==data||''==data.toString()) {
                     return row.theWinPrinAmt;
                 }else {
@@ -66,7 +66,28 @@
         	object.tradeMarket=entity.tradeMarket;
             object.counterId=entity.counterId;
         }
-        object.bidOrderBidPriceList=table.getAllRows();
+        //万元转换 add by yeming 20210730 start
+        // object.bidOrderBidPriceList=table.getAllRows();
+        var tableData  = table.getAllRows();
+        for (var i=0; i<tableData.length; i++){
+            if(tableData[i].bidPrinAmt){
+                tableData[i].bidPrinAmt = JoyinMath.doMul(tableData[i].bidPrinAmt, 10000, 2) ;
+            }
+            if(tableData[i].theWinPrinAmt){
+                tableData[i].theWinPrinAmt = JoyinMath.doMul(tableData[i].theWinPrinAmt, 10000, 2) ;
+            }
+            if(tableData[i].winPrinAmt){
+                tableData[i].winPrinAmt = JoyinMath.doMul(tableData[i].winPrinAmt, 10000 , 2) ;
+            }
+        }
+        object.bidOrderBidPriceList = tableData;
+        if($("#allBidPrinAmt").val()) {
+            object.allBidPrinAmt = JoyinMath.doMul($("#allBidPrinAmt").val(), 10000, 2);
+        }
+        if($("#winPrinAmt").val()){
+            object.winPrinAmt = JoyinMath.doMul($("#winPrinAmt").val(), 10000 , 2) ;
+        }
+        //万元转换 add by yeming 20210730 end
         Joyin.ajaxJson(basePath + 'invest/trade/primarybiddingmanage/PrimaryBiddingManage003/check', object, function(result) {
                 Joyin.confirm(result.data, function() {
                     if(operateType === 'save') {
@@ -144,11 +165,17 @@
         //自动分配
         $("#autoAllocation").click(function () {
             var object = $.serializeToObject('#informationForm', true);
+            if($("#allBidPrinAmt").val()) {
+                object.allBidPrinAmt = JoyinMath.doMul($("#allBidPrinAmt").val(), 10000, 2);
+            }
+            if($("#winPrinAmt").val()){
+                object.winPrinAmt = JoyinMath.doMul($("#winPrinAmt").val(), 10000 , 2) ;
+            }
             object.operateType = "autoAllocation";
             var data = {};
             data.winPrice = $("#winPrice").val();
             data.winType = $("#winType").val();
-            data.winPrinAmt = $("#winPrinAmt").val();
+            data.winPrinAmt = $("#winPrinAmt").val() * 10000;
             data.finprodId = $("#finprodId").val();
             data.counterId = entity.counterId;
             data.bidId = entity.bidId;

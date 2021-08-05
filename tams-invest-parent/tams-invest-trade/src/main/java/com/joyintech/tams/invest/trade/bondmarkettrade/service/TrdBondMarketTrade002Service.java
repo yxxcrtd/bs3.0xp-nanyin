@@ -402,6 +402,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
         wflTrdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         wflTrdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
         wflTrdFinProductDealTotal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+        wflTrdFinProductDealTotal.setpTradeId(entity.getFinprodId());
         wflTrdFinProductDealTotalMapper.insertSelective(wflTrdFinProductDealTotal);
     }
 
@@ -429,6 +430,19 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
            return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/selectIsInWorkflow", dto,
                     Integer.class);
     }
+
+    /**
+     * 查询发行代码是否有流程中数据或者有效数据
+     *
+     * @param dto 画面参数dto
+     * @see
+     * @since 1.0
+     */
+    public int selectIsInWorkflowEx(TrdBondMarketTradeDto dto) {
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/selectIsInWorkflowEx", dto,
+                Integer.class);
+    }
+
 
     /**
      * 查询发行标的当天的交易

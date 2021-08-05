@@ -25,6 +25,9 @@
                         fullDataFlag : '1',
                         trdProductDeal : trdProductDeal
                     }
+                    // add by zhangrui1 交易对手影响风险试算 start
+                    obj.counterId = item.counterId;
+                    // add by zhangrui1 交易对手影响风险试算 end
                     var object = {assetCode: ['finprodMarketId', 'EtrFund001.finprodId'],tradeDirection:['ps','EtrFund001.ps'],portfolioCode:['portfolioId','EtrFund001.portfolioId'],tradeAmount:['entrustAmt','EtrFund001.entrustAmt'],assetType:['assetType1','EtrFund001.finprodType2'],data:obj}
                 } else if (item.ps == T06) {
                     var obj = {
@@ -40,6 +43,9 @@
                         fullDataFlag : '1',
                         trdProductDeal : trdProductDeal
                     }
+                    // add by zhangrui1 交易对手影响风险试算 start
+                    obj.counterId = item.counterId;
+                    // add by zhangrui1 交易对手影响风险试算 end
                     var object = {assetCode: ['finprodMarketId', 'EtrFund001.finprodId'],tradeDirection:['ps','EtrFund001.ps'],portfolioCode:['portfolioId','EtrFund001.portfolioId'],tradeAmount:['entrustNum','EtrFund001.entrustNum'],assetType:['assetType1','EtrFund001.finprodType2'],data:obj}
                 } else if(item.ps == T01){
                     var obj = {
@@ -54,6 +60,9 @@
                         fullDataFlag : '1',
                         trdProductDeal : trdProductDeal
                     }
+                    // add by zhangrui1 交易对手影响风险试算 start
+                    obj.counterId = item.counterId;
+                    // add by zhangrui1 交易对手影响风险试算 end
                     var object = {assetCode: ['finprodMarketId', 'EtrFund001.finprodId'],tradeDirection:['ps','EtrFund001.ps'],portfolioCode:['portfolioId','EtrFund001.portfolioId'],tradeAmount:['entrustAmt','EtrFund001.entrustAmt'],assetType:['assetType1','EtrFund001.finprodType2'],data:obj}
                 }else if(item.ps == T02){
                     var obj = {
@@ -69,7 +78,28 @@
                             fullDataFlag : '1',
                             trdProductDeal : trdProductDeal
                         }
+                    // add by zhangrui1 交易对手影响风险试算 start
+                    obj.counterId = item.counterId;
+                    // add by zhangrui1 交易对手影响风险试算 end
                         var object = {assetCode: ['finprodMarketId', 'EtrFund001.finprodId'],tradeDirection:['ps','EtrFund001.ps'],portfolioCode:['portfolioId','EtrFund001.portfolioId'],tradeAmount:['entrustNum','EtrFund001.entrustNum'],assetType:['assetType1','EtrFund001.finprodType2'],data:obj}
+                } else if (item.ps == T65) {
+                    var obj = {
+                        tradeDirection : item.ps,
+                        timePoint : MY_SUP_TIME_TYPE_02,
+                        valDate : sysDate,
+                        portfolioCode : item.portfolioId,
+                        tradeAmount : item.entrustNum,
+                        assetType : fintype,
+                        isEnabled : '01',
+                        assetCode : item.finprodId,
+                        amtType:'1',
+                        fullDataFlag : '1',
+                        trdProductDeal : trdProductDeal,
+                        counterId : item.counterId,
+                        changeToFinprodMarketId : item.changeToFinprodMarketId
+                    }
+
+                    var object = {assetCode: ['finprodMarketId', 'EtrFund001.finprodId'],tradeDirection:['ps','EtrFund001.ps'],portfolioCode:['portfolioId','EtrFund001.portfolioId'],tradeAmount:['entrustNum','EtrFund001.entrustNum'],assetType:['assetType1','EtrFund001.finprodType2'],data:obj}
                 }
                 objects.push(object);
             }
@@ -445,15 +475,19 @@
         var allDto = {};
         allDto.importFlow = true;
         allDto.selectedItem = objects;
-
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund003/check', allDto,
-            function (result) {
-                Joyin.confirm(result.data, function () {
-                    if (operateType === 'submit') {
-                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrfund/EtrFund003/save', allDto, "EtrFund002_btn_submit","EtrFund002");
-                    } 
+        //批量风险预占需要
+        allDto.operateType = operateType;
+        allDto.riskTrialRetDto = object.riskTrialRetDto;
+        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', allDto, function(result1) {
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund003/check', allDto,
+                function (result) {
+                    Joyin.confirm(result.data, function () {
+                        if (operateType === 'submit') {
+                            WorkFlow.doSubmitList(basePath + 'invest/entrust/etrfund/EtrFund003/save', allDto, "EtrFund002_btn_submit","EtrFund002");
+                        }
+                    });
                 });
-            });
+        })
     }
     $(function() {
         if (etrFundDtoList) {
@@ -476,7 +510,45 @@
          */
         $('#EtrFund003_btn_riskcal').click(function () {
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-            $("#riskMathFlag").val("02");
+            //add by zhangnian start
+//            var list = $.serializeToObject('#searchForm', true).selectedItem;
+//            var objectList = [];
+//            for(var i in list){
+//                var temp = {};
+//                temp.portfolioId = list[i].portfolioId;
+//                temp.ps = list[i].ps;
+//                temp.ccy = list[i].ccy;
+//                temp.entrustAmt = list[i].entrustAmt;
+//                temp.entrustNum = list[i].entrustNum;
+//                temp.tradeMarket = list[i].tradeMarket;
+//                temp.finprodId = list[i].finprodId;
+//                temp.groupCode = 'F02_0_'+i;//格式类型+委托/交易+序号
+//                objectList.push(temp);
+//            }
+//            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK011/F02',
+//                objectList, getriskdata());
+
+            var object = $.serializeToObject('#searchForm').selectedItem;
+            var checkParam = {};
+            checkParam.data = getriskdata();
+            var param = [];
+            if (checkParam.data.length > 0) {
+                for(var index in checkParam.data){
+                    var item = checkParam.data[index];
+                    item.data.ps = object[index].ps;
+                    item.data.portfolioId = object[index].portfolioId;
+                    item.data.finprodId = object[index].finprodId;
+                    item.data.assetCode = object[index].finprodId;
+                    item.data.entrustAmt = object[index].entrustAmt;
+                    item.data.entrustNum = object[index].entrustNum;
+                    item.data.counterId = item.data.counterId;
+                    param.push(item.data);
+                }
+            }
+
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F02', param, checkParam);
+            //add by zhangnian end
+            //$("#riskMathFlag").val("02");
         });
     })
 

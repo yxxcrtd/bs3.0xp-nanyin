@@ -11,8 +11,9 @@
 package com.joyintech.tams.invest.common.riskinfrds.base.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,25 +30,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.base.intf.IDictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.redis.common.entity.IValue;
 import com.joyintech.redis.common.entity.Value;
 import com.joyintech.redis.common.util.JoyinRedisUtil;
-import com.joyintech.redis.core.data.IRedisHash;
-import com.joyintech.redis.core.data.RedisHash;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.common.base.entity.RskIndicatorParaCalcdetail;
 import com.joyintech.tams.common.base.entity.RskIsupTrial;
 import com.joyintech.tams.common.base.entity.RskIsupTrialCls;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.constantrds.RedisKeyEnum;
 import com.joyintech.tams.invest.common.riskinfrds.calendar.entity.ICalendar;
 import com.joyintech.tams.invest.common.riskinfrds.calendar.service.CalendarService;
 import com.joyintech.tams.invest.common.riskinfrds.event.entity.IEvent;
@@ -56,7 +55,10 @@ import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndicator;
 import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndicatorResult;
 import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndividLimit;
 import com.joyintech.tams.invest.common.riskinfrds.indic.service.IndicatorService;
+import com.joyintech.tams.invest.common.riskinfrds.info.entity.IProdAssetAmount;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.AssetInfoRedisService;
+import com.joyintech.tams.invest.common.riskinfrds.info.service.FundValuationService;
+import com.joyintech.tams.invest.common.riskinfrds.info.service.ProdAssetAmountService;
 import com.joyintech.tams.invest.common.riskinfrds.occupy.entity.IOccupyRelParam;
 import com.joyintech.tams.invest.common.riskinfrds.occupy.entity.IOcpRelParamItem;
 import com.joyintech.tams.invest.common.riskinfrds.occupy.entity.OccupyRelParam;
@@ -85,11 +87,6 @@ public class CalcOccupyInfoService {
      */
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    /**
-     * 服务线程数据
-     */
-    private ThreadLocal<Map<String, Object>> serviceInfo = ThreadLocal.withInitial(HashMap::new);
- 
     /**
      * 指标关联组合信息读写服务
      */
@@ -144,19 +141,31 @@ public class CalcOccupyInfoService {
     @Autowired
     private CalendarService calendarSrc;
 
+    @Autowired
+    private IndicatorTrendCalcService indTrendCalcSrc;
+
+    /**
+     * 资产实时规模信息
+     */
+    @Autowired
+    private ProdAssetAmountService prodAssetAmtSrc;
+
+    /**
+     * 基金估值行情Redis读写Service
+     */
+    @Autowired
+    private FundValuationService fundValSrc;
+
+    /**
+     * 本地缓存
+     */
+    private ThreadLocal<Map<String, Object>> localCache = ThreadLocal.withInitial(HashMap::new);
+
+    public static final String SEQ_NO = "seqNo";
     /**
      * KEY:组合代码
      */
     public static final String PORTFOLIOCODE = "portfolioCode";
-
-    /**
-     * KEY:交易对手
-     */
-    public static final String COUNTERID = "counterid";
-    /**
-     * KEY:资产代码
-     */
-    public static final String ASSETCODE = "assetCode";
 
     /**
      * KEY:交易方向
@@ -199,6 +208,16 @@ public class CalcOccupyInfoService {
     public static final String ASSET_CODE = "assetCode";
 
     /**
+     * KEY:资产类型
+     */
+    public static final String ASSET_TYPE = "assetType";
+
+    /**
+     * KEY:上调系数
+     */
+    public static final String FACTOR = "factor";
+
+    /**
      * KEY:试算结果
      */
     public static final String RSKSTATUS = "rskStatus";
@@ -217,6 +236,16 @@ public class CalcOccupyInfoService {
      * KEY:指标类型
      */
     public static final String KRITYPE = "kriType";
+
+    /**
+     * KEY:指标类型名称
+     */
+    public static final String KRITYPECN = "kriTypeCn";
+
+    /**
+     * KEY:计算表达式
+     */
+    public static final String KRIEXPR = "kriExpr";
 
     /**
      * KEY:审批线
@@ -268,6 +297,14 @@ public class CalcOccupyInfoService {
      */
     public static final String INF_STAPP_SYS = "infStappSys";
 
+    public static final String MIXAMOUNTKEY = "mixAmount";
+
+    public static final String TRADENUM = "tradeNum";
+
+    public static final String AMOUNT = "amount";
+
+    public static final String REVOKEFLG = "revokeFlg";
+
     /**
      * 处理类型：预占
      */
@@ -299,208 +336,659 @@ public class CalcOccupyInfoService {
     
     public static final String LOG_NO_IND_VAL = "指标参数值不存在";
 
-    protected static final String MIXAMOUNTKEY = "mixAmount";
-   
-    protected static final String ASSET_AMT_VAL = "assetAmtVal";
-    
-    protected static final List<String> indReplaceList = Arrays.asList("CPZZC","CPJZCJZ");
+    public void startTransaction() {
+        cleanLocalCache();
+    }
+
+    public void commit() {
+        cleanLocalCache();
+    }
+
+    protected boolean isNotEmptyNum(Object obj) {
+        return StringUtil.isNotEmpty(obj)
+               && BigDecimal.ZERO.compareTo(new BigDecimal(obj.toString())) != 0;
+    }
+
+    protected void calcAmount(Map<String, Object> request,
+                              com.joyintech.tams.invest.common.CommonUtil.DoHelper<BigDecimal> consumer) {
+        final String old = "Old";
+        Object amountObj = request.get(AMOUNT);
+        Object trdNumObj = request.get(TRADENUM);
+        // 备份数据
+        request.put(AMOUNT + old, amountObj);
+        request.put(TRADENUM + old, trdNumObj);
+        if (!isNotEmptyNum(amountObj) && !isNotEmptyNum(trdNumObj)) {
+            return;
+        }
+        String assetCode = (String)request.get(ASSET_CODE);
+        BigDecimal unitNet = consumer == null ? BigDecimal.ONE : consumer.handle();
+        if (unitNet == null) {
+            // 如果基金净值没有则按1计算
+            logger.debug("没有取到{}的净值，按1计算", assetCode);
+            unitNet = BigDecimal.ONE;
+        }
+        if (!isNotEmptyNum(amountObj)) {
+            BigDecimal trdNum = trdNumObj instanceof BigDecimal ? (BigDecimal)trdNumObj : new BigDecimal(
+                trdNumObj.toString());
+            BigDecimal amount = trdNum.multiply(unitNet);
+            request.put(AMOUNT, amount);
+        }
+        else if (!isNotEmptyNum(trdNumObj)) {
+            BigDecimal amount = amountObj instanceof BigDecimal ? (BigDecimal)amountObj : new BigDecimal(
+                amountObj.toString());
+            BigDecimal trdNum = CommonUtil.math(amount, unitNet,
+                BussinessDictCodeListRds.操作符_除.getValue());
+            request.put(TRADENUM, trdNum);
+        }
+    }
+
     /**
-     * 模糊委托试算
+     * 从redis取得净值
      * 
-     * @param mapData 模糊委托信息
-     * @param response 计算结果
+     * @param assetCode 资产代码
+     * @return 净值
      */
-    public void dimCalc(Map<String, Object> mapData, Map<String, Object> response) {
-    	// 指标参数计算明细
-    	List<RskIndicatorParaCalcdetail> details = new ArrayList<>();
-        // 备份组合代码
-        mapData.put(PROD_ID, mapData.get(PORTFOLIOCODE));
+    protected BigDecimal getUnitPrice(String assetCode) {
+        return fundValSrc.getFundValuation(assetCode);
+    }
+
+    /**
+     * 金额*上调系数
+     * 
+     * @param request 报文体
+     */
+    protected void factor(Map<String, Object> request) {
+        Object amountObj = request.get(AMOUNT);
+        // 资产大类
+        Object assetType = request.get(ASSET_TYPE);
+        // 交易方向
+        Object ps = request.get(PS);
+        // 事件类型
+        Object eventType = request.get(EVENT_TYPE);
+        StringBuilder builder = new StringBuilder(FACTOR);
+        builder.append(GlobalConstant.UNDER_LINE).append(eventType).append(
+            GlobalConstant.UNDER_LINE).append(assetType).append(GlobalConstant.UNDER_LINE).append(
+                ps);
+        String factor = CacheUtil.getSysParam(builder.toString());
+        // 若系数不存在则不计算
+        if (StringUtil.isEmpty(factor)) {
+            return;
+        }
+        BigDecimal factorNum = new BigDecimal(factor);
+        BigDecimal amount = amountObj instanceof BigDecimal ? (BigDecimal)amountObj : new BigDecimal(
+            amountObj.toString());
+        request.put(AMOUNT, amount.multiply(factorNum));
+    }
+
+    /**
+     * 生成预占信息
+     * 
+     * @param preCode 预占编号
+     * @param mapData 报文体
+     * @return 预占信息
+     */
+    public OccupyRelParam doOccupy(String preCode, Map<String, Object> mapData) {
+        // 取资产基本信息
+        assetInfo(mapData);
+        // 匹配风控事项
+        List<IEvent> eveList = matchEvent(mapData);
+        // 若风险事件不存在，则预占失败
+        if (StringUtil.isEmptyList(eveList)) {
+            return null;
+        }
+        // 取得基金估值行情
+        calcAmount(mapData, () -> getUnitPrice((String)mapData.get(ASSET_CODE)));
+        // 金额*上调系数
+        factor(mapData);
+        // 组合（包）列表
+        Set<String> prodSet = getProdSet(mapData);
+        // 从风险事件列表中取出相关的参数列表
+        Set<String> paraIdList = getParamIdList(eveList);
+        // 取得所有指标参数信息
+        Map<String, IParam> paramMap = getParam(paraIdList);
+        // 构建组合与指标参数索引
+        Map<String, Map<String, IValue<BigDecimal>>> ptlParamMap = unionPtlParam(prodSet,
+            paraIdList, mapData, paramMap);
+        // 构建预占信息
+        return createPreOcp(preCode, eveList, mapData, ptlParamMap);
+    }
+
+    /**
+     * 释放预占
+     * 
+     * @param preOcpInfo 预占信息
+     */
+    public void releaseOccupy(OccupyRelParam preOcpInfo, Map<String, Object> mapData) {
+        if (preOcpInfo == null || CollectionUtils.isEmpty(preOcpInfo.getItems())) {
+            return;
+        }
+        Map<String, IOcpRelParamItem> items = preOcpInfo.getItems();
+        // 撤销的场合，额度直接置0
+        if (isRevoke(mapData)) {
+            items.entrySet().forEach(en -> {
+                IOcpRelParamItem item = en.getValue();
+                // 额度直接置0
+                item.setOccupyVal(BigDecimal.ZERO);
+            });
+        }
+        // 部分释放的场合，减去报文中的额度
+        else {
+            items.entrySet().forEach(en -> {
+                IOcpRelParamItem item = en.getValue();
+                // 公式操作符
+                String relOpr = item.getFormulaOpr();
+                // 若非公式时则为关联操作符
+                relOpr = StringUtil.isEmpty(relOpr) ? item.getOccupyItem() : relOpr;
+                // 关联对象
+                String relItem = item.getOccupyItem();
+                // 占用额度
+                BigDecimal val = item.getOccupyVal();
+                // 报文中额度
+                BigDecimal tmp = CommonUtil.getBigDecimal(mapData, relItem, BigDecimal.ZERO);
+                tmp = tmp.negate();
+                item.setOccupyVal(CommonUtil.math(val, tmp, relOpr));
+            });
+        }
+    }
+
+    /**
+     * 判断预占是否为空
+     * 
+     * @param ocp 预占信息
+     * @return true : 预占为空
+     */
+    protected boolean isEmpty(IOccupyRelParam ocp) {
+        return ocp == null || CollectionUtils.isEmpty(ocp.getItems());
+    }
+
+    /**
+     * 变更预占信息（减去实占部分）
+     * 
+     * @param preOcpInfo 预占信息
+     * @param ocpInfo 实占信息
+     */
+    public void subtractOccupy(OccupyRelParam preOcpInfo, OccupyRelParam ocpInfo) {
+        // 若预占信息为空，则结束处理
+        if (isEmpty(preOcpInfo) || isEmpty(ocpInfo)) {
+            return;
+        }
+        // 预占参数列表
+        Map<String, IOcpRelParamItem> items = preOcpInfo.getItems();
+        // 实占参数列表
+        Map<String, IOcpRelParamItem> items2 = ocpInfo.getItems();
+        // 遍历执行预占 - 实占
+        items.entrySet().forEach(en -> {
+            // 预占额度
+            IOcpRelParamItem item = en.getValue();
+            BigDecimal val = item.getOccupyVal();
+            boolean isFormula = StringUtil.isNotEmpty(item.getFormulaOpr());
+            // 实占额度
+            IOcpRelParamItem item2 = items2.get(en.getKey());
+            BigDecimal val2 = item2.getOccupyVal();
+            boolean isFormula2 = StringUtil.isNotEmpty(item2.getFormulaOpr());
+            // 如果预占是公式实占不是时
+            if (isFormula && !isFormula2) {
+                val2 = reverseMath(val2, item.getFormulaOpr(), item.getFormulaVal());
+            }
+            // 如果预占不是公式时
+            else if (!isFormula) {
+                val2 = item2.doFormula();
+            }
+            // 预占 - 实占
+            item.setOccupyVal(BigDecimal.ZERO.max(ArithmeticUtil.subtract(val, val2)));
+        });
+    }
+
+    protected BigDecimal reverseMath(BigDecimal paraVal, String opr, BigDecimal val) {
+        if (CommonUtil.isType(opr, BussinessDictCodeListRds.操作符_乘)) {
+            return CommonUtil.math(paraVal, val, BussinessDictCodeListRds.操作符_除.getValue());
+        }
+        else if (CommonUtil.isType(opr, BussinessDictCodeListRds.操作符_除)) {
+            return CommonUtil.math(paraVal, val, BussinessDictCodeListRds.操作符_乘.getValue());
+        }
+        else if (CommonUtil.isType(opr, BussinessDictCodeListRds.操作符_加)) {
+            return CommonUtil.math(paraVal, val, BussinessDictCodeListRds.操作符_减.getValue());
+        }
+        else if (CommonUtil.isType(opr, BussinessDictCodeListRds.操作符_减)) {
+            return CommonUtil.math(paraVal, val, BussinessDictCodeListRds.操作符_加.getValue());
+        }
+        return null;
+    }
+
+    /**
+     * 是否撤销预占/实占
+     * 
+     * @param mapData 请求数据
+     * @return true:是
+     */
+    protected boolean isRevoke(Map<String, Object> mapData) {
+        String revokeFlg = (String)mapData.get(REVOKEFLG);
+        return CommonUtil.isType(revokeFlg, BussinessDictCodeListRds.是否_是);
+    }
+
+    /**
+     * 取占比金额
+     * 
+     * @param mapData 报文
+     * @return 占比金额
+     */
+    protected BigDecimal getMixAmount(Map<String, Object> mapData) {
+        // 组合代码
+        String portfolioCode = (String)mapData.get(PORTFOLIOCODE);
         // 资产代码
-        String assetCode = (String)mapData.get(ASSETCODE);
+        String assetCode = (String)mapData.get(ASSET_CODE);
+        // 资产代码不存在，则返回金额
+        if (StringUtil.isEmpty(assetCode)) {
+            return CommonUtil.getBigDecimal(mapData, AMOUNT, BigDecimal.ZERO);
+        }
+        // 取出资产实时规模
+        IProdAssetAmount info = getProdAssetAmount(portfolioCode, assetCode);
+        // 计算占比金额
+        return calcMixAmount(info, CommonUtil.getBigDecimal(mapData, TRADENUM, BigDecimal.ZERO));
+    }
+
+    /**
+     * 计算占比金额【目标数量 * 原金额 / 原数量】
+     * 
+     * @param info 实时资产规模
+     * @param newNum 目标数量
+     * @return 目标金额
+     */
+    protected BigDecimal calcMixAmount(IProdAssetAmount info, BigDecimal newNum) {
+        BigDecimal newAmt = ArithmeticUtil.multiply(2, RoundingMode.HALF_UP, newNum,
+            info.getAmount());
+        return CommonUtil.math(newAmt, info.getNum(), BussinessDictCodeListRds.操作符_除.getValue());
+    }
+
+    /**
+     * 构建预占信息
+     * 
+     * @param preCode 预占编号
+     * @param eveList 风控事项
+     * @param mapData 报文体
+     * @param paraValMap 参数项
+     * @return 预占信息
+     */
+    protected OccupyRelParam createPreOcp(String preCode, List<IEvent> eveList,
+                                          Map<String, Object> mapData,
+                                          Map<String, Map<String, IValue<BigDecimal>>> paraValMap) {
+        OccupyRelParam preOcpInfo = new OccupyRelParam();
+        // 预占编号
+        preOcpInfo.setOccupyCode(preCode);
+        // 类型
+        preOcpInfo.setOccupyType(PRE_OCCUPY);
+        // 参数明细
+        Map<String, IOcpRelParamItem> ocpPmItemMap = new HashMap<>();
+        preOcpInfo.setItems(ocpPmItemMap);
+        forEachEvent(eveList, epr -> {
+            // 参数代码
+            String paraCoce = epr.getParaCode();
+            // 关系类型
+            String relType = epr.getRelType();
+            // 关系预算的对象值
+            BigDecimal val = epr.getRelValue();
+            // 占比金额
+            if (StringUtil.equals(epr.getRelItem(), MIXAMOUNTKEY)
+                || (epr.isFormula() && StringUtil.equals(epr.formulaRelItem(), MIXAMOUNTKEY))) {
+                val = getMixAmount(mapData);
+            }
+            // Map<指标参数值Redis识别域, 指标参数值>
+            Map<String, IValue<BigDecimal>> valMap = paraValMap.get(paraCoce);
+            // 判空
+            if (CollectionUtils.isEmpty(valMap)) {
+                return;
+            }
+            // redis识别域
+            HashSet<String> hs = new HashSet<>();
+            valMap.entrySet().forEach(en -> {
+                String key = en.getKey();
+                hs.add(key);
+            });
+            OcpRelParamItem ocpPmItem = new OcpRelParamItem();
+            // 预占/实占的对象
+            ocpPmItem.setOccupyItem(epr.isFormula() ? epr.formulaRelItem() : epr.getRelItem());
+            // 预占/实占操作符号
+            ocpPmItem.setOccupyOper(relType);
+            // 预占/实占金额
+            ocpPmItem.setOccupyVal(val);
+            // 指标参数编号
+            ocpPmItem.setParamCode(paraCoce);
+            // 参数值Redis存储Field
+            ocpPmItem.setRedisFields(hs);
+            // 预占额度系数
+            ocpPmItem.setFormulaVal(epr.getFormulaParaVal());
+            // 预占额度系数操作符
+            ocpPmItem.setFormulaOpr(epr.formulaOprType());
+            // 添加明细
+            ocpPmItemMap.put(paraCoce, ocpPmItem);
+        });
+        return preOcpInfo;
+    }
+
+    /**
+     * 关联的组合及所有相关的组合包
+     * 
+     * @param mapData 报文体
+     * @return 组合（包）列表
+     */
+    protected Set<String> getProdSet(Map<String, Object> mapData) {
+        // 组合代码
+        String portfolioCode = (String)mapData.get(PORTFOLIOCODE);
+        Set<String> prodSet = new HashSet<>();
+        prodSet.add(portfolioCode);
+        // 取得组合关联指标信息
+        IPtlIndicator ptlInd = getPtlIndicator(mapData);
+        if (ptlInd != null && !CollectionUtils.isEmpty(ptlInd.getPtlBagIdList())) {
+            // 组合所在的组合包
+            prodSet.addAll(ptlInd.getPtlBagIdList().keySet());
+        }
+        return prodSet;
+    }
+
+    /**
+     * 返回<组合代码,<指标代码,redis识别域>>
+     * 
+     * @param prodSet 组合（包）代码列表
+     * @param paraIdList 参数代码
+     * @param mapData 报文体
+     * @return <组合代码,<指标代码,redis识别域>>
+     */
+    protected Map<String, Map<String, IValue<BigDecimal>>> unionPtlParam(Set<String> prodSet,
+                                                                         Set<String> paraIdList,
+                                                                         Map<String, Object> mapData,
+                                                                         Map<String, IParam> paramMap) {
+        Map<String, Object> newMap = new HashMap<>();
+        newMap.putAll(mapData);
+        // 返回值
+        Map<String, Map<String, IValue<BigDecimal>>> ptlParamMap = new HashMap<>();
+        paraIdList.forEach(paraCode -> {
+            IParam param = paramMap.get(paraCode);
+            // Redis识别域
+            String[] arr = param.getRedisFieldArr();
+            // 枚举型、不更新Redis、非Redis、不是SQL的、redis识别域为空的统统跳过
+            if (param.isEnumType() || !param.isUpRedis()
+                || !CommonUtil.isType(param.getParamMathType(),
+                    BussinessDictCodeListRds.指标参数计算方式_REDIS)
+                || !CommonUtil.isType(param.getParaDisplayType(),
+                    BussinessDictCodeListRds.指标参数实现类型_SQL)
+                || arr == null || arr.length == 0) {
+                return;
+            }
+            // Map<指标参数代码,指标参数值Redis识别域>
+            Map<String, IValue<BigDecimal>> pam = new HashMap<>();
+            // 遍历组合关联指标列表
+            prodSet.forEach(prod -> {
+                newMap.put(PORTFOLIOCODE, prod);
+                // redis识别域
+                String field = getField(arr, newMap);
+                pam.put(field, null);
+            });
+            ptlParamMap.put(paraCode, pam);
+        });
+        return ptlParamMap;
+    }
+
+    /**
+     * 资产基本信息
+     * 
+     * @param mapData 报文
+     */
+    protected void assetInfo(Map<String, Object> mapData) {
         // 取得资产基本信息
-        Map<String, Object> assetInfo = getAssetInfo(assetCode);
+        Map<String, Object> assetInfo = getAssetInfo(mapData);
         // 若资产基本信息不为空
         if (!CollectionUtils.isEmpty(assetInfo)) {
             mapData.putAll(assetInfo);
         }
-        else if (StringUtil.isNotEmpty(assetCode)) {
-        	logger.error("{}的资产信息不存在", assetCode);
-        	return;
-        }
-        // 取得日历信息
-        ICalendar calendar = getCalendar((String)mapData.get(CALENDAR_ID));
-        // 匹配风险事件
-        List<IEvent> eveList = getEvent(mapData, calendar);
-        // 若风险事件不存在，则试算通过
-        if (StringUtil.isEmptyList(eveList)) {
-            // 试算通过
-        	logger.info(LOG_INFO_EVENT);
-            return;
-        }
-        // 从风险事件列表中取出相关的参数列表
-        Set<String> paraIdList = getParamIdList(eveList);
-        // 取得组合关联指标信息
-        IPtlIndicator ptlInd = getPtlIndicator(mapData);
-        // 若无 组合关联指标信息，则试算通过
-        if (ptlInd == null) {
-        	logger.info(LOG_INFO_PASS);
-            return;
-        }
-        
-        // 取得所有指标代码
-        Set<String> indIdList = getIndIdList(ptlInd);
-        // 若组合未关联指标信息，则试算通过
-        if (CollectionUtils.isEmpty(indIdList)) {
-        	logger.info(LOG_INFO_PASS);
-            return;
-        }
-        // 取得所有的指标信息
-        Map<String, IIndicator> indMap = getIndicator(indIdList);
-        // 若指标信息不存在，则抛出异常
-        if (CollectionUtils.isEmpty(indMap)) {
-        	logger.error("指标信息不存在");
-        	return;
-        }
-        
-        // 风险事件相关参数与指标相关参数糅合去重(并集)
-        Map<String, Set<String>> ptlIndMap = ptlInd.getPtlIndicator();
-        unionParamId(indMap, paraIdList, ptlIndMap);
-        // 取得所有指标参数信息
-        Map<String, IParam> paramMap = getParam(paraIdList);
-        // 若指标参数不存在则抛出异常
-        if (CollectionUtils.isEmpty(paramMap)) {
-        	logger.error("指标参数信息不存在");
-        	return;
-        }
-
-        // 判断监督时点，若不满足则指标不计算,判断是否剔除资产，若满足则指标不计算
-        checkTpAndIndivAd(indMap, mapData, ptlInd);
-        // 当指标都被剔除时，直接试算通过
-        if (CollectionUtils.isEmpty(ptlInd.getPtlIndicator())) {
-        	logger.info("无需要计算的指标，试算通过");
-            return;
-        }
-
-        // 构建组合与指标参数索引
-        Map<String, Map<String, String>> ptlParamMap = getPtlParamMap(ptlInd, indMap);
-        
-        // 执行事务处理（Redis操作）
-        CommonUtil.handleByLock(() -> {
-            // 取得所有指标参数的值
-            Map<String, Map<String, IValue<Object>>> paraValMap = getParamValSrv().getParamVal(
-                createCondition(paramMap, mapData, ptlParamMap));
-            // 若指标参数值未初始化到Redis则抛出异常
-            if (CollectionUtils.isEmpty(paraValMap)) {
-            	logger.error(LOG_NO_IND_VAL);
-            	return -1;
-            }
-            // 计算参数值
-            Map<String, Map<String, IValue<Object>>> newValMap = calcParamVal(eveList,
-                paraValMap, null, details);
-            // 固定值参数
-            Map<String, Object> map = getFixedParaVal(paramMap,mapData);
-            // 指标参数原值
-            Map<String, Map<String, Object>> pValMap = parseParaVal(ptlParamMap, paraValMap);
-            // 加入固定值
-            unionParaVal(pValMap, map);
-            // 指标计算原值
-            calcIndicator(ptlInd, indMap, mapData, pValMap, true);
-            // 指标参数新值
-            pValMap = parseParaVal(ptlParamMap, calcValWithoutEvt(getParamIdList(eveList), eveList, newValMap));
-            // 加入固定值
-            unionParaVal(pValMap, map);
-            // 指标计算新值
-            calcIndicator(ptlInd, indMap, mapData, pValMap, false);
-            return null;
-        });
-        indMap.entrySet().forEach(en -> checkIndTrend(en.getValue()));
-        // 处理返回结果
-        writeResponse(response, indMap);
-        if (StringUtil.isNotEmpty(mapData.get(EVENT_ID))) {
-        	RskIsupTrialCls isupTrialCls = new RskIsupTrialCls();
-            // 业务类型
-            isupTrialCls.setTradeType("3");
-            // 业务编号
-            isupTrialCls.setTradeId((String) mapData.get(EVENT_ID));
-            // 试算结论
-            isupTrialCls.setConclusion((String) response.get(RSKSTATUS));
-            // 设置流水号
-            isupTrialCls.setSeqNo((String) mapData.get("uuid"));
-            // 保存风险计算结论
-            setUserDt(isupTrialCls);
-            // 保存监督指标计算结果
-            saveRskIsupTrial(response, mapData, (String) mapData.get(EVENT_ID), response);
-        }
-    }
-
-    public void calc(Map<String, Object> mapData, Map<String, Object> response) {
-        try {
-            // 备份组合代码
-            mapData.put(PORTFOLIOCODE, mapData.get("prodId"));
-            // 资产代码
-            String assetCode = (String)mapData.get(ASSETCODE);
-            // 取得资产基本信息
-            Map<String, Object> assetInfo = getAssetInfo(assetCode);
-            // 若资产基本信息不为空
-            if (!CollectionUtils.isEmpty(assetInfo)) {
-                mapData.putAll(assetInfo);
-            }
-            /************************************/
-            /** 风险计算 ***************************/
-            /************************************/
-            // 取得日历信息
-            ICalendar calendar = getCalendar((String)mapData.get(CALENDAR_ID));
-            // 匹配风险事件
-            List<IEvent> eveList = getEvent(mapData, calendar);
-            // 若风险事件不存在，则预占失败
-            if (StringUtil.isEmptyList(eveList)) {
-                logger.error("风险事件不存在，则预占失败");
-                return;
-            }
-            // 取得组合关联指标信息
-            IPtlIndicator ptlInd = getPtlIndicator(mapData);
-            // 若无 组合关联指标信息，则试算通过，直接进行预占
-            if (ptlInd == null) {
-                logger.info(LOG_INFO_PASS);
-                occupyWithoutCalc(eveList, mapData, response, null);
-                return;
-            }
-            occupyWithCalc(ptlInd, eveList, mapData, response);
-        }
-        catch (Exception e) {
-            logger.error("处理异常", e);
-        }
     }
 
     /**
-     * 风险计算后未达到违规线时进行预占
+     * 匹配风控
      * 
-     * @param ptlInd 组合关联指标
-     * @param eveList 风险事件
-     * @param mapData 接口输入
-     * @see
-     * @since 1.0
+     * @param mapData 报文体
+     * @return 风控列表
      */
-    private void occupyWithCalc(IPtlIndicator ptlInd, List<IEvent> eveList,
-                                Map<String, Object> mapData, Map<String, Object> resMap) {
-    	// 指标参数计算明细
-    	List<RskIndicatorParaCalcdetail> details = new ArrayList<>();
-        String occupyCode = (String)mapData.get(EVENT_ID);
+    protected List<IEvent> matchEvent(Map<String, Object> mapData) {
+        // 取得日历信息
+        ICalendar calendar = getCalendar((String)mapData.get(CALENDAR_ID));
+        // 匹配风控事项
+        return getEvent(mapData, calendar);
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected <T> T getFromLocalOrRedis(Map<String, Object> mapData, String key,
+                                        Function<String, T> fun) {
+        // 取得关键字
+        Object obj = mapData.get(key);
+        // 若不存在则返回空
+        if (!StringUtil.isNotEmpty(obj)) {
+            return null;
+        }
+        // 拼接索引
+        String uri = key + GlobalConstant.COLON + obj.toString();
+        // 从本地缓存数据
+        T t = getInfo(uri);
+        // 若本地缓存不存在从redis取
+        if (t == null || (t instanceof Map && CollectionUtils.isEmpty((Map)t))
+            || (t instanceof Collection && CollectionUtils.isEmpty((Collection)t))) {
+            t = fun.apply(obj.toString());
+            // 保存本地缓存
+            putInfo(uri, t);
+        }
+        // 返回数据
+        return t;
+    }
+
+    /**
+     * 计算参数值
+     * 
+     * @param preOcpInfo 预占信息
+     * @param paramVal 参数列表
+     * @param details 计算明细
+     * @return 计算后参数列表
+     */
+    protected Map<String, Map<String, IValue<Object>>> calcParamVal(OccupyRelParam preOcpInfo,
+                                                                    Map<String, Map<String, IValue<Object>>> paramVal,
+                                                                    List<RskIndicatorParaCalcdetail> details) {
+        // 返回值 Map<指标参数代码, Map<指标参数值Redis识别域, 指标参数值>>
+        Map<String, Map<String, IValue<Object>>> newValMap = new HashMap<>();
+        // 备份
+        newValMap.putAll(paramVal);
+        // 遍历计算参数值
+        ocpItemsForeach(preOcpInfo, item -> {
+            // 参数代码
+            String paraCoce = item.getParamCode();
+            // 关系类型
+            String relType = item.getOccupyOper();
+            // 关系预算的对象值
+            BigDecimal val = item.doFormula();
+            // Map<指标参数值Redis识别域, 指标参数值>
+            Map<String, IValue<Object>> valMap = paramVal.get(paraCoce);
+            if (CollectionUtils.isEmpty(valMap)) {
+                return;
+            }
+            // Map<指标参数值Redis识别域, 指标参数值>
+            Map<String, IValue<Object>> temp = new HashMap<>();
+            valMap.entrySet().forEach(en -> {
+                // redis识别域
+                String key = en.getKey();
+                // 参数值
+                IValue<Object> paraVal = en.getValue();
+                // 为空时置0
+                BigDecimal par = paraVal == null ? BigDecimal.ZERO : (BigDecimal)paraVal.value();
+                // 新建目标值
+                IValue<Object> newVal = new Value<>(
+                    str -> StringUtil.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
+                // 指标参数值计算
+                newVal.set(CommonUtil.math(par, val, relType));
+                temp.put(key, newVal);
+                // 计算明细
+                details.add(createDetail(paraCoce, key, par, (BigDecimal)newVal.value(),
+                    CommonUtil.math(BigDecimal.ZERO, val, relType)));
+            });
+            newValMap.put(paraCoce, temp);
+        });
+        // 记录未变更的参数值
+        paramVal.entrySet().forEach(en -> {
+            String paraCode = en.getKey();
+            // 参数值
+            Map<String, IValue<Object>> paraMap = en.getValue();
+            if (containsPara(details, paraCode) || paraMap == null) {
+                return;
+            }
+            paraMap.entrySet().forEach(pMap -> {
+                String key = pMap.getKey();
+                // 参数值
+                IValue<Object> paraVal = pMap.getValue();
+                BigDecimal par = paraVal == null ? BigDecimal.ZERO : (BigDecimal)paraVal.value();
+                // 计算明细
+                details.add(createDetail(paraCode, key, par, par, BigDecimal.ZERO));
+            });
+        });
+        return newValMap;
+    }
+
+    /**
+     * 遍历预占参数计算明细
+     * 
+     * @param preOcpInfo 预占信息
+     * @param consumer 业务处理
+     */
+    protected void ocpItemsForeach(OccupyRelParam preOcpInfo,
+                                   Consumer<IOcpRelParamItem> consumer) {
+        if (consumer == null || isEmpty(preOcpInfo)) {
+            return;
+        }
+        // 遍历计算参数值
+        preOcpInfo.getItems().entrySet().forEach(item -> consumer.accept(item.getValue()));
+    }
+
+    /**
+     * 取出所有变化的参数值
+     * 
+     * @param preOcpInfo 预占信息
+     * @return 所有变化的参数值
+     */
+    protected Map<String, Map<String, IValue<Object>>> collectParam(OccupyRelParam preOcpInfo) {
+        // 返回值 Map<指标参数代码, Map<指标参数值Redis识别域, 指标参数值>>
+        Map<String, Map<String, IValue<Object>>> newValMap = new HashMap<>();
+        // 遍历计算参数值
+        ocpItemsForeach(preOcpInfo, item -> {
+            // 参数代码
+            String paraCoce = item.getParamCode();
+            // 关系预算的对象值
+            BigDecimal val = item.doFormula();
+            // Map<指标参数值Redis识别域, 指标参数值>
+            Map<String, IValue<Object>> temp = new HashMap<>();
+            item.getRedisFields().forEach(key -> {
+                // 新建目标值
+                IValue<Object> newVal = new Value<>(
+                    str -> StringUtil.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
+                // 指标参数值计算
+                newVal.set(val);
+                temp.put(key, newVal);
+            });
+            newValMap.put(paraCoce, temp);
+        });
+        return newValMap;
+    }
+
+    /**
+     * 计算参数值，保存信息
+     * 
+     * @param preOcpInfo 预占信息
+     * @param mapData 报文
+     */
+    protected Map<String, Object> justSave(OccupyRelParam preOcpInfo,
+                                           Map<String, Object> mapData) {
+        Map<String, Object> resMap = new HashMap<>();
+        // 指标参数计算明细
+        List<RskIndicatorParaCalcdetail> details = new ArrayList<>();
+        final Map<String, Map<String, IValue<Object>>> paraList = collectParam(preOcpInfo);
+        // 取得所有指标参数信息
+        Map<String, IParam> paramMap = getParam(paraList.keySet());
+        CommonUtil.handleByLock(() -> {
+            String uuid = String.valueOf(System.currentTimeMillis());
+            mapData.put(SEQ_NO, uuid);
+            IndicatorParamValService service = getParamValSrv();
+            // 取得所有指标参数的值
+            Map<String, Map<String, IValue<Object>>> paraValMap = service.getParamVal(paraList);
+            // 若指标参数值未初始化到Redis则抛出异常
+            if (CollectionUtils.isEmpty(paraValMap)) {
+                logger.error(LOG_NO_IND_VAL);
+                return -1;
+            }
+            // 计算参数值
+            Map<String, Map<String, IValue<Object>>> newValMap = calcParamVal(preOcpInfo,
+                paraValMap, details);
+            // 更新Redis
+            service.setParamVal(newValMap);
+            // 更新预占/实占信息
+            setOccupyRelParam(preOcpInfo);
+            return 0;
+        });
+        // 参数计算明细
+        freshDetail(details, paramMap);
+        saveDetails(details, mapData);
+        resMap.put("PARA_VAL_DETAILS", details);
+        return resMap;
+    }
+
+    /**
+     * 是否计算指标
+     * 
+     * @param eventList 风险事件列表
+     * @return true:计算指标,false:不计算指标
+     */
+    protected boolean isCalcIndicator(List<IEvent> eventList) {
+        for (IEvent event : eventList) {
+            if (CommonUtil.isType(event.getIsCalcIndicator(), BussinessDictCodeListRds.是否_否)) {
+                logger.info("风控事项 {} 不计算指标", event.getEventName());
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 计算参数、指标并保存Redis
+     * 
+     * @param preOcpInfo 预占信息
+     * @param mapData 报文
+     * @return 指标计算结果
+     */
+    public Map<String, Object> calcAndSave(OccupyRelParam preOcpInfo,
+                                           Map<String, Object> mapData) {
+        mapData.put(PROD_ID, mapData.get(PORTFOLIOCODE));
+        // 取得风控事项
+        List<IEvent> eveList = matchEvent(mapData);
+        if (isEmpty(preOcpInfo) || CollectionUtils.isEmpty(eveList)) {
+            return new HashMap<>();
+        }
+        // 触发的风险事件不计算指标
+        if (!isCalcIndicator(eveList)) {
+            logger.info("触发的风控事项不计算指标");
+            return justSave(preOcpInfo, mapData);
+        }
+        Map<String, Object> resMap = new HashMap<>();
+        // 指标参数计算明细
+        List<RskIndicatorParaCalcdetail> details = new ArrayList<>();
+        String occupyCode = preOcpInfo.getOccupyCode();
+        // 取得组合关联指标信息
+        IPtlIndicator ptlInd = getPtlIndicator(mapData);
         // 取得所有指标代码
-        Set<String> indIdList = getIndIdList(ptlInd);
+        Set<String> indIdList = getIndIdList(getPtlIndicator(mapData));
         // 若组合未关联指标信息，则试算通过，直接进行预占
         if (CollectionUtils.isEmpty(indIdList)) {
             logger.info(LOG_INFO_PASS);
-            occupyWithoutCalc(eveList, mapData, resMap, ptlInd);
-            return;
+            return justSave(preOcpInfo, mapData);
         }
         // 取得所有的指标信息
         Map<String, IIndicator> indMap = getIndicator(indIdList);
         // 若指标信息不存在，则抛出异常，不进行预占处理
         if (CollectionUtils.isEmpty(indMap)) {
             logger.info("指标信息不存在，试算通过");
-            occupyWithoutCalc(eveList, mapData, resMap, ptlInd);
-            return;
+            return justSave(preOcpInfo, mapData);
         }
         // 判断监督时点，若不满足则指标不计算,判断是否剔除资产，若满足则指标不计算
         checkTpAndIndivAd(indMap, mapData, ptlInd);
@@ -508,8 +996,7 @@ public class CalcOccupyInfoService {
         Map<String, Set<String>> ptlIndMap = ptlInd.getPtlIndicator();
         if (CollectionUtils.isEmpty(ptlIndMap) || CollectionUtils.isEmpty(ptlIndMap.values())) {
             logger.info("无指标需要计算，试算通过");
-            occupyWithoutCalc(eveList, mapData, resMap, ptlInd);
-            return;
+            return justSave(preOcpInfo, mapData);
         }
         // 从风险事件列表中取出相关的参数列表
         Set<String> paraIdList = getParamIdList(eveList);
@@ -517,19 +1004,12 @@ public class CalcOccupyInfoService {
         unionParamId(indMap, paraIdList, ptlInd.getPtlIndicator());
         // 一条指标都没有的时候
         if (CollectionUtils.isEmpty(indMap) || CollectionUtils.isEmpty(indMap.values())) {
-            occupyWithoutCalc(eveList, mapData, resMap, ptlInd);
-            return;
+            return justSave(preOcpInfo, mapData);
         }
         // 取得所有指标参数信息
         Map<String, IParam> paramMap = getParam(paraIdList);
-        // 若指标参数不存在则抛出异常
-        if (CollectionUtils.isEmpty(paramMap)) {
-            logger.error("指标参数信息不存在");
-            return;
-        }
         // 构建组合与指标参数索引
         Map<String, Map<String, String>> ptlParamMap = getPtlParamMap(ptlInd, indMap);
-
         RskIsupTrialCls isupTrialCls = new RskIsupTrialCls();
         // 业务类型
         isupTrialCls.setTradeType((String)mapData.get(EVENT_TYPE));
@@ -538,108 +1018,133 @@ public class CalcOccupyInfoService {
         Map<String, Object> response = new HashMap<>();
         // 执行事务处理（Redis操作）
         CommonUtil.handleByLock(() -> {
-            String uuid =  String.valueOf(System.currentTimeMillis());
-            mapData.put("seqNo", uuid);
+            String uuid = String.valueOf(System.currentTimeMillis());
+            mapData.put(SEQ_NO, uuid);
             // 取得所有指标参数的值
             Map<String, Map<String, IValue<Object>>> paraValMap = getParamValSrv().getParamVal(
                 createCondition(paramMap, mapData, ptlParamMap));
-            // 若指标参数值未初始化到Redis则抛出异常
-            if (CollectionUtils.isEmpty(paraValMap)) {
-                logger.error(LOG_NO_IND_VAL);
-                return -1;
-            }
-            // 添加预占参数信息
-            OccupyRelParam newOcpRelParam = new OccupyRelParam();
-            Map<String, IOcpRelParamItem> ocpPmItem = new HashMap<>();
-            newOcpRelParam.setItems(ocpPmItem);
             // 计算参数值
-            Map<String, Map<String, IValue<Object>>> newValMap = calcParamVal(eveList,
-                paraValMap, newOcpRelParam, details);
-            if (!CollectionUtils.isEmpty(indMap) && !CollectionUtils.isEmpty(indMap.values())) {
+            Map<String, Map<String, IValue<Object>>> newValMap = calcParamVal(preOcpInfo,
+                paraValMap, details);
+            // 指标信息存在
+            if (!CollectionUtils.isEmpty(indMap)) {
                 // 固定值参数
-                Map<String, Object> map = getFixedParaVal(paramMap,mapData);
-                // 指标参数原值
-                Map<String, Map<String, Object>> pValMap = parseParaVal(ptlParamMap, paraValMap);
-                // 加入固定值
-                unionParaVal(pValMap, map);
-                // 指标计算原值
-                calcIndicator(ptlInd, indMap, mapData, pValMap, true);
-                // 指标参数新值
-                pValMap = parseParaVal(ptlParamMap, calcValWithoutEvt(getParamIdList(eveList), eveList, newValMap));
-                // 加入固定值
-                unionParaVal(pValMap, map);
-                // 指标计算新值
-                calcIndicator(ptlInd, indMap, mapData, pValMap, false);
+                Map<String, Object> map = getFixedParaVal(paramMap);
+                Map<String, IIndicator> leftIndMap = getIndTrendCalcSrc().execute(indMap, paramMap,
+                    getIndTrendCalcSrc().filterValMap(new HashMap<>(), paraValMap), eveList,
+                    mapData, (newIndMap, indValMap, newIndValMap) -> {
+                        IPtlIndicator newPtlInd = getIndTrendCalcSrc().newPtlInd(ptlInd,
+                            newIndMap);
+                        // 指标参数原值
+                        Map<String, Map<String, Object>> pValMap = getIndTrendCalcSrc().parseParaVal(
+                            ptlParamMap, indValMap);
+                        // 加入固定值
+                        unionParaVal(pValMap, map);
+                        // 指标计算原值
+                        calcIndicator(newPtlInd, newIndMap, mapData, pValMap, true);
+                        // 指标参数新值
+                        pValMap = getIndTrendCalcSrc().parseParaVal(ptlParamMap, newIndValMap);
+                        // 加入固定值
+                        unionParaVal(pValMap, map);
+                        // 指标计算原值
+                        calcIndicator(newPtlInd, newIndMap, mapData, pValMap, false);
+                    });
+                if (!CollectionUtils.isEmpty(leftIndMap)) {
+                    IPtlIndicator newPtlInd = getIndTrendCalcSrc().newPtlInd(ptlInd, leftIndMap);
+                    // 指标参数原值
+                    Map<String, Map<String, Object>> pValMap = parseParaVal(ptlParamMap,
+                        paraValMap);
+                    // 加入固定值
+                    unionParaVal(pValMap, map);
+                    // 指标计算原值
+                    calcIndicator(newPtlInd, indMap, mapData, pValMap, true);
+                    // 指标参数新值
+                    pValMap = parseParaVal(ptlParamMap,
+                        calcValWithoutEvt(getParamIdList(eveList), eveList, newValMap));
+                    // 加入固定值
+                    unionParaVal(pValMap, map);
+                    // 指标计算新值
+                    calcIndicator(newPtlInd, indMap, mapData, pValMap, false);
+                }
+                // 判断指标趋势
                 indMap.entrySet().forEach(en -> checkIndTrend(en.getValue()));
+                // 设置指标趋势到本地缓存
+                getIndTrendCalcSrc().setTrend(indMap, mapData,
+                    occupyCode + GlobalConstant.COLON + PRE_OCCUPY);
                 // 处理返回结果
                 writeResponse(response, indMap);
             }
             // 更新Redis
             getParamValSrv().setParamVal(newValMap);
-            newOcpRelParam.setOccupyCode(occupyCode);
-            // 类型
-            String eventType = (String)mapData.get(EVENT_TYPE);
-            // 预占/实占类型
-            newOcpRelParam.setOccupyType(StringUtil.equals(eventType, "0") ? PRE_OCCUPY : REL_OCCUPY);
-            // 预占/实占参数信息列表
-            newOcpRelParam.setItems(ocpPmItem);
             // 更新预占/实占信息
-            setOccupyRelParam(newOcpRelParam);
+            setOccupyRelParam(preOcpInfo);
+            // 更新指标趋势信息
+            getIndTrendCalcSrc().saveIndTrendList();
             return 0;
         });
-        Object wflStatus = mapData.get("wflStatus");
-        Object eventDate = mapData.get("eventDate");
-        if (StringUtil.equals(wflStatus, BussinessDictCodeListRds.有效状态_待处理.getValue())
-        		&& !StringUtil.equals(eventDate, DateUtil.getSysDate())) {
-        	String rskStatus = (String)response.get(RSKSTATUS);
-            // 试算结论
-            isupTrialCls.setConclusion(rskStatus);
-            // 流水号
-            isupTrialCls.setSeqNo((String) mapData.get("uuid"));
-            // 保存风险计算结论
-            setUserDt(isupTrialCls);
-            resMap.put("ISUP_TRIAL_CLS", isupTrialCls);
-            // 保存监督指标计算结果
-            saveRskIsupTrial(response, mapData, occupyCode, resMap);
-        }
+        String rskStatus = (String)response.get(RSKSTATUS);
+        // 试算结论
+        isupTrialCls.setConclusion(rskStatus);
+        // 流水号
+        isupTrialCls.setSeqNo((String)mapData.get("uuid"));
+        // 保存风险计算结论
+        setUserDt(isupTrialCls);
+        resMap.put("ISUP_TRIAL_CLS", isupTrialCls);
+        // 保存监督指标计算结果
+        saveRskIsupTrial(response, mapData, occupyCode, resMap);
         // 参数计算明细
         freshDetail(details, paramMap);
-        saveDetails(details, mapData, occupyCode);
+        saveDetails(details, mapData);
         resMap.put("PARA_VAL_DETAILS", details);
+        return resMap;
     }
 
-    public void calcIndParam(Map<String, Object> mapData, Map<String, Object> response) {
-        try {
-            // 备份组合代码
-            mapData.put(PORTFOLIOCODE, mapData.get("prodId"));
-            // 资产代码
-            String assetCode = (String)mapData.get(ASSETCODE);
-            // 取得资产基本信息
-            Map<String, Object> assetInfo = getAssetInfo(assetCode);
-            // 若资产基本信息不为空
-            if (!CollectionUtils.isEmpty(assetInfo)) {
-                mapData.putAll(assetInfo);
-            }
-            /************************************/
-            /** 风险计算 ***************************/
-            /************************************/
-            // 取得日历信息
-            ICalendar calendar = getCalendar((String)mapData.get(CALENDAR_ID));
-            // 匹配风险事件
-            List<IEvent> eveList = getEvent(mapData, calendar);
-            // 若风险事件不存在，则预占失败
-            if (StringUtil.isEmptyList(eveList)) {
-                logger.error("风险事件不存在，则预占失败");
-                return;
-            }
-            IPtlIndicator ptlInd = getPtlIndicator(mapData);
-            // 若无 组合关联指标信息，则试算通过，直接进行预占 
-            occupyWithoutCalc(eveList, mapData, response, ptlInd); 
-//            occupyWithoutCalc(eveList, mapData, response, null);
-        }
-        catch (Exception e) {
-            logger.error("处理异常", e);
-        }
+    /**
+     * 清除缓存内容
+     * 
+     * @param local 缓存
+     */
+    protected void cleanLocalCache() {
+        localCache.remove();
+    }
+
+    /**
+     * 设置缓存内容
+     * 
+     * @param map 内容
+     */
+    protected void setLocalCache(Map<String, Object> map) {
+        localCache.set(map);
+    }
+
+    /**
+     * 取得缓存内容
+     * 
+     * @return 缓存内容
+     */
+    protected Map<String, Object> getLocalCache() {
+        return localCache.get();
+    }
+
+    /**
+     * 取得缓存内容
+     * 
+     * @param key 索引
+     * @return 缓存内容
+     */
+    @SuppressWarnings("unchecked")
+    protected <T> T getInfo(String key) {
+        return (T)getLocalCache().get(key);
+    }
+
+    /**
+     * 设置缓存内容
+     * 
+     * @param key 索引
+     * @param obj 内容
+     */
+    protected void putInfo(String key, Object obj) {
+        getLocalCache().put(key, obj);
     }
 
     /**
@@ -649,26 +1154,28 @@ public class CalcOccupyInfoService {
      * @param mapData 报文
      * @param occupyCode 预占实占编号
      */
-    protected void saveDetails(List<RskIndicatorParaCalcdetail> details, Map<String, Object> mapData, String occupyCode){
+    protected void saveDetails(List<RskIndicatorParaCalcdetail> details,
+                               Map<String, Object> mapData) {
         if (!StringUtil.isEmptyList(details)) {
-        	details.forEach(detail->{
-        		// 业务编号
-        		detail.setTradeId(occupyCode);
-        		// 业务类型
-        		detail.setTradeType((String) mapData.get(EVENT_TYPE));
-        		// 设置监督日期
-        		detail.setSupDate(DateUtil.parse((String)mapData.get("sysDate")));
-        		// 设置时间戳
-        		Object obj = mapData.get("seqNo");
-        		detail.setDotimestamp(DateUtil.format(new Date(new Long(obj.toString())),DateUtil.DEFAULT_DATETIME_FORMAT_SSS));
-        		// 设置UUID
-        		detail.setUuid(IDGenerator.generate());
-        		String user = "batch";
-        		// 创建人
-        		detail.setCreateUser(user);
-        		// 更新人
-        		detail.setUpdateUser(user);
-        	});
+            details.forEach(detail -> {
+                // 业务编号
+                detail.setTradeId((String)mapData.get(EVENT_ID));
+                // 业务类型
+                detail.setTradeType(String.valueOf(0));
+                // 设置监督日期
+                detail.setSupDate(DateUtil.parse((String)mapData.get("sysDate")));
+                // 设置时间戳
+                Object obj = mapData.get(SEQ_NO);
+                detail.setDotimestamp(DateUtil.format(new Date(new Long(obj.toString())),
+                    DateUtil.DEFAULT_DATETIME_FORMAT_SSS));
+                // 设置UUID
+                detail.setUuid(IDGenerator.generate());
+                String user = "batch";
+                // 创建人
+                detail.setCreateUser(user);
+                // 更新人
+                detail.setUpdateUser(user);
+            });
         }
     }
 
@@ -677,8 +1184,6 @@ public class CalcOccupyInfoService {
      * 
      * @param paraVal 指标计算的参数列表
      * @param map 固定值参数
-     * @see
-     * @since 1.0
      */
     protected void unionParaVal(Map<String, Map<String, Object>> paraVal,
                                 Map<String, Object> map) {
@@ -698,8 +1203,8 @@ public class CalcOccupyInfoService {
      * @see
      * @since 1.0
      */
-    protected Map<String, Object> getFixedParaVal(Map<String, IParam> paramMap,Map<String, Object> mapData) {
-        Map<String, Object> map = new HashMap<>(); 
+    protected Map<String, Object> getFixedParaVal(Map<String, IParam> paramMap) {
+        Map<String, Object> map = new HashMap<>();
         paramMap.entrySet().forEach(en -> {
             String key = en.getKey();
             IParam para = en.getValue();
@@ -710,110 +1215,37 @@ public class CalcOccupyInfoService {
                 map.put(key, value);
             }
         });
-        if (MultilevelDataAuthorityUtil.isEnabled()) { 
-            paramMap.entrySet().forEach(en -> {
-                String key = en.getKey();
-                IParam para = en.getValue(); 
-                String instCode = mapData.get("instCode").toString();
-                if (!StringUtil.isEmpty(instCode)) {
-                    if (para != null && CommonUtil.isType(para.getParaDisplayType(),
-                        BussinessDictCodeListRds.指标参数实现类型_固定值) &&
-                        instCode.toString().equals(para.getInstitutionCode())) {
-                        String content = para.getContent();
-                        BigDecimal value = new BigDecimal(content); 
-                        map.put(key.replace(instCode,BussinessDictCodeListRds.指标参数实现类型_固定值.getValue()), value);
-                    }
-                }
-            });
-        }
         return map;
     }
+
+    protected String makeParaCode(String code, IDictCodeList gara) {
+        return code + GlobalConstant.COLON + gara.getValue();
+    }
+
     /**
-     * 无指标计算，直接进行预占
+     * 过滤参数该粒度没有被影响，但需要参与计算且其它粒度参数
      * 
-     * @param eveList 风险事件
-     * @param mapData 接口输入
-     * @param ptlInd 组合关联指标信息
-     * @see
-     * @since 1.0
+     * @param paraIdList 被影响的参数
+     * @param paraValMap 参数值列表
+     * @return 过滤结果
      */
-    private void occupyWithoutCalc(List<IEvent> eveList, Map<String, Object> mapData,
-                                   Map<String, Object> resMap,
-                                   IPtlIndicator ptlInd) {
-    	// 指标参数计算明细
-    	List<RskIndicatorParaCalcdetail> details = new ArrayList<>();
-        String occupyCode = (String)mapData.get(EVENT_ID);
-        // 从风险事件列表中取出相关的参数列表
-        Set<String> paraIdList = getParamIdList(eveList);
-        // 取得所有指标参数信息
-        Map<String, IParam> paramMap = getParam(paraIdList);
-        // 若指标参数不存在则抛出异常
-        if (CollectionUtils.isEmpty(paramMap)) {
-            logger.error("指标参数信息不存在，预占失败");
-            return;
-        }
-        // 取得组合关联所有指标代码
-        Set<String> indIdList = getIndIdList(ptlInd);
-        // 指标参数查询条件
-        Map<String, Map<String, IValue<Object>>> paraCond = null;
-        // 若无 组合关联指标信息，则只需组合代码参与指标参数计算
-        if (CollectionUtils.isEmpty(indIdList)) {
-            // 根据参数信息构建参数值查询条件
-            paraCond = createParaCond(paramMap, mapData);
-        }
-        else {
-            // 取得所有的指标信息
-            Map<String, IIndicator> indMap = getIndicator(indIdList);
-            // 若指标信息不存在，则只需组合代码参与指标参数计算
-            if (CollectionUtils.isEmpty(indMap) || CollectionUtils.isEmpty(indMap.values())) {
-                paraCond = createParaCond(paramMap, mapData);
+    protected Map<String, Map<String, IValue<Object>>> filter(Set<String> paraIdList,
+                                                              Map<String, Map<String, IValue<Object>>> paraValMap) {
+        Map<String, Map<String, IValue<Object>>> tempMap = new HashMap<>();
+        paraValMap.entrySet().forEach(en -> {
+            // 参数代码
+            String paraCode = en.getKey();
+            // 参数该粒度没有被影响，但需要参与计算且其它粒度被影响时
+            String pCd = StringUtil.substring(paraCode, 0,
+                StringUtil.indexOf(paraCode, GlobalConstant.COLON));
+            if (!paraIdList.contains(paraCode)
+                && (paraIdList.contains(makeParaCode(pCd, BussinessDictCodeListRds.参数粒度_买入))
+                    || paraIdList.contains(makeParaCode(pCd, BussinessDictCodeListRds.参数粒度_卖出))
+                    || paraIdList.contains(makeParaCode(pCd, BussinessDictCodeListRds.参数粒度_实时)))) {
+                tempMap.put(paraCode, en.getValue());
             }
-            else {
-                // 构建组合与指标参数索引
-                Map<String, Map<String, String>> ptlParamMap = getPtlParamMap(ptlInd, indMap);
-                paraCond = createCondition(paramMap, mapData, ptlParamMap);
-            }
-        }
-        final Map<String, Map<String, IValue<Object>>> paraList = paraCond;
-        int type = CommonUtil.handleByLock(() -> {
-            String uuid =  String.valueOf(System.currentTimeMillis());
-            mapData.put("seqNo", uuid);
-            IndicatorParamValService service = getParamValSrv();
-            // 取得所有指标参数的值
-            Map<String, Map<String, IValue<Object>>> paraValMap = service.getParamVal(
-                paraList);
-            // 若指标参数值未初始化到Redis则抛出异常
-            if (CollectionUtils.isEmpty(paraValMap)) {
-                logger.error(LOG_NO_IND_VAL);
-                return -1;
-            }
-            // 添加预占参数信息
-            OccupyRelParam newOcpRelParam = new OccupyRelParam();
-            Map<String, IOcpRelParamItem> ocpPmItem = new HashMap<>();
-            
-            newOcpRelParam.setItems(ocpPmItem);
-            // 计算参数值
-            Map<String, Map<String, IValue<Object>>> newValMap = calcParamVal(eveList,
-                paraValMap, newOcpRelParam, details, mapData);
-            // 更新Redis
-            service.setParamVal(newValMap);
-            newOcpRelParam.setOccupyCode((String)mapData.get(EVENT_ID));
-            // 类型
-            String eventType = (String)mapData.get(EVENT_TYPE);
-            // 预占/实占类型
-            newOcpRelParam.setOccupyType(StringUtil.equals(eventType, "0") ? PRE_OCCUPY : REL_OCCUPY);
-            // 预占/实占参数信息列表
-            newOcpRelParam.setItems(ocpPmItem);
-            // 更新预占/实占信息
-            setOccupyRelParam(newOcpRelParam);
-            return 0;
         });
-        // 参数计算明细
-        if (type == 0) {
-            freshDetail(details, paramMap);
-            saveDetails(details, mapData, occupyCode);
-            resMap.put("PARA_VAL_DETAILS", details);
-        }
+        return tempMap;
     }
 
     /**
@@ -823,25 +1255,13 @@ public class CalcOccupyInfoService {
      * @param paraValMap 参数值列表
      */
     protected Map<String, Map<String, IValue<Object>>> calcValWithoutEvt(Set<String> paraIdList, List<IEvent> eveList, Map<String, Map<String, IValue<Object>>> paraValMap){
-    	Map<String, Map<String, IValue<Object>>> tempMap = new HashMap<>();
-    	paraValMap.entrySet().forEach(en->{
-    		// 参数代码
-            String paraCode = en.getKey();
-            // 参数该粒度没有被影响，但需要参与计算且其它粒度被影响时
-            String pCd = StringUtil.substring(paraCode, 0, StringUtil.indexOf(paraCode, GlobalConstant.COLON));
-            if (!paraIdList.contains(paraCode) && (
-                   paraIdList.contains(pCd + GlobalConstant.COLON + BussinessDictCodeListRds.参数粒度_买入.getValue())
-                || paraIdList.contains(pCd + GlobalConstant.COLON + BussinessDictCodeListRds.参数粒度_卖出.getValue())
-                || paraIdList.contains(pCd + GlobalConstant.COLON + BussinessDictCodeListRds.参数粒度_实时.getValue()))) {
-            	tempMap.put(paraCode,en.getValue());
-            }
-    	});
+        Map<String, Map<String, IValue<Object>>> tempMap = filter(paraIdList, paraValMap);
+        if (CollectionUtils.isEmpty(tempMap)) {
+            return paraValMap;
+        }
         Map<String, Map<String, IValue<Object>>> newValMap = new HashMap<>();
         newValMap.putAll(paraValMap);
-    	if (CollectionUtils.isEmpty(tempMap)) {
-            return newValMap ;
-    	}
-    	forEachEvent(eveList, epr -> {
+        forEachEvent(eveList, epr -> {
             // 参数代码
             String paraCode = epr.getParaCode();
             // 关系类型
@@ -852,12 +1272,9 @@ public class CalcOccupyInfoService {
             tempMap.entrySet().forEach(en->{
                 String tempCode = en.getKey();
                 String pCd2 = StringUtil.substring(tempCode, 0, StringUtil.indexOf(tempCode, GlobalConstant.COLON));
-                if (!StringUtil.equals(pCd2, pCd)) {
-                	return;
-                }
                 // Map<指标参数值Redis识别域, 指标参数值>
                 Map<String, IValue<Object>> valMap = en.getValue();
-                if (CollectionUtils.isEmpty(valMap)) {
+                if (!StringUtil.equals(pCd2, pCd) || CollectionUtils.isEmpty(valMap)) {
                     return;
                 }
                 // Map<指标参数值Redis识别域, 指标参数值>
@@ -866,52 +1283,17 @@ public class CalcOccupyInfoService {
                     String key = item.getKey();
                     // 参数值
                     IValue<Object> paraVal = item.getValue();
-                    //----zxjjpei 更改类型------------------
                     BigDecimal par = paraVal == null ? BigDecimal.ZERO : (BigDecimal) paraVal.value();
                     IValue<Object> newVal = new Value<>(
                         str -> StringUtil.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
                     // 指标参数值计算
-                    newVal.set(CommonUtil.math(par, val, relType));
+                    newVal.set(CommonUtil.math(par, epr.doFormula(val), relType));
                     temp.put(key, newVal);
                 });
                 newValMap.put(tempCode, temp);
             });
         });
-    	return newValMap;
-    }
-
-    /**
-     * 根据参数信息构建参数值查询条件
-     * 
-     * @param paramMap 参数信息
-     * @param mapData 接口输入
-     * @return 参数值查询条件
-     * @see
-     * @since 1.0
-     */
-    private Map<String, Map<String, IValue<Object>>> createParaCond(Map<String, IParam> paramMap,
-                                                                        Map<String, Object> mapData) {
-        Map<String, Map<String, IValue<Object>>> resList = new HashMap<>();
-        paramMap.entrySet().forEach(en -> {
-            // 指标参数代码
-            String paraCode = en.getKey();
-            // 指标参数信息
-            IParam param = en.getValue();
-            if (param != null
-                && !CommonUtil.isType(param.getParaDisplayType(),
-                    BussinessDictCodeListRds.指标参数实现类型_类名)
-                && !CommonUtil.isType(param.getParaDisplayType(),
-                    BussinessDictCodeListRds.指标参数实现类型_固定值)) {
-                // Redis存储识别域
-                String[] rdsFields = param.getRedisFieldArr();
-                // 指标参数值Redis识别域
-                String field = getFiled(rdsFields, mapData);
-                Map<String, IValue<Object>> map = new HashMap<>();
-                map.put(field, null);
-                resList.put(paraCode, map);
-            }
-        });
-        return resList;
+        return newValMap;
     }
 
     /**
@@ -922,7 +1304,7 @@ public class CalcOccupyInfoService {
      * @see
      * @since 1.0
      */
-    public String getTimePoint(Map<String, Object> mapData) {
+    protected String getTimePoint(Map<String, Object> mapData) {
         String eventType = (String)mapData.get(EVENT_TYPE);
         String res = getTimePoint(eventType);
         mapData.putIfAbsent(TIME_POINT, res);
@@ -937,7 +1319,7 @@ public class CalcOccupyInfoService {
      * @see
      * @since 1.0
      */
-    public String getTimePoint(String eventType) {
+    protected String getTimePoint(String eventType) {
         if (StringUtil.equals(eventType, "0")) {
             return BussinessDictCodeListRds.监督时分_委托监控.getValue();
         }
@@ -958,8 +1340,8 @@ public class CalcOccupyInfoService {
      * @see
      * @since 1.0
      */
-    public void checkTpAndIndivAd(Map<String, IIndicator> indMap, Map<String, Object> mapData,
-                                  IPtlIndicator ptlInd) {
+    protected void checkTpAndIndivAd(Map<String, IIndicator> indMap, Map<String, Object> mapData,
+                                     IPtlIndicator ptlInd) {
         // 事件时点
         String timePoint = getTimePoint(mapData);
         // 资产代码
@@ -993,7 +1375,16 @@ public class CalcOccupyInfoService {
         });
     }
 
-    public void checkTimePoint(String key, IIndicator ind, Set<String> indList, String timePoint) {
+    /**
+     * 校验监督时点
+     * 
+     * @param key 指标代码
+     * @param ind 指标信息
+     * @param indList 指标列表
+     * @param timePoint 监督时点
+     */
+    protected void checkTimePoint(String key, IIndicator ind, Set<String> indList,
+                                  String timePoint) {
         // 指标监督时点
         String tp = ind.getTimePoint();
         // 当指标监督时点不符合事件时点时，该指标不参与计算
@@ -1009,11 +1400,9 @@ public class CalcOccupyInfoService {
      * @param indList 指标列表
      * @param ptlCode 组合(包)代码
      * @param assetCode 剔除的资产代码
-     * @see
-     * @since 1.0
      */
-    public void checkIndividAstDel(IIndicator ind, Set<String> indList, String ptlCode,
-                                   String assetCode) {
+    protected void checkIndividAstDel(IIndicator ind, Set<String> indList, String ptlCode,
+                                      String assetCode) {
         // 取得剔除资产代码信息
         Set<String> tpList = ind.getPtlIndividAstDel(ptlCode);
         // 若目标资产在剔除的列表中，则删除该组合与指标的关系
@@ -1028,10 +1417,8 @@ public class CalcOccupyInfoService {
      * @param ocpCode 接口输入报文体
      * @param type 预占/实占类型
      * @return 预占/实占信息
-     * @see
-     * @since 1.0
      */
-    public IOccupyRelParam getOccupy(String ocpCode, int type) {
+    protected IOccupyRelParam getOccupy(String ocpCode, int type) {
         // 预占实占参数信息
         IOccupyRelParam ocpRelParam = null;
         if (!StringUtil.isEmpty(ocpCode)) {
@@ -1041,46 +1428,12 @@ public class CalcOccupyInfoService {
         return ocpRelParam;
     }
 
-    public List<IRedisHash<String, String, IValue<Object>>> createHashList(Set<String> paraIdList,
-                                                                               IPtlIndicator ptlInd,
-                                                                               Map<String, IParam> paramMap,
-                                                                               Map<String, Object> mapData) {
-        List<IRedisHash<String, String, IValue<Object>>> tList = new ArrayList<>();
-        String ptlCode = ptlInd.getPtlCode();
-        paraIdList.forEach(str -> {
-            // 指标参数信息
-            IParam para = paramMap.get(str);
-            if (para != null && !CommonUtil.isType(para.getParaDisplayType(),
-                BussinessDictCodeListRds.指标参数实现类型_类名)) {
-                mapData.put(PORTFOLIOCODE, ptlCode);
-                tList.add(createHash(str, para, mapData));
-                ptlInd.getPtlBagIdList().keySet().forEach(ptlBag -> {
-                    mapData.put(PORTFOLIOCODE, ptlBag);
-                    tList.add(createHash(str, para, mapData));
-                });
-            }
-        });
-        return tList;
-    }
-
-    private IRedisHash<String, String, IValue<Object>> createHash(String paramId, IParam para,
-                                                                      Map<String, Object> mapData) {
-        // 指标参数值Redis识别域
-        String field = getFiled(para.getRedisFieldArr(), mapData);
-        RedisHash<String, String, IValue<Object>> hash = new RedisHash<>();
-        hash.setKey(paramId);
-        hash.setField(field);
-        return hash;
-    }
-
     /**
      * 判断指标趋势
      * 
      * @param ind 指标列表
-     * @see
-     * @since 1.0
      */
-    public void checkIndTrend(IIndicator ind) {
+    protected void checkIndTrend(IIndicator ind) {
         String cond = ind.getLimitCond();
         Map<String, IIndicatorResult> resMap = ind.getIndicatorResult();
         if (CollectionUtils.isEmpty(resMap)) {
@@ -1110,11 +1463,9 @@ public class CalcOccupyInfoService {
      * @param ptlInd 组合关联指标信息
      * @param indMap 指标信息Map <b>Map<指标代码,指标信息></b>
      * @return 组合与相关的指标参数索引
-     * @see
-     * @since 1.0
      */
-    public Map<String, Map<String, String>> getPtlParamMap(IPtlIndicator ptlInd,
-                                                           Map<String, IIndicator> indMap) {
+    protected Map<String, Map<String, String>> getPtlParamMap(IPtlIndicator ptlInd,
+                                                              Map<String, IIndicator> indMap) {
         // 返回值
         Map<String, Map<String, String>> ptlParamMap = new HashMap<>();
         // 组合关联指标列表Map<组合代码,List<指标代码>>
@@ -1148,20 +1499,18 @@ public class CalcOccupyInfoService {
      * 
      * @param ptlInd 组合关联指标信息 {@link IPtlIndicator}
      * @param indMap 指标信息 <b>Map<指标代码, 指标信息></b>
+     * @param mapData 报文
      * @param pValMap 指标参数值 <b>Map<指标参数代码, Map<指标参数值Redis识别域, 指标参数值>></b>
      * @param isOld 是否原指标值
-     * @throws Exception 异常
-     * @see
-     * @since 1.0
      */
-    public void calcIndicator(IPtlIndicator ptlInd, Map<String, IIndicator> indMap,
-                              Map<String, Object> mapData,
-                              Map<String, Map<String, Object>> pValMap, boolean isOld) {
+    protected void calcIndicator(IPtlIndicator ptlInd, Map<String, IIndicator> indMap,
+                                 Map<String, Object> mapData,
+                                 Map<String, Map<String, Object>> pValMap, boolean isOld) {
         calcService.calcIndicator(ptlInd, indMap, mapData, pValMap, isOld);
     }
 
-    public Map<String, Map<String, Object>> parseParaVal(Map<String, Map<String, String>> ptlParamMap,
-                                                         Map<String, Map<String, IValue<Object>>> valMap) {
+    protected Map<String, Map<String, Object>> parseParaVal(Map<String, Map<String, String>> ptlParamMap,
+                                                            Map<String, Map<String, IValue<Object>>> valMap) {
         // 返回值 Map<组合代码, Map<指标参数, 指标参数值>>
         Map<String, Map<String, Object>> pValMap = new HashMap<>();
         // 遍历组合与相关指标参数索引
@@ -1192,11 +1541,10 @@ public class CalcOccupyInfoService {
      * @param mapData 委托/交易信息
      * @param calendar 日历信息
      * @return 风险事件列表
-     * @see
-     * @since 1.0
      */
-    public List<IEvent> getEvent(Map<String, Object> mapData, ICalendar calendar) {
-        return rskEventSrv.matchEvent(mapData, calendar);
+    protected List<IEvent> getEvent(Map<String, Object> mapData, ICalendar calendar) {
+        return getFromLocalOrRedis(mapData, EVENT_ID,
+            eventId -> rskEventSrv.matchEvent(mapData, calendar));
     }
 
     /**
@@ -1204,43 +1552,10 @@ public class CalcOccupyInfoService {
      * 
      * @param mapData 委托/交易信息
      * @return 组合关联指标信息
-     * @see
-     * @since 1.0
      */
-    public IPtlIndicator getPtlIndicator(Map<String, Object> mapData) {
-//        String ptlCode = (String)mapData.get(PORTFOLIOCODE);
-//        return ptlIndService.getPtlIndicator(ptlCode);
-        List<String> fieldList = new ArrayList<>();
-        Map<String,Object> ptlMap = new HashMap<>();
-        String ptlCode = (String)mapData.get(PORTFOLIOCODE);
-        fieldList.add(ptlCode);
-        // 交易对手对应的组合关联指标情况
-        String issuer = (String)mapData.get(COUNTERID);
-        if (!StringUtil.isEmpty(issuer)) {
-            fieldList.add(issuer);
-        }
-        Map<String, IPtlIndicator> resultMap = ptlIndService.getMapFromRedis(
-            RedisKeyEnum.组合关联指标配置.key(), fieldList);
-        IPtlIndicator result = resultMap.get(ptlCode);
-        IPtlIndicator issPtl = resultMap.get(issuer);
-        // 有相同组合包则该组合包指标不进行试算，删除组合包
-        if (issPtl != null && result != null && issPtl.getPtlBagIdList() != null
-            && result.getPtlBagIdList() != null && result.getPtlIndicator() != null) {
-            Map<String, Object> resMap = result.getPtlBagIdList();
-            issPtl.getPtlBagIdList().entrySet().forEach(en -> {
-                String key = en.getKey();
-                resMap.remove(key);
-                result.getPtlIndicator().remove(key);
-            });
-        }
-        if (result != null) {
-            ptlMap.put(result.getPtlCode(), result.getPtlName());
-            if (result.getPtlBagIdList() != null) {
-                ptlMap.putAll(result.getPtlBagIdList());
-            }
-        }
-        setServiceInfo("PTL_NAME", ptlMap);
-        return result;
+    protected IPtlIndicator getPtlIndicator(Map<String, Object> mapData) {
+        return getFromLocalOrRedis(mapData, PORTFOLIOCODE,
+            ptlCode -> ptlIndService.getPtlIndicator(ptlCode));
     }
 
     /**
@@ -1248,10 +1563,8 @@ public class CalcOccupyInfoService {
      * 
      * @param ptlIndicator 组合关联指标信息
      * @return 组合关联的所有指标代码
-     * @see
-     * @since 1.0
      */
-    public Set<String> getIndIdList(IPtlIndicator ptlIndicator) {
+    protected Set<String> getIndIdList(IPtlIndicator ptlIndicator) {
         if (ptlIndicator == null) {
             return new HashSet<>();
         }
@@ -1273,10 +1586,8 @@ public class CalcOccupyInfoService {
      * 
      * @param indIdList 指标代码列表
      * @return 指标信息
-     * @see
-     * @since 1.0
      */
-    public Map<String, IIndicator> getIndicator(Set<String> indIdList) {
+    protected Map<String, IIndicator> getIndicator(Set<String> indIdList) {
         return indService.getIndicatorMap(indIdList);
     }
 
@@ -1285,10 +1596,8 @@ public class CalcOccupyInfoService {
      * 
      * @param eveList 风险事件列表
      * @return 参数列表
-     * @see
-     * @since 1.0
      */
-    public Set<String> getParamIdList(List<IEvent> eveList) {
+    protected Set<String> getParamIdList(List<IEvent> eveList) {
         // 指标中的所有参数代码
         Set<String> paraIdList = new HashSet<>();
         // 风险事件关联的所有指标参数代码
@@ -1301,33 +1610,31 @@ public class CalcOccupyInfoService {
      * 
      * @param indMap 指标列表
      * @param paraIdList 风险事件相关参数列表
-     * @see
-     * @since 1.0
+     * @param ptlIndMap 组合关联指标
      */
-    public void unionParamId(Map<String, IIndicator> indMap, Set<String> paraIdList,
-                             Map<String, Set<String>> ptlIndMap) {
+    protected void unionParamId(Map<String, IIndicator> indMap, Set<String> paraIdList,
+                                Map<String, Set<String>> ptlIndMap) {
         Set<String> indCodeSet = new HashSet<>();
-        // 参数代码列表长度
-        int size = paraIdList.size();
+        Set<String> temp = new HashSet<>();
         for (IIndicator ind : indMap.values()) {
-            // 指标参数列表
-            List<String> indPList = ind.getIndParamList();
-            // 指标参数列表长度
-            int lSize = indPList.size();
-            paraIdList.addAll(indPList);
-            // 添加后参数代码列表长度
-            int pSize = paraIdList.size();
-            // 去除未受影响的指标
-            // 原长度 + 添加元素的长度 = 添加后的长度 （没有相同的数据）
-            if (size + lSize == pSize) {
-                // 删除未受影响的指标
-                indCodeSet.add(ind.getField());
-                // 删除未受影响的指标参数
-                paraIdList.removeAll(indPList);
+            if (StringUtil.isNotEmpty(ind)) {
+                // 指标参数列表
+                List<String> indPList = ind.getIndParamList();
+                if (StringUtil.isEmptyList(indPList)) {
+                    continue;
+                }
+                // 判断指标参数是否受到影响
+                if (CollectionUtils.containsAny(paraIdList, indPList)) {
+                    temp.addAll(indPList);
+                }
+                else {
+                    // 删除未受影响的指标
+                    indCodeSet.add(ind.getField());
+                }
             }
-            else {
-                size = pSize;
-            }
+        }
+        if (!CollectionUtils.isEmpty(temp)) {
+            paraIdList.addAll(temp);
         }
         if (!CollectionUtils.isEmpty(indCodeSet) && !CollectionUtils.isEmpty(ptlIndMap)) {
             indCodeSet.forEach(code -> ptlIndMap.entrySet().forEach(set -> {
@@ -1342,10 +1649,8 @@ public class CalcOccupyInfoService {
      * 
      * @param paraIdList 指标参数代码
      * @return 指标参数信息 Map<指标参数代码,指标参数信息>
-     * @see
-     * @since 1.0
      */
-    public Map<String, IParam> getParam(Set<String> paraIdList) {
+    protected Map<String, IParam> getParam(Set<String> paraIdList) {
         return indParamSrv.getParamList(paraIdList);
     }
 
@@ -1355,10 +1660,8 @@ public class CalcOccupyInfoService {
      * @param ocpCode 预占/实占代码
      * @param type 预占/实占类型
      * @return 预占/实占参数信息
-     * @see
-     * @since 1.0
      */
-    public IOccupyRelParam getOccupyRelParam(String ocpCode, int type) {
+    protected IOccupyRelParam getOccupyRelParam(String ocpCode, int type) {
         return ocpService.getOccupyRelParamMap(ocpCode, type);
     }
 
@@ -1367,10 +1670,8 @@ public class CalcOccupyInfoService {
      * 
      * @param ocpRelParam 预占/实占代码
      * @return 预占/实占参数信息
-     * @see
-     * @since 1.0
      */
-    public void setOccupyRelParam(IOccupyRelParam ocpRelParam) {
+    protected void setOccupyRelParam(IOccupyRelParam ocpRelParam) {
         ocpService.saveToRedis(ocpRelParam);
     }
 
@@ -1379,10 +1680,8 @@ public class CalcOccupyInfoService {
      * 
      * @param calendarId 日历编号
      * @return 日历信息
-     * @see
-     * @since 1.0
      */
-    public ICalendar getCalendar(String calendarId) {
+    protected ICalendar getCalendar(String calendarId) {
         return calendarSrc.getCalendar(calendarId);
     }
 
@@ -1391,8 +1690,6 @@ public class CalcOccupyInfoService {
      * 
      * @param eveList 风险事件 <b>List<{@link IEvent}></b>
      * @param var1 处理逻辑
-     * @see
-     * @since 1.0
      */
     private void forEachEvent(List<IEvent> eveList, Consumer<IEventParaRel> var1) {
         eveList.forEach(eve -> {
@@ -1410,12 +1707,10 @@ public class CalcOccupyInfoService {
      * @param mapData 委托/交易信息
      * @param ptlParamMap 组合相关的指标参数 <b>Map<组合代码, Map<指标参数代码, 指标参数值Redis识别域>></b>
      * @return 指标参数查询条件
-     * @see
-     * @since 1.0
      */
-    public Map<String, Map<String, IValue<Object>>> createCondition(Map<String, IParam> paramMap,
-                                                                        Map<String, Object> mapData,
-                                                                        Map<String, Map<String, String>> ptlParamMap) {
+    protected Map<String, Map<String, IValue<Object>>> createCondition(Map<String, IParam> paramMap,
+                                                                       Map<String, Object> mapData,
+                                                                       Map<String, Map<String, String>> ptlParamMap) {
         // 查询条件列表
         Map<String, Map<String, IValue<Object>>> paraValList = new HashMap<>();
         // 指标参数信息
@@ -1423,9 +1718,14 @@ public class CalcOccupyInfoService {
             IParam para = paramMap.get(pEn.getKey());
             String pCode = pEn.getKey();
             if (para != null
-                && !CommonUtil.isType(para.getParaDisplayType(), BussinessDictCodeListRds.指标参数实现类型_类名)
-                && !para.isEnumType()) {
-                String field = getFiled(para.getRedisFieldArr(), mapData);
+                && para.isUpRedis()
+                && CommonUtil.isType(para.getParamMathType(),
+                    BussinessDictCodeListRds.指标参数计算方式_REDIS)
+                && CommonUtil.isType(para.getParaDisplayType(),
+                    BussinessDictCodeListRds.指标参数实现类型_SQL)
+                && !para.isEnumType() && para.getRedisFieldArr() != null
+                && para.getRedisFieldArr().length > 0) {
+                String field = getField(para.getRedisFieldArr(), mapData);
                 // 指标参数值Redis识别域
                 Map<String, IValue<Object>> map = paraValList.getOrDefault(pEn.getKey(),
                     new HashMap<>());
@@ -1445,10 +1745,15 @@ public class CalcOccupyInfoService {
                 String pCode = pEn.getKey();
                 // 指标参数信息
                 IParam para = paramMap.get(pCode);
-                if (para != null && !CommonUtil.isType(para.getParaDisplayType(),
-                    BussinessDictCodeListRds.指标参数实现类型_类名) && !para.isEnumType()) {
+                if (para != null && para.isUpRedis()
+                    && CommonUtil.isType(para.getParamMathType(),
+                        BussinessDictCodeListRds.指标参数计算方式_REDIS)
+                    && CommonUtil.isType(para.getParaDisplayType(),
+                        BussinessDictCodeListRds.指标参数实现类型_SQL)
+                    && !para.isEnumType()
+                    && para.getRedisFieldArr() != null && para.getRedisFieldArr().length > 0) {
                     // 指标参数值Redis识别域
-                    String field = getFiled(para.getRedisFieldArr(), mapData);
+                    String field = getField(para.getRedisFieldArr(), mapData);
                     pEn.setValue(field);
                     Map<String, IValue<Object>> map = paraValList.getOrDefault(pCode,
                         new HashMap<>());
@@ -1461,243 +1766,6 @@ public class CalcOccupyInfoService {
     }
 
     /**
-     * 根据风险事件计算指标参数
-     * 
-     * @param eveList 风险事件 List<{@link IEvent}>
-     * @param paraValMap 指标参数值 <b>Map<指标参数代码, Map<指标参数值Redis识别域, 指标参数值>></b>
-     * @param ocpRelParamObj 预占实占信息
-     * @param details 计算流水明细列表
-     * @see
-     * @since 1.0
-     */
-    protected Map<String, Map<String, IValue<Object>>> calcParamVal(List<IEvent> eveList,
-                                                                        Map<String, Map<String, IValue<Object>>> paraValMap,
-                                                                        IOccupyRelParam ocpRelParamObj,
-                                                                        List<RskIndicatorParaCalcdetail> details) {
-        Map<String, IOcpRelParamItem> ocpPmItemMap = ocpRelParamObj == null ? new HashMap<>() : ocpRelParamObj.getItems();
-        // 预占过的指标参数列表
-        Set<String> indSet = CollectionUtils.isEmpty(
-            ocpPmItemMap) ? new HashSet<>() : ocpPmItemMap.keySet();
-        // 返回值 Map<指标参数代码, Map<指标参数值Redis识别域, 指标参数值>>
-        Map<String, Map<String, IValue<Object>>> newValMap = new HashMap<>();
-        newValMap.putAll(paraValMap);
-        forEachEvent(eveList, epr -> {
-            // 参数代码
-            String paraCode = epr.getParaCode();
-            // 当参数代码在预占过的指标参数列表中，则参数不计算
-            if (indSet.contains(paraCode)) {
-                return;
-            } 
-            // 关系类型
-            String relType = epr.getRelType();
-            // add by zhangrui1 start
-            // 关系预算的对象值
-//          BigDecimal val = epr.getRelValue();
-            BigDecimal val1 = epr.getRelValue();
-            // 占比金额
-            if (StringUtil.equals(epr.getRelItem(), MIXAMOUNTKEY)) {
-                val1 = getMixAmount();
-            } 
-            BigDecimal val = val1;
-            // add by zhangrui1 end
-            // Map<指标参数值Redis识别域, 指标参数值>
-            Map<String, IValue<Object>> valMap = paraValMap.get(paraCode);
-            if (CollectionUtils.isEmpty(valMap)) {
-                return;
-            }
-            // Map<指标参数值Redis识别域, 指标参数值>
-            Map<String, IValue<Object>> temp = new HashMap<>();
-            HashSet<String> hs = new HashSet<>();
-            valMap.entrySet().forEach(en -> {
-                String key = en.getKey();
-                // 参数值
-                IValue<Object> paraVal = en.getValue();
-                //----zxjjpei 更改类型------------------
-                //若是禁投类或日期类处理
-                if(StringUtil.isNotEmpty(paraVal)&&paraVal.value() instanceof String){
-                    String parStr=paraVal.value().toString();
-                    IValue<Object> newVal = new Value<>(
-                            str -> StringUtil.isEmpty(str) ? StringUtil.EMPTY : str.toString());
-                    newVal.set(parStr);
-                    temp.put(key, newVal);
-                    return;
-                }
-                BigDecimal par = paraVal == null ? BigDecimal.ZERO : (BigDecimal)paraVal.value();
-                IValue<Object> newVal = new Value<>(
-                    str -> StringUtil.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
-                // 指标参数值计算
-                newVal.set(CommonUtil.math(par, val, relType));
-                temp.put(key, newVal);
-                hs.add(key);
-                // 计算明细
-                //----zxjjpei 更改类型------------------
-                details.add(createDetail(paraCode, key, par, (BigDecimal)newVal.value(), CommonUtil.math(BigDecimal.ZERO, val, relType)));
-            });
-            newValMap.put(paraCode, temp);
-            //----add by zxjjpei 20200401 检查是否需要更新redis start----
-            if(!checkUpRdsParam(paraCode)){
-                return;
-            }
-            //----add by zxjjpei 20200401 检查是否需要更新redis end----
-            OcpRelParamItem ocpPmItem = new OcpRelParamItem();
-            // 预占/实占的对象
-            ocpPmItem.setOccupyItem(epr.getRelItem());
-            // 预占/实占操作符号
-            ocpPmItem.setOccupyOper(relType);
-            // 预占/实占金额
-            ocpPmItem.setOccupyVal(val);
-            // 指标参数编号
-            ocpPmItem.setParamCode(paraCode);
-            // 参数值Redis存储Field
-            ocpPmItem.setRedisFields(hs);
-            ocpPmItemMap.put(paraCode, ocpPmItem);
-        });
-        // 记录未变更的参数值
-        paraValMap.entrySet().forEach(en->{
-            String paraCode = en.getKey();
-            // 参数值
-            Map<String,IValue<Object>> paraMap = en.getValue();
-            if (!containsPara(details,paraCode) && paraMap != null) {
-                paraMap.entrySet().forEach(pMap -> {
-                    String key = pMap.getKey();
-                    // 参数值
-                    IValue<Object> paraVal = pMap.getValue();
-                    //----zxjjpei 更改类型------------------
-                    if(StringUtil.isNotEmpty(paraVal)&&paraVal.value() instanceof String){
-                        return;
-                    }
-                    BigDecimal par = paraVal == null ? BigDecimal.ZERO : (BigDecimal)paraVal.value();
-                    // 计算明细
-                    details.add(createDetail(paraCode, key, par, par, BigDecimal.ZERO));
-                });
-            }
-        });
-        return newValMap;
-    }
-
-    /**
-     * 根据风险事件计算指标参数
-     * 
-     * @param eveList 风险事件 List<{@link IEvent}>
-     * @param paraValMap 指标参数值 <b>Map<指标参数代码, Map<指标参数值Redis识别域, 指标参数值>></b>
-     * @param ocpRelParamObj 预占实占信息
-     * @param details 计算流水明细列表
-     * @see
-     * @since 1.0
-     */
-    protected Map<String, Map<String, IValue<Object>>> calcParamVal(List<IEvent> eveList,
-                                                                        Map<String, Map<String, IValue<Object>>> paraValMap,
-                                                                        IOccupyRelParam ocpRelParamObj,
-                                                                        List<RskIndicatorParaCalcdetail> details,Map<String, Object> mapData) {
-        Map<String, IOcpRelParamItem> ocpPmItemMap = ocpRelParamObj == null ? new HashMap<>() : ocpRelParamObj.getItems();
-        // 预占过的指标参数列表
-        Set<String> indSet = CollectionUtils.isEmpty(
-            ocpPmItemMap) ? new HashSet<>() : ocpPmItemMap.keySet();
-        // 返回值 Map<指标参数代码, Map<指标参数值Redis识别域, 指标参数值>>
-        Map<String, Map<String, IValue<Object>>> newValMap = new HashMap<>();
-        newValMap.putAll(paraValMap);
-        forEachEvent(eveList, epr -> {
-            // 参数代码
-            String paraCode = epr.getParaCode();
-            // 当参数代码在预占过的指标参数列表中，则参数不计算
-            if (indSet.contains(paraCode)) {
-                return;
-            } 
-            // 关系类型
-            String relType = epr.getRelType();
-            // add by zhangrui1 start
-            // 关系预算的对象值
-//          BigDecimal val = epr.getRelValue();
-            BigDecimal val1 = epr.getRelValue();
-            // 占比金额
-            if (StringUtil.equals(epr.getRelItem(), MIXAMOUNTKEY)) {
-                val1 = getMixAmount();
-            }
-            if (StringUtil.isNotEmpty(mapData.get(PS)) 
-                && mapData.get(PS).toString().equals(DictCodeList.交易方向_产品认购.getValue())
-                && indReplaceList.contains(paraCode.substring(0, paraCode.indexOf(":")==-1?1:paraCode.indexOf(":")))) {
-                if (StringUtil.isNotEmpty(mapData.get("ocpStatus")) 
-                && mapData.get("ocpStatus").toString().equals("1")) {
-                    val1 = BigDecimal.ZERO;
-                } 
-            }
-            BigDecimal val = val1;
-            // add by zhangrui1 end
-            // Map<指标参数值Redis识别域, 指标参数值>
-            Map<String, IValue<Object>> valMap = paraValMap.get(paraCode);
-            if (CollectionUtils.isEmpty(valMap)) {
-                return;
-            }
-            // Map<指标参数值Redis识别域, 指标参数值>
-            Map<String, IValue<Object>> temp = new HashMap<>();
-            HashSet<String> hs = new HashSet<>();
-            valMap.entrySet().forEach(en -> {
-                String key = en.getKey();
-                // 参数值
-                IValue<Object> paraVal = en.getValue();
-                //----zxjjpei 更改类型------------------
-                //若是禁投类或日期类处理
-                if(StringUtil.isNotEmpty(paraVal)&&paraVal.value() instanceof String){
-                    String parStr=paraVal.value().toString();
-                    IValue<Object> newVal = new Value<>(
-                            str -> StringUtil.isEmpty(str) ? StringUtil.EMPTY : str.toString());
-                    newVal.set(parStr);
-                    temp.put(key, newVal);
-                    return;
-                }
-                BigDecimal par = paraVal == null ? BigDecimal.ZERO : (BigDecimal)paraVal.value();
-                IValue<Object> newVal = new Value<>(
-                    str -> StringUtil.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
-                // 指标参数值计算
-                newVal.set(CommonUtil.math(par, val, relType));
-                temp.put(key, newVal);
-                hs.add(key);
-                // 计算明细
-                //----zxjjpei 更改类型------------------
-                details.add(createDetail(paraCode, key, par, (BigDecimal)newVal.value(), CommonUtil.math(BigDecimal.ZERO, val, relType)));
-            });
-            //----add by zxjjpei 20200401 检查是否需要更新redis start----
-            if(!checkUpRdsParam(paraCode)){
-                return;
-            }
-            //----add by zxjjpei 20200401 检查是否需要更新redis end----
-            newValMap.put(paraCode, temp); 
-            OcpRelParamItem ocpPmItem = new OcpRelParamItem();
-            // 预占/实占的对象
-            ocpPmItem.setOccupyItem(epr.getRelItem());
-            // 预占/实占操作符号
-            ocpPmItem.setOccupyOper(relType);
-            // 预占/实占金额
-            ocpPmItem.setOccupyVal(val);
-            // 指标参数编号
-            ocpPmItem.setParamCode(paraCode);
-            // 参数值Redis存储Field
-            ocpPmItem.setRedisFields(hs);
-            ocpPmItemMap.put(paraCode, ocpPmItem);
-        });
-        // 记录未变更的参数值
-        paraValMap.entrySet().forEach(en->{
-            String paraCode = en.getKey();
-            // 参数值
-            Map<String,IValue<Object>> paraMap = en.getValue();
-            if (!containsPara(details,paraCode) && paraMap != null) {
-                paraMap.entrySet().forEach(pMap -> {
-                    String key = pMap.getKey();
-                    // 参数值
-                    IValue<Object> paraVal = pMap.getValue();
-                    //----zxjjpei 更改类型------------------
-                    if(StringUtil.isNotEmpty(paraVal)&&paraVal.value() instanceof String){
-                        return;
-                    }
-                    BigDecimal par = paraVal == null ? BigDecimal.ZERO : (BigDecimal)paraVal.value();
-                    // 计算明细
-                    details.add(createDetail(paraCode, key, par, par, BigDecimal.ZERO));
-                });
-            }
-        });
-        return newValMap;
-    }
-    /**
      * 构建计算明细
      * 
      * @param paraCode 参数代码
@@ -1708,7 +1776,7 @@ public class CalcOccupyInfoService {
      * @return 计算明细
      */
     private RskIndicatorParaCalcdetail createDetail(String paraCode, String key, BigDecimal oldOne, BigDecimal newOne, BigDecimal chgOne){
-    	// 计算明细
+        // 计算明细
         RskIndicatorParaCalcdetail detail = new RskIndicatorParaCalcdetail();
         int index = StringUtil.indexOf(paraCode, GlobalConstant.COLON);
         // 参数代码
@@ -1752,22 +1820,20 @@ public class CalcOccupyInfoService {
     }
 
     private boolean containsPara(List<RskIndicatorParaCalcdetail> details, String paraCode){
-    	if (StringUtil.isEmptyList(details)) {
-    		return false;
-    	}
-    	for(RskIndicatorParaCalcdetail detail:details) {
-    		if (detail != null && StringUtil.equals(paraCode, detail.getParaCode() + GlobalConstant.COLON + detail.getParaGranularity())) {
-    			return true;
-    		}
-    	}
-    	return false;
+        if (StringUtil.isEmptyList(details)) {
+            return false;
+        }
+        for (RskIndicatorParaCalcdetail detail : details) {
+            if (detail != null && StringUtil.equals(paraCode,
+                detail.getParaCode() + GlobalConstant.COLON + detail.getParaGranularity())) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    protected String getFiled(String[] redisFld, Map<String, Object> mapData) {
+    protected String getField(String[] redisFld, Map<String, Object> mapData) {
         StringBuilder builder = new StringBuilder();
-        if (!StringUtil.isNotEmpty(redisFld)) {
-            return StringUtil.EMPTY;
-        }
         for (int i = 0; i < redisFld.length; i++ ) {
             Object val = mapData.getOrDefault(redisFld[i], StringUtil.EMPTY);
             builder.append(GlobalConstant.COMMA).append(val);
@@ -1776,8 +1842,8 @@ public class CalcOccupyInfoService {
     }
 
     @SuppressWarnings("unchecked")
-    public void saveRskIsupTrial(Map<String, Object> response, Map<String, Object> mapData,
-                                 String occupyCode, Map<String, Object> resMap) {
+    protected void saveRskIsupTrial(Map<String, Object> response, Map<String, Object> mapData,
+                                    String occupyCode, Map<String, Object> resMap) {
         Object obj = response.get(RSK_LIST);
         List<RskIsupTrial> sendList = new ArrayList<>();
         if (obj != null) {
@@ -1797,6 +1863,8 @@ public class CalcOccupyInfoService {
                 info.setSupDate(dt);
                 // 监督值
                 info.setSupVal(getStrFromMap(map, KRIVALUE));
+                // 原值
+                info.setOldSupVal(getStrFromMap(map, OLDVALUE));
                 // 监督状态
                 info.setSupStat(getStrFromMap(map, KRISTATUS));
                 // 联合监督状态
@@ -1808,7 +1876,10 @@ public class CalcOccupyInfoService {
                 // 违规条件
                 info.setFoulCond(getStrFromMap(map, FORBIDDENLN));
                 // 流水号
-                info.setSeqNo((String) mapData.get("uuid"));
+                info.setSeqNo((String)mapData.get("uuid"));
+                // 资产代码
+                info.setAssetCode((String)mapData.get(ASSET_CODE));
+                // 设置创建人时间等
                 setUserDt(info);
                 sendList.add(info);
             });
@@ -1873,41 +1944,49 @@ public class CalcOccupyInfoService {
         // 禁止线
         temp.put(FORBIDDENLN, changeCond(indCellType,
             () -> limit != null ? limit.getFoulCond() : ind.getFoulCond()));
+        // 计算表达式
+        temp.put(KRIEXPR, res.getCalcExpr());
         // 指标计算值
         temp.put(KRIVALUE, CommonUtil.convertKriVal(res.getIndicatorVal(), ind));
         // 指标原值
         temp.put(OLDVALUE, CommonUtil.convertKriVal(res.getIndicatorOldVal(), ind));
         // 趋势
-        int inTrend = res.getIndicatorTrend();
-        String trendStr = "";
-        if (inTrend == 0) {
-            trendStr = "不变";
-        }
-        else {
-            trendStr = res.getIndicatorTrend() > 0 ? "向好" : "向坏";
-        }
-        temp.put(KRITREND, trendStr);
+        temp.put(KRITREND, trendStr(res.getIndicatorTrend()));
         Set<String> uniteList = ind.getPtlIndividUnite(ptlCode);
-        String uSts = res.getUniteStatus();
         String kriStatus = res.getIndStatus();
+        String uSts = kriStatus;
         // 指标状态
         temp.put(KRISTATUS, kriStatus);
         // 是否有联合指标设置
         boolean hasUnite = !CollectionUtils.isEmpty(uniteList);
-        // 有联合指标、且指标状态不是正常、且联合状态为空时
+        // 当存在某个指标状态超过整体状态且趋势向坏的指标时试算不通过
+        String rskStatus = (String)response.get(RSKSTATUS);
+        // 有联合指标时
         if (hasUnite) {
             uSts = checkStatus(kriStatus, uniteList, ptlCode, resMap);
             res.setUniteStatus(uSts);
             temp.put(UNITESTATUS, uSts);
-        } else {
-        	uSts = kriStatus;
         }
-        // 当存在某个指标状态超过整体状态且趋势向坏的指标时试算不通过
-        String rskStatus = (String)response.get(RSKSTATUS);
-        if (StringUtil.isNotEmpty(uSts) && uSts.compareTo(rskStatus) > 0 && res.getIndicatorTrend() < 0) {
-            response.put(RSKSTATUS, kriStatus);
+        if (StringUtil.isNotEmpty(uSts) && uSts.compareTo(rskStatus) > 0
+            && res.getIndicatorTrend() < 0) {
+            response.put(RSKSTATUS, uSts);
         }
         return temp;
+    }
+
+    /**
+     * 趋势
+     * 
+     * @param inTrend 趋势
+     * @return 趋势
+     */
+    private String trendStr(int inTrend) {
+        if (inTrend == 0) {
+            return "不变";
+        }
+        else {
+            return inTrend > 0 ? "向好" : "向坏";
+        }
     }
 
     /**
@@ -1916,8 +1995,6 @@ public class CalcOccupyInfoService {
      * @param indCellType 指标类型
      * @param fun 阈值条件取得接口
      * @return 解析结果
-     * @see
-     * @since 1.0
      */
     private String changeCond(String indCellType, Limit fun) {
         try {
@@ -1942,8 +2019,6 @@ public class CalcOccupyInfoService {
      * @param ptlCode 组合代码
      * @param resMap 指标列表
      * @return 指标联合设置判断结果
-     * @see
-     * @since 1.0
      */
     protected String checkStatus(String rskStatus, Set<String> indList, String ptlCode,
                                  Map<String, IIndicator> resMap) {
@@ -1963,6 +2038,17 @@ public class CalcOccupyInfoService {
         final String temp = min;
         resList.forEach(res -> res.setUniteStatus(temp));
         return min;
+    }
+
+    /**
+     * 取得实时资产规模信息
+     * 
+     * @param portfolioCode 组合代码
+     * @param assetCode 资产代码
+     * @return 实时资产规模信息
+     */
+    protected IProdAssetAmount getProdAssetAmount(String portfolioCode, String assetCode) {
+        return prodAssetAmtSrc.getProdAssetAmount(portfolioCode, assetCode);
     }
 
     /**
@@ -2040,23 +2126,20 @@ public class CalcOccupyInfoService {
     /**
      * 取得 资产基本信息
      * 
-     * @param assetCode 资产代码
+     * @param mapData 报文
      * @return 资产基本信息
-     * @see
-     * @since 1.0
      */
-    protected Map<String, Object> getAssetInfo(String assetCode) {
-        return assetInfoSrc.getAssetInfoAsMap(assetCode);
+    protected Map<String, Object> getAssetInfo(Map<String, Object> mapData) {
+        return getFromLocalOrRedis(mapData, ASSET_CODE,
+            assetCode -> assetInfoSrc.getAssetInfoAsMap(assetCode));
     }
 
     /**
      * 设置创建人时间等
      * 
      * @param info 数据
-     * @see
-     * @since 1.0
      */
-    public void setUserDt(BaseEntity info) {
+    protected void setUserDt(BaseEntity info) {
         String user = "system";
         // 创建人
         info.setCreateUser(user);
@@ -2068,27 +2151,8 @@ public class CalcOccupyInfoService {
         // 更新时间
         info.setUpdateTime(dt);
     }
-    
-    protected BigDecimal getMixAmount() {
-        return (BigDecimal) getServiceInfo(ASSET_AMT_VAL);
-    }
-    
-    public Object getServiceInfo(String key) {
-        return serviceInfo.get().get(key);
-    }
-    
-    protected boolean checkUpRdsParam(String paraCode){
-        boolean upRedis=true;
-        Map<String, IParam> newValParamMap=getParam(new HashSet<String>(Arrays.asList(paraCode)));
-        for(String key:newValParamMap.keySet()){
-            if (!newValParamMap.get(key).isUpRedis()) {
-                upRedis=false;
-            }
-        }
-        return upRedis;
-    }
-    
-    public void setServiceInfo(String key, Object info) {
-        serviceInfo.get().put(key, info);
+
+    public IndicatorTrendCalcService getIndTrendCalcSrc() {
+        return indTrendCalcSrc;
     }
 }

@@ -79,9 +79,9 @@
         	,{field:'tradeMarketText', sortField:'',width:130, title: 'TrdBondInvestTrade001.tradeMarket'}
         	,{field:'tradeMarketModeText',sortField:'TRADE_MARKET', width:120, title: 'TrdBondInvestTrade001.tradeMarketMode'}
         	,{field:'tradePlatText',sortField:'TRADE_PLAT', width:120, title: 'TrdBondInvestTrade001.tradePlat'}
-        	,{field:'tradeAmt',sortField:'TRADE_AMT', width:150, title: 'TrdBondInvestTrade001.tradeAmt', type: 'money'}
-            ,{field:'ownTradeAmt',type:'number', title: '本方券券面总额', width:150,sortField:"ownTradeAmt"}
-            ,{field:'integrateTradeAmt',type:'number', title: '融入券券面总额', width:150,sortField:"integrateTradeAmt"}
+        	,{field:'tradeAmt',sortField:'TRADE_AMT', width:150, digit: 4 , title: 'TrdBondInvestTrade001.tradeAmt1', type: 'money'}
+            ,{field:'ownTradeAmt',type:'number', title: 'TrdBondInvestTrade001.ownTradeAmt', width:150, digit: 4 ,sortField:"ownTradeAmt"}
+            ,{field:'integrateTradeAmt',type:'number', title: 'TrdBondInvestTrade001.integrateTradeAmt', width:150, digit: 4 , sortField:"integrateTradeAmt"}
         	,{field:'ccyText', sortField:'CCY',width:130, title: 'TrdBondInvestTrade001.ccy'}
             //  表格增加估值偏离度,净价by赵东东 2019.9.20 start
         	,{field:'deviation',sortField:'',width:200, title:'TrdBondInvestTrade001.deviation'}

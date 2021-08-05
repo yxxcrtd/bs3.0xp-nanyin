@@ -1,5 +1,7 @@
 package com.joyintech.tams.invest.trade.bondtostock.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 
 import com.joyintech.framework.constant.GlobalConstant;
@@ -76,7 +78,16 @@ public class TrdBondToStock001Service extends CommonExportService<TrdBondToStock
      */
     public Page<TrdBondToStock001Dto> findPage(Map<String, Object> pageParam) {
         setParam(pageParam);
-        return queryForPage(()->{trdBondToStockMapper.findPage(pageParam);});
+        //配置单位 edit by yeming 20210802 start
+        Page<TrdBondToStock001Dto> page = queryForPage(()->{trdBondToStockMapper.findPage(pageParam);});
+        for(TrdBondToStock001Dto dto:page.getRoot()){
+            if(dto.getShareAmt() != null) {
+                dto.setShareAmt(dto.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+        }
+        return page;
+        //配置单位 edit by yeming 20210802 end
+//        return queryForPage(()->{trdBondToStockMapper.findPage(pageParam);});
     }
 
     @Override

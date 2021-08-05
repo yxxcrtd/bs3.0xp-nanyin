@@ -50,8 +50,6 @@ import com.joyintech.tams.invest.common.riskinfrds.info.entity.IAssetInfo;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.AssetInfoRedisService;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.risktrialrds.RiskTrialComm;
-import com.joyintech.tams.invest.entrust.etrautomanagementaccount.dto.EtrAutoManagementAccountDto;
-import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 
 /**
@@ -305,21 +303,6 @@ public class EntrustRdsCommonAop {
         if (!isNeedPreoccupy() || args == null || args.length == 0) {
             return;
         }
-        // 自主专户指令的退回 在 模块内部特殊处理
-        if (args[0] instanceof EtrAutoManagementAccountDto){
-            return;
-        }
-        //债券一级指令不预占  add by zhangpei 20210118 start
-        if (args[0] instanceof  List<?>){
-            for (Object obj : (List<?>)args[0]){
-            	if(obj instanceof EtrBondFirstLBiddingDto){
-            		return;
-            	}
-            }
-        }else if (args[0] instanceof EtrBondFirstLBiddingDto) {
-        	return;
-		}
-        //债券一级指令不预占  add by zhangpei 20210118 end
         Map<String, Object> mapTrd = JsonUtils.object2Map(args[0]);
         // 如果是撤销的退回再提交直接退去，不需要调实占
         if (isRevokeOrDel(getOperateType(mapTrd)) || checkRevokeAction(mapTrd)) {
@@ -351,22 +334,12 @@ public class EntrustRdsCommonAop {
             return;
         }
         Object[] args = joinPoint.getArgs();
-        // 自主专户指令的更新 在 模块内部特殊处理
-        if (args[0] instanceof EtrAutoManagementAccountDto){
-            return;
-        }
-        //债券一级指令不预占  add by zhangpei 20210118 start
-        if (args[0] instanceof  List<?>){
-            for (Object obj : (List<?>)args[0]){
-            	if(obj instanceof EtrBondFirstLBiddingDto){
-            		return;
-            	}
-            }
-        }else if (args[0] instanceof EtrBondFirstLBiddingDto) {
-        	return;
-		}
-        //债券一级指令不预占  add by zhangpei 20210118 end
         Map<String, Object> mapTrd = JsonUtils.object2Map(args[0]);
+        // add by yzg 期货暂时不用风险 20201211 start
+        if(StringUtil.equals("F36", mapTrd.get("finprodType2"))) {
+        	return;
+        }
+        // add by yzg 期货暂时不用风险 20201211 end
         if (StringUtil.equals(getOperateType(mapTrd), BussinessConstant.SUBMIT)) {
             //如果是撤销的退回再提交直接退去，不需要调实占
             if (checkRevokeAction(mapTrd)) {
@@ -522,7 +495,7 @@ public class EntrustRdsCommonAop {
     /**
      * 如果是撤销的退回再提交直接退去，不需要调实占
      * 
-     * @param mapTrd
+     * @param workflowId
      * @return
      */
     private boolean checkRevokeAction(Map<String, Object> mapTrd) {
@@ -566,17 +539,6 @@ public class EntrustRdsCommonAop {
         if (!isNeedPreoccupy() || args == null || args.length < 1) {
             return;
         }
-        //债券一级指令不预占  add by zhangpei 20210118 start
-        if (args[0] instanceof  List<?>){
-            for (Object obj : (List<?>)args[0]){
-                if(obj instanceof EtrBondFirstLBiddingDto){
-                    return;
-                }
-            }
-        }else if (args[0] instanceof EtrBondFirstLBiddingDto) {
-            return;
-        }
-        //债券一级指令不预占  add by zhangpei 20210118 end
         Map<String,Object> mapTrd=JsonUtils.object2Map(args[0]);
         if (StringUtil.equals(getOperateType(mapTrd), BussinessConstant.SUBMIT)) {
             List<?> list = getTarget();

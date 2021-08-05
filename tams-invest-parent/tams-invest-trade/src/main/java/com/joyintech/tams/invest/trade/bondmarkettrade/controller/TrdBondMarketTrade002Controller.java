@@ -178,6 +178,16 @@ public class TrdBondMarketTrade002Controller extends BaseController {
             return res;
         }
 
+        count = trdBondMarketTrade002Service.selectIsInWorkflowEx(dto);
+        if(count > 0){
+            ValidMessage validMessage = new ValidMessage("finprodId",
+                    "该发行代码已存在上市流通数据，不可重复操作！");
+            errorList.add(validMessage);
+            res.setErrorList(errorList);
+            res.setMessageType(MessageType.错误消息);
+            return res;
+        }
+
         count = trdBondMarketTrade002Service.selectDealNums(dto);
         if (count > 0){
             ValidMessage validMessage = new ValidMessage("finprodId",

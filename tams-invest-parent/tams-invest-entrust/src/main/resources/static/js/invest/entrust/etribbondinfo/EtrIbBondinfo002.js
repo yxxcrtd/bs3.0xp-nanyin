@@ -150,6 +150,7 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
+        document.getElementById('deviationDegree').innerHTML ="";
         if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
             return;
         }
@@ -162,7 +163,9 @@
             if (result ) {
                 document.getElementById('deviationDegree').innerHTML ="<span style='color: red'>"+
                     JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
-
+            }else{
+                document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
+                    '0.0000%' +"</span>";
             }
         });
     }

@@ -81,21 +81,22 @@
                 });
             }
         }
-        
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-        	Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN002/checkAuthorization', object, function(result2) {
-	            Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN002/check',object,
-	                function(result) {
-	                    Joyin.confirm(result.data,function() {
-	                        if (operateType === 'save') {
-	                            WorkFlow.doSaveList(basePath+'invest/entrust/etrplanassetn/EtrPlanAssetN002/save',object,"EtrPlanAssetN002_btn_save");
-	                        } else {
-	                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetn/EtrPlanAssetN002/save',object,"EtrPlanAssetN002_btn_submit");
-	                        }
-	                    });
-	                });
-	        });
-        });
+
+        //指令暂存，去除校验  add by xxg 20210802
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrplanassetn/EtrPlanAssetN002/save',object,"EtrPlanAssetN002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN002/checkAuthorization', object, function(result2) {
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN002/check',object,
+                        function(result) {
+                            Joyin.confirm(result.data,function() {
+                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetn/EtrPlanAssetN002/save',object,"EtrPlanAssetN002_btn_submit");
+                            });
+                        });
+                });
+            });
+        }
     }
   //查询组合可用现金
     var getPtlCashPositionInfo = function(){
@@ -180,11 +181,12 @@
      */
     $('#EtrPlanAssetN002_btn_search').click(function() {
         var finprodId =$('#finprodIdhid').val();
+        var finprodIdhid =$('#finprodIdhid').val();
         var url = "/invest/asset/plan/planNet/FinPlanNetAsset002/init";
-        if (finprodId != ""){
+        if (finprodIdhid != ""){
             var params = {
                 pageModel:PAGE_MODEL_REFERENCE,
-                finprodId:finprodId
+                finprodId:finprodIdhid
             };
             EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
         } else {

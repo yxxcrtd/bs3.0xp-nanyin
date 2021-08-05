@@ -9,7 +9,13 @@
     var getriskdata = function(){
         var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#tradeDate').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#tradeAmtAndFee').val()==0?null:$('#tradeAmtAndFee').val(),assetType:FINPROD_TYPE_F07,isEnabled:'01',assetCode:$('#finprodMarketId').select2("data")[0].object,tradeDirection:$('#ps').val()}
             obj.assetSecType =MY_SUP_TIME_TYPE_02;
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo002Dto_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {assetCode:['finprodMarketId','TrdDepositInvestTrade001.finprodId'],valDate:['tradeDate','TrdDepositInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdDepositInvestTrade001.portfolioId'],tradeAmount:['tradeAmtAndFee','TrdFundInvestTrade001.tradeAmt'],assetType:['finprodType','TrdDepositInvestTrade001.finprodType'],tradeDirection:['ps','TrdDepositInvestTrade001.ps'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo002Dto.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
 

@@ -19,7 +19,10 @@ import java.util.Map;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -281,7 +284,7 @@ public class EtrFund002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrFundDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody EtrFundDto dto, BindingResult br) throws Exception{ //保存时，去除字段校验 add by xxg 20210802
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -291,6 +294,21 @@ public class EtrFund002Controller extends BaseController{
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
         }
+        // ----------add by yushilong 20200721 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            String ps = dto.getPs();
+            String infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
+            if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请)
+                    || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)) {
+                infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+            }
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto, infCode,
+                    DictCodeList.平安资产类型_基金.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrFundDto> processParameter = new ProcessParameter<EtrFundDto>();
         WorkFlowParameter<EtrFundDto> params = new WorkFlowParameter<EtrFundDto>();
         params.setPageId(this.getPageId());

@@ -134,7 +134,7 @@ public class FinDepositTargetValidator implements BeanValidator{
                     getMessage("COMMON_E_0057", getMessage("FinDepositTarget002.type7"))));
             }
         }
-        if (!StringUtil.equals(dto.getOperateType(), "delete") && StringUtil.equals(DictCodeList.是否_中债_是.getValue(),
+        if ( dto.getBussRepDepositInfoDto()!=null&&!StringUtil.equals(dto.getOperateType(), "delete") && StringUtil.equals(DictCodeList.是否_中债_是.getValue(),
                 dto.getBussRepDepositInfoDto().getRepIsStruct())) {
             if (StringUtil.isEmpty(dto.getBussRepDepositInfoDto().getRepTargetType())) {
                 resultList.add(new ValidMessage("bussRepDepositInfoDto.repTargetType",

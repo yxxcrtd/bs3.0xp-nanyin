@@ -67,18 +67,20 @@
                 });
             }
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC002/checkAuthorization', object, function(result2) {
-	        Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC002/check',object,
-	          function(result) {
-	              Joyin.confirm(result.data,function() {
-	                   if (operateType === 'save') {
-	                       WorkFlow.doSaveList(basePath+'invest/entrust/etrplanassetc/EtrPlanAssetC002/save',object,"EtrPlanAssetC002_btn_save");
-	                   } else {
-	                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetc/EtrPlanAssetC002/save',object,"EtrPlanAssetC002_btn_submit");
-	                   }
-	               });
-	           });
-        });
+
+        //指令暂存，去除校验  add by xxg 20210802
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrplanassetc/EtrPlanAssetC002/save',object,"EtrPlanAssetC002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC002/checkAuthorization', object, function(result2) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC002/check',object,
+                    function(result) {
+                        Joyin.confirm(result.data,function() {
+                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetc/EtrPlanAssetC002/save',object,"EtrPlanAssetC002_btn_submit");
+                        });
+                    });
+            });
+        }
     }
   //查询组合可用现金
     var getPtlCashPositionInfo = function(){
@@ -159,12 +161,12 @@
      * 查看资产详情事件
      */
     $('#EtrPlanAssetC002_btn_search').click(function() {
-        var finprodId =$('#finprodId').val();
+        var finprodId =$('#finprodIdhid').val();
         var url = "/invest/asset/plan/plancur/FinPlanAssetC002/init";
         if (finprodId != ""){
             var params = {
                 'pageModel':PAGE_MODEL_REFERENCE,
-                'finprodMarketId':finprodId,
+                'finprodId':finprodId,
                 'isQuickInput':true
             };
             EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);

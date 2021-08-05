@@ -13,6 +13,15 @@
         if($('#portfolioId').val()){
             data.portfolioId = $('#portfolioId').val().join(",");
         }
+        if(data.type9){
+            data.type9 = data.type9.join(",");
+        }
+        if(data.type10){
+            data.type10 = data.type10.join(",");
+        }
+        if(data.entrustStatus){
+            data.entrustStatus = data.entrustStatus.join(',');
+        }
         return data;
     };
     /** 
@@ -42,6 +51,7 @@
         },
         cols:[
             {field:'entrustStatus',visible:false}
+            ,{field:'counterId',visible:false}
             ,{field:'busEntrustStatus', title: 'EtrProject001.entrustStatus', width:'10%',sortField:"entrustStatus"}
             ,{field:'entrustId',visible:false}
             ,{field:'portfolioId', title: 'EtrProject001.portfolioId', width:'10%',
@@ -171,6 +181,12 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
              }else {
+                for(var index in selArr){
+                    if(selArr[index].entrustStatus == '08'){
+                        Joyin.error("流程中的数据不允许关闭");
+                        return ;
+                    }
+                }
                 var object = {selectedItem: selArr, operateType:"close"};
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrproject/EtrProject001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
@@ -192,6 +208,12 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
              }else {
+                for(var index in selArr){
+                    if(selArr[index].entrustStatus == '08'){
+                        Joyin.error("流程中的数据不允许撤回");
+                        return ;
+                    }
+                }
                 var object = {selectedItem: selArr, operateType:"recall"};
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrproject/EtrProject001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_C_0032","撤销"), function(){

@@ -163,6 +163,18 @@ public class PaTrdFinProductDealTotal extends BaseEntity {
     private String deptCode;
 
     /**
+     * 返款费率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal refundRate;
+
+    /**
+     * 返款金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal refundAmount;
+
+    /**
      * 取得 汇总交易编号
      * @return 汇总交易编号
      */
@@ -595,5 +607,36 @@ public class PaTrdFinProductDealTotal extends BaseEntity {
      */
     public void setTheoryPenaltyInt(BigDecimal theoryPenaltyInt) {
         this.theoryPenaltyInt = theoryPenaltyInt;
+    }
+
+    /**
+     * 取得 返款费率
+     * @return 返款费率
+     */
+    public BigDecimal getRefundRate() {
+        return refundRate;
+    }
+
+    /**
+     * 设置 返款费率
+     * @param refundRate 返款费率
+     */
+    public void setRefundRate(BigDecimal refundRate) {
+        this.refundRate = refundRate;
+    }
+    /**
+     * 取得 返款金额
+     * @return 返款金额
+     */
+    public BigDecimal getRefundAmount() {
+        return refundAmount;
+    }
+
+    /**
+     * 设置 返款金额
+     * @param refundAmount 返款金额
+     */
+    public void setRefundAmount(BigDecimal refundAmount) {
+        this.refundAmount = refundAmount;
     }
 }

@@ -103,5 +103,6 @@
         <module>background-component/component-common</module>
         <module>background-component/inter-bank-uplink</module>
         <module>background-component/exchange-order</module>
+        <module>microservice/tams-service-container-touguan</module>
     </modules>
 </project>

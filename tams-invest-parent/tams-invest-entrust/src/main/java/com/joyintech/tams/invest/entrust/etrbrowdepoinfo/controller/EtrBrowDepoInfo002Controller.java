@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.entrust.etrbrowdepoinfo.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -23,14 +24,17 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.service.EtrBrowDepoInfoService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -123,7 +127,15 @@ public class EtrBrowDepoInfo002Controller extends BaseController{
             model.addAttribute("tradeId", entrustId);
             model.addAttribute("person_entity", JsonUtils.object2Json(etrBrowDepoInfoDto.getBussEtrInvestPersonInfoDto()));
             model.addAttribute("businessId", etrBrowDepoInfoDto.getEntrustId());
-            
+
+            // 获取workflowId 加载风险试算结果
+            EtrBrowDepoInfoDto dto1 = new EtrBrowDepoInfoDto();
+            dto1.setEntrustId(entrustId);
+            ProcessMark processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto1);
+            //转换当前页面
+            processMark.setPageId("EtrBrowDepoInfo002");
+            String workflowId_T = WorkflowContext.getProcessMarkService().getLastWorkflowId(processMark);
+            model.addAttribute("workflowId", workflowId_T);
         }
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
         model.addAttribute("T01",DictCodeList.交易方向_买入.getValue());
@@ -255,7 +267,7 @@ public class EtrBrowDepoInfo002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrBrowDepoInfoDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody EtrBrowDepoInfoDto dto, BindingResult br) throws Exception{//保存时，去除校验 add by xxg 20210802
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -268,6 +280,16 @@ public class EtrBrowDepoInfo002Controller extends BaseController{
             //画面.资产类型==数据字典缓存.存款类资产类型.同业借款？数据字典缓存.业务编号一级分类.同业借款:数据字典缓存.业务编号一级分类.存放同业
             dto.setEntrustId(code);
         }
+        // ----------add by yushilong 20200721 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    DictCodeList.平安资产类型_存款.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrBrowDepoInfoDto> processParameter = new ProcessParameter<EtrBrowDepoInfoDto>();
         WorkFlowParameter<EtrBrowDepoInfoDto> params = new WorkFlowParameter<EtrBrowDepoInfoDto>();
         params.setPageId(this.getPageId());

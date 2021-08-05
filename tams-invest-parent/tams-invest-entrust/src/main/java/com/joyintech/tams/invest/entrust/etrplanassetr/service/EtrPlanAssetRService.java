@@ -107,6 +107,10 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
             param.put("startDate", dateList.get(0));
             param.put("endDate", dateList.get(2));
         }
+        if(StringUtil.isNotEmpty(param.get("entrustStatus"))){
+            List<String> entrustStatusList = StringUtil.splitToList(",",(String)param.get("entrustStatus"));
+            param.put("entrustStatusList", entrustStatusList);
+        }
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
         return restTemplate.postForPage(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetR/findPage", param,
@@ -421,6 +425,9 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
                         BussinessDictCodeList.平安资产类型_计划类资产_利率型.getValue(), dto.getAssetType1(), dto.getTradeMarket(), dto.getPs()
                         // 资产类型改为授权类型 add by renping 2019-08-06  start
                         , dto.getFinprodId(), dto.getWorkflowId());
+                // add by zhangrui1 风险审批修改 start
+                params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
+                // add by zhangrui1 风险审批修改 end
                 return commonBusinessService.是否需要上级审批_委托用(params);
             }
             catch (WorkFlowException e) {

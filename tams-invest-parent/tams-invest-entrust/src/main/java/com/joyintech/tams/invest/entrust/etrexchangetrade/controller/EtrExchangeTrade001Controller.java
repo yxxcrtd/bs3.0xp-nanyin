@@ -22,6 +22,7 @@ import org.apache.tools.ant.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -108,7 +109,12 @@ public class EtrExchangeTrade001Controller extends BaseController{
         this.setConstSelectOption(model);
         Date platformDate = DateUtil.platDateFromCache();
         model.addAttribute("iPlatformDate", DateUtil.format(platformDate));
-        
+
+        //配置单位 add by yeming 20210728 start
+        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
+        model.addAttribute("bond_traded_unit", bondTradedUnit );
+        //配置单位 add by yeming 20210728 end
+
         //流程id
         String workflowId = "null".equals(getParam(GlobalConstant.WORKFLOW_ID))?null:getParam(GlobalConstant.WORKFLOW_ID);
         model.addAttribute("workflowId", workflowId);
@@ -126,7 +132,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
         String isFromToDoList = getParam("isFromToDoList");
         EtrExchangeTrade001Dto entity = new EtrExchangeTrade001Dto();
         if ("true".equals(isFromToDoList) && StringUtil.isNotEmpty(workflowId)) {
-        	 //流程代办
+        	 //流程代办checkImportData
             entity = etrExchangeTrade001Service.getBussinessEntityByWorkflowId(
                 workflowId);
             model.addAttribute(GlobalConstant.ENTITY, entity);
@@ -1026,8 +1032,8 @@ public class EtrExchangeTrade001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("checkImportData")
-	public AjaxResult checkImportData(String fileName) throws Exception {
-		return etrExchangeTrade001Service.checkImportData(fileName);
+	public AjaxResult checkImportData(@RequestBody Map<String,Object> paramMap) throws Exception {
+		return etrExchangeTrade001Service.checkImportData(paramMap);
 	}
 	
 	/**

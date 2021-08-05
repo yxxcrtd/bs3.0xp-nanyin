@@ -256,5 +256,17 @@ public interface IIndicator extends IIndividLimit, IBusiness {
      */
     boolean isExcpWhenDivZero(IProdInfo prodInfo);
 
+    /**
+     * 建仓期指标是否无条件通过
+     * 
+     * @param prodInfo 产品信息
+     * @return true:是
+     */
+    boolean isPassWhenBuild(IProdInfo prodInfo);
 
+    /**
+     * 取得 是否显示原值
+     * @return 是否显示原值
+     */
+     String getIsDisplayOriginal();
 }

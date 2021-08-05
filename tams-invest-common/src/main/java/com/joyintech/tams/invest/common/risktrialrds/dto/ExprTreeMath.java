@@ -68,8 +68,8 @@ public class ExprTreeMath {
     	for(String paramKey:paramList){
     		Object obj = params.get(paramKey);
 		    String valueStr = obj == null ? "0" : obj.toString();
-		    if(StringUtil.isNotEmpty(obj)&&indType.indexOf(RiskUtil.LIMIT)!=-1){
-		    	if(RiskUtil.isInvalidDate(valueStr)) {
+		    if(StringUtil.isNotEmpty(obj)&&(indType.indexOf(RiskUtil.LIMIT)!=-1||indType.indexOf(RiskUtil.INNER)!=-1)){
+				if(RiskUtil.isInvalidDate(valueStr)) {
 					long days = DateUtil.parse(valueStr).getTime() / 1000 / 3600 / 24;
 					valueStr=String.valueOf(days);
 				}else {
@@ -191,7 +191,7 @@ public class ExprTreeMath {
     	return returnMapList;
     }
     /**
-     * 输入加减乘除表达式字符串，返回计算结果 
+     * 输入加减乘除表达式字符串，返回计算结果
      * @param expression 表达式字符串
      * @return 返回计算结果
      * @throws Exception 
@@ -200,20 +200,15 @@ public class ExprTreeMath {
         Stack<String> optStack = new Stack<>(); // 运算符栈
         Stack<BigDecimal> numStack = new Stack<>(); // 数值栈，数值以BigDecimal存储计算
         StringBuilder curNumBuilder = new StringBuilder(16); // 当前正在读取中的数值字符
-        //ZGBSS-211 信用等级在AA+以下的债券 参数会触发计算 start
-        if(expression.indexOf("||")!=-1) {
-        	return expression;
-        }
-        //ZGBSS-211 信用等级在AA+以下的债券 参数会触发计算 end
         if(! patternOp.matcher(expression).find()) {
         	  if(! patternOpUnit.matcher(expression).find()) {
         		  return expression;
         	  }
         	  else{
-          	  	 //判断禁投项中内容带括号的比如计划类(利率型)
-  				  if(!Pattern.compile("[0-9]*").matcher(expression).matches()) {
-  					  return expression;
-  				  }
+        	  	//判断禁投项中内容带括号的比如计划类(利率型)
+				  if(!Pattern.compile("[0-9]*").matcher(expression).matches()) {
+					  return expression;
+				  }
         		  return expression.replaceAll("(", "").replaceAll(")", "");
         	  }
 		}
@@ -221,6 +216,10 @@ public class ExprTreeMath {
         	 if(!patternOpNum.matcher(expression).find()) {
         		throw new Exception("cannot get number from parameters for expression");
         	}
+        	 //判断是否包含汉字
+			if(Pattern.compile("[\u4e00-\u9fa5]").matcher(expression).find()){
+				return expression;
+			}
         }
         boolean kxjsf=false;
         // 逐个读取字符，并根据运算符判断参与何种计算
@@ -323,6 +322,14 @@ public class ExprTreeMath {
      */
     public static void directCalc(Stack<String> optStack, Stack<BigDecimal> numStack, 
     		boolean isBracket) {
+    	//----update by 裴家俊 20200508 处理(a)这种计算模式 start ----
+        if (isBracket) {
+            if ("(".equals(optStack.peek())) {
+                // 括号类型则遇左括号停止计算，同时将左括号从栈中移除
+                optStack.pop();
+                return;
+            }
+        }
         String opt = optStack.pop(); // 计算运算符
         BigDecimal num2 = numStack.pop(); // 计算数值2
         BigDecimal num1 = numStack.pop(); // 计算数值1
@@ -344,6 +351,7 @@ public class ExprTreeMath {
                 directCalc(optStack, numStack, isBracket);
             }
         }
+		//----update by 裴家俊 20200508 处理(a)这种计算模式 end ----
     }
     
     /**

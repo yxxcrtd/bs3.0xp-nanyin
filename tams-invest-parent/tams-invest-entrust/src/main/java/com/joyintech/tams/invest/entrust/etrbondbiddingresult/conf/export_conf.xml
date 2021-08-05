@@ -12,8 +12,8 @@
             <Cell order="8" name="交易场所">otherTradeMarket</Cell>
             <Cell order="9" name="缴款日">payDate</Cell>
             <Cell order="10" name="缴款方式">otherPayType</Cell>
-            <Cell order="11" name="投标券面总额">bidPrinAmt</Cell>
-            <Cell order="12" name="中标券面总额">winPrinAmt</Cell>
+            <Cell order="11" name="投标券面总额/万元">bidPrinAmt</Cell>
+            <Cell order="12" name="中标券面总额/万元">winPrinAmt</Cell>
             <Cell order="13" name="投标标位%">bidPrice</Cell>
             <Cell order="14" name="中标标位%">winPrice</Cell>
             <Cell order="16" name="投标日">bidDate</Cell>

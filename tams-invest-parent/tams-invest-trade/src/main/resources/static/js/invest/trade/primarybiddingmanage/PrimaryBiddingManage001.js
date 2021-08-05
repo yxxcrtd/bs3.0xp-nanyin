@@ -46,7 +46,7 @@
             ,{field:'finprodId', title:'PrimaryBiddingManage001.finprodId',width:150,sortable:false,visible: false}
             ,{field:'finprodAbbr', title:'PrimaryBiddingManage001.finprodAbbr',width:150,sortable:false}
             ,{field:'biddate', title:'PrimaryBiddingManage001.biddate',width:150,sortable:false, type: 'date'}
-            ,{field:'allBidPrinAmt', title:'PrimaryBiddingManage001.allBidPrinAmt',width:150,sortable:false,type:'number'}
+            ,{field:'allBidPrinAmt', title:'PrimaryBiddingManage001.allBidPrinAmt1',width:150,digit: 4 ,sortable:false,type:'number'}
             ,{field:'bidpriceStr', title:'PrimaryBiddingManage001.bidprice',width:150,sortable:false}
             ,{field:'counterId', title:'PrimaryBiddingManage001.counterParty',width:150,sortable:false,visible: false}
             ,{field:'counterIdText', title:'PrimaryBiddingManage001.counterParty',width:150,sortable:false}

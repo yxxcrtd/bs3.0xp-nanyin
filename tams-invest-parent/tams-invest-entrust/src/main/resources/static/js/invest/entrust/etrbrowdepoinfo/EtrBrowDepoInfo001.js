@@ -92,6 +92,9 @@
             	width:'15%',sortField:"finprodMarketId"
             }
             ,{field:'finprodId', visible:false}
+            // add by zhangrui1 start
+            ,{field:'counterId', visible:false}
+            // add by zhangrui1 end
             ,{field:'finprodName', title: 'EtrBrowDepoInfo001.finprodName', width:'15%',sortField:"finprodName"}
             ,{field:'psStr', title: 'EtrBrowDepoInfo001.ps', width:'10%',sortField:"ps"}
             ,{field:'price',type:'number', title: 'EtrBrowDepoInfo001.price', width:'10%', type:'number',sortField:"price"}
@@ -261,6 +264,10 @@
             		Joyin.error('已关闭状态的数据不允许再次关闭');
             		return;
             	}
+                if(selArr[i].entrustStatusStr == '流程中'){
+                    Joyin.error('不能对流程中的数据进行关闭操作');
+                    return;
+                }
         	}
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
@@ -287,6 +294,12 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
             }//BUSS_COM_C_0032
+            for(var index in selArr){
+                if(selArr[index].entrustStatus == '08'){
+                    Joyin.error("流程中的数据不允许撤回");
+                    return ;
+                }
+            }
             var object = {selectedItem: selArr, operateType:"recall"};
             Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_C_0032","撤销"), function(){

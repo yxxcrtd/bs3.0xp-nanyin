@@ -194,26 +194,6 @@
 							</if>
 				) fci on fci.FINPROD_ID = t.FINPROD_ID
 				left join fin_product chl1 on fci.CHL_FINPROD_ID = chl1.FINPROD_ID
-				<where>
-					<if test="type8 != null and type8 !=''">
-						  and t5.type_8 = #{type8,jdbcType=VARCHAR}
-					</if>
-					<if test="type9 != null and type9 !=''">
-						and t5.type_9 = #{type9,jdbcType=VARCHAR}
-					</if>
-					<if test="type10 != null and type10 !=''">
-						and t5.type_10 = #{type10,jdbcType=VARCHAR}
-					</if>
-					<if test="type11 != null and type11 !=''">
-						and t5.type_11 = #{type11,jdbcType=VARCHAR}
-					</if>
-					<if test="type12 != null and type12 !=''">
-						and t5.type_12 = #{type12,jdbcType=VARCHAR}
-					</if>
-					<if test="secManageAcctId != null and secManageAcctId !=''">
-						and t.SEC_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR}
-					</if>
-				</where>
 				<!-- modify by swwan 增加市值列 20210720 start -->
 				left join
 				(
@@ -238,6 +218,31 @@
 					)gavInfo
 					group by finprodMarketId
 				) mv on t.FINPROD_ID = mv.finprodMarketId
+				<where>
+			<if test="type8 != null and type8 !=''">
+				and t5.type_8 = #{type8,jdbcType=VARCHAR}
+			</if>
+			<if test="type9 != null and type9 !=''">
+				and t5.type_9 = #{type9,jdbcType=VARCHAR}
+			</if>
+			<if test="type10 != null and type10 !=''">
+				and t5.type_10 = #{type10,jdbcType=VARCHAR}
+			</if>
+			<if test="type11 != null and type11 !=''">
+				and t5.type_11 = #{type11,jdbcType=VARCHAR}
+			</if>
+			<if test="type12 != null and type12 !=''">
+				and t5.type_12 = #{type12,jdbcType=VARCHAR}
+			</if>
+			<if test="secManageAcctIdList != null and secManageAcctIdList.size() >0">
+				<foreach collection="secManageAcctIdList" index="index" item="secManageAcctId" separator=",">
+					<if test="(index % 998) == 0">
+						and t.SEC_ACCT_ID in (
+					</if>
+					#{secManageAcctId,jdbcType=VARCHAR}
+				</foreach>)
+			</if>
+		</where>
 				group by t.PORTFOLIO_ID, pp.PORTFOLIO_NAME, NVL(NVL(chl.FINPROD_MARKET_ID, chl1.FINPROD_MARKET_ID), t.SEC_ACCT_ID ), t4.SEC_ACCT_NAME, chl.FINPROD_ABBR, chl1.FINPROD_ABBR, t.FINPROD_ID, fp.FINPROD_MARKET_ID, fp.FINPROD_ABBR,
 				t5.TYPE_9, t5.TYPE_10, t5.TYPE_11, t5.TYPE_12, t5.TYPE_8, t5.TYPE_7, T5.TYPE_6, mv.marketValue
 				<!-- modify by swwan 增加市值列 20210720 end -->
@@ -259,10 +264,10 @@
 				'cash' as type8,
 				null as type7,
 				null as type6,
-				cashBalance AS actualPositionAmount,
-				tradeCash AS tradePositionAmount,
-				cashAvailable AS instructionsAmount,
-				preReductionCash AS pledgeAmount,
+				SUM(cashBalance) AS actualPositionAmount,
+				SUM(tradeCash) AS tradePositionAmount,
+				SUM(cashAvailable) AS instructionsAmount,
+				SUM(preReductionCash) AS pledgeAmount,
 				0 AS preReductionAmount,
 				0 AS marketValue
 			FROM
@@ -450,6 +455,7 @@
 						) z
 					) zz
 				) nn
+				GROUP BY portfolioId,portfolioName
 			<!-- add by swwan 增加现金资产 20210719 end -->
 		) tt
         where (<![CDATA[  actualPositionAmount <> 0 or tradePositionAmount <> 0 or instructionsAmount <> 0 or pledgeAmount <> 0 or preReductionAmount <> 0  ]]>)

@@ -110,7 +110,7 @@ public class RiskTrialDayTimeTask extends BatchBaseService{
             params.put(Const.SUP_FREQUENCY, BussinessDictCodeListRds.监督频率_日间.getValue());
             List<RiskTrialDayTimeReaderResult> readerList=step1Reader.execute(params);
             List<RiskTrialDayTimeResult> processList=step1Processor.execute(readerList,params);
-            step1Writer.execute(processList, params);
+            step1Writer.execute(processList, params,readerList);
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {

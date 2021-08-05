@@ -50,6 +50,7 @@ public class ForbidPointThreshold {
 	
 	public SupervisionStat check(String valueStr) {
 		String[] valueAry=null;
+		valueStr = valueStr=="是"?"Y":valueStr=="否"?"N":valueStr;
 		valueAry=valueStr.trim().split(sep);
 		if("Y".equals(fbModel)) {
 			for (String value : valueAry) {

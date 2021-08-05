@@ -65,18 +65,20 @@
         object.ps = $('#ps').val();
         object.inputValue1 = PINAN_ASSET_TYPE_F08;
         object.inputValue2 = $('#ps').val();
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-            Joyin.ajaxJson(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/check',object,
-                function(result) {
-                    Joyin.confirm(result.data,function() {
-                        if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath+'invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/save',object,"EtrLendSpecInfo002_btn_save");
-                        } else {
+
+        //指令暂存，去除校验  add by xxg 20210802
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/save',object,"EtrLendSpecInfo002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/check',object,
+                    function(result) {
+                        Joyin.confirm(result.data,function() {
                             WorkFlow.doSubmitList(basePath+'invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/save',object,"EtrLendSpecInfo002_btn_submit");
-                        }
+                        });
                     });
-                });
-        });
+            });
+        }
     }
     /**
      * 判断是否节假日

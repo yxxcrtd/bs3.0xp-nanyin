@@ -12,16 +12,12 @@ package com.joyintech.service.riskrdsinf.event.rsk200.service;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.service.riskrdsinf.core.constant.InfDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -83,6 +79,8 @@ public class Rsk200Service  extends Rsk003Service {
 //		List<Map<String, Object>> list = (List<Map<String, Object>>) body.get(request.KEY_DATALIST);
 
 		List resultList = new ArrayList<>();
+        // 选出每组正反同步委托/交易相同的参数并存到缓存
+        if (isSync(body)) pickSameParam(mapList, body);
 		// 堆清空
 		stack.clear();
 		try {
@@ -97,17 +95,14 @@ public class Rsk200Service  extends Rsk003Service {
 				// add by zhangrui1 end
 				res.setBody(item);
 				// 外层加工的
-//				body.forEach((k, v) -> {
-//					if (v instanceof List) {
-//
-//					} else if(!StringUtil.equals(BigDecimal.ZERO, v)){  
-//					      item.put(k, v); 
-//					}
-//				});
-				item.put("consumerIP",body.get("consumerIP")); 
-				item.put("consumerPort",body.get("consumerPort"));
-				item.put("sysDate",body.get("sysDate")); 
-				super.handle(res, rsp);
+				body.forEach((k, v) -> {
+					if (v instanceof List) {
+
+					} else {
+						item.put(k, v);
+					}
+				});
+					super.handle(res, rsp);
 				// add by zhangrui1 start
 				String rskStatus = (String) response.getBodyField(RSKSTATUS);
 				String kriStatus = (String) rsp.getBodyField(RSKSTATUS);
@@ -122,28 +117,12 @@ public class Rsk200Service  extends Rsk003Service {
 				// add by zhangrui1 end
 				// 如果失败，或者异常。弹堆
 				if (BussinessDictCodeListRds.指标状态_禁止.getValue().equals(rsp.getBodyField(RSKSTATUS))) {
-
-					//增加软控硬控开关 add by jqq 20201216 start
-					String institutionCode = "";
-					if(MultilevelDataAuthorityUtil.isEnabled()){
-						institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
-					}
-					String isSoft = CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode);
-					if("02".equals(isSoft)){//硬控
-						rollbackStackToRedis();
-						// add by zhangrui1 start
-						response.setBodyField(RSKSTATUS, rsp.getBodyField(RSKSTATUS));
-						doException(response, res.getBodyField(EVENT_ID) + "交易超限，所有交易回滚", null);
-						// add by zhangrui1 end
-						break;
-					}
-
-//					rollbackStackToRedis();
-//					// add by zhangrui1 start
-//					response.setBodyField(RSKSTATUS, rsp.getBodyField(RSKSTATUS));
-//					doException(response, res.getBodyField(EVENT_ID) + "交易超限，所有交易回滚", null);
-//					// add by zhangrui1 end
-//					break;
+					rollbackStackToRedis();
+					// add by zhangrui1 start
+					response.setBodyField(RSKSTATUS, rsp.getBodyField(RSKSTATUS));
+					doException(response, res.getBodyField(EVENT_ID) + "交易超限，所有交易回滚", null);
+					// add by zhangrui1 end
+					break;
 				} else {
 					// 暂存
 					stack.push(res);
@@ -164,6 +143,8 @@ public class Rsk200Service  extends Rsk003Service {
 			// 回滚redis的信息
 			rollbackStackToRedis();
 			doException(response, "额度占用接口处理详细-批量", e);
+			response.setBodyField(RSKSTATUS, InfDictCodeList.信息码_拒绝.getValue());
+			response.setBodyField("message", "额度占用接口处理详细-批量"+ "【" + StringUtil.substring(e.getMessage(), 0, 60) + "】");
 		} finally {
 			/**
 			 * 结果集

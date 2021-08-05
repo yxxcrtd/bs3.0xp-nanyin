@@ -17,14 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.util.*;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
@@ -222,11 +219,22 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                 }
             }
 
-            if (StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getIsRight())
+            /*if (StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getIsRight())
                 && StringUtil.equals(cfetsBondDealDialogueQuoteDto.getIsRight(), "Y")) {
                 if (!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getExerYield())) {
                     validList.add(new ValidMessage("exerYield", this.getMessage("FW_E_0006",
                         this.getMessage("CfetsBondDealQuotedPrice002.exec"))));
+                }
+            }*/
+
+            if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getFinprodId())&&null!=cfetsBondDealDialogueQuoteDto.getSettleDate()){
+                Map<String,Object> param = new HashMap<>();
+                param.put("finprodId",cfetsBondDealDialogueQuoteDto.getFinprodId());
+                param.put("tradeDate", DateUtil.format(cfetsBondDealDialogueQuoteDto.getSettleDate()));
+                if(StringUtil.equals(cfetsBondDealQuotedPrice002Service.isExerYieldDivShow(param),BussinessDictCodeList.是否_是.getValue())
+                        &&null==cfetsBondDealDialogueQuoteDto.getExerYield()){
+                    validList.add(new ValidMessage("exerYield", this.getMessage("FW_E_0006",
+                            this.getMessage("CfetsBondDealQuotedPrice002.exec"))));
                 }
             }
 

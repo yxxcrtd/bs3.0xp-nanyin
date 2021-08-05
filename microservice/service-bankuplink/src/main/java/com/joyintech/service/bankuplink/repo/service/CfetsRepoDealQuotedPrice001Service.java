@@ -485,15 +485,15 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
         								}
         								pledgeBondMsg += ",将"+handleCss("折算比例(%)") + "从" + handleCss(temp.getPledgeRate().toString()) + "修改为" +handleCss(cfetsRepoDealQuotedPrice003Dto.getPledgeRate().toString());
         							}
-        							if(list.get(i).getPledgePrinTotal().compareTo(list.get(i).getPledgePrinTotal()) != 0) {
-        								if("".equals(pledgeBondMsg)) {
-    										pledgeBondMsg += "修改" + handleCss("质押券明细");
-    									}
-        								if(flag) {
-        									pledgeBondMsg += "修改债券" + handleCss(cfetsRepoDealQuotedPrice003Dto.getBondAbbrName());
-        								}
-        								pledgeBondMsg += ",将"+handleCss("券面总额(万元)") + "从" + handleCss(list.get(i).getPledgePrinTotal().divide(new BigDecimal(10000)).toString()) + "修改为" +handleCss(list.get(j).getPledgePrinTotal().divide(new BigDecimal(10000)).toString())+";";
-        							}
+                                    if(temp.getPledgePrin().compareTo(cfetsRepoDealQuotedPrice003Dto.getPledgePrin()) != 0) {
+                                        if("".equals(pledgeBondMsg)) {
+                                            pledgeBondMsg += "修改" + handleCss("质押券明细");
+                                        }
+                                        if(flag) {
+                                            pledgeBondMsg += "修改债券" + handleCss(cfetsRepoDealQuotedPrice003Dto.getBondAbbrName());
+                                        }
+                                        pledgeBondMsg += ",将"+handleCss("券面总额(万元)") + "从" + handleCss(temp.getPledgePrin().divide(new BigDecimal(10000)).toString()) + "修改为" +handleCss(cfetsRepoDealQuotedPrice003Dto.getPledgePrin().divide(new BigDecimal(10000)).toString())+";";
+                                    }
         							if(!"".equals(pledgeBondMsg)) {
         								pledgeBondMsg += ";";
         							}

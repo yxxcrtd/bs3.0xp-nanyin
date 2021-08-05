@@ -11,11 +11,14 @@
 package com.joyintech.tams.invest.common.riskinfrds.occupy.entity;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.util.CollectionUtils;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constantrds.RedisKeyEnum;
 import com.joyintech.tams.invest.common.riskinfrds.base.entity.IBusiness;
 
@@ -93,5 +96,59 @@ public interface IOccupyRelParam extends IBusiness {
     default boolean contains(String paraCode) {
         Map<String, IOcpRelParamItem> map = getItems();
         return !CollectionUtils.isEmpty(map) && map.containsKey(paraCode);
+    }
+
+    /**
+     * 取得 释放流水号列表
+     * 
+     * @return 释放流水号列表
+     */
+    Set<String> getSeqNoList();
+
+    /**
+     * 设置 释放流水号列表
+     * 
+     * @param seqNoList 释放流水号列表
+     */
+    void setSeqNoList(Set<String> seqNoList);
+
+    /**
+     * 添加 释放流水号
+     * 
+     * @param seqNo 释放流水号
+     */
+    default boolean addSeqNo(String seqNo){
+        if (StringUtil.isEmpty(seqNo)) {
+            return true;
+        }
+        Set<String> seqNoList = getSeqNoList();
+        if (CollectionUtils.isEmpty(seqNoList)) {
+            seqNoList = new HashSet<>();
+            setSeqNoList(seqNoList);
+        }
+        return seqNoList.add(seqNo);
+    }
+
+    /**
+     * 取得 预占下的实占列表
+     * 
+     * @return 预占下的实占列表
+     */
+    Set<String> getOcpCodeList();
+
+    /**
+     * 设置 预占下的实占列表
+     * 
+     * @param ocpCodeList 预占下的实占列表
+     */
+    void setOcpCodeList(Set<String> ocpCodeList);
+
+    default void addOcpCode(String ocpCode) {
+        Set<String> ocpList = getOcpCodeList();
+        if (CollectionUtils.isEmpty(ocpList)) {
+            ocpList = new HashSet<>();
+            setOcpCodeList(ocpList);
+        }
+        ocpList.add(ocpCode);
     }
 }

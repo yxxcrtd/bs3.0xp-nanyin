@@ -20,19 +20,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.invest.common.asset.service.BaseCommonAssetCommonService;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.mock.asset.MockAssetInfoDto;
-import com.joyintech.tams.invest.common.dto.mock.basicdata.MockQuotationInfoDto;
-import com.joyintech.tams.invest.common.redisinit.dto.ImplAssetDuration;
-import com.joyintech.tams.invest.common.riskinfrds.info.service.ProdAssetDurationService;
 import com.joyintech.tams.invest.common.risktrialrds.dao.RiskTrialCommMapper;
 import com.joyintech.tams.invest.common.risktrialrds.dto.RiskIndividConditionDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,6 @@ import com.joyintech.redis.common.entity.Value;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.common.base.dao.RskIsupLogMapper;
 import com.joyintech.tams.invest.common.component.base.core.ICond;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.RedisKeyEnum;
 import com.joyintech.tams.invest.common.redisinit.dao.RskRedisInitMapper;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplAsset;
@@ -66,6 +63,7 @@ import com.joyintech.tams.invest.common.redisinit.dto.ImplParam;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplPortf;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplProdAssetAmount;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplPtlIndicator;
+import com.joyintech.tams.invest.common.redisinit.service.RiskIndConditionLineService;
 import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.invest.common.riskinfrds.calendar.service.CalendarService;
 import com.joyintech.tams.invest.common.riskinfrds.event.entity.EventMap;
@@ -162,14 +160,13 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
     private ProdAssetAmountService prodAssetAmtSrc;
     // add by zhangrui1 end
 
-    @Autowired
-    private ProdAssetDurationService prodAssetDurationSrc;
-
     @Autowired(required = false)
     private RiskTrialCommMapper riskTrialCommMapper;
 
+    // add by zhangrui1 自定义条件阈值 start
     @Autowired
-    private BaseCommonAssetCommonService baseCommonAssetCommonService;
+    private RiskIndConditionLineService lineService;
+    // add by zhangrui1 自定义条件阈值 end
 
     private Map<String,Object> batchSucMap=new HashMap<>();
     /**
@@ -179,6 +176,7 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
      * @since 1.0
      */
     public Map<String,Object> execute(ICond cond) {
+        batchSucMap = new HashMap<>();
         // 初始化平台日
         setPlatDate(cond);
         // ----消除redis中所有数据----------
@@ -201,9 +199,10 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
         //dealAssetIndex(cond);
         // 处理汇率行情信息
         dealExchargeInfo(cond);
-        // 处理基金估值行情信息
-        //dealFundValuation(cond);
+        // 处理基金净值类估值行情信息
+        dealFundValuation(cond);
         // add by zhangrui1 start
+        // 处理资产实时规模信息
         dealProdAssetAmount(cond);
         // add by zhangrui1 end
         return batchSucMap;
@@ -378,15 +377,17 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
      * @param sysDate
      */
     private void dealParamValue(Map<String, List<ImplParam>> implParmMap, Date sysDate, ICond cond) {
+        //初始化参数日志信息
+        batchSucMap.clear();
         Map<String, Map<String, IValue<Object>>> totalParamValMap = new HashMap<>();
         CountDownLatch countDown = new CountDownLatch(implParmMap.keySet().size());
-        String[] paramDbArr=StringUtil.isNotEmpty(CacheUtil.getSysParam("param_risk_dbcal"))?CacheUtil.getSysParam("param_risk_dbcal").split(GlobalConstant.COMMA):null;
+        List<Future<Exception>> futures = new ArrayList<>(implParmMap.keySet().size());
         implParmMap.keySet().forEach(key -> {
-            threadPoolTaskExecutor.execute(() -> {
+            futures.add(threadPoolTaskExecutor.submit(() -> {
                 try {
                     implParmMap.get(key).forEach(item -> {
-                        boolean dbCalFlag=StringUtil.isNotEmpty(paramDbArr)?Arrays.asList(paramDbArr).contains(item.getParaCode())?true:false:false;
-                        if(dbCalFlag){
+                        if(StringUtil.equals(item.getParamMathType(),BussinessDictCodeListRds.指标参数计算方式_DB.getValue())
+                                ||StringUtil.equals(item.getParamMathType(),BussinessDictCodeListRds.指标参数计算方式_PLUGIN.getValue())){
                             return;
                         }
                         item.setFreshCanTrdRedis(item.getIsFreshCanTrd());
@@ -419,7 +420,7 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
                                     rValue.value(value.toString());
                                     if (cond.isLoadOffset()) {
                                         rValue.set(addOffset(rValue.value(), offListTmp, rdsKey.toString()));
-                                        if (cond.getCondList() != null && cond.getCondList().contains(rdsKey)) {
+                                        if (cond.getCondList() == null || cond.getCondList().contains(rdsKey)) {
                                             rValueObj.value(rValue.value().toString());
                                             mkParamValMap.put(rdsKey.toString(), rValueObj);
                                         }
@@ -438,15 +439,14 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
                 }
                 catch (Exception e) {
                     logger.error("指标参数："+key+GlobalConstant.COMMA+e.getMessage(), e);
-                    Exception re=new Exception("指标参数："+key+GlobalConstant.COMMA+e.getMessage(),e);
-                    batchSucMap.put("redisStatus","ERROR");
-                    batchSucMap.put("redisMessage",re);
+                    return new Exception(new StringBuilder().append("指标参数：").append(key).append(" 处理异常！").append(e.getMessage()).toString());
                 }
                 finally {
                     // 线程计数
                     countDown.countDown();
                 }
-            });
+                return null;
+            }));
 
         });
         try {
@@ -456,6 +456,29 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
         catch (InterruptedException e) {
             logger.error("线程池中断异常", e);
             Thread.currentThread().interrupt();
+        }
+        List<Exception> exceptions = new ArrayList<>();
+        for(Future<Exception> future : futures){
+            try {
+                Exception expFuture = future.get();
+                if(null != expFuture){
+                    exceptions.add(expFuture);
+                }
+            } catch (InterruptedException e) {
+                logger.error("线程池获取错误信息对象超时！", e);
+            } catch (ExecutionException e) {
+                logger.error("线程池获取错误信息对象执行异常！", e);
+            }
+        }
+        if(exceptions.size()>0){
+            batchSucMap.put("redisErrorMessageList",exceptions);
+        }
+        if (!CollectionUtils.isEmpty(totalParamValMap)) {
+            totalParamValMap.entrySet().forEach(en -> {
+                if (StringUtil.isNotEmpty(en.getKey())) {
+                    indicatorParamService.deleteInfoFromRedis(RedisKeyEnum.指标参数值.key() + en.getKey(), null);
+                }
+            });
         }
         paramValService.setParamVal(totalParamValMap);
 
@@ -533,12 +556,17 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
         mapPass.put("indIdList", cond.getIndicatorCodeArray());
         dealValDate(cond,mapPass);
         //mapPass.put("valDate", DateUtil.format(cond.getPlateDate()));// 有效期条件
-        List<ImplParam> implIndParamList = rskRedisInitMapper.getRskIndParamDtlData(mapPass);
-        Set<String> fixParamList = implIndParamList.stream().filter(
-                item -> item.getParaDisplayType().equals(
-                        BussinessDictCodeListRds.指标参数实现类型_固定值.getValue())).map(
+        List<ImplParam> implIndParamList = rskRedisInitMapper.getFixParamDtlData(mapPass);
+        Set<String> fixParamList = implIndParamList.stream().map(
                 ImplParam::getParaCode).collect(Collectors.toSet());
         List<ImplIndicator> implIndList = rskRedisInitMapper.getRskIndicatorData(mapPass);
+        // add by zhangrui1 自定义条件阈值 start
+        if (CollectionUtils.isEmpty(implIndList)) {
+            return;
+        }
+        Map<String, Map<String, IIndividLimit>> limitMap = lineService.getRiskIndConditionLine(
+            cond.getPlateDate(), implIndList.stream().map(ImplIndicator::getIndId).collect(Collectors.toList()));
+        // add by zhangrui1 自定义条件阈值 end
         // 查询联合设置
         List<RskIndividUnite> rskUniteList = rskRedisInitMapper.getRskIndUniteData(mapPass);
         //以产品维度分组
@@ -568,6 +596,17 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
                         rskSpecialList);
                 item.setIndividSpecLimitRedis(rskSpeMap);
             }
+            // add by zhangrui1 自定义条件阈值 start
+            if (!CollectionUtils.isEmpty(limitMap)) {
+                Map<String, IIndividLimit> custom = limitMap.get(item.getIndId());
+                if (!CollectionUtils.isEmpty(custom)
+                    && !CollectionUtils.isEmpty(item.getPtlIndividLimit())) {
+                    // 将特殊阶段阈值覆盖到自定义条件阈值中
+                    custom.putAll(item.getPtlIndividLimit());
+                }
+                item.setIndividSpecLimitRedis(custom);
+            }
+            // add by zhangrui1 自定义条件阈值 end
             // 处理联合设置
             Map<String, Set<String>> dealIndUnite = new HashMap<>();
             mapTaskMap.keySet().forEach(key -> {
@@ -625,7 +664,7 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
                 item.setAbsRedis(false);
             }
             // 把每个表达式的参数附加上MIN,MAX
-            if(item.getIndType().indexOf(RiskUtil.LIMIT)>=0) {
+            if(item.getIndType().indexOf(RiskUtil.LIMIT)>=0||item.getIndType().indexOf(RiskUtil.INNER)>=0) {
                 item.setExprGradRedis(RiskUtil.getParamWithMode(fixParamList, item.getExpr(),
                         StringUtil.isNotEmpty(
                                 item.getFoulCond()) ? item.getFoulCond() : StringUtil.isNotEmpty(
@@ -759,6 +798,9 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
         if(!StringUtil.isEmptyList(riskIndividConditionDtoList)){
             riskPortfValList =  riskTrialCommMapper.getPortfValuation(mapPass.get("valDate").toString());
         }
+        // add by zhangrui1 自定义条件阈值 start
+        List<String> ptlList = new ArrayList<>();
+        // add by zhangrui1 自定义条件阈值 end
         for (ImplPtlIndicator implPtlBag : implPtlBagList) {
             ImplPtlIndicator dealImplPtlInd = new ImplPtlIndicator();
             Map<String, Set<String>> ptlIndicatorMap = new HashMap<>();
@@ -808,7 +850,31 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
                 dealImplPtlInd.setPtlNameRedis(implPtlBag.getPtlName());
                 resultPtlInd.add(dealImplPtlInd);
             }
+            // add by zhangrui1 自定义条件阈值 start
+            if (!CollectionUtils.isEmpty(dealImplPtlInd.getPtlIndicator())) {
+                ptlList.addAll(dealImplPtlInd.getPtlIndicator().keySet().stream().collect(
+                    Collectors.toList()));
+            }
+            // add by zhangrui1 自定义条件阈值 end
         }
+        // add by zhangrui1 自定义条件阈值 start
+        // 剔除未启用的自定义条件项
+        Map<String, Set<String>> ptlIndMap = lineService.getPtlIndMap(ptlList);
+        if (!CollectionUtils.isEmpty(resultPtlInd)) {
+            resultPtlInd.forEach(dealImplPtlInd -> {
+                Map<String, Set<String>> ptlIndicatorMap = dealImplPtlInd.getPtlIndicatorRedis();
+                if (CollectionUtils.isEmpty(ptlIndicatorMap)) {
+                    return;
+                }
+                ptlIndicatorMap.forEach((key, val) -> {
+                    Set<String> indSet = ptlIndMap.get(key);
+                    if (!CollectionUtils.isEmpty(indSet) && !CollectionUtils.isEmpty(val)) {
+                        indSet.forEach(str -> val.remove(str));
+                    }
+                });
+            });
+        }
+        // add by zhangrui1 自定义条件阈值 end
         if (cond.isDel()) {
             ptlIndicatorService.deleteInfoFromRedis(RedisKeyEnum.组合关联指标配置.key(),
                     cond.getPortfIdArray().toArray(new String[cond.getPortfIdArray().size()]));
@@ -981,138 +1047,4 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
         }
     }
     // add by zhangrui1 end
-
-
-    /**
-     * 处理 资产现金流相关信息为久期指标用
-     *
-     * @param cond 资产现金流相关信息为久期指标用
-     */
-    public void dealAstCashDurationInfo(ICond cond) {
-        Map<String, Object> mapPass = new HashMap<>();
-        mapPass.put("finprodIdList", cond.getAssetIdArray());
-        mapPass.put("paramDate", DateUtil.format(cond.getPlateDate()));
-        try {
-            List<MockAssetInfoDto> 资产基本信息列表=baseCommonAssetCommonService.selectAsset(mapPass);
-            if (!StringUtil.isEmptyList(资产基本信息列表)) {
-                List<ImplAssetDuration> implAssetDurationList=资产基本信息列表.stream().map(item->{
-                    ImplAssetDuration implAssetDuration=new ImplAssetDuration();
-                    implAssetDuration.setAssetCode(item.getFinprodId());
-                    implAssetDuration.setMockAssetInfoDto(item);
-                    return implAssetDuration;
-                }).collect(Collectors.toList());
-                ImplAssetDuration[] implAssetDurations=implAssetDurationList.toArray(new ImplAssetDuration[implAssetDurationList.size()]);
-                clearRedisDurationProperty(implAssetDurations);
-                prodAssetDurationSrc.saveToRedis(implAssetDurations);
-            }
-        } catch (Exception e) {
-            logger.error("资产久期信息装载出错"+e.getMessage(),e);
-        }
-
-    }
-
-    /**
-     * 清除实体字段,提高接口那边的速度
-     *
-     * @param tList
-     * @param <T>
-     */
-    @SuppressWarnings("unchecked")
-    private <T extends ImplAssetDuration> void clearRedisDurationProperty(T... tList) {
-        for (T t : tList) {
-            //主实体
-            clearRedisProperty(t);
-            if(StringUtil.isNotEmpty(t.getMockAssetInfoDto())) {
-                //主实体
-                clearRedisProperty(t.getMockAssetInfoDto());
-                //金融产品主表
-                FinProduct newFinProduct = new FinProduct();
-                FinProduct finProduct = t.getMockAssetInfoDto().getFinProduct();
-                newFinProduct.setFinprodId(finProduct.getFinprodId());
-                newFinProduct.setFinprodAbbr(finProduct.getFinprodAbbr());
-                newFinProduct.setMdate(finProduct.getMdate());
-                newFinProduct.setIsSus(finProduct.getIsSus());
-                newFinProduct.setCouponSpecies(finProduct.getCouponSpecies());
-                newFinProduct.setIsRight(finProduct.getIsRight());
-                clearRedisProperty(newFinProduct);
-                t.getMockAssetInfoDto().setFinProduct(newFinProduct);
-                //金融产品附属表
-                FinProductAdd newFinProductAdd = new FinProductAdd();
-                FinProductAdd finProductAdd = t.getMockAssetInfoDto().getFinProductAdd();
-                newFinProductAdd.setNoFixedTerm(finProductAdd.getNoFixedTerm());
-                clearRedisProperty(newFinProductAdd);
-                t.getMockAssetInfoDto().setFinProductAdd(newFinProductAdd);
-                //金融产品分类
-                FinProductType newFinProductType = new FinProductType();
-                FinProductType finProductType = t.getMockAssetInfoDto().getFinProductType();
-                newFinProductType.setType6(finProductType.getType6());
-                newFinProductType.setType7(finProductType.getType7());
-                newFinProductType.setType8(finProductType.getType8());
-                clearRedisProperty(newFinProductType);
-                t.getMockAssetInfoDto().setFinProductType(newFinProductType);
-                //交易类金融产品
-                FinTradeProduct newFinTradeProduct = new FinTradeProduct();
-                FinTradeProduct finTradeProduct = t.getMockAssetInfoDto().getFinTradeProduct();
-                newFinTradeProduct.setMdate(finTradeProduct.getMdate());
-                clearRedisProperty(newFinTradeProduct);
-                t.getMockAssetInfoDto().setFinTradeProduct(newFinTradeProduct);
-                //交易类产品附属
-                t.getMockAssetInfoDto().setFinTradeProductAdd(null);
-                //现金流计算规则表Entity列表
-                List<FinCashCalcRule> finCashCalcRuleList = t.getMockAssetInfoDto().getFinCashCalcRuleList();
-                for (FinCashCalcRule finCashCalcRule : finCashCalcRuleList) {
-                    finCashCalcRule.setBranch(null);
-                    finCashCalcRule.setBasis(null);
-                    finCashCalcRule.setFinprodId(null);
-                    finCashCalcRule.setBaseDateType(null);
-                    finCashCalcRule.setBaseType(null);
-                    finCashCalcRule.setFinprodType(null);
-                    finCashCalcRule.setIsInitial(null);
-                    finCashCalcRule.setFinprodType2(null);
-                    finCashCalcRule.setRemark(null);
-                    finCashCalcRule.setCashId(null);
-                    clearRedisProperty(finCashCalcRule);
-                }
-                //现金流支付规则批量查询
-                List<FinCashPayRule> finCashPayRuleList = t.getMockAssetInfoDto().getFinCashPayRuleList();
-                List<FinCashPayRule> newFinCashPayRuleList = new ArrayList<>();
-                for (FinCashPayRule finCashPayRule : finCashPayRuleList) {
-                    FinCashPayRule newFinCashPayRule = new FinCashPayRule();
-                    newFinCashPayRule.setPayCycle(finCashPayRule.getPayCycle());
-                    newFinCashPayRule.setPayCycleVal(finCashPayRule.getPayCycleVal());
-                    clearRedisProperty(newFinCashPayRule);
-                    newFinCashPayRuleList.add(newFinCashPayRule);
-                }
-                t.getMockAssetInfoDto().setFinCashPayRuleList(newFinCashPayRuleList);
-                //现金流计划表扩展列表
-                t.getMockAssetInfoDto().setMockFinCashPlanDtoList(null);
-                //行情DTO列表
-                List<MockQuotationInfoDto> mockQuotationInfoDtoList = t.getMockAssetInfoDto().getMockQuotationInfoDtoList();
-                List<MockQuotationInfoDto> newMockQuotationInfoDtoList = new ArrayList<>();
-                if (!StringUtil.isEmptyList(mockQuotationInfoDtoList)) {
-                    clearRedisProperty(mockQuotationInfoDtoList.get(0));
-                    newMockQuotationInfoDtoList.add(mockQuotationInfoDtoList.get(0));
-                    t.getMockAssetInfoDto().setMockQuotationInfoDtoList(newMockQuotationInfoDtoList);
-                }
-                //行情DTO列表 (公允价值使用  原因：债券计算公允价值的行情的取值逻辑与久期行情逻辑不同)
-                t.getMockAssetInfoDto().setMockQuotationInfoDtoListForGYJZ(null);
-                //行权计划表Entity
-                t.getMockAssetInfoDto().setFinExercisePlanList(null);
-                //回售权下一行权计划列表
-                List<FinExercisePlan> finExercisePlanList = t.getMockAssetInfoDto().getResaleFinExercisePlanList();
-                List<FinExercisePlan> newFinExercisePlanList = new ArrayList<>();
-                if (!StringUtil.isEmptyList(finExercisePlanList)) {
-                    clearRedisProperty(finExercisePlanList.get(0));
-                    newFinExercisePlanList.add(finExercisePlanList.get(0));
-                    t.getMockAssetInfoDto().setResaleFinExercisePlanList(newFinExercisePlanList);
-                }
-                //基金开放计划
-                List<FinOpenPlan> fundOpenPlanList = t.getMockAssetInfoDto().getFundOpenPlanList();
-                for (FinOpenPlan finCashPayRule : fundOpenPlanList) {
-                    clearRedisProperty(finCashPayRule);
-                }
-            }
-        }
-    }
-
 }

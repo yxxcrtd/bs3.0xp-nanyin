@@ -15,13 +15,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
-import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
+import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
+import com.joyintech.tams.component.business.riskrds.constant.PageFieldToInterfFactory;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,9 +48,6 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.trade.investtrade.commandreceive.dto.TrdCommandReceive001Dto;
 import com.joyintech.tams.invest.trade.investtrade.commandreceive.service.TrdCommandReceive001Service;
 
@@ -269,8 +275,99 @@ public class TrdCommandReceive001Controller extends BaseController{
         param.put("trader", LoginUserUtil.getUserName());
         AjaxResult result=new AjaxResult();
         result.setErrorList(trdCommandReceive001Service.returnEntrust(param));
+        // add by zhangrui1 指令退回撤销预占 start
+        // 若退回正常，则撤销预占
+        if (StringUtil.isEmptyList(result.getErrorList())) {
+            @SuppressWarnings("unchecked")
+            List<String> enTrustIds = (List<String>)param.get("entrustIds");
+            List<Map<String, Object>> list = new ArrayList<>();
+            List<String> counterIdList = new ArrayList<>();
+            Map<String, String> counterIdMap = splitParams("counterIds",
+                    str -> counterIdList.add(str));
+            Map<String, PtlPortfolio> innerIds = AllTradeCommonUtil.selectPortfolioIds(
+                    counterIdList);
+            Map<String, String> psMap = splitParams("psList", null);
+            if (!StringUtil.isEmptyList(enTrustIds)) {
+                String ps = BussinessDictCodeList.交易方向_买入.getValue();
+                enTrustIds.forEach(id -> {
+                    Map<String, Object> finDto = new HashMap<>();
+                    finDto.put(PageFieldToInterfFactory.INF_EVENTID, id);
+                    finDto.put(PageFieldToInterfFactory.INF_PS, psMap.get(id));
+                    finDto.put(PageFieldToInterfFactory.INF_EVENTDATE, DateUtil.format(
+                            DateUtil.platDateFromCache(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    finDto.put(PageFieldToInterfFactory.INF_REVOKEFLG, BussinessDictCodeListRds.是否_是.getValue());
+                    finDto.put(PageFieldToInterfFactory.INF_ISINNERTRD, innerIds.containsKey(counterIdMap.get(
+                            id)) ? BussinessDictCodeListRds.是否_是.getValue() : BussinessDictCodeListRds.是否_否.getValue());
+                    TradeRdsCommonAop.getInterfRiskRdsService().changeEventId(finDto);
+                    list.add(finDto);
+                    // 生成方向指令
+                    if (innerIds.containsKey(counterIdMap.get(id))) {
+                        finDto = new HashMap<>();
+                        finDto.put(PageFieldToInterfFactory.INF_EVENTID, id + ps);
+                        finDto.put(PageFieldToInterfFactory.INF_EVENTDATE, DateUtil.format(
+                                DateUtil.platDateFromCache(),
+                                DateUtil.DEFAULT_DATE_FORMAT_EN));
+                        finDto.put(PageFieldToInterfFactory.INF_PS, ps);
+                        finDto.put(PageFieldToInterfFactory.INF_REVOKEFLG, BussinessDictCodeListRds.是否_是.getValue());
+                        finDto.put(PageFieldToInterfFactory.INF_ISINNERTRD, BussinessDictCodeListRds.是否_是.getValue());
+                        list.add(finDto);
+                    }
+                    // 转换申请生成买入方向指令
+                    else if (CommonUtil.isType(psMap.get(id), DictCodeListExt2.交易方向_转换申请)
+                            || CommonUtil.isType(psMap.get(id), DictCodeListExt1.交易方向_债转股)) {
+                        finDto.put(PageFieldToInterfFactory.INF_PS,
+                                BussinessDictCodeList.交易方向_卖出.getValue());
+                        finDto.put(PageFieldToInterfFactory.INF_EVENTID,
+                                id + BussinessDictCodeList.交易方向_卖出.getValue());
+                        finDto = new HashMap<>();
+                        finDto.put(PageFieldToInterfFactory.INF_EVENTID, id + ps);
+                        finDto.put(PageFieldToInterfFactory.INF_EVENTDATE, DateUtil.format(
+                                DateUtil.platDateFromCache(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+                        finDto.put(PageFieldToInterfFactory.INF_PS, ps);
+                        finDto.put(PageFieldToInterfFactory.INF_REVOKEFLG,
+                                BussinessDictCodeListRds.是否_是.getValue());
+                        finDto.put(PageFieldToInterfFactory.INF_ISINNERTRD,
+                                BussinessDictCodeListRds.是否_是.getValue());
+                        list.add(finDto);
+                    }
+                });
+            }
+            try {
+                ClientData data = TradeRdsCommonAop.getInterfRiskRdsService().sendListDataCommon(
+                        list, BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue());
+                if (StringUtil.equals(data.getHead().get(InterfUtil.std400msgt), InterfUtil.E)) {
+                    result.setMessage(data.getHead().get(InterfUtil.stdrtninfo).toString());
+                }
+            }
+            catch (Exception e) {
+                result.setMessage("指令撤销异常");
+            }
+        }
+        // add by zhangrui1 指令退回撤销预占 end
         return result;
     }
+
+    // add by zhangrui1 指令退回撤销预占 start
+    private Map<String, String> splitParams(String param, Consumer<String> consumer) {
+        List<String> list = StringUtil.splitToList(GlobalConstant.COMMA,
+                RequestUtil.getParam(param));
+        Map<String, String> map = new HashMap<>();
+        if (!StringUtil.isEmptyList(list)) {
+            list.forEach(str -> {
+                String[] arr = StringUtil.split(str, GlobalConstant.COLON);
+                if (arr == null || arr.length == 0) {
+                    return;
+                }
+                map.put(arr[0], arr.length == 2 ? arr[1] : StringUtil.EMPTY);
+                if (consumer != null && arr.length == 2 && !StringUtil.isEmpty(arr[1])) {
+                    consumer.accept(arr[1]);
+                }
+            });
+        }
+        return map;
+    }
+    // add by zhangrui1 指令退回撤销预占 end
+
     /**
      * 导出
      * @return

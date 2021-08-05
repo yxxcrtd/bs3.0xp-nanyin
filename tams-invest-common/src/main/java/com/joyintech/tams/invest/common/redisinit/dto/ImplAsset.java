@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.common.redisinit.dto;
 
+import java.util.Date;
+
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IAssetInfo;
 
@@ -97,19 +99,8 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
      * 发行机构(托管人，融资人，管理人等)
      */
     private String issuerCode;
-    
-    
-    private String isInAdvance;
 
-    public String getIsInAdvance() {
-		return isInAdvance;
-	}
-
-	public void setIsInAdvance(String isInAdvance) {
-		this.isInAdvance = isInAdvance;
-	}
-
-	/**
+    /**
      * 是否有关联方(Y或N)
      */
     private String isCorOrg;
@@ -126,7 +117,7 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
 
     @Override
     public String getAssetName() {
-        return this.getFinprodName();
+        return this.getFinprodAbbr();
     }
 
     @Override
@@ -237,9 +228,6 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
 
     @Override
     public String getBodyGradeType() {
-    	if(bodyGradeType==null) {
-    		return "00";
-    	}
         return bodyGradeType;
     }
 
@@ -291,4 +279,123 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
     public void setIsCorOrg(String isCorOrg) {
         this.isCorOrg = isCorOrg;
     }
+
+    // add by zhangrui1 增加资产属性 start
+    /**
+     * 最终利率调整期开始日
+     */
+    private Date vdateLast;
+
+    /**
+     * 设置 最终利率调整期开始日
+     * 
+     * @param vdateLast 最终利率调整期开始日
+     */
+    public void setVdateLast(Date vdateLast) {
+        this.vdateLast = vdateLast;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Date getVdateLast() {
+        return vdateLast;
+    }
+
+    /**
+     * 利率类型
+     */
+    private String calcType;
+
+    /**
+     * 设置 利率类型
+     * 
+     * @param calcType 利率类型
+     */
+    public void setCalcType(String calcType) {
+        this.calcType = calcType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getCalcType() {
+        return calcType;
+    }
+    // add by zhangrui1 增加资产属性 end
+
+    // add by etliu 增加资产属性:是否可提前支取 20200821 start
+    /**
+     * 是否可提前支取
+     */
+    private String isCanDrawInAdvance;
+
+    /**
+     * 取得 是否可提前支取
+     *
+     * @return 是否可提前支取
+     */
+    @Override
+    public String getIsCanDrawInAdvance() {
+        return isCanDrawInAdvance;
+    }
+
+    /**
+     * 设置是否可提前支取
+     * @param isCanDrawInAdvance
+     */
+    public void setIsCanDrawInAdvance(String isCanDrawInAdvance) {
+        this.isCanDrawInAdvance = isCanDrawInAdvance;
+    }
+    // add by etliu 增加资产属性:是否可提前支取 20200821 end
+    // add by zhangrui1 增加资产属性:是否流动性受限资产 start
+    /**
+     * 是否流动性受限
+     */
+    private String isFlowLimited;
+
+    /**
+     * 获取 是否流动性受限
+     * 
+     * @return 是否流动性受限.
+     */
+    public String getIsFlowLimited() {
+        return isFlowLimited;
+    }
+
+    /**
+     * 设置 是否流动性受限
+     * 
+     * @param isFlowLimited 是否流动性受限
+     */
+    public void setIsFlowLimited(String isFlowLimited) {
+        this.isFlowLimited = isFlowLimited;
+    }
+    // add by zhangrui1 增加资产属性:是否流动性受限 end
+    // add by zhangrui1 增加资产属性:机构主体类型 start
+    /**
+     * 机构主体类型
+     */
+    private String customerObjType;
+
+    /**
+     * 获取 机构主体类型
+     * 
+     * @return 机构主体类型.
+     */
+    public String getCustomerObjType() {
+        return customerObjType;
+    }
+
+    /**
+     * 设置 机构主体类型
+     * 
+     * @param customerObjType 机构主体类型
+     */
+    public void setCustomerObjType(String customerObjType) {
+        this.customerObjType = customerObjType;
+    }
+    // add by zhangrui1 增加资产属性:机构主体类型 end
 }

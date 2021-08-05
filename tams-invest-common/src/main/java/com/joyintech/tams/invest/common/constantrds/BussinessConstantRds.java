@@ -434,5 +434,11 @@ public interface BussinessConstantRds {
      * 自定义特征值
      */
     public static final String IS_REPEATED_REIDSBATCH ="is_repeated_reidsbatch";
-    
+
+    // add by zhangrui1 公式配置 start
+    /**
+     * 公式配置
+     */
+    public static final String FORMULA = "formula";
+    // add by zhangrui1 公式配置 end
 }

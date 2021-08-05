@@ -66,7 +66,18 @@ public class EtrFinProductCommonDto {
      */
     private BigDecimal costPrice;
 
+    /**
+     * 可用现金
+     */
+    private BigDecimal cashAmount;
 
+    public BigDecimal getCashAmount() {
+        return cashAmount;
+    }
+
+    public void setCashAmount(BigDecimal cashAmount) {
+        this.cashAmount = cashAmount;
+    }
 
     public String getPortfolioId() {
         return portfolioId;

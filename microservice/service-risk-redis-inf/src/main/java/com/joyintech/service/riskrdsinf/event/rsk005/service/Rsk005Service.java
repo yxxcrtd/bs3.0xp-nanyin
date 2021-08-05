@@ -50,6 +50,8 @@ public class Rsk005Service extends OccupyReleasService<Rsk005InEntity> {
             // 设置备份数据
             record.setAmount(record.getAmountOld());
             record.setTradeNum(record.getTradeNumOld());
+            // 报文流水号
+            record.setSeqNo(getSeqNo());
             getBusiService().savePreOcpInfo(record, isApprove, STATUS_RELEASE, user);
         }
         catch (Exception e) {

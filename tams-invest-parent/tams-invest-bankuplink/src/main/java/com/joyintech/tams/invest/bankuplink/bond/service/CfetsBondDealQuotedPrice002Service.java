@@ -1033,4 +1033,9 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         }
         return validList;
     }
+
+    public String isExerYieldDivShow(Map<String, Object> paramMap) {
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/isExerYieldDivShow",
+                paramMap, String.class);
+    }
 }

@@ -200,7 +200,7 @@ public class EtrPlanAssetCController  {
     @DTXTransaction
     @PostMapping("doUpdate")
     public void doUpdate(@RequestBody EtrPlanAssetCDto dto){
-        WFlowCommonService.doUpdateFlow(dto.getOperateType(), null);
+        WFlowCommonService.doUpdateFlow(dto.getOperateType(), etrPlanAssetCService.initBaseDto(dto));//代办流程保存时为空指针  add by xxg 20210803
         
         etrPlanAssetCService.doInsert(dto, dto.getOperateType());
     }

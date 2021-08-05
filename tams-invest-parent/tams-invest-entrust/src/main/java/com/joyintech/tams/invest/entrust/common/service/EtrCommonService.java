@@ -530,7 +530,18 @@ public class EtrCommonService extends BaseService<ITableRow> {
             return addMessage;
         }
     }
-	
+
+    /**
+     * 错误消息拼接
+     * @param errorMsg 原错误信息
+     * @param addMsg 新增错误信息
+     * @since 1.0
+     */
+    public void spliceMessage(StringBuilder errorMsg, String addMsg) {
+        // 错误信息拼接
+        errorMsg.append(StringUtil.isEmpty(addMsg)||StringUtil.isEmpty(errorMsg.toString())?addMsg:"<br />"+addMsg );
+    }
+
 	    /***
      * 验证指令能否撤销(指令状态变更接口)
      * @param selectItem
@@ -1355,7 +1366,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
             etrSecPositionDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
 
             etrSecPositionDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-            result.put("canSellAmount", this.getAssetAvailablePosition(etrSecPositionDto).divide(new BigDecimal(100)));
+            result.put("canSellAmount", this.getAssetAvailablePosition(etrSecPositionDto));
             // 资产持仓券面总额
             PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
             ptlSecPositionFlowDto.setCdate(tradeDate);
@@ -1365,11 +1376,11 @@ public class EtrCommonService extends BaseService<ITableRow> {
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
             ptlSecPositionFlowDto.setFinprodId((String)paramMap.get("finprodId"));
             ptlSecPositionFlowDto.setEntrust(true);
-            BigDecimal amount03 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto).divide(new BigDecimal(100));
+            BigDecimal amount03 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_融入.getValue());
-            BigDecimal amount05 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto).divide(new BigDecimal(100));
+            BigDecimal amount05 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_融出.getValue());
-            BigDecimal amount06 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto).divide(new BigDecimal(100));
+            BigDecimal amount06 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             BigDecimal assetPositionEntrustAmt = ArithmeticUtil.doAdd(amount03, amount05);
             assetPositionEntrustAmt = ArithmeticUtil.subtract(assetPositionEntrustAmt, amount06);
             result.put("positionAmount", assetPositionEntrustAmt);
@@ -1382,6 +1393,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
         dto.setCostPrice(costPrice);
         dto.setPositionAmount(result.get("positionAmount") == null ? BigDecimal.ZERO : (BigDecimal) result.get("positionAmount"));
         dto.setCanSellAmount(result.get("canSellAmount") == null ? BigDecimal.ZERO : (BigDecimal) result.get("canSellAmount"));
+        dto.setCashAmount(proAvailableCash);
         return dto;
     }
 

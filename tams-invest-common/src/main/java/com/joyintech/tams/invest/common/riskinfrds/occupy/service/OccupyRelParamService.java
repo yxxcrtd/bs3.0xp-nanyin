@@ -11,6 +11,8 @@
 package com.joyintech.tams.invest.common.riskinfrds.occupy.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,4 +44,12 @@ public class OccupyRelParamService extends RedisBaseService<IOccupyRelParam> {
         Map<String, IOccupyRelParam> map = getMapFromRedis(RedisKeyEnum.预占实占信息.key(), ocpList);
         return CollectionUtils.isEmpty(map) ? null : map.get(field);
     }
+    // add by zhangrui1 20200812 start
+    public Map<String, IOccupyRelParam> getOccupyRelParamList(Collection<String> ocpCodeList) {
+        if (CollectionUtils.isEmpty(ocpCodeList)) {
+            return new HashMap<>();
+        }
+        return getMapFromRedis(RedisKeyEnum.预占实占信息.key(), ocpCodeList);
+    }
+    // add by zhangrui1 20200812 end
 }

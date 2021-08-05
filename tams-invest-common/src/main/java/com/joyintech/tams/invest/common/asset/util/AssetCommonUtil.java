@@ -1,15 +1,19 @@
 package com.joyintech.tams.invest.common.asset.util;
 
+import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.asset.annotation.DictEnum;
+import com.joyintech.tams.invest.common.asset.annotation.DictList;
 import com.joyintech.tams.invest.common.asset.annotation.Number;
 import com.joyintech.tams.invest.common.asset.dao.AssetGenerateMapper;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
@@ -20,8 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -212,7 +218,7 @@ public class AssetCommonUtil {
         paramMap.put(KEY_ARRAY[2],valDate);
         paramMap.put(KEY_ARRAY[3],DictCodeListExt1.金融产品类型_投管用_债券.getValue()+ GlobalConstant.UNDER_LINE);
         List<Map> listMap=assetGenerateMapper.getBondValuation(paramMap);
-        return assembleDate(listMap,predicate,func);
+        return assembleData(listMap,predicate,func);
     }
 
     /**
@@ -232,7 +238,7 @@ public class AssetCommonUtil {
         paramMap.put(KEY_ARRAY[1],keyList);
         paramMap.put(KEY_ARRAY[2],valDate);
         List<Map> listMap=assetGenerateMapper.getAstNetVal(paramMap);
-        return assembleDate(listMap,predicate,func);
+        return assembleData(listMap,predicate,func);
     }
 
     /**
@@ -250,10 +256,10 @@ public class AssetCommonUtil {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put(KEY_ARRAY[1],keyList);
         List<Map> listMap=assetGenerateMapper.getStlAccount(paramMap);
-        return assembleDate(listMap,predicate,func);
+        return assembleData(listMap,predicate,func);
     }
 
-    private static <T,R> List<R> assembleDate(List<T> listMap,Predicate<T> predicate,Function<T,R> func){
+    private static <T,R> List<R> assembleData(List<T> listMap,Predicate<T> predicate,Function<T,R> func){
         List<R> rList=new ArrayList<>();
         if(!StringUtil.isEmptyList(listMap)){
             List<T> filterList=listMap.stream().filter(item->StringUtil.isNotEmpty(predicate)?predicate.test(item):true).collect(Collectors.toList());
@@ -330,6 +336,108 @@ public class AssetCommonUtil {
         catch (Exception e) {
             throw new BusinessException("数据解析异常",e);
         }
+    }
+
+    /**
+     * 文件行数据转化成Entity
+     * @param data 文件行数据
+     * @param clz Entity类型
+     * @param <T> 返回类型
+     * @return Entity实例
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public static <T> T parseArrayToEntry(String[] data, Class<T> clz)
+            throws BusinessException {
+        // 数据为空或者受体类不存在时返回空
+        if (data == null || data.length == 0 || clz == null) {
+            return null;
+        }
+        // 实例化受体类
+        try {
+            T entity = clz.newInstance();
+            // 受体类的方法列表
+            Method[] fList = clz.getMethods();
+            for (Method md : fList) {
+                // 受体类的方法注解
+                Number idx = md.getAnnotation(Number.class);
+                // 受体类的方法不是set方法或者没有注解时跳过
+                if (!StringUtil.startsWith(md.getName(), "set") || idx == null) {
+                    continue;
+                }
+                int i = idx.value();
+                // 参数类型
+                String paramType = md.getGenericParameterTypes()[0].getTypeName();
+                String val = data[i];
+                if (StringUtil.isEmpty(val)) {
+                    continue;
+                }
+                // String类型时
+                if (isClassType(paramType, String.class)) {
+                    // 关联数据字典
+                    DictList dict = md.getAnnotation(DictList.class);
+                    // 数据字典转换
+                    if (dict != null) {
+                        List<? extends DataDictItem> dictTypeList= SysDataUtil.getDataDictItem(dict.link().getValue());
+                        String valExt=val;
+                        for(DataDictItem item:dictTypeList){
+                            if (StringUtil.equals(dict.match()== DictEnum.MIX?item.getItemCode()+item.getItemValue():dict.match()== DictEnum.NMAE?item.getItemValue():item.getItemCode(), val)) {
+                                valExt=item.getItemCode();
+                                break;
+                            }else{
+                                valExt=null;
+                            }
+                        }
+                        val=valExt;
+                    }
+                    md.invoke(entity, val);
+                }
+                // Date类型时
+                else if (isClassType(paramType, Date.class)) {
+                    // 设置值
+                    md.invoke(entity, val.contains("/")?DateUtil.parseDate(val, DateUtil.DEFAULT_ANOTHER_FORMAT):val.contains("-")?DateUtil.parseDate(val, DateUtil.DEFAULT_DATE_FORMAT_EN):DateUtil.parseDate(val, DateUtil.DEFAULT_OTHER_FORMAT));
+                }
+                // BigDecimal类型时
+                else if (isClassType(paramType, BigDecimal.class)) {
+                    // 设置值
+                    md.invoke(entity, new BigDecimal(val));
+                }
+                // int类型时
+                else if (isClassType(paramType, Integer.class)) {
+                    // 设置值
+                    md.invoke(entity, new Integer(val));
+                }
+                // long类型时
+                else if (isClassType(paramType, Long.class)) {
+                    // 设置值
+                    md.invoke(entity, new Long(val));
+                }
+                else {
+                    throw new BusinessException("受体类属性(" + md.getName() + ")类型(" + paramType
+                            + ")定义不符合规范:【String, Date, BigDecimal, int, long】");
+                }
+            }
+            return entity;
+        }
+        catch (InstantiationException | IllegalAccessException | SecurityException
+                | IllegalArgumentException | InvocationTargetException | ParseException e) {
+            throw new BusinessException("文件解析异常");
+        }
+    }
+
+    /**
+     * 判断Class类型
+     *
+     * @param type 对象
+     * @param clz 目标
+     * @return true:符合预期；false:不符合
+     * @see
+     * @since 1.0
+     */
+    private static <T> boolean isClassType(String type, Class<T> clz) {
+        String clzName = clz.getName();
+        return StringUtil.equals(clzName, type);
     }
 
     /**

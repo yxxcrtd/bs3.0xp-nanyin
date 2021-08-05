@@ -303,6 +303,8 @@ public class EtrPlanAssetC002Controller extends BaseController {
                           + DateUtil.format(entity.getMdate()) + ")-"
                           + this.getMessage("EtrPlanAssetC002.entrustNum") + ":"
                           + entity.getEntrustNum2());
+        }else{
+            params.setComment(entity -> this.getMessage("计划类资产（货币型）投资委托"));// add by xxg 20210803
         }
         processParameter.setWorkFlowParameter(params);
         String msg = etrPlanAssetCService.start(processParameter, dto);

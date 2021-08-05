@@ -52,21 +52,9 @@ public class RiskTrialConsumerTask extends BatchBaseService {
         throws BatchException {
     	JobExecution result = new JobExecution(1l);
         result.setStatus(BatchStatus.FAILED);
-		synchronized (lock1) {
-			if(isRunning) {
-				while (isRunning) {
-					try {
-						Thread.sleep(30000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				isRunning = true;
-			}
-
-			else {
-				isRunning = true;
-			}
+        synchronized (lock1) {
+			if(isRunning) return result;
+			else isRunning = true;
 		}
         try {
         	riskTrialComm.afterRiskTrialDeal(taskQueue);

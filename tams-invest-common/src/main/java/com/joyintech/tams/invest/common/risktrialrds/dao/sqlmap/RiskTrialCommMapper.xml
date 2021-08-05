@@ -22,6 +22,15 @@
 		</collection>
 	</resultMap>
 
+	<resultMap id="ParamResultMap" type="com.joyintech.tams.invest.common.risktrialrds.dto.SupervisionParameterDto" >
+		<id column="PARA_CODE" property="paraCode" jdbcType="VARCHAR" />
+		<id column="PARA_GRANULARITY" property="paraGranularity" jdbcType="VARCHAR" />
+		<result column="PARA_DISPLAY_TYPE" property="paraDisplayType" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ParamResultMapWithBLOBs" type="com.joyintech.tams.invest.common.risktrialrds.dto.SupervisionParameterDto" extends="ParamResultMap" >
+		<result column="CONTENT" property="content" jdbcType="CLOB" />
+	</resultMap>
+
 	<select id="getPortfIndTask" parameterType="com.joyintech.tams.invest.common.risktrialrds.dto.InvestTradeTrialInput"
 		resultMap="rskTrialCommonMap">
 		select
@@ -113,10 +122,9 @@
 		<where>
 			<if test="productIdList != null and !productIdList.isEmpty()">
 				 (
-				PORTFOLIO_ID in (select PORTFOLIO_ID from FIN_PRODUCT_ADD where FIN_PRODUCT_ADD.FINPROD_ID in 
-			<foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
+				PORTFOLIO_ID in (select PORTFOLIO_ID from FIN_PRODUCT_ADD where FIN_PRODUCT_ADD.FINPROD_ID in <foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
 				<if test="(index % 500) == 499">
-					null) OR PORTFOLIO_ID IN (
+					null) OR and PORTFOLIO_ID IN (
 				</if>
 				#{obj}
 			</foreach>
@@ -127,7 +135,7 @@
 				PORTFOLIO_ID in
 				<foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
 					<if test="(index % 500) == 499">
-						null) OR PORTFOLIO_ID IN (
+						null) OR and PORTFOLIO_ID IN (
 					</if>
 					#{obj}
 				</foreach>
@@ -211,16 +219,25 @@
 		</where>
 	</select>
 
-	<select id="getIndicatorParamAll" resultType="com.joyintech.tams.invest.common.risktrialrds.dto.SupervisionParameterDto">
-		select m.PARA_CODE,m.PARA_GRANULARITY,m.PARA_DISPLAY_TYPE,m.CONTENT,'' institutionCode from RSK_ISUP_INDICATOR_PARA_DTL m
-		inner join RSK_ISUP_INDICATOR_PARA n on m.PARA_CODE=n.PARA_CODE
-		union all
-		select m.PARA_CODE,'FIX' as PARA_GRANULARITY,'FIX' AS PARA_DISPLAY_TYPE,m.CONTENT,m.INSTITUTION_CODE institutionCode from RSK_ISUP_FIX_RECODE m
-		inner join 	 (select MAX(RSK_ISUP_FIX_RECODE.VALID_DATE) as VALID_DATE,PARA_CODE,INSTITUTION_CODE from RSK_ISUP_FIX_RECODE
-        <![CDATA[ where RSK_ISUP_FIX_RECODE.VALID_DATE<=to_date('${valDate}','yyyy-MM-dd') group by PARA_CODE,INSTITUTION_CODE) n 
-        on m.PARA_CODE=n.PARA_CODE and m.VALID_DATE=n.VALID_DATE and m.INSTITUTION_CODE=n.INSTITUTION_CODE
-		inner join RSK_ISUP_INDICATOR_PARA y on m.PARA_CODE=y.PARA_CODE ]]>
-	</select>
+<select id="getIndicatorParamAll" resultMap="ParamResultMapWithBLOBs">
+    select m.PARA_CODE,m.PARA_GRANULARITY,m.PARA_DISPLAY_TYPE,m.CONTENT from RSK_ISUP_INDICATOR_PARA_DTL m
+    inner join RSK_ISUP_INDICATOR_PARA n on m.PARA_CODE=n.PARA_CODE
+    <where>
+		<if test="paramCode != null and paramCode != '' ">
+            and m.PARA_CODE in ${paramCode}
+		</if>
+		<if test="supFrequency != null and supFrequency != '' ">
+			and m.PARA_GRANULARITY = #{supFrequency}
+		</if>
+	</where>
+
+    union all
+
+    select m.PARA_CODE,'FIX' as PARA_GRANULARITY,'FIX' AS PARA_DISPLAY_TYPE,m.CONTENT from RSK_ISUP_FIX_RECODE m
+    inner join 	 (select MAX(RSK_ISUP_FIX_RECODE.VALID_DATE) as VALID_DATE,PARA_CODE from RSK_ISUP_FIX_RECODE
+    <![CDATA[ where RSK_ISUP_FIX_RECODE.VALID_DATE<=to_date('${valDate}','yyyy-MM-dd') group by PARA_CODE) n on m.PARA_CODE=n.PARA_CODE and m.VALID_DATE=n.VALID_DATE
+    inner join RSK_ISUP_INDICATOR_PARA y on m.PARA_CODE=y.PARA_CODE ]]>
+</select>
 
 	<select id="getRiskTrialRetInfo" resultType="com.joyintech.tams.invest.common.risktrialrds.dto.RiskTrialRetDto">
 		select
@@ -301,15 +318,23 @@
 	</foreach>
      ) t1
 	</insert>
-	
+
 	<select id="selectWorkflowActionType" parameterType="java.lang.String" resultType="java.lang.String">
 		select ACTION_TYPE from SYS_WFL_BUSINESS_LIST where SEQ_NO=#{seqNo, jdbcType=VARCHAR}
 	</select>
-	
-	<select id="getPortfolioInstCode" resultType="java.lang.String">
-       select INSTITUTION_CODE from DATA_AUTH_NOTIFY_INST 
-	  WHERE DATA_AUTH_NOTIFY_INST.MODEL_TYPE = '02' 
-	    and DATA_AUTH_NOTIFY_INST.DATA_TYPE = 'PTL01'
-	    and DATA_AUTH_NOTIFY_INST.BUSINESS_ID = #{portfolioId,jdbcType=VARCHAR}
-    </select>
+
+	<!--通过条件删除脏数据-->
+	<delete id="deleteRiskValBatchData" parameterType="java.util.List">
+		delete from RSK_ISUP_POINT_VAL where (PORTFOLIO_ID,SUP_FREQUENCY,SUP_DATE) in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			(#{item.portfolioId} , #{item.supFrequency} ,#{item.supDate})
+		</foreach>
+	</delete>
+	<!--通过条件删除脏数据-->
+	<delete id="deleteRiskValDetBatchData" parameterType="java.util.List">
+		delete from RSK_ISUP_POINT_DET_VAL where (PORTFOLIO_ID,SUP_FREQUENCY,SUP_DATE) in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			(#{item.portfolioId} , #{item.supFrequency} ,#{item.supDate})
+		</foreach>
+	</delete>
 </mapper>

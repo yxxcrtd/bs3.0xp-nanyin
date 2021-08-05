@@ -57,7 +57,8 @@
 		<module>../../microservice/service-invest-interf</module>
         <module>../../microservice/service-interf</module>
 		<module>../../microservice/service-common-basicdata</module>
-		<module>../../microservice/tams-service-container</module>
+
+		<module>../../microservice/tams-service-container-touguan</module>
 
         <!-- 批处理 -->
         <module>../../tams-invest-batch</module>
