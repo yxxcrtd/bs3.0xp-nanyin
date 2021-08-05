@@ -1,16 +1,18 @@
 package com.joyintech.tams.svreport.pbc.assetdebtdat.service;
 
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.svreport.pbc.assetdebt.dao.PbcReportAssetDebtDetailMapper;
-import com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportAssetDebtDetailDto;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAssetDebtDatDetailMapper;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
+import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcTemplateName;
-import com.joyintech.tams.svreport.pbc.common.service.PbcExportService;
+import com.joyintech.tams.svreport.pbc.common.service.PbcDatPriviewService;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import org.slf4j.Logger;
@@ -33,13 +35,13 @@ import java.util.Map;
  * @作者：weiyuqiang @创建时间：2019年3月4日 @修改记录：
  */
 @Service
-@TemplateName(PbcTemplateName.PBC_REPORT_2_1)
-public class PbcReportAssetDebtDatService extends PbcExportService {
+@TemplateName(PbcDatTemplateName.PBC_DAT_REPORT_2_1)
+public class PbcReportAssetDebtDatService extends PbcDatPriviewService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private PbcReportAssetDebtDetailMapper pbcReportAssetDebtDetailMapper;
+    private PbcReportAssetDebtDatDetailMapper pbcReportAssetDebtDatDetailMapper;
 
     @Autowired
     private PbcMonthReportMapper pbcMonthReportMapper;
@@ -53,22 +55,25 @@ public class PbcReportAssetDebtDatService extends PbcExportService {
             return data;
         }
         String reportuuid = param.get("reportuuid").toString();
+        String reporttype = param.get("reporttype").toString();
         PbcMonthReport pbcReport = pbcMonthReportMapper.selectByPrimaryKey(reportuuid);
         // 如果报表为空则返回data
         if (pbcReport == null) {
             return data;
         }
         pbcReport.setProdVariety(pbcReport.getProdVariety() + "-" + SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
-        data.put("report", pbcReport);
+        data.put("report", JsonUtils.object2Map(pbcReport));
         // 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
-        List<PbcReportAssetDebtDetailDto> listDetail = pbcReportAssetDebtDetailMapper.selectByReportuuid(reportuuid);
+        List<PbcReportAssetDebtDatDetailDto> listDetail = pbcReportAssetDebtDatDetailMapper.selectDatDiffByReport(reportuuid,reporttype);
         if (!CollectionUtils.isEmpty(listDetail)) {
-            for (PbcReportAssetDebtDetailDto detail : listDetail) {
+            for (PbcReportAssetDebtDatDetailDto detail : listDetail) {
+                //PBC_REPORT_PROD表和PBC_REPORT_PROD_DAT差异的实体类
+                dealAreaDateListForDiff(detail);
                 // 处理数据
                 dealAssetDebtDateListForExport(detail);
                 dealProdData(detail, isShowZero);
-                data.put(detail.getPropertycode(), detail);
+                data.put(detail.getPropertycode(), JsonUtils.object2Map(detail));
             }
         }
         return data;
@@ -77,7 +82,7 @@ public class PbcReportAssetDebtDatService extends PbcExportService {
     @SuppressWarnings("unchecked")
     @Override
     public Map<Object, Object> createDataMS(Map<String, Object> param) {
-        return restTemplate.postForObject(SvrServiceApplication.PBC_SERVICE_NAME + "/PbcMonthReportAsset/createDataAssetDebt", param, Map.class);
+        return createData(param);
     }
 
     /**
@@ -98,9 +103,9 @@ public class PbcReportAssetDebtDatService extends PbcExportService {
         data.put("report", pbcReport);
         // 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
-        List<PbcReportAssetDebtDetailDto> listDetail = pbcReportAssetDebtDetailMapper.selectByReportuuid(reportuuid);
+        List<PbcReportAssetDebtDatDetailDto> listDetail = pbcReportAssetDebtDatDetailMapper.selectByReportuuid(reportuuid);
         if (!CollectionUtils.isEmpty(listDetail)) {
-            for (PbcReportAssetDebtDetailDto detail : listDetail) {
+            for (PbcReportAssetDebtDatDetailDto detail : listDetail) {
                 // 处理数据
                 dealAssetDebtDateListForExport(detail);
                 dealProdData(detail, isShowZero);
@@ -120,7 +125,7 @@ public class PbcReportAssetDebtDatService extends PbcExportService {
      * @param isShowZero
      *            01:显示为0, 02:显示为空
      */
-    private void dealProdData(PbcReportAssetDebtDetailDto detail, String isShowZero) {
+    private void dealProdData(PbcReportAssetDebtDatDetailDto detail, String isShowZero) {
         if ("01".equals(isShowZero)) {
             if(detail.getCny() == null){
                 detail.setCny(BigDecimal.ZERO);
@@ -178,7 +183,7 @@ public class PbcReportAssetDebtDatService extends PbcExportService {
      * @param detail
      * @return PbcReportAssetDebtDetailDto
      */
-    public void dealAssetDebtDateListForExport(PbcReportAssetDebtDetailDto detail) {
+    public void dealAssetDebtDateListForExport(PbcReportAssetDebtDatDetailDto detail) {
         BigDecimal tenthousand = new BigDecimal(10000);
         // Add By QuJianZhong 20200508 金额单位由万元改为元 start
         if(null!=detail.getReporttype() && "ONEPRD_ASSET_DEBT".equals(detail.getReporttype())){
@@ -237,9 +242,9 @@ public class PbcReportAssetDebtDatService extends PbcExportService {
         data.put("report", pbcReport);
         // 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
-        List<PbcReportAssetDebtDetailDto> listDetail = pbcReportAssetDebtDetailMapper.selectByReportuuidForExport(reportuuid);
+        List<PbcReportAssetDebtDatDetailDto> listDetail = pbcReportAssetDebtDatDetailMapper.selectByReportuuidForExport(reportuuid);
         if (!CollectionUtils.isEmpty(listDetail)) {
-            for (PbcReportAssetDebtDetailDto detail : listDetail) {
+            for (PbcReportAssetDebtDatDetailDto detail : listDetail) {
                 // 处理数据
                 dealAssetDebtDateListForExport(detail);
                 dealProdData(detail, isShowZero);
@@ -247,6 +252,55 @@ public class PbcReportAssetDebtDatService extends PbcExportService {
             }
         }
         return data;
+    }
+
+    /**
+     * 功能:处理查询出资管产品统计模板和资管产品统计模板DAT差异
+     * @since 1.6.0
+     * @version 1.6.0
+     * @param detail
+     * @return
+     * PbcReportAssetDebtDetailDto
+     */
+    public void dealAreaDateListForDiff(PbcReportAssetDebtDatDetailDto detail) {
+        // 人民币
+        if(!detail.getCny().equals(detail.getCnyPrd())){
+            detail.setCnyDiff(1);
+        }else{
+            detail.setCnyDiff(0);
+        }
+        //外币
+//		if(detail.getForeignCcy() != null){
+//			detail.setForeignCcy(detail.getForeignCcy().divide(tenthousand));
+//		}
+        //美元折人民币
+        if(!detail.getUsdToCny().equals(detail.getUsdToCnyPrd())){
+            detail.setUsdToCnyDiff(1);
+        }else{
+            detail.setUsdToCnyDiff(0);
+        }
+        //欧元折人民币
+        if(!detail.getEurToCny().equals(detail.getUsdToCnyPrd())){
+            detail.setEurToCnyDiff(1);
+        }else{
+            detail.setEurToCnyDiff(0);
+        }
+        //英镑折人民币
+        if(!detail.getGbpToCny().equals(detail.getGbpToCnyPrd())){
+            detail.setGbpToCnyDiff(1);
+        }
+        //日元折人民币
+        if(!detail.getJpyToCny().equals(detail.getJpyToCnyPrd())){
+            detail.setJpyToCnyDiff(1);
+        }
+        //其他币种(外币)折人民币
+        if(!detail.getOthToCny().equals(detail.getOthToCnyPrd())){
+            detail.setOthToCnyDiff(1);
+        }
+        //合计
+        if(!detail.getTotal().equals(detail.getTotalPrd())){
+            detail.setTotalDiff(1);
+        }
     }
 
 

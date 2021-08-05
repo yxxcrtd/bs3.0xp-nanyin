@@ -5,11 +5,11 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.svreport.pbc.assetdebt.dao.PbcReportAssetIncomeDetailMapper;
-import com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportAssetIncomeDetail;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAssetIncomeDatDetailMapper;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
-import com.joyintech.tams.svreport.pbc.common.constants.PbcTemplateName;
-import com.joyintech.tams.svreport.pbc.common.service.PbcExportService;
+import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
+import com.joyintech.tams.svreport.pbc.common.service.PbcDatPriviewService;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import org.slf4j.Logger;
@@ -29,13 +29,13 @@ import java.util.Map;
  * @since 1.0
  */
 @Service
-@TemplateName(PbcTemplateName.PBC_REPORT_2_4)
-public class PbcReportAssetIncomeDetailDatService extends PbcExportService {
+@TemplateName(PbcDatTemplateName.PBC_DAT_REPORT_2_4)
+public class PbcReportAssetIncomeDetailDatService extends PbcDatPriviewService {
 
     @SuppressWarnings("unused")
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
-    private PbcReportAssetIncomeDetailMapper pbcReportAssetIncomeDetailMapper;
+    private PbcReportAssetIncomeDatDetailMapper PbcReportAssetIncomeDatDetailMapper;
     @Autowired
     private PbcMonthReportMapper pbcMonthReportMapper;
 
@@ -46,6 +46,7 @@ public class PbcReportAssetIncomeDetailDatService extends PbcExportService {
             return data;
         }
         String reportuuid = param.get("reportuuid").toString();
+        String reporttype = param.get("reporttype").toString();
         PbcMonthReport pbcReport = pbcMonthReportMapper.selectByPrimaryKey(reportuuid);
         // 如果报表为空则返回data
         if (pbcReport == null) {
@@ -55,8 +56,8 @@ public class PbcReportAssetIncomeDetailDatService extends PbcExportService {
         data.put("report", pbcReport);
         // 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
-        List<PbcReportAssetIncomeDetail> listDetail = pbcReportAssetIncomeDetailMapper.selectByReportuuid(reportuuid);
-        for (PbcReportAssetIncomeDetail detail : listDetail) {
+        List<PbcReportAssetIncomeDatDetail> listDetail = PbcReportAssetIncomeDatDetailMapper.selectByReportuuid(reportuuid);
+        for (PbcReportAssetIncomeDatDetail detail : listDetail) {
             dealProdData(detail, isShowZero);
             data.put(detail.getPropertycode(), processDataForExport(detail));
         }
@@ -73,7 +74,7 @@ public class PbcReportAssetIncomeDetailDatService extends PbcExportService {
      * @param isShowZero
      *            01:显示为0, 02:显示为空
      */
-    private void dealProdData(PbcReportAssetIncomeDetail detail, String isShowZero) {
+    private void dealProdData(PbcReportAssetIncomeDatDetail detail, String isShowZero) {
         if ("01".equals(isShowZero)) {
             if(detail.getLoanIncomeRight() == null){
                 detail.setLoanIncomeRight(BigDecimal.ZERO);
@@ -142,10 +143,10 @@ public class PbcReportAssetIncomeDetailDatService extends PbcExportService {
     /**
      * @Description 金额格式化
      * @param detail
-     * @return PbcReportAssetIncomeDetail
+     * @return PbcReportAssetIncomeDatDetail
      * @version 1.0 2019年3月5日
      */
-    public PbcReportAssetIncomeDetail processDataForExport(PbcReportAssetIncomeDetail detail) {
+    public PbcReportAssetIncomeDatDetail processDataForExport(PbcReportAssetIncomeDatDetail detail) {
         BigDecimal tenthousand = new BigDecimal(10000);
         // 贷款收益权
         if (detail.getLoanIncomeRight() != null) {
@@ -199,8 +200,8 @@ public class PbcReportAssetIncomeDetailDatService extends PbcExportService {
         data.put("report", pbcReport);
         // 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
-        List<PbcReportAssetIncomeDetail> listDetail = pbcReportAssetIncomeDetailMapper.selectByReportuuid(reportuuid);
-        for (PbcReportAssetIncomeDetail detail : listDetail) {
+        List<PbcReportAssetIncomeDatDetail> listDetail = PbcReportAssetIncomeDatDetailMapper.selectByReportuuid(reportuuid);
+        for (PbcReportAssetIncomeDatDetail detail : listDetail) {
             dealProdData(detail, isShowZero);
             data.put(detail.getPropertycode(), processDataForExport(detail));
         }

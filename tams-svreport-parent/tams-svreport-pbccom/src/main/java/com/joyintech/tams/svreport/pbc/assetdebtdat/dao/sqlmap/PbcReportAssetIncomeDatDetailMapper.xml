@@ -220,4 +220,24 @@
        and pr.send_status = '01'/*只删除未报送数据*/
        )
   </delete>
+
+  <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail"
+          parameterType="java.lang.String" >
+    select
+      ppd.*,
+      prp.LOAN_INCOME_RIGHT as loanIncomeRightPrd,
+       prp.DEBT_SECURITIES_INCOME_RIGHTS as debtSecuritiesIncomeRightsPrd,
+      prp.RECEIVABLE_INCOME_RIGHTS as receivableIncomeRightsPrd,
+       prp.OTHER_CREDITOR_RIGHTS as otherCreditorRightsPrd,
+       prp.STOCK_INCOME_RIGHT as stockIncomeRightPrd,
+       prp.OTHER_EQUITY_INCOME_RIGHTS as otherEquityIncomeRightsPrd,
+      prp.PROPERTY_RIGHTS as propertyRightsPrd,
+        prp.TOTAL as totalPrd
+    from PBC_REPORT_ASSET_INCOME_DAT ppd
+           left join PBC_REPORT_ASSET_INCOME  prp on ppd.REPORTUUID=prp.REPORTUUID
+      and ppd.REPORTTYPE=prp.REPORTTYPE
+      and ppd.propertyCode=prp.propertyCode
+    where ppd.REPORTUUID = #{reportuuid,jdbcType=CHAR}
+      and ppd.REPORTTYPE=#{reporttype,jdbcType=CHAR}
+  </select>
 </mapper>

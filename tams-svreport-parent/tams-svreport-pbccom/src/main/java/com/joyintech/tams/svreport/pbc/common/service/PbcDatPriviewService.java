@@ -97,7 +97,6 @@ public class PbcDatPriviewService extends BaseService<ITableRow>{
 			}
 
 		}
-		Map<String, Integer> redMap=(Map)data.get("redMap");
 		// 表格宽度默认100%
 		int tableWidth = 100;
 		if (param.get("tableWidth") != null){
@@ -111,7 +110,7 @@ public class PbcDatPriviewService extends BaseService<ITableRow>{
 		// 生成临时文件
 		String tempFileName = template + new Date().getTime();
 		//File depositfile = PbcExcelUtil.createFile(PbcExcelUtil.convertMapKey2String(data), template, tempFileName);
-		File depositfile = TisUtil.createFileIfCellRed(PbcExcelUtil.convertMapKey2String(data), "pbc/"+template, tempFileName,redMap);
+		File depositfile = TisUtil.createFileIfCellRed(PbcExcelUtil.convertMapKey2String(data), "pbc/"+template, tempFileName);
 		
 		return XlsxToHtml.readExcelToHtml(depositfile, true, true,sheetNum,tableWidth);
 	}

@@ -64,7 +64,7 @@ $(function() {
         }
 
         var param={reportuuid:data.reportuuid,
-            reporttype:data.datZipDatType}
+            reporttype:data.datZipDatType,datZipCode:data.datZipCode}
 
         Joyin.ajax('preView', param, function(result) {
             if ("fail" == result){

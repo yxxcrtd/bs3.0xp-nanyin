@@ -64,6 +64,67 @@ public class PbcReportCompanyDatDetailDto {
      */
     private String reportuuid;
 
+
+    /**
+     * 大型企业
+     */
+    private BigDecimal largeCompanyAmtPrd;
+
+    /**
+     * 中型企业
+     */
+    private BigDecimal mediumCompanyAmtPrd;
+
+    /**
+     * 小型企业
+     */
+    private BigDecimal smallCompanyAmtPrd;
+
+    /**
+     * 微型企业
+     */
+    private BigDecimal microCompanyAmtPrd;
+
+    /**
+     * 其他（住户、广义政府及境外）
+     */
+    private BigDecimal othAmtPrd;
+
+    /**
+     * 合计
+     */
+    private BigDecimal sumAmtPrd;
+
+    /**
+     * 大型企业
+     */
+    private Integer largeCompanyAmtDiff=0;
+
+    /**
+     * 中型企业
+     */
+    private Integer mediumCompanyAmtDiff=0;
+
+    /**
+     * 小型企业
+     */
+    private Integer smallCompanyAmtDiff=0;
+
+    /**
+     * 微型企业
+     */
+    private Integer microCompanyAmtDiff=0;
+
+    /**
+     * 其他（住户、广义政府及境外）
+     */
+    private Integer othAmtDiff=0;
+
+    /**
+     * 合计
+     */
+    private Integer sumAmtDiff=0;
+
     /**
      * 明细统计uuid
      * @return DETAILUUID 明细统计uuid
@@ -238,5 +299,114 @@ public class PbcReportCompanyDatDetailDto {
      */
     public void setReportuuid(String reportuuid) {
         this.reportuuid = reportuuid == null ? null : reportuuid.trim();
+    }
+
+
+    public BigDecimal getLargeCompanyAmtPrd() {
+        return largeCompanyAmtPrd;
+    }
+
+    public PbcReportCompanyDatDetailDto setLargeCompanyAmtPrd(BigDecimal largeCompanyAmtPrd) {
+        this.largeCompanyAmtPrd = largeCompanyAmtPrd;
+        return this;
+    }
+
+    public BigDecimal getMediumCompanyAmtPrd() {
+        return mediumCompanyAmtPrd;
+    }
+
+    public PbcReportCompanyDatDetailDto setMediumCompanyAmtPrd(BigDecimal mediumCompanyAmtPrd) {
+        this.mediumCompanyAmtPrd = mediumCompanyAmtPrd;
+        return this;
+    }
+
+    public BigDecimal getSmallCompanyAmtPrd() {
+        return smallCompanyAmtPrd;
+    }
+
+    public PbcReportCompanyDatDetailDto setSmallCompanyAmtPrd(BigDecimal smallCompanyAmtPrd) {
+        this.smallCompanyAmtPrd = smallCompanyAmtPrd;
+        return this;
+    }
+
+    public BigDecimal getMicroCompanyAmtPrd() {
+        return microCompanyAmtPrd;
+    }
+
+    public PbcReportCompanyDatDetailDto setMicroCompanyAmtPrd(BigDecimal microCompanyAmtPrd) {
+        this.microCompanyAmtPrd = microCompanyAmtPrd;
+        return this;
+    }
+
+    public BigDecimal getOthAmtPrd() {
+        return othAmtPrd;
+    }
+
+    public PbcReportCompanyDatDetailDto setOthAmtPrd(BigDecimal othAmtPrd) {
+        this.othAmtPrd = othAmtPrd;
+        return this;
+    }
+
+    public BigDecimal getSumAmtPrd() {
+        return sumAmtPrd;
+    }
+
+    public PbcReportCompanyDatDetailDto setSumAmtPrd(BigDecimal sumAmtPrd) {
+        this.sumAmtPrd = sumAmtPrd;
+        return this;
+    }
+
+    public Integer getLargeCompanyAmtDiff() {
+        return largeCompanyAmtDiff;
+    }
+
+    public PbcReportCompanyDatDetailDto setLargeCompanyAmtDiff(Integer largeCompanyAmtDiff) {
+        this.largeCompanyAmtDiff = largeCompanyAmtDiff;
+        return this;
+    }
+
+    public Integer getMediumCompanyAmtDiff() {
+        return mediumCompanyAmtDiff;
+    }
+
+    public PbcReportCompanyDatDetailDto setMediumCompanyAmtDiff(Integer mediumCompanyAmtDiff) {
+        this.mediumCompanyAmtDiff = mediumCompanyAmtDiff;
+        return this;
+    }
+
+    public Integer getSmallCompanyAmtDiff() {
+        return smallCompanyAmtDiff;
+    }
+
+    public PbcReportCompanyDatDetailDto setSmallCompanyAmtDiff(Integer smallCompanyAmtDiff) {
+        this.smallCompanyAmtDiff = smallCompanyAmtDiff;
+        return this;
+    }
+
+    public Integer getMicroCompanyAmtDiff() {
+        return microCompanyAmtDiff;
+    }
+
+    public PbcReportCompanyDatDetailDto setMicroCompanyAmtDiff(Integer microCompanyAmtDiff) {
+        this.microCompanyAmtDiff = microCompanyAmtDiff;
+        return this;
+    }
+
+    public Integer getOthAmtDiff() {
+        return othAmtDiff;
+    }
+
+    public PbcReportCompanyDatDetailDto setOthAmtDiff(Integer othAmtDiff) {
+        this.othAmtDiff = othAmtDiff;
+        return this;
+    }
+
+    public Integer getSumAmtDiff() {
+        return sumAmtDiff;
+    }
+
+    public PbcReportCompanyDatDetailDto setSumAmtDiff(Integer sumAmtDiff) {
+        this.sumAmtDiff = sumAmtDiff;
+        return this;
     }
 }

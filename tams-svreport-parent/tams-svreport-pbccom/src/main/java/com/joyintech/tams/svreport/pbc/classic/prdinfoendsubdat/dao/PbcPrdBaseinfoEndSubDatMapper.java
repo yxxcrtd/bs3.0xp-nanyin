@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDatDiff;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition;
@@ -88,4 +90,10 @@ public interface PbcPrdBaseinfoEndSubDatMapper {
 	 */
 	int deleteBatchByProdId(@Param("list") List<PbcPrdBaseinfoEndSubDat> list);
 
+	/**
+	 * 查询dat明细
+	 * @param datZipCode
+	 * @return dat明细列表
+	 */
+	List<PbcPrdBaseinfoEndSubDatDiff> queryPbcPrdBaseInfoEndByDatZipCode(String datZipCode);
 }

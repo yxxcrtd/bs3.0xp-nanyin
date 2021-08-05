@@ -28,10 +28,7 @@ import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1018,7 +1015,7 @@ public class TisUtil {
 		}
 		else if (value instanceof Integer) {
 			Integer cellValue = (Integer)value;
-			cell.setCellValue(cellValue.doubleValue());
+			cell.setCellValue(cellValue);
 		}
 	}
 
@@ -1072,7 +1069,7 @@ public class TisUtil {
 
 
 	@SuppressWarnings("unchecked")
-	public static File createFileIfCellRed(Map<String, Object> paraMap, String exceltemplate, String flieName,Map<String, Integer> redReportMap) {
+	public static File createFileIfCellRed(Map<String, Object> paraMap, String exceltemplate, String flieName) {
 		// 模板路径pbc/
 		String template = FileNameUtil.getTplFile(exceltemplate + ".xls");
 		// 模板文件后缀名
@@ -1124,7 +1121,7 @@ public class TisUtil {
 						String cellvalue = row.getCell(j).getStringCellValue();
 						if (StringUtil.isNotEmpty(cellvalue)) {
 							if (cellvalue.contains("${") && cellvalue.contains("}")) {
-								replaceDataAndColor(row.getCell(j), paraMap,redReportMap,wb);
+								replaceData(row.getCell(j), paraMap);
 							}
 							if (cellvalue.contains("!{") && cellvalue.contains("}")) {
 								replaceData2(row.getCell(j), paraMap);
@@ -1259,7 +1256,7 @@ public class TisUtil {
 								String cellvalue = newcell.getStringCellValue();
 								if (StringUtil.isNotEmpty(cellvalue)) {
 									if (cellvalue.contains("#{") && cellvalue.contains("}")) {
-										replaceListData(newcell, value);
+										replaceListDataDiffRed(wb,newcell, value);
 									}
 								}
 							}
@@ -1301,45 +1298,59 @@ public class TisUtil {
 		return null;
 	}
 
-	private static void replaceDataAndColor(Cell cell, Map<String, Object> datas,Map<String, Integer> redReportMap,HSSFWorkbook wb) {
-		CellType cellType = cell.getCellType();
-		if (cellType != CellType.STRING) {
-			return;
-		}
+	private static void replaceListDataDiffRed(HSSFWorkbook wb,Cell cell, Map<String, Object> datas) {
 		String result = cell.getStringCellValue();
 
-		if (!result.contains("${") || !result.contains("}")) {
+		if (!result.contains("#{") || !result.contains("}")) {
 			return;
 		}
-		String key = result.substring(result.indexOf("${") + 2, result.indexOf("}"));
-		String replaceString = replaceString(key, datas);
-		if (StringUtil.isNotEmpty(replaceString)) {
-			result = result.replace("${" + key + "}", replaceString(key, datas));
+		String cellvalue = result.substring(result.indexOf("#{") + 2, result.indexOf("}"));
+		String[] keys = cellvalue.split("\\.");
+        String valKey=keys[1];
+		Object value = datas.get(valKey);
+		if (value == null) {
+			cell.setCellValue("");
+			return;
 		}
-		else {
-			//解决两个参数其中一个为空整个字符串返回空值问题，例${PRODSERIES}${FINPRODNAME}  modify by liupeilin 20200301 begin
-			//result = "";
-			result = result.replace("${" + key + "}", replaceString(key, datas)==null?"":replaceString(key, datas));
-			//解决两个参数其中一个为空整个字符串返回空值问题，例${PRODSERIES}${FINPRODNAME}  modify by liupeilin 20200301 end
+		if (value instanceof Date) {
+			cell.setCellValue((Date)value);
 		}
-
-		//cell.setCellType(CellType.NUMERIC);
-		cell.setCellValue(result);
-		Integer isRedIndex=replaceInteger(key,redReportMap);
-		if(null!=isRedIndex&&1==isRedIndex){
-			CellStyle newStyle = wb.createCellStyle();
-			newStyle.cloneStyleFrom(cell.getCellStyle());
-			// 修改字体颜色为红色
-			Font ztFont1 = wb.createFont();
-			ztFont1.setColor(Font.COLOR_RED); // 将字体设置为“红色”
-			// 字体颜色设置
-			newStyle.setFont(ztFont1);
-			cell.setCellStyle(newStyle);
+		else if (value instanceof String) {
+			cell.setCellValue((String)value);
 		}
-		if (result.contains("${") && result.contains("}")) {
-			replaceData(cell, datas);
+		else if (value instanceof Boolean) {
+			cell.setCellValue((Boolean)value);
 		}
-
+		else if (value instanceof Calendar) {
+			cell.setCellValue((Calendar)value);
+		}
+		else if (value instanceof RichTextString) {
+			cell.setCellValue((RichTextString)value);
+		}
+		else if (value instanceof Double) {
+			cell.setCellValue((Double)value);
+		}
+		else if (value instanceof BigDecimal) {
+			BigDecimal cellValue = (BigDecimal)value;
+			cell.setCellValue(cellValue.doubleValue());
+		}
+		else if (value instanceof Integer) {
+			Integer cellValue = (Integer)value;//转为整形会变成.0,转为字符串正常
+			cell.setCellValue(value.toString());
+		}
+		if(StringUtil.isNotEmpty(datas.get(valKey+"Diff"))){ //【DAT表、登记表】有数据的内容，并且不一致的内容红色标记
+			Integer keyDiff=Integer.parseInt(datas.get(valKey+"Diff").toString());
+			if(1==keyDiff) {
+				CellStyle newStyle = wb.createCellStyle();
+				newStyle.cloneStyleFrom(cell.getCellStyle());
+				// 修改字体颜色为红色
+				Font ztFont1 = wb.createFont();
+				ztFont1.setColor(Font.COLOR_RED); // 将字体设置为“红色”
+				// 字体颜色设置
+				newStyle.setFont(ztFont1);
+				cell.setCellStyle(newStyle);
+			}
+		}
 	}
 
 	private static Integer replaceInteger(String key, Map<String, Integer> datas) {

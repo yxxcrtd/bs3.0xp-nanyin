@@ -80,7 +80,7 @@
 
 
 
-    <select id="selectPbcReportPrdDatDiff" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDiffDto"
+    <select id="selectPbcReportPrdDatDiff" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto"
             parameterType="java.lang.String" >
         select
             ppd.*,

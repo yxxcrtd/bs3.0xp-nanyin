@@ -14,12 +14,14 @@ package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.pbc.assetdebt.service.*;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.service.*;
 import com.joyintech.tams.svreport.pbc.prod.service.*;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import org.apache.commons.collections4.CollectionUtils;
@@ -61,21 +63,21 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	@Autowired
 	private PbcReportProdDat001Sub006Service pbcReportProdDat001Sub006Service;
 	@Autowired
-	private PbcReportProd003Sub001Service pbcReportProd003Sub001Service;
+	private PbcReportProdDat003Sub001Service pbcReportProdDat003Sub001Service;
 	@Autowired
-	private PbcReportProd003Sub002Service pbcReportProd003Sub002Service;
+	private PbcReportProdDat003Sub002Service pbcReportProdDat003Sub002Service;
 	@Autowired
-	private PbcReportAssetDebtService pbcReportAssetDebtService;
+	private PbcReportAssetDebtDatService pbcReportAssetDebtDatService;
 	@Autowired
-	private PbcReportCompanyService pbcReportCompanyService;
+	private PbcReportCompanyDatService pbcReportCompanyDatService;
 	@Autowired
-	private PbcReportAreaService pbcReportAreaService;
+	private PbcReportAreaDatService pbcReportAreaDatService;
 	@Autowired
-	private PbcReportCompanyBondService pbcReportCompanyBondService;
+	private PbcReportCompanyBondDatService pbcReportCompanyBondDatService;
 	@Autowired
-	private PbcReportAssetIncomeDetailService pbcReportAssetIncomeDetailService;
+	private PbcReportAssetIncomeDetailDatService pbcReportAssetIncomeDetailDatService;
 	@Autowired
-	private PbcReportDebtTermDetailService pbcReportDebtTermDetailService;
+	private PbcReportDebtTermDetailDatService pbcReportDebtTermDetailDatService;
 
 	@Autowired
 	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
@@ -102,6 +104,8 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 		dealSearchParam(pageParam);
 		//将发送状态改为空
 		pageParam.put("sendStatus", "");
+		String orgCode = SecurityUtil.getLoginUser().getOrgCode();
+		pageParam.put("orgCode",orgCode);
         if (pageParam.get(GlobalConstant.PARAM_PAGE) != null
                 && pageParam.get(GlobalConstant.PARAM_LENGTH) != null){
             int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
@@ -122,7 +126,7 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 		String message="";
 		if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue())){
 			// 设置table预览大小
-			selectParam.put("tableWidth", 200);
+			selectParam.put("tableWidth", 300);
 			message=pbcPrdBaseInfoSubDatService.priview(selectParam);
 		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue())){
 			// 设置table预览大小
@@ -148,26 +152,27 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 			message=pbcReportProdDat001Sub005Service.priview(selectParam);
 		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_到期未兑付报表.getValue())){
 			message=pbcReportProdDat001Sub006Service.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资管产品资产负债统计)){
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资管产品资产负债统计.getValue())){
 			// 设置table预览大小
 			selectParam.put("tableWidth", 200);
-			message=pbcReportAssetDebtService.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_除回购和拆借外贷款分行业企业规模统计)){
-			message=pbcReportCompanyService.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_除回购和拆借外贷款分地区统计表)){
-			message=pbcReportAreaService.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资产收益权按基础资产投向分类统计报表)){
+			message=pbcReportAssetDebtDatService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_除回购和拆借外贷款分行业企业规模统计.getValue())){
+			message=pbcReportCompanyDatService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_除回购和拆借外贷款分地区统计表.getValue())){
+			message=pbcReportAreaDatService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资产收益权按基础资产投向分类统计报表.getValue())){
 			// 设置table预览大小
 			selectParam.put("tableWidth", 120);
-			message=pbcReportAssetIncomeDetailService.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_企业债券分行业企业规模统计)){
-			message=pbcReportCompanyBondService.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_存续产品分期限募集余额报表)){
-			message=pbcReportProd003Sub001Service.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表)){
-			message=pbcReportProd003Sub002Service.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资管产品资产负债剩余期限统计)){
-			message=pbcReportDebtTermDetailService.priview(selectParam);
+			message=pbcReportAssetIncomeDetailDatService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_企业债券分行业企业规模统计.getValue())){
+			message=pbcReportCompanyBondDatService.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_存续产品分期限募集余额报表.getValue())){
+			message=pbcReportProdDat003Sub001Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue())){
+			message=pbcReportProdDat003Sub002Service.priview(selectParam);
+
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资管产品资产负债剩余期限统计.getValue())){
+			message=pbcReportDebtTermDetailDatService.priview(selectParam);
 		}
 
 //		Map<Object,Object> data = createData(selectParam);

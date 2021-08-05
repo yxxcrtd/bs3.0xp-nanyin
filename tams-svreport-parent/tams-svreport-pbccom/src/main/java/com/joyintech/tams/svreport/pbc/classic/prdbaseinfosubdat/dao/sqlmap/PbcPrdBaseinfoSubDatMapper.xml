@@ -1359,4 +1359,66 @@
 		</foreach>
 
 	</update>
+
+	<select id="queryPbcPrdBaseInfoByDatZipCode" resultType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto"
+			parameterType="java.lang.String">
+		select
+			rownum as rowIndex,
+		 dat.*,
+		prd.pbc_prod_id pbcProdIdPrd,
+		prd.ISSUE_PARTY_ID issuePartyIdPrd,
+		prd.PBC_PROD_TYPE pbcProdTypePrd,
+		prd.IVSTORIENTATION ivstorientationPrd,
+		prd.PROD_NAME prodNamePrd,
+		prd.PROD_BRAND prodBrandPrd,
+		prd.PROD_STAGE prodStagePrd,
+		prd.PROD_ID prodIdPrd,
+		prd.SUB_PROD_ID subProdIdPrd,
+		prd.RAISE_CCY raiseCcyPrd,
+		prd.CASH_PRIN_CCY cashPrinCcyPrd,
+		prd.CASH_PROF_CCY cashProfCcyPrd,
+		prd.CUSTOMER_TYPE customerTypePrd,
+		prd.RAISE_TYPE raiseTypePrd,
+		prd.MANAGE_TYPE manageTypePrd,
+		prd.FIDUCIARY_DUTY fiduciaryDutyPrd,
+		prd.CONT_MODE contModePrd,
+		prd.OPERATE_MODE operateModePrd,
+		prd.BUSI_MODEL busiModelPrd,
+		prd.INCOME_GUARAN_IDENT incomeGuaranIdentPrd,
+		prd.PRIN_GUARAN_IDENT prinGuaranIdentPrd,
+		prd.HIGH_YIELD_ISSUE highYieldIssuePrd,
+		prd.LOW_YIELD_ISSUE lowYieldIssuePrd,
+		prd.RAISE_VDATE raiseVdatePrd,
+		prd.RAISE_ENDDATE raiseEnddatePrd,
+		prd.TERM_RIGHT_FLAG termRightFlagPrd,
+		prd.CUS_REDEEM_FLAG cusRedeemFlagPrd,
+		prd.CREDIT_FLAG creditFlagPrd,
+		prd.CREDIT_TYPE creditTypePrd,
+		prd.CREDIT_MODE creditModePrd,
+		prd.IN_DEP_NAME inDepNamePrd,
+		prd.IN_DEP_CODE inDepCodePrd,
+		prd.OUT_DEP_CTRY outDepCtryPrd,
+		prd.OUT_DEP_NAME outDepNamePrd,
+		prd.VDATE vdatePrd,
+		prd.MDATE mdatePrd,
+		prd.IS_CONSTRACTE isConstractePrd,
+		prd.TRANSFER_TYPE transferTypePrd,
+		prd.IDENTI_FLAG identiFlagPrd,
+		prd.SEND_STATUS sendStatusPrd,
+		prd.SUBMIT_TIME submitTimePrd,
+		prd.SUBMIT_FEEDBACK_STATUS submitFeedbackStatusPrd,
+		prd.SUMIT_SEQ sumitSeqPrd,
+		prd.STATUS_DATE statusDatePrd,
+		prd.IS_MARKET_FUND isMarketFundPrd,
+		prd.PBC_SUBMIT_DEADLINE pbcSubmitDeadlinePrd,
+		prd.SUBMIT_DEADLINE submitDeadlinePrd,
+		prd.STATUS statusPrd,
+		prd.CREATE_USER createUserPrd,
+		prd.ORG_CODE orgCodePrd,
+		prd.CREATE_DEPT createDeptPrd,
+		prd.CREATE_TIME createTimePrd
+		from PBC_PRD_BASEINFO_SUB_DAT dat
+		left join PBC_PRD_BASEINFO_SUB  prd on dat.prod_id=prd.prod_id
+		where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
+	</select>
 </mapper>

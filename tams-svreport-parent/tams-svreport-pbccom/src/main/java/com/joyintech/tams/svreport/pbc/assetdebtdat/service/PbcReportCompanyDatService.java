@@ -1,15 +1,17 @@
 package com.joyintech.tams.svreport.pbc.assetdebtdat.service;
 
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.svreport.pbc.assetdebt.dao.PbcReportCompanyDetailMapper;
-import com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportCompanyDetailDto;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportCompanyDatDetailMapper;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportCompanyDatDetailDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
-import com.joyintech.tams.svreport.pbc.common.constants.PbcTemplateName;
-import com.joyintech.tams.svreport.pbc.common.service.PbcExportService;
+import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
+import com.joyintech.tams.svreport.pbc.common.service.PbcDatPriviewService;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import org.slf4j.Logger;
@@ -31,13 +33,13 @@ import java.util.Map;
  * @作者：weiyuqiang @创建时间：2019年3月4日 @修改记录：
  */
 @Service
-@TemplateName(PbcTemplateName.PBC_REPORT_2_2)
-public class PbcReportCompanyDatService extends PbcExportService {
+@TemplateName(PbcDatTemplateName.PBC_DAT_REPORT_2_2)
+public class PbcReportCompanyDatService extends PbcDatPriviewService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private PbcReportCompanyDetailMapper pbcReportCompanyDetailMapper;
+	private PbcReportCompanyDatDetailMapper pbcReportCompanyDatDetailMapper;
 
 	@Autowired
 	private PbcMonthReportMapper pbcMonthReportMapper;
@@ -49,6 +51,7 @@ public class PbcReportCompanyDatService extends PbcExportService {
 			return data;
 		}
 		String reportuuid = param.get("reportuuid").toString();
+		String reporttype = param.get("reporttype").toString();
 		PbcMonthReport pbcReport = pbcMonthReportMapper.selectByPrimaryKey(reportuuid);
 		 // 如果报表为空则返回data
         if (pbcReport == null){
@@ -56,16 +59,18 @@ public class PbcReportCompanyDatService extends PbcExportService {
         }
 		pbcReport.setProdVariety(pbcReport.getProdVariety() + "-"
 				+ SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
-		data.put("report", pbcReport);
-		List<PbcReportCompanyDetailDto> listDetail = pbcReportCompanyDetailMapper.selectByReportuuid(reportuuid);
+		data.put("report", JsonUtils.object2Map(pbcReport));
+		List<PbcReportCompanyDatDetailDto> listDetail = pbcReportCompanyDatDetailMapper.selectDatDiffByReport(reportuuid,reporttype);
 		// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
     	String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
     	if (!CollectionUtils.isEmpty(listDetail)) {
-			for (PbcReportCompanyDetailDto detail : listDetail) {
+			for (PbcReportCompanyDatDetailDto detail : listDetail) {
+				//登记表和DAT表数据差异比较
+				dealCompanyListForDiff(detail);
 				// 处理数据
 				dealCompanyDateListForExport(detail);
 				dealProdData(detail,isShowZero);
-				data.put(detail.getPropertycode(), detail);
+				data.put(detail.getPropertycode(), JsonUtils.object2Map(detail));
 			}
 		}
 		return data;
@@ -74,8 +79,7 @@ public class PbcReportCompanyDatService extends PbcExportService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<Object, Object> createDataMS(Map<String, Object> param) {
-		return restTemplate.postForObject(
-				SvrServiceApplication.PBC_SERVICE_NAME + "/PbcMonthReportAsset/createDataCompany", param, Map.class);
+		return createData(param);
 	}
 
 	/**
@@ -87,7 +91,7 @@ public class PbcReportCompanyDatService extends PbcExportService {
 	 * @param detail
 	 * @return PbcReportAssetDebtDetailDto
 	 */
-	public void dealCompanyDateListForExport(PbcReportCompanyDetailDto detail) {
+	public void dealCompanyDateListForExport(PbcReportCompanyDatDetailDto detail) {
 		BigDecimal tenthousand = new BigDecimal(10000);
 		// 大型企业
 		if (detail.getLargeCompanyAmt() != null) {
@@ -122,15 +126,17 @@ public class PbcReportCompanyDatService extends PbcExportService {
 			return;
 		}
 		String reportuuid = param.get("reportuuid").toString();
+		String reporttype = param.get("reporttype").toString();
+
 		PbcMonthReport pbcReport = pbcMonthReportMapper.selectByPrimaryKey(reportuuid);
 		pbcReport.setProdVariety(pbcReport.getProdVariety() + "-"
 				+ SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
 		data.put("report", pbcReport);
-		List<PbcReportCompanyDetailDto> listDetail = pbcReportCompanyDetailMapper.selectByReportuuid(reportuuid);
+		List<PbcReportCompanyDatDetailDto> listDetail = pbcReportCompanyDatDetailMapper.selectDatDiffByReport(reportuuid,reporttype);
 		// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
     	String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
     	if (!CollectionUtils.isEmpty(listDetail)) {
-			for (PbcReportCompanyDetailDto detail : listDetail) {
+			for (PbcReportCompanyDatDetailDto detail : listDetail) {
 				// 处理数据
 				dealCompanyDateListForExport(detail);
 				dealProdData(detail,isShowZero);
@@ -141,11 +147,11 @@ public class PbcReportCompanyDatService extends PbcExportService {
 	
 	/**
      * @Description 导出预览为零的数据显示空还是显示零
-     * @param detail
+     * @param model
      * @version 1.7 2019年7月4日
      * @param isShowZero 
      */
-    private void dealProdData(PbcReportCompanyDetailDto model, String isShowZero) {
+    private void dealProdData(PbcReportCompanyDatDetailDto model, String isShowZero) {
     	// 显示成零
 		if("01".equals(isShowZero)){
 			if(model.getLargeCompanyAmt()==null){
@@ -187,5 +193,34 @@ public class PbcReportCompanyDatService extends PbcExportService {
 			}
 		}
 	}
+
+	/**
+	 * 功能:处理查询出资管产品统计模板和资管产品统计模板DAT差异
+	 * @since 1.6.0
+	 * @version 1.6.0
+	 * @param detail
+	 * @return
+	 */
+	public void dealCompanyListForDiff(PbcReportCompanyDatDetailDto detail) {
+		if(!detail.getLargeCompanyAmt().equals(detail.getLargeCompanyAmt())){
+			detail.setLargeCompanyAmtDiff(1);
+		}
+		if(!detail.getMediumCompanyAmt().equals(detail.getMediumCompanyAmt())){
+			detail.setMicroCompanyAmtDiff(1);
+		}
+		if(!detail.getSmallCompanyAmt().equals(detail.getSmallCompanyAmt())){
+			detail.setSmallCompanyAmtDiff(1);
+		}
+		if(!detail.getMicroCompanyAmt().equals(detail.getMicroCompanyAmt())){
+			detail.setMediumCompanyAmtDiff(1);
+		}
+		if(!detail.getOthAmt().equals(detail.getOthAmt())){
+			detail.setOthAmtDiff(1);
+		}
+		if(!detail.getSumAmt().equals(detail.getSumAmt())){
+			detail.setSumAmtDiff(1);
+		}
+	}
+
 
 }

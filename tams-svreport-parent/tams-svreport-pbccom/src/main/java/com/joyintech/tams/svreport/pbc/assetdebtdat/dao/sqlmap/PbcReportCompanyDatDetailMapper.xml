@@ -191,4 +191,22 @@
           </if>
        and pr.send_status = '01'/*只删除未报送数据*/)
   </delete>
+
+  <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportCompanyDatDetailDto"
+          parameterType="java.lang.String" >
+    select
+      ppd.*,
+      prp.LARGE_COMPANY_AMT as largeCompanyAmtPrd,
+      prp.MEDIUM_COMPANY_AMT as mediumCompanyAmtPrd,
+      prp.SMALL_COMPANY_AMT as smallCompanyAmtPrd,
+      prp.MICRO_COMPANY_AMT as microCompanyAmtPrd,
+      prp.OTH_AMT as othAmtPrd,
+      prp.SUM_AMT as sumAmtPrd
+    from PBC_REPORT_COMPANY_DAT ppd
+           left join PBC_REPORT_COMPANY  prp on ppd.REPORTUUID=prp.REPORTUUID
+      and ppd.REPORTTYPE=prp.REPORTTYPE
+      and ppd.propertyCode=prp.propertyCode
+    where ppd.REPORTUUID = #{reportuuid,jdbcType=CHAR}
+      and ppd.REPORTTYPE=#{reporttype,jdbcType=CHAR}
+  </select>
 </mapper>
