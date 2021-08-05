@@ -17,8 +17,7 @@
          FROM MST_CFETS_CUSTOMER_INFO A
          LEFT JOIN MST_CFETS_CUSTOMER_RELA B ON A.PARTY_ID = B.SPARTY_ID
          LEFT JOIN MST_CFETS_CUSTOMER_INFO C ON B.MPARTY_ID = C.PARTY_ID
-        WHERE A.partyId = #{batchDate}
-        and T2.COUNTER_NAME IS NULL
+        WHERE A.PARTY_ID = #{batchDate}
     </select>
 
     <select id="selectCustomer01" resultType="java.lang.Integer">
