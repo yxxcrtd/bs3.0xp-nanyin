@@ -133,6 +133,11 @@ public class PbcSendZipDatFile extends BaseEntity {
     private String returnZipSendStatusStr;
 
     /**
+     * zip包状态str
+     */
+    private String datZipStatusStr;
+
+    /**
      * 设置 主键uuid
      * @param registSeqno 主键uuid
      */
@@ -468,6 +473,16 @@ public class PbcSendZipDatFile extends BaseEntity {
     public String getReturnZipSendStatusStr() {
         if(StringUtil.isNotEmpty(this.getReturnZipSendStatus())){
             return SysDataUtil.getNameFromDataDict(DictCode.人行报送反馈状态, this.getReturnZipSendStatus());
+        }
+        return "" ;
+    }
+    /**
+     * zip包状态
+     * @return  zip包状态
+     */
+    public String getDatZipStatusStr() {
+        if(StringUtil.isNotEmpty(this.getDatZipStatus())){
+            return SysDataUtil.getNameFromDataDict(DictCode.zip包状态, this.getDatZipStatus());
         }
         return "" ;
     }

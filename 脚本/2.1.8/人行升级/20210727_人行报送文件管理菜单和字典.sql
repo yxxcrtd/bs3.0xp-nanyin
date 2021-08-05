@@ -1,6 +1,6 @@
 delete from SYS_MENU where PAGE_ID in ('PbcSendZipDatFile');
 insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
-values ('REPORT_001_006_010','REP','','REPORT_001_006','PbcSendZipDatFile','10','02','人行报送文件管理-资产管理','system','',sysdate, 'system',sysdate);
+values ('REPORT_001_006_010','REP','','REPORT_001_006','PbcSendZipDatFile','10','02','人行报送文件管理(资产管理)','system','',sysdate, 'system',sysdate);
 
 delete from SYS_PAGE where PAGE_ID in ('PbcSendZipDatFile');
 insert into SYS_PAGE(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) values ('PbcSendZipDatFile', 'SVR', '/pbc/pbcsendzipdatfile/PbcSendZipDatFile', 'report/pbc/classic/pbcsendzipdatfile/PbcSendZipDatFile', 'REPORT_001_004_009', NULL, NULL, '01', '01', '新人行报送文件管理表', 'system', NULL,

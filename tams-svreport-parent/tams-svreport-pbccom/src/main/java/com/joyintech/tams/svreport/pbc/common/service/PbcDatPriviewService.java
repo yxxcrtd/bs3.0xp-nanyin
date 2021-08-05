@@ -20,7 +20,6 @@ import com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode00
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
 import com.joyintech.tams.svreport.pbc.common.util.PbcExcelUtil;
 import com.joyintech.tams.svreport.pbc.common.util.XlsxToHtml;
-import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +40,11 @@ import java.util.Map;
 @Service
 public class PbcDatPriviewService extends BaseService<ITableRow>{
 	private String templateName;
+	/**
+	 * SysInstRegBankCode001Mapper
+	 */
+	@Autowired
+	private SysInstRegBankCode001Mapper sysInstRegBankCode001Mapper;
 
     /**
      * 设置公共参数
@@ -71,6 +75,28 @@ public class PbcDatPriviewService extends BaseService<ITableRow>{
 		if (data.get("report") == null){
 		    return "fail";
 		}
+		if(data.get("report") instanceof Map){
+			Map pbcReport = (Map)data.get("report");
+			if(null!=pbcReport.get("enddate")){
+				Date enddate = new Date(Long.parseLong(pbcReport.get("enddate").toString()));
+				pbcReport.put("enddate",enddate);
+			}
+			if(!MultilevelDataAuthorityUtil.isEnabled()) {
+				//银行模式
+				SysInstRegBankCode001Dto bankDto=sysInstRegBankCode001Mapper.queryForPageWithMode(null);
+				if(null!=bankDto){
+
+					if(!StringUtil.isNotEmpty(pbcReport.get("socialCreditCode"))){
+						pbcReport.put("socialCreditCode",bankDto.getInsitituteCode());
+					}
+
+					if(!StringUtil.isNotEmpty(pbcReport.get("finInstitutionCode"))){
+						pbcReport.put("finInstitutionCode",bankDto.getRegistBankCode());
+					}
+				}
+			}
+
+		}
 		Map<String, Integer> redMap=(Map)data.get("redMap");
 		// 表格宽度默认100%
 		int tableWidth = 100;
@@ -84,7 +110,7 @@ public class PbcDatPriviewService extends BaseService<ITableRow>{
         }
 		// 生成临时文件
 		String tempFileName = template + new Date().getTime();
-//		File depositfile = PbcExcelUtil.createFile(data, template, tempFileName);
+		//File depositfile = PbcExcelUtil.createFile(PbcExcelUtil.convertMapKey2String(data), template, tempFileName);
 		File depositfile = TisUtil.createFileIfCellRed(PbcExcelUtil.convertMapKey2String(data), "pbc/"+template, tempFileName,redMap);
 		
 		return XlsxToHtml.readExcelToHtml(depositfile, true, true,sheetNum,tableWidth);

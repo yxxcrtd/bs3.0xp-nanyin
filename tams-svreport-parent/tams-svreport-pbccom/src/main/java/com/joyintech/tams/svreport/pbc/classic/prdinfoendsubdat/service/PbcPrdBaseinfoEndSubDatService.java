@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.service;
 
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
@@ -13,12 +14,14 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.service.PbcPrdBaseinfoSubDatService;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDto;
 import com.joyintech.tams.svreport.pbc.common.util.ExcelListToEntity;
+import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +54,15 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
      * @since 1.0
      */
     public AjaxResult checkBaseInfoSubDat(String fileName) {
+        AjaxResult ajaxResult = new AjaxResult();
         if(!fileName.endsWith(".xls")){
-            return new AjaxResult(TIPS_SUFFIX_ERROR, MessageType.错误消息);
+            ValidMessage message = new ValidMessage();
+            message.setMessage(TIPS_SUFFIX_ERROR);
+            ajaxResult.setErrorList(Arrays.asList(message));
+            return ajaxResult;
         }
-        return new AjaxResult();
+        ajaxResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+        return ajaxResult;
 
     }
 
@@ -71,7 +79,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
             //组装查询条件理财产品代码
             List<String> prodIds = new ArrayList<>();
             for (PbcPrdBaseinfoEndSubDto pbcPrdBaseinfoSubDatDto : pbcPrdBaseinfoEndSubDtos) {
-                String prodId = pbcPrdBaseinfoSubDatDto.getPbcProdId(); //todo
+                String prodId = pbcPrdBaseinfoSubDatDto.getProdId();
                 if(StringUtil.isNotEmpty(prodId)){
                     if(!prodIds.contains(prodId)){
                         prodIds.add(prodId);
@@ -93,7 +101,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
             List<PbcPrdBaseinfoEndSubDat> baseinfoSubDatsNew = new ArrayList<>();
             for (PbcPrdBaseinfoEndSubDto pbcPrdBaseinfoSubDatDto : pbcPrdBaseinfoEndSubDtos) {
                 Optional<PbcPrdBaseinfoEndSubDat> any = pbcPrdBaseinfoSubDats.stream()//todo
-                        .filter(baseinfoDat -> baseinfoDat.getProdId().equals(pbcPrdBaseinfoSubDatDto.getPbcProdId())).findAny();
+                        .filter(baseinfoDat -> baseinfoDat.getProdId().equals(pbcPrdBaseinfoSubDatDto.getProdId())).findAny();
                 if(any.isPresent()){
                     PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoSubDat = any.get();
                     String sendStatus = pbcPrdBaseinfoSubDat.getSendStatus();
@@ -119,8 +127,8 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                         baseinfoSubDat.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
                         //设置数据状态为修改
                         baseinfoSubDat.setStatus(DictCodeList.数据状态_修改.getValue());
-                        //设置报送流水号   重新生成报送流水号 TODO
-                        baseinfoSubDat.setSumitSeq(UUID.randomUUID().toString());
+                        //设置报送流水号   重新生成报送流水号
+                        baseinfoSubDat.setSumitSeq(null);
                         //设置压缩包编码为空
                         baseinfoSubDat.setDatZipCode(null);
                         baseinfoSubDatsSend.add(baseinfoSubDat);
@@ -134,8 +142,8 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                     baseinfoSubDat.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
                     //设置数据状态为新建
                     baseinfoSubDat.setStatus(DictCodeList.数据状态_新建.getValue());
-                    //设置报送流水号   重新生成报送流水号 TODO
-                    baseinfoSubDat.setSumitSeq(UUID.randomUUID().toString());
+                    //设置报送流水号   重新生成报送流水号
+                    baseinfoSubDat.setSumitSeq(null);
                     //设置压缩包编码为空
                     baseinfoSubDat.setDatZipCode(null);
                     baseinfoSubDatsNew.add(baseinfoSubDat);
@@ -176,6 +184,8 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
         List<String> message = new ArrayList<>();
         if(CollectionUtil.isNotEmpty(dataList)){
             for (int i = 0; i < dataList.size(); i++ ) {
+                // 验证消息
+                List<ExcelValidDto> errorMessage = new ArrayList<>();
                 List<String> rowsData = dataList.get(i);
                 PbcPrdBaseinfoEndSubDto dto = new PbcPrdBaseinfoEndSubDto();
                 int row = 0;
@@ -185,40 +195,57 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 //人行产品代码
                 String pbcProdId = rowsData.get(row++);
                 dto.setPbcProdId(pbcProdId);
-                //产品预计终止日期
+                //发行机构内部产品代码
+                String prodId = rowsData.get(row++);
+                if(checkIsNotEmpty(prodId,i,"发行机构内部产品代码",errorMessage)){
+                    dto.setProdId(prodId);
+                }
+                //产品实际终止日期
                 String mdate = rowsData.get(row++);
-                if(checkDate(mdate)){
-                    dto.setMdate(DateUtil.parse(mdate));
-                }else{
-                    message.add("产品预计终止日期格式不正确");
+                if(checkIsNotEmpty(mdate,i,"产品实际终止日期",errorMessage)){
+                    if(checkDate(mdate)){
+                        dto.setMdate(DateUtil.parse(mdate));
+                    }else{
+                        errorMessage.add(new ExcelValidDto("产品实际终止日期",String.valueOf(i),"第"+i+"行:产品预计终止日期格式不正确！"));
+                    }
                 }
                 //兑付客户收益率
                 String cusYearYield = rowsData.get(row++);
-                if(checkFigure(cusYearYield)){
-                    dto.setCusYearYield(new BigDecimal(cusYearYield));
-                }else{
-                    message.add("兑付客户收益率非数字");
+                if(checkIsNotEmpty(cusYearYield,i,"兑付客户收益率",errorMessage)){
+                    if(checkFigure(cusYearYield)){
+                        dto.setCusYearYield(new BigDecimal(cusYearYield));
+                    }else{
+                        errorMessage.add(new ExcelValidDto("兑付客户收益率",String.valueOf(i),"第"+i+"行:兑付客户收益率非数字！"));
+                    }
                 }
+
                 //币种代码
                 String ccy = rowsData.get(row++);
-                dto.setCcy(ccy);
+                if(checkIsNotEmpty(ccy,i,"币种代码",errorMessage)){
+                    dto.setCcy(ccy);
+                }
+
                 //兑付客户收益
                 String customProfit = rowsData.get(row++);
-                if(checkFigure(customProfit)){
-                    dto.setCustomProfit(new BigDecimal(customProfit));
-                }else{
-                    message.add("兑付客户收益非数字");
+                if(checkIsNotEmpty(customProfit,i,"兑付客户收益",errorMessage)){
+                    if(checkFigure(customProfit)){
+                        dto.setCustomProfit(new BigDecimal(customProfit));
+                    }else{
+                        errorMessage.add(new ExcelValidDto("兑付客户收益",String.valueOf(i),"第"+i+"行:兑付客户收益非数字！"));
+                    }
                 }
                 //兑付客户收益折人民币
                 String customProfitCny = rowsData.get(row++);
-                if(checkFigure(customProfitCny)){
-                    dto.setCustomProfit(new BigDecimal(customProfitCny));
-                }else{
-                    message.add("兑付客户收益折人民币非数字");
+                if(checkIsNotEmpty(customProfit,i,"兑付客户收益折人民币",errorMessage)){
+                    if(checkFigure(customProfitCny)){
+                        dto.setCustomProfit(new BigDecimal(customProfitCny));
+                    }else{
+                        errorMessage.add(new ExcelValidDto("兑付客户收益折人民币",String.valueOf(i),"第"+i+"行:兑付客户收益折人民币非数字！"));
+                    }
                 }
+
                 if(CollectionUtil.isNotEmpty(message)){
-                    checkResult.add(new ExcelValidDto(rowsData.get(0), String.valueOf(i+2),
-                            StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
+                    checkResult.addAll(errorMessage);
                 }else{
                     pbcPrdBaseinfoSubDatDtos.add(dto);
                 }
@@ -244,6 +271,18 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
     }
 
     /**
+     * 判断是否为空
+     * @return 返回boolean
+     */
+    private boolean checkIsNotEmpty(String value,int i,String desc,List<ExcelValidDto> errorMessage){
+        if(StrUtil.isEmpty(value)){
+            errorMessage.add(new ExcelValidDto(desc,String.valueOf(i),"第"+i+"行:"+desc+"不能为空！"));
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 日期格式校验
      *
      * @param
@@ -251,7 +290,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
      */
     private boolean checkDate(String date) {
         boolean flag = true;
-        if(!DateUtil.isDateStr(date, DateUtil.DEFAULT_OTHER_FORMAT)){
+        if(!DateUtil.isDateStr(date, DateUtil.DEFAULT_DATE_FORMAT_EN)){
             flag = false;
         }else{
             date = date.replace("-", "").replace("/", "");

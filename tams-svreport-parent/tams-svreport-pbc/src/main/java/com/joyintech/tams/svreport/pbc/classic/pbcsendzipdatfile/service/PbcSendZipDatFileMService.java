@@ -10,6 +10,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,19 +56,6 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 	}
 
 
-    /**
-     *
-     * 业务画面查询事件
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public PbcSendZipDatFile searchPageBysubmitDate(Map<String, Object> param) {
-        return restTemplate.postForObject(
-        		SvrServiceApplication.PBC_SERVICE_NAME + "/PbcSendZipDatFile/searchPageBysubmitDate",param,
-				PbcSendZipDatFile.class);
-    }
 
 	/**
 	 *
@@ -81,19 +69,19 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 		Map<String,Object> param = new HashMap<>();
 		param.put("dataList", ExcelUtil.getDataList1(fileName));
 		String name = FileNameUtil.getName(fileName);
-		if(name.startsWith(PRODUCT_BASE_INFO_NAME)){
-			return restTemplate.postForObject(
-					SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoSubDat/checkBaseInfoSubDat?fileName="+fileName,param,
-					AjaxResult.class);
-		}else if(name.startsWith(PRODUCT_END_INFO_NAME)){
-			return restTemplate.postForObject(
-					SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoEndSubDat/checkBaseInfoSubDat?fileName="+fileName,param,
-					AjaxResult.class);
-		}else{
-			return new AjaxResult(TIPS_SHEET_NAME_ERROR,MessageType.错误消息);
+		String[] strName = name.split("_");
+		if(strName.length > 0){
+			if(strName[0].equals(PRODUCT_BASE_INFO_NAME)){
+				return restTemplate.postForObject(
+						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoSubDat/checkBaseInfoSubDat?fileName=" + fileName, param,
+						CommonAjaxResult.class);
+			}else if(strName[0].equals(PRODUCT_END_INFO_NAME)){
+				return restTemplate.postForObject(
+						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoEndSubDat/checkBaseInfoSubDat?fileName="+fileName,param,
+						CommonAjaxResult.class);
+			}
 		}
-
-
+		return new AjaxResult(TIPS_SHEET_NAME_ERROR,MessageType.错误消息);
 	}
 
 
@@ -107,21 +95,51 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("dataList", ExcelUtil.getDataList1(fileName));
 		String name = FileNameUtil.getName(fileName);
-		if(name.startsWith(PRODUCT_BASE_INFO_NAME)){
-			return restTemplate.postForList(
-					SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoSubDat/importBaseInfoSubDat?fileName="+fileName,param,
-					ExcelValidDto.class);
-		}else if(name.startsWith(PRODUCT_END_INFO_NAME)){
-			return restTemplate.postForList(
-					SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoEndSubDat/importBaseInfoSubDat?fileName="+fileName,param,
-					ExcelValidDto.class);
-		}else{
-			List<ExcelValidDto> errorList = new ArrayList<>();
-			ExcelValidDto validDto = new ExcelValidDto();
-			validDto.setErrorInfo(TIPS_SHEET_NAME_ERROR);
-			errorList.add(validDto);
-			return errorList;
+		String[] strName = name.split("_");
+		if(strName.length > 0){
+			if(strName[0].equals(PRODUCT_BASE_INFO_NAME)){
+				return restTemplate.postForList(
+						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoSubDat/importBaseInfoSubDat?fileName="+fileName,param,
+						ExcelValidDto.class);
+			}else if(strName[0].equals(PRODUCT_END_INFO_NAME)){
+				return restTemplate.postForList(
+						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoEndSubDat/importBaseInfoSubDat?fileName="+fileName,param,
+						ExcelValidDto.class);
+			}
 		}
+		List<ExcelValidDto> errorList = new ArrayList<>();
+		ExcelValidDto validDto = new ExcelValidDto();
+		validDto.setErrorInfo(TIPS_SHEET_NAME_ERROR);
+		errorList.add(validDto);
+		return errorList;
+
+	}
+
+	/**
+	 *
+	 * 业务导入检查事件
+	 *
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public AjaxResult checkMonthReport(String fileName) {
+		return restTemplate.postForObject(
+				SvrServiceApplication.PBC_SERVICE_NAME + "/NewPbcMonthReport/checkMonthReport?fileName="+fileName,new HashMap<>(),
+				CommonAjaxResult.class);
+	}
+
+
+	/**
+	 * 导入数据文件
+	 *
+	 * @param fileName 导入的文件名
+	 * @return 导入结果，包含验证内容，如果验证失败，返回message
+	 */
+	public List<ExcelValidDto> importMonthReport(String fileName) {
+		return restTemplate.postForList(
+				SvrServiceApplication.PBC_SERVICE_NAME + "/NewPbcMonthReport/importMonthReport?fileName="+fileName,new HashMap<>(),
+				ExcelValidDto.class);
 	}
 
 

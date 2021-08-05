@@ -1261,7 +1261,8 @@
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
 		UPDATE_TIME)
 		values
-		<foreach collection="list" open="(" close=")" separator="," item="item">
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
 			#{item.subProdId,jdbcType=VARCHAR},
 			#{item.registSeqno,jdbcType=CHAR}, #{item.pbcProdId,jdbcType=VARCHAR},
 			#{item.issuePartyId,jdbcType=VARCHAR},

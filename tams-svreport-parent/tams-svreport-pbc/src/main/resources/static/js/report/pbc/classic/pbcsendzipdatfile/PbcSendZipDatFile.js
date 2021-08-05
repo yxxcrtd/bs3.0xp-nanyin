@@ -28,14 +28,15 @@ $(function() {
         },
         cols:[
             { title: "压缩包编号", field: 'datZipCode',width:200,sortable:false},
+            { title: '压缩包放置路径',field:'datZipPath',width:150,sortable:false},
             { title: "报送类型", field: 'datZipTypeStr',width:100, type: 'datetime',sortable:false},
             { title: "报送明细类型", field: 'datZipDatTypeStr',width:150,sortable:false},
-            { title: "业务日期", field: 'submitTime',width:100, type: 'datetime',sortable:false},
+            { title: 'zip包状态',field:'datZipStatusStr',width:150,sortable:false},
+            { title: "数据业务日期", field: 'statusVdate',width:100, type: 'datetime',sortable:false},
             { title: "DAT明细数", field: 'pibDetailCnt',width:100, type: 'datetime',sortable:false},
+            { title: "报送日期", field: 'submitTime',width:100, type: 'datetime',sortable:false},
             { title: "报送状态", field: 'zipSendStatusStr',width:100,sortable:false},
             { title: '反馈状态',field:'returnZipSendStatusStr',width:100,sortable:false},
-            { title: '反馈消息',field:'returnMsg',width:150,sortable:false},
-            { title: '压缩包放置路径',field:'datZipPath',width:150,sortable:false},
              {
                  title : '操作',
                      field : 'operation',
@@ -88,6 +89,18 @@ $(function() {
            Joyin.uploadFile(function(fileName) {
                 Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/checkBaseInfoSubDat', {fileName: fileName}, function() {
                     Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/importBaseInfoSubDat', {fileName: fileName});
+                });
+            },function() {
+                table.reload();
+            });
+        });
+    });
+    // 导入统计模板数据
+    $('#PbcSendZipDatFile_btn_staticTemplateImport').click(function() {
+        Joyin.confirm("请确认是否要导入数据？", function() {
+            Joyin.uploadFile(function(fileName) {
+                Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/checkMonthReport', {fileName: fileName}, function() {
+                    Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/importMonthReport', {fileName: fileName});
                 });
             },function() {
                 table.reload();

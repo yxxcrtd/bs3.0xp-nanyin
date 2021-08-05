@@ -19,15 +19,10 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.svreport.pbc.assetdebt.service.*;
-import com.joyintech.tams.svreport.pbc.assetposition.service.PbcMonthAssetPositionService;
-import com.joyintech.tams.svreport.pbc.assetposition.service.PbcMonthAssetReportService;
-import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubCheck;
 import com.joyintech.tams.svreport.pbc.prod.service.*;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +35,11 @@ import java.util.Map;
 
 /**
  * 
- * 功能:〈银行月度报表登记service
+ * 功能:人行报送文件管理service
  * @since 1.7.0
  * @version 1.7.0
  * @作者：weiyuqiang
- * @创建时间：2019年5月30日
+ * @创建时间：2021年7月27日
  * @修改记录：
  */
 @Service
@@ -54,17 +49,17 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	@Autowired
 	private  PbcPrdBaseInfoEndSubDatService pbcPrdBaseInfoEndSubDatService;
 	@Autowired
-	private PbcReportProd001Sub001Service pbcReportProd001Sub001Service;
+	private PbcReportProdDat001Sub001Service pbcReportProdDat001Sub001Service;
 	@Autowired
-	private PbcReportProd001Sub002Service pbcReportProd001Sub002Service;
+	private PbcReportProdDat001Sub002Service pbcReportProdDat001Sub002Service;
 	@Autowired
-	private PbcReportProd001Sub003Service pbcReportProd001Sub003Service;
+	private PbcReportProdDat001Sub003Service pbcReportProdDat001Sub003Service;
 	@Autowired
-	private PbcReportProd001Sub004Service pbcReportProd001Sub004Service;
+	private PbcReportProdDat001Sub004Service pbcReportProdDat001Sub004Service;
 	@Autowired
-	private PbcReportProd001Sub005Service pbcReportProd001Sub005Service;
+	private PbcReportProdDat001Sub005Service pbcReportProdDat001Sub005Service;
 	@Autowired
-	private PbcReportProd001Sub006Service pbcReportProd001Sub006Service;
+	private PbcReportProdDat001Sub006Service pbcReportProdDat001Sub006Service;
 	@Autowired
 	private PbcReportProd003Sub001Service pbcReportProd003Sub001Service;
 	@Autowired
@@ -133,26 +128,26 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 			// 设置table预览大小
 			selectParam.put("tableWidth", 200);
 			message=pbcPrdBaseInfoEndSubDatService.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集余额报表)){
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集余额报表.getValue())){
 			// 设置table预览大小
 			selectParam.put("tableWidth", 120);
-			message=pbcReportProd001Sub001Service.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集兑付报表)){
+			message=pbcReportProdDat001Sub001Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集兑付报表.getValue())){
 			// 设置table预览大小
 			selectParam.put("tableWidth", 200);
-			message=pbcReportProd001Sub002Service.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_只数情况报表)){
-			message=pbcReportProd001Sub003Service.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集余额报表分地区报表)){
+			message=pbcReportProdDat001Sub002Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_只数情况报表.getValue())){
+			message=pbcReportProdDat001Sub003Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集余额报表分地区报表.getValue())){
 			// 设置table预览大小
 			selectParam.put("tableWidth", 120);
-			message=pbcReportProd001Sub004Service.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_提前及延期兑付报表)){
+			message=pbcReportProdDat001Sub004Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_提前及延期兑付报表.getValue())){
 			// 设置table预览大小
 			selectParam.put("tableWidth", 160);
-			message=pbcReportProd001Sub005Service.priview(selectParam);
-		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_到期未兑付报表)){
-			message=pbcReportProd001Sub006Service.priview(selectParam);
+			message=pbcReportProdDat001Sub005Service.priview(selectParam);
+		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_到期未兑付报表.getValue())){
+			message=pbcReportProdDat001Sub006Service.priview(selectParam);
 		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_资管产品资产负债统计)){
 			// 设置table预览大小
 			selectParam.put("tableWidth", 200);
