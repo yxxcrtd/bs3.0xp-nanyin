@@ -458,4 +458,27 @@
 		WHERE FP.FINPROD_ID = #{finprodId}
 		AND FPA.APPEAR_MARKET_ID IS NOT NULL
 	</select>
+
+    <select id="selectIsInWorkflowEx" resultType="java.lang.Integer">
+        select sum(countnum) countnum from (
+        SELECT
+        count(1) countnum
+        FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL WTFPDT
+        <where>
+            WTFPDT.P_TRADE_ID = #{finprodId,jdbcType=VARCHAR}
+            <if test="workflowId != null and workflowId != ''">
+                AND WTFPDT.WORKFLOW_ID NOT IN #{workflowId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        union all
+        SELECT count(1)
+        FROM FIN_PRODUCT FP
+        INNER JOIN FIN_PRODUCT_ADD FPA
+        ON FPA.FINPROD_ID = FP.FINPROD_ID
+        WHERE FP.FINPROD_ID = #{finprodId}
+        AND FPA.APPEAR_MARKET_ID IS NOT NULL
+        )
+    </select>
+
+
 </mapper>

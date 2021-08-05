@@ -88,6 +88,13 @@ public interface TrdBondMarketTradeMapper {
     int selectIsInWorkflow(TrdBondMarketTradeDto dto);
 
     /**
+     * 查询发行代码是否有流程中数据或者有效数据
+     * @param dto
+     * @return
+     */
+    int selectIsInWorkflowEx(TrdBondMarketTradeDto dto);
+
+    /**
      * 检索债券上市流通交易实体
      *
      * @param totalTradeId 参数

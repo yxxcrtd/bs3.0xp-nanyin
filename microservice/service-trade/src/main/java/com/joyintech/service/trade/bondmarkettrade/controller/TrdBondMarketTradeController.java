@@ -147,6 +147,19 @@ public class TrdBondMarketTradeController {
     }
 
     /**
+     * 查询发行代码是否有流程中数据或者有效数据
+     *
+     * @param dto 画面参数dto
+     * @return 流程中数据条数
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("selectIsInWorkflowEx")
+    public int selectIsInWorkflowEx(@RequestBody TrdBondMarketTradeDto dto){
+        return trdBondMarketTradeService.selectIsInWorkflowEx(dto);
+    }
+
+    /**
      * 查询是否有当日交易数据
      * @param dto
      * @return 当日交易数据条数

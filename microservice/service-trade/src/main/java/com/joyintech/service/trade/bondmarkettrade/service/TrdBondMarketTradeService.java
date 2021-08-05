@@ -500,6 +500,16 @@ public class TrdBondMarketTradeService extends BaseService {
     }
 
     /**
+     *  查询发行代码是否有流程中数据或者有效数据
+     * @param dto
+     * @return
+     */
+    public int selectIsInWorkflowEx(TrdBondMarketTradeDto dto) {
+        return trdBondMarkettTradeMapper.selectIsInWorkflowEx(dto);
+    }
+
+
+    /**
      * 查询是否有当日交易数据
      * @param dto
      * @return
