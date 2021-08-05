@@ -109,6 +109,78 @@ public class PbcReportAssetDebtDatDetailDto {
      */
     private String ccyAmount;
 
+
+    /**
+     * 人民币
+     */
+    private BigDecimal cnyPrd;
+
+    /**
+     * 美元折人民币
+     */
+    private BigDecimal usdToCnyPrd;
+
+    /**
+     * 欧元折人民币
+     */
+    private BigDecimal eurToCnyPrd;
+
+    /**
+     * 英镑折人民币
+     */
+    private BigDecimal gbpToCnyPrd;
+
+    /**
+     * 日元折人民币
+     */
+    private BigDecimal jpyToCnyPrd;
+
+    /**
+     * 其他币种(外币)折人民币
+     */
+    private BigDecimal othToCnyPrd;
+
+
+    /**
+     * 合计
+     */
+    private BigDecimal totalPrd;
+    /**
+     * 人民币
+     */
+    private Integer cnyDiff=0;
+
+    /**
+     * 美元折人民币
+     */
+    private Integer usdToCnyDiff=0;
+
+    /**
+     * 欧元折人民币
+     */
+    private Integer eurToCnyDiff=0;
+
+    /**
+     * 英镑折人民币
+     */
+    private Integer gbpToCnyDiff=0;
+
+    /**
+     * 日元折人民币
+     */
+    private Integer jpyToCnyDiff=0;
+
+    /**
+     * 其他币种(外币)折人民币
+     */
+    private Integer othToCnyDiff=0;
+
+
+    /**
+     * 合计
+     */
+    private Integer totalDiff=0;
+
     /**
      * 明细统计uuid
      * @return DETAILUUID 明细统计uuid
@@ -363,5 +435,131 @@ public class PbcReportAssetDebtDatDetailDto {
 
     public void setCcyAmount(String ccyAmount) {
         this.ccyAmount = ccyAmount;
+    }
+
+    public BigDecimal getUsdToCnyPrd() {
+        return usdToCnyPrd;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setUsdToCnyPrd(BigDecimal usdToCnyPrd) {
+        this.usdToCnyPrd = usdToCnyPrd;
+        return this;
+    }
+
+    public BigDecimal getEurToCnyPrd() {
+        return eurToCnyPrd;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setEurToCnyPrd(BigDecimal eurToCnyPrd) {
+        this.eurToCnyPrd = eurToCnyPrd;
+        return this;
+    }
+
+    public BigDecimal getGbpToCnyPrd() {
+        return gbpToCnyPrd;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setGbpToCnyPrd(BigDecimal gbpToCnyPrd) {
+        this.gbpToCnyPrd = gbpToCnyPrd;
+        return this;
+    }
+
+    public BigDecimal getJpyToCnyPrd() {
+        return jpyToCnyPrd;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setJpyToCnyPrd(BigDecimal jpyToCnyPrd) {
+        this.jpyToCnyPrd = jpyToCnyPrd;
+        return this;
+    }
+
+    public BigDecimal getOthToCnyPrd() {
+        return othToCnyPrd;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setOthToCnyPrd(BigDecimal othToCnyPrd) {
+        this.othToCnyPrd = othToCnyPrd;
+        return this;
+    }
+
+    public BigDecimal getTotalPrd() {
+        return totalPrd;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setTotalPrd(BigDecimal totalPrd) {
+        this.totalPrd = totalPrd;
+        return this;
+    }
+
+    public Integer getCnyDiff() {
+        return cnyDiff;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setCnyDiff(Integer cnyDiff) {
+        this.cnyDiff = cnyDiff;
+        return this;
+    }
+
+    public Integer getUsdToCnyDiff() {
+        return usdToCnyDiff;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setUsdToCnyDiff(Integer usdToCnyDiff) {
+        this.usdToCnyDiff = usdToCnyDiff;
+        return this;
+    }
+
+    public Integer getEurToCnyDiff() {
+        return eurToCnyDiff;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setEurToCnyDiff(Integer eurToCnyDiff) {
+        this.eurToCnyDiff = eurToCnyDiff;
+        return this;
+    }
+
+    public Integer getGbpToCnyDiff() {
+        return gbpToCnyDiff;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setGbpToCnyDiff(Integer gbpToCnyDiff) {
+        this.gbpToCnyDiff = gbpToCnyDiff;
+        return this;
+    }
+
+    public Integer getJpyToCnyDiff() {
+        return jpyToCnyDiff;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setJpyToCnyDiff(Integer jpyToCnyDiff) {
+        this.jpyToCnyDiff = jpyToCnyDiff;
+        return this;
+    }
+
+    public Integer getOthToCnyDiff() {
+        return othToCnyDiff;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setOthToCnyDiff(Integer othToCnyDiff) {
+        this.othToCnyDiff = othToCnyDiff;
+        return this;
+    }
+
+    public Integer getTotalDiff() {
+        return totalDiff;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setTotalDiff(Integer totalDiff) {
+        this.totalDiff = totalDiff;
+        return this;
+    }
+
+    public BigDecimal getCnyPrd() {
+        return cnyPrd;
+    }
+
+    public PbcReportAssetDebtDatDetailDto setCnyPrd(BigDecimal cnyPrd) {
+        this.cnyPrd = cnyPrd;
+        return this;
     }
 }

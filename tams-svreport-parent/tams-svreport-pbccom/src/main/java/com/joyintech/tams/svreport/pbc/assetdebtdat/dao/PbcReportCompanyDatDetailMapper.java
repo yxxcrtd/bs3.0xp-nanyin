@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.pbc.assetdebtdat.dao;
 
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportCompanyDatDetailDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -50,4 +51,8 @@ public interface PbcReportCompanyDatDetailMapper {
      */
     int deleteByReportDate(@Param("reportStartDate") String reportEndDate, @Param("reportEndDate") String reportStartDate,
                            @Param("reporttype") String reporttype, @Param("deptCode") String deptCode);
+
+
+    List<PbcReportCompanyDatDetailDto> selectDatDiffByReport(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
+
 }

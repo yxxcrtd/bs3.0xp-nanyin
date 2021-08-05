@@ -231,7 +231,7 @@ ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
         select
         <include refid="Base_Column_List" />
         from PBC_SEND_ZIP_DAT_FILE
-        <where>
+            where ORG_CODE =    #{orgCode,jdbcType=VARCHAR}
             <if test="datZipTypeList != null and datZipTypeList.size()&gt;0">
                 <foreach close=")" collection="datZipTypeList" item="item" open="and DAT_ZIP_TYPE in(" separator=",">
                     #{item,jdbcType=VARCHAR}
@@ -247,7 +247,6 @@ ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
-        </where>
-        ) ORDER BY STATUS_VDATE
+        ) ORDER BY STATUS_VDATE desc
     </select>
 </mapper>

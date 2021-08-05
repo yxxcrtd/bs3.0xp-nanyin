@@ -30,9 +30,17 @@ public class PbcReportAreaDatDetailDto {
     private String propertycode;
 
     /**
-     * 余额
+     * dat余额
      */
     private BigDecimal balance;
+    /**
+     * 登记表余额
+     */
+    private BigDecimal balancePrd;
+    /**
+     * 余额是否不同
+     */
+    private Integer balanceDiff;
 
     /**
      * 主表关联id
@@ -133,5 +141,23 @@ public class PbcReportAreaDatDetailDto {
      */
     public void setReportuuid(String reportuuid) {
         this.reportuuid = reportuuid == null ? null : reportuuid.trim();
+    }
+
+    public BigDecimal getBalancePrd() {
+        return balancePrd;
+    }
+
+    public PbcReportAreaDatDetailDto setBalancePrd(BigDecimal balancePrd) {
+        this.balancePrd = balancePrd;
+        return this;
+    }
+
+    public Integer getBalanceDiff() {
+        return balanceDiff;
+    }
+
+    public PbcReportAreaDatDetailDto setBalanceDiff(Integer balanceDiff) {
+        this.balanceDiff = balanceDiff;
+        return this;
     }
 }

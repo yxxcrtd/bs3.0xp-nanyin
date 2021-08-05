@@ -55,6 +55,46 @@ public class PbcReportDebtTermDatDetail {
     private BigDecimal actualAmt;
 
     /**
+     * 债务工具
+     */
+    private BigDecimal debtInstrumentPrd;
+
+    /**
+     * 股权
+     */
+    private BigDecimal stockRightPrd;
+
+    /**
+     * 特定目的载体份额
+     */
+    private BigDecimal specialSharePrd;
+
+    /**
+     * 实收本金
+     */
+    private BigDecimal actualAmtPrd;
+
+    /**
+     * 债务工具
+     */
+    private Integer debtInstrumentDiff;
+
+    /**
+     * 股权
+     */
+    private Integer stockRightDiff;
+
+    /**
+     * 特定目的载体份额
+     */
+    private Integer specialShareDiff;
+
+    /**
+     * 实收本金
+     */
+    private Integer actualAmtDiff;
+
+    /**
      * 明细统计uuid
      * @return DETAILUUID 明细统计uuid
      */
@@ -196,5 +236,73 @@ public class PbcReportDebtTermDatDetail {
      */
     public void setActualAmt(BigDecimal actualAmt) {
         this.actualAmt = actualAmt;
+    }
+
+    public BigDecimal getDebtInstrumentPrd() {
+        return debtInstrumentPrd;
+    }
+
+    public PbcReportDebtTermDatDetail setDebtInstrumentPrd(BigDecimal debtInstrumentPrd) {
+        this.debtInstrumentPrd = debtInstrumentPrd;
+        return this;
+    }
+
+    public BigDecimal getStockRightPrd() {
+        return stockRightPrd;
+    }
+
+    public PbcReportDebtTermDatDetail setStockRightPrd(BigDecimal stockRightPrd) {
+        this.stockRightPrd = stockRightPrd;
+        return this;
+    }
+
+    public BigDecimal getSpecialSharePrd() {
+        return specialSharePrd;
+    }
+
+    public PbcReportDebtTermDatDetail setSpecialSharePrd(BigDecimal specialSharePrd) {
+        this.specialSharePrd = specialSharePrd;
+        return this;
+    }
+
+    public BigDecimal getActualAmtPrd() {
+        return actualAmtPrd;
+    }
+
+    public PbcReportDebtTermDatDetail setActualAmtPrd(BigDecimal actualAmtPrd) {
+        this.actualAmtPrd = actualAmtPrd;
+        return this;
+    }
+
+    public Integer getDebtInstrumentDiff() {
+        return debtInstrumentDiff;
+    }
+
+    public void setDebtInstrumentDiff(Integer debtInstrumentDiff) {
+        this.debtInstrumentDiff = debtInstrumentDiff;
+    }
+
+    public Integer getStockRightDiff() {
+        return stockRightDiff;
+    }
+
+    public void setStockRightDiff(Integer stockRightDiff) {
+        this.stockRightDiff = stockRightDiff;
+    }
+
+    public Integer getSpecialShareDiff() {
+        return specialShareDiff;
+    }
+
+    public void setSpecialShareDiff(Integer specialShareDiff) {
+        this.specialShareDiff = specialShareDiff;
+    }
+
+    public Integer getActualAmtDiff() {
+        return actualAmtDiff;
+    }
+
+    public void setActualAmtDiff(Integer actualAmtDiff) {
+        this.actualAmtDiff = actualAmtDiff;
     }
 }

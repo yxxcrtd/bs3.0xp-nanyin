@@ -72,6 +72,78 @@ public class PbcReportProdDatDto {
      */
     private BigDecimal total;
 
+
+    /**
+     * 人民币
+     */
+    private BigDecimal cnyPrd;
+
+    /**
+     * 美元折人民币
+     */
+    private BigDecimal usdToCnyPrd;
+
+    /**
+     * 欧元折人民币
+     */
+    private BigDecimal eurToCnyPrd;
+
+    /**
+     * 英镑折人民币
+     */
+    private BigDecimal gbpToCnyPrd;
+
+    /**
+     * 日元折人民币
+     */
+    private BigDecimal jpyToCnyPrd;
+
+    /**
+     * 其他币种(外币)折人民币
+     */
+    private BigDecimal othToCnyPrd;
+
+
+    /**
+     * 合计
+     */
+    private BigDecimal totalPrd;
+    /**
+     * 人民币
+     */
+    private Integer cnyDiff=0;
+
+    /**
+     * 美元折人民币
+     */
+    private Integer usdToCnyDiff=0;
+
+    /**
+     * 欧元折人民币
+     */
+    private Integer eurToCnyDiff=0;
+
+    /**
+     * 英镑折人民币
+     */
+    private Integer gbpToCnyDiff=0;
+
+    /**
+     * 日元折人民币
+     */
+    private Integer jpyToCnyDiff=0;
+
+    /**
+     * 其他币种(外币)折人民币
+     */
+    private Integer othToCnyDiff=0;
+
+
+    /**
+     * 合计
+     */
+    private Integer totalDiff=0;
+
     /**
      * 主键
      * @return DETAILUUID 主键
@@ -262,5 +334,131 @@ public class PbcReportProdDatDto {
      */
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public BigDecimal getCnyPrd() {
+        return cnyPrd;
+    }
+
+    public PbcReportProdDatDto setCnyPrd(BigDecimal cnyPrd) {
+        this.cnyPrd = cnyPrd;
+        return this;
+    }
+
+    public BigDecimal getUsdToCnyPrd() {
+        return usdToCnyPrd;
+    }
+
+    public PbcReportProdDatDto setUsdToCnyPrd(BigDecimal usdToCnyPrd) {
+        this.usdToCnyPrd = usdToCnyPrd;
+        return this;
+    }
+
+    public BigDecimal getEurToCnyPrd() {
+        return eurToCnyPrd;
+    }
+
+    public PbcReportProdDatDto setEurToCnyPrd(BigDecimal eurToCnyPrd) {
+        this.eurToCnyPrd = eurToCnyPrd;
+        return this;
+    }
+
+    public BigDecimal getGbpToCnyPrd() {
+        return gbpToCnyPrd;
+    }
+
+    public PbcReportProdDatDto setGbpToCnyPrd(BigDecimal gbpToCnyPrd) {
+        this.gbpToCnyPrd = gbpToCnyPrd;
+        return this;
+    }
+
+    public BigDecimal getJpyToCnyPrd() {
+        return jpyToCnyPrd;
+    }
+
+    public PbcReportProdDatDto setJpyToCnyPrd(BigDecimal jpyToCnyPrd) {
+        this.jpyToCnyPrd = jpyToCnyPrd;
+        return this;
+    }
+
+    public BigDecimal getOthToCnyPrd() {
+        return othToCnyPrd;
+    }
+
+    public PbcReportProdDatDto setOthToCnyPrd(BigDecimal othToCnyPrd) {
+        this.othToCnyPrd = othToCnyPrd;
+        return this;
+    }
+
+    public BigDecimal getTotalPrd() {
+        return totalPrd;
+    }
+
+    public PbcReportProdDatDto setTotalPrd(BigDecimal totalPrd) {
+        this.totalPrd = totalPrd;
+        return this;
+    }
+
+    public Integer getCnyDiff() {
+        return cnyDiff;
+    }
+
+    public PbcReportProdDatDto setCnyDiff(Integer cnyDiff) {
+        this.cnyDiff = cnyDiff;
+        return this;
+    }
+
+    public Integer getUsdToCnyDiff() {
+        return usdToCnyDiff;
+    }
+
+    public PbcReportProdDatDto setUsdToCnyDiff(Integer usdToCnyDiff) {
+        this.usdToCnyDiff = usdToCnyDiff;
+        return this;
+    }
+
+    public Integer getEurToCnyDiff() {
+        return eurToCnyDiff;
+    }
+
+    public PbcReportProdDatDto setEurToCnyDiff(Integer eurToCnyDiff) {
+        this.eurToCnyDiff = eurToCnyDiff;
+        return this;
+    }
+
+    public Integer getGbpToCnyDiff() {
+        return gbpToCnyDiff;
+    }
+
+    public PbcReportProdDatDto setGbpToCnyDiff(Integer gbpToCnyDiff) {
+        this.gbpToCnyDiff = gbpToCnyDiff;
+        return this;
+    }
+
+    public Integer getJpyToCnyDiff() {
+        return jpyToCnyDiff;
+    }
+
+    public PbcReportProdDatDto setJpyToCnyDiff(Integer jpyToCnyDiff) {
+        this.jpyToCnyDiff = jpyToCnyDiff;
+        return this;
+    }
+
+    public Integer getOthToCnyDiff() {
+        return othToCnyDiff;
+    }
+
+    public PbcReportProdDatDto setOthToCnyDiff(Integer othToCnyDiff) {
+        this.othToCnyDiff = othToCnyDiff;
+        return this;
+    }
+
+    public Integer getTotalDiff() {
+        return totalDiff;
+    }
+
+    public PbcReportProdDatDto setTotalDiff(Integer totalDiff) {
+        this.totalDiff = totalDiff;
+        return this;
     }
 }

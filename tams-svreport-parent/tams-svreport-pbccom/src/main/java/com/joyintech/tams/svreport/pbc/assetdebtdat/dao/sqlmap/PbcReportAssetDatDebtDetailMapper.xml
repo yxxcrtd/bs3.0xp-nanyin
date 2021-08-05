@@ -356,5 +356,24 @@
 	    from PBC_REPORT_BALANCE_DAT
 	    where REPORTUUID = #{reportuuid,jdbcType=CHAR}
 	  </select>
+
+  <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto"
+          parameterType="java.lang.String" >
+    select
+      ppd.*,
+      prp.CNY as cnyPrd,
+      prp.USD_TO_CNY as usdToCnyPrd,
+      prp.EUR_TO_CNY as eurToCnyPrd,
+      prp.GBP_TO_CNY as gbpToCnyPrd,
+      prp.JPY_TO_CNY as jpyToCnyPrd,
+      prp.OTH_TO_CNY as othToCnyPrd,
+      prp.TOTAL as totalPrd
+    from PBC_REPORT_BALANCE_DAT ppd
+           left join PBC_REPORT_BALANCE  prp on ppd.REPORTUUID=prp.REPORTUUID
+      and ppd.REPORTTYPE=prp.REPORTTYPE
+      and ppd.propertyCode=prp.propertyCode
+    where ppd.REPORTUUID = #{reportuuid,jdbcType=CHAR}
+      and ppd.REPORTTYPE=#{reporttype,jdbcType=CHAR}
+  </select>
   
 </mapper>

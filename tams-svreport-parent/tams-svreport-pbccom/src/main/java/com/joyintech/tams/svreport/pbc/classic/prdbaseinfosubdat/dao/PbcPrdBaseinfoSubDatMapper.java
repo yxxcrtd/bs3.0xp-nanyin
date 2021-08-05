@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao;
 
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -74,4 +75,11 @@ public interface PbcPrdBaseinfoSubDatMapper {
 	 * @return
 	 */
 	int updateBatchByPrimaryKey(@Param("list") List<PbcPrdBaseinfoSubDat> record);
+
+	/**
+	 * 查询dat明细
+	 * @param datZipCode
+	 * @return dat明细列表
+	 */
+	List<PbcPrdBaseinfoSubDatDiffDto> queryPbcPrdBaseInfoByDatZipCode(String datZipCode);
 }

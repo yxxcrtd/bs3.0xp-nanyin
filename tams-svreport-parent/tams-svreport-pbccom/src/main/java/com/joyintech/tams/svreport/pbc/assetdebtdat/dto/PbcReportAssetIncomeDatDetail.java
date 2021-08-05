@@ -73,6 +73,86 @@ public class PbcReportAssetIncomeDatDetail {
      * 关联主表uuid
      */
     private String reportuuid;
+    /**
+     * 贷款收益权
+     */
+    private BigDecimal loanIncomeRightPrd;
+
+    /**
+     * 债务证券收益权
+     */
+    private BigDecimal debtSecuritiesIncomeRightsPrd;
+
+    /**
+     * 应收账款收益权
+     */
+    private BigDecimal receivableIncomeRightsPrd;
+
+    /**
+     * 其他债权收益权
+     */
+    private BigDecimal otherCreditorRightsPrd;
+
+    /**
+     * 股票收益权
+     */
+    private BigDecimal stockIncomeRightPrd;
+
+    /**
+     * 其他股权收益权
+     */
+    private BigDecimal otherEquityIncomeRightsPrd;
+
+    /**
+     * 物权资产收益权
+     */
+    private BigDecimal propertyRightsPrd;
+
+    /**
+     * 总计
+     */
+    private BigDecimal totalPrd;
+
+    /**
+     * 贷款收益权
+     */
+    private Integer loanIncomeRightDiff;
+
+    /**
+     * 债务证券收益权
+     */
+    private Integer debtSecuritiesIncomeRightsDiff;
+
+    /**
+     * 应收账款收益权
+     */
+    private Integer receivableIncomeRightsDiff;
+
+    /**
+     * 其他债权收益权
+     */
+    private Integer otherCreditorRightsDiff;
+
+    /**
+     * 股票收益权
+     */
+    private Integer stockIncomeRightDiff;
+
+    /**
+     * 其他股权收益权
+     */
+    private Integer otherEquityIncomeRightsDiff;
+
+    /**
+     * 物权资产收益权
+     */
+    private Integer propertyRightsDiff;
+
+    /**
+     * 总计
+     */
+    private Integer totalDiff;
+
 
     /**
      * 主键
@@ -280,5 +360,149 @@ public class PbcReportAssetIncomeDatDetail {
      */
     public void setReportuuid(String reportuuid) {
         this.reportuuid = reportuuid == null ? null : reportuuid.trim();
+    }
+
+    public BigDecimal getLoanIncomeRightPrd() {
+        return loanIncomeRightPrd;
+    }
+
+    public PbcReportAssetIncomeDatDetail setLoanIncomeRightPrd(BigDecimal loanIncomeRightPrd) {
+        this.loanIncomeRightPrd = loanIncomeRightPrd;
+        return this;
+    }
+
+    public BigDecimal getDebtSecuritiesIncomeRightsPrd() {
+        return debtSecuritiesIncomeRightsPrd;
+    }
+
+    public PbcReportAssetIncomeDatDetail setDebtSecuritiesIncomeRightsPrd(BigDecimal debtSecuritiesIncomeRightsPrd) {
+        this.debtSecuritiesIncomeRightsPrd = debtSecuritiesIncomeRightsPrd;
+        return this;
+    }
+
+    public BigDecimal getReceivableIncomeRightsPrd() {
+        return receivableIncomeRightsPrd;
+    }
+
+    public PbcReportAssetIncomeDatDetail setReceivableIncomeRightsPrd(BigDecimal receivableIncomeRightsPrd) {
+        this.receivableIncomeRightsPrd = receivableIncomeRightsPrd;
+        return this;
+    }
+
+    public BigDecimal getOtherCreditorRightsPrd() {
+        return otherCreditorRightsPrd;
+    }
+
+    public PbcReportAssetIncomeDatDetail setOtherCreditorRightsPrd(BigDecimal otherCreditorRightsPrd) {
+        this.otherCreditorRightsPrd = otherCreditorRightsPrd;
+        return this;
+    }
+
+    public BigDecimal getStockIncomeRightPrd() {
+        return stockIncomeRightPrd;
+    }
+
+    public PbcReportAssetIncomeDatDetail setStockIncomeRightPrd(BigDecimal stockIncomeRightPrd) {
+        this.stockIncomeRightPrd = stockIncomeRightPrd;
+        return this;
+    }
+
+    public BigDecimal getOtherEquityIncomeRightsPrd() {
+        return otherEquityIncomeRightsPrd;
+    }
+
+    public PbcReportAssetIncomeDatDetail setOtherEquityIncomeRightsPrd(BigDecimal otherEquityIncomeRightsPrd) {
+        this.otherEquityIncomeRightsPrd = otherEquityIncomeRightsPrd;
+        return this;
+    }
+
+    public BigDecimal getPropertyRightsPrd() {
+        return propertyRightsPrd;
+    }
+
+    public PbcReportAssetIncomeDatDetail setPropertyRightsPrd(BigDecimal propertyRightsPrd) {
+        this.propertyRightsPrd = propertyRightsPrd;
+        return this;
+    }
+
+    public BigDecimal getTotalPrd() {
+        return totalPrd;
+    }
+
+    public PbcReportAssetIncomeDatDetail setTotalPrd(BigDecimal totalPrd) {
+        this.totalPrd = totalPrd;
+        return this;
+    }
+
+    public Integer getLoanIncomeRightDiff() {
+        return loanIncomeRightDiff;
+    }
+
+    public PbcReportAssetIncomeDatDetail setLoanIncomeRightDiff(Integer loanIncomeRightDiff) {
+        this.loanIncomeRightDiff = loanIncomeRightDiff;
+        return this;
+    }
+
+    public Integer getDebtSecuritiesIncomeRightsDiff() {
+        return debtSecuritiesIncomeRightsDiff;
+    }
+
+    public PbcReportAssetIncomeDatDetail setDebtSecuritiesIncomeRightsDiff(Integer debtSecuritiesIncomeRightsDiff) {
+        this.debtSecuritiesIncomeRightsDiff = debtSecuritiesIncomeRightsDiff;
+        return this;
+    }
+
+    public Integer getReceivableIncomeRightsDiff() {
+        return receivableIncomeRightsDiff;
+    }
+
+    public PbcReportAssetIncomeDatDetail setReceivableIncomeRightsDiff(Integer receivableIncomeRightsDiff) {
+        this.receivableIncomeRightsDiff = receivableIncomeRightsDiff;
+        return this;
+    }
+
+    public Integer getOtherCreditorRightsDiff() {
+        return otherCreditorRightsDiff;
+    }
+
+    public PbcReportAssetIncomeDatDetail setOtherCreditorRightsDiff(Integer otherCreditorRightsDiff) {
+        this.otherCreditorRightsDiff = otherCreditorRightsDiff;
+        return this;
+    }
+
+    public Integer getStockIncomeRightDiff() {
+        return stockIncomeRightDiff;
+    }
+
+    public PbcReportAssetIncomeDatDetail setStockIncomeRightDiff(Integer stockIncomeRightDiff) {
+        this.stockIncomeRightDiff = stockIncomeRightDiff;
+        return this;
+    }
+
+    public Integer getOtherEquityIncomeRightsDiff() {
+        return otherEquityIncomeRightsDiff;
+    }
+
+    public PbcReportAssetIncomeDatDetail setOtherEquityIncomeRightsDiff(Integer otherEquityIncomeRightsDiff) {
+        this.otherEquityIncomeRightsDiff = otherEquityIncomeRightsDiff;
+        return this;
+    }
+
+    public Integer getPropertyRightsDiff() {
+        return propertyRightsDiff;
+    }
+
+    public PbcReportAssetIncomeDatDetail setPropertyRightsDiff(Integer propertyRightsDiff) {
+        this.propertyRightsDiff = propertyRightsDiff;
+        return this;
+    }
+
+    public Integer getTotalDiff() {
+        return totalDiff;
+    }
+
+    public PbcReportAssetIncomeDatDetail setTotalDiff(Integer totalDiff) {
+        this.totalDiff = totalDiff;
+        return this;
     }
 }

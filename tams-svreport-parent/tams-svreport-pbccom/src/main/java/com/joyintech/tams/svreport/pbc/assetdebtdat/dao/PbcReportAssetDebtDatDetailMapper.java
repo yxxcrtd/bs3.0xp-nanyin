@@ -95,5 +95,7 @@ public interface PbcReportAssetDebtDatDetailMapper {
      * List<PbcReportAssetDebtNewDetailDto>
      */
 	List<PbcReportAssetDebtDatDetailDto> selectByReportuuidForExport(String reportuuid);
-    
+
+    List<PbcReportAssetDebtDatDetailDto> selectDatDiffByReport(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
+
 }
