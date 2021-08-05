@@ -1614,18 +1614,6 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			int 索引=objects.indexOf(object);
 			String lineNo= String.valueOf(索引+2);//行号
 			T dzImportDto=function.apply(object);
-			// 证券代码
-			Map<String, Object> map = new HashMap<>();
-			map.put("portfolioId",dzImportDto.getPortfolioId());
-			map.put("acctNo",dzImportDto.getAcctNo());
-			List<SelectOptionDto> secAcctInfoList = this.getPtlSecAcctInfo(map);
-			if(secAcctInfoList!=null&&secAcctInfoList.size()>0&&secAcctInfoList.get(0)!=null){
-				if(!StringUtil.isNotEmpty(dzImportDto.getSecAcctId())){
-					List<LinkedHashMap<String,Object>> secAcctInfoMapList = (ArrayList) secAcctInfoList.get(0).getObject();
-					if(secAcctInfoMapList.get(0)!=null)
-					dzImportDto.setSecAcctId((String) secAcctInfoMapList.get(0).get("secAcctId"));
-				}
-			}
 			dzImportDto.setSeqNo(String.valueOf(索引+1));//序号
 			//委托开始与结束日(优先校验日期，防止下面逻辑用到此日期条件)
 			checkElement(dzImportDto,promptMsg,null,obj-> {
@@ -1646,6 +1634,18 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				//在前面无错误提示情况下才校验此逻辑
 				return StringUtil.isNotEmpty(promptMsg.toString())?StringUtil.EMPTY:this.checkSecAcctCount(dzImportDto);
 			});
+			// 证券代码
+			Map<String, Object> map = new HashMap<>();
+			map.put("portfolioId",dzImportDto.getPortfolioId());
+			map.put("acctNo",dzImportDto.getAcctNo());
+			List<SelectOptionDto> secAcctInfoList = this.getPtlSecAcctInfo(map);
+			if(secAcctInfoList!=null&&secAcctInfoList.size()>0&&secAcctInfoList.get(0)!=null){
+				if(!StringUtil.isNotEmpty(dzImportDto.getSecAcctId())){
+					List<LinkedHashMap<String,Object>> secAcctInfoMapList = (ArrayList) secAcctInfoList.get(0).getObject();
+					if(secAcctInfoMapList.get(0)!=null)
+						dzImportDto.setSecAcctId((String) secAcctInfoMapList.get(0).get("secAcctId"));
+				}
+			}
 			// 资产代码为空与资产是否存在(债券，基金，股票)
 			checkElement(dzImportDto,promptMsg,null,obj-> {
 				return etrCommonService.checkIsBlank(dzImportDto.getFinprodId(), "EtrExchangeTrade001.secId", lineNo);
