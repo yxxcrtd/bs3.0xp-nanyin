@@ -59,8 +59,12 @@ public class RskValTableImportCommonService extends BaseService {
         logger.info("解析资管计划1"+assetName);
         System.out.println("解析资管计划2"+assetName);
         if (StringUtil.isNotEmpty(assetName)) {
-            if (assetName.contains("\\")) {
+           /* if (assetName.contains("\\")) {
                 String[] arr = StringUtil.split(assetName, "\\");
+                assetName = arr[arr.length - 1];
+            }*/
+            if (assetName.contains(File.separator)) {
+                String[] arr = StringUtil.split(assetName, File.separator);
                 assetName = arr[arr.length - 1];
             }
             String finalAssetName = assetName;
