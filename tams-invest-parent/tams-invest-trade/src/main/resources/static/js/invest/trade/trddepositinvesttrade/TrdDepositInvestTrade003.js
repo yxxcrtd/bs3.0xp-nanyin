@@ -24,9 +24,15 @@
                     tradeDirection:$('#ps').val(),
                     index: null,
                     mun: mun}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#trdInvestPersonInfo002Dto_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             list[i]=obj;
         }
         var object = {valDate:['tradeDate','TrdDepositInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdDepositInvestTrade001.portfolioId'],tradeAmount:['tradeAmtAndFee','TrdDepositInvestTrade002.prinAmt'],assetType:['finprodType','TrdDepositInvestTrade001.finprodType'],tradeDirection:['ps','TrdDepositInvestTrade001.ps'],data:list}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo002Dto.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     };
 
