@@ -1614,6 +1614,18 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			int 索引=objects.indexOf(object);
 			String lineNo= String.valueOf(索引+2);//行号
 			T dzImportDto=function.apply(object);
+			// 证券代码
+			Map<String, Object> map = new HashMap<>();
+			map.put("portfolioId",dzImportDto.getPortfolioId());
+			map.put("acctNo",dzImportDto.getAcctNo());
+			List<SelectOptionDto> secAcctInfoList = this.getPtlSecAcctInfo(map);
+			if(secAcctInfoList!=null&&secAcctInfoList.size()>0&&secAcctInfoList.get(0)!=null){
+				if(!StringUtil.isNotEmpty(dzImportDto.getSecAcctId())){
+					List<LinkedHashMap<String,Object>> secAcctInfoMapList = (ArrayList) secAcctInfoList.get(0).getObject();
+					if(secAcctInfoMapList.get(0)!=null)
+					dzImportDto.setSecAcctId((String) secAcctInfoMapList.get(0).get("secAcctId"));
+				}
+			}
 			dzImportDto.setSeqNo(String.valueOf(索引+1));//序号
 			//委托开始与结束日(优先校验日期，防止下面逻辑用到此日期条件)
 			checkElement(dzImportDto,promptMsg,null,obj-> {
@@ -1836,7 +1848,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		}else{
 			if(StringUtil.isEmpty(t.getAcctNo())||ptlSecAcctList.size()==1){
 				t.setAcctNo(ptlSecAcctList.get(0).getId());
-			}else if(!ptlSecAcctList.stream().anyMatch(e->StringUtil.equals(e,t.getAcctNo()))&&ptlSecAcctList.size()>1){
+			}else if(!ptlSecAcctList.stream().anyMatch(e->StringUtil.equals(e.getId(),t.getAcctNo()))&&ptlSecAcctList.size()>1){
 				return getMessage("ETR_E_0038", t.getPortfolioId(), Integer.valueOf(t.getSeqNo())+1);
 			}
 			return StringUtil.EMPTY;

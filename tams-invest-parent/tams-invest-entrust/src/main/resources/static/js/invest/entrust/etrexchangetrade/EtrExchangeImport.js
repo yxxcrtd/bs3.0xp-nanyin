@@ -168,6 +168,7 @@
         , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
         , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//委托开始日
+        , {field: 'secAcctId',visible: false}
     ];
 
     //固定收益指令
