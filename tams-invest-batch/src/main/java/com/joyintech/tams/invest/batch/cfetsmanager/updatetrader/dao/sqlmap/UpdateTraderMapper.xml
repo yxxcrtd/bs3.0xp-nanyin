@@ -4,10 +4,20 @@
 
 	<select id="selectCustomerNew" resultType="com.joyintech.tams.common.base.entity.MstCfetsCustomerInfo">
         SELECT T1.PARTY_NAME partyName,
-               T1.PARTY_CUSTOMER_ID partyCustomerId
+               T1.PARTY_CUSTOMER_ID partyCustomerId,
+               T1.PARTY_ID partyId
         FROM MST_CFETS_CUSTOMER_INFO T1
         LEFT JOIN MST_COUNTER_PARTY T2 on T2.COUNTER_NAME = T1.PARTY_NAME
         WHERE to_char(T1.UPDATE_TIME,'yyyymmdd') = #{batchDate}
+        and T2.COUNTER_NAME IS NULL
+    </select>
+    <select id="selectInfo" resultType="com.joyintech.tams.common.base.entity.MstCfetsCustomerInfo">
+        SELECT C.PARTY_CUSTOMER_ID partyCustomerId,
+               C.PARTY_ID partyId
+         FROM MST_CFETS_CUSTOMER_INFO A
+         LEFT JOIN MST_CFETS_CUSTOMER_RELA B ON A.PARTY_ID = B.SPARTY_ID
+         LEFT JOIN MST_CFETS_CUSTOMER_INFO C ON B.MPARTY_ID = C.PARTY_ID
+        WHERE A.partyId = #{batchDate}
         and T2.COUNTER_NAME IS NULL
     </select>
 
