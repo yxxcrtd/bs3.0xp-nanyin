@@ -711,7 +711,7 @@
     		<result column="PLEDGE_FINPROD_ID" property="finprodId" jdbcType="VARCHAR"/>
     		<result column="PLEDGE_RATIO" property="pledgeRate" jdbcType="DECIMAL"/>
     		<result column="FINPROD_ABBR" property="bondAbbrName" jdbcType="VARCHAR"/>
-            <result column="PLEDGE_AMT" property="pledgePrin" jdbcType="VARCHAR"/>
+            <result column="PLEDGE_AMT" property="pledgePrin" jdbcType="DECIMAL"/>
     	</collection>
     </resultMap>
     <select id="queryCfetsRepoHis" resultMap="cfetsRepoHisMap">
