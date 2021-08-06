@@ -114,4 +114,10 @@
 		 FROM SYS_DEPARTMENT
 		where SYS_DEPARTMENT.INSTITUTION_CODE = #{orgCode}
 	</select>
+
+    <select id="searchDate" resultType="java.util.Map">
+		SELECT TO_CHAR(CUR_DATE,'yyyy-MM-dd')  CDATE,
+		INSTITUTION_CODE CODE
+        FROM SYS_DATE
+	</select>
 </mapper>

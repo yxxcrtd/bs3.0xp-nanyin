@@ -50,4 +50,6 @@ public interface ValBatchImportMapper {
     void deleteSumValTable(RskValtblAssetSubDto dto);
 
     List<String> queryorgCodeCount(@Param("orgCode") String orgCode);
+
+    List<Map<String,String>>searchDate();
 }

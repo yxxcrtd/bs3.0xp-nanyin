@@ -76,6 +76,9 @@ public class RskValSumname003Controller  extends BaseController {
         }
         this.setSelectOptionToModel(model, DictCode.估值字段类型);
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
+        if(rskValSumname001Service.getCountById(dto)){
+            model.addAttribute("IS_MAP", DictCodeList.是否_是.getValue());
+        }
         return super.init(model);
     }
     /**
