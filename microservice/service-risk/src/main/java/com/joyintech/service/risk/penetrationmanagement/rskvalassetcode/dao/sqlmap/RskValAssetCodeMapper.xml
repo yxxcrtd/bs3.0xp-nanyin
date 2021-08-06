@@ -104,6 +104,9 @@
 				SUB_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
 				)
 			</if>
+			<if test="initValue != null and initValue != ''">
+				AND SUB_CODE = #{initValue}
+			</if>
 		</where>
 	</select>
 </mapper>
