@@ -10,8 +10,11 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrconbond.dto.EtrConBondDto;
 import com.joyintech.tams.invest.entrust.etrconbond.service.EtrConBondService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,12 +111,16 @@ public class EtrConBond001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("recall")
-    public AjaxResult recallDelegate(@RequestBody EtrConBondDto dto) {
+    public AjaxResult recallDelegate(@RequestBody EtrConBondDto dto) throws Exception {
         List<EtrConBondDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && !dtolist.isEmpty()){
             for(EtrConBondDto entity : dtolist){
                 service.recallDelegate(entity);
             }
+            // add by yushilong 批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_债券.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by yushilong 批量撤销预占 end
             return new AjaxResult(this.getMessage("ETR_X_001"));
         }
         return new AjaxResult(this.getMessage("ETR_X_002"));
@@ -127,12 +134,16 @@ public class EtrConBond001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("close")
-    public AjaxResult closeDelegate(@RequestBody EtrConBondDto dto) {
+    public AjaxResult closeDelegate(@RequestBody EtrConBondDto dto) throws Exception {
         List<EtrConBondDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && !dtolist.isEmpty()){
             for(EtrConBondDto entity : dtolist){
                 service.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
             }
+            // add by yushilong 批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_债券.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by yushilong 批量撤销预占 end
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }
         return new AjaxResult(this.getMessage("ETR_X_004"));
