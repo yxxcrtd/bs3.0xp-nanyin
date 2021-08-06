@@ -1,9 +1,8 @@
 package com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.common.base.entity.ModCurveResult;
-import com.joyintech.tams.common.base.entity.ModCurveResultDetail;
-import com.joyintech.tams.common.base.entity.ModRiskPremium;
+import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCurveResult;
+import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModRiskPremium;
 
 import java.util.List;
 

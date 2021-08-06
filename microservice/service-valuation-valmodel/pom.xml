@@ -2,16 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <parent>
         <groupId>com.joyintech</groupId>
         <artifactId>tams-parent</artifactId>
         <version>0.0.4</version>
     </parent>
     <version>3.0.1</version>
-
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>service-valuation-valmodel</artifactId>
+
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -57,24 +58,11 @@
 
 
     <properties>
-        <start-class>com.joyintech.service.valuation.lossmodel.ValuationLossModelApplication</start-class>
+        <start-class>com.joyintech.service.valuation.valmodel.ValuationValModelApplication</start-class>
         <hibernate.version>5.3.6.Final</hibernate.version>
     </properties>
     <build>
-
-            <resources>
-                <resource>
-                    <directory>src/main/java</directory>
-                    <excludes>
-                        <exclude>**/.git/*</exclude>
-                    </excludes>
-                    <includes>
-                        <include>**/*.xml</include>
-                    </includes>
-                </resource>
-            </resources>
-
-        <finalName>service-valuation-lossmodel</finalName>
+        <finalName>service-valuation-valmodel</finalName>
         <plugins>
             <!-- 打包源代码插件 -->
             <plugin>
@@ -109,7 +97,6 @@
             -->
         </plugins>
     </build>
-
 
 
 </project>

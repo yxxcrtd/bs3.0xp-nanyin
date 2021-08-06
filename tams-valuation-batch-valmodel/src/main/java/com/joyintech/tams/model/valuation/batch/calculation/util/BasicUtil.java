@@ -3,7 +3,7 @@ package com.joyintech.tams.model.valuation.batch.calculation.util;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.common.valuation.assetinfo.dto.ModCashFlowDto;
+import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCashFlowDto;
 import com.joyintech.tams.model.valuation.batch.calculation.entity.CashInfoDto;
 
 import java.math.BigDecimal;
@@ -269,7 +269,7 @@ public class BasicUtil {
      * 到期点差中间过程
      * @param cashFlow
      * @param matYield
-     * @param amount
+     * @param
      * @return
      */
     public static BigDecimal calPriceByMatYield(List<CashInfoDto>  cashFlow,BigDecimal matYield,int yearIntRate,BigDecimal spread) {
@@ -289,7 +289,7 @@ public class BasicUtil {
     /**
      * 即期点差中间过程
      * @param cashFlow
-     * @param amount
+     * @param
      * @return
      */
     public static BigDecimal calPriceByMatYield2(List<CashInfoDto>  cashFlow,BigDecimal spread) {

@@ -1,14 +1,14 @@
-package com.joyintech.tams.model.valuation.batch.batchtask.service;
+package com.joyintech.service.valuation.valmodel.batch.batchtask.dao;
 
-import com.joyintech.tams.model.valuation.batch.batchtask.dto.ModBatchLogs;
-import com.joyintech.tams.model.valuation.batch.batchtask.dto.ModBatchLogsExample;
+import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.ModBatchLogs;
+import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.ModBatchLogsExample;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ModBatchLogsMapper {
+public interface ModValBatchLogsMapper {
     int countByExample(ModBatchLogsExample example);
 
     int deleteByExample(ModBatchLogsExample example);

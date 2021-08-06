@@ -1,6 +1,5 @@
 package com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto;
 
-import com.joyintech.tams.common.base.entity.ModCurveConfig;
 
 /**
  * 贴现法曲线配置

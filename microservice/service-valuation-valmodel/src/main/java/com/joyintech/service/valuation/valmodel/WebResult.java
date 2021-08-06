@@ -1,4 +1,4 @@
-package com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets;
+package com.joyintech.service.valuation.valmodel;
 
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.grid.GridRowDto;

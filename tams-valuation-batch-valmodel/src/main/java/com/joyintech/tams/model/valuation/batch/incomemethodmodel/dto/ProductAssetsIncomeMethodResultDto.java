@@ -2,8 +2,8 @@ package com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.common.valuation.assetinfo.dto.ModCashFlowCalRuleDto;
-import com.joyintech.tams.common.valuation.assetinfo.dto.ModCashFlowDto;
+import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCashFlowCalRuleDto;
+import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCashFlowDto;
 
 import java.math.BigDecimal;
 import java.util.Date;
