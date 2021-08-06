@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeCSTPDto;
 import com.joyintech.tams.invest.trade.bond.validator.TrdBondInvestTradeDtoValidator;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.codec.binary.StringUtils;
@@ -607,15 +608,25 @@ public class TrdBondInvestTrade003Controller extends BaseController {
 			dtoList.add(tempDto);
 		}
         //----------add by jjpei 20200114 核风险版本 start----------
-        if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
-            AjaxResult ar =interfRiskRdsService.checkBatchRiskRds(dtoList,new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
-                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(), BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),DictCodeList.平安资产类型_债券.getValue(),
-                    (sm,en)->interfRiskRdsService.sendRiskRdsData(sm,en));
+//        if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
+//            AjaxResult ar =interfRiskRdsService.checkBatchRiskRds(dtoList,new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+//                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(), BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),DictCodeList.平安资产类型_债券.getValue(),
+//                    (sm,en)->interfRiskRdsService.sendRiskRdsData(sm,en));
+//            if (StringUtil.isNotEmpty(ar)) {
+//                return ar;
+//            }
+//        }
+        //----------add by jjpei 20200114 核风险版本 end----------
+
+        // ----------add by zhangrui1 20200704 批量实占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = TradeRdsCommonAop.doListOccupy(dtoList,
+                    DictCodeList.平安资产类型_债券.getValue(), true, dto.getTrdInvestPersonInfo());
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }
         }
-        //----------add by jjpei 20200114 核风险版本 end----------
+        // ----------add by zhangrui1 20200704 批量实占功能 end----------
 
         ProcessParameter<TrdBondInvestTradeDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdBondInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();
