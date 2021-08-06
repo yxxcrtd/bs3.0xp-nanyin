@@ -12,7 +12,13 @@
         }
         //配置单位 edit by yeming 20210721 end
         var obj = {tradeDirection:etrPs,timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:purchBondTotal,assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {tradeDirection:['ps','EtrConBond002.ps'],portfolioCode:['portfolioId','EtrConBond002.portfolioId'],tradeAmount:['purchBondTotal','EtrConBond001.purchBondTotal'],assetType:['assetType1','EtrConBond002.assetType1'],assetCode:['finprodId','EtrBondFirstLBidding002.finprodId'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
 	/**
@@ -49,36 +55,6 @@
 
 
     }
-
-
-    /**
-     * 资产代码
-     */
-    $('#finprodId').change(function() {
-
-        var ccy = $('#ccy').val();
-        var portfolioId = $('#portfolioId').val();
-        var finprodId = $('#finprodId').val();
-        if(finprodId){
-        	var data = $('#finprodId').select2('data')[0].object;
-            $('#finprodIdhid').val(data.finprodId).trigger('change');
-            $('#finprodName').val(data.finprodName).trigger('change');
-            $('#tradeMarket').val(data.tradeMarket).trigger('change').attr('disabled',true);
-            $('#assetType1').val(data.assetType1).trigger('change').attr('disabled',true);
-            $('#ccy').val(data.ccy).trigger('change').attr('disabled',true);
-            if(ccy && portfolioId){
-                getPtlCashPositionInfo();
-            }
-        } else {
-            $('#finprodIdhid').val('').trigger('change');
-            $('#finprodName').val('').trigger('change');
-            $('#tradeMarket').val('').trigger('change').attr('disabled',false);
-            $('#ccy').val(ccy).trigger('change').attr('disabled',false);
-            $('#assetType1').val('').trigger('change');
-        }
-        // 画星星
-        star();
-    });
     
     /**
      * 组合代码
@@ -95,18 +71,6 @@
         } 
     });
 
-    //联动通道可用现金
-    $("#chlId").on("change", function () {
-        if ($('#chlId').val()) {
-            var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),secAcctId:$('#secAcctId').val(),chlId:$('#chlId').val(),vdate:$('#entrustDate').val()}
-            Joyin.ajaxJson(basePath + 'invest/trade/conbond/TrdConBond002/getProAvailableCash',data,
-                function(result) {
-                    $('#channelAvailableCash').val(result.cashC).trigger('blur');
-            });
-        }else {
-            $('#channelAvailableCash').val('').trigger('blur');
-        }
-    });
     
   //查询组合可用现金
     var getPtlCashPositionInfo = function(){
@@ -152,6 +116,7 @@
         if(object.etrInvestPersonInfo.trader != null && object.etrInvestPersonInfo.trader != ''){
             object.etrInvestPersonInfo.trader = object.etrInvestPersonInfo.trader;//.join(",");
         }
+        object.finprodId = $('#finprodId').val();
         //配置单位 edit by yeming 20210728 start
         if ($('#purchBondTotal').val()) {
             object.purchBondTotal=JoyinMath.doMul($('#purchBondTotal').val(), entrustAmtUnit == '02' ? 10000 : 1, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
@@ -273,29 +238,70 @@
             var object = $.serializeToObject('#searchForm',true);
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F01',object,getriskdata());
 	    });
+
+        $('#chlId').change(function(){
+            if ($("#chlId").val()) {
+                $("#secAcctId").val('').trigger("change").prop("disabled", true);
+            } else {
+                $("#secAcctId").prop("disabled", false);
+            }
+        })
+
+        //联动通道可用现金
+        $('#chlId').on("change", function () {
+            if ($('#chlId').val()) {
+                var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),secAcctId:$('#secAcctId').val(),chlId:$('#chlId').val(),vdate:$('#entrustDate').val()}
+                Joyin.ajaxJson(basePath + 'invest/trade/conbond/TrdConBond002/getProAvailableCash',data,
+                    function(result) {
+                        $('#channelAvailableCash').val(result.cashC).trigger('blur');
+                    });
+            }else {
+                $('#channelAvailableCash').val('').trigger('blur');
+            }
+        });
+
+        /**
+         * 资产代码
+         */
+        $('#finprodId').change(function() {
+
+            var ccy = $('#ccy').val();
+            var portfolioId = $('#portfolioId').val();
+            var finprodId = $('#finprodId').val();
+            if(finprodId){
+                var data = $('#finprodId').select2('data')[0].object;
+                $('#finprodIdhid').val(data.finprodId).trigger('change');
+                $('#finprodName').val(data.finprodName).trigger('change');
+                $('#tradeMarket').val(data.tradeMarket).trigger('change').attr('disabled',true);
+                $('#assetType1').val(data.assetType1).trigger('change').attr('disabled',true);
+                $('#ccy').val(data.ccy).trigger('change').attr('disabled',true);
+                if(ccy && portfolioId){
+                    getPtlCashPositionInfo();
+                }
+            } else {
+                $('#finprodIdhid').val('').trigger('change');
+                $('#finprodName').val('').trigger('change');
+                $('#tradeMarket').val('').trigger('change').attr('disabled',false);
+                $('#ccy').val(ccy).trigger('change').attr('disabled',false);
+                $('#assetType1').val('').trigger('change');
+            }
+            // 画星星
+            star();
+        });
+
+        $('#secAcctId').change(function(){
+            if ($("#secAcctId").val()) {
+                $("#chlId").val('').prop("disabled", true);
+            }else {
+                $("#chlId").prop("disabled", false);
+            }
+            //add by mashukai ZGBSS-239 证券账户更改时交易所资金账户可用现金没有带出来 start
+            if ($('#portfolioId').val() != null && $('#portfolioId').val() != ''){
+                getPtlCashPositionInfo();
+            }
+            //add by mashukai ZGBSS-239 证券账户更改时交易所资金账户可用现金没有带出来 end
+        });
 	})
-
-    $('#secAcctId').change(function(){
-        if ($("#secAcctId").val()) {
-            $("#chlId").val('').prop("disabled", true);
-        }else {
-            $("#chlId").prop("disabled", false);
-        }
-        //add by mashukai ZGBSS-239 证券账户更改时交易所资金账户可用现金没有带出来 start
-        if ($('#portfolioId').val() != null && $('#portfolioId').val() != ''){
-            getPtlCashPositionInfo();
-        }
-        //add by mashukai ZGBSS-239 证券账户更改时交易所资金账户可用现金没有带出来 end
-    });
-
-    $("#chlId").change(function(){
-        if ($("#chlId").val()) {
-            $("#secAcctId").val('').trigger("change").prop("disabled", true);
-        } else {
-            $("#secAcctId").prop("disabled", false);
-        }
-    })
-
 
     $('#portfolioId').change(function(){
         if($('#secAcctId').val()){
@@ -303,7 +309,7 @@
         }
         //add by mashukai ZGBSS-239 修正清除产品代码时交易所资金账户可用现金不清零  start
         if ($('#portfolioId').val() == null || $('#portfolioId').val() == ''){
-              $('#tradeMarketCash').val('').trigger("change");
+            $('#tradeMarketCash').val('').trigger("change");
         }
         //add by mashukai ZGBSS-239 修正清除产品代码时交易所资金账户可用现金不清零  end
     });
