@@ -16,6 +16,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
+import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +41,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
@@ -82,6 +83,9 @@ public class TrdConBond003Controller extends BaseController {
 
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
+
+    @Autowired(required = false)
+    private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
 
     @Override
     public String init(Model model) {
@@ -277,6 +281,20 @@ public class TrdConBond003Controller extends BaseController {
 		else {
 			tempDto.setBusiCode(IDGenerator.generate());
 		}
+        //----------add by jjpei 20200114 核风险版本 start----------
+        if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
+            AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_债券.getValue(),
+                    (en)->interfRiskRdsService.sendRiskRdsData(tempDto,en));
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+            // add by zhangrui1 start
+            // 将实占信息设置到线程缓存出错时撤销用
+            TradeRdsCommonAop.setLocalCache(tempDto);
+            // add by zhangrui1 end
+        }
+        //----------add by jjpei 20200114 核风险版本 end----------
         ProcessParameter<TrdConBond003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdConBond003Dto> workFlowParameter = new WorkFlowParameter<>();
         processParameter.setWorkFlowParameter(workFlowParameter);
