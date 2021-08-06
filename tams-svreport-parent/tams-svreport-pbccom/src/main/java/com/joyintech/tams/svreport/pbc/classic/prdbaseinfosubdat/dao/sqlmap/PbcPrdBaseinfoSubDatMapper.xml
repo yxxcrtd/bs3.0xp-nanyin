@@ -1260,66 +1260,6 @@
 		STATUS, CREATE_USER, ORG_CODE,DAT_ZIP_CODE,
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
 		UPDATE_TIME)
-		<foreach collection="list" item="item" separator="union all" >
-			select
-			<choose><when test="item.subProdId !=null and item.subProdId != ''">#{item.subProdId,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.registSeqno !=null and item.registSeqno != ''">#{item.registSeqno,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.pbcProdId !=null and item.pbcProdId != ''">#{item.pbcProdId,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.issuePartyId !=null and item.issuePartyId != ''">#{item.issuePartyId,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.pbcProdType !=null and item.pbcProdType != ''">#{item.pbcProdType,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.prodName !=null and item.prodName != ''">#{item.prodName,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.prodBrand !=null and item.prodBrand != ''">#{item.prodBrand,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.prodStage !=null and item.prodStage != ''">#{item.prodStage,jdbcType=DECIMAL},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.prodId !=null and item.prodId != ''">#{item.prodId,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.raiseCcy !=null and item.raiseCcy != ''">#{item.raiseCcy,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.cashPrinCcy !=null and item.cashPrinCcy != ''">#{item.cashPrinCcy,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.cashProfCcy !=null and item.cashProfCcy != ''">#{item.cashProfCcy,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.customerType !=null and item.customerType != ''">#{item.customerType,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.raiseType !=null and item.raiseType != ''">#{item.raiseType,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.manageType !=null and item.manageType != ''">#{item.manageType,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.fiduciaryDuty !=null and item.fiduciaryDuty != ''">#{item.fiduciaryDuty,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.contMode !=null and item.contMode != ''">#{item.contMode,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.operateMode !=null and item.operateMode != ''">#{item.operateMode,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.ivstorientation !=null and item.ivstorientation != ''">#{item.ivstorientation,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.busiModel !=null and item.busiModel != ''">#{item.busiModel,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.incomeGuaranIdent !=null and item.incomeGuaranIdent != ''">#{item.incomeGuaranIdent,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.prinGuaranIdent !=null and item.prinGuaranIdent != ''">#{item.prinGuaranIdent,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.highYieldIssue !=null and item.highYieldIssue != ''">#{item.highYieldIssue,jdbcType=DECIMAL},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.lowYieldIssue !=null and item.lowYieldIssue != ''">#{item.lowYieldIssue,jdbcType=DECIMAL},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.raiseVdate !=null">to_date(#{item.raiseVdate,jdbcType=TIMESTAMP},'yyyy-MM-dd'),</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.raiseEnddate !=null">to_date(#{item.raiseEnddate,jdbcType=TIMESTAMP},'yyyy-MM-dd'),</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.termRightFlag !=null and item.termRightFlag != ''">#{item.termRightFlag,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.cusRedeemFlag !=null and item.cusRedeemFlag != ''">#{item.cusRedeemFlag,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.creditFlag !=null and item.creditFlag != ''">#{item.creditFlag,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.creditType !=null and item.creditType != ''">#{item.creditType,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.creditMode !=null and item.creditMode != ''">#{item.creditMode,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.inDepName !=null and item.inDepName != ''">#{item.inDepName,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.inDepCode !=null and item.inDepCode != ''">#{item.inDepCode,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.outDepCtry !=null and item.outDepCtry != ''">#{item.outDepCtry,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.outDepName !=null and item.outDepName != ''">#{item.outDepName,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.vdate !=null">to_date(#{item.vdate,jdbcType=TIMESTAMP},'yyyy-MM-dd'),</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.mdate !=null">to_date(#{item.mdate,jdbcType=TIMESTAMP},'yyyy-MM-dd'),</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.accountId !=null and item.accountId != ''">#{item.accountId,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.isConstracte !=null and item.isConstracte != ''">#{item.isConstracte,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.transferType !=null and item.transferType != ''">#{item.transferType,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.identiFlag !=null and item.identiFlag != ''">#{item.identiFlag,jdbcType=CHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.sendStatus !=null and item.sendStatus != ''">#{item.sendStatus,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.submitTime !=null">to_date(#{item.submitTime,jdbcType=TIMESTAMP},'yyyy-MM-dd'),</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.submitFeedbackStatus !=null and item.submitFeedbackStatus != ''">#{item.submitFeedbackStatus,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.sumitSeq !=null and item.sumitSeq != ''">#{item.sumitSeq,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.statusDate !=null">to_date(#{item.statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd'),</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.isMarketFund !=null and item.isMarketFund != ''">#{item.isMarketFund,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.pbcSubmitDeadline !=null">to_date(#{item.pbcSubmitDeadline,jdbcType=TIMESTAMP},'yyyy-MM-dd'),</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.submitDeadline !=null">to_date(#{item.submitDeadline,jdbcType=TIMESTAMP},'yyyy-MM-dd'),</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.status !=null and item.status != ''">#{item.status,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.createUser !=null and item.createUser != ''">#{item.createUser,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.orgCode !=null and item.orgCode != ''">#{item.orgCode,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.datZipCode !=null and item.datZipCode != ''">#{item.datZipCode,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			<choose><when test="item.createDept !=null and item.createDept != ''">#{item.createDept,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			sysdate,
-			<choose><when test="item.updateUser !=null and item.updateUser != ''">#{item.updateUser,jdbcType=VARCHAR},</when><otherwise>null,</otherwise></choose>
-			sysdate
-			from dual
 		<foreach collection="list" item="item" separator=" from dual union all select " open="select * from (select "
 				 close="from dual)">
 			#{item.subProdId,jdbcType=VARCHAR},

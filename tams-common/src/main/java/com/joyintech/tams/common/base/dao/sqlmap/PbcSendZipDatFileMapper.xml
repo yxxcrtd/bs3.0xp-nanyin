@@ -263,6 +263,6 @@ ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
         from  PBC_SEND_ZIP_DAT_FILE
         where DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
             and STATUS_VDATE = #{statusVdate,jdbcType=VARCHAR}
-            and REPORTUUID = {reportUUID,jdbcType=CHAR}
+            and REPORTUUID = #{reportUUID,jdbcType=CHAR}
     </delete>
 </mapper>

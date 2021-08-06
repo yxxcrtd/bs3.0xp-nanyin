@@ -57,8 +57,6 @@ public class NewPbcReport1_5ProdDealService extends AbstractNewPbcMonthProdRepor
             sendZipDatFile.setDatZipDatType(PBC_REPORT);
             deleteData(paramDto,PBC_REPORT);
             saveZipDatFile(pbcReportProdDatDtos,sendZipDatFile);
-            deleteData(paramDto,PBC_REPORT);
-            saveZipDatFile(pbcReportProdDatDtos,sendZipDatFile);
         }catch (Exception e){
             ExcelValidDto dto = new ExcelValidDto();
             dto.setErrorInfo("导入"+sheetName()+"失败");

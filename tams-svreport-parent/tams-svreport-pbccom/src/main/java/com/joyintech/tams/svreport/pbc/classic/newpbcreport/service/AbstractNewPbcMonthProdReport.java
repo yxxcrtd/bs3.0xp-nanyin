@@ -30,7 +30,7 @@ public abstract class AbstractNewPbcMonthProdReport extends AbstractDealNewPbcMo
             pbcReportProdDatMapper.deleteByUUIDAndType(paramsMap);
             Map<String,Object> pMap = new HashMap<>();
             pMap.put("datZipDatType",reportType);
-            pMap.put("statusVdate",reportType);
+            pMap.put("statusVdate",paramDto.getStatusVdate());
             pMap.put("reportUUID",paramDto.getReportUUID());
             pbcSendZipDatFileMapper.deleteByUUIDAndType(pMap);
         }

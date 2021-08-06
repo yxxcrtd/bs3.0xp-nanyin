@@ -150,6 +150,7 @@ public class NewPbcMonthReportService {
             List<PbcSendZipDatFile> pbcSendZipDatFiles = pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(paramMap);
             ReportDealParamDto paramDto = new ReportDealParamDto();
             paramDto.setOrgCode(SecurityUtil.getLoginUser().getOrgCode());
+            paramDto.setStatusVdate(statusVdate);
             if(CollectionUtil.isNotEmpty(pbcSendZipDatFiles)){
                 PbcSendZipDatFile pbcSendZipDatFile = pbcSendZipDatFiles.get(0);
                 paramDto.setReportUUID(pbcSendZipDatFile.getReportuuid());

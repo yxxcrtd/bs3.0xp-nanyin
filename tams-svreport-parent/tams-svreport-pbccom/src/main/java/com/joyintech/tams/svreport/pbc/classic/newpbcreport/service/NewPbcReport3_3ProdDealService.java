@@ -28,7 +28,7 @@ public class NewPbcReport3_3ProdDealService extends AbstractDealNewPbcMonthRepor
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String PBC_REPORT = PbcReportType.PBC_REPORT_2_5;
+    private static final String PBC_REPORT = PbcReportType.PBC_REPORT_3_3;
 
     @Autowired
     private PbcReportDebtTermDatDetailMapper pbcReportDebtTermDatDetailMapper;
@@ -88,7 +88,7 @@ public class NewPbcReport3_3ProdDealService extends AbstractDealNewPbcMonthRepor
             pbcReportDebtTermDatDetailMapper.deleteByUUIDAndType(paramsMap);
             Map<String,Object> pMap = new HashMap<>();
             pMap.put("datZipDatType",reportType);
-            pMap.put("statusVdate",reportType);
+            pMap.put("statusVdate",paramDto.getStatusVdate());
             pMap.put("reportUUID",paramDto.getReportUUID());
             pbcSendZipDatFileMapper.deleteByUUIDAndType(pMap);
         }

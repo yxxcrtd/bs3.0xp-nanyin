@@ -36,7 +36,7 @@ public class NewPbcReport3_2ProdDealService extends AbstractNewPbcMonthProdRepor
         List<ExcelValidDto> excelValidDtos = new ArrayList<>();
         try {
             List<ExcelPbcReportProdDat3_2Dto> dataFromExcel = MonthReportUtil
-                    .createDataFromExcel(paramDto.getHssfSheet(), PbcReportType.PBC_REPORT_1_1, ExcelPbcReportProdDat3_2Dto.class);
+                    .createDataFromExcel(paramDto.getHssfSheet(), PBC_REPORT, ExcelPbcReportProdDat3_2Dto.class);
             List<PbcReportProdDatDto> pbcReportProdDatDtos = new ArrayList<>();
             for (ExcelPbcReportProdDat3_2Dto excelPbcReportProdDatDto : dataFromExcel) {
                 PbcReportProdDatDto pbcReportProdDatDto = new PbcReportProdDatDto();

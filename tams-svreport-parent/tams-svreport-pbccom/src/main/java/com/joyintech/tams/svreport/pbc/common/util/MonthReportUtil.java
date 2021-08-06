@@ -50,10 +50,11 @@ public class MonthReportUtil {
                                 setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,pbcReportEnums.getPropertyCode(),clazz);
                             }else if(excelCell.isReportType()){
                                 //TODO
-                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,pbcReportEnums.getReportGroup(),clazz);
+                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,reportType,clazz);
                             }else if(excelCell.isGroupType()){
                                 //TODO
-                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,"propertyCode",clazz);
+//                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,pbcReportEnums.getReportGroup(),clazz);
+                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,"GROUP",clazz);
                             }else{
                                 //列号
                                 int columnNumber = excelCell.columnNumber();
