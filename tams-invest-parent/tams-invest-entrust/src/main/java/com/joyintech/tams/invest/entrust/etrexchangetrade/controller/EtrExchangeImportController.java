@@ -1,10 +1,40 @@
 package com.joyintech.tams.invest.entrust.etrexchangetrade.controller;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.progressbar.ProgressBarService;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tools.util.ValidationUtil;
+import com.joyintech.tools.util.ValidationUtil.ErrorMessage;
+import com.joyintech.tools.util.ValidationUtil.ValidResult;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
 
 /*
  * 文件名：RskValTableImport001Controller.java
@@ -15,53 +45,7 @@ import org.apache.commons.lang.StringUtils;
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.progressbar.ProgressBarService;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
-import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
-import com.joyintech.tools.util.ValidationUtil;
-import com.joyintech.tools.util.ValidationUtil.ErrorMessage;
-import com.joyintech.tools.util.ValidationUtil.ValidResult;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
 /**
  * 场内交易指令导入
@@ -417,14 +401,14 @@ public AjaxResult save(@RequestBody EtrExchangeTrade001Dto allDto, BindingResult
 	 */
 }
         // add by zhangrui1 start
-//        AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(getPageId(), dtoList,
-//            BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
-//        if (null != ar) {
-//            return ar;
-//        }
-//        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
-//            (dto, list) -> dto.setRiskTrialRetDto(list));
-//        // add by zhangrui1 end
+        AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(getPageId(), dtoList,
+            BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
+        if (null != ar) {
+            return ar;
+        }
+        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
+            (dto, list) -> dto.setRiskTrialRetDto(list));
+        // add by zhangrui1 end
 	ProcessParameter<EtrExchangeTrade001Dto> processParameter = new ProcessParameter<EtrExchangeTrade001Dto>();
 	WorkFlowParameter<EtrExchangeTrade001Dto> params = etrExchangeTrade001Service.getWorkFlowParameter(allDto);
 	params.setPageId("EtrExchangeTradeMain");

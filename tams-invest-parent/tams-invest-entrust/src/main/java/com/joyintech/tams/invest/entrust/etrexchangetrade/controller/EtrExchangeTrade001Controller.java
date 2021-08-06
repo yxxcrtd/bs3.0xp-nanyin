@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.entity.FinProductQuto;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.util.DateUtils;
@@ -750,34 +751,34 @@ public class EtrExchangeTrade001Controller extends BaseController{
 		
 		
         // ----------add by zhangrui1 20200703 预占功能 start----------
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
-//            String finprodType2 = "";
-//            if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-//                finprodType2 =  DictCodeList.平安资产类型_债券.getValue();
-//            }
-//            else if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
-//                finprodType2 =  DictCodeList.平安资产类型_基金.getValue();
-//            }
-//            else if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-//                finprodType2 =  DictCodeListExt2.平安资产类型_股票.getValue();
-//            }
-//            else if((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) ) {
-//                finprodType2 =  DictCodeList.平安资产类型_质押式回购.getValue();
-//            }
-//            //债转股需要走批量接口
-//            String infCode;
-//            if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
-//                infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
-//            }
-//            else {
-//                infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
-//            }
-//            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
-//                infCode, finprodType2);
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            String finprodType2 = "";
+            if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                finprodType2 =  DictCodeList.平安资产类型_债券.getValue();
+            }
+            else if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+                finprodType2 =  DictCodeList.平安资产类型_基金.getValue();
+            }
+            else if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+                finprodType2 =  DictCodeListExt2.平安资产类型_股票.getValue();
+            }
+            else if((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) ) {
+                finprodType2 =  DictCodeList.平安资产类型_质押式回购.getValue();
+            }
+            //债转股需要走批量接口
+            String infCode;
+            if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+                infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+            } 
+            else {
+                infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue(); 
+            }
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                infCode, finprodType2);
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
         // ----------add by zhangrui1 20200703 预占功能 end----------
 		
 		

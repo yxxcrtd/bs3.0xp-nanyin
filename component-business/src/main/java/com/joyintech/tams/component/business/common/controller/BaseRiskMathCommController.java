@@ -16,7 +16,6 @@ import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -30,6 +29,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.risktrial.RiskTrialComm;
 import com.joyintech.tams.invest.common.risktrial.dto.InvestTradeTrialInput;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
@@ -37,7 +37,6 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -149,14 +148,20 @@ public class BaseRiskMathCommController extends BaseController {
             model.addAttribute("entityName", "riskTrialRetDto");
         }
         if (!StringUtil.equals(map.get("tradeId"), "null") && map.get("tradeId") != null && StringUtil.isEmptyList(li) && StringUtil.isNotEmpty(map.get("tradeId").toString())) {
-            //--------20200228核新版风险 撤销时去除R带出列表 裴家俊 ------------------
-            if (map.get("tradeId").toString().lastIndexOf('R') == map.get("tradeId").toString().length() - 1) {
-                li = basRiskMathCommService.select( map.get("tradeId").toString().substring(0, map.get("tradeId").toString().length() - 1));
+            //----add by zxjjpei 解决从指令委托点击交易录单不能带出风险试算结果逻辑 start-----
+            if(StringUtil.equals(map.get("tradeSource"), BussinessDictCodeListRds.事件类型_投资交易.getValue())&&map.get("tradeId").toString().substring(0,2).equals("WT")){
+                li=new ArrayList<>();
+            }else {
+                //--------20200228核新版风险 撤销时去除R带出列表 裴家俊 ------------------
+                if (map.get("tradeId").toString().lastIndexOf('R') == map.get("tradeId").toString().length() - 1) {
+                    li = basRiskMathCommService.select( map.get("tradeId").toString().substring(0, map.get("tradeId").toString().length() - 1));
+                }
+                else {
+                    li = basRiskMathCommService.select(map.get("tradeId").toString());
+                }
+                //--------20200228核新版风险 撤销时去除R带出列表 裴家俊 ------------------
             }
-            else {
-                li = basRiskMathCommService.select(map.get("tradeId").toString());
-            }
-            //--------20200228核新版风险 撤销时去除R带出列表 裴家俊 ------------------
+            //----add by zxjjpei 解决从指令委托点击交易录单不能带出风险试算结果逻辑 end-----
             // 一体化对应etliu start
 //        }else if(map.get("entity") != null){
 //            li = JsonUtils.json2Object((String)map.get("entity"), RiskTrialRetDto.class);
