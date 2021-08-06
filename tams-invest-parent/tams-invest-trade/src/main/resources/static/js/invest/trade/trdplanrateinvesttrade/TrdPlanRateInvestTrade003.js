@@ -28,6 +28,9 @@ var etrAmt = '';
                 index: null,
                 mun: mun
             }
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#trdInvestPersonInfo002Dto_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             list[i] = obj;
         }
 
@@ -42,6 +45,9 @@ var etrAmt = '';
             payUnpaidintAmt: $('payUnpaidintAmt').val(),
             data: list
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo002Dto.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     };
 
