@@ -29,19 +29,15 @@
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
-            <artifactId>joyintech-system</artifactId>
+            <artifactId>tams-valuation-common</artifactId>
+            <version>3.0.1</version>
         </dependency>
-        <dependency>
-            <groupId>com.jixu</groupId>
-            <artifactId>jixu</artifactId>
-            <version>0.0.1</version>
-        </dependency>
-
         <dependency>
             <groupId>com.joyintech</groupId>
-            <artifactId>component-business</artifactId>
-            <version>0.0.1</version>
+            <artifactId>joyintech-system</artifactId>
         </dependency>
+
+
     </dependencies>
     <build>
         <!-- 打包源代码插件 -->

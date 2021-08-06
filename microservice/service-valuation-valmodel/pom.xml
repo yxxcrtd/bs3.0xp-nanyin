@@ -12,7 +12,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>service-valuation-valmodel</artifactId>
 
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -40,11 +39,6 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>joyintech-system</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jixu</groupId>
-            <artifactId>jixu</artifactId>
-            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
