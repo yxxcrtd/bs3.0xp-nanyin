@@ -124,253 +124,281 @@ public class ValBatchImportService {
         String valTableFilePath = CacheUtil.getSysParam("RSK_OUTS_VALTABLE_IMPORT_PATH");
         //资管计划名称_估值日期的规则
         String RSK_FILE_NAME_RULE = CacheUtil.getSysParam("RSK_FILE_NAME_RULE");
-//        if (!StringUtil.isNotEmpty(supDate)){
-            supDate = iPlatformDate.getSysDate();
-//        }
-        String filePath = valTableFilePath+ File.separator+DateUtil.format(supDate,DateUtil.DEFAULT_OTHER_FORMAT);
+        String deptCode = "system";
+        //查询所有机构的平台日
+        List<Map<String, String>> mapList = vlBatchImportMapper.searchDate();
+        Map<String, Date> dateMap = new HashMap<>();
+        mapList.forEach(x->{
+            dateMap.put(x.get("CODE"),DateUtil.parse(x.get("CDATE")));
+        });
+        String filePath = valTableFilePath+ File.separator+DateUtil.format(new Date(),DateUtil.DEFAULT_OTHER_FORMAT);
         File file = new File(filePath);
         if (file.isDirectory() && file.listFiles().length > 0) {
             logger.info("开始导入委外估值表......文件扫描，共扫描到"+file.listFiles().length+"个文件！");
             //开始解析文件内容入库
-            for (File valTableFile : file.listFiles()) {
-                Date startDate = DateUtil.now();
-                String valDate = StringUtil.EMPTY;
-                String portfolioName = valTableFile.getName();
-                String fileName=getEncodeFileName(valTableFile.getName());
-                String createDept = StringUtil.EMPTY;
-                try {
-                    logger.info("解析委外估值表文件"+fileName);
-                    if(StringUtil.isNotEmpty(RSK_FILE_NAME_RULE)){
-                        Pattern pattern = Pattern.compile(RSK_FILE_NAME_RULE);
-                        Matcher matcher = pattern.matcher(fileName);
-                        if(!matcher.matches()){
-                            logger.info(fileName+",文件名异常组合or日期格式错误。");
-                            this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, fileName, iPlatformDate.getSysDate(),
-                                    DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件名异常组合or日期格式错误.getValue(),startDate,supDate);
-                            continue;
-                        }
-                    }
-                    List<String> valTableFiles = StringUtil.splitToList(".", fileName);
-                    try {
-                        valDate = valTableFiles.get(0);
-                        valDate = valDate.substring(valDate.length()-8,valDate.length());
-                    }catch (Exception e){
-                        logger.info(fileName+",文件名异常组合or日期格式错误。");
-                        this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, fileName, iPlatformDate.getSysDate(),
-                                DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件名异常组合or日期格式错误.getValue(),startDate,supDate);
-                        continue;
-                    }
+            for (File file1 : file.listFiles()) {
+                if (file1.isDirectory()){
+                    for (File valTableFile : file1.listFiles()) {
+                        Date startDate = DateUtil.now();
+                        Date impDate = supDate;
+                        String valDate = StringUtil.EMPTY;
+                        String portfolioName = valTableFile.getName();
+                        String fileName=getEncodeFileName(valTableFile.getName());
 
-                    String organCode = StringUtil.EMPTY;
-                    if (valTableFiles.size() >= 2 && !StringUtil.equals(BAK_START_STR,valTableFiles.get(0))){
-//                        valDate = valTableFiles.get(valTableFiles.size()-1);
-                        List<String> createDeptList = vlBatchImportMapper.queryorgCodeCount(valTableFiles.get(0));
-                        organCode =createDeptList.size() > 0? valTableFiles.get(0):null;
-                        if (StringUtil.isNotEmpty(organCode)){
-                            createDept = createDeptList.get(0);
-                            portfolioName = fileName.replaceAll(fileName.substring(fileName.lastIndexOf(".")), "").replaceAll(organCode+"估值表","").replaceAll("估值表"+valDate,"");
-                        }else{
-                            portfolioName = fileName.replaceAll(fileName.substring(fileName.lastIndexOf(".")), "").replaceAll("估值表"+valDate,"");
-                        }
-                    }else if (StringUtil.equals("BAK",valTableFiles.get(0))){
-                        continue;
-                    }else{
-                        logger.info(fileName+",文件名异常组合or日期格式错误。");
-                        this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, fileName, iPlatformDate.getSysDate(),
-                                DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件名异常组合or日期格式错误.getValue(),startDate,supDate);
-                        continue;
-                    }
-                    //去掉文件后缀
-                    valDate = valDate.replaceAll(fileName.substring(fileName.lastIndexOf(".")), "");
-                    Date resValDate = DateUtil.parse(valDate);
-                    String days = StringUtil.defaultString(CacheUtil.getSysParam("MAX_SUB_VALDATE"),"16");
-                    if(DateUtil.compareDate(resValDate,DateUtil.parse(DateUtil.addDay(iPlatformDate.getSysDateStr(),-1*Integer.valueOf(days))))<0){
-                        logger.error(fileName+"超过可配置的估值日期");
-                        this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, portfolioName, resValDate,
-                                DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_超过可配置的估值日期.getValue(),startDate,supDate);
-                    }
-                    //1、组合
-                    Map<String, Object> pageParam = new HashMap<>();
-                    pageParam.put("portfolioType", DictCodeListExt1.组合类型_委外组合.getValue());
-                    pageParam.put("portfolioType2", BussinessDictCodeList.组合类型_自主组合.getValue());
-                    pageParam.put("search", portfolioName);
-                    List<String> prtfolioIdMap = vlBatchImportMapper.selectPortfolioId(pageParam);
-                    if (prtfolioIdMap == null || prtfolioIdMap.size() == 0) {
-                        logger.info(fileName+",未找到委外组合。");
-                        this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, portfolioName, resValDate,
-                                DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_无对应委外组合.getValue(),startDate,supDate);
-                        continue;
-                    }
-                    String ptlId = prtfolioIdMap.get(0);
-                    //1、组合
-                    pageParam.clear();
-                    pageParam.put("finprodMarketId", ptlId);
-                    Map<String,String> FinprodMarketIdMap =  vlBatchImportMapper.selectFinProductByFinprodMarketId(pageParam);
-                    String finprodType = StringUtil.EMPTY; //
-                    String finprodType2 = StringUtil.EMPTY;
-                    if (FinprodMarketIdMap != null && FinprodMarketIdMap.size() > 0) {
-                            finprodType=FinprodMarketIdMap.get("FINPROD_TYPE");
-                            finprodType2=FinprodMarketIdMap.get("FINPROD_TYPE2");
-                    }
-                    //2、查询组合对应的映射
-                    RskValtblPrtImpMap rskValtblPrtImpMap = this.selectInfoById(ptlId);
-                    RskValTableImportParamDto dto = new RskValTableImportParamDto();
-                    dto.setPtlId(ptlId);
-                    dto.setStructMapId(rskValtblPrtImpMap.getStructMapId());
-                    dto.setSumsubMapId(rskValtblPrtImpMap.getSumsubMapId());
-                    dto.setAssetSubMapId(rskValtblPrtImpMap.getAssetSubMapId());
-                    dto.setSubjectCodeCol(StringUtil.numberToString(rskValtblPrtImpMap.getSubjectCodeCol()));
-                    dto.setStartRow(StringUtil.numberToString(rskValtblPrtImpMap.getStartRow()));
-//                    dto.setTrimChars(rskValtblPrtImpMap.getTrimChars());
-                    dto.setFilterId(rskValtblPrtImpMap.getFilterId());
-                    dto.setValTableFileName(valTableFile.getPath());
-                    Map<String, Object> paramMap = new HashMap<String, Object>();
-                    List<RskValtblAssetSubDto> valList = new LinkedList<RskValtblAssetSubDto>();
-                    List<RskValtblAssetSubDto> valHand_oneList = new LinkedList<RskValtblAssetSubDto>();
-                    //指标结构映射
-                    List<RskValStructureDto> rskValStructureList = vlBatchImportMapper.selectForList(dto.getStructMapId());
-                    if(rskValStructureList==null || rskValStructureList.size()==0){
-                        logger.info(fileName+",指标结构映射数据不能为空。");
-                        this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
-                                DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表指标结构映射异常.getValue(),startDate,supDate);
-                        continue;
-                    }
-                    //资产科目映射
-                    List<RskValtblAssetSubMapDtlDto> rskValAssetCodeList = vlBatchImportMapper.selectDtlList(dto.getAssetSubMapId());
-                    if(rskValAssetCodeList==null || rskValAssetCodeList.size()==0){
-                        logger.info(fileName+",资产科目映射数据不能为空。");
-                        this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
-                                DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表资产科目映射异常.getValue(),startDate,supDate);
-                        continue;
-                    }
-                    //汇总科目映射
-                    List<RskValSumnameDto> rskValSumnameList = vlBatchImportMapper.selectSumForList(dto.getSumsubMapId());
-                    if(rskValSumnameList==null || rskValSumnameList.size()==0){
-                        logger.info(fileName+",汇总科目映射数据不能为空。");
-                        this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
-                                DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表汇总科目映射异常.getValue(),startDate,supDate);
-                        continue;
-                    }
-                    //目标资产科目
-                    List<RskValtblSubject> rskValtblSubjectList = vlBatchImportMapper.selecctRskValtblSubjectCodeList("01");
-                    //目标汇总科目
-                    List<RskValtblSubject> rskValtblSubjectList2 = vlBatchImportMapper.selecctRskValtblSubjectCodeList("02");
-                    Map<String, ColumnMapEntry> vtstructureMap = new HashMap<String, ColumnMapEntry>();
-                    Map<String, SubCodeEntry> vtaccountMap = new HashMap<String, SubCodeEntry>();
-                    Map<String, SumNameCodeEntry> vtsumaccountMap = new HashMap<String, SumNameCodeEntry>();
-                    //构造结构映射map
-                    for (RskValStructureDto rskValStructureDto : rskValStructureList) {
-                        ColumnMapEntry vtstructEntry = new ColumnMapEntry();
-                        vtstructEntry.setColIndex(Integer.parseInt(rskValStructureDto.getSrcColIndex()));
-                        vtstructEntry.setDataType(rskValStructureDto.getSrcColDataType());
-                        vtstructEntry.setValIndex(rskValStructureDto.getTgtIndex());
-                        vtstructureMap.put(rskValStructureDto.getSrcColIndex(), vtstructEntry);
-                    }
-                    //构造资产科目映射map
-                    for (RskValtblAssetSubMapDtlDto rskValtblAssetSubMapDtlDto : rskValAssetCodeList) {
-                        SubCodeEntry subentry = new SubCodeEntry();
-                        subentry.setSrc_code(rskValtblAssetSubMapDtlDto.getSrcCode());
-                        subentry.setTgt_code(rskValtblAssetSubMapDtlDto.getTgtCode());
-                        subentry.setTgt_name(rskValtblAssetSubMapDtlDto.getTgtName());
-                        subentry.setAllowSum(rskValtblAssetSubMapDtlDto.getAllowSum());
-                        vtaccountMap.put(rskValtblAssetSubMapDtlDto.getSrcCode(), subentry);
-                    }
-                    //构造汇总资产科目映射map
-                    for (RskValSumnameDto vtsumaccountDto : rskValSumnameList) {
-                        SumNameCodeEntry entry = new SumNameCodeEntry();
-                        entry.setSumName(vtsumaccountDto.getSumName().trim());
-                        entry.setSumCode(vtsumaccountDto.getSumCode().trim());
-                        entry.setNextColType(vtsumaccountDto.getNextIndexType());
-                        for (RskValtblSubject rskValtblSubject : rskValtblSubjectList2) {
-                            if (StringUtil.equals(rskValtblSubject.getSubCode(), vtsumaccountDto.getSumCode())) {
-                                entry.setTgt_sumName(rskValtblSubject.getSubName());
-                            }
-                        }
-                        vtsumaccountMap.put(vtsumaccountDto.getSumName(), entry);
-                    }
-                    paramMap.put("start_row", dto.getStartRow());
-                    paramMap.put("subjectCodeCol", dto.getSubjectCodeCol());
-                    paramMap.put("trimChars", dto.getTrimChars());
-                    paramMap.put("vtstructureMap", vtstructureMap);
-                    paramMap.put("vtaccountMap", vtaccountMap);
-                    paramMap.put("vtsumaccountMap", vtsumaccountMap);
-                    //处理excel数据
-                    if (StringUtil.isNotEmpty(dto.getValTableFileName())) {
-                        List<List<String>> dataList = Lists.newArrayList();
-                        InputStream in = null;
-                        try{
-                            //框架遇到空行 不读取  估值表比较特殊 资产与汇总科目中间有空格 需要重写
-                            dataList = readExcelUtil(dto);
-                            //添加枚举值的转换，处理估值表时，会根据对应名称作为key映射到科目代码，如果名称与数据库中的不匹配，则无法获得汇总科目的科目代码
-                            in = handleValImportEnmu(dataList);
-                        } catch (Exception e) {
-                            logger.info(fileName+",文件内容读取异常。");
-                            this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
-                                  DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件内容读取异常.getValue(),startDate,supDate);
+                        //处理后的数据不再处理
+                        if (StringUtil.startsWith(fileName,BAK_START_STR)){
                             continue;
-                        }finally {
-                            // 关闭流
-                            if(in != null) {
-                                try {
-                                    in.close();
-                                } catch (Exception e) {
-                                    logger.info(String.format("估值表导关闭流失败..., %s", e.getMessage()));
-                                    return;
+                        }
+                        String path = valTableFile.getPath();
+                        String createDept = StringUtil.EMPTY;
+                        try {
+                            //获取机构代码
+                            deptCode = StringUtil.substring(path,0,StringUtil.lastIndexOf(path, File.separator));
+                            deptCode = StringUtil.substring(deptCode,StringUtil.lastIndexOf(deptCode, File.separator)+1,deptCode.length());
+
+                            logger.info("解析委外估值表文件"+fileName);
+
+                            if (!dateMap.containsKey(deptCode)){
+                                logger.info(fileName+",文件名异常组合or日期格式错误。");
+                                this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, fileName, iPlatformDate.getSysDate(),
+                                        DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件名异常组合or日期格式错误.getValue(),startDate,impDate,deptCode);
+                                continue;
+                            }else{
+                                impDate =  dateMap.get(deptCode);
+                            }
+                            if(StringUtil.isNotEmpty(RSK_FILE_NAME_RULE)){
+                                Pattern pattern = Pattern.compile(RSK_FILE_NAME_RULE);
+                                Matcher matcher = pattern.matcher(fileName);
+                                if(!matcher.matches()){
+                                    logger.info(fileName+",文件名异常组合or日期格式错误。");
+                                    this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, fileName, iPlatformDate.getSysDate(),
+                                            DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件名异常组合or日期格式错误.getValue(),startDate,impDate,deptCode);
+                                    continue;
                                 }
                             }
-                        }
-                        for (List<String> list : dataList) {
-                            //处理excel------估值表
-                            RskValtblAssetSubDto val = handExcelListForVal(list, paramMap);
-                            if (val != null) {
-                                val.setValDate(dto.getValDate());
-                                val.setPtlId(dto.getPtlId());
-                                valList.add(val);
+                            List<String> valTableFiles = StringUtil.splitToList(".", fileName);
+                            try {
+                                valDate = valTableFiles.get(0);
+                                valDate = valDate.substring(valDate.length()-8,valDate.length());
+                            }catch (Exception e){
+                                logger.info(fileName+",文件名异常组合or日期格式错误。");
+                                this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, fileName, iPlatformDate.getSysDate(),
+                                        DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件名异常组合or日期格式错误.getValue(),startDate,impDate,deptCode);
+                                continue;
                             }
-                        }
-                        //处理valList---取出映射表配置的科目代码及底层资产
-                        List<RskValtblAssetSubDto> handval_List = handValList(valList, vtaccountMap);
-                        if (StringUtil.isEmptyList(handval_List) &&  valHand_oneList.size() > 0){
-                            logger.info(fileName+",估值表关联导入映射异常。");
-                            this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
-                                    DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表关联导入映射异常.getValue(),startDate,supDate);
-                            continue;
-                        }
-                        //底层---一级汇总
-                        valHand_oneList = sum_handValList(handval_List, vtaccountMap, rskValtblSubjectList);
-                        for (RskValtblAssetSubDto entity : valHand_oneList){
-                            entity.setSubName(toSemiangle(entity.getSubName().replaceAll(" ","")));
-                            entity.setCreateDept(createDept);
-                        }
-                        valHand_oneList = valHand_oneList.parallelStream().filter(item->StringUtil.isNotEmpty(item.getSubName())).collect(Collectors.toList());
-                        BigDecimal securityCost = BigDecimal.ZERO;
-                        if (valHand_oneList.size() > 0) {
-                            //保存
-                            RskValtblAssetSubDto rskValtblAssetSubDto = new RskValtblAssetSubDto();
-                            rskValtblAssetSubDto.setPtlId(dto.getPtlId());
-                            rskValtblAssetSubDto.setValDate(resValDate);
-                            rskValtblAssetSubDto.setSelectedItem(valHand_oneList);
-                            rskValtblAssetSubDto.setImpMode(DictCodeListExt1.导入方式_自动.getValue());
-                            rskValtblAssetSubDto.setCreateDept(createDept);
+
+                            String organCode = StringUtil.EMPTY;
+                            if (valTableFiles.size() >= 2 && !StringUtil.equals(BAK_START_STR,valTableFiles.get(0))){
+//                        valDate = valTableFiles.get(valTableFiles.size()-1);
+                                List<String> createDeptList = vlBatchImportMapper.queryorgCodeCount(valTableFiles.get(0));
+                                organCode =createDeptList.size() > 0? valTableFiles.get(0):null;
+                                if (StringUtil.isNotEmpty(organCode)){
+                                    createDept = createDeptList.get(0);
+                                    portfolioName = fileName.replaceAll(fileName.substring(fileName.lastIndexOf(".")), "").replaceAll(organCode+"估值表","").replaceAll("估值表"+valDate,"");
+                                }else{
+                                    portfolioName = fileName.replaceAll(fileName.substring(fileName.lastIndexOf(".")), "").replaceAll("估值表"+valDate,"");
+                                }
+                            }else if (StringUtil.equals("BAK",valTableFiles.get(0))){
+                                continue;
+                            }else{
+                                logger.info(fileName+",文件名异常组合or日期格式错误。");
+                                this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, fileName, iPlatformDate.getSysDate(),
+                                        DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件名异常组合or日期格式错误.getValue(),startDate,impDate,deptCode);
+                                continue;
+                            }
+                            //去掉文件后缀
+                            valDate = valDate.replaceAll(fileName.substring(fileName.lastIndexOf(".")), "");
+                            Date resValDate = DateUtil.parse(valDate);
+                            String days = StringUtil.defaultString(CacheUtil.getSysParam("MAX_SUB_VALDATE"),"16");
+                            if(DateUtil.compareDate(resValDate,DateUtil.parse(DateUtil.addDay(iPlatformDate.getSysDateStr(),-1*Integer.valueOf(days))))<0){
+                                logger.error(fileName+"超过可配置的估值日期");
+                                this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, portfolioName, resValDate,
+                                        DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_超过可配置的估值日期.getValue(),startDate,impDate,deptCode);
+                            }
+                            //1、组合
+                            Map<String, Object> pageParam = new HashMap<>();
+                            pageParam.put("portfolioType", DictCodeListExt1.组合类型_委外组合.getValue());
+                            pageParam.put("portfolioType2", BussinessDictCodeList.组合类型_自主组合.getValue());
+                            pageParam.put("search", portfolioName);
+                            List<String> prtfolioIdMap = vlBatchImportMapper.selectPortfolioId(pageParam);
+                            if (prtfolioIdMap == null || prtfolioIdMap.size() == 0) {
+                                logger.info(fileName+",未找到委外组合。");
+                                this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, portfolioName, resValDate,
+                                        DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_无对应委外组合.getValue(),startDate,impDate,deptCode);
+                                continue;
+                            }
+                            String ptlId = prtfolioIdMap.get(0);
+                            //1、组合
+                            pageParam.clear();
+                            pageParam.put("finprodMarketId", ptlId);
+                            Map<String,String> FinprodMarketIdMap =  vlBatchImportMapper.selectFinProductByFinprodMarketId(pageParam);
+                            String finprodType = StringUtil.EMPTY; //
+                            String finprodType2 = StringUtil.EMPTY;
+                            if (FinprodMarketIdMap != null && FinprodMarketIdMap.size() > 0) {
+                                finprodType=FinprodMarketIdMap.get("FINPROD_TYPE");
+                                finprodType2=FinprodMarketIdMap.get("FINPROD_TYPE2");
+                            }
+                            //2、查询组合对应的映射
+                            RskValtblPrtImpMap rskValtblPrtImpMap = this.selectInfoById(ptlId);
+                            RskValTableImportParamDto dto = new RskValTableImportParamDto();
+                            dto.setPtlId(ptlId);
+                            dto.setStructMapId(rskValtblPrtImpMap.getStructMapId());
+                            dto.setSumsubMapId(rskValtblPrtImpMap.getSumsubMapId());
+                            dto.setAssetSubMapId(rskValtblPrtImpMap.getAssetSubMapId());
+                            dto.setSubjectCodeCol(StringUtil.numberToString(rskValtblPrtImpMap.getSubjectCodeCol()));
+                            dto.setStartRow(StringUtil.numberToString(rskValtblPrtImpMap.getStartRow()));
+//                    dto.setTrimChars(rskValtblPrtImpMap.getTrimChars());
+                            dto.setFilterId(rskValtblPrtImpMap.getFilterId());
+                            dto.setValTableFileName(valTableFile.getPath());
+                            Map<String, Object> paramMap = new HashMap<String, Object>();
+                            List<RskValtblAssetSubDto> valList = new LinkedList<RskValtblAssetSubDto>();
+                            List<RskValtblAssetSubDto> valHand_oneList = new LinkedList<RskValtblAssetSubDto>();
+                            //指标结构映射
+                            List<RskValStructureDto> rskValStructureList = vlBatchImportMapper.selectForList(dto.getStructMapId());
+                            if(rskValStructureList==null || rskValStructureList.size()==0){
+                                logger.info(fileName+",指标结构映射数据不能为空。");
+                                this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
+                                        DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表指标结构映射异常.getValue(),startDate,impDate,deptCode);
+                                continue;
+                            }
+                            //资产科目映射
+                            List<RskValtblAssetSubMapDtlDto> rskValAssetCodeList = vlBatchImportMapper.selectDtlList(dto.getAssetSubMapId());
+                            if(rskValAssetCodeList==null || rskValAssetCodeList.size()==0){
+                                logger.info(fileName+",资产科目映射数据不能为空。");
+                                this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
+                                        DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表资产科目映射异常.getValue(),startDate,impDate,deptCode);
+                                continue;
+                            }
+                            //汇总科目映射
+                            List<RskValSumnameDto> rskValSumnameList = vlBatchImportMapper.selectSumForList(dto.getSumsubMapId());
+                            if(rskValSumnameList==null || rskValSumnameList.size()==0){
+                                logger.info(fileName+",汇总科目映射数据不能为空。");
+                                this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
+                                        DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表汇总科目映射异常.getValue(),startDate,impDate,deptCode);
+                                continue;
+                            }
+                            //目标资产科目
+                            List<RskValtblSubject> rskValtblSubjectList = vlBatchImportMapper.selecctRskValtblSubjectCodeList("01");
+                            //目标汇总科目
+                            List<RskValtblSubject> rskValtblSubjectList2 = vlBatchImportMapper.selecctRskValtblSubjectCodeList("02");
+                            Map<String, ColumnMapEntry> vtstructureMap = new HashMap<String, ColumnMapEntry>();
+                            Map<String, SubCodeEntry> vtaccountMap = new HashMap<String, SubCodeEntry>();
+                            Map<String, SumNameCodeEntry> vtsumaccountMap = new HashMap<String, SumNameCodeEntry>();
+                            //构造结构映射map
+                            for (RskValStructureDto rskValStructureDto : rskValStructureList) {
+                                ColumnMapEntry vtstructEntry = new ColumnMapEntry();
+                                vtstructEntry.setColIndex(Integer.parseInt(rskValStructureDto.getSrcColIndex()));
+                                vtstructEntry.setDataType(rskValStructureDto.getSrcColDataType());
+                                vtstructEntry.setValIndex(rskValStructureDto.getTgtIndex());
+                                vtstructureMap.put(rskValStructureDto.getSrcColIndex(), vtstructEntry);
+                            }
+                            //构造资产科目映射map
+                            for (RskValtblAssetSubMapDtlDto rskValtblAssetSubMapDtlDto : rskValAssetCodeList) {
+                                SubCodeEntry subentry = new SubCodeEntry();
+                                subentry.setSrc_code(rskValtblAssetSubMapDtlDto.getSrcCode());
+                                subentry.setTgt_code(rskValtblAssetSubMapDtlDto.getTgtCode());
+                                subentry.setTgt_name(rskValtblAssetSubMapDtlDto.getTgtName());
+                                subentry.setAllowSum(rskValtblAssetSubMapDtlDto.getAllowSum());
+                                vtaccountMap.put(rskValtblAssetSubMapDtlDto.getSrcCode(), subentry);
+                            }
+                            //构造汇总资产科目映射map
+                            for (RskValSumnameDto vtsumaccountDto : rskValSumnameList) {
+                                SumNameCodeEntry entry = new SumNameCodeEntry();
+                                entry.setSumName(vtsumaccountDto.getSumName().trim());
+                                entry.setSumCode(vtsumaccountDto.getSumCode().trim());
+                                entry.setNextColType(vtsumaccountDto.getNextIndexType());
+                                for (RskValtblSubject rskValtblSubject : rskValtblSubjectList2) {
+                                    if (StringUtil.equals(rskValtblSubject.getSubCode(), vtsumaccountDto.getSumCode())) {
+                                        entry.setTgt_sumName(rskValtblSubject.getSubName());
+                                    }
+                                }
+                                vtsumaccountMap.put(vtsumaccountDto.getSumName(), entry);
+                            }
+                            paramMap.put("start_row", dto.getStartRow());
+                            paramMap.put("subjectCodeCol", dto.getSubjectCodeCol());
+                            paramMap.put("trimChars", dto.getTrimChars());
+                            paramMap.put("vtstructureMap", vtstructureMap);
+                            paramMap.put("vtaccountMap", vtaccountMap);
+                            paramMap.put("vtsumaccountMap", vtsumaccountMap);
+                            //处理excel数据
+                            if (StringUtil.isNotEmpty(dto.getValTableFileName())) {
+                                List<List<String>> dataList = Lists.newArrayList();
+                                InputStream in = null;
+                                try{
+                                    //框架遇到空行 不读取  估值表比较特殊 资产与汇总科目中间有空格 需要重写
+                                    dataList = readExcelUtil(dto);
+                                    //添加枚举值的转换，处理估值表时，会根据对应名称作为key映射到科目代码，如果名称与数据库中的不匹配，则无法获得汇总科目的科目代码
+                                    in = handleValImportEnmu(dataList);
+                                } catch (Exception e) {
+                                    logger.info(fileName+",文件内容读取异常。");
+                                    this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
+                                            DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件内容读取异常.getValue(),startDate,impDate,deptCode);
+                                    continue;
+                                }finally {
+                                    // 关闭流
+                                    if(in != null) {
+                                        try {
+                                            in.close();
+                                        } catch (Exception e) {
+                                            logger.info(String.format("估值表导关闭流失败..., %s", e.getMessage()));
+                                            return;
+                                        }
+                                    }
+                                }
+                                for (List<String> list : dataList) {
+                                    //处理excel------估值表
+                                    RskValtblAssetSubDto val = handExcelListForVal(list, paramMap);
+                                    if (val != null) {
+                                        val.setValDate(dto.getValDate());
+                                        val.setPtlId(dto.getPtlId());
+                                        valList.add(val);
+                                    }
+                                }
+                                //处理valList---取出映射表配置的科目代码及底层资产
+                                List<RskValtblAssetSubDto> handval_List = handValList(valList, vtaccountMap);
+                                if (StringUtil.isEmptyList(handval_List) &&  valHand_oneList.size() > 0){
+                                    logger.info(fileName+",估值表关联导入映射异常。");
+                                    this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
+                                            DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表关联导入映射异常.getValue(),startDate,impDate,deptCode);
+                                    continue;
+                                }
+                                //底层---一级汇总
+                                valHand_oneList = sum_handValList(handval_List, vtaccountMap, rskValtblSubjectList);
+                                for (RskValtblAssetSubDto entity : valHand_oneList){
+                                    entity.setSubName(toSemiangle(entity.getSubName().replaceAll(" ","")));
+                                    entity.setCreateDept(createDept);
+                                }
+                                valHand_oneList = valHand_oneList.parallelStream().filter(item->StringUtil.isNotEmpty(item.getSubName())).collect(Collectors.toList());
+                                BigDecimal securityCost = BigDecimal.ZERO;
+                                if (valHand_oneList.size() > 0) {
+                                    //保存
+                                    RskValtblAssetSubDto rskValtblAssetSubDto = new RskValtblAssetSubDto();
+                                    rskValtblAssetSubDto.setPtlId(dto.getPtlId());
+                                    rskValtblAssetSubDto.setValDate(resValDate);
+                                    rskValtblAssetSubDto.setSelectedItem(valHand_oneList);
+                                    rskValtblAssetSubDto.setImpMode(DictCodeListExt1.导入方式_自动.getValue());
+                                    rskValtblAssetSubDto.setCreateDept(createDept);
 //                            this.autoCouponBetter(rskValtblAssetSubDto);
-                            this.insert(rskValtblAssetSubDto);
-                        }else{
-                            logger.info(fileName+",估值表关联导入映射异常。");
-                            this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
-                                    DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表关联导入映射异常.getValue(),startDate,supDate);
-                            continue;
+                                    this.insert(rskValtblAssetSubDto);
+                                }else{
+                                    logger.info(fileName+",估值表关联导入映射异常。");
+                                    this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
+                                            DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表关联导入映射异常.getValue(),startDate,impDate,deptCode);
+                                    continue;
+                                }
+                                logger.info(fileName+"估值表自动解析处理状态正常结束!!");
+                                //保存委托估值导入记录表
+                                this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
+                                        DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue(),StringUtil.EMPTY,startDate,impDate,deptCode);
+                                ExcelUtilForRisk.fixFileName( filePath+ File.separator +deptCode, fileName,BAK_START_STR+"_"+fileName);
+                            }
+                        } catch (Exception e) {
+                            logger.error("委外估值表接口批处理Error", e);
+                            //保存委托估值导入记录表
+                            this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, portfolioName, iPlatformDate.getSysDate(),
+                                    DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_其它异常.getValue(),startDate,impDate,deptCode);
                         }
-                        logger.info(fileName+"估值表自动解析处理状态正常结束!!");
-                        //保存委托估值导入记录表
-                        this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
-                                DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue(),StringUtil.EMPTY,startDate,supDate);
-                        ExcelUtilForRisk.fixFileName( filePath, fileName,BAK_START_STR+"_"+fileName);
                     }
-                } catch (Exception e) {
-                    logger.error("委外估值表接口批处理Error", e);
-                    //保存委托估值导入记录表
-                    this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), StringUtil.EMPTY, portfolioName, iPlatformDate.getSysDate(),
-                            DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_其它异常.getValue(),startDate,supDate);
                 }
             }
         }
@@ -1379,7 +1407,7 @@ public class ValBatchImportService {
      * @param
      */
     private void saveRskOutValtblImportHis(String name,String path,String ptlId,String portfolioName,Date resValDate,
-                                           String importType,String errorCode,Date startDate,Date impdate) {
+                                           String importType,String errorCode,Date startDate,Date impdate,String deptCode) {
         //保存委托估值表接入记录
         RskOutValtblImportHis dto = new RskOutValtblImportHis();
         dto.setFileName(name);
@@ -1393,6 +1421,7 @@ public class ValBatchImportService {
         dto.setStartTime(startDate);
         dto.setEndTime(DateUtil.now());
         dto.setTimedTaskStatus("S");
+        dto.setCreateDept(deptCode);
         RskOutValtblImportHisKey key=new RskOutValtblImportHisKey();
         key.setFileName(dto.getFileName());
         key.setPortfolioName(portfolioName);
@@ -1412,6 +1441,7 @@ public class ValBatchImportService {
             dateDto.setImpdate(DateUtil.parse(DateUtil.getSysDate()));
             dateDto.setPortfolioId(dto.getPortfolioId());
             dateDto.setValdate(dto.getValdate());
+            dateDto.setCreateDept(deptCode);
             valtblImportDateTraceMapper.insert(dateDto);
         }
     }
