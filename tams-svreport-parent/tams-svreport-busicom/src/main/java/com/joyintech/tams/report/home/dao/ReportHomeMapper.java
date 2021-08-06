@@ -57,7 +57,7 @@ public interface ReportHomeMapper {
 	 * @return List<String> 
 	 * @version 1.7 2019年5月27日
 	 */
-	List<String> selectMenulist(@Param("svrFlag") String svrFlag);
+	List<String> selectMenulist(@Param("svrFlag") String svrFlag,@Param("svrFirstMenuId") String svrFirstMenuId);
 	
 	/**
 	 * @Description 查询投资者身份统计数据
