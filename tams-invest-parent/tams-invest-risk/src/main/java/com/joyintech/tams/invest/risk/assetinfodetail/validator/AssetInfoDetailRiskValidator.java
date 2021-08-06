@@ -83,15 +83,19 @@ public class AssetInfoDetailRiskValidator implements BeanValidator{
           		resultList.add(new ValidMessage("issuePartyId",
           				getMessage("COMMON_E_0057", getMessage("发行机构代码"))));      		
           	}            	
-          		if(!StringUtil.isNotEmpty(dto.getVdate())) {
+          	if(!StringUtil.isNotEmpty(dto.getVdate())) {
               		resultList.add(new ValidMessage("vdate",
               				getMessage("COMMON_E_0057", getMessage("起息日"))));      		
-              	} 
-          		if(!StringUtil.isNotEmpty(dto.getMdate())) {
+          	}
+          	if(!StringUtil.isNotEmpty(dto.getMdate())) {
               		resultList.add(new ValidMessage("mdate",
               				getMessage("COMMON_E_0057", getMessage("到期日"))));      		
-              	}          
-        }else {
+          	}
+			if(!StringUtil.isNotEmpty(dto.getOrgAssetType1())) {
+				resultList.add(new ValidMessage("orgAssetType1",
+						getMessage("COMMON_E_0057", getMessage("资产一级分类"))));
+			}
+		}else {
        //权益类资产字段必填校验
         //股票代码必填校验
       if(StringUtil.equals(dto.getAssetType2(), "1305")||StringUtil.equals(dto.getAssetType2(), "1302")){
@@ -325,12 +329,16 @@ public class AssetInfoDetailRiskValidator implements BeanValidator{
       	 if(!StringUtil.equals(dto.getAssetType2(), "1302")&&!StringUtil.equals(dto.getAssetType2(), "1305")){
       		if(!StringUtil.isNotEmpty(dto.getVdate())) {
           		resultList.add(new ValidMessage("vdate",
-          				getMessage("COMMON_E_0057", getMessage("起息日"))));      		
-          	} 
+          				getMessage("COMMON_E_0057", getMessage("起息日"))));
+      		}
       		if(!StringUtil.isNotEmpty(dto.getMdate())) {
           		resultList.add(new ValidMessage("mdate",
           				getMessage("COMMON_E_0057", getMessage("到期日"))));      		
           	} 
+      	 }
+      	 if(!StringUtil.isNotEmpty(dto.getOrgAssetType1())) {
+				resultList.add(new ValidMessage("orgAssetType1",
+						getMessage("COMMON_E_0057", getMessage("资产一级分类"))));
       	 }
 
    }
