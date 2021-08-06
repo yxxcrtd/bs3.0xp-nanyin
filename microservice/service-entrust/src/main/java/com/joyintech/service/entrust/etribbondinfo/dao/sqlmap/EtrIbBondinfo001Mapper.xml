@@ -401,6 +401,7 @@ select
     ,MBVI.NETVALUATION_EXERCISE priceXq
     ,MBVI.NETVALUATION_RECOMMENDED priceTj
     ,MBVI.NETPRICE as newPrice
+    ,t7.CUSTOMER_NAME sponsorName
 from
     FIN_PRODUCT t1
     LEFT JOIN FIN_PRODUCT_TYPE t2 ON t2.FINPROD_ID = t1.FINPROD_ID
@@ -424,6 +425,7 @@ from
     ) t4 on t4.FINPROD_ID = t1.FINPROD_ID
     left join fin_cash_info t5 on t5.FINPROD_ID = t1.FINPROD_ID AND t5.CASH_TYPE_2 = 'C02' and t5.FINPROD_TYPE = '01'
     LEFT JOIN FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID
+    LEFT JOIN mst_customer_info t7 ON t1.sponsor = t7.CUSTOMER_ID
     left join (
         select FINPROD_ID, max(eff_date) as EFF_DATE
         from FIN_CASH_CALC_RULE
