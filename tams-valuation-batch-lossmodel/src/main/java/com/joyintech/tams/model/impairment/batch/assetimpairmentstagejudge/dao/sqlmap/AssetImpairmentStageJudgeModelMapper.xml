@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.AssetImpairmentStageJudgeModelMapper">
+
+    <select id="modStageParaList" resultType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModStageParaDto">
+        SELECT  A.STAGE_OF_ASSET || '_' || A.ABSOLUTE_OF_ELEMENTS ||'_'||A.ELEMENTS AS item,
+        A.ELEMENTS_VALUE AS itemValue
+        FROM MOD_STAGE_PARA A
+        WHERE 1=1
+    </select>
+
+    <select id="assetImpairmentStageJudgeList" resultType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess">
+    SELECT  SEQNO AS seqno,
+            PROD_ID AS prodId,
+            PROD_NAME AS prodName,
+            PORTFOLIO_ID AS portfolioId,
+            ASSET_ID AS assetId,
+            ASSET_NAME AS assetName,
+            MARKET_ID AS marketId,
+            TYPE_8 AS type8,
+            TYPE_9 AS type9,
+            TYPE_10 AS type10,
+            TYPE_11 AS type11,
+            TYPE_12 AS type12,
+            MODEL_ASSET_TYPE AS modelAssetType,
+            MODEL_ASSET_DETAIL_TYPE AS modelAssetDetailType,
+            MDATE AS mdate,
+            UPDATE_TIME AS updateTime,
+            FINANCIER AS financier,
+            GRADE_ORG_ID AS gradeOrgId,
+            ISSUER AS issuer,
+            ACTUAL_CREDIT AS actualCredit,
+            SPONSOR AS sponsor,
+            RISK_LEVEL_FIVE AS riskLevelFive,
+            TRADE_ID AS tradeId,
+            TRADE_DATE AS tradeDate,
+            PS AS ps,
+            SHARE_AMT AS shareAmt,
+            YIELD AS yield,
+            PAPER_RATE AS paperRate,
+            PLAN_END_DATE AS planEndDate,
+            IS_CLEAN AS isClean,
+            DEC_DATE AS decDate,
+            O_TYPE AS oType,
+            RESULT_01 AS result01,
+            RESULT_02 AS result02,
+            RESULT_ISSUER AS resultIssuer,
+            RESULT_FINANCIER AS resultFinancier,
+            RESULT_SPONSOR AS resultSponsor,
+            RESULT_ACTUAL_CREDIT AS resultActualCredit,
+            O_TYPE_FINAL AS oTypeFinal,
+            ORG_ID_FINAL AS orgIdFinal,
+            IS_FIN_LICENCE AS isFinLicence,
+            RESULT_DEAL AS resultDeal,
+            RESULT_CURRENT AS resultCurrent,
+            PRIN_OVERDUE_DAY AS prinOverdueDay,
+            INT_OVERDUE_DAY AS intOverdueDay,
+            FIN_STAGE AS finStage,
+            EMA_SHARE_AMT AS emaShareAmt,
+            EAD AS ead,
+            PRE_PROSPECTIVE_PD AS preProspectivePd,
+            PROSPECTIVE_PD AS prospectivePd,
+            LGD AS lgd,
+            PRE_PROSPECTIVE_ECL AS preProspectiveEcl,
+            PROSPECTIVE_ECL AS prospectiveEcl,
+            PROCESS AS process,
+            CREATE_USER AS createUser,
+            CREATE_DEPT AS createDept,
+            CREATE_TIME AS createTime,
+            UPDATE_USER AS updateUser,
+            IS_CONTAIN_PLEDGE AS isContainPledge,
+            TRADE_AMT AS tradeAmt,
+            ISSUE_AMT AS issueAmt,
+            COUPON_SPECIES AS couponSpecies,
+            ISSUE_PRICE AS issuePrice,
+            VDATE AS vdate
+        FROM MOD_ECL_RESULT_PROCESS A
+        WHERE DEC_DATE = #{batchDate,jdbcType=DATE}
+        AND PROCESS = '01'
+        AND PS = 'T01'
+        <if test="finprodIdList != null and finprodIdList.size > 0">
+            AND (ASSET_ID IN
+            <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ASSET_ID in (
+                </if>
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+
+    <delete id="deleteResult" >
+        delete from MOD_ECL_RESULT_PROCESS where
+        DEC_DATE = #{PLATE_DATE,jdbcType=DATE} AND
+        PROCESS = '02'
+        <if test="finprodIdList != null and finprodIdList.size > 0">
+            AND (ASSET_ID IN
+            <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ASSET_ID in (
+                </if>
+                #{item}
+            </foreach>
+            )
+        </if>
+    </delete>
+
+    <insert id="insertResult">
+        insert into MOD_ECL_RESULT_PROCESS (SEQNO,PROD_ID,PROD_NAME,PORTFOLIO_ID,ASSET_ID
+        ,ASSET_NAME,MARKET_ID,TYPE_8,TYPE_9,TYPE_10,TYPE_11,TYPE_12
+        ,MODEL_ASSET_TYPE,MODEL_ASSET_DETAIL_TYPE,MDATE,UPDATE_TIME
+        ,FINANCIER,GRADE_ORG_ID,ISSUER,ACTUAL_CREDIT,SPONSOR,RISK_LEVEL_FIVE
+        ,TRADE_ID,TRADE_DATE,PS,SHARE_AMT,YIELD,PAPER_RATE
+        ,PLAN_END_DATE,IS_CLEAN,DEC_DATE,O_TYPE,RESULT_01,RESULT_02
+        ,RESULT_ISSUER,RESULT_FINANCIER,RESULT_SPONSOR,RESULT_ACTUAL_CREDIT
+        ,O_TYPE_FINAL,ORG_ID_FINAL,IS_FIN_LICENCE,RESULT_DEAL,RESULT_CURRENT
+        ,PRIN_OVERDUE_DAY,INT_OVERDUE_DAY,FIN_STAGE,EMA_SHARE_AMT
+        ,EAD,PRE_PROSPECTIVE_PD,PROSPECTIVE_PD,LGD,PRE_PROSPECTIVE_ECL
+        ,PROSPECTIVE_ECL,PROCESS,CREATE_USER,CREATE_DEPT,CREATE_TIME
+        ,UPDATE_USER,IS_CONTAIN_PLEDGE,TRADE_AMT,ISSUE_AMT
+        ,COUPON_SPECIES,ISSUE_PRICE,VDATE
+        )
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
+            #{item.portfolioId,jdbcType=VARCHAR}, #{item.assetId,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR},
+            #{item.marketId,jdbcType=VARCHAR}, #{item.type8,jdbcType=VARCHAR}, #{item.type9,jdbcType=VARCHAR},
+            #{item.type10,jdbcType=VARCHAR}, #{item.type11,jdbcType=VARCHAR}, #{item.type12,jdbcType=VARCHAR},
+            #{item.modelAssetType,jdbcType=VARCHAR},#{item.modelAssetDetailType,jdbcType=VARCHAR},#{item.mdate,jdbcType=DATE},
+            #{item.updateTime,jdbcType=TIMESTAMP},#{item.financier,jdbcType=VARCHAR},#{item.gradeOrgId,jdbcType=VARCHAR},
+            #{item.issuer,jdbcType=VARCHAR},#{item.actualCredit,jdbcType=VARCHAR},#{item.sponsor,jdbcType=VARCHAR},
+            #{item.riskLevelFive,jdbcType=VARCHAR},#{item.tradeId,jdbcType=VARCHAR},#{item.tradeDate,jdbcType=DATE},
+            #{item.ps,jdbcType=VARCHAR},#{item.shareAmt,jdbcType=DECIMAL},#{item.yield,jdbcType=DECIMAL},#{item.paperRate,jdbcType=DECIMAL},
+            #{item.planEndDate,jdbcType=DATE},#{item.isClean,jdbcType=VARCHAR},#{item.decDate,jdbcType=DATE},#{item.oType,jdbcType=VARCHAR},
+            #{item.result01,jdbcType=VARCHAR},#{item.result02,jdbcType=VARCHAR},#{item.resultIssuer,jdbcType=VARCHAR},#{item.resultFinancier,jdbcType=VARCHAR},
+            #{item.resultSponsor,jdbcType=VARCHAR},#{item.resultActualCredit,jdbcType=VARCHAR},#{item.oTypeFinal,jdbcType=VARCHAR},#{item.orgIdFinal,jdbcType=VARCHAR},
+            #{item.isFinLicence,jdbcType=VARCHAR},#{item.resultDeal,jdbcType=VARCHAR},#{item.resultCurrent,jdbcType=VARCHAR},#{item.prinOverdueDay,jdbcType=DECIMAL},
+            #{item.intOverdueDay,jdbcType=DECIMAL},#{item.finStage,jdbcType=VARCHAR},#{item.emaShareAmt,jdbcType=DECIMAL},#{item.ead,jdbcType=DECIMAL},
+            #{item.preProspectivePd,jdbcType=DECIMAL},#{item.prospectivePd,jdbcType=DECIMAL},#{item.lgd,jdbcType=DECIMAL},#{item.preProspectiveEcl,jdbcType=DECIMAL},
+            #{item.prospectiveEcl,jdbcType=DECIMAL},#{item.process,jdbcType=VARCHAR},#{item.createUser,jdbcType=VARCHAR},#{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.isContainPledge,jdbcType=VARCHAR},
+            #{item.tradeAmt,jdbcType=DECIMAL}, #{item.issueAmt,jdbcType=DECIMAL}, #{item.couponSpecies,jdbcType=VARCHAR}, #{item.issuePrice,jdbcType=DECIMAL}, #{item.vdate,jdbcType=DATE}
+        </foreach>
+    </insert>
+
+    <select id="assetImpairmentStageJudgeT2322List" resultType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModRepayAndInterestDto">
+        SELECT
+        PLAN_END_DATE AS planEndDate,
+        PS AS dealSide
+        FROM MOD_ECL_RESULT_PROCESS A
+        WHERE ASSET_ID = #{assetId,jdbcType=VARCHAR}
+        AND IS_CLEAN = 'Y'
+        AND PS IN('T23','T22')
+    </select>
+
+    <!-- 获取资产现金流计划集合  -->
+    <select id="getCashFlowPlanInfoByFinprodId" resultType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModCashFlowDto">
+		SELECT A.FINPROD_ID FINPROD_ID,
+	           A.FINPROD_TYPE2 FINPROD_TYPE2,
+	           A.CASH_ID CASH_ID,
+	           A.CASH_TYPE_2 CASH_TYPE_2,
+	           A.VDATE_UNADJUST VDATE_UNADJUST,
+	           A.MDATE_UNADJUST MDATE_UNADJUST,
+	           A.VDATE VDATE,
+	           A.MDATE MDATE,
+	           A.PAY_DATE PAY_DATE,
+	           A.PRIN_AMT PRIN_AMT,
+	           A.INT_AMT INT_AMT,
+	           A.CASH_AMT CASH_AMT,
+	           A.INT_PRIN_AMT INT_PRIN_AMT
+	      FROM VW_MOD_CASH_FLOW_PLAN A
+	     WHERE A.FINPROD_ID= #{finprodId,jdbcType=VARCHAR}
+	     ORDER BY A.MDATE
+	</select>
+</mapper>

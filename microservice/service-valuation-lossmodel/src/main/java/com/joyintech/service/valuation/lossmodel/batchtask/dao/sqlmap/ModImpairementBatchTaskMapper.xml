@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.valuation.lossmodel.batchtask.dao.ModImpairementBatchTaskMapper">
+    <resultMap id="BaseResultMap" type="com.joyintech.service.valuation.lossmodel.batchtask.dto.BatchTaskDto" >
+        <id column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+        <result column="SYSTEM_CODE" property="systemCode" jdbcType="VARCHAR" />
+        <result column="TASK_NAME" property="taskName" jdbcType="VARCHAR" />
+        <result column="FTASK_ID" property="ftaskId" jdbcType="VARCHAR" />
+        <result column="BEAN_NAME" property="beanName" jdbcType="VARCHAR" />
+        <result column="TASK_PRI" property="taskPri" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TASK_ID TASK_ID, SYSTEM_CODE SYSTEM_CODE, TASK_NAME TASK_NAME, FTASK_ID FTASK_ID,
+        BEAN_NAME BEAN_NAME, TASK_PRI TASK_PRI, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.service.valuation.lossmodel.batchtask.dao.ModImpairementBatchTaskMapper.Base_Column_List" />
+        from SYS_BATCH_TASK
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.service.valuation.lossmodel.batchtask.dao.ModImpairementBatchTaskMapper.Base_Column_List" />
+        from SYS_BATCH_TASK
+    </sql>
+    <select id="getBatchTask" resultMap="BaseResultMap" >
+        select
+        <include refid="com.joyintech.service.valuation.lossmodel.batchtask.dao.ModImpairementBatchTaskMapper.Base_Column_List" />
+        from SYS_BATCH_TASK
+        where
+        SYSTEM_CODE = 'MODEL'
+        <if test="taskName != null" >
+            AND TASK_NAME = #{taskName,jdbcType=VARCHAR},
+        </if>
+        ORDER BY TASK_PRI, TASK_ID
+    </select>
+
+    <insert id="batchInsertBatchGroup">
+        insert into SYS_BATCH_JOB (BATCH_SEQ_NO, TASK_ID,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME)
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.batchSeqNo,jdbcType=VARCHAR}, #{item.taskId,jdbcType=VARCHAR},
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+    </insert>
+
+    <insert id="batchInsertProdGroup">
+        insert into SYS_BATCH_GRP_PRDLINK (GROUP_SEQ, PRODUCT_ID, PRODUCT_NAME,
+        CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.groupSeq,jdbcType=VARCHAR}, #{item.productId,jdbcType=VARCHAR}, #{item.productName,jdbcType=VARCHAR},
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
+            #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+    </insert>
+
+
+    <select id="findBatchExeDetail" resultType="com.joyintech.service.valuation.lossmodel.batchtask.dto.BatchExecutingStatusDto">
+        select
+            (select count(1) from MOD_BATCH_LOGS where BATCH_EXEC_SEQNO = A.SEQ_NO AND TASK_ID = SBT.TASK_ID ) totalNum,
+            (select  NVL(sum(case EXEC_STATUS when 'EXP' then 1 ELSE 0 END), 0) from MOD_BATCH_LOGS where BATCH_EXEC_SEQNO = A.SEQ_NO AND TASK_ID = SBT.TASK_ID ) errorNum,
+            (select  NVL(sum(case EXEC_STATUS when 'WARN' then 1 ELSE 0 END), 0) from MOD_BATCH_LOGS where BATCH_EXEC_SEQNO = A.SEQ_NO AND TASK_ID = SBT.TASK_ID ) warnNum,
+            (select  NVL(sum(case EXEC_STATUS when 'NOR' then 1 ELSE 0 END), 0) from MOD_BATCH_LOGS where BATCH_EXEC_SEQNO = A.SEQ_NO AND TASK_ID = SBT.TASK_ID ) successNum,
+            A.SEQ_NO seqNo,
+            sbei.EXECUTE_DATE executeDate,
+            A.BATCH_SEQ_NO batchSeqNo,
+            A.PRD_GROUP_SEQ_NO prdGroupSeqNo,
+            A.DETAIL_NAME detailName,
+            A.START_DATE startDate,
+            A.END_DATE endDate,
+            A.CREATE_USER createUser,
+            A.CREATE_TIME createTime,
+            A.UPDATE_TIME updateTime,
+            A.PROCESS_TIME processTime,
+            A.STATUS status,
+            A.EXEC_COUNT infoSeqNo,
+            A.PERCENT percent,
+            SBT.TASK_NAME taskName,
+            SBT.TASK_ID taskId
+        FROM (
+                 select
+                     aa.SEQ_NO,
+                     aa.BATCH_SEQ_NO,
+                     aa.PRD_GROUP_SEQ_NO,
+                     aa.DETAIL_NAME,
+                     aa.START_DATE,
+                     aa.END_DATE,
+                     aa.CREATE_USER,
+                     aa.CREATE_TIME,
+                     aa.UPDATE_TIME,
+                     aa.PROCESS_TIME,
+                     aa.STATUS,
+                     aa.EXEC_COUNT,
+                     aa.PERCENT
+                 from(
+                         SELECT
+                             A.SEQ_NO,
+                             A.BATCH_SEQ_NO,
+                             A.PRD_GROUP_SEQ_NO,
+                             A.DETAIL_NAME,
+                             A.START_DATE,
+                             A.END_DATE,
+                             A.CREATE_USER,
+                             A.CREATE_TIME,
+                             A.UPDATE_TIME,
+                             (extract(DAY FROM a.update_time-a.create_time) * 86400+ extract(hour FROM a.update_time-
+                                                                                                       a.create_time) * 3600 + extract(minute FROM a.update_time-a.create_time) * 60+ extract(second
+                                                                                                                                                                                              FROM a.update_time-a.create_time)) * 1000 PROCESS_TIME,
+                             A.STATUS,
+                             COUNT(B.SEQ_NO)                       EXEC_COUNT,
+                             ROUND(endNumber.num/allNumber.num, 2) PERCENT
+                         FROM
+                             SYS_BATCHGRP_EXEC_INFO A
+                                 LEFT JOIN
+                             SYS_BATCH_EXEC_INFO B
+                             ON
+                                     A.SEQ_NO = B.BATCH_EXEDETAIL_SEQ_NO
+                                     AND B.TASK_STATUS = 'EXP'
+
+                                 LEFT JOIN
+                             (
+                                 SELECT
+                                     BATCH_EXEDETAIL_SEQ_NO exeSeqNo,
+                                     COUNT(1)               num
+                                 FROM
+                                     SYS_BATCH_EXEC_INFO
+                                 WHERE
+                                     (
+                                             TASK_STATUS = 'END'
+                                             OR  TASK_STATUS='EXP'
+                                             OR  TASK_STATUS='BRK')
+                                 GROUP BY
+                                     BATCH_EXEDETAIL_SEQ_NO) endNumber
+                             ON
+                                 A.SEQ_NO = endNumber.exeSeqNo
+                                 LEFT JOIN
+                             (
+                                 SELECT
+                                     BATCH_EXEDETAIL_SEQ_NO exeSeqNo,
+                                     COUNT(1)               num
+                                 FROM
+                                     SYS_BATCH_EXEC_INFO
+                                 GROUP BY
+                                     BATCH_EXEDETAIL_SEQ_NO) allNumber
+                             ON
+                                 A.SEQ_NO = allNumber.exeSeqNo
+                         GROUP BY
+                             A.SEQ_NO,
+                             A.BATCH_SEQ_NO,
+                             A.PRD_GROUP_SEQ_NO,
+                             A.DETAIL_NAME,
+                             A.START_DATE,
+                             A.END_DATE,
+                             A.CREATE_USER,
+                             A.CREATE_TIME,
+                             A.UPDATE_TIME,
+                             endNumber.num,
+                             allNumber.num,
+                             A.STATUS
+                     ) aa
+                 GROUP BY
+                     aa.SEQ_NO,
+                     aa.BATCH_SEQ_NO,
+                     aa.PRD_GROUP_SEQ_NO,
+                     aa.DETAIL_NAME,
+                     aa.START_DATE,
+                     aa.END_DATE,
+                     aa.CREATE_USER,
+                     aa.CREATE_TIME,
+                     aa.UPDATE_TIME,
+                     aa.PROCESS_TIME,
+                     aa.STATUS,
+                     aa.EXEC_COUNT,
+                     aa.PERCENT
+                 ORDER BY
+                     aa.CREATE_TIME DESC
+             ) A
+                 left join SYS_BATCH_EXEC_INFO sbei ON sbei.BATCH_EXEDETAIL_SEQ_NO = A.SEQ_NO
+                 left join SYS_BATCH_TASK SBT ON SBT.TASK_ID = sbei.TASK_ID
+        WHERE (A.STATUS != 'END' AND A.STATUS != 'EXP') OR TO_CHAR(A.CREATE_TIME, 'yyyy-MM-dd') = #{importDate}
+           OR TO_CHAR(A.UPDATE_TIME, 'yyyy-MM-dd') = #{importDate}
+           OR TO_CHAR(sbei.EXECUTE_DATE, 'yyyy-MM-dd') = #{importDate}
+        ORDER BY A.CREATE_TIME DESC
+    </select>
+
+    <select id="checkIsRunning" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM sys_batchgrp_exec_info info
+        left join MOD_VAL_BATCH_PARAMS mvbp on info.SEQ_NO = mvbp.BATCH_EXEC_SEQNO
+        WHERE 1 = 1
+        AND info.status IN (
+        'UNR', 'RUN'
+        )
+        <if test="finprodIdList != null and finprodIdList.size() > 0">
+            AND mvbp.FINPROD_ID in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+    </select>
+
+    <delete id="cleanBatchParams">
+        DELETE
+        FROM MOD_VAL_BATCH_PARAMS MVBP
+        WHERE NOT EXISTS(SELECT 1
+                         FROM sys_batchgrp_exec_info info
+                         where info.status IN (
+                                               'UNR', 'RUN'
+                             )
+                           AND info.SEQ_NO = mvbp.BATCH_EXEC_SEQNO)
+    </delete>
+
+</mapper>

@@ -164,7 +164,7 @@ public class ModGradePdConfig001Controller extends BaseController {
         List<ModGradePdConfigDto> listdto;
         listdto = modGradePdConfigService.selectExportList(dto);
         File outFile = modGradePdConfigService.makeFile(
-                "/com/joyintech/tams/model/impairment/pddefaultmanager/gradepdconfig/conf/export_gradepdconfig.xml",
+                "/com/joyintech/tams/valuation/lossmodel/pddefaultmanager/gradepdconfig/conf/export_gradepdconfig.xml",
                 listdto);
         return ExportUtil.export(
                 this.getMessage(DateUtil.format(new Date())+"_评级PD维护记录")

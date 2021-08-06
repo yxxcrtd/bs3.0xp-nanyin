@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.model.impairment.batch.datapusheclresult.dao.DataPushEclResultMapper">
+
+	<!--根据跑批日，获取资产减值结果列表信息-->
+	<select id="selectEclResultList" resultType="com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResult">
+		select
+		A.SEQNO as seqno,
+		A.PROD_ID as prodId,
+		A.PROD_NAME as prodName,
+		A.ASSET_ID as assetId,
+		A.ASSET_NAME as assetName,
+		A.ASSET_TYPE as assetType,
+		A.PORTFOLIO_ID as portfolioId,
+		A.BUSS_NO as bussNo,
+		A.TRADE_DATE as tradeDate,
+		A.DEC_DATE as decDate,
+		A.PRIN_OVERDUE_DAY as prinOverdueDay,
+		A.INT_OVERDUE_DAY as intOverdueDay,
+		A.PURCHASE_TIME_GRADE as purchaseTimeGrade,
+		A.CURRENT_TIME_GRADE as currentTimeGrade,
+		A.PRE_PROSPECTIVE_PD as preProspectivePd,
+		A.STAGE as stage,
+		A.LGD as lgd,
+		A.EAD as ead,
+		A.PRE_PROSPECTIVE_ECL as preProspectiveEcl,
+		A.PROSPECTIVE_ECL as prospectiveEcl,
+		A.ALLOW_MODEL_COVER as allowModelCover,
+		A.DATA_SOURCE as dataSource,
+
+		A.CREATE_USER as createUser,
+		A.CREATE_DEPT as createDept,
+		A.CREATE_TIME as createTime,
+		A.UPDATE_USER as updateUser,
+		A.UPDATE_TIME as updateTime
+
+		from  MOD_ECL_RESULT A
+		where  A.DEC_DATE =#{plateDate,jdbcType=DATE}
+		<if test="finprodIdList != null and finprodIdList.size > 0">
+			AND (A.ASSET_ID IN
+			<foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR A.ASSET_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+	</select>
+
+
+
+</mapper>

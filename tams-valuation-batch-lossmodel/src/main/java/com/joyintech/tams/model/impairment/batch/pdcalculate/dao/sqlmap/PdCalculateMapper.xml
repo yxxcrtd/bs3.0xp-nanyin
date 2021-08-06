@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapper">
+
+	<sql id="pdCalculateSqlOne">
+		    A.SEQNO AS seqno,
+            A.PROD_ID AS prodId,
+            A.PROD_NAME AS prodName,
+            A.PORTFOLIO_ID AS portfolioId,
+            A.ASSET_ID AS assetId,
+            A.ASSET_NAME AS assetName,
+            A.MARKET_ID AS marketId,
+            A.TYPE_8 AS type8,
+            A.TYPE_9 AS type9,
+            A.TYPE_10 AS type10,
+            A.TYPE_11 AS type11,
+            A.TYPE_12 AS type12,
+            A.MODEL_ASSET_TYPE AS modelAssetType,
+            A.MODEL_ASSET_DETAIL_TYPE AS modelAssetDetailType,
+            A.MDATE AS mdate,
+            A.UPDATE_TIME AS updateTime,
+            A.FINANCIER AS financier,
+            A.GRADE_ORG_ID AS gradeOrgId,
+            A.ISSUER AS issuer,
+            A.ACTUAL_CREDIT AS actualCredit,
+            A.SPONSOR AS sponsor,
+            A.RISK_LEVEL_FIVE AS riskLevelFive,
+            A.TRADE_ID AS tradeId,
+            A.TRADE_DATE AS tradeDate,
+            A.PS AS ps,
+            A.SHARE_AMT AS shareAmt,
+            A.YIELD AS yield,
+            A.PAPER_RATE AS paperRate,
+            A.PLAN_END_DATE AS planEndDate,
+            A.IS_CLEAN AS isClean,
+            A.DEC_DATE AS decDate,
+            A.O_TYPE AS oType,
+            A.RESULT_01 AS result01,
+            A.RESULT_02 AS result02,
+            A.RESULT_ISSUER AS resultIssuer,
+            A.RESULT_FINANCIER AS resultFinancier,
+            A.RESULT_SPONSOR AS resultSponsor,
+            A.RESULT_ACTUAL_CREDIT AS resultActualCredit,
+            A.O_TYPE_FINAL AS oTypeFinal,
+            A.ORG_ID_FINAL AS orgIdFinal,
+            A.IS_FIN_LICENCE AS isFinLicence,
+            A.RESULT_DEAL AS resultDeal,
+            A.RESULT_CURRENT AS resultCurrent,
+            A.PRIN_OVERDUE_DAY AS prinOverdueDay,
+            A.INT_OVERDUE_DAY AS intOverdueDay,
+            A.FIN_STAGE AS finStage,
+            A.EMA_SHARE_AMT AS emaShareAmt,
+            A.EAD AS ead,
+            A.PRE_PROSPECTIVE_PD AS preProspectivePd,
+            A.PROSPECTIVE_PD AS prospectivePd,
+            A.LGD AS lgd,
+            A.PRE_PROSPECTIVE_ECL AS preProspectiveEcl,
+            A.PROSPECTIVE_ECL AS prospectiveEcl,
+            A.PROCESS AS process,
+            A.CREATE_USER AS createUser,
+            A.CREATE_DEPT AS createDept,
+            A.CREATE_TIME AS createTime,
+            A.UPDATE_USER AS updateUser,
+            A.IS_CONTAIN_PLEDGE AS isContainPledge,
+            A.TRADE_AMT AS tradeAmt,
+            A.ISSUE_AMT AS issueAmt,
+            A.COUPON_SPECIES AS couponSpecies,
+            A.ISSUE_PRICE AS issuePrice,
+            A.VDATE AS vdate
+	</sql>
+
+
+	<!-- 根据条件删除债券估值行情表 -->
+	<delete id="deletePdCalculateResult">
+		delete from MOD_ECL_RESULT_PROCESS A
+		WHERE  to_char(A.DEC_DATE,'yyyy-MM-dd') = to_char(#{plateDate,jdbcType = DATE},'yyyy-MM-dd')
+		AND A.PROCESS='04'
+		<if test="finprodIdList != null and finprodIdList.size > 0">
+			AND (A.ASSET_ID IN
+			<foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR A.ASSET_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+	</delete>
+
+	<!--根据跑批日获取待处理资产信息List-->
+	<select id="selectWaitPdCalculateList" resultType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess" >
+		SELECT
+		<include refid="pdCalculateSqlOne"/>
+		FROM  MOD_ECL_RESULT_PROCESS A
+		WHERE  to_char(A.DEC_DATE,'yyyy-MM-dd') = to_char(#{plateDate,jdbcType = DATE},'yyyy-MM-dd')
+		AND A.PS ='T01'
+		AND A.PROCESS='03'
+		<if test="finprodIdList != null and finprodIdList.size > 0">
+			AND (A.ASSET_ID IN
+			<foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR ASSET_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+	</select>
+
+
+	<!--获取前瞻因子权重配置信息-->
+	<select id="selectModPdWeightConfigInfo" resultType="com.joyintech.tams.model.impairment.batch.pdcalculate.dto.ModPdWeightConfigDto" >
+		select
+          A.OPTIMISTIC_WEIGHT optimisticWeight,
+		  A.BASIC_WEIGHT basicWeight,
+		  A.PESSIMISM_WEIGHT pessimismWeight
+		from  MOD_PD_WEIGHT_CONFIG A
+		WHERE ROWNUM =1 ORDER BY UPDATE_TIME DESC
+
+	</select>
+
+	<!--获取年份的评级PD配置信息-->
+	<select id="selectModGradePdConfigList" resultType="com.joyintech.tams.model.impairment.batch.pdcalculate.dto.ModGradePdConfigDto" >
+		select
+			A.SEQNO as seqNo,
+			'03' as configType,
+			#{yearNum,jdbcType=DECIMAL} as yearNum,
+			#{yearNum,jdbcType=DECIMAL} as yearStr,
+			A.FORWARD_YEAR_PD as forwardYearPd
+		from  MOD_GRADE_PD_CONFIG A
+		where
+        A.GRADE_RESULT=#{gradeResult,jdbcType=VARCHAR}
+		AND A.VOUCH_YEAR =
+		      (select max(B.vouch_year)  from MOD_GRADE_PD_CONFIG B
+		       where B.vouch_year  &lt;= #{yearNum,jdbcType=DECIMAL})
+		AND ROWNUM=1
+	</select>
+
+
+	<!--获取年份的季度对应的Z（乐观因子、基础因子、悲观因子）-->
+	<select id="selectModPdFactorConfig" resultType="com.joyintech.tams.model.impairment.batch.pdcalculate.dto.ModPdFactorConfigDto" >
+		select
+		A.SEQNO as seqNo,
+		'04' as configType,
+		A.VOUCH_YEAR as ouchYear,
+		A.VOUCH_QUARTER as vouchQuarter,
+		A.OPTIMISTIC_FACTOR as optimisticFactor,
+		A.BASIC_FACTOR as basicFactor,
+		A.PESSIMISM_FACTOR as pessimismFactor
+		from MOD_PD_FACTOR_CONFIG A
+		inner join
+		(
+		select
+		A2.VOUCH_YEAR as VOUCH_YEAR,
+		max(A2.VOUCH_QUARTER) as VOUCH_QUARTER
+		from MOD_PD_FACTOR_CONFIG A2
+		where A2.VOUCH_YEAR =(select max(A1.VOUCH_YEAR) from MOD_PD_FACTOR_CONFIG A1 where A1.VOUCH_YEAR &gt;= #{yearStr,jdbcType=VARCHAR})
+		and TO_NUMBER(A2.VOUCH_QUARTER) &gt;= TO_NUMBER(#{quarterStr,jdbcType=VARCHAR})
+		and  rownum=1
+		group by A2.VOUCH_YEAR,A2.VOUCH_QUARTER order by A2.VOUCH_QUARTER desc
+
+		) C
+		on A.VOUCH_YEAR=C.VOUCH_YEAR
+		and A.VOUCH_QUARTER =C.VOUCH_QUARTER
+	</select>
+
+	<!--用于判断使用的参数是否已存在减值配置使用情况表-->
+	<select id="selectCountConfigUseAge" resultType="int">
+	      FROM MOD_CONFIG_USEAGE A
+       WHERE A.CONFIG_SEQNO =#{configSeqNo,jdbcType=VARCHAR}
+          AND A.CONFIG_TYPE =#{configType,jdbcType=VARCHAR}SELECT COUNT(1)
+
+	</select>
+
+
+	<!-- 根据条件批量插入减值结果过程表 -->
+	<insert id="insertEclProcessResultPremium">
+		insert into MOD_ECL_RESULT_PROCESS (SEQNO,PROD_ID,PROD_NAME,PORTFOLIO_ID,ASSET_ID
+		,ASSET_NAME,MARKET_ID,TYPE_8,TYPE_9,TYPE_10,TYPE_11,TYPE_12
+		,MODEL_ASSET_TYPE,MODEL_ASSET_DETAIL_TYPE,MDATE,UPDATE_TIME
+		,FINANCIER,GRADE_ORG_ID,ISSUER,ACTUAL_CREDIT,SPONSOR,RISK_LEVEL_FIVE
+		,TRADE_ID,TRADE_DATE,PS,SHARE_AMT,YIELD,PAPER_RATE
+		,PLAN_END_DATE,IS_CLEAN,DEC_DATE,O_TYPE,RESULT_01,RESULT_02
+		,RESULT_ISSUER,RESULT_FINANCIER,RESULT_SPONSOR,RESULT_ACTUAL_CREDIT
+		,O_TYPE_FINAL,ORG_ID_FINAL,IS_FIN_LICENCE,RESULT_DEAL,RESULT_CURRENT
+		,PRIN_OVERDUE_DAY,INT_OVERDUE_DAY,FIN_STAGE,EMA_SHARE_AMT
+		,EAD,PRE_PROSPECTIVE_PD,PROSPECTIVE_PD,LGD,PRE_PROSPECTIVE_ECL
+		,PROSPECTIVE_ECL,PROCESS,CREATE_USER,CREATE_DEPT,CREATE_TIME
+		,UPDATE_USER,IS_CONTAIN_PLEDGE,TRADE_AMT,ISSUE_AMT
+		,COUPON_SPECIES,ISSUE_PRICE,VDATE
+		)
+		<foreach collection="eclProcessResultList" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
+			#{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
+			#{item.portfolioId,jdbcType=VARCHAR}, #{item.assetId,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR},
+			#{item.marketId,jdbcType=VARCHAR}, #{item.type8,jdbcType=VARCHAR}, #{item.type9,jdbcType=VARCHAR},
+			#{item.type10,jdbcType=VARCHAR}, #{item.type11,jdbcType=VARCHAR}, #{item.type12,jdbcType=VARCHAR},
+			#{item.modelAssetType,jdbcType=VARCHAR},#{item.modelAssetDetailType,jdbcType=VARCHAR},#{item.mdate,jdbcType=DATE},
+			#{item.updateTime,jdbcType=TIMESTAMP},#{item.financier,jdbcType=VARCHAR},#{item.gradeOrgId,jdbcType=VARCHAR},
+			#{item.issuer,jdbcType=VARCHAR},#{item.actualCredit,jdbcType=VARCHAR},#{item.sponsor,jdbcType=VARCHAR},
+			#{item.riskLevelFive,jdbcType=VARCHAR},#{item.tradeId,jdbcType=VARCHAR},#{item.tradeDate,jdbcType=DATE},
+			#{item.ps,jdbcType=VARCHAR},#{item.shareAmt,jdbcType=DECIMAL},#{item.yield,jdbcType=DECIMAL},#{item.paperRate,jdbcType=DECIMAL},
+			#{item.planEndDate,jdbcType=DATE},#{item.isClean,jdbcType=VARCHAR},#{item.decDate,jdbcType=DATE},#{item.oType,jdbcType=VARCHAR},
+			#{item.result01,jdbcType=VARCHAR},#{item.result02,jdbcType=VARCHAR},#{item.resultIssuer,jdbcType=VARCHAR},#{item.resultFinancier,jdbcType=VARCHAR},
+			#{item.resultSponsor,jdbcType=VARCHAR},#{item.resultActualCredit,jdbcType=VARCHAR},#{item.oTypeFinal,jdbcType=VARCHAR},#{item.orgIdFinal,jdbcType=VARCHAR},
+			#{item.isFinLicence,jdbcType=VARCHAR},#{item.resultDeal,jdbcType=VARCHAR},#{item.resultCurrent,jdbcType=VARCHAR},#{item.prinOverdueDay,jdbcType=DECIMAL},
+			#{item.intOverdueDay,jdbcType=DECIMAL},#{item.finStage,jdbcType=VARCHAR},#{item.emaShareAmt,jdbcType=DECIMAL},#{item.ead,jdbcType=DECIMAL},
+			#{item.preProspectivePd,jdbcType=DECIMAL},#{item.prospectivePd,jdbcType=DECIMAL},#{item.lgd,jdbcType=DECIMAL},#{item.preProspectiveEcl,jdbcType=DECIMAL},
+			#{item.prospectiveEcl,jdbcType=DECIMAL},#{item.process,jdbcType=VARCHAR},#{item.createUser,jdbcType=VARCHAR},#{item.createDept,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.isContainPledge,jdbcType=VARCHAR},
+			#{item.tradeAmt,jdbcType=DECIMAL}, #{item.issueAmt,jdbcType=DECIMAL}, #{item.couponSpecies,jdbcType=VARCHAR}, #{item.issuePrice,jdbcType=DECIMAL}, #{item.vdate,jdbcType=DATE}
+		</foreach>
+	</insert>
+
+	<!-- 减值配置使用情况表 -->
+	<insert id="insertConfigUseageResultPremium">
+		insert into MOD_CONFIG_USEAGE (
+		SEQNO, CONFIG_SEQNO,
+		CONFIG_TYPE,USE_PROCESS,
+
+		CREATE_USER, CREATE_DEPT,
+		CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME
+		)
+		<foreach collection="configUseageResultList" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
+			#{item.seqNo,jdbcType=VARCHAR}, #{item.configSeqNo,jdbcType=VARCHAR} ,
+			#{item.configType,jdbcType=VARCHAR},#{item.useProcess,jdbcType=VARCHAR},
+
+			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=TIMESTAMP}
+		</foreach>
+	</insert>
+
+
+
+
+
+
+
+</mapper>

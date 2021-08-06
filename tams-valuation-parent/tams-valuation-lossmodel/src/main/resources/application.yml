@@ -6,8 +6,8 @@ base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.70.245)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.70.245)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=orcl)))
-    username: CVR30INIT
-    password: CVR30INIT
+    username: CVR30INIT_DEV
+    password: CVR30INIT_DEV
     validationQuery: SELECT 1 FROM DUAL
     initialSize: 10
     maxWaitMillis: -1
@@ -83,8 +83,8 @@ spring:
     cache: false
   datasource:
     url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.70.245)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.70.245)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=orcl)))
-    username: CVR30INIT
-    password: CVR30INIT
+    username: CVR30INIT_DEV
+    password: CVR30INIT_DEV
     validationQuery: SELECT 1 FROM DUAL
     initialSize: 10
     maxTotal: 100

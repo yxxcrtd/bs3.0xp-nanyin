@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dao.DataPushValuatIoninfoMapper">
+
+	<!--根据跑批日，获取估值行情列表信息-->
+	<select id="selectValuationInfoList" resultType="com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.ValuationBatchSynDto">
+		select
+		A.FINPROD_ID as  finprodId,
+		A.CDATE as valueDate,
+		A.VAL_MODEL as valueSource,
+		A.FULL_PRICE as price,
+		A.NET_PRICE as netprice
+		from  MOD_CURVE_RESULT A
+		WHERE
+		to_char(A.CDATE,'yyyy-MM-dd') =#{batchDateStr,jdbcType = VARCHAR}
+		<if test="finprodIdList != null and finprodIdList.size > 0">
+			AND (A.FINPROD_ID IN
+			<foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR A.FINPROD_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+
+	</select>
+
+
+
+</mapper>
