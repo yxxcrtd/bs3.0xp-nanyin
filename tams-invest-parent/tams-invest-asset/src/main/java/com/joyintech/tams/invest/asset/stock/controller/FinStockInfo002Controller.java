@@ -114,11 +114,15 @@ public class FinStockInfo002Controller extends BaseController {
             FinStockInfoDto dto = finStockInfoService.selectByFinprodId(finprodId);
             dto.setRealFinProductId(finprodId);
             //commonBusinessService.setTradeMarketId(dto,model);
-            if("03".equals(dto.getTradeMarket())){ 
-            	dto.setTradeMarketId(".SH");
-            }else{
+            //modify by yjp ZGBSEI-138 香港联合交易所得标的查看和编辑页面也变成.SZ 20210806 START
+            if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())){
+                dto.setTradeMarketId(".SH");
+            }else if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
             	dto.setTradeMarketId(".SZ");
+            }else if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_香港联合交易所.getValue())){
+                dto.setTradeMarketId(".HK");
             }
+            //modify by yjp ZGBSEI-138 香港联合交易所得标的查看和编辑页面也变成.SZ 20210806 END
             if(null != dto){
                 model.addAttribute("businessId", dto.getFinprodId());
               //  model.addAttribute("businessId", dto.getFinprodId().substring(0,dto.getFinprodId().indexOf(".")));
