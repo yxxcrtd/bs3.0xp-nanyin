@@ -128,38 +128,17 @@ public class TrdBondLendInvestTrade002Controller extends BaseController {
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdBondLendInvestTrade002Service.getBussinessEntityByWorkflowId(
                 workflowId);
-            //配置单位 edit by yeming 20210726 start
-            if(StringUtil.equals(entrustAmtUnit,"02")){
-                if(dto.getShareAmt() != null) {
-                    dto.setShareAmt(dto.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-                }
-            }
-            //配置单位 edit by yeming 20210726 end
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
             model.addAttribute("workflowId",workflowId);
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdBondLendInvestTrade002Service.getTrdBondLendInvestTradeDto(tradeId);
-            //配置单位 edit by yeming 20210726 start
-            if(StringUtil.equals(entrustAmtUnit,"02")){
-                if(dto.getShareAmt() != null) {
-                    dto.setShareAmt(dto.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-                }
-            }
-            //配置单位 edit by yeming 20210726 end
         }
         else {
             String entrustId = this.getParam("entrustId");
             if (StringUtil.isNotEmpty(entrustId)) {
                 model.addAttribute("entrustId", entrustId);
                 dto.setEntrustId(entrustId);
-                //配置单位 edit by yeming 20210726 start
-                if(StringUtil.equals(entrustAmtUnit,"02")){
-                    if(dto.getShareAmt() != null) {
-                        dto.setShareAmt(dto.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-                    }
-                }
-                //配置单位 edit by yeming 20210726 end
                 //add by wangpeng 20190901 交易录单带出不出质押券信息 
                 BaseEtrInvestInfoDto baseEtrDto =trdBondLendInvestTrade002Service.getEntrustInfo(dto.getEntrustId());
                 BeanUtil.copyPropertiesIgnoreNull(dto, baseEtrDto.getEtrEntrust());
@@ -170,6 +149,13 @@ public class TrdBondLendInvestTrade002Controller extends BaseController {
                 //add by wangpeng 20190901 end
             }
         }
+        //配置单位 edit by yeming 20210802 start
+        if(StringUtil.equals(entrustAmtUnit,"02")){
+            if(dto.getShareAmt() != null) {
+                dto.setShareAmt(dto.getShareAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+        }
+        //配置单位 edit by yeming 20210802 end
         if (StringUtil.isNotBlank(tradeId)) {
             model.addAttribute("tradeId", tradeId);
             model.addAttribute("tradeEntrustId", tradeId);

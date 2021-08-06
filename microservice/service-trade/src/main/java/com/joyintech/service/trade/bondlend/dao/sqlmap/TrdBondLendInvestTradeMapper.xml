@@ -273,7 +273,7 @@
             ftp.M_INT_AMT M_TRADE_AMT, /*债券借贷投资交易借贷费用显示错误 update by 张年 20190909*/
             tpd.F_TRADE_ID,/*银行间成交编号*/
             ftp.CCY, /*交易日历*/
-            nvl2(tpd.SHARE_AMT,tpd.SHARE_AMT/10000,0) SHARE_AMT,
+            nvl2(tpd.SHARE_AMT,tpd.SHARE_AMT,0) SHARE_AMT,
             /*nvl2(fdt.PLEDGE_FACE_VALUE,0,fdt.PLEDGE_FACE_VALUE/10000) TRADE_AMT,*/
             tpd.REMARK,
             tpd.TRADER, tpd.COUNTER_ID, tpd.COUNTER_TRADER, tpd.COUNTER_CONTACT,

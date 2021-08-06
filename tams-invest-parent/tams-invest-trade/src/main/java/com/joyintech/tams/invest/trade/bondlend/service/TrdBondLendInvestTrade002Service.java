@@ -494,7 +494,8 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         //交割日等同于交易日期
         entry.setSettleDate(dto.getTradeDate());
         //交易份额=券面总额(万元)*10000
-        entry.setShareAmt(ArithmeticUtil.multiply(dto.getShareAmt(),new BigDecimal(10000)));
+//        js里已转换
+//        entry.setShareAmt(ArithmeticUtil.multiply(dto.getShareAmt(),new BigDecimal(10000)));
         //交易本金，券面 = 交易份额
         entry.setPrinAmt(entry.getShareAmt());
         //重置交易金额为0
@@ -1035,7 +1036,8 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         // 计划支付本金 = 0
         finCashPlan.setPrinAmt(BigDecimal.ZERO);
         // 计息本金 = 画面.券面总额
-        finCashPlan.setIntPrinAmt(ArithmeticUtil.multiply(input.getShareAmt(),new BigDecimal(10000)));
+//        finCashPlan.setIntPrinAmt(ArithmeticUtil.multiply(input.getShareAmt(),new BigDecimal(10000)));
+        finCashPlan.setIntPrinAmt(input.getShareAmt());
         // 计划支付利息 = 借贷费用
         finCashPlan.setIntAmt(input.getmTradeAmt());
         // 是否支付利息 数据字典缓存.是否.是
@@ -1064,7 +1066,7 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
                 + "/common/trdcommonbase/insertFinProductCashData",
             inputDto, Boolean.class);
-        
+
 		return inputDto;
     }
     /**
@@ -1104,7 +1106,8 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         BigDecimal 折算人民币金额 = ArithmeticUtil.multiply(dto.getFpriceAmt(), 收盘价);
         repTrade.setRepMoneyCny(折算人民币金额);
         // 数量 = 画面.券面总额
-        repTrade.setRepCount(ArithmeticUtil.multiply(dto.getShareAmt(),new BigDecimal(10000)));
+//        repTrade.setRepCount(ArithmeticUtil.multiply(dto.getShareAmt(),new BigDecimal(10000)));
+        repTrade.setRepCount((dto.getShareAmt()));
 
         // 资金流动类型: 数据字典缓存.资金流动类型 ※根据交易方向判断，若买入，即资产买入，若卖出，即为资产卖出或到期
         String 资金流动类型 = DictCodeListExt2.资金流动类型_资产卖出或到期.getValue();
@@ -1269,7 +1272,7 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
                 investInterfCommDto.setPledgeBondListDetailed(entity.getBussRepoSec().getPledgeBondListDetailed());
                 investInterfCommService.doInvestInterf(investInterfCommDto);
                 // 调用投管接口 add by cxq 20190219 end
-                
+
                 //删除授信占用
                 if (null != baseDto.getTrdProductDeal().getTradeId() && !"".equals(baseDto.getTrdProductDeal().getTradeId())){
                     riskCreditListCommonValidatorService.deleteCredit(baseDto.getTrdProductDeal().getTradeId());
@@ -1904,14 +1907,14 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         TrdBondLendInvestTradeDto dto = this.getBussinessEntity(entity);
         if (taskId != null) {
             try {
-//              
+//
 //              return commonBusinessService.是否需要上级审批(dto.getCounterId(), ArithmeticUtil.multiply(dto.getShareAmt(),new BigDecimal(10000)), LoginUserUtil.getUserName(),
 //                      DictCodeListExt2.平安资产类型_债券借贷.getValue(), dto.getFinprodType(), dto.getTradeMarket(), dto.getPs()
 //                      // 资产类型改为授权类型 add by renping 2019-08-06  start
 //                      , dto.getFinprodId()
 //                      // 资产类型改为授权类型 add by renping 2019-08-06  end
 //                      );
-              Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), ArithmeticUtil.multiply(dto.getShareAmt(),new BigDecimal(10000)), LoginUserUtil.getUserName(),
+              Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getShareAmt(), LoginUserUtil.getUserName(),
                   DictCodeListExt2.平安资产类型_债券借贷.getValue(), dto.getFinprodType(), dto.getTradeMarket(), dto.getPs()
                   , dto.getFinprodId(),entity.getWorkflowId());
               params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
