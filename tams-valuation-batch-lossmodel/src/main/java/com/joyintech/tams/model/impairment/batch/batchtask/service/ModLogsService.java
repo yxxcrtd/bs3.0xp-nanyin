@@ -1,6 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.batchtask.service;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.model.impairment.batch.batchtask.dao.ModBatchLogsMapper;
 import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModBatchLogs;
 import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModBatchLogsExample;
 import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;

@@ -1,4 +1,4 @@
-package com.joyintech.tams.model.impairment.batch.batchtask.service;
+package com.joyintech.tams.model.impairment.batch.batchtask.dao;
 
 import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModBatchLogs;
 import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModBatchLogsExample;
@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 
 @Repository
 public interface ModBatchLogsMapper {

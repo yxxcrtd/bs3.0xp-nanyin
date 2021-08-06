@@ -36,6 +36,12 @@
             <artifactId>jixu</artifactId>
             <version>0.0.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>component-business</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
     <build>
         <!-- 打包源代码插件 -->

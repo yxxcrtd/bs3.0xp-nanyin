@@ -2,15 +2,10 @@ package com.joyintech.tams.model.impairment.batch.eadcalculation.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.base.entity.SysBatchTask;
-import com.joyintech.framework.exception.BusinessException;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.batchtask.service.ModLogsService;
-import com.joyintech.tams.batchtask.service.ModParamsService;
-import com.joyintech.tams.common.base.entity.ModEclResultProcess;
-import com.joyintech.tams.common.base.entity.ModValBatchParams;
-import com.joyintech.tams.common.valuation.assetinfo.dto.ModCashFlowDto;
-import com.joyintech.tams.common.valuation.assetinfo.service.ModValuationCommonService;
 import com.joyintech.tams.constant.ModelDictCodeList;
+import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModCashFlowDto;
+import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModValBatchParams;
+import com.joyintech.tams.model.impairment.batch.batchtask.service.ModParamsService;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dao.EadCalculationBatchMapper;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadCalculationReaderDto;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadErrorParams;
@@ -22,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

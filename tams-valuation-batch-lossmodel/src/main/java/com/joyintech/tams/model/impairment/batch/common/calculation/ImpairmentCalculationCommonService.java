@@ -3,19 +3,10 @@ package com.joyintech.tams.model.impairment.batch.common.calculation;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.datasource.ModelDataSourceType;
-import com.joyintech.tams.model.impairment.batch.common.searchinfo.dao.ImpairmentViewCommonMapper;
-import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
 
 /**
  * 减值模块视图查询

@@ -1,0 +1,31 @@
+package com.joyintech.tams.model.impairment.batch.eadcalculation.dto;
+
+import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
+
+public class BinaryTreeModelResultDto extends NeedToWriteEntity {
+
+    /**
+     * 模型估值结果
+     */
+    private ModCurveResult modCurveResult;
+    /**
+     * 估值模型风险溢价数据
+     */
+    private ModRiskPremium modRiskPremium;
+
+    public ModCurveResult getModCurveResult() {
+        return modCurveResult;
+    }
+
+    public void setModCurveResult(ModCurveResult modCurveResult) {
+        this.modCurveResult = modCurveResult;
+    }
+
+    public ModRiskPremium getModRiskPremium() {
+        return modRiskPremium;
+    }
+
+    public void setModRiskPremium(ModRiskPremium modRiskPremium) {
+        this.modRiskPremium = modRiskPremium;
+    }
+}

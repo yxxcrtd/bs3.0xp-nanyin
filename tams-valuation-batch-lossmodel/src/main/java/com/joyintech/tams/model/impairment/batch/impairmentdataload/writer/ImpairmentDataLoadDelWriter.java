@@ -2,9 +2,8 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.batchtask.service.ModParamsService;
-import com.joyintech.tams.common.base.entity.ModValBatchParams;
-import com.joyintech.tams.constant.ModelDictCodeList;
+import com.joyintech.tams.model.impairment.batch.batchtask.service.ModParamsService;
+import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ResultDto;
 import org.springframework.beans.factory.annotation.Autowired;

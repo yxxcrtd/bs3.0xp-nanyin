@@ -3,7 +3,6 @@ package com.joyintech.tams.model.impairment.batch.common.searchinfo.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.datasource.ModelDataSourceType;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.dao.ImpairmentViewCommonMapper;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
@@ -35,7 +34,6 @@ public class ImpairmentViewCommonService extends BaseService{
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@DataSource(ModelDataSourceType.MODEL)
 	public List<ImpairmentDataLoadStep1ReaderDto> selectAssetTradeList(Map<String, Object> params){
 		return mmpairmentViewCommonMapper.selectAssetTradeList(params);
 	}
@@ -46,7 +44,6 @@ public class ImpairmentViewCommonService extends BaseService{
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@DataSource(ModelDataSourceType.MODEL)
 	public List<ViewRatingInfoDto> selectViewRatingInfo(Map<String, Object> params){
 		return mmpairmentViewCommonMapper.selectViewRatingInfo(params);
 	}
@@ -57,7 +54,6 @@ public class ImpairmentViewCommonService extends BaseService{
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@DataSource(ModelDataSourceType.MODEL)
 	public List<ViewRatingInfoDto> selectViewRatingInfoByList(List<ViewRatingInfoDto> list, Date searchDate){
 		return mmpairmentViewCommonMapper.selectViewRatingInfoByList(list, searchDate);
 	}
