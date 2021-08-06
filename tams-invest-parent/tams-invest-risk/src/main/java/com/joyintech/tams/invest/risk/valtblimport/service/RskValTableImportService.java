@@ -598,6 +598,8 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
        Map<String,ColumnMapEntry> vtstructureMap = new HashMap<String, ColumnMapEntry>();
        Map<String,SubCodeEntry> vtaccountMap = new HashMap<String, SubCodeEntry>();
        Map<String,SumNameCodeEntry> vtsumaccountMap = new HashMap<String, SumNameCodeEntry>();
+       //构造目标科目代码汇总科目Map
+       Map<String,SumNameCodeEntry> vtsumCodeMap = new HashMap<String, SumNameCodeEntry>();
        //构造结构映射map
        for(RskValStructureDto rskValStructureDto:rskValStructureList){
            ColumnMapEntry vtstructEntry = new ColumnMapEntry();
@@ -627,6 +629,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                }
            }
            vtsumaccountMap.put(vtsumaccountDto.getSumName(), entry);
+           vtsumCodeMap.put(entry.getSumCode(),entry);
        }
        paramMap.put("start_row", dto.getStartRow());
        paramMap.put("subjectCodeCol", dto.getSubjectCodeCol());
@@ -660,7 +663,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            //处理handval_List---为null的数值赋0
            dealHandValList(handval_List);
            //底层---一级汇总
-           valHand_oneList = sum_handValList(handval_List, vtaccountMap,rskValtblSubjectList);
+           valHand_oneList = sum_handValList(handval_List, vtaccountMap,rskValtblSubjectList, vtsumCodeMap);
 
            //多条科目需汇总（不同投资目的可生成多条信息）
            Map<String,Integer> indexMap = new HashMap<>();
@@ -773,10 +776,14 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @see
     * @since 1.0
     */
-   private List<RskValtblAssetSubDto> commonHandleSum(List<RskValtblAssetSubDto> valList,List<RskValtblSubject>  vtcountSubList,String level){
+   private List<RskValtblAssetSubDto> commonHandleSum(List<RskValtblAssetSubDto> valList,List<RskValtblSubject>  vtcountSubList,String level,Map<String,SumNameCodeEntry> vtsumCodeMap){
        List<RskValtblAssetSubDto> resultList = new LinkedList<RskValtblAssetSubDto>();
        Map<String,String> tempmap = new HashMap<String,String>();
        for(RskValtblAssetSubDto por:valList){
+           //过滤估值表汇总科目映射
+           if(vtsumCodeMap.containsKey(por.getSubCode())){
+               continue;
+           }
            String subSubjcode = StringUtil.EMPTY;
            String ccy = por.getCcy();
            BigDecimal exchangeRate = por.getExchangeRate();
@@ -893,11 +900,11 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @see
     * @since 1.0
     */
-   private List<RskValtblAssetSubDto> sum_handValList(List<RskValtblAssetSubDto> valList,Map<String,SubCodeEntry> vtaccountMap,List<RskValtblSubject>  vtcountSubList){
-       try{ 
-           List<RskValtblAssetSubDto> valHand_threeList = commonHandleSum(valList,vtcountSubList,"03");
-           List<RskValtblAssetSubDto> valHand_twoList = commonHandleSum(valHand_threeList,vtcountSubList,"02");
-           List<RskValtblAssetSubDto> valHand_oneList = commonHandleSum(valHand_twoList,vtcountSubList,"01");
+   private List<RskValtblAssetSubDto> sum_handValList(List<RskValtblAssetSubDto> valList,Map<String,SubCodeEntry> vtaccountMap,List<RskValtblSubject>  vtcountSubList,Map<String,SumNameCodeEntry> vtsumCodeMap){
+       try{
+           List<RskValtblAssetSubDto> valHand_threeList = commonHandleSum(valList,vtcountSubList,"03",vtsumCodeMap);
+           List<RskValtblAssetSubDto> valHand_twoList = commonHandleSum(valHand_threeList,vtcountSubList,"02",vtsumCodeMap);
+           List<RskValtblAssetSubDto> valHand_oneList = commonHandleSum(valHand_twoList,vtcountSubList,"01",vtsumCodeMap);
            Collections.sort(valHand_oneList);
            return valHand_oneList;
        }catch(Exception e){
