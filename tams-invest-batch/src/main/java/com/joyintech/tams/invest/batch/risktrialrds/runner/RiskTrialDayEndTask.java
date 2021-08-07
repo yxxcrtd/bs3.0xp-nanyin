@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
@@ -111,7 +112,8 @@ public class RiskTrialDayEndTask extends BatchBaseService{
             //add by lpf for 日终指标计算 S 将产品分为指定日期范围内的导入估值表 和没导入估值表的产品
             Date maxDate = (Date) params.get(BatchConstant.PLATE_DATE);
             Date minDate = maxDate;
-            List<Map<String,Object>> importValTableProdList = step1Reader.selectImportValTableProdList(maxDate,this.getProductIdList());
+            String deptCode = batchExecuteInfo.getCreateUser() != null? MultilevelDataAuthorityUtil.getOrganizationCode(batchExecuteInfo.getCreateUser()):null;
+            List<Map<String,Object>> importValTableProdList = step1Reader.selectImportValTableProdList(maxDate,this.getProductIdList(),deptCode);
             List<String> importProdList = new ArrayList<>();
             List<String> unImportProdList = new ArrayList<>();
             if(!StringUtil.isEmptyList(importValTableProdList)){

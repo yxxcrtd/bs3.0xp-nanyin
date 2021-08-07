@@ -720,7 +720,7 @@ public class ValRiftService {
      * @param productIdList
      * @return
      */
-    public List<Map<String,Object>> selectImportValTableProdList(Date supDate, List<String> productIdList,String isReport) {
+    public List<Map<String,Object>> selectImportValTableProdList(Date supDate, List<String> productIdList,String deptCode) {
         //参数
         Map<String,Object> param = new HashMap<>();
         //系统参数配置 指定日期范围内天数 联社：一个月以内，16天可以  杭联：1个月2次 默认16天
@@ -730,8 +730,7 @@ public class ValRiftService {
 
         param.put("dateMin",dateMin);
         param.put("dateMax",supDate);
-        param.put("isReport",isReport);
-        param.put("deptCode", LoginUserUtil.getDeptCode());     //TODO 查看是否能找到跑批的机构代码
+        param.put("deptCode", deptCode);
         List<Map<String,Object>> resultList = new ArrayList<>();
         //防止语句过长
         if(productIdList == null || productIdList.size()<800) {

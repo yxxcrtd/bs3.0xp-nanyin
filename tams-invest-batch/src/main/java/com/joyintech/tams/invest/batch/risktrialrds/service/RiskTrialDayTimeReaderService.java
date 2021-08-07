@@ -170,7 +170,7 @@ public class RiskTrialDayTimeReaderService extends BaseService {
         }
     }
 
-    public List<Map<String, Object>> selectImportValTableProdList(Date maxDate, List<String> productIdList) {
+    public List<Map<String, Object>> selectImportValTableProdList(Date maxDate, List<String> productIdList,String deptCode) {
         //参数
         Map<String,Object> param = new HashMap<>();
         //系统参数配置 指定日期范围内天数 联社：一个月以内，16天可以  杭联：1个月2次 默认16天
@@ -182,6 +182,7 @@ public class RiskTrialDayTimeReaderService extends BaseService {
         }
         param.put("dateMin",dateMin);
         param.put("dateMax",maxDate);
+        param.put("deptCode", deptCode);
         List<Map<String,Object>> resultList = new ArrayList<>();
         //防止语句过长
         if(productIdList == null || productIdList.size()<800) {

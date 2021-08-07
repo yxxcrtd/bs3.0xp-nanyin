@@ -224,6 +224,9 @@
 					VIDT.VALDATE>=#{dateMin,jdbcType=DATE}
 					AND VIDT.VALDATE &lt; #{dateMax,jdbcType=DATE}
 					AND VIDT.IMPDATE = #{dateMax,jdbcType=DATE}
+					<if test="deptCode != null and deptCode != ''">
+                        AND	VIDT.CREATE_DEPT = #{deptCode,jdbcType=VARCHAR}
+					</if>
 				GROUP BY PORTFOLIO_ID
 			)GROUP BY PTL_ID
 		)tt

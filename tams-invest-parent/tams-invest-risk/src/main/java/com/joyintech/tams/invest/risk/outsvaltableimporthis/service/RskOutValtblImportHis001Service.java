@@ -5,6 +5,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
@@ -290,6 +291,7 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
         dto.setStartTime(startDate);
         dto.setEndTime(DateUtil.now());
         dto.setTimedTaskStatus("S");
+        dto.setCreateDept((LoginUserUtil.getInstCode()!= null && LoginUserUtil.getInstCode().size()>0) ? LoginUserUtil.getInstCode().get(0):null);
         rskOutValtblImportHisMapper.updateByPrimaryKey(dto);
         valtblImportHisTraceMapper.insert(dto);
         //处理成功的文件入库估值表导入日期记录表
@@ -299,6 +301,7 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
             dateDto.setImpdate(DateUtil.parse(DateUtil.getSysDate()));
             dateDto.setPortfolioId(dto.getPortfolioId());
             dateDto.setValdate(dto.getValdate());
+            dateDto.setCreateDept((LoginUserUtil.getInstCode()!= null && LoginUserUtil.getInstCode().size()>0) ? LoginUserUtil.getInstCode().get(0):null);
             valtblImportDateTraceMapper.insert(dateDto);
         }
 

@@ -104,6 +104,7 @@ public class PtlPositionAnalysis001Controller extends BaseController {
                 if (StringUtil.equals(ptlPositionAnalysis002Dto.getFinprodType2(),"现金")){
                     cashList.forEach(item->{
                         ptlPositionAnalysis002Dto.setMarketValue(ptlPositionAnalysis002Dto.getMarketValue().add(item.getMarketValue()));
+                        ptlPositionAnalysis002Dto.setTdyIntincexp(ptlPositionAnalysis002Dto.getTdyIntincexp().add(item.getTdyIntincexp()));
                     });
                 }
             }
