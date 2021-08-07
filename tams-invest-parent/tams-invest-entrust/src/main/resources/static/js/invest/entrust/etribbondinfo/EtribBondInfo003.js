@@ -433,7 +433,7 @@
             type: 'number',
             digit: 2
         }, {/*证券账户*/
-            field: 'secAcct',
+            field: 'secManageAcctId',
             width: 100,
             title: 'EtribBondInfo003.secAcct',
             edit:true,
@@ -768,7 +768,6 @@
             tradeMarket = temp.tradeMarket;
             temp.entrustId = item.entrustId;
             ps = temp.ps;
-            temp.secAcct = item.secAcct;
             temp.settleAmt = item.settleAmt;
             temp.invAim = item.invAim;
             temp.secAcctId = item.secManageAcctId;
