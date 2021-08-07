@@ -32,6 +32,12 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.dto.RskValtblAssetSubMapDtlDto;
+import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.service.RskValAssetCode001Service;
+import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto;
+import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.service.RskValStructureService;
+import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.dto.RskValSumnameDto;
+import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.service.RskValSumname001Service;
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValTableImportParamDto;
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAssetSubDto;
 import com.joyintech.tams.invest.risk.valtblimport.dto.ZipFileAssetInfoDto;
@@ -84,8 +90,25 @@ public class RskValRelateImport001Service extends CommonExportService<RskValRela
     // 平台日期
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
-
+    @Autowired(required = false)
     private static final Logger logger = LoggerFactory.getLogger(RskValRelateImport001Service.class);
+    /**
+     * 指标结构映射
+     */
+    @Autowired
+    private RskValStructureService rskValStructureService;
+
+    /**
+     * 资产科目映射
+     */
+    @Autowired
+    private RskValAssetCode001Service rskValAssetCode001Service;
+
+    /**
+     * 汇总科目映射
+     */
+    @Autowired
+    private RskValSumname001Service rskValSumname001Service;
     /**
      * 画面查询 <功能详细描述>
      * 
@@ -403,18 +426,45 @@ public class RskValRelateImport001Service extends CommonExportService<RskValRela
                         this.saveRskOutValtblImportHis(fileName, filePath, info.getId(), import001Dto.getName(), valDate,
                                 DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表指标结构映射异常.getValue(),startDate,supDate);
                         isError=true;
+                    }else{
+                        //指标结构映射
+                        List<RskValStructureDto> rskValStructureList = rskValStructureService.selectForList(import001Dto.getStructMapId());
+                        if(rskValStructureList==null || rskValStructureList.size()==0){
+                            errorList.add(new ExcelValidDto(fileName, StringUtils.EMPTY, fileName + "，指标结构映射数据不能为空"));
+                            this.saveRskOutValtblImportHis(fileName, filePath, info.getId(), import001Dto.getName(), valDate,
+                                    DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表指标结构映射异常.getValue(),startDate,supDate);
+                            isError=true;
+                        }
                     }
                     if(Objects.isNull(import001Dto.getAssetSubMapId())){
                         errorList.add(new ExcelValidDto(fileName, StringUtils.EMPTY, fileName + "，资产科目映射不能为空"));
                         this.saveRskOutValtblImportHis(fileName, filePath, info.getId(), import001Dto.getName(), valDate,
                                 DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表资产科目映射异常.getValue(),startDate,supDate);
                         isError=true;
+                    }else{
+                        ///资产科目映射
+                        List<RskValtblAssetSubMapDtlDto> rskValAssetCodeList= rskValAssetCode001Service.selectDtlList(import001Dto.getAssetSubMapId());
+                        if(rskValAssetCodeList==null || rskValAssetCodeList.size()==0){
+                            errorList.add(new ExcelValidDto(fileName, StringUtils.EMPTY, fileName + "，资产科目映射数据不能为空"));
+                            this.saveRskOutValtblImportHis(fileName, filePath, info.getId(), import001Dto.getName(), valDate,
+                                    DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表资产科目映射异常.getValue(),startDate,supDate);
+                            isError=true;
+                        }
                     }
                     if(Objects.isNull(import001Dto.getSumsubMapId())){
                         errorList.add(new ExcelValidDto(fileName, StringUtils.EMPTY, fileName + "，汇总科目映射不能为空"));
                         this.saveRskOutValtblImportHis(fileName, filePath, info.getId(), import001Dto.getName(), valDate,
                                 DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表汇总科目映射异常.getValue(),startDate,supDate);
                         isError=true;
+                    }else{
+                        //汇总科目映射
+                        List<RskValSumnameDto> rskValSumnameList =  rskValSumname001Service.selectForList(import001Dto.getSumsubMapId());
+                        if(rskValSumnameList==null || rskValSumnameList.size()==0){
+                            errorList.add(new ExcelValidDto(fileName, StringUtils.EMPTY, fileName + "，汇总科目映射数据不能为空"));
+                            this.saveRskOutValtblImportHis(fileName, filePath, info.getId(), import001Dto.getName(), valDate,
+                                    DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_估值表汇总科目映射异常.getValue(),startDate,supDate);
+                            isError=true;
+                        }
                     }
                 }
             }
