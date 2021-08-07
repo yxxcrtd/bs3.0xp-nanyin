@@ -175,7 +175,7 @@
             var data = {};
             data.winPrice = $("#winPrice").val();
             data.winType = $("#winType").val();
-            data.winPrinAmt = $("#winPrinAmt").val() * 10000;
+            data.winPrinAmt = JoyinMath.doMul($("#winPrinAmt").val(), 10000 , 2) ;
             data.finprodId = $("#finprodId").val();
             data.counterId = entity.counterId;
             data.bidId = entity.bidId;
@@ -187,6 +187,11 @@
                             table.deleteRow(i);
                         }
                         for (var row in retPrice) {
+                            //配置单位 add by yeming 20210723 start
+                            // retPrice[row].bidPrinAmt = JoyinMath.doDiv(retPrice[row].bidPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
+                            retPrice[row].theWinPrinAmt = JoyinMath.doDiv(retPrice[row].theWinPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
+                            retPrice[row].winPrinAmt = JoyinMath.doDiv(retPrice[row].winPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
+                            //配置单位 add by yeming 20210723 end
                             table.addRow(retPrice[row]);
                         }
 
