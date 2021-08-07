@@ -305,6 +305,7 @@
 	        //可用持仓效验
 	    	var flag1 = true;
 	    	var message = "";
+            var prinAmtSum = object.prinAmt;
 	    	if(object.bussTrdTransferOrder.length){
 	    		for(var bussTrdTransferOrder in object.bussTrdTransferOrder){
 	    			for(var bussTrdTransfenpeiOrder in object.bussTrdTransfenpeiDto){
@@ -346,7 +347,7 @@
 	    	}
 	    	
 	    	//授权额度检查已完成，不在检查   把总本金金额置为0
-	    	object.prinAmt = 0;
+	    	object.prinAmt = prinAmtSum;
 	    	object.entrustId = '';
 	    	object.maxTradeamt = maxTradeamt;
 	    	object.counterType = object.trdInvestPersonInfo002Dto.isOutTrade;
