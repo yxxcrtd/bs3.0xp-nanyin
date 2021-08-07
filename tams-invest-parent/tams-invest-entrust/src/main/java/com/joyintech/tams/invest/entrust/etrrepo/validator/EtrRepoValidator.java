@@ -130,9 +130,15 @@ public class EtrRepoValidator implements EtrCommonValidator {
 //                投资组合系统-投资端-回购投资委托-新建-提交，正回购委托金额大于质押券总额，系统没有报错
                 if(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue()) && !StringUtil.equals(dto.getAssetType1(), DictCodeList.回购类型_质押式竞价回购.getValue())) {
                     // 银行间正回购委托，当没有添加押券时做提交，请去掉“委托金额不能大于质押券面额。”，但是添加了押券，就要有此判断。
+                    //汇总券面总额转换 edit by yeming 20210806 start
+                    BigDecimal totalPrinAmt = dto.getBussRepoSec().getTotalPrinAmt();
+                    if(StringUtil.equals(CacheUtil.getSysParam("entrustAmtUnit"),"02")){
+                        totalPrinAmt = totalPrinAmt.multiply(new BigDecimal(10000));//万元转成元
+                    }
+                    //汇总券面总额转换 edit by yeming 20210806 end
                     if (DictCodeListExt1.交易场所_银行间.getValue().equals(dto.getTradeMarket()) && dto.getBussRepoSec() != null && dto.getBussRepoSec().getPledgeBondList() != null &&
                             !dto.getBussRepoSec().getPledgeBondList().isEmpty() && dto.getBussRepoSec().getTotalPrinAmt() != null
-                        && dto.getEntrustAmt().compareTo(dto.getBussRepoSec().getTotalPrinAmt()) > 0) {
+                        && dto.getEntrustAmt().compareTo(totalPrinAmt) > 0) {
                         errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0003", getMessage("EtrRepo001.entrustAmt"),
                             getMessage("EtrRepo002.pledgeAmt"))));
                     }
