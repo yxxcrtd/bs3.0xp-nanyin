@@ -137,6 +137,7 @@ public class EtribBondInfo003Controller extends BaseController {
         model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
         model.addAttribute("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
         model.addAttribute("N", DictCodeList.是否_否.getValue());
+        model.addAttribute("Y", DictCodeList.是否_是.getValue());
         model.addAttribute("CCY", DictCodeList.币种_人民币_CNY.getValue());
         
         model.addAttribute("sysDate",DateUtil.format(sysDate));
