@@ -335,9 +335,20 @@
 		ON fp.FINPROD_ID = psv.FINPROD_ID
 		AND fp.FINPROD_TYPE2='F17'
 		LEFT JOIN (
-		SELECT PTL_ID,max(VAL_DATE) VAL_DATE from(
-		SELECT PTL_ID,MIN(VAL_DATE) VAL_DATE FROM RSK_VALTBL_ASSET_SUB rvas WHERE VAL_DATE>=#{dateMin,jdbcType=DATE} AND VAL_DATE &lt; #{dateMax,jdbcType=DATE} GROUP BY PTL_ID
-		)GROUP BY PTL_ID)tt
+			SELECT PTL_ID,max(VAL_DATE) VAL_DATE from(
+				SELECT PORTFOLIO_ID PTL_ID,
+					min(VIDT.VALDATE) VAL_DATE
+				FROM VALTBL_IMPORT_DATE_TRACE VIDT
+				WHERE
+					VIDT.VALDATE>=#{dateMin,jdbcType=DATE}
+					AND VIDT.VALDATE &lt; #{dateMax,jdbcType=DATE}
+					AND VIDT.IMPDATE = #{dateMax,jdbcType=DATE}
+					<if test="deptCode != null and deptCode != ''">
+						AND	VIDT.CREATE_DEPT = #{deptCode,jdbcType=VARCHAR}
+					</if>
+				GROUP BY PORTFOLIO_ID
+			)GROUP BY PTL_ID
+		)tt
 		ON tt.PTL_ID = fp.FINPROD_MARKET_ID
 		GROUP BY  prod.prodId
 	</select>
