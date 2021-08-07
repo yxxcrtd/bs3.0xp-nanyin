@@ -265,4 +265,18 @@ ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
             and STATUS_VDATE = #{statusVdate,jdbcType=VARCHAR}
             and REPORTUUID = #{reportUUID,jdbcType=CHAR}
     </delete>
+
+    <select id="selectBySendStatusSeqnoList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_SEND_ZIP_DAT_FILE
+        where ZIP_SEND_STATUS = #{zipSendStatus,jdbcType=VARCHAR}
+          and DAT_ZIP_CODE is not null
+        <if test="seqnoList != null and seqnoList.size() &gt; 0">
+            <foreach close=")" collection="seqnoList" item="item" open=" AND REGIST_SEQNO IN (" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+
+    </select>
 </mapper>

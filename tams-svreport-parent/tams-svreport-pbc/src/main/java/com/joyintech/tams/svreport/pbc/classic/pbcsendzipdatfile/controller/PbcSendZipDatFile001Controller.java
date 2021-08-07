@@ -4,13 +4,13 @@ package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.PbcSendZipDatFileService;
 import com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.service.PbcSendZipDatFileMService;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
@@ -18,6 +18,7 @@ import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,10 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -183,6 +181,27 @@ public class PbcSendZipDatFile001Controller extends BaseController{
 		return pbcSendZipDatFileMService.importMonthReport(fileName);
 	}
 
+	/**
+	 * 生成压缩文件
+	 * @return 压缩文件存放地址
+	 */
+	@ResponseBody
+	@RequestMapping("/createZipFile")
+	public String createZipFile() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		return StringUtil.trimHtmlTag(pbcSendZipDatFileMService.createZipFile(param));
+	}
+
+	/**
+	 * 下载压缩文件
+	 * @return 压缩文件
+	 */
+	@ResponseBody
+	@RequestMapping("/download")
+	public ResponseEntity<byte[]> download() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		return pbcSendZipDatFileService.download(param);
+	}
 
 
 }

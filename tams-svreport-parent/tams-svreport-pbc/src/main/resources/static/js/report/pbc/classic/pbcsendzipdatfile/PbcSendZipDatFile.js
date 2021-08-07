@@ -116,4 +116,21 @@ $(function() {
             });
         });
     });
+    //下载zip文件
+    // 导出按钮
+    $('#PbcSendZipDatFile_btn_sendFileDownLoad').click(function(){
+        var expArr=table.getAllCheckedRows();
+        Joyin.confirm("是否确认生成报送文件？", function() {
+            var param = getSearchParams();
+            Joyin.ajaxSync(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/createZipFile', param, function(result) {
+                if (result.length < 1) {
+                    layer.alert('所选产品已全部手工处理或没有在日期范围内！');
+                } else {
+                    param.result = result;
+                    Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
+                }
+            });
+        });
+    })
+
 }());

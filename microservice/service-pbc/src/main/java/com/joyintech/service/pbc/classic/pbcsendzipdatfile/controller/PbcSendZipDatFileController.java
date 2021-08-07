@@ -2,13 +2,12 @@ package com.joyintech.service.pbc.classic.pbcsendzipdatfile.controller;
 
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.PbcSendZipDatFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -42,6 +41,16 @@ public class PbcSendZipDatFileController {
 	public Page<PbcSendZipDatFile> searchPage(@RequestBody Map<String, Object> param) {
 		Page<PbcSendZipDatFile> page = pbcSendZipDatFileService.searchPage(param);
 		return page;
+	}
+
+	/**
+	 * 创建压缩文件
+	 * @param param 页面参数
+	 * @return 压缩文件之地
+	 */
+	@PostMapping("createZipFile")
+	public String createZipFile(@RequestBody Map<String, Object> param) {
+		return pbcSendZipDatFileService.createZipFile(param);
 	}
 
 

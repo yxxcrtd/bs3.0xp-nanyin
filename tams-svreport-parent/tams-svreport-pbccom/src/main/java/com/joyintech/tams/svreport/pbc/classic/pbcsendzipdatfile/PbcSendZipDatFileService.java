@@ -11,29 +11,40 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
 
+import com.joyintech.component.svrreport.chb.contant.DictCodeListExt;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.svreport.pbc.assetdebt.service.*;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.service.*;
+import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsDataFileService;
+import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dao.PbcPrdAccountSubMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dao.PbcPrdBaseinfoSubMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub;
 import com.joyintech.tams.svreport.pbc.prod.service.*;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -81,6 +92,14 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 
 	@Autowired
 	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
+	@Autowired
+	private PbcPrdBaseinfoSubMapper pbcPrdBaseinfoSubMapper;
+
+	@Autowired
+	private PbcPrdAccountSubMapper pbcPrdAccountSubMapper;
+
+	@Autowired
+	private PbcZipDataFileService pbcZipDataFileService;
 
     /**
      * 短sql最大一次最大插入条数
@@ -233,8 +252,99 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 		}
 	}
 
+	/**
+	 * 下载zip文件 <功能详细描述>
+	 *
+	 * @param pageParam
+	 * @see
+	 * @since 1.0
+	 */
 
-	
-	
+	public ResponseEntity<byte[]> downloadZipFile(Map<String, Object> pageParam){
+		//查询数据
+		pageParam.put("zipSendStatus",DictCodeListExt2.报送状态_未报送);
+//		List<PbcSendZipDatFile> list=pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(pageParam);
+//		List<PbcSendZipDatFile> PIBList = list.stream()
+//				.filter(pbcSendZipDatFile -> DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(pbcSendZipDatFile.getDatZipDatType()))
+//				.collect(Collectors.toList());
+//		List<PbcSendZipDatFile> PIEList=list.stream()
+//				.filter(pbcSendZipDatFile -> DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(pbcSendZipDatFile.getDatZipDatType()))
+//				.collect(Collectors.toList());
+//		List<PbcSendZipDatFile> report1_1List=list.stream()
+//				.filter(pbcSendZipDatFile -> DictCodeListExt2.人行报送明细类型_募集余额报表.getValue().equals(pbcSendZipDatFile.getDatZipDatType()))
+//				.collect(Collectors.toList());
+		String zipFileName = "zip下载"+ DateUtil.getSysDate() +".zip";
+		String exportFilePath = SvrDataUtil.getSysParam( GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+		// 如果生成excel文件个数大于1，生成压缩文件
+		File outFile =  new File(exportFilePath + File.separator + zipFileName);
+		//需要导出的excel文件集合
+		List<File> sourceFiles = new ArrayList<File>();
+
+		for(int i=0;i<2;i++) {
+
+			Map<String, Object> dataParam = new HashMap<String, Object>();
+			// 明细数据
+			dataParam.put("detail", 1);
+			File file = TisUtil.createFile(dataParam, "EmployeeInfoReg001", "从业人员信息登记_(" + i + ").xls");
+			sourceFiles.add(file);
+		}
+		// 导出路径不存在则重新生成
+		if (!outFile.getParentFile().exists()) {
+			outFile.getParentFile().mkdirs();
+		}
+		try {
+			ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+		}catch (Exception e) {
+			// 压缩文件失败后，删除所有临时文件
+			for (File file1 : sourceFiles) {
+				if (file1.exists()) {
+					file1.delete();
+				}
+			}
+			logger.error(e.getMessage(),e);
+		}
+		return ExportUtil.export(zipFileName, outFile, false);
+
+	}
+
+	/**
+			* 创建压缩文件
+	 * @param param 页面参数
+	 * @return 压缩文件之地
+	 */
+	public String createZipFile(Map<String, Object> param) {
+		param.put("zipSendStatus",DictCodeListExt2.报送状态_未报送.getValue());
+				List<PbcSendZipDatFile> list=pbcSendZipDatFileMapper.selectBySendStatusSeqnoList(param);
+		Map<String,Set<String>> map=new HashMap<>();
+		//zip包 路径
+		Map<String,PbcSendZipDatFile> zipInfoMap=new HashMap<>();
+		//报送类型明细---zipCode归类
+		list.stream().forEach(datFile -> {
+			if (map.containsKey(datFile.getDatZipDatType())){
+				Set<String> set=map.get(datFile.getDatZipDatType());
+				set.add(datFile.getDatZipCode());
+				map.put(datFile.getDatZipDatType(),set);
+			}else {
+				Set<String> set=new HashSet<>();
+				set.add(datFile.getDatZipCode());
+				map.put(datFile.getDatZipDatType(),set);
+			}
+			zipInfoMap.put(datFile.getDatZipCode(),datFile);
+		});
+		String filePath = pbcZipDataFileService.genDataFile(map,zipInfoMap);
+		return filePath;
+	}
+
+	/**
+	 * 下载压缩文件
+	 * @param param 页面参数
+	 * @return 压缩文件
+	 */
+	public ResponseEntity<byte[]> download(Map<String, Object> param) {
+		String finalFile = (String) param.get("result");
+		File sourceFiles = new File(finalFile);
+		// 下载手工生成的文件并删除服务器中的文件
+		return ExportUtil.export(sourceFiles.getName(), sourceFiles, true);
+	}
 
 }

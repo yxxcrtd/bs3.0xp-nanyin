@@ -1,0 +1,147 @@
+/*
+ * 文件名：java
+ * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：理财资管管理系统V2.0
+ * 修改人：Administrator
+ * 修改时间：2019年6月10日
+ * 修改内容：新建
+ * 系统名称：理财资管管理系统V2.0
+ */
+ 
+package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
+
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
+
+/**
+ * 详细DAT文件生成器
+ * @author meifaxin
+ * @version 1.0 2021年8月6日
+ * @see PbcZipDataFileHelper
+ * @since 1.0
+ */
+@Component
+public class PbcZipDataFileHelper {
+	public static Map<String,String> DATATYPEMAP= null;
+
+    /**
+     * 生成文件
+     * @param datas
+     * @param manualFlag
+     * @return
+     */
+    public static  List<String> genFile(PbcSendZipDatFile pbcSendZipDatFile,List<LinkedHashMap<String,String>>datas,  boolean manualFlag) {
+		init();
+		String datZipDatType= pbcSendZipDatFile.getDatZipDatType();
+		String dataType=DATATYPEMAP.get(datZipDatType);
+    	//【dat文件生成留痕】数据的key集合
+    	List<String> dataValueList = new ArrayList<String>();
+    	List<String> result = new ArrayList<String>();
+        //压缩包名称
+    	String filePath= pbcSendZipDatFile.getDatZipCode();
+    	//dat文件写入
+    	BufferedWriter writer = null;
+    	// 人行dat生成文件编码
+    	String SVR_DAT_FILE_ENCODE = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,ReportGlobalConstant.SVR_DAT_FILE_ENCODE);
+    	if (StringUtil.isEmpty(SVR_DAT_FILE_ENCODE)) {
+    		SVR_DAT_FILE_ENCODE = "UTF-8";
+		}
+        try {
+        	String datZipPath=pbcSendZipDatFile.getDatZipPath();
+            String fullPath = datZipPath+filePath;
+            result.add(fullPath);
+            createFolder(fullPath,dataType);
+            File file = null;
+
+            
+            file = new SafelyFile(fullPath + "/"+ dataType + ".dat");
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true), SVR_DAT_FILE_ENCODE));
+            
+            for (LinkedHashMap<String,String> data:datas ) {
+                StringBuffer sb = new StringBuffer();
+                for ( Entry<String,String>e:data.entrySet() ) {
+                	if(e.getValue()!=null) {
+                		//【dat文件生成留痕】将每条数据的主键（不为空）保存到list中;"datakey"的值不写入文件。
+                		if(StringUtil.equals("datakey",e.getKey())) {
+                			if(!StringUtils.isEmpty(e.getKey())) {
+                				dataValueList.add(e.getValue());
+                			}
+                		}else {
+                			sb.append(e.getValue()+"|");
+                		}
+                	}
+                	else {
+                		sb.append("|");
+                	}
+                }
+                writer.write(sb.substring(0,sb.length()-1).toString());//删除最后一个“|”
+                writer.flush();
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if ( writer!=null )
+                    writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+    
+    
+    public static void createFolder(String folderName,String dataType){
+    	//生成文件夹
+    	File fp = new SafelyFile(folderName);
+        if ( !fp.exists())
+           fp.mkdirs();
+        //生成各类型的空文件
+        	File file = new SafelyFile(folderName + "/"+dataType + ".dat");
+        	if(!file.exists()){
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+    }
+
+    //dat文件类型
+	public static void init() {
+		if (DATATYPEMAP == null) {
+			DATATYPEMAP = new HashMap<String, String>();
+			DATATYPEMAP.put("PIB", "PIB.dat");
+			DATATYPEMAP.put("PIE", "PIE.dat");
+			DATATYPEMAP.put("1_1", "MIT1-1");
+			DATATYPEMAP.put("1_2", "MIT1-2");
+			DATATYPEMAP.put("1_3", "MIT1-3");
+			DATATYPEMAP.put("1_4", "MIT1-4");
+			DATATYPEMAP.put("1_1", "MIT1-1");
+			DATATYPEMAP.put("1_5", "MIT1-5");
+			DATATYPEMAP.put("1_6", "MIT1-6");
+			DATATYPEMAP.put("2_1", "MIT2-1");
+			DATATYPEMAP.put("2_2", "MIT2-2");
+			DATATYPEMAP.put("2_3", "MIT2-3");
+			DATATYPEMAP.put("2_4", "MIT2-4");
+			DATATYPEMAP.put("2_5", "MIT2-5");
+			DATATYPEMAP.put("3_1", "MIT3-1");
+			DATATYPEMAP.put("3_2", "MIT3-2");
+			DATATYPEMAP.put("3_3", "MIT3-3");
+		}
+	}
+
+
+}

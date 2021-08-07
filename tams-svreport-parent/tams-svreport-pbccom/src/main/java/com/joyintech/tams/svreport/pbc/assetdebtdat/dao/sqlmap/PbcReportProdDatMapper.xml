@@ -105,4 +105,13 @@
         where REPORTTYPE = #{reportType,jdbcType=VARCHAR}
             AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
     </delete>
+
+    <select id="selectByDatZipCode"   resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto">
+        select     prp.*,pr.TERMID,pr.ISSUE_PARTY_ID,pr.PROD_VARIETY
+        from PBC_REPORT_PROD_DAT prp
+        left join  PBC_REPORT pr on prp.REPORTUUID=pr.REPORTUUID
+        left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID
+        where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

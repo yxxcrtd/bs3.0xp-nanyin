@@ -22,4 +22,6 @@ public interface PbcSendZipDatFileMapper {
     List<PbcSendZipDatFile> selectByZipTypeAndStatusVdate(Map<String,Object> map);
 
     int deleteByUUIDAndType(Map<String,Object> paramsMap);
+
+    List<PbcSendZipDatFile> selectBySendStatusSeqnoList(Map<String,Object> paramsMap);
 }

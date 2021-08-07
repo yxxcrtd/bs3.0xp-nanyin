@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Repository
 public interface PbcReportProdDatMapper {
@@ -30,4 +31,7 @@ public interface PbcReportProdDatMapper {
 	List<PbcReportProdDatDto> selectPbcReportPrdDatDiff(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
 
 	int deleteByUUIDAndType(Map<String,Object> paramsMap);
+
+	List<PbcReportProdDatDto> selectByDatZipCode(String datZipCode);
+
 }
