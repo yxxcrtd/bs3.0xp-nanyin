@@ -130,6 +130,11 @@ public class FinStockInfoValidator implements BeanValidator {
                    errorList.add(
                        new ValidMessage("bussRepEquityInfoDto.repPartyType3",this.getMessage("FW_E_0006", getMessage("BussRepEquityInfo.repPartyType3"))));
                }
+               //中债的交易流通场所必填
+               if(StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepTradeMarket())){
+                   errorList.add(
+                           new ValidMessage("bussRepEquityInfoDto.repTradeMarket",this.getMessage("FW_E_0006", getMessage("BussRepEquityInfo.repTradeMarket"))));
+               }
                //通过资产代码查询数据，验证资产代码的唯一性
                Map<String,Object> map = new HashMap<String,Object>();
              //  if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
