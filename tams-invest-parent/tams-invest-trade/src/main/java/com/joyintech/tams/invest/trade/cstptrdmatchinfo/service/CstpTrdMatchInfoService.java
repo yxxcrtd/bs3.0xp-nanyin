@@ -775,8 +775,11 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 		//获取交易方向
 		String fTradeSide = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getSide();
 		//获取回购期限
-		String fTremStr = calcTradelimitdays(cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradelimitdays(),
-				cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradeDateStr());
+		String fTremStr = "";
+		if(StringUtil.equals(fAssetType,"F07")){
+			fTremStr = calcTradelimitdays(cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradelimitdays(),
+					cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradeDateStr());
+		}
 		//获取成交日期
 		String tradeDateStr = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradeDateStr();
 		//获取证券账户托管机构  参数托管账号
@@ -784,7 +787,7 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 		//获取银行间交易费用设置信息 要素 资产类型 交易方向 回购期限 托管机构
 		CstpTrdMatchInfoDto feeDto = new CstpTrdMatchInfoDto();
 		feeDto = getFeeSetting(fAssetType,fTradeSide,fTremStr,fAccountNumber,feeType,tradeDateStr);
-		if(StringUtil.equals(fAssetType,"F01")){
+		if(StringUtil.equals(fAssetType,"F01") && feeDto != null){
 			if(StringUtil.equals(feeDto.getChargeType(),BussinessDictCodeList.计费类型_固定费率.getValue())){
 				//有最大值，最小值
 				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_券面总额)){
@@ -815,7 +818,7 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 				feeInfo = feeDto.getChargeValue();
 			}
 		}
-		if(StringUtil.equals(fAssetType,"F07")){
+		if(StringUtil.equals(fAssetType,"F07")  && feeDto != null){
 			if(StringUtil.equals(feeDto.getChargeType(),BussinessDictCodeList.计费类型_固定费率.getValue())){
 				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_成交金额)){
 					//有最大值，最小值
