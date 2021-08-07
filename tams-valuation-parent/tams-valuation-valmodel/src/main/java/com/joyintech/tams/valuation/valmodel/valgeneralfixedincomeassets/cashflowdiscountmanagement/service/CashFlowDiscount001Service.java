@@ -140,7 +140,7 @@ public class CashFlowDiscount001Service extends CommonExportService<CashFlowDisc
         }
 		qAssetInfoDto.setType12List(tgfls.stream().map(ModAseetMappingDto::getOutput5).collect(Collectors.toList()));
         List<AssetInfoDto> aseetS = restTemplate.postForList(
-                ServiceApplication.CUSTOMER_INTERF_NAME + "/interf/ModelCallOnInvest/getAssetNoClassify", qAssetInfoDto,
+                ServiceApplication.VAL_MODEL_SERVICE_NAME + "/Modelvaluation/getAssetNoClassify", qAssetInfoDto,
                 AssetInfoDto.class);
 
         // 剔除同时不含赎回权和利率调整权的永续债

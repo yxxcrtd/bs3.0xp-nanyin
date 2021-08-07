@@ -1,6 +1,8 @@
 
 package com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dao;
+import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto;
+import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.ModAseetMappingDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -50,4 +52,8 @@ public interface CashFlowDiscount001Mapper {
      * @return
      */
     List<CashFlowDiscount001Dto> getForExcel(Map<String, Object> map);
+
+    List<ModAseetMappingDto> selectByModel(ModAseetMappingDto record);
+
+    List<AssetInfoDto> selectAssetNoClassify(AssetInfoDto assetInfoDto);
 }

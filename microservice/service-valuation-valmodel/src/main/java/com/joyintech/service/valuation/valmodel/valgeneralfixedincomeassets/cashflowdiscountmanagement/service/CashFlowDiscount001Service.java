@@ -4,7 +4,9 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dao.CashFlowDiscount001Mapper;
+import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto;
+import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.ModAseetMappingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,5 +99,13 @@ public class CashFlowDiscount001Service extends BaseService<CashFlowDiscount001D
             return true;
         }
         return false;
+    }
+
+    public List<ModAseetMappingDto> getModAseetMappingByModel(ModAseetMappingDto modAseetMappingDto) {
+        return mapper.selectByModel(modAseetMappingDto);
+    }
+
+    public List<AssetInfoDto> getAssetNoClassify(AssetInfoDto assetInfoDto){
+        return mapper.selectAssetNoClassify(assetInfoDto);
     }
 }

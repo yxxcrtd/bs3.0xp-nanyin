@@ -9,6 +9,31 @@
         #{updateTime,jdbcType=TIMESTAMP})
     </insert>
 
+
+    <resultMap id="BaseResultMap" type="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.ModAseetMappingDto" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="MAPPING_TYPE" property="mappingType" jdbcType="VARCHAR" />
+        <result column="INPUT1" property="input1" jdbcType="VARCHAR" />
+        <result column="INPUT2" property="input2" jdbcType="VARCHAR" />
+        <result column="INPUT3" property="input3" jdbcType="VARCHAR" />
+        <result column="INPUT4" property="input4" jdbcType="VARCHAR" />
+        <result column="INPUT5" property="input5" jdbcType="VARCHAR" />
+        <result column="OUTPUT1" property="output1" jdbcType="VARCHAR" />
+        <result column="OUTPUT2" property="output2" jdbcType="VARCHAR" />
+        <result column="OUTPUT3" property="output3" jdbcType="VARCHAR" />
+        <result column="OUTPUT4" property="output4" jdbcType="VARCHAR" />
+        <result column="OUTPUT5" property="output5" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    SEQ_NO, MAPPING_TYPE, INPUT1, INPUT2, INPUT3, INPUT4, INPUT5, OUTPUT1, OUTPUT2, OUTPUT3,
+    OUTPUT4, OUTPUT5, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+
     <update id="update" parameterType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto" >
         update MOD_CURVE_CONFIG
         set CURVE_GROUP_CODE = #{curveGroupCode,jdbcType=VARCHAR},
@@ -108,6 +133,136 @@
         </if>
         <if test="finprodId!=null and finprodId != ''">
             AND  FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+
+    <select id="selectByModel" resultMap="BaseResultMap" parameterType="com.joyintech.service.modelvaluation.common.dto.ModAseetMappingDto" >
+        select
+        <include refid="Base_Column_List" />
+        from MOD_ASEET_MAPPING
+        where 1 =1
+        <if test="input1 != null" >
+            and INPUT1=#{input1,jdbcType=VARCHAR}
+        </if>
+        <if test="input2 != null" >
+            and INPUT2=#{input2,jdbcType=VARCHAR}
+        </if>
+        <if test="input3 != null" >
+            and INPUT3=#{input3,jdbcType=VARCHAR}
+        </if>
+        <if test="input4 != null" >
+            and INPUT4=#{input4,jdbcType=VARCHAR}
+        </if>
+        <if test="input5 != null" >
+            and INPUT5=#{input5,jdbcType=VARCHAR}
+        </if>
+        <if test="output1 != null" >
+            and OUTPUT1=#{output1,jdbcType=VARCHAR}
+        </if>
+        <if test="output2 != null" >
+            and OUTPUT2=#{output2,jdbcType=VARCHAR}
+        </if>
+        <if test="output3 != null" >
+            and OUTPUT3=#{output3,jdbcType=VARCHAR}
+        </if>
+        <if test="output4 != null" >
+            and OUTPUT4=#{output4,jdbcType=VARCHAR}
+        </if>
+        <if test="output5 != null" >
+            and OUTPUT5=#{output5,jdbcType=VARCHAR}
+        </if>
+        <if test="input1List != null and input1List.size()>0 ">
+            AND INPUT1 IN(
+            <foreach item="item" index="index" collection="input1List" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="input2List != null and input2List.size()>0 ">
+            AND INPUT2 IN(
+            <foreach item="item" index="index" collection="input2List" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="input3List != null and input3List.size()>0 ">
+            AND INPUT3 IN(
+            <foreach item="item" index="index" collection="input3List" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="input4List != null and input4List.size()>0 ">
+            AND INPUT4 IN(
+            <foreach item="item" index="index" collection="input4List" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="input5List != null and input5List.size()>0 ">
+            AND INPUT5 IN(
+            <foreach item="item" index="index" collection="input5List" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+
+
+    <select id="selectAssetNoClassify" resultType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto" parameterType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto" >
+        SELECT fp.FINPROD_ID finprodId,
+        fp.FINPROD_MARKET_ID finprodMarketId,
+        fp.FINPROD_ABBR finprodAbbr,
+        fp.FINPROD_NAME finprodName,
+        fp.is_sus isSus,
+        fp.is_right isRight,
+        fpadd.IS_RATE_ADJUST  isRateAdjust
+        FROM FIN_PRODUCT fp
+        left join fin_product_type fpt on fp.FINPROD_ID=fpt.FINPROD_ID
+        left join fin_product_add  fpadd on fp.finprod_id = fpadd.finprod_id
+        WHERE P_FINPROD_ID is null
+        <if test="search != null and search != ''">
+            and (fp.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
+            or fp.FINPROD_ABBR like concat(concat('%',#{search}),'%'))
+        </if>
+        <if test="initValue != null and initValue != ''">
+            and (fp.FINPROD_ABBR=#{initValue} or fp.FINPROD_ID =#{initValue})
+        </if>
+        <if test="type8List != null and type8List.size()>0 ">
+            AND fpt.TYPE_8 IN(
+            <foreach item="item" index="index" collection="type8List" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="type9List != null and type9List.size()>0 ">
+            AND fpt.TYPE_9 IN(
+            <foreach item="item" index="index" collection="type9List" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="type10List != null and type10List.size()>0 ">
+            AND fpt.TYPE_10 IN(
+            <foreach item="item" index="index" collection="type10List" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="type11List != null and type11List.size()>0 ">
+            AND fpt.TYPE_11 IN(
+            <foreach item="item" index="index" collection="type11List" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="type12List != null and type12List.size()>0 ">
+            AND fpt.TYPE_12 IN(
+            <foreach item="item" index="index" collection="type12List" separator=",">
+                #{item}
+            </foreach>
+            )
         </if>
     </select>
 

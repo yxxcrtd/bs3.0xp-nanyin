@@ -3,7 +3,9 @@ package com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cas
 
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto;
+import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.ModAseetMappingDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.service.CashFlowDiscount001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,5 +123,25 @@ public class CashFlowDiscount001Controller {
     @PostMapping("selectForExport")
     public List<CashFlowDiscount001Dto> selectForExport(@RequestBody Map<String, Object> map) {
         return cashFlowDiscount001Service.selectForExport(map);
+    }
+
+
+    @PostMapping("getModAseetMappingByModel")
+    public List<ModAseetMappingDto> getModAseetMappingByModel(@RequestBody ModAseetMappingDto modAseetMappingDto) {
+        return cashFlowDiscount001Service.getModAseetMappingByModel(modAseetMappingDto);
+    }
+
+    /**
+     *
+     * 查询没有分类的资产代码下拉选 可传投管资产分类
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getAssetNoClassify")
+    @ResponseBody
+    public List<AssetInfoDto> getAssetNoClassify(@RequestBody AssetInfoDto assetInfoDto){
+        return cashFlowDiscount001Service.getAssetNoClassify(assetInfoDto);
     }
 }
