@@ -4,9 +4,15 @@
  */
 $(function() {
 	  var getriskdata = function () {
-	        var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#tradeDate').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#shareAmt').val(),assetType:FINPROD_TYPE_F17,isEnabled:'01',assetCode:$('#finprodId').val(),tradeDirection:$('#ps').val()}
-	        var object = {valDate:['tradeDate','TrdPlanNetInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdPlanNetInvestTrade002.portfolioId'],tradeAmount:['shareAmt','TrdPlanNetInvestTrade003.tradeSha'],assetType:['type6','TrdPlanNetInvestTrade002.type6'],tradeDirection:['ps','TrdPlanNetInvestTrade001.ps'],data:obj}
-	        return object;
+            var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#tradeDate').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#shareAmt').val(),assetType:FINPROD_TYPE_F17,isEnabled:'01',assetCode:$('#finprodId').val(),tradeDirection:$('#ps').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
+            var object = {valDate:['tradeDate','TrdPlanNetInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdPlanNetInvestTrade002.portfolioId'],tradeAmount:['shareAmt','TrdPlanNetInvestTrade003.tradeSha'],assetType:['type6','TrdPlanNetInvestTrade002.type6'],tradeDirection:['ps','TrdPlanNetInvestTrade001.ps'],data:obj}
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
+            return object;
 	    }
 
 	  var submitRiskMathCheck = function(mes){  

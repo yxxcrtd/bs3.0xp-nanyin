@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.plannet.dto.TrdPlanNetInvestTradeDto;
 import com.joyintech.tams.invest.trade.plannet.service.TrdPlanNetInvestTrade002Service;
@@ -378,6 +379,10 @@ public class TrdPlanNetInvestTrade002Controller extends BaseController {
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }
+            // add by zhangrui1 start
+            // 将实占信息设置到线程缓存出错时撤销用
+            TradeRdsCommonAop.setLocalCache(dto);
+            // add by zhangrui1 end
         }
         //----------add by jjpei 20200114 核风险版本 end----------
         ProcessParameter<TrdPlanNetInvestTradeDto> processParameter = new ProcessParameter<>();

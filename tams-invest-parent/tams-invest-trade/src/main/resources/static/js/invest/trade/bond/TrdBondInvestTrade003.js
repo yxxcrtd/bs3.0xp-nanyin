@@ -61,6 +61,9 @@ var table;
                         tradeDirection:$('#ps').val(),
                         index: null,
                         mun: mun}
+                // add by zhangrui1 交易对手影响风险试算 start
+                obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+                // add by zhangrui1 交易对手影响风险试算 end
                 list[i]=obj;
             }
         }
@@ -70,6 +73,9 @@ var table;
             }
         }
         var object = {valDate:['settleDate','TrdPlanRateInvestTrade002.settleDate'],portfolioCode:['portfolioId','TrdBondInvestTrade002.portfolioId'],tradeAmount:['fpriceAmt','TrdBondInvestTrade002.fpriceAmt'],assetType:['windtypeone','TrdBondInvestTrade002.windtypeone'],tradeDirection:['ps','TrdLendInvestTrade002.ps'],data:list}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
 

@@ -85,6 +85,9 @@ public class EtrSecLendValidator implements EtrCommonValidator {
                 }
             }
             BigDecimal totalAmt=dto.getTotalAmt();
+            if(totalAmt == null){
+                errorList.add(new ValidMessage("请输入券面总额。"));
+            }
             BigDecimal objectAvailablePosition = dto.getObjectAvailablePosition();
             // 交易方向为融出时，显示可用持仓，券面总额不可大于可用持仓；
             if (StringUtil.equals(DictCodeList.回购拆借方向_融出.getValue(), dto.getBusiPs())) {

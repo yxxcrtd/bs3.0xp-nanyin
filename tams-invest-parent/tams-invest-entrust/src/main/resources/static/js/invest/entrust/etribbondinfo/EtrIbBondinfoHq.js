@@ -230,6 +230,7 @@
                     result.rateType=result.rateTypeName;
                     result.issuer=result.issuerName;
                     result.xqFlg=result.xqFlgName;
+                    result.sponsor=result.sponsorName;
                     dynview.resultToView(result);
                     //
                     // if (result.secName != null && result.secName != '') {

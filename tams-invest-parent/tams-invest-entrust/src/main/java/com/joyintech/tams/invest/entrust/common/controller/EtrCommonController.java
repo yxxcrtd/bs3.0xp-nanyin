@@ -597,6 +597,8 @@ public class EtrCommonController extends BaseController {
         return etrCommonService.calCanBuyAmount(param);
     }
 
-
+    public BigDecimal getCostPrice(Map<String, Object> param){
+        return etrCommonService.getCostPrice(param);
+    }
 
 }

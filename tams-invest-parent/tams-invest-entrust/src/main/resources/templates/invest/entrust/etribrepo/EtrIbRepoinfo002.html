@@ -169,15 +169,21 @@
                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbRepoinfo002.counterId}">交易对手</label>
                             <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
-                                <select
-                                    id="counterId"
-                                    name="counterId"
-                                    class="layui-input form-input input-select"
-                                    data-th-placeholder="#{SysCommon.placeholder}"
-                                    formatoption="false" parentIds="ps,finprodType2,profitType,tradeMarket,finprodId,pinanAssetType"
-                                    data-th-data-url="|@{/component/trade/BussEtrInvestPersonInfo/getCounterId}?innerTrade=false&tradeMarket=01&callPageId=EtrInvestBondInfo002|"
-                                    th:initValue="${entity?.counterId}"
-                                ></select>
+<!--                                <select-->
+<!--                                    id="counterId"-->
+<!--                                    name="counterId"-->
+<!--                                    class="layui-input form-input input-select"-->
+<!--                                    data-th-placeholder="#{SysCommon.placeholder}"-->
+<!--                                    formatoption="false" parentIds="ps,finprodType2,profitType,tradeMarket,finprodId,pinanAssetType"-->
+<!--                                    data-th-data-url="|@{/component/trade/BussEtrInvestPersonInfo/getCounterId}?innerTrade=false&tradeMarket=01&callPageId=EtrInvestBondInfo002|"-->
+<!--                                    th:initValue="${entity?.counterId}"-->
+<!--                                ></select>-->
+                                <select type="text" id="counterId" name="counterId"
+                                        class="layui-input form-input input-select"
+                                        th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
+                                        th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}" allowClear="true"
+                                        formatoption="true"
+                                        th:initValue="${entity?.counterId}"></select>
                             </div>
                         </div>
   						<!-- <div class="form-inline-wrap" style=" width: 50%; padding:0px;">

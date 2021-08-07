@@ -21,6 +21,7 @@ import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -318,6 +319,10 @@ public class TrdConBond002Controller extends BaseController {
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }
+            // add by zhangrui1 start
+            // 将实占信息设置到线程缓存出错时撤销用
+            TradeRdsCommonAop.setLocalCache(tempDto);
+            // add by zhangrui1 end
         }
         //----------add by jjpei 20200114 核风险版本 end----------
         ProcessParameter<TrdConBondDto> processParameter = new ProcessParameter<>();
@@ -346,7 +351,7 @@ public class TrdConBond002Controller extends BaseController {
     /**
      * 获取T日可用现金
      *
-     * @param inputDto 画面参数
+     * @param params 画面参数
      * @return 计算结果
      * @see
      * @since 1.0
