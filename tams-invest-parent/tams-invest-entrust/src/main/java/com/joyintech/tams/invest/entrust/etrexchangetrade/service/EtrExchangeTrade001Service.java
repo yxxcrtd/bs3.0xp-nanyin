@@ -1658,9 +1658,11 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				return etrCommonService.checkIsBlank(dzImportDto.getPs(), "EtrExchangeTrade001.ps", lineNo);
 			});
 			//投资目的
-			checkElement(dzImportDto,promptMsg,null,obj-> {
-				return etrCommonService.checkIsBlank(dzImportDto.getInvAim(), "EtrExchangeTrade001.invAim", lineNo);
-			});
+			if(StringUtil.equals(dzImportDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+				checkElement(dzImportDto,promptMsg,null,obj-> {
+					return etrCommonService.checkIsBlank(dzImportDto.getInvAim(), "EtrExchangeTrade001.invAim", lineNo);
+				});
+			}
 			// 价格模式
 			checkElement(dzImportDto,promptMsg,null,obj-> {
 				return etrCommonService.checkIsBlank(dzImportDto.getPriceModel(), "EtrExchangeTrade001.priceModel", lineNo);

@@ -1278,7 +1278,7 @@
                     var data = result.data;
                     if (data.price) {
                         query("#price").val(data.price).trigger("blur");
-                        query("#fpriceAmt").val(data.unitFprice).trigger("change");
+                        query("#fpriceAmt").val(data.unitFprice).trigger("blur");
                     } else {
                         query("#price").val("");
                         query("#fpriceAmt").val("");
