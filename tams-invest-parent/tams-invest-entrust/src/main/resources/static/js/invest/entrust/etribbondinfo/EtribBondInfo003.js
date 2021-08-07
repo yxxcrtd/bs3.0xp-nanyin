@@ -554,7 +554,14 @@
 
     window.componentLoadCallback = function(isDone, pagePath, params) {
         if (isDone) {
-            doOther.exerYield_setDisabled(true);
+            // 代办事项中 行权收益率置灰问题
+            exerYield.attr('disabled', true).removeAttr("required");
+            query('#calculateField_exerYield').attr('disabled', true);
+            if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
+                // 含权债或为空 且 价格模式不是市价
+                exerYield.attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
+                query('#calculateField_exerYield').val('').attr('disabled', false);
+            }
         }
     };
 
