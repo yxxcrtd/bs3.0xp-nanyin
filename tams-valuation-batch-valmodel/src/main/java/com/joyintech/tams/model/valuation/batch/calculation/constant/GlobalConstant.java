@@ -32,7 +32,7 @@ public interface GlobalConstant {
      */
     String DIS_DEBT_SCHEME_B = "B";
 
-    String YES ="是";
-    String NO = "否";
+    String YES ="Y";
+    String NO = "N";
 }
 

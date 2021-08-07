@@ -1,6 +1,9 @@
 package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao;
 
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.*;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModRepayAndInterestDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

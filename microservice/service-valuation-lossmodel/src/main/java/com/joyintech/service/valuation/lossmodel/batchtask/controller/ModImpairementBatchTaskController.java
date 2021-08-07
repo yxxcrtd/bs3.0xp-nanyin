@@ -4,10 +4,10 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.service.valuation.lossmodel.batchtask.dto.BatchExecutingStatusDto;
 import com.joyintech.service.valuation.lossmodel.batchtask.dto.BatchTaskDto;
-import com.joyintech.service.valuation.lossmodel.batchtask.dto.ModBatchLogDetailDTO;
 import com.joyintech.service.valuation.lossmodel.batchtask.service.ModImpairementBatchTaskService;
+import com.joyintech.system.batch.batchmonitor.dto.BatchExecutingStatusDto;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

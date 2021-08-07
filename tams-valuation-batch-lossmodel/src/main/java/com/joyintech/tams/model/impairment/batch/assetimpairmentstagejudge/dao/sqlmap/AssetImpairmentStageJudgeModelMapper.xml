@@ -9,7 +9,7 @@
         WHERE 1=1
     </select>
 
-    <select id="assetImpairmentStageJudgeList" resultType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess">
+    <select id="assetImpairmentStageJudgeList" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess">
     SELECT  SEQNO AS seqno,
             PROD_ID AS prodId,
             PROD_NAME AS prodName,
@@ -144,7 +144,7 @@
         </foreach>
     </insert>
 
-    <select id="assetImpairmentStageJudgeT2322List" resultType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModRepayAndInterestDto">
+    <select id="assetImpairmentStageJudgeT2322List" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModRepayAndInterestDto">
         SELECT
         PLAN_END_DATE AS planEndDate,
         PS AS dealSide
@@ -155,7 +155,7 @@
     </select>
 
     <!-- 获取资产现金流计划集合  -->
-    <select id="getCashFlowPlanInfoByFinprodId" resultType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModCashFlowDto">
+    <select id="getCashFlowPlanInfoByFinprodId" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto">
 		SELECT A.FINPROD_ID FINPROD_ID,
 	           A.FINPROD_TYPE2 FINPROD_TYPE2,
 	           A.CASH_ID CASH_ID,

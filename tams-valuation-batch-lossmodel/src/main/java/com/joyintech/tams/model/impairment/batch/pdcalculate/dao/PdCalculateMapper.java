@@ -1,7 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.dao;
 
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.*;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

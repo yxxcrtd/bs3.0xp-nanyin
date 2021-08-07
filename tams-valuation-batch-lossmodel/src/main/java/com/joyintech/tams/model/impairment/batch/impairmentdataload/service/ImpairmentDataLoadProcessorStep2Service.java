@@ -2,13 +2,15 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.service;
 
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess;
 import com.joyintech.tams.model.impairment.batch.common.calculation.ImpairmentCalculationCommonService;
 import com.joyintech.tams.model.impairment.batch.common.constants.GlobalConstant;
 import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.*;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModImpairRateParamsDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModRateDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

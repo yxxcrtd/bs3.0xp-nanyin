@@ -11,20 +11,18 @@
 package com.joyintech.tams.model.valuation.batch.incomemethodmodel.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
-import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.valuation.batch.batchtask.dto.ModValBatchLogResult;
-import com.joyintech.tams.model.valuation.batch.batchtask.dto.ModValBatchParams;
 import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCodeList;
-import com.joyintech.tams.model.valuation.batch.common.utils.DataHandleUtil;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ProductAssetsIncomeMethodResultDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ValBondValuationInfoResultDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.service.ProductAssetsIncomeMethodService;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
+import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;

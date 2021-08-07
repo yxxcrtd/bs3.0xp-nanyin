@@ -3,9 +3,9 @@ package com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCashFlowCalRuleDto;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCashFlowDto;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCashFlowPayRulesDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowCalRuleDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowPayRulesDto;
 
 import java.math.BigDecimal;
 import java.util.Date;

@@ -15,11 +15,15 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
-import com.joyintech.service.valuation.valmodel.batch.batchtask.dao.ModValBatchLogsMapper;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dao.ModBatchTaskMapper;
-import com.joyintech.service.valuation.valmodel.batch.batchtask.dao.ModBatchParamsMapper;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.*;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import com.joyintech.tams.valuation.component.batch.dao.ModBatchLogsMapper;
+import com.joyintech.tams.valuation.component.batch.dao.ModBatchParamsMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -59,7 +63,7 @@ public class ModBatchTaskService extends BaseService {
     private SysBatchgrpExecInfoMapper batchExecuteDetailMapper;
 
     @Autowired
-    private ModValBatchLogsMapper modBatchLogsMapper;
+    private ModBatchLogsMapper modBatchLogsMapper;
 
     public List<BatchTaskDto> getBatchTask(Map<String, Object> params) {
         return modBatchTaskMapper.getBatchTask(params);

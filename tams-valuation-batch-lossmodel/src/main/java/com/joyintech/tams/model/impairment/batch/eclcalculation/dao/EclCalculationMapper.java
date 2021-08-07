@@ -1,8 +1,8 @@
 package com.joyintech.tams.model.impairment.batch.eclcalculation.dao;
 
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModEclResult;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModLgdConfig;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

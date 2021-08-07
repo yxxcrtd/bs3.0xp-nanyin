@@ -1,15 +1,16 @@
 package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.AssetImpairmentStageJudgeModelMapper;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.*;
-import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModValBatchLogResult;
-import com.joyintech.tams.model.impairment.batch.batchtask.service.ModLogsService;
-import com.joyintech.tams.model.impairment.batch.common.calculation.ImpairmentCalculationCommonService;
 import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCode;
 import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModRepayAndInterestDto;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;

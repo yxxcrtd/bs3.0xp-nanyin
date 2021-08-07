@@ -68,7 +68,7 @@
     </insert>
 
 
-    <select id="findBatchExeDetail" resultType="com.joyintech.service.valuation.lossmodel.batchtask.dto.BatchExecutingStatusDto">
+    <select id="findBatchExeDetail" resultType="com.joyintech.tams.valuation.common.batch.batchTasks.BatchExecutingStatusDto">
         select
             (select count(1) from MOD_BATCH_LOGS where BATCH_EXEC_SEQNO = A.SEQ_NO AND TASK_ID = SBT.TASK_ID ) totalNum,
             (select  NVL(sum(case EXEC_STATUS when 'EXP' then 1 ELSE 0 END), 0) from MOD_BATCH_LOGS where BATCH_EXEC_SEQNO = A.SEQ_NO AND TASK_ID = SBT.TASK_ID ) errorNum,

@@ -144,7 +144,7 @@
 	</select>
 
 	<!--查询存续期交易列表-->
-	<select id="selectDurationTradeByAssetId" resultType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess" >
+	<select id="selectDurationTradeByAssetId" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess" >
 		select A.PLAN_END_DATE PLAN_END_DATE,
        		   A.PS PS,
        		   A.IS_CLEAN IS_CLEAN,
@@ -204,7 +204,7 @@
 		</foreach>
     </insert>
 
-	<insert id="insertSelective" parameterType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess" >
+	<insert id="insertSelective" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess" >
 		insert into MOD_ECL_RESULT_PROCESS
 		<trim prefix="(" suffix=")" suffixOverrides="," >
 			<if test="seqno != null" >

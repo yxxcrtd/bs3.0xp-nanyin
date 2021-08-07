@@ -19,9 +19,7 @@ import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
 import com.joyintech.calculation.shell.param.SecInfoModel;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.model.valuation.batch.batchtask.service.ModLogsService;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.service.ModValuationCommonService;
 import com.joyintech.tams.model.valuation.batch.calculation.CalculatorFactory;
 import com.joyintech.tams.model.valuation.batch.calculation.config.NumberEnum;
 import com.joyintech.tams.model.valuation.batch.calculation.constant.*;
@@ -36,6 +34,9 @@ import com.joyintech.tams.model.valuation.batch.calculation.util.BasicUtil;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.*;
 import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.valuation.common.dto.modelDto.*;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -465,7 +466,7 @@ public class CashFlowDiscountProcessorService {
 	 * @param modRateData
 	 * @return
 	 */
-	private ModRiskPremium handleRateInfo(ModRiskPremium modRiskPremium, ModRateDataDto modRateData,String curveCode){
+	private ModRiskPremium handleRateInfo(ModRiskPremium modRiskPremium, ModRateDataDto modRateData, String curveCode){
 		if(null==modRateData){
 			modRiskPremium.setGradeResult(cashFlowDiscountMapper.getGradeResult(curveCode));
 			modRiskPremium.setGradeSource(ModelDictCodeList.模型_评级来源类型_系统计算.getValue());
@@ -482,7 +483,7 @@ public class CashFlowDiscountProcessorService {
 	 * @param calDate
 	 * @return
 	 */
-	private List<ModYieldCurveInfoDto>  calCurveSmooth(Map<Date,List<ModYieldCurveInfoDto>> map,Date calDate){
+	private List<ModYieldCurveInfoDto>  calCurveSmooth(Map<Date,List<ModYieldCurveInfoDto>> map, Date calDate){
 		List<ModYieldCurveInfoDto> result = new ArrayList<>();
 		Map<BigDecimal,CurveSmoothDto> keyPointMap = new HashMap<>();
 		Iterator<Map.Entry<Date, List<ModYieldCurveInfoDto>>> it = map.entrySet().iterator();

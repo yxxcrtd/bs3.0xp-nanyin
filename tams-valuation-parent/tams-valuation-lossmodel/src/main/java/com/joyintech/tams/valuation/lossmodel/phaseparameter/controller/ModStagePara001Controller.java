@@ -86,7 +86,7 @@ public class ModStagePara001Controller extends BaseController{
             listdto = JsonUtils.json2List(datas, ModStageParaDto.class);
         }
         File outFile = modStageParaService.makeFile(
-                "/com/joyintech/tams/lossmodel/phaseparameter/conf/export_conf.xml",
+                "/com/joyintech/tams/valuation/lossmodel/phaseparameter/conf/export_conf.xml",
                 listdto);
         return ExportUtil.export( SystemGlobalConstant.OPEN_PARENTHESIS
                 + DateUtil.format(DateUtil.parse(DateUtil.getCurrentDate())) + SystemGlobalConstant.CLOSE_PARENTHESIS + this.getMessage(this.getPageId()) +SystemGlobalConstant.POINT

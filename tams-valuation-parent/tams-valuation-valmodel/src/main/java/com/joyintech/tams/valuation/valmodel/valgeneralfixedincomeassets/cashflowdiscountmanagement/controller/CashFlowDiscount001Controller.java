@@ -125,7 +125,7 @@ public class CashFlowDiscount001Controller extends BaseController {
             listdto = JsonUtils.json2List(datas, CashFlowDiscount001Dto.class);
         }
         File outFile = cashFlowDiscount001Service.makeFile(
-                "/com/joyintech/tams/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/conf/export_cashflowdiscount.xml",
+                "/com/joyintech/tams/valuation/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/conf/export_cashflowdiscount.xml",
                 listdto);
         return ExportUtil.export(
                 this.getMessage(DateUtil.format(new Date())+"_现金流折现模型曲线配置")

@@ -3,7 +3,7 @@ package com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.dto.AssetImpairmentManagement001Dto;
 import com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.dto.AssetImpairmentManagement002Dto;
-import com.joyintech.service.valuation.lossmodel.batchtask.dto.BatchAssetInfoDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.BatchAssetInfoDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -211,7 +211,7 @@
 		</if>
 	</select>
 
-	<select id="getAssetInfo" resultType="com.joyintech.service.valuation.lossmodel.batchtask.dto.BatchAssetInfoDto">
+	<select id="getAssetInfo" resultType="com.joyintech.tams.valuation.common.dto.modelDto.BatchAssetInfoDto">
 		SELECT
 		FINPROD_ID finprodId,
 		FINPROD_ABBR  finprodName
@@ -240,7 +240,7 @@
 		</where>
 	</select>
 
-	<select id="getAssetInfoImpairment" resultType="com.joyintech.service.valuation.lossmodel.batchtask.dto.BatchAssetInfoDto">
+	<select id="getAssetInfoImpairment" resultType="com.joyintech.tams.valuation.common.dto.modelDto.BatchAssetInfoDto">
 		with tmp as (
 		select A.FINPROD_ID, A.CDATE, A.INV_AIM, SUM(A.AMOUNT) AMOUNT
 		from PTL_SEC_POSITION A

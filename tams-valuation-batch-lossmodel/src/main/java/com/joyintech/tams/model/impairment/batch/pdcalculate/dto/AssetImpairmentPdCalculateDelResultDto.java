@@ -1,13 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess;
-
-import java.math.BigDecimal;
-import java.util.Date;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 
 public class AssetImpairmentPdCalculateDelResultDto extends NeedToWriteEntity {
 

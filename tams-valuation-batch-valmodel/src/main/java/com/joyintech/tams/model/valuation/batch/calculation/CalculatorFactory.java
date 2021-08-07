@@ -123,7 +123,7 @@ public final class CalculatorFactory {
      * 创建贴现模型-点差二分算法到期计算器
      */
     public static final DichotomySpreadExpireCalculator createDichotomySpreadExpireCalculator() {
-        if(!instances.containsKey(DichotomySpreadSpCalculator.class.getName())) {
+        if(!instances.containsKey(DichotomySpreadExpireCalculator.class.getName())) {
             instances.put(DichotomySpreadExpireCalculator.class.getName(), new DichotomySpreadExpireCalculator());
         }
         return (DichotomySpreadExpireCalculator)instances.get(DichotomySpreadExpireCalculator.class.getName());

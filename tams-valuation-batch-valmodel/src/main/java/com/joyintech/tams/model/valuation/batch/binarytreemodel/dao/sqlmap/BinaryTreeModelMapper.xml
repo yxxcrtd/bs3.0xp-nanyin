@@ -45,7 +45,7 @@ where
     INPUT2 in (#{MODEL_SEC_DETAIL_TYPE_011}, #{MODEL_SEC_DETAIL_TYPE_013})
     </select>
 
-    <select id="findModRiskPremium" resultType="com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModRiskPremium">
+    <select id="findModRiskPremium" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium">
     WITH TMP AS
     (
     SELECT
@@ -135,7 +135,7 @@ where
     </insert>
 
     <!-- 获取资产信息集合  -->
-    <select id="selectAssetInfo"  parameterType="com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModAssetInfoDto">
+    <select id="selectAssetInfo"  parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
         SELECT A.FINPROD_ID FINPROD_ID,
         A.FINPROD_ABBR FINPROD_ABBR,
         A.FINPROD_MARKET_ID FINPROD_MARKET_ID,
@@ -363,7 +363,7 @@ where
 
 
     <!-- 获取资产现金流计划集合  -->
-    <select id="getCashFlowPlanInfoByFinprodId" resultType="com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCashFlowDto">
+    <select id="getCashFlowPlanInfoByFinprodId" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto">
 		SELECT A.FINPROD_ID FINPROD_ID,
 	           A.FINPROD_TYPE2 FINPROD_TYPE2,
 	           A.CASH_ID CASH_ID,

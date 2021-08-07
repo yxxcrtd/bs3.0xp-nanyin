@@ -1,7 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.eclcalculation.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 
 public class EclCalculationResultDto extends NeedToWriteEntity {
 

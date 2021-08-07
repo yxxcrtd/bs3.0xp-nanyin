@@ -167,7 +167,7 @@ public class LgdSpecialConfig001Controller extends BaseController {
         List<LgdSpecialConfigDto> listdto;
         listdto = lgdSpecialConfigService.selectExportList(dto);
         File outFile = lgdSpecialConfigService.makeFile(
-                "/com/joyintech/tams/model/impairment/lgddefultmanager/lgdspecialconfig/conf/export_ldspecialconfig.xml",
+                "/com/joyintech/tams/valuation/lossmodel/lgddefultmanager/lgdspecialconfig/conf/export_ldspecialconfig.xml",
                 listdto);
         return ExportUtil.export(
                 this.getMessage(DateUtil.format(new Date())+"_特殊资产LGD维护记录")

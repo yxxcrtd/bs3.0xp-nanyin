@@ -29,7 +29,7 @@ public class DisCountFullPriceCalculator implements Calculator<DisCountInputPara
 	public DisCountOutputParameter calculate(DisCountInputParameter input) {
 		input.check();
 		
-		DisCountOutputParameter out = new DisCountOutputParameter(); 
+		DisCountOutputParameter out = new DisCountOutputParameter();
 		
 		//现金流信息
 		List<CashInfoDto> cashInfoDtoList = new ArrayList<>();
@@ -83,7 +83,7 @@ public class DisCountFullPriceCalculator implements Calculator<DisCountInputPara
 	private BigDecimal calcMidTemp(BigDecimal cashAmt,BigDecimal remainingTerm,BigDecimal yield,BigDecimal spread){
 		System.out.println("现金流金额="+cashAmt+",剩余期限="+remainingTerm+",即期R值="+yield+",点差="+spread);
 		// ITEM.现金流金额 / (1 + ITEM.即期R值 + 参数.现金流折现法DTO.点差） 求 ITEM.剩余期限 次方
-		BigDecimal powbase = ArithmeticUtil.doAdd(BigDecimal.ONE,ArithmeticUtil.doAdd(yield,spread));
+		BigDecimal powbase = ArithmeticUtil.doAdd(BigDecimal.ONE, ArithmeticUtil.doAdd(yield,spread));
 		BigDecimal pownum = ArithmeticUtil.multiply(remainingTerm,BigDecimal.ONE);
 		return ArithmeticUtil.divide(cashAmt, BigDecimal.valueOf(Math.pow(powbase.doubleValue(), pownum.doubleValue())));
 	}
@@ -99,7 +99,7 @@ public class DisCountFullPriceCalculator implements Calculator<DisCountInputPara
 	private BigDecimal calcMidTemp2(BigDecimal cashAmt,BigDecimal remainingTerm,BigDecimal yield,BigDecimal spread,BigDecimal yearIntRate){
 		System.out.println("现金流金额="+cashAmt+",剩余期限="+remainingTerm+",曲线收益率="+yield+",点差="+spread+",年付息次数="+yearIntRate);
 		//{ ITEM.现金流金额 / [1 + (参数.现金流折现法计算参数.收益率 + 参数.现金流折现法计算参数,点差)/参数.现金流折现法计算参数.年付息次数] 求 （ITEM.剩余期限 * 参数.现金流折现法计算参数.年付息次数） 次方}
-		BigDecimal powbase = ArithmeticUtil.doAdd(BigDecimal.ONE,ArithmeticUtil.divide(ArithmeticUtil.doAdd(yield,spread), yearIntRate));
+		BigDecimal powbase = ArithmeticUtil.doAdd(BigDecimal.ONE, ArithmeticUtil.divide(ArithmeticUtil.doAdd(yield,spread), yearIntRate));
 		BigDecimal pownum = ArithmeticUtil.multiply(remainingTerm,yearIntRate);
 		return ArithmeticUtil.divide(cashAmt, BigDecimal.valueOf(Math.pow(powbase.doubleValue(), pownum.doubleValue())));
 	}

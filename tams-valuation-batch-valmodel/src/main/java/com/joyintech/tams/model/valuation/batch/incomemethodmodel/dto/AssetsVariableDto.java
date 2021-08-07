@@ -10,8 +10,7 @@
 
 package com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto;
 
-import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModYieldCurveInfoDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModYieldCurveInfoDto;
 
 import java.math.BigDecimal;
 import java.util.Date;

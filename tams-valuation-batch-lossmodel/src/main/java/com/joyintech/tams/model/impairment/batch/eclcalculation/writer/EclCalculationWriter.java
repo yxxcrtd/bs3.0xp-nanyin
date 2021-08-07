@@ -2,13 +2,13 @@ package com.joyintech.tams.model.impairment.batch.eclcalculation.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess;
 import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationResultDto;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModEclResult;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

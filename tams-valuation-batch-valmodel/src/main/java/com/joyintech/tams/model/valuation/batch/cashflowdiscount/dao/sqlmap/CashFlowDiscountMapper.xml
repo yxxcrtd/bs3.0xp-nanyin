@@ -55,7 +55,7 @@
 	</select>
 
 	<!--查询溢价信息-->
-	<select id="getModRiskPremium" resultType="com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModRiskPremium">
+	<select id="getModRiskPremium" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium">
 		SELECT
 		SEQNO SEQNO,
 		SEC_TYPE_MODEL SEC_TYPE_MODEL,

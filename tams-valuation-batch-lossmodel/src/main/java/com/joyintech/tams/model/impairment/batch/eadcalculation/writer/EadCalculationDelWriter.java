@@ -2,11 +2,11 @@ package com.joyintech.tams.model.impairment.batch.eadcalculation.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModValBatchParams;
-import com.joyintech.tams.model.impairment.batch.batchtask.service.ModParamsService;
 import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dao.EadCalculationBatchMapper;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadCalculationReaderDto;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
+import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,16 +1,14 @@
 package com.joyintech.tams.model.impairment.batch.eadcalculation.listener;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModBatchLogs;
-import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModValBatchParams;
-import com.joyintech.tams.model.impairment.batch.batchtask.service.ModLogsService;
-import com.joyintech.tams.model.impairment.batch.batchtask.service.ModParamsService;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadErrorParams;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;

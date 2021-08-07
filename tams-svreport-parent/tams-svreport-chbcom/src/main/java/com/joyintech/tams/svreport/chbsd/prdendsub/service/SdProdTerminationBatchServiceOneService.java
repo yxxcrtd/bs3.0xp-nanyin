@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chbsd.prdendsub.service;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdEndSubDto;
 import com.joyintech.component.svrreport.chb.service.MsgSendService;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
@@ -45,7 +46,7 @@ public class SdProdTerminationBatchServiceOneService extends AutoSendCBBaseServi
         logger.info("【产品终止登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         try {
-            	 msgSend.sendChbPrdEndSubMsgs(msgRstList);
+            	 msgSend.sendChbPrdEndSubMsgs(msgRstList,SendDataCheckType.报送);
             	 sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【产品终止登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());

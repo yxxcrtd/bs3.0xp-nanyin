@@ -19,7 +19,7 @@ import com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.dto.A
 import com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.dto.AssetImpairmentManagement002Dto;
 import com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.dto.ModValBatchAssetInfoDto;
 import com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.service.AssetImpairmentManagement001Service;
-import com.joyintech.service.valuation.lossmodel.batchtask.dto.BatchAssetInfoDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.BatchAssetInfoDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

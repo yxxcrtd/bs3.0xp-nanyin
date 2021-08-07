@@ -3,6 +3,7 @@ package com.joyintech.tams.model.valuation.batch.binarytreemodel.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.tams.valuation.common.dto.modelDto.*;
 
 import java.math.BigDecimal;
 import java.util.Date;

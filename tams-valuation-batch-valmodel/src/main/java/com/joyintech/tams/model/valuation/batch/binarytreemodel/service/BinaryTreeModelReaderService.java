@@ -1,24 +1,22 @@
 package com.joyintech.tams.model.valuation.batch.binarytreemodel.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.valuation.batch.batchtask.dto.ModBatchLogs;
-import com.joyintech.tams.model.valuation.batch.batchtask.dto.ModValBatchParams;
-import com.joyintech.tams.model.valuation.batch.batchtask.service.ModLogsService;
-import com.joyintech.tams.model.valuation.batch.batchtask.service.ModParamsService;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
 import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
+import com.joyintech.tams.valuation.common.dto.modelDto.*;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
+import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 

@@ -2,10 +2,10 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess;
 import com.joyintech.tams.model.impairment.batch.common.constants.GlobalConstant;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcessMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ResultDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

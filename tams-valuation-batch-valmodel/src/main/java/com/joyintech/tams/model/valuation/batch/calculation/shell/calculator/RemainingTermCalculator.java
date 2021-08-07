@@ -41,7 +41,7 @@ public class RemainingTermCalculator implements Calculator<RemainingTermInputPar
 			}
             term = ArithmeticUtil.round(ArithmeticUtil.doAdd(term,
 						ArithmeticUtil.divide(new BigDecimal(BasicUtil.days(starDate, endDate)),
-								yearTotalDays,NumberEnum.ALL_PRECISION.getCode())),
+								yearTotalDays, NumberEnum.ALL_PRECISION.getCode())),
             		    NumberEnum.ALL_PRECISION.getCode(), RoundingMode.HALF_UP);
 			item.setRemainingTerm(term);
 		}

@@ -1,8 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 
 import java.util.List;
 

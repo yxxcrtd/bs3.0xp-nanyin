@@ -15,8 +15,6 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.valuation.batch.batchtask.dto.CommonErrorParams;
-import com.joyintech.tams.model.valuation.batch.batchtask.service.ModLogsService;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
 import com.joyintech.tams.model.valuation.batch.calculation.entity.KeyPointDto;
@@ -25,6 +23,9 @@ import com.joyintech.tams.model.valuation.batch.calculation.shell.param.inputpar
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.outparam.TargetRateOutputParameter;
 import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCode;
 import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
+import com.joyintech.tams.valuation.common.dto.modelDto.*;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

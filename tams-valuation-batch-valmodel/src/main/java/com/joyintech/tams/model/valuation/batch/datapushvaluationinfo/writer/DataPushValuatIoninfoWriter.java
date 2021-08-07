@@ -12,11 +12,11 @@ package com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.model.valuation.batch.batchtask.dto.ModValBatchLogResult;
-import com.joyintech.tams.model.valuation.batch.batchtask.service.ModLogsService;
 import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.ValuationBatchSynResultDto;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.service.DataPushValuatIoninfoProcessService;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

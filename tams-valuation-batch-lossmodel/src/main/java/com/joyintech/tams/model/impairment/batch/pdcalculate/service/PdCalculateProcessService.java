@@ -1,12 +1,12 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess;
-import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModValBatchLogResult;
 import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCode;
 import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapper;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.*;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.springframework.batch.core.StepExecution;

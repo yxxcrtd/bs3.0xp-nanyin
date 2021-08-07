@@ -12,6 +12,7 @@ package com.joyintech.tams.svreport.chbsd.bottomastsub.service;
 
 import java.util.List;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class SdBotAssetPosRegBatchServiceOneService extends AutoSendCBBaseServic
         logger.info("【底层资产持仓信息登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         boolean hasData = true;
         try {
-        	msgSendServiceImpl.sendChbBotAstPosSubMsgs(msgRstList);
+        	msgSendServiceImpl.sendChbBotAstPosSubMsgs(msgRstList, SendDataCheckType.报送);
        	    sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【底层资产持仓信息登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());

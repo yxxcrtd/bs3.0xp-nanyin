@@ -88,7 +88,7 @@
 	</delete>
 
 	<!--根据跑批日获取待处理资产信息List-->
-	<select id="selectWaitPdCalculateList" resultType="com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModEclResultProcess" >
+	<select id="selectWaitPdCalculateList" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess" >
 		SELECT
 		<include refid="pdCalculateSqlOne"/>
 		FROM  MOD_ECL_RESULT_PROCESS A

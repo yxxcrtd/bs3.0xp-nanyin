@@ -1,23 +1,13 @@
 package com.joyintech.service.valuation.valmodel.batch.batchtask.controller;
 
-import com.joyintech.framework.base.dao.SysBatchGrpMapper;
-import com.joyintech.framework.base.dao.SysBatchPrdGrpMapper;
-import com.joyintech.framework.base.dao.SysBatchgrpExecInfoMapper;
-import com.joyintech.framework.base.dto.Product;
-import com.joyintech.framework.base.entity.*;
-import com.joyintech.framework.base.service.ProductService;
-import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchExecutingStatusDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchTaskDto;
-import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.ModBatchLogDetailDTO;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.service.ModBatchTaskService;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

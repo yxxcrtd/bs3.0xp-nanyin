@@ -22,7 +22,7 @@ public class CurveRateSpRCalculator implements Calculator<TargetRateInputParamet
 	public TargetRateOutputParameter calculate(TargetRateInputParameter input) {
 		input.check();
 		
-		TargetRateOutputParameter  out = new TargetRateOutputParameter();
+		TargetRateOutputParameter out = new TargetRateOutputParameter();
 		
 		BigDecimal spR = this.getCurvYield(input.getKeyPointDtoList(), input.getTargetTerm());
 		if(spR == null){

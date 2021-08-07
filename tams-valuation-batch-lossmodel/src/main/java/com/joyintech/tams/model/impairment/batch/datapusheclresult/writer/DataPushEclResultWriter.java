@@ -2,10 +2,10 @@ package com.joyintech.tams.model.impairment.batch.datapusheclresult.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.model.impairment.batch.batchtask.dto.ModValBatchLogResult;
 import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResultProcessDto;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.service.DataPushEclResultProcessService;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;

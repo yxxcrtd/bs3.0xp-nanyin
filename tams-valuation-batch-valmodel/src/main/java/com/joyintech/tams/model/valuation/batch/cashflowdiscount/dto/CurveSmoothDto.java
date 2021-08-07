@@ -1,6 +1,6 @@
 package com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto;
 
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModYieldCurveInfoDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModYieldCurveInfoDto;
 
 import java.math.BigDecimal;
 import java.util.Date;

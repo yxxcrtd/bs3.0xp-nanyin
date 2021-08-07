@@ -2,9 +2,9 @@ package com.joyintech.tams.model.valuation.batch.cashflowdiscount.listener;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.valuation.batch.batchtask.dto.ModValBatchParams;
-import com.joyintech.tams.model.valuation.batch.batchtask.service.ModLogsService;
-import com.joyintech.tams.model.valuation.batch.batchtask.service.ModParamsService;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;

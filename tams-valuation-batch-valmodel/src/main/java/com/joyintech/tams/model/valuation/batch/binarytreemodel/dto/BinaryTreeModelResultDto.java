@@ -1,6 +1,7 @@
 package com.joyintech.tams.model.valuation.batch.binarytreemodel.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium;
 
 public class BinaryTreeModelResultDto extends NeedToWriteEntity {
 

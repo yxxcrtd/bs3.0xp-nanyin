@@ -3,8 +3,8 @@ package com.joyintech.tams.model.valuation.batch.calculation.util;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCashFlowDto;
 import com.joyintech.tams.model.valuation.batch.calculation.entity.CashInfoDto;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -213,7 +213,7 @@ public class BasicUtil {
         BigDecimal precision = null!=errorValue?errorValue:new BigDecimal(
                 String.valueOf(EngineContext.getInstance().getConfig().dicPrecision()));
         //计算次数
-        int totalTimes = 0!=calTimes?calTimes:EngineContext.getInstance().getConfig().dicTotalTimes();
+        int totalTimes = 0!=calTimes?calTimes: EngineContext.getInstance().getConfig().dicTotalTimes();
         // 低的起始金额
         BigDecimal tempAmountLow = new BigDecimal(
                 String.valueOf(EngineContext.getInstance().getConfig().dicStartAmountLow()));
@@ -272,13 +272,13 @@ public class BasicUtil {
      * @param
      * @return
      */
-    public static BigDecimal calPriceByMatYield(List<CashInfoDto>  cashFlow,BigDecimal matYield,int yearIntRate,BigDecimal spread) {
+    public static BigDecimal calPriceByMatYield(List<CashInfoDto>  cashFlow, BigDecimal matYield, int yearIntRate, BigDecimal spread) {
         BigDecimal price = BigDecimal.ZERO;
         for (int i = 0; i < cashFlow.size(); i++ ) {
             CashInfoDto cashInfoDto = cashFlow.get(i);
             BigDecimal tmpPrice = ArithmeticUtil.divide(cashInfoDto.getCashAmt(),
                     new BigDecimal(String.valueOf(
-                            Math.pow(ArithmeticUtil.doAdd(BigDecimal.ONE,ArithmeticUtil.divide(ArithmeticUtil.doAdd(matYield, spread),new BigDecimal(yearIntRate))).doubleValue(),
+                            Math.pow(ArithmeticUtil.doAdd(BigDecimal.ONE, ArithmeticUtil.divide(ArithmeticUtil.doAdd(matYield, spread),new BigDecimal(yearIntRate))).doubleValue(),
                                     ArithmeticUtil.multiply(cashInfoDto.getRemainingTerm(),new BigDecimal(yearIntRate)).doubleValue()))));
             price = ArithmeticUtil.doAdd(tmpPrice, price);
         }
@@ -292,7 +292,7 @@ public class BasicUtil {
      * @param
      * @return
      */
-    public static BigDecimal calPriceByMatYield2(List<CashInfoDto>  cashFlow,BigDecimal spread) {
+    public static BigDecimal calPriceByMatYield2(List<CashInfoDto>  cashFlow, BigDecimal spread) {
         BigDecimal price = BigDecimal.ZERO;
         /**现金流金额/pow(1+曲线收益率+点差,剩余期限)**/
         for(int i=0;i<cashFlow.size();i++){
