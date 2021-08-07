@@ -771,6 +771,9 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 		//获取银行间交易费用设置信息 要素 资产类型 交易方向 回购期限 托管机构
 		CstpTrdMatchInfoDto feeDto = new CstpTrdMatchInfoDto();
 		feeDto = getFeeSetting(fAssetType,fTradeSide,fTremStr,fAccountNumber,feeType,tradeDateStr);
+		if(StringUtil.isEmpty(feeDto.getChargeBasis())){
+			return BussinessDictCodeList.计费基数_券面总额.getValue();
+		}
 		return feeDto.getChargeBasis();
 	}
 
@@ -814,13 +817,13 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 		if(StringUtil.equals(fAssetType,"F01") && feeDto != null){
 			if(StringUtil.equals(feeDto.getChargeType(),BussinessDictCodeList.计费类型_固定费率.getValue())){
 				//有最大值，最小值
-				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_券面总额)){
+				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_券面总额.getValue())){
 					//获取券面总额
 					BigDecimal lastQty = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getLastqty();
 					//计算金额
 					feeInfo = lastQty.multiply(feeDto.getChargeRate());
 				}
-				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_成交金额)){
+				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_成交金额.getValue())){
 					//获取成交金额
 					BigDecimal tradecashamt = cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradecashamt();
 					feeInfo = tradecashamt.multiply(feeDto.getChargeRate());
@@ -844,7 +847,7 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 		}
 		if(StringUtil.equals(fAssetType,"F07")  && feeDto != null){
 			if(StringUtil.equals(feeDto.getChargeType(),BussinessDictCodeList.计费类型_固定费率.getValue())){
-				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_成交金额)){
+				if(StringUtil.equals(feeDto.getChargeBasis(),BussinessDictCodeList.计费基数_成交金额.getValue())){
 					//有最大值，最小值
 					//获取成交金额
 					cstpTrdMatchInfoDto.getCstpSelectDtoList().get(i).getTradecashamt();
@@ -962,7 +965,7 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 					//获取当前信息
 					TrdMatchInfo infoDto = trdMatchInfoMapper.selectByPrimaryKey(cstpSelectDtoListTemp.get(i).getSeqno());
 					//计算比例，计算交易手续费
-					if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_券面总额)){
+					if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_券面总额.getValue())){
 						BigDecimal procedureAmt = procedureAmtS.multiply((cstpSelectDtoListTemp.get(i).getPrinAmt())
 								.divide(prinAmtS,2,BigDecimal.ROUND_DOWN)).setScale(2,BigDecimal.ROUND_DOWN);
 						infoDto.setProcedureAmt(procedureAmt);
@@ -984,7 +987,7 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 				for(int i = 0;i<TrdMatchInfoTemp.size();i++){
 					TrdMatchInfo infoDtos = TrdMatchInfoTemp.get(i);
 					//交易手续费尾差
-					if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_券面总额)){
+					if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_券面总额.getValue())){
 						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),newSeqno)){
 							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
 							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
@@ -996,7 +999,7 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 						}
 					}
 					//结算手续费尾差
-					if(StringUtil.equals(setChargeBasis,BussinessDictCodeList.计费基数_券面总额)){
+					if(StringUtil.equals(setChargeBasis,BussinessDictCodeList.计费基数_券面总额.getValue())){
 						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),newSeqno)){
 							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
 							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
