@@ -555,6 +555,7 @@
     window.componentLoadCallback = function(isDone, pagePath, params) {
         if (isDone) {
             // 代办事项中 行权收益率置灰问题
+            let exerYield = query('#exerYield');
             exerYield.attr('disabled', true).removeAttr("required");
             query('#calculateField_exerYield').attr('disabled', true);
             if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
