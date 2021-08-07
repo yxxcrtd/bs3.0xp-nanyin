@@ -357,7 +357,6 @@
 	            if (result.data && message != result.data) {
 	                message += result.data;
 	            }
-	            object.prinAmt = $('#prinAmt').val();
 	            Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
 	            	object.prinAmt = 0;
 		            if(operateType === 'save') {
