@@ -1,6 +1,5 @@
 package com.joyintech.tams.svreport.chbsd.prdraisetotsub.service;
 
-import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdRaisetotSubDto;
 import com.joyintech.component.svrreport.chb.service.MsgSendService;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
@@ -46,7 +45,7 @@ public class SdProdRaisetotBatchServiceOneService extends AutoSendCBBaseService 
         logger.info("【产品募集总量登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         try {
-            	 msgSend.sendChbPrdRaisendotSubMsgs(msgRstList, SendDataCheckType.报送);
+            	 msgSend.sendChbPrdRaisendotSubMsgs(msgRstList);
             	 sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【产品募集总量登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());

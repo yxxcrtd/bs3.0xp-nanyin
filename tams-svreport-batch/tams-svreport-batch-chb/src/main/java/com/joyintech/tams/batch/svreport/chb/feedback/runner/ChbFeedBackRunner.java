@@ -40,7 +40,7 @@ public class ChbFeedBackRunner extends BatchBaseService {
         JobExecution result = new JobExecution(1l);
         // 调用组件处理反馈信息
         try {
-//            chbFeedbackMsgService.dealFeedBack(new Date());
+            chbFeedbackMsgService.dealFeedBack(new Date());
         } catch (Exception e) {
             result.setStatus(BatchStatus.FAILED);
         }
