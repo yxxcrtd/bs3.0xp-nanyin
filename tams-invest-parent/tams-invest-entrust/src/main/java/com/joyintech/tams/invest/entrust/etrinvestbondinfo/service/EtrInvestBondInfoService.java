@@ -833,7 +833,7 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                 dto.setUnitFprice(ArithmeticUtil.doAdd(dto.getPrice(), dto.getUnitInt()));
                 // 全价总额 = 单位全价 * 券面总额/100
                 dto.setFpriceAmt(ArithmeticUtil.divide(
-                    ArithmeticUtil.multiply(dto.getPrice(), dto.getEntrustNum()),
+                    ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
                     new BigDecimal(100), SCALE));
 //                // 净价总额 = 单位净价 * 券面总额/100
 //                dto.setCpriceAmt(ArithmeticUtil.divide(
@@ -1270,7 +1270,9 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
             // 币种
             etrInvestBondInfoDto.setCcy(rowData.get(6).toString().split(":")[0]);
             // 券面总额
-            etrInvestBondInfoDto.setEntrustNum(new BigDecimal(rowData.get(7).toString()));
+            if (StringUtil.isNotBlank(rowData.get(7).toString())) {
+                etrInvestBondInfoDto.setEntrustNum(new BigDecimal(rowData.get(7).toString()));
+            }
             // 价格模式
             etrInvestBondInfoDto.setPriceModel(rowData.get(8).toString().split(":")[0]);
             // 净价
@@ -1424,8 +1426,20 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                     else if (temp.getMatureYield() != null) {
                         temp.setCalflag("matureYield");
                     }
-                    this.calcAmt(temp);
-                    etrInvestBondInfoDto.setFpriceAmt(temp.getFpriceAmt());
+
+                    if (StringUtil.equals(temp.getSettleSpreed(),
+                            DictCodeList.清算速度_T_0.getValue())) {
+                        temp.setSettleSpreed("0");
+                    }
+                    if (StringUtil.equals(temp.getSettleSpreed(),
+                            DictCodeList.清算速度_T_1.getValue())) {
+                        temp.setSettleSpreed("1");
+                    }
+                    if(StringUtil.isNotEmpty(temp.getCalflag())){
+                        this.calcAmt(temp);
+                        etrInvestBondInfoDto.setFpriceAmt(temp.getUnitFprice());
+                        etrInvestBondInfoDto.setMatureYield(temp.getMatureYield());
+                    }
                 }
                 catch (Exception e) {
                     // 计算失败什么都不做

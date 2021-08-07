@@ -109,6 +109,23 @@ var correctData;
         object.pageModel = pageModel;
         object.portfolioId=PORTFOLIO_ID;//转出组合
         object.selectedItem = trialTable.getAllRows();
+        var datas = trialTable.getAllRows();
+        var filterdatas = filterTable.getAllRows();
+        for (var i in filterdatas) {
+            if (filterdatas[i].finprodId !== '' && filterdatas[i].finprodId !== undefined) {
+                var amount = Number(filterdatas[i].amount);
+                for (var j in datas) {
+                    if (datas[j].finprodId !== '' && datas[j].finprodId !== undefined && datas[j].finprodId == filterdatas[i].finprodId) {
+                        amount -= Number(datas[j].entrustNum);
+                        if(amount<0){
+                            Joyin.error("资产："+datas[j].finprodId+"在试算一览表中的转出数量之和不能大于筛选资产一览表内对应资产的持仓券面额度！请检查！");
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
         Joyin.ajaxJson(basePath + 'invest/entrust/etrastconfigtransfer/EtrAssetConfigTransfer002/assembleImportData', object, function(assembleResult) {
             if (assembleResult) {
                 var result = {};
@@ -168,7 +185,7 @@ var correctData;
             Joyin.ajaxJson(basePath + 'invest/entrust/etrastconfigtransfer/EtrAssetConfigTransfer002/selectPortfolioInfo', {portfolioId: $(obj).val()},
                 function (result) {
                     if (result) {
-                        $("input#trial_vdate:eq("+(index-1)+")").val(Date.ofDate(result.VDATE).format('yyyy-MM-dd'));
+                        $("input#trial_vdate:eq("+(index-1)+")").val(Date.ofDate(result.vdate).format('yyyy-MM-dd'));
                         $("input#trial_valuation:eq("+(index-1)+")").val(result.TDY_ASSET_NETVALUE);
                     }
                 }

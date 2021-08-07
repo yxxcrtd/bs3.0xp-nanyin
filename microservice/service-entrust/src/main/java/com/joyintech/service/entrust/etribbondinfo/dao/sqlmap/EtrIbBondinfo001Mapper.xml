@@ -501,6 +501,6 @@ from
         and t.trade_status='01'
         and t.is_cancel='N'
         and t.ps in('T01','T02')
-        order by t.UPDATE_TIME asc
+        order by t.CREATE_TIME asc
     </select>
 </mapper>
