@@ -3327,7 +3327,7 @@
         /* 穿透后剩余现金数据查询*/
         SELECT
         A.PORTFOLIO_ID AS portfolioId,
-        nvl(A.TDY_INTINCEXP,0) AS tdyIntincexp
+        nvl(A.TDY_INTINCEXP,0) AS tdyIntincexp,
         nvl(A.MARKET_VALUE,0)  AS marketValue
         FROM PTL_SEC_PIERCE_VALUTION A
         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">

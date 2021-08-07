@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import org.slf4j.Logger;
@@ -87,7 +88,8 @@ public class ValRiftTask extends BatchBaseService{
                 supDate = new Date();
             }
             //add by lpf for 估值穿透改造 S 将产品分为指定日期范围内的导入估值表 和没导入估值表的产品
-            List<Map<String,Object>> importValTableProdList = valRiftService.selectImportValTableProdList(supDate,this.getProductIdList(),"02");
+            String deptCode = batchExecuteInfo.getCreateUser() != null?MultilevelDataAuthorityUtil.getOrganizationCode(batchExecuteInfo.getCreateUser()):null;
+            List<Map<String,Object>> importValTableProdList = valRiftService.selectImportValTableProdList(supDate,this.getProductIdList(),deptCode);
             List<String> importProdList = new ArrayList<>();
             List<String> unImportProdList = new ArrayList<>();
             Date minDate = supDate;
