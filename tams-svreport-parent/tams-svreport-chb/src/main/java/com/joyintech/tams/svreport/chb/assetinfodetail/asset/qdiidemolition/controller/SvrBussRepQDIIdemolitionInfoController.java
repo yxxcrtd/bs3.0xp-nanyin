@@ -43,6 +43,10 @@ public class SvrBussRepQDIIdemolitionInfoController extends BaseController {
         //资产二级类别
         String   assetType=requestPargram.getParameter("assetType");
 
+        //工作流代码
+        String workFlowId = this.getParam("workflowId");
+
+        String entityName = this.getParam("entityName");
         //1.赋值界面数据字典
         setSelectOptionToModel(model,  new DictCode[] {DictCode.所属国家或地区, DictCode.计息基础_中债
                 ,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类});
@@ -50,7 +54,7 @@ public class SvrBussRepQDIIdemolitionInfoController extends BaseController {
         //2、当入参assetType2资产/负债二级类别 为【QDII拆出/逆回购资产】进行以下处理
         if (assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_QDII拆出_逆回购资产.getValue()).contains(assetType)){
             //调用service
-            bussAssetInfoService.setModle(uuid, dataStatus, model);
+            bussAssetInfoService.setModle(uuid, dataStatus, model,workFlowId,entityName);
         }
         model.addAttribute("entityName",this.getParam("entityName"));
 

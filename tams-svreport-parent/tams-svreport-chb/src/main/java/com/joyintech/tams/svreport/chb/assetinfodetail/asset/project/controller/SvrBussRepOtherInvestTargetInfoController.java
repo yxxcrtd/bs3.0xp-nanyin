@@ -44,6 +44,10 @@ public class SvrBussRepOtherInvestTargetInfoController extends BaseController{
         //资产二级类别
         String   assetType=requestPargram.getParameter("assetType");
 
+        //工作流代码
+        String workFlowId = this.getParam("workflowId");
+
+        String entityName = this.getParam("entityName");
         //1.赋值界面数据字典
         setSelectOptionToModel(model,   new DictCode[] {DictCode.行内资产类别,DictCode.所属国家或地区,DictCode.是否_中债,
                 DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分,DictCode.发行机构类型_按技术领域划分,
@@ -55,7 +59,7 @@ public class SvrBussRepOtherInvestTargetInfoController extends BaseController{
         //2、当入参assetType2资产/负债二级类别 为【资产_负债类别_各类资产的其他项】进行以下处理
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_各类资产的其他项.getValue()).contains(assetType)){
               //调用service
-            bussAssetInfoService.setModle(uuid, dataStatus, model);
+            bussAssetInfoService.setModle(uuid, dataStatus, model,workFlowId,entityName);
         }
         model.addAttribute("entityName",this.getParam("entityName"));
 

@@ -51,12 +51,16 @@ public class AssetInfoDetailController {
 	}
 
 	/**
-	 * 数据维护
-	 * @return
+	 *
+	 * 工作流完成操作
+	 * <功能详细描述>
+	 * @param map 业务实体
+	 * @see
+	 * @since 1.0
 	 */
-	@PostMapping("doSave")
-	public Integer doSave(@RequestBody AssetInfoDetailDto dto) {
-		return assetInfoDetail001Service.doSave(dto);
+	@RequestMapping("/doComplete")
+	public Integer doComplete(@RequestBody AssetInfoDetailDto dto) {
+		return assetInfoDetail001Service.doComplete(dto);
 	}
 
 	/**

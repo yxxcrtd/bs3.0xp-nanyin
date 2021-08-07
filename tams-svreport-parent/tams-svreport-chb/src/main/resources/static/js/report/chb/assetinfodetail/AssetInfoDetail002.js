@@ -392,10 +392,12 @@ var QueryFunc=function(){
 
         Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/check',object,function(result){
             if(result){
-                Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/save',object,function(result){
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
-                });
+                if(operateType === 'save') {
+                    WorkFlow.doSaveList(basePath + 'chb/assetinfodetail/AssetInfoDetail002/save', object, "AssetInfoDetail002_btn_save");
+                }
+                else {
+                    WorkFlow.doSubmitList(basePath + 'chb/assetinfodetail/AssetInfoDetail002/save', object, "AssetInfoDetail002_btn_submit");
+                }
             }
         })
     }
@@ -469,6 +471,11 @@ var QueryFunc=function(){
         //隐藏所有中债报送信息
         $(".businessDeptClass").hide();
         init();
+
+        $('#AssetInfoDetail002_btn_save').click(function() {
+            saveOrSubmit('save');
+        });
+
         $('#AssetInfoDetail002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });

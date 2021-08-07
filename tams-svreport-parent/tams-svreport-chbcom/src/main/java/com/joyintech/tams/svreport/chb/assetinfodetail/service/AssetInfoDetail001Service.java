@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -57,7 +58,7 @@ import java.util.stream.Collectors;
 /**
  * 资产基本信息维护Service
  */
-@Service(value="svrAssetInfoDetailService")
+@Service(value="svrAssetInfoDetailService_dtx")
 @Transactional(rollbackFor = Exception.class)
 public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDetailDto> {
 
@@ -121,25 +122,26 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
         return page;
 	}
 
-	/**
-	 * 数据赋值 marge模式
-	 * @param dto
-	 * @return
-	 */
-	public Integer doSave(AssetInfoDetailDto dto){
+	@Transactional
+	@DTXTransaction
+	public Integer doComplete(AssetInfoDetailDto dto){
 		int  flag = 0;
-		List<ChbAssetInfo> assetInfo = new ArrayList<>();
-		//数据保存.使用marge模式.避免出现老数据仍然出现的问题
-		if(StringUtil.isNotEmpty(dto)){
-			assetInfo.add(dto);
-			flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
-		}
-		/**
-		 * 如果是待处理数据,则将错误信息表里面的数据删除
-		 */
-		if(DictCodeListExt3.中债_处理状态_待处理.getValue().equals(dto.getDataStatus())){
-			assetInfoDetailMapper.deleteErrorMsg(dto.getAssetCode());
+		if (StringUtil.equals(dto.getOperateType(), "DELETE")) {//删除操作
+			flag = this.doDelete(dto);
+		}else {
+			List<ChbAssetInfo> assetInfo = new ArrayList<>();
+			//数据保存.使用marge模式.避免出现老数据仍然出现的问题
+			if (StringUtil.isNotEmpty(dto)) {
+				assetInfo.add(dto);
+				flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
+			}
+			/**
+			 * 如果是待处理数据,则将错误信息表里面的数据删除
+			 */
+			if (DictCodeListExt3.中债_处理状态_待处理.getValue().equals(dto.getDataStatus())) {
+				assetInfoDetailMapper.deleteErrorMsg(dto.getAssetCode());
 
+			}
 		}
 
 		return flag;

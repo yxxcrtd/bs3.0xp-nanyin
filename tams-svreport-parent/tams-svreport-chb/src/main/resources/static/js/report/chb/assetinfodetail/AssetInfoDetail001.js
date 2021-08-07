@@ -65,11 +65,9 @@
 	 * 绑定删除事件
 	 */
 	table.bind('click', '.delt', function(data, index) {
-		var object = {assetUuid:data.assetUuid,dataStatus:data.dataStatus, operateType:"edit"};
+		var object = {selectedItem: [data],operateType:"delete"};
 		Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-			Joyin.ajax(basePath +'chb/assetinfodetail/AssetInfoDetail001/delete',object, function(result){
-				table.reload();
-			});
+			WorkFlow.doDeleteList(basePath + 'chb/assetinfodetail/AssetInfoDetail001/delete', object, "AssetInfoDetail001_btn_delete", "AssetInfoDetail002");
 		});
 	});
 

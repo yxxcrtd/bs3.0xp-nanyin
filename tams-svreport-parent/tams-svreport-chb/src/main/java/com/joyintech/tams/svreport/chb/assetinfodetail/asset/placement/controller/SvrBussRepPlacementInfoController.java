@@ -49,6 +49,12 @@ public class SvrBussRepPlacementInfoController extends BaseController {
         String dataStatus = requestPargram.getParameter("dataStatus");
         //资产二级类别
         String assetType = requestPargram.getParameter("assetType");
+
+        //工作流代码
+        String workFlowId = this.getParam("workflowId");
+
+        String entityName = this.getParam("entityName");
+
         BigDecimal value=BigDecimal.ZERO;
         //1.赋值界面数据字典
         setSelectOptionToModel(model, new DictCode[] {DictCode.币种_中债,DictCode.交易流通场所,DictCode.交易对手类型,
@@ -58,7 +64,7 @@ public class SvrBussRepPlacementInfoController extends BaseController {
         //2、当入参assetType2资产/负债二级类别 为【拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）】进行以下处理
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue()).contains(assetType)){
             //调用service
-            bussAssetInfoService.setModle(uuid, dataStatus, model);
+            bussAssetInfoService.setModle(uuid, dataStatus, model,workFlowId,entityName);
             value=bussAssetInfoService.getValue(uuid);
         }
         model.addAttribute("entityName",this.getParam("entityName"));

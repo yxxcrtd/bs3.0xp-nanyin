@@ -31,6 +31,8 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetInfoDetailUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.ibatis.annotations.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +54,7 @@ import java.util.*;
  * @since 1.0
  */
 @Service
-public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetailDto> {
+public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetailDto> implements BaseProcessService<AssetInfoDetailDto> {
 
 	protected static final Logger logger = LoggerFactory.getLogger(AssetInfoDetailMService.class);
 
@@ -135,17 +137,24 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		return dtoList;
 	}
 
-	public void doSave(AssetInfoDetailDto dto) {
+	@Override
+	public String generateTitle(AssetInfoDetailDto entity, OperationType type) {
+		return  "资产代码" + "(" + entity.getAssetCode() + ")" + "-" + "资产名称" + "("
+				+ entity.getAssetName() + ")";
+	}
+	/**
+	 * 工作流（留痕操作结束的时候执行的方法）
+	 */
+	@Override
+	public void doComplete(AssetInfoDetailDto dto, OperationType type) {
+		dto.setOperateType(type.toString());
 		//分别调用各自的setEntity方法
 		this.getDtoByPageMessgae(dto);
 		//赋值相关数据
-		dto.setCreateUser(LoginUserUtil.getUserName());
-		dto.setUpdateUser(LoginUserUtil.getUserName());
 		dto.setIssuePartyId(CommonUtil.selectBankCode());
 		if(StringUtil.isEmpty(dto.getAssetUuid())){
 			dto.setAssetUuid(IDGenerator.generate(36));
 		}
-
 
 		/***当资产为资管计划或者委外时,需要保存资管计划开始结束日**/
 		if(DictCodeListExt2.资产_负债类别_资产管理产品.getValue().equals(dto.getAssetType())
@@ -159,9 +168,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		}
 
 		restTemplate.postForObject(
-				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", dto, Integer.class);
-
-
+				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doComplete", dto, Integer.class);
 	}
 
 

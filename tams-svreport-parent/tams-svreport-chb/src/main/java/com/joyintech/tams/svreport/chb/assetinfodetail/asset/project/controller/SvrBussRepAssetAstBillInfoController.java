@@ -44,6 +44,10 @@ public class SvrBussRepAssetAstBillInfoController extends BaseController{
         //资产二级类别
         String   assetType=requestPargram.getParameter("assetType");
 
+        //工作流代码
+        String workFlowId = this.getParam("workflowId");
+
+        String entityName = this.getParam("entityName");
         //1.赋值界面数据字典
         setSelectOptionToModel(model,   new DictCode[] {DictCode.是否_中债,DictCode.票据类信用证类资产类型,
                 DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类
@@ -53,7 +57,7 @@ public class SvrBussRepAssetAstBillInfoController extends BaseController{
         //2、当入参assetType2资产/负债二级类别 为【票据类资产/信用证类资产】进行以下处理
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_票据类资产_信用证类资产.getValue()).contains(assetType)){
               //调用service
-            bussAssetInfoService.setModle(uuid, dataStatus, model);
+            bussAssetInfoService.setModle(uuid, dataStatus, model,workFlowId,entityName);
         }
         model.addAttribute("entityName",this.getParam("entityName"));
         //3、返回 子组件对应的页面

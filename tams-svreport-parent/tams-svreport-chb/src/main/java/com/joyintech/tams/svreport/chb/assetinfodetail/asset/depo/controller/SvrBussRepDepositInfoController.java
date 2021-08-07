@@ -53,6 +53,11 @@ public class SvrBussRepDepositInfoController extends BaseController{
         //资产二级类别
         String   assetType=requestPargram.getParameter("assetType");
 
+        //工作流代码
+        String workFlowId = this.getParam("workflowId");
+
+        String entityName = this.getParam("entityName");
+
         //1.赋值界面数据字典
         setSelectOptionToModel(model, new DictCode[] {
                 DictCode.计息基础_中债,DictCode.回购标的类型,DictCode.交易对手类型,DictCode.存款类型,DictCode.标的类别
@@ -61,7 +66,7 @@ public class SvrBussRepDepositInfoController extends BaseController{
         //2、当入参assetType2资产/负债二级类别 为【资产_负债类别_本行_他行存款_大额存单】进行以下处理
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_本行_他行存款_大额存单.getValue()).contains(assetType)){
             //调用service
-            bussAssetInfoService.setModle(uuid, dataStatus, model);
+            bussAssetInfoService.setModle(uuid, dataStatus, model,workFlowId,entityName);
         }
         model.addAttribute("entityName",this.getParam("entityName"));
         return "report/chb/assetinfodetail/asset/depo/SvrBussRepDepositInfo";
