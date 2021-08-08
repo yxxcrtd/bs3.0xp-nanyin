@@ -178,6 +178,7 @@
         , {field: 'acctNo', title: 'EtrExchangeTrade001.acctNo', width: 150, sortable: false}
         , {field: 'finprodId', title: 'EtrExchangeTrade001.finprodId', width: 120, sortable: false}
         , {field: 'psStr', title: 'EtrExchangeTrade001.ps', width: 150, sortable: false}
+        , {field: 'settleSpreedName', title: 'EtrExchangeTrade001.settleSpreed', width: 150, sortable: false}
         , {field: 'priceModelStr', title: 'EtrExchangeTrade003.priceModel',sortable : false, width: 120,edit: false}
         , {field: 'declaTypeStr', title: 'EtrExchangeTrade001.priceModel2',sortable : false, width: 120,edit: false}
         , {field: 'entrustPrice', title: 'EtrExchangeTrade003.price', width:100, type:'number', digit : 3, sortable: false,
