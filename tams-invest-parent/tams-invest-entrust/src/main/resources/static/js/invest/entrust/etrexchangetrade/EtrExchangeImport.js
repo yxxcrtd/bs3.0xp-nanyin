@@ -163,7 +163,17 @@
         , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt', width: 120, type:'number',sortable: false}
         , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
-        , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false}
+        // , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false}
+        , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false ,
+            editOption: {
+                type: 'select',
+                id: 'counterId',
+                multiple: false,
+                showField: 'text',
+                searchable: true,
+                url: JoyinUtil.getRealPath('/invest/entrust/etrexchangetrade/EtrExchangeTrade001/selectCounterIdByCounterType')
+            }
+        }
         , {field: 'seatId', title: 'EtrExchangeTrade001.seatId', width: 120, sortable: false}
         , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日

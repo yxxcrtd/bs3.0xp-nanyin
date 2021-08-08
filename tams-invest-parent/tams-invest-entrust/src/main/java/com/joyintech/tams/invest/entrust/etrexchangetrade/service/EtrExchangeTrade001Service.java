@@ -1693,6 +1693,20 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				//指令数量控制在最小交易单位的整数倍（在前面数据无错误的情况下才校验，以防止资产代码为空等缺失条件）
 				return StringUtil.isNotEmpty(promptMsg.toString())?StringUtil.EMPTY:this.checkEntrustMinTrdUnit(obj);
 			});
+
+			// 交易对手是否存在
+			if(StringUtil.isNotEmpty(dzImportDto.getCounterId())){
+				checkElement(dzImportDto,promptMsg,null,obj-> {
+					Map<String, Object> param = new HashMap();
+					param.put("counterIdName",obj.getCounterId());
+					List<SelectOptionDto> result = this.selectCounterIdByCounterType(param);
+					if(result!=null||result.size()>0){
+						dzImportDto.setCounterId(result.get(0).getId());
+					}
+					return StringUtil.EMPTY;
+				});
+			}
+
 			if (StringUtil.isBlank(promptMsg.toString())) {
 				dzImportDto.setSeqNo(String.valueOf(jsonArrays.size()+1));
 				getEntrustListData(dzImportDto);
