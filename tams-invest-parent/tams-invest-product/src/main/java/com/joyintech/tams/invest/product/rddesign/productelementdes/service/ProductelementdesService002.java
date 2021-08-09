@@ -15,6 +15,8 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.product.rddesign.productelementdes.dto.Productelementdes002Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 @Service
 
 public class ProductelementdesService002 extends BaseService<Productelementdes002Dto> implements BaseProcessService<Productelementdes002Dto>{
+    private static final Logger logger = LoggerFactory.getLogger(ProductelementdesService002.class);
   public void createProductelementdes002(Productelementdes002Dto dto){
       restTemplate.postForObject(
               ServiceApplication.PRODUCT_SERVICE_NAME + "/Productelementdes/createProductelementdes002", dto, Productelementdes002Dto.class);
@@ -40,7 +43,8 @@ public class ProductelementdesService002 extends BaseService<Productelementdes00
 
     @Override
     public void doComplete(Productelementdes002Dto productelementdes002Dto, OperationType operationType) {
-        System.out.println(productelementdes002Dto+""+operationType);
+//        System.out.println(productelementdes002Dto+""+operationType);
+        logger.info(productelementdes002Dto+""+operationType);
 if (operationType.name()=="NEW"){
     String prdDesignId=productelementdes002Dto.getPrdDesignId();
     restTemplate.getForObject

@@ -71,7 +71,7 @@ public class ReportRule001Contoller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ReportRule001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+			@PathVariable("page") int page, @PathVariable("length") int length) {
         Page<ReportRule001Dto>  pageList = reportRule001Service.findPage(page, length, param);
         return pageList;
     }
@@ -80,7 +80,7 @@ public class ReportRule001Contoller extends BaseController {
     
     
     @PostMapping("/queryPageList")
-    public List<ReportRule001Dto> queryPageList(@RequestBody Map<String, Object> param) throws Exception{
+    public List<ReportRule001Dto> queryPageList(@RequestBody Map<String, Object> param) {
         List<ReportRule001Dto>  pageList = reportRule001Service.queryPageList(param);
         return pageList;
     }
@@ -123,7 +123,7 @@ public class ReportRule001Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/check")
-	public AjaxResult check(@RequestBody ReportRule001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody ReportRule001Dto dto, BindingResult result) {
 		return new AjaxResult();
 	}
 }

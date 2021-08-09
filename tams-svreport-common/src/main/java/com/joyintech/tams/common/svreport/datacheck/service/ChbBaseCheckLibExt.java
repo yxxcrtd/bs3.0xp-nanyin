@@ -14,6 +14,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.component.svrreport.chb.chbcommoncheck.dto.CheckElement;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -25,10 +27,14 @@ import java.util.Map;
  * 个性化检查方法，实现了多个数据检查方法
  * @author zhangliang
  * @version 1.7 2021年2月23日
- * @see BaseCheckLibExt
+ * @see ChbBaseCheckLibExt
  * @since 1.0
  */
 public class ChbBaseCheckLibExt {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(ChbBaseCheckLibExt.class);
 
     /**
      * 判断指定的字符串是否是数字
@@ -175,7 +181,7 @@ public class ChbBaseCheckLibExt {
         try {
             ff= srcValue.matches(format);
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return false;
         }
         return ff;

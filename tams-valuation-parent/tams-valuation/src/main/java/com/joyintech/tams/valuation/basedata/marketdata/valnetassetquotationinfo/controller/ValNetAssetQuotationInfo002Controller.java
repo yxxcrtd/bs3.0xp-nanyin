@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -116,7 +117,7 @@ public class ValNetAssetQuotationInfo002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getAssetCodeList")
     public List<SelectOptionDto> getAssetCodeList()
-        throws Exception { 
+         {
         Map<String,Object> param = RequestUtil.getPageParam();
         //map.put("finProdMarketId", param);
 		/* param.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue()); */
@@ -172,7 +173,7 @@ public class ValNetAssetQuotationInfo002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) ValNetAssetQuotationInfo001Dto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) ValNetAssetQuotationInfo001Dto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

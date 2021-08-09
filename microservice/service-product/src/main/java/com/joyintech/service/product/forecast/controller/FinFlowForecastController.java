@@ -45,7 +45,7 @@ public class FinFlowForecastController {
     public Page<FinFlowForecastConfig> findForecast(@RequestBody Map<String, Object> param,
                                                  @PathVariable("page") int page,
                                                  @PathVariable("length") int length)
-        throws Exception {
+    {
         return flowForecastService.findForecast(param, page, length);
     }
 
@@ -53,7 +53,7 @@ public class FinFlowForecastController {
     public Page<FinFlowForecastConfig> findReserveDetail(@RequestBody Map<String, Object> param,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("length") int length)
-        throws Exception {
+    {
         return flowForecastService.findReserveDetail(param, page, length);
     }
 
@@ -61,7 +61,7 @@ public class FinFlowForecastController {
     public Page<FinFlowForecastDealAmontDto> findNetValueOpenforecast(@RequestBody Map<String, Object> param,
                                                              @PathVariable("page") int page,
                                                              @PathVariable("length") int length)
-        throws Exception {
+    {
         return flowForecastService.findNetValueOpenforecast(param, page, length);
     }
 
@@ -76,7 +76,7 @@ public class FinFlowForecastController {
     public Page<FinFlowForecastDealAmontDto> findMaintainProductRedemptionData(@RequestBody Map<String, Object> param,
                                                                             @PathVariable("page") int page,
                                                                             @PathVariable("length") int length)
-                                                                                throws Exception {
+    {
         return flowForecastService.findMaintainProductRedemptionData(param, page, length);
     }
 }

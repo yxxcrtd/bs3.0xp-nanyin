@@ -35,7 +35,7 @@ public class CstpTrdMatchInfoService extends BaseService<CstpTrdMatchInfoDto> {
     @Autowired
     private FinProductMapper finProductMapper;
 
-    public Page<CstpTrdMatchInfoDto> findPage(int page, int length, Map<String,Object> map) throws Exception{
+    public Page<CstpTrdMatchInfoDto> findPage(int page, int length, Map<String,Object> map) {
     	Page<CstpTrdMatchInfoDto> pageLimit =  super.queryForPage(page, length, () -> cstpTrdMatchInfoMapper.findPage(map));
         finprodType2PinAn(pageLimit.getRoot());
         return pageLimit;

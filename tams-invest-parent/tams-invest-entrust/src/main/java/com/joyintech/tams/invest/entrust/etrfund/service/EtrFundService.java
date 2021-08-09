@@ -598,7 +598,7 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
         JSONArray objects = JSONArray.parseArray(tempList);
         for (int i = 0; i < objects.size(); i++ ) {
             EtrFundDto dto = new EtrFundDto();
-            String issuer = new String();
+            String issuer = "";
             JSONArray data = JSONArray.parseArray(((JSONArray)objects.get(i)).toJSONString());
             // 根据模板中固定的下标来复制
             dto.setIndexId(data.get(0).toString().trim());

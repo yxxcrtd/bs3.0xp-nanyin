@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.joyintech.framework.file.SafelyFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -47,6 +49,10 @@ import com.joyintech.tams.report.common.util.ReportGlobalConstant;
  */
 @Component
 public class PbcClassicsDataFileHelper {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(PbcClassicsDataFileHelper.class);
 
     public static final String OperateType_ADD="01";
     public static final String OperateType_MODIFY="02";
@@ -181,7 +187,7 @@ public class PbcClassicsDataFileHelper {
                 		sb.append("|");
                 	}
                 }
-                writer.write(sb.substring(0,sb.length()-1).toString());//删除最后一个“|”
+                writer.write(sb.substring(0,sb.length()-1));//删除最后一个“|”
                 writer.flush();
                 writer.newLine();
                 fileSize = file.length();
@@ -192,13 +198,13 @@ public class PbcClassicsDataFileHelper {
 				}
             }
         } catch (IOException e) {
-            e.printStackTrace();
+			logger.error(e.getMessage(),e);
         } finally {
             try {
                 if ( writer!=null )
                     writer.close();
             } catch (IOException e) {
-                e.printStackTrace();
+				logger.error(e.getMessage(),e);
             }
         }
         return result;
@@ -219,8 +225,7 @@ public class PbcClassicsDataFileHelper {
 				try {
 					file.createNewFile();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
         	}
         }

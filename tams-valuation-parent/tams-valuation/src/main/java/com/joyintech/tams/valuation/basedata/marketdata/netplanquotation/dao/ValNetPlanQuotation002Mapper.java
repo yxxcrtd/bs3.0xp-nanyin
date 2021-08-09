@@ -15,7 +15,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.valuation.basedata.marketdata.netplanquotation.dto.ValNetPlanQuotation002Dto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ValNetPlanQuotation002Mapper {
 	
 	  /**

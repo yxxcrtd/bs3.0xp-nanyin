@@ -46,7 +46,8 @@ public class PalOpenMarketDealersMonthlyController {
 	 * @throws  
 	 */  
 	@PostMapping("queryOpenMarketDealersMonthlyData")
-	public ChbBankMonthReportModelDto queryOpenMarketDealersMonthlyData(@RequestBody Map<String, Object> pageParam) throws Exception{
+	public ChbBankMonthReportModelDto queryOpenMarketDealersMonthlyData(@RequestBody Map<String, Object> pageParam)
+	{
 		return palOpenMarketDealersMonthlyService.queryOpenMarketDealersMonthlyData(pageParam);
 	}
 }

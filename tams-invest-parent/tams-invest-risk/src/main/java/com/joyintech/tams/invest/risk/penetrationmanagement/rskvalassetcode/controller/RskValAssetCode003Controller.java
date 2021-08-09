@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.controller;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,8 +83,7 @@ public class RskValAssetCode003Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("getAllTreeSourceNode")
-    public List<TreeNode> getAllTreeSourceNode(@RequestBody PriviewParamDto dto)
-        throws Exception {
+    public List<TreeNode> getAllTreeSourceNode(@RequestBody PriviewParamDto dto) throws FileNotFoundException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         List<TreeNode> list = new ArrayList<>();
         //起始行、科目代码列 字母转数字
         dto.setAssetCodeColIndex(ExcelUtilForRisk.columnToIndex(dto.getAssetCodeColIndexLetter()));
@@ -154,7 +154,7 @@ public class RskValAssetCode003Controller extends BaseController{
      * @since 1.0
      */
     private List<List<String>> readToList(int sheetIndex, int skipRows, int titleRow, Workbook wb)
-        throws Exception {
+         {
         List<List<String>> ls = new ArrayList<List<String>>();
         if (null != wb) {
             Sheet sh = wb.getSheetAt(sheetIndex);

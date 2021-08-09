@@ -17,6 +17,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.valuation.assets.fund.dto.ValAssetsFundQuery001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 基金类资产查询
@@ -26,6 +27,7 @@ import com.joyintech.tams.valuation.assets.fund.dto.ValAssetsFundQuery001Dto;
  * @see ValAssetsFundQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValAssetsFundQuery001Mapper {
 
     /** 根据条件查询列表 */

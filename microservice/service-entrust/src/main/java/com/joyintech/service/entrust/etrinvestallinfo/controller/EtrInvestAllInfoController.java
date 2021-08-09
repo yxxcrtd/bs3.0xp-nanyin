@@ -55,7 +55,7 @@ public class EtrInvestAllInfoController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<EtrInvestAllInfoDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) 
-        throws Exception {
+    {
         Page<EtrInvestAllInfoDto> result = etrInvestAllInfoService.selectForPage(
             page, length, param);
         return result;
@@ -72,7 +72,7 @@ public class EtrInvestAllInfoController {
      */
     @GetMapping("getentrustId")
     public List<SuggestDto> getentrustId(String entrustId)
-        throws Exception {
+    {
         List<SuggestDto> temp = etrInvestAllInfoService.getentrustId(entrustId);
         return temp;
     }
@@ -87,7 +87,7 @@ public class EtrInvestAllInfoController {
      */
     @GetMapping("getfinprodId")
     public List<SuggestDto> getfinprodId(String finprodId)
-        throws Exception {
+    {
         List<SuggestDto> temp = etrInvestAllInfoService.getfinprodId(finprodId);
         return temp;
     }
@@ -102,7 +102,7 @@ public class EtrInvestAllInfoController {
      */
     @PostMapping("selectExportPB")
     public List<EtrInvestAllInfoDto> selectExportPB(@RequestBody Map<String, Object> param) 
-        throws Exception {
+    {
     	List<EtrInvestAllInfoDto> result = etrInvestAllInfoService.selectExportPB( param);
         return result;
     }

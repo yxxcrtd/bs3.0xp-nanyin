@@ -87,7 +87,7 @@ public class FinProductSchedulingService extends BaseService<PaPrdIssueSchedule>
      */
     public Page<PaPrdIssueSchedule> selectForPage(int page, int length,
                                                   Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> finProductSchedulingMapper.queryAllData(pageParam));
     }
@@ -144,7 +144,7 @@ public class FinProductSchedulingService extends BaseService<PaPrdIssueSchedule>
      * @since 1.0
      */
     @Transactional
-    public int insert(PrdIssueScheduleDto entity) throws Exception {
+    public int insert(PrdIssueScheduleDto entity) throws InvocationTargetException, IllegalAccessException {
         List<BaseRepFinProductInfoDto> dtos = new ArrayList<BaseRepFinProductInfoDto>();
         BaseRepFinProductInfoDto repDto = new BaseRepFinProductInfoDto();
         // 产品申报登记

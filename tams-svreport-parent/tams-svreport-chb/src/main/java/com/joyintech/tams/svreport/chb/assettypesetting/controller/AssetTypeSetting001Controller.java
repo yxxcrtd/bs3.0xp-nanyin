@@ -81,7 +81,7 @@ public class AssetTypeSetting001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = ACTION_DELETE, method = RequestMethod.POST)
-    public AjaxResult doDelete(@RequestBody AssetTypeSetting001Dto dto) throws Exception {
+    public AjaxResult doDelete(@RequestBody AssetTypeSetting001Dto dto) {
         assetTypeSettingService.doDelete(dto);
         return new AjaxResult("删除成功");
     }
@@ -94,7 +94,7 @@ public class AssetTypeSetting001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("doExDelete")
-    public AjaxResult doExDelete(@RequestBody AssetTypeSetting001Dto dto) throws Exception {
+    public AjaxResult doExDelete(@RequestBody AssetTypeSetting001Dto dto) {
         assetTypeSettingService.doExDelete(dto);
         return new AjaxResult("删除成功");
     }

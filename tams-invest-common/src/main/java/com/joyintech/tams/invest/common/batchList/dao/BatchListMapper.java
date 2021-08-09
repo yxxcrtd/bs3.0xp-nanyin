@@ -12,6 +12,8 @@ package com.joyintech.tams.invest.common.batchList.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 /**
  * 批量存储Mapper
  * 
@@ -20,6 +22,7 @@ import java.util.List;
  * @see BatchListMapper
  * @since 1.0
  */
+@Repository
 public interface BatchListMapper<V> {
 
     void insertBatchList(List<V> infoList);

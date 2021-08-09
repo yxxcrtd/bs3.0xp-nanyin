@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -102,7 +103,7 @@ public class ValBondQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getSecIdToNew")
     public List<SuggestDto> getSecIdToNew(String param)
-        throws Exception{
+         {
         List<SuggestDto> list = new ArrayList<SuggestDto>();
         for(SuggestDto dto:valBondQuotationInfoService.getSecIdToNew(param)){
             if(dto!=null){
@@ -135,8 +136,7 @@ public class ValBondQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) ValBondQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) ValBondQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -177,7 +177,7 @@ public class ValBondQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getAssetCodeList")
     public List<SelectOptionDto> getAssetCodeList()
-        throws Exception { 
+        {
     	Map<String,Object> param = RequestUtil.getPageParam();
         List<SelectOptionDto> temp = valBondQuotationInfoService.getFinprodAbbrOption(param);
         return temp;

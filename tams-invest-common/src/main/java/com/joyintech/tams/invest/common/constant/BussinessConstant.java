@@ -311,4 +311,9 @@ public interface BussinessConstant {
      * 资产不满足中债报送数据时是否允许加券
      */
     String IS_PERMIT_ADDCOUPON = "IS_PERMIT_ADDCOUPON";
+
+    /**
+     * 中债导入估值表中文件名称拆分分隔符：估值表
+     */
+    String CHB_VAL_SPLIT_STR = "CHB_VAL_SPLIT_STR";
 }

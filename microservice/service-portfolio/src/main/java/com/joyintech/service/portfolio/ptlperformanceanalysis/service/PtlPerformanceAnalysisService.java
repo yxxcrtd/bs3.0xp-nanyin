@@ -45,7 +45,7 @@ public class PtlPerformanceAnalysisService extends BaseService<PtlPerformanceAna
 	
 	
     public Page<PtlPerformanceAnalysis001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+	{
     	Date searchDateStart = DateUtil.parse((String) pageParam.get("searchDateStart"));
     	Date searchDateEnd = DateUtil.parse((String) pageParam.get("searchDateEnd"));
     	

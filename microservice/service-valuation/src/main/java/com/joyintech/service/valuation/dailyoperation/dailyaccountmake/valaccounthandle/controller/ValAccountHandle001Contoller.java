@@ -10,6 +10,7 @@
 package com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valaccounthandle.controller;
 
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,7 +149,7 @@ public class ValAccountHandle001Contoller extends BaseController {
 
     
     @PostMapping("/findLogPage")
-    public List<ValAccountHandle001Dto> findLogPage(@RequestBody Map<String,Object> map) throws Exception{
+    public List<ValAccountHandle001Dto> findLogPage(@RequestBody Map<String,Object> map){
 //    	Map<String,Object> map =RequestUtil.getPageParam();
 
         return valAccountHandle001Service.findLogPage(map);
@@ -165,7 +166,7 @@ public class ValAccountHandle001Contoller extends BaseController {
     
  
     @PostMapping("/checkBokPosition")
-    public List<ValAccountHandle002Dto> checkBokPosition(@RequestBody Map<String,Object> map) throws Exception{
+    public List<ValAccountHandle002Dto> checkBokPosition(@RequestBody Map<String,Object> map) throws ParseException {
         	return valAccountHandle001Service.checkBokPosition(map);
 //        	list = valAccountHandle001Service.selectCheckLog(map);
     }

@@ -42,7 +42,7 @@ public class AssetTypeSettingService extends BaseService<AssetTypeSetting001Dto>
      * @param dto
      * @throws Exception
      */
-    public void doSave(AssetTypeSetting001Dto dto) throws Exception {
+    public void doSave(AssetTypeSetting001Dto dto) {
         dto.setCreateUser(LoginUserUtil.getUserName());//创建人
         dto.setUpdateUser(LoginUserUtil.getUserName());//更新人
         dto.setStatus(DictCodeList.数据状态_修改.getValue());//状态
@@ -55,7 +55,7 @@ public class AssetTypeSettingService extends BaseService<AssetTypeSetting001Dto>
      * @param dto
      * @throws Exception
      */
-    public void doDelete(AssetTypeSetting001Dto dto) throws Exception{
+    public void doDelete(AssetTypeSetting001Dto dto) {
         restTemplate.postForObject(
                 SvrServiceApplication.CHB_SERVICE_NAME + "/AssetTypeSetting/doDelete", dto, Integer.class);
     }

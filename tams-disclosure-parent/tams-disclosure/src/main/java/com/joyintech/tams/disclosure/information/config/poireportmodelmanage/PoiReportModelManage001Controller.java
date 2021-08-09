@@ -106,7 +106,7 @@ public class PoiReportModelManage001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<DisPoiTab> findIndexId() throws Exception {
+	public Page<DisPoiTab> findIndexId() {
 		Page<DisPoiTab> page = reportModelManage001Service.findByPage(RequestUtil.getPageParam());
 		return page;
 	}

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -118,8 +119,7 @@ public class FinResultsCovering002Controller extends BaseController{
 	@ResponseBody
 	@RequestMapping(OPERATE_TYPE_SAVE)
 	public AjaxResult save(@RequestBody @Validated({
-		ValidateGroupEdit.class}) FinResultsCovering002Dto dto, BindingResult br)
-				throws Exception {
+		ValidateGroupEdit.class}) FinResultsCovering002Dto dto, BindingResult br) throws WorkFlowException {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}

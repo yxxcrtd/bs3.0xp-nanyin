@@ -130,7 +130,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
 	  */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<TrdCommandDispatcher001Dto> selectAllCommonChar() throws Exception{
+	public Page<TrdCommandDispatcher001Dto> selectAllCommonChar() {
 		Map<String,Object> param = RequestUtil.getParameters(getRequest());
 		return trdCommandDispatcher001Service.selectForPage(param);
 	}
@@ -168,7 +168,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
 	 */
     @ResponseBody
     @RequestMapping("/getEntIds")
-    public List<SuggestDto> getEntrustId() throws Exception {
+    public List<SuggestDto> getEntrustId() {
     	Map<String, Object> param = new HashMap<String,Object>();
         param.put("entId", super.getRequest().getParameter("param"));
         List<SuggestDto> list = trdCommandDispatcher001Service.getEntrustId(param);
@@ -181,7 +181,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getPortfolioIds")
-    public List<SuggestDto> getPortfolioIds() throws Exception {
+    public List<SuggestDto> getPortfolioIds() {
     	String portfolioId=super.getRequest().getParameter("param");
     	return trdCommandDispatcher001Service.getPortfolioIds(portfolioId);
     }
@@ -192,7 +192,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinprodIds")
-    public List<SuggestDto> getFinprodIds() throws Exception {
+    public List<SuggestDto> getFinprodIds() {
     	String finprodId=super.getRequest().getParameter("param");
     	List<SuggestDto> list = trdCommandDispatcher001Service.getFinprodIds(finprodId);
     	return list;
@@ -231,7 +231,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return trdCommandDispatcher001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

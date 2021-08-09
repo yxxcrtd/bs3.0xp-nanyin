@@ -6,6 +6,7 @@
 	 <update id="updateReadybyAdapter" parameterType="String" >
     	UPDATE DIS_DATA_READY SET 
     		DATA_DATE	=	TO_DATE(#{date,jdbcType=VARCHAR},'yyyyMMdd')
+        WHERE 1=1
     </update>
     
     

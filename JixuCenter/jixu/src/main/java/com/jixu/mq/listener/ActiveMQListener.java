@@ -61,7 +61,8 @@ public class ActiveMQListener implements SessionAwareMessageListener<Message>{
 			ObjectMessage om=(ObjectMessage) message;
 			messagePublic.exeBean(om);
 			try {
-				System.out.println(om.getObject());
+//				System.out.println(om.getObject());
+				logger.info((String) om.getObject());
 			} catch (JMSException e) {
 				logger.error("Error", e);
 			}

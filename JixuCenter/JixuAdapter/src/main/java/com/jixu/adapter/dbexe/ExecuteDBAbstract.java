@@ -175,7 +175,9 @@ public abstract class ExecuteDBAbstract implements ExecuteDBScripts{
 						try {
 							inStreamDoc =clob.getCharacterStream();
 							char[] tempDoc = new char[(int) clob.length()];  
-				            inStreamDoc.read(tempDoc);  
+				            if(inStreamDoc!=null){
+								inStreamDoc.read(tempDoc);
+							}
 
 				            clobStr=new String(tempDoc);
 						}catch(Exception se) {
@@ -185,7 +187,7 @@ public abstract class ExecuteDBAbstract implements ExecuteDBScripts{
 								try {
 									inStreamDoc.close();
 								} catch (IOException e) {
-									e.printStackTrace();
+									logger.error(e.getMessage(),e);
 								}
 							}
 						}

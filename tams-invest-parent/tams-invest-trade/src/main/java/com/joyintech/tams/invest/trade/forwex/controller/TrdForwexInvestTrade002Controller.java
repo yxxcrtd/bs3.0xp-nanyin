@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.trade.forwex.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,9 @@ import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -82,6 +86,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("TrdForwexInvestTrade002")
 @RequestMapping("/invest/trade/forwex/TrdForwexInvestTrade002")
 public class TrdForwexInvestTrade002Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdForwexInvestTrade002Controller.class);
 
     @Autowired
     private TrdForwexInvestTrade002Service trdForwexInvestTrade002Service;
@@ -243,7 +251,7 @@ public class TrdForwexInvestTrade002Controller extends BaseController {
     /**
      * 组合可用现金查询 <功能详细描述>
      * 
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0
@@ -407,8 +415,7 @@ public class TrdForwexInvestTrade002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) TrdForwexInvestTradeDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) TrdForwexInvestTradeDto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -462,7 +469,7 @@ public class TrdForwexInvestTrade002Controller extends BaseController {
     @ResponseBody
     @PostMapping("autosave")
     public String autosave(@RequestBody TrdForwexInvestTradeDto dto, BindingResult br)
-        throws Exception {
+         {
         if (br.hasErrors()) {
             return br.toString();
         }
@@ -500,7 +507,7 @@ public class TrdForwexInvestTrade002Controller extends BaseController {
             // 分布式事务报错 modify by renping 20191106 end
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         return "1";
@@ -520,7 +527,7 @@ public class TrdForwexInvestTrade002Controller extends BaseController {
     /**
      * 定价日自动带出为交割日前2个工作日 <功能详细描述>
      * 
-     * @param dto
+     * @param param
      * @return
      * @throws Exception
      * @see
@@ -546,8 +553,7 @@ public class TrdForwexInvestTrade002Controller extends BaseController {
                 dealCalendarHolidayList, "1");
         }
         catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         //
         param.put("pricedDate", pricedDate);
@@ -557,7 +563,6 @@ public class TrdForwexInvestTrade002Controller extends BaseController {
     /**
      * 划款指令生成实体类
      * 
-     * @param dto 外汇远期投资交易实体类
      * @return 金融产品交易实体类
      * @see
      * @since 1.0

@@ -66,7 +66,7 @@ public class MarketRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/selectTmplIndByType")
-    public List<MarketRiskSceneManage002Dto> selectTmplIndByType(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MarketRiskSceneManage002Dto> selectTmplIndByType(@RequestBody Map<String, Object> param) {
         return marketRiskSceneManage002Service.selectTmplIndByType(param);
     }
     
@@ -80,7 +80,7 @@ public class MarketRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/queryIndexByType")
-    public List<MarketRiskSceneManage002Dto> queryIndexByType(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MarketRiskSceneManage002Dto> queryIndexByType(@RequestBody Map<String, Object> param) {
         return marketRiskSceneManage002Service.queryIndexByType(param);
     }
     
@@ -94,7 +94,7 @@ public class MarketRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/querySceneById")
-    public MarketRiskSceneManage002Dto querySceneById(@RequestBody Map<String, Object> param) throws Exception {
+    public MarketRiskSceneManage002Dto querySceneById(@RequestBody Map<String, Object> param) {
     	return marketRiskSceneManage002Service.querySceneById(param);
     }
     
@@ -107,7 +107,7 @@ public class MarketRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/queryScentNameCount")
-    public List<MarketRiskSceneManage002Dto> queryScentNameCount(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MarketRiskSceneManage002Dto> queryScentNameCount(@RequestBody Map<String, Object> param) {
         return marketRiskSceneManage002Service.queryScentNameCount(param);
     }
     
@@ -136,7 +136,7 @@ public class MarketRiskSceneManage002Controller {
     @DTXTransaction
     @DataSource(DataSourceType.STRESSTEST)
     @PostMapping("/insert")
-    public void insert(@RequestBody MarketRiskSceneManage002Dto dto) throws Exception {
+    public void insert(@RequestBody MarketRiskSceneManage002Dto dto) throws IllegalAccessException {
         marketRiskSceneManage002Service.insert(dto);
     }
     
@@ -152,7 +152,7 @@ public class MarketRiskSceneManage002Controller {
     @DTXTransaction
     @DataSource(DataSourceType.STRESSTEST)
     @PostMapping("/update")
-    public void update(@RequestBody MarketRiskSceneManage002Dto dto) throws Exception {
+    public void update(@RequestBody MarketRiskSceneManage002Dto dto) throws IllegalAccessException {
         marketRiskSceneManage002Service.update(dto);
     }
 }

@@ -97,7 +97,8 @@ public class InvestorsHoldInfoController {
      */
     @SuppressWarnings("unchecked")
    	@PostMapping("importData")
-    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) throws Exception {
+    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param)
+    {
 		List<List<String>> dataList = (List<List<String>>) param.get("dataList");
 		List<List<String>> tempList = (List<List<String>>) param.get("tempList");
 		String bankCode =  null!=param.get("bankCode")?param.get("bankCode").toString():"";

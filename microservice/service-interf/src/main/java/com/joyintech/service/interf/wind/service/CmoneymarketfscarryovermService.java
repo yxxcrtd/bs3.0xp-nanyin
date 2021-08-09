@@ -63,7 +63,7 @@ public class CmoneymarketfscarryovermService extends WindService<InfCmoneymarket
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InfCmoneymarketfscarryoverm entity) throws Exception {
+	public int insert(InfCmoneymarketfscarryoverm entity) {
 		// 删除重复数据
 		insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 登陆接口表

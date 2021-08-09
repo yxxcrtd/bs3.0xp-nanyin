@@ -76,7 +76,6 @@ public class PtlAnalyzeAfterInvest002Service extends CommonExportService<PtlAnal
     /**
      * 获取行情波动图数据源
      * @return Page<PtlAnalyzeAfterInvest002Dto>
-     * @throws Exception
      */
 	public List<PtlAnalyzeAfterInvest002Dto> getSourceData(Map<String, Object> param) {
 		List<PtlAnalyzeAfterInvest002Dto> t = restTemplate.postForList(
@@ -98,7 +97,7 @@ public class PtlAnalyzeAfterInvest002Service extends CommonExportService<PtlAnal
     /**
      * 导出
      * @return ResponseEntity<byte[]>
-     * @throws Exception
+     * @throws IOException
      */
 	public ResponseEntity<byte[]> export(Map<String, Object> parameters) throws IOException {
 		String pageId = (String) parameters.get("pageId");
@@ -191,7 +190,6 @@ public class PtlAnalyzeAfterInvest002Service extends CommonExportService<PtlAnal
                 wb = new XSSFWorkbook(stream);
             }
             else {
-                stream.close();
                 throw new BusinessException("不是一个有效的Excel文件");
             }
             return wb;

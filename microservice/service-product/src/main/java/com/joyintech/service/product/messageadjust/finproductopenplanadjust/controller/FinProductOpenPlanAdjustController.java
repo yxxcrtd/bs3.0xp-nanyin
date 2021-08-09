@@ -69,7 +69,7 @@ public class FinProductOpenPlanAdjustController {
      */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<FinProductOpenPlanAdjustDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception{
+    {
         return finProductOpenPlanService.selectForPage(page, length, param);
     }
 }

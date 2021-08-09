@@ -17,6 +17,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.valuation.trademanage.accountcurrentrate.dto.AccountCurrentRate002Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -26,6 +27,7 @@ import com.joyintech.tams.valuation.trademanage.accountcurrentrate.dto.AccountCu
  * @see AccountCurrentRate002Mapper
  * @since 1.0
  */
+@Repository
 public interface AccountCurrentRate002Mapper {
 
     /**

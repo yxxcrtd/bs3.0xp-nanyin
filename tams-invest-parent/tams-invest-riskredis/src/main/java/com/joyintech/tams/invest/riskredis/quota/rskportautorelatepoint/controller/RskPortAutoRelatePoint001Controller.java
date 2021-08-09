@@ -58,7 +58,7 @@ public class RskPortAutoRelatePoint001Controller extends BaseController {
     } 
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskPortAutoRelatePointDto> selectForPage() throws Exception{
+    public Page<RskPortAutoRelatePointDto> selectForPage() {
     	return rskPortAutoRelatePointService.selectForPage(RequestUtil.getPageParam());
     }
     

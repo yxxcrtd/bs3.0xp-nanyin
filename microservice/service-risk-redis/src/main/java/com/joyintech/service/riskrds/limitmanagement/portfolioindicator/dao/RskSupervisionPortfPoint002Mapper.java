@@ -10,6 +10,7 @@
  
 package com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public interface RskSupervisionPortfPoint002Mapper {
 
     List<RskSupervisionIndicator002Dto> queryRelatedIndList(Map<String, Object> param);
     
-    String getPortfolioConst(@Param("portfolioCode")String portfolioCode);
+    String getPortfolioConst(@Param("portfolioCode")String portfolioCode, @Param("paramSysDate")Date paramSysDate);
     
     RskPortfolioIndicator002Dto queryPortfIndByPortfId(@Param("portfolioCode")String portfolioCode,@Param("indId")String indId);
     

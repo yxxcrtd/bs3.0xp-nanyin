@@ -60,7 +60,7 @@ public class RskValtblPrtBotasset001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskValtblPrtBotassetMapDto> selectAll()
-        throws Exception {
+         {
         Page<RskValtblPrtBotassetMapDto> page = rskValtblPrtBotassetService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -75,7 +75,7 @@ public class RskValtblPrtBotasset001Controller extends BaseController{
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return rskValtblPrtBotassetService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

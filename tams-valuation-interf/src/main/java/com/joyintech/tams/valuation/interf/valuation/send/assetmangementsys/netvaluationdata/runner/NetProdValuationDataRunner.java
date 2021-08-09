@@ -64,7 +64,7 @@ public class NetProdValuationDataRunner extends InterfBaseService {
 	
 	@SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-	public void execute() throws Exception {
+	public void execute() throws InterfException {
 		// TODO Auto-generated method stub
 		logger.info(getInterfExecuteInfo().getTaskName() + "开始！");
 		// 参数列表增加"executeInfo"参数

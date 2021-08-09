@@ -91,7 +91,6 @@ public class MonthReportAssetService {
 			generateAssetMonthReportDetail(report,ifTrigger);
 		} catch (Exception e) {
 			logger.error("资产端月报生成错误："+e.getMessage(),e);
-//			e.printStackTrace();
 		}
 		 logger.info("生成月报资产明细数据结束："+year+"年"+month+"月");
         
@@ -385,7 +384,7 @@ public class MonthReportAssetService {
         		try {
 					bot.setBookdate(formatter.parse(formatter.format(report.getStatusDate())));
 				} catch (ParseException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
         		bot.setEnddate(lastday);
         		chbMonthAssetPositionMapper.insert(bot);

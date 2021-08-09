@@ -1,5 +1,8 @@
 package com.joyintech.tams.disclosure.busicommon.infodisclosure.reportSource.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,8 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DisTargetIndexServiceGroup {
-	
-	public Map<String,Object> printGS(Date startDate, Date endDate, String prodId,Connection conn)throws Exception {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(DisTargetIndexServiceGroup.class);
+
+	public Map<String,Object> printGS(Date startDate, Date endDate, String prodId,Connection conn) {
 		//定义返回值
 		Map<String,Object> resultmap=new HashMap<>();
 		// 期初总资产估值
@@ -156,7 +163,7 @@ public class DisTargetIndexServiceGroup {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -164,14 +171,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -205,7 +212,7 @@ public class DisTargetIndexServiceGroup {
 				endValueTotal = rs.getBigDecimal("endValueTotal");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -213,14 +220,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -252,21 +259,21 @@ public class DisTargetIndexServiceGroup {
 				gsStartValueNet = rs.getBigDecimal("gsStartValueNet");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}finally {
 			//释放连接
 			if(ps!=null){
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -299,7 +306,7 @@ public class DisTargetIndexServiceGroup {
 				qyStartValueNet = rs.getBigDecimal("qyStartValueNet");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -307,14 +314,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -347,7 +354,7 @@ public class DisTargetIndexServiceGroup {
 				yspStartValueNet = rs.getBigDecimal("yspStartValueNet");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		finally {
@@ -356,14 +363,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -397,7 +404,7 @@ public class DisTargetIndexServiceGroup {
 				zqStartValueNet = rs.getBigDecimal("zqStartValueNet");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -405,14 +412,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -445,7 +452,7 @@ public class DisTargetIndexServiceGroup {
 				ckStartValueNet = rs.getBigDecimal("ckStartValueNet");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -453,14 +460,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -492,7 +499,7 @@ public class DisTargetIndexServiceGroup {
 				gsEndValueNet = rs.getBigDecimal("gsEndValueNet");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -500,14 +507,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -540,7 +547,7 @@ public class DisTargetIndexServiceGroup {
 				qyEndValueNet = rs.getBigDecimal("qyEndValueNet");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		finally {
@@ -549,14 +556,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -589,7 +596,7 @@ public class DisTargetIndexServiceGroup {
 				yspEndValueNet = rs.getBigDecimal("yspEndValueNet");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		finally {
@@ -598,14 +605,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -638,7 +645,7 @@ public class DisTargetIndexServiceGroup {
 				zqEndValueNet = rs.getBigDecimal("zqEndValueNet");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -646,14 +653,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -687,7 +694,7 @@ public class DisTargetIndexServiceGroup {
 				ckEndValueNet = rs.getBigDecimal("ckEndValueNet");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		finally {
@@ -696,14 +703,14 @@ public class DisTargetIndexServiceGroup {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -728,7 +735,7 @@ public class DisTargetIndexServiceGroup {
 			System.out.println(resultmap.get("qtStartScale"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 	}*/
 }

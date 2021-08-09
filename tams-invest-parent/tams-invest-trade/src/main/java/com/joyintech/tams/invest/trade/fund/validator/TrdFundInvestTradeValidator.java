@@ -652,7 +652,7 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
         }
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
-        if(!"".equals(dto.getChlId())&&dto.getChlId()!=null){
+        if(dto.getChlId()!=null&&!"".equals(dto.getChlId())){
             Integer count;
             Map<String,Object> sMap= new HashMap<String ,Object>();
             if(!StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), DictCodeList.是否_否.getValue()) &&

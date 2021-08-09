@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.RepBatchDateStatus;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscgenfiledetail.entity.InfoDisclosureReadAndGenEntity;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface InfoDiscGenFileDetailMapper {
 	/**
 	 * 通过执行状态与执行标志查询所有有效的日志主表信息

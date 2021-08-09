@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
@@ -39,6 +42,11 @@ import com.joyintech.service.product.messageadjust.maintenance.dto.OpenPlanParam
  */
 @Service("backFinOpenPlanMaintenanceService")
 public class FinOpenPlanMaintenanceService  extends BaseService<FinOpenPlanMaintenanceDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinOpenPlanMaintenanceService.class);
+
     @Autowired
     private FinOpenPlanMaintenanceMapper finOpenPlanMaintenanceMapper;
     /**
@@ -70,7 +78,7 @@ public class FinOpenPlanMaintenanceService  extends BaseService<FinOpenPlanMaint
      * @see
      * @since 1.0
      */
-    public List<FinOpenPlanMaintenanceDto> selectForPage(Map<String, Object> pageParam) throws Exception {
+    public List<FinOpenPlanMaintenanceDto> selectForPage(Map<String, Object> pageParam) {
         pageParam.put("openType03", DictCodeList.申赎开放类型_申赎开放.getValue());
         return finOpenPlanMaintenanceMapper.selectForPage(pageParam);
     }
@@ -242,7 +250,7 @@ public class FinOpenPlanMaintenanceService  extends BaseService<FinOpenPlanMaint
     	try {
     		flag = finOpenPlanMaintenanceMapper.insertNewOpenPlan(finOpenPlanList);
 		} catch (Exception e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
     	return flag;
     }

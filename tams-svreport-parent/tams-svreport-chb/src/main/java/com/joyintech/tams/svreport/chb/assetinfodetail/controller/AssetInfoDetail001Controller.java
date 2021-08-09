@@ -17,19 +17,28 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.errormessage.dto.ErrorMessage001;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
@@ -107,19 +116,30 @@ public class AssetInfoDetail001Controller extends BaseController {
 	}
 
 
+	/**
+	 *  页面删除
+	 * @param dto 费用品种
+	 * @param br br
+	 * @return 删除结果
+	 * @throws WorkFlowException WorkFlowException
+	 */
 	@ResponseBody
-	@RequestMapping("delete")
-	public AjaxResult doDelete(String assetUuid,String dataStatus) {
-		AjaxResult result = new AjaxResult(this.getMessage("REPORT_COMMON_I_0007"));
-		AssetInfoDetailDto dto = new AssetInfoDetailDto();
-		dto.setAssetUuid(assetUuid);
-		dto.setDataStatus(dataStatus);
-		try{
-				assetInfoDetailMService.doDelete(dto);
-		}catch(Exception e){
-			logger.info("删除数据错误",e);
-		}
-		return result;
+	@RequestMapping(ACTION_DELETE)
+	public AjaxResult delete(@RequestBody @Validated({
+			ValidateGroupDelete.class}) AssetInfoDetailDto dto, BindingResult br) throws WorkFlowException {
+		ProcessParameter<AssetInfoDetailDto> processParameter = new ProcessParameter<AssetInfoDetailDto>();
+		WorkFlowParameter<AssetInfoDetailDto> params = new WorkFlowParameter<AssetInfoDetailDto>();
+		params.setPageId("AssetInfoDetail002");
+		params.setElementId(dto.getElementId());
+		params.setBusinessCode(item -> item.getAssetCode());
+		params.setBusinessType(DictCodeList.共通业务类型_资产基本信息维护.getValue());
+		// 设置流程业务说明, entity即传入的dto
+		params.setComment(entity -> "资产代码" + "(" + entity.getAssetCode() + ")" + "-" + "资产名称" + "("
+				+ entity.getAssetName() + ")");
+		processParameter.setWorkFlowParameter(params);
+		String msg = assetInfoDetailMService.start(processParameter,
+				dto.getSelectedItem().toArray(new AssetInfoDetailDto[dto.getSelectedItem().size()]));
+		return new AjaxResult(msg);
 	}
 
     /**
@@ -143,10 +163,7 @@ public class AssetInfoDetail001Controller extends BaseController {
 				outFile, true);
 
     }
-    
-
-     
-    
+      
     /**
      * 资产代码下拉框
      * @return 产品名称列表
@@ -156,4 +173,22 @@ public class AssetInfoDetail001Controller extends BaseController {
     public List<SelectOptionDto> getRegCode() {
         return assetInfoDetailMService.queryAssetCodeList(RequestUtil.getPageParam());
     }
+    
+    /**
+	 * 导入数据文件之前检查数据
+	 *
+	 * @param fileName 导入的文件名
+	 * @return 处理结果
+	 */
+	@ResponseBody
+	@RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+	public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+		return assetInfoDetailMService.checkConfirmMsgForImportData(fileName);
+	}
+
+	@ResponseBody
+	@RequestMapping("/importFile")
+	public List<ExcelValidDto> importData(String fileName){
+		return this.assetInfoDetailMService.importData(fileName);
+	}
 }

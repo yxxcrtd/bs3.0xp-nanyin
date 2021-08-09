@@ -81,7 +81,7 @@ public class TrdBondLendInvestTradeService extends BaseService {
      */
     public Page<TrdBondLendInvestTradeDto> selectForPage(int page, int length,
                                                          Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.交易流程状态_流程中.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.交易流程状态_有效.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());
@@ -197,7 +197,7 @@ public class TrdBondLendInvestTradeService extends BaseService {
      * @since 1.0
      */
     @SuppressWarnings("unchecked")
-    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         param.put("FINPROD_MARKET",DictCodeListExt1.交易场所_银行间.getValue());
         param.put("FINPROD_WIND_MARKET",DictCodeListExt1.交易场所_WIND_银行间.getValue());

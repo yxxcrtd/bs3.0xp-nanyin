@@ -99,7 +99,7 @@ public class RepBottomAsset001Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return repBottomAsset001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

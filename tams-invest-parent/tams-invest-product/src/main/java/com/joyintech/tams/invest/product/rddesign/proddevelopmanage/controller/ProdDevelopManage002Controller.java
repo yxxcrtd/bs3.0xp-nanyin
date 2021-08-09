@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.rddesign.proddevelopmanage.controller;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -117,8 +118,7 @@ public class ProdDevelopManage002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) ProdDevelopManageDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) ProdDevelopManageDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

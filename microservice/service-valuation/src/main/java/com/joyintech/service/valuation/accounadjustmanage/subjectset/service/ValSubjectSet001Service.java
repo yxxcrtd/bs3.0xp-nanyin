@@ -97,7 +97,7 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
      * @see 
      * @since 1.0
      */
-    public List<SelectOptionDto> getSubjectId2(Map<String, Object> map) throws Exception {
+    public List<SelectOptionDto> getSubjectId2(Map<String, Object> map) {
         List<SelectOptionDto> list = valSubjectSet001Mapper.getSubjectId2(map);
         if(CollectionUtils.isNotEmpty(list)) {
             list.forEach(item -> {
@@ -117,7 +117,7 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
      * @see 
      * @since 1.0
      */
-    public List<SelectOptionDto> getSubjectLevel(Map<String, Object> map) throws Exception {
+    public List<SelectOptionDto> getSubjectLevel(Map<String, Object> map) {
         return valSubjectSet001Mapper.getSubjectLevel(map);
     }
     
@@ -150,7 +150,7 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
      * @see
      * @since 1.0
      */
-    public Page<ValBokSubjectDto> selectForPage(int page,int length, Map<String, Object> pageParam) throws Exception {
+    public Page<ValBokSubjectDto> selectForPage(int page,int length, Map<String, Object> pageParam) {
         return super.queryForPage(page,length,()-> valSubjectSet001Mapper.selectAll(pageParam));
     }
     /**

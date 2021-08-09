@@ -54,9 +54,9 @@
 	          lay.finprod_id layFinprodId,
 	          A.cash_id cashId,
 	          A.ACCR_DATE accrDate,
-	          ACCR_STR_DATE accrStrDate,
-	          ACCR_END_DATE accrEndDate,
-	          VAL_DATE valDate,
+	          A.ACCR_STR_DATE accrStrDate,
+	          A.ACCR_END_DATE accrEndDate,
+	          A.VAL_DATE valDate,
 	          case
 	            when (select count(1)
 	                    from (select finprod_id finprod_id, happen_date trade_date
@@ -97,7 +97,7 @@
 					#{item}
 				</foreach>
 		</if>
-	    order by lay.prod_style,ACCR_STR_DATE
+	    order by lay.prod_style,A.ACCR_STR_DATE
 	</select>
 	<select id="getcycleTdayRule" resultType="java.lang.String">
 	select ACCR_TDAY_RULE from Fin_Float_Counting_Rule where cash_id=#{cashId,jdbcType = VARCHAR}   order by eff_date desc LIMIT 1

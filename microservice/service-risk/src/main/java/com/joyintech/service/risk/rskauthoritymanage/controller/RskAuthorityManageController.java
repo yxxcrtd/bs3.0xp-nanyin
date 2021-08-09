@@ -10,6 +10,7 @@
  
 package com.joyintech.service.risk.rskauthoritymanage.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public class RskAuthorityManageController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RskAuthorityManageDto> selectForPage(@RequestBody Map<String, Object> param,
-         @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+         @PathVariable("page") int page, @PathVariable("length") int length) {
         Page<RskAuthorityManageDto> pageList = rskAuthorityManageService.selectAll(page, length, param);
         return pageList;
     }
@@ -84,7 +85,7 @@ public class RskAuthorityManageController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody RskAuthorityManageDto dto) throws Exception {
+    public int delete(@RequestBody RskAuthorityManageDto dto) {
         return rskAuthorityManageService.delete(dto);
     }
     
@@ -102,7 +103,7 @@ public class RskAuthorityManageController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody RskAuthorityManageDto dto) throws Exception {
+    public int insert(@RequestBody RskAuthorityManageDto dto) {
         return rskAuthorityManageService.insert(dto);
     }
 
@@ -120,7 +121,7 @@ public class RskAuthorityManageController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody RskAuthorityManageDto dto) throws Exception {
+    public int update(@RequestBody RskAuthorityManageDto dto) {
         return rskAuthorityManageService.update(dto);
     }
     /**
@@ -132,7 +133,7 @@ public class RskAuthorityManageController {
      * @since 1.0
      */
     @PostMapping("/selectBySecNo")
-    public RskAuthorityManageDto selectByFinprodIdAndEffDate(@RequestBody RskAuthorityManageDto dto) throws Exception {
+    public RskAuthorityManageDto selectByFinprodIdAndEffDate(@RequestBody RskAuthorityManageDto dto) throws InvocationTargetException, IllegalAccessException {
         return rskAuthorityManageService.selectBySecNo(dto);
     }
     /**
@@ -156,7 +157,7 @@ public class RskAuthorityManageController {
      * @since 1.0
      */
     @GetMapping("/selectByUserName")
-    public List<RskAuthorityManageDto> selectByUserName(String existUserName) throws Exception {
+    public List<RskAuthorityManageDto> selectByUserName(String existUserName) {
         return rskAuthorityManageService.selectByUserName(existUserName);
     }
     /**
@@ -168,7 +169,7 @@ public class RskAuthorityManageController {
      * @since 1.0
      */
     @PostMapping("/getDtoByUserName")
-    public List<RskAuthorityManageDto> getDtoByUserName(@RequestBody Map<String,Object> map) throws Exception {
+    public List<RskAuthorityManageDto> getDtoByUserName(@RequestBody Map<String,Object> map) {
         return rskAuthorityManageService.getDtoByUserName(map);
     }
     /**
@@ -197,7 +198,7 @@ public class RskAuthorityManageController {
      * @since 1.0
      */
     @PostMapping("/selectAssetTrade")
-    public Integer selectAssetTrade(@RequestBody Map<String, Object> param) throws Exception {
+    public Integer selectAssetTrade(@RequestBody Map<String, Object> param) {
         return rskAuthorityManageService.selectAssetTrade(param);
     }
     /**
@@ -212,7 +213,7 @@ public class RskAuthorityManageController {
      */
     @PostMapping("getExistUser/{page}/{length}")
     public Page<RskAuthorityManageDto> getExistUser(@RequestBody Map<String, Object> param,
-         @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+         @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskAuthorityManageService.getExistUser(page, length, param);
     }
 }

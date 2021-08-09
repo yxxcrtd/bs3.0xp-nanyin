@@ -10,27 +10,21 @@
  
 package com.joyintech.tams.invest.asset.channel.validate;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.math.BigDecimal;
-
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.asset.channel.dto.ChannelAssetDto;
 import com.joyintech.tams.invest.asset.channel.service.ChannelAssetService;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 通道资产业务验证
@@ -50,7 +44,7 @@ public class ChannelAssetValidator implements BeanValidator{
     private ChannelAssetService channelAssetService;
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private ChbDataCheckService chbDataCheckService;
     
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -167,7 +161,7 @@ public class ChannelAssetValidator implements BeanValidator{
         }
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChannelAsset002", null, ValidMessage.class);
+            resultList = chbDataCheckService.chbCheckCommon(resultList, dto, "ChannelAsset002", null);
         }
         return resultList;
     }

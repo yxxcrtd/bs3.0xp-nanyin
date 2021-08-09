@@ -25,6 +25,7 @@ import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -51,6 +52,7 @@ import com.joyintech.tams.systemtools.listener.TamsAuthorizationListener;
 import com.joyintech.tams.systemtools.service.SystemToolService;
 import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 
+@Lazy(false)
 @Component
 public class CommonUtil {
 	
@@ -561,7 +563,7 @@ public class CommonUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		return false;
@@ -918,6 +920,24 @@ public class CommonUtil {
 	 */
 	public static String getYHGeneralBankCode(){
 		return baseCommonService.getYHGeneralBankCode();
+	}
+	
+	/**
+	 * 主要功能:判断字符串是否为日期 注意事项:无
+	 *
+	 * @param str
+	 *            日期字符串 yyyy-MM-dd
+	 * @return 是否
+	 */
+	public static boolean isEnDateStr(String str) {
+		SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_DATE_FORMAT_EN);
+		try {
+			format.setLenient(false);
+			format.parse(str);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 
 

@@ -50,7 +50,7 @@ public class CePreOccupancyManagementController {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<CePreOccupancyManagementDto> selectForPage(@RequestBody Map<String, Object> param,
-                                                           @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                           @PathVariable("page") int page, @PathVariable("length") int length) {
         return cePreOccupancyManagementService.selectForPage(page, length, param);
     }
 
@@ -141,7 +141,7 @@ public class CePreOccupancyManagementController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody CePreOccupancyManagementDto dto) throws Exception {
+    public void insert(@RequestBody CePreOccupancyManagementDto dto) {
         cePreOccupancyManagementService.insert(dto);
     }
 
@@ -155,7 +155,7 @@ public class CePreOccupancyManagementController {
 	@Transactional
 	@DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody CePreOccupancyManagementDto dto) throws Exception {
+    public void update(@RequestBody CePreOccupancyManagementDto dto) {
         cePreOccupancyManagementService.update(dto);
     }
 
@@ -169,7 +169,7 @@ public class CePreOccupancyManagementController {
 	@Transactional
 	@DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody CePreOccupancyManagementDto dto) throws Exception {
+    public int delete(@RequestBody CePreOccupancyManagementDto dto) {
         return cePreOccupancyManagementService.delete(dto);
     }
 }

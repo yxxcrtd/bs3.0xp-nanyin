@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trademanage.finprodtradequery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -97,7 +98,7 @@ public class ValFinprodTradeQuery001Contoller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValFinprodTradeQuery001Dto> findPage()
-        throws Exception {
+          {
         return valFinprodTradeQuery001Service.findPage(RequestUtil.getPageParam());
     }
     
@@ -147,7 +148,7 @@ public class ValFinprodTradeQuery001Contoller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+            throws ParseException, IOException {
 
         String datas = this.getParam("datas");
         Map<String, Object> params = this.getRequestMap();
@@ -182,7 +183,7 @@ public class ValFinprodTradeQuery001Contoller extends BaseController {
     @ResponseBody
     @RequestMapping("deleteCheck")
     public AjaxResult deleteCheck(@RequestBody @Valid ValFinprodTradeQuery001Dto dto,
-            BindingResult result) throws Exception {
+            BindingResult result) throws ParseException {
 
         List<ValFinprodTradeQuery001Dto> list = dto.getListValFinprodTradeQuery001Dto();
         if(list==null||list.size()<=0){
@@ -266,7 +267,7 @@ public class ValFinprodTradeQuery001Contoller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Valid ValFinprodTradeQuery001Dto dto, BindingResult br)
-        throws Exception {
+          {
 
         if (br.hasErrors()) {
             return new AjaxResult(br);

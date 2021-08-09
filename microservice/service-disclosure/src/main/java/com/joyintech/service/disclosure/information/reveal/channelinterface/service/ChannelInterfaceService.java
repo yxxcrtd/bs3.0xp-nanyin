@@ -29,7 +29,8 @@ public class ChannelInterfaceService extends CommonExportService<ChannelInterfac
 	private ChannelInterface001Mapper channelInterface001Mapper;
 
 
-	public Page<ChannelInterfaceNew001Dto> queryChannelInterfacePageList(Map<String, Object> params) throws Exception {
+	public Page<ChannelInterfaceNew001Dto> queryChannelInterfacePageList(Map<String, Object> params)
+	{
 
 		return super.queryForPage(() -> channelInterface001Mapper.queryChannelInterfacePageList(params));
 	}

@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.valuation.taxparametermanage.taxscheme.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -113,7 +114,7 @@ public class TaxScheme005Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findAsset")
     public List<SelectOptionDto> findAsset()
-        throws Exception {
+         {
         return taxScheme005Service.findAsset(RequestUtil.getPageParam());
     }
 
@@ -126,7 +127,7 @@ public class TaxScheme005Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getAssetInfo")
     public TaxScheme005Dto getAssetInfo()
-        throws Exception {
+         {
         return taxScheme005Service.getAssetInfo(RequestUtil.getPageParam());
     }
 
@@ -142,7 +143,7 @@ public class TaxScheme005Controller extends BaseController {
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) TaxScheme005Dto dto, BindingResult bindingResult)
-        throws Exception {
+            throws ParseException {
         String msg = StringUtils.EMPTY;
         String operateType = dto.getOperateType();
 

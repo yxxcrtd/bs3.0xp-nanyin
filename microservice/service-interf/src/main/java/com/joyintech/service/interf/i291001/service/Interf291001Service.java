@@ -56,7 +56,7 @@ public class Interf291001Service extends ProdAliveService<Interf291001InEntity, 
      */
     @Override
     public int saveInterfData(InterfOutEntity entity)
-        throws Exception {
+    {
         setPinganBusiType(DictCodeListExt1.平安业务类型_产品申购.getValue());
         return super.saveInterfData(entity);
     }

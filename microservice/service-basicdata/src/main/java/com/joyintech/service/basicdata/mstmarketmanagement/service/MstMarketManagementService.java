@@ -21,9 +21,9 @@ public class MstMarketManagementService  extends BaseService<MstMarketManageDto>
 	@Autowired
 	private MstMarketManagementMapper mstMarketManagementMapper;
 	public Page<MstMarketManageDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-	        throws Exception {
+	{
  	        return super.queryForPage(page,length,() -> mstMarketManagementMapper.queryForPage(pageParam));
-	    }
+	}
 	  /**
      * 
      * 客户名称联想文本框service层实现

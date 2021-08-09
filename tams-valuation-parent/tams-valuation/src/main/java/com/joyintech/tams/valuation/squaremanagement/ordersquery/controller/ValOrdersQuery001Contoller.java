@@ -71,7 +71,7 @@ public class ValOrdersQuery001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValOrdersQuery001Dto> findPage() throws Exception{
+    public Page<ValOrdersQuery001Dto> findPage() {
         //结算日期开始时间
         String settleDateStart = this.getParam("settleDateStart");
         //结算日期结束时间

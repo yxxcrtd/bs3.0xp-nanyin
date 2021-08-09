@@ -78,7 +78,7 @@ public class PreTrdBondInvestTradeService extends BaseService {
     @SuppressWarnings("unchecked")
 	public Page<PreTrdBondInvestTrade001Dto> selectForPage(int page, int length,
                                                      Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.有效状态_有效.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.有效状态_待处理.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.有效状态_撤销.getValue());
@@ -115,7 +115,7 @@ public class PreTrdBondInvestTradeService extends BaseService {
      * @since 1.0
      */
     @SuppressWarnings("unchecked")
-    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         return this.queryForPage(page, length,
                 () -> preTrdBondInvestTradeMapper.getFinprodId(param));
@@ -131,7 +131,7 @@ public class PreTrdBondInvestTradeService extends BaseService {
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-	public Page<SelectOptionDto> getacctNo(int page, int length, Map<String, Object> param) throws Exception {
+	public Page<SelectOptionDto> getacctNo(int page, int length, Map<String, Object> param) {
         return this.queryForPage(page, length, () -> preTrdBondInvestTradeMapper.getacctNo(param));
     }
 
@@ -145,7 +145,7 @@ public class PreTrdBondInvestTradeService extends BaseService {
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-	public Page<SelectOptionDto> getsecAcctId(int page, int length, Map<String, Object> param) throws Exception {
+	public Page<SelectOptionDto> getsecAcctId(int page, int length, Map<String, Object> param) {
         return this.queryForPage(page, length, () -> preTrdBondInvestTradeMapper.getsecAcctId(param));
     }
     /**

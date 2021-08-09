@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.common.service.dao;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import java.util.Map;
  * @see InvestDateCalcMapper
  * @since 1.0
  */
+@Repository
 public interface InvestDateCalcMapper {
 
     /**

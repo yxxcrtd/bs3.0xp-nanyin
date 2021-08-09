@@ -27,8 +27,7 @@ public class ValSubjectInfo001Service extends CommonExportService<ValSubjectInfo
      * @see
      * @since 1.0
      */
-    public Page<ValSubjectInfo001Dto> findPage(int page, int length, Map<String, Object> params)
-        throws Exception {
+    public Page<ValSubjectInfo001Dto> findPage(int page, int length, Map<String, Object> params){
         params.put("BOOKSET_TYPE_TEMPLATE", DictCodeList.账套类别_账套模板.getValue());
         params.put("INTER_TYPE_SUBJECTINFO", DictCodeListExt1.深圳通接口类型_科目信息表.getValue());
         return super.queryForPage(page, length,

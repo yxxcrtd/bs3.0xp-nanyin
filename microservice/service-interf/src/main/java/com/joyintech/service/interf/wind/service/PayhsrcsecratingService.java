@@ -82,7 +82,7 @@ public class PayhsrcsecratingService extends WindService<InterfPayhsrcsecrating>
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InterfPayhsrcsecrating entity) throws Exception {
+	public int insert(InterfPayhsrcsecrating entity) {
 		// 删除接口表重复数据
 		// insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 登录接口表

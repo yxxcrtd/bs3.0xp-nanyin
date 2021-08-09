@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.valuation.trademanage.accountcurrentrate.dto.AccountCurrentRate001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 账户活期利率查询 Mapper
@@ -24,6 +25,7 @@ import com.joyintech.tams.valuation.trademanage.accountcurrentrate.dto.AccountCu
  * @see AccountCurrentRate001Mapper
  * @since 1.0
  */
+@Repository
 public interface AccountCurrentRate001Mapper {
 
     /**

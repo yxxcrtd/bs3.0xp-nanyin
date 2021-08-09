@@ -7,6 +7,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +30,7 @@ import com.orm.obj.GlCoaaMap;
 
 @Controller
 public class COAController extends ExceptionControl{
-    
+    private static final Logger logger = LoggerFactory.getLogger(COAController.class);
     @Resource(name="configService")
     private ConfigService configService;
     
@@ -137,7 +139,8 @@ public class COAController extends ExceptionControl{
      public void acctRemove(@RequestParam(value = "pid", required = true) String coaID,
              				@RequestParam(value = "id", required = true) String acctID,
              			    HttpServletResponse response){
-        System.out.println("Remove acctid -" + acctID + " in COA " + coaID);
+//        System.out.println("Remove acctid -" + acctID + " in COA " + coaID);
+        logger.info("Remove acctid -" + acctID + " in COA " + coaID);
         JsonUtil.writeObjToResponse(response, "");
     }
     

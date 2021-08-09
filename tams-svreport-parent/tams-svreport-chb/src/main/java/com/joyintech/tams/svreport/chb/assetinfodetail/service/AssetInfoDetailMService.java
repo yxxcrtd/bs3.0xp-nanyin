@@ -1,5 +1,7 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -18,13 +20,19 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.errormessage.dto.ErrorMessage001;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetInfoDetailUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.ibatis.annotations.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +54,7 @@ import java.util.*;
  * @since 1.0
  */
 @Service
-public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetailDto> {
+public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetailDto> implements BaseProcessService<AssetInfoDetailDto> {
 
 	protected static final Logger logger = LoggerFactory.getLogger(AssetInfoDetailMService.class);
 
@@ -56,6 +64,8 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	@Autowired
 	private RechbAassetInfoUtilService rechbAassetInfoUtilService;
 
+	@Autowired
+	private AssetInfoDetailUtil assetInfoDetailUtil;
 
 	static Map<String,Set<String>> map = null;
 	/**
@@ -127,17 +137,24 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		return dtoList;
 	}
 
-	public void doSave(AssetInfoDetailDto dto) throws Exception {
+	@Override
+	public String generateTitle(AssetInfoDetailDto entity, OperationType type) {
+		return  "资产代码" + "(" + entity.getAssetCode() + ")" + "-" + "资产名称" + "("
+				+ entity.getAssetName() + ")";
+	}
+	/**
+	 * 工作流（留痕操作结束的时候执行的方法）
+	 */
+	@Override
+	public void doComplete(AssetInfoDetailDto dto, OperationType type) {
+		dto.setOperateType(type.toString());
 		//分别调用各自的setEntity方法
 		this.getDtoByPageMessgae(dto);
 		//赋值相关数据
-		dto.setCreateUser(LoginUserUtil.getUserName());
-		dto.setUpdateUser(LoginUserUtil.getUserName());
 		dto.setIssuePartyId(CommonUtil.selectBankCode());
 		if(StringUtil.isEmpty(dto.getAssetUuid())){
 			dto.setAssetUuid(IDGenerator.generate(36));
 		}
-
 
 		/***当资产为资管计划或者委外时,需要保存资管计划开始结束日**/
 		if(DictCodeListExt2.资产_负债类别_资产管理产品.getValue().equals(dto.getAssetType())
@@ -151,13 +168,11 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		}
 
 		restTemplate.postForObject(
-				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doSave", dto, Integer.class);
-
-
+				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doComplete", dto, Integer.class);
 	}
 
 
-	public void doDelete(AssetInfoDetailDto dto) throws Exception {
+	public void doDelete(AssetInfoDetailDto dto) {
 
 		restTemplate.postForObject(
 				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doDelete", dto, Integer.class);
@@ -218,8 +233,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		}catch (Exception e){
 			logger.info("实体转换错误,请检查数据类型",e);
 		}finally {
-			return null;
+//			return null;
 		}
+		return null;
 	}
 
 	/**
@@ -282,4 +298,47 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		}
 		return resultList;
 	}
+	
+	/**
+	 * 导入数据文件之前检查数据
+	 *
+	 * @param fileName 导入的文件名
+	 * @return 处理结果
+	 */
+	public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+		AjaxResult webResult = new AjaxResult();
+		List<List<String>> data = ExcelUtil.getDataList2(fileName);
+		List<AssetInfoDetailDto> list = new ArrayList<>();
+		List<ExcelValidDto> checkResult = assetInfoDetailUtil.convertToBean(list,data);
+		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list)){
+			int dataCount = this.assetInfoDetailMapper.selectDataCount(list);
+			if (dataCount > 0) {
+				webResult.setMessage(this.getMessage("REPORT_ASSET_C_0003"), MessageType.确认消息);
+			}
+			else{
+				webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+			}
+		}else {
+			webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+		}
+		return webResult;
+	}
+
+	public List<ExcelValidDto> importData(String fileName){
+		List<ExcelValidDto> tempCheckResult = assetInfoDetailUtil.checkExcelTemp(fileName);
+		if (!StringUtil.isEmptyList(tempCheckResult)) {
+			return tempCheckResult;
+		}
+		List<List<String>> data = ExcelUtil.getDataList2(fileName);
+		List<AssetInfoDetailDto> list = new ArrayList<>();
+		List<ExcelValidDto> resultList = assetInfoDetailUtil.convertToBean(list,data);
+		if (StringUtil.isEmptyList(resultList)){
+			return restTemplate.postForList(
+					SvrServiceApplication.CHB3_SERVICE_NAME + "/AssetInfoDetail/importData",
+					list,
+					ExcelValidDto.class);
+		}
+		return resultList;
+	}
+
 }

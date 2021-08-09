@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trademanage.investtradequery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -158,7 +159,7 @@ public class InvestTradeQuery001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<InvestTradeDto> findPage()  throws Exception {
+    public Page<InvestTradeDto> findPage()  {
         return investTradeQuery001Service.findPage(RequestUtil.getPageParam());
     }
     /**
@@ -198,7 +199,7 @@ public class InvestTradeQuery001Controller extends BaseController {
     }
     
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	String datas = this.getParam("expDatas");
     	String id = this.getParam("expId");
     	List<InvestTradeDto> listdto;
@@ -211,7 +212,7 @@ public class InvestTradeQuery001Controller extends BaseController {
     	return buildFile(fileMap.get(id),listdto);
     }
  
-    public ResponseEntity<byte[]> buildFile(String modlePath,List<InvestTradeDto> listdto) throws Exception{
+    public ResponseEntity<byte[]> buildFile(String modlePath,List<InvestTradeDto> listdto) {
         File outFile = investTradeQuery001Service.makeFile(modlePath,listdto);
         return ExportUtil.export(
             this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS

@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.basedata.marketdata.valotcopt.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -78,7 +79,7 @@ public class ValOtcOpt001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValOtcOpt001Dto> findPage() throws Exception{
+    public Page<ValOtcOpt001Dto> findPage() {
         return valOtcOpt001Service.findPage(RequestUtil.getPageParam());
     }
     
@@ -133,7 +134,7 @@ public class ValOtcOpt001Controller extends BaseController {
 //	 */
 //	@ResponseBody
 //	@RequestMapping("check")
-//	public AjaxResult check(@RequestBody ValOtcOpt001Dto dto, BindingResult result) throws Exception {
+//	public AjaxResult check(@RequestBody ValOtcOpt001Dto dto, BindingResult result) {
 //		
 //        return commonCheck(result, dto.getOperateType());
 //	}
@@ -186,7 +187,7 @@ public class ValOtcOpt001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         Map<String, Object> para= RequestUtil.getPageParam();
         List<ValOtcOpt001Dto> dtoList = new ArrayList<>();

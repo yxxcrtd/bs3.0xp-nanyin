@@ -752,7 +752,7 @@ public class FileUtil {
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 			finally {
             	if(outputStream!=null)

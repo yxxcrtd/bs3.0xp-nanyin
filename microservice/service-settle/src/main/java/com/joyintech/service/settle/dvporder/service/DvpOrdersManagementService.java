@@ -31,13 +31,13 @@ public class DvpOrdersManagementService extends BaseService<DvpOrdersManagementD
     private DvpOrdersManagementMapper dvpOrdersManagementMapper;
 
     public Page<DvpOrdersManagementDto> findTransferTableData(int page, int length, Map<String, Object> param)
-        throws Exception {
+    {
         setParams(param);
         return queryForPage(page, length, () -> dvpOrdersManagementMapper.findTransferTableData(param));
     }
 
     public Page<DvpOrdersManagementDto> findDvpTransferTableData(int page, int length, Map<String, Object> param)
-        throws Exception {
+    {
         setParams(param);
         return queryForPage(page, length, () -> dvpOrdersManagementMapper.findDvpTransferTableData(param));
     }

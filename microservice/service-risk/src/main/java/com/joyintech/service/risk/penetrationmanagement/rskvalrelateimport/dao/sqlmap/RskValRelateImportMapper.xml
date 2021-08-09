@@ -70,4 +70,18 @@
 			from RSK_VALTBL_PRT_IMP_MAP rvp
 		  where rvp.PTL_ID = #{ptlId}
 	</select>
+	<select id="selectAllAsset" resultType="com.joyintech.tams.common.base.entity.FinProduct">
+		SELECT
+		rsk.ASSET_CODE FINPROD_ID,
+		fpt.type_8 FINPROD_TYPE,
+		fpt.type_8 FINPROD_TYPE2,
+		rsk.ASSET_CODE FINPROD_ABBR,
+		rsk.ASSET_NAME FINPROD_NAME
+		FROM
+		RSK_ASSET_INFO rsk/**资产要素表**/
+		left join fin_product_type fpt
+		on rsk.asset_code=fpt.finprod_id
+		WHERE
+		rsk.status in ('E', 'M')
+	</select>
 </mapper>

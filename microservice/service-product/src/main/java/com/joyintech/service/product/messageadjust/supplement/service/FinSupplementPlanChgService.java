@@ -41,7 +41,7 @@ public class FinSupplementPlanChgService extends BaseService<FinSupplementPlanCh
 		return super.queryForPage(page, length, () ->finSupplementPlanChgMapper.findPage(param));
 	}
 
-	public Page<FinSupplementPlanChgDto> selectForPage(int page, int length, Map<String, Object> param) throws Exception {
+	public Page<FinSupplementPlanChgDto> selectForPage(int page, int length, Map<String, Object> param) {
 		return super.queryForPage(page, length, () -> finSupplementPlanChgMapper.findPage(param));
 	}
 	

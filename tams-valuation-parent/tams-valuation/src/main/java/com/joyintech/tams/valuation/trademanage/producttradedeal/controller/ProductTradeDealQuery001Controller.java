@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trademanage.producttradedeal.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +73,7 @@ public class ProductTradeDealQuery001Controller extends BaseController {
 
 	@RequestMapping("findPage")
 	@ResponseBody
-	public Page<ProductTradeDealQuery001Dto> findPage() throws Exception {
+	public Page<ProductTradeDealQuery001Dto> findPage() {
 		return productTradeDealQuery001Service.findByPage(RequestUtil.getPageParam());
 	}
 
@@ -86,7 +87,7 @@ public class ProductTradeDealQuery001Controller extends BaseController {
 	 */
 	@RequestMapping("getAssets")
 	@ResponseBody
-	public List<SelectOptionDto> getAssets() throws Exception {
+	public List<SelectOptionDto> getAssets() {
 		return productTradeDealQuery001Service.getAssets(RequestUtil.getPageParam());
 	}
     /**
@@ -144,7 +145,7 @@ public class ProductTradeDealQuery001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		 String datas = this.getParam("datas");
          List<ProductTradeDealQuery001Dto> listdto;
          if (datas == null) {

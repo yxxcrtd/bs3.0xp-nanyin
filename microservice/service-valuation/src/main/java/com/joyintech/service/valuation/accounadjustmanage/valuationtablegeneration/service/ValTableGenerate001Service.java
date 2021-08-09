@@ -170,7 +170,7 @@ public class ValTableGenerate001Service extends CommonExportService<ValTableGene
      * @throws Exception
      */
     public Page<ValTableGenerate001Dto> findPage(int page ,int length,Map<String, Object> params)
-        throws Exception {
+    {
         // 获取交易类型
         String prodType = (String)params.get("prodTypes");
         // 交易方向多选，转为数组
@@ -194,12 +194,18 @@ public class ValTableGenerate001Service extends CommonExportService<ValTableGene
         if (StringUtil.isNotEmpty(buildStatus)) {
             buildStatusArr = buildStatus.split(",");
         }
-        ValTableGenerate001SearchDto dto = (ValTableGenerate001SearchDto)JsonUtils.map2entity(
-            params, ValTableGenerate001SearchDto.class);
+        ValTableGenerate001SearchDto dto = null;
+        try {
+            dto = (ValTableGenerate001SearchDto) JsonUtils.map2entity(
+                params, ValTableGenerate001SearchDto.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("数据转换异常");
+        }
         dto.setProdIds(prodIdArr);
         dto.setProdTypes(prodTypeArr);
         dto.setBuildStatuses(buildStatusArr);
-        return super.queryForPage(page,length,() -> mapper.queryPageList(dto));
+        ValTableGenerate001SearchDto finalDto = dto;
+        return super.queryForPage(page,length,() -> mapper.queryPageList(finalDto));
     }
 
     /**

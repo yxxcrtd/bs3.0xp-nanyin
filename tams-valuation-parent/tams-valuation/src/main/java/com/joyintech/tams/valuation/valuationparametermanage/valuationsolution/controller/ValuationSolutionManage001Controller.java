@@ -48,14 +48,14 @@ public class ValuationSolutionManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValuationSolutionManage001Dto> queryPage()
-        throws Exception {
+         {
         Page<ValuationSolutionManage001Dto> page = valuationSolutionManage001Service.findPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
     @ResponseBody
     @RequestMapping("selectSolutionList")
     public List<SelectOptionDto> selectSolutionList()
-        throws Exception {
+         {
         return valuationSolutionManage001Service.selectSolutionList();
     }
     

@@ -12,9 +12,12 @@ package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.ser
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.tams.common.base.entity.RskValtblSubject;
@@ -144,5 +147,18 @@ public class RskValAssetCode003Service extends BaseService<RskValtblAssetSubMapD
         return restTemplate.getForList(ServiceApplication.RISK_SERVICE_NAME
             + "/RskValAssetCode/selecctRskValtblSubjectCodeList?subType="+subType,
             RskValtblSubject.class);
+    }
+    /**
+     * 查询目标汇总科目代码
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public  Page<SelectOptionDto> selecctRskValtblSubjectSumCodeList(Map<String, Object> pageParam){
+        return restTemplate.postForPage(ServiceApplication.RISK_SERVICE_NAME
+                        + "/RskValAssetCode/selecctRskValtblSubjectSumCodeList",pageParam,
+                SelectOptionDto.class);
     }
 }

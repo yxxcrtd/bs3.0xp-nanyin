@@ -13,6 +13,8 @@ package com.joyintech.service.trade.investtrade.commandscollection.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.trade.investtrade.commandscollection.dto.TrdCommandsCollection001Dto;
 import com.joyintech.service.trade.investtrade.commandscollection.dto.TrdCommandsCollection002Dto;
@@ -25,6 +27,7 @@ import com.joyintech.service.trade.investtrade.commandscollection.dto.TrdCommand
  * @see TrdCommandsCollectionMapper
  * @since 1.0
  */
+@Repository
 public interface TrdCommandsCollectionMapper {
 
     /**

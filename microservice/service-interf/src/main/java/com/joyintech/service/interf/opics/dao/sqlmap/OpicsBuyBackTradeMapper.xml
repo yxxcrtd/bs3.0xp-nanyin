@@ -202,5 +202,6 @@
                                   FROM INTERF_TRAD_REPOASST TR
                                   WHERE TRIM(OP.TRADEID) = TR.TRADEID
                                   GROUP BY TR.TRADEID)
+         WHERE 1=1                         
     </update>
 </mapper>

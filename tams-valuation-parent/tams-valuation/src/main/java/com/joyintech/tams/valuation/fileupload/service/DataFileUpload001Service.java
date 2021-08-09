@@ -62,7 +62,7 @@ public class DataFileUpload001Service extends BaseService<DataFileUpload001Dto>{
      * @see
      * @since 1.0
      */
-    public Page<DataFileUpload001Dto> findPage(Map<String, Object> pageParam) throws Exception {
+    public Page<DataFileUpload001Dto> findPage(Map<String, Object> pageParam) {
         return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/DataFileUpload001/findPage",
                 pageParam, DataFileUpload001Dto.class);

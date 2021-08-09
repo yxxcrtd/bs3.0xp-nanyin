@@ -606,7 +606,7 @@ public class FxSecrepoQuote002Service extends BaseService<FxSecrepoQuote002Dto> 
             //删除报价前明细表记录
             fxSecrepoQuoteDetailMapper.deleteByPseqNo(pseqno);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
     }

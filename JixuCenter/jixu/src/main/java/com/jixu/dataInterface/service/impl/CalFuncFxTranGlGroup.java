@@ -35,7 +35,7 @@ public class CalFuncFxTranGlGroup extends AdditionValFunc{
 		return funcname;
 	}
 	
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		String currencys=genConvertFormula(inputValue, colcfgMap);
 		String[] curs=currencys.split(",");
 		String longcur=curs[0];
@@ -51,7 +51,7 @@ public class CalFuncFxTranGlGroup extends AdditionValFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+			{
 		// TODO Auto-generated method stub
 		return null;
 	}

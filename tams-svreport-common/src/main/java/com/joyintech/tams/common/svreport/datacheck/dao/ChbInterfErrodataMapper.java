@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodata;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbInterfErrodataMapper {
     int deleteByPrimaryKey(String dataid);
 

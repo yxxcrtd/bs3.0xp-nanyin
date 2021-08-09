@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,6 +75,10 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @Service
 public class TrdProjectDuration002Service extends BaseService<TrdProjectDurationProcessDto> implements BaseProcessService<TrdProjectDurationProcessDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdProjectDuration002Service.class);
 
     @Autowired
     private BaseTradeProductDealCommService baseTradeProductDealCommServiceImpl;
@@ -517,7 +523,7 @@ public class TrdProjectDuration002Service extends BaseService<TrdProjectDuration
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         // 留痕表登录会丢主键，导致撤销报错 delete by renping 20191130 end
         saveDataWhenStartWorkflow(entity, OperationType.NEW);

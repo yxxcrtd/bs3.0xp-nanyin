@@ -70,7 +70,7 @@ public class PtlMockTestController extends BaseService<PtlMockTestDto> {
     public Page<PtlMockTestDto> selectForPage(@RequestBody Map<String, Object> pageParam,
                                               @PathVariable("page") int page,
                                               @PathVariable("length") int length)
-        throws Exception {
+    {
         return ptlMockTestService.selectForPage(page, length, pageParam);
     }
 
@@ -83,7 +83,7 @@ public class PtlMockTestController extends BaseService<PtlMockTestDto> {
     @Transactional
     @DTXTransaction
     public Integer delete(@RequestBody PtlMockTestDto entity)
-        throws Exception {
+    {
         return ptlMockTestService.delete(entity);
     }
 

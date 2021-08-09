@@ -37,7 +37,7 @@ public class RiskFactorConfigService extends BaseService<RiskFactor003Dto> {
 
 
     public List<RiskFactor001Dto> selectForPage( Map<String, Object> pageParam)
-            throws Exception {
+    {
 
         pageParam.put("sql", pageParam.get("sql"));
 

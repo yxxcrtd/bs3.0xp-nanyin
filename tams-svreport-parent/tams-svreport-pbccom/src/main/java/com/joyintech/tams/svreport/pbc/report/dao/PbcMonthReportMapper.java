@@ -7,8 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface PbcMonthReportMapper {
     int deleteByPrimaryKey(String reportuuid);
 

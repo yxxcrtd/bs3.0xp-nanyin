@@ -40,6 +40,7 @@ import com.joyintech.tams.invest.trade.trdrepotrade.validator.TrdRepoTrade004Dto
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -229,7 +230,7 @@ public class TrdRepoTrade004Controller extends BaseController {
      */
     @RequestMapping("findOutPage")
     @ResponseBody
-    public Page<PledgeBondInfoDto> findOutPage() throws Exception {
+    public Page<PledgeBondInfoDto> findOutPage() {
 
         Page<PledgeBondInfoDto> trdRepoTrade001DtoPage = trdRepoTrade004Service.findOutPage(RequestUtil.getPageParam());
         return trdRepoTrade001DtoPage;
@@ -288,8 +289,7 @@ public class TrdRepoTrade004Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    public  AjaxResult save(@RequestBody TrdRepoTrade004Dto dto)
-            throws Exception {
+    public  AjaxResult save(@RequestBody TrdRepoTrade004Dto dto) throws WorkFlowException {
 
         ProcessParameter<TrdRepoTrade004Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdRepoTrade004Dto> workFlowParameter = new WorkFlowParameter<>();

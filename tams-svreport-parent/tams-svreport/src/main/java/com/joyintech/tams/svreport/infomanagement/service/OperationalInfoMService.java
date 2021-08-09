@@ -147,7 +147,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 	/**
 	 * 根据前台传入的条件动态查询结果
 	 * 
-	 * @param map 前台条件组成的map
+	 * @param param 前台条件组成的map
 	 * @return 动态结果
 	 */
 	@SuppressWarnings("unchecked")
@@ -316,6 +316,14 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 			 logger.error(e1.getMessage(),e1);
 		 } catch (IOException e1) {
 			 logger.error(e1.getMessage(),e1);
+		 }finally {
+		 	if (xssfWorkBook != null){
+				try {
+					xssfWorkBook.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
 		 }
 
 		 try {
@@ -331,7 +339,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 //			 }
 
 		 } catch (FileNotFoundException e) {
-			 e.printStackTrace();
+			 logger.error(e.getMessage(),e);
 		 }
 		 param.put("tableName", tableName);
 		 param.put("dataList", dataList);
@@ -356,7 +364,6 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 					FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 //		File file = new SafelyFile(fileName);
 		XSSFWorkbook xssfWorkBook = null;
@@ -375,7 +382,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 				try {
 					xssfWorkBook.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -391,7 +398,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 //						FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
 //			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		param.put("userName", CommonUtil.getUserName());
 		param.put("tableName", tableName);
@@ -416,7 +423,6 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
                 FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
         } catch (FileNotFoundException e) {
         	logger.error(e.getMessage(),e);
-        	e.printStackTrace();
         }
         File file = new SafelyFile(fileName);
 		// 获取导入表名

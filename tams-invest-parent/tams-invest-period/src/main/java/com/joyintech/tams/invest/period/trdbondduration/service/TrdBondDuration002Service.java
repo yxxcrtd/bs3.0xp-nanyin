@@ -31,6 +31,8 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.CommentFunction;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,10 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
  */
 @Service
 public class TrdBondDuration002Service extends BaseService<TrdBondDuration002ProcessDto> implements BaseProcessService<TrdBondDuration002ProcessDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdBondDuration002Service.class);
 
     @Autowired
     private BaseTradeProductDealCommService baseTradeProductDealCommServiceImpl;
@@ -283,7 +289,7 @@ public class TrdBondDuration002Service extends BaseService<TrdBondDuration002Pro
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         if (!StringUtil.isNotEmpty(entity.getRevokeReason())){
             saveDataWhenStartWorkflow(entity, OperationType.MODIFY);
@@ -580,8 +586,8 @@ public class TrdBondDuration002Service extends BaseService<TrdBondDuration002Pro
     private StlPayOrders gen划款指令流程2(List<BussTrdTransferOrderDto> stlPayOrdersList, TrdFinProductDealTotal total, TrdBondDuration002ProcessDto entity) {
     	StlPayOrders stlPayOrders = null;
         for (BussTrdTransferOrderDto dto : stlPayOrdersList) {
-            if (dto.getPortfolioId().equals(total.getPortfolioId()) && ((StringUtil.isEmpty(dto.getInvAim()) && StringUtil.isEmpty(total.getInvAim()))
-                    || (dto.getInvAim() != null && dto.getInvAim().equals(total.getInvAim())))) {
+            if (dto.getPortfolioId().equals(total.getPortfolioId()) && ((dto.getInvAim() != null && dto.getInvAim().equals(total.getInvAim())) ||
+                    (StringUtil.isEmpty(dto.getInvAim()) && StringUtil.isEmpty(total.getInvAim())))) {
                 stlPayOrders = dto;
                 stlPayOrders.setOrderStatus(DictCodeList.清算操作类型_新建.getValue());
                 stlPayOrders.setTradeId(total.getTotleTradeId());

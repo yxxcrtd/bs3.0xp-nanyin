@@ -85,10 +85,12 @@ public class GeneralJob extends GeneralBaseJob {
 					
 					if(JixuUserUtil.isJoyinTablesFlag()){
 						String tableID="";
-						if(generalCooa.getOffVouch()!=null && !generalCooa.getVoucher().equals("")) {
-							tableID=SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.GENERAL+","+sec.getIssueType()+","+generalCooa.getOffVouch());
-						}else
-							tableID=SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.GENERAL+","+sec.getIssueType());
+						if(SecurityCoreFactory.getTableIDProperties()!=null) {
+							if (generalCooa.getOffVouch() != null && !generalCooa.getVoucher().equals("")) {
+								tableID = SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.GENERAL + "," + sec.getIssueType() + "," + generalCooa.getOffVouch());
+							} else
+								tableID = SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.GENERAL + "," + sec.getIssueType());
+						}
 						generalCooa.setTableID(tableID);
 						List<VoucherDetails> voucherDetailsList=generalCooa.getVoucherDetails();
 						for (VoucherDetails voucherDetails : voucherDetailsList) {

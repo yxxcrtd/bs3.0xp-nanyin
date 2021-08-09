@@ -1,5 +1,6 @@
 package com.joyintech.tams.batch.svreport.investmentsinfo.service;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
 import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
@@ -59,7 +60,7 @@ public class SvrProdRateInfoImpMainService extends AutoSendCBBaseService {
             }
         } catch (Exception e) {
             logger.error("产品收益率信息接口数据接入Error",e);
-            throw e;
+            throw new BusinessException(e);
         }
         logInfoBatchEnd();
         return mapPara;

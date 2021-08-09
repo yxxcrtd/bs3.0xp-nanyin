@@ -45,6 +45,8 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +70,11 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
 @Service
 public class TrdFundDuration001Service extends CommonExportService<TrdFundDuration001Dto>
 implements BaseProcessService<TrdFundDuration001Dto>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdFundDuration001Service.class);
+
     private final String 非货币总集复核_BTN = "TrdFundDuration002_btn_total";
     /**
      * 业务编号
@@ -166,7 +173,7 @@ implements BaseProcessService<TrdFundDuration001Dto>{
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), false);
     }
@@ -229,7 +236,6 @@ implements BaseProcessService<TrdFundDuration001Dto>{
 //                    WorkFlowUtil.startProcess(param,"","",entity.getTrader(),OperationType.NEW,false,entity);
 ////              设置为提交 插入流程表
 //                } catch (Exception e) {
-//                    e.printStackTrace();
 //                }
 //            }
 //        }
@@ -272,7 +278,7 @@ implements BaseProcessService<TrdFundDuration001Dto>{
                 WorkFlowUtil.startProcess(param,"","", entity.getCreateUser(),OperationType.NEW,false,entity);
 //          设置为提交 插入流程表
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
     }

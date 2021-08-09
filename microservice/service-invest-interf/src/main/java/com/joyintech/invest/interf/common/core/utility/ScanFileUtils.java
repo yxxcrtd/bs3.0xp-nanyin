@@ -3,8 +3,14 @@ package com.joyintech.invest.interf.common.core.utility;
 import java.util.Map;
 
 import com.joyintech.framework.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ScanFileUtils {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(ScanFileUtils.class);
 
 	public static ScanSFTPEntity scanFile(String resStr){
 		
@@ -38,7 +44,7 @@ public class ScanFileUtils {
 					try {
 						Thread.currentThread().sleep(1000);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 
 				} else if ((entity.getEndTime() - entity.getStartTime() < 5 * 60 * 1000)

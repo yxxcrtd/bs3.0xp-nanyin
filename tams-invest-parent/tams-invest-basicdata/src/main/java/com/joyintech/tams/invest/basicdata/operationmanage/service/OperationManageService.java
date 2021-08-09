@@ -76,7 +76,6 @@ public class OperationManageService extends CommonExportService<OperationManageD
      *
      * @param pageParam 查询方法
      * @return Page类
-     * @throws Exception 异常信息
      */
     public Page<OperationManageDto> selectForPage(Map<String, Object> pageParam){
         return restTemplate.postForPage(

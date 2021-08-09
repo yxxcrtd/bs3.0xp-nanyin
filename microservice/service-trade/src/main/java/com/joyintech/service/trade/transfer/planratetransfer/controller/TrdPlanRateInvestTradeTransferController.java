@@ -45,7 +45,7 @@ public class TrdPlanRateInvestTradeTransferController extends BaseController {
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
     public List<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return trdPlanRateInvestTradeTransferService.selectPortoId(param);
     }
 

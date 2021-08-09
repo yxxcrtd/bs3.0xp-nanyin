@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -81,7 +82,7 @@ public class NonstProUplimitMain002Controller extends BaseController {
 	}
 	    @RequestMapping("save")
 	    @ResponseBody
-	    public AjaxResult save(@RequestBody @Validated NonstProUplimitMain001Dto dto, BindingResult br) throws Exception{
+	    public AjaxResult save(@RequestBody @Validated NonstProUplimitMain001Dto dto, BindingResult br) throws WorkFlowException {
 	        if(br.hasErrors()){
 	            return new AjaxResult(br);
 	        }
@@ -142,13 +143,12 @@ public class NonstProUplimitMain002Controller extends BaseController {
 	     * @param dto 费用品种
 	     * @param br br
 	     * @return 删除结果
-	     * @throws Exception Exception
+	     * @throws WorkFlowException 
 	     */
 	    @ResponseBody
 	    @RequestMapping(ACTION_DELETE)
 	    public AjaxResult delete(@RequestBody @Validated({
-	        ValidateGroupDelete.class}) NonstProUplimitMain001Dto dto, BindingResult br)
-	        throws Exception {
+	        ValidateGroupDelete.class}) NonstProUplimitMain001Dto dto, BindingResult br) throws WorkFlowException {
 	        if (br.hasErrors()) {
 	            return new AjaxResult(br);
 	        }

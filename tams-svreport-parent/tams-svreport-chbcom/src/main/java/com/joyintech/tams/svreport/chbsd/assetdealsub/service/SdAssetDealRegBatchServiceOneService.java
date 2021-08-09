@@ -13,6 +13,7 @@ package com.joyintech.tams.svreport.chbsd.assetdealsub.service;
 import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbInvestTradeSubDto;
 import com.joyintech.component.svrreport.chb.service.MsgSendService;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ public class SdAssetDealRegBatchServiceOneService extends AutoSendCBBaseService{
     */
     public boolean handleDataPerTime(int handleIndex, 
     		                         int dataCountPerTime,List<ChbInvestTradeSubDto> msgRstList,
-    		                         List<ChbInvestTradeSubDto> sendResult, SendDataCheckType sendDataCheckType) throws Exception{
+    		                         List<ChbInvestTradeSubDto> sendResult, SendDataCheckType sendDataCheckType) {
         logger.info("【资产交易信息登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         boolean hasData = true;
         try {
@@ -59,7 +60,7 @@ public class SdAssetDealRegBatchServiceOneService extends AutoSendCBBaseService{
        	    sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【资产交易信息登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());
-	        throw e;
+	        throw new BusinessException(e);
 		}
         logger.info("【资产交易信息登记】直连报送处理结束，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         return hasData;

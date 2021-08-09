@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.financemanage.valsubjectbalanceabnormalquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class ValSubjectBalanceAbnormalQuery001Controller extends BaseController 
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValSubjectBalanceAbnormalQuery001Dto> findPage()
-        throws Exception {
+         {
         return valSubjectBalanceAbnormalQuery001Service.queryPageList(RequestUtil.getPageParam());
     }
     
@@ -107,7 +108,7 @@ public class ValSubjectBalanceAbnormalQuery001Controller extends BaseController 
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
             String datas = this.getParam("datas");
             List<ValSubjectBalanceAbnormalQuery001Dto> listdto;
             if (datas == null) {

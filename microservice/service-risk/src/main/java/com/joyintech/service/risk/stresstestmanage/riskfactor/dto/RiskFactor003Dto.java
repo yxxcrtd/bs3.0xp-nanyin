@@ -234,7 +234,7 @@ public class RiskFactor003Dto extends CreditAssetpool implements ITableRow, Proc
 
     public void setYvalue(String yvalue) {
     	if(yvalue.indexOf("%")>0) {
-    		yvalue=Double.valueOf((yvalue.substring(0, yvalue.indexOf("%"))).toString())+"%";
+    		yvalue=Double.valueOf((yvalue.substring(0, yvalue.indexOf("%"))))+"%";
     	}else{
     		yvalue=(Double.valueOf(yvalue)).toString();
     	}

@@ -69,8 +69,7 @@ public class SqlldrExecutor {
      * @see
      * @since 1.0
      */
-    public static boolean execute(Ctl ctl, Cmd cmd)
-        throws Exception {
+    public static boolean execute(Ctl ctl, Cmd cmd) throws IOException, InterruptedException {
 
         // 取得系统参数
         SysParamInfService paraService = ServiceMapperUtil.getApplicationContext().getBean(

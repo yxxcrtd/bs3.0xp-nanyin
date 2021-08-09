@@ -41,7 +41,7 @@ public class GroupMin extends AdditionFunc{
 	}
 	
 	@Override
-	public String groupCal(String key, List<HashMap<String, Object>> sourceData) throws Exception {
+	public String groupCal(String key, List<HashMap<String, Object>> sourceData) {
 		 double minValue=0;
 		for(HashMap<String, Object> dataHM:sourceData){
 			double value=Double.parseDouble(dataHM.get(key).toString());
@@ -62,13 +62,13 @@ public class GroupMin extends AdditionFunc{
 	@Override
 	public List<HashMap<String, Object>> genGroupNewSourceData(
 			List<HashMap<String, Object>> sourceHMList, String funcParams,
-			List<InterfaceColConfig> groupFuncClassList) throws Exception{
+			List<InterfaceColConfig> groupFuncClassList){
 		return null;
 	}
 	
 	@Override
 	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap)
-			throws Exception {
+			{
 		// TODO Auto-generated method stub
 		return null;
 	}

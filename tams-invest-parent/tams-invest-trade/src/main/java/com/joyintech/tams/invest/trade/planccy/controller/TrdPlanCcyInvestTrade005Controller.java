@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.trade.planccy.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,7 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -334,7 +336,7 @@ public class TrdPlanCcyInvestTrade005Controller extends BaseController {
     @RequestMapping("selectTrdTransfenpeiList")
     @ResponseBody
     public List<BussTrdTransfenpeiDto> selectTrdTransfenpeiList()
-        throws Exception {
+         {
         return trdPlanCcyInvestTrade001Service.selectTrdTransfenpeiList(RequestUtil.getPageParam());
     }
     
@@ -473,8 +475,7 @@ public class TrdPlanCcyInvestTrade005Controller extends BaseController {
 
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdPlanCcyInvestTradeConfirmDto dto, BindingResult br)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdPlanCcyInvestTradeConfirmDto dto, BindingResult br) throws InvocationTargetException, IllegalAccessException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

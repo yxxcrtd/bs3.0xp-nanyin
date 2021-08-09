@@ -19,6 +19,8 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,6 +79,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto> implements BaseProcessService<FinProductBuild002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinProductBuild002Service.class);
 
     /**
      * {@linkplain}
@@ -266,7 +272,7 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
                     ptlPortfolioInfoDto);
             }
             catch (Exception e) {
-                e.printStackTrace();// SpringContextUtil.getTextValue("COMMON_I_0005")
+                logger.error(e.getMessage(),e);
             }
         }
     }
@@ -741,7 +747,6 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
      *
      * @param map map
      * @return 结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

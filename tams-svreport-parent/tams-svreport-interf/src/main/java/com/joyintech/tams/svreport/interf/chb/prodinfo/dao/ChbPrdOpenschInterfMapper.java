@@ -6,7 +6,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.ChbPrdOpensch;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbPrdOpenschInterfMapper {
 	/**
 	 * @Description 根据产品代码删除开放计划

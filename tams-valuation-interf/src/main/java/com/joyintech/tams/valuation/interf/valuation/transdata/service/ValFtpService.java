@@ -158,7 +158,7 @@ public class ValFtpService {
         try {
             delAllFile(folderPath); // 删除完里面所有内容
             String filePath = folderPath;
-            filePath = filePath.toString();
+            //filePath = filePath;
             File myFilePath = new File(filePath);
             boolean rec =myFilePath.delete(); // 删除空文件夹
             if(rec){

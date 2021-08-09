@@ -453,7 +453,7 @@ public class ValBondTargetAssetService extends BaseService<ValBondTargetAssetDto
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValBondTargetAssetDto> findPage(int page, int length, Map<String, Object> params) throws Exception {
+    public Page<ValBondTargetAssetDto> findPage(int page, int length, Map<String, Object> params) {
         String bond = (String)params.get("bond");
         String couponType = (String)params.get("couponType");
         String bondType1 = (String)params.get("bondType1");

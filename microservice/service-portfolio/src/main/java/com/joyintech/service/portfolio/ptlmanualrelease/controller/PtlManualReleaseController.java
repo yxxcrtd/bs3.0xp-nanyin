@@ -103,7 +103,7 @@ public class PtlManualReleaseController {
      */
     @GetMapping("getSecAcctId")
     public List<SuggestDto> getSecAcctId(String secAcctId)
-        throws Exception {
+    {
         List<SuggestDto> temp = ptlManualReleaseService.getSecAcctId(secAcctId);
         return temp;
     }
@@ -119,7 +119,7 @@ public class PtlManualReleaseController {
     @PostMapping("findPageRs/{page}/{length}")
     public Page<PtlManualRelease001Dto> selectForPageRs(@RequestBody Map<String, Object> param,
         @PathVariable("page")int page,@PathVariable("length")int length)
-        throws Exception {
+    {
         return ptlManualReleaseService.selectForPageRs(page,length,param);
     }
     
@@ -133,12 +133,12 @@ public class PtlManualReleaseController {
     @PostMapping("findPageRepInfo/{page}/{length}")
     public Page<PtlManualRelease001Dto> findPageRepInfo(@RequestBody Map<String, Object> param,
         @PathVariable("page")int page,@PathVariable("length")int length)
-        throws Exception {
+    {
         return ptlManualReleaseService.findPageRepInfo(page,length,param);
     }
     @PostMapping("findPageRepInfoList")
     public List<PtlManualRelease001Dto> findPageRepInfoList(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return ptlManualReleaseService.findPageRepInfoList(param);
     }
     /**
@@ -151,14 +151,14 @@ public class PtlManualReleaseController {
     @PostMapping("findPageRb/{page}/{length}")
     public Page<PtlManualRelease001Dto> selectForPageRb(@RequestBody Map<String, Object> param,
         @PathVariable("page")int page,@PathVariable("length")int length)
-        throws Exception {
+    {
         return ptlManualReleaseService.selectForPageRb(page,length,param);
     }
     
   
     @PostMapping("/selectTradeInfo")
     public PtlManualRelease001Dto selectTradeInfo(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
             return ptlManualReleaseService.selectTradeInfo(param);
      }
     

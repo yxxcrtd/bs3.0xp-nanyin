@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.assets.plan.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -123,7 +124,7 @@ public class ValPlannedassetquery001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValPlannedassetquery001Dto> findPage() throws Exception {
+    public Page<ValPlannedassetquery001Dto> findPage() {
         return valPlannedassetquery001Service.findPage(RequestUtil.getPageParam());
     }
     
@@ -138,7 +139,7 @@ public class ValPlannedassetquery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
             String datas = this.getParam("datas");
             Map<String, Object> paraMap = RequestUtil.getPageParam();
             List<ValPlannedassetquery001Dto> listdto;

@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.base.dto.UploadFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ReturnTodoDto extends BaseEntity {
+	private static final Logger logger = LoggerFactory.getLogger(ReturnTodoDto.class);
     //pageId
     private String pageId;
 
@@ -175,7 +178,8 @@ public class ReturnTodoDto extends BaseEntity {
 
 
             if (object.get(key) instanceof JSONArray) {
-                System.out.println("key-" + str + key + ":List");
+//                System.out.println("key-" + str + key + ":List");
+                logger.info("key-" + str + key + ":List");
                 List<UploadFile> fileArray=new  ArrayList<UploadFile>();
                 if("fileArray".equals(key)) {
                 	for (int i = 0; i < ((JSONArray) object.get(key)).size(); i++) {
@@ -264,10 +268,12 @@ public class ReturnTodoDto extends BaseEntity {
 
 //                print((JSONObject) JSONObject.toJSON(object.get(key)), key,map);
             } else if (object.get(key) instanceof String) {
-                System.out.println("key-" + str + key + ":String");
+//                System.out.println("key-" + str + key + ":String");
+                logger.info("key-" + str + key + ":String");
                 map.put(str + key,object.get(key));
             } else if (object.get(key) instanceof JSONObject) {
-                System.out.println("key-" + key + ":Object");
+//                System.out.println("key-" + key + ":Object");
+                logger.info("key-" + key + ":Object");
                 print((JSONObject) JSONObject.toJSON(object.get(key)), key,map);
             }else {
             	map.put(str + key,object.get(key));

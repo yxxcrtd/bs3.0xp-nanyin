@@ -53,7 +53,7 @@ public class SdBotAssetPosRegBatchService{
 	@Autowired
 	private ChbBotAstPositionRegist001Service chbBotAstPositionRegist001Service;
 	
-	public void sdBottomAstPositionRegData(Date batchDate) throws Exception {
+	public void sdBottomAstPositionRegData(Date batchDate) {
 		//1、报送数据检索,取得 List
 		logger.info("【底层资产持仓信息登记】未报送数据检索开始------" +  df.format(new Date()));
 		List<ChbBotAstPositionRegist001Dto> list = sdBotAssetPosSvrMapper.selcteUnRegData(DateUtil.format(batchDate));
@@ -108,7 +108,7 @@ public class SdBotAssetPosRegBatchService{
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbBotAstPosSubDto> dataList, SendDataCheckType sendDataCheckType) throws Exception{
+	public void sendBatchCommon(List<ChbBotAstPosSubDto> dataList, SendDataCheckType sendDataCheckType) {
 		int dataCountPerTime = Integer.valueOf(
 				CacheUtil.getSysParam(ReportGlobalConstant.SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST));
 

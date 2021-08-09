@@ -74,7 +74,7 @@ public class ValOrdersQuery002Controller extends BaseController{
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValOrdersDto> findPage(@RequestBody Map<String, Object> param,
-                                       @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                       @PathVariable("page") int page, @PathVariable("length") int length) {
         return valOrdersQuery002Service.findBycondition(page, length, param);
     }
     
@@ -88,7 +88,7 @@ public class ValOrdersQuery002Controller extends BaseController{
      */
     @PostMapping("findFeePage/{page}/{length}")
     public Page<ValOrdersDto> findFeePage(@RequestBody Map<String, Object> param,
-                                          @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                          @PathVariable("page") int page, @PathVariable("length") int length) {
         return valOrdersQuery002Service.selectFeeBycondition(page, length, param);
     }
     
@@ -102,7 +102,7 @@ public class ValOrdersQuery002Controller extends BaseController{
      */
     @PostMapping("findDepPage/{page}/{length}")
     public Page<ValOrdersDto> findDepPage(@RequestBody Map<String, Object> param,
-                                          @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                          @PathVariable("page") int page, @PathVariable("length") int length) {
         return valOrdersQuery002Service.findDepBycondition(page, length, param);
     }
     

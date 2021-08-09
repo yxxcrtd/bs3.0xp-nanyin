@@ -14,13 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -59,7 +57,7 @@ public class RskValRelateImportController {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<RskValRelateImportDto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskValRelateImportService.selectForPage(page, length, param);
     }
     
@@ -186,6 +184,16 @@ public class RskValRelateImportController {
     @PostMapping("checkGroupName")
     public int checkGroupName(@RequestBody RskValRelateImportDto dto) {
         return rskValRelateImportService.checkGroupName(dto);
+    }
+    /**
+     * 查询资产维护界面维护的资产要素完整信息
+     *
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("selectAllAsset")
+    public List<FinProduct> selectAllAsset() {
+        return rskValRelateImportService.selectAllAsset();
     }
 
 }

@@ -60,7 +60,7 @@ public class EtrFundController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<EtrFundDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page,
-                                          @PathVariable("length") int length)throws Exception {
+                                          @PathVariable("length") int length) {
         return etrFundService.selectForPage(page,length,pageParam);
     }
     

@@ -77,7 +77,7 @@ public class PtlSubFundsMangeController {
      * @since 1.0
      */
     @PostMapping("/findIncomeStatisticsPage")
-    public List<PtlSubFundsMangeDto> findIncomeStatisticsPage(@RequestBody Map<String, Object> params) throws Exception {
+    public List<PtlSubFundsMangeDto> findIncomeStatisticsPage(@RequestBody Map<String, Object> params) {
         return ptlSubFundsMangeService.findPage(params);
     }
 
@@ -151,7 +151,7 @@ public class PtlSubFundsMangeController {
      */
     @PostMapping("/findIncomeStatisticsPageList")
     public List<PtlSubFundsMangeDto> findIncomeStatisticsPageList(@RequestBody Map<String, Object> params
-    ) throws Exception {
+    ) {
         return ptlSubFundsMangeService.findPageList(params);
     }
 

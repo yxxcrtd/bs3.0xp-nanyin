@@ -9,6 +9,7 @@ import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountS
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub;
 import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PbcPrdBaseinfoSubMapper {
     int deleteByPrimaryKey(String registSeqno);
 

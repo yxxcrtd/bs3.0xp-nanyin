@@ -96,8 +96,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
      * @return 表格信息
      * @throws Exception
      */
-    public Page<ReportConfirmManage001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+    public Page<ReportConfirmManage001Dto> findPage(Map<String, Object> params){
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/findPage",
             params, ReportConfirmManage001Dto.class);
     }
@@ -170,7 +169,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                         String fileType = StringUtil.substring(report.getSysFilename(),
                             report.getSysFilename().lastIndexOf("."));
                         String reportName = report.getReportName() + fileType;
-                        if (StringUtil.isNotEmpty(report.getEndDate()) && report.getEndDate() != null) {
+                        if (report.getEndDate() != null && StringUtil.isNotEmpty(report.getEndDate())) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
                                          + GlobalConstant.UNDER_LINE + reportName;
                         }
@@ -340,7 +339,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                     for (RepReveal report : reportList) {
                         // TODO
                         String reportName = report.getReportName();
-                        if (StringUtil.isNotEmpty(report.getEndDate()) && report.getEndDate() != null) {
+                        if (report.getEndDate() != null && StringUtil.isNotEmpty(report.getEndDate())) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
                                          + GlobalConstant.UNDER_LINE + reportName;
                         }
@@ -499,7 +498,6 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                             downloadFile.delete();
                         }
                     }
-                    zipOut.close();
                 }
                 catch (Exception e) {
                     log.error("", e);
@@ -521,9 +519,9 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 	private String getEncodeFileName(String fileName) {
 		try {
 			return StringUtil.isNotEmpty(fileName)
-					? (new String(fileName.getBytes(System.getProperty("file.encoding")), "UTF-8")) : fileName;
+					? (new String(fileName.getBytes(System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding")), "UTF-8")) : fileName;
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		return fileName;
 	}
@@ -564,7 +562,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 }
             }catch (Exception e)
             {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }finally {
                 if(bis!=null)
                 {
@@ -621,7 +619,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 }
             }catch (Exception e)
             {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }finally {
                 if(bis!=null)
                 {

@@ -93,7 +93,7 @@ public class SvrMstCalendarType001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<SvrMstCalendarType001Dto> selectAllCalendar()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getPageParam();
         return mstCalendarType001001service.selectForPage(map);
     }
@@ -109,7 +109,7 @@ public class SvrMstCalendarType001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getCalendarNameList")
     public List<SuggestDto> getCalendarNameList()
-        throws Exception {
+         {
         Map<String, Object> map = new HashMap<>();
         String param = super.getRequest().getParameter("param");
         map.put("calendarName", param);
@@ -129,7 +129,7 @@ public class SvrMstCalendarType001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getCalendarType")
     public List<SelectOptionDto> getCalendarType()
-        throws Exception {
+         {
         Map<String, Object> param = new HashMap<>();
         param.put("YESORNO_YES_01", "Y");
         param.put("calendarType", super.getRequest().getParameter("param"));
@@ -167,7 +167,7 @@ public class SvrMstCalendarType001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete()
-        throws Exception {
+         {
     	String msg = this.getMessage("REPORT_COMMON_I_0006");
     	String keyStr = super.getParam("deleteKeys");
     	if (StringUtil.isNotEmpty(keyStr)) {
@@ -192,7 +192,7 @@ public class SvrMstCalendarType001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	if(param.containsKey("keyList")){
         	String keyList = param.get("keyList").toString();
@@ -225,7 +225,7 @@ public class SvrMstCalendarType001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getTradeCalendarName")
     public List<SuggestDto> getInstitutionName()
-        throws Exception {
+         {
         String param = super.getRequest().getParameter("param");
         String isTradeCalendar = super.getRequest().getParameter("isTradeCalendar");
         List<SuggestDto> temp = mstCalendarType001001service.getTradeCalendarName(param,isTradeCalendar);

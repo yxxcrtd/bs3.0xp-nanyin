@@ -15,7 +15,7 @@ import java.util.Map;
 
 import com.joyintech.tams.disclosure.information.manage.workmonitor.dto.ReportWorkMonitor001Dto;
 import com.joyintech.tams.disclosure.information.manage.workmonitor.dto.ReportWorkMonitorNew001Dto;
-
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -26,6 +26,7 @@ import com.joyintech.tams.disclosure.information.manage.workmonitor.dto.ReportWo
  * @see ValNetValueConfirm001Mapper
  * @since 1.0
  */
+@Repository
 public interface ReportWorkMonitor001Mapper {
     
     /**
