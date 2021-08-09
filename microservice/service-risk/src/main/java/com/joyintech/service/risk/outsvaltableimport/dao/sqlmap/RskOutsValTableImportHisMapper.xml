@@ -3,28 +3,28 @@
 <mapper namespace="com.joyintech.service.risk.outsvaltableimport.dao.RskOutsValTableImportHisMapper" >
      <select id="selectForPage" resultType="com.joyintech.service.risk.outsvaltableimport.dto.RskOutValtblImportHisDto">
         select
-           FILE_NAME      fileName,
-           FILE_PATH      filePath,
-           RSK_OUT_VALTBL_IMPORT_HIS.PORTFOLIO_ID   portfolioId,
-           RSK_OUT_VALTBL_IMPORT_HIS.PORTFOLIO_NAME portfolioName,
-           START_TIME     startTime,
-           END_TIME       endTime,
-           VALDATE        valdate,
-           IMPDATE        impdate,
-           IMPORT_TYPE    importType,
-           ERROR_CODE     errorCode
-        from RSK_OUT_VALTBL_IMPORT_HIS
+            ROVIH.FILE_NAME      fileName,
+            ROVIH.FILE_PATH      filePath,
+            ROVIH.PORTFOLIO_ID   portfolioId,
+            ROVIH.PORTFOLIO_NAME portfolioName,
+            ROVIH.START_TIME     startTime,
+            ROVIH.END_TIME       endTime,
+            ROVIH.VALDATE        valdate,
+            ROVIH.IMPDATE        impdate,
+            ROVIH.IMPORT_TYPE    importType,
+            ROVIH.ERROR_CODE     errorCode
+        from RSK_OUT_VALTBL_IMPORT_HIS ROVIH
         left join PTL_PORTFOLIO ptp
-         on ptp.PORTFOLIO_ID = RSK_OUT_VALTBL_IMPORT_HIS.PORTFOLIO_ID
+         on ptp.PORTFOLIO_ID = ROVIH.PORTFOLIO_ID
         <where>
             <if test="importType != null and importType != ''">
-                AND IMPORT_TYPE = #{importType,jdbcType=VARCHAR}
+                AND ROVIH.IMPORT_TYPE = #{importType,jdbcType=VARCHAR}
             </if>
             <if test="searchDate != null and searchDate != ''">
-                and to_char(IMPDATE,'yyyy-MM-dd') = #{searchDate,jdbcType=VARCHAR}
+                and to_char(ROVIH.IMPDATE,'yyyy-MM-dd') = #{searchDate,jdbcType=VARCHAR}
             </if>
             <if test="endDate != null and endDate != ''">
-                and to_char(END_TIME,'yyyy-MM-dd') &gt;= #{searchDate,jdbcType=VARCHAR}
+                and to_char(ROVIH.END_TIME,'yyyy-MM-dd') &gt;= #{searchDate,jdbcType=VARCHAR}
             </if>
             <!-- add by wangcheng 二级法人改造   -->
             <if test="orgCode != null and orgCode != ''">
@@ -33,8 +33,9 @@
                 from sys_department s
                 where s.dept_code = ptp.create_dept
                 and s.institution_code = #{orgCode}
-                ) OR RSK_OUT_VALTBL_IMPORT_HIS.PORTFOLIO_ID IS NULL)
+                ) OR ROVIH.PORTFOLIO_ID IS NULL)
             </if>
+            ORDER BY ROVIH.START_TIME DESC
         </where>
     </select>
 
