@@ -65,8 +65,6 @@ $(function() {
 									width : 100, 
 									sortField:'status'
 								},
-								{ field: 'sendStatus',visible:false},
-					            { field: 'status',visible:false},
 								{
 									title : '数据日期',
 									field : 'statusDate',
@@ -508,10 +506,6 @@ $(function() {
 								},
 								{
 									field : 'status',
-									visible : false
-								},
-								{
-									field : 'registSeqno',
 									visible : false
 								},
 								{

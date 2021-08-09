@@ -105,12 +105,12 @@ public class TrdDepositInvestTrade001Validator implements TradeCommonValidator{
             if (!StringUtil.equals(dto.getFinprodType(), DictCodeListExt3.存款类资产类型_活期存放.getValue()) && StringUtil.isEmpty(dto.getTermDays())) {
                 errorList.add(new ValidMessage("termDays",getMessage("BUSS_COM_E_0038",getMessage("TrdDepositInvestTrade002.termDays"))));
             }
-            //同一标的只能一个组合交易
-            if (StringUtil.equals(dto.getFinprodType(), DictCodeListExt3.存款类资产类型_活期存放.getValue())
-                    && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-                    && trdDepositInvestTrade002Service.checkTradeById(dto)>0) {
-                errorList.add(new ValidMessage("",getMessage("TRD_DEPOSIT_001")));
-            }
+//            //同一标的只能一个组合交易
+//            if (StringUtil.equals(dto.getFinprodType(), DictCodeListExt3.存款类资产类型_活期存放.getValue())
+//                    && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+//                    && trdDepositInvestTrade002Service.checkTradeById(dto)>0) {
+//                errorList.add(new ValidMessage("",getMessage("TRD_DEPOSIT_001")));
+//            }
             //验证标的是否做过终止协议交易
             if (StringUtil.equals(dto.getFinprodType(), DictCodeListExt3.存款类资产类型_活期存放.getValue())
                     && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())

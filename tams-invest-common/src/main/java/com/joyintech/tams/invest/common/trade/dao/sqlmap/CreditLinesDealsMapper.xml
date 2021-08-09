@@ -522,7 +522,7 @@
     </select>
 
 	<select id="getPledgeAmt"  resultType="java.math.BigDecimal" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal">
-		select sum(fdp.pledge_number * newfaceValue) pledge_number
+		select sum(fdp.pledge_number * nvl(newfaceValue,100)) pledge_number
 		from FIN_DEAL_PLEDGE fdp
 				 left join (SELECT FINPROD_ID, nvl(100 - sum(nvl(PRIN_AMT, 0)), 100) newfaceValue
 							FROM FIN_CASH_PLAN
@@ -647,11 +647,12 @@
 	</select>
 
 	<select id="selectCreditOriginDealByTradeId" resultType="com.joyintech.tams.common.base.entity.CreditLinesDeal">
+        select * from (
 		select
 			cld.SEQNO,cld.TRADE_AMT tradeAmt
 		from CREDIT_LINES_DEAL cld
 			left join TRD_PRODUCT_DEAL fpd on cld.trade_id = fpd.FINPROD_ID
-		where fpd.trade_id = #{tradeId}
+		where fpd.trade_id = #{tradeId}) where rownum = 1
 	</select>
 	
 	<select id="selectCeLinesInfoBySeqno" resultType="com.joyintech.tams.common.base.entity.CreditLines">

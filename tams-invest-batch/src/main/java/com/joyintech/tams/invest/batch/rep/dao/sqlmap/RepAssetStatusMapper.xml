@@ -11,18 +11,19 @@ WHERE
 			T1.REP_FINPROD_ID 
 		FROM
 			REP_ASSET_DEPT T1
-		INNER JOIN ( SELECT DISTINCT T3.FINPROD_ID FROM TRD_PRODUCT_DEAL T3 ) T2 ON T1.REP_FINPROD_ID = T2.FINPROD_ID 
-		AND T2.FINPROD_ID IS NOT NULL 
+	INNER JOIN ( SELECT FINPROD_ID,max(Update_Time) Update_Time FROM TRD_PRODUCT_DEAL group by FINPROD_ID) T2 ON T1.REP_FINPROD_ID = T2.FINPROD_ID
+		AND T2.FINPROD_ID IS NOT NULL
+		where TRUNC(T1.Update_Time) = TRUNC(#{updateTime}) or TRUNC(T2.Update_Time) = TRUNC(#{updateTime})
 	)
 	<!-- 增加母子资管计划更新   dzh 19/4/22-->
 	   or REP_FINPROD_ID IN
        (SELECT distinct T1.P_FINPROD_ID
           FROM FIN_PRODUCT T1
-         INNER JOIN (SELECT DISTINCT T3.FINPROD_ID
-                      FROM TRD_PRODUCT_DEAL T3) T2
+         INNER JOIN (SELECT FINPROD_ID,max(Update_Time) Update_Time FROM TRD_PRODUCT_DEAL group by FINPROD_ID) T2
             ON (T1.FINPROD_ID = T2.FINPROD_ID
                AND T2.FINPROD_ID IS NOT NULL)
           where     T1.P_FINPROD_ID is not null
+			AND TRUNC(T1.Update_Time) = TRUNC(#{updateTime}) or TRUNC(T2.Update_Time) = TRUNC(#{updateTime})
        )
        <!--dzh end -->
 	<!-- 估值表导入资产 lizhi 2019/05/06 start-->
@@ -31,6 +32,7 @@ WHERE
 	SELECT distinct T1.FINPROD_ID
 	FROM RSK_VALTBL_ASSET_SUB T1
 	where t1.FINPROD_ID is not null
+	and TRUNC(T1.Update_Time) = TRUNC(#{updateTime})
 	)
 	<!-- 估值表导入资产 lizhi 2019/05/06 end-->
 </update>

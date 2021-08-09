@@ -386,9 +386,20 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
      * 
      */
     private  String subProdId;
-    
-    
-    
+
+    /**
+     * 定义人行的枚举值
+     */
+    private String  isMarketFund;
+
+    public String getIsMarketFund() {
+        return isMarketFund;
+    }
+
+    public void setIsMarketFund(String isMarketFund) {
+        this.isMarketFund = isMarketFund;
+    }
+
     public String getSubProdId() {
 		return subProdId;
 	}

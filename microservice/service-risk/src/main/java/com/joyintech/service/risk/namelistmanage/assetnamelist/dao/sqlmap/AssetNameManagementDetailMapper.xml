@@ -47,7 +47,7 @@ FROM
             T1.OPERATE_TYPE,
             T1.CREATE_TIME,
             T1.CREATE_USER UPDATE_USER,
-            T2.UPDATE_USER spr,
+            T1.UPDATE_USER spr,
             T1.INSTITUTION_CODE  <!--  wangyang1 20200707 -->
         FROM
 	RSK_ACCESS_LIST_DETAIL T1
@@ -218,7 +218,7 @@ FROM
         OPERATE_PS，
         null WORKFLOW_ID,
        <!-- #{updateUser} updateUser -->
-        UPDATE_USER updateUser,
+        #{updateUser} updateUser,
         #{spr}  spr
     FROM
         RSK_ACCESS_LIST_LOG

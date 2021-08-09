@@ -6,7 +6,7 @@
             <Cell order="2" name="资产名称">listDetailName</Cell>
             <Cell order="3" name="生效日期">listDateStr</Cell>
             <Cell order="4" name="操作方式">operateType</Cell>
-            <Cell order="5" name="操作人">createUser</Cell>
+            <Cell order="5" name="操作人">updateUser</Cell>
             <Cell order="6" name="审批人">spr</Cell>
         </Row>
     </Worksheet>

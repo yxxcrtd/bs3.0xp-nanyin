@@ -59,8 +59,9 @@
 		y on y.PTL_BAG_ID=m.PORTFOLIO_ID
 		<where>
 			<if test="portfolioCode != null and portfolioCode != '' ">
-				 (m.PORTFOLIO_ID =#{portfolioCode} or m.PORTFOLIO_ID in 
-				 (select PTL_BAG_ID from RSK_PORTFOLIO_PACKAGE_DTL where PORTFOLIO_ID=#{portfolioCode}))
+				 ( m.PORTFOLIO_ID in
+				 (   select #{portfolioCode} from dual
+				union   select PTL_BAG_ID from RSK_PORTFOLIO_PACKAGE_DTL where PORTFOLIO_ID=#{portfolioCode}))
 			</if>
 			<if test="valDate != null and valDate != '' "><![CDATA[
 				and m.START_DATE <= to_date('${valDate}','yyyy-MM-dd')

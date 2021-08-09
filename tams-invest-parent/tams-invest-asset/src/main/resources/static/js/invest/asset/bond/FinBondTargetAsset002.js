@@ -772,6 +772,8 @@ $(function() {
         //修改  资产代码置灰
         if(pageModel!=PAGE_MODEL_NEW){
             $("#finprodMarketId").attr('disabled',true);
+            //提交流程确认后，交易场所置灰不允许修改
+            $("#tradeMarket").attr('disabled',true);
             $('.btn-save').hide();
         }
         //是否含权债change

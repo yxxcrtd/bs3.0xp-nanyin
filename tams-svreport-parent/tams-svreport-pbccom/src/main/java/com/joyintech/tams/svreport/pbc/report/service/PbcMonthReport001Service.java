@@ -432,8 +432,11 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             //已报送数据进留痕表
  		    pbcMonthReportMapper.insertReportHis(investList);
             //删除正式表已报送数据
+			investList.get(0).getStatusDate();
  		    pbcMonthReportMapper.deleteLastSubmitRegist(investList);
  			pbcMonthReportMapper.updateInterfSubmitAndSeqBatch(sendStatus, investList,null);
+ 			pbcMonthReportMapper.updateDoMannultSendZipDatFile(investList);
+
  			return;
  		}
 
@@ -509,6 +512,8 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
  		pbcMonthReportMapper.insertReportDataFromHis(list);
  		// 删除履历表中移除数据
  		pbcMonthReportMapper.deleteLastSubmitHis(list);
+
+		pbcMonthReportMapper.updateCancelMannultSendZipDatFile(list);
  		return false;
  	}
  	

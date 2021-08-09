@@ -172,7 +172,7 @@
       SELECT  '01' fiduciaryDuty,<!-- 受托职责：01 主动管理 -->
       --'99' transferType,<!-- 转让类型 ：99 其他-->
       decode(D.REP_FIDUCIARY_DUTY,'01','01','02','99','') transferType,
-      '02' isMarketFund,<!-- 货币市场基金标识 ：02 否-->
+      decode(TA.IS_CASH_MANAGE,'01','01','02') isMarketFund,/******DECODE（是否现金管理类（IS_CASH_MANAGE），01,01,02）*/
       t.finprod_id  finprodid,
       T.FINPROD_TYPE2 FINPRODTYPE2,
          --f_guid  PRODUUID  ,  --<!--  主键，自动生成   -->

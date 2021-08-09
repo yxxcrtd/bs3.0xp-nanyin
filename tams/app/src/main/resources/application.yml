@@ -435,14 +435,14 @@ spring:
   #  redislock:
   #    redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-  sqldiruserName: zgtams217_zzsj0606_ls_08
-  sqldirpassword: zgtams217_zzsj0606_ls_08
+  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldiruserName: zgtams217_v0630_renhang
+  sqldirpassword: zgtams217_v0630_renhang
 shiro:
   ssoEnable: false
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -454,30 +454,30 @@ shiro:
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 log:
   path: /home/tams/logs/tams
   level: debug
