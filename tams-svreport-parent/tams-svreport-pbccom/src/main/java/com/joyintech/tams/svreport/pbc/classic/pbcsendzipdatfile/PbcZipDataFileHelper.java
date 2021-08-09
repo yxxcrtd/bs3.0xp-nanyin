@@ -40,17 +40,14 @@ public class PbcZipDataFileHelper {
      * @param manualFlag
      * @return
      */
-    public static  List<String> genFile(PbcSendZipDatFile pbcSendZipDatFile,List<LinkedHashMap<String,String>>datas,  boolean manualFlag) {
+    public static  String genFile(PbcSendZipDatFile pbcSendZipDatFile,String datType,List<LinkedHashMap<String,String>>datas) {
 		init();
-		String datZipDatType= pbcSendZipDatFile.getDatZipDatType();
-		String dataType=DATATYPEMAP.get(datZipDatType);
-    	//【dat文件生成留痕】数据的key集合
-    	List<String> dataValueList = new ArrayList<String>();
-    	List<String> result = new ArrayList<String>();
+		String dataType=DATATYPEMAP.get(datType);
         //压缩包名称
     	String filePath= pbcSendZipDatFile.getDatZipCode();
     	//dat文件写入
     	BufferedWriter writer = null;
+		String fullPath="";
     	// 人行dat生成文件编码
     	String SVR_DAT_FILE_ENCODE = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,ReportGlobalConstant.SVR_DAT_FILE_ENCODE);
     	if (StringUtil.isEmpty(SVR_DAT_FILE_ENCODE)) {
@@ -58,12 +55,10 @@ public class PbcZipDataFileHelper {
 		}
         try {
         	String datZipPath=pbcSendZipDatFile.getDatZipPath();
-            String fullPath = datZipPath+filePath;
-            result.add(fullPath);
+            fullPath = datZipPath+filePath;
             createFolder(fullPath,dataType);
             File file = null;
 
-            
             file = new SafelyFile(fullPath + "/"+ dataType + ".dat");
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true), SVR_DAT_FILE_ENCODE));
             
@@ -71,16 +66,8 @@ public class PbcZipDataFileHelper {
                 StringBuffer sb = new StringBuffer();
                 for ( Entry<String,String>e:data.entrySet() ) {
                 	if(e.getValue()!=null) {
-                		//【dat文件生成留痕】将每条数据的主键（不为空）保存到list中;"datakey"的值不写入文件。
-                		if(StringUtil.equals("datakey",e.getKey())) {
-                			if(!StringUtils.isEmpty(e.getKey())) {
-                				dataValueList.add(e.getValue());
-                			}
-                		}else {
-                			sb.append(e.getValue()+"|");
-                		}
-                	}
-                	else {
+						sb.append(e.getValue()+"|");
+                	}else {
                 		sb.append("|");
                 	}
                 }
@@ -98,7 +85,7 @@ public class PbcZipDataFileHelper {
                 e.printStackTrace();
             }
         }
-        return result;
+        return fullPath;
     }
     
     

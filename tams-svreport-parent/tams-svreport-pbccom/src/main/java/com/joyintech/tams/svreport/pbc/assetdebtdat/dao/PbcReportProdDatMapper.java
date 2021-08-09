@@ -37,6 +37,6 @@ public interface PbcReportProdDatMapper {
 
 	int deleteByUUIDAndType(Map<String,Object> paramsMap);
 
-	List<PbcReportProdDatDto> selectByDatZipCode(String datZipCode);
+	List<PbcReportProdDatDto> selectByDatZipCode(@Param("datZipCode") String datZipCode, @Param("datZipDatType") String datZipDatType);
 
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -49,7 +50,7 @@ public class PbcSendZipDatFileController {
 	 * @return 压缩文件之地
 	 */
 	@PostMapping("createZipFile")
-	public String createZipFile(@RequestBody Map<String, Object> param) {
+	public List<String> createZipFile(@RequestBody Map<String, Object> param) {
 		return pbcSendZipDatFileService.createZipFile(param);
 	}
 
