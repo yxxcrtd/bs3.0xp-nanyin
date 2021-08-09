@@ -93,8 +93,6 @@ public class ModBatchTaskService extends BaseService {
 //                , params, BatchAssetInfoDto.class);
         Page<BatchAssetInfoDto> assetInfoPages = new Page<>();
         Boolean isImpairment = (Boolean)params.get("isImpairment");
-        RequestUtil.getParam("key");
-        RequestUtil.getCurrentRequest().getHeader("key");
         if (isImpairment != null && isImpairment) {
             assetInfoPages= super.queryForPage(page, length, () -> modBatchTaskMapper.getAssetInfoImpairment(params));
         } else {

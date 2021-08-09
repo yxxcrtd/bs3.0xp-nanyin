@@ -75,8 +75,6 @@ public class ModValBatchTask001Controller extends BaseController {
     @ResponseBody
     public Page<SelectOptionDto> getAssetInfo() {
         Map<String, Object> pageParam = RequestUtil.getParameters(getRequest());
-        pageParam.put("key","finprodId asc");
-        pageParam.put("order","finprodName asc");
         return modBatchTask001Service.getAssetInfo(pageParam);
     }
 
