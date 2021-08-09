@@ -17,6 +17,9 @@
             if($('#projectType').val() && $('#projectType').val() != ''){
                 obj.assetSecType = $('#projectType').val();
             }
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             //---add by 裴家俊  2019/03/20  添加资产类型条件---end-----
             var object = {
                     assetCode: ['finprodMarketId', 'TrdBondInvestTrade002.finprodId'],
@@ -27,6 +30,9 @@
                     tradeDirection:['ps','TrdLendInvestTrade002.ps'],
                     data: obj
             }
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
             return object;
         }
         /**
