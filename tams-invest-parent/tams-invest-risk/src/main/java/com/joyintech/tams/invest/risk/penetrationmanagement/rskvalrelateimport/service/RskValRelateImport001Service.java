@@ -198,25 +198,26 @@ public class RskValRelateImport001Service extends CommonExportService<RskValRela
         }
 
         List<ZipFileAssetInfoDto> list = new ArrayList<>();
+        int sizeLength=fileList.size();
         for (int j=0;j<fileList.size();j++) {
             File file1=fileList.get(j);
             Boolean isError= checkFile(file1, errorList, list,filePath);
             if(isError){
-                fileList.remove(j);
+                sizeLength=sizeLength-1;
             }
         }
       /*  if (errorList.size() > 0) {
             return errorList;
         }*/
         progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0.55d, false);
-        saveData(pageId, fileList, list, errorList,filePath);
+        saveData(pageId, sizeLength, list, errorList,filePath);
         if (errorList.size() > 0) {
             return errorList;
         }
         return errorList;
     }
 
-    private void saveData(String pageId, List<File> fileList, List<ZipFileAssetInfoDto> list, List<ExcelValidDto> errorList,String filePath) {
+    private void saveData(String pageId, int sizeLength, List<ZipFileAssetInfoDto> list, List<ExcelValidDto> errorList,String filePath) {
         //Date supDate = iPlatformDate.getSysDate();
         Date supDate=DateUtil.platDateFromCache();
         Date startDate = DateUtil.now();
@@ -226,7 +227,7 @@ public class RskValRelateImport001Service extends CommonExportService<RskValRela
         if (StringUtil.isNotEmpty(CacheUtil.getSysParam("BATCH_IMPORT_VAL_MAX_THREAD"))) {
             maxPoolCapacitySize = Integer.parseInt(CacheUtil.getSysParam("BATCH_IMPORT_VAL_MAX_THREAD"));
         }
-        int listSize = fileList.size();
+        int listSize = sizeLength;
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();//线程池
         int initPoolSize = listSize < 10 ? listSize : 10;//初始化线程数
         int actMaxPoolSize = listSize < maxPoolCapacitySize ? listSize : maxPoolCapacitySize;//最大线程数
