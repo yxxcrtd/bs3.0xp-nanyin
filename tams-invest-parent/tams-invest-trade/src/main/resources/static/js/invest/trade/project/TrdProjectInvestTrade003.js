@@ -114,6 +114,9 @@
                         tradeDirection:$('#ps').val(),
                         index: null,
                         mun: mun}
+                // add by zhangrui1 交易对手影响风险试算 start
+                obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+                // add by zhangrui1 交易对手影响风险试算 end
                 list[i]=obj;
             }
             if($('#projectType').val() && $('#projectType').val() != ''){
@@ -130,6 +133,9 @@
                     tradeDirection:['ps','TrdLendInvestTrade002.ps'],
             		data:list
             }
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
             return object;
         }
         
