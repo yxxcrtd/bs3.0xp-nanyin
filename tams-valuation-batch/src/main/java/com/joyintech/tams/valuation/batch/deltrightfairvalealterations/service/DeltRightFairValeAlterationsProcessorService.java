@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.BokAssetMarketInfo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -875,6 +876,47 @@ public class DeltRightFairValeAlterationsProcessorService {
             	bokBatchMarketwarningInfo.setYesOrNo(DictCodeList.是否_否.getValue());
             	rtnResult.getBokBatchMarketwarningInfoList().add(bokBatchMarketwarningInfo);
             }
+
+            // add by weipeng 20210807：增加资产行情信息入库 start
+            // 变量.资产行情信息DTO
+            BokAssetMarketInfo bokAssetMarketInfo = new BokAssetMarketInfo();
+            //变量.行情价格警告信息DTO.流水号
+            bokAssetMarketInfo.setSeqNo(IDGenerator.generate());
+            // 变量.行情价格警告信息DTO.账套代码
+            bokAssetMarketInfo.setBooksetId(acctEntityEx.getBooksetId());
+            // 变量.行情价格警告信息DTO.发生日期
+            bokAssetMarketInfo.setHappenDate(acctEntityEx.getHappenDate());
+            // 变量.行情价格警告信息DTO.入账日期
+            bokAssetMarketInfo.setBookDate(bookDate);
+            // 变量.行情价格警告信息DTO.金融产品代码 = 变量.标的信息.金融产品代码
+            bokAssetMarketInfo.setFinprodId(rstBaseinfo.getFinprodId());
+            // 变量.行情价格警告信息DTO.金融产品类型 = 变量.标的信息.金融产品类型
+            bokAssetMarketInfo.setFinprodType(rstBaseinfo.getFinprodType());
+            // 变量.行情价格警告信息DTO.投资目的 = 计提类账务处理结果.投资目的
+            bokAssetMarketInfo.setInvAim(acctEntityEx.getInvAim());
+            // 变量.行情价格警告信息DTO.市场代码 = 变量.标的信息.市场代码
+            bokAssetMarketInfo.setMarketCode(rstBaseinfo.getFinprodMarketId());
+            // 变量.行情价格警告信息DTO.估值来源 = 市价共通返回.估值来源
+            bokAssetMarketInfo.setValueSource(marketPriceDto.getValueSource());
+            // 变量.行情价格警告信息DTO.市价 = 变量.市价
+            bokAssetMarketInfo.setMarketPrice(marketPrice);
+            // 变量.行情价格警告信息DTO.行情日期 = 市价共通返回.行情日期
+            bokAssetMarketInfo.setValueDate(marketPriceDto.getValDate());
+            // 变量.行情价格警告信息DTO.估值方案代码 = 市价共通返回.估值方案代码
+            bokAssetMarketInfo.setSchemeId(marketPriceDto.getSchemeId());
+            // 变量.行情价格警告信息DTO.估值方案明细代码 = 市价共通返回.估值方案明细代码
+            bokAssetMarketInfo.setSchemeDetailId(marketPriceDto.getSchemeDetailId());
+            // 变量.行情价格警告信息DTO.是否来源于行情数据
+            // if 市价共通返回.市价== null || 变量.市价 != 市价共通返回.市价
+            if(marketPriceDto.getPrice() == null ||  marketPrice.compareTo(marketPriceDto.getPrice()) != 0){
+                bokAssetMarketInfo.setDataSource(DictCodeListExt1.行情价格数据来源_系统生成.getValue());
+            }
+            else{
+                bokAssetMarketInfo.setDataSource(DictCodeListExt1.行情价格数据来源_行情信息.getValue());
+            }
+            // 添加到返回值中
+            rtnResult.getBokAssetMarketInfoList().add(bokAssetMarketInfo);
+            // add by weipeng 20210807：增加资产行情信息入库 end
         }
         return rtnResult;
     }

@@ -14,11 +14,9 @@ import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BokBookdetailCurrent;
-import com.joyintech.tams.common.base.entity.BokBookdetailCurrentExt;
-import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
-import com.joyintech.tams.common.base.entity.FinProductValuation;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListTableId;
@@ -476,6 +474,40 @@ public class MoneyFundDealCountingDrawingProcessorService {
                     }
                     // 变量.账务明细辅助列表.add(变量.账务明细辅助)
                     bokBookdetailCurrentExtList.add(bokBookdetailCurrentExtNow);
+
+                    // add by weipeng 20210807：增加资产行情信息入库
+                    // 变量.资产行情信息DTO
+                    BokAssetMarketInfo bokAssetMarketInfo = new BokAssetMarketInfo();
+                    //变量.行情价格警告信息DTO.流水号
+                    bokAssetMarketInfo.setSeqNo(IDGenerator.generate());
+                    // 变量.行情价格警告信息DTO.账套代码
+                    bokAssetMarketInfo.setBooksetId(acctEntity.getBooksetId());
+                    // 变量.行情价格警告信息DTO.发生日期
+                    bokAssetMarketInfo.setHappenDate(acctEntity.getHappenDate());
+                    // 变量.行情价格警告信息DTO.入账日期
+                    bokAssetMarketInfo.setBookDate(acctEntity.getBookDate());
+                    // 变量.行情价格警告信息DTO.金融产品代码 = 变量.标的信息.金融产品代码
+                    bokAssetMarketInfo.setFinprodId(targetFinProduct.getFinprodId());
+                    // 变量.行情价格警告信息DTO.金融产品类型 = 变量.标的信息.金融产品类型
+                    bokAssetMarketInfo.setFinprodType(targetFinProduct.getFinprodType());
+                    // 变量.行情价格警告信息DTO.投资目的 = 计提类账务处理结果.投资目的
+                    bokAssetMarketInfo.setInvAim(acctEntity.getInvAim());
+                    // 变量.行情价格警告信息DTO.市场代码 = 变量.标的信息.市场代码
+                    bokAssetMarketInfo.setMarketCode(targetFinProduct.getFinprodMarketId());
+                    // 变量.行情价格警告信息DTO.市价 = 变量.市价
+                    bokAssetMarketInfo.setMarketPrice(vo.getValuation());
+                    // 变量.行情价格警告信息DTO.行情日期 = 市价共通返回.行情日期
+                    bokAssetMarketInfo.setValueDate(vo.getValDate());
+                    // 变量.行情价格警告信息DTO.是否来源于行情数据
+                    // if 市价共通返回.市价== null
+                    if(vo.getValuation() == null){
+                        bokAssetMarketInfo.setDataSource(DictCodeListExt1.行情价格数据来源_系统生成.getValue());
+                    }
+                    else{
+                        bokAssetMarketInfo.setDataSource(DictCodeListExt1.行情价格数据来源_行情信息.getValue());
+                    }
+                    // 添加到返回值中
+                    returnResult.getBokAssetMarketInfoList().add(bokAssetMarketInfo);
                 }
             }
 
