@@ -1702,6 +1702,8 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 					List<SelectOptionDto> result = this.selectCounterIdByCounterType(param);
 					if(result!=null&&result.size()>0){
 						dzImportDto.setCounterId(result.get(0).getId());
+					}else{
+						dzImportDto.setCounterId("");
 					}
 					return StringUtil.EMPTY;
 				});
