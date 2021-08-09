@@ -187,9 +187,13 @@ public class PbcSendZipDatFile001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("/createZipFile")
-	public String createZipFile() {
+	public List<String> createZipFile() {
 		Map<String, Object> param = RequestUtil.getPageParam();
-		return StringUtil.trimHtmlTag(pbcSendZipDatFileMService.createZipFile(param));
+		List<String> list=pbcSendZipDatFileMService.createZipFile(param);
+		list.stream().forEach(datFile -> {
+			StringUtil.trimHtmlTag(datFile);
+		});
+		return list;
 	}
 
 	/**

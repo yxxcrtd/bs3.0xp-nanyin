@@ -22,6 +22,8 @@ import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportProdDatMapper;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto;
 import com.joyintech.tams.svreport.pbc.assetposition.constants.PbcAssetPositionConstants;
 import com.joyintech.tams.svreport.pbc.common.util.SftpUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +71,7 @@ public class PbcZipDataFileService {
      * @see
      * @since 1.0
      */
-    public String genDataFile(Map<String,Set<String>> paramMap,Map<String, PbcSendZipDatFile> zipInfoMap) {
+    public List<String> genDataFile(Map<String,Set<String>> paramMap,Map<String, PbcSendZipDatFile> zipInfoMap) {
     	List<String> zipFileName = new ArrayList<String>();
     	
     	// 是否手工生成标志
@@ -77,45 +79,45 @@ public class PbcZipDataFileService {
     	if (null != paramMap) {
     		manualFlag = true;
     	}
-		for (Map.Entry<String, Set<String>> entry : paramMap.entrySet()) {
-			String keyVal=entry.getKey();
+		for (Map.Entry<String, Set<String>> entry : paramMap.entrySet()) {  //循环datZipCode
+			String datZipCode=entry.getKey();
 			Set<String> set=entry.getValue();
-			if (DictCodeListExt2.人行报送明细类型_募集余额报表.getValue().equals(keyVal) ) {
-				for(String datZipCode:set) {
-					PbcSendZipDatFile pbcSendZipDatFile=zipInfoMap.get(datZipCode);
-					zipFileName.addAll(genReport1_6File(pbcSendZipDatFile,manualFlag));
+			//去重
+			Set<String> reslut = new HashSet<String>();
+			PbcSendZipDatFile pbcSendZipDatFile=zipInfoMap.get(datZipCode);
+			for(String datType:set) {  //生成dat文件
+				if(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType)){
+
+				}else if(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
+
+				}else if (DictCodeListExt2.人行报送明细类型_募集余额报表.getValue().equals(datType)
+						||DictCodeListExt2.人行报送明细类型_募集兑付报表.getValue().equals(datType)
+						||DictCodeListExt2.人行报送明细类型_只数情况报表.getValue().equals(datType)
+						||DictCodeListExt2.人行报送明细类型_募集余额报表分地区报表.getValue().equals(datType)
+						||DictCodeListExt2.人行报送明细类型_提前及延期兑付报表.getValue().equals(datType)
+						||DictCodeListExt2.人行报送明细类型_到期未兑付报表.getValue().equals(datType)
+						||DictCodeListExt2.人行报送明细类型_存续产品分期限募集余额报表.getValue().equals(datType)
+						||DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue().equals(datType)
+					) {
+						String datZipCodePath=genReport1_1_6_3_2FileDat(pbcSendZipDatFile,datType,manualFlag);
+					    reslut.add(datZipCodePath);
+				}else if(DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue().equals(datType)){
+					String datZipCodePath=genReport1_1_6_3_2FileDat(pbcSendZipDatFile,datType,manualFlag);
+					reslut.add(datZipCodePath);
 				}
 			}
+			//生成压缩包
+			List<String> zipFileList = genCompressFile(reslut,manualFlag);
+			zipFileName.addAll(zipFileList);
 		}
-        String finalZipFile = "";
-        /*手工生成的文件再次压缩   begin*/
-        if (manualFlag) {
-        	finalZipFile = genFinalCompressFile(zipFileName);
-        }
         /*手工生成的文件再次压缩   end*/
-        return finalZipFile;
+        return zipFileName;
         
     }
-    //报表1_1到1_6zip
-    public List<String> genReport1_6File(PbcSendZipDatFile pbcSendZipDatFile, boolean manualFlag) {
-    	// 人行单产品报表DAT文件明细表关联List
-    	Map<String,Object> fileDataMap = new HashMap<String,Object>();
-    	//记录序列号
-    	Map<String,List<String>> seqMap = new HashMap<String,List<String>>();
-    	//生成dat文件
-    	List<String> files1_1 = genReport1_6FileDat(pbcSendZipDatFile,seqMap,manualFlag,fileDataMap);
-        //去重
-        Set<String> reslut = new HashSet<String>(); 
-        reslut.addAll(files1_1);
-        //生成压缩包
-        List<String> zipFileList = genCompressFile(reslut,manualFlag);    
-        return zipFileList;
-    }
-    //报表1_1到1_6dat
-    private List<String> genReport1_6FileDat(PbcSendZipDatFile pbcSendZipDatFile,Map<String,List<String>> seqMap, boolean manualFlag,Map<String,Object> fileDataMap) {
-    	List<String> result = new ArrayList<String>();
-		List<PbcReportProdDatDto> subList = pbcReportProdDatMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode());
-        //不同的zip包
+    //报表1_1到1_6,3_1到3_2dat
+    private String genReport1_1_6_3_2FileDat(PbcSendZipDatFile pbcSendZipDatFile,String datType,boolean manualFlag) {
+		List<PbcReportProdDatDto> subList = pbcReportProdDatMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(),datType);
+
         Map<String,List<LinkedHashMap<String,String>>> map=new HashMap<String,List<LinkedHashMap<String,String>>>();
 		List<LinkedHashMap<String,String>> dataList =new ArrayList<>();
         for(PbcReportProdDatDto sub :subList){
@@ -127,11 +129,28 @@ public class PbcZipDataFileService {
         	dataList.add(data);
         	map.put(sub.getDatZipCode(),dataList);
         }
-		result.addAll(
-				PbcZipDataFileHelper.genFile(pbcSendZipDatFile,dataList,manualFlag));
+		String result=PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList);
         return result;
     }
 
+	//报表3_3dat
+	private String genReport3_3FileDat(PbcSendZipDatFile pbcSendZipDatFile,String datType,boolean manualFlag) {
+		List<PbcReportProdDatDto> subList = pbcReportProdDatMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(),datType);
+
+		Map<String,List<LinkedHashMap<String,String>>> map=new HashMap<String,List<LinkedHashMap<String,String>>>();
+		List<LinkedHashMap<String,String>> dataList =new ArrayList<>();
+		for(PbcReportProdDatDto sub :subList){
+			//组装数据
+			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+			data.put("date",sub.getTermid());
+			data.put("finInstitutionCode",sub.getFinInstitutionCode());
+			data.put("prodVariety",sub.getProdVariety());
+			dataList.add(data);
+			map.put(sub.getDatZipCode(),dataList);
+		}
+		String result=PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList);
+		return result;
+	}
 
     private List<String> genCompressFile(Set<String>  files, boolean manualFlag) {
         String rootdir = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
@@ -213,5 +232,7 @@ public class PbcZipDataFileService {
     	
     	return finalZipPath;
     }
+
+
 
 }

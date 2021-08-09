@@ -126,11 +126,14 @@ $(function() {
                 if (result.length < 1) {
                     layer.alert('所选产品已全部手工处理或没有在日期范围内！');
                 } else {
-                    param.result = result;
-                    Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
+                    for(var key in result) {
+                        param.result = result[key];
+                        Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
+                    }
                 }
             });
         });
     })
+
 
 }());
