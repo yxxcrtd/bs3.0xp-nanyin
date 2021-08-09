@@ -83,22 +83,24 @@ $(function() {
      * 绑定编辑关联指标参数事件
      */
     table.bind('click', '.run', function(data, index) {
-        Joyin.ajaxJson(basePath + 'invest/risk/outsvaltableimporthis/RskOutValtblImportHis001/run',
-            data,function(result){
-                var resultMsg = result.data.resultMsg;
-                var resultCode = result.data.resultCode;
-                if (resultCode == 'T'){
-                    Joyin.alert(resultMsg);
-                    table.load();
-                }else{
-                    Joyin.error(resultMsg,function(){
-                        //点击保存后关闭窗口
-                        var index = parent.layer.getFrameIndex(window.name);
-                        parent.layer.close(index);
+        Joyin.confirm("确认重新运行?", function () {
+            Joyin.ajaxJson(basePath + 'invest/risk/outsvaltableimporthis/RskOutValtblImportHis001/run',
+                data,function(result){
+                    var resultMsg = result.data.resultMsg;
+                    var resultCode = result.data.resultCode;
+                    if (resultCode == 'T'){
+                        Joyin.alert(resultMsg);
                         table.load();
-                    });
-                }
-          });
+                    }else{
+                        Joyin.error(resultMsg,function(){
+                            //点击保存后关闭窗口
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            table.load();
+                        });
+                    }
+                });
+        });
     });
 
     /**
