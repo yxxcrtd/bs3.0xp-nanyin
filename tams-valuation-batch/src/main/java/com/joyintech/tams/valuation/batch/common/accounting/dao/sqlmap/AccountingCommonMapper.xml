@@ -1265,4 +1265,20 @@ FROM
               #{item}
             </foreach>
     </select>
+
+	<!-- 删除资产行情信息表数据【deleteBokAssetMarketInfo】 -->
+	<delete id="deleteBokAssetMarketInfo" parameterType="java.util.Map">
+		DELETE
+		FROM BOK_ASSET_MARKET_INFO a
+		WHERE EXISTS(
+				SELECT 1
+				FROM BOK_BATCH_TASK_TODO B
+				WHERE
+					B.BOOKSET_ID =  A.BOOKSET_ID
+				  AND B.SEQ_NO = #{seqNo}
+				  AND B.BOOKSET_DATE = #{BOOKSET_DATE}
+				  AND B.TASK_ID = #{taskId}
+			)
+		  AND a.HAPPEN_DATE <![CDATA[>=]]> #{BOOKSET_DATE}
+	</delete>
 </mapper>

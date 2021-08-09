@@ -477,6 +477,13 @@ public class FinProductCommonService {
                         //modify by mashukai 合并修改 TISHKBS-1631 20201123	end
 					}
                 }
+                // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
+                // 估值方案代码
+                marketPriceDto.setSchemeId(specialDto.getSchemeId());
+                // 估值方案明细代码
+                marketPriceDto.setSchemeDetailId(specialDto.getSchemeDetailId());
+                // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
+
                 return marketPriceDto;
             }
         }
@@ -492,6 +499,7 @@ public class FinProductCommonService {
             return marketPriceDto;
         }
         schemeDetailDto = listSchemeDetailDto.get(0);
+
         // 5.1 判断取出估值方案
         // FOR (产品估值方案配置明细 D:步骤2返回值估值方案配置LIST）
 //        for (SchemeDetailDto item : listSchemeDetailDto) {
@@ -651,7 +659,12 @@ public class FinProductCommonService {
             }
         }
 
-
+        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
+        // 估值方案代码
+        marketPriceDto.setSchemeId(schemeDetailDto.getSchemeId());
+        // 估值方案明细代码
+        marketPriceDto.setSchemeDetailId(schemeDetailDto.getSchemeDetailId());
+        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
 
         return marketPriceDto;
     }
@@ -1167,6 +1180,7 @@ public class FinProductCommonService {
             return marketPriceDto;
         }
         schemeDetailDto = listSchemeDetailDto.get(0);
+
         // 4.查询估值信息（生成mapper查询方法）
         // 4.1、查询场外基金估值行情：
         // 4.2、交易所基金估值行情：
@@ -1244,7 +1258,13 @@ public class FinProductCommonService {
             }else{
                 marketPriceDto.setSchemeValDate(calculationCommonService.getCDate(queryDate,targetFinProduct.getCalendarId() ));
             }
-            
+
+        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
+        // 估值方案代码
+        marketPriceDto.setSchemeId(schemeDetailDto.getSchemeId());
+        // 估值方案明细代码
+        marketPriceDto.setSchemeDetailId(schemeDetailDto.getSchemeDetailId());
+        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
         return marketPriceDto;
     }
 
@@ -1486,6 +1506,13 @@ public class FinProductCommonService {
         }
         /** add by yanya on 20200117 影子定价查询 价格等于"全价"处理 end**/
 
+        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
+        // 估值方案代码
+        marketPriceDto.setSchemeId(schemeDetailDto.getSchemeId());
+        // 估值方案明细代码
+        marketPriceDto.setSchemeDetailId(schemeDetailDto.getSchemeDetailId());
+        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
+
         // 小数位处理
         setQuotaDigit(schemeDetailDto.getQuotaDigit(), marketPriceDto, schemeDetailDto.getPriceTailMode());
         return marketPriceDto;
@@ -1642,8 +1669,14 @@ public class FinProductCommonService {
         		valFinProductValuationDto.setValuation(ArithmeticUtil.round(valFinProductValuationDto.getValuation(),
         				QuotaDigit.intValue(), roundingMode));
         	}
-        	
+
         }
+        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
+        // 估值方案代码
+        valFinProductValuationDto.setSchemeId(schemeDetailDto.getSchemeId());
+        // 估值方案明细代码
+        valFinProductValuationDto.setSchemeDetailId(schemeDetailDto.getSchemeDetailId());
+        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
         return valFinProductValuationDto;
     }
     
@@ -1739,6 +1772,7 @@ public class FinProductCommonService {
 
             // 特殊资产方案有值的情况
             if (specialDto != null) {
+
                 if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(specialDto.getInvAim())) {
                     // 变量.市价净价 = 0;
                     marketPriceDto.setPrice(BigDecimal.ZERO);
@@ -1771,6 +1805,12 @@ public class FinProductCommonService {
                         marketPriceDto.setSchemeValDate(calculationCommonService.getCDate(queryDate,targetFinProduct.getCalendarId()));
                     }
                 }
+                // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
+                // 估值方案代码
+                marketPriceDto.setSchemeId(specialDto.getSchemeId());
+                // 估值方案明细代码
+                marketPriceDto.setSchemeDetailId(specialDto.getSchemeDetailId());
+                // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
                 return marketPriceDto;
             }
         }

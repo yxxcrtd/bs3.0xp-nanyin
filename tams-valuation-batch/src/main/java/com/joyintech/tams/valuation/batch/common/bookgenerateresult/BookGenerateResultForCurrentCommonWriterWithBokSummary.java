@@ -13,7 +13,9 @@ package com.joyintech.tams.valuation.batch.common.bookgenerateresult;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.tams.common.base.entity.BokAssetMarketInfo;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.dao.AccountingMethodMapper;
+import com.joyintech.tams.valuation.common.batch.bookcommon.dao.BokAssetMarketInfoWriterMapper;
 import com.joyintech.tams.valuation.common.batch.bookcommon.dao.BokBatchMarketwarningInfoWriterMapper;
 import com.joyintech.tams.valuation.common.batch.losscommon.service.LossCommonService;
 
@@ -69,6 +71,9 @@ public class BookGenerateResultForCurrentCommonWriterWithBokSummary extends Base
     
     @Autowired
     private BokBatchMarketwarningInfoWriterMapper bokBatchMarketwarningInfoMapper;
+
+    @Autowired
+    private BokAssetMarketInfoWriterMapper  bokAssetMarketInfoWriterMapper;
     
 
 	@SuppressWarnings("unused")
@@ -122,6 +127,10 @@ public class BookGenerateResultForCurrentCommonWriterWithBokSummary extends Base
     	  lossCommonService.insertBokStatLossPosiitonList(bookGenerateResult.getBokStatLossPosiitonList());
       }
 
+        // 第五步：循环数据，插入【资产行情信息】数据
+        for(BookGenerateResultWithBokSummary bookGenerateResult : resultList){
+            this.insertBokBatchAssetMarketInfo(bookGenerateResult.getBokAssetMarketInfoList());
+        }
     }
     
     /**
@@ -214,5 +223,30 @@ public class BookGenerateResultForCurrentCommonWriterWithBokSummary extends Base
   
         return bokBookdetailCurrentExtList.size();
     }
-    
+
+    /**
+     * 将数据，插入【行情价格警告信息】表
+     * @param BokBatchMarketwarningInfoList
+     * @return
+     * @see
+     * @since 1.0
+     */
+    private int insertBokBatchAssetMarketInfo(List<BokAssetMarketInfo> bokAssetMarketInfoList) {
+
+        int sucessNum = 0;
+        //数据存在
+        if(bokAssetMarketInfoList!=null && !bokAssetMarketInfoList.isEmpty()){
+            //循环列表进行插入
+            //            for(BokBatchMarketwarningInfo vo: bokBatchMarketwarningInfoList){
+            //                //插入
+            //                sucessNum = sucessNum + bokBatchMarketwarningInfoMapper.insert(vo);
+            //            }
+            List<List<BokAssetMarketInfo>> list = DataHandleUtil.splitList(bokAssetMarketInfoList);
+            for(List<BokAssetMarketInfo> bokAssetMarketInfos : list){
+                bokAssetMarketInfoWriterMapper.insertbatch(bokAssetMarketInfos);
+            }
+
+        }
+        return sucessNum;
+    }
 }
