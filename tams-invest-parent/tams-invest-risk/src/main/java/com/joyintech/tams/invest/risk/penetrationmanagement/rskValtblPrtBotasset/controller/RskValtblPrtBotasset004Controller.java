@@ -96,7 +96,7 @@ public class RskValtblPrtBotasset004Controller extends BaseController {
     */
     @ResponseBody
     @RequestMapping("selectAllAsset")
-    public List<SelectOptionDto> selectAllAsset(){
+    public Page<SelectOptionDto> selectAllAsset(){
         return rskValtblPrtBotassetService.selectAllAsset1(RequestUtil.getPageParam());
     }
 

@@ -317,7 +317,6 @@
 		SELECT
 		ASSET_CODE id,
 		nvl(ASSET_NAME,ASSET_CODE) text,
-		<!--'01'||','||ASSET_CODE  object-->
 		concat('01,',ASSET_CODE) object
 		FROM
 		RSK_ASSET_INFO /**资产要素表**/
@@ -326,6 +325,31 @@
 			and (ASSET_CODE LIKE concat(concat('%',#{search,jdbcType=VARCHAR}),'%')
 			or ASSET_NAME LIKE concat(concat('%',#{search,jdbcType=VARCHAR}),'%'))
 		</if>
+		union all
+		SELECT distinct
+		fp.FINPROD_ID id,
+		fp.FINPROD_NAME text ,
+		concat('01,',fp.FINPROD_MARKET_ID) object
+		FROM
+		FIN_PRODUCT fp
+		<if test="orgCode!=null and orgCode!=''">
+		left join 	data_auth_notify_inst inst
+		on	fp.FINPROD_ID = inst.business_id AND inst.model_type = '02'
+		</if>
+		<where>
+			<if test="search != null and search != ''">
+				(fp.FINPROD_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR
+				fp.FINPROD_NAME LIKE CONCAT('%', CONCAT(#{search}, '%')))
+			</if>
+			<if test="finprodType2 != null and finprodType2 != ''">
+				AND fp.FINPROD_TYPE2 = #{finprodType2}
+			</if>
+			<if test="orgCode!=null and orgCode!=''">
+				and (fp.FINPROD_TYPE2 IN ('F01','F06','F10','F32')
+				OR (FINPROD_TYPE2 NOT IN ('F01','F06','F10','F32') AND inst.institution_code =#{orgCode}))
+			</if>
+		</where>
 	</select>
 	<!--取消映射 RSK_VALTBL_PRT_BOTASSET_MAP-->
 	<update id="cancelApplyMapForIntSubject" parameterType="com.joyintech.service.risk.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto">

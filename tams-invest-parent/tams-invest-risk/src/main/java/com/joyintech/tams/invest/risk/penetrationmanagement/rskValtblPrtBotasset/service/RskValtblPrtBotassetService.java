@@ -15,9 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.risktrial.dto.TreeNode;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -377,7 +381,7 @@ public class RskValtblPrtBotassetService extends CommonExportService<RskValtblPr
                 paramMap,Integer.class);
     }
 
-    public List<SelectOptionDto> selectAllAsset1(Map<String, Object> pageParam) {
+    public Page<SelectOptionDto> selectAllAsset1(Map<String, Object> pageParam) {
         List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
         String subClass = (String) pageParam.get("subClass");
         String finprodType = "";
@@ -412,9 +416,9 @@ public class RskValtblPrtBotassetService extends CommonExportService<RskValtblPr
         }else{pageParam.put("notFinprodType2",DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());}*/
         pageParam.put("notFinprodType2",DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
        //修改获取系统内的资产，资产通过资产要素界面维护
-        resultList.addAll(selectRskAsset(pageParam));
-        resultList.addAll(selectAsset(pageParam));
-        if(null!=resultList&&!resultList.isEmpty()){
+       // resultList.addAll(selectRskAsset(pageParam));
+       // resultList.addAll(selectAsset(pageParam));
+       /* if(null!=resultList&&!resultList.isEmpty()){
             for(SelectOptionDto selectOptionDto:resultList){
                 if(null!=selectOptionDto.getObject()){
                     String obj = selectOptionDto.getObject().toString();
@@ -426,8 +430,8 @@ public class RskValtblPrtBotassetService extends CommonExportService<RskValtblPr
                     }
                 }
             }
-        }
-        return resultList;
+        }*/
+        return selectRskAsset(pageParam);
 
     }
 
@@ -436,9 +440,13 @@ public class RskValtblPrtBotassetService extends CommonExportService<RskValtblPr
      * @param param
      * @return
      */
-    public List<SelectOptionDto> selectRskAsset(Map<String,Object> param){
-        List<SelectOptionDto> result = simpleRestTemplate.postForList(ServiceApplication.RISK_SERVICE_NAME + "/RskValtblPrtBotasset/selectRskAsset", param, SelectOptionDto.class);
-        return result;
+    public Page<SelectOptionDto> selectRskAsset(Map<String,Object> param){
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            //联社模式,查询登录人的机构
+            param.put("orgCode", CommonUtil.getOrgCode());
+        }
+        return simpleRestTemplate.postForPage(ServiceApplication.RISK_SERVICE_NAME + "/RskValtblPrtBotasset/selectRskAsset", param, SelectOptionDto.class);
+
     }
     /**
      * 获取无标的信息下拉框

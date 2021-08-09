@@ -843,21 +843,19 @@
   <select id="selectBotCashListEx" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"  
   		parameterType="date">
   		WITH ap AS (
-				SELECT DISTINCT UNINVEST_CASH, PLAN_ASSET_ID,TOTAL_NUM
-				FROM chb_bot_ast_pos
-				WHERE (PLAN_ASSET_ID IN (
-						SELECT DISTINCT ASSET_CODE
-						FROM chb_asset_position deal
-							LEFT JOIN CHB_PRD_BASEINFO prd
-							ON prd.PROD_ID = deal.PROD_ID
-								AND prd.status != 'D'
-						WHERE (deal.trade_type = '05'
-							AND prd.PROFIT_TYPE = '03'
-							AND deal.CDATE = #{cdate,jdbcType=DATE})
-					)
-					AND pos_date = #{cdate,jdbcType=DATE}
-					AND status != 'D'
-                    AND ASSET_CODE = 'REMAININGCASH')
+            SELECT DISTINCT cbap.UNINVEST_CASH, cbap.PLAN_ASSET_ID,cbap.TOTAL_NUM
+            FROM chb_bot_ast_pos cbap
+            inner join chb_asset_position deal
+            on cbap.PLAN_ASSET_ID=deal.ASSET_CODE
+               and deal.trade_type = '05'
+               and deal.CDATE = #{cdate,jdbcType=DATE}
+            inner join CHB_PRD_BASEINFO prd
+            ON prd.PROD_ID = deal.PROD_ID
+               AND prd.status != 'D'
+               AND prd.PROFIT_TYPE = '03'
+            where cbap.pos_date = #{cdate,jdbcType=DATE}
+               AND cbap.status != 'D'
+               AND cbap.ASSET_CODE = 'REMAININGCASH'
 			)
 		SELECT cp.PROD_ID AS prodId
 			, Round(cp.accuqty / ap.TOTAL_NUM * ap.UNINVEST_CASH, 2) AS cashamt

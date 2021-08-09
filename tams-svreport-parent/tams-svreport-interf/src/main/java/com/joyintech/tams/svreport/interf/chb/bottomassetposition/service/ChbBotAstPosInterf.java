@@ -18,6 +18,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.ConnectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,7 +86,7 @@ public class ChbBotAstPosInterf extends BaseService{
     		for(Date date :isUpdated){
 	        	//查询信息
 	        	//List<ChbBotAstPosition> listChbBotAstPosition = chbBotAstPosInterf2.getDataFromInterf(date);
-				List<ChbBotAstPosition> listChbBotAstPosition = getBotDataFromRsk(date);//add by lingxiaoqing on 2021-06-10 估值表导入需求升级
+				List<ChbBotAstPosition> listChbBotAstPosition = getBotDataFromRsk(date);//估值表升级
 	        	if("02".equals(isChlBtm)){
 	        		List<ChbBotAstPosition> listBotAstPosition = chbBotAstPosInterf2.getChlBtmDataFromInterf(date, source);
 	        		List<ChbBotAstPosition> listBotAstPositionSp = chbBotAstPosInterf2.getChlBtmDataFromInterfSp(date, source,isCalLoadRate);
@@ -318,7 +319,7 @@ public class ChbBotAstPosInterf extends BaseService{
 		List<ChbBotAstPosition> otherBotList = getOtherBotDataFromRsk(date,botUnInvestBotMap,botTotalNumMap);
 		//4、查询回购底层资产,并进行拆分操作
 		List<ChbBotAstPosition> repBotList = getRepBotDataFromRsk(date,botUnInvestBotMap,botTotalNumMap);
-		//5、虚拟一笔剩余现金底层资产CASH(为G06而用)
+		//5、虚拟一笔剩余现金底层资产REMAININGCASH(为G06而用)
 		List<ChbBotAstPosition> botCashList = getCashBotDataFromRsk(date,botUnInvestBotMap,botTotalNumMap);
 		allBotList.addAll(otherBotList);
 		allBotList.addAll(repBotList);
@@ -332,9 +333,8 @@ public class ChbBotAstPosInterf extends BaseService{
 	 * @return
 	 */
 	private Map<String,List<ChbBotAstPosition>> getUnInvestBotListFromRsk(Date date) {
-		logger.info("-----------------获取所有资管计划的未投资头寸开始---------------");
+		//获取所有资管计划的未投资头寸
 		List<ChbBotAstPosition> unInvestBotList = chbBotAstPosInterfMapper.getUnInvestBotListFromRsk(date);
-		logger.info("-----------------获取所有资管计划的未投资头寸结束---------------结果集 = " + unInvestBotList.size());
 		return unInvestBotList.stream().collect(JoyinCollectors.groupingBy(ChbBotAstPosition::getPlanAssetId));
 	}
 	/**
@@ -343,10 +343,8 @@ public class ChbBotAstPosInterf extends BaseService{
 	 * @return
 	 */
 	private Map<String, List<ChbBotAstPosition>> getBotTotalNumFromRsk(Date date) {
-		logger.info("-----------------获取所有资管计划的资产价值以及实收资本开始---------------");
+		//获取所有资管计划的资产价值以及实收资本开始
 		List<ChbBotAstPosition> botTotalNumList = chbBotAstPosInterfMapper.getBotTotalNumFromRsk(date);
-		//根据资管计划代码+资产价值以及实收资本科目号进行分组
-		logger.info("-----------------获取所有资管计划的资产价值以及实收资本结束---------------结果集 = " + botTotalNumList.size());
 		return botTotalNumList.stream().collect(JoyinCollectors.groupingBy(ChbBotAstPosition::getPlanAssetIdAndSubjectCd));
 	}
 	/**
@@ -357,12 +355,11 @@ public class ChbBotAstPosInterf extends BaseService{
 	private List<ChbBotAstPosition> getOtherBotDataFromRsk(Date date,
 														   Map<String,List<ChbBotAstPosition>> botUnInvestBotMap,
 														   Map<String,List<ChbBotAstPosition>> botTotalNumMap) {
-		logger.info("-----------------获取除回购外的底层资产开始---------------");
+		//获取除回购外的底层资产
 		List<ChbBotAstPosition> list = chbBotAstPosInterfMapper.getOtherBotDataFromRsk(date);
 		list.forEach(pos -> {
 			setBotAssetOtherAmt(pos,botUnInvestBotMap,botTotalNumMap,true);
 		});
-		logger.info("-----------------获取除回购外的底层资产结束---------------结果集 = " + list.size());
 		return list;
 	}
 	/**
@@ -402,7 +399,7 @@ public class ChbBotAstPosInterf extends BaseService{
 	private List<ChbBotAstPosition> getRepBotDataFromRsk(Date date,
 														 Map<String,List<ChbBotAstPosition>> botUnInvestBotMap,
 														 Map<String,List<ChbBotAstPosition>> botTotalNumMap) {
-		logger.info("-----------------获取回购底层资产开始---------------");
+
 		//获取底层回购资产
 		List<ChbBotAstPosition> botRepList = chbBotAstPosInterfMapper.getRepBotDataFromRsk(date);
 		//根据上述的回购资产查找符合的底层回购要素开始占比拆分
@@ -412,7 +409,7 @@ public class ChbBotAstPosInterf extends BaseService{
 		Map<String,BigDecimal> intAmtMap = calBotAstIntAmt(botRepList, repInfoList);
 		//Step3、计算成本的占比(根据底层资产的二级科目号映射资产二级类型以及流通场所筛选出同类资产)
 		List<ChbBotAstPosition> resultList = calBotAstCostAmt(botRepList, repInfoList,intAmtMap,botUnInvestBotMap,botTotalNumMap);
-		logger.info("-----------------获取回购底层资产结束---------------结果集 = " + resultList.size());
+
 		return resultList;
 	}
 
@@ -424,7 +421,7 @@ public class ChbBotAstPosInterf extends BaseService{
 	private List<ChbBotAstPosition> getCashBotDataFromRsk(Date date,
 														  Map<String,List<ChbBotAstPosition>> botUnInvestBotMap,
 														  Map<String,List<ChbBotAstPosition>> botTotalNumMap) {
-		logger.info("-----------------根据底层未投资任何资产来虚拟一笔剩余现金底层资产开始----------------");
+
 		//剩余现金
 		List<ChbBotAstPosition> cashList = chbBotAstPosInterfMapper.getCashBotDataFromRsk(date);
 		//排除当前资管计划没有底层资产只有剩余现金
@@ -439,7 +436,6 @@ public class ChbBotAstPosInterf extends BaseService{
 			}
 			setBotAssetOtherAmt(pos,botUnInvestBotMap,botTotalNumMap,false);
 		});
-		logger.info("-----------------根据底层未投资任何资产来虚拟一笔剩余现金底层资产结束---------------结果集 = " + cashList.size());
 		return cashList;
 	}
 	/**
@@ -448,13 +444,14 @@ public class ChbBotAstPosInterf extends BaseService{
 	 * @param repInfoList
 	 */
 	private Map<String,BigDecimal> calBotAstIntAmt(List<ChbBotAstPosition> botRepList, List<ChbAssetInfo> repInfoList) {
-		logger.info("计算底层回购要素利息数据---------开始---------------");
+		//计算底层回购要素利息数据
 		String assets2 = "1108";//买入返售
 		Map<String,BigDecimal> resultMap = new HashMap<>();
 		for(ChbBotAstPosition bot : botRepList){
 			//应收/应付利息
-			if("120410".equals(bot.getAssetCode()) || "223101".equals(bot.getAssetCode())) {
-				if ("223101".equals(bot.getAssetCode())) {
+			String assetCode=bot.getAssetCode();
+			if("120410".equals(assetCode) || "223101".equals(assetCode)) {
+				if ("223101".equals(assetCode)) {
 					//卖出回购
 					assets2 = "1902";
 				}else{
@@ -466,7 +463,7 @@ public class ChbBotAstPosInterf extends BaseService{
 				String finalAssets = assets2;
 				List<ChbAssetInfo> intAmtList = repInfoList.stream().filter(repines -> StringUtil.equals(repines.getCheckCode(), bot.getPlanAssetId()) && StringUtil.equals(repines.getAssetType2(), finalAssets)).collect(Collectors.toList());
 				if(StringUtil.isEmptyList(intAmtList)){
-					logger.info("根据当前资管计划:"+ bot.getPlanAssetId() +"以及科目号："+bot.getAssetCode() +",未找到对应的底层回购要素信息,请检查是否维护底层回购信息!");
+					logger.info("根据当前资管计划:"+ bot.getPlanAssetId() +"以及科目号："+assetCode +",未找到对应的底层回购要素信息,请检查是否维护底层回购信息!");
 					continue;
 				}
 				//按照金额进行升序排序
@@ -480,7 +477,7 @@ public class ChbBotAstPosInterf extends BaseService{
 				BigDecimal tmpAmt = BigDecimal.ZERO;
 				//当前循环光标
 				int index = 0;
-				logger.info("计算利息->回购占比公式 = 底层回购的市值 * (当前回购的标的金额 / 回购标的总金额)");
+				//"计算利息->回购占比公式 = 底层回购的市值 * (当前回购的标的金额 / 回购标的总金额)"
 				for(ChbAssetInfo info : intAmtList){
 					//资管计划代码+底层资产代码作为唯一key
 					String key = bot.getPlanAssetId() + GlobalConstant.UNDER_LINE + info.getAssetCode();
@@ -499,7 +496,6 @@ public class ChbBotAstPosInterf extends BaseService{
 				}
 			}
 		}
-		logger.info("计算底层回购要素利息数据---------结束---------------");
 		return resultMap;
 	}
 	/**
@@ -515,22 +511,22 @@ public class ChbBotAstPosInterf extends BaseService{
 													 Map<String,List<ChbBotAstPosition>> botUnInvestBotMap,
 													 Map<String,List<ChbBotAstPosition>> botTotalNumMap
 	) {
-		logger.info("计算底层回购要素成本市值数据---------开始---------------");
+		//计算底层回购要素成本市值数据
 		List<ChbBotAstPosition> resultList = new ArrayList<>();
 		for(ChbBotAstPosition bot : botRepList){
 			//应收/应付利息
-			if("120410".equals(bot.getAssetCode()) || "223101".equals(bot.getAssetCode())) {
+			String assetCode=bot.getAssetCode();
+			if("120410".equals(assetCode) || "223101".equals(assetCode)) {
 				continue;
 			}
 			String assets2 = "1108";//买入返售
 			String tradeMarket = null;
-			if("220201".equals(bot.getAssetCode()) || "220202".equals(bot.getAssetCode()) || "220203".equals(bot.getAssetCode())){
+			if("220201".equals(assetCode) || "220202".equals(assetCode) || "220203".equals(assetCode)){
 				assets2 = "1902";
 			}else{
 				assets2 = "1108";
 			}
 			tradeMarket = getTradeMark(bot);
-			logger.info("当前资管计划代码:"+ bot.getPlanAssetId() + ",中债二级分类:" + assets2 + ",交易市场:" + tradeMarket);
 			//根据二级分类以及交易场所找到对应的回购要素
 			String finalAssets = assets2;
 			String finalTradeMkt = tradeMarket;
@@ -541,7 +537,7 @@ public class ChbBotAstPosInterf extends BaseService{
 			//按照金额进行升序排序
 			costAmtList = costAmtList.stream().sorted(Comparator.comparing(ChbAssetInfo::getTargetAmt)).collect(Collectors.toList());
 			if(StringUtil.isEmptyList(costAmtList)){
-				logger.info("根据当前资管计划:"+ bot.getPlanAssetId() +"、科目号:"+bot.getAssetCode() +"以及交易市场:"+tradeMarket+",未找到对应的底层回购要素信息,请检查是否维护底层回购信息!");
+				logger.info("根据当前资管计划:"+ bot.getPlanAssetId() +"、科目号:"+assetCode +"以及交易市场:"+tradeMarket+",未找到对应的底层回购要素信息,请检查是否维护底层回购信息!");
 				continue;
 			}
 			//同一类回购标的汇总金额
@@ -553,7 +549,7 @@ public class ChbBotAstPosInterf extends BaseService{
 			BigDecimal tmpAmt = BigDecimal.ZERO;
 			//当前循环光标
 			int index = 0;
-			logger.info("计算成本->回购占比公式 = 底层回购的市值 * (当前回购的标的金额 / 回购标的总金额)");
+			//"计算成本->回购占比公式 = 底层回购的市值 * (当前回购的标的金额 / 回购标的总金额)"
 			for(ChbAssetInfo info : costAmtList){
 				ChbBotAstPosition pos = new ChbBotAstPosition();
 				//对比上次最大更新日使用
@@ -571,7 +567,7 @@ public class ChbBotAstPosInterf extends BaseService{
 					logger.info("计算成本->最后一笔回购金额倒减,回购底层成本总市值="+ bot.getPosAmt() +",倒减金额="+tmpAmt+",最后一笔成本="+cost);
 				}else{
 					//当前回购市值 = 底层回购的市值 * (当前回购的标的金额 / 回购标的总金额) 保留两位小数
-					cost = bot.getPosAmt().multiply(info.getTargetAmt().divide(totalTargetAmt,14,RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP);
+					cost=ArithmeticUtil.multiply(bot.getPosAmt(),ArithmeticUtil.divide(info.getTargetAmt(),totalTargetAmt,14)).setScale(2, RoundingMode.HALF_UP);
 					tmpAmt = tmpAmt.add(cost);
 					logger.info("计算成本->第"+ (index + 1) +"笔回购拆分各项值：底层回购的市值="+bot.getPosAmt()+",当前回购的标的金额="+info.getTargetAmt()+",回购标的总金额"+ totalTargetAmt);
 				}
@@ -589,7 +585,6 @@ public class ChbBotAstPosInterf extends BaseService{
 				index ++ ;
 			}
 		}
-		logger.info("计算底层回购要素成本市值数据---------结束---------------");
 		return resultList;
 	}
 
@@ -599,13 +594,14 @@ public class ChbBotAstPosInterf extends BaseService{
 	 * @return
 	 */
 	private String getTradeMark(ChbBotAstPosition bot) {
-		if("120201".equals(bot.getAssetCode()) || "220201".equals(bot.getAssetCode())){
+		String assetCode=bot.getAssetCode();
+		if("120201".equals(assetCode) || "220201".equals(assetCode)){
 			//上海证券交易所
 			return "03";
-		}else if("120202".equals(bot.getAssetCode()) || "220202".equals(bot.getAssetCode())){
+		}else if("120202".equals(assetCode) || "220202".equals(assetCode)){
 			//银行间债券市场
 			return "01";
-		}else if("120203".equals(bot.getAssetCode()) || "220203".equals(bot.getAssetCode())){
+		}else if("120203".equals(assetCode) || "220203".equals(assetCode)){
 			//深圳证券交易所
 			return "04";
 		}else{
