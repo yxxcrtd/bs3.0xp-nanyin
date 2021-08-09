@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListNatureGroup;
@@ -48,12 +51,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.tools.collectors.JoyinCollectors;
-import com.joyintech.tams.common.base.entity.BokStatBokPosition;
-import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
-import com.joyintech.tams.common.base.entity.BokSubject;
-import com.joyintech.tams.common.base.entity.BokValbalTableLog;
-import com.joyintech.tams.common.base.entity.BokValbalTableStatus;
-import com.joyintech.tams.common.base.entity.FinProduct;
 
 import groovy.lang.Tuple2;
 
@@ -82,6 +79,9 @@ public class ValSchemeService extends CommonExportService<ValSchemeBatchDto> {
 
     @Autowired
     private FinProductCommonService finProductCommonService;
+
+    @Autowired
+    private FinProductMapper finProductMapper;
 
     public ValSchemeGenerateResult execute(Map<String, Object> params1)
         throws Exception {
@@ -172,6 +172,7 @@ public class ValSchemeService extends CommonExportService<ValSchemeBatchDto> {
                 calculationCommonService.queryExchangeRate(item, acctEntity.getStandardCcy(), bookDate));
         }).collect(JoyinCollectors.toMap(item -> item.getFirst(), item -> item.getSecond()));
         result.setProdValuationDtoList(new ArrayList<>());
+        result.setBokAssetMarketInfoList(new ArrayList<>());
         // 定义 变量.偏离金额 = 0
         BigDecimal deviationAmt = BigDecimal.ZERO;
         HashMap<String, ProdValuationDto> 科目余额集合 = new HashMap<>();
@@ -350,6 +351,54 @@ public class ValSchemeService extends CommonExportService<ValSchemeBatchDto> {
                 // 估值 = ArithmeticUtil.multiply(dto.getoAmt(), 汇率).setScale(2,
                 // RoundingMode.HALF_UP);
 
+                // add by weipeng 20210807：增加资产行情信息入库 start
+                // 变量.资产行情信息DTO
+                BokAssetMarketInfo bokAssetMarketInfo = new BokAssetMarketInfo();
+                //变量.资产行情信息DTO.流水号
+                bokAssetMarketInfo.setSeqNo(IDGenerator.generate());
+                // 变量.资产行情信息DTO.账套代码
+                bokAssetMarketInfo.setBooksetId(dto.getBooksetId());
+                // 变量.资产行情信息DTO.发生日期
+                bokAssetMarketInfo.setHappenDate(bookDate);
+                // 变量.资产行情信息DTO.入账日期
+                bokAssetMarketInfo.setBookDate(bookDate);
+                // 变量.资产行情信息DTO.金融产品代码 = 变量.标的信息.金融产品代码
+                bokAssetMarketInfo.setFinprodId(dto.getDetailSubjectNoTail());
+                // 查询对应标的信息
+                FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getDetailSubjectNoTail());
+                if(finProduct != null){
+                    // 变量.资产行情信息DTO.金融产品类型 = 变量.标的信息.金融产品类型
+                    bokAssetMarketInfo.setFinprodType(finProduct.getFinprodType());
+                    // 变量.资产行情信息DTO.市场代码 = 变量.标的信息.市场代码
+                    bokAssetMarketInfo.setMarketCode(finProduct.getFinprodMarketId());
+                }
+                // 变量.资产行情信息DTO.投资目的 = 摊余成本类
+                bokAssetMarketInfo.setInvAim(DictCodeListExt1.投资目的_摊余成本类.getValue());
+                // 变量.资产行情信息DTO.市价 = 变量.市价
+                bokAssetMarketInfo.setMarketPrice(行情价格);
+                if(marketPriceDto != null){
+                    // 变量.资产行情信息DTO.估值方案代码 = 市价共通返回.估值方案代码
+                    bokAssetMarketInfo.setSchemeId(marketPriceDto.getSchemeId());
+                    // 变量.资产行情信息DTO.估值方案明细代码 = 市价共通返回.估值方案明细代码
+                    bokAssetMarketInfo.setSchemeDetailId(marketPriceDto.getSchemeDetailId());
+                    // 变量.资产行情信息DTO.估值来源 = 市价共通返回.估值来源
+                    bokAssetMarketInfo.setValueSource(marketPriceDto.getValueSource());
+                }
+                // 变量.资产行情信息DTO.是否来源于行情数据
+                // if 市价共通返回.市价== null || 变量.市价 != 市价共通返回.市价
+                if(marketPriceDto== null || marketPriceDto.getPrice() ==null ||  行情价格.compareTo(marketPriceDto.getPrice()) != 0){
+                    // 变量.资产行情信息DTO.行情日期 = 市价共通返回.行情日期
+                    bokAssetMarketInfo.setValueDate(bookDate);
+                    bokAssetMarketInfo.setDataSource(DictCodeListExt1.行情价格数据来源_系统生成.getValue());
+                }
+                else{
+                    // 变量.资产行情信息DTO.行情日期 = 市价共通返回.行情日期
+                    bokAssetMarketInfo.setValueDate(marketPriceDto.getValDate());
+                    bokAssetMarketInfo.setDataSource(DictCodeListExt1.行情价格数据来源_行情信息.getValue());
+                }
+                // 添加到返回值中
+                result.getBokAssetMarketInfoList().add(bokAssetMarketInfo);
+                // add by weipeng 20210807：增加资产行情信息入库 end
             }
             // else if（变量.科目明细.基础科目性质 = "公允价值损益类-成本" and 变量.科目明细.科目级别 = 全局变量【底层科目级别】）
             else if (StringUtil.equals(dto.getBaseSubjectNature(),

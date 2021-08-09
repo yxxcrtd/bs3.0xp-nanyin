@@ -21,6 +21,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.batch.bookcommon.dao.BokAssetMarketInfoWriterMapper;
 import com.joyintech.tams.valuation.common.batch.bookcommon.dao.BokValTableDateWriterMapper;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import com.joyintech.tams.common.base.entity.BokValbalTableStatus;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.calculation.util.ArithmeticUtil;
@@ -37,11 +39,9 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BokValbalTableStatus;
-import com.joyintech.tams.common.base.entity.BokValbalTableStatusKey;
 import com.joyintech.tams.common.base.dao.BokValbalTableLogMapper;
 import com.joyintech.tams.common.base.dao.BokValbalTableStatusMapper;
 //import com.joyintech.tams.common.base.entity.BokFileGen;
-import com.joyintech.tams.common.base.entity.BokValTableData;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -53,6 +53,7 @@ import com.joyintech.tams.valuation.batch.valscheme.dto.ValSchemeGenerateResult;
 import com.joyintech.tams.valuation.common.constants.DataIndexSequenceType;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 估值表生成
@@ -92,6 +93,9 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
     
     @Autowired
     private AccountingCommonService accountingCommonService;
+
+    @Autowired
+    private BokAssetMarketInfoWriterMapper bokAssetMarketInfoWriterMapper;
 
     /**
      * {@inheritDoc}
@@ -867,6 +871,15 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             // 估值表余额表生成日志表 入库
             if (result.getBokValbalTableLog() != null) {
                 bokValbalTableLogMapper.insert(result.getBokValbalTableLog());
+            }
+
+            // 资产行情信息不为空，入库
+            if(!StringUtil.isEmptyList(result.getBokAssetMarketInfoList())){
+                //循环列表进行插入
+                List<List<BokAssetMarketInfo>> listInsert = DataHandleUtil.splitList(result.getBokAssetMarketInfoList());
+                for(List<BokAssetMarketInfo> bokAssetMarketInfos : listInsert){
+                    bokAssetMarketInfoWriterMapper.insertbatch(bokAssetMarketInfos);
+                }
             }
         }
     }
