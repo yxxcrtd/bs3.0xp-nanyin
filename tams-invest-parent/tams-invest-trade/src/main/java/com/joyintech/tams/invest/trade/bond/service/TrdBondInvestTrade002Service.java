@@ -4403,7 +4403,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
             entity.getPtlTrade().forEach(trdTradeFeeDetail -> ptlTradeMapper.insertSelective(trdTradeFeeDetail));
 
-            entity.getTrdTradeFeeTotals().forEach(trdTradeFeeDetail -> trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail));
+            entity.getTrdTradeFeeTotals().forEach(trdTradeFeeDetail -> {
+                if(!StringUtil.isNotEmpty(trdTradeFeeDetail.getIsPayWithTrade()))trdTradeFeeDetail.setIsPayWithTrade("N");
+                trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail);
+            });
 
             this.deleteBussFlowData(entity.getWorkflowId());
 
