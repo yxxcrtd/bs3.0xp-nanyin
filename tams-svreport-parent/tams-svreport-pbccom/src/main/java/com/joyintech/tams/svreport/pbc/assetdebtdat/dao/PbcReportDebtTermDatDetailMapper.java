@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.pbc.assetdebtdat.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportCompanyDatDetailDto;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail;
@@ -35,6 +36,8 @@ public interface PbcReportDebtTermDatDetailMapper {
      */
     int deleteByReportDate(@Param("reportStartDate") String reportEndDate, @Param("reportEndDate") String reportStartDate, @Param("reporttype") String reporttype
             , @Param("deptCode") String deptCode);
+
+    int deleteByUUIDAndType(Map<String,Object> paramsMap);
 
     List<PbcReportDebtTermDatDetail> selectDatDiffByReport(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
 

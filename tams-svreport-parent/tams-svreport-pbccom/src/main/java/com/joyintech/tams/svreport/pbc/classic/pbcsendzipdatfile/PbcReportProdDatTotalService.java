@@ -35,10 +35,6 @@ import java.util.Map;
 public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService {
     
 	@Autowired
-	private PbcPrdBaseinfoEndSubDatMapper pbcPrdBaseinfoEndSubDatMapper;
-	@Autowired
-	private PbcPrdBaseinfoEndSubMapper pbcPrdBaseinfoEndSubMapper;
-	@Autowired
 	private PbcMonthReportMapper pbcMonthReportMapper;
 	@Autowired
 	private PbcReportProdDatMapper pbcReportProdDatMapper;

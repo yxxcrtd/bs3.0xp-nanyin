@@ -6,10 +6,16 @@ import cn.hutool.poi.excel.ExcelUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.export.ExcelOperationUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.svreport.pbc.classic.newpbcreport.dto.ReportDealParamDto;
 import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -32,6 +38,7 @@ public class NewPbcMonthReportService {
 
     private static final String TIPS_SUFFIX_ERROR = "只支持2003版的excel导入，请修改文件重新导入";
     private static final String TIPS_SHEET_NAME_ERROR = "只支持规定的14种模板导入，请修改文件后重新导入";
+    private static final String TIPS_FILE_NAME_ERROR = "文件名称不规范，请确认文件名称后，重新导入。";
 
     private static final Set<String> sheetNames = new HashSet<>();
     /**
@@ -85,6 +92,9 @@ public class NewPbcMonthReportService {
     @Autowired
     private List<IDealNewPbcMonthReport> iDealNewPbcMonthReports;
 
+    @Autowired
+    private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
+
     private static final Map<String,IDealNewPbcMonthReport> allNewPbcMonthReportsMap = new ConcurrentHashMap<>();
 
     /**
@@ -96,23 +106,26 @@ public class NewPbcMonthReportService {
      * @since 1.0
      */
     public AjaxResult checkMonthReport(String fileName) {
+        AjaxResult ajaxResult = new AjaxResult();
         if(!fileName.endsWith(".xls")){
-            return new CommonAjaxResult(TIPS_SUFFIX_ERROR, MessageType.错误消息);
+            ValidMessage message = new ValidMessage();
+            message.setMessage(TIPS_SUFFIX_ERROR);
+            ajaxResult.setErrorList(Arrays.asList(message));
+            return ajaxResult;
         }
         try {
             Workbook workbook = new HSSFWorkbook(new FileInputStream(fileName));
             List<ValidMessage> validMessages = checkSheetName(workbook);
             if(CollectionUtil.isNotEmpty(validMessages)){
-                AjaxResult ajaxResult = new AjaxResult();
                 ajaxResult.setErrorList(validMessages);
-                ajaxResult.setStatuCode(HttpStatus.PROXY_AUTHENTICATION_REQUIRED.value());
                 return ajaxResult;
             }
         }catch (Exception e){
             logger.error("检查规范异常",e);
             return new AjaxResult("检查规范异常", MessageType.错误消息);
         }
-        return new AjaxResult();
+        ajaxResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+        return ajaxResult;
 
     }
 
@@ -121,17 +134,44 @@ public class NewPbcMonthReportService {
         try {
             Workbook workbook = new HSSFWorkbook(new FileInputStream(fileName));
             Iterator<Sheet> sheetIterator = workbook.sheetIterator();
+            String name = FileNameUtil.getName(fileName);
+            String[] strName = name.split("_");
+            if(strName.length == 0){
+                ExcelValidDto dto = new ExcelValidDto();
+                dto.setErrorInfo(TIPS_FILE_NAME_ERROR);
+                errorList.add(dto);
+                return errorList;
+            }
+            String fName = strName[0];
+            String statusVdate = fName.substring(0,4).concat("-").concat(fName.substring(4,6));
+            Map<String,Object> paramMap = new HashMap<>();
+            paramMap.put("statusVdate",statusVdate);
+            paramMap.put("datZipType","MI");
+            List<PbcSendZipDatFile> pbcSendZipDatFiles = pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(paramMap);
+            ReportDealParamDto paramDto = new ReportDealParamDto();
+            paramDto.setOrgCode(SecurityUtil.getLoginUser().getOrgCode());
+            paramDto.setStatusVdate(statusVdate);
+            if(CollectionUtil.isNotEmpty(pbcSendZipDatFiles)){
+                PbcSendZipDatFile pbcSendZipDatFile = pbcSendZipDatFiles.get(0);
+                paramDto.setReportUUID(pbcSendZipDatFile.getReportuuid());
+                paramDto.setDatZipCode(pbcSendZipDatFile.getDatZipCode());
+                paramDto.setHasRecord(true);
+            }else{
+                paramDto.setReportUUID(UUID.randomUUID().toString());
+                paramDto.setDatZipCode("001");
+                paramDto.setHasRecord(false);
+            }
             while(sheetIterator.hasNext()){
-                Sheet sheet = sheetIterator.next();
+                HSSFSheet sheet = (HSSFSheet)sheetIterator.next();
+                paramDto.setHssfSheet(sheet);
                 String sheetName = sheet.getSheetName();
                 if(allNewPbcMonthReportsMap.containsKey(sheetName)){
-                    errorList.addAll(allNewPbcMonthReportsMap.get(sheetName).dealExcelData(sheet));
+                    errorList.addAll(allNewPbcMonthReportsMap.get(sheetName).dealExcelData(paramDto));
                 }else{
                     for (IDealNewPbcMonthReport iDealNewPbcMonthReport : iDealNewPbcMonthReports) {
                         if(iDealNewPbcMonthReport.sheetName().contains(sheetName)){
                             allNewPbcMonthReportsMap.put(sheetName,iDealNewPbcMonthReport);
-                            errorList.addAll(iDealNewPbcMonthReport.dealExcelData(sheet));
-                            break;
+                            errorList.addAll(iDealNewPbcMonthReport.dealExcelData(paramDto));
                         }
                     }
                 }

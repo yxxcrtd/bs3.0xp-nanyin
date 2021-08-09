@@ -15,6 +15,7 @@ import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -141,6 +142,17 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 				SvrServiceApplication.PBC_SERVICE_NAME + "/NewPbcMonthReport/importMonthReport?fileName="+fileName,new HashMap<>(),
 				ExcelValidDto.class);
 	}
+	/**
+	 * 生成压缩文件
+	 * @return 压缩文件存放地址
+	 */
+	public String createZipFile(Map<String, Object> param) {
+		return restTemplate.postForObject(
+				SvrServiceApplication.PBC_SERVICE_NAME + "/PbcSendZipDatFile/createZipFile",param,
+				String.class);
+	}
+
+
 
 
 }

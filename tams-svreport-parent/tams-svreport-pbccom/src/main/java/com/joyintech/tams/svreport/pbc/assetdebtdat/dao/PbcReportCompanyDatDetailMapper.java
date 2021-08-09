@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 功能:人行报表-除回购和拆借外贷款按行业、企业模板mapper表2-2
@@ -51,6 +52,8 @@ public interface PbcReportCompanyDatDetailMapper {
      */
     int deleteByReportDate(@Param("reportStartDate") String reportEndDate, @Param("reportEndDate") String reportStartDate,
                            @Param("reporttype") String reporttype, @Param("deptCode") String deptCode);
+
+    int deleteByUUIDAndType(Map<String,Object> paramsMap);
 
 
     List<PbcReportCompanyDatDetailDto> selectDatDiffByReport(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);

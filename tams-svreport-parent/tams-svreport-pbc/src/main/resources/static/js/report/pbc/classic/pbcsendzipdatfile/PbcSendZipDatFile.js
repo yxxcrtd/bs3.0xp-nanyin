@@ -82,7 +82,16 @@ $(function() {
            $('#PbcSendZipDatFile_btn_search').click(function() {
                table.load();
            });
+           /**
+            * 重置
+            */
        });
+    $('#PbcSendZipDatFile_btn_reset').click(function() {
+        $('#datZipType').val('');
+        $('#zipSendStatus').val('');
+        $('#returnZipSendStatus').val('');
+        table.load();
+    });
     // 导入资管产品信息事件
     $('#PbcSendZipDatFile_btn_prdImport').click(function() {
         Joyin.confirm("请确认是否要导入数据？", function() {
@@ -107,4 +116,21 @@ $(function() {
             });
         });
     });
+    //下载zip文件
+    // 导出按钮
+    $('#PbcSendZipDatFile_btn_sendFileDownLoad').click(function(){
+        var expArr=table.getAllCheckedRows();
+        Joyin.confirm("是否确认生成报送文件？", function() {
+            var param = getSearchParams();
+            Joyin.ajaxSync(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/createZipFile', param, function(result) {
+                if (result.length < 1) {
+                    layer.alert('所选产品已全部手工处理或没有在日期范围内！');
+                } else {
+                    param.result = result;
+                    Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
+                }
+            });
+        });
+    })
+
 }());

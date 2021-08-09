@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 功能:人行报表-资产负债mapper表2.1
@@ -97,5 +98,7 @@ public interface PbcReportAssetDebtDatDetailMapper {
 	List<PbcReportAssetDebtDatDetailDto> selectByReportuuidForExport(String reportuuid);
 
     List<PbcReportAssetDebtDatDetailDto> selectDatDiffByReport(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
+
+    int deleteByUUIDAndType(Map<String,Object> paramsMap);
 
 }

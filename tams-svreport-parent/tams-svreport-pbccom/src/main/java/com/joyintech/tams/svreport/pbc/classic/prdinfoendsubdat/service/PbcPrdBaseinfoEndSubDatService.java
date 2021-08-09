@@ -7,10 +7,14 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
@@ -44,6 +48,9 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
 
     @Autowired
     private PbcPrdBaseinfoEndSubDatMapper pbcPrdBaseinfoEndSubDatMapper;
+
+    @Autowired
+    private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
 
     /**
      *
@@ -152,15 +159,39 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
             //删除未报送有修改的记录 并重新插入
             if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendProdIds)){
                 pbcPrdBaseinfoEndSubDatMapper.deleteBatchByProdId(baseinfoSubDatsNoSendProdIds);
-                pbcPrdBaseinfoEndSubDatMapper.insertBatch(baseinfoSubDatsNoSend);
             }
-            //更新已报送有修改数据
+            //1:分配不生成压缩文件
+            String zipType = "1";
+            //获取系统参数 1:按照业务日期进行压缩；  2：整体压缩
+            String pbc_send_zip_model = CacheUtil.getSysParam("PBC_SEND_ZIP_MODEL");
+            String zipModel = StrUtil.isEmpty(pbc_send_zip_model) ? "2" : pbc_send_zip_model;
+            //登录用户的机构代码
+            String orgCode = SecurityUtil.getLoginUser().getOrgCode();
+            //调用【DAT生成共通处理-产品端】
+            Map<String,ArrayList> resultMap = null; //PbcDatUtil.genDatZipList();
+            List<PbcPrdBaseinfoEndSubDat> endList = resultMap.get("endList");
+            List<PbcSendZipDatFile> zipList = resultMap.get("zipList");
+            //插入新的数据
+            if(CollectionUtil.isNotEmpty(endList)){
+                for (PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoEndSubDat : endList) {
+                    pbcPrdBaseinfoEndSubDatMapper.insert(pbcPrdBaseinfoEndSubDat);
+                }
+            }
+            //插入新的数据
+            if(CollectionUtil.isNotEmpty(zipList)){
+                for (PbcSendZipDatFile pbcSendZipDatFile : zipList) {
+                    pbcSendZipDatFileMapper.insert(pbcSendZipDatFile);
+                }
+            }
             if(CollectionUtil.isNotEmpty(baseinfoSubDatsSend)){
-                pbcPrdBaseinfoEndSubDatMapper.updateBatchByPrimaryKey(baseinfoSubDatsSend);
-            }
-            //插入新建的数据
-            if(CollectionUtil.isNotEmpty(baseinfoSubDatsNew)){
-                pbcPrdBaseinfoEndSubDatMapper.insertBatch(baseinfoSubDatsNew);
+                List<ExcelValidDto> warnList = new ArrayList<>();
+                for (PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoEndSubDat : baseinfoSubDatsSend) {
+                    ExcelValidDto excelValidDto = new ExcelValidDto();
+                    excelValidDto.setWarnInfo("已报送的数据，不支持修改。请在人行客户端直接修复！");
+                    excelValidDto.setValidKey(pbcPrdBaseinfoEndSubDat.getProdId());
+                    warnList.add(excelValidDto);
+                }
+                return warnList;
             }
             return errorList;
         }else{
