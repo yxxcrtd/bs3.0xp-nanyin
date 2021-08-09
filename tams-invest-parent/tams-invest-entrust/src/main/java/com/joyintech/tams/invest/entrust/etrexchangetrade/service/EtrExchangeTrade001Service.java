@@ -2783,6 +2783,17 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
             else {
             	etrExchangeTrade001Dto.setProAvailableCash(BigDecimal.ZERO);
             }
+
+			//指令可用持仓查询
+			Map<String, Object> mapSec = new HashMap<String, Object>();
+			mapSec.put("portfolioId", etrExchangeTrade001Dto.getPortfolioId());
+			mapSec.put("finprodId", etrExchangeTrade001Dto.getFinprodId());
+			mapSec.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
+			mapSec.put("secAcctId", etrExchangeTrade001Dto.getSecAcctId());
+			BigDecimal vailableNum = selectAvailableNum(mapSec);
+			if (StringUtil.isNotEmpty(vailableNum)) {
+				etrExchangeTrade001Dto.setAccAvailablePos(vailableNum);
+			}
             /*if(StringUtil.isNotEmpty(etrExchangeTrade001Dto.getPs()) && (etrExchangeTrade001Dto.getPs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())
 					|| etrExchangeTrade001Dto.getPs().equals(DictCodeListExt3.交易方向_质押券出库.getValue()))){
             	etrExchangeTrade001Dto.setEntrustAmt(etrExchangeTrade001Dto.getEntrustNum().multiply(etrExchangeTrade001Dto.getEntrustPrice().divide(new BigDecimal(100))));
