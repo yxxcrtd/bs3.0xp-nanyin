@@ -159,7 +159,7 @@
         }
         , {field: 'fprice', title: 'EtrExchangeTrade001.fprice', width:100, type:'number', digit : 3, sortable: false}
         , {field: 'yield', title: 'EtrExchangeImport.yield', width:100, type:'number', digit : 6, sortable: false}
-        , {field: 'targetType', title: 'EtrExchangeTrade001.targetType', width: 150, sortable: false}
+        , {field: 'targetTypeStr', title: 'EtrExchangeTrade001.targetType', width: 150, sortable: false}
         , {field: 'entrustNum', title: 'EtrExchangeTrade001.entrustNum', width: 120, type:'number', digit : 0, sortable: false}
         , {field: 'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt', width: 120, type:'number',sortable: false}
         , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
