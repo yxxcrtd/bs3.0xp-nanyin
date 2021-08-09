@@ -563,6 +563,7 @@
                 exerYield.attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
                 query('#calculateField_exerYield').val('').attr('disabled', false);
             }
+            calDeviationDegree();
         }
     };
 
