@@ -2783,6 +2783,42 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
             else {
             	etrExchangeTrade001Dto.setProAvailableCash(BigDecimal.ZERO);
             }
+
+			//指令可用持仓查询
+			Map<String, Object> mapSec = new HashMap<String, Object>();
+			mapSec.put("portfolioId", etrExchangeTrade001Dto.getPortfolioId());
+			mapSec.put("finprodId", etrExchangeTrade001Dto.getFinprodId());
+			mapSec.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
+			mapSec.put("secAcctId", etrExchangeTrade001Dto.getSecAcctId());
+			BigDecimal vailableNum = selectAvailableNum(mapSec);
+			if (StringUtil.isNotEmpty(vailableNum)) {
+				etrExchangeTrade001Dto.setAccAvailablePos(vailableNum);
+			}
+			//交易方向 价格模式
+			if (StringUtil.equals(DictCodeListExt3.交易方向_正回购.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
+			}
+			else if (StringUtil.equals(DictCodeListExt3.交易方向_逆回购.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeListExt3.交易方向_逆回购.getValue());
+			}
+			else if (StringUtil.equals(DictCodeList.交易方向_买入.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeList.交易方向_买入.getValue());
+			}
+			else if (StringUtil.equals(DictCodeList.交易方向_卖出.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeList.交易方向_卖出.getValue());
+			}
+
+			if (StringUtil.equals(DictCodeListExt2.价格模式_指定价格.getCodeName(),etrExchangeTrade001Dto.getPriceModel())){
+				etrExchangeTrade001Dto.setPriceModel(DictCodeListExt2.价格模式_指定价格.getValue());
+			}
+			else if (StringUtil.equals(DictCodeListExt2.价格模式_市价指令.getCodeName(),etrExchangeTrade001Dto.getPriceModel())){
+				etrExchangeTrade001Dto.setPriceModel(DictCodeListExt2.价格模式_市价指令.getValue());
+			}
+			else if (StringUtil.equals(DictCodeListExt2.价格模式_限价指令.getCodeName(),etrExchangeTrade001Dto.getPriceModel())){
+				etrExchangeTrade001Dto.setPriceModel(DictCodeListExt2.价格模式_限价指令.getValue());
+			}
+
+
             /*if(StringUtil.isNotEmpty(etrExchangeTrade001Dto.getPs()) && (etrExchangeTrade001Dto.getPs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())
 					|| etrExchangeTrade001Dto.getPs().equals(DictCodeListExt3.交易方向_质押券出库.getValue()))){
             	etrExchangeTrade001Dto.setEntrustAmt(etrExchangeTrade001Dto.getEntrustNum().multiply(etrExchangeTrade001Dto.getEntrustPrice().divide(new BigDecimal(100))));
@@ -3144,7 +3180,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			}
 			if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
 					&& null != minTrdUnitLimitDto.getMinAmt()) {
-				confirmMsg += "，应至少不超过其中一个！";
+				confirmMsg += "，应至少不低于其中一个！";
 			}
 		}
 

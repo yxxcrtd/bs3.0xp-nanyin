@@ -44,43 +44,44 @@ public class CeLinesUpdate  extends CelinesUpdateFactory{
 
 	@Transactional(rollbackFor=Exception.class, propagation = Propagation.REQUIRES_NEW)
 	public List<CreditLinesDealCommon> isNeedOccupyCre(AllTradeCommonInputDto inputmodel, boolean isNotBottomflag, boolean isSave,Boolean isdeleteflag) {
- 
-		//底层资产返回list
-		List<CreditLinesDealCommon> list = new ArrayList<CreditLinesDealCommon>();
-		//监控授信开关
-	    boolean isCreditSoftControl = Boolean.parseBoolean(CacheUtil.getSysParam("IS_CREDIT_SOFTCONTROL")); 
-		if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))) {
-            // 软控为true时保存仍进行额度修改
-//		    if (isCreditSoftControl){
-//                if (!isSave) {
-//                    return list;
-//                }
-//            }
-		    
-		    return list;
-	    }
-		//交易相关信息model
-		// 交易撤销时交易对手代码会被修改为市场机构bug修正 modify by renping 20190919 start
-		TrdProductDeal model = new TrdProductDeal();
-		BeanUtil.copyPropertiesIgnoreNull(model, inputmodel.getTrdProductDeal());
-		// 交易撤销时交易对手代码会被修改为市场机构bug修正 modify by renping 20190919 end
-		super.inputmodel=inputmodel;
-		super.isNotBottomflag=isNotBottomflag;
-		super.isSave=isSave;
-		super.isdeleteflag=isdeleteflag;
-		super.creditLinesMapper=creditLinesMapper;
-	/*	HashMap<String, Object> map=new HashMap<>();
-		List<CreditLines> crelist=new ArrayList<>();// 品种授信列表
-		CreditLines creditLines=new CreditLines();
-		creditLines.setSeqno("0050");
-		crelist.add(creditLines);
-		map.put("creLineslist",crelist);// TOdo 待实现内容List<CreditLines> list 自定义品种授信
-		//自定义品种授信
-		//super.getVarietiesCeLineList(map);*/
-
-		AllTradeCommonInputDto allTradeCommonInputDto=new AllTradeCommonInputDto();
-		BeanUtil.copyPropertiesIgnoreNull(allTradeCommonInputDto,inputmodel);
-		return super.isNeedOccupyCre(allTradeCommonInputDto,isNotBottomflag,isSave,isdeleteflag);
+//
+//		//底层资产返回list
+//		List<CreditLinesDealCommon> list = new ArrayList<CreditLinesDealCommon>();
+//		//监控授信开关
+//	    boolean isCreditSoftControl = Boolean.parseBoolean(CacheUtil.getSysParam("IS_CREDIT_SOFTCONTROL"));
+//		if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))) {
+//            // 软控为true时保存仍进行额度修改
+////		    if (isCreditSoftControl){
+////                if (!isSave) {
+////                    return list;
+////                }
+////            }
+//
+//		    return list;
+//	    }
+//		//交易相关信息model
+//		// 交易撤销时交易对手代码会被修改为市场机构bug修正 modify by renping 20190919 start
+//		TrdProductDeal model = new TrdProductDeal();
+//		BeanUtil.copyPropertiesIgnoreNull(model, inputmodel.getTrdProductDeal());
+//		// 交易撤销时交易对手代码会被修改为市场机构bug修正 modify by renping 20190919 end
+//		super.inputmodel=inputmodel;
+//		super.isNotBottomflag=isNotBottomflag;
+//		super.isSave=isSave;
+//		super.isdeleteflag=isdeleteflag;
+//		super.creditLinesMapper=creditLinesMapper;
+//	/*	HashMap<String, Object> map=new HashMap<>();
+//		List<CreditLines> crelist=new ArrayList<>();// 品种授信列表
+//		CreditLines creditLines=new CreditLines();
+//		creditLines.setSeqno("0050");
+//		crelist.add(creditLines);
+//		map.put("creLineslist",crelist);// TOdo 待实现内容List<CreditLines> list 自定义品种授信
+//		//自定义品种授信
+//		//super.getVarietiesCeLineList(map);*/
+//
+//		AllTradeCommonInputDto allTradeCommonInputDto=new AllTradeCommonInputDto();
+//		BeanUtil.copyPropertiesIgnoreNull(allTradeCommonInputDto,inputmodel);
+//		return super.isNeedOccupyCre(allTradeCommonInputDto,isNotBottomflag,isSave,isdeleteflag);
+		return null;
 
 	}
 

@@ -328,7 +328,7 @@
         if (finprodId != ""){
             var params = {
                 'pageModel':PAGE_MODEL_REFERENCE,
-                'finprodMarketId':finprodId,
+                'finprodId':finprodId,
                 'isQuickInput':true
             };
             EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);

@@ -140,6 +140,7 @@ public class PrimaryBiddingManage003Controller extends BaseController {
              model.addAttribute("trdInvestPersonInfo002Dto", JsonUtils.object2Json(entity.getTrdInvestPersonInfo()));
          }
          model.addAttribute(GlobalConstant.ENTITY, entity);
+        model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
         return super.init(model);
     }
     /**

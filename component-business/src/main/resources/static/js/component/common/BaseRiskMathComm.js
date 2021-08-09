@@ -57,24 +57,6 @@
         {field:'portfolioCode', visible: false}
         ,{field:'groupId', visible:false}
         ,{field:'kriCode', visible: false}
-        ,{field:'kriName',  title: 'BaseRiskMathComm.indName', width:250,sortable:false}
-        ,{field:'kriTypeCn',  title: 'BaseRiskMathComm.indType', width:120,sortable:false}
-        ,{field:'portfolioName',  title: 'BaseRiskMathComm.portfolioName', width:200,sortable:false}
-        ,{field:'assetName',  title: 'BaseRiskMathComm.assetName', width:200,sortable:false}
-        ,{field:'warningLine',  title: 'BaseRiskMathComm.wthreshold', width:160,sortable:false}
-        ,{field:'approveLine',  title: 'BaseRiskMathComm.approveold', width:160,sortable:false}
-        ,{field:'forbiddenLn',  title: 'BaseRiskMathComm.vthreshold', width:160,sortable:false}
-        ,{field:'kriValue',  title: 'BaseRiskMathComm.currValue',width:150,sortable:false,render: function(data, type, row, meta){
-                if(data&&row.kriType.indexOf("FORBID_")!=-1){
-                    return forbidVal(data,row.kriType);
-                }
-                return row.kriExpr==null?data:"<span title='"+row.kriExpr+"'>"+data+"</span>";;
-            }}
-        ,{field:'oldValue',  title: 'BaseRiskMathComm.preValue',width:150,sortable:false,render: function(data, type, row, meta){
-            return row.kriOldExpr==null?data:"<span title='"+row.kriOldExpr+"'>"+data+"</span>";;
-        }}
-        ,{field:'kriTrend',  title: 'BaseRiskMathComm.kriTrend',width:70,sortable:false}
-        ,{field:'kriStatus', visible: false}
         ,{field:'kriStatusCn',  title: 'BaseRiskMathComm.currStatus',sortable:false,
             render: function (data, type, row, meta) {
                 if(row.kriStatus == 0){
@@ -94,8 +76,26 @@
                 }
                 return row.kriStatus;
             }
-        },
-        {field:'totalConclu', visible: false}
+        }
+        ,{field:'kriName',  title: 'BaseRiskMathComm.indName', width:250,sortable:false}
+        ,{field:'kriTypeCn',  title: 'BaseRiskMathComm.indType', width:120,sortable:false}
+        ,{field:'portfolioName',  title: 'BaseRiskMathComm.portfolioName', width:200,sortable:false}
+        ,{field:'assetName',  title: 'BaseRiskMathComm.assetName', width:200,sortable:false}
+        ,{field:'warningLine',  title: 'BaseRiskMathComm.wthreshold', width:160,sortable:false}
+        ,{field:'approveLine',  title: 'BaseRiskMathComm.approveold', width:160,sortable:false}
+        ,{field:'forbiddenLn',  title: 'BaseRiskMathComm.vthreshold', width:160,sortable:false}
+        ,{field:'kriValue',  title: 'BaseRiskMathComm.currValue',width:150,sortable:false,render: function(data, type, row, meta){
+                if(data&&row.kriType.indexOf("FORBID_")!=-1){
+                    return forbidVal(data,row.kriType);
+                }
+                return row.kriExpr==null?data:"<span title='"+row.kriExpr+"'>"+data+"</span>";;
+            }}
+        ,{field:'oldValue',  title: 'BaseRiskMathComm.preValue',width:150,sortable:false,render: function(data, type, row, meta){
+            return row.kriOldExpr==null?data:"<span title='"+row.kriOldExpr+"'>"+data+"</span>";;
+        }}
+        ,{field:'kriTrend',  title: 'BaseRiskMathComm.kriTrend',width:70,sortable:false}
+        ,{field:'kriStatus', visible: false}
+        ,{field:'totalConclu', visible: false}
     ];
     function transferSupVal(data, type, row, meta){
     	var wg=data;
