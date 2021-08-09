@@ -106,12 +106,12 @@ public class FundAccountImplService extends BaseService<FundAccountInfoDto> impl
         mapperDelegateService.deleteBySpecificKey("PTL_CAPACCT_INFO", "PORTFOLIO_ID", portfolioId);
         for (FundAccountInfoDto dto : fundAccountInfoDto) {
             dto.setPortfolioId(portfolioId);
-            String[] temp = dto.getAcctNo().split("_");
-            dto.setAcctNo(temp[0]);
-            //增加判断 by gejiaao 2019/8/15
-            if (temp.length > 1){
-                dto.setCcy(temp[1]);
-            }
+//            String[] temp = dto.getAcctNo().split("_");
+//            dto.setAcctNo(temp[0]);
+//            //增加判断 by gejiaao 2019/8/15
+//            if (temp.length > 1){
+//                dto.setCcy(temp[1]);
+//            }
             PtlCapacctInfo ptlCapacctInfo = new PtlCapacctInfo();
             BeanUtil.copyPropertiesIgnoreNull(ptlCapacctInfo, dto);
             logger.debug(dto.getPortfolioId() + "---" + dto.getAcctNo());

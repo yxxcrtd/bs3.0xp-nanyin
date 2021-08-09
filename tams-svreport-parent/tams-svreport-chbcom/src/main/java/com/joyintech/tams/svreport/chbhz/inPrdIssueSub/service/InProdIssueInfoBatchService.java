@@ -262,7 +262,7 @@ public class InProdIssueInfoBatchService extends FileImpService {
 			// 产品发行登记报送时点:募集起始日期
 			if (sub.getRaiseVdate() != null) {
 				List<Date> issueDateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(),
-						DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, sub.getRaiseVdate());
+						sub.getStatus(), dateMap, sub.getRaiseVdate());
 				if (CollectionUtils.isNotEmpty(issueDateList)) {
 					sub.setChbSubmitDeadline(issueDateList.get(0));
 					sub.setSubmitDeadline(issueDateList.get(1));

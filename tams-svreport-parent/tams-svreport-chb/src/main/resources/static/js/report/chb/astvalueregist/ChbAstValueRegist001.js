@@ -71,8 +71,6 @@ $(function() {
           
           },
           cols:[
-              { field: 'sendStatus',visible:false},
-              { field: 'status',visible:false},
               { title: "数据状态", field: 'statusStr',width:100,sortField:'status'},
               { title: "数据日期", field: 'statusDate', type: 'datetime',sortField:'statusDate'},
               { title: "报送状态", field: 'sendStatusStr',width:100 ,sortField:'sendStatus',

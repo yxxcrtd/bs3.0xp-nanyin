@@ -354,4 +354,18 @@ public class MstTradeOpponent001Service extends CommonExportService<MstTradeOppo
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstTradeOpponent/getCountInfo",map,
             StlCapacctInfo.class);
     }
+
+    /**
+     * 统计
+     * <功能详细描述> 当交易对手类别是分行时，是否被债券投后责任机构使用
+     * @param counterId id
+     * @return 统计结果
+     * @see
+     * @since 1.0
+     */
+    public int selectFHCounter(String counterId) {
+        return restTemplate.postForObject(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstTradeOpponent/selectFHCounter",
+                counterId,Integer.class);
+    }
 }

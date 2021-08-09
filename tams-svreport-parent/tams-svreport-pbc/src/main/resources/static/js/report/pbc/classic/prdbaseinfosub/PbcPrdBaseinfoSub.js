@@ -277,7 +277,6 @@ $(function(){
     
     // 导出人行Excel按钮
     $('#PbcPrdBaseinfoSub_btn_chbexportxls').click(function(){
-    	debugger;
     	var expArr=table.getAllCheckedRows();
     	if(expArr != null && expArr.length >0){
     		Joyin.confirm('确认导出选中信息？',function(){
@@ -296,7 +295,6 @@ $(function(){
      * flag:0 全部导出
      */
      var downloadExcel = function(flag) {
-		debugger;
 		var expArr = table.getAllCheckedRows();
 		var expArr1 = table.getAllCheckedRows();
 		var param = {};
@@ -365,8 +363,6 @@ $(function(){
 							
 						}
 					}
-				
-				debugger;
 				if (count == 0){
 					var infoList = [];
 					param.infoList = JSON.stringify(expArr1);

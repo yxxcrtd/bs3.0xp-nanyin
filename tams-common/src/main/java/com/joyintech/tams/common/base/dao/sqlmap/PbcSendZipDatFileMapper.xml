@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
+        <result column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="DAT_ZIP_CODE" property="datZipCode" jdbcType="VARCHAR" />
+        <result column="DAT_ZIP_PATH" property="datZipPath" jdbcType="VARCHAR" />
+        <result column="DAT_ZIP_TYPE" property="datZipType" jdbcType="VARCHAR" />
+        <result column="DAT_ZIP_DAT_TYPE" property="datZipDatType" jdbcType="VARCHAR" />
+        <result column="DAT_ZIP_STATUS" property="datZipStatus" jdbcType="VARCHAR" />
+        <result column="ZIP_DOWNLOAD_TIME" property="zipDownloadTime" jdbcType="DATE" />
+        <result column="STATUS_VDATE" property="statusVdate" jdbcType="VARCHAR" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+        <result column="PIB_DETAIL_CNT" property="pibDetailCnt" jdbcType="DECIMAL" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="DATE" />
+        <result column="ZIP_SEND_STATUS" property="zipSendStatus" jdbcType="VARCHAR" />
+        <result column="RETURN_ZIP_SEND_STATUS" property="returnZipSendStatus" jdbcType="VARCHAR" />
+        <result column="RETURN_ZIP_CODE" property="returnZipCode" jdbcType="VARCHAR" />
+        <result column="RETURN_TIME" property="returnTime" jdbcType="DATE" />
+        <result column="RETURN_MSG" property="returnMsg" jdbcType="VARCHAR" />
+        <result column="RETURN_ERROR_CNT" property="returnErrorCnt" jdbcType="DECIMAL" />
+        <result column="RETURN_PASS_CNT" property="returnPassCnt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REGIST_SEQNO,DAT_ZIP_CODE,DAT_ZIP_PATH,DAT_ZIP_TYPE,DAT_ZIP_DAT_TYPE,DAT_ZIP_STATUS,
+ZIP_DOWNLOAD_TIME,STATUS_VDATE,REPORTUUID,PIB_DETAIL_CNT,SUBMIT_TIME,ZIP_SEND_STATUS,RETURN_ZIP_SEND_STATUS,
+RETURN_ZIP_CODE,RETURN_TIME,RETURN_MSG,RETURN_ERROR_CNT,RETURN_PASS_CNT,CREATE_USER,
+ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_SEND_ZIP_DAT_FILE
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </select>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
+        insert into PBC_SEND_ZIP_DAT_FILE (REGIST_SEQNO, DAT_ZIP_CODE, DAT_ZIP_PATH, 
+            DAT_ZIP_TYPE, DAT_ZIP_DAT_TYPE, DAT_ZIP_STATUS, 
+            ZIP_DOWNLOAD_TIME, STATUS_VDATE, REPORTUUID, 
+            PIB_DETAIL_CNT, SUBMIT_TIME, ZIP_SEND_STATUS, 
+            RETURN_ZIP_SEND_STATUS, RETURN_ZIP_CODE, RETURN_TIME, 
+            RETURN_MSG, RETURN_ERROR_CNT, RETURN_PASS_CNT, 
+            CREATE_USER, ORG_CODE, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{registSeqno,jdbcType=CHAR}, #{datZipCode,jdbcType=VARCHAR}, #{datZipPath,jdbcType=VARCHAR}, 
+            #{datZipType,jdbcType=VARCHAR}, #{datZipDatType,jdbcType=VARCHAR}, #{datZipStatus,jdbcType=VARCHAR}, 
+            #{zipDownloadTime,jdbcType=DATE}, #{statusVdate,jdbcType=VARCHAR}, #{reportuuid,jdbcType=CHAR}, 
+            #{pibDetailCnt,jdbcType=DECIMAL}, #{submitTime,jdbcType=DATE}, #{zipSendStatus,jdbcType=VARCHAR}, 
+            #{returnZipSendStatus,jdbcType=VARCHAR}, #{returnZipCode,jdbcType=VARCHAR}, #{returnTime,jdbcType=DATE}, 
+            #{returnMsg,jdbcType=VARCHAR}, #{returnErrorCnt,jdbcType=DECIMAL}, #{returnPassCnt,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
+        insert into PBC_SEND_ZIP_DAT_FILE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                REGIST_SEQNO,
+            </if>
+            <if test="datZipCode != null" >
+                DAT_ZIP_CODE,
+            </if>
+            <if test="datZipPath != null" >
+                DAT_ZIP_PATH,
+            </if>
+            <if test="datZipType != null" >
+                DAT_ZIP_TYPE,
+            </if>
+            <if test="datZipDatType != null" >
+                DAT_ZIP_DAT_TYPE,
+            </if>
+            <if test="datZipStatus != null" >
+                DAT_ZIP_STATUS,
+            </if>
+            <if test="zipDownloadTime != null" >
+                ZIP_DOWNLOAD_TIME,
+            </if>
+            <if test="statusVdate != null" >
+                STATUS_VDATE,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+            <if test="pibDetailCnt != null" >
+                PIB_DETAIL_CNT,
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME,
+            </if>
+            <if test="zipSendStatus != null" >
+                ZIP_SEND_STATUS,
+            </if>
+            <if test="returnZipSendStatus != null" >
+                RETURN_ZIP_SEND_STATUS,
+            </if>
+            <if test="returnZipCode != null" >
+                RETURN_ZIP_CODE,
+            </if>
+            <if test="returnTime != null" >
+                RETURN_TIME,
+            </if>
+            <if test="returnMsg != null" >
+                RETURN_MSG,
+            </if>
+            <if test="returnErrorCnt != null" >
+                RETURN_ERROR_CNT,
+            </if>
+            <if test="returnPassCnt != null" >
+                RETURN_PASS_CNT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                #{registSeqno,jdbcType=CHAR},
+            </if>
+            <if test="datZipCode != null" >
+                #{datZipCode,jdbcType=VARCHAR},
+            </if>
+            <if test="datZipPath != null" >
+                #{datZipPath,jdbcType=VARCHAR},
+            </if>
+            <if test="datZipType != null" >
+                #{datZipType,jdbcType=VARCHAR},
+            </if>
+            <if test="datZipDatType != null" >
+                #{datZipDatType,jdbcType=VARCHAR},
+            </if>
+            <if test="datZipStatus != null" >
+                #{datZipStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="zipDownloadTime != null" >
+                #{zipDownloadTime,jdbcType=DATE},
+            </if>
+            <if test="statusVdate != null" >
+                #{statusVdate,jdbcType=VARCHAR},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="pibDetailCnt != null" >
+                #{pibDetailCnt,jdbcType=DECIMAL},
+            </if>
+            <if test="submitTime != null" >
+                #{submitTime,jdbcType=DATE},
+            </if>
+            <if test="zipSendStatus != null" >
+                #{zipSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="returnZipSendStatus != null" >
+                #{returnZipSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="returnZipCode != null" >
+                #{returnZipCode,jdbcType=VARCHAR},
+            </if>
+            <if test="returnTime != null" >
+                #{returnTime,jdbcType=DATE},
+            </if>
+            <if test="returnMsg != null" >
+                #{returnMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="returnErrorCnt != null" >
+                #{returnErrorCnt,jdbcType=DECIMAL},
+            </if>
+            <if test="returnPassCnt != null" >
+                #{returnPassCnt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
+        insert into PBC_SEND_ZIP_DAT_FILE(REGIST_SEQNO, DAT_ZIP_CODE, DAT_ZIP_PATH, DAT_ZIP_TYPE, 
+        DAT_ZIP_DAT_TYPE, DAT_ZIP_STATUS, ZIP_DOWNLOAD_TIME, STATUS_VDATE, REPORTUUID, PIB_DETAIL_CNT, 
+        SUBMIT_TIME, ZIP_SEND_STATUS, RETURN_ZIP_SEND_STATUS, RETURN_ZIP_CODE, RETURN_TIME, 
+        RETURN_MSG, RETURN_ERROR_CNT, RETURN_PASS_CNT, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select REGIST_SEQNO, DAT_ZIP_CODE, DAT_ZIP_PATH, DAT_ZIP_TYPE, 
+            DAT_ZIP_DAT_TYPE, DAT_ZIP_STATUS, ZIP_DOWNLOAD_TIME, STATUS_VDATE, REPORTUUID, PIB_DETAIL_CNT, 
+            SUBMIT_TIME, ZIP_SEND_STATUS, RETURN_ZIP_SEND_STATUS, RETURN_ZIP_CODE, RETURN_TIME, 
+            RETURN_MSG, RETURN_ERROR_CNT, RETURN_PASS_CNT, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from PBC_SEND_ZIP_DAT_FILE
+             where 1 = 1
+    </insert>
+
+
+    <select id="searchPage" parameterType="map" resultMap="BaseResultMap">
+        select * from (
+        select
+        <include refid="Base_Column_List" />
+        from PBC_SEND_ZIP_DAT_FILE
+            where ORG_CODE =    #{orgCode,jdbcType=VARCHAR}
+            <if test="datZipTypeList != null and datZipTypeList.size()&gt;0">
+                <foreach close=")" collection="datZipTypeList" item="item" open="and DAT_ZIP_TYPE in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="zipSendStatusList != null and zipSendStatusList.size()&gt;0">
+                <foreach close=")" collection="zipSendStatusList" item="item" open="and ZIP_SEND_STATUS in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="returnZipSendStatusList != null and returnZipSendStatusList.size() &gt; 0">
+                <foreach close=")" collection="returnZipSendStatusList" item="item" open=" AND RETURN_ZIP_SEND_STATUS IN (" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        ) ORDER BY STATUS_VDATE desc
+    </select>
+
+    <select id="selectByZipTypeAndStatusVdate" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_SEND_ZIP_DAT_FILE
+        where STATUS_VDATE = #{statusVdate,jdbcType=VARCHAR}
+            AND DAT_ZIP_TYPE = #{datZipType,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByUUIDAndType" parameterType="java.util.Map">
+        delete
+        from  PBC_SEND_ZIP_DAT_FILE
+        where DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
+            and STATUS_VDATE = #{statusVdate,jdbcType=VARCHAR}
+            and REPORTUUID = #{reportUUID,jdbcType=CHAR}
+    </delete>
+
+    <select id="selectBySendStatusSeqnoList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_SEND_ZIP_DAT_FILE
+        where ZIP_SEND_STATUS = #{zipSendStatus,jdbcType=VARCHAR}
+          and DAT_ZIP_CODE is not null
+        <if test="seqnoList != null and seqnoList.size() &gt; 0">
+            <foreach close=")" collection="seqnoList" item="item" open=" AND REGIST_SEQNO IN (" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+
+    </select>
+</mapper>

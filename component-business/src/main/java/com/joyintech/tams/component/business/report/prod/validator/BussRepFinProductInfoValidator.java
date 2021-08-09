@@ -306,11 +306,11 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
 //        // 是否有预期收益率
 //        if (StringUtil.isNotEmpty(dto.getRepIsYield()) && StringUtil.equals(dto.getRepIsYield(),
 //            DictCodeList.是否_是.getValue())) {
-            if (StringUtil.isEmpty(dto.getRepIsYieldBasis())) {
-                resultList.add(
-                    new ValidMessage("repIsYieldBasis", getMessage("BUSS_COM_E_0038",
-                        getMessage("BussRepFinProductInfo.repIsYieldBasis"))));
-            }
+//            if (StringUtil.isEmpty(dto.getRepIsYieldBasis())) {
+//                resultList.add(
+//                    new ValidMessage("repIsYieldBasis", getMessage("BUSS_COM_E_0038",
+//                        getMessage("BussRepFinProductInfo.repIsYieldBasis"))));
+//            }
             // 预计客户最高年收益率%
 //            if (!StringUtil.isNotEmpty(dto.getRepHighYield())) {
 ////                resultList.add(new ValidMessage("repHighYield", getMessage(

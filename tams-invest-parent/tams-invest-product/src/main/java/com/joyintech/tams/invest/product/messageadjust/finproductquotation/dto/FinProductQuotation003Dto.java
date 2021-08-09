@@ -38,7 +38,7 @@ public class FinProductQuotation003Dto extends PrdLayerParam {
      */
     @Override
     @NotEmpty(fieldName = "FinProductQuotation002.yield")
-    @Rate(fieldName = "FinProductQuotation002.yield", maxDecBit = 4)
+    @Rate(fieldName = "FinProductQuotation002.yield", maxDecBit = 4,message = "FIN_PROD_E_0399")
     public BigDecimal getYield() {
         return super.getYield();
     }

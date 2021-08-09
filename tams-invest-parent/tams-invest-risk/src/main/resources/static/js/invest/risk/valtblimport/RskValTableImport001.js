@@ -114,9 +114,7 @@ function checkDate(dateStr) {
             }
             ,{
                 field : 'srcColIndexLetter',
-               // sortField :"srcColIndexNumber",
-               sortField:'TO_NUMBER(SRC_COL_INDEX)',
-                title : 'RskValStructure001.srcColIndex'
+                title : 'RskValStructure001.srcColIndex',sortField:'srcColIndex'
             }, {
                 field : 'srcColDataTypeStr',
                 sortField : "srcColDataType",

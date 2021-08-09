@@ -1016,6 +1016,18 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 
     /** modify by yanya on 20210528 增加外管局估值来源字典值**/
     估值来源_外管局(DictCode.估值来源, "SAFE", "外管局"),
+
+    是否压缩_不生成压缩文件(DictCode.是否压缩, "1", "不生成压缩文件"),
+    是否压缩_生成压缩文件(DictCode.是否压缩, "2", "生成压缩文件"),
+    是否压缩_按照业务日期(DictCode.压缩方式, "1", "按照业务日期"),
+    是否压缩_整体压缩(DictCode.压缩方式, "2", "整体压缩"),
+
+
+    zip包状态_已使用(DictCode.zip包状态, "01", "已使用"),
+    zip包状态_可编辑(DictCode.zip包状态, "02", "可编辑"),
+
+    /******/
+
     ;
 
     /**

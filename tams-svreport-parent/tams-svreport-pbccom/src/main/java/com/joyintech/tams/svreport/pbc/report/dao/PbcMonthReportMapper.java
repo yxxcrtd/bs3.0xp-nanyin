@@ -27,7 +27,11 @@ public interface PbcMonthReportMapper {
     
     void updateInterfSubmitAndSeqBatch(@Param("sendStatus")String sendStatus, @Param("registList")List<PbcMonthReport> registList
     		,@Param("submitadd")String submitadd);
-    
+
+    void updateDoMannultSendZipDatFile(@Param("registList")List<PbcMonthReport> registList);
+
+    void updateCancelMannultSendZipDatFile(@Param("registList")List<PbcMonthReport> registList);
+
     Integer cancelMannultRegist(List<PbcMonthReport> list);
     
     /**
@@ -79,6 +83,7 @@ public interface PbcMonthReportMapper {
      * @since 1.0
      */
     void insertReportDataFromHis(@Param("registList")List<PbcMonthReport> registList);
+
     /**
      * 功能:删除履历表中的最新已报送数据
      * @since 1.7.0

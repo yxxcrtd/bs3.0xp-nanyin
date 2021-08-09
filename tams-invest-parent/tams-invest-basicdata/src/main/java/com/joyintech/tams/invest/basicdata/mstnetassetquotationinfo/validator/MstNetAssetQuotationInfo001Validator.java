@@ -68,6 +68,16 @@ public class MstNetAssetQuotationInfo001Validator implements BeanValidator{
                         if (StringUtil.isNotEmpty(selectDto.getImportDate()) && DateUtil.compareDate(DateUtil.formatDate(selectDto.getImportDate()), DateUtil.format(sysDate))  != 0) {
                         	errorList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
                         }
+
+                        //判断当前流程是否存在
+                        MstNetAssetQuotationInfo001Dto mstNetAssetQuotationInfo001Dto =new MstNetAssetQuotationInfo001Dto();
+                        mstNetAssetQuotationInfo001Dto.setFinprodId(selectDto.getFinProdMarketId());
+                        mstNetAssetQuotationInfo001Dto.setValDate(selectDto.getValDate());
+                        if(mstNetAssetQuotationInfo001Service.checkBusinessDataInFlow(mstNetAssetQuotationInfo001Dto)){
+                            //流程存在情况
+                            errorList.add(new ValidMessage(getMessage("COMMON_E_0021","KEY",
+                                    selectDto.getFinProdMarketId().concat(",").concat(selectDto.getValDateStr()))));
+                        }
                     }
                 }
             }
