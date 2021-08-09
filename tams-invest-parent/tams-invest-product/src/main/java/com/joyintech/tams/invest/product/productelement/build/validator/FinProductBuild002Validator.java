@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.product.productelement.build.validator;
 
+
+ import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
  import com.joyintech.framework.constant.GlobalConstant;
  import com.joyintech.framework.util.CacheUtil;
  import com.joyintech.framework.util.DateUtil;
@@ -76,6 +78,10 @@ public class FinProductBuild002Validator implements BeanValidator {
 
     @Autowired
     private ChbDataCheckService chbDataCheckService;
+
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+
 
     /**
      * {@linkplain}
