@@ -55,6 +55,10 @@ public interface PbcReportAssetDebtDatDetailMapper {
     int deleteByReportDate(@Param("reportStartDate") String reportEndDate, @Param("reportEndDate") String reportStartDate,
                            @Param("reporttype") String reporttype, @Param("pbcAccountId") String pbcAccountId, @Param("deptCode") String deptCode);
 
+    int deleteByReportUUid(@Param("reportUuid") String reportUuid);
+
+    int insertDataBySelect(@Param("reportUuid") String reportUuid);
+
     /**
      * 查询贷款导出详情
      *

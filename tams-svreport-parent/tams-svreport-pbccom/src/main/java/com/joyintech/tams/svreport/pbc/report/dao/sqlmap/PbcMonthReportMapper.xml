@@ -970,6 +970,19 @@
         and reporttype = 'ONEPRD_ASSET_DEBT'
     </select>
 
+    <select id="selectTermIdList" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport">
+        select TERMID,REPORTTYPE,ORG_CODE,REPORTUUID
+        from PBC_REPORT
+        where reporttype != 'ONEPRD_ASSET_DEBT'
+        <foreach collection="list" item="item" open="and SEND_STATUS in (" separator="," close=")">
+              #{item,jdbcType=VARCHAR}
+        </foreach>
+        <if test="orgCode != null">
+            and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+        </if>
+        group by TERMID,REPORTTYPE,ORG_CODE,REPORTUUID
+    </select>
+
     <select id="findProductByName" resultType="java.lang.String">
         select PROD_ID prodId
         from chb_prd_baseinfo

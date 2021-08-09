@@ -57,4 +57,7 @@ public interface PbcReportAreaDatDetailMapper {
 
     List<PbcReportAreaDatDetailDto> selectDatDiffByReport(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
 
+    int deleteByReportUUid(@Param("reportUuid") String reportUuid);
+
+    int insertDataBySelect(@Param("reportUuid") String reportUuid);
 }

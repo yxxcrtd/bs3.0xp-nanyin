@@ -55,6 +55,7 @@ public interface PbcMonthReportMapper {
     List<PbcMonthReport> selectSendDataByTermId(String termid);
     
     PbcMonthReport selectByTermId(String termid);
+
     /**
      * 功能:将已报送数据移入履历表
      * @since 1.7.0
@@ -141,6 +142,10 @@ public interface PbcMonthReportMapper {
     int insertOnePrd(PbcMonthReport record);
     
     List<String> selectRegistSeqnoList(@Param("list")List<PbcMonthReport> registList,@Param("flag")String flag);
+
+    List<PbcMonthReport> selectTermIdList(@Param("list")List<String> statusList,@Param("orgCode")String orgCode);
+
+
     List<String> findProductByName(Map<String,Object> map);
 
 }

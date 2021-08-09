@@ -35,6 +35,19 @@
 	      </if> 
         and send_status = '01'/*只删除未报送数据*/)
   </delete>
+
+
+    <delete id="deleteByReportUUid"  parameterType="map" >
+        delete
+        from PBC_REPORT_PROD_DAT prp
+        where prp.REPORTUUID  = #{reportUuid,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insertDataBySelect">
+        INSERT INTO PBC_REPORT_PROD_DAT (<include refid="Base_Column_List" />)
+        SELECT <include refid="Base_Column_List" /> FROM PBC_REPORT_PROD
+        WHERE REPORTUUID = #{reportUuid,jdbcType=VARCHAR}
+    </insert>
   
   
   <delete id="deleteByReportDateDept"  parameterType="map" >

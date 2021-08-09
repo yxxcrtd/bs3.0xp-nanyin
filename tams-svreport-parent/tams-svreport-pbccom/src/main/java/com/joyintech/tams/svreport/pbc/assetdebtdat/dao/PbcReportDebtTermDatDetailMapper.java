@@ -22,6 +22,10 @@ public interface PbcReportDebtTermDatDetailMapper {
     int updateByPrimaryKeySelective(PbcReportDebtTermDatDetail record);
 
     int updateByPrimaryKey(PbcReportDebtTermDatDetail record);
+
+    int deleteByReportUUid(@Param("reportUuid") String reportUuid);
+
+    int insertDataBySelect(@Param("reportUuid") String reportUuid);
     
     List<PbcReportDebtTermDatDetail> selectByReportuuid(String reportuuid);
     /**

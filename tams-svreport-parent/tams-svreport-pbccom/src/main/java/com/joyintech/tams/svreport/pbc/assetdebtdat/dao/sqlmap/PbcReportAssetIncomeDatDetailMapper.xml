@@ -196,6 +196,19 @@
 	PROPERTY_RIGHTS, TOTAL, REPORTUUID from PBC_REPORT_ASSET_INCOME_DAT
 	where REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
 </select>
+
+  <delete id="deleteByReportUUid"  parameterType="map" >
+        delete
+        from PBC_REPORT_ASSET_INCOME_DAT prp
+        where prp.REPORTUUID  = #{reportUuid,jdbcType=VARCHAR}
+    </delete>
+
+  <insert id="insertDataBySelect">
+    INSERT INTO PBC_REPORT_ASSET_INCOME_DAT (<include refid="Base_Column_List" />)
+    SELECT <include refid="Base_Column_List" /> FROM PBC_REPORT_ASSET_INCOME
+    WHERE REPORTUUID = #{reportUuid,jdbcType=VARCHAR}
+  </insert>
+
  <delete id="deleteByReportDate"  parameterType="map" >
     delete
     from PBC_REPORT_ASSET_INCOME_DAT prp

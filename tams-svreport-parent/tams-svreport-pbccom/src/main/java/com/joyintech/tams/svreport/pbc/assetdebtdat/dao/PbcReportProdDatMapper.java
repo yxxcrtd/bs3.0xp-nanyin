@@ -25,6 +25,11 @@ public interface PbcReportProdDatMapper {
 
 	int deleteByReportDate(@Param("reportStartDate") String reportStartDate, @Param("reportEndDate") String reportEndDate, @Param("reporttype") String reporttype);
 
+	int deleteByReportUUid(@Param("reportUuid") String reportUuid);
+
+	int insertDataBySelect(@Param("reportUuid") String reportUuid);
+
+
 	int deleteByReportDateDept(@Param("reportStartDate") String reportStartDate, @Param("reportEndDate") String reportEndDate, @Param("reporttype") String reporttype
             , @Param("deptCode") String deptCode);
 

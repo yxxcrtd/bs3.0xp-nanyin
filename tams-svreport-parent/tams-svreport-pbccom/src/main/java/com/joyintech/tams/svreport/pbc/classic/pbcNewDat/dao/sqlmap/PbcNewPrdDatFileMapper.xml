@@ -122,4 +122,13 @@
                 )
         </delete>
 
+
+        <delete id="deleteZipDataMI">
+            DELETE FROM PBC_SEND_ZIP_DAT_FILE F
+            WHERE F.DAT_ZIP_TYPE = 'MI' AND F.ZIP_SEND_STATUS = '01'
+            <if test="null!=OrgCode">
+                and ORG_CODE = #{OrgCode,jdbcType=VARCHAR}
+            </if>
+        </delete>
+
 </mapper>

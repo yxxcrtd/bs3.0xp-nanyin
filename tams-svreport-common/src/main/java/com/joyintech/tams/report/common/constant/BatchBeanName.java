@@ -80,7 +80,10 @@ public enum BatchBeanName {
 	周期型产品余额数据接入("3049","svrCprodBalanceInterfTaskService","svrCprodBalanceImpMainService","周期型产品余额数据接入"),
 	子资管计划资产指标信息("3050","svrSubInvestmentPlanAssetIndicatorInfoTaskService","subInvestImpMainService","子资管计划资产指标信息"),
     贷款明细信息接口数据接入("3051","svrLoanDetailInfoInterfTaskService","loanDetailInfoImpMainService","贷款明细信息接口数据接入"),
-	
+
+    新人行单产品报表生成("3056","svrNewPbcDatFileTaskService","PbcNewDatFileCBMainService","新人行单产品报表生成"),
+    新人行月报Dat文件生成批处理("3057","svrNewPbcReportDatFileTaskService","PbcNewReportDatFileCBMainService","新人行月报Dat文件生成批处理"),
+
     贷款明细原始合同信息接入("3081","svrLoanDetailContractInterfTaskService","loanDetailInfoFileImpService","贷款明细原始合同信息接入"),
 	资产基础指标不穿透数据接入("3082","svrAssetIndexNoBtmInterfTaskService","assetIndexNoBtmImpMainService","资产基础指标不穿透数据接入"),
     投资者明细信息登记手工处理("3067", "equityBusiInfoRegistAutoManualCBService", "equityBusiInfoRegistAutoManualCBMainService","投资者明细信息登记手工处理"),
