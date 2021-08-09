@@ -75,6 +75,24 @@
             }
         }
     }
+
+    /**
+     * 查看资产详情事件
+     */
+    $('#EtrOption002_btn_search').click(function() {
+        var finprodId =$('#finprodId').val();
+        var url = "/invest/asset/option/FinOptionTarget002/init";
+        if (finprodId != ""){
+            var params = {
+                'pageModel':PAGE_MODEL_REFERENCE,
+                'targetId':finprodId
+            };
+            EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
+        } else {
+            Joyin.error("资产名称不能为空")
+        }
+    });
+
     /**
      * 绑定事件
      */

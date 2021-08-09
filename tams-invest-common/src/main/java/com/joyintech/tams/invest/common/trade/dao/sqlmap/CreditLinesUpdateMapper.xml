@@ -650,12 +650,9 @@
 			<include refid="com.joyintech.tams.common.base.dao.CreditUsingSeriesMapper.Base_Column_List" />
 	 	FROM CREDIT_USING_SERIES T
 		WHERE T.FINPROD_ID = #{finprodId}
-		<if test="portfolioId != null and portfolioId != ''">
-			AND T.PORTFOLIO_ID = #{portfolioId}
-		</if>
 		AND T.STATUS = '01'
 		AND T.CREDIT_OCCURE_TYPE = '02'
-		AND T.AMOUNT > 0
+		AND T.AMOUNT = 0
 		AND T.SHARE_AMT > 0
 		ORDER BY T.CREATE_TIME ASC
 	</select>
@@ -664,12 +661,9 @@
 			<include refid="com.joyintech.tams.common.base.dao.CreditUsingAstMapper.Base_Column_List" />
  		FROM CREDIT_USING_AST T
 		WHERE T.FINPROD_ID = #{finprodId}
-		<if test="portfolioId != null and portfolioId != ''">
-			AND T.PORTFOLIO_ID = #{portfolioId}
-		</if>
 		AND T.STATUS = '01'
 		AND T.CREDIT_OCCURE_TYPE = '02'
-		AND T.AMOUNT > 0
+		AND T.AMOUNT = 0
 		AND T.SHARE_AMT > 0
 		ORDER BY T.CREATE_TIME ASC
 	</select>
@@ -800,5 +794,14 @@
         LEFT JOIN FIN_PRODUCT B ON A.PLEDGE_FINPROD_ID = B.FINPROD_ID
         WHERE
             A.FINPROD_ID = #{finprodId}
+	</select>
+
+	<select id="getShareAmt" resultType="java.math.BigDecimal">
+		select
+			AMOUNT
+		from
+			CREDIT_USING_AST
+		where
+			TRADE_ID=#{bTradeId}
 	</select>
 </mapper>
