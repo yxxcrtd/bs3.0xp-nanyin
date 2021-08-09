@@ -3144,7 +3144,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			}
 			if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
 					&& null != minTrdUnitLimitDto.getMinAmt()) {
-				confirmMsg += "，应至少不超过其中一个！";
+				confirmMsg += "，应至少不低于其中一个！";
 			}
 		}
 
