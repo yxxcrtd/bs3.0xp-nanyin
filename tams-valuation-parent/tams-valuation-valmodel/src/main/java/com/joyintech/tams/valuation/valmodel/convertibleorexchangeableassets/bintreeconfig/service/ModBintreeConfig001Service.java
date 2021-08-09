@@ -41,7 +41,7 @@ public class ModBintreeConfig001Service extends CommonExportService<ModBintreeCo
     	StockQuotationDto qStockQuotationDto=new StockQuotationDto();
     	qStockQuotationDto.setStockCodeList(list1.stream().map(ModBintreeConfigDto::getCompStockid).collect(Collectors.toList()));
     	List<StockQuotationDto> quotations = restTemplate.postForList(
-				ServiceApplication.CUSTOMER_INTERF_NAME + "/interf/ModelCallOnInvest/getStockQuotation", qStockQuotationDto,
+				ServiceApplication.VAL_MODEL_SERVICE_NAME + "/ModBintreeConfig/getStockQuotation", qStockQuotationDto,
 				StockQuotationDto.class);
     	if(!quotations.isEmpty()){
     		Map<String, StockQuotationDto> quotationsMap = quotations.stream().collect(Collectors.toMap(StockQuotationDto::getStockCode, a -> a,(k1,k2)->k1));
@@ -61,11 +61,6 @@ public class ModBintreeConfig001Service extends CommonExportService<ModBintreeCo
 public List<SelectOptionDto> getFinprodIdForBintree(Map<String, Object> parameters) {
     	
 		List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
-//		ModAseetMappingDto qModAseetMappingDto=new ModAseetMappingDto();
-//		qModAseetMappingDto.setInput2List(Arrays.asList("011","013"));
-//		List<ModAseetMappingDto> tgfls=restTemplate.postForList(
-//				ServiceApplication.VAL_MODEL_SERVICE_NAME + "/valmodel/getModAseetMappingByModel", qModAseetMappingDto,
-//				ModAseetMappingDto.class);
 		AssetInfoDto qAssetInfoDto=new AssetInfoDto();
 		if(parameters.get("search")!=null&&!"".equals(parameters.get("search"))){
 			qAssetInfoDto.setSearch(parameters.get("search").toString());
@@ -75,7 +70,7 @@ public List<SelectOptionDto> getFinprodIdForBintree(Map<String, Object> paramete
 		}
 		qAssetInfoDto.setType8List(Arrays.asList("F11"));
 		List<AssetInfoDto> aseetS = restTemplate.postForList(
-				ServiceApplication.CUSTOMER_INTERF_NAME + "/interf/ModelCallOnInvest/getAssetNoClassify", qAssetInfoDto,
+				ServiceApplication.VAL_MODEL_SERVICE_NAME + "/ModBintreeConfig/getAssetNoClassify", qAssetInfoDto,
 				AssetInfoDto.class);
 		resultList = aseetS.stream().map(operationStation -> {
 			SelectOptionDto stationDictVO = new SelectOptionDto();

@@ -1,17 +1,16 @@
 
 package com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
+import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.service.ModBintreeConfigService;
+import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
@@ -93,6 +92,35 @@ public class ModBintreeConfigController {
     @PostMapping("initBintreeConfig")
     public int initBintreeConfig(@RequestBody Map<String,String> map){
     	return modBintreeConfigService.initBintreeConfig(map);
+    }
+
+
+    /**
+     *
+     * 查询没有分类的资产代码下拉选 可传投管资产分类
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getAssetNoClassify")
+    @ResponseBody
+    public List<AssetInfoDto> getAssetNoClassify(@RequestBody AssetInfoDto assetInfoDto){
+        return modBintreeConfigService.getAssetNoClassify(assetInfoDto);
+    }
+
+    /**
+     *
+     * 查询有分类的资产代码减值用 只查债券，项目类的新增和非标 不可传资产分类
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getStockQuotation")
+    @ResponseBody
+    public List<StockQuotationDto> getStockQuotation(@RequestBody StockQuotationDto assetInfoDto){
+        return modBintreeConfigService.getStockQuotation(assetInfoDto);
     }
 
 }

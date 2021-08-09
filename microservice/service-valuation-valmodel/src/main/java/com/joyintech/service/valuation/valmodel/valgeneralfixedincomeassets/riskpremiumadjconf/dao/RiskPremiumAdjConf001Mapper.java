@@ -1,5 +1,6 @@
 package com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dao;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf001Dto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf002Dto;
 import org.springframework.stereotype.Repository;
@@ -35,5 +36,7 @@ public interface RiskPremiumAdjConf001Mapper {
     RiskPremiumAdjConf002Dto findByPrimaryKey(Map<String, Object> params);
 
     int updateByPrimaryKeySelective(RiskPremiumAdjConf002Dto record);
+
+    List<SelectOptionDto> getFinprodIdForRiskPremium(Map<String, Object> param);
 
 }

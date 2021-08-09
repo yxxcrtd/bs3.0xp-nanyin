@@ -266,4 +266,78 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where SEQNO = #{seqno,jdbcType=VARCHAR}
   </update>
+
+
+  <select id="selectAssetNoClassify" resultType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto" parameterType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto" >
+    SELECT fp.FINPROD_ID finprodId,
+    fp.FINPROD_MARKET_ID finprodMarketId,
+    fp.FINPROD_ABBR finprodAbbr,
+    fp.FINPROD_NAME finprodName,
+    fp.is_sus isSus,
+    fp.is_right isRight,
+    fpadd.IS_RATE_ADJUST  isRateAdjust
+    FROM FIN_PRODUCT fp
+    left join fin_product_type fpt on fp.FINPROD_ID=fpt.FINPROD_ID
+    left join fin_product_add  fpadd on fp.finprod_id = fpadd.finprod_id
+    WHERE P_FINPROD_ID is null
+    <if test="search != null and search != ''">
+      and (fp.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
+      or fp.FINPROD_ABBR like concat(concat('%',#{search}),'%'))
+    </if>
+    <if test="initValue != null and initValue != ''">
+      and (fp.FINPROD_ABBR=#{initValue} or fp.FINPROD_ID =#{initValue})
+    </if>
+    <if test="type8List != null and type8List.size()>0 ">
+      AND fpt.TYPE_8 IN(
+      <foreach item="item" index="index" collection="type8List" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+    <if test="type9List != null and type9List.size()>0 ">
+      AND fpt.TYPE_9 IN(
+      <foreach item="item" index="index" collection="type9List" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+    <if test="type10List != null and type10List.size()>0 ">
+      AND fpt.TYPE_10 IN(
+      <foreach item="item" index="index" collection="type10List" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+    <if test="type11List != null and type11List.size()>0 ">
+      AND fpt.TYPE_11 IN(
+      <foreach item="item" index="index" collection="type11List" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+    <if test="type12List != null and type12List.size()>0 ">
+      AND fpt.TYPE_12 IN(
+      <foreach item="item" index="index" collection="type12List" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+  </select>
+
+  <select id="getStockQuotation" resultType="com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto" parameterType="com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto" >
+    SELECT SHARES_ID stockCode,
+    DEAL_DATE dealDate,
+    PE pe,
+    PB pb,
+    CLOSE_PRICE closePrice
+    FROM MST_SHARE_PRICE
+    WHERE 1=1
+    <if test="stockCodeList != null and stockCodeList.size()>0 ">
+      AND SHARES_ID IN(
+      <foreach item="item" index="index" collection="stockCodeList" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+  </select>
 </mapper>

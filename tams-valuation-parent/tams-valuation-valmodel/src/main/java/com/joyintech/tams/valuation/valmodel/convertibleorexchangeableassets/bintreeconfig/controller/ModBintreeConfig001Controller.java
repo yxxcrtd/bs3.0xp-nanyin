@@ -112,5 +112,6 @@ public class ModBintreeConfig001Controller extends BaseController {
     	param.put("pageId", this.getPageId());
         return modBintreeConfig001Service.export(this.getPageId(),param);
     }
+
     
 }

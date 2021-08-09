@@ -50,4 +50,28 @@
         FROM MOD_RISK_PREMIUM A
         WHERE A.SEQNO = #{seqNo}
 	</select>
+
+	<select id="getFinprodIdForRiskPremium" resultType="com.joyintech.framework.select.SelectOptionDto" parameterType="Map">
+		SELECT
+		A.FINPROD_ID id,A.FINPROD_ABBR text
+		FROM FIN_PRODUCT A
+		INNER JOIN FIN_PRODUCT_TYPE B
+		ON A.FINPROD_ID = B.FINPROD_ID
+		WHERE A.FINPROD_TYPE2 IN ('F01','F18')
+		AND B.TYPE_11 NOT IN ('011','013','023')
+		AND NOT EXISTS (
+		SELECT 1 FROM FIN_PRODUCT C
+		WHERE C.IS_SUS = 'Y'
+		AND NOT EXISTS (
+		SELECT 1 FROM FIN_EXERCISE_PLAN D
+		WHERE C.FINPROD_ID = D.FINPROD_ID
+		AND EXERCISE_TYPE = '01'
+		)
+		AND C.FINPROD_ID = A.FINPROD_ID
+		)
+		<if test="search != null and search != ''">
+			and (A.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
+			or A.FINPROD_ABBR like concat(concat('%',#{search}),'%'))
+		</if>
+	</select>
 </mapper>

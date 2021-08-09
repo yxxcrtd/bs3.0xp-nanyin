@@ -1,0 +1,1 @@
+alter table MOD_RISK_PREMIUM modify SEC_DETAIL_TYPE_MODEL null;

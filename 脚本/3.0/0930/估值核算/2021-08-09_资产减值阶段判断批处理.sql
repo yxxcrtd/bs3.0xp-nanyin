@@ -1,0 +1,2 @@
+delete from SYS_BATCH_TASK where BEAN_NAME = 'assetImpairmentStageJudgeModelTask';
+Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,IS_BATCH_START_TARGET) values ('2042','MODEL','减值模型-资产减值阶段判断批处理',null,'assetImpairmentStageJudgeModelTask',20,'system',null,to_timestamp('2021-07-16 11:03:09','YYYY-MM-DD HH24:MI:SS'),'system',to_timestamp('2021-07-16 11:03:09','YYYY-MM-DD HH24:MI:SS'),'02');

@@ -11,6 +11,7 @@
 package com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.controller;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf001Dto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf002Dto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.service.RiskPremiumAdjConf001Service;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,5 +54,19 @@ public class RiskPremiumAdjConf001Controller {
 		Map<String, Object> map = new HashMap<>();
 		map.put("seqNo", seqNo);
 		return riskPremiumAdjConf001Service.findByPrimaryKey(map);
+	}
+
+	/**
+	 * 资产代码（剔除同时不含赎回权和利率调整权的永续债、优先股、可转债、可交债） 风险溢价调整配置
+	 *
+	 * @param param 画面参数
+	 * @return 产品代码：下拉框
+	 * @throws Exception
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("getFinprodIdForRiskPremium")
+	public List<SelectOptionDto> getFinprodIdForRiskPremium(@RequestBody Map<String, Object> param) throws Exception {
+		return riskPremiumAdjConf001Service.getFinprodIdForRiskPremium(param);
 	}
 }

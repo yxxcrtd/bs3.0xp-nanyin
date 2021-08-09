@@ -90,15 +90,8 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
      * @return
      */
     public Page<SelectOptionDto> getAssetInfo(Map<String, Object> pageParam) {
-//        MultiValueMap<String, Object> params = new LinkedMultiValueMap<String, Object>();
-//        if(!CollectionUtils.isEmpty(pageParam)) {
-//            for (Map.Entry<String, Object> entry : pageParam.entrySet()) {
-//                params.add(entry.getKey(), entry.getValue());
-//            }
-//        }
-        Page<SelectOptionDto> page = restTemplate.postForPage(ServiceApplication.LOSS_MODEL_SERVICE_NAME
-                + "/modBatchTask/getAssetInfo", pageParam, SelectOptionDto.class);
-
+        Page<SelectOptionDto> page = restTemplate.postForPage(ServiceApplication.VAL_MODEL_SERVICE_NAME
+                + "/modValBatchTask/getAssetInfo", pageParam, SelectOptionDto.class);
         return page;
     }
 

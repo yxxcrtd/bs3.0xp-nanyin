@@ -32,7 +32,7 @@ public class RiskPremiumAdjConf001Service extends CommonExportService<RiskPremiu
      * @throws Exception
      */
     public List<SelectOptionDto> getFinprodIdForRiskPremium(Map<String, Object> params){
-        return restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME + "/interf/ModelCallOnInvest/getFinprodIdForRiskPremium", params, SelectOptionDto.class);
+        return restTemplate.postForList(ServiceApplication.VAL_MODEL_SERVICE_NAME + "/RiskPremiumAdjConf001/getFinprodIdForRiskPremium", params, SelectOptionDto.class);
     }
 
 }

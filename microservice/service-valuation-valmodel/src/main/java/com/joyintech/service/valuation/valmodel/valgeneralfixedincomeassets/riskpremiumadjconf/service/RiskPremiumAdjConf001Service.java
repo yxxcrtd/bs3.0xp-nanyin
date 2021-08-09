@@ -12,12 +12,14 @@ package com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.ris
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dao.RiskPremiumAdjConf001Mapper;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf001Dto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf002Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +42,19 @@ public class RiskPremiumAdjConf001Service extends BaseService<RiskPremiumAdjConf
 
 	public RiskPremiumAdjConf002Dto findByPrimaryKey(Map<String, Object> pageParam) {
 		return riskPremiumAdjConf001Mapper.findByPrimaryKey(pageParam);
+	}
+
+	/**
+	 * 资产代码（剔除同时不含赎回权和利率调整权的永续债、优先股、可转债、可交债）风险溢价配置
+	 *
+	 * @param
+	 * @return 产品代码：下拉框
+	 * @throws Exception
+	 * @see
+	 * @since 1.0
+	 */
+	public List<SelectOptionDto> getFinprodIdForRiskPremium(Map<String, Object> param) throws Exception {
+		return riskPremiumAdjConf001Mapper.getFinprodIdForRiskPremium(param);
 	}
 
 }

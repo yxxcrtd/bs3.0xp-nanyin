@@ -12,10 +12,13 @@ package com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dao.ModBintreeConfigDtoMapper;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
+import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
+import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,6 +116,14 @@ public class ModBintreeConfigService extends BaseService<ModBintreeConfigDto> {
     	dto.setUpdateTime(new Date());
        return modBintreeConfigDtoMapper.insert(dto);
     }
+
+	public List<AssetInfoDto> getAssetNoClassify(AssetInfoDto assetInfoDto){
+		return modBintreeConfigDtoMapper.selectAssetNoClassify(assetInfoDto);
+	}
+
+	public List<StockQuotationDto> getStockQuotation(StockQuotationDto assetInfoDto){
+		return modBintreeConfigDtoMapper.getStockQuotation(assetInfoDto);
+	}
     		
    
 }
