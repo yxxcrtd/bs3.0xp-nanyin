@@ -20,9 +20,14 @@ import java.util.Map;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
+import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,7 +130,10 @@ public class TrdPlanCcyInvestTrade003Controller extends BaseController {
      */
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
-    
+
+    @Autowired
+    private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
+
     /**
      * {@inheritDoc}
      */
@@ -474,6 +482,21 @@ public class TrdPlanCcyInvestTrade003Controller extends BaseController {
         else {
             dto.setTradeId(IDGenerator.generate());
         }
+        // ----------add by zhangrui1 核风险版本 start----------
+        if (dto.getOperateType().equals(BussinessConstant.SUBMIT) && CommonUtil.isType(
+                CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+            AjaxResult ar = interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(),
+                    BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),
+                    DictCodeList.平安资产类型_计划类资产_货币型.getValue(),
+                    en -> interfRiskRdsService.sendRiskRdsData(dto, en));
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+            // 将实占信息设置到线程缓存出错时撤销用
+            TradeRdsCommonAop.setLocalCache(dto);
+        }
+        // ----------add by zhangrui1 核风险版本 end----------
         ProcessParameter<TrdPlanCcyInvestTradeConfirmDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdPlanCcyInvestTradeConfirmDto> workFlowParameter = new WorkFlowParameter<>();
         processParameter.setWorkFlowParameter(workFlowParameter);

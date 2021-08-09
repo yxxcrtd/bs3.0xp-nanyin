@@ -48,6 +48,12 @@ public class ValFinProductValuationDto {
      */
     private String inputType;
 
+    // 估值方案代码
+    private String schemeId;
+
+    // 估值方案明细代码
+    private String schemeDetailId;
+
     /**
      * 获取 finprodId
      * 
@@ -138,4 +144,35 @@ public class ValFinProductValuationDto {
         this.inputType = inputType;
     }
 
+    /**
+     * @return schemeId
+     */
+    public String getSchemeId() {
+        return schemeId;
+    }
+
+    /**
+     * 设置 schemeId
+     *
+     * @param schemeId schemeId
+     */
+    public void setSchemeId(String schemeId) {
+        this.schemeId = schemeId;
+    }
+
+    /**
+     * @return schemeDetailId
+     */
+    public String getSchemeDetailId() {
+        return schemeDetailId;
+    }
+
+    /**
+     * 设置 schemeDetailId
+     *
+     * @param schemeDetailId schemeDetailId
+     */
+    public void setSchemeDetailId(String schemeDetailId) {
+        this.schemeDetailId = schemeDetailId;
+    }
 }

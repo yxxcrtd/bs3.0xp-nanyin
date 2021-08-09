@@ -114,6 +114,9 @@
     		Joyin.error(JoyinUtil.getMessage("自主专户没有组合持有!"));
     		return ;
     	}
+    	if(!$("#entrustAmt").val()){
+    	    Joyin.error(JoyinUtil.getMessage("指令金额不可为空!"))
+        }
         var objectRisk=table.getAllRows();
         var objectRiskForm = $.serializeToObject('#searchForm');
         var checkParamRisk = {};
