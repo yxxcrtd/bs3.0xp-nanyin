@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.trade.trdrepotrade.validator;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
@@ -220,8 +221,14 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
 	        		}
 	        		inputDto.getBussRepoSec().setTotalPrinAmt(totalPrinAmt);
 	        	}
+                //汇总券面总额转换 edit by yeming 20210809 start
+                BigDecimal totalPrinAmt = inputDto.getBussRepoSec().getTotalPrinAmt();
+                if(StringUtil.equals(CacheUtil.getSysParam("entrustAmtUnit"),"02")){
+                    totalPrinAmt = totalPrinAmt.multiply(new BigDecimal(10000));//万元转成元
+                }
+                //汇总券面总额转换 edit by yeming 20210809 end
 	        	if (inputDto.getBussRepoSec().getTotalPrinAmt() == null
-	                    || inputDto.getPrinAmt().compareTo(inputDto.getBussRepoSec().getTotalPrinAmt()) > 0) {
+	                    || inputDto.getPrinAmt().compareTo(totalPrinAmt) > 0) {
 	                ValidMessage validMessage = new ValidMessage("prinAmt",
 	                        getMessage("TRD_E_00121"));
 	                errorList.add(validMessage);
@@ -387,6 +394,11 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
 
                 BigDecimal prinAmt = inputDto.getPrinAmt()==null ? BigDecimal.ZERO :inputDto.getPrinAmt() ;
                 BigDecimal totalPrinAmt = inputDto.getBussRepoSec() == null ? BigDecimal.ZERO : inputDto.getBussRepoSec().getTotalPrinAmt();
+                //汇总券面总额转换 edit by yeming 20210809 start
+                if(StringUtil.equals(CacheUtil.getSysParam("entrustAmtUnit"),"02")){
+                    totalPrinAmt = totalPrinAmt.multiply(new BigDecimal(10000));//万元转成元
+                }
+                //汇总券面总额转换 edit by yeming 20210809 end
                 if (totalPrinAmt.compareTo(prinAmt) < 0) {
                     ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_00122"));
                     errorList.add(validMessage);
