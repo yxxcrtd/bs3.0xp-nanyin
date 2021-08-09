@@ -203,6 +203,14 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         if (Objects.isNull(剩余占用额度) || 剩余占用额度.compareTo(BigDecimal.ZERO) == 0){
             return;
         }
+        if(剩余占用额度.compareTo(BigDecimal.ZERO)>0 && creditLinesAst!=null && "N".equals(creditLinesAst.getCreditFlag())){
+            if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_否.getValue())){
+                outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_12"));
+            }else if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_是.getValue())){
+                outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_14"));
+            }
+            return;
+        }
         // TODO 资产授信额度不够，机构授信配置不扣限额，临时处理方式：交易通过
         if(oneStepInfo != null && StringUtil.equals(DictCodeListRsk.额度分类_不扣限额.getValue(),oneStepInfo.getCreditType())){
             logger.info(getMessage("==========处理数据结束,交易或指令编号:"+ inputDto.getFinprodId() + ",不扣限额=========="));
@@ -602,6 +610,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         }
         // 资产授信额度释放之后剩余待释放额度
         if (剩余占用额度.compareTo(BigDecimal.ZERO) == 0){
+            return;
+        }
+        if(剩余占用额度.compareTo(BigDecimal.ZERO)>0 && creditLinesAst!=null && "N".equals(creditLinesAst.getCreditFlag())){
             return;
         }
         // 释放前置交易占用
@@ -1739,6 +1750,22 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         findBasicData(inputDto);
         if (creditLinesAst == null && oneStepInfo != null && oneStepInfo.getDeductObj() == null){
             return outputDto;
+        }
+        //处理 净值型、货币型、基金的申购确认
+        if(StringUtil.isNotEmpty(inputDto.getIsSpecial()) && "true".equals(inputDto.getIsSpecial())){
+            if(creditLinesAst!=null) {
+                if (creditLinesAst.getCreditObj().equals(BussinessDictCodeList.授信对象_份额.getValue())) {
+                    BigDecimal yuanShareAmt = creditLinesDealsMapper.getShareAmt(inputDto.getEntrustId());
+                    BigDecimal objShareAmt = inputDto.getShareAmt().subtract(yuanShareAmt);
+                    inputDto.setShareAmt(objShareAmt.abs());
+                    occupy=objShareAmt.compareTo(BigDecimal.ZERO)>0?true:false;
+                }else if(StringUtil.equals(BussinessConstant.RELEASE_MODE_01,CacheUtil.getSysParam(BussinessConstant.RELEASE_MODE))){
+                    inputDto.setTradeAmt(BigDecimal.ZERO);
+                }else{
+                    return outputDto;
+                }
+                inputDto.setEntrustId(null);
+            }
         }
         // STEP  2 计算占用额度
         BigDecimal 占用额度 = cal占用额度(inputDto,creditLinesAst);

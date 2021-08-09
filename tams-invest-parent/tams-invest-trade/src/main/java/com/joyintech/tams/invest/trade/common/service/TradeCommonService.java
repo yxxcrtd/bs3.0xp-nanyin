@@ -681,6 +681,18 @@ public class TradeCommonService extends BaseService {
                 //净值
                 creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
             }
+            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_申购确认.getValue())) {
+                creditLinesInputDto = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
+                creditLinesInputDto.setEntrustId(inputDto.getbTradeId());
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+                if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo()))
+                    creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
+                creditLinesInputDto.setTradeStatus(status);
+                //净值
+                creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
+                creditLinesInputDto.setIsSpecial("true");
+            }
             if (StringUtil.equals(inputDto.getPs(),DictCodeListExt2.交易方向_转换赎回确认.getValue())) {
                 List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
                 creditLinesInputDto = new CreditLinesInputDto();
@@ -776,6 +788,34 @@ public class TradeCommonService extends BaseService {
                 //净值
                 creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
             }
+            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_申购确认.getValue())) {
+                creditLinesInputDto = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+                creditLinesInputDto.setEntrustId(inputDto.getbTradeId());
+                if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo())){
+                    creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
+                }
+                creditLinesInputDto.setTradeStatus(status);
+                // 多组合和单组合的金额信息和交易编号取值不同
+                if (StringUtil.isEmptyList(inputDto.getBussTrdTransfenpeiDto())){
+                    creditLinesInputDto.setTradeAmt(inputDto.getTradeAmt());
+                    creditLinesInputDto.setShareAmt(inputDto.getShareAmt());
+                }else {
+                    creditLinesInputDto.setTradeId(inputDto.getTradeId());
+                    BigDecimal tradeAmt = BigDecimal.ZERO;
+                    BigDecimal shareAmt = BigDecimal.ZERO;
+                    for (BussTrdTransfenpeiDto item : inputDto.getBussTrdTransfenpeiDto()){
+                        tradeAmt = tradeAmt.add(item.getTradeAmt() == null ?  BigDecimal.ZERO : item.getTradeAmt());
+                        shareAmt = shareAmt.add(item.getShareAmt() == null ?  BigDecimal.ZERO : item.getShareAmt());
+                    }
+                    creditLinesInputDto.setTradeAmt(tradeAmt);
+                    creditLinesInputDto.setShareAmt(shareAmt);
+                }
+                //净值
+                creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
+                creditLinesInputDto.setIsSpecial("true");
+            }
 
         }
 
@@ -842,6 +882,34 @@ public class TradeCommonService extends BaseService {
                 }
                 //净值
                 creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
+            }
+            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_申购确认.getValue())) {
+                creditLinesInputDto = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+                creditLinesInputDto.setEntrustId(inputDto.getbTradeId());
+                if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo())){
+                    creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
+                }
+                creditLinesInputDto.setTradeStatus(status);
+                // 多组合和单组合的金额信息和交易编号取值不同
+                if (StringUtil.isEmptyList(inputDto.getBussTrdTransfenpeiDto())){
+                    creditLinesInputDto.setTradeAmt(inputDto.getTradeAmt());
+                    creditLinesInputDto.setShareAmt(inputDto.getShareAmt());
+                }else {
+                    creditLinesInputDto.setTradeId(inputDto.getTradeId());
+                    BigDecimal tradeAmt = BigDecimal.ZERO;
+                    BigDecimal shareAmt = BigDecimal.ZERO;
+                    for (BussTrdTransfenpeiDto item : inputDto.getBussTrdTransfenpeiDto()){
+                        tradeAmt = tradeAmt.add(item.getTradeAmt() == null ?  BigDecimal.ZERO : item.getTradeAmt());
+                        shareAmt = shareAmt.add(item.getShareAmt() == null ?  BigDecimal.ZERO : item.getShareAmt());
+                    }
+                    creditLinesInputDto.setTradeAmt(tradeAmt);
+                    creditLinesInputDto.setShareAmt(shareAmt);
+                }
+                //净值
+                creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
+                creditLinesInputDto.setIsSpecial("true");
             }
         }
         // 项目类
@@ -1133,6 +1201,7 @@ public class TradeCommonService extends BaseService {
                 if (DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_卖出.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
+                        || DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_赎回确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_转换申请.getValue().equals(creditLinesInputDto.getPs())
@@ -1150,6 +1219,7 @@ public class TradeCommonService extends BaseService {
                         || DictCodeListExt2.交易方向_转换赎回确认.getValue().equals(creditLinesInputDto.getPs())){
                     return true;
                 }
+                if(DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs()))return true;
             }
         }
         // 买入、申购，退回时，释放授信
