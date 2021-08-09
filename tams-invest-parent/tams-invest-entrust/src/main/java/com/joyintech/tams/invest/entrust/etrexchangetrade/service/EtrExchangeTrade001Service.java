@@ -2794,6 +2794,31 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			if (StringUtil.isNotEmpty(vailableNum)) {
 				etrExchangeTrade001Dto.setAccAvailablePos(vailableNum);
 			}
+			//交易方向 价格模式
+			if (StringUtil.equals(DictCodeListExt3.交易方向_正回购.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
+			}
+			else if (StringUtil.equals(DictCodeListExt3.交易方向_逆回购.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeListExt3.交易方向_逆回购.getValue());
+			}
+			else if (StringUtil.equals(DictCodeList.交易方向_买入.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeList.交易方向_买入.getValue());
+			}
+			else if (StringUtil.equals(DictCodeList.交易方向_卖出.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeList.交易方向_卖出.getValue());
+			}
+
+			if (StringUtil.equals(DictCodeListExt2.价格模式_指定价格.getCodeName(),etrExchangeTrade001Dto.getPriceModel())){
+				etrExchangeTrade001Dto.setPriceModel(DictCodeListExt2.价格模式_指定价格.getValue());
+			}
+			else if (StringUtil.equals(DictCodeListExt2.价格模式_市价指令.getCodeName(),etrExchangeTrade001Dto.getPriceModel())){
+				etrExchangeTrade001Dto.setPriceModel(DictCodeListExt2.价格模式_市价指令.getValue());
+			}
+			else if (StringUtil.equals(DictCodeListExt2.价格模式_限价指令.getCodeName(),etrExchangeTrade001Dto.getPriceModel())){
+				etrExchangeTrade001Dto.setPriceModel(DictCodeListExt2.价格模式_限价指令.getValue());
+			}
+
+
             /*if(StringUtil.isNotEmpty(etrExchangeTrade001Dto.getPs()) && (etrExchangeTrade001Dto.getPs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())
 					|| etrExchangeTrade001Dto.getPs().equals(DictCodeListExt3.交易方向_质押券出库.getValue()))){
             	etrExchangeTrade001Dto.setEntrustAmt(etrExchangeTrade001Dto.getEntrustNum().multiply(etrExchangeTrade001Dto.getEntrustPrice().divide(new BigDecimal(100))));
