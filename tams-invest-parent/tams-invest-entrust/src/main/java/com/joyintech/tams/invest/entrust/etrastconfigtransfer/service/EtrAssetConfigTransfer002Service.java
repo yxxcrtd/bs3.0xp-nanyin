@@ -54,7 +54,7 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
         for(EtrAssetConfigDto dto:result){
             Map<String, Object> costParam = new HashMap<>();
             costParam.put("sysDate",DateUtil.format(DateUtil.platDateFromCache()));
-            costParam.put("portfolioId",dto.getPortfolioId());
+            costParam.put("portfolioId",param.get("portfolioId"));
             costParam.put("finprodId",dto.getFinprodId());
             EtrCommonController etrCommonController = SpringContextUtil.getBean(
                     EtrCommonController.class);
