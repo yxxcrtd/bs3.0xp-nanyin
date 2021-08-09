@@ -96,4 +96,6 @@ public interface CreditLinesUpdateMapper {
                                              @Param("sysDate") Date sysDate);
 
     List<Map<String, Object>> findPledgeBondInfo(Map<String, Object> param);
+
+    BigDecimal getShareAmt(String bTradeId);
 }
