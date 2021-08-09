@@ -1847,6 +1847,11 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	ETF基金类型_商品期货ETF(DictCode.ETF基金类型,"10","商品期货ETF"),
 	ETF基金类型_跨境ETF(DictCode.ETF基金类型,"11","跨境ETF"),
 
+	// add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
+	行情价格数据来源_行情信息(DictCode.行情价格数据来源,"01","行情信息"),
+	行情价格数据来源_系统生成(DictCode.行情价格数据来源,"02","系统生成"),
+	// add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
+
 
 	//add by meifaxin 20210713  end
 	;

@@ -45,6 +45,16 @@ public class MarketPriceDto {
      * 估值方案估值日期
      */
     private Date schemeValDate;
+
+    /**
+     * 估值方案代码
+     */
+    private String schemeId;
+
+    /**
+     * 估值方案明细代码
+     */
+    private String schemeDetailId;
     
     public String getValueSource() {
 		return valueSource;
@@ -116,6 +126,38 @@ public class MarketPriceDto {
 	public void setSchemeValDate(Date queryDate) {
 		this.schemeValDate = queryDate;
 	}
-    
-    
+
+    /**
+     * @return 方案代码
+     */
+    public String getSchemeId() {
+        return schemeId;
+    }
+
+    /**
+     * 设置 方案代码
+     *
+     * @param schemeId 方案代码
+     */
+    public MarketPriceDto setSchemeId(String schemeId) {
+        this.schemeId = schemeId;
+        return this;
+    }
+
+    /**
+     * @return 估值方案明细代码
+     */
+    public String getSchemeDetailId() {
+        return schemeDetailId;
+    }
+
+    /**
+     * 设置 估值方案明细代码
+     *
+     * @param schemeDetailId 估值方案明细代码
+     */
+    public MarketPriceDto setSchemeDetailId(String schemeDetailId) {
+        this.schemeDetailId = schemeDetailId;
+        return this;
+    }
 }

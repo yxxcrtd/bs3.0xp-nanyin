@@ -389,6 +389,15 @@ public class FinProductCommonBatchService {
             return marketPriceDto;
         }
         SchemeDetailDto schemeDetailDto = listSchemeDetailDto.get(0);
+
+        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
+        // 估值方案代码
+        marketPriceDto.setSchemeId(schemeDetailDto.getSchemeId());
+        // 估值方案明细代码
+        marketPriceDto.setSchemeDetailId(schemeDetailDto.getSchemeDetailId());
+        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
+
+
         // if(估值方案.估值方法=市值法)
         if (DictCodeListExt1.估值方法_市值法.getValue().equals(
             schemeDetailDto.getValuationMethod())) {

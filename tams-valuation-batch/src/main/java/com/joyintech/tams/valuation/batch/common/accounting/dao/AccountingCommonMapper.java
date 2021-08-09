@@ -499,4 +499,13 @@ public interface AccountingCommonMapper {
      * @return
      */
     BigDecimal selectFloatSubjectBalance(Map<String, Object> map);
+
+
+    /**
+     *  删除资产行情信息表数据
+     * @return
+     * @see
+     * @since 1.0
+     */
+    int deleteBokAssetMarketInfo(Map<String, Object> param);
 }

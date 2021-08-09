@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -412,6 +413,10 @@ public class TrdProjectInvestTrade002Controller extends BaseController {
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }
+            // add by zhangrui1 start
+            // 将实占信息设置到线程缓存出错时撤销用
+            TradeRdsCommonAop.setLocalCache(dto);
+            // add by zhangrui1 end
         }
         //----------add by jjpei 20200114 核风险版本 end----------
         params.setBusinessCode(dto.getBizCode());

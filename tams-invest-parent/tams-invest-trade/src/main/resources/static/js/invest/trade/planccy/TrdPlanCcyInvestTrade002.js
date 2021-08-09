@@ -11,7 +11,13 @@ $(function() {
             if($('#type7').val() && $('#type7').val() != ''){
                 obj.assetSecType = $('#type7').val();
             }
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','TrdPlanNetInvestTrade001.ps'],valDate:['tradeDate','TrdPlanCcyInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdPlanCcyInvestTrade002.portfolioId'],tradeAmount:['tradeAmt','TrdPlanCcyInvestTrade002.tradeAmt'],assetType:['type6','TrdPlanCcyInvestTrade002.type6'],data:obj}
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
             return object;
         }else if (ps == ps_T06){
             var obj = {timePoint:MY_SUP_TIME_TYPE_02,tradeDirection:$('#ps').val(),valDate:$('#tradeDate').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#shareAmt').val(),assetType:FINPROD_TYPE_F17,isEnabled:'01',assetCode:$('#finprodId').val()}
@@ -19,7 +25,13 @@ $(function() {
             if($('#type7').val() && $('#type7').val() != ''){
                 obj.assetSecType = $('#type7').val();
             }
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','TrdPlanNetInvestTrade001.ps'],valDate:['tradeDate','TrdPlanCcyInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdPlanCcyInvestTrade002.portfolioId'],tradeAmount:['shareAmt','TrdPlanCcyInvestTrade003.tradeSha'],assetType:['type6','TrdPlanCcyInvestTrade002.type6'],data:obj}
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
             return object;
         } else {
             var obj = {timePoint:MY_SUP_TIME_TYPE_02,tradeDirection:$('#ps').val(),valDate:$('#tradeDate').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#tradeAmt').val(),assetType:FINPROD_TYPE_F17,assetCode:$('#finprodId').val()}
@@ -27,7 +39,13 @@ $(function() {
             if($('#type7').val() && $('#type7').val() != ''){
                 obj.assetSecType = $('#type7').val();
             }
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','TrdPlanNetInvestTrade001.ps'],valDate:['tradeDate','TrdPlanCcyInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdPlanCcyInvestTrade002.portfolioId'],tradeAmount:['tradeAmt','TrdPlanCcyInvestTrade002.tradeAmt'],assetType:['type6','TrdPlanCcyInvestTrade002.type6'],data:obj}
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
             return object;
         }
     }
