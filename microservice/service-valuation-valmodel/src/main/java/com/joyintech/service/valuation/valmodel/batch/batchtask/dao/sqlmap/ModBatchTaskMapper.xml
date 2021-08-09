@@ -223,4 +223,87 @@
                            AND info.SEQ_NO = mvbp.BATCH_EXEC_SEQNO)
     </delete>
 
+
+    <select id="getAssetInfo" resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
+        SELECT
+        FINPROD_ID finprodId,
+        FINPROD_ABBR  finprodName,
+        FINPROD_ID id,
+        FINPROD_ABBR  text
+        FROM
+        FIN_PRODUCT A
+        <where>
+            <if test="finprodTypes != null and finprodTypes.size() > 0">
+                AND A.FINPROD_TYPE2 IN
+                <foreach collection="finprodTypes" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="search != null and search != ''">
+                and (instr(A.FINPROD_ID, #{search}) > 0 or instr(A.FINPROD_NAME, #{search}) > 0 or instr(A.FINPROD_ABBR, #{search}) > 0)
+            </if>
+            <if test="initValue != null and initValue != ''">
+                and A.FINPROD_ID = #{initValue}
+            </if>
+
+            <if test="finprodIdList != null and finprodIdList.size() > 0">
+                AND  A.FINPROD_ID IN
+                <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getAssetInfoImpairment" resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
+        with tmp as (
+        select A.FINPROD_ID, A.CDATE, A.INV_AIM, SUM(A.AMOUNT) AMOUNT
+        from PTL_SEC_POSITION A
+        INNER JOIN PTL_PORTFOLIO C
+        ON A.PORTFOLIO_ID = C.PORTFOLIO_ID
+        AND C.INVEST_YESORNO = 'Y'
+        INNER JOIN FIN_PRODUCT B
+        ON A.FINPROD_ID = B.FINPROD_ID
+        AND B.FINPROD_TYPE2 IN ('F01', 'F18') --债券、项目类
+        where A.HODING_TYPE = '03' --实际持仓
+        GROUP BY A.FINPROD_ID, A.CDATE, A.INV_AIM
+        )
+        SELECT
+        A.FINPROD_ID finprodId,
+        A.FINPROD_ABBR finprodName
+        FROM
+        fin_product a
+        inner join fin_product_type b on a.FINPROD_ID = b.FINPROD_ID
+        where
+        (
+        (b.type_8 = 'F01' or (b.type_8 = 'F06' and b.type_9 in ('08', '09')))
+        and exists(
+        select 1
+        from
+        tmp c
+        where
+        c.FINPROD_ID = a.FINPROD_ID and
+        c.INV_AIM = 'AC'
+        <if test="execDate != null and execDate != ''">
+            and c.CDATE = to_date(#{execDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+        </if>
+        and c.AMOUNT != 0
+        )
+        )
+        <if test="search != null and search != ''">
+            and (instr(A.FINPROD_ID, #{search}) > 0 or instr(A.FINPROD_NAME, #{search}) > 0 or instr(A.FINPROD_ABBR, #{search}) > 0)
+        </if>
+        <if test="initValue != null and initValue != ''">
+            and A.FINPROD_ID = #{initValue}
+        </if>
+        <if test="finprodIdList != null and finprodIdList.size() > 0">
+            AND  A.FINPROD_ID IN
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+    </select>
+
 </mapper>

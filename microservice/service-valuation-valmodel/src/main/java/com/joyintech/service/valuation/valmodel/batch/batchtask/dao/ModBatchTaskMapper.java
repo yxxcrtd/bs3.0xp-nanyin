@@ -2,8 +2,10 @@ package com.joyintech.service.valuation.valmodel.batch.batchtask.dao;
 
 import com.joyintech.framework.base.entity.SysBatchGrpPrdlink;
 import com.joyintech.framework.base.entity.SysBatchJob;
+import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchExecutingStatusDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchTaskDto;
+import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.ModValBatchAssetInfoDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,5 +30,9 @@ public interface ModBatchTaskMapper {
     int checkIsRunning(Map<String, Object> params);
 
     Integer cleanBatchParams();
+
+    List<BatchAssetInfoDto> getAssetInfo(Map<String, Object> param);
+
+    List<BatchAssetInfoDto> getAssetInfoImpairment(Map<String, Object> param);
 
 }

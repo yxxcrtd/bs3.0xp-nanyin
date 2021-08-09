@@ -17,6 +17,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dao.ModBatchTaskMapper;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.*;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
@@ -86,9 +87,24 @@ public class ModBatchTaskService extends BaseService {
     public Page<SelectOptionDto> getAssetInfo(Map<String, Object> params, int page, int length) {
         params.put("page", page);
         params.put("length", length);
-        Page<BatchAssetInfoDto> assetInfoPages = restTemplate.postForPage(ServiceApplication.CUSTOMER_INTERF_NAME
-                        + "/interf/ModelCallOnInvest/getBatchAssetInfo"
-                , params, BatchAssetInfoDto.class);
+
+//        Page<BatchAssetInfoDto> assetInfoPages = restTemplate.postForPage(ServiceApplication.CUSTOMER_INTERF_NAME
+//                        + "/interf/ModelCallOnInvest/getBatchAssetInfo"
+//                , params, BatchAssetInfoDto.class);
+        Page<BatchAssetInfoDto> assetInfoPages = new Page<>();
+        Boolean isImpairment = (Boolean)params.get("isImpairment");
+        RequestUtil.getParam("key");
+        RequestUtil.getCurrentRequest().getHeader("key");
+        if (isImpairment != null && isImpairment) {
+            assetInfoPages= super.queryForPage(page, length, () -> modBatchTaskMapper.getAssetInfoImpairment(params));
+        } else {
+            List<String> finprodTypes = new ArrayList<>(2);
+            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            params.put("finprodTypes", finprodTypes);
+            assetInfoPages=super.queryForPage(page, length, () -> modBatchTaskMapper.getAssetInfo(params));
+        }
+
         Page<SelectOptionDto> res = new Page<>();
         BeanUtils.copyProperties(assetInfoPages, res);
         if (CollectionUtils.isNotEmpty(assetInfoPages.getRoot())) {

@@ -67,6 +67,8 @@ public class ModImpaireBatchTask001Controller extends BaseController {
     @RequestMapping("findLogPage")
     @ResponseBody
     public Page<BatchExecutingStatusDto> findBatchExeDetail(String sysDate){
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        sysDate=(String)pageParam.get("importDate");
         return modImpaireBatchTask001Service.findBatchExeDetail(sysDate);
     }
 
