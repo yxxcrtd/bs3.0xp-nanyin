@@ -1669,14 +1669,13 @@ public class FinProductCommonService {
         		valFinProductValuationDto.setValuation(ArithmeticUtil.round(valFinProductValuationDto.getValuation(),
         				QuotaDigit.intValue(), roundingMode));
         	}
-
+            // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
+            // 估值方案代码
+            valFinProductValuationDto.setSchemeId(schemeDetailDto.getSchemeId());
+            // 估值方案明细代码
+            valFinProductValuationDto.setSchemeDetailId(schemeDetailDto.getSchemeDetailId());
+            // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
         }
-        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
-        // 估值方案代码
-        valFinProductValuationDto.setSchemeId(schemeDetailDto.getSchemeId());
-        // 估值方案明细代码
-        valFinProductValuationDto.setSchemeDetailId(schemeDetailDto.getSchemeDetailId());
-        // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
         return valFinProductValuationDto;
     }
     

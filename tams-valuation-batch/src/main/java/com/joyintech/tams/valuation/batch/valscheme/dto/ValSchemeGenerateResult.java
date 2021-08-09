@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.batch.valscheme.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.tams.common.base.entity.BokAssetMarketInfo;
 import com.joyintech.tams.common.base.entity.BokValbalTableLog;
 import com.joyintech.tams.common.base.entity.BokValbalTableStatus;
 import com.joyintech.tams.valuation.batch.valbokbalance.dto.ValBokBalanceGenerateResult;
@@ -301,6 +302,11 @@ public class ValSchemeGenerateResult extends ValBokBalanceGenerateResult {
      * 成立以来年化收益率
      */
     private ProdValuationDto toTdyyield;
+
+    /**
+     *  资产行情信息
+     */
+    private List<BokAssetMarketInfo> bokAssetMarketInfoList;
 
     /**
      * 获取 finprodName
@@ -1164,5 +1170,21 @@ public class ValSchemeGenerateResult extends ValBokBalanceGenerateResult {
 
     public void setToTdyyield(ProdValuationDto toTdyyield) {
         this.toTdyyield = toTdyyield;
+    }
+
+    /**
+     * @return 资产行情信息
+     */
+    public List<BokAssetMarketInfo> getBokAssetMarketInfoList() {
+        return bokAssetMarketInfoList;
+    }
+
+    /**
+     * 设置 资产行情信息
+     *
+     * @param bokAssetMarketInfoList 资产行情信息
+     */
+    public void setBokAssetMarketInfoList(List<BokAssetMarketInfo> bokAssetMarketInfoList) {
+        this.bokAssetMarketInfoList = bokAssetMarketInfoList;
     }
 }
