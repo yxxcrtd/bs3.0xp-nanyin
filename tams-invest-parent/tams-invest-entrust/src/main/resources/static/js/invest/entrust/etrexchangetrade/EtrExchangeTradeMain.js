@@ -410,3 +410,18 @@ $(function() {
         doRiskcal();
     });
 }());
+
+
+
+var dialogSelf = {}
+dialogSelf.flag="acd";
+dialogSelf.dialog=function(url, param){
+    EtrShowFinPlanAssetDetailInfo.searchDetail(param,url);
+}
+
+parent.EtrExchangeTradeMain = {
+    dialogSelf:dialogSelf
+}
+EtrExchangeTradeMain = {
+    dialogSelf:dialogSelf
+}
