@@ -314,18 +314,6 @@
 		</choose>
 	</update>
 	<select id="selectRskAsset" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT
-		ASSET_CODE id,
-		nvl(ASSET_NAME,ASSET_CODE) text,
-		concat('01,',ASSET_CODE) object
-		FROM
-		RSK_ASSET_INFO /**资产要素表**/
-		WHERE status in ('E', 'M')
-		<if test="search != null and search != ''">
-			and (ASSET_CODE LIKE concat(concat('%',#{search,jdbcType=VARCHAR}),'%')
-			or ASSET_NAME LIKE concat(concat('%',#{search,jdbcType=VARCHAR}),'%'))
-		</if>
-		union all
 		SELECT distinct
 		fp.FINPROD_ID id,
 		fp.FINPROD_NAME text ,
@@ -350,6 +338,18 @@
 				OR (FINPROD_TYPE2 NOT IN ('F01','F06','F10','F32') AND inst.institution_code =#{orgCode}))
 			</if>
 		</where>
+		union all
+		SELECT
+		ASSET_CODE id,
+		nvl(ASSET_NAME,ASSET_CODE) text,
+		concat('01,',ASSET_CODE) object
+		FROM
+		RSK_ASSET_INFO /**资产要素表**/
+		WHERE status in ('E', 'M')
+		<if test="search != null and search != ''">
+			and (ASSET_CODE LIKE concat(concat('%',#{search,jdbcType=VARCHAR}),'%')
+			or ASSET_NAME LIKE concat(concat('%',#{search,jdbcType=VARCHAR}),'%'))
+		</if>
 	</select>
 	<!--取消映射 RSK_VALTBL_PRT_BOTASSET_MAP-->
 	<update id="cancelApplyMapForIntSubject" parameterType="com.joyintech.service.risk.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto">

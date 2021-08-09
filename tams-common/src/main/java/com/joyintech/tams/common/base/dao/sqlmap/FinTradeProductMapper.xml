@@ -52,6 +52,7 @@
         <result column="IS_RUSH_BACK" property="isRushBack" jdbcType="VARCHAR" />
         <result column="CONTRACT_NAME" property="contractName" jdbcType="VARCHAR" />
         <result column="HOLD_PURPOSE" property="holdPurpose" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         FINPROD_ID FINPROD_ID, BRANCH BRANCH, FINPROD_TYPE FINPROD_TYPE, FINPROD_TYPE2 FINPROD_TYPE2, 
@@ -66,7 +67,7 @@
         CONTRACT_NO CONTRACT_NO, ACT_CAP_DAYS ACT_CAP_DAYS, IRS_TYPE IRS_TYPE, EXC_PS EXC_PS, 
         CUR_PAIR CUR_PAIR, EXC_FXS_TERM_TYPE EXC_FXS_TERM_TYPE, USD_AMT USD_AMT, DIF_SETTLE_REF_RATE DIF_SETTLE_REF_RATE, 
         CONFLICT_SOLVE_WAY CONFLICT_SOLVE_WAY, PERIOD_ID PERIOD_ID, IS_RUSH_BACK IS_RUSH_BACK, 
-        CONTRACT_NAME CONTRACT_NAME, HOLD_PURPOSE HOLD_PURPOSE
+        CONTRACT_NAME CONTRACT_NAME, HOLD_PURPOSE HOLD_PURPOSE,DATA_SOURCE DATA_SOURCE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -112,7 +113,7 @@
             CONTRACT_NO, ACT_CAP_DAYS, IRS_TYPE, 
             EXC_PS, CUR_PAIR, EXC_FXS_TERM_TYPE, 
             USD_AMT, DIF_SETTLE_REF_RATE, CONFLICT_SOLVE_WAY, 
-            PERIOD_ID, IS_RUSH_BACK, CONTRACT_NAME, HOLD_PURPOSE
+            PERIOD_ID, IS_RUSH_BACK, CONTRACT_NAME, HOLD_PURPOSE,DATA_SOURCE
             )
         values (#{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{finprodType,jdbcType=VARCHAR}, 
             #{finprodType2,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{branchType,jdbcType=VARCHAR}, 
@@ -130,7 +131,7 @@
             #{excPs,jdbcType=VARCHAR}, #{curPair,jdbcType=VARCHAR}, #{excFxsTermType,jdbcType=VARCHAR}, 
             #{usdAmt,jdbcType=DECIMAL}, #{difSettleRefRate,jdbcType=VARCHAR}, #{conflictSolveWay,jdbcType=VARCHAR}, 
             #{periodId,jdbcType=VARCHAR}, #{isRushBack,jdbcType=VARCHAR}, #{contractName,jdbcType=VARCHAR}, 
-            #{holdPurpose,jdbcType=VARCHAR}
+            #{holdPurpose,jdbcType=VARCHAR},#{dataSource,jdbcType=VARCHAR}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinTradeProduct" >
@@ -286,6 +287,9 @@
             <if test="holdPurpose != null" >
                 HOLD_PURPOSE,
             </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="finprodId != null" >
@@ -438,6 +442,9 @@
             <if test="holdPurpose != null" >
                 #{holdPurpose,jdbcType=VARCHAR},
             </if>
+            <if test="dataSource != null" >
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinTradeProduct" >
@@ -447,7 +454,7 @@
         CALENDAR_ID, TERM_TYPE, COUNTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
         UPDATE_TIME, M_UNIT_CPRICE, M_UNIT_INT, M_UNIT_FPRICE, M_YIELD, M_DELIVERY_TYPE, 
         VPAY_DATE, MPAY_DATE, CONTRACT_NO, ACT_CAP_DAYS, IRS_TYPE, EXC_PS, CUR_PAIR, EXC_FXS_TERM_TYPE, 
-        USD_AMT, DIF_SETTLE_REF_RATE, CONFLICT_SOLVE_WAY, PERIOD_ID, IS_RUSH_BACK, CONTRACT_NAME, HOLD_PURPOSE
+        USD_AMT, DIF_SETTLE_REF_RATE, CONFLICT_SOLVE_WAY, PERIOD_ID, IS_RUSH_BACK, CONTRACT_NAME, HOLD_PURPOSE,DATA_SOURCE
         )
         select FINPROD_ID, BRANCH, FINPROD_TYPE, FINPROD_TYPE2, PROFIT_TYPE, 
             BRANCH_TYPE, CHL_AGRT_ID, PRIN, CCY, VDATE, MDATE, TERM, INT_TYPE, INT_RATE, INT_RATE_ID, 
@@ -455,7 +462,7 @@
             CALENDAR_ID, TERM_TYPE, COUNTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
             #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, M_UNIT_CPRICE, M_UNIT_INT, M_UNIT_FPRICE, M_YIELD, M_DELIVERY_TYPE, 
             VPAY_DATE, MPAY_DATE, CONTRACT_NO, ACT_CAP_DAYS, IRS_TYPE, EXC_PS, CUR_PAIR, EXC_FXS_TERM_TYPE, 
-            USD_AMT, DIF_SETTLE_REF_RATE, CONFLICT_SOLVE_WAY, PERIOD_ID, IS_RUSH_BACK, CONTRACT_NAME, HOLD_PURPOSE
+            USD_AMT, DIF_SETTLE_REF_RATE, CONFLICT_SOLVE_WAY, PERIOD_ID, IS_RUSH_BACK, CONTRACT_NAME, HOLD_PURPOSE,DATA_SOURCE
             
              from FIN_TRADE_PRODUCT
              where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL}
@@ -597,6 +604,9 @@
             </if>
             <if test="holdPurpose != null" >
                 HOLD_PURPOSE = #{holdPurpose,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
             </if>
         </set>
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}

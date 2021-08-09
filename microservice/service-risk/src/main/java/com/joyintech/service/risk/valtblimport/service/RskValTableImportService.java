@@ -136,9 +136,6 @@ public class RskValTableImportService {
             String code=entity2.getSubCode().substring(0, 8);
             String finprodType= null;
             String tradeMarket = null;
-            String type1= null;
-            String type2= null;
-            String type3= null;
             String type6= null;
             String type7= null;
             String type8= null;
@@ -151,9 +148,6 @@ public class RskValTableImportService {
                     //上交所质押式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();//F03
                     tradeMarket=DictCodeListExt1.交易场所_上海证券交易所.getValue();
-                    type1="02";//回购标的类型 BONDREP_TYPE
-                    type2="02";
-                    type3="G03";
                     type6=DictCodeList.回购类型_质押式回购.getValue();
                     type7=DictCodeList.回购拆借方向_正回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_回购.getValue();
@@ -162,9 +156,6 @@ public class RskValTableImportService {
                     //上交所买断式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue();//F05
                     tradeMarket=DictCodeListExt1.交易场所_上海证券交易所.getValue();
-                    type1="04";
-                    type2="02";
-                    type3="G04";
                     type6=DictCodeList.回购类型_买断式回购.getValue();
                     type7=DictCodeList.回购拆借方向_逆回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_买断式回购.getValue();
@@ -177,9 +168,6 @@ public class RskValTableImportService {
                     //银行间质押式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();//F03
                     tradeMarket=DictCodeListExt1.交易场所_银行间.getValue();
-                    type1="02";
-                    type2="01";
-                    type3="G01";
                     type6= DictCodeList.回购类型_质押式回购.getValue();
                     type7=DictCodeList.回购拆借方向_逆回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_回购.getValue();
@@ -188,9 +176,6 @@ public class RskValTableImportService {
                     //银行间买断式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue();//F05
                     tradeMarket=DictCodeListExt1.交易场所_银行间.getValue();
-                    type1="04";
-                    type2="01";
-                    type3="G02";
                     type6=DictCodeList.回购类型_买断式回购.getValue();
                     type7=DictCodeList.回购拆借方向_逆回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_买断式回购.getValue();
@@ -203,9 +188,6 @@ public class RskValTableImportService {
                     //深交所质押式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();//F03
                     tradeMarket=DictCodeListExt1.交易场所_深圳证券交易所.getValue();
-                    type1="02";
-                    type2="03";
-                    type3="G03";
                     type6=DictCodeList.回购类型_质押式回购.getValue();
                     type7=DictCodeList.回购拆借方向_逆回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_回购.getValue();
@@ -213,9 +195,6 @@ public class RskValTableImportService {
                     //深交所买断式逆回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue();//F05
                     tradeMarket=DictCodeListExt1.交易场所_深圳证券交易所.getValue();
-                    type1="04";
-                    type2="03";
-                    type3="G04";
                     type6=DictCodeList.回购类型_买断式回购.getValue();
                     type7=DictCodeList.回购拆借方向_逆回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_买断式回购.getValue();
@@ -228,8 +207,6 @@ public class RskValTableImportService {
                     //上交所卖出质押式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue();//F02
                     tradeMarket=DictCodeListExt1.交易场所_上海证券交易所.getValue();
-                    type1="01";
-                    type2="02";
                     type6=DictCodeList.回购类型_质押式回购.getValue();
                     type7=DictCodeList.回购拆借方向_正回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_回购.getValue();
@@ -238,8 +215,6 @@ public class RskValTableImportService {
                     //上交所卖出买断式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue();//F04
                     tradeMarket=DictCodeListExt1.交易场所_上海证券交易所.getValue();
-                    type1="03";
-                    type2="02";
                     type6=DictCodeList.回购类型_买断式回购.getValue();
                     type7=DictCodeList.回购拆借方向_正回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_买断式回购.getValue();
@@ -252,8 +227,6 @@ public class RskValTableImportService {
                     //银行间卖出质押式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue();//F02
                     tradeMarket=DictCodeListExt1.交易场所_银行间.getValue();
-                    type1="01";
-                    type2="01";
                     type6=DictCodeList.回购类型_质押式回购.getValue();
                     type7=DictCodeList.回购拆借方向_正回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_回购.getValue();
@@ -262,8 +235,6 @@ public class RskValTableImportService {
                     //银行间卖出买断式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue();//F04
                     tradeMarket=DictCodeListExt1.交易场所_银行间.getValue();
-                    type1="03";
-                    type2="01";
                     type6=DictCodeList.回购类型_买断式回购.getValue();
                     type7=DictCodeList.回购拆借方向_正回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_买断式回购.getValue();
@@ -277,8 +248,6 @@ public class RskValTableImportService {
                     //深交所卖出质押式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue();//F02
                     tradeMarket=DictCodeListExt1.交易场所_深圳证券交易所.getValue();
-                    type1="01";
-                    type2="03";
                     type6=DictCodeList.回购类型_质押式回购.getValue();
                     type7=DictCodeList.回购拆借方向_正回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_回购.getValue();
@@ -287,8 +256,6 @@ public class RskValTableImportService {
                     //深交所卖出买断式回购
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue();//F04
                     tradeMarket=DictCodeListExt1.交易场所_深圳证券交易所.getValue();
-                    type1="03";
-                    type2="03";
                     type6=DictCodeList.回购类型_买断式回购.getValue();
                     type7=DictCodeList.回购拆借方向_正回购.getValue();
                     type8= BussinessDictCodeList.平安资产类型_买断式回购.getValue();
@@ -309,6 +276,7 @@ public class RskValTableImportService {
                 ftp.setCreateDept(CommonUtil.getDeptCode());
                 ftp.setCreateTime(DateUtil.now());
                 ftp.setUpdateTime(DateUtil.now());
+                ftp.setDataSource(DictCodeListExt1.生成方式_接口接入.getValue());
                 finTradeProductMapper.insert(ftp);
 
                 FinProductType fpt=new FinProductType();
@@ -340,9 +308,6 @@ public class RskValTableImportService {
                 }
                 fpt.setFinprodId(entity2.getFinprodId());
                 fpt.setBranch(0L);
-                fpt.setType1(type1);
-                fpt.setType2(type2);
-                fpt.setType3(type3);
                 fpt.setType6(type6);
                 fpt.setType7(type7);
                 fpt.setType8(type8);

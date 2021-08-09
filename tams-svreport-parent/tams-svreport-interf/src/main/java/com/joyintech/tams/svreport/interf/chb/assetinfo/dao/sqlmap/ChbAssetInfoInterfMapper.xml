@@ -7397,6 +7397,7 @@
         WHERE 1 = 1
         and fp.branch = 0
         and fp.finprod_type2 in ('F02', 'F03', 'F04', 'F05')
+        and (fp.data_source is null or fp.data_source!='01')
 		   <!-- add by zhangliang 20201210 回购的数据需要排除上面union all 的 REP_ASSET_INTER_LEND信息，以此段sql为准  start-->
             and not exists (select 1 from REP_ASSET_INTER_LEND repLend
                                         left JOIN REP_ASSET_DEPT ASSET on repLend.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -12494,6 +12495,7 @@
         WHERE 1 = 1
         and fp.branch = 0
         and fp.finprod_type2 in ('F02', 'F03', 'F04', 'F05')
+        and (fp.data_source is null or fp.data_source!='01')
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(fp.UPDATE_TIME,fp.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
