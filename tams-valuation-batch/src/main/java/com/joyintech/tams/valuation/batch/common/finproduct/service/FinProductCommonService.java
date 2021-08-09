@@ -580,6 +580,9 @@ public class FinProductCommonService {
                     BigDecimal day = ArithmeticUtil.divide(new BigDecimal(day1), new BigDecimal(day2));
                     BigDecimal priceAdd = ArithmeticUtil.multiply(day,
                         ArithmeticUtil.subtract(new BigDecimal(100), targetFinProduct.getIssuePrice()));
+                    if(marketPrice ==null || marketPrice.compareTo(BigDecimal.ZERO)==0){
+                        marketPrice =targetFinProduct.getIssuePrice();
+                    }
                     marketPrice = ArithmeticUtil.doAdd(marketPrice, priceAdd);
                     // 市价Dto.市价净价 = 变量.市价净价
                 }
