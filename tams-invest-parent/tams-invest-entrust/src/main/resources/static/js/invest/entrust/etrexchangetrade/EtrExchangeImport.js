@@ -163,11 +163,22 @@
         , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt', width: 120, type:'number',sortable: false}
         , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
-        , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false}
+        // , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false}
+        , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false ,
+            editOption: {
+                type: 'select',
+                id: 'counterId',
+                multiple: false,
+                showField: 'text',
+                searchable: true,
+                url: JoyinUtil.getRealPath('/invest/entrust/etrexchangetrade/EtrExchangeTrade001/selectCounterIdByCounterType')
+            }
+        }
         , {field: 'seatId', title: 'EtrExchangeTrade001.seatId', width: 120, sortable: false}
         , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
         , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//委托开始日
+        , {field: 'secAcctId',visible: false}
     ];
 
     //固定收益指令
@@ -177,6 +188,7 @@
         , {field: 'acctNo', title: 'EtrExchangeTrade001.acctNo', width: 150, sortable: false}
         , {field: 'finprodId', title: 'EtrExchangeTrade001.finprodId', width: 120, sortable: false}
         , {field: 'psStr', title: 'EtrExchangeTrade001.ps', width: 150, sortable: false}
+        , {field: 'settleSpreedName', title: 'EtrExchangeTrade001.settleSpreed', width: 150, sortable: false}
         , {field: 'priceModelStr', title: 'EtrExchangeTrade003.priceModel',sortable : false, width: 120,edit: false}
         , {field: 'declaTypeStr', title: 'EtrExchangeTrade001.priceModel2',sortable : false, width: 120,edit: false}
         , {field: 'entrustPrice', title: 'EtrExchangeTrade003.price', width:100, type:'number', digit : 3, sortable: false,

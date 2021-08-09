@@ -1,5 +1,6 @@
 package com.joyintech.service.trade.cstptrdmatchinfo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.joyintech.tams.common.base.entity.TrdMatchInfo;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @ClassName TrdMatchInfoService
@@ -125,5 +127,19 @@ public class CstpTrdMatchInfoService extends BaseService<CstpTrdMatchInfoDto> {
 			return true;
 		}
 		return false;
+	}
+
+	public String getOurdepositaccountnumber(Map<String,Object> map) throws Exception{
+		return cstpTrdMatchInfoMapper.getOurdepositaccountnumber(map);
+	}
+
+	public CstpTrdMatchInfoDto getFeeSetting(Map<String,Object> map) throws Exception{
+		return cstpTrdMatchInfoMapper.getFeeSetting(map);
+	}
+	public List<CstpTrdMatchInfoDto> getCstpInfo(Map<String,Object> map) throws Exception{
+		List<CstpTrdMatchInfoDto> pageLimit = new ArrayList<CstpTrdMatchInfoDto>();
+		pageLimit =  cstpTrdMatchInfoMapper.getCstpInfo(map);
+		finprodType2PinAn(pageLimit);
+		return pageLimit;
 	}
 }

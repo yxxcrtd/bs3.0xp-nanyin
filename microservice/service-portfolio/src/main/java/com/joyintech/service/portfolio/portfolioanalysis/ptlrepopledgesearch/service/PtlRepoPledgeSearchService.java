@@ -90,15 +90,15 @@ public class PtlRepoPledgeSearchService extends BaseService<PtlRepoPledgeSearchD
          // add by wangyang1 【吉林银行】 增加 产品经理  end
         // add by swwan 【重庆银行】 增加 业务类型  2021年7月22日 start
         if(StringUtil.isNotEmpty(pageParam.get("busiType"))){
-            pageParam.put("busiTypeList", StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("busiType").toString()));
+            List<String> busiTypeList = StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("busiType").toString());
+            if (busiTypeList.contains("BZQRK")) {
+                busiTypeList.add("标准债");
+                busiTypeList.remove("BZQRK");
+            }
+            pageParam.put("busiTypeList", busiTypeList);
         }
         if(StringUtil.isNotEmpty(pageParam.get("counter"))){
-            List<String> counterList = StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("counter").toString());
-            if (counterList.contains("BZQRK")) {
-                counterList.add("标准债");
-                counterList.remove("BZQRK");
-            }
-            pageParam.put("counterList", counterList);
+            pageParam.put("counterList", StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("counter").toString()));
         }
         // add by swwan 【重庆银行】 增加 业务类型  2021年7月22日 end
         pageParam.put("BACK_LEND_DIRECTION_03", DictCodeList.回购拆借方向_正回购.getValue());

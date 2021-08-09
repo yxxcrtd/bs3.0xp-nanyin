@@ -27,4 +27,10 @@ public interface UpdateTraderMapper {
 	 * @return
 	 */
 	int selectCustomer02(Map<String, Object> map);
+
+	/**
+	 * 查询在主机构代码
+	 * @return
+	 */
+	MstCfetsCustomerInfo selectInfo(String batchDate);
 }

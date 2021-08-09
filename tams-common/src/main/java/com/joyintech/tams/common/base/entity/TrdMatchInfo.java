@@ -63,6 +63,18 @@ public class TrdMatchInfo extends BaseEntity {
     private BigDecimal matchNumSc;
 
     /**
+     * 交易手续费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal procedureAmt;
+
+    /**
+     * 结算手续费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal settleAmt;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -221,5 +233,37 @@ public class TrdMatchInfo extends BaseEntity {
      */
     public void setMatchNumSc(BigDecimal matchNumSc) {
         this.matchNumSc = matchNumSc;
+    }
+
+    /**
+     * 取得 交易手续费
+     * @return 交易手续费
+     */
+    public BigDecimal getProcedureAmt() {
+        return procedureAmt;
+    }
+
+    /**
+     * 设置 交易手续费
+     * @param procedureAmt 交易手续费
+     */
+    public void setProcedureAmt(BigDecimal procedureAmt) {
+        this.procedureAmt = procedureAmt;
+    }
+
+    /**
+     * 取得 结算手续费
+     * @return 结算手续费
+     */
+    public BigDecimal getSettleAmt() {
+        return settleAmt;
+    }
+
+    /**
+     * 设置 结算手续费
+     * @param settleAmt 结算手续费
+     */
+    public void setSettleAmt(BigDecimal settleAmt) {
+        this.settleAmt = settleAmt;
     }
 }

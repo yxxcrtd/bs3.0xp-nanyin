@@ -8,6 +8,7 @@ import com.joyintech.tams.common.base.entity.TrdMatchInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,7 +27,6 @@ public class CstpTrdMatchInfoController {
     @ResponseBody
     @PostMapping("findPage/{page}/{length}")
     public Page<CstpTrdMatchInfoDto> findPage(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
-
         return cstpTrdMatchInfoService.findPage(page, length, map);
     }
     
@@ -35,5 +35,23 @@ public class CstpTrdMatchInfoController {
     public boolean deleteTrdPledgeMatchInfo(@RequestBody TrdMatchInfo trdMatchInfo) throws Exception{
 
         return cstpTrdMatchInfoService.deleteTrdPledgeMatchInfo(trdMatchInfo);
+    }
+
+    @ResponseBody
+    @PostMapping("getOurdepositaccountnumber")
+    public String getOurdepositaccountnumber(@RequestBody Map<String,Object> map) throws Exception{
+        return cstpTrdMatchInfoService.getOurdepositaccountnumber(map);
+    }
+
+    @ResponseBody
+    @PostMapping("getFeeSetting")
+    public CstpTrdMatchInfoDto getFeeSetting(@RequestBody Map<String,Object> map) throws Exception{
+        return cstpTrdMatchInfoService.getFeeSetting(map);
+    }
+
+    @ResponseBody
+    @PostMapping("getCstpInfo")
+    public List<CstpTrdMatchInfoDto> getCstpInfo(@RequestBody Map<String,Object> map) throws Exception{
+        return cstpTrdMatchInfoService.getCstpInfo(map);
     }
 }

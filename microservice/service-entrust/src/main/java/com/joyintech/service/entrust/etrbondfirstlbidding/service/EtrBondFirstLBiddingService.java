@@ -601,6 +601,11 @@ public class EtrBondFirstLBiddingService extends BaseService<EtrBondFirstLBiddin
         return mstCounterParty==null?"":mstCounterParty.getCounterName();
     }
 
+    public String isCounterName(String counterName){
+        MstCounterParty mcp = mapper.isCounterName(counterName);
+        return mcp == null?"":mcp.getCounterName();
+    }
+
     /**
      * 验证债券是否截标
      * @param dto

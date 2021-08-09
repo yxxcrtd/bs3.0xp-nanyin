@@ -1942,7 +1942,7 @@ public class EtrExchangeTradeService extends BaseService{
             etrBondFxdIncmPlatSHDto.setCalMode(dto.getCalculateField());// 计算方式
             etrBondFxdIncmPlatSHDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
             etrBondFxdIncmPlatSHDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
-            etrBondFxdIncmPlatSHDto.setSettleSpreed(Long.parseLong(dto.getSettleSpeed()));//清算速度
+            etrBondFxdIncmPlatSHDto.setSettleSpreed(StringUtil.isNotEmpty(dto.getSettleSpeed())?Long.parseLong(dto.getSettleSpeed()):0L);//清算速度
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBondFxdIncmPlatSHDto);
             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBondFxdIncmPlatSHDto);
         }

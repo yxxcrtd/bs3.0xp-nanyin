@@ -93,7 +93,7 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 			if (!StringUtil.isNotEmpty(dto.getAcctNo())) {
 				errorList.add(new ValidMessage("acctNo", this.getMessage("ETR_ERROR_0020")));
 			}
-			if (!StringUtil.isNotEmpty(dto.getStockId())) {
+			if (!StringUtil.isNotEmpty(dto.getStockId())&&!StringUtil.isNotEmpty(dto.getFinprodId())) {
 				errorList.add(new ValidMessage("stockId", this.getMessage("ETR_ERROR_0016")));
 			}
 			if (!StringUtil.isNotEmpty(dto.getPs())) {

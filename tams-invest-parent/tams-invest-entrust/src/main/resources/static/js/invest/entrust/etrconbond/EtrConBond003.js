@@ -107,6 +107,20 @@
      * @returns
      */
     function saveOrSubmit(operateType) {
+        //风险试算 start
+        var s;
+        if(BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+            if(!s && s != ''){
+                return;
+            }
+            /* del by zhangrui1 批量导入数据不会变更不需要检验变化 start
+            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+                return;
+            }
+               del by zhangrui1 批量导入数据不会变更不需要检验变化 end */
+        }
+        //风险试算 end
         //校验数据  校验表格
         var tableData = table.getAllRows();
         if (tableData.length == 0) {
@@ -132,17 +146,21 @@
         }
         var allDto = {};
         allDto.importFlow = true;
+        allDto.operateType = operateType;
         allDto.selectedItem = objects;
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrconbond/EtrConBond003/check', allDto,
-            function (result) {
-                Joyin.confirm(result.data, function () {
-                    if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrconbond/EtrConBond003/save', allDto, "EtrConBond002_btn_save",'EtrConBond002');
-                    } else {
-                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrconbond/EtrConBond003/save', allDto, "EtrConBond002_btn_submit",'EtrConBond002');
-                    }
+        allDto.riskTrialRetDto = object.riskTrialRetDto;
+        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', allDto, function(result1) {
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrconbond/EtrConBond003/check', allDto,
+                function (result) {
+                    Joyin.confirm(result.data, function () {
+                        if (operateType === 'save') {
+                            WorkFlow.doSaveList(basePath + 'invest/entrust/etrconbond/EtrConBond003/save', allDto, "EtrConBond002_btn_save",'EtrConBond002');
+                        } else {
+                            WorkFlow.doSubmitList(basePath + 'invest/entrust/etrconbond/EtrConBond003/save', allDto, "EtrConBond002_btn_submit",'EtrConBond002');
+                        }
+                    });
                 });
-            });
+        })
     }
     
     /**
@@ -150,7 +168,23 @@
      */
     $('#EtrConBond003_btn_riskcal').click(function(){
     	//window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-        $("#riskMathFlag").val("02");
+        var object = $.serializeToObject('#searchForm').selectedItem;
+        var checkParam = {};
+        checkParam.data = getriskdata();
+        var param = [];
+        if (checkParam.data.length > 0) {
+            for(var index in checkParam.data){
+                var item = checkParam.data[index];
+                item.data.ps = object[index].ps;
+                item.data.portfolioId = object[index].portfolioId;
+                item.data.finprodId = object[index].finprodId;
+                item.data.assetCode = object[index].finprodId;
+                item.data.purchBondTotal = item.data.tradeAmount;
+                item.data.counterId = item.data.counterId;
+                param.push(item.data);
+            }
+        }
+        window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F01',param,checkParam);
     });
     
     /**

@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -158,7 +162,7 @@ public class EtrFund001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("recall")
-    public AjaxResult recallDelegate(@RequestBody EtrFundDto dto) {
+    public AjaxResult recallDelegate(@RequestBody EtrFundDto dto) throws Exception{
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         List<EtrFundDto> list = dto.getSelectedItem();
@@ -170,6 +174,12 @@ public class EtrFund001Controller extends BaseController{
                 ajaxResult.setErrorList(errorList);
             }
         }
+        // add by yushilong 批量撤销预占 start
+        if (CollectionUtils.isEmpty(ajaxResult.getErrorList())) {
+            EntrustRdsCommonAop.doListPreOccupy(list, DictCodeList.平安资产类型_基金.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+        }
+        // add by yushilong 批量撤销预占 end
         return ajaxResult;
     }
     /**
@@ -182,18 +192,30 @@ public class EtrFund001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("close")
-    public AjaxResult closeDelegate(@RequestBody EtrFundDto dto) {
+    public AjaxResult closeDelegate(@RequestBody EtrFundDto dto) throws Exception{
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         List<EtrFundDto> list = dto.getSelectedItem();
+        // add by zhangrui1 批量委托关闭 start
+        List<String> entrustIdList = new ArrayList<>();
+        // add by zhangrui1 批量委托关闭 end
         for(EtrFundDto etrFundDto:list){
             if(eteFundService.closeDelegate(etrFundDto.getEntrustId(), etrFundDto.getCloseWay())){
                 ajaxResult.setMessage(this.getMessage("ETR_X_003"));
+                // add by yushilong 批量委托关闭 start
+                entrustIdList.add(etrFundDto.getEntrustId());
+                // add by yushilong 批量委托关闭 end
             }else{
                 errorList.add(new ValidMessage(getMessage("组合代码:"+etrFundDto.getPortfolioId())+"委托关闭失败"));
                 ajaxResult.setErrorList(errorList);
             }
         }
+        // add by zhangrui1 批量委托关闭 start
+        // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
+        if (!CollectionUtils.isEmpty(entrustIdList)) {
+            EntrustCompleteUtil.doComplete(entrustIdList);
+        }
+        // add by zhangrui1 批量委托关闭 end
         return ajaxResult;
     }
     
@@ -208,7 +230,7 @@ public class EtrFund001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult deleteDelegate(@RequestBody EtrFundDto dto) {
+    public AjaxResult deleteDelegate(@RequestBody EtrFundDto dto) throws Exception{
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         List<EtrFundDto> list = dto.getSelectedItem();
@@ -219,6 +241,10 @@ public class EtrFund001Controller extends BaseController{
                 errorList.add(new ValidMessage(getMessage("组合代码:"+etrFundDto.getPortfolioId())+"委托删除失败"));
             }
         }
+        // add by yushilong 批量撤销预占 start
+        EntrustRdsCommonAop.doListPreOccupy(list, DictCodeList.平安资产类型_基金.getValue(),
+                BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+        // add by yushilong 批量撤销预占 end
         ajaxResult.setErrorList(errorList);
         return ajaxResult;
     }

@@ -81,51 +81,51 @@
             parent.EtrIbBondinfoHq.queryAmountInfoMuti(finprodIdhid,portfolioIds,chlFinprodId,query('#ccy').val(),sysDateT1, query('#calendarId').val());
             parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,query('#ccy').val(),query('#vdate').val(),query('#price').val());
 
-            let ccy = query('#ccy').val();
-            let vdate = query('#vdate').val();
-            let calId = query('#calendarId').val();
-            let finprodId = query("#finprodIdhid").val();
-
-            var leftPositionData = {
-                proAvailableCash:Number(0),
-                proAvailableCashT1:Number(0),
-                secManageAvailablePosition:Number(0),
-                secManageAvailablePositionT1:Number(0),
-                assetPositionEntrustAmt:Number(0),
-                assetAvailableEntrustAmt:Number(0)
-            };
-            var datas = table.getAllRows();
-            for (var i in datas) {
-                if (datas[i].portfolioId !== '' && datas[i].portfolioId !== undefined) {
-                    var params = {
-                        portfolioId:datas[i].portfolioId,
-                        ccy:ccy,
-                        vdate:vdate,
-                        calId:calId,
-                        finprodId:finprodId
-                    };
-                    Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', params,
-                        function (result) {
-                            if (result) {
-                                // 组合T日可用现金
-                                if (result.proAvailableCash) leftPositionData.proAvailableCash += Number(result.proAvailableCash);
-                                // 组合T+1日可用现金
-                                if(result.proAvailableCashT1) leftPositionData.proAvailableCashT1 += Number(result.proAvailableCashT1);
-                                // 托管户T日可用现金
-                                if(result.secManageAvailablePosition) leftPositionData.secManageAvailablePosition += Number(result.secManageAvailablePosition);
-                                // 托管户T+1日可用现金
-                                if(result.secManageAvailablePositionT1) leftPositionData.secManageAvailablePositionT1+= Number(result.secManageAvailablePositionT1);
-
-                                if (result) {
-                                    if(result.assetPositionEntrustAmt) leftPositionData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
-                                    if(result.assetAvailableEntrustAmt) leftPositionData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
-                                }
-                            }
-                            // 左边联动
-                            parent.EtrIbBondinfoHq.viewPositionInfo(leftPositionData);
-                        });
-                }
-            }
+            // let ccy = query('#ccy').val();
+            // let vdate = query('#vdate').val();
+            // let calId = query('#calendarId').val();
+            // let finprodId = query("#finprodIdhid").val();
+            //
+            // var leftPositionData = {
+            //     proAvailableCash:Number(0),
+            //     proAvailableCashT1:Number(0),
+            //     secManageAvailablePosition:Number(0),
+            //     secManageAvailablePositionT1:Number(0),
+            //     assetPositionEntrustAmt:Number(0),
+            //     assetAvailableEntrustAmt:Number(0)
+            // };
+            // var datas = table.getAllRows();
+            // for (var i in datas) {
+            //     if (datas[i].portfolioId !== '' && datas[i].portfolioId !== undefined) {
+            //         var params = {
+            //             portfolioId:datas[i].portfolioId,
+            //             ccy:ccy,
+            //             vdate:vdate,
+            //             calId:calId,
+            //             finprodId:finprodId
+            //         };
+            //         Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', params,
+            //             function (result) {
+            //                 if (result) {
+            //                     // 组合T日可用现金
+            //                     if (result.proAvailableCash) leftPositionData.proAvailableCash += Number(result.proAvailableCash);
+            //                     // 组合T+1日可用现金
+            //                     if(result.proAvailableCashT1) leftPositionData.proAvailableCashT1 += Number(result.proAvailableCashT1);
+            //                     // 托管户T日可用现金
+            //                     if(result.secManageAvailablePosition) leftPositionData.secManageAvailablePosition += Number(result.secManageAvailablePosition);
+            //                     // 托管户T+1日可用现金
+            //                     if(result.secManageAvailablePositionT1) leftPositionData.secManageAvailablePositionT1+= Number(result.secManageAvailablePositionT1);
+            //
+            //                     if (result) {
+            //                         if(result.assetPositionEntrustAmt) leftPositionData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
+            //                         if(result.assetAvailableEntrustAmt) leftPositionData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
+            //                     }
+            //                 }
+            //                 // 左边联动
+            //                 parent.EtrIbBondinfoHq.viewPositionInfo(leftPositionData);
+            //             });
+            //     }
+            // }
         },
         exerYield_setDisabled : function(isDisabled){
             // 行权收益率可用判断通用设置
@@ -134,7 +134,7 @@
                 exerYield.val('').attr('disabled', true).removeAttr("required");
                 query('#calculateField_exerYield').prop('checked', false).attr('disabled', true);
             }else{
-                if(query("#isRight").val() !== N && query("#priceModel").val() !== PRICEMODEL_03){
+                if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
                     // 含权债或为空 且 价格模式不是市价
                     exerYield.val('').attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
                     query('#calculateField_exerYield').val('').attr('disabled', false);
@@ -408,7 +408,6 @@
                 type: 'select',
                 id: 'portfolioId',
                 parentIds:'portfolioSeries',
-                /*childrenIds : 'portfolioId',*/
                 multiple: false,
                 showField: 'text',
                 searchable: true,
@@ -434,12 +433,13 @@
             type: 'number',
             digit: 2
         }, {/*证券账户*/
-            field: 'secAcct',
+            field: 'secManageAcctId',
             width: 100,
             title: 'EtribBondInfo003.secAcct',
             edit:true,
             sortable: false,
-            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId', multiple: false, showField:'text',searchable: true,
+            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId',
+                multiple: false, showField:'text',searchable: true,
                 url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
             }
         },  {/*投资目的*/
@@ -551,7 +551,25 @@
         doOther.leftHqReload();
     });
 
+
+    window.componentLoadCallback = function(isDone, pagePath, params) {
+        if (isDone) {
+            // 代办事项中 行权收益率置灰问题
+            let exerYield = query('#exerYield');
+            exerYield.attr('disabled', true).removeAttr("required");
+            query('#calculateField_exerYield').attr('disabled', true);
+            if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
+                // 含权债或为空 且 价格模式不是市价
+                exerYield.attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
+                query('#calculateField_exerYield').val('').attr('disabled', false);
+            }
+        }
+    };
+
+
     var init = function () {
+        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
+            '0.0000%' +"</span>";
         table.reload();
         if(calculateField){
             query("#calculateField_" + calculateField).attr("checked", true);
@@ -750,6 +768,7 @@
             tradeMarket = temp.tradeMarket;
             temp.entrustId = item.entrustId;
             ps = temp.ps;
+            temp.settleAmt = item.settleAmt;
             temp.invAim = item.invAim;
             temp.secAcctId = item.secManageAcctId;
             temp.proAvailableCash = item.proAvailableCash;
@@ -1171,7 +1190,8 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
-        document.getElementById('deviationDegree').innerHTML ="";
+        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
+            '0.0000%' +"</span>";
         if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
             return;
         }
@@ -1184,9 +1204,6 @@
                 if (result ) {
                     document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
                             JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
-                }else{
-                    document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-                        '0.0000%' +"</span>";
                 }
             });
     }
@@ -1261,7 +1278,7 @@
                     var data = result.data;
                     if (data.price) {
                         query("#price").val(data.price).trigger("blur");
-                        query("#fpriceAmt").val(data.unitFprice).trigger("change");
+                        query("#fpriceAmt").val(data.unitFprice).trigger("blur");
                     } else {
                         query("#price").val("");
                         query("#fpriceAmt").val("");

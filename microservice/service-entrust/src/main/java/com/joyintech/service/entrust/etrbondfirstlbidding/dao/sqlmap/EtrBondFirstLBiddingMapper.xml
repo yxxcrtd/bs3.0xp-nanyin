@@ -647,4 +647,39 @@
 			OR CUSTOMER_ABBR LIKE CONCAT(CONCAT('%',#{search}),'%'))
 		</if>
 	</select>
+
+	<!--场内债券一级指令 导入时  获取交易对手名称-->
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstCounterParty" >
+		<id column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
+		<result column="COUNTER_TYPE" property="counterType" jdbcType="VARCHAR" />
+		<result column="COUNTER_NAME" property="counterName" jdbcType="VARCHAR" />
+		<result column="LINK_ID" property="linkId" jdbcType="VARCHAR" />
+		<result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+		<result column="HEAD_BANK" property="headBank" jdbcType="VARCHAR" />
+		<result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+		<result column="CONTACT_WAY" property="contactWay" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="LINK_DEPT_CODE" property="linkDeptCode" jdbcType="VARCHAR" />
+		<result column="P_TYPE_ONE" property="pTypeOne" jdbcType="VARCHAR" />
+		<result column="P_TYPE_TWO" property="pTypeTwo" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+		COUNTER_ID COUNTER_ID, COUNTER_TYPE COUNTER_TYPE, COUNTER_NAME COUNTER_NAME, LINK_ID LINK_ID,
+        MANAGER_ID MANAGER_ID, HEAD_BANK HEAD_BANK, CONTACT CONTACT, CONTACT_WAY CONTACT_WAY,
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, LINK_DEPT_CODE LINK_DEPT_CODE,
+        P_TYPE_ONE P_TYPE_ONE, P_TYPE_TWO P_TYPE_TWO
+	</sql>
+	<select id="isCounterName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+		<include refid="com.joyintech.tams.common.base.dao.MstCounterPartyMapper.Base_Column_List" />
+		from MST_COUNTER_PARTY
+		where COUNTER_NAME = #{counterName,jdbcType=VARCHAR}
+	</select>
+
 </mapper>

@@ -85,6 +85,9 @@ public class UpdateTraderService {
                             bussinessCodeParameter) : IDGenerator.generate());
                     mstCounterParty.setCounterType(DictCodeListExt1.交易对手类型_资管产品.getValue());
                     mstCounterParty.setCounterName(mstCfetsCustomerInfo.getPartyName());
+                    //获取主机构代码
+                    MstCfetsCustomerInfo temp = updateTraderMapper.selectInfo(mstCfetsCustomerInfo.getPartyId());
+                    mstCounterParty.setManagerId(temp.getPartyCustomerId());
                     mstCounterPartyMapper.insertSelective(mstCounterParty);
                 }
                 if(temp02 > 0){

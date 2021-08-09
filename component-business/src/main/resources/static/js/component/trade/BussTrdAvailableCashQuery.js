@@ -46,7 +46,7 @@
                 && params.calendarId && params.ccy && params.tradeDate){
             params.acctTypeList = ACCT_TYPE_A01 + "," + ACCT_TYPE_A07;
             debugger;
-            if(bondFirstSign){
+            if(typeof(bondFirstSign) != 'undefined' && bondFirstSign){
                 params.bondFirstSign = bondFirstSign;
             }
             if(entrustId){

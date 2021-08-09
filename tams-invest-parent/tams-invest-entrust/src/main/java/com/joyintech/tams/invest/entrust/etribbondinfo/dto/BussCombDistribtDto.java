@@ -88,6 +88,33 @@ public class BussCombDistribtDto {
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal assetAvailableEntrustAmt;
 
+    /**
+     *  结算金额
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal settleAmt;
+
+    /**
+     * 证券账户
+     */
+    private String secManageAcctId;
+
+    public BigDecimal getSettleAmt() {
+        return settleAmt;
+    }
+
+    public void setSettleAmt(BigDecimal settleAmt) {
+        this.settleAmt = settleAmt;
+    }
+
+    public String getSecManageAcctId() {
+        return secManageAcctId;
+    }
+
+    public void setSecManageAcctId(String secManageAcctId) {
+        this.secManageAcctId = secManageAcctId;
+    }
+
     public String getEntrustId() {
         return entrustId;
     }

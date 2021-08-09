@@ -1,10 +1,13 @@
 package com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinDealPledge;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -349,7 +352,25 @@ public class PtlRepoPledgeSearchDto extends FinDealPledge {
     }
 
     public String getFinprodType2Name() {
-        return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用,getFinprodType2())==null?getFinprodType2():SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用,getFinprodType2());
+        String name = StringUtil.EMPTY;
+        switch (getFinprodType2()) {
+            case "F02":
+                name = "质押式正回购的质押券";
+                break;
+            case "F04":
+                name = "买断式正回购的融出券";
+                break;
+            case "标准券":
+                name = "标准券入库的券";
+                break;
+            case "F15":
+                name = "债券借贷的融出券";
+                break;
+            case "F29":
+                name = "债券借贷融入的质押券";
+                break;
+        }
+        return name;
     }
 
     public void setFinprodType2Name(String finprodType2Name) {

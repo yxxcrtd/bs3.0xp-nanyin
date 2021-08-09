@@ -6,7 +6,13 @@ var table;
         if($('#windtypeone').val() && $('#windtypeone').val() != ''){
             obj.assetSecType = $('#windtypeone').val();
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {valDate:['settleDate','TrdPlanRateInvestTrade002.settleDate'],portfolioCode:['portfolioId','TrdConBond003.portfolioId'],tradeAmount:['winlotteryAmt','TrdConBond001.winlotteryAmt'],assetType:['windtypeone','TrdConBond003.windtypeone'],tradeDirection:['ps','TrdLendInvestTrade002.ps'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
     function saveOrSubmit(operateType) {

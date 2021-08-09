@@ -1477,7 +1477,6 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             if (refundRate != null){
                 paTrdFinDealTotal.setRefundRate(refundRate.divide(new BigDecimal(100)));
             }
-            paTrdFinDealTotal.setRefundRate(entity.getRefundRate());
             // 新增 返款金额 、返款利率 by caozhenming 20210803 end
             paTrdFinProductDealTotalMapper.insertSelective(paTrdFinDealTotal);
 

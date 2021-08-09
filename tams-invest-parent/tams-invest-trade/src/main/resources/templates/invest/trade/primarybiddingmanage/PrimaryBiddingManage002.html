@@ -77,9 +77,10 @@
                                             th:text="#{PrimaryBiddingManage002.allBidPrinAmt}">汇总投标券面总额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input disabled type="text" id="allBidPrinAmt" name="allBidPrinAmt"
-                                            class="layui-input form-input"
+                                            class="layui-input form-input" data-textrange="4"
                                             th:placeholder="#{SysCommon.placeholder}"
                                                th:value="${entity?.allBidPrinAmt}">
+                                        <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
                             </div>

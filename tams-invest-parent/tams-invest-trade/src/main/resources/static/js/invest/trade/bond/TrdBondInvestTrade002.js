@@ -32,7 +32,13 @@ var table;
         if($('#windtypeone').val() && $('#windtypeone').val() != ''){
             obj.assetSecType = $('#windtypeone').val();
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {valDate:['settleDate','TrdPlanRateInvestTrade002.settleDate'],portfolioCode:['portfolioId','TrdBondInvestTrade002.portfolioId'],tradeAmount:['fpriceAmt','TrdBondInvestTrade002.fpriceAmt'],assetType:['windtypeone','TrdBondInvestTrade002.windtypeone'],tradeDirection:['ps','TrdLendInvestTrade002.ps'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
     function saveOrSubmit(operateType) {
@@ -2573,7 +2579,11 @@ var table;
             
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/1/RSK002/F01',object,getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 end----------
-            window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());
+            // add by etliu 20210129 start
+            if (object.isSkipRisk != 'Y') {
+                window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());
+            }
+            // add by etliu 20210129 end
 
         })
         if($("#finprodId").val()){

@@ -179,6 +179,19 @@ public class EtrFinProductDto {
      */
     private BigDecimal gzRate;
 
+    /**
+     * 担保人
+     */
+    private String sponsorName;
+
+    public String getSponsorName() {
+        return sponsorName;
+    }
+
+    public void setSponsorName(String sponsorName) {
+        this.sponsorName = sponsorName;
+    }
+
     public String getPortfolioId() {
         return portfolioId;
     }
