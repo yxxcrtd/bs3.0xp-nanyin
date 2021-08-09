@@ -2157,7 +2157,7 @@
         ASSET_NAME text
         from (
         SELECT
-        ASSET_CODE,ASSET_NAME
+        ASSET_CODE,NVL(ASSET_NAME,ASSET_CODE) ASSET_NAME
         FROM CHB_ASSET_INFO ASSETINFO
         <where>
             1=1
@@ -2176,7 +2176,7 @@
         union all
 
         SELECT
-        ASSET_CODE,ASSET_NAME
+        ASSET_CODE,NVL(ASSET_NAME,ASSET_CODE) ASSET_NAME
         FROM CHB_ASSET_INFO_ERRODATA data
         <where>
             <if test="search != null and search != ''">
