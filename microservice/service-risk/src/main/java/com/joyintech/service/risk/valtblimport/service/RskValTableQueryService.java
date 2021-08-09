@@ -22,8 +22,7 @@ public class RskValTableQueryService extends BaseService<RskValtblAssetSumDto> {
     private RskValTableQueryMapper rskValTableQueryMapper;
 
 
-    public Page<RskValtblAssetSumDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-    {
+    public Page<RskValtblAssetSumDto> selectForPage(int page, int length, Map<String, Object> pageParam){
         String valDate = String.valueOf(pageParam.get("valDate"));
         //前一日
         pageParam.put("previousDay", DateUtil.addDay(valDate,-1));

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.background.component.common.pack.common.util.BeanUtil;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ import com.joyintech.service.risk.rskValtblPrtBotasset.dto.RskValtblPrtBotassetM
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 估值表底层资产映射
@@ -203,13 +205,14 @@ public class RskValtblPrtBotassetService extends BaseService<RskValtblPrtBotasse
      * @Author: liupengfei
      * @Date: 2021/3/24
      */
+    @Transactional
     public void applyMapForSubject(Map<String, Object> paramMap) {
         String subCode = (String)paramMap.get("subCode");
         String ptlId = (String)paramMap.get("ptlId");
         String finprodId = (String)paramMap.get("finprodId");
         if(StringUtil.isNotEmpty(subCode)){
             //资产科目
-            String [] subCodeArr = subCode.split(",");
+            String[] subCodeArr = StringUtil.split(subCode, GlobalConstant.COMMA);
             for(int i = 0;i<subCodeArr.length;i++){
                 //更新：估值表组合底层资产映射表
                 RskValtblPrtBotassetMapDto dto = new RskValtblPrtBotassetMapDto();
@@ -222,10 +225,10 @@ public class RskValtblPrtBotassetService extends BaseService<RskValtblPrtBotasse
                 rskValtblPrtBotassetMapper.applyMapForSubject(dto);
 
                 //处理期货类科目成本科目和冲销成本科目做特殊处理，以及根据成本自动更新利息科目做特殊处理
-                String befSubCode = subCodeArr[i].substring(0,8);//科目代码
-                String aftSubCode = subCodeArr[i].substring(8);//资产代码
+                String befSubCode =StringUtil.substring(subCodeArr[i],0,8);//科目代码　
+                String aftSubCode =StringUtil.substring(subCodeArr[i],8);//资产代码
                 List<String> intSubject = rskValtblPrtBotassetMapper.selectIntSubjectByCostSubject(befSubCode);
-                if(!StringUtil.isEmptyList(intSubject) && intSubject.size()>0){
+                if(!StringUtil.isEmptyList(intSubject) ){
                     for(int j=0;j<intSubject.size();j++){
                         RskValtblPrtBotassetMapDto dto1 = new RskValtblPrtBotassetMapDto();
                         BeanUtil.copyPropertiesIgnoreNull(dto1,dto);
@@ -256,6 +259,7 @@ public class RskValtblPrtBotassetService extends BaseService<RskValtblPrtBotasse
      * @Author:
      * @Date:
      */
+    @Transactional
     public void cancelApplyMapForSubject(Map<String, Object> paramMap) {
         String subCode = (String)paramMap.get("subCode");
         String ptlId = (String)paramMap.get("ptlId");
@@ -299,8 +303,8 @@ public class RskValtblPrtBotassetService extends BaseService<RskValtblPrtBotasse
      * @param paramMap
      * @return
      */
-    public List<SelectOptionDto> selectRskAsset(Map<String,Object> paramMap){
-        return rskValtblPrtBotassetMapper.selectRskAsset(paramMap);
+    public Page<SelectOptionDto> selectRskAsset(int page, int length, Map<String, Object> paramMap){
+        return super.queryForPageForSelectReturn(page,length,() -> rskValtblPrtBotassetMapper.selectRskAsset(paramMap));
     }
 
     /**

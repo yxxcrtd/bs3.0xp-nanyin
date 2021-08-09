@@ -551,8 +551,7 @@ GROUP BY asset.POS_DATE,
         AND SUB.SUB_CODE = DC.SUB_CODE
         AND SUB.FINPROD_ID = DC.FINPROD_ID
 
-        WHERE 1 = 1
-        AND SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+        WHERE  SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
         AND SUB.FINPROD_ID IS NOT NULL
         AND DC.SUB_CLASS NOT IN ('ZHG', 'NHG') /** 过滤回购资产通过三级科目来计算**/
 

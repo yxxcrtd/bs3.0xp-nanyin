@@ -201,10 +201,9 @@ public class RskValtblPrtBotassetController {
      * @param paramMap
      * @return
      */
-    @RequestMapping("selectRskAsset")
-    public List<SelectOptionDto> selectRskAsset(@RequestBody Map<String,Object> paramMap){
-        List<SelectOptionDto> result=rskValtblPrtBotassetService.selectRskAsset(paramMap);
-        return result;
+    @RequestMapping("selectRskAsset/{page}/{length}")
+    public Page<SelectOptionDto> selectRskAsset(@PathVariable("page") int page, @PathVariable("length") int length, @RequestBody Map<String, Object> paramMap){
+        return rskValtblPrtBotassetService.selectRskAsset(page,length,paramMap);
     }
     /**
      * 获取底层资产要素的信息下拉框
