@@ -97,7 +97,7 @@ public class PbcNewReportPrdDatFileService {
 			zipFile.setZipSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 			zipFile.setOrgCode(report.getOrgCode());
 			zipFile.setPibDetailCnt(1);
-			zipFile.setReportuuid(report.getReporttype());
+			zipFile.setReportuuid(report.getReportuuid());
 			zipFileList.add(zipFile);
 			//产品类型的报表处理
 			if(prodList.contains(report.getReporttype())){

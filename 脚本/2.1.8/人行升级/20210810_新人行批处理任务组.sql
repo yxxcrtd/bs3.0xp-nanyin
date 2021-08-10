@@ -1,0 +1,6 @@
+insert into SYS_BATCH_JOB (BATCH_SEQ_NO, TASK_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('rep', '3057', 'unistart', null, SYSDATE, 'unistart', SYSDATE);
+insert into SYS_BATCH_JOB (BATCH_SEQ_NO, TASK_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('rep', '3056', 'unistart', null, SYSDATE, 'unistart', SYSDATE);
+insert into SYS_BATCH_JOB (BATCH_SEQ_NO, TASK_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('rep', '3055', 'unistart', null, SYSDATE, 'unistart', SYSDATE);
