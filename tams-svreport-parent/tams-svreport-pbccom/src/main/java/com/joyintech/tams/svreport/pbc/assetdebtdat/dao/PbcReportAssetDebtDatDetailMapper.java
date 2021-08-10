@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.assetdebtdat.dao;
 
 import com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcLoanDetailInfoSubReportVo;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -105,4 +106,5 @@ public interface PbcReportAssetDebtDatDetailMapper {
 
     int deleteByUUIDAndType(Map<String,Object> paramsMap);
 
+    List<PbcReportAssetDebtDatDetailDto> selectByDatZipCode(@Param("datZipCode") String datZipCode, @Param("datZipDatType") String datZipDatType);
 }

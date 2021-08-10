@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao;
 
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto;
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto;
@@ -82,4 +83,7 @@ public interface PbcPrdBaseinfoSubDatMapper {
 	 * @return dat明细列表
 	 */
 	List<PbcPrdBaseinfoSubDatDiffDto> queryPbcPrdBaseInfoByDatZipCode(String datZipCode);
+
+	List<PbcPrdBaseinfoSubDat> selectByDatZipCode(@Param("datZipCode") String datZipCode);
+
 }

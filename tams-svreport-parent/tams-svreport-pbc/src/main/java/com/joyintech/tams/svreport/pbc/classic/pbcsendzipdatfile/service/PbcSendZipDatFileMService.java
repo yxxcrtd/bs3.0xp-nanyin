@@ -88,13 +88,31 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 		String[] strName = name.split("_");
 		if(strName.length > 0){
 			if(strName[0].equals(PRODUCT_BASE_INFO_NAME)){
-				return restTemplate.postForObject(
+				CommonAjaxResult commonAjaxResult = restTemplate.postForObject(
 						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoSubDat/checkBaseInfoSubDat?fileName=" + fileName, param,
 						CommonAjaxResult.class);
+				if(StrUtil.isNotEmpty(commonAjaxResult.getMessage())){
+					AjaxResult ajaxResult = new AjaxResult();
+					JoyinMessage message = new JoyinMessage(commonAjaxResult.getMessage(),MessageType.确认消息);
+					ajaxResult.setJoyinMessages(Arrays.asList(message));
+					ajaxResult.setMessageType(MessageType.确认消息);
+					ajaxResult.setStatuCode(HttpStatus.OK.value());
+					return ajaxResult;
+				}
+				return commonAjaxResult;
 			}else if(strName[0].equals(PRODUCT_END_INFO_NAME)){
-				return restTemplate.postForObject(
-						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoEndSubDat/checkBaseInfoSubDat?fileName="+fileName,param,
+				CommonAjaxResult commonAjaxResult = restTemplate.postForObject(
+						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoEndSubDat/checkBaseInfoSubDat?fileName=" + fileName, param,
 						CommonAjaxResult.class);
+				if(StrUtil.isNotEmpty(commonAjaxResult.getMessage())){
+					AjaxResult ajaxResult = new AjaxResult();
+					JoyinMessage message = new JoyinMessage(commonAjaxResult.getMessage(),MessageType.确认消息);
+					ajaxResult.setJoyinMessages(Arrays.asList(message));
+					ajaxResult.setMessageType(MessageType.确认消息);
+					ajaxResult.setStatuCode(HttpStatus.OK.value());
+					return ajaxResult;
+				}
+				return commonAjaxResult;
 			}
 		}
 		return new AjaxResult(TIPS_SHEET_NAME_ERROR,MessageType.错误消息);

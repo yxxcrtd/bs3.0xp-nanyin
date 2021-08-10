@@ -169,7 +169,7 @@ public class NewPbcMonthReportService {
                     }
                 }
                 if(StrUtil.isNotEmpty(waningReport)){
-                    String warningInfo = String.format("统计模板%s数据已报送，不支持对数据进行维护", waningReport);
+                    String warningInfo = String.format("统计模板%s数据已报送，不支持对数据进行维护,是否继续?", waningReport);
                     ajaxResult.setMessage(warningInfo);
                     ajaxResult.setMessageType(MessageType.确认消息);
                     ajaxResult.setStatuCode(HttpStatus.OK.value());
