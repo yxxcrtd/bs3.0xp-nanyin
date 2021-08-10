@@ -204,6 +204,11 @@ public interface BussinessConstant {
     String VALUATION_FILTER_URL = "com.joyintech.tams.invest.risk.valtblimport.filtertools.";
 
     /**
+     * 估值表批量过滤器路径
+     */
+    String VALUATION_BATCH_FILTER_URL = "com.joyintech.tams.invest.batch.valbatchimport.filter.";
+
+    /**
      * 过滤器合并列
      */
     String VALUATION_FILTER_MERGECOL = "MergeColsFilter";

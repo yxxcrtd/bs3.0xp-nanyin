@@ -140,9 +140,16 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
         Date startDate = DateUtil.now();
         RskOutValtblImportHis returnDto = new RskOutValtblImportHis();
         String valTableFilePath = CacheUtil.getSysParam("RSK_OUTS_VALTABLE_IMPORT_PATH");
+        //是否是联社模式
+        Boolean flag = StringUtil.equals(CacheUtil.getSysParam("AUTHORITY_TYPE"),"02");
+
         //资管计划名称_估值日期的规则
         String RSK_FILE_NAME_RULE = CacheUtil.getSysParam("RSK_FILE_NAME_RULE");
-        String filePath = valTableFilePath+ File.separator+DateUtil.format(dto.getImpdate(),DateUtil.DEFAULT_OTHER_FORMAT);
+        String filePath = valTableFilePath+ File.separator+DateUtil.format(new Date(),DateUtil.DEFAULT_OTHER_FORMAT);
+        String deptCode = (LoginUserUtil.getInstCode()!= null && LoginUserUtil.getInstCode().size()>0) ? LoginUserUtil.getInstCode().get(0):null;
+        if (flag){
+            filePath = filePath + File.separator + deptCode;
+        }
         File file = new File(filePath);
         if (file.isDirectory() && file.listFiles().length > 0) {
             //开始解析文件内容入库

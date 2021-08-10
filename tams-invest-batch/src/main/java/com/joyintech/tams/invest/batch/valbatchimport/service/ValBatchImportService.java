@@ -29,6 +29,7 @@ import com.joyintech.tams.invest.batch.valbatchimport.constant.ValtbImportConsta
 import com.joyintech.tams.invest.batch.valbatchimport.dao.RskValtblPrtBotassetMapper;
 import com.joyintech.tams.invest.batch.valbatchimport.dao.ValBatchImportMapper;
 import com.joyintech.tams.invest.batch.valbatchimport.dto.*;
+import com.joyintech.tams.invest.batch.valbatchimport.filter.Filter;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -41,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -119,7 +121,6 @@ public class ValBatchImportService {
      */
     public void execute(Date supDate) {
         String valTableFilePath = CacheUtil.getSysParam("RSK_OUTS_VALTABLE_IMPORT_PATH");
-
         //是否是联社模式
         Boolean flag = StringUtil.equals(CacheUtil.getSysParam("AUTHORITY_TYPE"),"02");
         Map<String, Date> dateMap = new HashMap<>();
@@ -603,22 +604,30 @@ public class ValBatchImportService {
 
 
     /**
-     * 重读excel
+     *  重读excel
+     * <功能详细描述>
      * @param dto
      * @return
      * @throws Exception
+     * @see
+     * @since 1.0
      */
-    private List<List<String>> readExcelUtil(RskValTableImportParamDto dto) throws Exception {
+    private List<List<String>> readExcelUtil(RskValTableImportParamDto dto) throws FileNotFoundException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         List<List<String>> resultList = new ArrayList<List<String>>();
         Workbook wb = ExcelUtil.loadWorkbook(dto.getValTableFileName(), null, null);
+        if (Objects.isNull(wb)) {
+            return null;
+        }
         // ---modify by 裴家俊 20190514---start---------
         Filter filter = null;
         if (StringUtil.isNotEmpty(dto.getFilterId())) {
             if (dto.getFilterId().startsWith(BussinessConstant.VALUATION_FILTER_MERGECOL)) {
-                filter = (Filter) Class.forName(BussinessConstant.VALUATION_FILTER_URL + BussinessConstant.VALUATION_FILTER_MERGECOL).newInstance();
-            }else {
-                String filterId=dto.getFilterId();
-                filter = (Filter) Class.forName(BussinessConstant.VALUATION_FILTER_URL + filterId).newInstance();
+                filter = (Filter) Class
+                        .forName(BussinessConstant.VALUATION_BATCH_FILTER_URL + BussinessConstant.VALUATION_FILTER_MERGECOL)
+                        .newInstance();
+            } else {
+                filter = (Filter) Class.forName(BussinessConstant.VALUATION_BATCH_FILTER_URL + dto.getFilterId())
+                        .newInstance();
             }
         }
         if (filter != null) {
@@ -641,7 +650,6 @@ public class ValBatchImportService {
     /**
      * 解析excel
      * <功能详细描述>
-     *
      * @param sheetIndex
      * @param skipRows
      * @param titleRow
@@ -650,33 +658,29 @@ public class ValBatchImportService {
      * @see
      * @since 1.0
      */
-    private List<List<String>> readToList(int sheetIndex, int skipRows, int titleRow, Workbook wb)throws Exception {
+    private List<List<String>> readToList(int sheetIndex, int skipRows, int titleRow,Workbook wb)
+    {
         List<List<String>> ls = new ArrayList<List<String>>();
-        if(null != wb){
+        if (null != wb) {
             Sheet sh = wb.getSheetAt(sheetIndex);
             int rows = sh.getPhysicalNumberOfRows();
             int cells = sh.getRow(titleRow).getPhysicalNumberOfCells();
-            for (int i = skipRows; i < rows; i++) {
+            for (int i = skipRows; i < rows; i++ ) {
                 Row row = sh.getRow(i);
                 if (row == null) {
                     break;
                 }
                 List<String> r = new ArrayList<String>(cells);
                 boolean dataFlag = true;
-                for (int c = 0; c < cells; c++) {
-                    // mod by xzp start 20200708  空指针异常处理
-                    if(row.getCell(c) == null) {
+                for (int c = 0; c < cells; c++ ) {
+                    if (row.getCell(c) == null
+                            || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
                         r.add("");
-                    }else {
-                        CellType cellType=row.getCell(c).getCellTypeEnum();
-                        if (cellType == CellType.BLANK) {
-                            r.add("");
-                        } else {
-                            dataFlag = false;
-                            r.add(getStringCellValue(row.getCell(c)));
-                        }
                     }
-                    // mod by xzp start 20200708  空指针异常处理
+                    else {
+                        dataFlag = false;
+                        r.add(getStringCellValue(row.getCell(c)));
+                    }
                 }
                 // 遇到一行全为空继续
                 if (dataFlag) {
@@ -773,6 +777,7 @@ public class ValBatchImportService {
         }
 
         String actMarketCode = null;
+
         for(RskValtblAssetSubDto entity:dto.getSelectedItem()){
             if(StringUtil.equals(entity.getValType().getDesc(), ValType.ASSET.getDesc())
                     && StringUtil.isNotEmpty(entity.getIsMatch()) && StringUtil.equals(entity.getIsMatch(),DictCodeListExt1.是否_否.getValue())){
@@ -837,14 +842,16 @@ public class ValBatchImportService {
                 //根据估值表底层资产映射获取债券的交易场所，适用于四级科目无法区分
                 if(entity.getSubCode().length() >8){
                     String SubName = paraMap.get(entity.getSubCode().substring(0,8));
-                    if (SubName.contains("上交所")) {
-                        actMarketCode = "SH";
-                    }
-                    if (SubName.contains("深交所")) {
-                        actMarketCode = "SZ";
-                    }
-                    if (SubName.contains("银行间")) {
-                        actMarketCode = "IB";
+                    if(StringUtil.isNotEmpty(SubName)){
+                        if (SubName.contains("上交所")) {
+                            actMarketCode = "SH";
+                        }
+                        if (SubName.contains("深交所")) {
+                            actMarketCode = "SZ";
+                        }
+                        if (SubName.contains("银行间")) {
+                            actMarketCode = "IB";
+                        }
                     }
                 }
             }
@@ -875,9 +882,6 @@ public class ValBatchImportService {
                 }
             }
             //第三步  匹配wind资产信息
-
-
-
             if(flag){
                 if(StringUtil.equals(entity.getValType().getDesc(), ValType.ASSET.getDesc())){
                     //添加利息匹配1204
@@ -945,8 +949,7 @@ public class ValBatchImportService {
                     //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  end
                 }
             }
-
-        }
+            }
         botAssetMapList.clear();
 
         isAutoCouponBondSecidList = isAutoCouponBondSecidList.stream().distinct().collect(Collectors.toList());
