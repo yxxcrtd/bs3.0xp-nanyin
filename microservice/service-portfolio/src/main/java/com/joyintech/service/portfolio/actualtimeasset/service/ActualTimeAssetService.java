@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -108,6 +109,8 @@ public class ActualTimeAssetService extends BaseService<ActualTimeAssetDto> {
         
         pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_通道.getValue());
         pageParam.put("finprodType2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        pageParam.put("finprodType2_F07", DictCodeList.平安资产类型_质押式回购.getValue());
+        pageParam.put("finprodType2_F10", DictCodeList.平安资产类型_买断式回购.getValue());
         //update zhangweiqi SNSTZJY-2370 按照实际持仓最大的优先扣减指令持仓  2020-12-15 begin
         Page<ActualTimeAssetDto> pageList = super.queryForPage(page, length, () -> actualTimeAssetMapper.findPage(pageParam));
 		for (ActualTimeAssetDto dto : pageList.getRoot()) {
