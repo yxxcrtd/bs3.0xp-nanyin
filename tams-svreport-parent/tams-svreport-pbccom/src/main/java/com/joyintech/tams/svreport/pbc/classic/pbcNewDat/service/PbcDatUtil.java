@@ -261,6 +261,8 @@ public class PbcDatUtil {
 			if(null==resultMap.get("prdList")){
 				resultMap.put("prdList",new ArrayList());
 			}
+
+			prodDat.setDatZipCode(zipCode);
 			//补充数据
 			resultMap.get("prdList").add(prodDat);
 			resultMap.get("zipList").add(zipFile);
@@ -278,6 +280,7 @@ public class PbcDatUtil {
 			if(null==resultMap.get("endList")){
 				resultMap.put("endList",new ArrayList());
 			}
+			prodEndDat.setDatZipCode(zipCode);
 			resultMap.get("endList").add(prodEndDat);
 			resultMap.get("zipList").add(zipFile);
 		}
