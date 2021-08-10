@@ -4167,7 +4167,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     trdBondInvestTradeDto.setProcedureAmtRate(tradeFeeDto.getFeeRate());
                 }
                 if(StringUtil.equals(tradeFeeDto.getFeeType(), BussinessDictCodeList.费用类型_结算手续费.getValue())&& tradeFeeDto.getFeeAmt()!=null){
-                    trdBondInvestTradeDto.setSettleAmt(tradeFeeDto.getFeeAmt());
+//                    trdBondInvestTradeDto.setSettleAmt(tradeFeeDto.getFeeAmt());
+                    trdBondInvestTradeDto.setSettleServiceAmt(tradeFeeDto.getFeeAmt());
                 }
             }
         }
