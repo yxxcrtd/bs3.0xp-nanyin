@@ -250,8 +250,8 @@
             t2.int_amt,
             t2.cash_id,
             t2.cash_type,
-            t2.pay_date,
-            rank() over(partition BY t1.finprod_id ORDER BY t2.mdate) rank
+            t2.pay_date
+<!--            ,rank() over(partition BY t1.finprod_id ORDER BY t2.mdate) rank-->
             FROM PTL_SEC_POSITION T1 INNER JOIN FIN_CASH_PLAN T2 ON T1.FINPROD_ID = T2.FINPROD_ID
             AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01} AND t1.CDATE &lt; t2.MDATE
             LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = T1.PORTFOLIO_ID
@@ -277,6 +277,13 @@
                     (#{CASH_CLASS_TYPE01},#{CASH_CLASS_TYPE02},#{CASH_CLASS_TYPE03},#{CASH_CLASS_TYPE04})
                 </if>
                 and (t2.INT_AMT > 0 or t2.PRIN_AMT > 0)
+                and t2.mdate = (select min(tt.mdate) from FIN_CASH_PLAN tt where tt.finprod_id =t1.finprod_id
+                    and Tt.FINPROD_TYPE2 = 'F01'
+                    AND tt.MDATE > t1.CDATE
+                    AND Tt.PAY_DATE >= to_date('2021-03-26','yyyy-MM-dd')
+                    and Tt.CASH_TYPE IN ('01', '02', '03', '04')
+                    and (tt.INT_AMT > 0 or t2.PRIN_AMT > 0)
+                )
                 <!-- and t2.MDATE &lt;=#{PLATEFORM_DATE} -->
                 /*不存在生效的交易*/
                 and NOT EXISTS (SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL TPDA
@@ -343,7 +350,8 @@
                     AND T1.SEC_ACCT_ID = #{secManageAcctId}
                 </if>
             </where>
-            ) where rank = 1
+            )
+<!--            where rank = 1-->
             ) T6
             <where>
                 <if test="mdateStart != null and !mdateStart.isEmpty()">
