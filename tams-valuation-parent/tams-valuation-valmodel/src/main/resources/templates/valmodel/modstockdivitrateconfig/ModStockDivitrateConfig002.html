@@ -13,7 +13,7 @@
 <body>
     <div layout:fragment="content">
         <div>
-            <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
+            <form class="layui-form joyin-form-wrap pro-module-form" style="padding: 10px 0;" id="submitForm">
                 <div class="layui-form-item" style="display: none">
                 	<input type="text" id="seqno" name="seqno" class="layui-input form-input"
                            data-th-value="${entity?.seqno}">
@@ -21,24 +21,6 @@
 		                   data-th-value="${entity?.operateType}"/>
 		            <input type="text" id="workflowId" name="workflowId" placeholder="流程 Id"
                    			class="layui-input form-input" data-th-value="${entity?.workflowId}"/>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label form-lable mst-lable">资产代码</label>
-                    <div class="layui-input-inline input-inline">
-                        <select type="text" id="finprodId" name="finprodId" formatoption="true"
-                               class="layui-input form-input input-select" placeholder="请输入内容" data-th-parentids="${pageModel}"
-                               data-th-data-url="@{/valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/getAssetCodeListExceptExsits}"
-                               required="required" data-th-initValue="${entity?.finprodId}">
-                          </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label form-lable mst-lable">资产名称</label>
-                    <div class="layui-input-inline input-inline">
-                             <input type="text" readonly="readonly" id="finProdName" name="finProdName"
-                               class="layui-input form-input" data-th-value='${entity?.finProdName}'
-                               placeholder="请输入内容" required disabled>
-                    </div>
                 </div>
                 <div class="layui-form-item" style="display: none">
                     <label class="layui-form-label form-lable mst-lable" >资产类型</label>
@@ -64,16 +46,48 @@
 							data-th-placeholder="#{SysCommon.placeholder}"></select>
 					</div>
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label form-lable mst-lable" >预期股息增长率%</label>
-                    <div class="layui-input-inline input-inline">
-                        <input type="text" id="stockIntarte" name="stockIntarte" required="required"
-                               data-pattern="" data-fixtype="2" data-textrange="2" maxlength="30"
-                               class="layui-input form-input text-number"
-                               data-th-value="${entity?.stockIntarte}" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}">
+                <div class="layui-form-item ">
+                    <div class="layui-row ">
+                        <div class="layui-form-item">
+                            <div class="layui-inline layui-col-md5">
+                                <label class="layui-form-label form-lable mst-lable">资产代码</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select type="text" id="finprodId" name="finprodId" formatoption="true"
+                                            class="layui-input form-input input-select" placeholder="请输入内容" data-th-parentids="${pageModel}"
+                                            data-th-data-url="@{/valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/getAssetCodeListExceptExsits}"
+                                            required="required" data-th-initValue="${entity?.finprodId}">
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline layui-col-md5">
+                                <label class="layui-form-label form-lable mst-lable">资产名称</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" readonly="readonly" id="finProdName" name="finProdName"
+                                           class="layui-input form-input" data-th-value='${entity?.finProdName}'
+                                           placeholder="请输入内容" required disabled>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline layui-col-md5">
+                                <label class="layui-form-label form-lable mst-lable" >预期股息增长率%</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" id="stockIntarte" name="stockIntarte" required="required"
+                                           data-pattern="" data-fixtype="2" data-textrange="2" maxlength="30"
+                                           class="layui-input form-input text-number"
+                                           data-th-value="${entity?.stockIntarte}" placeholder="请输入内容"
+                                           data-th-placeholder="#{SysCommon.placeholder}">
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
+
             </form>
             <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="position: fixed;bottom: 30px;">
                 <div class="text-center">

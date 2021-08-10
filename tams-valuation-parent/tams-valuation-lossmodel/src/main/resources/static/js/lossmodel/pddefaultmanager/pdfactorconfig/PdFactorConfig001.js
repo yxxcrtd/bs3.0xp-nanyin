@@ -109,7 +109,7 @@ $(function() {
     var showDialog = function(){
         Joyin.dialog(JoyinUtil.getLabel("前瞻因子新建"),
                 JoyinUtil.getRealPath("/model/impairment/pddefaultmanager/pdfactorconfig/PdFactorConfig002/init"),
-                "95%", "90%",{pageModel : PAGE_MODEL_NEW},function(){table.reload();}
+                "45%", "75%",{pageModel : PAGE_MODEL_NEW},function(){table.reload();}
         );
     }
 

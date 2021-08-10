@@ -22,104 +22,99 @@
                    class="layui-input form-input" data-th-value="${entity?.workflowId}" >
         </div>
         <div class="layui-form-item">
-            <div class="layui-inline layui-col-md4"id="asset_type">
-                <label class="layui-form-label form-lable">资产类型</label>
-                <div class="layui-input-inline input-inline">
-                    <select id="secTypeModel" name="secTypeModel" searchable="false" type="text"
-                            data-th-data-result='${MODEL_SEC_TYPE}'
-                            data-th-initValue="${entity?.secTypeModel}"
-                            class="layui-input form-input input-select" placeholder="请选择" required>
-                    </select>
+            <div class="layui-row layui-col-space20">
+                <div class="layui-inline layui-col-md5 "id="asset_type">
+                    <label class="layui-form-label form-lable">资产类型</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="secTypeModel" name="secTypeModel" searchable="false" type="text"
+                                data-th-data-result='${MODEL_SEC_TYPE}'
+                                data-th-initValue="${entity?.secTypeModel}"
+                                class="layui-input form-input input-select" placeholder="请选择" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline layui-col-md5" id="asset_detail_type">
+                    <label class="layui-form-label form-lable">资产细分类</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="secDetailTypeModel" name="secDetailTypeModel" searchable="false" type="text"
+                                data-th-data-result='${MODEL_SEC_DETAIL_TYPE}'
+                                data-th-initValue="${entity?.secDetailTypeModel}"
+                                class="layui-input form-input input-select" placeholder="请选择" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md5">
+                    <label class="layui-form-label form-lable">资产名称</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="finprodName" name="finprodName"
+                               class="layui-input form-input input-lenovoselect" data-th-data-url="@{/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001/getFinprodIdForValuation}"
+                               placeholder="请选择"
+                               data-parentids="secTypeModel,secDetailTypeModel"
+                               data-th-placeholder="#{SysCommon.selectplaceholder}"
+                               data-th-value="${entity?.finprodName}"
+                               data-idfield="code"  data-keyfield="shortName" data-th-data-effectivefieldsalias='|{"shortName":"资产名称","code":"资产代码"}|'
+                        >
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md5">
+                    <label class="layui-form-label form-lable">资产代码</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="finprodId" name="finprodId" disabled="true"
+                               class="layui-input form-input" placeholder="请输入内容"
+                               data-th-placeholder="#{SysCommon.placeholder}"
+                               data-th-value="${entity?.finprodId}">
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md5"id="asset_Name">
+                    <label class="layui-form-label form-lable">曲线族</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="curveGroupCode" name="curveGroupCode" searchable="false" type="text"
+                                data-th-data-result='${CURVE_GROUP}'
+                                data-th-initValue="${entity?.curveGroupCode}"
+                                class="layui-input form-input input-select" placeholder="请选择" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline layui-col-md5">
+                    <label class="layui-form-label form-lable">曲线类型</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="curveType" name="curveType" searchable="false" type="text"
+                                data-th-data-result='${CURVE_TYPE}'
+                                data-th-initValue="${entity?.curveType}"
+                                class="layui-input form-input input-select" placeholder="请选择" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md5">
+                    <label class="layui-form-label form-label-wrap">是否平滑曲线</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="checkbox" id="isSmooth" name="isSmooth" lay-filter="isSmooth"
+                               lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+                               data-th-checked="${YES_OR_NO_Y} ==${entity?.isSmooth}" required>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md5" id="smoothSectionDiv">
+                    <label class="layui-form-label form-lable">平滑区间</label>
+                    <div class="layui-input-inline input-inline">
+                        <select name="smoothSection" id="smoothSection"
+                                class="layui-input form-input input-select"
+                                placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-data-result="${SMOOTHSECTION}"
+                                data-th-initValue="*{entity?.smoothSection}">
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <div class="layui-inline layui-col-md4"id="asset_detail_type">
-                <label class="layui-form-label form-lable">资产细分类</label>
-                <div class="layui-input-inline input-inline">
-                    <select id="secDetailTypeModel" name="secDetailTypeModel" searchable="false" type="text"
-                            data-th-data-result='${MODEL_SEC_DETAIL_TYPE}'
-                            data-th-initValue="${entity?.secDetailTypeModel}"
-                            class="layui-input form-input input-select" placeholder="请选择" required>
-                    </select>
-                </div>
-            </div>
         </div>
 
-        <div class="layui-form-item">
-            <div class="layui-inline layui-col-md4">
-                <label class="layui-form-label form-lable">资产名称</label>
-                <div class="layui-input-inline input-inline">
-                    <input type="text" id="finprodName" name="finprodName"
-                           class="layui-input form-input input-lenovoselect" data-th-data-url="@{/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001/getFinprodIdForValuation}"
-                           placeholder="请选择"
-                           data-parentids="secTypeModel,secDetailTypeModel"
-                           data-th-placeholder="#{SysCommon.selectplaceholder}"
-                           data-th-value="${entity?.finprodName}"
-                           data-idfield="code"  data-keyfield="shortName" data-th-data-effectivefieldsalias='|{"shortName":"资产名称","code":"资产代码"}|'
-                           >
-                </div>
-            </div>
 
-            <div class="layui-inline layui-col-md4">
-                <label class="layui-form-label form-lable">资产代码</label>
-                <div class="layui-input-inline input-inline">
-                    <input type="text" id="finprodId" name="finprodId" disabled="true"
-                           class="layui-input form-input" placeholder="请输入内容"
-                           data-th-placeholder="#{SysCommon.placeholder}"
-                           data-th-value="${entity?.finprodId}">
-                </div>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-inline layui-col-md4"id="asset_Name">
-                <label class="layui-form-label form-lable">曲线族</label>
-                <div class="layui-input-inline input-inline">
-                    <select id="curveGroupCode" name="curveGroupCode" searchable="false" type="text"
-                            data-th-data-result='${CURVE_GROUP}'
-                            data-th-initValue="${entity?.curveGroupCode}"
-                            class="layui-input form-input input-select" placeholder="请选择" required>
-                    </select>
-                </div>
-            </div>
-
-            <div class="layui-inline layui-col-md4">
-                <label class="layui-form-label form-lable">曲线类型</label>
-                <div class="layui-input-inline input-inline">
-                    <select id="curveType" name="curveType" searchable="false" type="text"
-                            data-th-data-result='${CURVE_TYPE}'
-                            data-th-initValue="${entity?.curveType}"
-                            class="layui-input form-input input-select" placeholder="请选择" required>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-inline layui-col-md4">
-                <label class="layui-form-label form-label-wrap">是否平滑曲线</label>
-                <div class="layui-input-inline input-inline">
-                    <input type="checkbox" id="isSmooth" name="isSmooth" lay-filter="isSmooth"
-                           lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
-                           data-th-checked="${YES_OR_NO_Y} ==${entity?.isSmooth}" required>
-                </div>
-            </div>
-            <div class="layui-inline layui-col-md4" id="smoothSectionDiv">
-                <label class="layui-form-label form-lable">平滑区间</label>
-                <div class="layui-input-inline input-inline">
-                    <select name="smoothSection" id="smoothSection"
-                            class="layui-input form-input input-select"
-                            placeholder="请输入内容"
-                            data-th-placeholder="#{SysCommon.placeholder}" required
-                            data-th-data-result="${SMOOTHSECTION}"
-                            data-th-initValue="*{entity?.smoothSection}">
-                    </select>
-                </div>
-            </div>
-        </div>
 
     </form>
-    <div class="layui-col-md11" style="margin: 10px 0 10px 0;">
+    <div class="layui-col-md11" style="position: fixed;bottom: 30px;">
         <div class="text-center">
             <!--<a id="ValCashFlowDiscount002_btn_save" class="layui-btn layui-btn-sm btn-save">保存</a>-->
             <a id="ValCashFlowDiscount002_btn_submit" class="layui-btn layui-btn-sm btn-submit">提交</a>

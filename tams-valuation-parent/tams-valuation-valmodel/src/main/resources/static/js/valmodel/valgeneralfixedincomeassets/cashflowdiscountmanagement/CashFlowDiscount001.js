@@ -61,8 +61,8 @@ $(function() {
     $('#ValCashFlowDiscount001_btn_add').click(
         function() {
             Joyin.dialog(JoyinUtil.getLabel("新建现金流折现模型曲线配置"), basePath
-                    + "valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002/init", "90%",
-                    "90%", null,
+                    + "valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002/init", "70%",
+                    "75%", null,
                     function(){
                         table.reload();
                         pageModel : PAGE_MODEL_NEW

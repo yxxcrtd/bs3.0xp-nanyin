@@ -12,7 +12,7 @@
     };
     //新建
     function showDialog() {
-        Joyin.dialog('预期股息增长率配置新建', basePath +'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/init', '75%', '75%');
+        Joyin.dialog('预期股息增长率配置新建', basePath +'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/init', '50%', '75%');
     }
     
     /**
