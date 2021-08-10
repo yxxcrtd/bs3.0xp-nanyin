@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
+import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtrIbBondinfo002Service;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtribBondInfo003Service;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ import java.util.*;
  */
 @Component
 public class EtribBondInfo003Validator implements EtrCommonValidator  {
+
+    @Autowired
+    private EtrIbBondinfo002Service etrIbBondinfo002Service;
 
     @Autowired
     private EtribBondInfo003Service etribBondInfo003Service;
@@ -123,6 +127,15 @@ public class EtribBondInfo003Validator implements EtrCommonValidator  {
 //            	}
 //            }
 //            //PB上下行关联改造： 当交易平台为“固定收益平台”或“大宗交易平台”时，交易对手增加必填校验 add by caoxue 2019-12-27 end
+
+            String ps = dto.getPs();
+            if (!etrIbBondinfo002Service.isRight(dto.getFinprodId())
+                    && (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
+                    || StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs()))) {
+                ValidMessage validMessage = new ValidMessage("非行权债不可做行权交易！");
+                errorList.add(validMessage);
+            }
+
             Date vdate = dto.getVdate();
             Date mdate = dto.getMdate();
             Date finmdate = dto.getFinmdate();
@@ -141,7 +154,7 @@ public class EtribBondInfo003Validator implements EtrCommonValidator  {
             BigDecimal entrustNum = dto.getEntrustNum();
 //            券面总额除以100等于数量
             entrustNum = ArithmeticUtil.divide(entrustNum,100,2);
-            String ps = dto.getPs();
+
             if (!etribBondInfo003Service.isRight(dto.getFinprodId())
                     && (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
                     || StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs()))) {
