@@ -443,21 +443,35 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_存款类.getValue());
                         }else if (StringUtil.equals(entity2.getSubCode().substring(0, 4), KEY_NHGB_STR)) {
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_逆回购.getValue());
+                            String code=StringUtil.substring(entity2.getSubCode(),0,8);
+                            String finprodType= null;
+                            if(StringUtil.equals(code,"12020101") || StringUtil.equals(code,"12020201") || StringUtil.equals(code,"12020301")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();
+                            }else if(StringUtil.equals(code,"12020102") || StringUtil.equals(code,"12020202") || StringUtil.equals(code,"12020302")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue();
+                            }
                             String termType = rskValTableImportCommonService.getTermTypeFromStr(entity2.getSubCode(), entity2.getSubName());
                             if(termType != null) {
-                                entity2.setFinprodId(termType);
+                                entity2.setFinprodId(finprodType+'_'+termType);
                             } else {
-                                entity2.setFinprodId(entity2.getSubCode().substring(8, entity2.getSubCode().length()));
+                                entity2.setFinprodId(finprodType+'_'+entity2.getSubCode().substring(8, entity2.getSubCode().length()));
                             }
                             //在fin_trade_product、fin_product_type生成相关数据，风险需要用到
                             createRepoInfo(entity2);
                         } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_ZHGB_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_正回购.getValue());
+                            String code=entity2.getSubCode().substring(0, 8);
+                            String finprodType= null;
+                            if(StringUtil.equals(code,"22020101") || StringUtil.equals(code,"22020201") || StringUtil.equals(code,"22020301")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue();
+                            }else if(StringUtil.equals(code,"22020102") || StringUtil.equals(code,"22020202") || StringUtil.equals(code,"22020302")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue();
+                            }
                             String termType = rskValTableImportCommonService.getTermTypeFromStr(entity2.getSubCode(), entity2.getSubName());
                             if(termType != null) {
-                                entity2.setFinprodId(termType);
+                                entity2.setFinprodId(finprodType+'_'+termType);
                             } else {
-                                entity2.setFinprodId(entity2.getSubCode().substring(8, entity2.getSubCode().length()));
+                                entity2.setFinprodId(finprodType+'_'+entity2.getSubCode().substring(8, entity2.getSubCode().length()));
                             }
                             //在fin_trade_product、fin_product_type生成相关数据，风险需要用到
                             createRepoInfo(entity2);
