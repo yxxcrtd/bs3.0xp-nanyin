@@ -33,7 +33,7 @@ $(function() {
             { title: "报送明细类型", field: 'datZipDatTypeStr',width:150,sortable:false},
             { title: 'zip包状态',field:'datZipStatusStr',width:150,sortable:false},
             { title: "数据业务日期", field: 'statusVdate',width:100, type: 'datetime',sortable:false},
-            { title: "DAT明细数", field: 'pibDetailCnt',width:100, type: 'datetime',sortable:false},
+            { title: "DAT明细数", field: 'pibDetailCnt',width:100, sortable:false},
             { title: "报送日期", field: 'submitTime',width:100, type: 'datetime',sortable:false},
             { title: "报送状态", field: 'zipSendStatusStr',width:100,sortable:false},
             { title: '反馈状态',field:'returnZipSendStatusStr',width:100,sortable:false},

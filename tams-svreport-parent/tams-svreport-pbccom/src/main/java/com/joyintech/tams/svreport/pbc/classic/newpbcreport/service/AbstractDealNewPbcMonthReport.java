@@ -43,7 +43,7 @@ public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthR
         PbcSendZipDatFile sendZipDatFile = new PbcSendZipDatFile();
         sendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
         sendZipDatFile.setDatZipCode(paramDto.getDatZipCode());
-        sendZipDatFile.setDatZipPath(null);
+        sendZipDatFile.setDatZipPath(paramDto.getDatZipPath());
         sendZipDatFile.setDatZipType("MI");
         sendZipDatFile.setDatZipStatus("01");
         sendZipDatFile.setStatusVdate(paramDto.getStatusVdate());

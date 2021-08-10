@@ -100,9 +100,9 @@ public class PbcZipDataFileService {
 						||DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue().equals(datType)
 					) {
 						String datZipCodePath=genReport1_1_6_3_2FileDat(pbcSendZipDatFile,datType,manualFlag);
-					    reslut.add(datZipCodePath);
+					reslut.add(datZipCodePath);
 				}else if(DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue().equals(datType)){
-					String datZipCodePath=genReport1_1_6_3_2FileDat(pbcSendZipDatFile,datType,manualFlag);
+					String datZipCodePath=genReport3_3FileDat(pbcSendZipDatFile,datType,manualFlag);
 					reslut.add(datZipCodePath);
 				}
 			}

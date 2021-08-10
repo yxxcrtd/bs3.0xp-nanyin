@@ -28,7 +28,7 @@ public class ExcelPbcReportProdDat1_5YQDFDto {
     /**
      * 分组类型：DQMJ-当期募集,DQDF-当期兑付,QMCX-期末存续,DQXF-当期新发,DQZZ-当期终止,TQDF-提前兑付,YQDF-延期兑付,DQWDF-到期未兑付
      */
-    @ExcelCell(isGroupType = true)
+    @ExcelCell(fixedValue = "YQDF")
     private String grouptype;
 
     /**
