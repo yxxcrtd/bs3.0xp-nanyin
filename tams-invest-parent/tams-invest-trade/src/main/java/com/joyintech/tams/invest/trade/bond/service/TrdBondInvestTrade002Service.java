@@ -3916,7 +3916,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             if(!StringUtil.isEmptyList(ptlAllocationDtos)){
                 Map<String,Object> map = new HashMap<>();
                 map.put("shareAmt",null!=prinamt?prinamt:BigDecimal.ZERO);
-                map.put("fpriceAmt",null!=fpriceAmt?prinamt:BigDecimal.ZERO);
+                map.put("fpriceAmt",null!=fpriceAmt?fpriceAmt:BigDecimal.ZERO);
                 ptlAllocationDtos = cstpCommonService.组合分配拆分(ptlAllocationDtos,map);
                 map.put("trdTradeFeeDetails",trdTradeFeeDetails);
                 ptlAllocationDtos = cstpCommonService.交易费用拆分(ptlAllocationDtos,map);
@@ -3946,7 +3946,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             //全价总额
             BigDecimal cpriceAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(bondCstpInfo.getPrice8(), prinamt2),BigDecimal.valueOf(100), 2);
             //应计利息总额
-            BigDecimal intAmt = ArithmeticUtil.subtract(fpriceAmt2,prinamt2);
+            BigDecimal intAmt = ArithmeticUtil.subtract(fpriceAmt2,cpriceAmt);
             // 交易编号
             BussinessCodeParameter codeParameter = new BussinessCodeParameter();
             if (StringUtil.equals(BussinessDictCodeList.交易方向_买入.getValue(), trdBondInvestTradeDto.getPs())) {
