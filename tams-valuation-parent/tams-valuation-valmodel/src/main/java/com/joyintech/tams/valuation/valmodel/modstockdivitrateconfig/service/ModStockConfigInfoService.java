@@ -112,7 +112,7 @@ public class ModStockConfigInfoService extends CommonExportService<ModStockDivit
 		 param.put("FIN_TYPE_F01",DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 		 param.put("CUSTOM_ASSET_TYPE_FOUR_023",DictCodeListExt3.资产四级分类_优先股.getValue());
 		 return restTemplate.postForPage(ServiceApplication.CUSTOMER_INTERF_NAME
-                 + "/interf/ModelCallOnInvest/getAssetCodeList",param,SelectOptionDto.class);
+                 + "/ModStockDivitrateConfigInfo/getAssetCodeList",param,SelectOptionDto.class);
 	}
 	
 	/**

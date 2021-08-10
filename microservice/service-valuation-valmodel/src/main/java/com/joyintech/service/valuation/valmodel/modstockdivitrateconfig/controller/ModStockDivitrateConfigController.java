@@ -3,6 +3,7 @@ package com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.control
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto;
 import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.service.ModStockDivitrateConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,4 +123,19 @@ public class ModStockDivitrateConfigController {
     public int checkByFinprodId(@RequestBody Map<String, Object> map) {
     	return modStockDivitrateConfigService.checkByFinprodId(map);
     }
+
+	/**
+	 * 查询资产代码：不设置参数的话查所有的
+	 * @param map
+	 * @return
+	 */
+	@PostMapping("getAssetCodeList/{page}/{length}")
+	public Page<SelectOptionDto> getAssetCodeList(@RequestBody Map<String, Object> map,
+												  @PathVariable("page") int page, @PathVariable("length") int length){
+		Page<SelectOptionDto> pageList = modStockDivitrateConfigService.getAssetCodeList(map, page, length);
+		return pageList;
+	}
+
+
+
 }

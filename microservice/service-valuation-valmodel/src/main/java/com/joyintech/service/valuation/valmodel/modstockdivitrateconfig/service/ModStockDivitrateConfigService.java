@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
 import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dao.ModStockDivitrateConfigMapper;
 import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +94,19 @@ public class ModStockDivitrateConfigService extends BaseService<ModStockDivitrat
 	 */
 	public int checkByFinprodId(Map<String, Object> param) {
 		return modStockDivitrateConfigMapper.checkByFinprodId(param);
+	}
+
+
+	/**
+	 * 查询标的信息：不设置参数的话查所有的
+	 * @author zhangfei
+	 * @param
+	 * @date 2021年7月1日
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public Page<SelectOptionDto> getAssetCodeList(Map<String, Object> map,int page, int length) {
+		return this.queryForPageForSelectReturn(page, length,()->modStockDivitrateConfigMapper.selectAssetCodeList(map));
 	}
 	
 	
