@@ -17,9 +17,11 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.ValtblImportDateTraceMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.risk.valtblimport.dto.*;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -37,11 +39,6 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExcelUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.RskValtblSubject;
 import com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.component.business.common.dto.InfChinamutualfunddescriptionDto;
 import com.joyintech.tams.component.business.common.dto.InterfPayhsrcsecinfoDto;
@@ -107,7 +104,8 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
      */
     @Autowired
     private RskValtblPrtBotassetService rskValtblPrtBotassetService;
-
+    @Autowired
+    private ValtblImportDateTraceMapper valtblImportDateTraceMapper;
     /**
      * 债券
      */
@@ -452,9 +450,9 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                             }
                             String termType = rskValTableImportCommonService.getTermTypeFromStr(entity2.getSubCode(), entity2.getSubName());
                             if(termType != null) {
-                                entity2.setFinprodId(finprodType+'_'+termType);
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(termType));
                             } else {
-                                entity2.setFinprodId(finprodType+'_'+entity2.getSubCode().substring(8, entity2.getSubCode().length()));
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(entity2.getSubCode().substring(8, entity2.getSubCode().length())));
                             }
                             //在fin_trade_product、fin_product_type生成相关数据，风险需要用到
                             createRepoInfo(entity2);
@@ -469,9 +467,9 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                             }
                             String termType = rskValTableImportCommonService.getTermTypeFromStr(entity2.getSubCode(), entity2.getSubName());
                             if(termType != null) {
-                                entity2.setFinprodId(finprodType+'_'+termType);
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(termType));
                             } else {
-                                entity2.setFinprodId(finprodType+'_'+entity2.getSubCode().substring(8, entity2.getSubCode().length()));
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(entity2.getSubCode().substring(8, entity2.getSubCode().length())));
                             }
                             //在fin_trade_product、fin_product_type生成相关数据，风险需要用到
                             createRepoInfo(entity2);
@@ -540,7 +538,16 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         //保存估值表
 
         saveValTbl(dto);
-        
+        //处理成功的文件入库估值表导入日期记录表
+        if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
+            ValtblImportDateTrace dateDto = new ValtblImportDateTrace();
+            dateDto.setUuid(IDGenerator.generate());
+            dateDto.setImpdate(DateUtil.parse(DateUtil.getSysDate()));
+            dateDto.setPortfolioId(dto.getPtlId());
+            dateDto.setValdate(dto.getValDate());
+            dateDto.setCreateDept((LoginUserUtil.getInstCode()!= null && LoginUserUtil.getInstCode().size()>0) ? LoginUserUtil.getInstCode().get(0):null);
+            valtblImportDateTraceMapper.insert(dateDto);
+        }
         return errorInfoList;
     }
     
