@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface ImpairmentViewCommonMapper {
+public interface ValViewCommonMapper {
 	//获取资产交易列表
 	List<ImpairmentDataLoadStep1ReaderDto> selectAssetTradeList(Map<String, Object> params);
 	//获取评级信息

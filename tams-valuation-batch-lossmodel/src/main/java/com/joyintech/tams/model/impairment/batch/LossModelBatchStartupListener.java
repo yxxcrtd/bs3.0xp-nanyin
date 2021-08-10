@@ -16,7 +16,7 @@ import java.util.Date;
  * @author zznn
  */
 @Component
-public class ValModelBatchStartupListener  implements AppStartupListener {
+public class LossModelBatchStartupListener implements AppStartupListener {
 
     /**
      * 日志

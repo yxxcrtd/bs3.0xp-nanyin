@@ -2,10 +2,10 @@ package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.serv
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.ModelDictCode;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.AssetImpairmentStageJudgeModelMapper;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.*;
-import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCode;
-import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;

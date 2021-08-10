@@ -1,12 +1,12 @@
 package com.joyintech.tams.model.impairment.batch.datapusheclresult.service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.model.impairment.batch.common.constants.ServiceApplication;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResult;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResultProcessDto;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResultReaderDto;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.ImpairmentBatchSynParam;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
+import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.stereotype.Service;

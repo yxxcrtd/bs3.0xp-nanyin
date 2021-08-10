@@ -3,8 +3,7 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.impairment.batch.common.constants.GlobalConstant;
-import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentViewCommonService;
 import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
@@ -12,6 +11,7 @@ import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.Impairme
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep2ReaderDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ModStandardGradeMapping;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

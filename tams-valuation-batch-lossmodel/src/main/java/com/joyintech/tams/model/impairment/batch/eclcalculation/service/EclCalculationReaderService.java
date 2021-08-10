@@ -1,7 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.eclcalculation.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationReaderDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;

@@ -1,7 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapper;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.AssetGroupPdCalculateReaderDto;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;

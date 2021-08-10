@@ -19,6 +19,7 @@ import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
 import com.joyintech.calculation.shell.param.SecInfoModel;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
 import com.joyintech.tams.model.valuation.batch.calculation.CalculatorFactory;
 import com.joyintech.tams.model.valuation.batch.calculation.config.NumberEnum;
@@ -33,7 +34,6 @@ import com.joyintech.tams.model.valuation.batch.calculation.shell.param.outparam
 import com.joyintech.tams.model.valuation.batch.calculation.util.BasicUtil;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.*;
-import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
@@ -593,7 +593,7 @@ public class CashFlowDiscountProcessorService {
 			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),ModelDictCodeList.计息基础_A_A_B_COUP.getValue())){
 				secInfoModel.setBasis(com.joyintech.calculation.bonds.constant.Basis.A_A);
 			}
-			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),ModelDictCodeList.计息基础_A_A_B_DAY.getValue())){
+			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(), ModelDictCodeList.计息基础_A_A_B_DAY.getValue())){
 				secInfoModel.setBasis(com.joyintech.calculation.bonds.constant.Basis.A_A_D);
 			}
 		}

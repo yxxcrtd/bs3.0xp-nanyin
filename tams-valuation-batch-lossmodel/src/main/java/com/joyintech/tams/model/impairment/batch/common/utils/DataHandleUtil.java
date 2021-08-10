@@ -6,7 +6,7 @@
 package com.joyintech.tams.model.impairment.batch.common.utils;
 
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.model.impairment.batch.common.constants.GlobalConstant;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 
 import java.util.ArrayList;
 import java.util.List;

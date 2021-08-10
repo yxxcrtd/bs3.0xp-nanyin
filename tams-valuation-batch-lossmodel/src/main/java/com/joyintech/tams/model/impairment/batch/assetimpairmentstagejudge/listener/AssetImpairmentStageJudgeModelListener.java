@@ -3,7 +3,7 @@ package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.list
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;

@@ -1,7 +1,7 @@
 package com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dao.DataPushValuatIoninfoMapper;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.ValuationBatchSynDto;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;

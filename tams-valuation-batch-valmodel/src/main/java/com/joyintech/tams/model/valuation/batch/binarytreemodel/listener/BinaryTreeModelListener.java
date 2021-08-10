@@ -2,7 +2,7 @@ package com.joyintech.tams.model.valuation.batch.binarytreemodel.listener;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;

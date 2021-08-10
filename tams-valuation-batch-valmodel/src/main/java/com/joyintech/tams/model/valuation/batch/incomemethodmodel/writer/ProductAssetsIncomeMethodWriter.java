@@ -13,7 +13,7 @@ package com.joyintech.tams.model.valuation.batch.incomemethodmodel.writer;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ProductAssetsIncomeMethodResultDto;

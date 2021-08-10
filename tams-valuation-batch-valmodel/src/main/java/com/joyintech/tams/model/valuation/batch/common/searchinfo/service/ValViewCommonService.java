@@ -1,10 +1,8 @@
 package com.joyintech.tams.model.valuation.batch.common.searchinfo.service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ImpairmentDataLoadStep1ReaderDto;
-import com.joyintech.tams.model.valuation.batch.common.searchinfo.dao.ImpairmentViewCommonMapper;
+import com.joyintech.tams.model.valuation.batch.common.searchinfo.dao.ValViewCommonMapper;
 import com.joyintech.tams.model.valuation.batch.common.searchinfo.dto.ViewRatingInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +19,12 @@ import java.util.Map;
  * 减值模块视图查询
  */
 @Service
-public class ImpairmentViewCommonService extends BaseService{
+public class ValViewCommonService extends BaseService{
 	
-	private static final Logger logger = LoggerFactory.getLogger(ImpairmentViewCommonService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ValViewCommonService.class);
 	
 	@Autowired
-	private ImpairmentViewCommonMapper mmpairmentViewCommonMapper;
+	private ValViewCommonMapper mmpairmentViewCommonMapper;
 
 	/**
 	 * 获取资产交易列表

@@ -1,12 +1,12 @@
 package com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.model.valuation.batch.common.constants.ServiceApplication;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dao.DataPushValuatIoninfoMapper;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.ValuationBatchSynDto;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.ValuationBatchSynParam;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.ValuationBatchSynResultDto;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
+import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.BeanUtils;

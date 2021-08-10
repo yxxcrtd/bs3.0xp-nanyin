@@ -13,11 +13,11 @@ package com.joyintech.tams.model.valuation.batch.cashflowdiscount.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountReaderResult;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveConfig;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveDto;
-import com.joyintech.tams.model.valuation.batch.common.constants.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
@@ -119,7 +119,7 @@ public class CashFlowDiscountReaderService {
                 CashFlowDiscountReaderResult cashFlowDiscountReaderResult = new CashFlowDiscountReaderResult();
                 BeanUtil.copyPropertiesIgnoreNull(cashFlowDiscountReaderResult,item);
                 result.add(cashFlowDiscountReaderResult);
-                if(StringUtil.equals(item.getIsSus(),ModelDictCodeList.是否_是.getValue())&&StringUtil.equals(item.getIsRight(), ModelDictCodeList.是否_否.getValue())){
+                if(StringUtil.equals(item.getIsSus(), ModelDictCodeList.是否_是.getValue())&&StringUtil.equals(item.getIsRight(), ModelDictCodeList.是否_否.getValue())){
                     return;
                 }
                 else{

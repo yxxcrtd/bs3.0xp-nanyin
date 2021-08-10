@@ -13,7 +13,7 @@ package com.joyintech.tams.model.impairment.batch.pdcalculate.writer;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapper;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.AssetImpairmentPdCalculateResultDto;

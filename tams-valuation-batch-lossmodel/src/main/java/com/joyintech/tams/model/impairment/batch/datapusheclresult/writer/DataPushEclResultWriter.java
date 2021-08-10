@@ -2,7 +2,7 @@ package com.joyintech.tams.model.impairment.batch.datapusheclresult.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.model.impairment.batch.common.constants.ModelDictCodeList;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResultProcessDto;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.service.DataPushEclResultProcessService;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;

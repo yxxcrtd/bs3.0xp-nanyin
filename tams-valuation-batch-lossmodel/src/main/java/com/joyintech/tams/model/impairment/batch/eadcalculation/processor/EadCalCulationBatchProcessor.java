@@ -2,10 +2,10 @@ package com.joyintech.tams.model.impairment.batch.eadcalculation.processor;
 
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
-import com.joyintech.tams.model.impairment.batch.common.constants.GlobalConstant;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadCalCulationResultDto;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadCalculationReaderDto;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.service.EadCalCulationBatchProcessorService;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
