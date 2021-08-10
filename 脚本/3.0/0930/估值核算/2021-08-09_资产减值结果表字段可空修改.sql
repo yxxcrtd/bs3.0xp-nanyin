@@ -1,1 +1,0 @@
-alter table MOD_ECL_RESULT modify allow_model_cover null;
