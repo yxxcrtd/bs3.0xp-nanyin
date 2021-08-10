@@ -78,9 +78,10 @@
             var chlFinprodId = query("#chlFinprodId").val();
             var finprodIdhid = query("#finprodIdhid").val();
             var sysDateT1 = query('#vdate').val();
-            parent.EtrIbBondinfoHq.queryAmountInfoMuti(finprodIdhid,portfolioIds,chlFinprodId,query('#ccy').val(),sysDateT1, query('#calendarId').val());
-            parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,query('#ccy').val(),query('#vdate').val(),query('#price').val());
-
+            if(parent.EtrIbBondinfoHq){
+                parent.EtrIbBondinfoHq.queryAmountInfoMuti(finprodIdhid,portfolioIds,chlFinprodId,query('#ccy').val(),sysDateT1, query('#calendarId').val());
+                parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,query('#ccy').val(),query('#vdate').val(),query('#price').val());
+            }
             // let ccy = query('#ccy').val();
             // let vdate = query('#vdate').val();
             // let calId = query('#calendarId').val();
