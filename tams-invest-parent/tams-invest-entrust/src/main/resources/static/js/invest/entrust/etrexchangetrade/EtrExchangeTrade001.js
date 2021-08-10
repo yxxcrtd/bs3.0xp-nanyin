@@ -2830,9 +2830,22 @@
      * 查看资产详情事件
      */
     var searchDetail = function() {
-        var finprodId =  $('#finprodId_' + currentTab).val();;
-        var url = "/invest/asset/fund/FinFundTarget002/init";
+        var finprodId =  $('#finprodId_' + currentTab).val();
+        var finprodType2 =  $('#finprodType2_' + currentTab).val();
         if (finprodId != ""){
+            var url = "invest/asset/bond/FinBondTargetAsset002/init"; // 默认债券标的
+            if (FINPROD_TYPE_TG_F06 == finprodType2){
+                var flagStr = finprodId.substr(finprodId.length-2,finprodId.length);
+                // 场内基金标的
+                url = "invest/asset/exfund/FinExFundTarget002/init";
+                if (flagStr == "OF"){
+                    // 公募基金标的
+                    url = "invest/asset/fund/FinFundTarget002/init";
+                }
+            } else if (FINPROD_TYPE_TG_F10 == finprodType2){
+                // 股票标的
+                url = "invest/asset/stock/FinStockInfo002/init";
+            }
             var param = {
                 pageModel:PAGE_MODEL_REFERENCE,
                 finprodId:finprodId
