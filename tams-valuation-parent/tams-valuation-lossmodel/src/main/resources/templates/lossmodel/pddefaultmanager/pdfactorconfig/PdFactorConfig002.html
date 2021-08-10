@@ -3,10 +3,15 @@
       layout:decorator="~{layout/default}">
 <head>
     <title>前瞻因子维护</title>
+    <style>
+        .mst-lable{
+            width: 20%;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
-    <form class="layui-form " id="submitForm">
+    <form class="layui-form joyin-form-wrap pro-module-form"style="padding: 10px 0;" id="submitForm">
         <div class="layui-form-item" style="display: none;">
         	<input type="text" id="seqno" name="seqno" class="layui-input form-input"
                            data-th-value="${entity?.seqno}">
@@ -15,64 +20,73 @@
             <input type="text" id="workflowId" name="workflowId" placeholder="流程 Id"
                    class="layui-input form-input" data-th-value="${entity?.workflowId}"/>
         </div>
-        <div class="layui-form-item">
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable"><span style="color: red"> * </span>年份</label>
-                <div class="layui-input-inline input-inline">
-                    <input id="vouchYear" name="vouchYear" class="layui-input form-input" autocomplete="off"
-                            allowClear="true" data-th-value="${entity?.vouchYear}"
-                           data-th-placeholder="#{SysCommon.placeholder}">
+        <div class="layui-form-item ">
+            <div class="layui-row ">
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md6">
+                        <label class="layui-form-label form-lable"><span style="color: red"> * </span>年份</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="vouchYear" name="vouchYear" class="layui-input form-input" autocomplete="off"
+                                   allowClear="true" data-th-value="${entity?.vouchYear}"
+                                   data-th-placeholder="#{SysCommon.placeholder}">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable"><span style="color: red"> * </span> 季度</label>
-                <div class="layui-input-inline input-inline">
-                    <select id="vouchQuarter" name="vouchQuarter" class="layui-input form-input input-select"
-                            allowClear="true" data-th-data-result="${QUARTER}"
-                            data-th-placeholder="#{SysCommon.placeholder}"
-                            data-th-initvalue="${entity?.vouchQuarter}">
-                    </select>
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md6">
+                        <label class="layui-form-label form-lable"><span style="color: red"> * </span> 季度</label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="vouchQuarter" name="vouchQuarter" class="layui-input form-input input-select"
+                                    allowClear="true" data-th-data-result="${QUARTER}"
+                                    data-th-placeholder="#{SysCommon.placeholder}"
+                                    data-th-initvalue="${entity?.vouchQuarter}">
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable"><span style="color: red"> * </span> 乐观因子</label>
-                <div class="layui-input-inline input-inline">
-                    <input id="optimisticFactor" name="optimisticFactor" class="layui-input form-input text-number" 
-                            allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" data-fixtype="2" data-textrange="4" maxlength="10"
-                            data-th-value="${entity?.optimisticFactor}">
+
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md6">
+                        <label class="layui-form-label form-lable"><span style="color: red"> * </span> 乐观因子</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="optimisticFactor" name="optimisticFactor" class="layui-input form-input text-number"
+                                    allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" data-fixtype="2" data-textrange="4" maxlength="10"
+                                    data-th-value="${entity?.optimisticFactor}">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable"><span style="color: red"> * </span> 基础因子</label>
-                <div class="layui-input-inline input-inline">
-                    <input id="basicFactor" name="basicFactor" class="layui-input form-input text-number" 
-                            allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" data-fixtype="2" data-textrange="4" maxlength="10"
-                            data-th-value="${entity?.basicFactor}">
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md6">
+                    <label class="layui-form-label form-lable"><span style="color: red"> * </span> 基础因子</label>
+                    <div class="layui-input-inline input-inline">
+                        <input id="basicFactor" name="basicFactor" class="layui-input form-input text-number"
+                               allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" data-fixtype="2" data-textrange="4" maxlength="10"
+                               data-th-value="${entity?.basicFactor}">
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable"><span style="color: red"> * </span> 悲观因子</label>
-                <div class="layui-input-inline input-inline">
-                    <input id="pessimismFactor" name="pessimismFactor" class="layui-input form-input text-number" 
-                            allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" data-fixtype="2" data-textrange="4" maxlength="10"
-                            data-th-value="${entity?.pessimismFactor}">
                 </div>
-            </div>
-        </div>
-        <div class="layui-row" style="margin: 50px;">
-            <div class="text-center">
-                <!-- <button type="button" class="layui-btn btn-save" id="PdFactorConfig002_btn_save">保存</button> -->
-                <button type="button" class="layui-btn btn-submit" id="PdFactorConfig002_btn_submit">提交
-                </button>
-                <a type="button" class="layui-btn btn-cancel" id="PdFactorConfig002_btn_cancel">取消</a>
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md6">
+                        <label class="layui-form-label form-lable"><span style="color: red"> * </span> 悲观因子</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="pessimismFactor" name="pessimismFactor" class="layui-input form-input text-number"
+                                    allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" data-fixtype="2" data-textrange="4" maxlength="10"
+                                    data-th-value="${entity?.pessimismFactor}">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
+    <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="position: fixed;bottom: 30px;">
+        <div class="text-center">
+            <a id="PdFactorConfig002_btn_submit" class="layui-btn layui-btn-sm btn-submit"
+               data-th-text="#{SysCommon.submit}">提交</a>
+            <a id="PdFactorConfig002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel"
+               data-th-text="#{SysCommon.cancel}">取消</a>
+        </div>
+        </div>
+
 </div>
 <div layout:fragment="script">
     <script data-th-src="@{/js/lossmodel/pddefaultmanager/pdfactorconfig/PdFactorConfig002.js}"
