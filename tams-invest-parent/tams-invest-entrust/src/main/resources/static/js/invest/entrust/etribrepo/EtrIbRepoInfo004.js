@@ -46,7 +46,8 @@
         {field: 'indexId', title: 'EtrRepo003.indexId', width: 80, sortable: false}
         , {field: 'vdateText', title: 'EtrRepo003.vdate', width: 120, sortable: false}
         , {field: 'mdateText', title: 'EtrRepo003.mdate', width: 120, sortable: false}
-        , {field: 'portfolioId', title: 'EtrRepo003.portfolioId', width: 120, sortable: false}
+       /* , {field: 'portfolioId', title: 'EtrRepo003.portfolioId', width: 120, sortable: false}*/
+        , {field: 'portfolioName', title: 'EtrRepo003.portfolioName', width: 120, sortable: false}
         // , {field: 'portfolioId', title: '子组合代码', width: 120, sortable: false}
         , {field: 'busPs', title: 'EtrRepo003.ps', width: 150, sortable: false}
         , {field: 'busCcy', title: 'EtrRepo003.ccy', width: 150, sortable: false}
