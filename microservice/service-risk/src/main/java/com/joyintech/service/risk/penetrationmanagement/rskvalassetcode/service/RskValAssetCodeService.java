@@ -221,5 +221,15 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
         return super.queryForPageForSelectReturn(page,length,() -> rskValAssetCodeMapper.selecctRskValtblSubjectSumCodeList(pageParam));
     }
 
+    /**
+     * 查询所有已配置科目代码
+     * @param page
+     * @param length
+     * @param pageParam
+     * @return
+     */
+    public List<RskValtblAssetSubMapDtlDto> findListDtl(Map<String, Object> pageParam) {
+           return rskValAssetCodeMapper.selectDtl(pageParam);
+    }
 
 }

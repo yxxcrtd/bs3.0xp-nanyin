@@ -205,5 +205,17 @@ public class RskValAssetCodeController {
     public Page<SelectOptionDto> selecctRskValtblSubjectSumCodeList(@PathVariable("page") int page, @PathVariable("length") int length, @RequestBody Map<String, Object> pageParam){
         return rskValAssetCodeService.selecctRskValtblSubjectSumCodeList(page,length,pageParam);
     }
+    /**
+     * 获取所有明细查询
+     * <功能详细描述>
+     * @param id
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("findListDtl")
+    public List<RskValtblAssetSubMapDtlDto> findListDtl(@RequestBody Map<String, Object> param) {
+        return rskValAssetCodeService.findListDtl(param);
+    }
 
 }
