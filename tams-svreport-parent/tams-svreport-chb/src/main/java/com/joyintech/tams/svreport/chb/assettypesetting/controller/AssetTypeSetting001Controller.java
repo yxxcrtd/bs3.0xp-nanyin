@@ -8,8 +8,10 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.svreport.chb.assettypesetting.dto.AssetTypeSetting001Dto;
+import com.joyintech.tams.svreport.chb.assettypesetting.service.AssetTypeSetting001Service;
 import com.joyintech.tams.svreport.chb.assettypesetting.service.AssetTypeSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +27,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AssetTypeSetting001Controller extends BaseController {
     @Autowired
     private AssetTypeSettingService assetTypeSettingService;
+
+    @Autowired
+    private AssetTypeSetting001Service assetTypeSetting001Service;
 
     /**
      * 初始化 controller
@@ -97,5 +102,15 @@ public class AssetTypeSetting001Controller extends BaseController {
     public AjaxResult doExDelete(@RequestBody AssetTypeSetting001Dto dto) throws Exception {
         assetTypeSettingService.doExDelete(dto);
         return new AjaxResult("删除成功");
+    }
+
+    /**
+     * 导出
+     * @return ResponseEntity
+     * @throws Exception 异常
+     */
+    @RequestMapping(ACTION_EXPORT)
+    public ResponseEntity<byte[]> export() throws Exception {
+        return assetTypeSetting001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

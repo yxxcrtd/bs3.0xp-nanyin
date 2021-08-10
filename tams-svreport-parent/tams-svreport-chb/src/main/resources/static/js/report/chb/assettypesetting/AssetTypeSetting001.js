@@ -116,14 +116,22 @@
         })
     });
 
+        /**
+         * 导出事件
+         */
+        var exportExcel = function() {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        };
+
     /**
      * 画面加载完成
      */
     $(function () {
         //导出按钮隐藏
-        $('#AssetTypeSetting001_btn_export').hide();
+//        $('#AssetTypeSetting001_btn_export').hide();
         //筛选按钮隐藏
-        $('#AssetTypeSetting001_btn_filter').hide();
+//        $('#AssetTypeSetting001_btn_filter').hide();
         // 查询
         $('#AssetTypeSetting001_btn_search').click(function() {
             tableA.load();
@@ -137,7 +145,7 @@
         });
         // 导出
         $('#AssetTypeSetting001_btn_export').click(function() {
-
+            exportExcel();
         });
     });
 }());
