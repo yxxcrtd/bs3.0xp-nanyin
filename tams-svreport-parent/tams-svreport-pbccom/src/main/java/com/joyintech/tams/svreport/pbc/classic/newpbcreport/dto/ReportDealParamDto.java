@@ -16,6 +16,8 @@ public class ReportDealParamDto {
 
     private String orgCode;
 
+    private String datZipPath;
+
     public String getDatZipCode() {
         return datZipCode;
     }
@@ -62,5 +64,13 @@ public class ReportDealParamDto {
 
     public void setOrgCode(String orgCode) {
         this.orgCode = orgCode;
+    }
+
+    public String getDatZipPath() {
+        return datZipPath;
+    }
+
+    public void setDatZipPath(String datZipPath) {
+        this.datZipPath = datZipPath;
     }
 }

@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.svreport.pbc.classic.pbcNewDat.service.PbcDatUtil;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.service.PbcPrdBaseinfoSubDatService;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
@@ -156,21 +157,38 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                     baseinfoSubDatsNew.add(baseinfoSubDat);
                 }
             }
-            //删除未报送有修改的记录 并重新插入
-            if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendProdIds)){
-                pbcPrdBaseinfoEndSubDatMapper.deleteBatchByProdId(baseinfoSubDatsNoSendProdIds);
-            }
+
             //1:分配不生成压缩文件
             String zipType = "1";
+            //调用来源是否批处理   01：是批处理调用   ； 02：报送文件管理页面调用
+            String srcModel = "02";
             //获取系统参数 1:按照业务日期进行压缩；  2：整体压缩
             String pbc_send_zip_model = CacheUtil.getSysParam("PBC_SEND_ZIP_MODEL");
             String zipModel = StrUtil.isEmpty(pbc_send_zip_model) ? "2" : pbc_send_zip_model;
             //登录用户的机构代码
             String orgCode = SecurityUtil.getLoginUser().getOrgCode();
+            List<PbcPrdBaseinfoEndSubDat> endListAll = new ArrayList<>();
+            //加入新建的数据
+            endListAll.addAll(baseinfoSubDatsNew);
+            //加入未报送的数据
+            endListAll.addAll(baseinfoSubDatsNoSend);
             //调用【DAT生成共通处理-产品端】
-            Map<String,ArrayList> resultMap = null; //PbcDatUtil.genDatZipList();
+            Map<String,ArrayList> resultMap = new HashMap<>();
+            try {
+                resultMap = PbcDatUtil.genDatZipList(zipType,zipModel,srcModel,orgCode,new ArrayList<>(),endListAll);
+            }catch (Exception e){
+                logger.error("生成dat文件异常",e);
+                ExcelValidDto dto = new ExcelValidDto();
+                dto.setErrorInfo("生成dat文件异常");
+                errorList.add(dto);
+                return errorList;
+            }
             List<PbcPrdBaseinfoEndSubDat> endList = resultMap.get("endList");
             List<PbcSendZipDatFile> zipList = resultMap.get("zipList");
+            //删除未报送有修改的记录 并重新插入
+            if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendProdIds)){
+                pbcPrdBaseinfoEndSubDatMapper.deleteBatchByProdId(baseinfoSubDatsNoSendProdIds);
+            }
             //插入新的数据
             if(CollectionUtil.isNotEmpty(endList)){
                 for (PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoEndSubDat : endList) {
