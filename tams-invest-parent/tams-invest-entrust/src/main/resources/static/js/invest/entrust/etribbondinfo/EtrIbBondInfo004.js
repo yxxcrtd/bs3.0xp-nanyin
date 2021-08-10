@@ -206,7 +206,7 @@
         /**
          * 风险试算
          */
-        $('#EtrInvestBondInfo004_btn_riskcal').click(function () {
+        $('#EtrIbBondInfo004_btn_riskcal').click(function () {
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
             // 批量风险试算  modify by zhangrui1 start
 //            $("#riskMathFlag").val("02");

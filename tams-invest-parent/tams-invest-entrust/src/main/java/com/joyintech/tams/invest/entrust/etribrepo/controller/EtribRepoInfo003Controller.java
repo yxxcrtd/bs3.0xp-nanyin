@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtribBondInfo003Service;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtribRepoInfo003Dto;
@@ -360,17 +361,17 @@ public class EtribRepoInfo003Controller extends BaseController {
                 dto.getBussRepoSec().setPledgeBondList(pledgeBondList);
             }
         }
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, RepoInfoDto.getOperateType())) {
-//            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
-//                    dataList, DictCodeList.平安资产类型_质押式回购.getValue(),
-//                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
-//                    true, RepoInfoDto.getEtrInvestPersonInfo());
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
-//        EntrustRdsCommonAop.riskListToChildren(RepoInfoDto.getRiskTrialRetDto(), RepoInfoDto.getEtrInvestRepoInfoDtos(),
-//                (dto, list) -> dto.setRiskTrialRetDto(list));
+        if (StringUtil.equals(BussinessConstant.SUBMIT, RepoInfoDto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
+                    dataList, DictCodeList.平安资产类型_质押式回购.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                    true, RepoInfoDto.getEtrInvestPersonInfo());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        EntrustRdsCommonAop.riskListToChildren(RepoInfoDto.getRiskTrialRetDto(), RepoInfoDto.getEtrInvestRepoInfoDtos(),
+                (dto, list) -> dto.setRiskTrialRetDto(list));
 
         // 临时主键
         BussinessCodeParameter param = new BussinessCodeParameter();
