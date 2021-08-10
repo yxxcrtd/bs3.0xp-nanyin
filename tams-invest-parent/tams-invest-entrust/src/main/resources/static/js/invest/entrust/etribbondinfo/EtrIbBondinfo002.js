@@ -702,6 +702,20 @@
     });
 
     /**
+     * 查看组合详情事件
+     */
+    $('#EtrIbBondinfo002_portfolioId_btn_search').click(function() {
+        if(query("#portfolioId").val()){
+            // 在父页面全屏展示
+            parent.EtrIbBondinfoMain.dialogSelf.dialog(JoyinUtil.getLabel("SysCommon.refrence"),basePath
+                + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+                {pageModel:PAGE_MODEL_REFERENCE, portfolioId:query("#portfolioId").val()});
+        }else {
+            Joyin.error("组合名称不能为空")
+        }
+    });
+
+    /**
      * 绑定事件
      */
     $(function () {

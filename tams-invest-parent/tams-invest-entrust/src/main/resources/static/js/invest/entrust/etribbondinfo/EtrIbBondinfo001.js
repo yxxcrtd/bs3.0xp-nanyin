@@ -173,7 +173,7 @@
     positionsTable.bind('click','.portfolioIdLink', function(row) {
         // 在父页面全屏展示
         parent.EtrIbBondinfoMain.dialogSelf.dialog(JoyinUtil.getLabel("SysCommon.refrence"),basePath
-            + "invest/asset/bond/FinBondTargetAsset002/init",
+            + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
             {pageModel:PAGE_MODEL_REFERENCE, portfolioId:row.portfolioId});
         
         // Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
@@ -186,7 +186,7 @@
      */
     positionsTable.bind('click','.finprodIdLink', function(row) {
         parent.EtrIbBondinfoMain.dialogSelf.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+            basePath + "invest/asset/bond/FinBondTargetAsset002/init",
             {pageModel:PAGE_MODEL_REFERENCE,
                 finprodId:row.finprodId,  //金融产品代码
                 //valDate:data.valDate,//估值日
