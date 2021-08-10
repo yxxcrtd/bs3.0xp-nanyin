@@ -4,11 +4,12 @@ import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountS
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
-
+@Repository
 public interface PbcPrdBaseinfoSubNewMapper {
     int deleteByPrimaryKey(String registSeqno);
 
