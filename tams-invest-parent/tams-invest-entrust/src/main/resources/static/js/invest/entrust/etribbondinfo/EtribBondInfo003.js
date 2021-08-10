@@ -138,7 +138,7 @@
                 if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
                     // 含权债或为空 且 价格模式不是市价
                     exerYield.val('').attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
-                    query('#calculateField_exerYield').val('').attr('disabled', false);
+                    query('#calculateField_exerYield').attr('disabled', false);
                 }
             }
             return exerYield;
@@ -567,7 +567,7 @@
             if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
                 // 含权债或为空 且 价格模式不是市价
                 exerYield.attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
-                query('#calculateField_exerYield').val('').attr('disabled', false);
+                query('#calculateField_exerYield').attr('disabled', false);
             }
             calDeviationDegree();
         }
@@ -1238,8 +1238,6 @@
             if (!query("#finprodId").val()) {
                 return;
             }
-            // 根据净价计算净价偏离度
-            calDeviationDegree();
             //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 start
             var calculateField =  query("input[name=calculateField]:checked").val();
             if(calflag != calculateField){
@@ -1286,6 +1284,8 @@
                     if (data.price) {
                         query("#price").val(data.price).trigger("blur");
                         query("#fpriceAmt").val(data.unitFprice).trigger("blur");
+                        // 根据净价计算净价偏离度
+                        calDeviationDegree();
                     } else {
                         query("#price").val("");
                         query("#fpriceAmt").val("");
