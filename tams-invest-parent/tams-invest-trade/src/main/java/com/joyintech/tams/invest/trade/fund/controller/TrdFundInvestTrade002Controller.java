@@ -17,6 +17,7 @@ import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.client.ClientData;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
@@ -511,12 +512,26 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         }
         //----------add by jjpei 20200114 核风险版本 start----------
         if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
+            // modify by zhangrui1 增加批量接口处理 start
+//            AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(),BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+//                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_基金.getValue(),
+//                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
+            String ps = dto.getPs();
+            String infCode = BussinessDictCodeListRds.接口系统ID_实占接口.getValue();
+            if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请) || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)) {
+                infCode = BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue();
+            }
             AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(),BussinessDictCodeListRds.事件类型_投资交易.getValue(),
-                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_基金.getValue(),
-                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
+                    infCode, DictCodeList.平安资产类型_基金.getValue(),
+                    en -> interfRiskRdsService.sendRiskRdsData(dto, en));
+            // modify by zhangrui1 增加批量接口处理 end
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }
+            // add by zhangrui1 start
+            // 将实占信息设置到线程缓存出错时撤销用
+            TradeRdsCommonAop.setLocalCache(dto);
+            // add by zhangrui1 end
         }
         //----------add by jjpei 20200114 核风险版本 end----------
         ProcessParameter<TrdFundInvestTradeDto> processParameter = new ProcessParameter<>();

@@ -87,7 +87,17 @@
         , {field: 'assetAvailablePosition', title: 'EtrInvestBondInfo004.assetAvailablePosition', type: 'number', width: 150, sortable: false}
 //        , {field: 'SecManageAvailableCash', title: 'EtrInvestBondInfo004.SecManageAvailableCash', type: 'number', width: 150, sortable: false}
 //        , {field: 'channelAvailableCash', title: 'invest.channelId', type: 'number', width: 150, sortable: false}
-        , {field: 'counterIdName', title: 'EtrInvestBondInfo004.counterId', width: 150, sortable: false}
+        , {
+            field: 'counterId', width: 150, title: 'EtrInvestBondInfo004.counterId', edit: true, sortable: false,
+            editOption: {
+                type: 'select',
+                id: 'counterId',
+                multiple: false,
+                showField: 'text',
+                searchable: true,
+                url: JoyinUtil.getRealPath('/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList')
+            }
+        }
         , {field: 'remark', title: 'EtrInvestBondInfo004.remark', width: 150, sortable: false}
         , {field: 'fileArray', width: 150, visible: false}
         , {field: 'businessId', width: 150, visible: false}

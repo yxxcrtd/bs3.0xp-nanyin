@@ -1,17 +1,65 @@
 package com.joyintech.tams.invest.common.risktrialrds.reflect;
 
+import com.joyintech.tams.invest.common.risktrialrds.dto.InvestTradeTrialInput;
 import com.joyintech.tams.invest.common.risktrialrds.dto.SystemParam;
+import com.joyintech.tams.invest.common.risktrialrds.reflect.duration.service.RiskManageCommonService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author 裴家俊
- * @remark  所有PLUGIN类型的指标参数调用接口
- * @date 2017-12-20
+ * @remark 所有PLUGIN参数基类
+ * @date 2020-07-15
  */
 
-public interface PluginClass {
+public abstract class PluginClass<V> {
 
-		void setSysParameter(SystemParam sysPass, PluginClassDao assetDao);
+	@Autowired
+	protected PluginClassRdsDao pluginClassDao;
+
+	@Autowired
+	protected RiskManageCommonService riskManageCommonService;
+
+	protected SystemParam systemParam;
+
+	protected InvestTradeTrialInput inputParam;
+
+	/**
+	 * 反射类ID
+	 */
+	private String refId;
+
+	/**
+	 * 取得INF注解
+	 *
+	 * @return INF注解实例
+	 * @see
+	 * @since 1.0
+	 */
+	private REF getREF() {
+		return getClass().getAnnotation(REF.class);
+	}
+
+	@Autowired
+	private void init() {
+		REF ref = getREF();
+		if (ref != null) {
+			refId = ref.value();
+		}
+	}
+
+	public  void setSysParameter(InvestTradeTrialInput investTradeTrialInput, SystemParam sysPass){
+		this.inputParam=investTradeTrialInput;
+		this.systemParam = sysPass;
+	};
 		
-		Object getParamterValue() throws Exception;
+	public  V getParameterValue() throws Exception{
+		V obj=handleData();
+		return obj;
+	};
 
+	public String getRefId() {
+		return refId;
+	}
+
+	protected  abstract V handleData() throws Exception;
 }

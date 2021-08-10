@@ -65,19 +65,19 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
         SelectOptionDto busiTypeSelectOptionFour = new SelectOptionDto();
         SelectOptionDto busiTypeSelectOptionFive = new SelectOptionDto();
         busiTypeSelectOptionOne.setId(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
-        busiTypeSelectOptionOne.setText(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getCodeName());
+        busiTypeSelectOptionOne.setText("质押式正回购的质押券");
         busiTypeList.add(busiTypeSelectOptionOne);
         busiTypeSelectOptionTwo.setId(DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue());
-        busiTypeSelectOptionTwo.setText(DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getCodeName());
+        busiTypeSelectOptionTwo.setText("买断式正回购的融出券");
         busiTypeList.add(busiTypeSelectOptionTwo);
         busiTypeSelectOptionThree.setId("BZQRK");
-        busiTypeSelectOptionThree.setText("标准券入库");
+        busiTypeSelectOptionThree.setText("标准券入库的券");
         busiTypeList.add(busiTypeSelectOptionThree);
         busiTypeSelectOptionFour.setId(DictCodeListExt1.金融产品类型_投管用_债券借贷.getValue());
-        busiTypeSelectOptionFour.setText(DictCodeListExt1.金融产品类型_投管用_债券借贷.getCodeName());
+        busiTypeSelectOptionFour.setText("债券借贷的融出券");
         busiTypeList.add(busiTypeSelectOptionFour);
         busiTypeSelectOptionFive.setId(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue());
-        busiTypeSelectOptionFive.setText(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getCodeName());
+        busiTypeSelectOptionFive.setText("债券借贷融入的质押券");
         busiTypeList.add(busiTypeSelectOptionFive);
         //add by swwan 【重庆银行】 增加 业务类型  2021年7月20日 end
         //质押券置换查询

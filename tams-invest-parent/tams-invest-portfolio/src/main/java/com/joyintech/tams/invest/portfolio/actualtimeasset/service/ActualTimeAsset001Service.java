@@ -75,14 +75,9 @@ public class ActualTimeAsset001Service extends CommonExportService<ActualTimeAss
             map.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
         }
         // add by swwan 多组合查询 20210719 end
-        Object secManageAcctId = map.get("secManageAcctId");
-        if (portfolioId != null) {
-            map.put("portfolioIdList",
-                    StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioId));
-        }
-        if (secManageAcctId != null) {
-            map.put("secManageAcctIdList",
-                    StringUtil.splitToList(GlobalConstant.COMMA, (String)secManageAcctId));
+        String secManageAcctId = (String) map.get("secManageAcctId");
+        if (StringUtil.isNotEmpty(secManageAcctId)) {
+            map.put("secManageAcctIdList", StringUtil.splitToList(GlobalConstant.COMMA, secManageAcctId));
         }
         Page<ActualTimeAssetDto> page = restTemplate.postForPage(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ActualTimeAsset/findPage",

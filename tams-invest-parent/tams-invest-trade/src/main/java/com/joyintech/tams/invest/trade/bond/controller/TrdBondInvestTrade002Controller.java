@@ -250,6 +250,14 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         Date sysDate = DateUtil.platDateFromCache();
         String formatDate = DateUtil.format(sysDate);
         model.addAttribute("formatDate",formatDate);
+        //add by chenjiaxing 银行间下行交易费用匹配展示 start
+        if(StringUtils.isNotBlank(this.getParam("procedureAmt")) && StringUtils.isNotBlank(this.getParam("fTradeId"))){
+            dto.setProcedureAmt(new BigDecimal(this.getParam("procedureAmt")));
+        }
+        if(StringUtils.isNotBlank(this.getParam("settleAmt")) && StringUtils.isNotBlank(this.getParam("fTradeId"))){
+            dto.setSettleAmt(new BigDecimal(this.getParam("settleAmt")));
+        }
+        //add by chenjiaxing 银行间下行交易费用匹配展示 end
         model.addAttribute("entity", dto);
         model.addAttribute("entity_trdInvestPersonInfo",
             dto.getTrdInvestPersonInfo() == null ? null : JsonUtils.object2Json(
@@ -790,14 +798,25 @@ public class TrdBondInvestTrade002Controller extends BaseController {
                 if (!(StringUtil.isNotBlank(bondDto.getfTradeId())
                         && StringUtil.equals(DictCodeList.是否_是.getValue(),
                         tradeCommonService.checkExecIdHasQuote(bondDto.getfTradeId())))) {
-                        AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
-                                BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_债券.getValue(),
-                                (en)->interfRiskRdsService.sendRiskRdsData(bondDto,en));
+                    if (StringUtil.isNotEmpty(bondDto.getBondFirstSign())) {
+                        AjaxResult ar = TradeRdsCommonAop.doFirstBondTrade(bondDto, BussinessDictCodeListRds.接口系统ID_实占接口.getValue());
                         if (StringUtil.isNotEmpty(ar)) {
                             return ar;
                         }
+                    } else {
+                        AjaxResult ar = interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                                BussinessDictCodeListRds.接口系统ID_实占接口.getValue(), DictCodeList.平安资产类型_债券.getValue(),
+                                (en) -> interfRiskRdsService.sendRiskRdsData(bondDto, en));
+                        if (StringUtil.isNotEmpty(ar)) {
+                            return ar;
+                        }
+                    }
                 }
             }
+            // add by zhangrui1 start
+            // 将实占信息设置到线程缓存出错时撤销用
+            TradeRdsCommonAop.setLocalCache(dtoList);
+            // add by zhangrui1 end
         }
         //----------add by jjpei 20200114 核风险版本 end----------
 

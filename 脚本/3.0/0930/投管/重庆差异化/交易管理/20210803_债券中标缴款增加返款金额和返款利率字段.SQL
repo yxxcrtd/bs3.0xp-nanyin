@@ -1,0 +1,4 @@
+-- 增加返款金额、烦乱利率字段
+alter table PA_TRD_FIN_PRODUCT_DEAL_TOTAL add (REFUND_RATE NUMBER(30,4),REFUND_AMOUNT NUMBER(30,2));
+comment on column PA_TRD_FIN_PRODUCT_DEAL_TOTAL.REFUND_RATE is '返款费率';
+comment on column PA_TRD_FIN_PRODUCT_DEAL_TOTAL.REFUND_AMOUNT is '返款金额';

@@ -10,9 +10,10 @@
 
 package com.joyintech.interf.bankname.riskinterf.service;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.*;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
@@ -20,12 +21,30 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
 import com.joyintech.tams.common.base.entity.FinTradeProductKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.core.BaseRiskRdsService;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.util.CommonBusinessUtil;
-import com.joyintech.tams.constant.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListRsk;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.client.ClientUtil;
@@ -41,15 +60,6 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 接口组件Service
@@ -59,7 +69,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 @Service
-public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsService {
+public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsService{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -68,15 +78,15 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      */
     public static final String RSK_SZ_LIST = "RSK_LIST";
 
-    private List<String> 申购确认_赎回申请=Arrays.asList(DictCodeList.交易方向_申购确认.getValue(), DictCodeList.交易方向_赎回.getValue(), DictCodeList.交易方向_赎回到账.getValue());
+    private List<String> 申购确认_赎回申请=Arrays.asList(DictCodeList.交易方向_申购确认.getValue(),DictCodeList.交易方向_赎回.getValue(),DictCodeList.交易方向_赎回到账.getValue());
 
-    private List<String> 产品端_认购赎回分红=Arrays.asList(DictCodeList.交易方向_产品认购.getValue(), DictCodeList.交易方向_产品申购.getValue()
-            , DictCodeList.交易方向_产品赎回.getValue(), DictCodeList.交易方向_份额强增.getValue(), DictCodeList.交易方向_份额强减.getValue(), DictCodeList.交易方向_现金分红.getValue()
-            , DictCodeList.交易方向_提前终止.getValue(), DictCodeList.交易方向_提前赎回.getValue(), DictCodeList.交易方向_产品付费.getValue(), DictCodeList.交易方向_税费缴税.getValue()
-            , DictCodeList.交易方向_产品提前赎回.getValue(), DictCodeList.交易方向_产品现金分红.getValue());
+    private List<String> 产品端_认购赎回分红=Arrays.asList(DictCodeList.交易方向_产品认购.getValue(),DictCodeList.交易方向_产品申购.getValue()
+            ,DictCodeList.交易方向_产品赎回.getValue(),DictCodeList.交易方向_份额强增.getValue(),DictCodeList.交易方向_份额强减.getValue(),DictCodeList.交易方向_现金分红.getValue()
+            ,DictCodeList.交易方向_提前终止.getValue(),DictCodeList.交易方向_提前赎回.getValue(),DictCodeList.交易方向_产品付费.getValue(),DictCodeList.交易方向_税费缴税.getValue()
+            ,DictCodeList.交易方向_产品提前赎回.getValue(),DictCodeList.交易方向_产品现金分红.getValue());
 
-    private List<String> 协议回购到期交易方向 = Arrays.asList(DictCodeListExt3.交易方向_提前购回.getValue(), DictCodeListExt3.交易方向_到期购回.getValue()
-            , DictCodeListExt3.交易方向_解除质押.getValue());
+    private List<String> 协议回购到期交易方向 = Arrays.asList(DictCodeListExt3.交易方向_提前购回.getValue(),DictCodeListExt3.交易方向_到期购回.getValue()
+            ,DictCodeListExt3.交易方向_解除质押.getValue());
     /**
      * 资产基本信息更新Redis服务
      */
@@ -109,7 +119,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
     @Autowired
     private FinTradeProductMapper finTradeProductMapper;
 
-    public ClientData sendRiskRdsDataCommon(Map<String, Object> dataMap, V v) throws Exception {
+    public ClientData sendRiskRdsDataCommon(Map<String, Object> dataMap,V v) throws Exception {
         logger.info("==========调用微服务端风险接口 start==========");
         List<Map<String, Object>> listMap = (List<Map<String, Object>>) dataMap.get("rskList");
         List<InterfRiskRdsDto> requestList = new ArrayList<InterfRiskRdsDto>();
@@ -128,7 +138,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                 interfRiskRdsDto.setAssetCode(null);
             } else {
 //                interfRiskRdsDto.setAssetCode(assetType + "_" + interfRiskRdsDto.getAssetCode());
-//                interfRiskRdsDto.setAssetCode(trdCommonBaseService.queryFinprodIdByFinprodMarketId(interfRiskRdsDto.getAssetCode(), assetType));
+                interfRiskRdsDto.setAssetCode(trdCommonBaseService.queryFinprodIdByFinprodMarketId(interfRiskRdsDto.getAssetCode(), assetType));
             }
 
             /**TZJY-37 【投管】配债，组合挂风险后到场内交易下单，显示风控拒绝，应该是待审批才对  ps 转成 T01 2020-08-21  */
@@ -142,7 +152,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
             interfRiskRdsDto.setCcy(StringUtil.isNotEmpty(entity.get(InterfUtil.CCY)) ? entity.get(InterfUtil.CCY).toString()
                     : BussinessDictCodeListRds.币种_人民币_CNY.getValue());
             interfRiskRdsDto.setPreOccupyCode(interfRiskRdsDto.getEntrustCode());
-            if (StringUtil.equals(CommonUtil.findValue(entity,"ps"), DictCodeList.交易方向_到期续做.getValue())){
+            if (StringUtil.equals(CommonUtil.findValue(entity,"ps"),DictCodeList.交易方向_到期续做.getValue())){
                 InterfRiskRdsDto secdto = new InterfRiskRdsDto();
                 BeanUtil.copyPropertiesIgnoreNull(secdto, interfRiskRdsDto);
                 interfRiskRdsDto.setPreOccupyCode(interfRiskRdsDto.getPreOccupyCode() + interfRiskRdsDto.getPs());
@@ -172,7 +182,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     secdto.setAmount(finTradeProduct.getmTradeAmt());
                     secdto.setTradeNum(finTradeProduct.getPrin());
                     secdto.setAssetRate(finTradeProduct.getIntRate());
-//                    secdto.setOneDay(finTradeProduct.getTerm());
+                    secdto.setOneDay(finTradeProduct.getTerm());
                     secdto.setMdate(finTradeProduct.getMdate());
                     requestList.add(secdto);
                 }
@@ -196,7 +206,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
         return result;
     }
  
-    public ClientData sendRiskRdsDataCommon(List<Map<String, Object>> dataMap, V v, String rskType, boolean isNeedRiskCheck) throws Exception {
+    public ClientData sendRiskRdsDataCommon(List<Map<String, Object>> dataMap,V v,String rskType, boolean isNeedRiskCheck) throws Exception {
         logger.info("==========调用微服务端风险接口 start==========");
 		List<InterfRiskRdsDto> requestList = new ArrayList<InterfRiskRdsDto>();
 		for (Map<String, Object> entity : dataMap) {
@@ -215,7 +225,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                 interfRiskRdsDto.setAssetCode(null);
             } else {
 //                interfRiskRdsDto.setAssetCode(assetType + "_" + interfRiskRdsDto.getAssetCode());
-//                interfRiskRdsDto.setAssetCode(trdCommonBaseService.queryFinprodIdByFinprodMarketId(interfRiskRdsDto.getAssetCode(), assetType));
+                interfRiskRdsDto.setAssetCode(trdCommonBaseService.queryFinprodIdByFinprodMarketId(interfRiskRdsDto.getAssetCode(), assetType));
             }
 			interfRiskRdsDto.setInfCode(v.getInfCode());
 			interfRiskRdsDto.setEventType(v.getEventType());
@@ -265,13 +275,13 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                         stockdto.setAmount(num.multiply(pri));
                     }
 //                    stockdto.setAssetCode("F10_" + (String) entity.get("conShareId"));
-//                    stockdto.setAssetCode(trdCommonBaseService.queryFinprodIdByFinprodMarketId((String) entity.get("conShareId"), "F10"));
+                    stockdto.setAssetCode(trdCommonBaseService.queryFinprodIdByFinprodMarketId((String) entity.get("conShareId"), "F10"));
                     stockdto.setAssetType(BussinessDictCodeList.平安资产类型_股票.getValue());
                     stockdto.setPs(BussinessDictCodeList.交易方向_买入.getValue());
                     stockdto.setEventId(stockdto.getEventId()+stockdto.getPs());
                     requestList.add(stockdto);
                 }
-            }else if (StringUtil.equals(CommonUtil.findValue(entity,"ps"), DictCodeList.交易方向_到期续做.getValue())){
+            }else if (StringUtil.equals(CommonUtil.findValue(entity,"ps"),DictCodeList.交易方向_到期续做.getValue())){
                 InterfRiskRdsDto secdto = new InterfRiskRdsDto();
                 BeanUtil.copyPropertiesIgnoreNull(secdto, interfRiskRdsDto);
                 interfRiskRdsDto.setPreOccupyCode(interfRiskRdsDto.getPreOccupyCode() + interfRiskRdsDto.getPs());
@@ -301,7 +311,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     secdto.setAmount(finTradeProduct.getmTradeAmt());
                     secdto.setTradeNum(finTradeProduct.getPrin());
                     secdto.setAssetRate(finTradeProduct.getIntRate());
-//                    secdto.setOneDay(finTradeProduct.getTerm());
+                    secdto.setOneDay(finTradeProduct.getTerm());
                     secdto.setMdate(finTradeProduct.getMdate());
                     requestList.add(secdto);
                 }
@@ -341,7 +351,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      * @return
      * @throws Exception
      */
-    public ClientData sendPreRiskRdsDataCommon(List<Map<String, Object>> dataMap, V v) throws Exception {
+    public ClientData sendPreRiskRdsDataCommon(List<Map<String, Object>> dataMap,V v) throws Exception {
         logger.info("==========调用微服务端风险接口 start==========");
         InterfRiskRdsDto riskRdsDto = new InterfRiskRdsDto();
         riskRdsDto.setInfCode(v.getInfCode());
@@ -387,7 +397,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      * @return
      * @throws Exception
      */
-    private InterfRiskRdsDto prepareRiskEntity(Map<String, Object> dataMap, V v) throws Exception{
+    private InterfRiskRdsDto prepareRiskEntity(Map<String, Object> dataMap,V v) throws Exception{
         if(StringUtil.isNotEmpty(dataMap.get(InterfUtil.finprodId))&&!StringUtil.isNotEmpty(v.getAssetType())){
             Map<String, IAssetInfo> mapAsset = assetInfoSrc.getMapFromRedis(RedisKeyEnum.资产基本信息.key(), Arrays.asList(dataMap.get(InterfUtil.finprodId).toString()));
             for(IAssetInfo iAst:mapAsset.values()){
@@ -395,8 +405,8 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
             }
         }
         //定义返回实体
-        if(StringUtil.equals(v.getEventType(), BussinessDictCodeListRds.事件类型_投资交易.getValue())){
-            if(StringUtil.equals(v.getEventStatus(), BussinessDictCodeListRds.事件类型_投资交易_存续期.getValue())){
+        if(StringUtil.equals(v.getEventType(),BussinessDictCodeListRds.事件类型_投资交易.getValue())){
+            if(StringUtil.equals(v.getEventStatus(),BussinessDictCodeListRds.事件类型_投资交易_存续期.getValue())){
                 return periodEntityDev(dataMap,v);
             }
             return tradeEntityDev(dataMap,v);
@@ -414,9 +424,9 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      * @return
      * @throws Exception
      */
-    private InterfRiskRdsDto entrustEntityDev(Map<String, Object> dataMap, V v) throws Exception {
+    private InterfRiskRdsDto entrustEntityDev(Map<String, Object> dataMap,V v) throws Exception {
         //定义返回实体
-        InterfRiskRdsDto finDto=(InterfRiskRdsDto) JsonUtils.map2entity(dataMap, InterfRiskRdsDto.class);
+        InterfRiskRdsDto finDto=(InterfRiskRdsDto)JsonUtils.map2entity(dataMap,InterfRiskRdsDto.class);
 
         if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),v.getAssetType())) {
             finDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
@@ -437,40 +447,40 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      * @return
      * @throws Exception
      */
-    private InterfRiskRdsDto tradeEntityDev(Map<String, Object> dataMap, V v) throws Exception {
+    private InterfRiskRdsDto tradeEntityDev(Map<String, Object> dataMap,V v) throws Exception {
         //定义返回实体
-        InterfRiskRdsDto finDto=(InterfRiskRdsDto) JsonUtils.map2entity(dataMap, InterfRiskRdsDto.class);
+        InterfRiskRdsDto finDto=(InterfRiskRdsDto)JsonUtils.map2entity(dataMap,InterfRiskRdsDto.class);
         //委托编号
         String entrustCode = finDto.getEntrustCode();
         EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustCode);
         if(StringUtil.isNotEmpty(etrEntrust)) {
-            if(StringUtil.equals(etrEntrust.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+            if(StringUtil.equals(etrEntrust.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
                 finDto.setCalendarCode("04");
             }
-            else if (StringUtil.equals(etrEntrust.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+            else if (StringUtil.equals(etrEntrust.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
                 finDto.setCalendarCode("05");
             }
         }
         if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())) {
             // 100 * 交易数量
-//            finDto.setTotalFaceAmt(
-//                    ArithmeticUtil.multiply(new BigDecimal(100), finDto.getTradeNum()));
+            finDto.setTotalFaceAmt(
+                    ArithmeticUtil.multiply(new BigDecimal(100), finDto.getTradeNum()));
         }
 
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),v.getFinType())||
                 StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(),v.getFinType())||
                 StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),v.getAssetType())) {
             String assetType2 = String.valueOf(CommonUtil.findValue(dataMap,"assetType2"));
-            if (StringUtil.equals(assetType2, DictCodeList.回购类型_质押式协议回购.getValue())){
+            if (StringUtil.equals(assetType2,DictCodeList.回购类型_质押式协议回购.getValue())){
                 // 查询指令信息，取得正、逆回购信息
 
-                if (StringUtil.isNotEmpty(etrEntrust) && StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())){
+                if (StringUtil.isNotEmpty(etrEntrust) && StringUtil.equals(etrEntrust.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())){
                     finDto.setAssetType2(DictCodeList.回购拆借方向_正回购.getValue());
                 }else {
                     finDto.setAssetType2(DictCodeList.回购拆借方向_逆回购.getValue());
                 }
                 finDto.setInfCode(v.getInfCode());
-                finDto.setEventDate(DateUtil.format(DateUtil.platDateFromCache(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+                finDto.setEventDate(DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_DATE_FORMAT_EN));
                 //查询指令附属表
                 EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustCode);
                 if (协议回购到期交易方向.contains(finDto.getPs())){
@@ -493,20 +503,20 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                 finDto.setMarketCode(null);
 
                 //获得指令的期限。mdate-vdate是实际账款天数，不等于期限
-//                if(StringUtil.isNotEmpty(etrEntrustAdd)) {
-//                    finDto.setOneDay(etrEntrustAdd.getTermDays());
-//                    finDto.setVarietyCode(String.valueOf(etrEntrustAdd.getTermDays()));
-//                }
-//                else {
-//                    Object vdateObject = dataMap.get("vdate");
-//                    Object mdateObject = dataMap.get("mdate");
-//                    if(StringUtil.isNotEmpty(vdateObject) && StringUtil.isNotEmpty(mdateObject)) {
-//                        long term = DateUtil.getBetweenDayNumber((String)vdateObject, (String) mdateObject);
-//                        finDto.setOneDay(term);
-//                        finDto.setVarietyCode(String.valueOf(term));
-//                    }
-//                }
-                finDto.setMdate(DateUtil.parseDate(String.valueOf(CommonUtil.findValue(dataMap,"mdate")), DateUtil.DEFAULT_DATE_FORMAT_EN));
+                if(StringUtil.isNotEmpty(etrEntrustAdd)) {
+                    finDto.setOneDay(etrEntrustAdd.getTermDays());
+                    finDto.setVarietyCode(String.valueOf(etrEntrustAdd.getTermDays()));
+                }
+                else {
+                    Object vdateObject = dataMap.get("vdate");
+                    Object mdateObject = dataMap.get("mdate");
+                    if(StringUtil.isNotEmpty(vdateObject) && StringUtil.isNotEmpty(mdateObject)) {
+                        long term = DateUtil.getBetweenDayNumber((String)vdateObject, (String) mdateObject);
+                        finDto.setOneDay(term);
+                        finDto.setVarietyCode(String.valueOf(term));
+                    }
+                }
+                finDto.setMdate(DateUtil.parseDate(String.valueOf(CommonUtil.findValue(dataMap,"mdate")),DateUtil.DEFAULT_DATE_FORMAT_EN));
                 return finDto;
             }
 
@@ -520,57 +530,57 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                 finDto.setAssetRate(ArithmeticUtil.divide(finDto.getAssetRate(), new BigDecimal(100), 4));
             }
 
-//            if(StringUtil.isNotEmpty(assetType2)) {
-//                if(StringUtil.equals((String)assetType2, DictCodeList.回购类型_质押式协议回购.getValue())) {
-//                    Object vdateObject = dataMap.get("vdate");
-//                    if(StringUtil.isNotEmpty(vdateObject) && StringUtil.isNotEmpty(finDto.getMdate())) {
-//                        long term = DateUtil.getBetweenDayNumber((String)vdateObject, finDto.getMdate());
-//                        finDto.setOneDay(term);
-//                    }
-//                }
-//                else {
-//                    //竞价回购需要根据期限品种计算MDate
-//                    Object varietyCode = dataMap.get("varietyCode");
-//                    if(StringUtil.isNotEmpty(varietyCode)) {
-//                        long term = CommonBusinessUtil.TERM_MAP.get((String)varietyCode);
-//                        //期限
-//                        finDto.setOneDay(term);
-//                        Object vdateObject = dataMap.get("vdate");
-//                        if(StringUtil.isNotEmpty(vdateObject) && StringUtil.isNotEmpty(term)) {
-//
-//                            Date vdate = new Date();
-//                            //试算和提交时Vdate格式不一样
-//                            try{
-//                                if(DateUtil.isDateStr((String)vdateObject))  {
-//                                    vdate = DateUtil.parse((String)vdateObject);
-//                                }
-//
-//                            } catch (Exception e) {
-//                                vdate =  new Date((long)vdateObject);
-//                            }
-//                            Date mDate = DateUtil.addDays(vdate, (int)term);
-//                            List<String> holiday = dateCalService.getDealCalendarHoliday(vdate,
-//                                    mDate, finDto.getCalendarCode());
-//                            Date tradingDay = dateCalService.calculationTradingDay(mDate, 1, holiday, "1");
-//
-//                            finDto.setMdate(tradingDay);
-//                        }
-//                        else {
-//                            if(!StringUtil.isNotEmpty(term)) {
-//                                logger.info("==========查询期限为空,委托编号：=========="+finDto.getEntrustCode());
-//                            }
-//
-//                            if(!StringUtil.isNotEmpty(vdateObject)) {
-//                                logger.info("==========vdate为空,委托编号：=========="+finDto.getEntrustCode());
-//                            }
-//                        }
-//
-//                    }
-//                    else {
-//                        logger.info("==========期限品种varietyCode为空,委托编号：=========="+finDto.getEntrustCode());
-//                    }
-//                }
-//            }
+            if(StringUtil.isNotEmpty(assetType2)) {
+                if(StringUtil.equals((String)assetType2, DictCodeList.回购类型_质押式协议回购.getValue())) {
+                    Object vdateObject = dataMap.get("vdate");
+                    if(StringUtil.isNotEmpty(vdateObject) && StringUtil.isNotEmpty(finDto.getMdate())) {
+                        long term = DateUtil.getBetweenDayNumber((String)vdateObject, finDto.getMdate());
+                        finDto.setOneDay(term);
+                    }
+                } 
+                else {
+                    //竞价回购需要根据期限品种计算MDate 
+                    Object varietyCode = dataMap.get("varietyCode");
+                    if(StringUtil.isNotEmpty(varietyCode)) {
+                        long term = CommonBusinessUtil.TERM_MAP.get((String)varietyCode);
+                        //期限
+                        finDto.setOneDay(term);
+                        Object vdateObject = dataMap.get("vdate");
+                        if(StringUtil.isNotEmpty(vdateObject) && StringUtil.isNotEmpty(term)) {
+                           
+                            Date vdate = new Date();
+                            //试算和提交时Vdate格式不一样
+                            try{
+                              if(DateUtil.isDateStr((String)vdateObject))  {
+                                  vdate = DateUtil.parse((String)vdateObject);  
+                              }
+                             
+                            } catch (Exception e) {
+                                vdate =  new Date((long)vdateObject); 
+                            }
+                            Date mDate = DateUtil.addDays(vdate, (int)term);
+                            List<String> holiday = dateCalService.getDealCalendarHoliday(vdate,
+                                mDate, finDto.getCalendarCode()); 
+                            Date tradingDay = dateCalService.calculationTradingDay(mDate, 1, holiday, "1");
+                            
+                            finDto.setMdate(tradingDay);
+                        }  
+                        else {
+                            if(!StringUtil.isNotEmpty(term)) {
+                                logger.info("==========查询期限为空,委托编号：=========="+finDto.getEntrustCode());
+                            }
+                            
+                            if(!StringUtil.isNotEmpty(vdateObject)) {
+                                logger.info("==========vdate为空,委托编号：=========="+finDto.getEntrustCode());
+                            }
+                        }
+                     
+                    } 
+                    else {
+                        logger.info("==========期限品种varietyCode为空,委托编号：=========="+finDto.getEntrustCode());
+                    }
+                }
+            }
 
         }
 
@@ -584,14 +594,14 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      * @return
      * @throws Exception
      */
-    private InterfRiskRdsDto periodEntityDev(Map<String, Object> dataMap, V v) throws Exception {
+    private InterfRiskRdsDto periodEntityDev(Map<String, Object> dataMap,V v) throws Exception {
         //定义返回实体
-        InterfRiskRdsDto finDto=(InterfRiskRdsDto) JsonUtils.map2entity(dataMap, InterfRiskRdsDto.class);
+        InterfRiskRdsDto finDto=(InterfRiskRdsDto)JsonUtils.map2entity(dataMap,InterfRiskRdsDto.class);
 
         if(StringUtil.equals(finDto.getAssetType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())||
                 StringUtil.equals(finDto.getAssetType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
             finDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
-            finDto.setAssetType2(StringUtil.equals(finDto.getAssetType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())? DictCodeList.回购拆借方向_正回购.getValue(): DictCodeList.回购拆借方向_逆回购.getValue());
+            finDto.setAssetType2(StringUtil.equals(finDto.getAssetType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())?DictCodeList.回购拆借方向_正回购.getValue():DictCodeList.回购拆借方向_逆回购.getValue());
             finDto.setAssetCode(null);
             finDto.setMarketCode(null);
         }
@@ -653,7 +663,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
 
         if(BussinessDictCodeListRds.指标状态_通过.getValue().equals(resultMap.get("rskStatus"))){
             //3、授信接口占用
-//            AllTradeCommonUtil.handleBeforeTradeComplete(trdProductDeals, DictCodeListRsk.授信占用类别_实占.getValue());
+            AllTradeCommonUtil.handleBeforeTradeComplete(trdProductDeals, DictCodeListRsk.授信占用类别_实占.getValue());
         }
         logger.info("==========授信占用/释放批量结果：rskStatus：" +resultMap.get("rskStatus")+";message: "+resultMap.get("message"));
         logger.info("==========授信占用/释放批量接口 start==========");
@@ -676,7 +686,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
             trdlist.add(creditLinesInputDto) ;
         }
         //2、授信接口占用
-//        AllTradeCommonUtil.handleBeforeTradeComplete(trdlist, DictCodeListRsk.授信占用类别_预占.getValue());
+        AllTradeCommonUtil.handleBeforeTradeComplete(trdlist, DictCodeListRsk.授信占用类别_预占.getValue());
         logger.info("==========授信预占释放批量接口 end==========");
     }
 
@@ -685,10 +695,10 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      * 包装调用授信接口的参数
      * @param list
      */
-    private List<CreditLinesInputDto> packageParams(List<Map<String, Object>> list, String tradeStatu) throws Exception{
+    private List<CreditLinesInputDto> packageParams(List<Map<String, Object>> list,String tradeStatu) throws Exception{
         List<CreditLinesInputDto> trdlist = new ArrayList<CreditLinesInputDto>();
         for(Map<String, Object> temp :list ) {
-            InterfRiskRdsDto finDto =(InterfRiskRdsDto) JsonUtils.map2entity(temp, InterfRiskRdsDto.class);
+            InterfRiskRdsDto finDto =(InterfRiskRdsDto)JsonUtils.map2entity(temp,InterfRiskRdsDto.class);
             if (CommonUtil.isType(finDto.getPs(), DictCodeListExt3.交易方向_配债)
                 || CommonUtil.isType(finDto.getPs(), DictCodeListExt2.交易方向_配股) ) {
                 finDto.setPs(DictCodeList.交易方向_买入.getValue());
@@ -751,13 +761,13 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     FinTradeProduct firstFinTradeProduct = finTradeProductMapper.selectByPrimaryKey(finTradeProductKey);
 
                     // 正回购 不占授信
-                    if (StringUtil.equals(temp.get("ps"), DictCodeList.回购拆借方向_正回购.getValue()) || (StringUtil.isNotEmpty(firstFinTradeProduct)
-                        && StringUtil.equals(firstFinTradeProduct.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()))){
+                    if (StringUtil.equals(temp.get("ps"),DictCodeList.回购拆借方向_正回购.getValue()) || (StringUtil.isNotEmpty(firstFinTradeProduct)
+                        && StringUtil.equals(firstFinTradeProduct.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()))){
                         continue;
                     }
                     // 深交所到期续做，不涉及授信占用和释放
-                    if (StringUtil.isNotEmpty(firstFinTradeProduct) && StringUtil.equals(finDto.getPs(), DictCodeListExt3.交易方向_到期续做.getValue())
-                        && StringUtil.equals(firstFinTradeProduct.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                    if (StringUtil.isNotEmpty(firstFinTradeProduct) && StringUtil.equals(finDto.getPs(),DictCodeListExt3.交易方向_到期续做.getValue())
+                        && StringUtil.equals(firstFinTradeProduct.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
                         continue;
                     }
                     CreditLinesInputDto creditLinesInputDto =new CreditLinesInputDto();
@@ -794,7 +804,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     creditLinesInputDto.setSaleCode(DictCodeList.回购拆借方向_逆回购.getValue());
                     trdlist.add(creditLinesInputDto);
                     // 到期续做的 原首期 到期购回
-                    if (StringUtil.equals(finDto.getPs(), DictCodeListExt3.交易方向_到期续做.getValue())){
+                    if (StringUtil.equals(finDto.getPs(),DictCodeListExt3.交易方向_到期续做.getValue())){
                         // 未找到首期信息
                         if (firstFinTradeProduct == null){
                             logger.info("未找到对应首期信息，成交信息:" + JsonUtils.object2Json(temp));
@@ -870,11 +880,11 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("rskStatus","0");
         resultMap.put("message","成功");
-//        AjaxResult ajaxResult = AllTradeCommonUtil.checkBeforeTradeComplete(list);
-//        if (ajaxResult != null && !StringUtil.isEmptyList(ajaxResult.getErrorList())){
-//            resultMap.put("rskStatus","9");
-//            resultMap.put("message",ajaxResult.getErrorList().get(0).getMessage());
-//        }
+        AjaxResult ajaxResult = AllTradeCommonUtil.checkBeforeTradeComplete(list);
+        if (ajaxResult != null && !StringUtil.isEmptyList(ajaxResult.getErrorList())){
+            resultMap.put("rskStatus","9");
+            resultMap.put("message",ajaxResult.getErrorList().get(0).getMessage());
+        }
         return resultMap;
     }
 
@@ -886,7 +896,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      * @throws Exception
      */
     @Transactional(rollbackFor=Exception.class)
-    public Map<String, Object> doOccupyBatchData(Map<String, Object> dataMap, ClientData szcliendata) throws Exception{
+    public Map<String, Object> doOccupyBatchData( Map<String, Object> dataMap,ClientData szcliendata) throws Exception{
         String assetType = (String) dataMap.get("assetType");
         String assetType2 = null;
         String eventType = (String) dataMap.get("eventType");
@@ -901,11 +911,11 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
             for(Map<String, Object> tmp : listMap) {
                 tmp.put("inputValue1",tmp.get("assetType"));
                 tmp.put("inputValue2",tmp.get("assetType2"));
-                if(StringUtil.equals(tmp.get("ps"), DictCodeList.回购拆借方向_正回购.getValue())) {
-                    tmp.put("inputValue3", DictCodeListExt3.行内资产三级分类_正回购.getValue());
+                if(StringUtil.equals(tmp.get("ps"),DictCodeList.回购拆借方向_正回购.getValue())) {
+                    tmp.put("inputValue3",DictCodeListExt3.行内资产三级分类_正回购.getValue());
                 }
                 else {
-                    tmp.put("inputValue3", DictCodeListExt3.行内资产三级分类_逆回购.getValue());
+                    tmp.put("inputValue3",DictCodeListExt3.行内资产三级分类_逆回购.getValue());
                 }
 
                 assetType2 = (String) tmp.get("assetType2");
@@ -957,7 +967,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
     }
 
     @Transactional(rollbackFor=Exception.class)
-    public Map<String, Object> doOccupyReleasBatchData(Map<String, Object> dataMap, ClientData szcliendata) throws Exception{
+    public Map<String, Object> doOccupyReleasBatchData( Map<String, Object> dataMap,ClientData szcliendata) throws Exception{
 
         InterfRiskRdsDto interfRiskRdsDto = new InterfRiskRdsDto();
         String assetType = (String) dataMap.get("assetType");
@@ -1013,7 +1023,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      * @throws Exception
      */
     @Transactional(rollbackFor=Exception.class)
-    public Map<String, Object> doPreOccupyReleasBatchData(Map<String, Object> dataMap, ClientData szcliendata) throws Exception{
+    public Map<String, Object> doPreOccupyReleasBatchData( Map<String, Object> dataMap,ClientData szcliendata) throws Exception{
 
         InterfRiskRdsDto interfRiskRdsDto = new InterfRiskRdsDto();
 

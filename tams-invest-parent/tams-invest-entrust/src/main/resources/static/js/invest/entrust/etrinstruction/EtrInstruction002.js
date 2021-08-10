@@ -102,15 +102,16 @@ var QueryFunc=function(){
         }
         object.pageModel = pageModel;
         object.operateType = operateType;
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-            Joyin.ajaxJson(basePath + 'invest/entrust/etrinstruction/EtrInstruction002/check', object, function(result) {
-                if (operateType === 'save') {
-                    WorkFlow.doSaveList(basePath + 'invest/entrust/etrinstruction/EtrInstruction002/save', object, "EtrInstruction002_btn_save");
-                } else {
+        //去除指令保存校验
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath + 'invest/entrust/etrinstruction/EtrInstruction002/save', object, "EtrInstruction002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrinstruction/EtrInstruction002/check', object, function(result) {
                     WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinstruction/EtrInstruction002/save', object, "EtrInstruction002_btn_submit");
-                }
+                });
             });
-        });
+        }
     };
 
     /**

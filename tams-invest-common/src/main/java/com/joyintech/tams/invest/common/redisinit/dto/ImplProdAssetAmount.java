@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.common.redisinit.dto;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IProdAssetAmount;
 
@@ -85,6 +86,21 @@ public class ImplProdAssetAmount implements IProdAssetAmount {
     @Override
     public BigDecimal getNum() {
         return this.num;
+    }
+
+    /**
+     * 预占实占的规模变化情况
+     */
+    private Map<String, BigDecimal[]> ocpList;
+
+    @Override
+    public void setOcpList(Map<String, BigDecimal[]> ocpList) {
+        this.ocpList = ocpList;
+    }
+
+    @Override
+    public Map<String, BigDecimal[]> getOcpList() {
+        return ocpList;
     }
 
 }

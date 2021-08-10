@@ -90,10 +90,9 @@ public class RiskTrialCommCallable {
 					}
 					if (BussinessDictCodeListRds.指标参数实现类型_类名.getValue().equals(indicatorParam.getParaDisplayType())) {
 						String className = indicatorParam.getContent();
-						PluginClass plugclass = (PluginClass) Class.forName(RiskUtil.COMMON_PLUGIN_NAME+className.trim()).newInstance();
-						plugclass.setSysParameter(sysParam,
-								(PluginClassDao) SpringContextUtil.getBean(RiskUtil.COMMON_PLUGIN_REFLECT));
-						Object paramValue = plugclass.getParamterValue();// 获取每个参数实际值
+						PluginClass pluginClass = RiskUtil.getBean(className.trim());
+						pluginClass.setSysParameter(inputDto,sysParam);
+						Object paramValue = pluginClass.getParameterValue();// 获取每个参数实际值
 						if (paramValue == null) {
 							if(rskTaskDto.getIndType().indexOf(RiskUtil.LIMIT)!=-1){
 								params.put(paramName,new BigDecimal(0));

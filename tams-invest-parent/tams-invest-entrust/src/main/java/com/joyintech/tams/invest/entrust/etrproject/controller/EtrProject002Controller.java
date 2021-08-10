@@ -17,6 +17,8 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -275,6 +277,16 @@ public class EtrProject002Controller extends BaseController {
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
         }
+        // ----------add by yushilong 20200721 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    DictCodeList.平安资产类型_项目类资产.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrProjectDto> processParameter = new ProcessParameter<EtrProjectDto>();
         WorkFlowParameter<EtrProjectDto> params = new WorkFlowParameter<EtrProjectDto>();
         params.setPageId(this.getPageId());

@@ -8,8 +8,14 @@
         if($('#assetType1').val() && $('#assetType1').val() != ''){
             obj.assetSecType = $('#assetType1').val();
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         //---add by 裴家俊  2019/03/20  添加资产类型条件---end-----
         var object = {tradeDirection:['ps','EtrProject002.ps'],portfolioCode:['portfolioId','EtrProject002.portfolioId'],tradeAmount:['entrustAmt','EtrProject002.entrustAmt'],assetType:['assetType1','EtrProject002.assetType1'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
 
@@ -61,35 +67,42 @@
                 });
             }
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-	        Joyin.ajaxJson(basePath + 'invest/entrust/etrproject/EtrProject002/checkAuthorization', object, function(result2) {
-		        Joyin.ajaxJson(basePath + 'invest/entrust/etrproject/EtrProject002/check',object,
-		          function(result) {
-		              Joyin.confirm(result.data,function() {
-		                   if (operateType === 'save') {
-		                       WorkFlow.doSaveList(basePath+'invest/entrust/etrproject/EtrProject002/save',object,"EtrProject002_btn_save");
-		                   } else {
-		                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrproject/EtrProject002/save',object,"EtrProject002_btn_submit");
-		                   }
-		               });
-		           },null,function (result) {
-                        var disabledFlag = $('#invAim').attr('disabled');
-                        if(disabledFlag) return;
-                        var msg = result.errorList;
-                        var message ="";
-                        for(var i=0;i<msg.length;i++){
-                            message = msg[i];
-                            if(message.field!=null && message.field=='invAim'){
-                                if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
-                                    $('#invAim').textSelect('setValue', "FVTPL");
-                                    break;
+
+        //指令暂存，WFL_TRD_PRODUCT_DEAL表为非空 资产代码不能为空  add by xxg 20210803
+        if (operateType === 'save' && object.finprodId == '') {
+            return  Joyin.error("资产名称不能为空");
+        }
+
+        //指令暂存，去掉校验 add by xxg 20210803
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrproject/EtrProject002/save',object,"EtrProject002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrproject/EtrProject002/checkAuthorization', object, function(result2) {
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrproject/EtrProject002/check',object,
+                        function(result) {
+                            Joyin.confirm(result.data,function() {
+                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrproject/EtrProject002/save',object,"EtrProject002_btn_submit");
+                            });
+                        },null,function (result) {
+                            var disabledFlag = $('#invAim').attr('disabled');
+                            if(disabledFlag) return;
+                            var msg = result.errorList;
+                            var message ="";
+                            for(var i=0;i<msg.length;i++){
+                                message = msg[i];
+                                if(message.field!=null && message.field=='invAim'){
+                                    if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
+                                        $('#invAim').textSelect('setValue', "FVTPL");
+                                        break;
+                                    }
                                 }
                             }
-                        }
 
-                    });
-	        });
-        });
+                        });
+                });
+            });
+        }
     }
   //查询组合可用现金
     var getPtlCashPositionInfo = function(){
@@ -130,14 +143,13 @@
      * 查看资产详情事件
      */
     $('#EtrProject002_btn_search').click(function() {
-        // var finprodMarketId = $("#finprodMarketId").val();
-        var finprodMarketId = $("#finprodId").val();
+        var finprodId = $("#finprodIdhid").val();
         var url = "/invest/asset/project/FinProjectTargetAsset002/init";
-        if (finprodMarketId != ""){
+        if (finprodId != ""){
             var params = {
                 pageModel:PAGE_MODEL_REFERENCE,
                 isQuickInput:true,
-                finprodMarketId:finprodMarketId
+                finprodId:finprodId
             };
             EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
         } else {

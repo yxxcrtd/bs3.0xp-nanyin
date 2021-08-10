@@ -86,6 +86,9 @@
                 }
 
             }
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'EtrPlanAssetN002.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
             return object;
         }
     }
@@ -225,14 +228,22 @@ var cols = [
             }
             objects.push(temp);
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN003/check',objects,
-            function(result) {
-                Joyin.confirm(result.data,function() {
-                    if (operateType === 'submit') {
-                        WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetn/EtrPlanAssetN003/save',objects,"EtrPlanAssetN002_btn_submit","EtrPlanAssetN002");
-                    }
+        var allDto = {};
+        allDto.importFlow = true;
+        allDto.selectedItem = objects;
+        allDto.riskTrialRetDto = object.riskTrialRetDto;
+        //批量风险预占需要
+        allDto.operateType = operateType;
+        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', allDto, function(result1) {
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN003/check',allDto,
+                function(result) {
+                    Joyin.confirm(result.data,function() {
+                        if (operateType === 'submit') {
+                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetn/EtrPlanAssetN003/save',allDto,"EtrPlanAssetN002_btn_submit","EtrPlanAssetN002");
+                        }
+                    });
                 });
-            });
+        })
     }
     /**
      * 绑定事件
@@ -249,6 +260,15 @@ var cols = [
          */
         $('#EtrPlanAssetN003_btn_riskcal').click(function(){
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
+            //add by zhangnian  start
+            var list = $.serializeToObject('#searchForm', true).selectedItem;
+            var objectList = [];
+            for(var i in list){
+                objectList.push(list[i]);
+            }
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F04',
+                objectList, getriskdata());
+            //add by zhangnian end
             $("#riskMathFlag").val("02")
         });
 

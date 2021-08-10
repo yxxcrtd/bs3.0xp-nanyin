@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
+import com.joyintech.workflow.engine.WorkflowContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -203,7 +206,14 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
             }
             else {
                 TrdPlanRateInvestTradeDto entity = trdPlanRateInvestTrade002Service.getInitEntity(totleTradeId);//
-
+                // 获取workflowId 加载风险试算结果
+                TrdPlanRateInvestTradeDto dto1 = new TrdPlanRateInvestTradeDto();
+                dto1.setTotleTradeId(totleTradeId);
+                ProcessMark processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto1);
+                //转换当前页面
+                processMark.setPageId("TrdPlanRateInvestTrade002");
+                String workflowId_T = WorkflowContext.getProcessMarkService().getLastWorkflowId(processMark);
+                model.addAttribute("workflowId", workflowId_T);
 
                 if(StringUtil.isNotEmpty(portfolioId)) {
                     entity.setPortfolioId(portfolioId);
@@ -506,6 +516,10 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }
+            // add by zhangrui1 start
+            // 将实占信息设置到线程缓存出错时撤销用
+            TradeRdsCommonAop.setLocalCache(dto);
+            // add by zhangrui1 end
         }
         //----------add by jjpei 20200114 核风险版本 end----------
         params.setElementId(dto.getElementId());

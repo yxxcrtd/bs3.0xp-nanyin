@@ -11,7 +11,13 @@ var etrAmt = '';
         if($('#type7').val() && $('#type7').val() != ''){
             obj.assetSecType = $('#type7').val();
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo002Dto_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {assetCode: ['finprodMarketId', 'TrdBondInvestTrade002.finprodId'],valDate:['settleDate','TrdPlanRateInvestTrade002.settleDate'],portfolioCode:['portfolioId','TrdDepositInvestTrade001.portfolioId'],tradeAmount:['tradeAmt','TrdPlanRateInvestTrade002.tradeAmt'],assetType:['finprodType','TrdDepositInvestTrade001.finprodType'],tradeDirection:['ps','TrdDepositInvestTrade001.ps'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo002Dto.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
 

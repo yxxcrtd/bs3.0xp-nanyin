@@ -177,14 +177,9 @@ public class RedisBaseService<V extends IBusiness> {
      * @since 1.0
      */
     public void flushDB() {
-        List<String> keys = this.reader.allKeys(null);
+        List<String> keys = this.reader.allKeys(RedisConstant.STAR + "RSK{" + RedisConstant.STAR);
         if (!StringUtil.isEmptyList(keys)) {
-            keys.forEach(key -> {
-                RedisHash<String, String, V> hash = new RedisHash<>();
-                hash.setKey(key);
-                hash.setField(key);
-                this.writer.deleteAll(hash);
-            });
+            keys.forEach(key -> flushDBHashFiled(key, null));
         }
     }
 
@@ -196,24 +191,21 @@ public class RedisBaseService<V extends IBusiness> {
      * @since 1.0
      */
     public void flushDBExceptKey(String... keyArr) {
-        List<String> keys = this.reader.allKeys(RedisConstant.STAR+"RSK{"+RedisConstant.STAR);
+        List<String> keys = this.reader.allKeys(RedisConstant.STAR + "RSK{" + RedisConstant.STAR);
         if (!StringUtil.isEmptyList(keys)) {
         	List<String> excKeys = keyArr != null && keyArr.length > 0 ? Arrays.asList(keyArr) : new ArrayList<>();
             keys.forEach(key -> {
             	if (excKeys.contains(key)) {
             		return;
             	}
-                RedisHash<String, String, V> hash = new RedisHash<>();
-                hash.setKey(key);
-                hash.setField(key);
-                this.writer.deleteAll(hash);
+                flushDBHashFiled(key, null);
             });
         }
     }
 
     /**
      * 模糊删除
-     * 
+     * 	
      * @param key Redis key
      * @param field 模糊字段
      */

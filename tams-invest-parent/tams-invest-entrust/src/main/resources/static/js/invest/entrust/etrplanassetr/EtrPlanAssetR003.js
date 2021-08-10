@@ -52,6 +52,9 @@
 					  trdProductDeal : trdProductDeal
                }
             }
+			// add by zhangrui1 交易对手影响风险试算 start
+			obj.counterId = item.counterId;
+			// add by zhangrui1 交易对手影响风险试算 end
                  var object = {
                    tradeDirection : [ 'ps', 'EtrPlanAssetR002.ps' ],
                    portfolioCode : [ 'portfolioId', 'EtrPlanAssetR002.portfolioId' ],
@@ -92,6 +95,8 @@
 	, {field : 'assetAvailablePosition',title : 'EtrPlanAssetR003.assetAvailablePosition',width : '10%',id : 'assetAvailablePosition', sortable: false}// 指令可用持仓
 	, {field : 'accAvailableCash',title : 'EtrPlanAssetR003.accAvailableCash',width : '10%',id : 'accAvailableCash', sortable: false}// 托管户剩余现金
     , {field : 'invManagerId',width : 150,id :'invManagerId',title:'投资经理',visible : false, sortable: false}
+	, {field : 'counterId',width : 150,id :'counterId',title:'交易对手ID',visible : false, sortable: false}
+	, {field : 'counterIdName',width : 150,id :'counterIdName',title:'交易对手', sortable: false}
 	, {field : 'remark',title : 'EtrPlanAssetR003.remark',width : '10%', sortable: false}// 备注
 	, {field : 'fileArray',title : 'EtrBondFirstLBidding003.fileArray',width : 150,visible : false, sortable: false}
 	, {field : 'businessId',width : 150,visible : false, sortable: false}
@@ -126,6 +131,18 @@
                 table.renderRow(data.LAY_TABLE_INDEX, result);
             });
     });
+	// add by zhangrui1 start
+	//添加风险试算验证
+	window.componentLoadCallback = function(isDone, pagePath, params) {
+		if (isDone) {
+			var riskparam = getriskdata();
+			if (pageModel==PAGE_MODEL_NEW){
+				riskparam.data =null;
+			}
+			window.BaseRiskMathComm.getparam(riskparam);
+		}
+	}
+	// add by zhangrui1 end
 	/**
 	 * 提交
 	 * 
@@ -133,6 +150,18 @@
 	 * @returns
 	 */
 	function saveOrSubmit(operateType) {
+		// add by zhangrui1 start
+		var s;
+		if(BaseRiskMathComm) {
+			s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+			if(!s && s != ''){
+				return;
+			}
+//            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+//                return;
+//            }
+		}
+		// add by zhangrui1 end
 		// 校验数据 校验表格
 		var tableData = table.getAllRows();
 		if (tableData.length == 0) {
@@ -154,19 +183,25 @@
                   temp.elementId = 'EtrPlanAssetR002_btn_save';
             } else {
                 temp.elementId = 'EtrPlanAssetR002_btn_submit';
-        }
+        	}
 		}
+		var allDto = {};
+		allDto.importFlow = true;
+		allDto.selectedItem = objects;
+		allDto.operateType = operateType;
+		allDto.pageModel = pageModel;
+		allDto.riskTrialRetDto = object.riskTrialRetDto;
 		Joyin.ajaxJson(basePath+ 'invest/entrust/etrplanassetr/EtrPlanAssetR003/check',objects,
-						function(result) {Joyin.confirm(
-											result.data,
-											function() {
-												if (operateType === 'save') {
-													WorkFlow.doSaveList(basePath+ 'invest/entrust/etrplanassetr/EtrPlanAssetR003/save',objects,"EtrPlanAssetR002_btn_save","EtrPlanAssetR002");
-												  }else {
-							                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR003/save', objects, "EtrPlanAssetR002_btn_submit", "EtrPlanAssetR002");
-								                  }
-											});
-						});
+			function(result) {Joyin.confirm(
+				result.data,
+				function() {
+					if (operateType === 'save') {
+						WorkFlow.doSaveList(basePath+ 'invest/entrust/etrplanassetr/EtrPlanAssetR003/save',allDto,"EtrPlanAssetR002_btn_save","EtrPlanAssetR002");
+					}else {
+						WorkFlow.doSubmitList(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR003/save', allDto, "EtrPlanAssetR002_btn_submit", "EtrPlanAssetR002");
+					}
+				});
+			});
 	}
 	$(function() {
 		if (etrPlanAssetRDtoList) {
@@ -185,7 +220,27 @@
 		 */
 		$('#EtrPlanAssetR003_btn_riskcal').click(function() {
 			//window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-			$("#riskMathFlag").val("02")
+			// add by zhangrui1 start
+			var object = $.serializeToObject('#searchForm');
+			var checkParam = {};
+			checkParam.data = getriskdata();
+			var param = [];
+			if (checkParam.data.length > 0) {
+				for(var index in checkParam.data){
+					var item = checkParam.data[index];
+					item.data.finprodId = object.bussCombDistribtList[index].finprodId;
+					item.data.counterId = object.bussCombDistribtList[index].counterId;
+					item.data.tradeMarket = object.bussCombDistribtList[index].tradeMarket;
+					item.data.ps = object.bussCombDistribtList[index].ps;
+					item.data.ccy = object.bussCombDistribtList[index].ccy;
+					item.data.portfolioId = item.data.portfolioCode;
+					item.data.price=object.bussCombDistribtList[index].price;
+					item.data.entrustAmt=item.data.tradeAmount;
+					param.push(item.data);
+				}
+			}
+			window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F03', param, checkParam);
+			// add by zhangrui1 end
 		});
 	})
 }());

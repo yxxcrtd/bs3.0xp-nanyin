@@ -1,54 +1,70 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.invest.batch.riskparamcalc.dao.RskParamReCalcMapper" >
-    <select id="queryOcpInfo" resultMap="com.joyintech.tams.common.base.dao.RskOccupyInfoMapper.BaseResultMap"
-            parameterType="java.util.List" >
-        select 
-        <include refid="com.joyintech.tams.common.base.dao.RskOccupyInfoMapper.Base_Column_List" />
-        from RSK_OCCUPY_INFO
-        where EVENT_ID IN (SELECT EVENT_ID from RSK_OCCUPY_INFO 
-            where EVENT_DATE >= #{sysDate} 
-        <if test="prodIdList != null and prodIdList.size() > 0">
-            and (PROD_ID IN
-            <foreach collection="prodIdList" item="item" index="index" separator="," open="(" close="))">
-                <if test="(index % 999) == 998">
-                    null) OR PROD_ID in (
-                </if>
-                #{item}
-            </foreach> 
-        </if>
+    <select id="queryOcpInfo" resultType="com.joyintech.tams.invest.batch.riskparamcalc.dto.RskInterfDataDto" >
+         WITH YZ AS (
+            SELECT t1.EVENT_ID,t1.OCCUPY_CODE FROM RSK_OCCUPY_INFO t1
+            INNER JOIN RSK_PRE_OCCUPY_INFO t2 ON t1.OCCUPY_CODE = t2.EVENT_ID 
+            LEFT JOIN ETR_ENTRUST etr ON t2.EVENT_ID = etr.ENTRUST_ID 
+            OR SUBSTR(t2.EVENT_ID,0,LENGTH(t2.EVENT_ID)-3) = etr.ENTRUST_ID 
+            WHERE t2.OCCUPY_DATE &gt;= #{sysDate,jdbcType=DATE}
+            AND etr.ENTRUST_STATUS NOT IN ('04', '06', '07') 
+        ), SF AS (
+            SELECT rpoi.EVENT_ID FROM RSK_PRE_OCCUPY_INFO rpoi
+            LEFT JOIN ETR_ENTRUST etr ON etr.ENTRUST_ID = rpoi.EVENT_ID 
+            OR SUBSTR(rpoi.EVENT_ID,0,LENGTH(rpoi.EVENT_ID)-3) = etr.ENTRUST_ID 
+            WHERE rpoi.OCCUPY_DATE &gt;= #{sysDate,jdbcType=DATE}
+            AND etr.ENTRUST_STATUS NOT IN ('04', '06', '07')
         )
+        -- 预占部分
+        SELECT 
+            rpoi.UUID orderNo,              -- 序号
+            rpoi.EVENT_ID eventId,          -- 事件编号
+            null preOccupyCode,             -- 实占对应的预占编号
+            irl.REQUEST_DATA requestData,   -- 报文
+            irl.INF_ID infCode,             -- 接口代码
+            irl.SEQ_NO seqNo                -- 报文流水号
+        FROM RSK_PRE_OCCUPY_INFO rpoi
+        LEFT JOIN INTERF_RISK_LOG irl ON irl.SEQ_NO = rpoi.SEQ_NO 
+        WHERE irl.RESPONSE_DATA IS NULL AND irl.SEQ_NO IS NOT NULL
+        AND EXISTS (SELECT 1 FROM SF WHERE SF.EVENT_ID = rpoi.EVENT_ID )
+        <if test="infoList != null and infoList.size() > 0">
+            AND rpoi.PROD_ID IN
+            <foreach collection="infoList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+      UNION ALL
+        -- 实占部分
+        SELECT 
+            rpoi.UUID orderNo,              -- 序号
+            rpoi.EVENT_ID eventId,          -- 事件编号
+            t1.OCCUPY_CODE preOccupyCode,   -- 实占对应的预占编号
+            irl.REQUEST_DATA requestData,   -- 报文
+            irl.INF_ID infCode,             -- 接口代码
+            irl.SEQ_NO seqNo                -- 报文流水号
+        FROM RSK_OCCUPY_INFO rpoi
+        LEFT JOIN INTERF_RISK_LOG irl ON irl.SEQ_NO = rpoi.SEQ_NO 
+        LEFT JOIN YZ t1 ON t1.EVENT_ID = rpoi.EVENT_ID 
+        WHERE irl.RESPONSE_DATA IS NULL AND irl.SEQ_NO IS NOT NULL
+        AND EXISTS (SELECT 1 FROM YZ WHERE YZ.EVENT_ID = rpoi.EVENT_ID )
+        <if test="infoList != null and infoList.size() > 0">
+            AND rpoi.PROD_ID IN
+            <foreach collection="infoList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
     </select>
 
     <delete id="deleteRskIndParaDtl" parameterType="java.util.List" >
         delete from RSK_INDICATOR_PARA_CALCDETAIL
         <where>
-	        <if test="infoList != null and infoList.size() > 0">
-	            AND ((SUP_DATE||TRADE_ID||CREATE_USER) IN
-	            <foreach collection="infoList" item="item" index="index" separator="," open="(" close="))">
-                    <if test="(index % 999) == 998">
-                        null) OR (SUP_DATE||TRADE_ID||CREATE_USER) in (
-                    </if>
-	               #{item.supDate} || #{item.tradeId} || #{item.createUser}
-	            </foreach>
-	        </if>
-        </where>
-    </delete>
-    
-    <delete id="deleteRskIndParaDtlTwo" parameterType="java.util.Map" >
-        delete from RSK_INDICATOR_PARA_CALCDETAIL
-        <where>
-            SUP_DATE = to_date(#{supDate},'YYYY-MM-DD') 
-            and CREATE_USER = #{createUser}
-	        <if test="tradeIds != null and tradeIds.size() > 0">
-	            AND (TRADE_ID IN
-	            <foreach collection="tradeIds" item="item" index="index" separator="," open="(" close="))">
-                    <if test="(index % 999) == 998">
-                        null) OR TRADE_ID in (
-                    </if>
-	                #{item} 
-	            </foreach>
-	        </if>
+        <if test="infoList != null and infoList.size() > 0">
+            OR (SUP_DATE||TRADE_ID||CREATE_USER) IN
+            <foreach collection="infoList" item="item" separator="," open="(" close=")">
+               #{item.supDate} || #{item.tradeId} || #{item.createUser}
+            </foreach>
+        </if>
         </where>
     </delete>
 </mapper>

@@ -699,7 +699,7 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
             // etrEntrustAdd
             EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_存款.getValue());
-            BeanUtil.copyProperties(etrEntrustAdd, entity);
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
             //设置资产一级类型：资产一级分类=资产类型        
 //            etrEntrustAdd.setAssetType1(entity.getFinprodType2());	//	finprodType2已弃用
             //设置起息日到期日

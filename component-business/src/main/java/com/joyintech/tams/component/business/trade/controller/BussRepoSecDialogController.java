@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +70,8 @@ public class BussRepoSecDialogController extends BaseController {
         //Modify by gaopeng 2019/10/12 end
         String isDzh = this.getParam("isDzh");
         String quoteId = this.getParam("quoteId");
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+        model.addAttribute("entrustAmtUnit", entrustAmtUnit );
         if (!StringUtil.equals(this.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || !WorkFlowUtil.isNotFromToDoList()
                 || !StringUtil.equals(getParam("statusValid"), DictCodeListExt1.画面数据状态_待处理.getValue())) {
             String entityStr = this.getParam("entity");
@@ -161,7 +165,22 @@ public class BussRepoSecDialogController extends BaseController {
     @RequestMapping("selectAvaPledgeBondDetailList")
     @ResponseBody
     public Page<PledgeBondInfoDto> selectAvaPledgeBondDetailList(@RequestParam Map<String, Object> params) {
-        return bussRepoSecService.selectAvaPledgeBondDetailPage(params);
+        //配置单位 edit by yeming 20210802 start
+        Page<PledgeBondInfoDto> page = bussRepoSecService.selectAvaPledgeBondDetailPage(params);
+        for(PledgeBondInfoDto dto:page.getRoot()){
+            if(dto.getPrin() != null) {
+                dto.setPrin(dto.getPrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(dto.getPledgePrin() != null) {
+                dto.setPledgePrin(dto.getPledgePrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(dto.getAvaPledgePrin() != null) {
+                dto.setAvaPledgePrin(dto.getAvaPledgePrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+        }
+        return page;
+        //配置单位 edit by yeming 20210802 end
+//        return bussRepoSecService.selectAvaPledgeBondDetailPage(params);
     }
 
 }

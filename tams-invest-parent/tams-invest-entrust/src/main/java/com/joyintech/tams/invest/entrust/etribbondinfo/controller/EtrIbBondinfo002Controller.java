@@ -101,6 +101,7 @@ public class EtrIbBondinfo002Controller extends BaseController {
         model.addAttribute("type03", DictCodeList.收益类型_货币型.getValue());
         model.addAttribute("type02", DictCodeList.收益类型_收益型.getValue());
         model.addAttribute("N", DictCodeList.是否_否.getValue());
+        model.addAttribute("Y", DictCodeList.是否_是.getValue());
         model.addAttribute("CCY", DictCodeList.币种_人民币_CNY.getValue());
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE") == null ? "01" : CacheUtil.getSysParam("IS_SHOW_TYPE"));
         

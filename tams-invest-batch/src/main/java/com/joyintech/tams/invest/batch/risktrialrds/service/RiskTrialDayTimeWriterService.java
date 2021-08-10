@@ -7,18 +7,20 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
-
+ 
 package com.joyintech.tams.invest.batch.risktrialrds.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.entity.RskPortfolioPackageDtl;
+import com.joyintech.tams.invest.batch.risktrialrds.dto.RiskTrialDayTimeReaderResult;
+import com.joyintech.tams.invest.common.risktrialrds.dto.SupervisionTargetDto;
+import com.joyintech.tams.invest.common.risktrialrds.dto.Task;
 import com.joyintech.framework.constant.GlobalConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,10 +65,53 @@ public class RiskTrialDayTimeWriterService extends BaseService{
     @Autowired
     private RskIsupLogMapper rskIsupLogMapper;
 
-    public void execute(List<RiskTrialDayTimeResult> resultList,Map<String, Object> param1)
-            throws Exception {
+    public void execute(List<RiskTrialDayTimeResult> resultList,Map<String, Object> param1,List<RiskTrialDayTimeReaderResult> readerList)
+        throws Exception {
+        //清理已有的当天日间或日终数据
+        deleteData(param1, readerList);
         if (!StringUtil.isEmptyList(resultList)) {
             dealTrialIndicatorDb(resultList,param1);
+        }
+    }
+
+    /**
+     * 清理当天的日间或日终数据
+     * @param param1
+     * @param readerList
+     */
+    private void deleteData(Map<String, Object> param1, List<RiskTrialDayTimeReaderResult> readerList) {
+        //获取需要清理的数据
+        if (readerList != null && readerList.size() > 0) {
+            List<RiskTrialRetDto> riskTrialRetDtoList = new ArrayList<>();
+            for (RiskTrialDayTimeReaderResult riskTrialDayTimeReaderResult : readerList) {
+                Task taskQueue = riskTrialDayTimeReaderResult.getTaskQueue();
+                if (taskQueue != null) {
+                    SupervisionTargetDto point = taskQueue.getPoint();
+                    RiskTrialRetDto dto = new RiskTrialRetDto();
+                    dto.setSupDate(taskQueue.getDate());
+                    dto.setPortfolioId(point.getPortfolioId());
+                    dto.setSupFrequency(String.valueOf(param1.get(Const.SUP_FREQUENCY)));
+                    riskTrialRetDtoList.add(dto);
+                }
+            }
+            if (!StringUtil.isEmptyList(riskTrialRetDtoList)) {
+                List<RiskTrialRetDto> list = new ArrayList<>();
+                int count = 0;
+                for (RiskTrialRetDto info : riskTrialRetDtoList) {
+                    if (info==null || StringUtil.isEmpty(info.getPortfolioId())) {
+                        continue;
+                    }
+                    count++;
+                    list.add(info);
+                    if (count % 1000 == 0) {
+                        riskTrialCommMapper.deleteRiskValBatchData(list);
+                        riskTrialCommMapper.deleteRiskValDetBatchData(list);
+                        list.clear();
+                    }
+                }
+                riskTrialCommMapper.deleteRiskValBatchData(list);
+                riskTrialCommMapper.deleteRiskValDetBatchData(list);
+            }
         }
     }
 
@@ -82,7 +127,7 @@ public class RiskTrialDayTimeWriterService extends BaseService{
         //查询个性化联合设置
         List<RskIndividUnite> rskIndividUniteList=riskTrialCommMapper.getRiskIndividUnite();
         //----------add by 裴家俊 添加删除当日脏数据  start--------------
-        for (RiskTrialDayTimeResult resetRateResult : resultList) {
+      /*  for (RiskTrialDayTimeResult resetRateResult : resultList) {
             if (!StringUtil.isNotEmpty(resetRateResult)) {
                 continue;
             }
@@ -92,7 +137,7 @@ public class RiskTrialDayTimeWriterService extends BaseService{
             }
             riskTrialCommMapper.deleteMxPointWithoutInd(dealDto);
             supervisionCalcSvc.deletePointValueWithoutInd(dealDto);
-        }
+        }*/
         //----------add by 裴家俊 添加删除当日脏数据  end--------------
         for (RiskTrialDayTimeResult resetRateResult : resultList) {
             if (!StringUtil.isNotEmpty(resetRateResult)) {
@@ -108,7 +153,7 @@ public class RiskTrialDayTimeWriterService extends BaseService{
                 if (rskFilterList.size() > 0) {
                     Set<String> indIdSet = rskIndividUniteList.stream().filter(item -> rskFilterList.contains(item.getUniteId())).map(entry -> entry.getIndId()).collect(Collectors.toSet());
                     if (indIdSet.size() > 0) {
-                        List<String> supStatList = resultList.stream().filter(item -> StringUtil.isNotEmpty(item.getRiskTrialRetDto()) && indIdSet.contains(item.getRiskTrialRetDto().getIndId())).map(entry -> entry.getRiskTrialRetDto().getSupStat()).collect(Collectors.toList());
+                        List<String> supStatList = resultList.stream().filter(item -> StringUtil.isNotEmpty(item.getRiskTrialRetDto()) && indIdSet.contains(item.getRiskTrialRetDto().getIndId())&&StringUtil.equals(dealDto.getPortfolioId(),item.getRiskTrialRetDto().getPortfolioId())).map(entry -> entry.getRiskTrialRetDto().getSupStat()).collect(Collectors.toList());
                         dealDto.setSupUniteStat(RiskUtil.getMinState(supStatList));
                         if (StringUtil.isNotEmpty(dealDto.getMathProcess())) {
                             Map<String, Object> mapProcess = JsonUtils.json2Object(dealDto.getMathProcess(), Map.class);
@@ -134,10 +179,12 @@ public class RiskTrialDayTimeWriterService extends BaseService{
                 //DB明细操作
                 riskTrialCommMapper.deleteMxPointSupervisionBatch(dealDto);
                 if (!StringUtil.isEmptyList(dealDto.getRiskTrialRetDetailDtoList())) {
-                    List<RiskTrialRetDetailDto> riskTrialRetDetailDtoList = duplicateRemoval(dealDto.getRiskTrialRetDetailDtoList());
                     List<RiskTrialRetDetailDto> list = new ArrayList<>();
                     int count = 0;
-                    for (RiskTrialRetDetailDto info : riskTrialRetDetailDtoList) {
+                    // modify by zhangrui1 start
+                    //for (RiskTrialRetDetailDto info : dealDto.getRiskTrialRetDetailDtoList()) {
+                    for (RiskTrialRetDetailDto info : duplicateRemoval(dealDto.getRiskTrialRetDetailDtoList())) {
+                    // modify by zhangrui1 end
                         count++;
                         list.add(info);
                         if (count % 1000 == 0) {
@@ -158,7 +205,8 @@ public class RiskTrialDayTimeWriterService extends BaseService{
         logger.info("--------->插入监控指标数据结束");
 
     }
- 
+
+    // add by zhangrui1 批量去重 start
     /**
      * 数据去重<br>
      * 
@@ -186,5 +234,7 @@ public class RiskTrialDayTimeWriterService extends BaseService{
             }
         });
         return resList;
-    } 
+    }
+    // add by zhangrui1 批量去重 end
+
 }

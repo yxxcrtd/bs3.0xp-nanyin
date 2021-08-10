@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -123,12 +124,16 @@ public class EtrLendSpecInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("recall")
-    public AjaxResult recallDelegate(@RequestBody EtrLendSpecInfoDto dto) {
+    public AjaxResult recallDelegate(@RequestBody EtrLendSpecInfoDto dto) throws Exception {
         List<EtrLendSpecInfoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrLendSpecInfoDto entity : dtolist){
                 etrLendSpecInfoService.recallDelegate(entity);
             }
+            // add by yushilong 批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_拆借.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by yushilong 批量撤销预占 end
             return new AjaxResult(this.getMessage("ETR_X_001"));
         }
         return new AjaxResult(this.getMessage("ETR_X_002"));
@@ -174,13 +179,17 @@ public class EtrLendSpecInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult deleteDelegate(@RequestBody EtrLendSpecInfoDto dto) {
+    public AjaxResult deleteDelegate(@RequestBody EtrLendSpecInfoDto dto) throws Exception {
         List<EtrLendSpecInfoDto> list = dto.getSelectedItem();
         if(list!=null && list.size()>0){
             for(EtrLendSpecInfoDto entity : list){
                 String entrustId = entity.getEntrustId();
                 etrLendSpecInfoService.deleteDelegate(entrustId);
             }
+            // add by yushilong 批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(list, DictCodeList.平安资产类型_拆借.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by yushilong 批量撤销预占 end
             return new AjaxResult("删除成功");
         }
         return new AjaxResult("删除失败");

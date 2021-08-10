@@ -225,6 +225,18 @@ public class CommonBusinessService extends BaseService {
         }
 
     }
+    /**
+     * 资产是否存在交易
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    public int isExistTransInAsset(String finprodId) {
+        return restTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/isExistTransInAsset?finprodId=" + finprodId,
+                Integer.class);
+    }
 
     /**
      * 现金流代码生成

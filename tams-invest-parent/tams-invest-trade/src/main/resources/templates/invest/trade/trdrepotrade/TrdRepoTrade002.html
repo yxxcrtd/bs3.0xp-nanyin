@@ -113,7 +113,7 @@
                                            th:text="#{TrdRepoTrade002.tradeMarket}">交易场所</label>
                                         <div class="layui-input-inline input-inline">
                                             <select required type="text" id="tradeMarket" name="tradeMarket"  
-                                                    class="layui-input form-input input-select" childrenIds="repoType,secAcctId"
+                                                    class="layui-input form-input input-select" childrenIds="secAcctId"
                                                     placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                     th:data-result='${TRADE_PLACE}' allowClear="true" formatoption="true"
                                                     th:initValue="${entity?.tradeMarket}"
@@ -505,7 +505,7 @@
                         </div>
                     </div>
                 <!-- 风险试算 -->
-                <div th:if="${isEleShow['TrdRepoTrade002_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'"  id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
+                    <div id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
                 <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin:50px;">
                     <div class="row text-center" style="margin: 20px 0;">
                         <a th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm"

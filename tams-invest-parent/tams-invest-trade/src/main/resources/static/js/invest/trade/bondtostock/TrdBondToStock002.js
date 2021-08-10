@@ -69,7 +69,7 @@
                 if(ret&&ret.data){
                     if(ret.data.holdetrPriceTotal){
                         //配置单位 edit by yeming 20210726 start
-                        var holdetrPriceTotal = JoyinMath.doDiv(ret.data.holdetrPriceTotal,unitNum,2,JoyinMath.ROUND_HALF_UP);
+                        var holdetrPriceTotal = JoyinMath.doDiv(ret.data.holdetrPriceTotal,unitNum,4,JoyinMath.ROUND_HALF_UP);
                         $("#holdetrPriceTotal").val(holdetrPriceTotal);
                         //配置单位 edit by yeming 20210726 start
                     }
@@ -84,7 +84,7 @@
                 // table.renderRow(data.LAY_TABLE_INDEX, {"assetsavailablepositions": cashdata.position});
                 if(cashdata.position) {
                     //配置单位 edit by yeming 20210726 start
-                    var conetrPriceTotal = JoyinMath.doDiv(cashdata.position,unitNum,2,JoyinMath.ROUND_HALF_UP);
+                    var conetrPriceTotal = JoyinMath.doDiv(cashdata.position,unitNum,4,JoyinMath.ROUND_HALF_UP);
                     $("#conetrPriceTotal").val(JoyinMath.doMul(conetrPriceTotal, 100));
                     //配置单位 edit by yeming 20210726 start
                 }
@@ -252,6 +252,7 @@
 	        }
 	        object.pageModel = pageModel;
 	        object.operateType = operateType;
+	        object.shareAmt = JoyinMath.doMul($("#shareAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
 	        if(FileCommon) {
 	            object.uploadFileList = FileCommon.getUploadFileInfo();
 	        }

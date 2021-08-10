@@ -1,4 +1,3 @@
-//@ sourceURL=BaseRiskMathComm.js
 /**
  * 风险试算
  */
@@ -19,8 +18,8 @@
         param.pageModel = pageModel;
         return param;
     }
-
-    // add by etliu 20210427 交易所协议回购相关代码合并 start
+    
+    
     /**
      * 重置风险试算标识---场内交易指令需要
      * @returns
@@ -28,7 +27,6 @@
     function resetRiskMathFlag(){
         $("#riskMathFlag").val('01');
     }
-    // add by etliu 20210427 交易所协议回购相关代码合并 end
 
     /**
      * 定义数据表格
@@ -57,22 +55,8 @@
     ];*/
     var cols = [
         {field:'portfolioCode', visible: false}
+        ,{field:'groupId', visible:false}
         ,{field:'kriCode', visible: false}
-        ,{field:'kriName',  title: 'BaseRiskMathComm.indName', width:250,sortable:false}
-        ,{field:'kriTypeCn',  title: 'BaseRiskMathComm.indType', width:100,sortable:false}
-        ,{field:'portfolioName',  title: 'BaseRiskMathComm.portfolioName', width:150,sortable:false}
-        ,{field:'warningLine',  title: 'BaseRiskMathComm.wthreshold', width:200,sortable:false}
-        ,{field:'approveLine',  title: 'BaseRiskMathComm.approveold', width:200,sortable:false}
-        ,{field:'forbiddenLn',  title: 'BaseRiskMathComm.vthreshold', width:200,sortable:false}
-        ,{field:'kriValue',  title: 'BaseRiskMathComm.currValue',width:150,sortable:false,render: function(data, type, row, meta){
-            if(data&&row.kriType.indexOf("FORBID_")!=-1){
-                return forbidVal(data,row.kriType);
-            }
-            return data;
-        }}
-      ,{field:'oldValue',  title: 'BaseRiskMathComm.preValue',width:150,sortable:false/*,render: transferSupVal*/}
-        ,{field:'kriTrend',  title: 'BaseRiskMathComm.kriTrend',width:70,sortable:false}
-        ,{field:'kriStatus', visible: false}
         ,{field:'kriStatusCn',  title: 'BaseRiskMathComm.currStatus',sortable:false,
             render: function (data, type, row, meta) {
                 if(row.kriStatus == 0){
@@ -92,8 +76,26 @@
                 }
                 return row.kriStatus;
             }
-        },
-        {field:'totalConclu', visible: false}
+        }
+        ,{field:'kriName',  title: 'BaseRiskMathComm.indName', width:250,sortable:false}
+        ,{field:'kriTypeCn',  title: 'BaseRiskMathComm.indType', width:120,sortable:false}
+        ,{field:'portfolioName',  title: 'BaseRiskMathComm.portfolioName', width:200,sortable:false}
+        ,{field:'assetName',  title: 'BaseRiskMathComm.assetName', width:200,sortable:false}
+        ,{field:'warningLine',  title: 'BaseRiskMathComm.wthreshold', width:160,sortable:false}
+        ,{field:'approveLine',  title: 'BaseRiskMathComm.approveold', width:160,sortable:false}
+        ,{field:'forbiddenLn',  title: 'BaseRiskMathComm.vthreshold', width:160,sortable:false}
+        ,{field:'kriValue',  title: 'BaseRiskMathComm.currValue',width:150,sortable:false,render: function(data, type, row, meta){
+                if(data&&row.kriType.indexOf("FORBID_")!=-1){
+                    return forbidVal(data,row.kriType);
+                }
+                return row.kriExpr==null?data:"<span title='"+row.kriExpr+"'>"+data+"</span>";;
+            }}
+        ,{field:'oldValue',  title: 'BaseRiskMathComm.preValue',width:150,sortable:false,render: function(data, type, row, meta){
+            return row.kriOldExpr==null?data:"<span title='"+row.kriOldExpr+"'>"+data+"</span>";;
+        }}
+        ,{field:'kriTrend',  title: 'BaseRiskMathComm.kriTrend',width:70,sortable:false}
+        ,{field:'kriStatus', visible: false}
+        ,{field:'totalConclu', visible: false}
     ];
     function transferSupVal(data, type, row, meta){
     	var wg=data;
@@ -219,6 +221,7 @@
         height : 200,
         page:false,
         done: function(table, allData){
+            //debugger
             if(table[0] && table[0].totalConclu && table[0].totalConclu ){
                 if(table[0].totalConclu){
                     if(table[0].totalConclu!=3){
@@ -228,6 +231,12 @@
                     }
                 }else {
                     $("#riskTrialSpan").html("&nbsp;&nbsp;"+table[0].totalConclu);
+                }
+            } 
+            else {
+                //流程中和查看，没有试算信息的单据的试算结果查看应该是试算通过
+                if(pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) {
+                    $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.clusion"));
                 }
             }
         }
@@ -292,15 +301,6 @@
                             var cacheData = table.getRow(0, true);
                             cacheData.totalConclu = JoyinUtil.getLabel("BaseRiskMathComm.clusion");                    
                         }
-                        //修改为同步 防止使用条件出现异常
-                        //---add by xkni 2019/08/27----获取授信使用条件---
-                        // if(object1.data["assetCode"] != undefined&&object1.data.assetCode.length>1 ) {
-                            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', object1, function (result) {
-                                $("#riskTrialSpan").html($("#riskTrialSpan").html() + "!" + "<span style=\"color:#F00\"> " + result.data + "</span>");
-                                // $("#riskTrialSpan").after(result.data);
-                                //修改为同步 防止使用条件出现异常
-                            },false);
-                        // }
                     },false);
                 },false);
             }
@@ -373,13 +373,6 @@
 	                		basePath + "component/common/RiskMathAndCredit/init", 
 	                		"90%", "90%");*/
 	                //sjj add 20190409平安需求变更风险试算 end
-                    //---add by xkni 2019/08/27----获取授信使用条件---
-                    // if(initParam.data["assetCode"] != undefined&&initParam.data.assetCode.length>1 ) {
-                        Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', initParam, function (result) {
-                            $("#riskTrialSpan").html($("#riskTrialSpan").html() + "!" + "<span style=\"color:#F00\"> " + result.data + "</span>");
-                            //  $("#riskTrialSpan").after(result.data);
-                        },false);
-                    // }
 	            },false);
 	        },false);
         }
@@ -457,13 +450,6 @@
                             var cacheData = table.getRow(0, true);
                             cacheData.totalConclu = JoyinUtil.getLabel("BaseRiskMathComm.clusion");                    
                         }
-                        //---add by xkni 2019/08/27----获取授信使用条件---
-                        // if(object1.data["assetCode"] != undefined&&object1.data.assetCode.length>1 ) {
-                            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', object1, function (result) {
-                                //  $("#riskTrialSpan").after(result.data);
-                                $("#riskTrialSpan").html($("#riskTrialSpan").html() + "!" + "<span style=\"color:#F00\"> " + result.data + "</span>");
-                            });
-                        // }
                     },false);
                 },false);
             }
@@ -586,6 +572,7 @@
         param2 = {
             data: checkParam.data
         }
+        
         // add by etliu 20210129 start
         if (initParam.isSkipRisk == 'Y') {
             table.reload({data:[]});
@@ -599,82 +586,79 @@
             return;
         }
         // add by etliu 20210129 end
+        
         var forbidFlag=false;
-        if(null!=checkParam&&Array.isArray(checkParam.data)){
-            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', checkParam, function() {
-                var results = [];
-                Joyin.ajaxJson(url, initParam, function (resultArrList) {
-                    $("#riskTrialSpan").empty();
-                    $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
-                    table.reload({data:[]});
-                    var cluflag=true;
-                    for(var row in resultArrList) {
-                        var resultArr=JSON.parse(resultArrList[row]);
-                        if (resultArr && resultArr.head && resultArr.head.std400msgt) {
-                            if (resultArr.head.std400msgt == 'E') {
-                                Joyin.error(resultArr.head.stdrtninfo)
-                                return;
-                            }
-                        }
-                        if (!resultArr || !resultArr.body || !resultArr.body.RSK_LIST || !resultArr.body.rskStatus) {
-                            return;
-                        }
-                        var result = resultArr.body.RSK_LIST
-                        for(var row in result){
-                            result[row].kriValue=forbidVal(result[row].kriValue,result[row].kriType);
-                            checkRiskStatus(result[row]);
-                            changeHtml(result[row]);
-                            results.push(result[row]);
-                            if(result[row].kriStatus=='3'&&result[row].kriTrend!="向好" ){
-                                forbidFlag=true
-                            }
-                        }
-                        //当置为不通过时就不再进来了
-                        if(cluflag) {
-                            if(resultArr.body.rskStatus!="3"){
-                                if(resultArr.body.rskStatus=="4"&&forbidFlag){
-                                    cluflag=false;
-                                    resultArr.body.rskStatus="3";
-                                }
-                            }else{
-                                cluflag=false;
-                            }
-                            //cluflag = resultArr.body.rskStatus!="3"?resultArr.body.rskStatus=="4"&&forbidFlag?false:true:true;;
-                            if (!cluflag) {
-                                $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.noclusion"))
-
-                            } else {
-                                $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
-                            }
-                            //把总结论也放在列表中隐藏以方便保存到库中
-                            var cacheData = table.getRow(0, true);
-                            cacheData.totalConclu = resultArr.body.rskStatus;
-                        }
-                    }
-                    table.reload({data:results});
-
-                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 start
-                    if(IS_RISKMATH_SOFTCONTROL == '01'){
-                        if(forbidFlag){
-                            Joyin.alert("存在违规指标，请注意",3);
-                        }
-                    }
-                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 end
-
-                    /**
-                     * add by chendijun 20200710 上农商场内交易页面试算和展示不在同一个页面，需要回调传出数据
-                     */
-                    if(callback) {
-                        callback(results,cluflag);
-                    }
-                }, true);
-            },true);
-        }else{
+        // del 批量试算 by zhangrui1 start
+//        if(null!=checkParam&&Array.isArray(checkParam.data)){
+//            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', checkParam, function() {
+//                var results = [];
+//                Joyin.ajaxJson(url, initParam, function (resultArrList) {
+//                    $("#riskTrialSpan").empty();
+//                    $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
+//                    table.reload({data:[]});
+//                    var cluflag=true;
+//                    for(var row in resultArrList) {
+//                        var resultArr=JSON.parse(resultArrList[row]);
+//                        if (resultArr && resultArr.head && resultArr.head.std400msgt) {
+//                            if (resultArr.head.std400msgt == 'E') {
+//                                Joyin.error(resultArr.head.stdrtninfo)
+//                                return;
+//                            }
+//                        }
+//                        if (!resultArr || !resultArr.body || !resultArr.body.RSK_LIST || !resultArr.body.rskStatus) {
+//                            return;
+//                        }
+//                        var result = resultArr.body.RSK_LIST
+//
+//                        for(var row in result){
+//                            result[row].kriValue=forbidVal(result[row].kriValue,result[row].kriType);
+//                            checkRiskStatus(result[row]);
+//                            changeHtml(result[row]);
+//                            results.push(result[row]);
+//                            if(result[row].kriStatus=='3'&&result[row].kriTrend!="向好" ){
+//                                forbidFlag=true
+//                            }
+//                        }
+//                        //当置为不通过时就不再进来了
+//                        if(cluflag) {
+//                            if(resultArr.body.rskStatus!="3"){
+//                                if(resultArr.body.rskStatus=="4"&&forbidFlag){
+//                                    cluflag=false;
+//                                    resultArr.body.rskStatus="3";
+//                                }
+//                            }else{
+//                                cluflag=false;
+//                            }
+//                            //cluflag = resultArr.body.rskStatus!="3"?resultArr.body.rskStatus=="4"&&forbidFlag?false:true:true;;
+//                            if (!cluflag) {
+//                                $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.noclusion"))
+//
+//                            } else {
+//                                $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
+//                            }
+//                            //把总结论也放在列表中隐藏以方便保存到库中
+//                            var cacheData = table.getRow(0, true);
+//                            cacheData.totalConclu = resultArr.body.rskStatus;
+//                        }
+//                    }
+//                    table.reload({data:results});
+//                    /**
+//                     * add by chendijun 20200710 上农商场内交易页面试算和展示不在同一个页面，需要回调传出数据
+//                     */
+//                    if(callback) {
+//                        callback(results,cluflag);
+//                    }
+//                }, true);
+//            },true);
+//        }else{
+        // del 批量试算 by zhangrui1 end
             Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', checkParam, function() {
                 Joyin.ajaxJson(url, initParam, function(resultArr) {
                     $("#riskTrialSpan").empty();
-                    $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
                     table.reload({data:[]});
+                    if(risk_math_switch!='Y') {
+                        $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
+                    }
                     if(resultArr&&resultArr.head&&resultArr.head.std400msgt){
                         if(resultArr.head.std400msgt=='E'){
                             Joyin.error(resultArr.head.stdrtninfo)
@@ -689,14 +673,14 @@
                         result[row].kriValue = forbidVal(result[row].kriValue, result[row].kriType);
                         checkRiskStatus(result[row]);
                         changeHtml(result[row]);
-                        if(result[row].kriStatus=="3"&&result[row].kriTrend!="向好" ){
+                        if(resultArr.body.rskStatus != "0" && result[row].kriStatus=="3"&&result[row].kriTrend!="向好" ){
                             forbidFlag=true
                         }
                     }
                     table.reload({data:result});
                     var cluflag=true;
                     if(resultArr.body.rskStatus!="3"){
-                        if(resultArr.body.rskStatus=="4"&&forbidFlag){
+                        if(resultArr.body.rskStatus=="4"||forbidFlag){
                             cluflag=false;
                             resultArr.body.rskStatus="3";
                         }
@@ -704,23 +688,34 @@
                         cluflag=false;
                     }
                    // var cluflag=resultArr.body.rskStatus!="3"?resultArr.body.rskStatus=="4"&&forbidFlag?false:true:true;
-                   if(!cluflag){
+                    if(!cluflag){
                         $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.noclusion"))
 
                     }
                     else{
                         $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
                     }
+                    if (!(initParam instanceof Array)){
+                        var requestObj = $.extend(initParam,{data: checkParam.data})
+                        Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', requestObj, function (result) {
+                            if (result.data){
+                                $("#remark").html($("#remark").html() + result.data);
+                            }
+                            //修改为同步 防止使用条件出现异常
+                        },false);
+                    }
+
+                    if(risk_math_switch=='Y'){
+                        $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
+                    }
                     //把总结论也放在列表中隐藏以方便保存到库中
                     var cacheData = table.getRow(0, true);
                     cacheData.totalConclu = resultArr.body.rskStatus;
-                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 start
-                    if(IS_RISKMATH_SOFTCONTROL == '01'){
-                        if(forbidFlag){
-                            Joyin.alert("存在违规指标，请注意",3);
-                        }
+                    
+                    for(var row in result) {
+                        //把总结论也放在列表中隐藏以方便保存到库中
+                        result[row].totalConclu = resultArr.body.rskStatus; 
                     }
-                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 end
 
                     /**
                      * add by chendijun 20200710 上农商场内交易页面试算和展示不在同一个页面，需要回调传出数据
@@ -730,113 +725,10 @@
                     }
                 },true);
             },true);
-        }
-    };
-
-    /**
-     * 上农商个性化_指令环节风险试算改造需求 add by libaisong 2020-11-27
-     */
-    var initBaseRiskMathRedisEtr = function(url,initParam,checkParam,callback){
-        if(null==checkParam||null==checkParam.data|| checkParam.data.length==0){
-            return;
-        }
-        param = checkParam;
-        param2 = {
-            data: checkParam.data
-        }
-        var forbidFlag=false;
-        Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', checkParam, function() {
-            Joyin.ajaxJson(url, initParam, function(resultArr) {
-                $("#riskTrialSpan").empty();
-                table.reload({data:[]});
-                if(risk_math_switch!='Y') {
-                    $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
-                }
-                if(resultArr&&resultArr.head&&resultArr.head.std400msgt){
-                    if(resultArr.head.std400msgt=='E'){
-                        Joyin.error(resultArr.head.stdrtninfo)
-                        return;
-                    }
-                }
-                if(!resultArr||!resultArr.body||!resultArr.body.RSK_LIST||!resultArr.body.rskStatus){
-                    $("#FundAccountInfo_DIV3").hide();
-                    $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
-                    return;
-                }
-                var result=resultArr.body.RSK_LIST
-                for(var row in result) {
-                    result[row].kriValue = forbidVal(result[row].kriValue, result[row].kriType);
-                    checkRiskStatus(result[row]);
-                    changeHtml(result[row]);
-                    if(resultArr.body.rskStatus != "0" && resultArr.body.rskStatus != "1" &&resultArr.body.rskStatus != "2" && result[row].kriStatus=="3"&&result[row].kriTrend!="向好" ){
-                        forbidFlag=true
-                    }
-                }
-                table.reload({data:result});
-                var cluflag=true;
-                if(resultArr.body.rskStatus!="3"){
-                    if(resultArr.body.rskStatus=="4"||forbidFlag){
-                        cluflag=false;
-                        resultArr.body.rskStatus="3";
-                    }
-                }else{
-                    cluflag=false;
-                }
-                // var cluflag=resultArr.body.rskStatus!="3"?resultArr.body.rskStatus=="4"&&forbidFlag?false:true:true;
-                if(!cluflag){
-                    $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.noclusion"))
-                    $("#FundAccountInfo_DIV3").hide();
-                    Joyin.dialog("风险试算", basePath +'component/common/BaseRiskMathCommEtr/init', '98%', '95%',{initParam:JSON.stringify(resultArr)});
-
-                }
-                else{
-                    $("#FundAccountInfo_DIV3").hide();
-                    $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
-                }
-                if (!(initParam instanceof Array)){
-                    var requestObj = $.extend(initParam,{data: checkParam.data})
-                    Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', requestObj, function (result) {
-                        if (result.data){
-                            if(null==$("#remark").val()||""==$("#remark").val()){
-                                $("#remark").val(result.data);
-                            }
-                            else{
-                                //不存在这条件备注，才处理
-                                if($("#remark").val().indexOf(result.data)==-1){
-                                    $("#remark").val($("#remark").val()+"\n"+result.data);
-                                }
-                            }
-                            //$("#remark").html($("#remark").html() + result.data);
-                        }
-                        //修改为同步 防止使用条件出现异常
-                    },false);
-                }
-
-                if(risk_math_switch=='Y'){
-                    $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
-                }
-                //把总结论也放在列表中隐藏以方便保存到库中
-                var cacheData = table.getRow(0, true);
-                cacheData.totalConclu = resultArr.body.rskStatus;
-
-                for(var row in result) {
-                    //把总结论也放在列表中隐藏以方便保存到库中
-                    result[row].totalConclu = resultArr.body.rskStatus;
-                }
-
-                /**
-                 * add by chendijun 20200710 上农商场内交易页面试算和展示不在同一个页面，需要回调传出数据
-                 */
-                if(callback) {
-                    callback(result,cluflag);
-                }
-            },false);
-        },false);
-        // del 批量试算 by zhangrui1 start
+            // del 批量试算 by zhangrui1 start
 //        }
-        // del 批量试算 by zhangrui1 end
+            // del 批量试算 by zhangrui1 end
     };
-
     var changeHtml = function(result) {
         for(var key in result) {
             if(result.hasOwnProperty(key) && result[key] && typeof result[key] === 'string') {
@@ -869,30 +761,8 @@
         }
         Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/insert',rows);
     }
-
-    /**
-     * 检查 产品是否配置了指标
-     * @param portfolioName 组合代码控件的id 空值默认为 "portfolioId"
-     * @author jiangpeng
-     * @returns {string}
-     */
-    var checkPortfolioIdRisk = function (portfolioName) {
-        var resultFlag = "Y";
-        if (portfolioName === "" || portfolioName === null || portfolioName === undefined) {
-            portfolioName = "portfolioId";
-        }
-        var portfolioId = $("#" + portfolioName).val();
-        if(portfolioId != "" && portfolioId != null && portfolioId != undefined){
-            console.log("haha")
-            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/isSetRiskByPortfolioId', portfolioId, function (result) {
-                    resultFlag = result.data.flag;
-                }, false);
-
-        }
-        return resultFlag;
-    }
     
-    var saveOrSubmitCheck = function(mes,portfolioName){
+    var saveOrSubmitCheck = function(mes){
         if(mes == 'save'){
             mes = JoyinUtil.getLabel("SysCommon.save");
         }else if(mes == 'submit'){
@@ -900,15 +770,16 @@
         }
     	//---add by 裴家俊 2019/03/20  风险试算点击判断------
         //----modify by 裴家俊 2019/03/30  风险试算点击判断----start----
-        if($("#riskMathFlag").val()=='01'&& risk_math_switch=='Y' && (!workflowBaskRiskId || workflowBaskRiskId == 'null')){
+
+        if($("#riskMathFlag").val()=='01'&& risk_math_switch=='Y' &&
+                ((!workflowBaskRiskId || workflowBaskRiskId == 'null') || (!$("#riskTrialSpan").val().trim().replace(/\s/g,"")&&workflowBaskRiskId))){
             //内部交易对手不需要风险测试              
-            var paramConterId=["etrInvestPersonInfo.counterId","bussEtrInvestPersonInfoDto.counterId","trdInvestPersonInfo.counterId","trdInvestPersonInfo002Dto.counterId"];
-            var counterType=findCounterType(paramConterId);
-            var portfolioIdRisk = checkPortfolioIdRisk(portfolioName);
-            if(counterType != 'N' && portfolioIdRisk != 'N'){
-                Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),3);
+//            var paramConterId=["etrInvestPersonInfo.counterId","bussEtrInvestPersonInfoDto.counterId","trdInvestPersonInfo.counterId","trdInvestPersonInfo002Dto.counterId"];
+//            var counterType=findCounterType(paramConterId);
+//            if(counterType != 'N'){
+                Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),2);
                 return ;
-            }            
+//            }            
         }
         //----modify by 裴家俊 2019/03/30  风险试算点击判断----end----
         if(BaseRiskMathComm && $('#riskTrialSpan')){
@@ -916,9 +787,6 @@
 //                Joyin.alert(JoyinUtil.getLabel('BaseRiskMathComm.riskCheck')+mes,2);
 //                return;
 //            }else 
-            if(IS_RISKMATH_SOFTCONTROL == '01'){
-                return '';
-            }else{
             if($('#riskTrialSpan').html() == JoyinUtil.getLabel('BaseRiskMathComm.violation') && risk_math_switch=='Y'){
                 //判断是否符合分控场景
                 /*if(checkDiffSubmitScene()) {
@@ -938,26 +806,9 @@
                 return '';
             }else{
                 return '';
-                }
             }
         }
     }
-      
-    var submitT19Check = function(){ 
-        if($("#riskMathFlag").val()=='01'&& risk_math_switch=='Y'){
-            //内部交易对手不需要风险测试              
-            var paramConterId=["etrInvestPersonInfo.counterId","bussEtrInvestPersonInfoDto.counterId","trdInvestPersonInfo.counterId","trdInvestPersonInfo002Dto.counterId"];
-            var counterType=findCounterType(paramConterId);
-            if(counterType != 'N'){
-                Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),2);
-                return ;
-            }            
-        }else{
-        	 return '';
-        }
-    }
-    
-    
     /***
      * 检查风险试算是否满足分控场景
      */
@@ -1013,7 +864,7 @@
         var retType="Y";
         $.each(list,function(i,el){
             if($("select[name='"+el+"']").length>0) {
-                if (typeof $("select[name='" + el + "']").select2('data') != 'undefined' && typeof $("select[name='" + el + "']").select2('data')[0].object != 'undefined') {
+                if (typeof $("select[name='" + el + "']").select2('data') != 'undefined' && $("select[name='" + el + "']").select2('data').length>0 && typeof $("select[name='" + el + "']").select2('data')[0].object != 'undefined') {
                     retType = $("select[name='" + el + "']").select2('data')[0].object;
                     return false;
                 }
@@ -1041,7 +892,7 @@
         if(newdata != null){
             // 组合风险试算参数更改检验	王贵奇	2019/8/19	开始
         	if(Array.isArray(newdata.data)){
-        		if(param2 && param2.data.length != newdata.data.length){
+            	if(param2 && param2.data.length != newdata.data.length){
             		Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013", ["风险生成要素", "生成风险试算"]));
                     return true;
             	}
@@ -1097,7 +948,7 @@
                         if (key == "createTime" || key == "updateTime" || key == 'index') {
                             continue;
                         }
-                        var currentDealObj = currentCalcConditionList.data[index][key];
+                        var currentDealObj = currentCalcConditionList[index].data[key];
                         var backupDealObj = element[key];
 
                         if (typeof currentDealObj != "object"
@@ -1171,16 +1022,7 @@
                     }
                     $("#riskTrialSpan").empty();
                     $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
-                    //---add by jjpei 20190801--------去除当前这笔流程---暂时塞进tradeCode----                 
-                        //修改为同步 防止使用条件出现异常
-                        //---add by xkni 2019/08/27----获取授信使用条件---
-                        // if(object1.data["assetCode"] != undefined&&object1.data.assetCode.length>1 ) {
-                            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', object1, function (result) {
-                                $("#riskTrialSpan").html($("#riskTrialSpan").html() + "!" + "<span style=\"color:#F00\"> " + result.data + "</span>");
-                                // $("#riskTrialSpan").after(result.data);
-                                //修改为同步 防止使用条件出现异常
-                            },false);
-                        // }
+                    //---add by jjpei 20190801--------去除当前这笔流程---暂时塞进tradeCode----
                 },false);
             }
             // zhangrui 风险性能优化 start
@@ -1209,12 +1051,6 @@
 	            }	     
 	            $("#riskTrialSpan").empty();
                 $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
-                //---add by xkni 2019/08/27----获取授信使用条件---
-                Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', initParam, function (result) {
-                    if(typeof result.data != 'undefined') {
-                        $("#riskTrialSpan").html($("#riskTrialSpan").html() + "!" + "<span style=\"color:#F00\"> " + result.data + "</span>");
-                    }
-                },false);
 	        },false);
         }
     };
@@ -1224,7 +1060,6 @@
              * {timePoint:'01','valDate':'2018-01-01','portfolioCode':'123456','tradeAmount':111,assetType:'01',assetCode:'214'}
              */
 			initBaseRiskMathRedis: initBaseRiskMathRedis,
-            initBaseRiskMathRedisEtr: initBaseRiskMathRedisEtr,//上农商个性化_指令环节风险试算改造需求 add by libaisong 2020-11-27
             initBaseRiskMathCommPage: initBaseRiskMathCommPage,
             initBaseRiskMathCommPage2: initBaseRiskMathCommPage2,
             initBaseRiskMathCommPageCus: initBaseRiskMathCommPageCus,
@@ -1233,10 +1068,7 @@
             initBaseRiskMathCommLxzlPage:initBaseRiskMathCommLxzlPage,
             reloadRiskTable:reloadRiskTable,
             getparam:getparam,
-            submitT19Check:submitT19Check,
-            // add by etliu 20210427 交易所协议回购相关代码合并 start
             resetRiskMathFlag:resetRiskMathFlag
-            // add by etliu 20210427 交易所协议回购相关代码合并 end
     };
       
     /*吉林银行风险试算-流程控制显示   add by caojin   2019/09/23   start*/

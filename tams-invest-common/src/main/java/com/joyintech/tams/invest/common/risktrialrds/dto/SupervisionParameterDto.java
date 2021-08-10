@@ -20,25 +20,25 @@ public class SupervisionParameterDto extends RskIsupIndicatorParaDtl{
 	public void setIsMath(String isMath) {
 		this.isMath = isMath;
 	}
-	
+
 	private String institutionCode;
 
-    
-    /**
-     * 获取 institutionCode
-     * @return institutionCode.
-     */
-    public String getInstitutionCode() {
-        return institutionCode;
-    }
 
-    
-    /**
-     * 设置 institutionCode
-     * @param institutionCode institutionCode
-     */
-    public void setInstitutionCode(String institutionCode) {
-        this.institutionCode = institutionCode;
-    }
-  
+	/**
+	 * 获取 institutionCode
+	 * @return institutionCode.
+	 */
+	public String getInstitutionCode() {
+		return institutionCode;
+	}
+
+
+	/**
+	 * 设置 institutionCode
+	 * @param institutionCode institutionCode
+	 */
+	public void setInstitutionCode(String institutionCode) {
+		this.institutionCode = institutionCode;
+	}
+	
 }

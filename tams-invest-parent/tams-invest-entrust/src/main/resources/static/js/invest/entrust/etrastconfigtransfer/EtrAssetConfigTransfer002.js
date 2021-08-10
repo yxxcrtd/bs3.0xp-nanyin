@@ -109,9 +109,27 @@ var correctData;
         object.pageModel = pageModel;
         object.portfolioId=PORTFOLIO_ID;//转出组合
         object.selectedItem = trialTable.getAllRows();
+        var datas = trialTable.getAllRows();
+        var filterdatas = filterTable.getAllRows();
+        for (var i in filterdatas) {
+            if (filterdatas[i].finprodId !== '' && filterdatas[i].finprodId !== undefined) {
+                var amount = Number(filterdatas[i].amount);
+                for (var j in datas) {
+                    if (datas[j].finprodId !== '' && datas[j].finprodId !== undefined && datas[j].finprodId == filterdatas[i].finprodId) {
+                        amount -= Number(datas[j].entrustNum);
+                        if(amount<0){
+                            Joyin.error("资产："+datas[j].finprodId+"在试算一览表中的转出数量之和不能大于筛选资产一览表内对应资产的持仓券面额度！请检查！");
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
         Joyin.ajaxJson(basePath + 'invest/entrust/etrastconfigtransfer/EtrAssetConfigTransfer002/assembleImportData', object, function(assembleResult) {
             if (assembleResult) {
                 var result = {};
+                correctData=new Array();
                 result.tempList = assembleResult.entrustData;
                 var tradeMarket=object.selectedItem[0].tradeMarket;
                 //银行间指令
@@ -122,17 +140,22 @@ var correctData;
                         "98%", "95%", result);
                 }
                 //上交所(固定收益)指令
-                if(TRADE_PLACE_03==tradeMarket){
-                    correctData = JSON.parse(result.tempList);
-                    Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.gsImport"),
-                        JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
-                        "98%", "95%", {currentTab:SHARES_TRADE_PLATFORM_03});
-                }
-                //深交所(大宗)指令
-                if(TRADE_PLACE_04==tradeMarket){
-                    Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.dzImport"),
-                        JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
-                        "98%", "95%", {currentTab:SHARES_TRADE_PLATFORM_04});
+                if($.inArray(tradeMarket,[TRADE_PLACE_03,TRADE_PLACE_04])>=0){
+                    var retArray=JSON.parse(result.tempList);
+                    $.each(retArray,function (i,v) {
+                        correctData.push(v[0])
+                    })
+                    if(TRADE_PLACE_03==tradeMarket) {
+                        Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.gsImport"),
+                            JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
+                            "98%", "95%", {currentTab: SHARES_TRADE_PLATFORM_03});
+                    }
+                    //深交所(大宗)指令
+                    if(TRADE_PLACE_04==tradeMarket){
+                        Joyin.dialog(JoyinUtil.getLabel("EtrExchangeTradeImport.dzImport"),
+                            JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
+                            "98%", "95%", {currentTab:SHARES_TRADE_PLATFORM_04});
+                    }
                 }
             }
         });
@@ -162,7 +185,7 @@ var correctData;
             Joyin.ajaxJson(basePath + 'invest/entrust/etrastconfigtransfer/EtrAssetConfigTransfer002/selectPortfolioInfo', {portfolioId: $(obj).val()},
                 function (result) {
                     if (result) {
-                        $("input#trial_vdate:eq("+(index-1)+")").val(Date.ofDate(result.VDATE).format('yyyy-MM-dd'));
+                        $("input#trial_vdate:eq("+(index-1)+")").val(Date.ofDate(result.vdate).format('yyyy-MM-dd'));
                         $("input#trial_valuation:eq("+(index-1)+")").val(result.TDY_ASSET_NETVALUE);
                     }
                 }

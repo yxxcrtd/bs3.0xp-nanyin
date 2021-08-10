@@ -66,7 +66,9 @@ $(function() {
 //        });
         
         //当已存在交易数据时，基金类型和货币均不可修改
-        if(trade == "true"){
+        var tradevalue = $("#trade").val();//modify by yanya on 20210207
+        //if(trade == "true"){
+        if(tradevalue == "true"){
           //alert(trade);
             $("#fundType").attr("disabled",true);
             $("#ccy").attr("disabled",true);

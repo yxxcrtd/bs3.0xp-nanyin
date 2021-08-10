@@ -32,7 +32,13 @@ var table;
         if($('#windtypeone').val() && $('#windtypeone').val() != ''){
             obj.assetSecType = $('#windtypeone').val();
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {valDate:['settleDate','TrdPlanRateInvestTrade002.settleDate'],portfolioCode:['portfolioId','TrdBondInvestTrade002.portfolioId'],tradeAmount:['fpriceAmt','TrdBondInvestTrade002.fpriceAmt'],assetType:['windtypeone','TrdBondInvestTrade002.windtypeone'],tradeDirection:['ps','TrdLendInvestTrade002.ps'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
     function saveOrSubmit(operateType) {
@@ -112,6 +118,8 @@ var table;
 	        object.settleAmt=$("#settleAmt").val();
 	        object.exchangeAmt=$("#exchangeAmt").val();
 	        object.commissionAmt=$("#commissionAmt").val();
+	        object.refundRate=$("#refundRate").val();
+	        object.refundAmount=$("#refundAmount").val();
 	        object.preTradeId = preTradeId;
 //	        object.fTradeId = fTradeId;
 	        object.entrustNum = entrustNum; // 指令时的券面总额
@@ -830,7 +838,21 @@ var table;
             $("#ownTradeAmt").val(entrustOwnNum).trigger("blur");
         }
     });
-   
+
+    // 绑定输入框失焦事件
+    $('#refundRate').change(function () {
+        var tradeAmt = $("#tradeAmt").val();
+        var refundRate = $("#refundRate").val();
+        var refundRateMulHundred = JoyinMath.doMul(refundRate, 100, 4, JoyinMath.ROUND_HALF_UP)
+        var refundAmount = JoyinMath.doMul(tradeAmt, refundRateMulHundred, 2, JoyinMath.ROUND_HALF_UP)
+        if(refundAmount < 0) {
+            $("#refundRate").val(refundRate).trigger("blur");
+            $("#refundAmount").val(0).trigger("blur");
+        } else {
+            $("#refundAmount").val(refundAmount).trigger("blur");
+        }
+    });
+
     /**
 
      * 本方券券面总额
@@ -1591,7 +1613,7 @@ var table;
             if (result && result.data) {
                 var data = result.data;
                 if(!$('#fTradeId').val()){
-                    $("#tradeAmt").val(JoyinMath.doDiv(data.tradeAmt,unitNum,2,JoyinMath.ROUND_HALF_UP)).change().trigger("blur");
+                    $("#tradeAmt").val(JoyinMath.doDiv(data.tradeAmt,unitNum,4,JoyinMath.ROUND_HALF_UP)).change().trigger("blur");
                 }
                 $("#unitCprice").val(data.unitCprice).trigger("blur");
                 $("#unitInt").val(data.unitInt).trigger("blur");
@@ -2557,7 +2579,11 @@ var table;
             
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/1/RSK002/F01',object,getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 end----------
-            window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());
+            // add by etliu 20210129 start
+            if (object.isSkipRisk != 'Y') {
+                window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());
+            }
+            // add by etliu 20210129 end
 
         })
         if($("#finprodId").val()){

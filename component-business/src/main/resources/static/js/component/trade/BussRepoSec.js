@@ -79,18 +79,18 @@
             , {
                 field: 'avaPledgePrin',
                 width: 170,
-                title: 'BussRepoSec.pledgeBondTotalTbl.colmodel.avaPledgePrin',
+                title: 'BussRepoSec.pledgeBondTotalTbl.colmodel.avaPledgePrin1',
                 type: 'money',
-                digit: 2,
+                digit: 4,
                 sortable: false
             }
             // 质押券面额
             , {
                 field: 'pledgePrin',
                 width: 150,
-                title: 'BussRepoSec.pledgeBondTotalTbl.colmodel.pledgePrin',
+                title: 'BussRepoSec.pledgeBondTotalTbl.colmodel.pledgePrin1',
                 type: 'money',
-                digit: 2,
+                digit: 4,
                 edit: true,
                 sortable: false
             }
@@ -297,8 +297,9 @@
         var totalPrinAmtSum = Number(0);
         for (var i in allRows) {
             var pledgePrin = allRows[i].pledgePrin;
-            if(isDzh == 'Y'){
-                pledgePrin = JoyinMath.doMul(pledgePrin,10000);
+            // if(isDzh == 'Y'){
+            if(entrustAmtUnit == '01'){
+                pledgePrin = JoyinMath.doMul(pledgePrin,10000,4,JoyinMath.ROUND_HALF_UP);
             }
             totalPrinAmt += pledgePrin * allRows[i].pledgeRatio / 100;
             totalPrinAmtSum += pledgePrin / 10000;
@@ -309,11 +310,11 @@
                 sqsPrinAmt+=pledgePrin * allRows[i].pledgeRatio / 100;
             }
         }
-        //配置单位 add by yeming 20210721 end
-        if(entrustAmtUnit == '02' ){
-            totalPrinAmt = JoyinMath.doDiv(totalPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
-        }
-        //配置单位 add by yeming 20210721 end
+        // //配置单位 add by yeming 20210721 end
+        // if(entrustAmtUnit == '02' ){
+        //     totalPrinAmt = JoyinMath.doDiv(totalPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
+        // }
+        // //配置单位 add by yeming 20210721 end
         getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
         getElementById("zzdTotalPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
         getElementById("sqsTotalPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
@@ -350,17 +351,18 @@
                     pledgeBondTotalTbl.addRow(obj);
                 }
                 //多组合  可质押券面额和质押券面额 以万元为单位
-                if(isDzh == 'Y'){
+                // if(isDzh == 'Y'){
+                if (entrustAmtUnit == '01'){
                     totalPrinAmtSum = totalPrinAmtSum*10000;
                     totalPrinAmt = totalPrinAmt*10000;
                     zzdPrinAmt = zzdPrinAmt*10000;
                     sqsPrinAmt = sqsPrinAmt*10000;
                 }
-                //配置单位 add by yeming 20210721 end
-                if(entrustAmtUnit == '02' ){
-                    totalPrinAmt = JoyinMath.doDiv(totalPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
-                }
-                //配置单位 add by yeming 20210721 end
+                // //配置单位 add by yeming 20210721 end
+                // if(entrustAmtUnit == '02' ){
+                //     totalPrinAmt = JoyinMath.doDiv(totalPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
+                // }
+                // //配置单位 add by yeming 20210721 end
                 getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
                 getElementById("zzdTotalPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
                 getElementById("sqsTotalPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
@@ -608,8 +610,8 @@
         pledgeBondTotalTbl.showColumns([{field:'repRegistOrgStr',visible: true}]);
     }
     //多组合
-    if(isDzh == 'Y'){
-        pledgeBondTotalTbl.showColumns([{field:'avaPledgePrin',visible:true,title: '可质押券面总额(万元)'}]);
-        pledgeBondTotalTbl.showColumns([{field:'pledgePrin',visible:true,title: '质押券面额(万元)'}]);
-    }
+    // if(isDzh == 'Y'){
+    //     pledgeBondTotalTbl.showColumns([{field:'avaPledgePrin',visible:true,title: '可质押券面总额(万元)'}]);
+    //     pledgeBondTotalTbl.showColumns([{field:'pledgePrin',visible:true,title: '质押券面额(万元)'}]);
+    // }
 }());

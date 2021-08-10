@@ -249,6 +249,12 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"),"关闭");
                 return;
             }
+            for(var index in selArr){
+                if(selArr[index].entrustStatus == '08'){
+                    Joyin.error("流程中的数据不允许关闭");
+                    return ;
+                }
+            }
             //	画面提示message【ETR_C_0002：请确认是否要关闭委托？】																
             var object = {selectedItem: selArr, operateType:"close"};
             Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund001/check', object, function(result) {
@@ -273,6 +279,12 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
             }//BUSS_COM_C_0032
+            for(var index in selArr){
+                if(selArr[index].entrustStatus == '08'){
+                    Joyin.error("流程中的数据不允许撤回");
+                    return ;
+                }
+            }
             var object = {selectedItem: selArr, operateType:"recall"};
             object.assetType11 = selArr[0].assetType11;
             Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund001/check', object, function(result) {

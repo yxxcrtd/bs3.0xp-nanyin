@@ -123,4 +123,40 @@ public class ImplPtlIndicator extends RskPortfolioIndicator implements IPtlIndic
     public void setPortfolioBagName(String portfolioBagName) {
         this.portfolioBagName = portfolioBagName;
     }
+
+    /**
+     * 获取 portfIdRedis
+     * 
+     * @return portfIdRedis.
+     */
+    public String getPortfIdRedis() {
+        return portfIdRedis;
+    }
+
+    /**
+     * 获取 ptlIndicatorRedis
+     * 
+     * @return ptlIndicatorRedis.
+     */
+    public Map<String, Set<String>> getPtlIndicatorRedis() {
+        return ptlIndicatorRedis;
+    }
+
+    /**
+     * 获取 portfolioBagIdRedis
+     * 
+     * @return portfolioBagIdRedis.
+     */
+    public Map<String, Object> getPortfolioBagIdRedis() {
+        return portfolioBagIdRedis;
+    }
+
+    /**
+     * 获取 ptlNameRedis
+     * 
+     * @return ptlNameRedis.
+     */
+    public String getPtlNameRedis() {
+        return ptlNameRedis;
+    }
 }

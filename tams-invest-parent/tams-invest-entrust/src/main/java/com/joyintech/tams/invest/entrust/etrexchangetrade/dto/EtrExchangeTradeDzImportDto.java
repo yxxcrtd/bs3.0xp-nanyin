@@ -155,4 +155,10 @@ public class EtrExchangeTradeDzImportDto extends EtrExchangeTrade001Dto {
     public String getDeclaTypeStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.申报类型,getDeclaType());
     }
+
+    /**
+     * 目标类型名称
+     * @return
+     */
+    public String getTargetTypeStr() { return  SysDataUtil.getNameFromDataDict(DictCode.目标类型,getTargetType()); }
 }

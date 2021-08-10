@@ -43,6 +43,8 @@ public class CstpTrdMatchInfoController  extends BaseController {
     public AjaxResult saveTrdMatchInfoByCstp(@RequestBody CstpTrdMatchInfoDto dto){
         try {
             cstpTrdMatchInfoService.saveTrdMatchInfoByCstp(dto);
+            //交易匹配成功后计算交易手续费，结算手续费
+            cstpTrdMatchInfoService.calcProcedureAmtAndSettleAmt(dto);
         } catch (Exception e) {
            return new AjaxResult("交易匹配确认失败",MessageType.错误消息);
         }

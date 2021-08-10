@@ -23,8 +23,10 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
 import com.joyintech.tams.invest.entrust.etrplanassetn.dto.EtrPlanAssetNDto;
 import com.joyintech.tams.invest.entrust.etrplanassetn.service.EtrPlanAssetNService;
@@ -275,6 +277,16 @@ public class EtrPlanAssetN002Controller extends BaseController {
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
         }
+        // ----------add by yushilong 20200721 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    DictCodeList.平安资产类型_计划类资产_净值型.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrPlanAssetNDto> processParameter = new ProcessParameter<EtrPlanAssetNDto>();
         WorkFlowParameter<EtrPlanAssetNDto> params = new WorkFlowParameter<EtrPlanAssetNDto>();
         params.setPageId(this.getPageId());
@@ -300,6 +312,8 @@ public class EtrPlanAssetN002Controller extends BaseController {
                           + DateUtil.format(entity.getMdate()) + ")-"
                           + this.getMessage("EtrPlanAssetN002.entrustNum") + ":"
                           + entity.getEntrustNum());
+        }else{
+            params.setComment(entity -> this.getMessage("计划类资产（净值型）投资委托"));// add by xxg 20210802
         }
         processParameter.setWorkFlowParameter(params);
         String msg = etrPlanAssetNService.start(processParameter, dto);

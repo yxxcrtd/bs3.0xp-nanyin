@@ -1,8 +1,11 @@
 $(function () {
   //当前是否包含流程
     var workflowIdNow = $("#workflowId").val();
+    /** modify by yanya on 20210224 类型修改为从隐藏input获取**/
+    var curEntityType = $("#entityType").val();
     //当资产类型为活期类资产时，还本计划table不显示
-    if(entityType=='02'){
+    //if(entityType=='02'){
+    if(curEntityType=='02'){
         $("#hbjh").hide();
     }
     $("#type1").change(function(){

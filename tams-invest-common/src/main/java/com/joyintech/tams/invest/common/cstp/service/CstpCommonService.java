@@ -324,23 +324,25 @@ public class CstpCommonService{
             for(PtlAllocationDto ptlAllocationDto : ptlAllocations){
                 List<TrdTradeFeeDetail> trdTradeFeeDetails2 = new ArrayList<>();
                 if(null!=trdTradeFeeDetailJy){
+
                     //组合分配列表总金额
-                    BigDecimal total = new BigDecimal(ptlAllocations.size());
+                    BigDecimal shareAmtTotalFP = ptlAllocations.stream().map(PtlAllocationDto::getShareAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
                     BigDecimal feeTotal = trdTradeFeeDetailJy.getFeeAmt();
                     TrdTradeFeeDetail trdTradeFeeDetail = new TrdTradeFeeDetail();
                     BeanUtil.copyPropertiesIgnoreNull(trdTradeFeeDetail,trdTradeFeeDetailJy);
-                    BigDecimal fee = ArithmeticUtil.divide(ArithmeticUtil.multiply(feeTotal,new BigDecimal(1)),total,2, RoundingMode.HALF_DOWN);
+                    BigDecimal fee = ArithmeticUtil.divide(ArithmeticUtil.multiply(feeTotal,ptlAllocationDto.getShareAmt()),shareAmtTotalFP,2, RoundingMode.HALF_DOWN);
                     trdTradeFeeDetail.setFeeAmt(fee);
                     交易手续费尾差 = ArithmeticUtil.subtract(交易手续费尾差,fee);
                     trdTradeFeeDetails2.add(trdTradeFeeDetail);
                 }
                 if(null!=trdTradeFeeDetailJs){
                     //组合分配列表总金额
-                    BigDecimal shareAmtTotalFP = ptlAllocations.stream().map(PtlAllocationDto::getShareAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    //组合分配列表总金额
+                    BigDecimal total = new BigDecimal(ptlAllocations.size());
                     BigDecimal feeTotal = trdTradeFeeDetailJs.getFeeAmt();
                     TrdTradeFeeDetail trdTradeFeeDetail = new TrdTradeFeeDetail();
                     BeanUtil.copyPropertiesIgnoreNull(trdTradeFeeDetail,trdTradeFeeDetailJs);
-                    BigDecimal fee = ArithmeticUtil.divide(ArithmeticUtil.multiply(feeTotal,ptlAllocationDto.getShareAmt()),shareAmtTotalFP,2, RoundingMode.HALF_DOWN);
+                    BigDecimal fee = ArithmeticUtil.divide(ArithmeticUtil.multiply(feeTotal,new BigDecimal(1)),total,2, RoundingMode.HALF_DOWN);
                     trdTradeFeeDetail.setFeeAmt(fee);
                     结算手续费尾差 = ArithmeticUtil.subtract(结算手续费尾差,fee);
                     trdTradeFeeDetails2.add(trdTradeFeeDetail);
@@ -351,11 +353,11 @@ public class CstpCommonService{
             for(PtlAllocationDto item : ptlAllocations){
                 if(!StringUtil.isEmptyList(item.getTradeFeeList())){
                     for(TrdTradeFeeDetail feeItem : item.getTradeFeeList()) {
-                        if(交易手续费尾差.compareTo(BigDecimal.ZERO)>0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())
+                        if(交易手续费尾差.compareTo(BigDecimal.ZERO)!=0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())
                         &&StringUtils.equals(feeItem.getFeeType(),BussinessDictCodeList.费用类型_交易手续费.getValue())){
                             feeItem.setFeeAmt(ArithmeticUtil.doAdd(feeItem.getFeeAmt(),交易手续费尾差));
                         }
-                        if(结算手续费尾差.compareTo(BigDecimal.ZERO)>0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())
+                        if(结算手续费尾差.compareTo(BigDecimal.ZERO)!=0&&StringUtil.equals(item.getEntrustId(),ptlAllocationDtoMax.getEntrustId())
                                 &&StringUtils.equals(feeItem.getFeeType(),BussinessDictCodeList.费用类型_结算手续费.getValue())){
                             feeItem.setFeeAmt(ArithmeticUtil.doAdd(feeItem.getFeeAmt(),结算手续费尾差));
                         }

@@ -86,6 +86,7 @@ public class RiskTrialRetDto extends BaseEntity{
 	 * by nixukuan 20191012
 	 */
 	private String investedAmountExpr;
+	
     /**
      * 获取 index
      * @return index.
@@ -265,12 +266,12 @@ public class RiskTrialRetDto extends BaseEntity{
 	 * 违规条件，记录当时比较的违规值，防止该指标以后发生变化
 	 */
 	private String forbiddenLn;
-
+	
 	/*
 	 *资产代码
 	 */
 	private String assetCode;
-
+	
 	/*
 	 * 资产名称
 	 */
@@ -281,7 +282,7 @@ public class RiskTrialRetDto extends BaseEntity{
 	 */
 	private String kriExpr;
 
-
+	
 	public String getPortfolioCode() {
 		return portfolioCode;
 	}
@@ -425,7 +426,27 @@ public class RiskTrialRetDto extends BaseEntity{
     public void setAssetName(String assetName) {
         this.assetName = assetName;
     }
+    // add by zhangrui1 增加groupId start
+    private int groupId;
 
+    /**
+     * 获取 groupId
+     * 
+     * @return groupId.
+     */
+    public int getGroupId() {
+        return groupId;
+    }
+
+    /**
+     * 设置 groupId
+     * 
+     * @param groupId groupId
+     */
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+    // add by zhangrui1 增加groupId end
 	public String getKriExpr() {
 		return kriExpr;
 	}
@@ -433,26 +454,4 @@ public class RiskTrialRetDto extends BaseEntity{
 	public void setKriExpr(String kriExpr) {
 		this.kriExpr = kriExpr;
 	}
-
-	// add by zhangrui1 增加groupId start
-	private int groupId;
-
-	/**
-	 * 获取 groupId
-	 *
-	 * @return groupId.
-	 */
-	public int getGroupId() {
-		return groupId;
-	}
-
-	/**
-	 * 设置 groupId
-	 *
-	 * @param groupId groupId
-	 */
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
-	}
-	// add by zhangrui1 增加groupId end
 }

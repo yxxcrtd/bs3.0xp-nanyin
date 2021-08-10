@@ -102,4 +102,6 @@ public interface BasePtlCashPositionInfoMapper {
      * @since 1.0
      */
     Date selectNextWorkDay(Map<String,Object> map);
+
+    BigDecimal selectPtlCashPositionFlowAmount(PtlCashPositionFlowDto ptlCashPositionFlowDto);
 }

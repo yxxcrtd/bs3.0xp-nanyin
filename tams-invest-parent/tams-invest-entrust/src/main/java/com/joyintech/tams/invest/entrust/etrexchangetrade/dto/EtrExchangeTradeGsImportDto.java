@@ -10,8 +10,10 @@
  
 package com.joyintech.tams.invest.entrust.etrexchangetrade.dto;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.asset.annotation.Number;
 
@@ -156,4 +158,15 @@ public class EtrExchangeTradeGsImportDto extends EtrExchangeTrade001Dto {
     public String getDeclaTypeStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.申报类型,getDeclaType());
     }
+
+
+    /**
+     * 获取 settleSpreedName
+     *
+     * @return settleSpreedName.
+     */
+    public String getSettleSpreedName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, StringUtil.isNotEmpty(this.getSettleSpeed())?this.getSettleSpeed(): DictCodeList.清算速度_T_1.getValue());
+    }
+
 }

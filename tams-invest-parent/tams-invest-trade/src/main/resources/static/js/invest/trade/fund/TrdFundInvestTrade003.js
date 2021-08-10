@@ -12,7 +12,13 @@ $(function () {
             finprodId= data.finprodId;
         }
         var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#tradeDate').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#tradeAmt').val(),assetType:FINPROD_TYPE_F06,isEnabled:'01',assetCode:finprodId,tradeDirection:$('#ps').val()}
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {valDate:['tradeDate','TrdFundInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdFundInvestTrade002.portfolioId'],tradeAmount:['tradeAmt','TrdFundInvestTrade002.tradeAmt'],assetType:['type6','TrdFundInvestTrade002.type6'],tradeDirection:['ps','TrdFundInvestTrade002.ps'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
     function saveOrSubmit(operateType) {

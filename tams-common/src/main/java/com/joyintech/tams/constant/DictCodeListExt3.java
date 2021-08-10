@@ -1141,6 +1141,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     委托状态_流程中(DictCode.委托状态,"08","流程中"),
     所有_所有(DictCode.所有,"BROKER","所有"),
 
+    // add by zhangrui1 start
+    共通业务类型_关联方管理(DictCode.共通业务类型,"RSK49","关联方管理"),
+    // add by zhangrui1 end
+
     交易单位_张(DictCode.交易单位,"01","张"),
     交易单位_份(DictCode.交易单位,"02","份"),
     交易单位_股(DictCode.交易单位,"03","股"),
@@ -1373,7 +1377,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     是否开通港股通_否(DictCode.是否开通港股通,"02","否"),
 
     共通业务类型_港股通投资委托(DictCode.共通业务类型,"ETR_HKSE","港股通投资委托"),
-
+    共通业务类型_额度管理(DictCode.共通业务类型,"RSK25","额度管理"),
+    风险管理_质押式回购导入白名单(DictCode.共通业务类型,"REPRISKWHITE","质押式回购导入白名单"),
     ;
     /**
      * 对应于数据字典code

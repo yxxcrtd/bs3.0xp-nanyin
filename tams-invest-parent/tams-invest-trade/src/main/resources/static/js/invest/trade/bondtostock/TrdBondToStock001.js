@@ -82,7 +82,7 @@
             //正股名称
             ,{field:'finprodMarketName', sortField:'finprodMarketName',width:100, title: 'TrdBondToStock001.finprodMarketName'}
             //转股券面总额
-            ,{field:'shareAmt',sortField:'shareAmt', width:120, title: 'TrdBondToStock001.shareAmt'}
+            ,{field:'shareAmt',sortField:'shareAmt', width:120, digit: 4 ,title: 'TrdBondToStock001.shareAmt1'}
             //转股价
             ,{field:'conPrice',sortField:'conPrice', width:120, title: 'TrdBondToStock001.conPrice', type: 'money'}
             //转股数

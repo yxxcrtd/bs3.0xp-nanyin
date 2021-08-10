@@ -49,8 +49,8 @@ public class SysParamInfService {
     /**
      * 平台日期组件对象
      */
-    @Autowired(required = false)
-    private IPlatformDate platformDtImpl;
+    @Autowired
+    private IPlatformDate iPlatformDate;
 
     /**
      * 加载系统参数
@@ -82,7 +82,7 @@ public class SysParamInfService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String getSysDate() {
         // 加载平台日期
-        Date dt = platformDtImpl.getSysDate();
+        Date dt = iPlatformDate.getSysDate();
         if (dt != null) {
             return DateUtil.format(dt, DateUtil.DEFAULT_OTHER_FORMAT);
         }

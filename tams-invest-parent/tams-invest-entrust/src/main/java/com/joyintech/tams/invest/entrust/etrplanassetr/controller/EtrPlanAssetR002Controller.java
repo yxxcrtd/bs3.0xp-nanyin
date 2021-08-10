@@ -15,11 +15,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.WorkflowContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -125,6 +129,15 @@ public class EtrPlanAssetR002Controller extends BaseController {
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
             model.addAttribute("businessId", dto.getEntrustId());
             model.addAttribute("single", "1");
+
+            // 获取workflowId 加载风险试算结果
+            EtrPlanAssetRDto dto1 = new EtrPlanAssetRDto();
+            dto1.setEntrustId(entrustId);
+            ProcessMark processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto1);
+            //转换当前页面
+            processMark.setPageId("EtrPlanAssetR002");
+            String workflowId_T = WorkflowContext.getProcessMarkService().getLastWorkflowId(processMark);
+            model.addAttribute("workflowId", workflowId_T);
         }
         else if (WorkFlowUtil.isNotFromToDoList() && !StringUtil.isNotEmpty(entrustId)) {
             EtrPlanAssetRDto entity = new EtrPlanAssetRDto();
@@ -290,7 +303,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrPlanAssetRDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody EtrPlanAssetRDto dto, BindingResult br) throws Exception{//去除指令暂存校验 add by xxg 20210802
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -300,6 +313,16 @@ public class EtrPlanAssetR002Controller extends BaseController {
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
         }
+        // ----------add by yushilong 20200721 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    DictCodeList.平安资产类型_计划类资产_利率型.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrPlanAssetRDto> processParameter = new ProcessParameter<EtrPlanAssetRDto>();
         WorkFlowParameter<EtrPlanAssetRDto> params = new WorkFlowParameter<EtrPlanAssetRDto>();
         params.setPageId(this.getPageId());

@@ -218,7 +218,7 @@ public class AssetCommonUtil {
         paramMap.put(KEY_ARRAY[2],valDate);
         paramMap.put(KEY_ARRAY[3],DictCodeListExt1.金融产品类型_投管用_债券.getValue()+ GlobalConstant.UNDER_LINE);
         List<Map> listMap=assetGenerateMapper.getBondValuation(paramMap);
-        return assembleDate(listMap,predicate,func);
+        return assembleData(listMap,predicate,func);
     }
 
     /**
@@ -238,7 +238,7 @@ public class AssetCommonUtil {
         paramMap.put(KEY_ARRAY[1],keyList);
         paramMap.put(KEY_ARRAY[2],valDate);
         List<Map> listMap=assetGenerateMapper.getAstNetVal(paramMap);
-        return assembleDate(listMap,predicate,func);
+        return assembleData(listMap,predicate,func);
     }
 
     /**
@@ -256,10 +256,10 @@ public class AssetCommonUtil {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put(KEY_ARRAY[1],keyList);
         List<Map> listMap=assetGenerateMapper.getStlAccount(paramMap);
-        return assembleDate(listMap,predicate,func);
+        return assembleData(listMap,predicate,func);
     }
 
-    private static <T,R> List<R> assembleDate(List<T> listMap,Predicate<T> predicate,Function<T,R> func){
+    private static <T,R> List<R> assembleData(List<T> listMap,Predicate<T> predicate,Function<T,R> func){
         List<R> rList=new ArrayList<>();
         if(!StringUtil.isEmptyList(listMap)){
             List<T> filterList=listMap.stream().filter(item->StringUtil.isNotEmpty(predicate)?predicate.test(item):true).collect(Collectors.toList());

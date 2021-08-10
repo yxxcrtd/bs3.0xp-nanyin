@@ -255,6 +255,16 @@ public interface TrdCommonBaseMapper {
      */
      String queryRTradeId(String tradeId);
 
+    // add by zhangrui1 根据交易代码取指令代码 start
+    /**
+     * 根据交易代码反向取指令编号
+     *
+     * @param tradeId 交易代码
+     * @return 指令编号
+     */
+    EtrEntrust selectEntrustInfo(String tradeId);
+    // add by zhangrui1 根据交易代码取指令代码 end
+
     /**
      * 查询基金最新净值
      * @param map 参数
@@ -341,4 +351,14 @@ public interface TrdCommonBaseMapper {
      * @return
      */
     public String selectParentPortfolioIdByPortfolioId(String portfolioId);
+
+    /**
+     * 根据市场代码查询金融产品代码
+     *
+     * @param param 入参
+     * @return 金融产品代码
+     * @see
+     * @since 1.0
+     */
+    String queryFinprodIdByFinprodMarketId(Map<String, Object> param);
 }

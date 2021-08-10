@@ -53,7 +53,11 @@
         object.objectAvailablePosition = $("#bussTrdAvailableCashQuery_assetPosition").val(); // 资产可用持仓
         object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
         ////配置单位 add by yeming 20210728 start
-        object.totalAmt =JoyinMath.doMul($('#totalAmt').val(), unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+        object.totalAmt = $('#totalAmt').val();
+        if(object.totalAmt){//非空校验 add by xxg 20210806
+            object.totalAmt = JoyinMath.doMul($('#totalAmt').val(), unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+        }
+        //JoyinMath.doMul($('#totalAmt').val(), unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
         //配置单位 add by yeming 20210728 end
         if(object.busiRate != null && object.busiRate != ''){
             object.busiRate = JoyinMath.doDiv(object.busiRate,100,6);

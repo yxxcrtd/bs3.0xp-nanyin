@@ -72,8 +72,8 @@
         	,{field:'finprodName', sortField:'finprodName',width:140, title: 'TrdConBond001.finprodName', visible: false}
         	,{field:'psStr', sortField:'ps',width:100, title: 'TrdConBond001.ps'}
         	
-        	,{field:'prinAmt',sortField:'prinAmt', width:120, title: 'TrdConBond001.prinAmt'}
-        	,{field:'winlotteryAmt',sortField:'winlotteryAmt', width:120, title: 'TrdConBond001.winlotteryAmt', type: 'money'}
+        	,{field:'prinAmt',sortField:'prinAmt', width:120, digit:4,title: 'TrdConBond001.prinAmt1'}
+        	,{field:'winlotteryAmt',sortField:'winlotteryAmt', width:120, digit:4, title: 'TrdConBond001.winlotteryAmt1', type: 'money'}
         	,{field:'purchDate',sortField:'purchDate', width:120, title: 'TrdConBond001.purchDate', type: 'date'}
         	,{field:'tradeDate', sortField:'tradeDate',width:100, title: 'TrdConBond001.tradeDate', type: 'date'}
         	,{field:'settleDate',sortField:'settleDate', width:100, title: 'TrdConBond001.settleDate', type: 'date'}

@@ -9,17 +9,32 @@
         var ps = $('#ps').val();
         if(entrustAmt){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustAmt','EtrPlanAssetR002.entrustAmt'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
         }else if(entrustNum){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustNum').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustNum','EtrPlanAssetR002.entrustNum'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
         }else if('T01'==ps){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustAmt','EtrPlanAssetR002.entrustAmt'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
         }else{
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustNum').val(),assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             var object = {tradeDirection:['ps','EtrPlanAssetR002.ps'],portfolioCode:['portfolioId','EtrPlanAssetR002.portfolioId'],tradeAmount:['entrustNum','EtrPlanAssetR002.entrustNum'],assetType:['assetType1','EtrPlanAssetR002.assetType1'],data:obj}
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
     /**
@@ -71,35 +86,37 @@
                 });
             }
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-        	Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR002/checkAuthorization', object, function(result2) {
-	            Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR002/check',object,
-	                function(result) {
-	                    Joyin.confirm(result.data,function() {
-	                        if (operateType === 'save') {
-	                            WorkFlow.doSaveList(basePath+'invest/entrust/etrplanassetr/EtrPlanAssetR002/save',object,"EtrPlanAssetR002_btn_save");
-	                        } else {
-	                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetr/EtrPlanAssetR002/save',object,"EtrPlanAssetR002_btn_submit");
-	                        }
-	                    });
-	                },null,function (result) {
-                        var disabledFlag = $('#invAim').attr('disabled');
-                        if(disabledFlag) return;
-	                    var msg = result.errorList;
-	                    var message ="";
-                        for(var i=0;i<msg.length;i++){
-                            message = msg[i];
-                            if(message.field!=null && message.field=='invAim'){
-                                if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
-                                    $('#invAim').textSelect('setValue', "FVTPL");
-                                    break;
+
+        //指令暂存，去除校验  add by xxg 20210802
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrplanassetr/EtrPlanAssetR002/save',object,"EtrPlanAssetR002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR002/checkAuthorization', object, function(result2) {
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetR002/check',object,
+                        function(result) {
+                            Joyin.confirm(result.data,function() {
+                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrplanassetr/EtrPlanAssetR002/save',object,"EtrPlanAssetR002_btn_submit");
+                            });
+                        },null,function (result) {
+                            var disabledFlag = $('#invAim').attr('disabled');
+                            if(disabledFlag) return;
+                            var msg = result.errorList;
+                            var message ="";
+                            for(var i=0;i<msg.length;i++){
+                                message = msg[i];
+                                if(message.field!=null && message.field=='invAim'){
+                                    if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
+                                        $('#invAim').textSelect('setValue', "FVTPL");
+                                        break;
+                                    }
                                 }
                             }
-                        }
 
-                    });
-        	});
-        });
+                        });
+                });
+            });
+        }
     }
   // 查询组合可用现金
     var getPtlCashPositionInfo = function(){
@@ -306,13 +323,12 @@
      * 查看资产详情事件
      */
     $('#EtrPlanAssetR002_btn_search').click(function() {
-        var finprodMarketId = $("#finprodMarketId").val();
-        var finprodId =$('#finprodId').val();
+        var finprodId =$('#finprodIdhid').val();
         var url = "/invest/asset/plan/planProfit/FinPlanProfitAsset002/init";
         if (finprodId != ""){
             var params = {
                 'pageModel':PAGE_MODEL_REFERENCE,
-                'finprodMarketId':finprodId,
+                'finprodId':finprodId,
                 'isQuickInput':true
             };
             EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);

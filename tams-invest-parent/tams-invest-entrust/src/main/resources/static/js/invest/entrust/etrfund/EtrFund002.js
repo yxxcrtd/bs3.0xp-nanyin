@@ -14,17 +14,32 @@
         var object={};
         if(ps == T04||ps == T52){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:entrustAmt,assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#bussEtrInvestPersonInfoDto_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             object = {assetCode: ['finprodMarketId', 'EtrFund001.finprodId'],tradeDirection:['ps','EtrFund001.ps'],portfolioCode:['portfolioId','EtrFund001.portfolioId'],tradeAmount:['entrustAmt','EtrFund001.entrustAmt'],assetType:['assetType1','EtrFund001.finprodType2'],data:obj}
         }else if(($("#ps").val() == T06 || $("#ps").val() == T65)){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:entrustNum,assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val(),amtType:'1'}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#bussEtrInvestPersonInfoDto_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             object = {assetCode: ['finprodMarketId', 'EtrFund001.finprodId'],tradeDirection:['ps','EtrFund001.ps'],portfolioCode:['portfolioId','EtrFund001.portfolioId'],tradeAmount:['entrustNum','EtrFund001.entrustNum'],assetType:['assetType1','EtrFund001.finprodType2'],data:obj}
         }else if(ps == T01){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:entrustAmt,assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#bussEtrInvestPersonInfoDto_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             object = {assetCode: ['finprodMarketId', 'EtrFund001.finprodId'],tradeDirection:['ps','EtrFund001.ps'],portfolioCode:['portfolioId','EtrFund001.portfolioId'],tradeAmount:['entrustAmt','EtrFund001.entrustAmt'],assetType:['assetType1','EtrFund001.finprodType2'],data:obj}
         }else if (ps == T02) {
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:entrustNum,assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val(),amtType:'1'}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#bussEtrInvestPersonInfoDto_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             object = {assetCode: ['finprodMarketId', 'EtrFund001.finprodId'],tradeDirection:['ps','EtrFund001.ps'],portfolioCode:['portfolioId','EtrFund001.portfolioId'],tradeAmount:['entrustNum','EtrFund001.entrustNum'],assetType:['assetType1','EtrFund001.finprodType2'],data:obj}
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'BussEtrInvestPersonInfoDto.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
     /**
@@ -111,46 +126,40 @@
         if(object.ps != T04){
             object.assetAvailablePosition = $('#assetAvailablePosition').val();
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/checkAuthorization', object, function(result2) {
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/check',object,
-          function(result) {
-            if(object.ps == T04 || object.ps == T01){
-                if($('#proAvailableCash').val() != null && $('#proAvailableCash').val() != '' && $('#entrustAmt').val() != null && $('#entrustAmt').val() != ''){
-                    if(parseInt($('#entrustAmt').val()) > parseInt($('#proAvailableCash').val())&&ETR_CHECK_CASH_SWITCH == 01){
-                        Joyin.confirm("委托金额必须小于等于组合T日可用现金,确认保存或提交吗",function() {
-                            //Joyin.confirm(result.data,function() {
-                                if (operateType === 'save') {
-                                    WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
-                                } else {
-                                    WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+
+        //指令保存，不校验要素
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/checkAuthorization', object, function(result2) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/check',object,
+                    function(result) {
+                        if(object.ps == T04 || object.ps == T01){
+                            if($('#proAvailableCash').val() != null && $('#proAvailableCash').val() != '' && $('#entrustAmt').val() != null && $('#entrustAmt').val() != ''){
+                                if(parseInt($('#entrustAmt').val()) > parseInt($('#proAvailableCash').val())&&ETR_CHECK_CASH_SWITCH == 01){
+                                    Joyin.confirm("委托金额必须小于等于组合T日可用现金,确认保存或提交吗",function() {
+                                        //Joyin.confirm(result.data,function() {
+                                        WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+                                        //});
+                                    },function(){
+                                        return false;
+                                    })
                                 }
-                            //});
-                        },function(){
-                            return false;
-                        })
-                    }
-                    else{
-                        Joyin.confirm(result.data,function() {
-                            if (operateType === 'save') {
-                                WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
-                            } else {
-                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+                                else{
+                                    Joyin.confirm(result.data,function() {
+                                        WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+                                    });
+                                }
                             }
-                        });
-                    }
-                }
-            }
-            else{
-                Joyin.confirm(result.data,function() {
-                    if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
-                    } else {
-                        WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
-                    }
-                });
-            }
-           });
-        });
+                        }
+                        else{
+                            Joyin.confirm(result.data,function() {
+                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_submit");
+                            });
+                        }
+                    });
+            });
+        }
     }
     
     //查询资产管理人
@@ -412,6 +421,7 @@
                 getEntrustAmt();
                 star();
             });
+            elementShowCtrl();
         }
     }
 
@@ -700,9 +710,105 @@
     
     function init(){
         psChange();
+        elementShowCtrl();
         initFlag = false;
     }
-    
+
+    // 画面初始化控件显示控制
+    var elementShowCtrl =  function(){
+        if($("#finprodMarketId").val()){
+            var selectObject = $('#finprodMarketId').select2('data')[0].object;
+            if ($('#finprodMarketId').select2('data')[0].object) {
+                if(selectObject.trmFundAbbr !== null && selectObject.trmFundAbbr !== ''){
+                    $('#trmFundAbbr').show();
+                }else{
+                    $('#trmFundAbbr').hide();
+                }
+            }
+        }
+        if($("#finprodMarketId").val()&&$('#finprodMarketId').select2('data')[0].object&&$('#finprodMarketId').select2('data')[0].object.tradeMarket){
+            $("#tradeMarket").attr("disabled",true);
+        }else{
+            $("#tradeMarket").attr("disabled",false);
+        }
+
+        if($('#finprodMarketId').val() != null && $('#finprodMarketId').val() != ''){
+            changeDisabled(true);
+        }
+
+        if($("#assetType1").val() == F01 && ($('#finprodMarketId').val() != null || $('#finprodMarketId').val() != '') && ($("#ps").val() == T06 || $("#ps").val() == T65)){
+            $("#pschange2").show();
+        }
+        else if($("#ps").val() != T04 && $("#ps").val() != T01){
+            $("#pschange2").show();
+        }
+        $(".changein").hide();
+        //交易对手返回可选状态
+        $("#bussEtrInvestPersonInfoDto_counterId").attr('disabled',false);
+        if($("#ps").val()==T04){
+            $(".pschange").show();
+            $("#pschange2").hide();
+            $("#entrustAmt0").show();
+            $("#entrustNum0").hide();
+            $("#entrustAmt").attr("disabled",false);
+            $('#assetAvailablePosition').val('').trigger('blur');
+            $("#bussEtrInvestPersonInfoDto_counterId").attr('disabled',true);
+        }
+        else if(($("#ps").val() == T06 || $("#ps").val() == T65)){
+            $(".pschange").hide();
+            if($("#assetType1").val() == F01 && ($('#finprodMarketId').val() == null || $('#finprodMarketId').val() == '')){
+                $("#pschange2").hide();
+            }
+            else{
+                $("#pschange2").show();
+            }
+            $("#entrustNum0").show();
+            $("#entrustNum").attr("disabled",false);
+            $("#entrustAmt0").hide();
+            if ($("#ps").val() == T65) {
+                $(".changein").show();
+            }
+        }
+        else if($("#ps").val()==T52){
+            $(".pschange").show();
+            $("#pschange2").hide();
+            $("#entrustAmt0").show();
+            $("#entrustNum0").hide();
+            $("#entrustAmt").attr("disabled",false);
+        }
+        else if($("#ps").val()==T01){
+            $(".pschange").show();
+            $("#pschange2").hide();
+            $("#entrustAmt0").show();
+            $("#entrustNum0").show();
+            $("#entrustAmt").attr("disabled",false);
+        }
+        else if($("#ps").val()==T02){
+            $(".pschange").hide();
+            $("#pschange2").show();
+            $("#entrustAmt0").show();
+            $("#entrustNum0").show();
+            $("#entrustNum").attr("disabled",false);
+        }
+        if(($("#ps").val()==T01 || $("#ps").val()==T02)&&($("#tradeMarket").val()==TRADE_PLACE_03||$("#tradeMarket").val()==TRADE_PLACE_04)
+            &&($('#bussEtrInvestPersonInfoDto_counterId').val()==JYDSJYS000000001||$('#bussEtrInvestPersonInfoDto_counterId').val()==JYDSJYS000000002)){
+            $("#price").prop("disabled", false).attr("required",true);
+        }else{
+            if(pageModel === PAGE_MODEL_REFERENCE) {
+                $("#price").prop("disabled", true).removeAttr("required");
+            } else {
+                $("#price").prop("disabled", true).removeAttr("required");
+            }
+        }
+        if($("#tradeMarket").val()&&($("#tradeMarket").val()==TRADE_PLACE_03 ||$("#tradeMarket").val()==TRADE_PLACE_04)
+            &&$("#secAcctId").val()){
+            $("#tradeMarketCash_div").show();
+        }else{
+            $("#tradeMarketCash_div").hide();
+        }
+        $("#plat_price_div").hide();
+    };
+
     $('#secAcctId').on('change',function(){
         if ($("#secAcctId").val()) {
             $("#entrustTongdao").val('').prop("disabled", true).trigger("change");
@@ -733,13 +839,13 @@
      * 查看资产详情事件
      */
     $('#EtrFund002_btn_search').click(function() {
-        var finprodMarketId = $("#finprodMarketId").val();
+        var finprodId = $("#finprodIdhid").val();
         var url = "invest/asset/fund/FinFundTarget002/init";
-        if (finprodMarketId != ""){
+        if (finprodId != ""){
             var params = {
                 pageModel:PAGE_MODEL_REFERENCE,
                 isQuickInput:true,
-                finprodMarketId:finprodMarketId
+                finprodId:finprodId
             };
             EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
         } else {
@@ -770,13 +876,21 @@
         $('#EtrFund002_btn_riskCalculate').click(function(){
             // window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
 			var object = $.serializeToObject('#searchForm',true);
-			if($('#entrustNum').val()) {
-				object.entrustAmt =$('#entrustNum').val();//把份额直接赋值给金额
-			}
+            /* del by zhangrui1 这里不需要把份额赋值给金额 start
+           if($('#entrustNum').val()) {
+               object.entrustAmt =$('#entrustNum').val();//把份额直接赋值给金额
+           }
+              del by zhangrui1 这里不需要把份额赋值给金额 start */
 			if(object.finprodMarketId != null && object.finprodMarketId != ''){
 				object.finprodId = $('#finprodMarketId').select2('data')[0].object.finprodId;
 			}
-			window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F02',object,getriskdata());
+            // 基金转换申请时调用批量接口
+            if (object.ps == T65) {
+                window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK011/F02',object,getriskdata());
+            }
+            else {
+                window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F02',object,getriskdata());
+            }
         });
    /* }*/
         if(IS_SHOW_TYPE == '01'){

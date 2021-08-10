@@ -13,8 +13,6 @@ package com.joyintech.tams.invest.common.redisinit.core;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constantrds.BussinessConstantRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -47,9 +45,6 @@ public abstract class AopBaseService<V extends IRiskRds>  {
     @Autowired
     private AssetInfoRedisService assetInfoSrc;
 
-    @Autowired
-    private FinProductMapper finProductMapper;
-
     public interface IInfCallback<V>{
         ClientData receive(Map<String,Object> t, V v) throws Exception;
     }
@@ -73,10 +68,6 @@ public abstract class AopBaseService<V extends IRiskRds>  {
                 for (IAssetInfo iAst : mapAsset.values()) {
                     assetType = StringUtil.isNotEmpty(iAst)?iAst.getAssetType():assetType;
                 }
-            }
-            if (!StringUtil.isNotEmpty(mapTrd.get("mDate")) && !StringUtil.isNotEmpty(mapTrd.get("mdate"))) {
-                FinProduct finProduct = finProductMapper.selectByPrimaryKey(mapTrd.get(Const.finprodId).toString());
-                mapTrd.put("mdate", finProduct.getMdate());
             }
         }
         v.setAssetType(assetType);

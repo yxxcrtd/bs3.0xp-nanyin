@@ -114,4 +114,17 @@
       	AND IS_HOLIDAY = '0'
       	AND TRADE_CALENDAR_ID = #{tradeMarketId}
     </select>
+
+    <select id="selectPtlCashPositionFlowAmount"  resultType="java.math.BigDecimal" parameterType="com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto">
+        select sum(Amount) amount from PTL_CASH_POSITION_FLOW
+        <where>
+            <if test="cdate != null">
+                CDATE = #{cdate, jdbcType=DATE}
+            </if>
+            <if test="orderId != null and orderId != ''">
+                AND ORDER_ID = #{orderId}
+            </if>
+            <include refid="whereSql"/>
+        </where>
+    </select>
 </mapper>

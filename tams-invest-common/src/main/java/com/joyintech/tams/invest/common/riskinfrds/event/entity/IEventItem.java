@@ -75,7 +75,7 @@ public interface IEventItem extends Serializable {
         }
         String regex = "(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})(((0[13578]|1[02])(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)(0[1-9]|[12][0-9]|30))|(02(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))0229)(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})(((0[13578]|1[02])(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)(0[1-9]|[12][0-9]|30))|(02(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))0229)";
         if (valStr.matches(regex)) {
-            int day = getOffsetVal().intValue();
+            int day = getOffsetVal() == null ? 0 : getOffsetVal().intValue();
             Date valDate = DateUtil.parse(valStr);
             day = CommonUtil.isType(getOffsetType(), BussinessDictCodeListRds.操作符_加) ? day : -day;
             if (CommonUtil.isType(getOffsetUnit(), BussinessDictCodeListRds.特征值偏移单位_年)) {
@@ -91,7 +91,7 @@ public interface IEventItem extends Serializable {
         }
         else {
             BigDecimal res = CommonUtil.math(new BigDecimal(valStr),
-                new BigDecimal(getOffsetVal()), getOffsetType());
+                new BigDecimal(getOffsetVal() == null ? 0 : getOffsetVal()), getOffsetType());
             return StringUtil.numberToString(res);
         }
     }

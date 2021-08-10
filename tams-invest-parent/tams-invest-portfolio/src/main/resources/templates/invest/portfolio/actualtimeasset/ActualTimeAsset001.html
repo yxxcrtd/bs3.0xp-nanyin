@@ -17,7 +17,7 @@
 							<label class="layui-form-label form-lable"
 								data-th-text="#{ActualTimeAsset001.portfolioId}">组合代码</label>
 							<div class="layui-input-inline input-inline">
-                      			<select required type="text" id="portfolioId" name="portfolioId"
+                      			<select type="text" id="portfolioId" name="portfolioId"
                       				class="layui-input form-input input-select" placeholder="请输入内容" multiple=true
                       				data-th-placeholder="#{SysCommon.placeholder}" 
                       				data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId?ww=false}" >
@@ -35,7 +35,7 @@
 							<label class="layui-form-label form-lable"
 				                            data-th-text="#{ActualTimeAsset001.secManageAcctId}">证券账户</label>
 	                        <div class="layui-input-inline input-inline">
-	                        	<select type="text" id="secManageAcctId" name="secManageAcctId"
+	                        	<select type="text" id="secManageAcctId" name="secManageAcctId" multiple
                       				class="layui-input form-input input-select" placeholder="请输入内容"
                       				data-th-placeholder="#{SysCommon.placeholder}" parentIds="portfolioId" 
                       				data-th-data-url="@{/invest/portfolio/actualtimeasset/ActualTimeAsset001/getSecAcct}" >

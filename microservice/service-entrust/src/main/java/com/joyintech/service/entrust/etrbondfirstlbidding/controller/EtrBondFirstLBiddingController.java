@@ -292,6 +292,19 @@ public class EtrBondFirstLBiddingController {
     public String getCounterName(String counterId){
         return service.getCounterName(counterId);
     }
+
+    /**
+     * 根据交易对手名称获取是否存在,存在则返回
+     * @param counterName
+     * @return
+     */
+    @GetMapping("isCounterName")
+    public String isCounterName(String counterName){
+        return service.isCounterName(counterName);
+    }
+
+
+
     /**
      * 验证是否截标
      * @param dto

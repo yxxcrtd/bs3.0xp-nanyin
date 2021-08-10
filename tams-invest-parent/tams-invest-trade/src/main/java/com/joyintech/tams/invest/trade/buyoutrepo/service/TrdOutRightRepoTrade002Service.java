@@ -1539,7 +1539,7 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 				BigDecimal wflPrinAmt = tradeCommonService.getWflPrinAmt(entrustId,
 						DictCodeList.平安资产类型_买断式回购.getValue(), null);
 				trdOutRightRepoTrade002Dto.setSecTotalPrin(
-						ArithmeticUtil.divide(ArithmeticUtil.subtract(entrustNum, wflPrinAmt), new BigDecimal(100), 2)); // 委托的是数量，应该乘以100面值，页面是万元，所以再除以10000
+						ArithmeticUtil.divide(ArithmeticUtil.subtract(entrustNum, wflPrinAmt), new BigDecimal(100), 4)); // 委托的是数量，应该乘以100面值，页面是万元，所以再除以10000
 				// 扣除流程中的委托额度与已完成委托额度
 //                trdOutRightRepoTrade002Dto.setSecTotalPrin(
 //                    ArithmeticUtil.divide(baseEtrInvestInfoDto.getEtrEntrust().getEntrustNum(), new BigDecimal(100), 2)); // 委托的是数量，应该乘以100面值，页面是万元，所以再除以10000

@@ -119,28 +119,39 @@
      * @returns
      */
     function saveOrSubmit(operateType) {
+        // 风险试算验证 add by yufei 20200826 start
+        var s;
+        if(BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+            if(!s && s != ''){
+                return;
+            }
+        }
+        // 风险试算验证 add by yufei 20200826 end
         //校验数据  校验表格
         var tableData = table.getAllRows();
-        if (tableData.length == 0) {
-            Joyin.alert("委托列表至少有一条数据！", 2);
-            return false;
-        }
-        for (var i = 0; i < tableData.length; i++) {
-            if (!tableData[i].bidPrice) {
-                Joyin.alert("投标标位不能为空！", 2);
+        if(operateType != 'save'){
+            if (tableData.length == 0) {
+                Joyin.alert("委托列表至少有一条数据！", 2);
                 return false;
             }
-            if (tableData[i].bidPrice > 100 || tableData[i].bidPrice <= 0) {
-                Joyin.alert("投标标位的值应大于0，小于等于100！", 2);
-                return false;
-            }
-            if (!tableData[i].bidPrinAmt) {
-                Joyin.alert("投标券面总额不能为空！", 2);
-                return false;
-            }
-            if (tableData[i].bidPrinAmt.length > 16) {
-                Joyin.alert("投标券面总额的值不能超过16位！", 2);
-                return false;
+            for (var i = 0; i < tableData.length; i++) {
+                if (!tableData[i].bidPrice) {
+                    Joyin.alert("投标标位不能为空！", 2);
+                    return false;
+                }
+                if (tableData[i].bidPrice > 100 || tableData[i].bidPrice <= 0) {
+                    Joyin.alert("投标标位的值应大于0，小于等于100！", 2);
+                    return false;
+                }
+                if (!tableData[i].bidPrinAmt) {
+                    Joyin.alert("投标券面总额不能为空！", 2);
+                    return false;
+                }
+                if (tableData[i].bidPrinAmt.length > 16) {
+                    Joyin.alert("投标券面总额的值不能超过16位！", 2);
+                    return false;
+                }
             }
         }
         /**
@@ -188,16 +199,16 @@
             }
             objects.push(temp);
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/check', objects,
-            function (result) {
-                Joyin.confirm(result.data, function () {
-                    if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/save', objects, "EtrBondFirstLBidding002_btn_save","EtrBondFirstLBidding002");
-                    } else {
+        if(operateType === 'save'){
+            WorkFlow.doSaveList(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/save', objects, "EtrBondFirstLBidding002_btn_save","EtrBondFirstLBidding002");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/check', objects,
+                function (result) {
+                    Joyin.confirm(result.data, function () {
                         WorkFlow.doSubmitList(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/save', objects, "EtrBondFirstLBidding002_btn_submit","EtrBondFirstLBidding002");
-                    }
+                    });
                 });
-            });
+        }
     }
 
     $(function () {
@@ -243,9 +254,9 @@
 		            object.finmdate = $('#finmdate').val();
 		            var initParam = getriskdata();
 		            $("#riskMathFlag").val("02");
-		           /* Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', initParam, function (resultresult) {
+		            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', initParam, function (resultresult) {
 		                window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F01',object,getriskdata());
-		            });*/
+		            });
 		
 		        });
 		    })

@@ -1471,6 +1471,13 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal);
 
             PaTrdFinProductDealTotal paTrdFinDealTotal = entity.getPaTrdFinProductDealTotal();
+            // 新增 返款金额 、返款利率 by caozhenming 20210803 start
+            paTrdFinDealTotal.setRefundAmount(entity.getRefundAmount());
+            BigDecimal refundRate = entity.getRefundRate();
+            if (refundRate != null){
+                paTrdFinDealTotal.setRefundRate(refundRate.divide(new BigDecimal(100)));
+            }
+            // 新增 返款金额 、返款利率 by caozhenming 20210803 end
             paTrdFinProductDealTotalMapper.insertSelective(paTrdFinDealTotal);
 
             TrdDealTotalAdd trdDealTotalAdd = entity.getTrdDealTotalAdd();
@@ -4139,6 +4146,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
     public void dealAutoTradeFeeDetial(TrdBondInvestTradeDto trdBondInvestTradeDto){
         if(!StringUtil.isEmptyList(trdBondInvestTradeDto.getTradeFeeList())){
             for(TrdTradeFeeDetail tradeFeeDto:trdBondInvestTradeDto.getTradeFeeList()){
+                if(!StringUtil.isNotEmpty(tradeFeeDto.getIsPayWithTrade()))tradeFeeDto.setIsPayWithTrade("N");
                 //给对应页面的佣金，结算费，手续费成员变量字段设置值
                 if(StringUtil.equals(tradeFeeDto.getFeeType(), BussinessDictCodeList.费用类型_佣金.getValue())&& tradeFeeDto.getFeeAmt()!=null){
                     trdBondInvestTradeDto.setCommissionAmt(trdBondInvestTradeDto.getFeeAmt());
@@ -4159,7 +4167,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     trdBondInvestTradeDto.setProcedureAmtRate(tradeFeeDto.getFeeRate());
                 }
                 if(StringUtil.equals(tradeFeeDto.getFeeType(), BussinessDictCodeList.费用类型_结算手续费.getValue())&& tradeFeeDto.getFeeAmt()!=null){
-                    trdBondInvestTradeDto.setSettleAmt(tradeFeeDto.getFeeAmt());
+//                    trdBondInvestTradeDto.setSettleAmt(tradeFeeDto.getFeeAmt());
+                    trdBondInvestTradeDto.setSettleServiceAmt(tradeFeeDto.getFeeAmt());
                 }
             }
         }
@@ -4395,7 +4404,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
             entity.getPtlTrade().forEach(trdTradeFeeDetail -> ptlTradeMapper.insertSelective(trdTradeFeeDetail));
 
-            entity.getTrdTradeFeeTotals().forEach(trdTradeFeeDetail -> trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail));
+            entity.getTrdTradeFeeTotals().forEach(trdTradeFeeDetail -> {
+                if(!StringUtil.isNotEmpty(trdTradeFeeDetail.getIsPayWithTrade()))trdTradeFeeDetail.setIsPayWithTrade("N");
+                trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail);
+            });
 
             this.deleteBussFlowData(entity.getWorkflowId());
 

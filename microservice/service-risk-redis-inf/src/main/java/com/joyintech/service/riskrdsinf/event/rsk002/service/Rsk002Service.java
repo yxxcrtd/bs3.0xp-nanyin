@@ -10,36 +10,31 @@
 
 package com.joyintech.service.riskrdsinf.event.rsk002.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.joyintech.service.riskrdsinf.core.constant.InfColumns;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IProdInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.redis.common.entity.IValue;
 import com.joyintech.service.riskrdsinf.cache.InterfCacheUtil;
 import com.joyintech.service.riskrdsinf.common.service.EventBaseService;
 import com.joyintech.service.riskrdsinf.core.annotation.INF;
 import com.joyintech.service.riskrdsinf.core.client.ClientData;
 import com.joyintech.service.riskrdsinf.core.exception.InterfException;
 import com.joyintech.service.riskrdsinf.event.rsk002.entity.Rsk002InEntity;
-import com.joyintech.redis.common.entity.IValue;
-import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.common.base.entity.RskIndicatorParaCalcdetail;
+import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.calendar.entity.ICalendar;
 import com.joyintech.tams.invest.common.riskinfrds.event.entity.IEvent;
 import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndicator;
+import com.joyintech.tams.invest.common.riskinfrds.occupy.entity.IOccupyRelParam;
 import com.joyintech.tams.invest.common.riskinfrds.param.entity.IParam;
 import com.joyintech.tams.invest.common.riskinfrds.prod.entity.IPtlIndicator;
 
@@ -61,9 +56,14 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
     @Override
     protected Map<String, Map<String, Rsk002InEntity>> handle(ClientData request,
                                                               ClientData response)
-        throws InterfException { 
+        throws InterfException {
+        // add by zhangrui 有预占的实占试算 start
+        IOccupyRelParam ocpRelParam = null;
+        // add by zhangrui 有预占的实占试算 end
         // 做过预占的风险试算直接通过
         if (isPreOcp(request)) {
+            // add by zhangrui 有预占的实占试算 start
+            /**
             // 状态
             response.setBodyField(RSKSTATUS, BussinessDictCodeListRds.指标状态_通过.getValue());
             // 提示信息
@@ -71,13 +71,42 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
             // 试算结果
             response.setBodyField(RSK_LIST, new ArrayList<>());
             return null;
+            */
+            // 预占/实占编号
+            String occupyCode = (String)request.getBodyField("preOccupyCode");
+            // 预占实占参数信息
+            ocpRelParam = getOccupy(occupyCode, PRE_OCCUPY);
+            if (ocpRelParam != null) {
+                setAllOcpVal(ocpRelParam);
+            }
+            // add by zhangrui 有预占的实占试算 end
     	}
+        // add by zhangrui1 差分预占 start
+        else if (isDiffOcp(request.getBody())) {
+            // 预占/实占编号
+            String occupyCode = (String)request.getBodyField(ENTRUST_CODE);
+            // 预占实占参数信息
+            ocpRelParam = getOccupy(occupyCode, PRE_OCCUPY);
+        }
+        else if (StringUtil.isNotEmpty(request.getBodyField(EVENT_ID))) {
+            // 预占/实占编号
+            String occupyCode = (String)request.getBodyField(EVENT_ID);
+            // 预占实占参数信息
+            ocpRelParam = getOccupy(occupyCode, StringUtil.equals(request.getBodyField(EVENT_TYPE),
+                "0") ? PRE_OCCUPY : REL_OCCUPY);
+        }
+        // add by zhangrui1 差分预占 end
+        // add by zhangrui 有预占的实占试算 start
+        final IOccupyRelParam preOcpParam = ocpRelParam;
+        // add by zhangrui 有预占的实占试算 end
     	// 指标参数计算明细
     	List<RskIndicatorParaCalcdetail> details = new ArrayList<>();
         // 取得报文体
         Map<String, Object> mapData = new HashMap<>();
         mapData.putAll(request.getBody());
         String portfolioCode = (String)mapData.get(PORTFOLIOCODE);
+        // 备份组合代码
+        mapData.put(PROD_ID, portfolioCode);
         // 取得产品信息
         IProdInfo prodInfo = getProdInfo(portfolioCode);
         // 是否启动风险
@@ -164,18 +193,6 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
         // 风险事件相关参数与指标相关参数糅合去重(并集)
         Map<String, Set<String>> ptlIndMap = ptlInd.getPtlIndicator();
         unionParamId(indMap, paraIdList, ptlIndMap);
-        //wangyang1 风险二级法人改造 start
-        if (MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isNotEmpty(mapData.get("instCode"))) {
-            String instCode = mapData.get("instCode").toString();
-            Set<String> paraIdListChd = new HashSet<>();
-            paraIdList.forEach(item->{
-                if (item.indexOf(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue())!=-1) { 
-                    paraIdListChd.add(item.replace(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue(),instCode));
-                }
-            });
-            paraIdList.addAll(paraIdListChd);
-        } 
-        //wangyang1 风险二级法人改造 end 
         // 取得所有指标参数信息
         Map<String, IParam> paramMap = getParam(paraIdList);
         // 若指标参数不存在则抛出异常
@@ -192,7 +209,7 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
         // 执行事务处理（Redis操作）
         handleByLock(() -> {
             // add by zhangrui1 start
-            calcMixAmount(mapData, false);
+            calcMixAmount(mapData, false, false, null);
             // add by zhangrui1 end
             String uuid =  String.valueOf(System.currentTimeMillis());
             mapData.put("uuid", uuid);
@@ -209,17 +226,48 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
                 }
                 //----update by zxjjpei 20200318 若存在固定值参数则让通过 end---
             }
+            // add by zhangrui1 一级投标的修改预占试算 start
+            removeBeforePre(paraValMap, preOcpParam, mapData);
+            // add by zhangrui1 一级投标的修改预占试算 end
             // 计算参数值
             Map<String, Map<String, IValue<Object>>> newValMap = calcParamVal(eveList,
-                paraValMap, null, details);
+                paraValMap, getRelParam(mapData, preOcpParam), CALC_SCENE_OCP_DIFF, mapData,
+                details);
             // 固定值参数
-            Map<String, Object> map = getFixedParaVal(paramMap,mapData); 
+            Map<String, Object> map = getFixedParaVal(paramMap);
+            // add by zhangrui1 同向变动特殊处理 start
+            Map<String, IIndicator> leftIndMap = getIndTrendCalcSrc().execute(indMap, paramMap,
+                getIndTrendCalcSrc().filterValMap(new HashMap<>(), paraValMap), eveList, mapData,
+                (newIndMap, indValMap, newIndValMap) -> {
+                    IPtlIndicator newPtlInd = getIndTrendCalcSrc().newPtlInd(ptlInd, newIndMap);
+                    // 指标参数原值
+                    Map<String, Map<String, Object>> pValMap = getIndTrendCalcSrc().parseParaVal(
+                        ptlParamMap, indValMap);
+                    // 加入固定值
+                    unionParaVal(pValMap, map);
+                    // 指标计算原值
+                    calcIndicator(newPtlInd, newIndMap, mapData, pValMap, true);
+                    // 指标参数新值
+                    pValMap = getIndTrendCalcSrc().parseParaVal(ptlParamMap, newIndValMap);
+                    // 加入固定值
+                    unionParaVal(pValMap, map);
+                    // 指标计算原值
+                    calcIndicator(newPtlInd, newIndMap, mapData, pValMap, false);
+                });
+            if (CollectionUtils.isEmpty(leftIndMap)) {
+                return null;
+            }
+            IPtlIndicator newPtlInd = getIndTrendCalcSrc().newPtlInd(ptlInd, leftIndMap);
+            // add by zhangrui1 同向变动特殊处理 end
             // ---zxjjpei---枚举型参数 走库型参数 20200312 start-----
             Map<String, Object> mapFbd = getForbidParaVal(paramMap,mapData);
-            Map<String, Object> mapDbCal =getDataBaseParaVal(paramMap,mapData);
+            long startTime = System.currentTimeMillis();
+            Map<String, Object> mapDbCal =getDataBaseParaVal(eveList,ptlParamMap,paramMap,mapData);
+            long endTime = System.currentTimeMillis();
+            getLogger().info("获取走数据库的方法参数消耗的时间：{}", (endTime - startTime));
             // ---zxjjpei---枚举型参数 走库型参数 20200312 end-----
             // 指标参数原值
-            Map<String, Map<String, Object>> pValMap = parseParaVal(ptlParamMap, paraValMap);
+            Map<String, Map<String, Object>> pValMap = parseParaVal(ptlParamMap, paraValMap,paramMap);
             // 加入固定值
             unionParaVal(pValMap, map);
             // --add by jjpei 20200312 加入走库参数 start---
@@ -230,9 +278,14 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
             calcFixParamVal(eveList,mapDbCal);
             //----add by jjpei 20200312 把固定值与走库加上画面的这一笔进行计算 end-------
             // 指标计算原值
+            // add by zhangrui1 同向变动特殊处理 start
+            /**
             calcIndicator(ptlInd, indMap, mapData, pValMap, true);
+            */
+            calcIndicator(newPtlInd, indMap, mapData, pValMap, true);
+            // add by zhangrui1 同向变动特殊处理 end
             // 指标参数新值
-            pValMap = parseParaVal(ptlParamMap, calcValWithoutEvt(getParamIdList(eveList), eveList, newValMap));
+            pValMap = parseParaVal(ptlParamMap, calcValWithoutEvt(getParamIdList(eveList), eveList, newValMap),paramMap);
             // 加入固定值
             unionParaVal(pValMap, map);
             // ---zxjjpei---加入枚举型参数值 走库型参数 20200312 start-----
@@ -240,17 +293,19 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
             unionParaVal(pValMap,mapDbCal);
             // ---zxjjpei---加入枚举型参数值 走库型参数 20200312 end-----
             // 指标计算新值
+            // add by zhangrui1 同向变动特殊处理 start
+            /**
             calcIndicator(ptlInd, indMap, mapData, pValMap, false);
+            */
+            calcIndicator(newPtlInd, indMap, mapData, pValMap, false);
+            // add by zhangrui1 同向变动特殊处理 end
             return null;
         });
         indMap.entrySet().forEach(en -> checkIndTrend(en.getValue()));
-        // TODO 禁（可）投指标处理
         // 处理返回结果
         writeResponse(response, indMap, paramMap);
-        // 参数计算明细
-//        saveDetails(details, mapData);
         // add by zhangrui1 试算返回值增加资产名称 start
-        handleResponse(response, assetInfo);
+        handleResponse(response, assetInfo, 0);
         // add by zhangrui1 试算返回值增加资产名称 end
         return null;
     }
@@ -264,13 +319,8 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
     protected boolean isPreOcp(ClientData request){
         // 预占编号
         String preCode = (String)request.getBodyField("preOccupyCode");
-        String sysCode = (String)request.getBodyField("sourceSys");
-        if (StringUtil.isEmpty(preCode) || StringUtil.isEmpty(sysCode)) {
-            return false;
-        }
-        String preOccupyCode = sysCode + GlobalConstant.COLON + preCode;
         // 预占信息存在
-        return getOccupy(preOccupyCode, PRE_OCCUPY) != null;
+        return getOccupy(preCode, PRE_OCCUPY) != null;
     }
 
     /**

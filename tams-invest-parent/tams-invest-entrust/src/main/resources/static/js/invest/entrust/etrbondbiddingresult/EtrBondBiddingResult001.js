@@ -61,8 +61,8 @@ $(function() {
             ,{field:'payDate', title:'缴款日',type:'date',width:150,sortable:false}
             ,{field:'payType', title:'缴款方式',width:150,sortable:false,visible:false}
             ,{field:'otherPayType', title:'缴款方式',width:150,sortable:false}
-            ,{field:'bidPrinAmt', title:'投标券面总额',width:150,sortable:false,type:'number'}
-            ,{field:'winPrinAmt', title:'中标券面总额',width:150,sortable:false,type:'number'}
+            ,{field:'bidPrinAmt', title:'投标券面总额/万元',width:150,digit:4,sortable:false,type:'number'}
+            ,{field:'winPrinAmt', title:'中标券面总额/万元',width:150,digit:4,sortable:false,type:'number'}
             ,{field:'bidPrice', title:'投标标位%',width:150,sortable:false,visible:false}
             ,{field:'bidPriceStr', title:'投标标位%',width:150,sortable:false}
             ,{field:'winPrice', title:'中标标位%',width:150,sortable:false}
@@ -298,6 +298,9 @@ $(function() {
             selArr[0].tradeMarket = '01';
             //标识债券一级市场
             selArr[0].bondFirstSign = '01';
+            // add by zhangrui1 start
+            selArr[0].oFinprodId = result.oFinprodId;
+            // add by zhangrui1 end
             Joyin.dialog(JoyinUtil.getLabel("TrdBondInvestTrade002"), basePath + "invest/trade/bond/TrdBondInvestTrade002/init", "98%", "98%", selArr[0], function () {
                 table.reload();
             });
