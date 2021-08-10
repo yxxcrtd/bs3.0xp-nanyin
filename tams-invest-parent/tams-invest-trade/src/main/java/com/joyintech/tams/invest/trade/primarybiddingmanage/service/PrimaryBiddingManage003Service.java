@@ -136,7 +136,7 @@ public class PrimaryBiddingManage003Service extends BaseService<TrdBiddingManage
                         dto.setSeqno(IDGenerator.generate());
                         dto.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
                         dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-                        dto.setAmount(ArithmeticUtil.multiply(bidOrderBidPriceDto.getWinPrinAmt(),new BigDecimal("100"),bidOrderBidPriceDto.getWinCprice()));
+                        dto.setAmount(ArithmeticUtil.multiply(ArithmeticUtil.divide(bidOrderBidPriceDto.getWinPrinAmt(),new BigDecimal("100"),2, RoundingMode.HALF_UP),bidOrderBidPriceDto.getWinCprice()));
                         etrCashPositionFlowMapper.insertSelective(dto);
                     }
                     /**add by sunhui 20210719 重庆银行：中标结果维护，【是否头寸冻结】为是时，取消冻结组合可用现金   end**/
