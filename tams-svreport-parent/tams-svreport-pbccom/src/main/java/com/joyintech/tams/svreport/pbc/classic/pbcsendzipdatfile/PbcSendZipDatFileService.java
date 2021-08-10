@@ -312,27 +312,27 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	 * @param param 页面参数
 	 * @return 压缩文件之地
 	 */
-	public String createZipFile(Map<String, Object> param) {
+	public List<String> createZipFile(Map<String, Object> param) {
 		param.put("zipSendStatus",DictCodeListExt2.报送状态_未报送.getValue());
 				List<PbcSendZipDatFile> list=pbcSendZipDatFileMapper.selectBySendStatusSeqnoList(param);
 		Map<String,Set<String>> map=new HashMap<>();
 		//zip包 路径
 		Map<String,PbcSendZipDatFile> zipInfoMap=new HashMap<>();
-		//报送类型明细---zipCode归类
+		//datZipCode--归类报送类型明细
 		list.stream().forEach(datFile -> {
-			if (map.containsKey(datFile.getDatZipDatType())){
-				Set<String> set=map.get(datFile.getDatZipDatType());
-				set.add(datFile.getDatZipCode());
-				map.put(datFile.getDatZipDatType(),set);
+			if (map.containsKey(datFile.getDatZipCode())){
+				Set<String> set=map.get(datFile.getDatZipCode());
+				set.add(datFile.getDatZipDatType());
+				map.put(datFile.getDatZipCode(),set);
 			}else {
 				Set<String> set=new HashSet<>();
-				set.add(datFile.getDatZipCode());
-				map.put(datFile.getDatZipDatType(),set);
+				set.add(datFile.getDatZipDatType());
+				map.put(datFile.getDatZipCode(),set);
 			}
 			zipInfoMap.put(datFile.getDatZipCode(),datFile);
 		});
-		String filePath = pbcZipDataFileService.genDataFile(map,zipInfoMap);
-		return filePath;
+		List<String> result = pbcZipDataFileService.genDataFile(map,zipInfoMap);
+		return result;
 	}
 
 	/**

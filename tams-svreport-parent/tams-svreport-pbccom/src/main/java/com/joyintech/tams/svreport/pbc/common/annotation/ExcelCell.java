@@ -20,5 +20,7 @@ public @interface ExcelCell {
     boolean isReportType() default false;
     //报表分组类型 由开发人员指定
     boolean isGroupType() default false;
+    //固定值，当固定值不为空时，优先取固定值
+    String fixedValue() default "";
 
 }

@@ -290,6 +290,19 @@
       where t.reportuuid  = #{reportuuid,jdbcType=CHAR}
       group by t.POBCASSETID,t.PBC_ACCOUNT_ID,t.CCY
   </select>
+
+
+  <delete id="deleteByReportUUid"  parameterType="map" >
+        delete
+        from PBC_REPORT_BALANCE_DAT prp
+        where prp.REPORTUUID  = #{reportUuid,jdbcType=VARCHAR}
+    </delete>
+
+  <insert id="insertDataBySelect">
+    INSERT INTO PBC_REPORT_BALANCE_DAT (<include refid="Base_Column_List" />)
+    SELECT <include refid="Base_Column_List" /> FROM PBC_REPORT_BALANCE
+    WHERE REPORTUUID = #{reportUuid,jdbcType=VARCHAR}
+  </insert>
   
   
   <!-- 根据主表主键查询贷款明细基本信息 -->

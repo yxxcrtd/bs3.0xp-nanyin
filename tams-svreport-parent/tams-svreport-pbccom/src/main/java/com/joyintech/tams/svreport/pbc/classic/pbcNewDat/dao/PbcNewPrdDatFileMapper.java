@@ -34,4 +34,9 @@ public interface PbcNewPrdDatFileMapper {
 
     int deleteZipData(@Param("OrgCode") String OrgCode);
 
+    int deleteZipDataMI(@Param("OrgCode") String OrgCode);
+
+
+
+
 }

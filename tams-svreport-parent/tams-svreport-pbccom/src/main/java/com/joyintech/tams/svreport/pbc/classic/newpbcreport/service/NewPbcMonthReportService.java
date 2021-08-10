@@ -1,19 +1,29 @@
 package com.joyintech.tams.svreport.pbc.classic.newpbcreport.service;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelFileUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.export.ExcelOperationUtil;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.svreport.pbc.classic.newpbcreport.dto.ReportDealParamDto;
+import com.joyintech.tams.svreport.pbc.classic.pbcNewDat.service.PbcDatUtil;
+import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
 import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -114,11 +124,57 @@ public class NewPbcMonthReportService {
             return ajaxResult;
         }
         try {
+            List<ValidMessage> validMessages1 = checkFileName(fileName);
+            if (CollectionUtil.isNotEmpty(validMessages1)) {
+                ajaxResult.setErrorList(validMessages1);
+                return ajaxResult;
+            }
             Workbook workbook = new HSSFWorkbook(new FileInputStream(fileName));
             List<ValidMessage> validMessages = checkSheetName(workbook);
-            if(CollectionUtil.isNotEmpty(validMessages)){
+            if (CollectionUtil.isNotEmpty(validMessages)) {
                 ajaxResult.setErrorList(validMessages);
                 return ajaxResult;
+            }
+            String name = FileNameUtil.getName(fileName);
+            String[] strName = name.split("_");
+            if (strName.length == 0) {
+                ValidMessage message = new ValidMessage();
+                message.setMessage(TIPS_FILE_NAME_ERROR);
+                ajaxResult.setErrorList(Arrays.asList(message));
+                return ajaxResult;
+            }
+            String fName = strName[0];
+            String statusVdate = fName.substring(0, 4).concat("-").concat(fName.substring(4, 6)).concat("-").concat(fName.substring(6, 8));
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("statusVdate", statusVdate);
+            paramMap.put("datZipType", "MI");
+            List<PbcSendZipDatFile> pbcSendZipDatFiles = pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(paramMap);
+            Set<String> sets = new HashSet<>();
+            for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
+                if(pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_接口报送.getValue())
+                        || pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_手工处理.getValue())){
+                    sets.add(getSheetName(pbcSendZipDatFile.getDatZipDatType()));
+                }
+            }
+            StringBuilder waningReport = new StringBuilder();
+            if (sets.size() > 0) {
+                for (String set : sets) {
+                    Iterator<Sheet> sheetIterator = workbook.sheetIterator();
+                    while (sheetIterator.hasNext()) {
+                        Sheet sheet = sheetIterator.next();
+                        String sheetName = sheet.getSheetName();
+                        if (sheetName.equals(set)) {
+                            waningReport.append("[").append(set).append("]");
+                        }
+                    }
+                }
+                if(StrUtil.isNotEmpty(waningReport)){
+                    String warningInfo = String.format("统计模板%s数据已报送，不支持对数据进行维护", waningReport);
+                    ajaxResult.setMessage(warningInfo);
+                    ajaxResult.setMessageType(MessageType.确认消息);
+                    ajaxResult.setStatuCode(HttpStatus.OK.value());
+                    return ajaxResult;
+                }
             }
         }catch (Exception e){
             logger.error("检查规范异常",e);
@@ -143,28 +199,41 @@ public class NewPbcMonthReportService {
                 return errorList;
             }
             String fName = strName[0];
-            String statusVdate = fName.substring(0,4).concat("-").concat(fName.substring(4,6));
+            String statusVdate = fName.substring(0,4).concat("-").concat(fName.substring(4,6)).concat("-").concat(fName.substring(6,8));
             Map<String,Object> paramMap = new HashMap<>();
             paramMap.put("statusVdate",statusVdate);
             paramMap.put("datZipType","MI");
             List<PbcSendZipDatFile> pbcSendZipDatFiles = pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(paramMap);
             ReportDealParamDto paramDto = new ReportDealParamDto();
-            paramDto.setOrgCode(SecurityUtil.getLoginUser().getOrgCode());
+            String orgCode = SecurityUtil.getLoginUser().getOrgCode();
+            paramDto.setOrgCode(orgCode);
             paramDto.setStatusVdate(statusVdate);
+            String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
+            paramDto.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);
+            Set<String> noUpdateReport = new HashSet<>();
             if(CollectionUtil.isNotEmpty(pbcSendZipDatFiles)){
+                for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
+                    if(pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_接口报送.getValue())
+                     || pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_手工处理.getValue())){
+                        noUpdateReport.add(getSheetName(pbcSendZipDatFile.getDatZipDatType()));
+                    }
+                }
                 PbcSendZipDatFile pbcSendZipDatFile = pbcSendZipDatFiles.get(0);
                 paramDto.setReportUUID(pbcSendZipDatFile.getReportuuid());
                 paramDto.setDatZipCode(pbcSendZipDatFile.getDatZipCode());
                 paramDto.setHasRecord(true);
             }else{
                 paramDto.setReportUUID(UUID.randomUUID().toString());
-                paramDto.setDatZipCode("001");
+                paramDto.setDatZipCode(PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_统计模板数据.getValue(),DateUtil.parse(statusVdate, com.joyintech.framework.util.DateUtil.DEFAULT_DATE_FORMAT_EN),1,orgCode));
                 paramDto.setHasRecord(false);
             }
             while(sheetIterator.hasNext()){
                 HSSFSheet sheet = (HSSFSheet)sheetIterator.next();
                 paramDto.setHssfSheet(sheet);
                 String sheetName = sheet.getSheetName();
+                if(noUpdateReport.contains(sheetName)){
+                    continue;
+                }
                 if(allNewPbcMonthReportsMap.containsKey(sheetName)){
                     errorList.addAll(allNewPbcMonthReportsMap.get(sheetName).dealExcelData(paramDto));
                 }else{
@@ -200,4 +269,62 @@ public class NewPbcMonthReportService {
         }
         return validMessages;
     }
+
+    public List<ValidMessage> checkFileName(String fileName){
+        List<ValidMessage> validMessages = new ArrayList<>();
+        try {
+            String name = FileNameUtil.getName(fileName);
+            String[] strName = name.split("_");
+            if(strName.length == 0){
+                ValidMessage dto = new ValidMessage();
+                dto.setMessage(TIPS_FILE_NAME_ERROR);
+                validMessages.add(dto);
+                return validMessages;
+            }
+            String dateStr = strName[0];
+            String year = dateStr.substring(0, 4);
+            String month = dateStr.substring(4, 6);
+            String day = dateStr.substring(6, 8);
+            DateTime dateTime = DateUtil.parse(year.concat("-").concat(month).concat("-").concat(day), "yyyy-MM-dd");
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateTime);
+            if("01".equals(month)){
+                if(!(calendar.get(Calendar.DAY_OF_MONTH) == 1)){
+                    ValidMessage dto = new ValidMessage();
+                    dto.setMessage(TIPS_FILE_NAME_ERROR);
+                    validMessages.add(dto);
+                }else if(!(calendar.get(Calendar.DAY_OF_MONTH) == calendar
+                        .getActualMaximum(Calendar.DAY_OF_MONTH))){
+                    ValidMessage dto = new ValidMessage();
+                    dto.setMessage(TIPS_FILE_NAME_ERROR);
+                    validMessages.add(dto);
+                }
+            }else{
+                if(!(calendar.get(Calendar.DAY_OF_MONTH) == calendar
+                        .getActualMaximum(Calendar.DAY_OF_MONTH))){
+                    ValidMessage dto = new ValidMessage();
+                    dto.setMessage(TIPS_FILE_NAME_ERROR);
+                    validMessages.add(dto);
+                }
+            }
+        }catch (Exception e){
+            logger.error("检查文件名称格式异常",e);
+            ValidMessage dto = new ValidMessage();
+            dto.setMessage(TIPS_FILE_NAME_ERROR);
+            validMessages.add(dto);
+        }
+        return validMessages;
+    }
+
+    public String getSheetName(String reportType){
+        String replace = reportType.replace("_", "-");
+        for (String sheetName : sheetNames) {
+            if(sheetName.contains(replace)){
+                return sheetName;
+            }
+        }
+        return null;
+    }
+
+
 }

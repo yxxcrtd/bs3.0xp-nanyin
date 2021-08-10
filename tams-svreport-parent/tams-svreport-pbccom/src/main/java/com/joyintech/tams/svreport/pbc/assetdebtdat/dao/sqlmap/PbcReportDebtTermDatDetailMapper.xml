@@ -146,6 +146,19 @@
     from PBC_REPORT_BALANCETERM_DAT
     where REPORTUUID = #{reportuuid,jdbcType=CHAR}
   </select>
+
+  <delete id="deleteByReportUUid"  parameterType="map" >
+        delete
+        from PBC_REPORT_BALANCETERM_DAT prp
+        where prp.REPORTUUID  = #{reportUuid,jdbcType=VARCHAR}
+    </delete>
+
+  <insert id="insertDataBySelect">
+    INSERT INTO PBC_REPORT_BALANCETERM_DAT (<include refid="Base_Column_List" />)
+    SELECT <include refid="Base_Column_List" /> FROM PBC_REPORT_BALANCETERM
+    WHERE REPORTUUID = #{reportUuid,jdbcType=VARCHAR}
+  </insert>
+
   <delete id="deleteByReportDate"  parameterType="map" >
     delete
     from PBC_REPORT_BALANCETERM_DAT prp

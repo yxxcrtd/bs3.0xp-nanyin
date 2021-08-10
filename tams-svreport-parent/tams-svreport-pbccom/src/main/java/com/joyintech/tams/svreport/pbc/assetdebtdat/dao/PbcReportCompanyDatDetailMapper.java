@@ -28,6 +28,11 @@ public interface PbcReportCompanyDatDetailMapper {
 
     int updateByPrimaryKeySelective(PbcReportCompanyDatDetailDto record);
 
+
+    int deleteByReportUUid(@Param("reportUuid") String reportUuid);
+
+    int insertDataBySelect(@Param("reportUuid") String reportUuid);
+
     int updateByPrimaryKey(PbcReportCompanyDatDetailDto record);
 
     /**

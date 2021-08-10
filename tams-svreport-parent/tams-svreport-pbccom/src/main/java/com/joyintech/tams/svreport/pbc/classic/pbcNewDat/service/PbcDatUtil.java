@@ -155,7 +155,7 @@ public class PbcDatUtil {
 			}
 
 			int count = 0;
-			String zipFileCode = genZipCode(date,num,OrgCode);
+			String zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 			//同组数据优先处理
 			if(null!=samePrd){
 				for(Map.Entry<String,Map<String,Object>> dto : samePrd.entrySet()){
@@ -202,7 +202,7 @@ public class PbcDatUtil {
     	//重置数据
 		count = 0;
 		maxCode++;
-		zipFileCode = genZipCode(date,maxCode,OrgCode);
+		zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,maxCode,OrgCode);
 
 		List<PbcSendZipDatFile> result = (List<PbcSendZipDatFile>)resultMap.get("zipList");
 		//获取当前数组中所有可编辑数据
@@ -227,9 +227,9 @@ public class PbcDatUtil {
 	 * @param orgCode 机构代码
 	 * @return
 	 */
-	public static String genZipCode(Date date,int zipNum,String orgCode){
+	public static String genZipCode(String pCode,Date date,int zipNum,String orgCode){
 		//PI+14位金融机构法人标准代码+1位产品品种代码+ yyyyMMdd（业务日期）+变量.3位顺序号.zip
-		return "PI"+ "1" + CommonUtil.selectPbcBankCode(orgCode) + DateUtil.format(date,"yyyyMMdd") + StringUtils.leftPad(zipNum+"", 3, "0");
+		return pCode+ "1" + CommonUtil.selectPbcBankCode(orgCode) + DateUtil.format(date,"yyyyMMdd") + StringUtils.leftPad(zipNum+"", 3, "0");
 	}
 	/**
 	 * 数据组装
@@ -261,6 +261,8 @@ public class PbcDatUtil {
 			if(null==resultMap.get("prdList")){
 				resultMap.put("prdList",new ArrayList());
 			}
+
+			prodDat.setDatZipCode(zipCode);
 			//补充数据
 			resultMap.get("prdList").add(prodDat);
 			resultMap.get("zipList").add(zipFile);
@@ -278,6 +280,7 @@ public class PbcDatUtil {
 			if(null==resultMap.get("endList")){
 				resultMap.put("endList",new ArrayList());
 			}
+			prodEndDat.setDatZipCode(zipCode);
 			resultMap.get("endList").add(prodEndDat);
 			resultMap.get("zipList").add(zipFile);
 		}

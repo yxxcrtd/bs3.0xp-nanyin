@@ -1,23 +1,33 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile.service;
 
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
 import java.util.*;
 
 
@@ -41,6 +51,11 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 	 * 日志
 	 */
 	private static Logger logger = LoggerFactory.getLogger(PbcSendZipDatFileMService.class);
+
+	private static final String TIPS_FILE_NAME_ERROR = "文件名称不规范，请确认文件名称后，重新导入。";
+
+	@Autowired
+	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
 
 	/**
 	 *
@@ -125,9 +140,61 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 	 * @since 1.0
 	 */
 	public AjaxResult checkMonthReport(String fileName) {
-		return restTemplate.postForObject(
-				SvrServiceApplication.PBC_SERVICE_NAME + "/NewPbcMonthReport/checkMonthReport?fileName="+fileName,new HashMap<>(),
+		AjaxResult commonAjaxResult = restTemplate.postForObject(
+				SvrServiceApplication.PBC_SERVICE_NAME + "/NewPbcMonthReport/checkMonthReport?fileName=" + fileName, new HashMap<>(),
 				CommonAjaxResult.class);
+		if(StrUtil.isNotEmpty(commonAjaxResult.getMessage())){
+			AjaxResult ajaxResult = new AjaxResult();
+			JoyinMessage message = new JoyinMessage(commonAjaxResult.getMessage(),MessageType.确认消息);
+			ajaxResult.setJoyinMessages(Arrays.asList(message));
+			ajaxResult.setMessageType(MessageType.确认消息);
+			ajaxResult.setStatuCode(HttpStatus.OK.value());
+			return ajaxResult;
+		}
+		return commonAjaxResult;
+		/*if(commonAjaxResult != null && CollectionUtil.isNotEmpty(commonAjaxResult.getErrorList())){
+			return commonAjaxResult;
+		}
+		AjaxResult ajaxResult = new AjaxResult();
+		String name = FileNameUtil.getName(fileName);
+		String[] strName = name.split("_");
+		if(strName.length == 0){
+			ValidMessage message = new ValidMessage();
+			message.setMessage(TIPS_FILE_NAME_ERROR);
+			ajaxResult.setErrorList(Arrays.asList(message));
+			return ajaxResult;
+		}
+		String fName = strName[0];
+		String statusVdate = fName.substring(0,4).concat("-").concat(fName.substring(4,6)).concat("-").concat(fName.substring(6,8));
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("statusVdate",statusVdate);
+		paramMap.put("datZipType","MI");
+		List<PbcSendZipDatFile> pbcSendZipDatFiles = pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(paramMap);
+		List<JoyinMessage> validMessageList = new ArrayList<>();
+		Set<String> sets = new HashSet<>();
+		for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
+			if(pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_接口报送.getValue())
+					|| pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_手工处理.getValue())){
+				sets.add(pbcSendZipDatFile.getDatZipDatType());
+			}
+		}
+		StringBuilder waningReport = new StringBuilder();
+		if(sets.size() > 0){
+			for (String set : sets) {
+				waningReport.append("[").append(set).append("]");
+			}
+			String warningInfo = String.format("统计模板%s数据已报送，不支持对数据进行维护",waningReport.toString());
+			JoyinMessage message = new JoyinMessage(warningInfo,MessageType.确认消息);
+			validMessageList.add(message);
+		}
+		if(CollectionUtil.isNotEmpty(validMessageList)){
+			ajaxResult.setJoyinMessages(validMessageList);
+			ajaxResult.setMessageType(MessageType.确认消息);
+			ajaxResult.setStatuCode(HttpStatus.OK.value());
+			return ajaxResult;
+		}
+		ajaxResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+		return ajaxResult;*/
 	}
 
 
@@ -146,10 +213,10 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 	 * 生成压缩文件
 	 * @return 压缩文件存放地址
 	 */
-	public String createZipFile(Map<String, Object> param) {
+	public List<String> createZipFile(Map<String, Object> param) {
 		return restTemplate.postForObject(
 				SvrServiceApplication.PBC_SERVICE_NAME + "/PbcSendZipDatFile/createZipFile",param,
-				String.class);
+				List.class);
 	}
 
 
