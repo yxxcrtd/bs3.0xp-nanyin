@@ -77,11 +77,17 @@ public class PbcDatUtil {
 		 按日期分配后的.list<产品终止信息DTO>	同业务日期	产品终止信息   --->  产品实际终止日期
 		 */
 		if(DictCodeListExt3.是否压缩_按照业务日期.getValue().equals(zipModel)){
-			baseMap = prdList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoSubDat::getVdate));
-			endMap = endList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoEndSubDat::getMdate));
-			//获取所有开始终止的业务日期
-			dateSet.addAll(baseMap.keySet());
-			dateSet.addAll(endMap.keySet());
+			//获取产品基本信息起息日
+			if(null!=prdList){
+				baseMap = prdList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoSubDat::getVdate));
+				dateSet.addAll(baseMap.keySet());
+			}
+			//获取产品终止信息到期日
+			if(null!=endList){
+				endMap = endList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoEndSubDat::getMdate));
+				dateSet.addAll(endMap.keySet());
+			}
+
 		}else{
 			//1.2、【1.1】以外的情况下，调用2的处理   默认传入当前日期
 			Date date = new Date();
