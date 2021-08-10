@@ -130,7 +130,6 @@ public class PbcDatUtil {
 					}
 				}
 
-
 			//根据产品代码将数据重新分组  合并数据以传入的为主
 			Map<String,PbcPrdBaseinfoSubDat> prodDatList = null!=prdDatList?prdDatList.stream().collect(Collectors.toMap(p->p.getProdId(), p-> p,(key1,key2)->key1)):new HashMap<>();
 			Map<String,PbcPrdBaseinfoEndSubDat> prodEndDatList = null!=prdEndDatList?prdEndDatList.stream().collect(Collectors.toMap(p->p.getProdId(), p-> p,(key1,key2)->key1)):new HashMap<>();
@@ -150,7 +149,6 @@ public class PbcDatUtil {
 						//复制到samePrd中
 						//2.3.1产品基本信息、终止信息有在一起的数据
 						samePrd.put(set.getKey(),reuslt);
-
 						//删除数据
 						//2.3.2、只有产品基本信息的  去除放在【2.3.1】中的数据，其它产品基本信息、 保留在原变量中
 						//2.3.3、只有产品终止信息的  去除放在【2.3.1】中的数据，其它产品终止信息、 保留在原变量中
@@ -162,24 +160,28 @@ public class PbcDatUtil {
 
 			int count = 0;
 			String zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
+
+			Map<String,Integer> codeCount = new HashMap<>();
+			codeCount.put("prdCount",0);
+			codeCount.put("endCount",0);
+
 			//同组数据优先处理
 			if(null!=samePrd){
 				for(Map.Entry<String,Map<String,Object>> dto : samePrd.entrySet()){
-					count +=buildResult(resultMap,(PbcPrdBaseinfoSubDat)dto.getValue().get("prod"),(PbcPrdBaseinfoEndSubDat)dto.getValue().get("end"),zipFileCode,DateUtil.format(date));
+					count +=buildResult(resultMap,(PbcPrdBaseinfoSubDat)dto.getValue().get("prod"),(PbcPrdBaseinfoEndSubDat)dto.getValue().get("end"),zipFileCode,DateUtil.format(date),codeCount);
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
-						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true);
+						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
 					}
 				}
 			}
 			//产品基本信息
 			if(null!=prodDatList){
 				for(Map.Entry<String,PbcPrdBaseinfoSubDat> dto : prodDatList.entrySet()){
-					count +=buildResult(resultMap,(PbcPrdBaseinfoSubDat)dto.getValue(),null,zipFileCode,DateUtil.format(date));
+					count +=buildResult(resultMap,(PbcPrdBaseinfoSubDat)dto.getValue(),null,zipFileCode,DateUtil.format(date),codeCount);
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
-						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true);
-
+						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
 					}
 				}
 			}
@@ -187,15 +189,16 @@ public class PbcDatUtil {
 			//产品终止信息遍历
 			if(null!=prodEndDatList){
 				for(Map.Entry<String,PbcPrdBaseinfoEndSubDat> dto : prodEndDatList.entrySet()){
-					count +=buildResult(resultMap,null,(PbcPrdBaseinfoEndSubDat)dto.getValue(),zipFileCode,DateUtil.format(date));
+					count +=buildResult(resultMap,null,(PbcPrdBaseinfoEndSubDat)dto.getValue(),zipFileCode,DateUtil.format(date),codeCount);
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
-						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true);
+						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
 
 					}
 				}
 			}
-			reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,false);
+			reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,false,codeCount);
+
 		}
 
 
@@ -204,8 +207,40 @@ public class PbcDatUtil {
 
 
 
-	public static void reBuildDat(int count,int maxCode,String zipFileCode,Date date,String OrgCode,Map<String,ArrayList> resultMap,boolean isend){
+	public static void reBuildDat(int count,int maxCode,String zipFileCode,Date date,String OrgCode,Map<String,ArrayList> resultMap,boolean isend,Map<String,Integer> codeCount){
     	//重置数据
+		//初始化zip文件
+		if(null==resultMap.get("zipList")){
+			resultMap.put("zipList",new ArrayList());
+		}
+
+		/**产品基本信息条数汇总**/
+		if(null!=codeCount.get("prdCount")&&codeCount.get("prdCount")>0){
+			PbcSendZipDatFile zipFile = new PbcSendZipDatFile();
+			zipFile.setDatZipCode(zipFileCode);
+			zipFile.setDatZipDatType(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue());
+			zipFile.setDatZipType(DictCodeListExt2.人行报送类型_产品信息.getValue());
+			zipFile.setDatZipStatus(DictCodeListExt3.zip包状态_可编辑.getValue());
+			zipFile.setStatusVdate(DateUtil.format(date));
+			zipFile.setZipSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+			zipFile.setPibDetailCnt(codeCount.get("prdCount"));
+			resultMap.get("zipList").add(zipFile);
+		}
+
+		/**产品终止信息条数汇总**/
+		if(null!=codeCount.get("endCount")&&codeCount.get("endCount")>0){
+			PbcSendZipDatFile zipFile = new PbcSendZipDatFile();
+			zipFile.setDatZipCode(zipFileCode);
+			zipFile.setDatZipDatType(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue());
+			zipFile.setDatZipType(DictCodeListExt2.人行报送类型_产品信息.getValue());
+			zipFile.setDatZipStatus(DictCodeListExt3.zip包状态_可编辑.getValue());
+			zipFile.setStatusVdate(DateUtil.format(date));
+			zipFile.setZipSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+			zipFile.setPibDetailCnt(codeCount.get("endCount"));
+			resultMap.get("zipList").add(zipFile);
+		}
+
+
 		count = 0;
 		maxCode++;
 		zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,maxCode,OrgCode);
@@ -215,8 +250,6 @@ public class PbcDatUtil {
 		List<PbcSendZipDatFile> doList = result.stream().filter(i-> DictCodeListExt3.zip包状态_可编辑.getValue().equals(i.getDatZipStatus())).collect(Collectors.toList());
 		//将所有数据进行最后处理
 		for(PbcSendZipDatFile dataFile: doList){
-			//填入数据
-			dataFile.setPibDetailCnt(doList.size());
 			dataFile.setOrgCode(OrgCode);
 			//是否是最后数据进行修改
 			if(isend){
@@ -235,7 +268,7 @@ public class PbcDatUtil {
 	 */
 	public static String genZipCode(String pCode,Date date,int zipNum,String orgCode){
 		//PI+14位金融机构法人标准代码+1位产品品种代码+ yyyyMMdd（业务日期）+变量.3位顺序号.zip
-		return pCode+ "1" + CommonUtil.selectPbcBankCode(orgCode) + DateUtil.format(date,"yyyyMMdd") + StringUtils.leftPad(zipNum+"", 3, "0");
+		return pCode+ CommonUtil.selectPbcBankCode(orgCode) + "1"  + DateUtil.format(date,"yyyyMMdd") + StringUtils.leftPad(zipNum+"", 3, "0");
 	}
 	/**
 	 * 数据组装
@@ -244,51 +277,34 @@ public class PbcDatUtil {
 	 * @param prodEndDat 产品终止信息
 	 * @param zipCode zip编号
 	 * @param Date 日期字段
-	 * @return
+	 * @return  返回当前组文件的长度
 	 * @throws UnsupportedEncodingException
 	 */
 	public static int buildResult(Map<String, ArrayList> resultMap,
-								  PbcPrdBaseinfoSubDat prodDat, PbcPrdBaseinfoEndSubDat prodEndDat, String zipCode, String Date) throws UnsupportedEncodingException {
-		//初始化zip文件
-		if(null==resultMap.get("zipList")){
-			resultMap.put("zipList",new ArrayList());
-		}
+								  PbcPrdBaseinfoSubDat prodDat, PbcPrdBaseinfoEndSubDat prodEndDat, String zipCode, String Date,Map<String,Integer> countMap) throws UnsupportedEncodingException {
+
 		int size = 0;
 		//产品基本信息压入
 		if(null!=prodDat){
-			PbcSendZipDatFile zipFile = new PbcSendZipDatFile();
-			zipFile.setDatZipCode(zipCode);
-			zipFile.setDatZipDatType(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue());
-			zipFile.setDatZipType(DictCodeListExt2.人行报送类型_产品信息.getValue());
-			zipFile.setDatZipStatus(DictCodeListExt3.zip包状态_可编辑.getValue());
-			zipFile.setStatusVdate(Date);
-			zipFile.setZipSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 			size = prodDat.toPbcString("|").getBytes("GBK").length;
+
+			countMap.put("prdCount",countMap.get("prdCount")+1);
 			if(null==resultMap.get("prdList")){
 				resultMap.put("prdList",new ArrayList());
 			}
-
+			resultMap.get("prdList").add(prodDat);
 			prodDat.setDatZipCode(zipCode);
 			//补充数据
-			resultMap.get("prdList").add(prodDat);
-			resultMap.get("zipList").add(zipFile);
 		}
 		//产品终止信息压入
 		if(null!=prodEndDat) {
-			PbcSendZipDatFile zipFile = new PbcSendZipDatFile();
-			zipFile.setDatZipCode(zipCode);
-			zipFile.setDatZipDatType(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue());
-			zipFile.setDatZipType(DictCodeListExt2.人行报送类型_产品信息.getValue());
-			zipFile.setDatZipStatus(DictCodeListExt3.zip包状态_可编辑.getValue());
-			zipFile.setStatusVdate(Date);
-			zipFile.setZipSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 			size += prodEndDat.toPbcString("|").getBytes("GBK").length;
+			countMap.put("endCount",countMap.get("endCount")+1);
 			if(null==resultMap.get("endList")){
 				resultMap.put("endList",new ArrayList());
 			}
 			prodEndDat.setDatZipCode(zipCode);
 			resultMap.get("endList").add(prodEndDat);
-			resultMap.get("zipList").add(zipFile);
 		}
 		return size;
 	}
