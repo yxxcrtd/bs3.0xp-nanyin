@@ -48,6 +48,188 @@
 		</if>
 	</select>
 
+	<delete id="deleteModEclResultByConditions" parameterType="Map" >
+        delete from ASSET_LOSS_RESULT
+        where DEC_DATE = #{delDate,jdbcType=DATE}
+          and ALLOW_MODEL_COVER = #{ALLOW_MODEL_COVER_Y,jdbcType=VARCHAR}
+    </delete>
+
+	<insert id="insertSelective" parameterType="com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResult" >
+		insert into ASSET_LOSS_RESULT
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="seqno != null" >
+				SEQNO,
+			</if>
+			<if test="prodId != null" >
+				PROD_ID,
+			</if>
+			<if test="prodName != null" >
+				PROD_NAME,
+			</if>
+			<if test="portfolioId != null" >
+				PORTFOLIO_ID,
+			</if>
+			<if test="assetId != null" >
+				ASSET_ID,
+			</if>
+			<if test="assetName != null" >
+				ASSET_NAME,
+			</if>
+			<if test="assetType != null" >
+				ASSET_TYPE,
+			</if>
+			<if test="bussNo != null" >
+				BUSS_NO,
+			</if>
+			<if test="tradeDate != null" >
+				TRADE_DATE,
+			</if>
+			<if test="decDate != null" >
+				DEC_DATE,
+			</if>
+			<if test="prinOverdueDay != null" >
+				PRIN_OVERDUE_DAY,
+			</if>
+			<if test="intOverdueDay != null" >
+				INT_OVERDUE_DAY,
+			</if>
+			<if test="purchaseTimeGrade != null" >
+				PURCHASE_TIME_GRADE,
+			</if>
+			<if test="currentTimeGrade != null" >
+				CURRENT_TIME_GRADE,
+			</if>
+			<if test="preProspectivePd != null" >
+				PRE_PROSPECTIVE_PD,
+			</if>
+			<if test="prospectivePd != null" >
+				PROSPECTIVE_PD,
+			</if>
+			<if test="stage != null" >
+				STAGE,
+			</if>
+			<if test="lgd != null" >
+				LGD,
+			</if>
+			<if test="ead != null" >
+				EAD,
+			</if>
+			<if test="preProspectiveEcl != null" >
+				PRE_PROSPECTIVE_ECL,
+			</if>
+			<if test="prospectiveEcl != null" >
+				PROSPECTIVE_ECL,
+			</if>
+			<if test="allowModelCover != null" >
+				ALLOW_MODEL_COVER,
+			</if>
+			<if test="dataSource != null" >
+				DATA_SOURCE,
+			</if>
+			<if test="createUser != null" >
+				CREATE_USER,
+			</if>
+			<if test="createDept != null" >
+				CREATE_DEPT,
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME,
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER,
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="seqno != null" >
+				#{seqno,jdbcType=VARCHAR},
+			</if>
+			<if test="prodId != null" >
+				#{prodId,jdbcType=VARCHAR},
+			</if>
+			<if test="prodName != null" >
+				#{prodName,jdbcType=VARCHAR},
+			</if>
+			<if test="portfolioId != null" >
+				#{portfolioId,jdbcType=CHAR},
+			</if>
+			<if test="assetId != null" >
+				#{assetId,jdbcType=VARCHAR},
+			</if>
+			<if test="assetName != null" >
+				#{assetName,jdbcType=VARCHAR},
+			</if>
+			<if test="assetType != null" >
+				#{assetType,jdbcType=VARCHAR},
+			</if>
+			<if test="bussNo != null" >
+				#{bussNo,jdbcType=VARCHAR},
+			</if>
+			<if test="tradeDate != null" >
+				#{tradeDate,jdbcType=DATE},
+			</if>
+			<if test="decDate != null" >
+				#{decDate,jdbcType=DATE},
+			</if>
+			<if test="prinOverdueDay != null" >
+				#{prinOverdueDay,jdbcType=DECIMAL},
+			</if>
+			<if test="intOverdueDay != null" >
+				#{intOverdueDay,jdbcType=DECIMAL},
+			</if>
+			<if test="purchaseTimeGrade != null" >
+				#{purchaseTimeGrade,jdbcType=VARCHAR},
+			</if>
+			<if test="currentTimeGrade != null" >
+				#{currentTimeGrade,jdbcType=VARCHAR},
+			</if>
+			<if test="preProspectivePd != null" >
+				#{preProspectivePd,jdbcType=DECIMAL},
+			</if>
+			<if test="prospectivePd != null" >
+				#{prospectivePd,jdbcType=DECIMAL},
+			</if>
+			<if test="stage != null" >
+				#{stage,jdbcType=VARCHAR},
+			</if>
+			<if test="lgd != null" >
+				#{lgd,jdbcType=DECIMAL},
+			</if>
+			<if test="ead != null" >
+				#{ead,jdbcType=DECIMAL},
+			</if>
+			<if test="preProspectiveEcl != null" >
+				#{preProspectiveEcl,jdbcType=DECIMAL},
+			</if>
+			<if test="prospectiveEcl != null" >
+				#{prospectiveEcl,jdbcType=DECIMAL},
+			</if>
+			<if test="allowModelCover != null" >
+				#{allowModelCover,jdbcType=VARCHAR},
+			</if>
+			<if test="dataSource != null" >
+				#{dataSource,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null" >
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null" >
+				#{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null" >
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
 
 
 </mapper>

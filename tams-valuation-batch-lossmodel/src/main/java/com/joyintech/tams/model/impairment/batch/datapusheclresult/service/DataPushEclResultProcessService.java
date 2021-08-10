@@ -1,17 +1,20 @@
 package com.joyintech.tams.model.impairment.batch.datapusheclresult.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.model.impairment.batch.datapusheclresult.dao.DataPushEclResultMapper;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResult;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResultProcessDto;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResultReaderDto;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.ImpairmentBatchSynParam;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
-import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.StepExecution;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +28,8 @@ import java.util.Map;
 @Service
 public class DataPushEclResultProcessService extends BaseService {
     private final String BATCH_LOG_RESULTS = "logResults";
+    @Autowired
+    private DataPushEclResultMapper dataPushEclResultMapper;
     /**
      * @Description:获取待处理资产信息List
      * @auther: yuzj
@@ -57,9 +62,7 @@ public class DataPushEclResultProcessService extends BaseService {
             assetLossResultList.add(assetLossResult);
         }
         param.setSynList(assetLossResultList);
-        Integer result = restTemplate.postForObject(
-                ServiceApplication.CUSTOMER_INTERF_NAME + "/interf/ModelCallOnInvest/impairmentModEclResultSyn", param,
-                Integer.class);
+        Integer result = impairmentModReultSyn(param);
         return result;
     }
 
@@ -81,6 +84,21 @@ public class DataPushEclResultProcessService extends BaseService {
                 stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,bBatchLogResultList);
             }
         }
+    }
+
+    public int impairmentModReultSyn(ImpairmentBatchSynParam param){
+        //判断结果对象是否大于0,删除资产减值结果
+        if(param.getSynList().size()>0){
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("delDate",param.getSynDate());
+            map.put("ALLOW_MODEL_COVER_Y", DictCodeListExt1.是否_是.getValue());
+            dataPushEclResultMapper.deleteModEclResultByConditions(map);
+            List<AssetLossResult> batchList = param.getSynList();
+            for(AssetLossResult dto : batchList){
+                dataPushEclResultMapper.insertSelective(dto);
+            }
+        }
+        return 0;
     }
 
 

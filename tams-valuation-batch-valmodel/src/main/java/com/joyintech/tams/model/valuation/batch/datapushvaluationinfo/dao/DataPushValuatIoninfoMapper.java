@@ -1,5 +1,11 @@
 package com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dao;
 
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductValuation;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
+import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.AssetLossResult;
+import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.FinProductProjectValuation;
+import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.ValuationBatchSynDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ValBondValuationInfoResultDto;
@@ -24,5 +30,21 @@ public interface DataPushValuatIoninfoMapper {
      */
     List<ValuationBatchSynDto> selectValuationInfoList(@Param("batchDateStr")String batchDateStr,@Param("finprodIdList") List<String> finprodIdList);
 
+    //债券估值行情信息
+    int deleteBondByConditions(MstBondQuotationInfoDto record);
 
+    int insertSelectiveBondQuotationInfo(MstBondValuationInfo record);
+
+    //项目类资产行情
+    int deleteFinProductProjectByConditions(FinProductProjectValuation record);
+
+    int insertSelectiveFinProject(FinProductProjectValuation record);
+
+
+    //场外金融产品估值
+    int deleteFinProductByConditions(FinProductValuation record);
+
+    int insertSelectiveFinProduct(FinProductValuation record);
+
+    FinProduct selectByPrimaryKey(String finprodId);
 }

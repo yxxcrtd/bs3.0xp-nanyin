@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据推送批处理DAO
@@ -23,5 +24,10 @@ public interface DataPushEclResultMapper {
      */
     List<AssetLossResult> selectEclResultList(@Param("plateDate") Date plateDate,@Param("finprodIdList") List<String> finprodIdList);
 
+
+    //资产减值结果删除
+    int deleteModEclResultByConditions(Map<String,Object> params);
+
+    int insertSelective(AssetLossResult record);
 
 }
