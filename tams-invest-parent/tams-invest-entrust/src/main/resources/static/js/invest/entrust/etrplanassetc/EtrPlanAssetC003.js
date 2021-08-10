@@ -62,6 +62,9 @@
              }
              objects.push(object);
          }
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'EtrPlanAssetC002.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
          return objects;
      }
 	}
@@ -139,6 +142,13 @@
 			Joyin.alert("委托列表至少有一条数据！", 2);
 			return false;
 		}
+        var s;
+        if(BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+            if(!s && s != ''){
+                return;
+            }
+        }
 		/**
 		 * 获取列表参数
 		 */
@@ -154,8 +164,14 @@
                   temp.elementId = 'EtrPlanAssetC002_btn_save';
             } else {
                 temp.elementId = 'EtrPlanAssetC002_btn_submit';
+            }
         }
-        }
+        var allDto = {};
+        allDto.importFlow = true;
+        allDto.selectedItem = objects;
+        //批量风险预占需要
+        allDto.operateType = operateType;
+        allDto.riskTrialRetDto = object.riskTrialRetDto;
 		Joyin.ajaxJson(basePath+ 'invest/entrust/etrplanassetc/EtrPlanAssetC003/check',objects,
 						function(result) {Joyin.confirm(
 											result.data,
@@ -185,6 +201,16 @@
 		 */
 		$('#EtrPlanAssetC003_btn_riskcal').click(function() {
 		//window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
+            //add by zhangnian start
+            var list = $.serializeToObject('#searchForm', true).bussCombDistribtList;
+            var objectList = [];
+            for(var i in list){
+                var temp = list[i];
+                objectList.push(temp);
+            }
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F09',
+                objectList, getriskdata());
+            //add by zhangnian end
             $("#riskMathFlag").val("02")
 				});
 	})

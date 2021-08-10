@@ -119,6 +119,15 @@
      * @returns
      */
     function saveOrSubmit(operateType) {
+        // 风险试算验证 add by yufei 20200826 start
+        var s;
+        if(BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+            if(!s && s != ''){
+                return;
+            }
+        }
+        // 风险试算验证 add by yufei 20200826 end
         //校验数据  校验表格
         var tableData = table.getAllRows();
         if(operateType != 'save'){
@@ -245,9 +254,9 @@
 		            object.finmdate = $('#finmdate').val();
 		            var initParam = getriskdata();
 		            $("#riskMathFlag").val("02");
-		           /* Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', initParam, function (resultresult) {
+		            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', initParam, function (resultresult) {
 		                window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F01',object,getriskdata());
-		            });*/
+		            });
 		
 		        });
 		    })

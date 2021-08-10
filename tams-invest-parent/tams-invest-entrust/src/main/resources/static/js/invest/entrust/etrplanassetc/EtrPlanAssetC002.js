@@ -16,7 +16,13 @@
             }
         }
         var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:entrustAmt,assetType:fintype,isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {tradeDirection:['ps','EtrPlanAssetC002.ps'],portfolioCode:['portfolioId','EtrPlanAssetC002.portfolioId'],tradeAmount:['entrustAmt','EtrPlanAssetC002.entrustAmt'],assetType:['assetType1','EtrPlanAssetC002.assetType1'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
     /**

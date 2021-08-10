@@ -361,7 +361,7 @@
                  </div>
             </div>
             <!-- 风险试算 -->
-            <div th:if="${isEleShow['EtrBondFirstLBidding002_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'" id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
+            <div id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
     </form>
     <!--  按钮 -->
     <div class="row text-center" style="margin: 20px 0;">

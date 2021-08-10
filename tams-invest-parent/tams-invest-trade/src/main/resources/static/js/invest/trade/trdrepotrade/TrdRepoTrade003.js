@@ -72,6 +72,9 @@
                     }else{
                         obj.assetType = null;
                     }
+                // add by zhangrui1 交易对手影响风险试算 start
+                obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+                // add by zhangrui1 交易对手影响风险试算 end
                     list[i]=obj;
                 }
 
@@ -84,6 +87,9 @@
             tradeDirection:['ps', 'TrdRepoTrade002.ps'],
             data: list.length>0?list:obj1
         };
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo002Dto.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     };
 

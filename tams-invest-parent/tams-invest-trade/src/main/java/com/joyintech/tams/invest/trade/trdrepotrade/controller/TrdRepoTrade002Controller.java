@@ -688,6 +688,10 @@ public class TrdRepoTrade002Controller extends BaseController {
                 if (StringUtil.isNotEmpty(ar)) {
                     return ar;
                 }
+                // add by zhangrui1 start
+                // 将实占信息设置到线程缓存出错时撤销用
+                TradeRdsCommonAop.setLocalCache(dto);
+                // add by zhangrui1 end
             }
         }
         //----------add by jjpei 20200114 核风险版本 end----------

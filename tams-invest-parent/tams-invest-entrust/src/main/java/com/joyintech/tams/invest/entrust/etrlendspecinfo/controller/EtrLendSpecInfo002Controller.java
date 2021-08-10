@@ -27,6 +27,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.service.EtrLendSpecInfoService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -221,14 +222,14 @@ public class EtrLendSpecInfo002Controller extends BaseController {
             dto.setEntrustId(code);
         }
         // ----------add by yushilong 20200721 预占功能 start----------
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
-//            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
-//                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
-//                    DictCodeList.平安资产类型_拆借.getValue());
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    DictCodeList.平安资产类型_拆借.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
         // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrLendSpecInfoDto> processParameter = new ProcessParameter<EtrLendSpecInfoDto>();
         WorkFlowParameter<EtrLendSpecInfoDto> params = new WorkFlowParameter<EtrLendSpecInfoDto>();

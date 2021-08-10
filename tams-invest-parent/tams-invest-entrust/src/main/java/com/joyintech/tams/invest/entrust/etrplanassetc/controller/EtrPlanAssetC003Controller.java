@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,8 +194,9 @@ public class EtrPlanAssetC003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody List<EtrPlanAssetCDto> dtoList, BindingResult br)
+    public AjaxResult save(@RequestBody EtrPlanAssetCDto allDto, BindingResult br)
             throws Exception {
+        List<EtrPlanAssetCDto> dtoList = allDto.getSelectedItem();
         AjaxResult ajaxResult = this.check(dtoList, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;
@@ -208,6 +211,22 @@ public class EtrPlanAssetC003Controller extends BaseController {
             }
             dto.setWorkflowParameter("new|||1|EtrPlanAssetC002|EtrPlanAssetC002_btn_submit|true");
         }
+        // ----------add by yushilong 20200721 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
+                    DictCodeList.平安资产类型_计划类资产_货币型.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                    false, null);
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by yushilong 20200721 预占功能 end----------
+
+        // add by zhangrui1 批量提交设置风控指标明细 start
+        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
+                (dto, list) -> dto.setRiskTrialRetDto(list));
+        // add by zhangrui1 批量提交设置风控指标明细 end
         ProcessParameter<EtrPlanAssetCDto> processParameter = new ProcessParameter<EtrPlanAssetCDto>();
         WorkFlowParameter<EtrPlanAssetCDto> params = new WorkFlowParameter<EtrPlanAssetCDto>();
         params.setPageId("EtrPlanAssetC002");
