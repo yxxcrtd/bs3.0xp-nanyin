@@ -10,6 +10,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
@@ -30,6 +31,8 @@ import java.math.RoundingMode;
  **/
 @Service
 public class EtrSecPrimaryBiddingCashPositionDealService extends EtrCashPositionBaseService {
+
+	private static BasePtlCashPositionInfoService basePtlCashPositionInfoServiceImpl;
 
 	private static PtlCashPositionFlowMapper ptlCashPositionFlowMapper;
 
@@ -92,7 +95,7 @@ public class EtrSecPrimaryBiddingCashPositionDealService extends EtrCashPosition
 			BeanUtil.copyPropertiesIgnoreNull(PtlCashPositionFlowDto,etrCashPositionFlowDtoFrozen);
 			PtlCashPositionFlowDto.setSeqno(IDGenerator.generate());
 			PtlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
-			ptlCashPositionFlowMapper.insertSelective(PtlCashPositionFlowDto);
+			basePtlCashPositionInfoServiceImpl.insertCashPositionFlow(PtlCashPositionFlowDto);
 		}
 		/**add by sunhui 20210719 重庆银行：中标结果维护，【是否头寸冻结】为是时，冻结组合可用现金   end**/
 	}
