@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * @program: 2.1.0
@@ -84,7 +85,7 @@ public class EtrSecPrimaryBiddingCashPositionDealService extends EtrCashPosition
 			etrCashPositionFlowDtoFrozen.setSeqno(IDGenerator.generate());
 			etrCashPositionFlowDtoFrozen.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());//冻结的现金
 			//冻结的头寸 = 中标券面总额*100*净价
-			etrCashPositionFlowDtoFrozen.setAmount(ArithmeticUtil.multiply(实际中标券面总额, new BigDecimal("-1"),new BigDecimal("100"),bidPriceDto.getWinCprice()));
+			etrCashPositionFlowDtoFrozen.setAmount(ArithmeticUtil.multiply(ArithmeticUtil.divide(实际中标券面总额,new BigDecimal("100"),2, RoundingMode.HALF_UP), new BigDecimal("-1"),bidPriceDto.getWinCprice()));
 			etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDtoFrozen);
 			//2.组合可用冻结
 			PtlCashPositionFlowDto PtlCashPositionFlowDto = new PtlCashPositionFlowDto();
