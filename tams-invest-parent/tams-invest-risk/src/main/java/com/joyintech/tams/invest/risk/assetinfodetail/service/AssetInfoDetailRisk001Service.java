@@ -137,6 +137,9 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 		return dtoList;
 	}
 
+	/**
+	 * 设置流程业务说明
+	 */
 	 @Override
 	 public String generateTitle(AssetInfoDetailRisk001Dto entity, OperationType type) {
 		 return  "资产代码" + "(" + entity.getAssetCode() + ")" + "-" + "资产名称" + "("
@@ -202,7 +205,9 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 			finProductType.setType11(dto.getOrgAssetType4());
 			finProductType.setType12(dto.getOrgAssetType5());
 		}else{
-			finProductAdd.setInvestNature(dto.getSvrBussQDIISharesInfoRiskDto().getInvestNature());
+			if(dto.getSvrBussQDIISharesInfoRiskDto()!=null) {
+				finProductAdd.setInvestNature(dto.getSvrBussQDIISharesInfoRiskDto().getInvestNature());
+			}
 			finProductType.setType8(DictCodeList.平安资产类型_基金.getValue());
 			finProductType.setType9(dto.getOrgAssetType2());
 			finProductType.setType10(dto.getOrgAssetType3());
@@ -469,7 +474,9 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 				finProductType.setType11(dto.getOrgAssetType4());
 				finProductType.setType12(dto.getOrgAssetType5());
 			}else{
-				finProductAdd.setInvestNature(dto.getSvrBussQDIISharesInfoRiskDto().getInvestNature());
+				if(dto.getSvrBussQDIISharesInfoRiskDto()!=null) {
+					finProductAdd.setInvestNature(dto.getSvrBussQDIISharesInfoRiskDto().getInvestNature());
+				}
 				finProductType.setType8(DictCodeList.平安资产类型_基金.getValue());
 				finProductType.setType9(dto.getOrgAssetType2());
 				finProductType.setType10(dto.getOrgAssetType3());

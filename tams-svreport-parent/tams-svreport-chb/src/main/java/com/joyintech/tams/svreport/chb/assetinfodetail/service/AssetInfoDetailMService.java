@@ -137,6 +137,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		return dtoList;
 	}
 
+	/**
+	 * 设置流程业务说明
+	 */
 	@Override
 	public String generateTitle(AssetInfoDetailDto entity, OperationType type) {
 		return  "资产代码" + "(" + entity.getAssetCode() + ")" + "-" + "资产名称" + "("

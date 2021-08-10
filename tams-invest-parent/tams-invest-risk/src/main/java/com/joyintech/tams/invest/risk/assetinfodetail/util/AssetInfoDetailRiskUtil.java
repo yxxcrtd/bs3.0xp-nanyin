@@ -11,6 +11,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
@@ -77,7 +78,7 @@ public class AssetInfoDetailRiskUtil {
      * 获取资产及二级类型的关系
      * @return
      */
-    public Map<String, Set<String>> getDataListLink(){
+    public synchronized Map<String, Set<String>> getDataListLink(){
 
         if(map==null||map.isEmpty()){
             map = new HashMap<>();
@@ -122,14 +123,14 @@ public class AssetInfoDetailRiskUtil {
         }
     }
 
-    public List<ExcelValidDto> convertToBean(List<AssetInfoDetailRisk001Dto> entities , List<List<String>> dataList){
+    public synchronized List<ExcelValidDto> convertToBean(List<AssetInfoDetailRisk001Dto> entities , List<List<String>> dataList){
         List<ExcelValidDto> resultList = new ArrayList<>();
         Map<String,Object> params = new HashMap<>();
         params.put("linkDictCode", DictCode.资产_负债类别.getValue());
         List<SysDatadictListLink> listLink = assetInfoDetailRisk001Service.getDataListLink1(params);
         dict = new HashMap<>();
         listLink.forEach(sysDatadictListLink -> {
-            dict.put(sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
+                dict.put(sysDatadictListLink.getItemCode(), sysDatadictListLink.getLinkedItemCode());
         });
         params.put("linkDictCode", DictCode.机构所属行业一级分类.getValue());
         List<SysDatadictListLink> industryListLink = assetInfoDetailRisk001Service.getDataListLink1(params);
@@ -160,79 +161,68 @@ public class AssetInfoDetailRiskUtil {
             List<String> list = dataList.get(i);
             AssetInfoDetailRisk001Dto entity = new AssetInfoDetailRisk001Dto();
             List<ValidMessage> messages = new ArrayList<>();
-            if (StringUtil.isNotEmpty(list.get(0))) {
-                entity.setAssetCode(list.get(0));
+            List<String> headList = new ArrayList();
+            getHeadList_gt(headList);
+            if (StringUtil.isNotEmpty(list.get(headList.indexOf("*行内资产/负债编码")))) {
+                entity.setAssetCode(list.get(headList.indexOf("*行内资产/负债编码")));
             }else {
                 messages.add(new ValidMessage("行内资产/负债编码数据不能为空。"));
             }
-            if (StringUtil.isNotEmpty(list.get(1))) {
-                entity.setIssuePartyId(list.get(1));
+            if (StringUtil.isNotEmpty(list.get(headList.indexOf("*发行机构代码")))) {
+                entity.setIssuePartyId(list.get(headList.indexOf("*发行机构代码")));
             }else {
                 messages.add(new ValidMessage("发行机构代码数据不能为空。"));
             }
-            if (StringUtil.isNotEmpty(list.get(2))) {
-                entity.setAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.资产_负债二级类别, list.get(2)));
+            if (StringUtil.isNotEmpty(list.get(headList.indexOf("*资产/负债类别")))) {
+                entity.setAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.资产_负债二级类别, list.get(headList.indexOf("*资产/负债类别"))));
             }else {
                 messages.add(new ValidMessage("资产/负债类别数据不能为空。"));
             }
             entity.setAssetType(dict.get(entity.getAssetType2()));
-            if (StringUtil.isNotEmpty(list.get(3))) {
-                entity.setTradeMarket(SysDataUtil.getZZDictCodeFromName(DictCode.交易流通场所_中债, list.get(3)));
+            if (StringUtil.isNotEmpty(list.get(headList.indexOf("*交易流通场所")))) {
+                entity.setTradeMarket(SysDataUtil.getZZDictCodeFromName(DictCode.交易流通场所_中债, list.get(headList.indexOf("*交易流通场所"))));
             }else {
                 messages.add(new ValidMessage("交易流通场所数据不能为空。"));
             }
-            if (StringUtil.isNotEmpty(list.get(4))) {
-                entity.setCcy(SysDataUtil.getZZDictCodeFromName(DictCode.币种_中债, list.get(4)));
+            if (StringUtil.isNotEmpty(list.get(headList.indexOf("*币种")))) {
+                entity.setCcy(SysDataUtil.getZZDictCodeFromName(DictCode.币种_中债, list.get(headList.indexOf("*币种"))));
             }else {
                 messages.add(new ValidMessage("币种数据不能为空。"));
             }
+
            if (DictCodeListExt2.资产_负债类别_权益类资产.getValue().equals(entity.getAssetType())){
                 /**维护信息-权益类资产*/
 //                if (dataList.get(1).size() != 24) {
 //                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-权益类格式不正确！"));
 //                    return resultList;
 //                }
+               headList.clear();
+               getHeadList_06(headList);
                //资产名称
-               if (StringUtil.isNotEmpty(list.get(6))) {
-                   entity.setAssetName(list.get(6));
+               if (StringUtil.isNotEmpty(list.get(headList.indexOf("*股票/企业名称")))) {
+                   entity.setAssetName(list.get(headList.indexOf("*股票/企业名称")));
                }else {
                    messages.add(new ValidMessage("股票/企业名称数据不能为空。"));
                }
-              /* //起息日
-               if (StringUtil.isNotEmpty(list.get(15))) {
-                   if (CommonUtil.isEnDateStr(list.get(15))){
-                       entity.setVdate(DateUtil.parse(list.get(15)));
-                   }else {
-                       entity.setVdate(new Date());
-                       messages.add(new ValidMessage("起息日必须为日期格式（yyyy-MM-dd）"));
-                   }
-               }
-               //到期日
-               if (StringUtil.isNotEmpty(list.get(16))) {
-                   if (CommonUtil.isEnDateStr(list.get(16))){
-                       entity.setMdate(DateUtil.parse(list.get(16)));
-                   }else {
-                       entity.setMdate(new Date());
-                       messages.add(new ValidMessage("到期日必须为日期格式（yyyy-MM-dd）"));
-                   }
-               }*/
-                entity.setSvrBussRepEquityInfoRiskDto(getSvrBussRepEquityInfoRiskDto(messages , list));
+                entity.setSvrBussRepEquityInfoRiskDto(getSvrBussRepEquityInfoRiskDto(messages , list,headList));
             }else if (DictCodeListExt2.资产_负债类别_金融衍生品.getValue().equals(entity.getAssetType())){
                 /**维护信息-金融衍生品*/
 //                if (dataList.get(1).size() != 14) {
 //                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-金融衍生品格式不正确！"));
 //                    return resultList;
 //                }
+               headList.clear();
+               getHeadList_07(headList);
                //资产名称
-               if (StringUtil.isNotEmpty(list.get(5))) {
-                   entity.setAssetName(list.get(5));
+               if (StringUtil.isNotEmpty(list.get(headList.indexOf("*名称")))) {
+                   entity.setAssetName(list.get(headList.indexOf("*名称")));
                }else {
                    messages.add(new ValidMessage("名称数据不能为空。"));
                }
                //起息日
-               if (StringUtil.isNotEmpty(list.get(10))) {
-                   if (CommonUtil.isEnDateStr(list.get(10))){
-                       entity.setVdate(DateUtil.parse(list.get(10)));
+               if (StringUtil.isNotEmpty(list.get(headList.indexOf("*起息日")))) {
+                   if (CommonUtil.isEnDateStr(list.get(headList.indexOf("*起息日")))){
+                       entity.setVdate(DateUtil.parse(list.get(headList.indexOf("*起息日"))));
                    }else {
                        entity.setVdate(new Date());
                        messages.add(new ValidMessage("起息日必须为日期格式（yyyy-MM-dd）"));
@@ -241,9 +231,9 @@ public class AssetInfoDetailRiskUtil {
                    messages.add(new ValidMessage("起息日数据不能为空。"));
                }
                //到期日
-               if (StringUtil.isNotEmpty(list.get(11))) {
-                   if (CommonUtil.isEnDateStr(list.get(11))){
-                       entity.setMdate(DateUtil.parse(list.get(11)));
+               if (StringUtil.isNotEmpty(list.get(headList.indexOf("*到期日")))) {
+                   if (CommonUtil.isEnDateStr(list.get(headList.indexOf("*到期日")))){
+                       entity.setMdate(DateUtil.parse(list.get(headList.indexOf("*到期日"))));
                    }else {
                        entity.setMdate(new Date());
                        messages.add(new ValidMessage("到期日必须为日期格式（yyyy-MM-dd）"));
@@ -251,23 +241,25 @@ public class AssetInfoDetailRiskUtil {
                }else {
                    messages.add(new ValidMessage("到期日数据不能为空。"));
                }
-                entity.setSvrBussRepFinanciallInfoRiskDto(getSvrBussRepFinanciallInfoRiskDto(messages , list));
+                entity.setSvrBussRepFinanciallInfoRiskDto(getSvrBussRepFinanciallInfoRiskDto(messages , list,headList));
             }else if (DictCodeListExt2.资产_负债类别_QDII债券资产.getValue().equals(entity.getAssetType())){
                 /**维护信息-QDII债券资产*/
 //                if (dataList.get(1).size() != 51) {
 //                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-QDII品格式不正确！"));
 //                    return resultList;
 //                }
+               headList.clear();
+               getHeadList_08(headList);
                //资产名称
-               if (StringUtil.isNotEmpty(list.get(6))) {
-                   entity.setAssetName(list.get(6));
+               if (StringUtil.isNotEmpty(list.get(headList.indexOf("*债券名称")))) {
+                   entity.setAssetName(list.get(headList.indexOf("*债券名称")));
                }else {
                    messages.add(new ValidMessage("债券名称数据不能为空。"));
                }
                //起息日
-               if (StringUtil.isNotEmpty(list.get(10))) {
-                   if (CommonUtil.isEnDateStr(list.get(10))){
-                       entity.setVdate(DateUtil.parse(list.get(10)));
+               if (StringUtil.isNotEmpty(list.get(headList.indexOf("*起息日")))) {
+                   if (CommonUtil.isEnDateStr(list.get(headList.indexOf("*起息日")))){
+                       entity.setVdate(DateUtil.parse(list.get(headList.indexOf("*起息日"))));
                    }else {
                        entity.setVdate(new Date());
                        messages.add(new ValidMessage("起息日必须为日期格式（yyyy-MM-dd）"));
@@ -276,9 +268,9 @@ public class AssetInfoDetailRiskUtil {
                    messages.add(new ValidMessage("起息日数据不能为空。"));
                }
                //到期日
-               if (StringUtil.isNotEmpty(list.get(11))) {
-                   if (CommonUtil.isEnDateStr(list.get(11))){
-                       entity.setMdate(DateUtil.parse(list.get(11)));
+               if (StringUtil.isNotEmpty(list.get(headList.indexOf("*到期日")))) {
+                   if (CommonUtil.isEnDateStr(list.get(headList.indexOf("*到期日")))){
+                       entity.setMdate(DateUtil.parse(list.get(headList.indexOf("*到期日"))));
                    }else {
                        entity.setMdate(new Date());
                        messages.add(new ValidMessage("到期日必须为日期格式（yyyy-MM-dd）"));
@@ -286,23 +278,25 @@ public class AssetInfoDetailRiskUtil {
                }else {
                    messages.add(new ValidMessage("到期日数据不能为空。"));
                }
-                entity.setSvrBussRepQDIIBondInfoRiskDto(getSvrBussRepQDIIBondInfoRiskDto(messages , list));
+                entity.setSvrBussRepQDIIBondInfoRiskDto(getSvrBussRepQDIIBondInfoRiskDto(messages , list,headList));
             }else if (DictCodeListExt2.资产_负债类别_QDII股票_基金类资产.getValue().equals(entity.getAssetType())){
                 /**维护信息-QDII股票/基金类资产*/
 //                if (dataList.get(1).size() != 51) {
 //                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-QDII品格式不正确！"));
 //                    return resultList;
 //                }
+               headList.clear();
+               getHeadList_08(headList);
                //资产名称
-               if (StringUtil.isNotEmpty(list.get(23))) {
-                   entity.setAssetName(list.get(23));
+               if (StringUtil.isNotEmpty(list.get(headList.indexOf("*股票/基金名称")))) {
+                   entity.setAssetName(list.get(headList.indexOf("*股票/基金名称")));
                }else {
                    messages.add(new ValidMessage("股票/基金名称数据不能为空。"));
                }
                //起息日
-               if (StringUtil.isNotEmpty(list.get(20))) {
-                   if (CommonUtil.isEnDateStr(list.get(20))){
-                       entity.setVdate(DateUtil.parse(list.get(20)));
+               if (StringUtil.isNotEmpty(list.get(headList.indexOf("*起息日")))) {
+                   if (CommonUtil.isEnDateStr(list.get(headList.indexOf("*起息日")))){
+                       entity.setVdate(DateUtil.parse(list.get(headList.indexOf("*起息日"))));
                    }else {
                        entity.setVdate(new Date());
                        messages.add(new ValidMessage("起息日必须为日期格式（yyyy-MM-dd）"));
@@ -311,9 +305,9 @@ public class AssetInfoDetailRiskUtil {
                    messages.add(new ValidMessage("起息日数据不能为空。"));
                }
                //到期日
-               if (StringUtil.isNotEmpty(list.get(21))) {
-                   if (CommonUtil.isEnDateStr(list.get(21))){
-                       entity.setMdate(DateUtil.parse(list.get(21)));
+               if (StringUtil.isNotEmpty(list.get(headList.indexOf("*到期日")))) {
+                   if (CommonUtil.isEnDateStr(list.get(headList.indexOf("*到期日")))){
+                       entity.setMdate(DateUtil.parse(list.get(headList.indexOf("*到期日"))));
                    }else {
                        entity.setMdate(new Date());
                        messages.add(new ValidMessage("到期日必须为日期格式（yyyy-MM-dd）"));
@@ -321,7 +315,7 @@ public class AssetInfoDetailRiskUtil {
                }else {
                    messages.add(new ValidMessage("到期日数据不能为空。"));
                }
-                entity.setSvrBussQDIISharesInfoRiskDto(getSvrBussQDIISharesInfoRiskDto(messages , list));
+                entity.setSvrBussQDIISharesInfoRiskDto(getSvrBussQDIISharesInfoRiskDto(messages , list,headList));
             }else {
                 resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产/负债类别不在值域范围内"));
                 return resultList;
@@ -373,47 +367,36 @@ public class AssetInfoDetailRiskUtil {
      * @param list
      * @return
      */
-    private SvrBussQDIISharesInfoRiskDto getSvrBussQDIISharesInfoRiskDto(List<ValidMessage> messages,List<String> list){
+    private SvrBussQDIISharesInfoRiskDto getSvrBussQDIISharesInfoRiskDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussQDIISharesInfoRiskDto dto = new SvrBussQDIISharesInfoRiskDto();
-        if (StringUtil.isNotEmpty(list.get(19))) {
-            dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(19)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*所属国家或地区")))) {
+            dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.indexOf("*所属国家或地区"))));
         }else {
             messages.add(new ValidMessage("所属国家或地区数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(22))) {
-            dto.setAssetId(list.get(22));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*股票/基金代码")))) {
+            dto.setAssetId(list.get(headList.indexOf("*股票/基金代码")));
         }else {
             messages.add(new ValidMessage("股票/基金代码数据不能为空。"));
         }
-        dto.setAssetName(list.get(23));
-        if (StringUtil.isNotEmpty(list.get(24))) {
-            dto.setIssuePartyName(list.get(24));
+        dto.setAssetName(list.get(headList.indexOf("*股票/基金名称")));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*发行机构")))) {
+            dto.setIssuePartyName(list.get(headList.indexOf("*发行机构")));
         }else {
             messages.add(new ValidMessage("发行机构数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(25))) {
-            dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(25)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*行业")))) {
+            dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(headList.indexOf("*行业"))));
         }else {
             messages.add(new ValidMessage("行业数据不能为空。"));
         }
         dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
-        if (StringUtil.isNotEmpty(list.get(26))) {
-            dto.setInvestNature(SysDataUtil.getZZDictCodeFromName(DictCode.投资性质, list.get(26)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*资产投资性质")))) {
+            dto.setInvestNature(SysDataUtil.getZZDictCodeFromName(DictCode.投资性质, list.get(headList.indexOf("*资产投资性质"))));
         }else {
             messages.add(new ValidMessage("资产投资性质数据不能为空。"));
         }
-        dto.setRemark(list.get(27));
-       /* if (StringUtil.isNotEmpty(list.get(48)) && list.get(48).length()>2){
-            dto.setPbcAssetType1(list.get(48).substring(0,3));
-        }
-
-        if (StringUtil.isNotEmpty(list.get(49)) && list.get(49).length()>2){
-            dto.setPbcAssetType2(list.get(49).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
-        }
-
-        if (StringUtil.isNotEmpty(list.get(50)) && list.get(50).length()>2){
-            dto.setPbcAssetType3(list.get(50).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
-        }*/
+        dto.setRemark(list.get(headList.indexOf("备注")));
         return dto;
     }
 
@@ -422,50 +405,50 @@ public class AssetInfoDetailRiskUtil {
      * @param list
      * @return
      */
-    private SvrBussRepQDIIBondInfoRiskDto getSvrBussRepQDIIBondInfoRiskDto(List<ValidMessage> messages,List<String> list){
+    private SvrBussRepQDIIBondInfoRiskDto getSvrBussRepQDIIBondInfoRiskDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussRepQDIIBondInfoRiskDto dto = new SvrBussRepQDIIBondInfoRiskDto();
-        if (StringUtil.isNotEmpty(list.get(5))) {
-            dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(5)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*所属国家或地区")))) {
+            dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(headList.indexOf("*所属国家或地区"))));
         }else {
             messages.add(new ValidMessage("所属国家或地区数据不能为空。"));
         }
-        dto.setAssetName(list.get(6));
-        if (StringUtil.isNotEmpty(list.get(7))) {
-            dto.setAssetId(list.get(7));
+        dto.setAssetName(list.get(headList.indexOf("*债券名称")));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*债券代码")))) {
+            dto.setAssetId(list.get(headList.indexOf("*债券代码")));
         }else {
             messages.add(new ValidMessage("债券代码数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(8))) {
-            dto.setIssuePartyName(list.get(8));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*发行机构")))) {
+            dto.setIssuePartyName(list.get(headList.indexOf("*发行机构")));
         }else {
             messages.add(new ValidMessage("发行机构数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(9))) {
-            dto.setIndustryLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(9)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*发行机构所属行业")))) {
+            dto.setIndustryLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(headList.indexOf("*发行机构所属行业"))));
         }else {
             messages.add(new ValidMessage("发行机构所属行业数据不能为空。"));
         }
         dto.setIndustry(dict.get("industry"+dto.getIndustryLevel2()));
         dto.setIndustryLevel2(null);
-        if (StringUtil.isNotEmpty(list.get(10))) {
-            if (CommonUtil.isEnDateStr(list.get(10))){
-                dto.setVdate(DateUtil.parse(list.get(10)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*起息日")))) {
+            if (CommonUtil.isEnDateStr(list.get(headList.indexOf("*起息日")))){
+                dto.setVdate(DateUtil.parse(list.get(headList.indexOf("*起息日"))));
             }else {
                 dto.setVdate(new Date());
                 messages.add(new ValidMessage(rule.get(SVRBUSSREPQDIIBONDINFODTO + GlobalConstant.POINT + "vdate" + GlobalConstant.UNDER_LINE + ISVALIDDATE )));
             }
         }
-        if (StringUtil.isNotEmpty(list.get(11))) {
-            if (CommonUtil.isEnDateStr(list.get(11))){
-                dto.setMdate(DateUtil.parse(list.get(11)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*到期日")))) {
+            if (CommonUtil.isEnDateStr(list.get(headList.indexOf("*到期日")))){
+                dto.setMdate(DateUtil.parse(list.get(headList.indexOf("*到期日"))));
             }else {
                 dto.setMdate(new Date());
                 messages.add(new ValidMessage(rule.get(SVRBUSSREPQDIIBONDINFODTO + GlobalConstant.POINT + "mdate" + GlobalConstant.UNDER_LINE + ISVALIDDATE )));
             }
         }
-        if (StringUtil.isNotEmpty(list.get(12))) {
-            if (CommonUtil.isFloatNumeric(list.get(12))){
-                dto.setTermMonth(new BigDecimal(list.get(12)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*期限（月）")))) {
+            if (CommonUtil.isFloatNumeric(list.get(headList.indexOf("*期限（月）")))){
+                dto.setTermMonth(new BigDecimal(list.get(headList.indexOf("*期限（月）"))));
             }else {
                 dto.setTermMonth(new BigDecimal(0));
                 messages.add(new ValidMessage(rule.get(SVRBUSSREPQDIIBONDINFODTO + GlobalConstant.POINT + "termMonth" + GlobalConstant.UNDER_LINE + ISNUMBER2 )));
@@ -473,19 +456,19 @@ public class AssetInfoDetailRiskUtil {
         }else {
             messages.add(new ValidMessage("期限（月）数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(13))) {
-            dto.setPartyGrade(list.get(13));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*发行机构主体信用评级")))) {
+            dto.setPartyGrade(list.get(headList.indexOf("*发行机构主体信用评级")));
         }else {
             messages.add(new ValidMessage("发行机构主体信用评级数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(14))) {
-            dto.setSecCreditGradeType(list.get(14));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*债券信用评级")))) {
+            dto.setSecCreditGradeType(list.get(headList.indexOf("*债券信用评级")));
         }else {
             messages.add(new ValidMessage("债券信用评级数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(15))) {
-            if (CommonUtil.isFloatNumeric(list.get(15))){
-                dto.setAssetYield(new BigDecimal(list.get(15)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*票面利率%")))) {
+            if (CommonUtil.isFloatNumeric(list.get(headList.indexOf("*票面利率%")))){
+                dto.setAssetYield(new BigDecimal(list.get(headList.indexOf("*票面利率%"))));
             }else {
                 dto.setAssetYield(new BigDecimal(0));
                 messages.add(new ValidMessage(rule.get(SVRBUSSREPQDIIBONDINFODTO + GlobalConstant.POINT + "assetYield" + GlobalConstant.UNDER_LINE + ISNUMBER2 )));
@@ -493,9 +476,9 @@ public class AssetInfoDetailRiskUtil {
         }else {
             messages.add(new ValidMessage("票面利率%数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(16))) {
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*付息频率（个月/次）")))) {
             try {
-                dto.setIntpayCycle(Long.valueOf(list.get(16)));
+                dto.setIntpayCycle(Long.valueOf(list.get(headList.indexOf("*付息频率（个月/次）"))));
             }catch (Exception e){
                 dto.setIntpayCycle(0L);
                 messages.add(new ValidMessage(rule.get(SVRBUSSREPQDIIBONDINFODTO + GlobalConstant.POINT + "intpayCycle" + GlobalConstant.UNDER_LINE + "isNumber" )));
@@ -503,29 +486,18 @@ public class AssetInfoDetailRiskUtil {
         }else {
             messages.add(new ValidMessage("付息频率（个月/次）数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(17))) {
-            dto.setGuaranteeCmt(list.get(17));
-            dto.setGuaTypeRemark(list.get(17));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*担保情况说明")))) {
+            dto.setGuaranteeCmt(list.get(headList.indexOf("*担保情况说明")));
+            dto.setGuaTypeRemark(list.get(headList.indexOf("*担保情况说明")));
         }else {
             messages.add(new ValidMessage("担保情况说明数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(18))) {
-            dto.setSpecialCmt(list.get(18));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否含权等特殊条款情况说明")))) {
+            dto.setSpecialCmt(list.get(headList.indexOf("*是否含权等特殊条款情况说明")));
         }else {
             messages.add(new ValidMessage("是否含权等特殊条款情况说明数据不能为空。"));
         }
-        dto.setRemark(list.get(27));
-       /* if (StringUtil.isNotEmpty(list.get(48)) && list.get(48).length()>2){
-            dto.setPbcAssetType1(list.get(48).substring(0,3));
-        }
-
-        if (StringUtil.isNotEmpty(list.get(49)) && list.get(49).length()>2){
-            dto.setPbcAssetType2(list.get(49).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
-        }
-
-        if (StringUtil.isNotEmpty(list.get(50)) && list.get(50).length()>2){
-            dto.setPbcAssetType3(list.get(50).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
-        }*/
+        dto.setRemark(list.get(headList.indexOf("备注")));
         return dto;
     }
 
@@ -534,12 +506,12 @@ public class AssetInfoDetailRiskUtil {
      * @param list
      * @return
      */
-    private SvrBussRepFinanciallInfoRiskDto getSvrBussRepFinanciallInfoRiskDto(List<ValidMessage> messages,List<String> list){
+    private SvrBussRepFinanciallInfoRiskDto getSvrBussRepFinanciallInfoRiskDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussRepFinanciallInfoRiskDto dto = new SvrBussRepFinanciallInfoRiskDto();
-        dto.setAssetName(list.get(5));
-        if (StringUtil.isNotEmpty(list.get(6))) {
-            if (CommonUtil.isFloatNumeric(list.get(6))){
-                dto.setNomCapi(new BigDecimal(list.get(6)));
+        dto.setAssetName(list.get(headList.indexOf("*名称")));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*名义本金")))) {
+            if (CommonUtil.isFloatNumeric(list.get(headList.indexOf("*名义本金")))){
+                dto.setNomCapi(new BigDecimal(list.get(headList.indexOf("*名义本金"))));
             }else {
                 dto.setNomCapi(new BigDecimal(0));
                 messages.add(new ValidMessage(rule.get(SVRBUSSREPFINANCIALLINFODTO + GlobalConstant.POINT + "nomCapi" + GlobalConstant.UNDER_LINE + ISNUMBER2 )));
@@ -547,8 +519,8 @@ public class AssetInfoDetailRiskUtil {
         }else {
             messages.add(new ValidMessage("名义本金数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty( list.get(7))){
-            String[] targetType3s = list.get(7).split(GlobalConstant.COMMA);
+        if (StringUtil.isNotEmpty( list.get(headList.indexOf("*标的类别")))){
+            String[] targetType3s = list.get(headList.indexOf("*标的类别")).split(GlobalConstant.COMMA);
             String targetType3 = "";
             for (int i=0;i<targetType3s.length;i++){
                 targetType3 += SysDataUtil.getZZDictCodeFromName(DictCode.标的类别, targetType3s[i]) + GlobalConstant.COMMA;
@@ -557,37 +529,18 @@ public class AssetInfoDetailRiskUtil {
         }else {
             messages.add(new ValidMessage("标的类别数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty( list.get(8))) {
-            dto.setHoldPurpose(SysDataUtil.getZZDictCodeFromName(DictCode.持有目的, list.get(8)));
+        if (StringUtil.isNotEmpty( list.get(headList.indexOf("*持有目的")))) {
+            dto.setHoldPurpose(SysDataUtil.getZZDictCodeFromName(DictCode.持有目的, list.get(headList.indexOf("*持有目的"))));
         }else {
             messages.add(new ValidMessage("持有目的数据不能为空。"));
         }
-        dto.setRemark(list.get(9));
-        if(StringUtil.equals(dto.getTargetType3(),"99")
-                ||StringUtil.equals(dto.getHoldPurpose(),"99") ) {
-            if (!StringUtil.isNotEmpty( list.get(9))) {
+        dto.setRemark(list.get(headList.indexOf("备注")));
+        if(StringUtil.equals(dto.getTargetType3(),DictCodeListExt2.标的类别_其他.getValue())
+                ||StringUtil.equals(dto.getHoldPurpose(),DictCodeListExt1.持有目的_其他.getValue()) ) {
+            if (!StringUtil.isNotEmpty( list.get(headList.indexOf("备注")))) {
                 messages.add(new ValidMessage("备注数据不能为空。"));
             }
         }
-        /*if (StringUtil.isNotEmpty(list.get(10))) {
-            if (CommonUtil.isEnDateStr(list.get(10))){
-                dto.setMdate(DateUtil.parse(list.get(10)));
-            }else {
-                dto.setMdate(new Date());
-                messages.add(new ValidMessage(rule.get(SVRBUSSREPFINANCIALLINFODTO + GlobalConstant.POINT + "mdate" + GlobalConstant.UNDER_LINE + ISVALIDDATE )));
-            }
-        }
-        if (StringUtil.isNotEmpty(list.get(11)) && list.get(11).length()>2){
-            dto.setPbcAssetType1(list.get(11).substring(0,3));
-        }
-
-        if (StringUtil.isNotEmpty(list.get(12)) && list.get(12).length()>2){
-            dto.setPbcAssetType2(list.get(12).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
-        }
-
-        if (StringUtil.isNotEmpty(list.get(13)) && list.get(13).length()>2){
-            dto.setPbcAssetType3(list.get(13).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
-        }*/
         return dto;
     }
 
@@ -596,91 +549,61 @@ public class AssetInfoDetailRiskUtil {
      * @param list
      * @return
      */
-    private SvrBussRepEquityInfoRiskDto getSvrBussRepEquityInfoRiskDto(List<ValidMessage> messages,List<String> list){
+    private SvrBussRepEquityInfoRiskDto getSvrBussRepEquityInfoRiskDto(List<ValidMessage> messages,List<String> list,List<String> headList){
         SvrBussRepEquityInfoRiskDto dto = new SvrBussRepEquityInfoRiskDto();
-        if (StringUtil.isNotEmpty(list.get(5))) {
-            dto.setAssetId(list.get(5));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("股票代码")))) {
+            dto.setAssetId(list.get(headList.indexOf("股票代码")));
         }else {
             messages.add(new ValidMessage("股票代码数据不能为空。"));
         }
-        dto.setAssetName(list.get(6));
-        if (StringUtil.isNotEmpty(list.get(7))) {
-            dto.setSharesType(SysDataUtil.getZZDictCodeFromName(DictCode.股票类型, list.get(7)));
+        dto.setAssetName(list.get(headList.indexOf("*股票/企业名称")));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("股票类型")))) {
+            dto.setSharesType(SysDataUtil.getZZDictCodeFromName(DictCode.股票类型, list.get(headList.indexOf("股票类型"))));
         }else {
             messages.add(new ValidMessage("股票类型数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(8))) {
-            dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(8)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*行业")))) {
+            dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(headList.indexOf("*行业"))));
         }else {
             messages.add(new ValidMessage("行业数据不能为空。"));
         }
         dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
-        dto.setInvestStage(SysDataUtil.getZZDictCodeFromName(DictCode.投资阶段, list.get(9)));
-       /* if (StringUtil.isNotEmpty(list.get(10))) {
-            if (CommonUtil.isEnDateStr(list.get(10))){
-                dto.setEquityQuit(DateUtil.parse(list.get(10)));
-            }else {
-                dto.setEquityQuit(new Date());
-                messages.add(new ValidMessage(rule.get(SVRBUSSREPEQUITYINFODTO + GlobalConstant.POINT + "equityQuit" + GlobalConstant.UNDER_LINE + ISVALIDDATE )));
-            }
-        }*/
-        if (StringUtil.isNotEmpty(list.get(10))) {
-            dto.setSharesType1(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按规模划分, list.get(10)));
+        dto.setInvestStage(SysDataUtil.getZZDictCodeFromName(DictCode.投资阶段, list.get(headList.indexOf("投资阶段"))));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*企业类型（按规模划分）")))) {
+            dto.setSharesType1(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按规模划分, list.get(headList.indexOf("*企业类型（按规模划分）"))));
         }else {
             messages.add(new ValidMessage("企业类型（按规模划分）数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(11))) {
-            dto.setSharesType3(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按技术领域划分, list.get(11)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*企业类型（按技术领域划分）")))) {
+            dto.setSharesType3(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按技术领域划分, list.get(headList.indexOf("*企业类型（按技术领域划分）"))));
         }else {
             messages.add(new ValidMessage("企业类型（按技术领域划分）数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(12))) {
-            dto.setSharesType2(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按经济类型划分, list.get(12)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*企业类型（按经济类型划分）")))) {
+            dto.setSharesType2(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按经济类型划分, list.get(headList.indexOf("*企业类型（按经济类型划分）"))));
         }else {
             messages.add(new ValidMessage("企业类型（按经济类型划分）数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(13))) {
-            dto.setIsPledge(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(13)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否为质押融资")))) {
+            dto.setIsPledge(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*是否为质押融资"))));
         }else {
             messages.add(new ValidMessage("是否为质押融资数据不能为空。"));
         }
-        if (StringUtil.isNotEmpty(list.get(14))) {
-            dto.setDeptEquity(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(14)));
+        if (StringUtil.isNotEmpty(list.get(headList.indexOf("*是否为债转股")))) {
+            dto.setDeptEquity(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("*是否为债转股"))));
         }else {
             messages.add(new ValidMessage("是否为债转股数据不能为空。"));
         }
-        dto.setBankSecPrefer(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(15)));
-        dto.setRemark(list.get(16));
-        if(StringUtil.equals(dto.getSharesType1(),"99")
-                || StringUtil.equals(dto.getSharesType2(),"99")
-                || StringUtil.equals(dto.getSharesType3(),"99")
-                || StringUtil.equals(dto.getSharesType(),"99")) {
-            if (!StringUtil.isNotEmpty(list.get(16))) {
+        dto.setBankSecPrefer(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否商业银行优先股"))));
+        dto.setRemark(list.get(headList.indexOf("备注")));
+        if(StringUtil.equals(dto.getSharesType1(),DictCodeListExt1.企业性质_其他企业.getValue())
+                || StringUtil.equals(dto.getSharesType2(), DictCodeListExt1.企业性质_其他企业.getValue())
+                || StringUtil.equals(dto.getSharesType3(),DictCodeListExt1.企业性质_其他企业.getValue())
+                || StringUtil.equals(dto.getSharesType(),DictCodeListExt1.企业性质_其他企业.getValue())) {
+            if (!StringUtil.isNotEmpty(list.get(headList.indexOf("备注")))) {
                 messages.add(new ValidMessage("备注数据不能为空。"));
             }
         }
-       // dto.setBankSecPrefer(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(17)));
-        /*if (StringUtil.isNotEmpty(list.get(18))) {
-            if (CommonUtil.isEnDateStr(list.get(18))){
-                dto.setMdate(DateUtil.parse(list.get(18)));
-            }else {
-                dto.setMdate(new Date());
-                messages.add(new ValidMessage(rule.get(SVRBUSSREPEQUITYINFODTO + GlobalConstant.POINT + "mdate" + GlobalConstant.UNDER_LINE + ISVALIDDATE )));
-            }
-        }
-        dto.setIsGovernFund(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(19)));
-        dto.setIsunlisted(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(20)));
-        if (StringUtil.isNotEmpty(list.get(21)) && list.get(21).length()>2){
-            dto.setPbcAssetType1(list.get(21).substring(0,3));
-        }
-
-        if (StringUtil.isNotEmpty(list.get(22)) && list.get(22).length()>2){
-            dto.setPbcAssetType2(list.get(22).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
-        }
-
-        if (StringUtil.isNotEmpty(list.get(23)) && list.get(23).length()>2){
-            dto.setPbcAssetType3(list.get(23).replace(GlobalConstant.UNDER_LINE,"").substring(0,3));
-        }*/
         return dto;
     }
    
@@ -731,6 +654,14 @@ public class AssetInfoDetailRiskUtil {
         return null;
     }
 
+    private void getHeadList_gt(List<String> headList){
+        headList.add("*行内资产/负债编码");
+        headList.add("*发行机构代码");
+        headList.add("*资产/负债类别");
+        headList.add("*交易流通场所");
+        headList.add("*币种");
+    }
+
     private void getHeadList_06(List<String> headList){
         headList.add("*行内资产/负债编码");
         headList.add("*发行机构代码");
@@ -777,8 +708,6 @@ public class AssetInfoDetailRiskUtil {
         headList.add("*债券代码");
         headList.add("*发行机构");
         headList.add("*发行机构所属行业");
-        headList.add("*起息日");
-        headList.add("*到期日");
         headList.add("*期限（月）");
         headList.add("*发行机构主体信用评级");
         headList.add("*债券信用评级");
@@ -787,13 +716,13 @@ public class AssetInfoDetailRiskUtil {
         headList.add("*担保情况说明");
         headList.add("*是否含权等特殊条款情况说明");
         headList.add("*所属国家或地区");
-        headList.add("*起息日");
-        headList.add("*到期日");
         headList.add("*股票/基金代码");
         headList.add("*股票/基金名称");
         headList.add("*发行机构");
         headList.add("*行业");
         headList.add("*资产投资性质");
+        headList.add("*起息日");
+        headList.add("*到期日");
         headList.add("备注");
     }
 

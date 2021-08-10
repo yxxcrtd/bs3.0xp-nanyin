@@ -94,7 +94,7 @@ public class AssetInfoDetailUtil {
      * 获取资产及二级类型的关系
      * @return
      */
-    public Map<String, Set<String>> getDataListLink(){
+    public synchronized Map<String, Set<String>> getDataListLink(){
 
         if(map==null||map.isEmpty()){
             map = new HashMap<>();
@@ -139,7 +139,7 @@ public class AssetInfoDetailUtil {
         }
     }
 
-    public List<ExcelValidDto> convertToBean(List<AssetInfoDetailDto> entities , List<List<String>> dataList){
+    public synchronized List<ExcelValidDto> convertToBean(List<AssetInfoDetailDto> entities , List<List<String>> dataList){
         List<ExcelValidDto> resultList = new ArrayList<>();
         Map<String,Object> params = new HashMap<>();
         params.put("linkDictCode", DictCode.资产_负债类别.getValue());

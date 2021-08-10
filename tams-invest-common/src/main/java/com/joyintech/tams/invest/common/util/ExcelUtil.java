@@ -453,7 +453,12 @@ public class ExcelUtil {
         }
         return dataList;
     }
-    
+
+    /**
+     * 获取列表数据
+     * @param fileName 文件路径
+     * @return 列表数据
+     */
     public static List<List<String>> getDataList2(String fileName){
         List<List<String>> dataList = null;
         try {

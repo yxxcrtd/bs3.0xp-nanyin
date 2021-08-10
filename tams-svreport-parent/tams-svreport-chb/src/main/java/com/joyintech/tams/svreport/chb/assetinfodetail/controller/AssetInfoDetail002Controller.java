@@ -142,9 +142,6 @@ public class AssetInfoDetail002Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getAssetCode());
         params.setBusinessType(DictCodeList.共通业务类型_资产基本信息维护.getValue());
-        // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> "资产代码" + "(" + entity.getAssetCode() + ")" + "-" + "资产名称" + "("
-                + entity.getAssetName() + ")");
         processParameter.setWorkFlowParameter(params);
         String msg = assetInfoDetailMService.start(processParameter, dto);
         return new AjaxResult(msg);
