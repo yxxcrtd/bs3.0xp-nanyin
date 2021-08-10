@@ -95,6 +95,7 @@ public class PurSaleJob extends JNLJob {
 						String tableID = "";
 						if(SecurityCoreFactory.getTableIDProperties()!=null && sec.getIssueType()!=null && inc!=null){
 							tableID=SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.PURSALEJNL+","+sec.getIssueType()+","+inc.getTrantype());
+							tableID = tableID == null ? "" : tableID;
 						}
 						pursaleCooa.setTableID(tableID);	//业务场景
 						List<VoucherDetails> voucherDetailsList=pursaleCooa.getVoucherDetails();

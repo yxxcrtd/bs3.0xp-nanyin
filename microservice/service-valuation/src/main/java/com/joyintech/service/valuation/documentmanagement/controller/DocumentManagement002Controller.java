@@ -133,7 +133,8 @@ public class DocumentManagement002Controller extends BaseController {
     public String fileUpload(HttpServletRequest request, HttpServletResponse response,
                              ModelMap model) throws IOException {
         // 画面ID
-        String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID)==null?"":request.getParameter(GlobalConstant.PAGE_ID));
+		String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID)==null?"":request.getParameter(GlobalConstant.PAGE_ID));
+		pageId = pageId == null? "":pageId;
         // 初始化进度条
         progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0D, true);
         String uploadFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);

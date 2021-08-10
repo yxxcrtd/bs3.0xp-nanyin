@@ -719,7 +719,7 @@ public class TargetIndexService {
 			ps.setDate(5, new java.sql.Date(startDate.getTime()));
 			//执行语句
 			rs = ps.executeQuery();
-			if(rs.next()){
+			if(rs!=null && rs.next()){
 				map.put("BQYSX", rs.getBigDecimal("BQYSX"));
 				map.put("BQLR", rs.getBigDecimal("BQLR"));
 				map.put("SSZB", rs.getBigDecimal("SSZB"));

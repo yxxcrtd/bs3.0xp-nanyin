@@ -109,6 +109,7 @@ public class CashJob extends JNLJob {
 								String tableID="";
 								if(sec!=null && SecurityCoreFactory.getTableIDProperties()!=null) {
 									tableID = SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.CASH + "," + sec.getIssueType() + "," + tranbasic.getTrantype());
+									tableID = tableID == null ? "" : tableID;
 								}
 								cashCooa.setTableID(tableID);
 								cashCooa.setOfftableID(tableID);

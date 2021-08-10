@@ -3587,7 +3587,9 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			Reader inStreamDoc = clob.getCharacterStream();
 
 			char[] tempDoc = new char[(int) clob.length()];
-			inStreamDoc.read(tempDoc);
+			if (inStreamDoc != null) {
+				inStreamDoc.read(tempDoc);
+			}
 			inStreamDoc.close();
 			return new String(tempDoc);
 		}
