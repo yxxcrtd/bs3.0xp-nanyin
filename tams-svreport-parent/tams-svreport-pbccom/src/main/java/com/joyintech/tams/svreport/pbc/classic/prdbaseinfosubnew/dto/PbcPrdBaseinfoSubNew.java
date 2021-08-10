@@ -403,7 +403,7 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
 
 
     public String getIsMarketFundStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.销售渠道, this.getIsMarketFund());
+        return SysDataUtil.getNameFromDataDict(DictCode.是否理财子公司, this.getIsMarketFund());
     }
 
     public String getSubProdId() {
