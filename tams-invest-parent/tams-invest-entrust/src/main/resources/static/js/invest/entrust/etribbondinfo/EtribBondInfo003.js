@@ -836,6 +836,7 @@
         query("#mdate").val(sysDate).trigger("change");
         query("#counterId1").val("").trigger("change");
         query("#counterId2").val("").trigger("change");
+        query("#portfolioSeries").val("").trigger("change");
         query("#tradeAmt").removeAttr("auto");// 劵面总额汇总方式
         document.getElementById('deviationDegree').innerHTML = '';
         table.clear();

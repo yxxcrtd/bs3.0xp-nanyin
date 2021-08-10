@@ -7,10 +7,10 @@
             vdate : vdate,
             portfolioId:portfolioId
         };
+        document.getElementById('tgAcctCash').innerHTML = '0.00万元';
+        document.getElementById('secAcctCash').innerHTML = '0.00万元';
+        document.getElementById('t1Cash').innerHTML = '0.00万元';
         if (portfolioId != null && portfolioId != '') {
-            document.getElementById('tgAcctCash').innerHTML = '0.00万元';
-            document.getElementById('secAcctCash').innerHTML = '0.00万元';
-            document.getElementById('t1Cash').innerHTML = '0.00万元';
             Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/findCashAmountInfo', param, function (result) {
                 if (result) {
                     document.getElementById('tgAcctCash').innerHTML = JoyinUtil.formatNumber(result.tgAcctCash, 2, 10000, 2) + '万元';
