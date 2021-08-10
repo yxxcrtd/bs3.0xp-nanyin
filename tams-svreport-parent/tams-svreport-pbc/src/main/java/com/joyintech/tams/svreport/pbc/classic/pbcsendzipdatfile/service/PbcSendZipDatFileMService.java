@@ -231,10 +231,10 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 	 * 生成压缩文件
 	 * @return 压缩文件存放地址
 	 */
-	public List<String> createZipFile(Map<String, Object> param) {
+	public String createZipFile(Map<String, Object> param) {
 		return restTemplate.postForObject(
 				SvrServiceApplication.PBC_SERVICE_NAME + "/PbcSendZipDatFile/createZipFile",param,
-				List.class);
+				String.class);
 	}
 
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportCompanyDatDetailDto;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -44,5 +45,8 @@ public interface PbcReportDebtTermDatDetailMapper {
     int deleteByUUIDAndType(Map<String,Object> paramsMap);
 
     List<PbcReportDebtTermDatDetail> selectDatDiffByReport(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
+
+
+    List<PbcReportDebtTermDatDetail> selectByDatZipCode(@Param("datZipCode") String datZipCode, @Param("datZipDatType") String datZipDatType);
 
 }

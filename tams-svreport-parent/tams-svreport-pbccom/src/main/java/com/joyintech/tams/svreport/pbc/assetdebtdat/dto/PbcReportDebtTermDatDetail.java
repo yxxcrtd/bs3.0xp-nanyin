@@ -95,6 +95,21 @@ public class PbcReportDebtTermDatDetail {
     private Integer actualAmtDiff;
 
     /**
+     * 产品品种
+     */
+    private String prodVariety;
+
+    /**
+     * 期数
+     */
+    private String termid;
+
+    /**
+     * 发行机构代码
+     */
+    private String issuePartyId;
+
+    /**
      * 明细统计uuid
      * @return DETAILUUID 明细统计uuid
      */
@@ -304,5 +319,29 @@ public class PbcReportDebtTermDatDetail {
 
     public void setActualAmtDiff(Integer actualAmtDiff) {
         this.actualAmtDiff = actualAmtDiff;
+    }
+
+    public String getProdVariety() {
+        return prodVariety;
+    }
+
+    public void setProdVariety(String prodVariety) {
+        this.prodVariety = prodVariety;
+    }
+
+    public String getTermid() {
+        return termid;
+    }
+
+    public void setTermid(String termid) {
+        this.termid = termid;
+    }
+
+    public String getIssuePartyId() {
+        return issuePartyId;
+    }
+
+    public void setIssuePartyId(String issuePartyId) {
+        this.issuePartyId = issuePartyId;
     }
 }

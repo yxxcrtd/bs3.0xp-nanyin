@@ -92,11 +92,6 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 
 	@Autowired
 	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
-	@Autowired
-	private PbcPrdBaseinfoSubMapper pbcPrdBaseinfoSubMapper;
-
-	@Autowired
-	private PbcPrdAccountSubMapper pbcPrdAccountSubMapper;
 
 	@Autowired
 	private PbcZipDataFileService pbcZipDataFileService;
@@ -312,7 +307,7 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	 * @param param 页面参数
 	 * @return 压缩文件之地
 	 */
-	public List<String> createZipFile(Map<String, Object> param) {
+	public String createZipFile(Map<String, Object> param) {
 		param.put("zipSendStatus",DictCodeListExt2.报送状态_未报送.getValue());
 				List<PbcSendZipDatFile> list=pbcSendZipDatFileMapper.selectBySendStatusSeqnoList(param);
 		Map<String,Set<String>> map=new HashMap<>();
@@ -331,7 +326,7 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 			}
 			zipInfoMap.put(datFile.getDatZipCode(),datFile);
 		});
-		List<String> result = pbcZipDataFileService.genDataFile(map,zipInfoMap);
+		String result = pbcZipDataFileService.genDataFile(map,zipInfoMap);
 		return result;
 	}
 
