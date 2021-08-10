@@ -285,6 +285,11 @@
     window.componentLoadCallback = function(isDone, pagePath, params) {
         if (isDone) {
             getLeftZHinfo();
+            var finprodId = query("#finprodId").val();
+            if (finprodId) {
+                var data = query("#finprodId").select2("data")[0].object;
+                query("#isRight").val(data.isRight).trigger("change");
+            }
             // 代办事项中 行权收益率置灰问题
             let exerYield = query('#exerYield');
             exerYield.attr('disabled', true).removeAttr("required");

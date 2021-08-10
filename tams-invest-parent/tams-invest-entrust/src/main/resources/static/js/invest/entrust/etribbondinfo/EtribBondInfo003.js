@@ -559,6 +559,11 @@
             let exerYield = query('#exerYield');
             exerYield.attr('disabled', true).removeAttr("required");
             query('#calculateField_exerYield').attr('disabled', true);
+            var finprodId = query("#finprodId").val();
+            if (finprodId) {
+                var data = query("#finprodId").select2("data")[0].object;
+                query("#isRight").val(data.isRight).trigger("change");
+            }
             if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
                 // 含权债或为空 且 价格模式不是市价
                 exerYield.attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
