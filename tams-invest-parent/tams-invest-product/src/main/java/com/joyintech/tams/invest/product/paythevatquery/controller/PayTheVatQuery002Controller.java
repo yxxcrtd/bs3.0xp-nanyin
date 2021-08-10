@@ -51,6 +51,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -244,7 +245,7 @@ public class PayTheVatQuery002Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@Valid @RequestBody  PayTheVatQuery002Dto dto, BindingResult br) throws Exception {
+    public AjaxResult check(@Valid @RequestBody  PayTheVatQuery002Dto dto, BindingResult br) throws IOException {
         if (br != null && br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -333,7 +334,7 @@ public class PayTheVatQuery002Controller extends BaseController{
     @RequestMapping(value = "docommit", method = RequestMethod.POST)
     @ResponseBody
     public AjaxResult docommit(@RequestBody PayTheVatQuery002Dto dto,
-                               BindingResult result) throws Exception {
+                               BindingResult result) throws InvocationTargetException, IllegalAccessException {
     	String msg = getMessage("COMMON_I_0001");
     	for(PayTheVatQuery002TableDto tabledto : dto.getListpayTheVatQuery002TableDto()){
     		PayTheVatQuery002Dto payTheVatQuery002Dto = new PayTheVatQuery002Dto();
@@ -425,7 +426,7 @@ public class PayTheVatQuery002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("searchCurrency")
-    public List<String> searchCurrency(Map<String, Object> params) throws Exception {
+    public List<String> searchCurrency(Map<String, Object> params) {
     	
     	params.put("finprodMarketId", getParam("finprodMarketId"));
     	

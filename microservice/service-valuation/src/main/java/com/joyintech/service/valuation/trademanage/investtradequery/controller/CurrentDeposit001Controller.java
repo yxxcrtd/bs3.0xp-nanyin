@@ -58,7 +58,7 @@ public class CurrentDeposit001Controller extends BaseController{
 //    }
     
     @PostMapping("/selectByTradeId")
-    public CurrentDepositDto selectByTradeId(@RequestBody Map<String, Object> param) throws Exception {
+    public CurrentDepositDto selectByTradeId(@RequestBody Map<String, Object> param) {
         return currentDeposit001Service.selectByTradeId(param);
     }
     
@@ -72,7 +72,7 @@ public class CurrentDeposit001Controller extends BaseController{
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<CurrentDepositDto> findPage(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length)  throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         String tradeId = (String) param.get("tradeId");
         return currentDeposit001Service.selectByTradeId3(page,length, tradeId);
     }

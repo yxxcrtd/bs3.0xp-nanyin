@@ -259,7 +259,7 @@ public class MarketRiskSceneManage003Service extends BaseService<MarketRiskScene
 			
 			return cursorList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		
 		return new ArrayList<MarketRiskSceneManage003Dto>();

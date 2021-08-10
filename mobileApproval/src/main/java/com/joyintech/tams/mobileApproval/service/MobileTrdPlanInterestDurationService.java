@@ -1,7 +1,9 @@
 package com.joyintech.tams.mobileApproval.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,7 @@ public class MobileTrdPlanInterestDurationService {
 	@Autowired
 	private MobileApprovalMapper mobileApprovalMapper;
 
-	public String getWorkFlowInfo(String businessData) throws Exception {
+	public String getWorkFlowInfo(String businessData) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
 		//1、获取业务数据
 		TrdPlanInterestDurationProcessDto dto = JsonUtils.json2Object(businessData, TrdPlanInterestDurationProcessDto.class);
 	    //2、处理数据字典

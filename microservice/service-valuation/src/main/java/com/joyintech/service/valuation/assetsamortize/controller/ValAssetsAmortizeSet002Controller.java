@@ -69,8 +69,7 @@ public class ValAssetsAmortizeSet002Controller extends BaseController {
      */
     @ResponseBody
     @PostMapping("/getRecalType")
-    public List<SelectOptionDto> getRecalType()
-        throws Exception {
+    public List<SelectOptionDto> getRecalType(){
         return valAssetsAmortizeSet002Service.getRecalType();
     }
     

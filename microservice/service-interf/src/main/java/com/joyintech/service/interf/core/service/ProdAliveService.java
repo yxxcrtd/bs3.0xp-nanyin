@@ -98,7 +98,7 @@ public abstract class ProdAliveService<T extends InterfAliveProdEntity<?>, F ext
      */
     @Override
     public T preparedLocalData(Object param)
-        throws Exception {
+    {
         InterfFinProdDto dto = (InterfFinProdDto)param;
         // 设置产类型
         String prodType = (String)getServiceInfo(PROD_TYPE);
@@ -205,7 +205,7 @@ public abstract class ProdAliveService<T extends InterfAliveProdEntity<?>, F ext
      */
     @Override
     public int saveInterfData(InterfOutEntity entity)
-        throws Exception {
+    {
         entity.setProdtype((String)getServiceInfo(PROD_TYPE));
         entity.setPinanBusinessType((String)getServiceInfo(PINGAN_BUSI_TYPE));
         deleteInterfData(entity);
@@ -249,7 +249,7 @@ public abstract class ProdAliveService<T extends InterfAliveProdEntity<?>, F ext
      */
     @Override
     public int saveBusinessData(InterfOutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 

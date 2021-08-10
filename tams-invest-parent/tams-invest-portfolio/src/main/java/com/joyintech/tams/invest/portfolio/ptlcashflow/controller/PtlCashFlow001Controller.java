@@ -10,8 +10,12 @@
  
 package com.joyintech.tams.invest.portfolio.ptlcashflow.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +72,10 @@ public class PtlCashFlow001Controller extends BaseController{
      */
     @Autowired(required = false)
     private BussSettleOrderCommService bussSettleOrderCommService;
+
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
+
     /**
      * 界面初始化
      * {@inheritDoc}
@@ -125,14 +133,12 @@ public class PtlCashFlow001Controller extends BaseController{
     /**
      * 分页查询
      * @return Page<PtlActivityPeriod001Dto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/findPage")
-    public Page<PtlCashFlowDto> findPage()
-        throws Exception {
+    public Page<PtlCashFlowDto> findPage(){
         return ptlCashFlowService.selectForPage(RequestUtil.getParameters(getRequest()));
     }
     /**
@@ -145,6 +151,18 @@ public class PtlCashFlow001Controller extends BaseController{
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupDelete.class}) PtlCashFlowDto dto, BindingResult result) {
+
+        WflValidInputParameter parameter = new WflValidInputParameter();
+        parameter.setPageId("PtlCashFlow002");
+        parameter.setBusinessDataPk1(dto.getBusiNo() + "R");
+        if (mstWorkflowCommonService.isInWflProcess(parameter)) {
+            ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+            errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0041")));
+            AjaxResult ar = new AjaxResult();
+            ar.setErrorList(errorList);
+            return ar;
+        }
+
         return commonCheck(result, dto.getOperateType());
     }
     
@@ -153,7 +171,6 @@ public class PtlCashFlow001Controller extends BaseController{
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("revoke")
@@ -191,14 +208,12 @@ public class PtlCashFlow001Controller extends BaseController{
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlCashFlowService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

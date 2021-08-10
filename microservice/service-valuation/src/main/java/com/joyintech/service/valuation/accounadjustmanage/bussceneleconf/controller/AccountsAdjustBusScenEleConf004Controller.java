@@ -122,7 +122,7 @@ public class AccountsAdjustBusScenEleConf004Controller extends BaseController {
     @Transactional
     @DTXTransaction
     @PostMapping("/save")
-    public boolean save(@RequestBody AccountsAdjustBusScenEleConf002Dto dto) throws Exception {
+    public boolean save(@RequestBody AccountsAdjustBusScenEleConf002Dto dto) {
 //    	String datas = this.getParam("datas");
 //    	AccountsAdjustBusScenEleConf002Dto dto = JsonUtils.json2Object(datas, AccountsAdjustBusScenEleConf002Dto.class);
 //    	dto.setStatus("E");

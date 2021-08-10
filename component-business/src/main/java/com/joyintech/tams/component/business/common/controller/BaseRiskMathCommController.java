@@ -148,7 +148,7 @@ public class BaseRiskMathCommController extends BaseController {
         } else {
             model.addAttribute("entityName", "riskTrialRetDto");
         }
-        if (!StringUtil.equals(map.get("tradeId"), "null") && map.get("tradeId") != null && StringUtil.isEmptyList(li) && StringUtil.isNotEmpty(map.get("tradeId").toString())) {
+        if (map.get("tradeId") != null && !StringUtil.equals(map.get("tradeId"), "null")  && StringUtil.isEmptyList(li) && StringUtil.isNotEmpty(map.get("tradeId").toString())) {
             //--------20200228核新版风险 撤销时去除R带出列表 裴家俊 ------------------
             if (map.get("tradeId").toString().lastIndexOf('R') == map.get("tradeId").toString().length() - 1) {
                 li = basRiskMathCommService.select( map.get("tradeId").toString().substring(0, map.get("tradeId").toString().length() - 1));

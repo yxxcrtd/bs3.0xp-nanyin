@@ -1,6 +1,7 @@
 package com.jixu.adapter.reader;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,7 +36,7 @@ public class ReadExcelFile extends ReadFileBasic {
 		return InterfaceConfig.excel;
 	}
 
-	public DataReadResult readFileDataResult(InterfaceSource source,DataCounter dataCounter) throws Exception {
+	public DataReadResult readFileDataResult(InterfaceSource source,DataCounter dataCounter) throws IOException {
 		List<String> filePaths = getReadFiles(source);
 		DataReadResult result = new DataReadResult();
 		if(result.getFilePathList().size()==0){
@@ -45,9 +46,10 @@ public class ReadExcelFile extends ReadFileBasic {
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		
 		for (String filepath : filePaths) {
-			InputStream stream = new FileInputStream(new SafelyFile(filepath));  
+			InputStream stream = null;
 			Workbook workbook=null;
 			try {
+				stream = new FileInputStream(new SafelyFile(filepath));
 				//创建实例，并判断是否为xls或者xlsx格式的文件
 				workbook=WorkbookFactory.create(stream);
 

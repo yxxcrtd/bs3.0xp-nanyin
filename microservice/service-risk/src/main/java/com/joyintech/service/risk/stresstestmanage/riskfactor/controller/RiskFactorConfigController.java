@@ -35,7 +35,7 @@ public class RiskFactorConfigController {
      * @since 1.0
      */
     @PostMapping("findPage")
-    public List<RiskFactor001Dto> selectAll(@RequestBody Map<String, Object> param) throws Exception {
+    public List<RiskFactor001Dto> selectAll(@RequestBody Map<String, Object> param) {
         return RiskFactorConfigService.selectForPage(param);
     }
 

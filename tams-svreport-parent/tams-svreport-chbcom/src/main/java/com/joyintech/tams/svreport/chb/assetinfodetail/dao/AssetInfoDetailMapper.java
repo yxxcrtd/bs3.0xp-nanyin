@@ -57,14 +57,16 @@ public interface AssetInfoDetailMapper {
 
 	List<SelectOptionDto>  getAssetTye2(Map<String, Object> pageParam);
 
-
-
+	int selectDataCount(@Param("keylist") List<AssetInfoDetailDto> list);
+	
+	List<AssetInfoDetailDto> selectKeyListData(@Param("keylist") List<AssetInfoDetailDto> list);
 
 	int deleteError(String assetUUid);
 
 	int updateChbAssetType(String assetUUid);
 
-
+	int updateBatchNotCheckNull(@Param("updateList") List<ChbAssetInfo> updateList);
+	
 	int deleteErrorMsg(String assetCode);
 
 

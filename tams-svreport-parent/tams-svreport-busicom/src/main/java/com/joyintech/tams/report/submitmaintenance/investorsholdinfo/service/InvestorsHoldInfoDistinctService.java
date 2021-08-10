@@ -11,6 +11,8 @@ import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.formula.functions.T;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +42,11 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tools.collectors.JoyinCollectors;
 @Service
 public class InvestorsHoldInfoDistinctService {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(InvestorsHoldInfoDistinctService.class);
+
 //	@Autowired
 //	private InvestorsHoldInfo001Mapper investorsHoldInfo001Mapper;
 	@Autowired
@@ -285,7 +292,6 @@ public class InvestorsHoldInfoDistinctService {
 	}
 	/**
 	 * 合并
-	 * @param list
 	 * @param type 01 map类型  02dto 类型
 	 */
 	public void mergeInvestorsHoldInfolist(String type,String interType){
@@ -303,7 +309,7 @@ public class InvestorsHoldInfoDistinctService {
 				chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkDJ(recode);
 			}
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		//合并处理
 		List<InvestorsHoldInfo001Dto> resultList=chbInvestholdInfoCheckDtoMapper.selectHbhChbInvestholdInfoUnmerged();

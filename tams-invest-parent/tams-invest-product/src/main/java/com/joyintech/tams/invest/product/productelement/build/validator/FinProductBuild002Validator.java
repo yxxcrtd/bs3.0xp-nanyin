@@ -10,41 +10,42 @@
 
 package com.joyintech.tams.invest.product.productelement.build.validator;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.EncryptUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.BeanValidator;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
-import com.joyintech.tams.common.base.entity.FinOpenPlan;
-import com.joyintech.tams.common.base.entity.PtlPortfolio;
-import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
-import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.component.business.prod.dto.BussBenchMarkInfoDto;
-import com.joyintech.tams.component.business.prod.dto.BussFinProductFeeInfoDto;
-import com.joyintech.tams.component.business.prod.dto.BussFinProductFloatFeeDto;
-import com.joyintech.tams.component.business.prod.dto.BussFinProductLayeredInfoDto;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.product.productelement.build.dto.FinProductBuild002Dto;
-import com.joyintech.tams.invest.product.productelement.build.service.FinProductBuild001Service;
-import com.joyintech.tams.invest.product.productelement.build.service.FinProductBuild002Service;
-import com.joyintech.tams.invest.product.productelement.scheduling.service.FinProductScheduling002Service;
-import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
-import com.joyintech.tams.systemtools.util.PageElementUtil;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+ import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+ import com.joyintech.framework.constant.GlobalConstant;
+ import com.joyintech.framework.util.CacheUtil;
+ import com.joyintech.framework.util.DateUtil;
+ import com.joyintech.framework.util.EncryptUtil;
+ import com.joyintech.framework.util.StringUtil;
+ import com.joyintech.framework.validation.BeanValidator;
+ import com.joyintech.framework.validation.ValidMessage;
+ import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
+ import com.joyintech.tams.common.base.entity.FinOpenPlan;
+ import com.joyintech.tams.common.base.entity.PtlPortfolio;
+ import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+ import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+ import com.joyintech.tams.component.business.prod.dto.BussBenchMarkInfoDto;
+ import com.joyintech.tams.component.business.prod.dto.BussFinProductFeeInfoDto;
+ import com.joyintech.tams.component.business.prod.dto.BussFinProductFloatFeeDto;
+ import com.joyintech.tams.component.business.prod.dto.BussFinProductLayeredInfoDto;
+ import com.joyintech.tams.constant.DictCodeList;
+ import com.joyintech.tams.constant.DictCodeListExt1;
+ import com.joyintech.tams.constant.DictCodeListExt2;
+ import com.joyintech.tams.invest.common.constant.BussinessConstant;
+ import com.joyintech.tams.invest.product.productelement.build.dto.FinProductBuild002Dto;
+ import com.joyintech.tams.invest.product.productelement.build.service.FinProductBuild001Service;
+ import com.joyintech.tams.invest.product.productelement.build.service.FinProductBuild002Service;
+ import com.joyintech.tams.invest.product.productelement.scheduling.service.FinProductScheduling002Service;
+ import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+ import com.joyintech.tams.systemtools.util.PageElementUtil;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+ import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.List;
+ import java.util.Map;
 
 /**
  * 产品新建管理验证类
@@ -76,7 +77,11 @@ public class FinProductBuild002Validator implements BeanValidator {
     private FinProductBuild001Service finProductBuild001Service;
 
     @Autowired
+    private ChbDataCheckService chbDataCheckService;
+
+    @Autowired
     private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+
 
     /**
      * {@linkplain}
@@ -637,10 +642,11 @@ public class FinProductBuild002Validator implements BeanValidator {
                 }
             }
           //当申赎不同频并且不是周期型产品时，对赎回计划进行校验
-            if (!StringUtil.equals(DictCodeList.处理模式_周期型.getValue(), entity.getDealMode())
+            if (entity.getBussFinProductOpenPlanRedDto() != null
+                    &&!StringUtil.equals(DictCodeList.处理模式_周期型.getValue(), entity.getDealMode())
             		&&!StringUtil.equals(entity.getBussFinProductOpenPlanRedDto().getOpenMode(), DictCodeList.开放模式_高频开放.getValue())
             		&&!StringUtil.equals(entity.getBussFinProductOpenPlanDto().getOpenType(),DictCodeList.申赎开放类型_申赎开放.getValue())
-            		&&entity.getBussFinProductOpenPlanRedDto() != null) {
+            		) {
             	if(StringUtil.isEmptyList(entity.getBussFinProductOpenPlanRedDto().getFinOpenPlanList())){
             	    validList.add(new ValidMessage("bussFinProductOpenPlanRedDto.finOpenPlanList",
                             "申赎不同频时，请生成赎回计划"));

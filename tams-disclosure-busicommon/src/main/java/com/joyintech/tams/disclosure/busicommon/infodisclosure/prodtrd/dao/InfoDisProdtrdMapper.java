@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.prodtrd.entity.InfoDisProdtrdEntity;
 
+@Repository
 public interface InfoDisProdtrdMapper {
     int insert(InfoDisProdtrdEntity record);
 

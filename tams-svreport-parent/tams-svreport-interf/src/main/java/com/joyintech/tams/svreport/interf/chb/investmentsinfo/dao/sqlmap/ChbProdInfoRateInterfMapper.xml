@@ -159,7 +159,7 @@
 	REMARK,CCY)
 	<foreach collection="list" item="dto" separator="union all">
 		select #{dto.seqno,jdbcType=CHAR},
-		#{dto.prodId,jdbcType=VARCHAR},	#{dto.fprodId,jdbcType=VARCHAR},#{dto.isLay,jdbcType=VARCHAR},
+		#{dto.prodId,jdbcType=VARCHAR},
 		#{dto.changeDate,jdbcType=TIMESTAMP}, #{dto.profitType,jdbcType=VARCHAR},#{dto.changType,jdbcType=VARCHAR},
 		#{dto.prodYield,jdbcType=DECIMAL},#{dto.prodBenchmarkRate,jdbcType=DECIMAL},#{dto.unitValueTotal,jdbcType=DECIMAL},
 		#{dto.unitValue,jdbcType=DECIMAL},#{dto.sevenDayRate,jdbcType=DECIMAL},

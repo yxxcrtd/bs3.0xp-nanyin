@@ -76,7 +76,8 @@ public class MstTradeOpponentController {
      * @since 1.0
      */
     @PostMapping("/selectForPage/{page}/{length}")
-    public Page<MstTradeOpponentDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<MstTradeOpponentDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
+    {
         Page<MstTradeOpponentDto> dto = mstTradeOpponent001Service.selectForPage(page,length,pageParam);
         return dto;
     }

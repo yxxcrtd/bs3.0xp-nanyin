@@ -226,7 +226,7 @@ public class TrdFundDurationController {
     public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-            throws Exception {
+    {
         return trdFundDurationService.getFinprodMarketId(page, length, param);
     }
 

@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,6 +61,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("PeriodicManagement002")
 @RequestMapping("/invest/product/productelement/periodicmanagement/PeriodicManagement002")
 public class PeriodicManagement002Controller extends BaseController {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(PeriodicManagement002Controller.class);
 
 	@Autowired
 	private PeriodicManagement002Service periodicManagement002Service;
@@ -150,7 +157,7 @@ public class PeriodicManagement002Controller extends BaseController {
 	            	entity.setCcy(pmDto.getCcy());
 	            }
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 			if(entity.getStartDate()==null){
 				entity.setStartDate(iPlatformDate.getSysDate());
@@ -198,13 +205,13 @@ public class PeriodicManagement002Controller extends BaseController {
      * @param dto 保存对象
      * @param br 验证信息
      * @return 操作结果
-     * @throws Exception 异常信息
+     * @throws WorkFlowException 异常信息
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated PeriodicManagement001Dto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated PeriodicManagement001Dto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

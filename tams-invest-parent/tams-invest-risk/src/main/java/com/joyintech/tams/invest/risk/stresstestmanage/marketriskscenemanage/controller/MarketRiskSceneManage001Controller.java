@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -104,7 +105,7 @@ public class MarketRiskSceneManage001Controller extends BaseController {
     /** 情景分页查询 */
     @ResponseBody
     @RequestMapping("/findPage")
-    public Page<MarketRiskSceneManage001Dto> selectForPage() throws Exception {
+    public Page<MarketRiskSceneManage001Dto> selectForPage() {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         
         Set<String> idSet = new HashSet<>();
@@ -139,7 +140,7 @@ public class MarketRiskSceneManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/updateScenesEffStatus")
     public AjaxResult updateScenesEffStatus(@RequestBody @Validated({ValidateGroupEffective.class}) 
-        MarketRiskSceneManage001Dto dto, BindingResult br)  throws Exception {
+        MarketRiskSceneManage001Dto dto, BindingResult br) throws WorkFlowException {
     	
         AjaxResult checkResult = commonCheck(br, dto.getOperateType());
         if (br.hasErrors()) {
@@ -194,7 +195,7 @@ public class MarketRiskSceneManage001Controller extends BaseController {
      */
     @ResponseBody
     @GetMapping("fuzzySelectScene")
-    public List<SelectOptionDto> fuzzySelectScene() throws Exception {
+    public List<SelectOptionDto> fuzzySelectScene() {
         //Map<String, Object> map = RequestUtil.getParameters(getRequest());
         Map<String, Object> paramMap = new HashMap<>();
         Map<String, Object> pageMap = RequestUtil.getPageParam();
@@ -214,7 +215,7 @@ public class MarketRiskSceneManage001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody MarketRiskSceneManage001Dto dto, BindingResult br) throws Exception {
+    public AjaxResult delete(@RequestBody MarketRiskSceneManage001Dto dto, BindingResult br) throws WorkFlowException {
 //    	MarketRiskSceneManage001Dto dto2 = marketRiskSceneManage002Service.querySceneById(dto.getSceneId());
         AjaxResult checkResult = commonCheck(br, dto.getOperateType());
         if (br.hasErrors()) {
@@ -252,7 +253,7 @@ public class MarketRiskSceneManage001Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
     	Map<String, Object> map = RequestUtil.getParameters(getRequest());
         
         Set<String> idSet = new HashSet<>();

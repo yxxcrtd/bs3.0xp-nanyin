@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -665,7 +666,7 @@ public class InterfCommonService {
                 if (invAimDto.getSchemeCnt() > 1) {
                     // 抛出异常
                     try {
-                        throw new Exception("变量.账套信息Dto.账套代码—输入.金融产品交易.金融产品代码：出现重复估值方案");
+                        throw new BusinessException("变量.账套信息Dto.账套代码—输入.金融产品交易.金融产品代码：出现重复估值方案");
                     }
                     catch (Exception e) {
                         logger.error("", e);
@@ -6911,7 +6912,7 @@ public class InterfCommonService {
                     if (invAimDto.getSchemeCnt() > 1) {
                         // 抛出异常
                         try {
-                            throw new Exception("变量.账套信息Dto.账套代码—输入.金融产品交易.金融产品代码：出现重复估值方案");
+                            throw new BusinessException("变量.账套信息Dto.账套代码—输入.金融产品交易.金融产品代码：出现重复估值方案");
                         }
                         catch (Exception e) {
                             logger.error("", e);
@@ -7189,7 +7190,7 @@ public class InterfCommonService {
      */
     public  Map<String,String> parameterConditionAnalysis(String parms){
         Map<String,String> resultMap = new HashMap<String,String>();
-        if(parms.isEmpty() || parms == null){
+        if(parms == null || parms.isEmpty()){
             return  resultMap;
         }
         String[] parm = parms.split("\\|");
@@ -7220,7 +7221,7 @@ public class InterfCommonService {
 	        Object obj = method.invoke(dto);
 	        settleAmt = obj == null ? BigDecimal.ZERO :(BigDecimal) obj ;
         }catch(Exception e){
-        	e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return settleAmt;
     }

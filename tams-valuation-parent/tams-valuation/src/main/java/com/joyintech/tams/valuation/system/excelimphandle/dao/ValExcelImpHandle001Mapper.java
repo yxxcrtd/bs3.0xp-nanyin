@@ -20,6 +20,7 @@ import com.joyintech.tams.valuation.system.excelimphandle.dto.ValExcelRuleDictco
 import com.joyintech.tams.valuation.system.excelimphandle.dto.ValExcelRuleMasterDataDto;
 import com.joyintech.tams.valuation.system.excelimphandle.dto.ValExcelRuleDto;
 import com.joyintech.tams.valuation.system.excelimphandle.dto.ValTableColumnDefineInfoDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 导入管理mapper
@@ -28,6 +29,7 @@ import com.joyintech.tams.valuation.system.excelimphandle.dto.ValTableColumnDefi
  * @see ValExcelImpHandle001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValExcelImpHandle001Mapper {
     
     /**

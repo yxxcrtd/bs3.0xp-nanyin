@@ -1,5 +1,6 @@
 package com.joyintech.service.product.common.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -186,7 +187,7 @@ public class FinProductCommonController {
     @Transactional
     @DTXTransaction
 	@PostMapping("insertFinProductCommon")
-	public void insertFinProductCommon(@RequestBody FinProductCommonInfoDto finProductCommonInfoDto) throws Exception{
+	public void insertFinProductCommon(@RequestBody FinProductCommonInfoDto finProductCommonInfoDto) throws InvocationTargetException, IllegalAccessException {
 	    finProductCommonService.insertFinProductCommon(finProductCommonInfoDto);
 	}
 	
@@ -199,7 +200,7 @@ public class FinProductCommonController {
     @Transactional
     @DTXTransaction
     @PostMapping("updateFinProductCommon")
-    public void updateFinProductCommon(@RequestBody FinProductCommonInfoDto finProductCommonInfoDto) throws Exception{
+    public void updateFinProductCommon(@RequestBody FinProductCommonInfoDto finProductCommonInfoDto) throws InvocationTargetException, IllegalAccessException {
         finProductCommonService.updateFinProductCommon(finProductCommonInfoDto);
     }
     
@@ -212,7 +213,8 @@ public class FinProductCommonController {
     @Transactional
     @DTXTransaction
     @GetMapping("deleteFinProductCommon")
-    public void deleteFinProductCommon(String finprodId) throws Exception{
+    public void deleteFinProductCommon(String finprodId)
+    {
         finProductCommonService.deleteFinProductCommon(finprodId);
     }
 

@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.report.debtreport.repfinproductregistcodemng.controller;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +94,7 @@ public class RepFinProductRegistCodeMngController extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepFinProductRegistCodeMngDto> selectAll()
-        throws Exception {
+    {
         Page<RepFinProductRegistCodeMngDto> page = repFinProductRegistCodeMngService.select(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -110,7 +111,7 @@ public class RepFinProductRegistCodeMngController extends BaseController{
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return repFinProductRegistCodeMngService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
@@ -125,8 +126,7 @@ public class RepFinProductRegistCodeMngController extends BaseController{
      */
     @ResponseBody
     @RequestMapping("importFile")
-    public List<ExcelValidDto> importData(String fileName)
-        throws Exception{
+    public List<ExcelValidDto> importData(String fileName) throws FileNotFoundException {
         return this.repFinProductRegistCodeMngService.importData(fileName);
     }
 }

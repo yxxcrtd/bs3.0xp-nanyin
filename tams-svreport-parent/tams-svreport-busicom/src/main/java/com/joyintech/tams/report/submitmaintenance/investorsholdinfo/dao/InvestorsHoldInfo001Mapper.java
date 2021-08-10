@@ -22,6 +22,7 @@ import com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub;
 import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 投资者持有信息
@@ -32,6 +33,7 @@ import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.In
  * @since 1.0
  */
 @Mapper
+@Repository
 public interface InvestorsHoldInfo001Mapper {
 
     /**

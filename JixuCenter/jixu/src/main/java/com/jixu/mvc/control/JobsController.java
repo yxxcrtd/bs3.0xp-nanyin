@@ -1,24 +1,7 @@
 package com.jixu.mvc.control;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
+import com.jixu.common.apiconst.ApiPathConst;
 import com.jixu.common.controller.ExceptionControl;
 import com.jixu.common.func.CommFuncService;
 import com.jixu.common.tool.JixuUserUtil;
@@ -28,19 +11,26 @@ import com.jixu.common.type.ResultContainer;
 import com.jixu.common.type.WorkFlowSteps;
 import com.jixu.common.util.DateUtil;
 import com.jixu.common.util.JsonUtil;
-import com.jixu.job.service.AutoMaturityService;
-import com.jixu.job.service.CalNavService;
-import com.jixu.job.service.CloseControlService;
-import com.jixu.job.service.ContractualSetService;
-import com.jixu.job.service.ExecuteJobService;
+import com.jixu.job.service.*;
 import com.jixu.msg.dto.JobExeDto;
 import com.jixu.mvc.control.service.JobsService;
 import com.jixu.mvc.control.service.WorkFlowService;
 import com.orm.obj.PortfolioHdr;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 public class JobsController extends ExceptionControl{
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(JobsController.class);
+
 	@RequestMapping(value="/job.do", method = RequestMethod.GET, name="作业-页面显示")
 	public String client() {
 		return "job";
@@ -341,8 +331,8 @@ public class JobsController extends ExceptionControl{
 					       HttpServletResponse response){
 		
 		List<Object> ports_list = JsonUtil.stringToList(ports);
-		System.out.println("Run job " + jobID + " on " + ports_list + " on " + date);
-		
+//		System.out.println("Run job " + jobID + " on " + ports_list + " on " + date);
+		logger.info("Run job " + jobID + " on " + ports_list + " on " + date);
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		List<String> titles = Arrays.asList("作业名称", "投资组合", "开始时间",  "结束时间", "操作人");		
 		result.put("titles", titles);
@@ -383,5 +373,21 @@ public class JobsController extends ExceptionControl{
 		ResultContainer container=jobsService.executeJobByJobID(dto.getPortnum(), ledgerDate, dto.getJobID());
 		container.setEntityObj("");
 		return container;
+	}
+
+	/**
+	 * 执行投资组合任务
+	 * @param ports
+	 * @param ledgerDate
+	 * @param jobsSteps
+	 * @param dailyJobIDs
+	 */
+	@PostMapping(value= ApiPathConst.API_PATH + "/" + ApiPathConst.EXECUTE_APPOINTED_JOBS)
+	public ResultContainer runAppointedJobs(@RequestParam("ports[]") List<String> ports,
+											@RequestParam("ledgerDate") Date ledgerDate,
+											@RequestParam("jobsSteps[]") int[] jobsSteps,
+											@RequestParam("dailyJobIDs[]") int[] dailyJobIDs,
+											@RequestParam("redoFlag") boolean redoFlag){
+		return jobsService.executeAppointedJobs(ports, ledgerDate, jobsSteps, dailyJobIDs, redoFlag);
 	}
 }

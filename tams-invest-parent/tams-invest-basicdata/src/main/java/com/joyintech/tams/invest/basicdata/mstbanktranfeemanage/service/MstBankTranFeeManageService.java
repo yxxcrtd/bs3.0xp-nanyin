@@ -21,13 +21,14 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
@@ -47,6 +48,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class MstBankTranFeeManageService extends CommonExportService<MstBankTranFeeManageDto> implements BaseProcessService<MstBankTranFeeManageDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MstBankTranFeeManageService.class);
 
     /**
      * {@inheritDoc}
@@ -190,7 +195,7 @@ public class MstBankTranFeeManageService extends CommonExportService<MstBankTran
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

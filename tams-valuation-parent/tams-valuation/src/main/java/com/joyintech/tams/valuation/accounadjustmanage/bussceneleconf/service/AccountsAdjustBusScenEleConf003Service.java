@@ -56,13 +56,12 @@ public class AccountsAdjustBusScenEleConf003Service extends BaseService<Accounts
      * 
      * @param paraMap 页面参数map
      * @return 查询到的业务场景配置信息
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @DataSource(DataSourceType.MASERT)
     public Page<AccountsAdjustBusScenEleConf002Dto> findPage(Map<String, Object> pageParam)
-        throws Exception {
+         {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/AccountsAdjustBusScenEleConf003/findPage", pageParam, AccountsAdjustBusScenEleConf002Dto.class);
 //    	return super.queryForPage(()-> accountsAdjustBusScenEleConf003Mapper.findValBokTableDictList(pageParam));
     }

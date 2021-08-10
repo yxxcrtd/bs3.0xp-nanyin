@@ -177,7 +177,7 @@ public class ValTransactionDataImport001 extends BaseController {
      */
     @PostMapping("/findBooksetGroup/{page}/{length}")
     public Page<SelectOptionDto> findBooksetGroup(@RequestBody Map<String, Object> map,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+    		@PathVariable("page") int page, @PathVariable("length") int length) {
         return valAccountHandle001Service.findBooksetGroup(page,length,map);
     }
     

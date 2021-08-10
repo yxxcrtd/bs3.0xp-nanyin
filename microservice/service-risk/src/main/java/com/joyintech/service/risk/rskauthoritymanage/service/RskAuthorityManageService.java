@@ -81,7 +81,7 @@ public class RskAuthorityManageService extends BaseService<RskAuthorityManageDto
      * @see
      * @since 1.0
      */
-    public Page<RskAuthorityManageDto> selectAll(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<RskAuthorityManageDto> selectAll(int page, int length, Map<String, Object> param) {
         String userName = (String)param.get("userName");
         if(StringUtil.isNotEmpty(userName)){
             param.put("userName", StringUtil.splitToList(GlobalConstant.COMMA,userName));

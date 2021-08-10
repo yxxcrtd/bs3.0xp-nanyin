@@ -13,6 +13,7 @@ package com.joyintech.tams.disclosure.information.manage.workrule.dao;
 import java.util.List;
 
 import com.joyintech.tams.common.base.entity.RepRule;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -23,6 +24,7 @@ import com.joyintech.tams.common.base.entity.RepRule;
  * @see ReportRule002Mapper
  * @since 1.0
  */
+@Repository
 public interface ReportRule002Mapper {
     
  

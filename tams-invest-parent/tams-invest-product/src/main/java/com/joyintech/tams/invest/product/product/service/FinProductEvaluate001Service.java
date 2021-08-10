@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -117,7 +118,7 @@ public class FinProductEvaluate001Service extends BaseService {
      * @param params
      * @return
      */
-    public List<FinProductEvaluate001Tab4Dto> selectForPage4(Map<String,Object> params)throws Exception{
+    public List<FinProductEvaluate001Tab4Dto> selectForPage4(Map<String,Object> params) throws ParseException {
         translate(params);
         Date startDate = (Date) params.get("startDate");
         Date endDate = (Date) params.get("endDate");
@@ -191,7 +192,7 @@ public class FinProductEvaluate001Service extends BaseService {
      * @return
      * @throws Exception
      */
-    public List<FinProductEvaluate001Tab5Dto> selectForPage5(Map<String,Object> params)throws Exception{
+    public List<FinProductEvaluate001Tab5Dto> selectForPage5(Map<String,Object> params) throws ParseException {
         translate(params);
         Date startDate = (Date) params.get("startDate");
         Date endDate = (Date) params.get("endDate");
@@ -275,7 +276,7 @@ public class FinProductEvaluate001Service extends BaseService {
      * @return
      * @throws Exception
      */
-    public List<FinProductEvaluate001Tab6Dto> selectForPage6(Map<String,Object> params)throws Exception{
+    public List<FinProductEvaluate001Tab6Dto> selectForPage6(Map<String,Object> params) throws ParseException {
         translate(params);
         Date startDate = (Date) params.get("startDate");
         Date endDate = (Date) params.get("endDate");
@@ -366,7 +367,7 @@ public class FinProductEvaluate001Service extends BaseService {
      * @return
      * @throws Exception
      */
-    public List<FinProductEvaluate001Tab7Dto> selectForPage7(Map<String,Object> params)throws Exception{
+    public List<FinProductEvaluate001Tab7Dto> selectForPage7(Map<String,Object> params) throws ParseException {
         translate(params);
         Date startDate = (Date) params.get("startDate");
         Date endDate = (Date) params.get("endDate");

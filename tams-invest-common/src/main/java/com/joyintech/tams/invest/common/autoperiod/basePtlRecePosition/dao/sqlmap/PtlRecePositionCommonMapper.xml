@@ -34,9 +34,9 @@
     <!--ͨ通道交易 新增 强成西 2019/03/26 start-->
     <select id="selectChlCapacctInfoList" resultType="com.joyintech.tams.common.base.entity.StlCapacctInfo">
         SELECT DISTINCT B.ACCT_NO   as acctNo,
-                        ACCT_NAME as acctName
+                        C.ACCT_NAME as acctName
         FROM stl_fin_product_acct B, STL_CAPACCT_INFO C
-        WHERE b.ACCT_NO = c.ACCT_NO and FINPROD_ID = #{chlId}
+        WHERE b.ACCT_NO = c.ACCT_NO and B.FINPROD_ID = #{chlId}
     </select>
     <!--ͨ通道交易 新增 强成西 2019/03/26 end-->
 
@@ -918,7 +918,7 @@
     and post.INV_AIM=#{INV_AIM}
     and post.CDATE=#{PLAT_DATE}
     and post.HODING_TYPE=#{POSITION_TYPE_SJ}
-    and rec_type='03'
+    and post.rec_type='03'
 </select>
 
     <select id="getRepayAmtList" resultType="com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.dto.PtlRecePositionDto">
@@ -939,7 +939,7 @@
         and post.INV_AIM=#{INV_AIM}
         and post.CDATE=#{PLAT_DATE}
         and post.HODING_TYPE=#{POSITION_TYPE_SJ}
-        and rec_type=#{REC_TYPE_03}
+        and post.rec_type=#{REC_TYPE_03}
         group by repay.WITHOUT_BRANCH,post.PORTFOLIO_ID
     </select>
 

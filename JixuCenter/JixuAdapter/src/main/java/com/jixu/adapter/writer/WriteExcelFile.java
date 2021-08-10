@@ -34,7 +34,7 @@ public class WriteExcelFile extends WriteFileBasic {
 
 	@Override
 	public boolean writeFile(InterfaceSource interfaceSource,
-			DataReadResult dataSet) throws Exception {
+			DataReadResult dataSet) throws IOException {
 		boolean writeSuccessFlag = false;
 		Workbook workBook = null;
 		File file = getWriteFile(interfaceSource, dataSet);

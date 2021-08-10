@@ -51,12 +51,7 @@ public class SvrSdEmployeeInfoTaskService extends BatchBaseService {
         try {
             mainService.SendEmployeeInfoRegMsg(ToolsUtil.getCurrentTime(batchExecuteInfo.getExecuteDate()));
             result.setStatus(BatchStatus.COMPLETED);
-        }
-        catch (BatchException e) {
-            logger.error("从业人员登记信息报送批处理Error",e);
-        	throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 			logger.info("批处理异常" + e.getMessage());
         	logger.error("批处理异常Error",e);
         }finally{

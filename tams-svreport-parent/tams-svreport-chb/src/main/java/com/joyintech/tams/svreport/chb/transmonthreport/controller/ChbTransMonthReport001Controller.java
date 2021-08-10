@@ -82,7 +82,7 @@ public class ChbTransMonthReport001Controller extends BaseController{
     */
    @ResponseBody
    @RequestMapping("/getChbTransOrg")
-   public Page<SelectOptionDto> getChbTransOrg() throws Exception {
+   public Page<SelectOptionDto> getChbTransOrg() {
 	HashMap<String, Object> pageParam = (HashMap<String, Object>) RequestUtil.getPageParam();
  	String search = null;
    	if (pageParam.containsKey("search")) {

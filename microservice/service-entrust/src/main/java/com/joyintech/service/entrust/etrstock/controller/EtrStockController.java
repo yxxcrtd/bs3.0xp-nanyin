@@ -48,7 +48,8 @@ public class EtrStockController {
      *@throws:
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<EtrStockDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrStockDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
 
         return etrStockService.selectForPage(page,length,param);
     }
@@ -77,7 +78,7 @@ public class EtrStockController {
      *@throws:
      */
     @PostMapping("getentrustId")
-    public List<SuggestDto> getentrustId(@RequestBody Map<String, Object> map) throws Exception {
+    public List<SuggestDto> getentrustId(@RequestBody Map<String, Object> map) {
         List<SuggestDto> temp = etrStockService.getentrustId(map);
         return temp;
     }
@@ -91,7 +92,7 @@ public class EtrStockController {
      *@throws:
      */
     @GetMapping("getfinprodId")
-    public List<SuggestDto> getfinprodId(String finprodId) throws Exception {
+    public List<SuggestDto> getfinprodId(String finprodId) {
         List<SuggestDto> temp = etrStockService.getfinprodId(finprodId);
         return temp;
     }
@@ -108,7 +109,8 @@ public class EtrStockController {
      */
     @PostMapping("getSelectTongDao/{page}/{length}")
     @ResponseBody
-    public Page<SelectOptionDto> getSelectTongDao(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+    public Page<SelectOptionDto> getSelectTongDao(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         Page<SelectOptionDto> temp = etrStockService.getSelectTongDao(page,length,map);
         return temp;
     }
@@ -140,7 +142,7 @@ public class EtrStockController {
     @PostMapping("getfinprodIdForAdd/{page}/{length}")
     @ResponseBody
     public Page<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, String> map, @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<SelectOptionDto> temp = etrStockService.getfinprodIdForAdd(page,length,map);
         return temp;
     }

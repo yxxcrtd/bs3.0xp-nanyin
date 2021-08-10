@@ -51,20 +51,20 @@
 	<select id="queryAdjustInfoByFinprodId" resultType="com.joyintech.service.product.messageadjust.finmdateadjustment.dto.FinMdateAdjustmentDto">
 		select
 
-		IFNULL(T.MDATE, FIN_PRODUCT.MDATE) mdate ,
-		IFNULL(T.LDATE, FIN_PRODUCT.LIQUIDATION_DATE) ldateUnadjust ,
-		FIN_PRODUCT.FINPROD_ABBR finprodAbbr,
-		FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,
+		IFNULL(T.MDATE, FP.MDATE) mdate ,
+		IFNULL(T.LDATE, FP.LIQUIDATION_DATE) ldateUnadjust ,
+		FP.FINPROD_ABBR finprodAbbr,
+		FP.FINPROD_MARKET_ID finprodMarketId,
 		IFNULL(T.adjustNum, 0) adjustNum,
-		FIN_PRODUCT.VDATE vdate,
-		FIN_PRODUCT.CALENDAR_ID calendarId,
-		FIN_PRODUCT_ADD.DEAL_MODE dealMode,
-		FIN_PRODUCT.PROFIT_TYPE profitType
-		from FIN_PRODUCT
+		FP.VDATE vdate,
+		FP.CALENDAR_ID calendarId,
+		FPA.DEAL_MODE dealMode,
+		FP.PROFIT_TYPE profitType
+		from FIN_PRODUCT FP
 
 
-		left join FIN_PRODUCT_ADD
-		ON FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+		left join FIN_PRODUCT_ADD FPA
+		ON FP.FINPROD_ID = FPA.FINPROD_ID
 		left join (select FINPROD_ID, MDATE,LDATE,ADJUST_NUM adjustNum from PRD_MDATE_ADJUST
 		where FINPROD_ID = #{finprodId} and ADJUST_NUM =  (
 		SELECT
@@ -74,23 +74,23 @@
 		WHERE
 		T.FINPROD_ID = #{finprodId})
 		) T
-		on FIN_PRODUCT.FINPROD_ID = T.FINPROD_ID
-		where FIN_PRODUCT.FINPROD_ID = #{finprodId}
+		on FP.FINPROD_ID = T.FINPROD_ID
+		where FP.FINPROD_ID = #{finprodId}
 	</select>
 	<select id="queryPortFolioMdateByFinprodId" resultType="java.lang.String">
-		select DATE_FORMAT(PTL_PORTFOLIO.MDATE, '%Y-%m-%d') mdate
-		from PTL_PORTFOLIO, PTL_MANAGE_OBJ
-		where PTL_PORTFOLIO.PORTFOLIO_ID = PTL_MANAGE_OBJ.PORTFOLIO_ID
-		and PTL_MANAGE_OBJ.MANAGE_OBJ_ID = #{finprodId}
+		select DATE_FORMAT(PP.MDATE, '%Y-%m-%d') mdate
+		from PTL_PORTFOLIO PP, PTL_MANAGE_OBJ PMO
+		where PP.PORTFOLIO_ID = PMO.PORTFOLIO_ID
+		and PMO.MANAGE_OBJ_ID = #{finprodId}
 	</select>
 	<select id="queryDealCountByFinprodId" resultType="java.lang.Integer">
-		select count(1) from TRD_FIN_PRODUCT_DEAL_TOTAL, FIN_PRODUCT
-		where TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-		and TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 = #{finprodType2}
-		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2}
-		and FIN_PRODUCT.FINPROD_ID = #{finprodId}
-		and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_DATE &gt;= STR_TO_DATE(#{mdate}, '%Y-%m-%d')
-		and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{tradeStatus}
+		select count(1) from TRD_FIN_PRODUCT_DEAL_TOTAL TFPD, FIN_PRODUCT FP
+		where TFPD.FINPROD_ID = FP.FINPROD_ID
+		and TFPD.FINPROD_TYPE2 = #{finprodType2}
+		and FP.FINPROD_TYPE2 = #{finprodType2}
+		and FP.FINPROD_ID = #{finprodId}
+		and TFPD.TRADE_DATE &gt;= STR_TO_DATE(#{mdate}, '%Y-%m-%d')
+		and TFPD.TRADE_STATUS = #{tradeStatus}
 
 	</select>
 	<select id="getMaxAdjustNum" resultType="java.lang.Integer">
@@ -99,34 +99,34 @@
 		where FINPROD_ID=#{finprodId}
 	</select>
 	<sql id="queryUnAdjustMdateInfo">
-		select  FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,
-		FIN_PRODUCT.FINPROD_ABBR finprodAbbr,
+		select  FP.FINPROD_MARKET_ID finprodMarketId,
+		FP.FINPROD_ABBR finprodAbbr,
 		NULL AS adjusttype,
-		FIN_PRODUCT.MDATE mdateUnadjust,
-		FIN_PRODUCT.LIQUIDATION_DATE ldateUnadjust,
+		FP.MDATE mdateUnadjust,
+		FP.LIQUIDATION_DATE ldateUnadjust,
 		NULL AS ldate,
 		NULL AS bdate,
 		NULL AS rdate,
 		NULL AS mdate,
 		NULL AS remark,
-		FIN_PRODUCT.FINPROD_ID finprodId,
+		FP.FINPROD_ID finprodId,
 		NULL AS adjustNum,
 		NULL AS status,
 		PMSI.SEND_STATUS sendStatus,
 		PMSI.SEND_REMARK sendRemark
-		from FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY, FIN_PRODUCT
+		from FIN_PRODUCT_ADD FPA, PTL_PORTFOLIO_AUTHORITY PPA, FIN_PRODUCT FP
 		LEFT JOIN
-		INF_PRD_MDATE_ADJUST PMSI ON FIN_PRODUCT.FINPROD_ID = PMSI.FINPROD_ID
-		where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
-		and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
-		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2}
-		and FIN_PRODUCT.P_FINPROD_ID IS NULL
-		and date_format(FIN_PRODUCT.MDATE, '%Y-%m-%d %H%-%i-%s') &gt;= #{platDate}
-		and FIN_PRODUCT_ADD.ISSUE_STATUS = #{ISSUE_STATUS01}
+		INF_PRD_MDATE_ADJUST PMSI ON FP.FINPROD_ID = PMSI.FINPROD_ID
+		where FP.FINPROD_ID = FPA.FINPROD_ID
+		and FPA.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+		and PPA.USER_ID = #{userId}
+		and FP.FINPROD_TYPE2 = #{finprodType2}
+		and FP.P_FINPROD_ID IS NULL
+		and date_format(FP.MDATE, '%Y-%m-%d %H%-%i-%s') &gt;= #{platDate}
+		and FPA.ISSUE_STATUS = #{ISSUE_STATUS01}
 
 		<if test="finprodId != null and finprodId.size() > 0">
-			and FIN_PRODUCT.FINPROD_ID IN
+			and FP.FINPROD_ID IN
 			<foreach collection="finprodId" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
@@ -134,53 +134,53 @@
 		<if test="sendStatus !=null and sendStatus !=''">
 			AND IFNULL(PMSI.SEND_STATUS, '03') = #{sendStatus,jdbcType=VARCHAR}
 		</if>
-		and not exists (select 1 from PRD_MDATE_ADJUST where FIN_PRODUCT.FINPROD_ID = PRD_MDATE_ADJUST.FINPROD_ID)
+		and not exists (select 1 from PRD_MDATE_ADJUST where FP.FINPROD_ID = PRD_MDATE_ADJUST.FINPROD_ID)
 	</sql>
 	<sql id="queryAdjustMdateInfo">
-		select  FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,
-		FIN_PRODUCT.FINPROD_ABBR finprodAbbr,
-		PRD_MDATE_ADJUST.ADJUST_TYPE adjusttype,
-		PRD_MDATE_ADJUST.MDATE_UNADJUST mdateUnadjust,
-		PRD_MDATE_ADJUST.LDATE_UNADJUST ldateUnadjust,
+		select  FP.FINPROD_MARKET_ID finprodMarketId,
+		FP.FINPROD_ABBR finprodAbbr,
+		PMAD.ADJUST_TYPE adjusttype,
+		PMAD.MDATE_UNADJUST mdateUnadjust,
+		PMAD.LDATE_UNADJUST ldateUnadjust,
 
-		PRD_MDATE_ADJUST.LDATE ldate,
-		(CASE WHEN PRD_MDATE_ADJUST.ADJUST_TYPE = #{TZLX_TQZZ} THEN PRD_MDATE_ADJUST.MDATE ELSE NULL END) bdate,
+		PMAD.LDATE ldate,
+		(CASE WHEN PMAD.ADJUST_TYPE = #{TZLX_TQZZ} THEN PMAD.MDATE ELSE NULL END) bdate,
 		<!--			    MYSQL_CASEWHEN(PRD_MDATE_ADJUST.ADJUST_TYPE,#{TZLX_TQZZ},PRD_MDATE_ADJUST.MDATE,NULL) bdate,-->
-		(CASE WHEN PRD_MDATE_ADJUST.ADJUST_TYPE = #{TZLX_CPZQ} THEN PRD_MDATE_ADJUST.MDATE ELSE NULL END) rdate,
+		(CASE WHEN PMAD.ADJUST_TYPE = #{TZLX_CPZQ} THEN PMAD.MDATE ELSE NULL END) rdate,
 		<!--		MYSQL_CASEWHEN(PRD_MDATE_ADJUST.ADJUST_TYPE,#{TZLX_CPZQ},PRD_MDATE_ADJUST.MDATE,NULL) rdate,-->
-		(CASE WHEN PRD_MDATE_ADJUST.ADJUST_TYPE = #{TZLX_DQRTZ} THEN PRD_MDATE_ADJUST.MDATE ELSE NULL END) mdate,
+		(CASE WHEN PMAD.ADJUST_TYPE = #{TZLX_DQRTZ} THEN PMAD.MDATE ELSE NULL END) mdate,
 		<!--		MYSQL_CASEWHEN(PRD_MDATE_ADJUST.ADJUST_TYPE,#{TZLX_DQRTZ},PRD_MDATE_ADJUST.MDATE,NULL) mdate,-->
-		PRD_MDATE_ADJUST.REMARK remark,
-		FIN_PRODUCT.FINPROD_ID finprodId,
-		PRD_MDATE_ADJUST.ADJUST_NUM adjustNum,
-		(CASE WHEN PRD_MDATE_ADJUST.ADJUST_NUM  = (select max(ADJUST_NUM) from PRD_MDATE_ADJUST pma where pma.FINPROD_ID=PRD_MDATE_ADJUST.FINPROD_ID) THEN 'E' ELSE 'D' END) status,
+		PMAD.REMARK remark,
+		FP.FINPROD_ID finprodId,
+		PMAD.ADJUST_NUM adjustNum,
+		(CASE WHEN PMAD.ADJUST_NUM  = (select max(ADJUST_NUM) from PRD_MDATE_ADJUST pma where pma.FINPROD_ID=PMAD.FINPROD_ID) THEN 'E' ELSE 'D' END) status,
 		<!--				MYSQL_CASEWHEN(PRD_MDATE_ADJUST.ADJUST_NUM ,(select max(ADJUST_NUM) from PRD_MDATE_ADJUST pma where pma.FINPROD_ID=PRD_MDATE_ADJUST.FINPROD_ID),'E','D') status,-->
 		PMSI.SEND_STATUS sendStatus,
 		PMSI.SEND_REMARK sendRemark
-		from PRD_MDATE_ADJUST, FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY, FIN_PRODUCT
+		from PRD_MDATE_ADJUST PMAD, FIN_PRODUCT_ADD FPA, PTL_PORTFOLIO_AUTHORITY PPA, FIN_PRODUCT FP
 		LEFT JOIN
-		INF_PRD_MDATE_ADJUST PMSI ON FIN_PRODUCT.FINPROD_ID = PMSI.FINPROD_ID
-		where FIN_PRODUCT.FINPROD_ID = PRD_MDATE_ADJUST.FINPROD_ID
-		and FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+		INF_PRD_MDATE_ADJUST PMSI ON FP.FINPROD_ID = PMSI.FINPROD_ID
+		where FP.FINPROD_ID = PMAD.FINPROD_ID
+		and FP.FINPROD_ID = FPA.FINPROD_ID
 
-		and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
-		and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
-		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2}
-		and FIN_PRODUCT_ADD.ISSUE_STATUS = #{ISSUE_STATUS01}
+		and FPA.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+		and PPA.USER_ID = #{userId}
+		and FP.FINPROD_TYPE2 = #{finprodType2}
+		and FPA.ISSUE_STATUS = #{ISSUE_STATUS01}
 		<if test="finprodId != null and finprodId.size() > 0">
-			and FIN_PRODUCT.FINPROD_ID IN
+			and FP.FINPROD_ID IN
 			<foreach collection="finprodId" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
 		</if>
 		<if test="adjustAfterMdateStart != null and adjustAfterMdateStart != ''">
-			and PRD_MDATE_ADJUST.MDATE &gt;= STR_TO_DATE(#{adjustAfterMdateStart}, '%Y-%m-%d')
+			and PMAD.MDATE &gt;= STR_TO_DATE(#{adjustAfterMdateStart}, '%Y-%m-%d')
 		</if>
 		<if test="adjustAfterMdateEnd != null and adjustAfterMdateEnd != ''">
-			and PRD_MDATE_ADJUST.MDATE &lt;= STR_TO_DATE(#{adjustAfterMdateEnd}, '%Y-%m-%d')
+			and PMAD.MDATE &lt;= STR_TO_DATE(#{adjustAfterMdateEnd}, '%Y-%m-%d')
 		</if>
 		<if test="adjustType != null and adjustType != ''">
-			and PRD_MDATE_ADJUST.ADJUST_TYPE = #{adjustType}
+			and PMAD.ADJUST_TYPE = #{adjustType}
 		</if>
 		<if test="sendStatus !=null and sendStatus !=''">
 			AND IFNULL(PMSI.SEND_STATUS, '03') = #{sendStatus,jdbcType=VARCHAR}

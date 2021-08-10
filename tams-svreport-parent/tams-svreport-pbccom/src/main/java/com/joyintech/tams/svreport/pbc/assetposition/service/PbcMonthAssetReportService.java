@@ -6810,9 +6810,9 @@ public class PbcMonthAssetReportService  extends BaseService{
 						pbcMonthAssetPositionDtoNew.setInvestDirection(assetsInvestArr[i]);
 						posAssetNewList.add(pbcMonthAssetPositionDtoNew);
 					} catch (IllegalAccessException e) {
-						e.printStackTrace();
+                         logger.error(e.getMessage(),e);
 					} catch (InvocationTargetException e) {
-						e.printStackTrace();
+                         logger.error(e.getMessage(),e);
 					}
         		 }
         	 }

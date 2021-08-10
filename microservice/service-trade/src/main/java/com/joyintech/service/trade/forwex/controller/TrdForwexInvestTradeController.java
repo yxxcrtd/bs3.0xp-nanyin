@@ -64,7 +64,7 @@ public class TrdForwexInvestTradeController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<TrdForwexInvestTradeDto> queryForPage(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
     	Page<TrdForwexInvestTradeDto> returnPage= trdForwexInvestTradeService.selectForPage(page, length, param);
     	return returnPage;
     }
@@ -80,7 +80,7 @@ public class TrdForwexInvestTradeController {
      */
     @RequestMapping("getTrdForwexInvestTradeDto/{tradeId}")
     public TrdForwexInvestTradeDto getTrdForwexInvestTradeDto(@PathVariable("tradeId") String tradeId)
-            throws Exception {
+    {
         return trdForwexInvestTradeService.getTrdForwexInvestTradeDto(tradeId);
     }
 

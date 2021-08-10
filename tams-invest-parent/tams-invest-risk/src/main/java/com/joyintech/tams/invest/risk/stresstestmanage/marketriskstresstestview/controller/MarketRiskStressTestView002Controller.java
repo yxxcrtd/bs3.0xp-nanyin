@@ -71,14 +71,14 @@ public class MarketRiskStressTestView002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findOnePage")
     public Page<MarketRiskStressTestView002Dto> selectForPage()
-        throws Exception {
+         {
        Map<String, Object> map = RequestUtil.getParameters(getRequest());
        Page<MarketRiskStressTestView002Dto> page = marketRiskStressTestView002Service.selectAll(map);
         return page;
     }
     @RequestMapping("export")
 	public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
     	Map<String, Object> Params=RequestUtil.getParameters(getRequest());
     	//树状图导出功能:此处写比较猥琐，为了展示报告时将现金余额放在一起，导出时不影响树状结构
     	Params.put("isExport", "Y");

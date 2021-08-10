@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFile;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PbcDataFileMapper {
     int deleteByPrimaryKey(String fileid);
 

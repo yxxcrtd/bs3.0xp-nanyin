@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.accounadjustmanage.valueaddedtax.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -176,12 +177,11 @@ public class ValueAddedTax001Controller extends BaseController {
     /**
      * 查询页面
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValueAddedTax001Dto> selectBalanceStatement()
-        throws Exception {
+         {
         Page<ValueAddedTax001Dto> page = valueAddedTax001Service.selectForPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
@@ -189,23 +189,21 @@ public class ValueAddedTax001Controller extends BaseController {
     /**
      * 查询页面
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("selectSum")
     public Page<ValueAddedTax001Dto> selectSum()
-        throws Exception {
+         {
         return valueAddedTax001Service.selectSum(RequestUtil.getParameters(getRequest()));
     }
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         Map<String, Object> para= RequestUtil.getPageParam();
         List<ValueAddedTax001Dto> dtoList;

@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -47,6 +49,10 @@ import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectwaterque
  */
 @Service
 public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubjectWaterQuery001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValSubjectWaterQuery001Service.class);
 
     @Autowired
     private ValSubjectWaterQuery001Mapper valSubjectWaterQuery001Mapper;
@@ -103,7 +109,7 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
      * @see
      * @since 1.0
      */
-    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto) throws Exception {
+    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto) {
     	return restTemplate.postForList(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValSubjectWaterQuery001/getSubjectWater",
                 dto, ValSubjectWaterQuery001Dto.class);
@@ -116,7 +122,7 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
      * @return 表格信息
      * @throws Exception
      */
-    public Page<ValSubjectWaterQuery001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ValSubjectWaterQuery001Dto> findPage(Map<String, Object> params) {
     	 return restTemplate.postForPage(
 	                ServiceApplication.VALUATION_SERVICE_NAME + "/ValSubjectWaterQuery001/findPage",
 	                params, ValSubjectWaterQuery001Dto.class);
@@ -178,16 +184,14 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
             try {
 				dto.setBookDateBegin(DateUtil.parseDate(bookDateBegin, "yyyy-MM-dd"));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
         }
         if (StringUtil.isNotEmpty(bookDateEnd)) {
             try {
 				dto.setBookDateEnd(DateUtil.parseDate(bookDateEnd, "yyyy-MM-dd"));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
         }
         // 账套类别
@@ -204,7 +208,7 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
         try {
             return findPage(selectParam);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

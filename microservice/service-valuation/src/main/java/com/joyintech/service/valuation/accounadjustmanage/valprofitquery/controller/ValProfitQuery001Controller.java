@@ -48,8 +48,7 @@ public class ValProfitQuery001Controller extends BaseController {
 
 
     @PostMapping("findPage")
-    public List<ValProfitQuery001Dto> selectBalanceStatement(@RequestBody Map<String, Object> paraMap)
-        throws Exception {
+    public List<ValProfitQuery001Dto> selectBalanceStatement(@RequestBody Map<String, Object> paraMap) throws ParseException {
     	// 报表维度为单账套
     	if (DictCodeListExt2.批处理账套类型_账套.getValue().equals(String.valueOf(paraMap.get("reportDimen")))) {
     		return valProfitQuery001Service.findPage(paraMap);
@@ -109,7 +108,7 @@ public class ValProfitQuery001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getTermLink")
-	public List<SelectOptionDto> getTradeMarket() throws Exception {
+	public List<SelectOptionDto> getTradeMarket() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		String reportTermType = (String) param.get("reportTermType");
 

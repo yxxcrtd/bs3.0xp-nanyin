@@ -40,6 +40,8 @@ import com.joyintech.tams.report.common.dto.ChbTransformRuleObjDto;
 import com.joyintech.tams.report.common.dto.TransformRule001Dto;
 import com.joyintech.tams.report.common.util.ChbSensitiveInfoUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -50,6 +52,10 @@ import com.joyintech.tools.collectors.JoyinCollectors;
  * @since 1.0
  */
 public class BaseCheckLib {
+    /**
+     * 日志
+     */
+    private  static Logger logger = LoggerFactory.getLogger(BaseCheckLib.class);
 	  public static Map<String,List<ChbTransformRuleObjDto>> objFiledsMap;
 	  public static Map<String,TransformRule001Dto> spzMap;
 	  public static final String PATTERN_ALL = "^[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
@@ -61,77 +67,77 @@ public class BaseCheckLib {
 	  	  
 public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF]{0,}$";
 	  public static final String NEW_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF-\\u0020\\u0020]{0,}$"; 
-	  public static void main(String[] args) {
-//        String s = "12.345.6";
-//        System.out.println(isNumeric(s));
-		 String aString = "10%:股票(二级市场);10%-20%:公司债券;30%:信贷资产;";
-//		 Boolean flagBoolean = aString.matches(PATTERN_NOSYMBOL);
-//		 System.out.println(flagBoolean);
-		 String cc = "C1111109999912";
-		 String c1 = "C11111";
-		 System.out.println(cc.matches("^[0-9a-zA-Z]{6}[0-9]{2}[ABC]?[0-9]{6}$"));
-		 System.out.println(cc.matches("^[0-9a-zA-Z]{8}[ABC]?[0-9]{6}$"));
-		 System.out.println("^[0-9a-zA-Z]{14}$".matches(cc));
-		 System.out.println(c1.matches("^[0-9a-zA-Z]{6}$"));
-		 
-//        Map<String, String> map = new HashMap<String, String>();
-//        map.put("TESTID", "1");
-//        map.put("TESTNAME", "test00000990");
-//        map.put("VDATE", "20180801");
-//        map.put("MDATE", "20190731");
-//        map.put("DEAL_TYPE", "01");
-//        map.put("OPEN_PLAN", "100");
-//        map.put("OPERATE_MODE", "0");
+//	  public static void main(String[] args) {
+////        String s = "12.345.6";
+////        System.out.println(isNumeric(s));
+//		 String aString = "10%:股票(二级市场);10%-20%:公司债券;30%:信贷资产;";
+////		 Boolean flagBoolean = aString.matches(PATTERN_NOSYMBOL);
+////		 System.out.println(flagBoolean);
+//		 String cc = "C1111109999912";
+//		 String c1 = "C11111";
+//		 System.out.println(cc.matches("^[0-9a-zA-Z]{6}[0-9]{2}[ABC]?[0-9]{6}$"));
+//		 System.out.println(cc.matches("^[0-9a-zA-Z]{8}[ABC]?[0-9]{6}$"));
+//		 System.out.println("^[0-9a-zA-Z]{14}$".matches(cc));
+//		 System.out.println(c1.matches("^[0-9a-zA-Z]{6}$"));
 //
-//        CheckElement rule = new CheckElement();
-//        rule.setCheckmethod("isNumber");
-//        rule.setNullable("Y");
-//        rule.setSrcproperty("AMOUNT");
-//        
-//        map.put("AMOUNT", "123");
-//        rule.setObjvalue("6,0");
-//        System.out.println("isNumber方法结果[true]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
+////        Map<String, String> map = new HashMap<String, String>();
+////        map.put("TESTID", "1");
+////        map.put("TESTNAME", "test00000990");
+////        map.put("VDATE", "20180801");
+////        map.put("MDATE", "20190731");
+////        map.put("DEAL_TYPE", "01");
+////        map.put("OPEN_PLAN", "100");
+////        map.put("OPERATE_MODE", "0");
+////
+////        CheckElement rule = new CheckElement();
+////        rule.setCheckmethod("isNumber");
+////        rule.setNullable("Y");
+////        rule.setSrcproperty("AMOUNT");
+////
+////        map.put("AMOUNT", "123");
+////        rule.setObjvalue("6,0");
+////        System.out.println("isNumber方法结果[true]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
+////
+////        map.put("AMOUNT", "123.");
+////        rule.setObjvalue("6,0");
+////        System.out.println("isNumber方法结果[true]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
+////
+////        map.put("AMOUNT", ".123");
+////        rule.setObjvalue("6,3");
+////        System.out.println("isNumber方法结果[true]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
+////
+////        map.put("AMOUNT", "0.123");
+////        rule.setObjvalue("6,3");
+////        System.out.println("isNumber方法结果[true]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
+////
+////        map.put("AMOUNT", "01.23");
+////        rule.setObjvalue("6,2");
+////        System.out.println("isNumber方法结果[true]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
+////
+////        map.put("AMOUNT", "123");
+////        rule.setObjvalue("6,2");
+////        System.out.println("isNumber方法结果[false]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
+////
+////        Map<String, String> map = new HashMap<String, String>();
+////        map.put("TESTID", "1");
+////        map.put("TESTNAME", "test00000990");
+////        map.put("AMOUNT", "12");
+////        map.put("VDATE", "2017-02-28");
+////        map.put("MDATE", "20190731");
+////        map.put("DEAL_TYPE", "01");
+////        map.put("OPEN_PLAN", "100");
+////        map.put("OPERATE_MODE", "0");
+////
+////        CheckElement rule = new CheckElement();
+////        rule.setCheckmethod("isValidDate");
+////        rule.setNullable("Y");
+////        //rule.setCompareto(">");
+////        rule.setObjvalue("YYYY-MM-dd");
+////        rule.setSrcproperty("VDATE");
+////
+////        System.out.println("结果:"+isValidDate(map,rule));
 //
-//        map.put("AMOUNT", "123.");
-//        rule.setObjvalue("6,0");
-//        System.out.println("isNumber方法结果[true]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
-//        
-//        map.put("AMOUNT", ".123");
-//        rule.setObjvalue("6,3");
-//        System.out.println("isNumber方法结果[true]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");        
-//
-//        map.put("AMOUNT", "0.123");
-//        rule.setObjvalue("6,3");
-//        System.out.println("isNumber方法结果[true]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
-//
-//        map.put("AMOUNT", "01.23");
-//        rule.setObjvalue("6,2");
-//        System.out.println("isNumber方法结果[true]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
-//
-//        map.put("AMOUNT", "123");
-//        rule.setObjvalue("6,2");
-//        System.out.println("isNumber方法结果[false]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
-//        
-//        Map<String, String> map = new HashMap<String, String>();
-//        map.put("TESTID", "1");
-//        map.put("TESTNAME", "test00000990");
-//        map.put("AMOUNT", "12");
-//        map.put("VDATE", "2017-02-28");
-//        map.put("MDATE", "20190731");
-//        map.put("DEAL_TYPE", "01");
-//        map.put("OPEN_PLAN", "100");
-//        map.put("OPERATE_MODE", "0");
-//
-//        CheckElement rule = new CheckElement();
-//        rule.setCheckmethod("isValidDate");
-//        rule.setNullable("Y");
-//        //rule.setCompareto(">");
-//        rule.setObjvalue("YYYY-MM-dd");
-//        rule.setSrcproperty("VDATE");
-//        
-//        System.out.println("结果:"+isValidDate(map,rule));
-        
-    }
+//    }
 
     /**
      * 根据指定的规则，判断数据是否为空 
@@ -187,7 +193,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 			byte[] b_gbk = srcValue.getBytes("GBK");
 			return (b_gbk.length < length);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 			return false;
 		}
     }
@@ -585,7 +591,6 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             sdf.parse(srcValue);
             ret = true;
         } catch (ParseException e) {
-            //e.printStackTrace();
             ret = false;
         }
 
@@ -647,7 +652,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         try {
             return srcValue.matches(format);
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return false;
         }
     }
@@ -672,7 +677,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         try {
             ff= srcValue.matches(format);
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return false;
         }
         //白名单验证不通过后继续检查有没有存在生僻字库中
@@ -937,7 +942,6 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             sdf.parse(srcValue);
             ret = true;
         } catch (ParseException e) {
-            //e.printStackTrace();
             ret = false;
         }
         
@@ -974,7 +978,6 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             sdf.parse(srcValue);
             ret = true;
         } catch (ParseException e) {
-            //e.printStackTrace();
             ret = false;
         }
         
@@ -1202,7 +1205,6 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             	return true;
             }
         } catch (ParseException e) {
-            //e.printStackTrace();
         	return true;
         }
     }

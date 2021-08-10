@@ -97,7 +97,7 @@ public class MarketRiskSceneManage003Controller extends BaseController {
     /** 因子变化信息查询 */
     @ResponseBody
     @RequestMapping("/queryfactorList")
-    public List<MarketRiskSceneManage003Dto> queryFactorInfoList() throws Exception {
+    public List<MarketRiskSceneManage003Dto> queryFactorInfoList() {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         String origin = getParam("origin");
         map.put("origin", origin);
@@ -132,7 +132,7 @@ public class MarketRiskSceneManage003Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return marketRiskSceneManage003Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

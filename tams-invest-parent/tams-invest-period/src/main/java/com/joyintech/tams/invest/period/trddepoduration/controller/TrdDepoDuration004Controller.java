@@ -27,6 +27,7 @@ import com.joyintech.tams.invest.period.trddepoduration.dto.TrdDepoDuration001Dt
 import com.joyintech.tams.invest.period.trddepoduration.service.TrdDepoDuration001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -190,13 +191,12 @@ public class TrdDepoDuration004Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) TrdDepoDuration001Dto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) TrdDepoDuration001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

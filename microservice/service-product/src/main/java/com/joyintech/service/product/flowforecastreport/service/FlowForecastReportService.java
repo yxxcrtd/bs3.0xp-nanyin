@@ -56,7 +56,7 @@ public class FlowForecastReportService extends CommonExportService<FlowCommonDto
      * @throws Exception 异常信息
      */
     public Page<FlowCommonDto> selectReserve(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
         // 定义变量.查询时间
         String queryDateStr = (String)map.get("queryDate");
         // 定义 变量.返回结果List
@@ -348,7 +348,7 @@ public class FlowForecastReportService extends CommonExportService<FlowCommonDto
      * @throws Exception 异常信息
      */
     public Page<FlowCommonDto> selectForcast(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
         // 定义变量.查询时间
         String queryDateStr = (String)map.get("queryDate");
         // 定义 变量.返回结果List

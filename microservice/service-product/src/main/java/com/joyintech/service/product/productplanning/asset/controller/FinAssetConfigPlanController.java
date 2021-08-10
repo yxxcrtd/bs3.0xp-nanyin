@@ -59,7 +59,7 @@ public class FinAssetConfigPlanController {
      */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<FinAssetConfigPlanDto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return finAssetConfigPlanService.selectForPage(page, length, param);
     }
     
@@ -72,7 +72,7 @@ public class FinAssetConfigPlanController {
      * @since 1.0
      */
     @PostMapping("queryAssetConfigPlanList")
-    public List<FinAssetConfigPlanDto> queryAssetConfigPlanList(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FinAssetConfigPlanDto> queryAssetConfigPlanList(@RequestBody Map<String, Object> param) {
         return finAssetConfigPlanService.queryAssetConfigPlanList(param);
     }
     

@@ -16,6 +16,11 @@
         <result column="VALUE_ADDED" property="valueAdded" jdbcType="DECIMAL" />
         <result column="SUSPENSION_INFO" property="suspensionInfo" jdbcType="VARCHAR" />
         <result column="EQUITY_INFO" property="equityInfo" jdbcType="VARCHAR" />
+        <result column="SECURITY_COST_ORI" property="securityCostOri" jdbcType="DECIMAL" />
+        <result column="SMV_ORI" property="smvOri" jdbcType="DECIMAL" />
+        <result column="VALUE_ADDED_ORI" property="valueAddedOri" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="EXCHANGE_RATE" property="exchangeRate" jdbcType="DECIMAL" />
         <result column="IMP_MODE" property="impMode" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
@@ -27,7 +32,9 @@
     <sql id="Base_Column_List" >
         VAL_DATE VAL_DATE, PTL_ID PTL_ID, SUB_CODE SUB_CODE, FINPROD_ID FINPROD_ID, SECURITY_QUANTITY SECURITY_QUANTITY, 
         UNIT_COST UNIT_COST, SECURITY_COST SECURITY_COST, CTNWR CTNWR, MCP MCP, SMV SMV, 
-        MCR MCR, VALUE_ADDED VALUE_ADDED, SUSPENSION_INFO SUSPENSION_INFO, EQUITY_INFO EQUITY_INFO, 
+        MCR MCR, VALUE_ADDED VALUE_ADDED, SUSPENSION_INFO SUSPENSION_INFO, EQUITY_INFO EQUITY_INFO,
+        SECURITY_COST_ORI SECURITY_COST_ORI, SMV_ORI SMV_ORI, VALUE_ADDED_ORI VALUE_ADDED_ORI,
+        CCY CCY, EXCHANGE_RATE EXCHANGE_RATE,
         IMP_MODE IMP_MODE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, SUB_NAME SUB_NAME
     </sql>
@@ -60,7 +67,9 @@
             FINPROD_ID, SECURITY_QUANTITY, UNIT_COST, 
             SECURITY_COST, CTNWR, MCP, 
             SMV, MCR, VALUE_ADDED, 
-            SUSPENSION_INFO, EQUITY_INFO, IMP_MODE, 
+            SUSPENSION_INFO, EQUITY_INFO,
+            SECURITY_COST_ORI, SMV_ORI,
+            VALUE_ADDED_ORI, CCY, EXCHANGE_RATE,IMP_MODE,
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, SUB_NAME
             )
@@ -68,7 +77,10 @@
             #{finprodId,jdbcType=VARCHAR}, #{securityQuantity,jdbcType=DECIMAL}, #{unitCost,jdbcType=DECIMAL}, 
             #{securityCost,jdbcType=DECIMAL}, #{ctnwr,jdbcType=DECIMAL}, #{mcp,jdbcType=DECIMAL}, 
             #{smv,jdbcType=DECIMAL}, #{mcr,jdbcType=DECIMAL}, #{valueAdded,jdbcType=DECIMAL}, 
-            #{suspensionInfo,jdbcType=VARCHAR}, #{equityInfo,jdbcType=VARCHAR}, #{impMode,jdbcType=VARCHAR}, 
+            #{suspensionInfo,jdbcType=VARCHAR}, #{equityInfo,jdbcType=VARCHAR},
+            #{securityCostOri,jdbcType=DECIMAL}, #{smvOri,jdbcType=DECIMAL},#{valueAddedOri,jdbcType=DECIMAL},
+            #{ccy,jdbcType=VARCHAR},#{exchangeRate,jdbcType=DECIMAL},
+            #{impMode,jdbcType=VARCHAR},
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{subName,jdbcType=VARCHAR}
             )
@@ -117,6 +129,21 @@
             </if>
             <if test="equityInfo != null" >
                 EQUITY_INFO,
+            </if>
+            <if test="securityCostOri != null" >
+                SECURITY_COST_ORI,
+            </if>
+            <if test="smvOri != null" >
+                SMV_ORI,
+            </if>
+            <if test="valueAddedOri != null" >
+                VALUE_ADDED_ORI,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="exchangeRate != null" >
+                EXCHANGE_RATE,
             </if>
             <if test="impMode != null" >
                 IMP_MODE,
@@ -183,6 +210,21 @@
             <if test="equityInfo != null" >
                 #{equityInfo,jdbcType=VARCHAR},
             </if>
+            <if test="securityCostOri != null" >
+                #{securityCostOri,jdbcType=DECIMAL},
+            </if>
+            <if test="smvOri != null" >
+                #{smvOri,jdbcType=DECIMAL},
+            </if>
+            <if test="valueAddedOri != null" >
+                #{valueAddedOri,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeRate != null" >
+                #{exchangeRate,jdbcType=DECIMAL},
+            </if>
             <if test="impMode != null" >
                 #{impMode,jdbcType=VARCHAR},
             </if>
@@ -208,11 +250,13 @@
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskValtblAssetSub" >
         insert into RSK_VALTBL_ASSET_SUB(VAL_DATE, PTL_ID, SUB_CODE, FINPROD_ID, SECURITY_QUANTITY, 
-        UNIT_COST, SECURITY_COST, CTNWR, MCP, SMV, MCR, VALUE_ADDED, SUSPENSION_INFO, EQUITY_INFO, 
+        UNIT_COST, SECURITY_COST, CTNWR, MCP, SMV, MCR, VALUE_ADDED, SUSPENSION_INFO, EQUITY_INFO,
+        SECURITY_COST_ORI, SMV_ORI, VALUE_ADDED_ORI, CCY, EXCHANGE_RATE,
         IMP_MODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUB_NAME
         )
         select VAL_DATE, PTL_ID, SUB_CODE, FINPROD_ID, SECURITY_QUANTITY, 
-            UNIT_COST, SECURITY_COST, CTNWR, MCP, SMV, MCR, VALUE_ADDED, SUSPENSION_INFO, EQUITY_INFO, 
+            UNIT_COST, SECURITY_COST, CTNWR, MCP, SMV, MCR, VALUE_ADDED, SUSPENSION_INFO, EQUITY_INFO,
+            SECURITY_COST_ORI, SMV_ORI, VALUE_ADDED_ORI,  CCY, EXCHANGE_RATE,
             IMP_MODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SUB_NAME
             
              from RSK_VALTBL_ASSET_SUB
@@ -254,6 +298,21 @@
             <if test="equityInfo != null" >
                 EQUITY_INFO = #{equityInfo,jdbcType=VARCHAR},
             </if>
+            <if test="securityCostOri != null" >
+                SECURITY_COST_ORI = #{securityCostOri,jdbcType=DECIMAL},
+            </if>
+            <if test="smvOri != null" >
+                SMV_ORI = #{smvOri,jdbcType=DECIMAL},
+            </if>
+            <if test="valueAddedOri != null" >
+                VALUE_ADDED_ORI = #{valueAddedOri,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeRate != null" >
+                EXCHANGE_RATE = #{exchangeRate,jdbcType=DECIMAL},
+            </if>
             <if test="impMode != null" >
                 IMP_MODE = #{impMode,jdbcType=VARCHAR},
             </if>
@@ -284,6 +343,11 @@
             VALUE_ADDED = #{valueAdded,jdbcType=DECIMAL},
             SUSPENSION_INFO = #{suspensionInfo,jdbcType=VARCHAR},
             EQUITY_INFO = #{equityInfo,jdbcType=VARCHAR},
+            SECURITY_COST_ORI = #{securityCostOri,jdbcType=DECIMAL},
+            SMV_ORI = #{smvOri,jdbcType=DECIMAL},
+            VALUE_ADDED_ORI = #{valueAddedOri,jdbcType=DECIMAL},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            EXCHANGE_RATE = #{exchangeRate,jdbcType=DECIMAL},
             IMP_MODE = #{impMode,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},

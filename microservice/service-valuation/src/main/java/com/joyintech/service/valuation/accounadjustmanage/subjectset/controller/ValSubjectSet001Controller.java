@@ -101,7 +101,7 @@ public class ValSubjectSet001Controller extends BaseController {
      */
     @PostMapping("/getFSubjectId2")
     public List<SuggestDto> getFSubjectId2(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         String params = (String) param.get("param");
         return valSubjectSet001Service.getFSubjectId2(params);
     }
@@ -116,7 +116,7 @@ public class ValSubjectSet001Controller extends BaseController {
      */
     @PostMapping("/getSubjectId")
     public List<SuggestDto> getSubjectId(@RequestBody String param)
-        throws Exception {
+    {
 //        String param = super.getRequest().getParameter("param");
         return valSubjectSet001Service.getSubjectId(param);
     }
@@ -146,7 +146,7 @@ public class ValSubjectSet001Controller extends BaseController {
      */
     @PostMapping("/getSubjectId2")
     public List<SelectOptionDto> getSubjectId2(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         return valSubjectSet001Service.getSubjectId2(map);
     }
 
@@ -160,7 +160,7 @@ public class ValSubjectSet001Controller extends BaseController {
      */
     @PostMapping("/getSubjectLevel")
     public List<SelectOptionDto> getSubjectLevel(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         return valSubjectSet001Service.getSubjectLevel(map);
 //        List<SelectOptionDto> list = Lists.newArrayList();
 //        String subjectNo = getParam("subjectNo");
@@ -188,7 +188,7 @@ public class ValSubjectSet001Controller extends BaseController {
      */
     @PostMapping("/getBooksetId")
     public List<SuggestDto> getBooksetId(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         String params = (String) param.get("param");
         return valAssetBook001Service.getBooksetIdByBooksetType(params);
     }
@@ -217,7 +217,7 @@ public class ValSubjectSet001Controller extends BaseController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValBokSubjectDto> selectAllSubject(@RequestBody Map<String, Object> pageParam,
                                                    @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<ValBokSubjectDto> pages = valSubjectSet001Service.selectForPage(page,length,pageParam);
         return pages;
     }

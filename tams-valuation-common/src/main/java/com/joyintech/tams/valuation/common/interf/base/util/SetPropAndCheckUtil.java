@@ -50,8 +50,7 @@ public class SetPropAndCheckUtil {
      * @since 1.0
      */
     public static void setValue(Field _f, Object _obj, String _v, TemplateOrderInfoReaderDTO check,
-                          ValInterflog checkLog, StringBuffer checkError, String o_col)
-        throws Exception {
+                          ValInterflog checkLog, StringBuffer checkError, String o_col) throws IllegalAccessException {
         _f.setAccessible(true);
         Class<?> t = _f.getType();
         if (t.toString().contains("java.util.Date")) {

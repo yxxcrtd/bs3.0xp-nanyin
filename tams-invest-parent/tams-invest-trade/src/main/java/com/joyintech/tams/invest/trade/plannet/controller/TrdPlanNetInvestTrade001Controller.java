@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.trade.plannet.service.TrdPlanNetInvestTrade002S
 import com.joyintech.tams.invest.trade.plannet.service.TrdPlanNetInvestTrade003Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -137,7 +138,7 @@ public class TrdPlanNetInvestTrade001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TrdPlanNetInvestTradeDto> findPage()
-        throws Exception {
+         {
         return trdPlanNetInvestTrade001Service.findPage(RequestUtil.getPageParam());
     }
     
@@ -296,7 +297,7 @@ public class TrdPlanNetInvestTrade001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult revoke(@RequestBody @Validated({
-        ValidateGroupDelete.class}) TrdPlanNetInvestTradeDto entity, BindingResult br) throws Exception {
+        ValidateGroupDelete.class}) TrdPlanNetInvestTradeDto entity, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -400,7 +401,7 @@ public class TrdPlanNetInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return trdPlanNetInvestTrade001Service.export(this.getPageId(),

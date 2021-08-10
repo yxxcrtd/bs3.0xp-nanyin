@@ -25,6 +25,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -113,11 +114,15 @@ public class FinStockInfo002Controller extends BaseController {
             FinStockInfoDto dto = finStockInfoService.selectByFinprodId(finprodId);
             dto.setRealFinProductId(finprodId);
             //commonBusinessService.setTradeMarketId(dto,model);
-            if("03".equals(dto.getTradeMarket())){ 
-            	dto.setTradeMarketId(".SH");
-            }else{
+            //modify by yjp ZGBSEI-138 香港联合交易所得标的查看和编辑页面也变成.SZ 20210806 START
+            if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())){
+                dto.setTradeMarketId(".SH");
+            }else if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
             	dto.setTradeMarketId(".SZ");
+            }else if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_香港联合交易所.getValue())){
+                dto.setTradeMarketId(".HK");
             }
+            //modify by yjp ZGBSEI-138 香港联合交易所得标的查看和编辑页面也变成.SZ 20210806 END
             if(null != dto){
                 model.addAttribute("businessId", dto.getFinprodId());
               //  model.addAttribute("businessId", dto.getFinprodId().substring(0,dto.getFinprodId().indexOf(".")));
@@ -134,7 +139,7 @@ public class FinStockInfo002Controller extends BaseController {
            // dto.setFinprodId(IDGenerator.generate());
             dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             dto.setIsMarginFinprod(DictCodeList.是否_否.getValue());
-            dto.setShOrZh(DictCodeListExt2.是否沪港通或深港通_否.getValue());
+//            dto.setShOrZh(DictCodeListExt2.是否沪港通或深港通_否.getValue());
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
             //commonBusinessService.setTradeMarketId(dto,model);
             model.addAttribute("entity", dto);
@@ -255,8 +260,7 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
     public AjaxResult save(@RequestBody
                                @Validated({
         ValidateGroupEdit.class})
-                                   FinStockInfoDto dto, BindingResult br)
-        throws Exception {
+                                   FinStockInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -314,8 +318,7 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
      */
     @ResponseBody
     @RequestMapping("/getCustomerName")
-    public List<SuggestDto> getCustomerName()
-            throws Exception {
+    public List<SuggestDto> getCustomerName(){
         String param = super.getRequest().getParameter("param");
         List<SuggestDto> temp = finStockInfoService.getCustomerName(param);
         return temp;
@@ -329,7 +332,7 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
      */
     @ResponseBody
     @RequestMapping("/getCalendarId")
-    public AjaxResult getCalendarId(@RequestParam("tradeMarket") String tradeMarket) throws ParseException{
+    public AjaxResult getCalendarId(@RequestParam("tradeMarket") String tradeMarket) {
         AjaxResult ar = new AjaxResult();
         if(tradeMarket.equals("03")){
             tradeMarket = "04";
@@ -338,6 +341,22 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
             tradeMarket = "05";
         }
         List<SuggestDto> temp =  finStockInfoService.getCalendarId(tradeMarket);
+        ar.setData(temp);
+        return ar;
+    }
+
+    /**
+     * 沪港通&深港通交易日历
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getShOrZhCalendarId")
+    public AjaxResult getShOrZhCalendarId() {
+        AjaxResult ar = new AjaxResult();
+        List<SuggestDto> temp =  finStockInfoService.getShOrZhCalendarId();
         ar.setData(temp);
         return ar;
     }

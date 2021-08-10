@@ -25,9 +25,15 @@ import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,18 +81,23 @@ public class AssetInfoDetail002Controller extends BaseController {
         String assetUuid = this.getParam("assetUuid");
         String dataStatus = this.getParam("dataStatus");
         String issuepartyid= CommonUtil.selectBankCode();
-
-        //资产编号不为空则为修改.
-
+        String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String jsonObject= JSONObject.toJSONString(assetInfoDetailMService.getDataListLink());
         model.addAttribute("AssetTypeListLink", jsonObject);
-
-        AssetInfoDetailDto  dto=new   AssetInfoDetailDto();
-        dto.setIssuePartyId(issuepartyid);
-        model.addAttribute(GlobalConstant.ENTITY, dto);
-        if(StringUtil.isNotEmpty(assetUuid)&&StringUtil.isNotEmpty(dataStatus)){
-              dto = assetInfoDetailMService.getAssetInfoDetail(assetUuid,dataStatus);
+        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {// 判断是否存在于工作流中
+            AssetInfoDetailDto dto = assetInfoDetailMService.getBussinessEntityByWorkflowId(
+                    workflowId);
+            model.addAttribute("pageModel", dto.getPageModel());
             model.addAttribute(GlobalConstant.ENTITY, dto);
+        }else {
+            AssetInfoDetailDto dto = new AssetInfoDetailDto();
+            dto.setIssuePartyId(issuepartyid);
+            model.addAttribute(GlobalConstant.ENTITY, dto);
+            //资产编号不为空则为修改.
+            if (StringUtil.isNotEmpty(assetUuid) && StringUtil.isNotEmpty(dataStatus)) {
+                dto = assetInfoDetailMService.getAssetInfoDetail(assetUuid, dataStatus);
+                model.addAttribute(GlobalConstant.ENTITY, dto);
+            }
         }
         return super.init(model);
     }
@@ -108,14 +119,34 @@ public class AssetInfoDetail002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) AssetInfoDetailDto dto, BindingResult result) {
-        return commonCheck(result, "save");
+        return commonCheck(result, dto.getOperateType());
     }
+    /**
+     * 保存
+     *
+     * @param dto 实体类
+     * @param br 结果
+     * @return 结果集
+     * @throws WorkFlowException 异常
+     */
     @ResponseBody
-    @RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
-    public AjaxResult doAdd(@RequestBody AssetInfoDetailDto dto) throws Exception {
-        assetInfoDetailMService.doSave(dto);
-        return new AjaxResult("保存成功");
+    @RequestMapping("save")
+    public AjaxResult save(@RequestBody @Validated({
+            ValidateGroupEdit.class}) AssetInfoDetailDto dto, BindingResult br) throws WorkFlowException {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+        ProcessParameter<AssetInfoDetailDto> processParameter = new ProcessParameter<AssetInfoDetailDto>();
+        WorkFlowParameter<AssetInfoDetailDto> params = new WorkFlowParameter<AssetInfoDetailDto>();
+        params.setPageId("AssetInfoDetail002");
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(dto.getAssetCode());
+        params.setBusinessType(DictCodeList.共通业务类型_资产基本信息维护.getValue());
+        processParameter.setWorkFlowParameter(params);
+        String msg = assetInfoDetailMService.start(processParameter, dto);
+        return new AjaxResult(msg);
     }
+    
     @ResponseBody
     @RequestMapping("getValue")
     public BigDecimal getValue(@RequestBody Map<String, Object> param) {

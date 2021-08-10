@@ -52,7 +52,7 @@ public class ValAssetsFundQuery002Controller extends BaseController {
     @Transactional
 	@DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody ValAssetsFundQuery002Dto dto) throws Exception {
+    public void insert(@RequestBody ValAssetsFundQuery002Dto dto){
     	valAssetsFundQuery002Service.doComplete(dto,OperationType.NEW);
     }
     
@@ -66,7 +66,7 @@ public class ValAssetsFundQuery002Controller extends BaseController {
     @Transactional
 	@DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody ValAssetsFundQuery002Dto dto) throws Exception{
+    public void update(@RequestBody ValAssetsFundQuery002Dto dto){
     	valAssetsFundQuery002Service.doComplete(dto,OperationType.MODIFY);
     }
     
@@ -80,7 +80,7 @@ public class ValAssetsFundQuery002Controller extends BaseController {
     @Transactional
 	@DTXTransaction
     @PostMapping("delete")
-    public void delete(@RequestBody ValAssetsFundQuery002Dto dto) throws Exception{
+    public void delete(@RequestBody ValAssetsFundQuery002Dto dto){
     	valAssetsFundQuery002Service.doComplete(dto,OperationType.DELETE);
     }
     

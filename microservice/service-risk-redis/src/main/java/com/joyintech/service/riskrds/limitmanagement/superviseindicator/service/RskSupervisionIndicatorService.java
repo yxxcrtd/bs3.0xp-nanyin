@@ -59,7 +59,7 @@ public class RskSupervisionIndicatorService extends BaseService<RskSupervisionIn
      */
     public Page<RskSupervisionIndicator002Dto> selectForPage(int page, int length,
                                                              Map<String, Object> param)
-        throws Exception {
+    {
         CommonUtil.setInstitutionMapByType_ms(param);
         return super.queryForPage(page, length,
             () -> rskSupervisionIndicatorMapper.selectForPage(param));

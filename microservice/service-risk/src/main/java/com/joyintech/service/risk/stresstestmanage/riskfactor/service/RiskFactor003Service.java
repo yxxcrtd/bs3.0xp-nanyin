@@ -47,7 +47,7 @@ public class RiskFactor003Service extends BaseService<RiskFactor003Dto> {
 
 
     public Page<RiskFactor003Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
     	DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         RiskFactor003selectDto dto = RiskFactor003Mapper.selectdto(pageParam);
         //+ dto.getSelectcriteria() + " and " + dto.getInputcolumn() + "=" + dto.getInputvalue()
@@ -69,7 +69,7 @@ public class RiskFactor003Service extends BaseService<RiskFactor003Dto> {
     }
 
     public RiskFactor003Dto selectdto(Map<String, Object> pageParam)
-            throws Exception {
+    {
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         RiskFactor003Dto DAT = RiskFactor003Mapper.selectdtodate(pageParam);
         DynamicDataSourceHolder.clearDataSource();

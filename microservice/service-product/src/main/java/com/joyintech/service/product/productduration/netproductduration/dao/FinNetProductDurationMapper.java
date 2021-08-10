@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.product.productduration.netproductduration.dto.FinCashPlanDto;
 import com.joyintech.service.product.productduration.netproductduration.dto.FinNetProductDurationDto;
@@ -36,6 +38,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
  * @see FinNetProductDurationMapper
  * @since 1.0
  */
+@Repository
 public interface FinNetProductDurationMapper {
 
     /**

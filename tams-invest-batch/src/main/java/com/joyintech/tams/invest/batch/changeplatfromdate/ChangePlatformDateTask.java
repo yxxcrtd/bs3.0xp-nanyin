@@ -13,6 +13,9 @@ package com.joyintech.tams.invest.batch.changeplatfromdate;
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.web.PlatformDate;
@@ -31,6 +34,7 @@ import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -80,13 +84,35 @@ public class ChangePlatformDateTask extends BatchBaseService {
         JobExecution result = new JobExecution(1l);
         result.setStatus(BatchStatus.FAILED);
 
+        SysBatchExecInfo batchExecuteInfo = this.getBatchExecuteInfo();
+
         try {
-            // 当前平台日
-            Date platformDate = platformDateService.getSysDate();
-            // 切日后平台日
-            Date newPlatformDate = DateUtil.addDay(platformDate, 1);
-            // 平台日切换
-            platformDateService.updateSysDate(newPlatformDate);
+
+            String institutionCode = "";
+            if(MultilevelDataAuthorityUtil.isEnabled()){
+                // 仅 省联社跑批/自动跑批 跑全部平台日  非省联社用户 跑自己机构的数据
+                String createUser = batchExecuteInfo.getCreateUser();
+                // 省联社  || system || admin
+                if(StringUtil.equals(createUser, GlobalConstant.SYSTEM_USER) || StringUtil.equals(createUser, GlobalConstant.SUPER_ADMIN_USER_NAME) || MultilevelDataAuthorityUtil.isTopOrganization(createUser)){
+//                    platformDateService.updateAllSysDate();
+                    // 更新所有机构的平台日   各自基础上 +1
+                    institutionCode = "ALL";
+                }else{
+                    // 更新自己机构的平台日即可
+                    institutionCode = MultilevelDataAuthorityUtil.getOrganizationCode(createUser);
+                }
+                platformDateService.updateAllSysDate(institutionCode);
+
+            }else{
+                // 当前平台日
+                Date platformDate = platformDateService.getSysDate();
+                // 切日后平台日
+                Date newPlatformDate = DateUtil.addDay(platformDate, 1);
+                // 平台日切换
+                platformDateService.updateSysDate(newPlatformDate);
+
+            }
+
 
             if (isSingle) {
                 final String[] services = ServiceApplication.PINGAN_SERVICE_NAME.split(",");
@@ -95,7 +121,7 @@ public class ChangePlatformDateTask extends BatchBaseService {
                         logger.debug("更新一体化应用{}平台日缓存", service);
                         // 调用平安页面端service，刷新平台日缓存
                         simpleRestTemplate.getForObject(
-                                service + "/api/sys/refreshPlatDate",
+                                service + "/api/sys/refreshPlatDate?institutionCode="+institutionCode,
                                 String.class);
                     }
                 }
@@ -103,7 +129,7 @@ public class ChangePlatformDateTask extends BatchBaseService {
             }
             else {
                 // 更新web应用端缓存
-                refreshAppCache();
+                refreshAppCache(institutionCode);
             }
             
             result.setStatus(BatchStatus.COMPLETED);
@@ -120,7 +146,7 @@ public class ChangePlatformDateTask extends BatchBaseService {
     /**
      * 更新web应用端缓存
      */
-    private void refreshAppCache() {
+    private void refreshAppCache(String institutionCode) {
         String serverName = StringUtil.split(ServiceApplication.PINGAN_SERVICE_NAME, "://")[1];
         if (StringUtil.contains(serverName, "/")) {
             serverName = StringUtil.split(serverName, "/")[0];
@@ -134,7 +160,7 @@ public class ChangePlatformDateTask extends BatchBaseService {
                 String apiUrl = StringUtil.replaceOnce(ServiceApplication.PINGAN_SERVICE_NAME, serviceNameFinal,
                         client.getInstanceInfo().getIPAddr() + ":" + client.getInstanceInfo().getPort());
                 logger.debug("更新平台日缓存刷新接口：{}", apiUrl);
-                HttpClient.getString(apiUrl + ServiceApplication.SERVLET_CONTEXT_PATH + "/api/sys/refreshPlatDate", null, null);
+                HttpClient.getString(apiUrl + ServiceApplication.SERVLET_CONTEXT_PATH + "/api/sys/refreshPlatDate?institutionCode="+institutionCode, null, null);
             });
         }
     }

@@ -2191,7 +2191,6 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				try {
 					fout.close();
 				} catch (Exception e) {
-//				e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -2200,7 +2199,6 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				try {
 					osw.close();
 				} catch (Exception e) {
-//				e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -3158,7 +3156,6 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			result = investorsHoldInfo001Mapper.countProdReg(prdRegistCode);
 		}
 		catch (Exception e) {
-//            e.printStackTrace();
 			logger.error(e.getMessage(),e);
 		}
 		return result;

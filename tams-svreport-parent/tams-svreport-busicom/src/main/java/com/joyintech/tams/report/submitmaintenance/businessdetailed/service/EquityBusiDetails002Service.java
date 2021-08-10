@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,10 @@ import com.joyintech.tools.collectors.JoyinCollectors;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class EquityBusiDetails002Service extends BaseService{
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(EquityBusiDetails002Service.class);
 
 	@Autowired
 	private EquityBusiDetails001Mapper equityBusiDetails001Mapper;
@@ -90,7 +96,7 @@ public class EquityBusiDetails002Service extends BaseService{
 
 	/**
 	 * 更新数据
-	 * @param dto
+	 * @param param
 	 */
 	@SuppressWarnings("unchecked")
 	public void doSaveOrUpdate(Map<String, Object> param){
@@ -104,7 +110,7 @@ public class EquityBusiDetails002Service extends BaseService{
 			try {
 				dto = (EquiteBusiDetails001Dto)JsonUtils.map2entity(dtomap,EquiteBusiDetails001Dto.class);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}else{
 			dto=(EquiteBusiDetails001Dto)param.get("objdto");

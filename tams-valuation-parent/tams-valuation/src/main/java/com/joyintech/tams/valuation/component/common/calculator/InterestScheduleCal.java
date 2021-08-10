@@ -64,7 +64,7 @@ public class InterestScheduleCal {
     public static <T extends FinCashPlanDto> List<T> interestScheduleCalA(List<T> lis, AssetCommonInfoDto scai,
                                                        List<FinCashPlanDto> lirs,
                                                        FinRateInfo irr, List<? extends FinCashCalcRule> liy, FinCashPayRule isr,
-                                                       List<String> holidayList, BigDecimal papi, Class<? extends FinCashPlanDetailDto> classdetail) throws ParseException {
+                                                       List<String> holidayList, BigDecimal papi, Class<? extends FinCashPlanDetailDto> classdetail) throws ParseException, IllegalAccessException, InstantiationException {
         // 分段区间计算
         for (T is :lis) {
             List<? extends FinCashPlanDetailDto> lisd = InterestSubCal.cal(is, liy, lirs, scai, papi, classdetail);

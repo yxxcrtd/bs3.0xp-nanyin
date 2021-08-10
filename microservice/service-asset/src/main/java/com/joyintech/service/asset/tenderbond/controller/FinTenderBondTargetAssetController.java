@@ -47,7 +47,7 @@ public class FinTenderBondTargetAssetController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<FinTenderBondTargetAssetDto> selectAll(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return finTenderBondTargetAssetService.selectForPage(page, length, param);
     }
     /**
@@ -61,7 +61,7 @@ public class FinTenderBondTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody FinTenderBondTargetAssetDto dto) throws Exception {
+    public void insert(@RequestBody FinTenderBondTargetAssetDto dto) {
         finTenderBondTargetAssetService.insert(dto);
     }
     // 一级市场新债日历插入 by zhaodongdong start 20191116
@@ -76,7 +76,7 @@ public class FinTenderBondTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("getInsert")
-    public void getInsert(@RequestBody FinTenderBondTargetAssetDto dto) throws Exception {
+    public void getInsert(@RequestBody FinTenderBondTargetAssetDto dto) {
         finTenderBondTargetAssetService.getInsert(dto);
     }
  // 一级市场新债日历插入 by zhaodongdong end 20191116
@@ -90,7 +90,7 @@ public class FinTenderBondTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody FinTenderBondTargetAssetDto dto) throws Exception{
+    public void update(@RequestBody FinTenderBondTargetAssetDto dto) {
         finTenderBondTargetAssetService.update(dto);
     }
     
@@ -104,7 +104,7 @@ public class FinTenderBondTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public void delete(@RequestBody FinTenderBondTargetAssetDto dto) throws Exception{
+    public void delete(@RequestBody FinTenderBondTargetAssetDto dto) {
         finTenderBondTargetAssetService.delete(dto);
     }
     
@@ -117,7 +117,7 @@ public class FinTenderBondTargetAssetController {
      * @since 1.0
      */
     @GetMapping("getBasicInfo")
-    public FinTenderBondTargetAssetDto getBasicInfo(String finprodId) throws Exception {
+    public FinTenderBondTargetAssetDto getBasicInfo(String finprodId) {
         return finTenderBondTargetAssetService.getBasicInfo(finprodId);
     }
     

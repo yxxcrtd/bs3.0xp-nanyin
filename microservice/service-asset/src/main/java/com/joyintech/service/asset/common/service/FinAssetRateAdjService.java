@@ -74,7 +74,7 @@ public class FinAssetRateAdjService extends BaseService<RateAdjDto>{
     }
     
     public Page<RateAdjDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> finAssetRateAdjMapper.queryForPage(pageParam));
     }
     

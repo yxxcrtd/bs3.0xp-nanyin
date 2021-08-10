@@ -40,7 +40,7 @@ public class TaxBalanceQuery001Service extends CommonExportService<TaxBalanceQue
      * @throws Exception
      */
     public Page<TaxBalanceQuery001Dto> findByPage(Map<String, Object> params)
-        throws Exception {
+          {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/TaxBalanceQuery001/findPage",
             params, TaxBalanceQuery001Dto.class);
     }
@@ -53,7 +53,7 @@ public class TaxBalanceQuery001Service extends CommonExportService<TaxBalanceQue
      * @throws Exception
      */
     public List<TaxBalanceQuery001Dto> findByList(Map<String, Object> params)
-        throws Exception {
+          {
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/TaxBalanceQuery001/findAll", params,
             TaxBalanceQuery001Dto.class);
     }

@@ -33,7 +33,7 @@ public class MaxRetReat implements PluginClass {
     }
 	
 	@Override
-    public Object getParamterValue() throws Exception {
+    public Object getParamterValue() {
 		List<Map<String,Object>> unitPriceList=pluginClassDao.getMaxRetReat(sysRefParam.getPortfolioCode(),sysRefParam.getValDate());//取前一日净价
 		if (StringUtil.isEmptyList(unitPriceList)) {
 			return null;

@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.controller;
 
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,7 @@ import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -68,12 +70,10 @@ public class MstBankTranFeeManage001Controller extends BaseController {
     /**
      * 画面查询方法
      * @return 所有数据
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstBankTranFeeManageDto> selectAll()
-        throws Exception {
+    public Page<MstBankTranFeeManageDto> selectAll(){
         return mstBankTranFeeManageService.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -97,13 +97,12 @@ public class MstBankTranFeeManage001Controller extends BaseController {
      * @param dto 费用品种
      * @param br br
      * @return 删除结果
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstBankTranFeeManageDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstBankTranFeeManageDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -127,14 +126,13 @@ public class MstBankTranFeeManage001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
+     * @throws IOException IOException
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<MstBankTranFeeManageDto> param1;
         if (datas == null) {

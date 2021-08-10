@@ -98,13 +98,13 @@
 		       A.EXECUTE_DATE as batchDate,
 		       A.CREATE_TIME batchStartTime,
 		       CASE
-		         WHEN TASK_STATUS in ('EXP', 'END') THEN
+		         WHEN A.TASK_STATUS in ('EXP', 'END') THEN
 		          A.UPDATE_TIME
 		         ELSE
 		          null
 		       END as batchEndTime,
 		       CASE
-		         WHEN TASK_STATUS in ('EXP', 'END') THEN
+		         WHEN A.TASK_STATUS in ('EXP', 'END') THEN
 						round(extract(second from (A.UPDATE_TIME - a.CREATE_TIME)),2)
 		        else
 		          0

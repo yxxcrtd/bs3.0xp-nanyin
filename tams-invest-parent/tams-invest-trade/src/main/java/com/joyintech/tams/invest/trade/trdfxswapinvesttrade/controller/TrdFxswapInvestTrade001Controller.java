@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -114,14 +115,13 @@ public class TrdFxswapInvestTrade001Controller extends BaseController {
      * 分页查询
      * 
      * @return Page<TrdFxswapInvestTrade001Dto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TrdFxswapInvestTrade001Dto> findPage()
-        throws Exception {
+         {
         return trdFxswapInvestTrade001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -129,13 +129,12 @@ public class TrdFxswapInvestTrade001Controller extends BaseController {
      * 画面导出功能实现
      * 
      * @return ResponseEntity 确认的实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+        {
         return trdFxswapInvestTrade001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -165,8 +164,7 @@ public class TrdFxswapInvestTrade001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("delete")
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) TrdFxswapInvestTrade001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) TrdFxswapInvestTrade001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

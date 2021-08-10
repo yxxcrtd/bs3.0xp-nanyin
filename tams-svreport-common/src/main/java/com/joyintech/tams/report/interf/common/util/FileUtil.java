@@ -424,7 +424,6 @@ public class FileUtil {
                 fis.close();
             }
             catch (IOException e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
             }
           }  
@@ -433,7 +432,6 @@ public class FileUtil {
                   isr.close();
               }
               catch (IOException e) {
-//                  e.printStackTrace();
                   logger.error(e.getMessage(),e);
               }
           }  
@@ -442,7 +440,6 @@ public class FileUtil {
                   reader.close();
               }
               catch (IOException e) {
-//                  e.printStackTrace();
                   logger.error(e.getMessage(),e);
               }
           }  

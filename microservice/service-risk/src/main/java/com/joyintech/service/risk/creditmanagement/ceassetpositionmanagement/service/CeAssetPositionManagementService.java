@@ -54,7 +54,7 @@ public class CeAssetPositionManagementService extends BaseService<CeAssetPositio
      * @since 1.0
      */
     public Page<CeAssetPositionManagement001Dto> selectForPage(int page, int length,
-                                                               Map<String, Object> param) throws Exception {
+                                                               Map<String, Object> param) {
         return super.queryForPage(page, length, () ->ceAssetPositionManagementMapper.selectForPage(param));
     }
 

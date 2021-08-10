@@ -70,7 +70,7 @@ public class FlowRiskStressTestView003Controller extends BaseController{
     
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

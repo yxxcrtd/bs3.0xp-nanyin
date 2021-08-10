@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.trade.investtrade.investdealquery.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.file.SafelyFile;
@@ -578,21 +579,21 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		}
 		catch (Exception e) {
 			logger.info(exceltemplate + "生成失败！");
-			throw new RuntimeException(e);
+			throw new BusinessException(e);
 		}finally {
 			if(os != null){
 				try {
 					os.flush();
 					os.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(stream != null){
 				try {
 					stream.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -618,10 +619,10 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		}
 		tmpDir.mkdirs();
 		ZipOutputStream zipOut= null;
+		InputStream input = null;
 		try {
 			File zipFile = new SafelyFile(exportFilePath + File.separator + fileName);
 			zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-			InputStream input = null;
 			if (files != null && !files.isEmpty()) {
 				for (File realFile : files) {
 					if (realFile.exists()) {
@@ -647,14 +648,21 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		}
 		catch (Exception e) {
 			logger.info(fileName + "zip生成失败！");
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}finally {
 			if (zipOut != null){
 				try {
 					zipOut.flush();
 					zipOut.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if (input != null){
+				try {
+					input.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}

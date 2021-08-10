@@ -48,7 +48,7 @@ public class ValBooksetDateSwitch003Service extends CommonExportService<ValBooks
      * @throws Exception
      */
     public List<ValBooksetDateSwitch003Dto> findList(Map<String, Object> params)
-        throws Exception {
+    {
         return mapper.queryPageList(params);
     }
 

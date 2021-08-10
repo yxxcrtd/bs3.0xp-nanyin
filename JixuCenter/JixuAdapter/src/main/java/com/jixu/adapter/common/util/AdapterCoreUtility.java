@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.joyintech.framework.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *   适配器核心utility
@@ -16,7 +18,10 @@ import com.joyintech.framework.util.JsonUtils;
  * @since 1.0
  */
 public class AdapterCoreUtility {
-	
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(AdapterCoreUtility.class);
 	
     /**
      * @Description: 发送数据给目标系统
@@ -38,19 +43,19 @@ public class AdapterCoreUtility {
  		try {
  			//读取配置文件，获取请求下游系统的接口地址
  			Properties prop = AdapterWebserviceIntefUtil.getProperties("webservice.properties");
- 			webserviceUrl = prop.getProperty("webseviceUrl");
+ 			if(prop!=null) {
+				webserviceUrl = prop.getProperty("webseviceUrl");
+			}
  		} catch (IOException e) {
- 			e.printStackTrace();
+			logger.error(e.getMessage(),e);
  		}
  		// 调用下游接口
  		String result = AdapterHttpClientWebservice.send(requestXml, webserviceUrl);
     	
  		if(null!=result) {
  			String responseJson = GenerateXMLUtil.getResponseJson(result);
- 			
  			res = JsonUtils.json2Object(responseJson, Map.class);
  		}
- 		
     	return res;
     }
     

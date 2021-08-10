@@ -10,33 +10,29 @@
  
 package com.joyintech.tams.invest.asset.bond.validator;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.MstBondCreditRating;
-import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
-import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRepInfoDto;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
+import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRepInfoDto;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.bond.dto.FinBondTargetAssetDto;
 import com.joyintech.tams.invest.asset.bond.service.FinBondTargetAssetService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 债券标的信息业务验证
@@ -60,7 +56,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
     private MstWorkflowCommonService mstWorkflowCommonService;
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private ChbDataCheckService chbDataCheckService;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -279,7 +275,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
         }
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
+            resultList = chbDataCheckService.chbCheckCommon(resultList, dto, null, dto.getRepAssetType());
         }
         //ZGBSSE-588  【中债直连】债券标的新建提交时，具体类别选择99其他债券，备注check重复
 //        if((StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT))&&dto.getBussFinBondRepInfoDto().getRepSectype().equals("99")){

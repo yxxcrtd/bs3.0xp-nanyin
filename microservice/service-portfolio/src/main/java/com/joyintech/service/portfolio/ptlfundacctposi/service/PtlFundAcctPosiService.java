@@ -56,7 +56,8 @@ public class PtlFundAcctPosiService extends BaseService<PtlFundAcctPosiDto>{
      * @see
      * @since 1.0
      */
-    public Page<PtlFundAcctPosiDto> selectForPage(int page,int length,Map<String,Object> pageParam) throws Exception{
+    public Page<PtlFundAcctPosiDto> selectForPage(int page,int length,Map<String,Object> pageParam)
+	{
         // add by caiqun 20200819 东莞 工单YHZGCPB20200814003  start
         //pageParam.put("cdate", DateUtil.parse((String)pageParam.get("cdate")));
         pageParam.put("startCDate", DateUtil.parse((String)pageParam.get("startCDate")));
@@ -187,7 +188,8 @@ public class PtlFundAcctPosiService extends BaseService<PtlFundAcctPosiDto>{
      * @see
      * @since 1.0
      */
-    public Page<PtlFundAcctPosiDto> selectForPage1(int page,int length,Map<String,Object> pageParam) throws Exception{
+    public Page<PtlFundAcctPosiDto> selectForPage1(int page,int length,Map<String,Object> pageParam)
+	{
 		pageParam.put("cdate", DateUtil.parse((String)pageParam.get("cdate")));
 		//银行模式，无数据隔离，直接在sql中进行汇总
         if(MultilevelDataAuthorityUtil.isEnabled()) {
@@ -253,7 +255,7 @@ public class PtlFundAcctPosiService extends BaseService<PtlFundAcctPosiDto>{
      * @see
      * @since 1.0
      */
-    public Page<PtlFundAcctPosiDto> selectForPage2(int page,int length,Map<String,Object> pageParam) throws Exception{
+    public Page<PtlFundAcctPosiDto> selectForPage2(int page,int length,Map<String,Object> pageParam) {
     	pageParam.put("cdate", DateUtil.parse((String)pageParam.get("cdate")));
     	pageParam.put("startCdate", DateUtil.parse((String)pageParam.get("startCdate")));
 		pageParam.put("endCdate", DateUtil.parse((String)pageParam.get("endCdate")));

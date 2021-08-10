@@ -50,7 +50,7 @@ public class GetIssueTypeID extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

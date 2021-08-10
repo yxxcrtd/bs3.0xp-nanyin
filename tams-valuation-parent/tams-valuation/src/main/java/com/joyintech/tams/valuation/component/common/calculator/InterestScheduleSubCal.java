@@ -63,7 +63,7 @@ public class InterestScheduleSubCal {
     @SuppressWarnings("unchecked")
     public static <T extends FinCashPlanDto> List<T> interestScheduleSubCalA(List<T> lis, AssetCommonInfoDto scai,
                                                        List<FinCashPlanDto> lirs, List<? extends FinCashCalcRule> liy, FinCashPayRule isr,
-                                                       BigDecimal papi, Class<? extends FinCashPlanDetailDto> classdetail) throws ParseException {
+                                                       BigDecimal papi, Class<? extends FinCashPlanDetailDto> classdetail) throws ParseException, IllegalAccessException, InstantiationException {
         // 分段区间计算
         List<T> newLis = new ArrayList<T>();
         for (T is :lis) {

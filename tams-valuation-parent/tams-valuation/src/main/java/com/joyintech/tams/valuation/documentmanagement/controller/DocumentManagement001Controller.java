@@ -11,12 +11,14 @@
 package com.joyintech.tams.valuation.documentmanagement.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jcraft.jsch.JSchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -68,7 +70,7 @@ public class DocumentManagement001Controller extends BaseController {
      */
 	@RequestMapping("findPage")
 	@ResponseBody
-	public Page<DocumentManagement001Dto> findPage() throws Exception {
+	public Page<DocumentManagement001Dto> findPage() {
 		Map<String, Object> params = RequestUtil.getPageParam();
 		return DocumentManagement001Service.findPage(params);
 	}
@@ -82,7 +84,7 @@ public class DocumentManagement001Controller extends BaseController {
 	 * @throws Exception
 	 */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
             String datas = this.getParam("datas");
             Map<String, Object> paraMap = RequestUtil.getPageParam();
             List<DocumentManagement001Dto> listdto;
@@ -113,8 +115,7 @@ public class DocumentManagement001Controller extends BaseController {
 	 */
     @RequestMapping(value = "/downloadFile")
     @ResponseBody
-    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request)
-            throws Exception { 
+    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws IOException, JSchException {
            return DocumentManagement001Service.downloadFile(request);
     }
 }

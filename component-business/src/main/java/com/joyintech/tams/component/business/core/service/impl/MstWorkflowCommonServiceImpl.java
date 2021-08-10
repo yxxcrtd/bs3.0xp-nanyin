@@ -12,6 +12,8 @@ package com.joyintech.tams.component.business.core.service.impl;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,10 @@ import java.util.Map;
  */
 @Service("componentMstWorkflowCommonService")
 public class MstWorkflowCommonServiceImpl implements MstWorkflowCommonService{
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(MstWorkflowCommonServiceImpl.class);
 	
     @Autowired
     private JoyinRestTemplate restTemplate;
@@ -129,7 +135,7 @@ public class MstWorkflowCommonServiceImpl implements MstWorkflowCommonService{
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+			logger.error(e.getMessage(),e);
         }
         return null;
 	}

@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -78,7 +79,7 @@ public class BankBalanceQuery002Contoller extends BaseController {
      */
     @RequestMapping("searchList")
     @ResponseBody
-    public List<ValSubjectWaterQuery001Dto> searchList() throws Exception {
+    public List<ValSubjectWaterQuery001Dto> searchList() throws ParseException {
         //账套代码
         String booksetId = this.getParam("booksetId");
         //记账日期

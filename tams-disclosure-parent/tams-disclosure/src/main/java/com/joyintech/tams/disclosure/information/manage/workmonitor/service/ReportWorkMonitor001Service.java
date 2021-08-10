@@ -59,9 +59,8 @@ public class ReportWorkMonitor001Service extends CommonExportService<ReportWorkM
      * 
      * @param params 筛选条件
      * @return 表格信息
-     * @throws Exception 
      */
-    public Page<ReportWorkMonitorNew001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ReportWorkMonitorNew001Dto> findPage(Map<String, Object> params) {
         
 //    	String jobId = (String)params.get("jobId");
 //        String[] jobIdArr = null;
@@ -186,7 +185,6 @@ public class ReportWorkMonitor001Service extends CommonExportService<ReportWorkM
 //    		flag = infoDisclosureReadAndGenDetailService.readAndGenMain(repJob, DisclosureDictCodeList.执行标志_重新执行.getValue(),
 //    				map.get("jobSeq").toString(), DateUtil.parse(map.get("execDate").toString()));
 //		} catch (Exception e) {
-////			e.printStackTrace();
 //			logger.error("error:",e);
 //		}
 //    	return flag;
@@ -213,7 +211,6 @@ public class ReportWorkMonitor001Service extends CommonExportService<ReportWorkM
 //    		flag = infoDisclosureReadAndGenDetailService.readAndGenErrorAgain(repJob, dateMap, 
 //    				DateUtil.parse(map.get("execDate").toString()),map.get("jobSeq").toString());
 //		} catch (Exception e) {
-////			e.printStackTrace();
 //			logger.error("error:",e);
 //		}
 //    	return flag;

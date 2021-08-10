@@ -27,7 +27,7 @@ public class ReadXMLFile extends ReadFileBasic {
 		return InterfaceConfig.xml;
 	}
 
-	public DataReadResult readFileDataResult(InterfaceSource source,DataCounter dataCounter) throws Exception{
+	public DataReadResult readFileDataResult(InterfaceSource source,DataCounter dataCounter){
 		List<String> filePaths = getReadFiles(source);
 		DataReadResult result = new DataReadResult();
 		if(result.getFilePathList().size()==0){

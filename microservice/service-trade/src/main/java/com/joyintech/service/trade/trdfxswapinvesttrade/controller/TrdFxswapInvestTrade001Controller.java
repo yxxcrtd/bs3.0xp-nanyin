@@ -61,7 +61,7 @@ public class TrdFxswapInvestTrade001Controller {
     public Page<TrdFxswapInvestTrade001Dto> selectAllCommonChar(@RequestBody Map<String, Object> map,
                                                                 @PathVariable("page") int page,
                                                                 @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdFxswapInvestTrade001Service.selectForPage(page, length, map);
     }
 

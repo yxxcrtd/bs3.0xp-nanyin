@@ -307,7 +307,7 @@ public class InterfBillInfoService {
      * @throws Exception 异常
      */
     public void setWkfUser(InterfBillOutEntity outEntity, DictCodeList busiType)
-        throws Exception {
+    {
         ProcessMark mark = new ProcessMark();
         String pageId = null;
         String cdate = null;

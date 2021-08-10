@@ -320,7 +320,7 @@ public class TrdCommandDispatcher001Service extends CommonExportService<TrdComma
 	 * @return
 	 * @throws Exception
 	 */
-	public int addAutoTime(TrdCommandDispatcher001Dto dto) throws Exception{
+	public int addAutoTime(TrdCommandDispatcher001Dto dto) {
 		PaEtrAutoDispenseTime record=new PaEtrAutoDispenseTime();
 		record.setVdate(dto.getVdate());
 		record.setMdate(dto.getMdate());

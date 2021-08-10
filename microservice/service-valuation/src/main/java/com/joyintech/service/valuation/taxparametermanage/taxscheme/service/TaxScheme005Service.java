@@ -148,7 +148,7 @@ public class TaxScheme005Service extends CommonExportService<TaxScheme005Dto> im
      * @return
      * @throws Exception
      */
-    public List<SelectOptionDto> findAsset(Map<String, Object> pageParam) throws Exception {
+    public List<SelectOptionDto> findAsset(Map<String, Object> pageParam) {
         pageParam.put("InstCode", LoginUserUtil.getInstCode());
         List<TaxScheme005Dto> resultList = taxScheme005Mapper.selectAsset(pageParam);
         List<SelectOptionDto> selectOptionList = new ArrayList<>();

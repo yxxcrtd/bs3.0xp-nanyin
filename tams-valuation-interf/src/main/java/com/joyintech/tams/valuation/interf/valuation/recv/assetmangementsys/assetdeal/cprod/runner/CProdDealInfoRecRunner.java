@@ -63,8 +63,7 @@ public class CProdDealInfoRecRunner extends InterfBaseService {
     
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public void execute()
-        throws Exception {
+    public void execute() throws InterfException {
         logger.info(getInterfExecuteInfo().getTaskName() + "开始！");
         //参数列表增加"executeInfo"参数
         this.getParams().put("executeInfo", this.getInterfExecuteInfo());

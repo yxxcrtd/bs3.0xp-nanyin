@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -95,7 +96,7 @@ public class PlanningStrategyPool001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<PlanningStrategyPool001Dto> findPage() throws Exception {
+	public Page<PlanningStrategyPool001Dto> findPage(){
 		return planningStrategyPool001Service.selectForPage(RequestUtil.getParameters(getRequest()));
 
 	}
@@ -110,7 +111,7 @@ public class PlanningStrategyPool001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export(){
 		Map<String, Object> paraMap = RequestUtil.getPageParam();
 		List<PlanningStrategyPool001Dto> listdto = planningStrategyPool001Service.selectForExport(paraMap);
 
@@ -156,7 +157,7 @@ public class PlanningStrategyPool001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping(ACTION_DELETE)
 	public AjaxResult delete(@RequestBody @Validated({ ValidateGroupDelete.class }) PlanningStrategyPool001Dto dto,
-			BindingResult br) throws Exception {
+			BindingResult br) throws WorkFlowException {
 		// 删除前校验
 		if (br.hasErrors()) {
 			return new AjaxResult(br);

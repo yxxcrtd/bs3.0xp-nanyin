@@ -70,7 +70,7 @@ public class DataFileUpload002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check() throws Exception {
+    public AjaxResult check() {
         String msg = StringUtils.EMPTY;
         
         String finprodId = StringUtils.EMPTY; //  产品代码
@@ -184,7 +184,7 @@ public class DataFileUpload002Controller extends BaseController {
     @RequestMapping(value = "/uploadFile")
     @ResponseBody
     public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-        throws Exception {
+         {
         AjaxResult res = new AjaxResult();
         String fileType = request.getParameter("fileType");
         if (StringUtils.isNotEmpty(fileType)) {

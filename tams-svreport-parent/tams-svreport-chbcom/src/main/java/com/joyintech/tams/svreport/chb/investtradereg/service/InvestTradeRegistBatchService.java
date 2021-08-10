@@ -620,7 +620,7 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
             catch(Exception e){
             	logger.error(e.getMessage(),e);
                 session.rollback();
-                throw e;
+                throw new BusinessException(e);
             }
             finally {
                 session.close();

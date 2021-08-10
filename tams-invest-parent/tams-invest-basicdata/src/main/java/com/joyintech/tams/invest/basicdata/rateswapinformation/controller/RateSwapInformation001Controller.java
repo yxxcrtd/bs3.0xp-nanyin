@@ -16,6 +16,7 @@ import com.joyintech.tams.invest.basicdata.rateswapinformation.service.RateSwapI
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -86,7 +87,7 @@ public class RateSwapInformation001Controller extends BaseController{
      *@throws:
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return rateSwapInformationService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 
@@ -107,8 +108,7 @@ public class RateSwapInformation001Controller extends BaseController{
 
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) RateSwapInformationDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) RateSwapInformationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

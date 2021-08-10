@@ -78,7 +78,7 @@ public class PayhsrcinterestrateService extends WindService<InterfPayhsrcinteres
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
     public int insert(InterfPayhsrcinterestrate entity)
-        throws Exception {
+	{
 		// 删除接口表重复数据
 		insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 接口表登录

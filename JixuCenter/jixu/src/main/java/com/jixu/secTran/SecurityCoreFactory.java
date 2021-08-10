@@ -1,5 +1,6 @@
 package com.jixu.secTran;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,7 @@ public class SecurityCoreFactory implements InitializingBean, ApplicationContext
     public final static int ALL = 0;
     
 
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws IOException {
     	logger.info("开始初始化证券服务中心...");
     	secTranTypeMap=new HashMap<Integer, SecurityBasic>();
     	secAssetTypeMap=new HashMap<String, SecurityAssetService>();

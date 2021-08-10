@@ -6,7 +6,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbPrdDeclareInfoMapper {
     int deleteByPrimaryKey(String declareUuid);
 

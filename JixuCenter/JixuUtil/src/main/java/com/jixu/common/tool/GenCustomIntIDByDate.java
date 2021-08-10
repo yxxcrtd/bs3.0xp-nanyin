@@ -44,7 +44,7 @@ public class GenCustomIntIDByDate implements Configurable, IdentifierGenerator {
 		if(DBTypeSelect.curDBType.equals(DBTypeSelect.db2))
 			sql = "select next value for " + seqobj.getSeq_name() + " from Sysibm.sysdummy1";
 			
-		NativeQuery query = arg0.getFactory().getCurrentSession().createSQLQuery(sql.toString());
+		NativeQuery query = arg0.getFactory().getCurrentSession().createSQLQuery(sql);
 		Object obj=query.uniqueResult();
 		long curID=Long.parseLong(obj.toString());
 		String formatter = "%0" + 4 + "d";

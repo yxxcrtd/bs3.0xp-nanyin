@@ -59,7 +59,7 @@ public class ValProdSchemeConfig001Controller extends BaseController {
 	 */
 	@PostMapping("/findPage/{page}/{length}")
 	public Page<ValProdSchemeConfig001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return valProdSchemeConfig001Service.findPage(page, length, param);
 
 	}
@@ -74,7 +74,7 @@ public class ValProdSchemeConfig001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@PostMapping("/selectAll")
-	public List<ValProdSchemeConfig001Dto> selectAll(@RequestBody Map<String, Object> params) throws Exception {
+	public List<ValProdSchemeConfig001Dto> selectAll(@RequestBody Map<String, Object> params) {
 		return valProdSchemeConfig001Service.selectAll(params);
 	}
 

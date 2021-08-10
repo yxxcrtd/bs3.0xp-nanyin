@@ -12,6 +12,7 @@ package com.joyintech.tams.valuation.basedata.marketdata.valbondquotationinfo.co
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -78,7 +79,7 @@ public class ValBondQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getSecId")
     public List<SuggestDto> getSecIdOption(String param)
-        throws Exception {
+          {
         List<SuggestDto> list = valBondQuotationInfoService.getSecIdOption(param);
         return list;
     }
@@ -93,7 +94,7 @@ public class ValBondQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getFinProdAbbr")
     public List<SuggestDto> getFinProdAbbr(String param)
-        throws Exception {
+         {
         return valBondQuotationInfoService.getFinProdAbbr(param);
     }
 
@@ -105,7 +106,7 @@ public class ValBondQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValBondQuotationInfoDto> selectAll()
-        throws Exception {
+         {
         Page<ValBondQuotationInfoDto> page = valBondQuotationInfoService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -136,8 +137,7 @@ public class ValBondQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) ValBondQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) ValBondQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -172,7 +172,7 @@ public class ValBondQuotationInfo001Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return valBondQuotationInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

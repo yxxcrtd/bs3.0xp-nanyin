@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.interf.valuation.sztinterf.utils;
 
 import com.hex.connector.Connector;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.valuation.common.sztinterf.constant.DictCodeSztList;
 import com.sscc.fdep.mrapi;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class SztConnector extends Connector<SztMessage> implements InitializingB
     @Override
     public void sendMessage(SztMessage msg) {
         if (null== msg.getBody()){
-            throw new RuntimeException("invalid msg body!");
+            throw new BusinessException("invalid msg body!");
         }
 
         if (null == msg.getFromAppId()){
@@ -57,7 +58,7 @@ public class SztConnector extends Connector<SztMessage> implements InitializingB
                 msg.getExpiredTime(), (byte)0, msg.getUcBizType(), 2000);
         msg.setId(pkgid);
         if (null==pkgid || pkgid.isEmpty()){
-            throw new RuntimeException("failed to send sztMessage!");
+            throw new BusinessException("failed to send sztMessage!");
         }
 
         logger.info("send sztMessage to {}/{}, pkgId={}, body:{}" + "," +
@@ -192,9 +193,9 @@ public class SztConnector extends Connector<SztMessage> implements InitializingB
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (null==this.getAppId() || null==this.getMrIp()){
-            throw new RuntimeException("深证通参数配置错误!");
+            throw new BusinessException("深证通参数配置错误!");
         }
 
         this.init();
@@ -344,7 +345,7 @@ public class SztConnector extends Connector<SztMessage> implements InitializingB
             /** modify by yanya on 20200311**/
             logger.info("invalid msg body!");
             return DictCodeSztList.深圳通接口发送结果_INVALID_MSG_BODY.getValue();
-            //throw new RuntimeException("invalid msg body!");
+            //throw new BusinessException("invalid msg body!");
         }
 
         if (null == msg.getFromAppId()){
@@ -376,7 +377,7 @@ public class SztConnector extends Connector<SztMessage> implements InitializingB
         msg.setId(pkgid);
         /** modify by yanya on 20200311 增加深圳通返回结果的处理，针对不同的行，处理的方式可能不一样**/
         if (null==pkgid || pkgid.isEmpty()){
-            //throw new RuntimeException("failed to send sztMessage!");
+            //throw new BusinessException("failed to send sztMessage!");
             logger.info("failed to send sztMessage, body:{}" + "," + msg.getBody());
             return DictCodeSztList.深圳通接口发送结果_FAILED_TO_SEND_SZTMESSAGE.getValue();
         }

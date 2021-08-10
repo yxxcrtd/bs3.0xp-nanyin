@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.busicommon.productRating.service.CommonProductRatingService;
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -29,10 +30,6 @@ import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
-import com.joyintech.tams.common.base.entity.ChbTypeMapping;
-import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -312,6 +309,9 @@ public class ChbAssetInfoInterf  extends BaseService{
         logger.debug("上游资产要素信息插入:----开始------" +  df.format(new Date()));
         insertDataMerge(insertDataList,null);
         logger.debug("上游资产要素信息插入:----结束------" +  df.format(new Date()));
+
+        //抽数债券的还本付息计划
+        this.generateChbSecRepayInfoData();
 //      if (CollectionUtils.isNotEmpty(insertDataList)) {
 ////            allData.addAll(insertDataList);
 //          // 批量插入
@@ -746,5 +746,21 @@ public class ChbAssetInfoInterf  extends BaseService{
                 }
             }
         }
+    }
+
+    /**
+     * 功能:抽数债券的还本付息计划
+     * @since 2.1.8
+     * @version 2.1.8
+     * @author：yjp 2021年7月26日
+     *
+     */
+    public void generateChbSecRepayInfoData() {
+        //删除债券还本付息a表里的数据
+        chbAssetInfoInterfMapper.deleteAllChbSecRepayInfoData();
+        //插入查询债券的还本付息计划a
+        ChbSecRepayInfo record = new ChbSecRepayInfo();
+        chbAssetInfoInterfMapper.insertChbSecRepayInfoData(record);
+
     }
 }

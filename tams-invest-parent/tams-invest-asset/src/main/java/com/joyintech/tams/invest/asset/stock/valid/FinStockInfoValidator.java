@@ -10,9 +10,7 @@
  
 package com.joyintech.tams.invest.asset.stock.valid;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
@@ -20,12 +18,10 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
-import com.joyintech.tams.invest.asset.stock.service.FinStockInfoService;
 import com.joyintech.tams.invest.asset.stock.dto.FinStockInfoDto;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import com.joyintech.tams.invest.asset.stock.service.FinStockInfoService;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +56,7 @@ public class FinStockInfoValidator implements BeanValidator {
     MstWorkflowCommonService mstWorkflowCommonService;
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private ChbDataCheckService chbDataCheckService;
     
     /**
      * {@inheritDoc}
@@ -134,6 +130,11 @@ public class FinStockInfoValidator implements BeanValidator {
                    errorList.add(
                        new ValidMessage("bussRepEquityInfoDto.repPartyType3",this.getMessage("FW_E_0006", getMessage("BussRepEquityInfo.repPartyType3"))));
                }
+               //中债的交易流通场所必填
+               if(StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepTradeMarket())){
+                   errorList.add(
+                           new ValidMessage("bussRepEquityInfoDto.repTradeMarket",this.getMessage("FW_E_0006", getMessage("BussRepEquityInfo.repTradeMarket"))));
+               }
                //通过资产代码查询数据，验证资产代码的唯一性
                Map<String,Object> map = new HashMap<String,Object>();
              //  if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
@@ -200,9 +201,12 @@ public class FinStockInfoValidator implements BeanValidator {
 
                    //总股本大于等于流通股本check
                }
-                errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, "1302", ValidMessage.class);
+                errorList = chbDataCheckService.chbCheckCommon(errorList, value, null, "1302");
             }
 
+            if(StringUtil.equals(dto.getTradeMarket(),"12") && StringUtil.isEmpty(dto.getShOrZh())) {
+                errorList.add(new ValidMessage("shOrZh","交易场所为香港联合交易所时，港股通市场必填。"));
+            }
         return errorList;
     }
 

@@ -63,14 +63,12 @@ public class MstCustomerNature001Controller extends BaseController {
      * <一句话功能简述> 
      * <功能详细描述>
      * @return list
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getCustomerName")
-    public List<SuggestDto> getCustomerName()
-        throws Exception {
+    public List<SuggestDto> getCustomerName() {
         Map<String, Object> param = new HashMap<>();
         param.put("customerName", super.getRequest().getParameter("param"));
         List<SuggestDto> list = mstCustomerNatureService.getCustomerName(param);;
@@ -80,14 +78,12 @@ public class MstCustomerNature001Controller extends BaseController {
     /**
      * 客服性质管理查询按钮的查询方法
      * @return Page<MstCustomerNatureDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("selectCustomerInfo")
-    public Page<MstCustomerNatureDto> selectCustomerInfo()
-        throws Exception {
+    public Page<MstCustomerNatureDto> selectCustomerInfo() {
         Map<String, Object> param = RequestUtil.getPageParam();
         Page<MstCustomerNatureDto> dto = mstCustomerNatureService.selectCustomerInfo(param);
         return dto;
@@ -96,10 +92,9 @@ public class MstCustomerNature001Controller extends BaseController {
     /**
      * 导出
      * @return ResponseEntity
-     * @throws Exception 异常
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstCustomerNatureService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

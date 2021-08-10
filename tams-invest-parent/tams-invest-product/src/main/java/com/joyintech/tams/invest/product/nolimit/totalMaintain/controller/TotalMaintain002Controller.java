@@ -16,6 +16,7 @@ import com.joyintech.tams.invest.product.nolimit.totalMaintain.dto.TotalMaintain
 import com.joyintech.tams.invest.product.nolimit.totalMaintain.service.TotalMaintain002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -87,11 +88,12 @@ public class TotalMaintain002Controller extends BaseController {
      *
      * @param dto
      * @param br
+     * @throws WorkFlowException
      * @return AjaxResult
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated TotalMaintain001Dto dto, BindingResult br) throws Exception {
+    public AjaxResult save(@RequestBody @Validated TotalMaintain001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -132,12 +134,12 @@ public class TotalMaintain002Controller extends BaseController {
      * 删除
      *
      * @param dto
+     * @throws WorkFlowException
      * @return AjaxResult
      */
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult delete(@RequestBody TotalMaintain001Dto dto)
-            throws Exception {
+    public AjaxResult delete(@RequestBody TotalMaintain001Dto dto) throws WorkFlowException {
         ProcessParameter<TotalMaintain001Dto> processParameter = new ProcessParameter<TotalMaintain001Dto>();
         WorkFlowParameter<TotalMaintain001Dto> params = new WorkFlowParameter<TotalMaintain001Dto>();
         //判断是否在工作流中

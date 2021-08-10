@@ -44,7 +44,7 @@ public class TaxSchBokCfgManage001Service extends CommonExportService<TaxSchBokC
      * @see
      * @since 1.0
      */
-    public Page<TaxSchBokCfgManage001Dto> findTaxSchaBokConfigByPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<TaxSchBokCfgManage001Dto> findTaxSchaBokConfigByPage(int page, int length, Map<String, Object> pageParam) {
         return super.queryForPage(page, length, ()-> taxSchBokCfgManage001Mapper.selectTaxSchaBokConfig(pageParam));
     }
 

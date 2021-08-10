@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.basedata.marketdata.valcoinfundquotationinf
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -83,7 +84,7 @@ public class ValCoinFundQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValCoinFundQuotationInfo001Dto> selectAllCurrencyFund()
-        throws Exception {
+          {
         Page<ValCoinFundQuotationInfo001Dto> page = valCoinFundQuotationInfo001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -113,7 +114,7 @@ public class ValCoinFundQuotationInfo001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return valCoinFundQuotationInfo001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -147,8 +148,7 @@ public class ValCoinFundQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) ValCoinFundQuotationInfo001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) ValCoinFundQuotationInfo001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -185,7 +185,7 @@ public class ValCoinFundQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getCodeName")
     public List<SuggestDto> getSuggestDataByName()
-        throws Exception {
+         {
         // 画面的输入值param前台的输入值，为了进行模糊查询
         Map<String, Object> param = RequestUtil.getPageParam();
         // 获取根据输入值检索到的结果
@@ -204,7 +204,7 @@ public class ValCoinFundQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getManagement") // 获取基金管理人的名称
     public List<SuggestDto> getManagement()
-        throws Exception {
+         {
         // 画面的输入值
         Map<String, Object> param = RequestUtil.getPageParam();
         // 获取根据输入值检索到的结果

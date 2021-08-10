@@ -76,7 +76,7 @@ public class ValNetPlanQuotation001Controller extends BaseController {
 	 */
 	@PostMapping("/ValNetPlanQuotation001Search/{page}/{length}")
 	public Page<ValNetPlanQuotation001Dto> queryPageList(@RequestBody Map<String, Object> params,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 //		Map<String, Object> params = this.getRequestMap();
 //		ValNetPlanQuotation001SearchDto dto = (ValNetPlanQuotation001SearchDto) JsonUtils.map2entity(params,
 //				ValNetPlanQuotation001SearchDto.class);
@@ -124,7 +124,7 @@ public class ValNetPlanQuotation001Controller extends BaseController {
 	
 	
 	@GetMapping("getFinprodId")
-	public List<SuggestDto> getFinprodId(String param) throws Exception {
+	public List<SuggestDto> getFinprodId(String param) {
 //		String param = super.getRequest().getParameter("param");
 		return valNetPlanQuotation001Service.getFinprodId(param);
 	}

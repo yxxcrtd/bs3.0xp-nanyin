@@ -147,8 +147,7 @@ public class IndicatorCalcService {
      * @since 1.0
      */
     private void calc(IIndicator indcator, boolean isOld, Map<String, Object> param,
-                      String ptlCode, String assetCode)
-        throws Exception {
+                      String ptlCode, String assetCode){
         Map<String, IIndicatorResult> resMap = indcator.getIndicatorResult();
         resMap = resMap == null ? new HashMap<>() : resMap;
         IIndicatorResult res = resMap.containsKey(ptlCode) ? resMap.get(

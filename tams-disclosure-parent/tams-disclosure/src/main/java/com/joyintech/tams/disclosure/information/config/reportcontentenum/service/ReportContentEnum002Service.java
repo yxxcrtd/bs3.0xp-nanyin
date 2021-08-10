@@ -81,7 +81,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
      * @return
      * @throws Exception
      */
-	public Page<ReportContentEnum002Dto> findIndexDetailByPage(Map<String, Object> pageParam) throws Exception {
+	public Page<ReportContentEnum002Dto> findIndexDetailByPage(Map<String, Object> pageParam) {
 		return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum001/findIndexIdDetail",
                 pageParam, ReportContentEnum002Dto.class);
@@ -171,7 +171,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	 * @param request
 	 * @throws JSchException 
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
         // 文件本地路径
 //		String filePath = request.getParameter("fileName");
 //		/*
@@ -238,13 +238,13 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 		}
 		
 		//生效日期
-		String indexDate = request.getParameter("indexDate");
+		String indexDate = request.getParameter("indexDate")==null?"":request.getParameter("indexDate");
 		dto.setIndexDate(DateUtil.parse(indexDate));
 		//指标名称
-		String indexName = request.getParameter("fileNameOnly");
+		String indexName = request.getParameter("fileNameOnly")==null?"":request.getParameter("fileNameOnly");
 		dto.setIndexName(indexName);
 		
-		String priId =request.getParameter("priId");
+		String priId =request.getParameter("priId")==null?"":request.getParameter("priId");
 		dto.setPriId(priId);
 		
 		//指标值
@@ -252,7 +252,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 				+ DateUtil.format(DateUtil.parse(Sysdate), DateUtil.DEFAULT_OTHER_FORMAT);
 		dto.setIndexValue(indexValue);
 		//指标类型
-		String indexType = request.getParameter("indexType");
+		String indexType = request.getParameter("indexType")==null?"":request.getParameter("indexType");
 		dto.setIndexType(indexType);
 		
 		return repIndexSubMapper.insert(dto);

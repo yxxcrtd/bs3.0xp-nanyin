@@ -38,7 +38,6 @@ public class PtlPerformanceAnalysis002Service extends CommonExportService<PtlPer
     /**
      * 获取指标设置树结构
      * @return 查询结果集
-     * @throws Exception 异常
      */
     public List<TreeNode<TargetDetail>> getAllTreeNode(Map<String, Object> map) {
         List<TreeNode<TargetDetail>> treeNodeList=new ArrayList<>();
@@ -106,7 +105,6 @@ public class PtlPerformanceAnalysis002Service extends CommonExportService<PtlPer
     /**
      * 保存设置的列
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @Transactional(rollbackFor=Exception.class)
     public boolean savaTableCols(Map<String, Object> map) {

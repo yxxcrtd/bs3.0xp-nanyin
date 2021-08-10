@@ -15,8 +15,11 @@ import com.joyintech.tams.invest.basicdata.mstnetassetquotationinfo.dto.MstNetAs
 import com.joyintech.tams.invest.portfolio.ptlmanagementinfo.dto.PtlManagementInfoDto;
 import com.joyintech.tams.mobileApproval.dto.ReturnTodoDto;
 import com.joyintech.tams.mobileApproval.util.MobileUtils;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * <b>方法：</b>MobilePtlManagementInfoService<br>
@@ -31,7 +34,7 @@ public class MobileMstNetAssetQuotationInfoService {
     private MobileApprovalService mobileApprovalService;
 
 
-    public String getWorkFlowInfo(String businessData) throws Exception {
+    public String getWorkFlowInfo(String businessData) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //1、获取业务数据
     	MstNetAssetQuotationInfo001Dto dto = JsonUtils.json2Object(businessData, MstNetAssetQuotationInfo001Dto.class);
         //2、处理数据字典

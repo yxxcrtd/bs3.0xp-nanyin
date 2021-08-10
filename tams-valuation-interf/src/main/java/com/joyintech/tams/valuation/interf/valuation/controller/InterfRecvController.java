@@ -177,7 +177,7 @@ public class InterfRecvController {
     
     @ResponseBody
     @RequestMapping(InterfCommonConstant.组装XMl文件)
-    public void buildXml() throws Exception {
+    public void buildXml() {
     	
     	String startDa = RequestUtil.getParam(InterfCommonConstant.接口_开始日);
 

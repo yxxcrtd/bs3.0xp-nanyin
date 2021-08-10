@@ -130,7 +130,7 @@ public class BokDetailIdUpdate001Service extends BaseService {
      * @return
      * @throws ParseException
      */
-    public String update(List<BokDetailIdUpdate001Dto> params) throws ParseException{
+    public String update(List<BokDetailIdUpdate001Dto> params){
         String msg = "";
         List<BokDetailIdUpdate002Dto> updateList = new ArrayList<>();
     	for (BokDetailIdUpdate001Dto oldId:params){

@@ -351,7 +351,7 @@ public class ValProfitQuery002Service extends CommonExportService<ValProfitQuery
      * @see
      * @since 1.0
      */
-    public List<ValProfitQuery001Dto> findPageAll(Map<String, Object> parameters) throws Exception {
+    public List<ValProfitQuery001Dto> findPageAll(Map<String, Object> parameters) throws CloneNotSupportedException {
         List<ValProfitQuery001Dto> dtoList = this.selectListAll(parameters);
         return dtoList;
     }
@@ -366,8 +366,7 @@ public class ValProfitQuery002Service extends CommonExportService<ValProfitQuery
      * @since 1.0
      */
     @SuppressWarnings("unchecked")
-	public List<ValProfitQuery001Dto> selectListAll(Map<String, Object> pageParam)
-        throws Exception {
+	public List<ValProfitQuery001Dto> selectListAll(Map<String, Object> pageParam) throws CloneNotSupportedException {
     	// 查询表样
     	List<ProfitCalculationDto> profitCalculationDtoList = valProfitQuery001Mapper.selectProfitCalculationDtoList();
     	List<ValProfitQuery001Dto> list = new ArrayList<ValProfitQuery001Dto>();

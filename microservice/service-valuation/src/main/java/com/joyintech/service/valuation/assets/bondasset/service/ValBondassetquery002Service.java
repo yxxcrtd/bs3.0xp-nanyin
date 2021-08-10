@@ -161,7 +161,7 @@ public class ValBondassetquery002Service extends CommonExportService<ValBondasse
      * 查询是否交易数据：行权交易
      * 
      * <功能详细描述>
-     * @param finprodid
+     * @param map
      * @return
      * @see
      * @since 1.0
@@ -284,7 +284,7 @@ public class ValBondassetquery002Service extends CommonExportService<ValBondasse
      * @since 1.0
      */
     @DataSource(DataSourceType.OTHER)
-    public int workflowCheck(ProcessMark processMark) throws Exception {
+    public int workflowCheck(ProcessMark processMark){
         return valBondassetquery001Mapper.getDataInWorklow(processMark);
     }
 
@@ -292,8 +292,7 @@ public class ValBondassetquery002Service extends CommonExportService<ValBondasse
      * 查询大于等于actDateEnd的第一个工作日
      * 
      * <功能详细描述>
-     * @param actDateEnd
-     * @param tradMarketId
+     * @param map
      * @return
      * @see
      * @since 1.0

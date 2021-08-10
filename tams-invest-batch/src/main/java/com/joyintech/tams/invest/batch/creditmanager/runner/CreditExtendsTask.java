@@ -69,7 +69,7 @@ public class CreditExtendsTask extends BatchBaseService{
                     try {
                         Thread.sleep(30000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                 }
                 isRunning = true;
@@ -84,7 +84,7 @@ public class CreditExtendsTask extends BatchBaseService{
         		supDate=batchExecuteInfo.getExecuteDate();
         	}
         	else{
-        		supDate = platformDateService.getSysDate();
+        		supDate = platformDateService.getSysDate(batchExecuteInfo.getCreateUser());
         	}
             if(CacheUtil.getSysParam("IS_EXTEND_CREDIT").equals("true")) {
                 creditExtendsService.run(supDate);

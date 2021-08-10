@@ -107,7 +107,7 @@ public class AssetsTransfer001Controller extends BaseController {
     @RequestMapping("/getPortfolioIdTree")
     public List<TreeNode> getPortfolioIdTree(@RequestParam(name="portfolioId", required=false) String portfolioId,
                                              @RequestParam(name="mdate", required=false) Date mdate)
-            throws Exception {
+             {
         return assetsTransfer001Service.getPortfolioIdTree(portfolioId,mdate);
     }
 

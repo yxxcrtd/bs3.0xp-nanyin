@@ -74,7 +74,7 @@ public class ValOptInfo001Service extends CommonExportService<ValOptInfo001Dto> 
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValOptInfo001Dto> findPage(int page,int length,Map<String, Object> params) throws Exception {
+    public Page<ValOptInfo001Dto> findPage(int page,int length,Map<String, Object> params) {
     	params.put("FINPROD_TYPE_TG_F35", DictCodeListExt1.金融产品类型_投管用_期权.getValue());
         return super.queryForPage(page,length,()->mapper.findPage(params));
     }
@@ -86,7 +86,7 @@ public class ValOptInfo001Service extends CommonExportService<ValOptInfo001Dto> 
      * @return 信息
      * @throws Exception 
      */
-    public List<ValOptInfo001Dto> findByTargetId(Map<String, Object> params) throws Exception {
+    public List<ValOptInfo001Dto> findByTargetId(Map<String, Object> params) {
     	params.put("FINPROD_TYPE_TG_F35", DictCodeListExt1.金融产品类型_投管用_期权.getValue());
         return mapper.findPage(params);
     }

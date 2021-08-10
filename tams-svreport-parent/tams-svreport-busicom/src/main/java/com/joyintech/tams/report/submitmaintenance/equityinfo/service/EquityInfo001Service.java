@@ -3297,7 +3297,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         try {
                             fout.close();
                         } catch (Exception e) {
-//        				e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -3306,7 +3305,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         try {
                             osw.close();
                         } catch (Exception e) {
-//        				e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -3702,7 +3700,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         try {
                             fout.close();
                         } catch (Exception e) {
-//        				e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -3711,7 +3708,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         try {
                             osw.close();
                         } catch (Exception e) {
-//        				e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }

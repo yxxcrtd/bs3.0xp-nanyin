@@ -51,7 +51,7 @@ public class ValSztInterfBalanceController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValSztInterfBalanceDto> findPage(@RequestBody Map<String, Object> param,
                                                  @PathVariable("page") int page, @PathVariable("length") int length)
-                                                     throws Exception {
+    {
         return valSztInterfBalanceService.findPage(page, length, param);
     }
     

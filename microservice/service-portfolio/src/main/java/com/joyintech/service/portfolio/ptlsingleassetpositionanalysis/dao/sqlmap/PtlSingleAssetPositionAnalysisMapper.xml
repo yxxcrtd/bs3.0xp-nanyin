@@ -66,16 +66,16 @@
 		                          marketValueRatio,gavInfo.portfolioId,ppvInfo.tdyAssetValue,gavInfo.portfolioId1
 		                     from (select psv.CDATE cdate,psv.PORTFOLIO_ID portfolioId,psv.FINPROD_ID finprodId,
 		                                  psv.MARKET_VALUE marketValue,psv.SHARE_AMT shareAmt,psv.DSC_COST_AMT dscCostAmt,
-		                                  pp.PORTFOLIO_NAME portFolioName,fp.FINPROD_MARKET_ID finprodMarketId,
-		                                  fp.FINPROD_ABBR finprodAbbr,
+		                                  pp.PORTFOLIO_NAME portFolioName,NVL(fp.FINPROD_MARKET_ID,RAI.ASSET_CODE) finprodMarketId,
+										  NVL(fp.FINPROD_ABBR,RAI.ASSET_NAME) finprodAbbr,
 										  pp.PORTFOLIO_ID portfolioId1
 		                             from PTL_SEC_PIERCE_VALUTION psv
+									 LEFT join RSK_ASSET_INFO RAI
+									   	ON psv.FINPROD_ID = RAI.ASSET_CODE
 		                       inner join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
-		                       inner join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
-		                    <!--   add  by yujiaping 2020-11-24 ZGBUGTWO-244【单一资产持仓分析】改为不可以查询到通道的信息start --> 
-		                       and fp.FINPROD_TYPE2 != 'F28' and fp.FINPROD_TYPE2 is not null
-		                    <!--   add  by yujiaping 2020-11-24 ZGBUGTWO-244【单一资产持仓分析】改为不可以查询到通道的信息end -->
+		                       LEFT join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
 		                            where 1=1
+									and ((fp.FINPROD_TYPE2 is not null and fp.FINPROD_TYPE2 != 'F28') OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
 		                            <if test="finprodIdList != null and finprodIdList.size()>0">
 		                               AND fp.FINPROD_MARKET_ID IN
 		                               <foreach collection="finprodIdList" item="item" separator="," open="(" close =")">

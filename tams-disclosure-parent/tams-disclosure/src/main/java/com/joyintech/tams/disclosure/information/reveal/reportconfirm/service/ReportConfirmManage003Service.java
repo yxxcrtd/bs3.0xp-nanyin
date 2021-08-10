@@ -1,12 +1,14 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.service;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jcraft.jsch.JSchException;
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,12 +56,11 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
      * 读取文件并上传到文件服务器
      * 
      * @param request
-     * @throws Exception
+     * @throws JSchException
      */
-    public void readFile(HttpServletRequest request)
-        throws Exception {
+    public void readFile(HttpServletRequest request) throws JSchException {
         // 文件本地路径
-        String filePath = request.getParameter("fileName");
+        String filePath = request.getParameter("fileName")==null?"":request.getParameter("fileName");
         request.getParameter("id");
         request.getParameter("fileNo");
         request.getParameter("fileNameOnly");
@@ -70,10 +71,10 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
          */
 
         // 产品id
-        String finprodId = request.getParameter("finprodId");
+        String finprodId = request.getParameter("finprodId")==null?"":request.getParameter("finprodId");
 
         // 估值表余额表标识
-        String valBalFlag = request.getParameter("valBalFlag");
+        String valBalFlag = request.getParameter("valBalFlag")==null?"":request.getParameter("valBalFlag");
         if (StringUtil.isNotEmpty(valBalFlag)) {
             // if(valBalFlag.equals(DictCodeList.文件类型_估值表.getCodeName())){
             // valBalFlag = DictCodeList.文件类型_估值表.getValue();
@@ -83,7 +84,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
         }
 
         // 估值表余额表标识
-        String valDateS = request.getParameter("valDate");
+        String valDateS = request.getParameter("valDate")==null?"":request.getParameter("valDate");
         String valDate = valDateS.replace("-", "");
 
         // 产品唯一标识
@@ -126,8 +127,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
         progressBarService.updatePercent("ValNetValueConfirm003", ProgressBarService.FILE_UPLOAD_ID, 1D, false);
     }
 
-    public int insertFileTransferInfo(HttpServletRequest request)
-        throws Exception {
+    public int insertFileTransferInfo(HttpServletRequest request) throws ParseException {
         BokFileTransfer003Dto dto = new BokFileTransfer003Dto();
         // 文件信息
         BokFileInfoDto infoDto = new BokFileInfoDto();
@@ -149,13 +149,13 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
         cfmDto.setValBalFlag(valBalFlag);
         dto.setValBalFlag(valBalFlag);
         // 估值日期
-        String valDateS = request.getParameter("valDate");
+        String valDateS = request.getParameter("valDate")==null?"":request.getParameter("valDate");
         Date valDate = DateUtil.parseDate(valDateS, "yyyy-MM-dd");
         cfmDto.setValDate(valDate);
         dto.setValDate(valDate);
 
         // 文件名称
-        String filename = request.getParameter("fileNameOnly");
+        String filename = request.getParameter("fileNameOnly")==null?"":request.getParameter("fileNameOnly");
         infoDto.setFileName(filename);
         dto.setFileName(filename);
 
@@ -209,8 +209,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
      * @return 表格信息
      * @throws Exception
      */
-    public Page<BokFileTransfer003Dto> findPage(Map<String, Object> params)
-        throws Exception {
+    public Page<BokFileTransfer003Dto> findPage(Map<String, Object> params){
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage003/findPage",
             params, BokFileTransfer003Dto.class);
     }
@@ -221,10 +220,9 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
      * @param request
      * @throws Exception
      */
-    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request)
-        throws Exception {
+    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws JSchException {
         // 文件本地路径
-        String fileId = request.getParameter("fileId");
+        String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
 
         BokFileTransfer003Dto dto = reportConfirmManage001Mapper.qryBokFileInfoByFileId(fileId);
         // 附件存储路径

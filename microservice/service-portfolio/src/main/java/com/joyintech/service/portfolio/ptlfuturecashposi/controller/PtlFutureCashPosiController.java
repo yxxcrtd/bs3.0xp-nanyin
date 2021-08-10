@@ -49,7 +49,7 @@ public class PtlFutureCashPosiController {
      */
     @PostMapping("/selectData")
     public List<PtlFutureCashPosiDto> selectAll(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return ptlFutureCashPosiService.selectData(param);
     }
 }

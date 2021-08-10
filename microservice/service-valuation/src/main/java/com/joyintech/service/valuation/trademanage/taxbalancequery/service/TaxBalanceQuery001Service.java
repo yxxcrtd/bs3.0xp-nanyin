@@ -49,7 +49,7 @@ public class TaxBalanceQuery001Service extends CommonExportService<TaxBalanceQue
      * @return
      * @throws Exception
      */
-    public Page<TaxBalanceQuery001Dto> findByPage(int page, int length, Map<String, Object> params) throws Exception{
+    public Page<TaxBalanceQuery001Dto> findByPage(int page, int length, Map<String, Object> params){
     	//增加增值税类型限制
     	params.put("initvatTypes", DictCodeList.valuesfromDictCode(DictCode.增值税类型));
     	
@@ -87,7 +87,7 @@ public class TaxBalanceQuery001Service extends CommonExportService<TaxBalanceQue
      * @return
      * @throws Exception
      */
-    public List<TaxBalanceQuery001Dto> findByList(Map<String, Object> params) throws Exception{
+    public List<TaxBalanceQuery001Dto> findByList(Map<String, Object> params) {
         //增加增值税类型限制
         params.put("initvatTypes", DictCodeList.valuesfromDictCode(DictCode.增值税类型));
         

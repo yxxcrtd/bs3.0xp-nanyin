@@ -50,8 +50,7 @@ public class InterfLc0005Service extends ReceivedEsbService<InterfLc0005OutEntit
      * {@inheritDoc}
      */
     @Override
-    public InterfLc0005OutEntity selectResponseData(InterfLc0005InEntity entity)
-        throws Exception {
+    public InterfLc0005OutEntity selectResponseData(InterfLc0005InEntity entity) throws InterfException {
         // 1.查询金融产品是否存在
         entity.setProdType2(DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         String finprodid = interfLC0005Mapper.selectFinprodidCount(entity);
@@ -83,7 +82,7 @@ public class InterfLc0005Service extends ReceivedEsbService<InterfLc0005OutEntit
      */
     @Override
     public int saveInterfData(InterfLc0005InEntity entity)
-        throws Exception {
+    {
         // 查询类接口，无登录操作
         return 0;
     }
@@ -93,7 +92,7 @@ public class InterfLc0005Service extends ReceivedEsbService<InterfLc0005OutEntit
      */
     @Override
     public int saveBusinessData(InterfLc0005InEntity entity)
-        throws Exception {
+    {
         // 查询类接口，无登录操作
         return 0;
     }
