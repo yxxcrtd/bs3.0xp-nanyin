@@ -704,7 +704,10 @@
         var ccy = query('#ccy').val();
         var sysDateT1 = query('#vdate').val();
         var calId = query('#calendarId').val();
-        parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
+        if (parent.EtrIbBondinfoHq) {
+            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
+
+        }
     });
 
 
