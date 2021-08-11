@@ -1,17 +1,11 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
-import cn.hutool.core.lang.UUID;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.ChbAssetTypeMappingEx;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -30,10 +24,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * excel操作
+ * excel操作 -- report的行，列配置初始化数据
  *
- * @author daiyue
- * @version 1.0 2016年12月1日
+ * @author fxmei
+ * @version 1.0 2021年08月10日
  * @see PbcZExcelDefineUtil
  * @since 1.0
  */
@@ -115,11 +109,10 @@ public class PbcZExcelDefineUtil {
                                 String properyFiled=keyVal.substring(keyVal.indexOf(".")+1,keyVal.length());
                                 properyFiled=properyFiled.replace(" ", "");//去掉空格
                                 ChbTypeMappingEx ex=new ChbTypeMappingEx();
-                                ex.setMappingid(UUID.randomUUID().toString());
+                                ex.setMappingid(properyCode);
                                 ex.setMappingcode(reportType);
                                 ex.setMappingname("MI");
                                 ex.setObjfield("");//防止空异常
-                                ex.setSrcfield(properyCode);
                                 ex.setSrcfield1(properyFiled);
                                 ex.setObjfield1(rowNum);
                                 ex.setObjfield2(columnMap.get(cell.getColumnIndex()));

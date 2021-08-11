@@ -13,13 +13,16 @@ package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -53,8 +56,12 @@ public class PbcZipDataFileHelper {
     	if (StringUtil.isEmpty(SVR_DAT_FILE_ENCODE)) {
     		SVR_DAT_FILE_ENCODE = "UTF-8";
 		}
-        try {
-        	String datZipPath=pbcSendZipDatFile.getDatZipPath();
+		String rootdir = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
+		Date date= DateUtil.parse(DateUtil.getCurrentDate());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String dateStr = sdf.format(date);
+		String datZipPath=rootdir+dateStr + "/";
+		try {
             fullPath = datZipPath+filePath;
             createFolder(fullPath,dataType);
             File file = null;
