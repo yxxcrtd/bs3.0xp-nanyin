@@ -490,7 +490,7 @@
 	</select>
 	<!-- 投资经理联想框 -->
 	<select id="getManagers" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT
+		SELECT distinct
 			SYS_USER.USER_NAME id,
 			SYS_USER.REAL_NAME text
 			,SYS_USER.DEPT_CODE deptCode /* add by songyawei */

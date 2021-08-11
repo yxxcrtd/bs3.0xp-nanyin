@@ -134,16 +134,18 @@ public class PrimaryBiddingManage003Service extends BaseService<TrdBiddingManage
 
                         BigDecimal amount = basePtlCashPositionInfoMapper.selectPtlCashPositionFlowAmount(ptlCashPositionFlowDto);
                         basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
-                        Map<String,Object> positionMap = new HashMap<>();
-                        positionMap.put("minDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
-                        positionMap.put("maxDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getMdate()));
-                        positionMap.put("amount",amount);
-                        positionMap.put("hodingType",DictCodeList.持仓类型_实际.getValue());
-                        positionMap.put("portfolioId",bidOrderBidPriceDto.getPortfolioId());
-                        positionMap.put("acctId",acctId);
-                        positionMap.put("ccy",entrustCommonDto.getEtrEntrust().getCcy());
-                        positionMap.put("orderId",entrustCommonDto.getEtrEntrust().getEntrustId());
-                        basePtlCashPositionInfoMapper.updatePosition(positionMap);
+                        if(amount!=null){
+                            Map<String,Object> positionMap = new HashMap<>();
+                            positionMap.put("minDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
+                            positionMap.put("maxDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
+                            positionMap.put("amount",amount.negate());
+                            positionMap.put("hodingType",DictCodeList.持仓类型_实际.getValue());
+                            positionMap.put("portfolioId",bidOrderBidPriceDto.getPortfolioId());
+                            positionMap.put("acctId",acctId);
+                            positionMap.put("ccy",entrustCommonDto.getEtrEntrust().getCcy());
+                            positionMap.put("orderId",entrustCommonDto.getEtrEntrust().getEntrustId());
+                            basePtlCashPositionInfoMapper.updatePosition(positionMap);
+                        }
                         //2.撤销删除指令可用现金冻结--生成反向流水
                         EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
                         BeanUtil.copyPropertiesIgnoreNull(dto, ptlCashPositionFlowDto);
