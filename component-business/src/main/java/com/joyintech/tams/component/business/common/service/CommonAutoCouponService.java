@@ -12,6 +12,7 @@ package com.joyintech.tams.component.business.common.service;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.MstCustomerInfoAddMapper;
@@ -41,6 +42,7 @@ import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationInputParaDto;
 import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationOutputDto;
 import com.joyintech.tams.invest.common.util.xmlrelation.XmlRelationUtil;
 import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -1386,8 +1388,7 @@ public class CommonAutoCouponService extends BaseService{
     /**
      * 根据外部代码1获取客户代码
      * <功能详细描述>
-     * @param linkId1
-     * @param type 类型
+     * @param interfPayhsrcsecinfo
      * @return
      * @see
      * @since 1.0
@@ -1604,7 +1605,7 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询是否存在债券估值行情count
-     * @param sInfoWindcode(新增)
+     * @param finprodMarketId
      * @return
      */
     public int selectMstBondValuationInfoCount(String finprodMarketId){
@@ -1614,7 +1615,9 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_债券市价估值list
-     * @param sInfoWindcode(新增)
+     * @param finprodMarketId
+     * @param sysDate
+     * @param newDate 
      * @return
      */
     public List<InterfPayhsrccbvlt> selectInterfPayhsrccbvlt(String finprodMarketId,String sysDate,String newDate){
@@ -1664,7 +1667,9 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_基金净值list-基金加券
-     * @param sInfoWindcode
+     * @param finprodMarketId
+     * @param sysDate 
+     * @param newDate
      * @return
      */
     public List<InterfCmfundnav> selectInterfCmfundnav(String finprodMarketId,String sysDate,String newDate){
@@ -1683,7 +1688,9 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_基金市场行情list-基金加券
-     * @param sInfoWindcode
+     * @param  finprodMarketId
+     * @param newDate
+     * @param sysDate
      * @return
      */
     public List<InterfFMarketInfo> selectInterfFMarketInfo(String finprodMarketId,String sysDate,String newDate){
@@ -1747,7 +1754,7 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询客户信息附属表list-债券中债
-     * @param sInfoWindcode
+     * @param customerid
      * @return
      */
     public List<MstCustomerInfoAdd> selectMstCustomerInfoAdd(String customerid){
@@ -1756,7 +1763,7 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_债券评级信息表
-     * @param sInfoWindcode
+     * @param secid
      * @return
      */
     public List<InterfPayhsrcsecrating> selectInterfPayhsrcsecrating(String secid){
@@ -1765,7 +1772,8 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_债券评级中主体评级结果
-     * @param sInfoWindcode
+     * @param secid
+     * @param date
      * @return
      */
     public String selectRating(String secid,String date){
@@ -1776,7 +1784,7 @@ public class CommonAutoCouponService extends BaseService{
     /**
      *  自动加券(债券)
      * <功能详细描述>
-     * @param objIdList
+     * @param dto
      * @see
      * @since 1.0
      */
@@ -2140,7 +2148,7 @@ public class CommonAutoCouponService extends BaseService{
     /**
      * 获取wind资产信息(股票)
      * <功能详细描述>
-     * @param secid
+     * @param stockCode
      * @return
      * @see
      * @since 1.0
@@ -2198,7 +2206,16 @@ public class CommonAutoCouponService extends BaseService{
     				baseFinProductBaseInfoList.add(baseInfoDto1);
     			}else{
     				//中债校验不通过的数据
-    				errorAssetInfo.add("债券代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+"，"+"债券名称："+baseInfoDto1.getFinProduct().getFinprodAbbr());
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+                    sb.append(GlobalConstant.HTML_NEWLINE + "债券代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("债券名称："+baseInfoDto1.getFinProduct().getFinprodAbbr()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+    				errorAssetInfo.add(sb.toString());
     			}
     		}
     		interfPayhsrcsecinfoDtoNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
@@ -2267,7 +2284,16 @@ public class CommonAutoCouponService extends BaseService{
     				baseFinProductBaseInfoList.add(baseInfoDto1);
     			}else{
     				//中债校验不通过的数据
-    				errorAssetInfo.add("基金代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+"，"+"基金名称："+baseInfoDto1.getFinProduct().getFinprodAbbr());
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+                    sb.append(GlobalConstant.HTML_NEWLINE + "基金代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("基金名称："+baseInfoDto1.getFinProduct().getFinprodAbbr() + GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+                    errorAssetInfo.add(sb.toString());
     			}
     		}
     		infChinamutualfunddescriptionNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
@@ -2312,7 +2338,17 @@ public class CommonAutoCouponService extends BaseService{
     				baseFinProductBaseInfoList.add(baseInfoDto1);
     			}else{
     				//中债校验不通过的数据
-    				errorAssetInfo.add("股票代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+"，"+"股票名称："+baseInfoDto1.getFinProduct().getFinprodAbbr());
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+
+                    sb.append(GlobalConstant.HTML_NEWLINE + "股票代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("股票名称："+baseInfoDto1.getFinProduct().getFinprodAbbr() + GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+                    errorAssetInfo.add(sb.toString());
     			}
     		}
     		interfStockInfoDtoNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
