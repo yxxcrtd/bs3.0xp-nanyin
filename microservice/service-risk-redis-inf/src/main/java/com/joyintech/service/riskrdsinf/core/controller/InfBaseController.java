@@ -47,7 +47,7 @@ import com.joyintech.service.riskrdsinf.tool.service.RefreshCacheService;
  * @since 1.0
  */
 @RestController
-@RequestMapping("${service}/interf")
+@RequestMapping("/interf")
 public class InfBaseController {
 
     @Autowired

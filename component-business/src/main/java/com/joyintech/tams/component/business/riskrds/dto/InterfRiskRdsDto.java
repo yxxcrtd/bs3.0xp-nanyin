@@ -1062,16 +1062,6 @@ public class InterfRiskRdsDto implements IRiskRds {
     private String isRelatedParty;
 
     /**
-     * 关联方是否授信机构
-     */
-    private String isRelatedPartyCeOrg;
-
-    /**
-     * 关联方机构授信额度
-     */
-    private BigDecimal relatedPartyAmt;
-
-    /**
      * 获取 关联方
      * 
      * @return 关联方.
@@ -1106,44 +1096,6 @@ public class InterfRiskRdsDto implements IRiskRds {
     public void setIsRelatedParty(String isRelatedParty) {
         this.isRelatedParty = isRelatedParty;
     }
-
-    /**
-     * 获取 关联方是否授信机构
-     * 
-     * @return 关联方是否授信机构.
-     */
-    public String getIsRelatedPartyCeOrg() {
-        return isRelatedPartyCeOrg;
-    }
-
-    /**
-     * 设置 关联方是否授信机构
-     * 
-     * @param isRelatedPartyCeOrg 关联方是否授信机构
-     */
-    public void setIsRelatedPartyCeOrg(String isRelatedPartyCeOrg) {
-        this.isRelatedPartyCeOrg = isRelatedPartyCeOrg;
-    }
-
-    /**
-     * 获取 关联方机构授信额度
-     * 
-     * @return 关联方机构授信额度.
-     */
-    public BigDecimal getRelatedPartyAmt() {
-        return relatedPartyAmt;
-    }
-
-    /**
-     * 设置 关联方机构授信额度
-     * 
-     * @param relatedPartyAmt 关联方机构授信额度
-     */
-    public void setRelatedPartyAmt(BigDecimal relatedPartyAmt) {
-        this.relatedPartyAmt = relatedPartyAmt;
-    }
-    // add by zhangrui1 关联方信息 end
-
 
     public String getIgnoreStatus() {
         return ignoreStatus;

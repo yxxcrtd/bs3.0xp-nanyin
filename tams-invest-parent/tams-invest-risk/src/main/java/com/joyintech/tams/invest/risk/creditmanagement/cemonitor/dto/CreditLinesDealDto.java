@@ -44,6 +44,11 @@ public class CreditLinesDealDto extends CreditLines implements GridRowDto{
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal usedEnstustAmt;
+	/**
+	 * 已使用金额(自主管理)
+	 */
+	@JsonSerialize(using=BigDecimalSerializer.class)
+	private BigDecimal usedZizhuAmt;
     /**
      * 已使用金额(合计)
      */
@@ -65,6 +70,11 @@ public class CreditLinesDealDto extends CreditLines implements GridRowDto{
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal usedAmtNl;
+	/**
+	 * 非法人机构已使用金额(自主管理)
+	 */
+	@JsonSerialize(using=BigDecimalSerializer.class)
+	private BigDecimal usedZizhuAmtNl;
     /**
      * 非法人机构已使用金额(委托投资)
      */
@@ -288,4 +298,20 @@ public class CreditLinesDealDto extends CreditLines implements GridRowDto{
     public void setCreditAmtNl(BigDecimal creditAmtNl) {
         this.creditAmtNl = creditAmtNl;
     }
+
+	public BigDecimal getUsedZizhuAmt() {
+		return usedZizhuAmt;
+	}
+
+	public void setUsedZizhuAmt(BigDecimal usedZizhuAmt) {
+		this.usedZizhuAmt = usedZizhuAmt;
+	}
+
+	public BigDecimal getUsedZizhuAmtNl() {
+		return usedZizhuAmtNl;
+	}
+
+	public void setUsedZizhuAmtNl(BigDecimal usedZizhuAmtNl) {
+		this.usedZizhuAmtNl = usedZizhuAmtNl;
+	}
 }

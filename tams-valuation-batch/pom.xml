@@ -8,7 +8,7 @@
     </parent>
     <artifactId>tams-valuation-batch</artifactId>
     <name>tams-valuation-batch</name>
-    <version>2.0</version>
+    <version>3.0.1</version>
     <properties>
         <hibernate.version>5.3.6.Final</hibernate.version>
         <jackson.version>2.9.2</jackson.version>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>tams-valuation-common</artifactId>
-            <version>2.0.0</version>
+            <version>3.0.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.joyintech</groupId>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>tams-valuation-api</artifactId>
-            <version>2.0.0</version>
+            <version>3.0.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.joyintech</groupId>

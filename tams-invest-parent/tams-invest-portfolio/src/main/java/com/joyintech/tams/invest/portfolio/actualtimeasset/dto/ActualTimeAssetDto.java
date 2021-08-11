@@ -114,9 +114,6 @@ public class ActualTimeAssetDto extends BaseEntity {
      * @since 1.0
      */
     public String getType8Name() {
-        if (StringUtil.isNotEmpty(this.getType8()) && this.getType8().equals("cash")) {
-            return "现金";
-        }
         return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, this.getType8());
     }
     

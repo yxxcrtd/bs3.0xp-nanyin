@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.BussCombDistribtDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
@@ -321,17 +322,17 @@ public class EtribBondInfo003Controller extends BaseController {
             }
             // ----------add by zhangrui1 20200715 预占功能 end----------
         }
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, bondInfoDto.getOperateType())) {
-//            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
-//                    dataList, DictCodeList.平安资产类型_债券.getValue(),
-//                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
-//                    true, bondInfoDto.getEtrInvestPersonInfo());
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
-//        EntrustRdsCommonAop.riskListToChildren(bondInfoDto.getRiskTrialRetDto(), bondInfoDto.getEtrInvestBondInfoDtos(),
-//                (dto, list) -> dto.setRiskTrialRetDto(list));
+        if (StringUtil.equals(BussinessConstant.SUBMIT, bondInfoDto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
+                    dataList, DictCodeList.平安资产类型_债券.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                    true, bondInfoDto.getEtrInvestPersonInfo());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        EntrustRdsCommonAop.riskListToChildren(bondInfoDto.getRiskTrialRetDto(), bondInfoDto.getEtrInvestBondInfoDtos(),
+                (dto, list) -> dto.setRiskTrialRetDto(list));
 
         // 临时主键
         BussinessCodeParameter param = new BussinessCodeParameter();

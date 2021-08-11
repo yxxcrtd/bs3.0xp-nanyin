@@ -187,9 +187,21 @@
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>service-valuation</artifactId>
-			<version>2.1.1</version>
+			<version>3.0.1</version>
 		</dependency>
-		
+		<!-- 估值核算-估值模型 -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>service-valuation-valmodel</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<!-- 估值核算 - 减值模型 -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>service-valuation-lossmodel</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>service-valuation-basicdata</artifactId>

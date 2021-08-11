@@ -13,8 +13,12 @@ package com.joyintech.tams.invest.entrust.etrinvestbondinfo.controller;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -160,12 +164,16 @@ public class EtrInvestBondInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("recall")
-    public AjaxResult recallDelegate(@RequestBody EtrInvestBondInfoDto dto) {
+    public AjaxResult recallDelegate(@RequestBody EtrInvestBondInfoDto dto) throws Exception {
         List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrInvestBondInfoDto entity : dtolist){
                 etrInvestBondInfoService.recallDelegate(entity);
             }
+            // add by zhangrui1 批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_债券.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by zhangrui1 批量撤销预占 end
             return new AjaxResult(this.getMessage("ETR_X_001"));
         }
         return new AjaxResult(this.getMessage("ETR_X_002"));
@@ -180,12 +188,18 @@ public class EtrInvestBondInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("close")
-    public AjaxResult closeDelegate(@RequestBody EtrInvestBondInfoDto dto) {
+    public AjaxResult closeDelegate(@RequestBody EtrInvestBondInfoDto dto) throws Exception{
         List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrInvestBondInfoDto entity : dtolist){
                 etrInvestBondInfoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
             }
+            // add by zhangrui1 批量委托关闭 start
+            // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
+            List<String> entrustIdList = dtolist.stream().map(
+                    EtrInvestBondInfoDto::getEntrustId).collect(Collectors.toList());
+            EntrustCompleteUtil.doComplete(entrustIdList);
+            // add by zhangrui1 批量委托关闭 end
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }
         return new AjaxResult(this.getMessage("ETR_X_004"));
@@ -195,7 +209,7 @@ public class EtrInvestBondInfo001Controller extends BaseController {
      * 
      * 删除投资委托
      * <功能详细描述>
-     * @param entrustId
+     * @param dto
      * @return
      * @see
      * @since 1.0

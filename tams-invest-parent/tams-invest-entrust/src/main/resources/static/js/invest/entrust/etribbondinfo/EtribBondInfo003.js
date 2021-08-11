@@ -138,7 +138,7 @@
                 if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
                     // 含权债或为空 且 价格模式不是市价
                     exerYield.val('').attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
-                    query('#calculateField_exerYield').val('').attr('disabled', false);
+                    query('#calculateField_exerYield').attr('disabled', false);
                 }
             }
             return exerYield;
@@ -559,10 +559,15 @@
             let exerYield = query('#exerYield');
             exerYield.attr('disabled', true).removeAttr("required");
             query('#calculateField_exerYield').attr('disabled', true);
+            var finprodId = query("#finprodId").val();
+            if (finprodId) {
+                var data = query("#finprodId").select2("data")[0].object;
+                query("#isRight").val(data.isRight).trigger("change");
+            }
             if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
                 // 含权债或为空 且 价格模式不是市价
                 exerYield.attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
-                query('#calculateField_exerYield').val('').attr('disabled', false);
+                query('#calculateField_exerYield').attr('disabled', false);
             }
             calDeviationDegree();
         }
@@ -699,7 +704,10 @@
         var ccy = query('#ccy').val();
         var sysDateT1 = query('#vdate').val();
         var calId = query('#calendarId').val();
-        parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
+        if (parent.EtrIbBondinfoHq) {
+            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
+
+        }
     });
 
 
@@ -831,6 +839,7 @@
         query("#mdate").val(sysDate).trigger("change");
         query("#counterId1").val("").trigger("change");
         query("#counterId2").val("").trigger("change");
+        query("#portfolioSeries").val("").trigger("change");
         query("#tradeAmt").removeAttr("auto");// 劵面总额汇总方式
         document.getElementById('deviationDegree').innerHTML = '';
         table.clear();
@@ -1233,8 +1242,6 @@
             if (!query("#finprodId").val()) {
                 return;
             }
-            // 根据净价计算净价偏离度
-            calDeviationDegree();
             //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 start
             var calculateField =  query("input[name=calculateField]:checked").val();
             if(calflag != calculateField){
@@ -1281,6 +1288,8 @@
                     if (data.price) {
                         query("#price").val(data.price).trigger("blur");
                         query("#fpriceAmt").val(data.unitFprice).trigger("blur");
+                        // 根据净价计算净价偏离度
+                        calDeviationDegree();
                     } else {
                         query("#price").val("");
                         query("#fpriceAmt").val("");
@@ -1295,29 +1304,29 @@
     };
 
 
-    // // 绑定提交按钮
-    // $('#EtribBondInfo003_btn_submit').click(function () {
-    //     saveOrSubmit('submit');
-    // });
-    //
-    // // 绑定保存按钮
-    // $('#EtribBondInfo003_btn_save').click(function () {
-    //     saveOrSubmit('save');
-    // });
-    //
-    // // 绑定取消按钮
-    // $('#EtribBondInfo003_btn_reset').click(function () {
-    //     doReset();
-    // });
-    //
-    // // 绑定风险按钮
-    // $('#EtribBondInfo003_btn_riskcal').click(function () {
-    //     doRiskcal();
-    // });
-    //
-    // $('#EtribBondInfo003_btn_fileupload').click(function () {
-    //     fileUpload();
-    // });
+    // 绑定提交按钮
+    $('#EtribBondInfo003_btn_submit').click(function () {
+        saveOrSubmit('submit');
+    });
+
+    // 绑定保存按钮
+    $('#EtribBondInfo003_btn_save').click(function () {
+        saveOrSubmit('save');
+    });
+
+    // 绑定取消按钮
+    $('#EtribBondInfo003_btn_reset').click(function () {
+        doReset();
+    });
+
+    // 绑定风险按钮
+    $('#EtribBondInfo003_btn_riskcal').click(function () {
+        doRiskcal();
+    });
+
+    $('#EtribBondInfo003_btn_fileupload').click(function () {
+        fileUpload();
+    });
 
     query('#finprodId').change(function () {
         doChange.finprodId();

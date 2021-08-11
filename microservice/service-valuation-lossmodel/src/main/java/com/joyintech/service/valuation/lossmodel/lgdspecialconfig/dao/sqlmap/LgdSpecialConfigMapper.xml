@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dao.LgdSpecialConfigMapper">
+
+	<sql id="Base_Column_List" >
+            A.SEQNO as seqNo,
+			A.FINPROD_ID as finprodId,
+			A.FINPROD_NAME as finprodName,
+			A.LGD as lgd,
+
+			A.CREATE_DEPT as createDept,
+			A.UPDATE_USER updateUser,
+			A.UPDATE_TIME updateTime,
+			A.CREATE_USER createUser,
+			A.CREATE_TIME createTime
+    </sql>
+
+
+	<select id="selectAll" resultType="com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto">
+		select
+		<include refid="Base_Column_List" />
+			FROM MOD_LGD_SPECIAL_CONFIG A
+		<where>
+			1=1
+			<if test="finprodIds !=null and finprodIds !=''">
+				and A.FINPROD_ID in
+				<foreach collection="finprodIds.split(',')" item="item" index= "index" open="(" close=")" separator="," >
+					#{item}
+				</foreach>
+			</if>
+
+		</where>
+
+		ORDER BY A.CREATE_TIME DESC
+	</select>
+
+
+
+	<select id="selectExportList" resultType="com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto">
+		select
+		<include refid="Base_Column_List" />
+		FROM MOD_LGD_SPECIAL_CONFIG A
+		<where>
+			1=1
+			<if test="finprodIds !=null and finprodIds !=''">
+				and A.FINPROD_ID in
+				<foreach collection="finprodIds.split(',')" item="item" index= "index" open="(" close=")" separator="," >
+					#{item}
+				</foreach>
+			</if>
+
+		</where>
+
+		ORDER BY A.CREATE_TIME DESC
+	</select>
+
+
+
+    <select id="selectByPrimaryKey" resultType="com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto" >
+        select
+		<include refid="Base_Column_List" />
+        FROM MOD_LGD_SPECIAL_CONFIG A
+        where A.SEQNO = #{seqNo}
+
+    </select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from MOD_LGD_SPECIAL_CONFIG
+		where SEQNO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+
+
+	<insert id="insert" parameterType="com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto" >
+		insert into MOD_LGD_SPECIAL_CONFIG (
+		SEQNO,
+		FINPROD_ID,
+		FINPROD_NAME,
+		LGD,
+
+		CREATE_DEPT,
+		CREATE_USER,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME
+		)values (
+		#{seqNo,jdbcType=VARCHAR},
+		#{finprodId,jdbcType=DATE},
+		#{finprodName,jdbcType=VARCHAR},
+		#{lgd,jdbcType=DECIMAL},
+
+		#{createDept,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateUser,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=TIMESTAMP})
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto" >
+		update MOD_LGD_SPECIAL_CONFIG
+		<set >
+			<if test="finprodId != null" >
+				FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+			</if>
+			<if test="finprodName != null" >
+				FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+			</if>
+			<if test="finprodName != null" >
+				LGD = #{lgd,jdbcType=DECIMAL},
+			</if>
+
+			<if test="createDept != null" >
+				CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+			</if>
+
+			<if test="updateUser != null" >
+				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where SEQNO = #{seqNo,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectByMap" resultType="com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto">
+        select
+		<include refid="Base_Column_List" />
+        FROM MOD_LGD_SPECIAL_CONFIG A
+        <where>
+			1=1
+			<if test="seqNo != null"  >
+				and A.SEQNO = #{seqNo}
+			</if>
+
+			<if test="finprodId != null" >
+				and FINPROD_ID = #{finprodId}
+			</if>
+			<if test="finprodName != null" >
+				and FINPROD_NAME = #{finprodName}
+			</if>
+			<if test="lgd != null" >
+				and LGD = #{lgd}
+			</if>
+	    </where>
+    </select>
+
+	<select id="getRepeatCheckList" resultType="int" parameterType="com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto">
+		select count(1)
+		FROM MOD_LGD_SPECIAL_CONFIG A
+		<where>
+			<if test="seqNo != null and seqNo != '' ">
+				A.SEQNO != #{seqNo}
+			</if>
+			and  A.FINPROD_ID = #{finprodId}
+		</where>
+	</select>
+
+    <!--根据产品代码判断是否有重复数据-->
+	<select id="selectRepetList" resultType="com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto">
+		select
+		<include refid="Base_Column_List" />
+		FROM MOD_LGD_SPECIAL_CONFIG A
+		<where>
+			FINPROD_ID = #{finprodId}
+		</where>
+	</select>
+
+
+
+	<update id="updateRepetDto" parameterType="com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto" >
+		update MOD_LGD_SPECIAL_CONFIG
+		<set >
+			LGD = #{lgd,jdbcType=DECIMAL}
+		</set>
+		where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+	</update>
+
+
+
+    
+</mapper>

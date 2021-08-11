@@ -8,6 +8,7 @@ import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -313,14 +314,14 @@ public class EtrIbRepoinfo002Controller extends BaseController {
         }
 
         // ----------预占功能 start----------
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
-//            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
-//                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
-//                    DictCodeList.平安资产类型_质押式回购.getValue());
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    DictCodeList.平安资产类型_质押式回购.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
         // ----------预占功能 end----------
         ProcessParameter<EtrIbRepoinfo002Dto> processParameter = new ProcessParameter<EtrIbRepoinfo002Dto>();
         WorkFlowParameter<EtrIbRepoinfo002Dto> params = new WorkFlowParameter<EtrIbRepoinfo002Dto>();

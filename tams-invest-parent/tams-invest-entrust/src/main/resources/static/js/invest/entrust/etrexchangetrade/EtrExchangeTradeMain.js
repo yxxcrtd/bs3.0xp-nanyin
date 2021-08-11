@@ -30,16 +30,16 @@ var correctData;
       object.operateType = operateType;
       //object.pageModel = pageModel;
             
-      // var riskdata = EtrExchangeTrade001.getriskdata(object);
-      // if(BaseRiskMathComm && EtrExchangeTrade001.isNeedRiskcal()) {
-      //     s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-      //     if(!s && s != ''){
-      //         return;
-      //     }
-      //     if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
-      //         return;
-      //     }
-      // }
+      var riskdata = EtrExchangeTrade001.getriskdata(object);
+      if(BaseRiskMathComm && EtrExchangeTrade001.isNeedRiskcal()) {
+          s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+          if(!s && s != ''){
+              return;
+          }
+          if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
+              return;
+          }
+      }
       //验证
       if(!checkDbClickData(object)){
           return;
