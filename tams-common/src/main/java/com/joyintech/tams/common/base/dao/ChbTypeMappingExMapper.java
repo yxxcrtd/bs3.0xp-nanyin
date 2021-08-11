@@ -4,7 +4,11 @@ import java.util.List;
 
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
+
+@Repository
 public interface ChbTypeMappingExMapper {
     int deleteByPrimaryKey(String mappingid);
 

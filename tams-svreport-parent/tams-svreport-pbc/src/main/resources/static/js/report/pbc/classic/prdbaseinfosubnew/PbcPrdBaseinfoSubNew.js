@@ -71,9 +71,9 @@ $(function () {
             {title: "货币市场基金标识", field: 'isMarketFundStr', width: 150, sortField: 'isMarketFund'},
 
             /***未提供字段.暂时使用资产池代码替代.*/
-            {title: "其他产品标识1", field: 'issuePartyName', width: 150, sortable:false},
-            {title: "其他产品标识2", field: 'issuePartyName', width: 150, sortable:false},
-            {title: "其他产品标识3", field: 'issuePartyName', width: 150, sortable:false},
+            {title: "其他产品标识1", field: '', width: 150, sortable:false},
+            {title: "其他产品标识2", field: '', width: 150, sortable:false},
+            {title: "其他产品标识3", field: '', width: 150, sortable:false},
 
 
             {title: "募集资金币种", field: 'raiseCcy', width: 150, sortField: 'raiseCcy'},
