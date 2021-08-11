@@ -706,7 +706,8 @@
         var calId = query('#calendarId').val();
         if (parent.EtrIbBondinfoHq) {
             parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
-
+            // 左边持仓现金信息联动
+            doOther.leftHqReload();
         }
     });
 
@@ -1159,19 +1160,18 @@
 
         Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', res.param, function(result1) {
             if(res.objects.length>0){
+                if (operateType === "save") {
+                    WorkFlow.doSaveList(basePath+'invest/entrust/etribbondinfo/EtribBondInfo003/save',res.param,"EtribBondInfo003_btn_save","EtribBondInfo003");
+                    EtrIbBondinfo003.doReset();
+                } else {
                 Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/check',res.objects,
                     function(result) {
                         Joyin.confirm(result.data,function() {
-                            if (operateType === "save") {
-                                WorkFlow.doSaveList(basePath+'invest/entrust/etribbondinfo/EtribBondInfo003/save',res.param,"EtribBondInfo003_btn_save","EtribBondInfo003");
-                                EtrIbBondinfo003.doReset();
-                            } else {
                                 WorkFlow.doSubmitList(basePath+'invest/entrust/etribbondinfo/EtribBondInfo003/save',res.param,"EtribBondInfo003_btn_submit","EtribBondInfo003");
                                 EtrIbBondinfo003.doReset();
-                            }
-
                         });
                     });
+                }
             }else{
                 Joyin.warn("请添加组合分配！");
                 return;

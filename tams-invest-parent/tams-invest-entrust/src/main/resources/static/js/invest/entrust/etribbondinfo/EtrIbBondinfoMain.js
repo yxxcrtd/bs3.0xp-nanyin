@@ -257,19 +257,19 @@ $(
             }
 
             Joyin.ajaxJson(basePath + "invest/entrust/EtrCommonController/check", object, function (result1) {
-                Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/check", object, function (result) {
-                    Joyin.confirm(result.data, function () {
-                        if (operateType === "save") {
-                            WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/save", object, "EtrIbBondinfoMain_btn_save", "EtrIbBondinfo002", function () {
-                                window.location.reload();
-                            });
-                        } else {
-                            WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/save", object, "EtrIbBondinfoMain_btn_submit", "EtrIbBondinfo002", function () {
-                                window.location.reload();
-                            });
-                        }
+                if (operateType === "save") {
+                    WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/save", object, "EtrIbBondinfoMain_btn_save", "EtrIbBondinfo002", function () {
+                        window.location.reload();
                     });
-                });
+                } else {
+                    Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/check", object, function (result) {
+                        Joyin.confirm(result.data, function () {
+                                WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/save", object, "EtrIbBondinfoMain_btn_submit", "EtrIbBondinfo002", function () {
+                                    window.location.reload();
+                                });
+                        });
+                    });
+                }
             });
         }
 
