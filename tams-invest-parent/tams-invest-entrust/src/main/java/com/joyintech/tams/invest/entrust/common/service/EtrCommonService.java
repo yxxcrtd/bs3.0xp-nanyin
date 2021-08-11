@@ -1792,4 +1792,19 @@ public class EtrCommonService extends BaseService<ITableRow> {
     public void removeCheckAuthUser(String key) {
         userMap.remove(key);
     }
+
+
+    /**
+     * add by xxg 20210811
+     * 根据组合代码获取组合全称
+     */
+    public String getPortfolioName(String portfolioId){
+        PtlPortfolio ptlPortfolio = ptlPortfolioMapper.selectByPrimaryKey(portfolioId);
+        String portfolioName = "";
+        if(ptlPortfolio != null){
+            portfolioName = ptlPortfolio.getPortfolioName();
+        }
+        return portfolioName;
+    }
+
 }
