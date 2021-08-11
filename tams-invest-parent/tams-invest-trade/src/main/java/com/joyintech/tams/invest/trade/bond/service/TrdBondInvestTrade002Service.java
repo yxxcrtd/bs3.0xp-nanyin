@@ -1737,8 +1737,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     BigDecimal isFrozenPosition = basePtlCashPositionInfoMapper.selectCashPositionFlow(ptlCashPositionFlowDto);
                     //判断是否已释放头寸
                     if(isFrozenPosition != null && isFrozenPosition.compareTo(BigDecimal.ZERO) != 0){
-                        basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
                         BigDecimal amount = basePtlCashPositionInfoMapper.selectPtlCashPositionFlowAmount(ptlCashPositionFlowDto);
+                        basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
                         if(amount!=null){
                             Map<String,Object> positionMap = new HashMap<>();
                             positionMap.put("minDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
