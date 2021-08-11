@@ -1266,8 +1266,11 @@
                     var entrustNum = 0.0;
                     for (var index in object.bussCombDistribtList) {
                         var item = object.bussCombDistribtList[index];
-                        if (item.entrustNum == null || item.entrustNum == "") return;
-                        entrustNum += parseFloat(item.entrustNum) * 10000;
+                        if (item.entrustNum == null || item.entrustNum == ""){
+                            // return;
+                        }else{
+                            entrustNum += parseFloat(item.entrustNum) * 10000;
+                        }
                     }
                     object.entrustNum = String(entrustNum);
                 } else {
