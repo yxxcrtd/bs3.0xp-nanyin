@@ -96,6 +96,7 @@
         ,A.IS_LOOP_AMT as isLoopAmt
         <!-- 资产授信新增字段  add by yufei 20200629 end -->
 		,A.HOLD_MATURITY as holdMaturity
+       ,A.CREDIT_PRICE as creditPrice
 	 FROM
 	 	CREDIT_LINES A
         where SEQNO = #{seqno,jdbcType=VARCHAR}
