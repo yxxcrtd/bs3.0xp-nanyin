@@ -205,6 +205,10 @@ $(function() {
              	   return;
                 }
             })
+            if (!isHaveData){
+                Joyin.error("列表无数据，不支持导出！");
+                return;
+            }
             Joyin.exportExcel("export",param);
             if (isHaveData){
 	            Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
