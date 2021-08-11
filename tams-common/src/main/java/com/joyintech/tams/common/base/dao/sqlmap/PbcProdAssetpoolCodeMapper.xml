@@ -158,4 +158,15 @@
         where INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR}
           and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
     </update>
+
+    <select id="selectByInsideProdList" resultMap="BaseResultMap" parameterType="java.util.List" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper.Base_Column_List" />
+        from PBC_PROD_ASSETPOOL_CODE
+        where CODE_TYPE = '01'
+        INSIDE_PROD_ID IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")" >
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
 </mapper>

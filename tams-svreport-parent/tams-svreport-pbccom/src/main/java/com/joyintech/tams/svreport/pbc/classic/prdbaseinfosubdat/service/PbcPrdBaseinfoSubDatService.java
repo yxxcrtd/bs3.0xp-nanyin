@@ -103,7 +103,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
             if(CollectionUtil.isNotEmpty(prodIds)){
                 boolean flag = false;
                 pbcPrdBaseinfoSubDats = pbcPrdBaseinfoSubDatMapper.queryPbcPrdBaseInfoByprodId(prodIds);
-                StringBuilder builder = new StringBuilder();
+                /*StringBuilder builder = new StringBuilder();
                 builder.append("已报送的数据，不支持修改。请在人行客户端直接修复！").append("\n").append("产品内部代码:[");
                 for (PbcPrdBaseinfoSubDatDto pbcPrdBaseinfoSubDatDto : pbcPrdBaseinfoSubDatDtos) {
                     Optional<PbcPrdBaseinfoSubDat> any = pbcPrdBaseinfoSubDats.stream().filter(baseinfoDat -> baseinfoDat.getProdId().equals(pbcPrdBaseinfoSubDatDto.getProdId())).findAny();
@@ -115,9 +115,24 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                             builder.append(pbcPrdBaseinfoSubDat.getProdId()).append(",").append("\n");
                         }
                     }
+                }*/
+                List<ValidMessage> validMessages = new ArrayList<>();
+                for (PbcPrdBaseinfoSubDatDto pbcPrdBaseinfoSubDatDto : pbcPrdBaseinfoSubDatDtos) {
+                    Optional<PbcPrdBaseinfoSubDat> any = pbcPrdBaseinfoSubDats.stream().filter(baseinfoDat -> baseinfoDat.getProdId().equals(pbcPrdBaseinfoSubDatDto.getProdId())).findAny();
+                    if(any.isPresent()){
+                        PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat = any.get();
+                        String sendStatus = pbcPrdBaseinfoSubDat.getSendStatus();
+                        if(!DictCodeListExt2.报送状态_未报送.getValue().equals(sendStatus)){
+                            flag = true;
+                            ValidMessage message = new ValidMessage();
+                            message.setMessage(pbcPrdBaseinfoSubDat.getProdId());
+                            validMessages.add(message);
+                        }
+                    }
                 }
                 if(flag){
-                    ajaxResult.setMessage(builder.append("]").append("是否继续?").toString());
+                    ajaxResult.setData("CONFIRM_MSG");
+                    ajaxResult.setErrorList(validMessages);
                     ajaxResult.setMessageType(MessageType.确认消息);
                     ajaxResult.setStatuCode(HttpStatus.OK.value());
                     return ajaxResult;
