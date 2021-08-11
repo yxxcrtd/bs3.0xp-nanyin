@@ -9,7 +9,7 @@ insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRA
 values ('PbcPrdBaseinfoEndSubNew001', 'PbcPrdBaseinfoEndSubNew001_btn_chbexport', '01', '01', null, '导出', 'system', null, SYSDATE, 'system', SYSDATE, 'COM');
 
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG)
-values ('PbcPrdBaseinfoEndSubNew001', 'PbcPrdBaseinfoEndSubNew001_btn_chbexportxls', '01', '01', null, '导出人行Excel', 'system', null, SYSDATE, 'system', SYSDATE, 'C');
+values ('PbcPrdBaseinfoEndSubNew001', 'PbcPrdBaseinfoEndSubNew001_btn_chbexportxls', '01', '01', null, '导出待修复数据', 'system', null, SYSDATE, 'system', SYSDATE, 'C');
 
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG)
 values ('PbcPrdBaseinfoEndSubNew001', 'PbcPrdBaseinfoEndSubNew001_btn_manual', '01', '01', null, '手工处理', 'system', null, SYSDATE, 'system', SYSDATE, 'C');
