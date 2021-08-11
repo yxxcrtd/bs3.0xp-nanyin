@@ -32,7 +32,7 @@ import java.math.RoundingMode;
 @Service
 public class EtrSecPrimaryBiddingCashPositionDealService extends EtrCashPositionBaseService {
 
-	@Autowired
+
 	private static BasePtlCashPositionInfoService basePtlCashPositionInfoServiceImpl;
 
 	private static PtlCashPositionFlowMapper ptlCashPositionFlowMapper;
@@ -104,5 +104,10 @@ public class EtrSecPrimaryBiddingCashPositionDealService extends EtrCashPosition
 	@Autowired(required = false)
 	public void setPtlCashPositionFlowMapper(PtlCashPositionFlowMapper ptlCashPositionFlowMapper) {
 		EtrSecPrimaryBiddingCashPositionDealService.ptlCashPositionFlowMapper = ptlCashPositionFlowMapper;
+	}
+
+	@Autowired(required = false)
+	public void setBasePtlCashPositionInfoServiceImpl(BasePtlCashPositionInfoService basePtlCashPositionInfoServiceImpl) {
+		EtrSecPrimaryBiddingCashPositionDealService.basePtlCashPositionInfoServiceImpl = basePtlCashPositionInfoServiceImpl;
 	}
 }
