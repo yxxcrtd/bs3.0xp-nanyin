@@ -901,7 +901,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             if (mstCounterParty == null){
                 return;
             }
-            if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_非法人机构.getValue())){
+            if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_资管产品.getValue())){
                 oneStepInfo.setCreditType(DictCodeListRsk.额度分类_非法人机构.getValue());
             }
             if (StringUtil.isNotEmpty(mstCounterParty.getLinkId())) {
