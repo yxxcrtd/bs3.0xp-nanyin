@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.sso.config.dao.SsoUserPlatFormMapper">
+
+    <resultMap type="com.joyintech.sso.config.pojo.SsoUserPlatForm" id="SsoUserPlatFormResult">
+        <result property="userid"    column="USER_ID"    />
+        <result property="platformid"    column="PLATFORM_ID"    />
+        <result property="platformname"    column="PLATFORM_NAME"    />
+        <result property="platformcode"    column="PLATFORM_CODE"    />
+        <result property="platformurl"    column="PLATFORM_URL"    />
+        <result property="mdtime"    column="MDTIME"    />
+        <result property="mduser"    column="MDUSER"    />
+        <result property="remark1"    column="REMARK1"    />
+        <result property="remark2"    column="REMARK2"    />
+    </resultMap>
+
+    <resultMap type="com.joyintech.sso.common.dto.TreeNode" id="TreeNodeResult">
+        <result property="id"    column="ID"    />
+        <result property="name"    column="NAME"    />
+        <result property="pid"    column="PID"    />
+        <result property="type"    column="TYPE"    />
+        <result property="sortnum"    column="SORTNUM"    />
+    </resultMap>
+
+    <select id="listSsoUserPlatForm" parameterType="java.util.Map" resultMap="SsoUserPlatFormResult" useCache="false">
+        select up.USER_ID, p.ID PLATFORM_ID, p.PLATFORM_NAME,p.PLATFORM_CODE, p.PLATFORM_URL,up.MDTIME,up.MDUSER,up.REMARK1,up.REMARK2
+        from SSO_PLATFORM p  left join SSO_USER_PLATFORM up on up.platform_id = p.id
+        <if test="userid != null  and userid != ''"> and up.USER_ID = #{userid,jdbcType=VARCHAR}</if>
+        <where>
+            <if test="platformid != null  and platformid != ''"> and up.PLATFORM_ID = #{platformid,jdbcType=VARCHAR} </if>
+            <if test="platformcode != null  and platformcode != ''"> and p.PLATFORM_CODE LIKE concat('%',concat(#{platformcode,jdbcType=VARCHAR},'%'))</if>
+            <if test="platformname != null  and platformname != ''"> and P.PLATFORM_NAME LIKE concat('%',concat(#{platformname,jdbcType=VARCHAR},'%')) </if>
+        </where>
+    </select>
+
+    <update id="updateSsoPlatform" parameterType="com.joyintech.sso.config.pojo.SsoUserPlatForm">
+        UPDATE SSO_USER_PLATFORM
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mdtime != null">MDTIME = #{mdtime},</if>
+            <if test="mduser != null">MDUSER = #{mduser},</if>
+            <if test="remark1 != null">REMARK1 = #{remark1},</if>
+            <if test="remark2 != null">REMARK2 = #{remark2},</if>
+        </trim>
+        where USER_ID = #{userid} and PLATFORM_ID = #{platformid}
+    </update>
+
+    <delete id="deleteSsoUserPlatFormByPlatformids" parameterType="java.util.Map">
+        delete  from SSO_USER_PLATFORM where PLATFORM_ID in
+        <foreach item="platformid" collection="platformids" open="(" separator="," close=")">
+            #{platformid}
+        </foreach>
+        AND  USER_ID = #{userid}
+    </delete>
+
+    <select id="selectTreeNodeList" parameterType="java.util.Map" resultMap="TreeNodeResult" useCache="false">
+        SELECT *
+          FROM (select INSTITUTION_CODE ID,
+                       INSTITUTION_NAME NAME,
+                       UPPER_INSTITUTION_CODE PID,
+                       '1' as TYPE,
+                       '1' AS SORTNUM
+                  from sys_institution
+                union all
+                select DEPT_CODE ID,
+                       DEPT_NAME NAME,
+                       UPPER_DEPT_CODE PID,
+                       '2' as TYPE,
+                       '1' AS SORTNUM
+                  from sys_department
+                union all
+                select USER_ID ID,
+                       USER_NAME NAME,
+                       DEPT_CODE PID,
+                       '3' AS type,
+                       '1' AS SORTNUM
+                  from sys_user) T
+        <where>
+            <if test="type != null  and type != ''"> and TYPE = #{id}</if>
+            <if test="id != null  and id != ''"> and ID = #{id}</if>
+            <if test="pid != null  and pid != ''"> and PID = #{pid}</if>
+            <if test="name != null  and name != ''"> and NAME LIKE concat('%',concat(#{name,jdbcType=VARCHAR},'%')) </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,143 @@
+@import './variables.scss';
+@import './mixin.scss';
+@import './transition.scss';
+@import './element-ui.scss';
+@import './sidebar.scss';
+
+body {
+  height: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
+label {
+  font-weight: 700;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+#app {
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+a:focus,
+a:active {
+  outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+div:focus {
+  outline: none;
+}
+
+.clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+}
+
+.p16{
+  padding: 16px;
+}
+.p0{
+  padding: 0 !important;
+}
+
+// main-container global css
+.app-container-input {
+  // padding: 20px;
+  // .el-button--default{
+  //   width: 10px !important;
+  // }
+  padding: 6px;
+  border-bottom: 1px solid #ccc;
+  
+}
+.el-button-init{
+  width: 72.75px !important;
+  height: 28px !important;
+  background-color: #4893e6 !important;
+}
+
+.FormClass{
+  
+  .el-form-item__label{
+    font-size: 10px !important;
+    width: 70px !important;
+  }
+  .el-input__inner{
+    height: 30px;
+    line-height: 30px;
+    width: 200px !important;
+    // width: auto;
+  }
+  .el-form-item__content{
+    margin-left: 70px !important;
+  }
+  .el-col-6{
+    width: auto !important;
+  }
+  
+}
+.addFormRow{
+  .el-row{
+    display: flex;
+    justify-content: space-between;
+  }
+  .el-col{
+    width: 48% !important;
+  }
+}
+
+
+
+.el-tree{
+  height: 100% !important;
+}
+.switchStyle .el-switch__label {
+  position: absolute;
+  display: none;
+  color: #fff;
+}
+.switchStyle .el-switch__label--left {
+  z-index: 9;
+  left: 20px;
+}
+.switchStyle .el-switch__label--right {
+  z-index: 9;
+  left: 0px;
+}
+.switchStyle .el-switch__label.is-active {
+  display: block;
+}
+.switchStyle.el-switch .el-switch__core,
+.el-switch .el-switch__label {
+  width: 70px !important;
+}
+
+.paginationBlock{
+  text-align: right;
+}

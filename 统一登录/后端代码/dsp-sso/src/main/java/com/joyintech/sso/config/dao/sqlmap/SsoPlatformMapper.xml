@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.sso.config.dao.SsoPlatformMapper">
+
+    <resultMap type="com.joyintech.sso.config.pojo.SsoPlatform" id="SsoPlatformResult">
+        <result property="id"    column="ID"    />
+        <result property="platformname"    column="PLATFORM_NAME"    />
+        <result property="platformcode"    column="PLATFORM_CODE"    />
+        <result property="platformurl"    column="PLATFORM_URL"    />
+        <result property="weight"    column="WEIGHT"    />
+        <result property="mdtime"    column="MDTIME"    />
+        <result property="mduser"    column="MDUSER"    />
+        <result property="status"    column="STATUS"    />
+        <result property="icon"    column="ICON"    />
+        <result property="cookiekey"    column="COOKIE_KEY"    />
+        <result property="remark1"    column="REMARK1"    />
+        <result property="remark2"    column="REMARK2"    />
+        <result property="describe"    column="DESCRIBE"    />
+    </resultMap>
+
+    <select id="listSsoPlatform" parameterType="com.joyintech.sso.config.dto.SsoPlatformDto" resultMap="SsoPlatformResult" useCache="false">
+        select ID, PLATFORM_NAME,PLATFORM_CODE, PLATFORM_URL, WEIGHT, STATUS, MDTIME, MDUSER, ICON, COOKIE_KEY, REMARK1, REMARK2,DESCRIBE
+        from SSO_PLATFORM
+        <where>
+            <if test="platformname != null  and platformname != ''"> and (ID LIKE concat('%',concat(#{platformname,jdbcType=VARCHAR},'%')) or PLATFORM_NAME LIKE concat('%',concat(#{platformname,jdbcType=VARCHAR},'%')))</if>
+            <if test="status != null"> and STATUS = #{status}</if>
+            <if test="mduser != null  and mduser != ''"> and MDUSER LIKE concat('%',concat(#{mduser,jdbcType=VARCHAR},'%')) </if>
+        </where>
+    </select>
+
+    <update id="updateSsoPlatform" parameterType="com.joyintech.sso.config.pojo.SsoPlatform">
+        UPDATE SSO_PLATFORM
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platformname != null">PLATFORM_NAME = #{platformname},</if>
+            <if test="platformcode != null">PLATFORM_CODE = #{platformcode},</if>
+            <if test="platformurl != null">PLATFORM_URL = #{platformurl},</if>
+            <if test="weight != null">WEIGHT = #{weight},</if>
+            <if test="status != null">STATUS = #{status},</if>
+            <if test="mdtime != null">MDTIME = #{mdtime},</if>
+            <if test="mduser != null">MDUSER = #{mduser},</if>
+            <if test="icon != null">ICON = #{icon},</if>
+            <if test="cookiekey != null">COOKIE_KEY = #{cookiekey},</if>
+            <if test="describe != null">DESCRIBE = #{describe},</if>
+            <if test="remark1 != null">REMARK1 = #{remark1},</if>
+            <if test="remark2 != null">REMARK2 = #{remark2}</if>
+        </trim>
+        where ID = #{id}
+    </update>
+</mapper>

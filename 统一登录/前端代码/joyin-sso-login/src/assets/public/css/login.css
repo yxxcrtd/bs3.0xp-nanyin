@@ -1,0 +1,102 @@
+﻿/* CSS Document */
+
+/*全局定义*/
+body,html{ width:100%;height:100%}
+body { font-family:-apple-system,BlinkMacSystemFont,segoe ui,Roboto,helvetica neue,Arial,noto sans,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol,noto color emoji; font-size:14px; color:rgba(0, 0, 0, .85); font-variant:tabular-nums; line-height:1.5715; font-feature-settings:"tnum","tnum"; background: #fff; -webkit-transition: background 1s cubic-bezier(.075, .82, .165, 1); transition: background 1s cubic-bezier(.075, .82, .165, 1); overflow-x: hidden;}
+body,th,td,p,div,ul,ol,li,dl,dt,dd,form,button,input,h1,h2,h3,h4,h5,h6,pre,textarea,blockquote { margin:0; padding:0; -webkit-tap-highlight-color:rgba(0,0,0,0)}
+a:active,a:hover { outline: 0}
+img { border:none}
+ul,ol,li { list-style:none;}
+table { border-collapse:collapse; border-spacing:0}
+h1,h2,h3,h4,h5,h6 { font-weight:400}
+h4,h5,h6 { font-size:100%}
+button,input,optgroup,option,select,textarea { font-family:inherit; font-size:inherit; font-style:inherit; font-weight:inherit; outline:0;}
+pre { white-space:pre-wrap; white-space:-moz-pre-wrap; white-space:-pre-wrap; white-space:-o-pre-wrap; word-wrap:break-word}
+i,cite,em,var,address,dfn { font-style:normal;}
+a { color:#333; text-decoration:none;}
+a:hover { color:#666;}
+a cite { font-style: normal; *cursor:pointer;}
+/*覆盖字体图标*/
+[class*=" jyicon-"],[class^=jyicon-]{ font-family:"jyiconfont"!important;speak:none;font-style:normal;font-weight:400;font-variant:normal;text-transform:none;line-height:1;vertical-align:baseline;display:inline-block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+/*浏览器过低提示*/
+.ie6-warning { width:100%; position:absolute; top:0; left:0; z-index:1001; background:#FFF6C8; padding:5px 0; font-size:12px}
+.ie6-warning p { width:1000px;margin:0 auto;}.ie6-warning p a:hover { text-decoration:underline;}
+
+/*通用定义*/
+.joyin-row:after,.joyin-row:before {content: '';display: block;clear: both;}
+.joyin-show{display:block!important}.joyin-hide{display:none!important}
+.joyin-btn,.joyin-edge,.joyin-inline, img { vertical-align: middle;}
+.joyin-btn,.joyin-disabled,.joyin-unselect { -moz-user-select:none; -webkit-user-select:none; -ms-user-select:none;}
+.joyin-btn,.joyin-input,.joyin-select,.joyin-textarea,.joyin-upload-button { outline:0; -webkit-appearance:none; transition:all .3s; -webkit-transition:all .3s; box-sizing:border-box;}
+.joyin-form-pane .joyin-form-item[pane],.joyin-form-pane .joyin-form-label,.joyin-input,.joyin-select,.joyin-textarea { border-color:#f2f2f2;/*border-color:#e6e6e6;*/}
+.joyin-input,.joyin-select,.joyin-textarea { height:38px; line-height: 1.3; border-width: 1px; border-style: solid;background-color:#f2f2f2;/*background-color:#fff;*/ border-radius: 2px;}
+.joyin-input,.joyin-textarea { display: block; width:100%; padding-left:10px;}
+.joyin-input::-webkit-input-placeholder { color:#b0b0b0;}.joyin-input:hover{border-color:#c0c4cc!important}.joyin-input:focus{border-color:#1f8cff!important}
+.joyin-btn { display:inline-block; height:38px; line-height:38px; padding:0 18px; background-color:#1F8CFF; color:#fff; white-space:nowrap; text-align:center; font-size:14px; border:none; border-radius:2px; cursor:pointer;}
+.joyin-btn-fluid { width:100%;}.joyin-btn:hover{opacity:.8; color:#fff;}
+.joyin-btn:active{ opacity:1}.joyin-btn+.joyin-btn{margin-left:10px}
+.jyicon-qq { color:#3492ED;}.jyicon-wechat { color:#4DAF29;}.jyicon-sweibo { color:#CF1900;}
+
+/*登录CSS*/
+.joyin-ulogin { left:0; top:0; position:relative; z-index:0; width:100%; min-height:100%; overflow:hidden; box-sizing:border-box; }
+.joyin-loginbg0 { background:url(../images/login-bg.png) no-repeat; background-size:cover; background-attachment:fixed;}
+.joyin-ulogin-top,.joyin-ulogin-main { width:1200px; margin:0 auto; margin-top:8vh;}
+.joyin-ulogin-top img {height:48px;}
+.joyin-ulogin-main { border-radius:5px; background-color:rgba(255,255,255,1); box-shadow:0 4px 4px 4px rgba(0,0,0,.1); box-sizing:border-box; position:relative; z-index:1;}
+.joyin-ulogin-main:after,.joyin-ulogin-main:before {content: '';display: block;clear: both;}
+.joyin-ulogin-left,.joyin-ulogin-right { display:inline-block; float:left; width:600px; height:560px;}
+.joyin-ulogin-left { position:relative; z-index:3; line-height:560px; text-align:center;  border-radius:5px 0 0 5px; background:url(../images/login-leftbg.png) repeat; box-shadow:rgba(0,0,0,.1) 0 0 6px 1px inset;}
+.joyin-ulogin-left img { height:450px;}
+.joyin-ulogin-right { position:relative; z-index:4; float:right; }
+.joyin-ulogin-box { padding:30px 60px; box-sizing:border-box;}
+.joyin-ulogin-header { text-align:center; position: relative; z-index: 5;}
+.joyin-ulogin-logo { padding:15px 0; border-bottom:rgba(0,0,0,.2) 1px solid; text-align:center;}
+.joyin-ulogin-logo img,.joyin-ulogin-logo h3 { height:42px; display:inline-block; vertical-align:middle;}
+.joyin-ulogin-logo img { margin-right:8px;}
+.joyin-ulogin-logo h3 { font-weight:600; line-height:42px; font-size:28px; color:#000; letter-spacing:3px;}
+.joyin-ulogin-title { padding:30px 20px; text-align:left;}
+.joyin-ulogin-title p { font-size:18px; font-weight:700;}
+.joyin-ulogin-title p span { font-size:14px; font-weight:400; color:#999999; padding-left:5px;}
+.joyin-ulogin-tips { border-top:rgba(255,255,255,.5) 1px solid; padding-top:24px; letter-spacing:1px; line-height:20px; color:#FF0000;}
+.joyin-ulogin-body { padding:0 20px;}
+.joyin-ulogin-body .joyin-form-item { position: relative; margin:45px 0 0 0;}
+.joyin-ulogin-icon { position:absolute; left:1px; top:1px;z-index: 1; width:38px;line-height:46px; text-align:center; color:#303133; font-size:18px;}
+.joyin-ulogin-body .joyin-form-item .joyin-input { padding-left: 0; border-width:2px;height: 50px;}
+.joyin-ulogin-body .joyin-form-item .joyin-btn { height:50px; line-height:50px;  font-weight:700; font-size:18px; box-shadow: 0 4px 8px 0 rgba(31,140,255,.2); box-sizing:border-box;}
+.joyin-ulogin-body .ulogin-code {position:absolute; right:2px; top:2px; width:118px; height:34px; background-color:#fff; border-left:#dcdfe6 1px solid;}
+.joyin-ulogin-body .ulogin-code img {max-height:34px; width:100%; cursor:pointer; box-sizing:border-box}
+.joyin-ulogin-body .joyin-form-item .joyin-form-checkbox[lay-skin=primary] { margin-top:0; padding-left:24px;}
+.joyin-ulogin-body .joyin-form-checkbox[lay-skin=primary]:hover i {border-color:#1F8CFF;}
+.joyin-ulogin-body .joyin-form-checked[lay-skin=primary] i {border-color:#1F8CFF!important; background-color:#1F8CFF;}
+.joyin-ulogin-body .login-other { line-height:28px;}
+.joyin-ulogin-body .login-other>* { display:inline-block; vertical-align:middle; font-size:14px}
+.joyin-ulogin-body .login-other a { margin-left:8px;}
+.joyin-ulogin-body .login-other a:hover { opacity:.85}
+.joyin-ulogin-body .login-other [class*=" jyicon-"],[class^=jyicon-] { position:relative; top:2px; font-size:32px;}
+.joyin-ulogin-body .jump-change { float:right; color:#1F8CFF;}
+.joyin-ulogin-body a.jump-change:hover { text-decoration:underline; opacity:1;}
+.joyin-ulogin-footer { padding:15px 20px; font-size:13px; line-height:160%; color:rgba(255,255,255,.8); text-align:center; box-sizing:border-box;}
+.joyin-ulogin-footer a { color:rgba(255,255,255,.8); margin-right:5px;}.joyin-ulogin-footer a:hover { text-decoration:underline;}
+
+/*重置elementUI的input样式*/
+.el-input__inner{
+  background-color: transparent;
+  height: 46px;
+  width: 100%;
+  border: none;
+  margin: 0;
+  padding: 0 0 0 38px;
+  line-height: 1.3;
+}
+
+/*响应式*/
+@media screen and (max-width: 1366px){
+  .joyin-ulogin-main{ width:1200px; margin-top:11vh;}
+  .joyin-ulogin-top,.joyin-ulogin-main {width:1080px; margin-top:3vh;}
+  .joyin-ulogin-left,.joyin-ulogin-right { width:540px; height:420px;}
+  .joyin-ulogin-left { line-height:420px;}
+  .joyin-ulogin-left img { height:380px;}
+  .joyin-ulogin-logo { padding: 16px 0;}
+  .joyin-ulogin-tips { padding-top:16px;}
+  .joyin-ulogin-body .joyin-form-item {margin:30px 0 0 0;}
+}

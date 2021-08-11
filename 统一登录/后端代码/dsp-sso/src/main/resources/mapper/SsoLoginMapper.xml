@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.sso.login.dao.SsoLoginMapper">
+    <select id="selectUserInfoBySSOName" parameterType="java.lang.String" resultType="com.joyintech.sso.login.dto.SsoUser">
+        select
+            USER_ID as userId,
+            SYSTEM_CODE as systemCode,
+            USER_NAME as userName,
+            REAL_NAME as realName,
+            MAIL_ADDR as mailAddr,
+            PHONE_NUM as phoneNum,
+            PASSWORD as password,
+            SALT as salt,
+            DEPT_CODE as deptCode,
+            SSO_USER_ID as ssoUserId,
+            ADMIN_FLAG as adminFlag,
+            IS_FROZEN as isFrozen,
+            WECHAT_NUM as wechatNum
+        from
+            SYS_USER
+        where
+            USER_NAME = #{username, jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectPlatformByUserName" resultType="com.joyintech.sso.login.dto.Platform">
+            SELECT T2.ID,
+                T2.PLATFORM_NAME,
+                T2.PLATFORM_URL,
+                T2.WEIGHT,
+                T2.ICON,
+                T2.COOKIE_KEY
+                FROM SSO_USER_PLATFORM T1  LEFT JOIN SSO_PLATFORM T2  ON T1.PLATFORM_ID  = T2.ID
+            WHERE T1.USER_ID   = #{username}
+    </select>
+
+    <select id="selectPlatformById" resultType="com.joyintech.sso.config.pojo.SsoPlatform">
+        SELECT
+            ID,
+            PLATFORM_NAME,
+            PLATFORM_URL,
+            WEIGHT,
+            ICON,
+            COOKIE_KEY
+        FROM
+            SSO_PLATFORM
+         where ID = #{id} and STATUS = '1'
+    </select>
+</mapper>
