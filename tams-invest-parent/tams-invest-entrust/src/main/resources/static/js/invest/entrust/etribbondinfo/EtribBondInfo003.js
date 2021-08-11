@@ -1301,29 +1301,29 @@
     };
 
 
-    // // 绑定提交按钮
-    // $('#EtribBondInfo003_btn_submit').click(function () {
-    //     saveOrSubmit('submit');
-    // });
-    //
-    // // 绑定保存按钮
-    // $('#EtribBondInfo003_btn_save').click(function () {
-    //     saveOrSubmit('save');
-    // });
-    //
-    // // 绑定取消按钮
-    // $('#EtribBondInfo003_btn_reset').click(function () {
-    //     doReset();
-    // });
-    //
-    // // 绑定风险按钮
-    // $('#EtribBondInfo003_btn_riskcal').click(function () {
-    //     doRiskcal();
-    // });
-    //
-    // $('#EtribBondInfo003_btn_fileupload').click(function () {
-    //     fileUpload();
-    // });
+    // 绑定提交按钮
+    $('#EtribBondInfo003_btn_submit').click(function () {
+        saveOrSubmit('submit');
+    });
+
+    // 绑定保存按钮
+    $('#EtribBondInfo003_btn_save').click(function () {
+        saveOrSubmit('save');
+    });
+
+    // 绑定取消按钮
+    $('#EtribBondInfo003_btn_reset').click(function () {
+        doReset();
+    });
+
+    // 绑定风险按钮
+    $('#EtribBondInfo003_btn_riskcal').click(function () {
+        doRiskcal();
+    });
+
+    $('#EtribBondInfo003_btn_fileupload').click(function () {
+        fileUpload();
+    });
 
     query('#finprodId').change(function () {
         doChange.finprodId();
