@@ -319,10 +319,6 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 		Map<String,Set<String>> map=new HashMap<>();
 		//zip包 路径
 		Map<String,PbcSendZipDatFile> zipInfoMap=new HashMap<>();
-		//zipCode set，更新使用
-		Set<String>  zipCodeSet=new HashSet<>();
-		//REPORT主键	 set，更新使用
-		Set<String>  reportuuidSet=new HashSet<>();
 		//datZipCode--归类报送类型明细
 		list.stream().forEach(datFile -> {
 			String datZipCode=datFile.getDatZipCode();
@@ -336,13 +332,8 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 				map.put(datZipCode,set);
 			}
 			zipInfoMap.put(datZipCode,datFile);
-			if(DictCodeListExt2.人行报送类型_统计模板数据.equals(datFile.getDatZipType())){
-				zipCodeSet.add(datZipCode);
-				reportuuidSet.add(datFile.getReportuuid());
-			}
-
 		});
-		String result = pbcZipDataFileService.genDataFile(map,zipInfoMap,zipCodeSet,reportuuidSet);
+		String result = pbcZipDataFileService.genDataFile(map,zipInfoMap);
 
 		return result;
 	}

@@ -69,7 +69,7 @@ public class PbcZipDataFileService {
      * @see
      * @since 1.0
      */
-    public String genDataFile(Map<String,Set<String>> paramMap,Map<String, PbcSendZipDatFile> zipInfoMap,Set<String>  zipCodeSet,Set<String>  reportuuidSet) {
+    public String genDataFile(Map<String,Set<String>> paramMap,Map<String, PbcSendZipDatFile> zipInfoMap) {
     	List<String> zipFileName = new ArrayList<String>();
 		chbTypeMappingExList=initReportConfig();
 		//去重
