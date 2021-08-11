@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper">
+
+	<select id="selectModEclResultProcessForDeal" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess">
+select
+	a.SEQNO, a.PROD_ID, a.PROD_NAME,
+	a.PORTFOLIO_ID, a.ASSET_ID, a.ASSET_NAME,
+	a.MARKET_ID, a.TYPE_8, a.TYPE_9,
+	a.TYPE_10, a.TYPE_11, a.TYPE_12,
+	a.MODEL_ASSET_TYPE, a.MODEL_ASSET_DETAIL_TYPE,
+	a.MDATE, a.UPDATE_TIME, a.FINANCIER,
+	a.GRADE_ORG_ID, a.ISSUER, a.ACTUAL_CREDIT,
+	a.SPONSOR, a.RISK_LEVEL_FIVE, a.TRADE_ID,
+	a.TRADE_DATE, a.PS, a.SHARE_AMT,
+	a.TRADE_AMT, a.YIELD, a.PAPER_RATE,
+	a.PLAN_END_DATE, a.IS_CLEAN, a.DEC_DATE,
+	a.O_TYPE, a.RESULT_01, a.RESULT_02,
+	a.RESULT_ISSUER, a.RESULT_FINANCIER, a.RESULT_SPONSOR,
+	a.RESULT_ACTUAL_CREDIT, a.O_TYPE_FINAL, a.ORG_ID_FINAL,
+	a.IS_FIN_LICENCE, a.RESULT_DEAL, a.RESULT_CURRENT,
+	a.PRIN_OVERDUE_DAY, a.INT_OVERDUE_DAY, a.FIN_STAGE,
+	a.EMA_SHARE_AMT, a.EAD, a.PRE_PROSPECTIVE_PD,
+	a.PROSPECTIVE_PD, a.LGD, a.PRE_PROSPECTIVE_ECL,
+	a.PROSPECTIVE_ECL, a.ISSUE_AMT, a.VDATE,
+	a.COUPON_SPECIES, a.ISSUE_PRICE, a.PROCESS,
+	a.CREATE_USER, a.CREATE_DEPT, a.CREATE_TIME,
+	a.UPDATE_USER, a.IS_CONTAIN_PLEDGE
+from
+	MOD_ECL_RESULT_PROCESS a
+	inner join MOD_VAL_BATCH_PARAMS b on b.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo} and b.FINPROD_ID = a.ASSET_ID
+where
+	a.DEC_DATE = #{searchDate, jdbcType=DATE} and
+	a.PROCESS = #{process,jdbcType=VARCHAR} and
+	a.PS = #{ps,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteModEclResult" >
+		delete from MOD_ECL_RESULT
+		where
+		DEC_DATE = #{searchDate,jdbcType=DATE} and
+		DATA_SOURCE = #{dataSource,jdbcType=VARCHAR} and
+		exists(
+			select 1 from
+			MOD_VAL_BATCH_PARAMS
+			where
+			MOD_VAL_BATCH_PARAMS.FINPROD_ID = MOD_ECL_RESULT.asset_id and
+			MOD_VAL_BATCH_PARAMS.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo}
+		)
+	</delete>
+
+	<select id="selectModLgdConfig" resultType="com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModLgdConfig">
+select
+	para.SEQNO,
+	para.CONFIG_TYPE ASSET_TYPE,
+	para.LGD
+from (
+	select
+		a.SEQNO,
+		#{MODEL_DEC_CONFIG_TYPE_06} CONFIG_TYPE,
+		a.LGD,
+		1 orderNum
+	from
+		MOD_LGD_SPECIAL_CONFIG a
+	where
+		a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+	UNION ALL
+	select
+		b.SEQNO,
+		#{MODEL_DEC_CONFIG_TYPE_05} CONFIG_TYPE,
+		b.LGD,
+		2 orderNum
+	from
+		MOD_LGD_CONFIG b
+	where
+		b.ASSET_DETAIL_TYPE = (select c.INPUT2 from MOD_ASEET_MAPPING c
+			where c.MAPPING_TYPE = #{MODEL_MAPPING_TYPE_01} and c.OUTPUT1 = #{type8,jdbcType=VARCHAR} and c.OUTPUT5 = #{type12,jdbcType=VARCHAR})
+			and b.IS_CONTAIN_PLEDGE = #{isContainPledge,jdbcType=VARCHAR}
+) para order by para.orderNum asc
+	</select>
+
+	<select id="selectInput2" resultType="java.lang.String">
+select
+	a.INPUT2
+from
+	MOD_ASEET_MAPPING a
+where
+	a.MAPPING_TYPE = #{MODEL_MAPPING_TYPE_01} and
+	a.OUTPUT1 = #{type8,jdbcType=VARCHAR} and
+	a.OUTPUT2 = #{type9,jdbcType=VARCHAR} and
+	a.OUTPUT3 = #{type10,jdbcType=VARCHAR} and
+	a.OUTPUT4 = #{type11,jdbcType=VARCHAR} and
+	a.OUTPUT5 = #{type12,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insertModEclResult">
+		insert into MOD_ECL_RESULT (SEQNO, PROD_ID, PROD_NAME,
+		ASSET_ID, ASSET_NAME, ASSET_TYPE,
+		PORTFOLIO_ID, BUSS_NO, TRADE_DATE,
+		DEC_DATE, PRIN_OVERDUE_DAY, INT_OVERDUE_DAY,
+		PURCHASE_TIME_GRADE, CURRENT_TIME_GRADE,
+		PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, STAGE,
+		LGD, EAD, PRE_PROSPECTIVE_ECL,
+		PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE,
+		CREATE_USER, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME)
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
+			#{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
+			#{item.assetId,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR}, #{item.assetType,jdbcType=VARCHAR},
+			#{item.portfolioId,jdbcType=VARCHAR}, #{item.bussNo,jdbcType=VARCHAR}, #{item.tradeDate,jdbcType=DATE},
+			#{item.decDate,jdbcType=DATE}, #{item.prinOverdueDay,jdbcType=DECIMAL}, #{item.intOverdueDay,jdbcType=DECIMAL},
+			#{item.purchaseTimeGrade,jdbcType=VARCHAR}, #{item.currentTimeGrade,jdbcType=VARCHAR},
+			#{item.preProspectivePd,jdbcType=DECIMAL}, #{item.prospectivePd,jdbcType=DECIMAL}, #{item.stage,jdbcType=VARCHAR},
+			#{item.lgd,jdbcType=DECIMAL}, #{item.ead,jdbcType=DECIMAL}, #{item.preProspectiveEcl,jdbcType=DECIMAL},
+			#{item.prospectiveEcl,jdbcType=DECIMAL}, #{item.allowModelCover,jdbcType=VARCHAR}, #{item.dataSource,jdbcType=VARCHAR},
+			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
+			#{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+		</foreach>
+	</insert>
+</mapper>

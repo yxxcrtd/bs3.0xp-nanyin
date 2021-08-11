@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper">
+	<select id="getAllModCurve" parameterType="java.util.Map" resultType="com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveDto">
+	SELECT
+		T1.SEC_TYPE_MODEL,
+		T1.SEC_DETAIL_TYPE_MODEL,
+		T1.FINPROD_ID,
+		T1.FINPROD_NAME,
+		T1.CURVE_GROUP_CODE,
+		T1.CURVE_TYPE,
+		T1.ISSMOOTH,
+		T1.SMOOTHSECTION,
+		T2.OUTPUT1 ASSET_ONE,
+		T2.OUTPUT2 ASSET_TWO,
+		T2.OUTPUT3 ASSET_THREE,
+		T2.OUTPUT4 ASSET_FOUR,
+		T2.OUTPUT5 ASSET_FIVE
+	FROM
+		MOD_CURVE_CONFIG T1
+		INNER JOIN MOD_ASEET_MAPPING T2 ON T1.SEC_TYPE_MODEL = T2.INPUT1  AND T1.SEC_DETAIL_TYPE_MODEL = T2.INPUT2
+	<where>
+		<if test="MODEL_MAPPING_TYPE_01 != null and MODEL_MAPPING_TYPE_01 != ''">
+			and T2.MAPPING_TYPE  = #{MODEL_MAPPING_TYPE_01}
+		</if>
+		<if test="finprodId != null and finprodId != ''">
+			and T1.FINPROD_ID  = #{finprodId}
+		</if>
+		<if test="finprodIdList != null and finprodIdList.size()>0 ">
+			AND T1.FINPROD_ID IN(
+			<foreach item="item" index="index" collection="finprodIdList" separator=",">
+				#{item}
+			</foreach>
+			)
+		</if>
+	</where>
+	</select>
+
+	<select id="getCurveCode" resultType="java.lang.String">
+		SELECT
+			CURVE_CODE
+		FROM
+			MOD_CURVE_MAPPING
+		<where>
+			<if test="curveGroupCode != null and curveGroupCode != ''">
+				and CURVE_GROUP_CODE = #{curveGroupCode}
+			</if>
+			<if test="curveType != null and curveType != ''">
+				AND CURVE_TYPE = #{curveType}
+			</if>
+			<if test="graderesult != null and graderesult != ''">
+				AND GRADE_RESULT = #{graderesult}
+			</if>
+		</where>
+	</select>
+
+	<!--查询溢价信息-->
+	<select id="getModRiskPremium" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium">
+		SELECT
+		SEQNO SEQNO,
+		SEC_TYPE_MODEL SEC_TYPE_MODEL,
+		SEC_DETAIL_TYPE_MODEL SEC_DETAIL_TYPE_MODEL,
+		FINPROD_ID FINPROD_ID,
+		FINPROD_NAME FINPROD_NAME,
+		GRADE_SOURCE GRADE_SOURCE,
+		GRADE_RESULT GRADE_RESULT,
+		BASEDATE BASEDATE,
+		SPREAD SPREAD,
+		SPREAD_ADJ SPREAD_ADJ,
+		B_FULLPRICE B_FULLPRICE,
+		B_QTY B_QTY,
+		MOD_METHOD MOD_METHOD,
+		CREATE_USER CREATE_USER,
+		CREATE_DEPT CREATE_DEPT,
+		CREATE_TIME CREATE_TIME,
+		UPDATE_USER UPDATE_USER,
+		UPDATE_TIME UPDATE_TIME
+	FROM
+		MOD_RISK_PREMIUM A WHERE FINPROD_ID  = #{finprodId} AND (BASEDATE = #{basedate} OR (SPREAD_ADJ IS NOT NULL AND SPREAD_ADJ!=0))
+		AND NOT exists (SELECT 1 FROM MOD_RISK_PREMIUM WHERE SEQNO = A.SEQNO AND BASEDATE>A.BASEDATE)
+	</select>
+
+	<!--获取评级结果-->
+	<select id="getGradeResult" resultType="java.lang.String">
+		select GRADE_RESULT from MOD_CURVE_MAPPING where CURVE_CODE = #{curveCode}
+	</select>
+	<delete id="deleteRiskPremium">
+		delete from MOD_RISK_PREMIUM where FINPROD_ID = #{finprodId} and BASEDATE = #{basedate}
+	</delete>
+	<delete id="deleteCurveResult">
+		delete from  MOD_CURVE_RESULT where FINPROD_ID = #{finprodId} and CDATE = #{cdate}
+	</delete>
+	<delete id="deleteCurveResultDetail">
+		delete from MOD_CURVE_RESULT_DETAIL where FINPROD_ID = #{finprodId} and CDATE = #{cdate}
+	</delete>
+	<!--批量登录估值模型风险溢价数据-->
+	<insert id="insertBatchRiskPremium">
+		insert into MOD_RISK_PREMIUM (SEQNO, SEC_TYPE_MODEL, SEC_DETAIL_TYPE_MODEL,
+		FINPROD_ID, FINPROD_NAME, GRADE_SOURCE,
+		GRADE_RESULT, BASEDATE, SPREAD,
+		SPREAD_ADJ, B_FULLPRICE, B_QTY,
+		MOD_METHOD, CREATE_USER, CREATE_DEPT,
+		CREATE_TIME, UPDATE_USER, UPDATE_TIME
+		)
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
+			#{item.seqno,jdbcType=VARCHAR}, #{item.secTypeModel,jdbcType=VARCHAR}, #{item.secDetailTypeModel,jdbcType=VARCHAR},
+			#{item.finprodId,jdbcType=VARCHAR}, #{item.finprodName,jdbcType=VARCHAR}, #{item.gradeSource,jdbcType=VARCHAR},
+			#{item.gradeResult,jdbcType=VARCHAR}, #{item.basedate,jdbcType=DATE}, #{item.spread,jdbcType=DECIMAL},
+			#{item.spreadAdj,jdbcType=DECIMAL}, #{item.bFullprice,jdbcType=DECIMAL}, #{item.bQty,jdbcType=DECIMAL},
+			#{item.modMethod,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+		</foreach>
+	</insert>
+
+	<!--批量登录模型估值结果-->
+	<insert id="insertBatchCurveResult">
+		insert into MOD_CURVE_RESULT (SEQNO, FINPROD_ID, CDATE,
+		FULL_PRICE, NET_PRICE, CURVE_SPREAD,
+		CURVE_NAME, CURVE_CODE, BASIS,
+		VAL_MODEL, CREATE_USER, CREATE_DEPT,
+		CREATE_TIME, UPDATE_USER, UPDATE_TIME
+		)
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
+			#{item.seqno,jdbcType=VARCHAR}, #{item.finprodId,jdbcType=VARCHAR}, #{item.cdate,jdbcType=DATE},
+			#{item.fullPrice,jdbcType=DECIMAL}, #{item.netPrice,jdbcType=DECIMAL}, #{item.curveSpread,jdbcType=DECIMAL},
+			#{item.curveName,jdbcType=VARCHAR}, #{item.curveCode,jdbcType=VARCHAR}, #{item.basis,jdbcType=VARCHAR},
+			#{item.valModel,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+		</foreach>
+	</insert>
+
+
+
+	<!--批量登录模型估值结果明细-->
+	<insert id="insertBatchCurveResultDetail">
+		insert into MOD_CURVE_RESULT_DETAIL (SEQNO, RESULT_SEQNO, FINPROD_ID,
+		CDATE, CASH_DATE, PERIOD,
+		CASH_AMT, DIS_RATE, DIS_FACTOR,
+		DIS_CASH_AMT, CREATE_USER, CREATE_DEPT,
+		CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
+			#{item.seqno,jdbcType=VARCHAR}, #{item.resultSeqno,jdbcType=VARCHAR},#{item.finprodId,jdbcType=VARCHAR}, #{item.cdate,jdbcType=DATE}, #{item.cashDate,jdbcType=DATE},
+			#{item.period,jdbcType=DECIMAL}, #{item.cashAmt,jdbcType=DECIMAL}, #{item.disRate,jdbcType=DECIMAL},
+			#{item.disFactor,jdbcType=DECIMAL}, #{item.disCashAmt,jdbcType=DECIMAL}, #{item.createUser,jdbcType=VARCHAR},
+			#{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=TIMESTAMP}
+		</foreach>
+	</insert>
+</mapper>

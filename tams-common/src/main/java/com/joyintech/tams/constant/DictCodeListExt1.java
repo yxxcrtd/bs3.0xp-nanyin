@@ -1330,6 +1330,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	录入方式_接口导入(DictCode.录入方式,"05","接口导入"),
 	录入方式_销售平台(DictCode.录入方式,"06","销售平台"),
 	估值来源_专家法_EXP(DictCode.估值来源,"EXP","专家法(EXP)"),
+	估值来源_模型法_MOD(DictCode.估值来源,"MOD","模型法(MOD)"),
 	指令类型_质押式逆回购首期_资金交收(DictCode.指令类型,"2716","质押式逆回购首期（资金交收）"),
 	指令类型_质押式逆回购到期_资金到账(DictCode.指令类型,"2717","质押式逆回购到期-资金到账"),
 	指令类型_质押式正回购首期_资金到账(DictCode.指令类型,"2718","质押式正回购首期-资金到账"),

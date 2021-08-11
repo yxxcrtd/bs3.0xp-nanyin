@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dao.DataPushValuatIoninfoMapper">
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinProduct" >
+		<id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+		<result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+		<result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+		<result column="FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
+		<result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+		<result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+		<result column="COUPON_SPECIES" property="couponSpecies" jdbcType="VARCHAR" />
+		<result column="CHL_FINPROD_ID" property="chlFinprodId" jdbcType="VARCHAR" />
+		<result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
+		<result column="ISSUE_ID" property="issueId" jdbcType="VARCHAR" />
+		<result column="ISSUE_PRICE" property="issuePrice" jdbcType="DECIMAL" />
+		<result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+		<result column="CCY" property="ccy" jdbcType="VARCHAR" />
+		<result column="BLN_AREA" property="blnArea" jdbcType="VARCHAR" />
+		<result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+		<result column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+		<result column="ISSUE_TYPE" property="issueType" jdbcType="VARCHAR" />
+		<result column="OPERATION_TYPE" property="operationType" jdbcType="VARCHAR" />
+		<result column="ENTRUST_TYPE" property="entrustType" jdbcType="VARCHAR" />
+		<result column="ENTRUSTER" property="entruster" jdbcType="VARCHAR" />
+		<result column="TRUSTEE_ID" property="trusteeId" jdbcType="VARCHAR" />
+		<result column="ISSUER" property="issuer" jdbcType="VARCHAR" />
+		<result column="MANAGER" property="manager" jdbcType="VARCHAR" />
+		<result column="FINANCIER" property="financier" jdbcType="VARCHAR" />
+		<result column="IDATE" property="idate" jdbcType="DATE" />
+		<result column="VDATE" property="vdate" jdbcType="DATE" />
+		<result column="MDATE" property="mdate" jdbcType="DATE" />
+		<result column="TERM_DAYS" property="termDays" jdbcType="DECIMAL" />
+		<result column="ACTMDATE" property="actmdate" jdbcType="DATE" />
+		<result column="LIQUIDATION_DATE" property="liquidationDate" jdbcType="DATE" />
+		<result column="IS_CHL" property="isChl" jdbcType="VARCHAR" />
+		<result column="IS_SUS" property="isSus" jdbcType="VARCHAR" />
+		<result column="SUSTAINABLE_REMARK" property="sustainableRemark" jdbcType="VARCHAR" />
+		<result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
+		<result column="CAPI_INCOME_FEATURE" property="capiIncomeFeature" jdbcType="VARCHAR" />
+		<result column="P_FINPROD_ID" property="pFinprodId" jdbcType="VARCHAR" />
+		<result column="O_FINPROD_ID" property="oFinprodId" jdbcType="VARCHAR" />
+		<result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+		<result column="EXE_DATE" property="exeDate" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="CONTRACT_NO" property="contractNo" jdbcType="VARCHAR" />
+		<result column="IS_FIN_ORG" property="isFinOrg" jdbcType="VARCHAR" />
+		<result column="SPONSOR" property="sponsor" jdbcType="VARCHAR" />
+		<result column="INVEST_ADVISER" property="investAdviser" jdbcType="VARCHAR" />
+		<result column="LIQUIDATION_YESNO" property="liquidationYesno" jdbcType="VARCHAR" />
+		<result column="TRANSFER_DATE" property="transferDate" jdbcType="DATE" />
+		<result column="SPPI_TEST_STATUS" property="sppiTestStatus" jdbcType="CHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, FINPROD_TYPE2 FINPROD_TYPE2, FINPROD_MARKET_ID FINPROD_MARKET_ID
+    </sql>
+	<!--根据跑批日，获取估值行情列表信息-->
+	<select id="selectValuationInfoList" resultType="com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.ValuationBatchSynDto">
+		select
+		A.FINPROD_ID as  finprodId,
+		A.CDATE as valueDate,
+		A.VAL_MODEL as valueSource,
+		A.FULL_PRICE as price,
+		A.NET_PRICE as netprice
+		from  MOD_CURVE_RESULT A
+		WHERE
+		to_char(A.CDATE,'yyyy-MM-dd') =#{batchDateStr,jdbcType = VARCHAR}
+		<if test="finprodIdList != null and finprodIdList.size > 0">
+			AND (A.FINPROD_ID IN
+			<foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR A.FINPROD_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+
+	</select>
+
+	<!-- 估值行情删除 -->
+	<delete id="deleteBondByConditions" parameterType="com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto" >
+        delete from MST_BOND_VALUATION_INFO
+        where SEC_ID = #{secId,jdbcType=VARCHAR}
+          and VALUE_DATE = #{valueDate,jdbcType=DATE}
+          and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+    </delete>
+
+	<insert id="insertSelectiveBondQuotationInfo" parameterType="com.joyintech.tams.common.base.entity.MstBondValuationInfo" >
+		insert into MST_BOND_VALUATION_INFO
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="secId != null" >
+				SEC_ID,
+			</if>
+			<if test="valueDate != null" >
+				VALUE_DATE,
+			</if>
+			<if test="valueSource != null" >
+				VALUE_SOURCE,
+			</if>
+			<if test="lastPeriod != null" >
+				LAST_PERIOD,
+			</if>
+			<if test="price != null" >
+				PRICE,
+			</if>
+			<if test="netprice != null" >
+				NETPRICE,
+			</if>
+			<if test="mDuration != null" >
+				M_DURATION,
+			</if>
+			<if test="mConvexity != null" >
+				M_CONVEXITY,
+			</if>
+			<if test="bpvalue != null" >
+				BPVALUE,
+			</if>
+			<if test="sduration != null" >
+				SDURATION,
+			</if>
+			<if test="scnvxty != null" >
+				SCNVXTY,
+			</if>
+			<if test="interestDuration != null" >
+				INTEREST_DURATION,
+			</if>
+			<if test="interestCnvxty != null" >
+				INTEREST_CNVXTY,
+			</if>
+			<if test="bpyield != null" >
+				BPYIELD,
+			</if>
+			<if test="inputType != null" >
+				INPUT_TYPE,
+			</if>
+			<if test="createUser != null" >
+				CREATE_USER,
+			</if>
+			<if test="createDept != null" >
+				CREATE_DEPT,
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME,
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER,
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME,
+			</if>
+			<if test="mbpvalue != null" >
+				MBPVALUE,
+			</if>
+			<if test="var != null" >
+				VAR,
+			</if>
+			<if test="cvar != null" >
+				CVAR,
+			</if>
+			<if test="mduration != null" >
+				MDURATION,
+			</if>
+			<if test="implicitGrade != null" >
+				IMPLICIT_GRADE,
+			</if>
+			<if test="implicitHgrade != null" >
+				IMPLICIT_HGRADE,
+			</if>
+			<if test="debHideRate != null" >
+				DEB_HIDE_RATE,
+			</if>
+			<if test="expireYield != null" >
+				EXPIRE_YIELD,
+			</if>
+			<if test="exerciseYield != null" >
+				EXERCISE_YIELD,
+			</if>
+			<if test="lastPeriodTowYear != null" >
+				LAST_PERIOD_TOW_YEAR,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="secId != null" >
+				#{secId,jdbcType=VARCHAR},
+			</if>
+			<if test="valueDate != null" >
+				#{valueDate,jdbcType=DATE},
+			</if>
+			<if test="valueSource != null" >
+				#{valueSource,jdbcType=VARCHAR},
+			</if>
+			<if test="lastPeriod != null" >
+				#{lastPeriod,jdbcType=DECIMAL},
+			</if>
+			<if test="price != null" >
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="netprice != null" >
+				#{netprice,jdbcType=DECIMAL},
+			</if>
+			<if test="mDuration != null" >
+				#{mDuration,jdbcType=DECIMAL},
+			</if>
+			<if test="mConvexity != null" >
+				#{mConvexity,jdbcType=DECIMAL},
+			</if>
+			<if test="bpvalue != null" >
+				#{bpvalue,jdbcType=DECIMAL},
+			</if>
+			<if test="sduration != null" >
+				#{sduration,jdbcType=DECIMAL},
+			</if>
+			<if test="scnvxty != null" >
+				#{scnvxty,jdbcType=DECIMAL},
+			</if>
+			<if test="interestDuration != null" >
+				#{interestDuration,jdbcType=DECIMAL},
+			</if>
+			<if test="interestCnvxty != null" >
+				#{interestCnvxty,jdbcType=DECIMAL},
+			</if>
+			<if test="bpyield != null" >
+				#{bpyield,jdbcType=DECIMAL},
+			</if>
+			<if test="inputType != null" >
+				#{inputType,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null" >
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null" >
+				#{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null" >
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="mbpvalue != null" >
+				#{mbpvalue,jdbcType=DECIMAL},
+			</if>
+			<if test="var != null" >
+				#{var,jdbcType=DECIMAL},
+			</if>
+			<if test="cvar != null" >
+				#{cvar,jdbcType=DECIMAL},
+			</if>
+			<if test="mduration != null" >
+				#{mduration,jdbcType=DECIMAL},
+			</if>
+			<if test="implicitGrade != null" >
+				#{implicitGrade,jdbcType=VARCHAR},
+			</if>
+			<if test="implicitHgrade != null" >
+				#{implicitHgrade,jdbcType=VARCHAR},
+			</if>
+			<if test="debHideRate != null" >
+				#{debHideRate,jdbcType=VARCHAR},
+			</if>
+			<if test="expireYield != null" >
+				#{expireYield,jdbcType=DECIMAL},
+			</if>
+			<if test="exerciseYield != null" >
+				#{exerciseYield,jdbcType=DECIMAL},
+			</if>
+			<if test="lastPeriodTowYear != null" >
+				#{lastPeriodTowYear,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<delete id="deleteFinProductProjectByConditions" parameterType="com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.FinProductProjectValuation" >
+        delete from FIN_PRODUCT_PROJECT_VALUATION
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </delete>
+
+	<!-- 场外金融产品估值 -->
+	<delete id="deleteFinProductByConditions" parameterType="com.joyintech.tams.common.base.entity.FinProductValuation" >
+        delete from FIN_PRODUCT_VALUATION
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </delete>
+
+
+	<insert id="insertSelectiveFinProject" parameterType="com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.FinProductProjectValuation" >
+		insert into FIN_PRODUCT_PROJECT_VALUATION
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="finprodId != null" >
+				FINPROD_ID,
+			</if>
+			<if test="valDate != null" >
+				VAL_DATE,
+			</if>
+			<if test="valueSource != null" >
+				VALUE_SOURCE,
+			</if>
+			<if test="finprodType != null" >
+				FINPROD_TYPE,
+			</if>
+			<if test="finprodType2 != null" >
+				FINPROD_TYPE2,
+			</if>
+			<if test="publishDate != null" >
+				PUBLISH_DATE,
+			</if>
+			<if test="valuation != null" >
+				VALUATION,
+			</if>
+			<if test="day7YearYield != null" >
+				DAY7_YEAR_YIELD,
+			</if>
+			<if test="yearYield != null" >
+				YEAR_YIELD,
+			</if>
+			<if test="totalValue != null" >
+				TOTAL_VALUE,
+			</if>
+			<if test="inputType != null" >
+				INPUT_TYPE,
+			</if>
+			<if test="remark != null" >
+				REMARK,
+			</if>
+			<if test="createUser != null" >
+				CREATE_USER,
+			</if>
+			<if test="createDept != null" >
+				CREATE_DEPT,
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME,
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER,
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME,
+			</if>
+			<if test="restNetValue != null" >
+				REST_NET_VALUE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="finprodId != null" >
+				#{finprodId,jdbcType=VARCHAR},
+			</if>
+			<if test="valDate != null" >
+				#{valDate,jdbcType=DATE},
+			</if>
+			<if test="valueSource != null" >
+				#{valueSource,jdbcType=VARCHAR},
+			</if>
+			<if test="finprodType != null" >
+				#{finprodType,jdbcType=VARCHAR},
+			</if>
+			<if test="finprodType2 != null" >
+				#{finprodType2,jdbcType=VARCHAR},
+			</if>
+			<if test="publishDate != null" >
+				#{publishDate,jdbcType=DATE},
+			</if>
+			<if test="valuation != null" >
+				#{valuation,jdbcType=DECIMAL},
+			</if>
+			<if test="day7YearYield != null" >
+				#{day7YearYield,jdbcType=DECIMAL},
+			</if>
+			<if test="yearYield != null" >
+				#{yearYield,jdbcType=DECIMAL},
+			</if>
+			<if test="totalValue != null" >
+				#{totalValue,jdbcType=DECIMAL},
+			</if>
+			<if test="inputType != null" >
+				#{inputType,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null" >
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null" >
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null" >
+				#{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null" >
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="restNetValue != null" >
+				#{restNetValue,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductValuation" >
+		insert into FIN_PRODUCT_VALUATION
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="finprodId != null" >
+				FINPROD_ID,
+			</if>
+			<if test="valDate != null" >
+				VAL_DATE,
+			</if>
+			<if test="finprodType != null" >
+				FINPROD_TYPE,
+			</if>
+			<if test="finprodType2 != null" >
+				FINPROD_TYPE2,
+			</if>
+			<if test="publishDate != null" >
+				PUBLISH_DATE,
+			</if>
+			<if test="valuation != null" >
+				VALUATION,
+			</if>
+			<if test="day7YearYield != null" >
+				DAY7_YEAR_YIELD,
+			</if>
+			<if test="yearYield != null" >
+				YEAR_YIELD,
+			</if>
+			<if test="totalValue != null" >
+				TOTAL_VALUE,
+			</if>
+			<if test="inputType != null" >
+				INPUT_TYPE,
+			</if>
+			<if test="remark != null" >
+				REMARK,
+			</if>
+			<if test="createUser != null" >
+				CREATE_USER,
+			</if>
+			<if test="createDept != null" >
+				CREATE_DEPT,
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME,
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER,
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME,
+			</if>
+			<if test="restNetValue != null" >
+				REST_NET_VALUE,
+			</if>
+			<if test="valueSource != null" >
+				VALUE_SOURCE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="finprodId != null" >
+				#{finprodId,jdbcType=VARCHAR},
+			</if>
+			<if test="valDate != null" >
+				#{valDate,jdbcType=DATE},
+			</if>
+			<if test="finprodType != null" >
+				#{finprodType,jdbcType=VARCHAR},
+			</if>
+			<if test="finprodType2 != null" >
+				#{finprodType2,jdbcType=VARCHAR},
+			</if>
+			<if test="publishDate != null" >
+				#{publishDate,jdbcType=DATE},
+			</if>
+			<if test="valuation != null" >
+				#{valuation,jdbcType=DECIMAL},
+			</if>
+			<if test="day7YearYield != null" >
+				#{day7YearYield,jdbcType=DECIMAL},
+			</if>
+			<if test="yearYield != null" >
+				#{yearYield,jdbcType=DECIMAL},
+			</if>
+			<if test="totalValue != null" >
+				#{totalValue,jdbcType=DECIMAL},
+			</if>
+			<if test="inputType != null" >
+				#{inputType,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null" >
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null" >
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null" >
+				#{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null" >
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="restNetValue != null" >
+				#{restNetValue,jdbcType=DECIMAL},
+			</if>
+			<if test="valueSource != null" >
+				#{valueSource,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+		<include refid="com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dao.DataPushValuatIoninfoMapper.Base_Column_List" />
+		from FIN_PRODUCT
+		where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+	</select>
+
+
+</mapper>
