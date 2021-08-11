@@ -164,7 +164,10 @@ public class CreditLines extends BaseEntity {
      * 是否持有至到期
      */
     private String holdMaturity;
-
+    /**
+     * 授信价格
+     */
+    private BigDecimal creditPrice;
     /**
      * 取得 授信额度代码
      * @return 授信额度代码
@@ -649,5 +652,13 @@ public class CreditLines extends BaseEntity {
      */
     public void setHoldMaturity(String holdMaturity) {
         this.holdMaturity = holdMaturity == null ? null : holdMaturity.trim();
+    }
+
+    public BigDecimal getCreditPrice() {
+        return creditPrice;
+    }
+
+    public void setCreditPrice(BigDecimal creditPrice) {
+        this.creditPrice = creditPrice;
     }
 }

@@ -24,8 +24,8 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT
-    password: CVR30INIT
+    username: CVR30INIT_DEV
+    password: CVR30INIT_DEV
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -282,12 +282,12 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
     username: CVR30INIT
     password: CVR30INIT
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+    reportSqlldrDatabaseName: 127.0.0.1:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
   sqldiruserName: CVR30INIT
   sqldirpassword: CVR30INIT
 shiro:
@@ -304,22 +304,22 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
     username: CVR30INIT
     password: CVR30INIT
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
     username: CVR30INIT
     password: CVR30INIT
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
     username: CVR30INIT
     password: CVR30INIT
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
     username: CVR30INIT
     password: CVR30INIT
 log:

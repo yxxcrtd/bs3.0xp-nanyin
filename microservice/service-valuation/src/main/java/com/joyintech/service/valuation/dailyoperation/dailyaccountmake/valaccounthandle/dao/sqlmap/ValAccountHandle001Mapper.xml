@@ -428,5 +428,25 @@
 			</foreach>
 		</if>
 	</select>
-        
+	<select id="selectCorrespondingFrame" resultType="com.joyintech.service.valuation.accounadjustmanage.valbalancestatementquery.dto.ValBalanceStatementQuery001Dto">
+		select bbd.detail_subject_no_tail detailSubjectNoTail ,
+		fp.FINPROD_MARKET_ID finprodMarketId,
+		nvl(fp.finprod_type,tpd.finprod_type) finprodType,
+		mvf.valmodel_id valmodelId,
+		<if test="valueDate !=null and valueDate !='' ">
+			BOND.VALUE_SOURCE valueSource,
+		</if>
+		mvf.datasource_type datasourceType
+		from BOK_BUSS_DETSUB bbd
+		left join fin_product fp on fp.finprod_id = bbd.detail_subject_no_tail
+		<if test="valueDate !=null and valueDate !='' ">
+			left join MST_BOND_VALUATION_INFO BOND on fp.FINPROD_MARKET_ID = BOND.SEC_ID
+			AND BOND.VALUE_DATE = to_date(#{valueDate}, 'yyyy-mm-dd')
+		</if>
+		left join TRD_PRODUCT_DEAL tpd
+		on  tpd.trade_id = bbd.detail_subject_no_tail
+		left join MST_VAL_FX mvf on mvf.finprod_id2 = tpd.trade_id
+		where bbd.bookset_id = #{booksetId}
+		and bbd.detail_subject_no = #{subjectno}
+	</select>
 </mapper>

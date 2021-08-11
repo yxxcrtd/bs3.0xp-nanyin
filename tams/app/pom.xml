@@ -107,7 +107,7 @@
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>tams-valuation</artifactId>
-			<version>1.0.0</version>
+			<version>3.0.1</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>

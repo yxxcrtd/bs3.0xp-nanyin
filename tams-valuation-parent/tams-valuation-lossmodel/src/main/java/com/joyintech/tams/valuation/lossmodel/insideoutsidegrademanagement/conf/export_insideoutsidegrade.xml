@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="InsideOutsideGrade001.xlsx" name="内外部评级映射管理">
+    <Worksheet javaBean="com.joyintech.tams.valuation.lossmodel.insideoutsidegrademanagement.dto.InsideOutsideGrade001Dto">
+        <Row>
+            <Cell order="1" name="评级机构">gradeInstStr</Cell>
+            <Cell order="2" name="对象类型">oTypeStr</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

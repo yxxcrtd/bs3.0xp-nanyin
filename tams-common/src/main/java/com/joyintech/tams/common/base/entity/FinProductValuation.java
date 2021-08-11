@@ -69,6 +69,13 @@ public class FinProductValuation extends FinProductValuationKey {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal cShares;
 
+
+    /**
+     * 估值来源，专家法，模型法
+     */
+    private String valueSource;
+
+
     /**
      * 取得 金融产品类型（估值核算），债券、理财产品、基金、理财产品模板、理财产品分层
      * @return 金融产品类型（估值核算），债券、理财产品、基金、理财产品模板、理财产品分层
@@ -244,5 +251,13 @@ public class FinProductValuation extends FinProductValuationKey {
      */
     public void setcShares(BigDecimal cShares) {
         this.cShares = cShares;
+    }
+
+    public String getValueSource() {
+        return valueSource;
+    }
+
+    public void setValueSource(String valueSource) {
+        this.valueSource = valueSource;
     }
 }

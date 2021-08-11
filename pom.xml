@@ -103,6 +103,10 @@
         <module>background-component/component-common</module>
         <module>background-component/inter-bank-uplink</module>
         <module>background-component/exchange-order</module>
+        <module>microservice/service-valuation-valmodel</module>
+        <module>microservice/service-valuation-lossmodel</module>
+        <module>tams-valuation-batch-valmodel</module>
+        <module>tams-valuation-batch-lossmodel</module>
         <module>microservice/tams-service-container-touguan</module>
     </modules>
 </project>
