@@ -199,6 +199,10 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             model.addAttribute("tradeId", dto.getTotleTradeId());
             //---------add by zxjjpei 风险试算需要交易编号 20200325 start------
             model.addAttribute("tradeEntrustId", dto.getTotleTradeId()==null?this.getParam("entrustId"):dto.getTotleTradeId());
+            if(StringUtil.equals(dto.getOperateType(),"revoke")){
+                model.addAttribute("tradeEntrustId", dto.getTotleTradeId()==null?null:dto.getTotleTradeId().substring(0, dto.getTotleTradeId().length() - 1));
+
+            }
             //---------add by zxjjpei 风险试算需要交易编号 20200325 end------
         }
         if (StringUtil.isNotBlank(workflowId)) {

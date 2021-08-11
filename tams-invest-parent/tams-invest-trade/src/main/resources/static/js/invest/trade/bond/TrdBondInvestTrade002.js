@@ -1503,7 +1503,9 @@ var table;
         if ($("#yield_calc").val()) {
             paramObj.yield = $("#yield_calc").val();
         }
-
+        if($("#tradeMarketCash").val() == 0 ||$("#tradeMarketCash").val() == 0.00){
+            paramObj.tradeMarketCash = null;
+        }
         // 行权计算时用数据库中的理论行权日 add by renping 20191105 start
         if(paramObj.finprodId && ($("#ps").val() == PS_T03 || $("#ps").val() == PS_T39)) {
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getExerciseDate'), paramObj, function (result) {

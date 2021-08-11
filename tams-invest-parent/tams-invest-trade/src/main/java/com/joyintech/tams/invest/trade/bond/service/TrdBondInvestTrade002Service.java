@@ -25,6 +25,7 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -285,6 +286,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
+
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
 
@@ -704,7 +709,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
      */
     private void handleBussFlowData(TrdBondInvestTradeDto entity) {
         // 多组合交易时对附件进行处理
-        setDzhUploadFileList(entity);
+        //setDzhUploadFileList(entity);
 
         if (!StringUtil.equals("submit", entity.getOperateType())) {
             return;
@@ -1335,6 +1340,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 				else {
 					tempDto.setTotleTradeId(IDGenerator.generate());
 				}
+                // 将附件和当前业务对象绑定（更新附件的业务代码）
+                fileAttachmentProcess.updateBussinessNo(
+                        dto.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                                Collectors.toList()),
+                        tempDto.getTotleTradeId());
     			dtoList.add(tempDto);
     		}
     		
