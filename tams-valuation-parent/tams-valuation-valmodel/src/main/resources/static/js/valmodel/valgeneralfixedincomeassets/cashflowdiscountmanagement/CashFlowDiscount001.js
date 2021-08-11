@@ -51,7 +51,7 @@ $(function() {
                  row.pageModel = PAGE_MODEL_EDIT;
                     Joyin.dialog("现金流折现模型曲线配置修改",
                            "/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002/init",
-                           "90%", "100%", row,function(){
+                           "45%", "75%", row,function(){
                        table.reload();
                    });
              });

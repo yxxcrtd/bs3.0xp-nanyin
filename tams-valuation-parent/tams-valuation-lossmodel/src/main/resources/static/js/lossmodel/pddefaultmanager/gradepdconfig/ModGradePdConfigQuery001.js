@@ -195,7 +195,7 @@ $(function () {
         Joyin.ajaxJson(basePath + 'model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig002/check', data, function (result) {
             Joyin.dialog('评级PD维护编辑',
                 basePath + "model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig002/init",
-                "95%", "90%", {
+                "45%", "75%", {
                     pageModel: PAGE_MODEL_EDIT,
                     seqNo: data.seqNo
                 }, function () {

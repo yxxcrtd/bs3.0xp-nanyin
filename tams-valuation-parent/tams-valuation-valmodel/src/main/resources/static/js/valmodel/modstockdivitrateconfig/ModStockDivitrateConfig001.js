@@ -57,7 +57,7 @@
         Joyin.ajaxJson(basePath + 'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/check', data, function(result) {
             Joyin.dialog('预期股息增长率配置编辑',
                     basePath + "valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/init",
-                    "75%", "75%",data,
+                    "50%", "75%",data,
                     function(){table.reload();});
         });
         
