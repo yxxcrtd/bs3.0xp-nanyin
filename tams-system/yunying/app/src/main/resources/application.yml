@@ -230,8 +230,6 @@ application:
       exchangeService: http://127.0.0.1:${server.port}/tamsyy
       quoteService: http://127.0.0.1:${server.port}/tamsyy
       valuationBasicdataService: http://127.0.0.1:${server.port}/tamsyy
-      lossModelService: http://127.0.0.1:${server.port}/tamsyy
-      valModelService: http://127.0.0.1:${server.port}/tamsyy
 # 使用服务注册中心的方式
 #  loadbalance: true
 #  micorservice:
@@ -284,14 +282,14 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: CVR30INIT
+    password: CVR30INIT
+    reportSqlldrDatabaseName: 127.0.0.1:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  sqldiruserName: CVR30INIT_DEV
-  sqldirpassword: CVR30INIT_DEV
+  sqldirurl: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+  sqldiruserName: CVR30INIT
+  sqldirpassword: CVR30INIT
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -306,24 +304,24 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: CVR30INIT
+    password: CVR30INIT
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: CVR30INIT
+    password: CVR30INIT
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: CVR30INIT
+    password: CVR30INIT
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: CVR30INIT
+    password: CVR30INIT
 log:
   path: /home/tams/logs/tams
   level: debug
