@@ -233,7 +233,8 @@
 							where 1=1
 							and psv.CDATE = to_date(#{cdate},'yyyy-MM-dd')
 							AND mbvi.VALUE_DATE = to_date(#{cdate},'yyyy-MM-dd')
-							AND mfmi.VAL_DATE = to_date(#{cdate},'yyyy-MM-dd')
+							AND mfmi.VALUE_DATE = to_date(#{cdate},'yyyy-MM-dd')
+							AND frv.VAL_DATE = to_date(#{cdate},'yyyy-MM-dd')
 							AND msp.DEAL_DATE = to_date(#{cdate},'yyyy-MM-dd')
 						)gavInfo
 
@@ -283,7 +284,7 @@
 				null as type10,
 				null as type11,
 				null as type12,
-				'cash' as type8,
+				#{finprodType2_F19} as type8,
 				null as type7,
 				null as type6,
 				SUM(cashBalance) AS actualPositionAmount,
@@ -481,6 +482,9 @@
 			<!-- add by swwan 增加现金资产 20210719 end -->
 		) tt
         where (<![CDATA[  actualPositionAmount <> 0 or tradePositionAmount <> 0 or instructionsAmount <> 0 or pledgeAmount <> 0 or preReductionAmount <> 0  ]]>)
+		<if test="type8 != null and type8 != ''">
+			and type8 = #{type8,jdbcType=VARCHAR}
+		</if>
         order by portfolioId desc,type8 desc,secAcctId desc,finprodMarketId desc
     </select>
 
