@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">产品终止日期</label>
+                    <label class="layui-form-label form-lable">产品实际终止日期</label>
                     <div class="layui-input-inline input-inline">
                         <input id="mdate" type="text" name="timeControl"
                                class="layui-input form-input timeControl input-dateRangeSelect"
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">内部产品代码</label>
+                    <label class="layui-form-label form-lable">发行机构内部产品代码</label>
                     <div class="layui-input-inline input-inline">
                         <select id="prodId" name="prodId"
                                 data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getProdID}'
@@ -77,6 +77,17 @@
                                placeholder="请选择日期区间"/>
                     </div>
                 </div>
+
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">报送截止日</label>
+                    <div class="layui-input-inline input-inline">
+                        <input id="pbcSubmitDeadline" type="text" name="timeControl"
+                               class="layui-input form-input timeControl input-dateRangeSelect"
+                               placeholder="请选择日期区间"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">反馈状态</label>
                     <div class="layui-input-inline input-inline">
@@ -88,16 +99,7 @@
                         </select>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">报送截止日</label>
-                    <div class="layui-input-inline input-inline">
-                        <input id="pbcSubmitDeadline" type="text" name="timeControl"
-                               class="layui-input form-input timeControl input-dateRangeSelect"
-                               placeholder="请选择日期区间"/>
-                    </div>
-                </div>
+
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">数据日期</label>
                     <div class="layui-input-inline input-inline">

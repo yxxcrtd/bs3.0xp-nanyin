@@ -490,7 +490,7 @@
     </update>
 
     <update id="updateCancelMannultSendZipDatFile" parameterType="java.util.Map">
-        update PBC_SEND_ZIP_DAT_FILE set SEND_STATUS = '01',SUBMIT_FEEDBACK_STATUS = NULL
+        update PBC_SEND_ZIP_DAT_FILE set ZIP_SEND_STATUS = '01',DAT_ZIP_STATUS = '01'
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
                 REPORTUUID = #{regist.reportuuid,jdbcType=VARCHAR}
