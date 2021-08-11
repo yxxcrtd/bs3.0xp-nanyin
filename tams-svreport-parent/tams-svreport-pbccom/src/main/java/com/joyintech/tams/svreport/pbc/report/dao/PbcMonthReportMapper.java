@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.pbc.report.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -148,5 +149,9 @@ public interface PbcMonthReportMapper {
 
 
     List<String> findProductByName(Map<String,Object> map);
+
+
+    int updatePbcReportSendInfo(@Param("sendStatus")String sendStatus,@Param("submitTime") Date submitTime
+            ,@Param("submitFeedbackStatus")String submitFeedbackStatus,@Param("registList")List<String> registList);
 
 }

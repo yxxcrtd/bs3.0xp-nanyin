@@ -989,4 +989,17 @@
         from chb_prd_baseinfo
     </select>
 
+
+    <update id="updatePbcReportSendInfo" >
+        update PBC_REPORT set
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+        SUBMIT_TIME=#{submitTime,jdbcType=TIMESTAMP},
+        SUBMIT_FEEDBACK_STATUS=#{submitFeedbackStatus,jdbcType=VARCHAR}
+        <where>
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                REPORTUUID = #{regist,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
+
 </mapper>

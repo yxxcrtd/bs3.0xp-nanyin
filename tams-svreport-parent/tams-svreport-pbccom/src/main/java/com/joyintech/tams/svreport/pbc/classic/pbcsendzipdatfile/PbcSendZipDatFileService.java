@@ -309,24 +309,41 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	 */
 	public String createZipFile(Map<String, Object> param) {
 		param.put("zipSendStatus",DictCodeListExt2.报送状态_未报送.getValue());
-				List<PbcSendZipDatFile> list=pbcSendZipDatFileMapper.selectBySendStatusSeqnoList(param);
+		if(StringUtil.isNotEmpty(param.get("result"))){
+			try {
+				param.put("seqnoList",JsonUtils.json2List(param.get("result").toString(),String.class));
+			} catch (IOException e) {
+			}
+		}
+		List<PbcSendZipDatFile> list=pbcSendZipDatFileMapper.selectBySendStatusSeqnoList(param);
 		Map<String,Set<String>> map=new HashMap<>();
 		//zip包 路径
 		Map<String,PbcSendZipDatFile> zipInfoMap=new HashMap<>();
+		//zipCode set，更新使用
+		Set<String>  zipCodeSet=new HashSet<>();
+		//REPORT主键	 set，更新使用
+		Set<String>  reportuuidSet=new HashSet<>();
 		//datZipCode--归类报送类型明细
 		list.stream().forEach(datFile -> {
-			if (map.containsKey(datFile.getDatZipCode())){
-				Set<String> set=map.get(datFile.getDatZipCode());
+			String datZipCode=datFile.getDatZipCode();
+			if (map.containsKey(datZipCode)){
+				Set<String> set=map.get(datZipCode);
 				set.add(datFile.getDatZipDatType());
-				map.put(datFile.getDatZipCode(),set);
+				map.put(datZipCode,set);
 			}else {
 				Set<String> set=new HashSet<>();
 				set.add(datFile.getDatZipDatType());
-				map.put(datFile.getDatZipCode(),set);
+				map.put(datZipCode,set);
 			}
-			zipInfoMap.put(datFile.getDatZipCode(),datFile);
+			zipInfoMap.put(datZipCode,datFile);
+			if(DictCodeListExt2.人行报送类型_统计模板数据.equals(datFile.getDatZipType())){
+				zipCodeSet.add(datZipCode);
+				reportuuidSet.add(datFile.getReportuuid());
+			}
+
 		});
-		String result = pbcZipDataFileService.genDataFile(map,zipInfoMap);
+		String result = pbcZipDataFileService.genDataFile(map,zipInfoMap,zipCodeSet,reportuuidSet);
+
 		return result;
 	}
 

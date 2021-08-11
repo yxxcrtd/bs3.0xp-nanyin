@@ -11,21 +11,24 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.ZipFileUtil;
 import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportDebtTermDatDetailMapper;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportProdDatMapper;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto;
 import com.joyintech.tams.svreport.pbc.common.util.SftpUtil;
-import com.joyintech.tams.svreport.pbc.report.dao.PbcReportTemplateMapper;
+import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +58,10 @@ public class PbcZipDataFileService {
     private PbcReportProdDatMapper pbcReportProdDatMapper;
 	@Autowired
 	private PbcReportDebtTermDatDetailMapper pbcReportDebtTermDatDetailMapper;
+	@Autowired
+	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
+	@Autowired
+	private PbcMonthReportMapper pbcMonthReportMapper;
     private  List<ChbTypeMappingEx> chbTypeMappingExList=null;
 
     /**
@@ -62,22 +69,21 @@ public class PbcZipDataFileService {
      * @see
      * @since 1.0
      */
-    public String genDataFile(Map<String,Set<String>> paramMap,Map<String, PbcSendZipDatFile> zipInfoMap) {
+    public String genDataFile(Map<String,Set<String>> paramMap,Map<String, PbcSendZipDatFile> zipInfoMap,Set<String>  zipCodeSet,Set<String>  reportuuidSet) {
     	List<String> zipFileName = new ArrayList<String>();
 		chbTypeMappingExList=initReportConfig();
-		initChbExData();
-    	// 是否手工生成标志
-        boolean manualFlag = false;
-    	if (null != paramMap) {
-    		manualFlag = true;
-    	}
 		//去重
 		Set<String> reslut = new HashSet<String>();
+    	//zipDat更新数据
+		List<PbcSendZipDatFile> zipDatFileList=new ArrayList<>();
+		//pbcReport更新数据
+		List<String> pbcReportUuidList=new ArrayList<>();
+		Date date= DateUtil.parse(DateUtil.getCurrentDate());
 		for (Map.Entry<String, Set<String>> entry : paramMap.entrySet()) {  //循环datZipCode
 			String datZipCode=entry.getKey();
 			Set<String> set=entry.getValue();
-
 			PbcSendZipDatFile pbcSendZipDatFile=zipInfoMap.get(datZipCode);
+			String datZipCodePath="";
 			for(String datType:set) {  //生成dat文件
 				if(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType)){
 
@@ -92,24 +98,27 @@ public class PbcZipDataFileService {
 						||DictCodeListExt2.人行报送明细类型_存续产品分期限募集余额报表.getValue().equals(datType)
 						||DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue().equals(datType)
 					) {
-						String datZipCodePath=genReport1_1_6_3_2FileDat(pbcSendZipDatFile,datType);
+					datZipCodePath=genReport1_1_6_3_2FileDat(pbcSendZipDatFile,datType);
 					reslut.add(datZipCodePath);
 				}else if(DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue().equals(datType)){
-					String datZipCodePath=genReport3_3FileDat(pbcSendZipDatFile,datType);
+					datZipCodePath=genReport3_3FileDat(pbcSendZipDatFile,datType);
 					reslut.add(datZipCodePath);
 				}
 			}
+			//添加zip路径
+			if(DictCodeListExt2.人行报送类型_统计模板数据.getValue().equals(pbcSendZipDatFile.getDatZipType())) {
+				PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date);
+				zipDatFileList.add(zipDatFile);
+				pbcReportUuidList.add(pbcSendZipDatFile.getReportuuid());
+			}
 		}
 		//生成压缩包
-		List<String> zipFileList = genCompressFile(reslut,manualFlag);
+		List<String> zipFileList = genCompressFile(reslut);
 		zipFileName.addAll(zipFileList);
 
-		String finalZipFile = "";
-		/*手工生成的文件再次压缩   begin*/
-		if (manualFlag) {
-			finalZipFile = genFinalCompressFile(zipFileName);
-		}
-		/*手工生成的文件再次压缩   end*/
+		String finalZipFile = genFinalCompressFile(zipFileName);
+		//更新数据状态
+		updateFileDatAndPbcReport(zipDatFileList,pbcReportUuidList,date);
 		return finalZipFile;
 
     }
@@ -150,7 +159,9 @@ public class PbcZipDataFileService {
 					dataList.add(data);
 			}
 		}
+		//生成dat文件
 		String result=PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList);
+		//更新数据状态
         return result;
     }
 
@@ -195,7 +206,7 @@ public class PbcZipDataFileService {
 		return result;
 	}
 
-    private List<String> genCompressFile(Set<String>  files, boolean manualFlag) {
+    private List<String> genCompressFile(Set<String>  files) {
         String rootdir = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
         String switchs = SvrDataUtil.getSysParam("SVR_PBC_DAT_SWITCH");
     	/*将生成压缩文件的地址存入List并返回 add by gaojian 2019-06-18 begin*/
@@ -210,15 +221,7 @@ public class PbcZipDataFileService {
     			  outFile.delete();
     		  }
     		  try {
-    			  // 手工生成的文件在压缩之后删除
-    			  if (manualFlag) {
-    				  //压缩删除文件
-    				  ZipFileUtil.compressZip(outFile, true, allFiles);
-    				  //删除文件夹
-    				  new SafelyFile(folderPath).delete();
-    			  } else {
-    				  ZipFileUtil.compressZip(outFile, false, allFiles);//压缩文件
-    			  }
+				  ZipFileUtil.compressZip(outFile, false, allFiles);//压缩文件
 //                new File(folderPath).delete();//删除文件夹
               }catch (Exception e) {
             	  e.printStackTrace();
@@ -308,9 +311,10 @@ public class PbcZipDataFileService {
 	}
 
 	//初始化配置表数据
-	private void  initChbExData(){
+	private String  initChbExData(){
 		String[] reportTypeList={"1_1","1_2","1_3","1_4","1_5","1_6",
 				"2_1","2_2","2_3","2_4","2_5","3_1","3_2","3_3"};
+		List<String> deleteSqlList=new ArrayList<>();
 		for(String reportType:reportTypeList ) {
 			File file = new File("D:\\pj\\yth\\tams\\tams-svreport-parent\\tams-svreport\\src\\main\\resources\\tpl\\pbc\\PbcDatReport_"+reportType+".xls");
 			try {
@@ -320,13 +324,40 @@ public class PbcZipDataFileService {
 					if (typeMappingEx == null) {
 						chbTypeMappingExMapper.insertSelective(chbTypeMappingEx);
 					}
+					String sql="delete from CHB_TYPE_MAPPING_EX where Srcfield='"+chbTypeMappingEx.getSrcfield()+"' and Srcfield1='"+chbTypeMappingEx.getSrcfield1()+"'";
+					deleteSqlList.add(sql);
 				}
-
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
+		return JsonUtils.object2Json(deleteSqlList);
 	}
+
+	//数据报送文件管理表PBC_SEND_ZIP_DAT_FILE
+    private PbcSendZipDatFile getPbcSendZipDatFile(String ZipCode,String datZipPath,Date date){
+		PbcSendZipDatFile datFile=new PbcSendZipDatFile();
+		datFile.setDatZipCode(ZipCode);
+		datFile.setDatZipPath(datZipPath);
+		datFile.setDatZipStatus(DictCodeListExt3.zip包状态_已使用.getValue());
+		datFile.setReturnZipSendStatus(DictCodeListExt2.人行报送反馈状态_人行通过.getValue());
+		datFile.setSubmitTime(date);
+		datFile.setZipDownloadTime(date);
+		datFile.setZipSendStatus(DictCodeListExt2.报送状态_手工处理.getValue());
+		datFile.setDatZipType(DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+		return datFile;
+	}
+	//更新数据状态
+	private  void updateFileDatAndPbcReport(List<PbcSendZipDatFile> datFileList,List<String> pbcReportUuidList,Date date){
+		if(!CollectionUtils.isEmpty(datFileList)){
+			//更新PBC_SEND_ZIP_DAT_FILE
+			pbcSendZipDatFileMapper.updateByZipCodeAndZipType(datFileList,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+		}
+	    //更新报表
+		if(!CollectionUtils.isEmpty(pbcReportUuidList)) {
+			pbcMonthReportMapper.updatePbcReportSendInfo(DictCodeListExt2.报送状态_手工处理.getValue(), date, DictCodeListExt2.人行报送反馈状态_人行通过.getValue(), pbcReportUuidList);
+		}
+		}
 
 
 
