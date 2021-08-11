@@ -10,9 +10,7 @@
  
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.joyintech.framework.file.SafelyFile;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.ZipFileUtil;
 import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
@@ -20,25 +18,24 @@ import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAssetDebtDatDetailMapper;
+import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportDebtTermDatDetailMapper;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportProdDatMapper;
-import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto;
-import com.joyintech.tams.svreport.pbc.assetposition.constants.PbcAssetPositionConstants;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.common.util.SftpUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.joyintech.tams.svreport.pbc.report.dao.PbcReportTemplateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -53,67 +50,39 @@ import java.util.*;
 public class PbcZipDataFileService {
 
 	@Autowired
-	private ChbTypeMappingExMapper chbTypeMappingExMapper;
+	private  ChbTypeMappingExMapper chbTypeMappingExMapper;
     @Autowired
     private PbcReportProdDatMapper pbcReportProdDatMapper;
-
 	@Autowired
-	private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
-
-	@Autowired
-	private PbcPrdBaseinfoEndSubDatMapper pbcPrdBaseinfoEndSubDatMapper;
-
-
-	@Autowired
-	private PbcReportAssetDebtDatDetailMapper pbcReportAssetDebtDatDetailMapper;
-	/**
-	 * 根据映射表取申请单名称及说明
-	 * @param type
-	 * @return
-	 */
-	String [] getRequestNameAndRemark(String type){
-		List<ChbTypeMappingEx>   subjectNoMappingList = chbTypeMappingExMapper
-				.selectByMappingcode(PbcAssetPositionConstants.MAPPINGCODE_PBCREPORT_DAT_REQUEST_NAME);
-		String [] aa=new String [2];
-		for(ChbTypeMappingEx single:subjectNoMappingList){
-			if(single.getSrcfield1().equals(type)){
-				aa =single.getSrcfield().split("\\|");
-				return aa;
-			}
-		}
-		return null;
-	}
+	private PbcReportDebtTermDatDetailMapper pbcReportDebtTermDatDetailMapper;
+    private  List<ChbTypeMappingEx> chbTypeMappingExList=null;
 
     /**
      * 生成数据文件
      * @see
      * @since 1.0
      */
-    public List<String> genDataFile(Map<String,Set<String>> paramMap,Map<String, PbcSendZipDatFile> zipInfoMap) {
+    public String genDataFile(Map<String,Set<String>> paramMap,Map<String, PbcSendZipDatFile> zipInfoMap) {
     	List<String> zipFileName = new ArrayList<String>();
-    	
+		chbTypeMappingExList=initReportConfig();
+		initChbExData();
     	// 是否手工生成标志
         boolean manualFlag = false;
     	if (null != paramMap) {
     		manualFlag = true;
     	}
+		//去重
+		Set<String> reslut = new HashSet<String>();
 		for (Map.Entry<String, Set<String>> entry : paramMap.entrySet()) {  //循环datZipCode
 			String datZipCode=entry.getKey();
 			Set<String> set=entry.getValue();
-			//去重
-			Set<String> reslut = new HashSet<String>();
+
 			PbcSendZipDatFile pbcSendZipDatFile=zipInfoMap.get(datZipCode);
 			for(String datType:set) {  //生成dat文件
 				if(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType)){
-					String datZipCodePath = genReportPrdBaseInfoFileDat(pbcSendZipDatFile, datType, manualFlag);
-					if(StringUtil.isNotEmpty(datZipCodePath)){
-						reslut.add(datZipCodePath);
-					}
+
 				}else if(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
-					String datZipCodePath = genReportPrdEndInfoFileDat(pbcSendZipDatFile,datType,manualFlag);
-					if(StringUtil.isNotEmpty(datZipCodePath)){
-						reslut.add(datZipCodePath);
-					}
+
 				}else if (DictCodeListExt2.人行报送明细类型_募集余额报表.getValue().equals(datType)
 						||DictCodeListExt2.人行报送明细类型_募集兑付报表.getValue().equals(datType)
 						||DictCodeListExt2.人行报送明细类型_只数情况报表.getValue().equals(datType)
@@ -123,235 +92,104 @@ public class PbcZipDataFileService {
 						||DictCodeListExt2.人行报送明细类型_存续产品分期限募集余额报表.getValue().equals(datType)
 						||DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue().equals(datType)
 					) {
-						String datZipCodePath=genReport1_1_6_3_2FileDat(pbcSendZipDatFile,datType,manualFlag);
+						String datZipCodePath=genReport1_1_6_3_2FileDat(pbcSendZipDatFile,datType);
 					reslut.add(datZipCodePath);
-				}else if(DictCodeListExt2.人行报送明细类型_资管产品资产负债剩余期限统计.getValue().equals(datType)){
-					String datZipCodePath=genReport3_3FileDat(pbcSendZipDatFile,datType,manualFlag);
-					reslut.add(datZipCodePath);
-				}else if(DictCodeListExt2.人行报送明细类型_资管产品资产负债统计.getValue().equals(datType)){
-					String datZipCodePath=genReport2_1FileDat(pbcSendZipDatFile,datType,manualFlag);
+				}else if(DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue().equals(datType)){
+					String datZipCodePath=genReport3_3FileDat(pbcSendZipDatFile,datType);
 					reslut.add(datZipCodePath);
 				}
 			}
-			//生成压缩包
-			List<String> zipFileList = genCompressFile(reslut,manualFlag);
-			zipFileName.addAll(zipFileList);
 		}
-        /*手工生成的文件再次压缩   end*/
-        return zipFileName;
-        
+		//生成压缩包
+		List<String> zipFileList = genCompressFile(reslut,manualFlag);
+		zipFileName.addAll(zipFileList);
+
+		String finalZipFile = "";
+		/*手工生成的文件再次压缩   begin*/
+		if (manualFlag) {
+			finalZipFile = genFinalCompressFile(zipFileName);
+		}
+		/*手工生成的文件再次压缩   end*/
+		return finalZipFile;
+
     }
-
-
-	//产品基本信息dat
-	private String genReportPrdBaseInfoFileDat(PbcSendZipDatFile pbcSendZipDatFile, String datType, boolean manualFlag) {
-		List<PbcPrdBaseinfoSubDat> pbcPrdBaseinfoSubDats = pbcPrdBaseinfoSubDatMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode());
-		if(CollectionUtil.isEmpty(pbcPrdBaseinfoSubDats)){
-			return "";
-		}
-		List<LinkedHashMap<String,String>> dataList =new ArrayList<>();
-		for(PbcPrdBaseinfoSubDat subDat :pbcPrdBaseinfoSubDats){
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			//产品代码
-			data.put("pbcProdId",subDat.getPbcProdId());
-			//发行机构代码
-			data.put("issuePartyId",subDat.getIssuePartyId());
-			//产品名称
-			data.put("prodName",subDat.getProdName());
-			//产品品种
-			data.put("pbcProdType",subDat.getPbcProdType());
-			//产品类型
-			data.put("ivstorientation",subDat.getIvstorientation());
-			//产品品牌
-			data.put("prodBrand",subDat.getProdBrand());
-			//产品期次
-			data.put("prodStage",subDat.getProdStage().toPlainString());
-			//发行机构内部产品代码
-			data.put("prodId",subDat.getProdId());
-			//募集方式
-			data.put("raiseType",subDat.getRaiseType());
-			//管理方式
-			data.put("manageType",subDat.getManageType());
-			//运行方式
-			data.put("operateMode",subDat.getOperateMode());
-			//募集起始日期
-			data.put("raiseVdate",subDat.getRaiseVdate() == null ? "" : DateUtil.format(subDat.getRaiseVdate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
-			//募集结束日期
-			data.put("raiseEnddate",subDat.getRaiseEnddate() == null ? "" : DateUtil.format(subDat.getRaiseEnddate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
-			//发行机构提前终止权标识
-			data.put("termRightFlag",subDat.getTermRightFlag());
-			//客户赎回权标识
-			data.put("cusRedeemFlag",subDat.getCusRedeemFlag());
-			//产品增信标识
-			data.put("creditFlag",subDat.getCreditFlag());
-			//境内托管机构代码
-			data.put("inDepCode",subDat.getInDepCode());
-			//境外托管机构国别
-			data.put("outDepCtry",subDat.getOutDepCtry());
-			//境外托管机构名称
-			data.put("outDepName",subDat.getOutDepName());
-			//产品起始日期
-			data.put("vdate",subDat.getVdate() == null ? "" : DateUtil.format(subDat.getVdate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
-			//产品预计终止日期
-			data.put("mdate",subDat.getMdate() == null ? "" : DateUtil.format(subDat.getMdate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
-			//受托职责
-			data.put("fiduciaryDuty",subDat.getFiduciaryDuty());
-			//分级产品标识
-			data.put("isConstracte",subDat.getIsConstracte());
-			//收益权转让产品标识
-			data.put("transferType",subDat.getTransferType());
-			//货币市场基金标识
-			data.put("isMarketFund",subDat.getIsMarketFund());
-			//其他产品标识1
-			data.put("other1","");
-			//其他产品标识2
-			data.put("other2","");
-			//其他产品标识3
-			data.put("other3","");
-			dataList.add(data);
-		}
-		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDats) {
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			//产品代码
-			data.put("pbcProdId",subDat.getPbcProdId());
-			//币种种类1-募集资金币种
-			//2-兑付本金币种
-			//3-兑付收益币种
-			data.put("ccyType","1");
-			//币种代码
-			data.put("ccyCode",subDat.getRaiseCcy());
-			dataList.add(data);
-			//组装数据
-			LinkedHashMap<String,String> data1= new LinkedHashMap<String,String>();
-			//产品代码
-			data1.put("pbcProdId",subDat.getPbcProdId());
-			//币种种类1-募集资金币种
-			//2-兑付本金币种
-			//3-兑付收益币种
-			data1.put("ccyType","2");
-			//币种代码
-			data1.put("ccyCode",subDat.getCashPrinCcy());
-			dataList.add(data1);
-			//组装数据
-			LinkedHashMap<String,String> data2 = new LinkedHashMap<String,String>();
-			//产品代码
-			data2.put("pbcProdId",subDat.getPbcProdId());
-			//币种种类1-募集资金币种
-			//2-兑付本金币种
-			//3-兑付收益币种
-			data2.put("ccyType","3");
-			//币种代码
-			data2.put("ccyCode",subDat.getCashProfCcy());
-			dataList.add(data2);
-		}
-		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDats) {
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			//产品代码
-			data.put("pbcProdId",subDat.getPbcProdId());
-			//增信机构类型
-			data.put("creditType",subDat.getCreditType());
-			dataList.add(data);
-		}
-		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDats) {
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			//产品代码
-			data.put("pbcProdId",subDat.getPbcProdId());
-			//增信形式
-			data.put("creditMode",subDat.getCreditMode());
-			dataList.add(data);
-		}
-		return PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList);
-	}
-
-	//产品终止信息dat
-	private String genReportPrdEndInfoFileDat(PbcSendZipDatFile pbcSendZipDatFile, String datType, boolean manualFlag) {
-		List<PbcPrdBaseinfoEndSubDat> pbcPrdBaseinfoEndSubDats = pbcPrdBaseinfoEndSubDatMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode());
-		if(CollectionUtil.isEmpty(pbcPrdBaseinfoEndSubDats)){
-			return "";
-		}
-		List<LinkedHashMap<String,String>> dataList =new ArrayList<>();
-		for (PbcPrdBaseinfoEndSubDat subDat : pbcPrdBaseinfoEndSubDats) {
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			//产品代码
-			data.put("pbcProdId",subDat.getPbcProdId());
-			//产品实际终止日期
-			data.put("mDate",subDat.getMdate() == null ? "" : DateUtil.format(subDat.getMdate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
-			//兑付客户收益率
-			data.put("cusYearYield",subDat.getCusYearYield().toPlainString());
-			dataList.add(data);
-		}
-		for (PbcPrdBaseinfoEndSubDat subDat : pbcPrdBaseinfoEndSubDats) {
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			//产品代码
-			data.put("pbcProdId",subDat.getPbcProdId());
-			//币种代码
-			data.put("mDate",subDat.getCcy());
-			//兑付客户收益
-			data.put("customProfit",subDat.getCustomProfit().toPlainString());
-			//兑付客户收益转人民币
-			data.put("profitCny",subDat.getProfitCny().toPlainString());
-			dataList.add(data);
-		}
-		return PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList);
-	}
-	//报表2_1
-	private String genReport2_1FileDat(PbcSendZipDatFile pbcSendZipDatFile, String datType, boolean manualFlag) {
-		List<PbcReportAssetDebtDatDetailDto> debtDatDetailDtos = pbcReportAssetDebtDatDetailMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), datType);
-		List<LinkedHashMap<String,String>> dataList =new ArrayList<>();
-		for(PbcReportAssetDebtDatDetailDto sub :debtDatDetailDtos){
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			data.put("date",sub.getTermid());
-			data.put("finInstitutionCode",sub.getFinInstitutionCode());
-			data.put("prodVariety",sub.getProdVariety());
-			dataList.add(data);
-		}
-		String result=PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList);
-		return result;
-	}
-
-	//报表1_1到1_6,3_1到3_2dat
-    private String genReport1_1_6_3_2FileDat(PbcSendZipDatFile pbcSendZipDatFile,String datType,boolean manualFlag) {
+    //报表1_1到1_6,3_1到3_2dat
+    private String genReport1_1_6_3_2FileDat(PbcSendZipDatFile pbcSendZipDatFile,String datType) {
 		List<PbcReportProdDatDto> subList = pbcReportProdDatMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(),datType);
 
         Map<String,List<LinkedHashMap<String,String>>> map=new HashMap<String,List<LinkedHashMap<String,String>>>();
 		List<LinkedHashMap<String,String>> dataList =new ArrayList<>();
-        for(PbcReportProdDatDto sub :subList){
-        	//组装数据
-        	LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			data.put("date",sub.getTermid());
-            data.put("finInstitutionCode",sub.getFinInstitutionCode());
-			data.put("prodVariety",sub.getProdVariety());
-        	dataList.add(data);
-        	map.put(sub.getDatZipCode(),dataList);
-        }
+		List<ChbTypeMappingEx> exList=getReportRowAndColumnNum(datType);
+		for(PbcReportProdDatDto sub :subList){  //循环报表数据
+			String propertycode=sub.getPropertyCode();
+			//查询属性对应的匹配关系数据
+			List<ChbTypeMappingEx> propertyCodeFiledList=exList.stream().filter(
+					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
+			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
+					Object   filedValue=null;
+					//get[源属性1]()   取得报表的对应单元的数值
+					try {
+						Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+						//设置对象的访问权限，保证对private的属性的访问
+						field.setAccessible(true);
+						filedValue= field.get(sub);
+					} catch (Exception e) {
+						return null;
+					}
+				     //数值为空或者0的情况下跳过
+					if(null==filedValue||filedValue.equals("0")){
+                         continue;
+					}
+					//组装数据
+					LinkedHashMap<String, String> data = new LinkedHashMap<String, String>();
+					data.put("date", DateUtil.getLastDayOfThisMonth(sub.getTermid()));
+					data.put("issuePartyId", sub.getIssuePartyId());
+					data.put("prodVariety", sub.getProdVariety());
+					data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
+					data.put("filedValue", filedValue.toString());
+					dataList.add(data);
+			}
+		}
 		String result=PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList);
         return result;
     }
 
-
-
-
 	//报表3_3dat
-	private String genReport3_3FileDat(PbcSendZipDatFile pbcSendZipDatFile,String datType,boolean manualFlag) {
-		List<PbcReportProdDatDto> subList = pbcReportProdDatMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(),datType);
+	private String genReport3_3FileDat(PbcSendZipDatFile pbcSendZipDatFile,String datType) {
+		List<PbcReportDebtTermDatDetail> subList = pbcReportDebtTermDatDetailMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(),datType);
 
 		Map<String,List<LinkedHashMap<String,String>>> map=new HashMap<String,List<LinkedHashMap<String,String>>>();
 		List<LinkedHashMap<String,String>> dataList =new ArrayList<>();
-		for(PbcReportProdDatDto sub :subList){
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			data.put("date",sub.getTermid());
-			data.put("finInstitutionCode",sub.getFinInstitutionCode());
-			data.put("prodVariety",sub.getProdVariety());
-			dataList.add(data);
-			map.put(sub.getDatZipCode(),dataList);
+		List<ChbTypeMappingEx> exList=getReportRowAndColumnNum(datType);
+		for(PbcReportDebtTermDatDetail sub :subList){  //循环报表数据
+			String propertycode=sub.getPropertycode();
+			//查询属性对应的匹配关系数据
+			List<ChbTypeMappingEx> propertyCodeFiledList=exList.stream().filter(
+					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
+			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
+				Object   filedValue=null;
+				//get[源属性1]()   取得报表的对应单元的数值
+				try {
+					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					//设置对象的访问权限，保证对private的属性的访问
+					field.setAccessible(true);
+					filedValue= field.get(sub);
+				} catch (Exception e) {
+					return null;
+				}
+				//数值当为空、或者0的情况下
+				if(null==filedValue||filedValue.equals("0")){
+					continue;
+				}
+				//组装数据
+				LinkedHashMap<String, String> data = new LinkedHashMap<String, String>();
+				data.put("date", DateUtil.getLastDayOfThisMonth(sub.getTermid()));
+				data.put("issuePartyId", sub.getIssuePartyId());
+				data.put("prodVariety", sub.getProdVariety());
+				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
+				data.put("filedValue", filedValue.toString());
+				dataList.add(data);
+			}
 		}
 		String result=PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList);
 		return result;
@@ -437,6 +275,60 @@ public class PbcZipDataFileService {
     	
     	return finalZipPath;
     }
+
+	/**
+	 * 报表根据类型和列获取行号和列号
+	 * @param reportType
+	 * @return
+	 */
+	private List<ChbTypeMappingEx>  getReportRowAndColumnNum(String reportType){
+		// 根据类型筛选
+		List<ChbTypeMappingEx> exList = chbTypeMappingExList.stream()
+				.filter(ex -> reportType.equals(ex.getMappingcode()))
+				.collect(Collectors.toList());
+		//行号-列号
+		return exList;
+	}
+
+	/**
+	 * 报表配置初始化
+	 * @return
+	 */
+	private  List<ChbTypeMappingEx>  initReportConfig(){
+		List<ChbTypeMappingEx>  HoldTypeMappingList = chbTypeMappingExMapper.selectByMappingname(DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+		return HoldTypeMappingList;
+	}
+
+
+    //行编号-列编号，例如：300000-A
+	private String getRowAndColumn(String row,String column){
+		StringBuilder strBuilder=new StringBuilder();
+		strBuilder.append(row).append("-").append(column);
+		return strBuilder.toString();
+	}
+
+	//初始化配置表数据
+	private void  initChbExData(){
+		String[] reportTypeList={"1_1","1_2","1_3","1_4","1_5","1_6",
+				"2_1","2_2","2_3","2_4","2_5","3_1","3_2","3_3"};
+		for(String reportType:reportTypeList ) {
+			File file = new File("D:\\pj\\yth\\tams\\tams-svreport-parent\\tams-svreport\\src\\main\\resources\\tpl\\pbc\\PbcDatReport_"+reportType+".xls");
+			try {
+				List<ChbTypeMappingEx> list = PbcZExcelDefineUtil.readToList(reportType, file, 0);
+				for (ChbTypeMappingEx chbTypeMappingEx : list) {
+					ChbTypeMappingEx typeMappingEx = chbTypeMappingExMapper.selectBySrcfieldSrcfield1(chbTypeMappingEx.getSrcfield(), chbTypeMappingEx.getSrcfield1());
+					if (typeMappingEx == null) {
+						chbTypeMappingExMapper.insertSelective(chbTypeMappingEx);
+					}
+				}
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
 
 
 

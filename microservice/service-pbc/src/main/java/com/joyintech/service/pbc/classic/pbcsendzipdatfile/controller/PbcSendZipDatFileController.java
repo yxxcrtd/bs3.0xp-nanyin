@@ -50,7 +50,7 @@ public class PbcSendZipDatFileController {
 	 * @return 压缩文件之地
 	 */
 	@PostMapping("createZipFile")
-	public List<String> createZipFile(@RequestBody Map<String, Object> param) {
+	public String createZipFile(@RequestBody Map<String, Object> param) {
 		return pbcSendZipDatFileService.createZipFile(param);
 	}
 

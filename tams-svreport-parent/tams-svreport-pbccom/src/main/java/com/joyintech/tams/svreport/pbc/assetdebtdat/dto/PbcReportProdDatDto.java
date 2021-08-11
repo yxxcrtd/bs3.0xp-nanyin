@@ -162,6 +162,11 @@ public class PbcReportProdDatDto {
     private String termid;
 
     /**
+     * 发行机构代码
+     */
+    private String issuePartyId;
+
+    /**
      * 主键
      * @return DETAILUUID 主键
      */
@@ -517,5 +522,13 @@ public class PbcReportProdDatDto {
      */
     public void setTermid(String termid) {
         this.termid = termid == null ? null : termid.trim();
+    }
+
+    public String getIssuePartyId() {
+        return issuePartyId;
+    }
+
+    public void setIssuePartyId(String issuePartyId) {
+        this.issuePartyId = issuePartyId;
     }
 }
