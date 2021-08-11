@@ -40,7 +40,7 @@
             delete from PBC_PRD_BASEINFO_SUB_DAT
             where SEND_STATUS = '01'
             <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
-                #{item.prodId,jdbcType=VARCHAR}
+                #{item,jdbcType=VARCHAR}
             </foreach>
         </delete>
 
@@ -49,7 +49,7 @@
             delete from PBC_PRD_BASEINFO_END_SUB_DAT
             where SEND_STATUS = '01'
             <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
-                #{item.prodId,jdbcType=VARCHAR}
+                #{item,jdbcType=VARCHAR}
             </foreach>
         </delete>
 
@@ -62,7 +62,7 @@
                   WHERE 1=1
                   and SEND_STATUS IN ('02','03')
                     <foreach collection="List" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
-                        #{item.prodId,jdbcType=VARCHAR}
+                        #{item,jdbcType=VARCHAR}
                     </foreach>
                   group by DAT_ZIP_CODE
                  UNION ALL
@@ -71,7 +71,7 @@
                   WHERE 1=1
                   and SEND_STATUS IN ('02','03')
                     <foreach collection="List" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
-                        #{item.prodId,jdbcType=VARCHAR}
+                        #{item,jdbcType=VARCHAR}
                     </foreach>
                   group by DAT_ZIP_CODE)
               group by DAT_ZIP_CODE
@@ -89,7 +89,7 @@
                           WHERE 1=1
                           and SEND_STATUS IN ('02','03')
                             <foreach collection="List" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
-                                #{item.prodId,jdbcType=VARCHAR}
+                                #{item,jdbcType=VARCHAR}
                             </foreach>
                           group by DAT_ZIP_CODE
                          UNION ALL
@@ -98,7 +98,7 @@
                           WHERE 1=1
                           and SEND_STATUS IN ('02','03')
                             <foreach collection="List" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
-                                #{item.prodId,jdbcType=VARCHAR}
+                                #{item,jdbcType=VARCHAR}
                             </foreach>
                           group by DAT_ZIP_CODE)
                           group by DAT_ZIP_CODE) d
