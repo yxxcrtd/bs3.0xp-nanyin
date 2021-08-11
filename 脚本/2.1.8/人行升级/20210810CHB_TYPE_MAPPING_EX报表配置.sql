@@ -2200,7 +2200,7 @@ delete from CHB_TYPE_MAPPING_EX where Srcfield='AMT_990000_XXCSRJHXXJSFWY' and S
 delete from CHB_TYPE_MAPPING_EX where Srcfield='AMT_990000_XXCSRJHXXJSFWY' and Srcfield1='smallCompanyAmt'  and  MAPPINGNAME='MI';
 delete from CHB_TYPE_MAPPING_EX where Srcfield='AMT_990000_XXCSRJHXXJSFWY' and Srcfield1='microCompanyAmt'  and  MAPPINGNAME='MI';
 delete from CHB_TYPE_MAPPING_EX where Srcfield='AMT_990000_XXCSRJHXXJSFWY' and Srcfield1='othAmt'  and  MAPPINGNAME='MI';
-delete from CHB_TYPE_MAPPING_EX where Srcfield='AMT_990000_XXCSRJHXXJSFWY' and Srcfield1='sumAmt'  and  MAPPINGNAME='MI';]
+delete from CHB_TYPE_MAPPING_EX where Srcfield='AMT_990000_XXCSRJHXXJSFWY' and Srcfield1='sumAmt'  and  MAPPINGNAME='MI';
 
 
 
