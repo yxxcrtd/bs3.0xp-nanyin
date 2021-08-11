@@ -213,25 +213,21 @@
 									WHEN fpt.TYPE_8 = 'F01' THEN NVL(mbvi.PRICE,1)
 									WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET = '09' THEN NVL(frv.VALUATION,1)
 									WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET in ('03','04') THEN NVL(mfmi.CLOSE_PRICE,1)
-									WHEN fpt.TYPE_8 = 'F17' THEN NVL(frv.VALUATION,1)
+									WHEN fpt.TYPE_8 = 'F04' THEN NVL(frv.VALUATION,1)
 									WHEN fpt.TYPE_8 = 'F11' THEN NVL(msp.CLOSE_PRICE,1)
 								END AS marketPrice
 							FROM
-							PTL_SEC_VALUTION psv
-							INNER JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = psv.FINPROD_ID
-							AND fp.FINPROD_TYPE2 != 'F28'
-							AND fp.FINPROD_TYPE2
-							IS NOT NULL INNER JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID
+							FIN_PRODUCT fp
+							INNER JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = fp.FINPROD_ID
 							LEFT JOIN MST_BOND_VALUATION_INFO mbvi
 							ON mbvi.SEC_ID = fp.FINPROD_MARKET_ID
 							LEFT JOIN FIN_PRODUCT_VALUATION frv
-							ON frv.FINPROD_ID = fp.FINPROD_ID
+							ON frv.FINPROD_ID = fp.FINPROD_MARKET_ID
 							LEFT JOIN MST_FUND_MARKET_INFO mfmi
 							ON mfmi.FUND_CODE = fp.FINPROD_MARKET_ID
 							LEFT JOIN MST_SHARE_PRICE msp
 							ON msp.SHARES_ID = fp.FINPROD_MARKET_ID
 							where 1=1
-							and psv.CDATE = to_date(#{cdate},'yyyy-MM-dd')
 							AND mbvi.VALUE_DATE = to_date(#{cdate},'yyyy-MM-dd')
 							AND mfmi.VALUE_DATE = to_date(#{cdate},'yyyy-MM-dd')
 							AND frv.VAL_DATE = to_date(#{cdate},'yyyy-MM-dd')
