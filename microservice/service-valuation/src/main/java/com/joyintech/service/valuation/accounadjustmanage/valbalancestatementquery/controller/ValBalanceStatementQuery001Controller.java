@@ -10,42 +10,19 @@
  
 package com.joyintech.service.valuation.accounadjustmanage.valbalancestatementquery.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
 import com.joyintech.service.valuation.accounadjustmanage.valbalancestatementquery.dto.ValBalanceStatementQuery001Dto;
 import com.joyintech.service.valuation.accounadjustmanage.valbalancestatementquery.service.ValBalanceStatementQuery001Service;
 import com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valaccounthandle.service.ValAccountHandle001Service;
 import com.joyintech.tams.common.base.dao.BokBooksetExtMapper;
 import com.joyintech.tams.common.base.entity.BokBooksetExt;
 import com.joyintech.tams.common.base.entity.BokBooksetExtKey;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 估值余额表查询Controller
@@ -152,5 +129,11 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
     @PostMapping("/selectAllList")
     public List<ValBalanceStatementQuery001Dto> selectAllList(@RequestBody Map<String, Object> pageParam) {
         return valBalanceStatementQuery001Service.selectAllList(pageParam);
+    }
+
+    @PostMapping("/selectCorrespondingFrame")
+    public ValBalanceStatementQuery001Dto selectCorrespondingFrame(@RequestBody Map<String, Object> params) {
+        ValBalanceStatementQuery001Dto msg=valAccountHandle001Service.selectCorrespondingFrame(params);
+        return msg;
     }
 }

@@ -10,11 +10,6 @@
  
 package com.joyintech.tams.valuation.accounadjustmanage.valbalancestatementquery.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.grid.GridRowDto;
@@ -25,6 +20,10 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.tams.common.base.entity.BokValTableData;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import org.apache.commons.lang.StringUtils;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 
 public class ValBalanceStatementQuery001Dto extends BokValTableData implements ITableRow, GridRowDto {
@@ -60,6 +59,27 @@ public class ValBalanceStatementQuery001Dto extends BokValTableData implements I
      * 原币币种 - 中文
      */
     private String oCcyFmt;
+
+    /**
+     * 市场代码
+     */
+    private String finprodMarketId;
+    /**
+     * 金融产品类型：估值核算
+     */
+    private String finprodType;
+    /**
+     * 四级科目尾号
+     */
+    private String detailSubjectNoTail;
+    /**
+     * 估值模型
+     */
+    private String valmodelId;
+    /**
+     * 数据来源
+     */
+    private String datasourceType;
 
     public String getoCcyFmt() {
         return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.币种, oCcyFmt))?
@@ -230,5 +250,44 @@ public class ValBalanceStatementQuery001Dto extends BokValTableData implements I
         }
         return subjectNo;
     }
-    
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
+
+    public String getFinprodType() {
+        return finprodType;
+    }
+
+    public void setFinprodType(String finprodType) {
+        this.finprodType = finprodType;
+    }
+
+    public String getDetailSubjectNoTail() {
+        return detailSubjectNoTail;
+    }
+
+    public void setDetailSubjectNoTail(String detailSubjectNoTail) {
+        this.detailSubjectNoTail = detailSubjectNoTail;
+    }
+
+    public String getValmodelId() {
+        return valmodelId;
+    }
+
+    public void setValmodelId(String valmodelId) {
+        this.valmodelId = valmodelId;
+    }
+
+    public String getDatasourceType() {
+        return datasourceType;
+    }
+
+    public void setDatasourceType(String datasourceType) {
+        this.datasourceType = datasourceType;
+    }
 }
