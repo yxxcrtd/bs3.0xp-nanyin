@@ -10,12 +10,11 @@
 
 package com.joyintech.tams.component.business.common.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -24,10 +23,8 @@ import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.risktrial.RiskTrialComm;
@@ -35,12 +32,15 @@ import com.joyintech.tams.invest.common.risktrial.dto.InvestTradeTrialInput;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
+import com.joyintech.tams.invest.common.trade.CreditLinesUpdate;
+import com.joyintech.tams.invest.common.trade.CreditLinesUpdateImpl;
+import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
+import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,6 +51,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * 风险试算共通结果展示画面
@@ -80,11 +81,10 @@ public class BaseRiskMathCommController extends BaseController {
 
     private static String workflowId_JL;
 
-    /**
-     * 日志
-     */
-    private Logger logger = LoggerFactory.getLogger(getClass());
-    
+    @Autowired
+    private IPlatformDate iPlatformDate;
+    @Autowired
+    private CreditLinesDealsMapper creditLineMapper;
     /**
      * 占用、释放授信额度共通处理 类
      * 风险试算时获取授信管理中授信使用条件使用
@@ -126,11 +126,6 @@ public class BaseRiskMathCommController extends BaseController {
         model.addAttribute("SUP_TIME_TYPE_03", DictCodeListExt1.监督时分_事后监控);
         //model.addAttribute("risk_math_switch", CacheUtil.getSysParam("risk_math_switch"));
         model.addAttribute("risk_math_switch", CacheUtil.getSysParam("pageRedisFlag"));
-        String institutionCode = "";
-        if(MultilevelDataAuthorityUtil.isEnabled()){
-            institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
-        }
-        model.addAttribute("IS_RISKMATH_SOFTCONTROL", CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode));
         Map<String, Object> map = RequestUtil.getPageParam();
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         // add by caojin 吉林银行风险试算-流程控制显示 2019/09/23 start
@@ -154,44 +149,14 @@ public class BaseRiskMathCommController extends BaseController {
             }else {
                 //--------20200228核新版风险 撤销时去除R带出列表 裴家俊 ------------------
                 if (map.get("tradeId").toString().lastIndexOf('R') == map.get("tradeId").toString().length() - 1) {
-                    li = basRiskMathCommService.select( map.get("tradeId").toString().substring(0, map.get("tradeId").toString().length() - 1));
-                }
-                else {
+                    li = basRiskMathCommService.select(map.get("tradeId").toString().substring(0, map.get("tradeId").toString().length() - 1));
+                } else {
                     li = basRiskMathCommService.select(map.get("tradeId").toString());
                 }
                 //--------20200228核新版风险 撤销时去除R带出列表 裴家俊 ------------------
             }
             //----add by zxjjpei 解决从指令委托点击交易录单不能带出风险试算结果逻辑 end-----
-            // 一体化对应etliu start
-//        }else if(map.get("entity") != null){
-//            li = JsonUtils.json2Object((String)map.get("entity"), RiskTrialRetDto.class);
-//        }
-//        list.add(li);
-
         }
-        //--------2020年7月13日 wangyang1 start ------------------
-        if (!StringUtil.equals(map.get("tradeId"), "null") && map.get("tradeId") != null && StringUtil.isEmptyList(li) && StringUtil.isNotEmpty(map.get("tradeId").toString())) {
-            if (map.get("tradeId").toString().lastIndexOf('R') == map.get("tradeId").toString().length() - 1) {
-                li = basRiskMathCommService.select( map.get("tradeId").toString().substring(0, map.get("tradeId").toString().length() - 1)+DictCodeList.交易方向_买入.getValue());
-                li.addAll(basRiskMathCommService.select( map.get("tradeId").toString().substring(0, map.get("tradeId").toString().length() - 1)+DictCodeList.交易方向_卖出.getValue()));
-            }
-            else {
-                li = basRiskMathCommService.select(map.get("tradeId").toString()+DictCodeList.交易方向_买入.getValue());
-                li.addAll(basRiskMathCommService.select(map.get("tradeId").toString()+DictCodeList.交易方向_卖出.getValue()));
-            }
-            if (StringUtil.isEmptyList(li)&&StringUtil.isNotEmpty(map.get("rTradeId"))) {
-                if (map.get("rTradeId").toString().lastIndexOf('R') == map.get("rTradeId").toString().length() - 1) {
-                    li = basRiskMathCommService.select( map.get("rTradeId").toString().substring(0, map.get("rTradeId").toString().length() - 1)+DictCodeList.交易方向_买入.getValue());
-                    li.addAll(basRiskMathCommService.select( map.get("rTradeId").toString().substring(0, map.get("rTradeId").toString().length() - 1)+DictCodeList.交易方向_卖出.getValue()));
-                }
-                else {
-                    li = basRiskMathCommService.select(map.get("rTradeId").toString()+DictCodeList.交易方向_买入.getValue());
-                    li.addAll(basRiskMathCommService.select(map.get("rTradeId").toString()+DictCodeList.交易方向_卖出.getValue()));
-                }
-            } 
-            //--------2020年7月13日 wangyang1 start ------------------
-        }
-        //list.add(li);
         model.addAttribute("RiskTrialRetDto", li);
         //---add by 裴家俊  2019/03/30-------start------
         model.addAttribute("workflowBaskRiskId", workflowId);
@@ -349,59 +314,93 @@ public class BaseRiskMathCommController extends BaseController {
      * @see
      * @since 1.0
      */
+    @SuppressWarnings("unchecked")
     @RequestMapping("getCreditConditionList")
     @ResponseBody
     public AjaxResult getCreditConditionList(@RequestBody Map<String, Object> map) {
         AjaxResult result = new AjaxResult();
-        List<CreditLines> creditLinesList = new ArrayList<>();
-        StringBuilder sbMsg = new StringBuilder();//返回的信息内容
-        Map<String, Map<String, Object>> data = (HashMap<String, Map<String, Object>>) map.get("data");
-        Map<String, Object> mapdata = (Map<String, Object>) map.get("data");
-        Map<String, Object> trdProductDeallist = data.get("trdProductDeal");
-        // Map<String,Object> assetCodeMap= data.get("assetCode");
-        //TrdProductDeal model, List<CreditLines> creLineslist, AllTradeCommonInputDto inputmodel,"assetCode" -> "F07_DEPO201902250348","finprodMarketId" -> "DEPO201902250348""tradeDate" -> "2019-08-27""finprodType" -> "D02"
-        TrdProductDeal model = new TrdProductDeal();
-        if (trdProductDeallist.get("tradeDate") == null) {
-            //获取不到交易日取平台日
-            model.setTradeDate(DateUtil.parse(DateUtil.getSysDate()));
-        } else {
-            model.setTradeDate(DateUtil.parse(trdProductDeallist.get("tradeDate").toString()));
-        }
-        if(mapdata.get("assetCode")!=null){
-        	model.setFinprodId(mapdata.get("assetCode").toString());
-        }
-        if (trdProductDeallist.get("ps") == null) {
-            //债券一级市场投资委托获取不到ps 时取tradeDirection
-            model.setPs(mapdata.get("tradeDirection").toString());
-        } else {
-            model.setPs(trdProductDeallist.get("ps").toString());
-        }
-        AllTradeCommonInputDto inputmodel = new AllTradeCommonInputDto();
-        //只有交易方向在下列情况下才需要根据交易对手判断是否占用授信
-        String[] arrisNeedOccupyCreCounter = {DictCodeList.交易方向_买入.getValue(), DictCodeList.交易方向_卖出.getValue(),
-                DictCodeList.交易方向_行权_回售.getValue(), DictCodeList.交易方向_申购.getValue(),
-                DictCodeList.交易方向_赎回确认.getValue()};
-        Boolean flagarrisNeedOccupyCreCounter = Arrays.asList(arrisNeedOccupyCreCounter).contains(model.getPs());
-        creditLinesList = ceLinesUpdate.getCreLineslist(model, creditLinesList, inputmodel, false, flagarrisNeedOccupyCreCounter);
-        if (StringUtil.isEmptyList(creditLinesList)) {
+        if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))){
             return result;
         }
-        creditLinesList.forEach(item ->
-        {
-            if (item.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_机构授信.getValue()) && StringUtil.isNotEmpty(item.getCreditCondition())) {
-                sbMsg.append("***机构授信：" + item.getCreditCondition());
-            } else if (item.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_系列授信.getValue()) && StringUtil.isNotEmpty(item.getCreditCondition())) {
-                sbMsg.append("***系列授信：" + item.getCreditCondition());
-            } else if (item.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_资产授信.getValue()) && StringUtil.isNotEmpty(item.getCreditCondition())) {
-                sbMsg.append("***资产授信：" + item.getCreditCondition());
-            } else if (item.getCreditMstId().equals(BussinessDictCodeList.授信配置代码__品种授信.getValue()) && StringUtil.isNotEmpty(item.getCreditCondition())) {
-                sbMsg.append("***品种授信：" + item.getCreditCondition());
+        if (StringUtil.equals(BussinessDictCodeList.授信使用条件开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.CREDIT_CONDITION_SHOW))){
+            return result;
+        }
+        StringBuilder sbMsg = new StringBuilder();//返回的信息内容
+        Map<String, Object> inputData = (Map<String, Object>) map.get("data");
+        // 交易入参转换
+        CreditLinesInputDto inputDto = JSONObject.parseObject(JSONObject.toJSONString(map), CreditLinesInputDto.class);
+        // 交易对手
+        if (inputData.get("counterId") != null){
+            inputDto.setCounterId(inputData.get("counterId").toString());
+        }
+        // 交易状态
+        inputDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+        // 交易金额
+        if (inputData.get("tradeAmount") != null){
+            inputDto.setTradeAmt(new BigDecimal(inputData.get("tradeAmount").toString()));
+        }
+        // 交易日期
+        if (inputDto.getTradeDate() == null){
+            inputDto.setTradeDate(iPlatformDate.getSysDate());
+        }
+        // 交易类金融产品类型
+        String assetType = String.valueOf(inputData.get("assetType"));
+        if (DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(assetType)){
+            inputDto.setTgBusiType(DictCodeList.平安资产类型_质押式回购.getValue());
+            inputDto.setPsPayment(DictCodeList.回购类型_质押式协议回购.getValue());
+            inputDto.setPs(DictCodeList.交易方向_买入.getValue());
+            inputDto.setSaleCode(String.valueOf(inputData.get("tradeDirection")));
+            inputDto.setFinprodId("");
+        }else if (DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue().equals(assetType)){
+            Map<String,Object> counterMap = (Map<String, Object>) map.get("trdOutRightRepoPersonInfo");
+            if (counterMap != null){
+                inputDto.setCounterId(String.valueOf(counterMap.get("counterId")));
             }
-        });
-        if (StringUtil.isEmpty(sbMsg.toString())) {
-            result.setData(sbMsg.toString());
-        } else {
-            result.setData("授信使用条件(" + sbMsg.toString() + ")");
+            inputDto.setTgBusiType(DictCodeList.平安资产类型_买断式回购.getValue());
+            inputDto.setPsPayment(String.valueOf(inputData.get("tradeDirection")));
+            inputDto.setFinprodId("");
+        }else if (DictCodeListExt1.金融产品类型_投管用_债券借贷.getValue().equals(assetType)){
+            inputDto.setTgBusiType(DictCodeListExt2.平安资产类型_债券借贷.getValue());
+            inputDto.setPsPayment(String.valueOf(inputData.get("tradeDirection")));
+            inputDto.setFinprodId("");
+        }else if (DictCodeListExt1.金融产品类型_投管用_拆出.getValue().equals(assetType)){
+            inputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_拆出.getValue());
+            inputDto.setTgBusiType(DictCodeList.平安资产类型_拆借.getValue());
+            inputDto.setPsPayment(String.valueOf(inputData.get("tradeDirection")));
+            inputDto.setFinprodId("");
+        }
+
+        if (StringUtil.isEmpty(inputDto.getFinprodId()) && StringUtil.isEmpty(inputDto.getCounterId())){
+            return result;
+        }
+        CreditLinesUpdate creditLinesUpdate = SpringContextUtil.getBean(CreditLinesUpdateImpl.class);
+        if (creditLinesUpdate != null){
+            List<CreditLines> creditLinesList = creditLinesUpdate.findCreditLinesCondition(inputDto);
+            if (StringUtil.isEmptyList(creditLinesList)){
+                return result;
+            }
+            List<CreditLines> newCreditLinesList = creditLinesList.stream().filter(item -> {
+                if (item.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_机构授信.getValue())
+                || item.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_系列授信.getValue())
+                || item.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_资产授信.getValue())) {
+                    return true;
+                }
+                return false;
+            }).collect(Collectors.toList());
+            newCreditLinesList.forEach(item ->{
+                int index = newCreditLinesList.indexOf(item);
+                if (item.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_机构授信.getValue()) && StringUtil.isNotEmpty(item.getCreditCondition())) {
+                    sbMsg.append(index+1).append("、机构授信：").append(item.getCreditCondition()).append(" ");
+                } else if (item.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_系列授信.getValue()) && StringUtil.isNotEmpty(item.getCreditCondition())) {
+                    sbMsg.append(index+1).append("、系列授信：").append(item.getCreditCondition()).append(" ");
+                } else if (item.getCreditMstId().equals(BussinessDictCodeList.授信配置代码_资产授信.getValue()) && StringUtil.isNotEmpty(item.getCreditCondition())) {
+                    sbMsg.append(index+1).append("、资产授信：").append(item.getCreditCondition()).append(" ");
+                }
+            });
+            if (StringUtil.isNotEmpty(sbMsg.toString())) {
+                result.setData(sbMsg.toString());
+                result.setData("授信使用条件(" + sbMsg.toString() + ")");
+            }
         }
         return result;
     }
@@ -453,12 +452,17 @@ public class BaseRiskMathCommController extends BaseController {
             return result;
         }
         dealCheckRiskComm(map,entry->{
-        	List<ValidMessage> retMes = new ArrayList<>();
-            if(StringUtil.isNotEmpty(entry)) {
-                map.put("data",(Map) entry);
-                retMes=dealEachCheck((Map<String, Object>)entry);
+            // del by zhangrui1 start
+            // if(StringUtil.isNotEmpty(entry)) {
+            // map.put("data",(Map) entry);
+            // }
+            // List<ValidMessage> retMes=dealEachCheck(map);
+            Map<String, Object> checkData = map;
+            if (StringUtil.isNotEmpty(entry)) {
+                checkData = (Map<String, Object>)entry;
             }
-            retMes=dealEachCheck(map);
+            List<ValidMessage> retMes = dealEachCheck(checkData);
+            // del by zhangrui1 end
             if(retMes.size()>0){
                 result.setErrorList(retMes);
             }
@@ -490,6 +494,15 @@ public class BaseRiskMathCommController extends BaseController {
                     List<String> fields = (List<String>) map.get("assetCode");
                     notEmptyCheck(data.get("assetCode"), fields.get(0).toString(), fields.get(1).toString(), messages);
                 } else {
+                    // 协议回购，不对质押券做校验 modify 20200930 14:53
+                    if (StringUtil.isNotEmpty(data.get("flag"))){
+                        return messages;
+                        /*
+                         //&&StringUtil.isNotEmpty(data.get("repPs")) && StringUtil.isNotEmpty(data.get("tradeMarket")
+                        if (StringUtil.equals(data.get("repPs").toString(),DictCodeListExt3.交易方向_逆回购.getValue()) && StringUtil.equals(data.get("tradeMarket").toString(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+
+                        }*/
+                    }
                     List<String> fields = new ArrayList<String>();
                     fields.add("finprodId");
                     fields.add("TrdBondInvestTrade002.finprodId");
@@ -532,27 +545,4 @@ public class BaseRiskMathCommController extends BaseController {
         return "2";
     }
     // add by caojin 吉林银行风险试算-流程控制显示 end
-
-    // add by jiangpeng ZGBUGTWO-257 未配置风险指标的行社不应提示请进行风险试算 20201214 start
-    /**
-     * 按组合代码检查是否配置风险指标
-     * @param portfolioId 组合代码
-     * @return 结果
-     */
-    @ResponseBody
-    @RequestMapping("isSetRiskByPortfolioId")
-    public AjaxResult isSetRiskByPortfolioId(@RequestBody String portfolioId) {
-        portfolioId = portfolioId.replaceAll("\"","");
-        AjaxResult result = new AjaxResult();
-        Map<String, Object> data = new HashMap<>();
-        if (StringUtil.isEmpty(portfolioId)) {
-            logger.debug("组合代码为空,可能为 BaseRiskMathComm.js中 portfolioId 取值错误,默认取id为'portfolioId'的控件的值,该业务html页面 组合代码 控件id可能不同");
-            data.put("flag", "Y");
-        } else {
-            data.put("flag", basRiskMathCommService.isSetRiskByPortfolioId(portfolioId));
-        }
-        result.setData(data);
-        return result;
-    }
-    // add by jiangpeng ZGBUGTWO-257 未配置风险指标的行社不应提示请进行风险试算 20201214 end
 }
