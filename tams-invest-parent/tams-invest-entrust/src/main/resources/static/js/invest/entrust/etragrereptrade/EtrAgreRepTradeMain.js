@@ -14,16 +14,16 @@
       }
       object.pageModel = pageModel;
 
-      // var riskdata = EtrAgreRepTrade001.getriskdata(object);
-      // if(BaseRiskMathComm && (object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
-      //     s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-      //     if(!s && s != ''){
-      //         return;
-      //     }
-      //     if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
-      //         return;
-      //     }
-      // }
+      var riskdata = EtrAgreRepTrade001.getriskdata(object);
+      if(BaseRiskMathComm && (object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
+          s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+          if(!s && s != ''){
+              return;
+          }
+          if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
+              return;
+          }
+      }
       // 验证组合是否绑定券商账户
       if(!object.acctNo){
           var portfolioId = object.portfolioId;

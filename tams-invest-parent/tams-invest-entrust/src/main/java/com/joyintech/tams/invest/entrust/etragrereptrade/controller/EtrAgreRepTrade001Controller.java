@@ -23,6 +23,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -463,16 +464,16 @@ public class EtrAgreRepTrade001Controller extends BaseController{
 		dto.setBusiPs(dto.getRepPs());
 		dto.setAssetType2(DictCodeList.回购类型_质押式协议回购.getValue());
         // ----------add by zhangrui1 20200703 预占功能 start----------
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())
-//        &&(DictCodeListExt3.交易方向_到期续做.getValue().equals(dto.getPs())
-//            || DictCodeListExt3.交易方向_逆回购.getValue().equals(dto.getPs())
-//            || DictCodeListExt3.交易方向_正回购.getValue().equals(dto.getPs()) )) {
-//            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
-//                BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),DictCodeList.平安资产类型_质押式回购.getValue());
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())
+        &&(DictCodeListExt3.交易方向_到期续做.getValue().equals(dto.getPs())
+            || DictCodeListExt3.交易方向_逆回购.getValue().equals(dto.getPs())
+            || DictCodeListExt3.交易方向_正回购.getValue().equals(dto.getPs()) )) {
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),DictCodeList.平安资产类型_质押式回购.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
         // ----------add by zhangrui1 20200703 预占功能 end----------
 		/*
 		 * if 画面.金融产品类型（投管）.股票 and 画面.交易平台 = 数据字典.交易平台.竞价交易平台 指令业务类型 =

@@ -1405,7 +1405,7 @@
             };
             Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/calCanBuyAmount', param, function (result) {
                 if (result) {
-                    document.getElementById('canBuyAmount').innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万元';
+                    document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万元';
                 }
             }, false);
         }
