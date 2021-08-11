@@ -771,8 +771,8 @@
         decode(FIDUCIARY_DUTY,'01','1','2') FIDUCIARY_DUTY,
         decode(CONT_MODE,'01','11','02','12','03','13','04','14','05','15','07','16','99','17')
         CONT_MODE,
-        decode(OPERATE_MODE,'01','4','02','5','03','2','04','3') OPERATE_MODE,
-        decode(PROFIT_TYPE,'03',decode(IVSTORIENTATION,'01','007','02','008','03','009','04','010'),'011')
+        decode(OPERATE_MODE,'01','3','02','4','03','1','04','2') OPERATE_MODE,
+        decode(PROFIT_TYPE,'03',decode(IVSTORIENTATION,'01','1','02','2','03','3','04','4'),'011')
         IVSTORIENTATION,
         PROFIT_TYPE,
         decode(PROFIT_TYPE,'03','3','1') BUSI_MODEL,
@@ -833,6 +833,7 @@
         /****add by leipeng 人行产品基本信息，人行产品代码一旦生成，修改基本信息数据在重新跑批也不会改变了 end**/
         and info.fprod_id is null
         and info.ISSUING_STATUS='01'
+        and PROFIT_TYPE = '03'
         <if test="prodList !=null  and prodList.size()!=0">
             and deal.prod_id in
             <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
@@ -936,7 +937,7 @@
         t1.SUBMIT_DEADLINE submitDeadline,
         t1.STATUS status,
         t1.CREATE_USER createUser,
-        t1.ORG_CODE orgCode,
+        SI.INSTITUTION_CODE orgCode,
         t1.CREATE_DEPT createDept,
         t1.CREATE_TIME createTime,
         t1.UPDATE_USER updateUser,
@@ -967,7 +968,7 @@
         )t3 ON t3.inside_prod_id=t1.PROD_ID
         <!-- add by zhangliang 20210220 工单号:YHZGCPB20210129004 end -->
         LEFT JOIN CHB_ORG_REGIST_BANK_CODE CORBC
-        ON CORBC.REGIST_BANK_CODE = t1.ISSUE_PARTY_ID
+        ON CORBC.Pbc_Bank_Code = t1.ISSUE_PARTY_ID
         LEFT JOIN SYS_INSTITUTION SI
         ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
         <where>

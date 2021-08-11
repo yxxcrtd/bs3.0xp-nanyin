@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
@@ -398,6 +399,11 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
 
     public void setIsMarketFund(String isMarketFund) {
         this.isMarketFund = isMarketFund;
+    }
+
+
+    public String getIsMarketFundStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.是否理财子公司, this.getIsMarketFund());
     }
 
     public String getSubProdId() {

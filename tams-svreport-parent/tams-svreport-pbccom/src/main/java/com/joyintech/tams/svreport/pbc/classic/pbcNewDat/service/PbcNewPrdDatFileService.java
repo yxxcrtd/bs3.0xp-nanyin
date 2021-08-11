@@ -11,6 +11,7 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcNewDat.service;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.ZipFileUtil;
@@ -124,7 +125,7 @@ public class PbcNewPrdDatFileService {
 
 		for(String OrgCode : dateSet){
 			/**3、调用共通处理【DAT生成共通处理-产品端】**/
-			Map<String, ArrayList> resultMap = PbcDatUtil.genDatZipList(DictCodeListExt3.是否压缩_不生成压缩文件.getValue(),"1", DictCodeList.是否_中债_否.getValue(),OrgCode,
+			Map<String, ArrayList> resultMap = PbcDatUtil.genDatZipList(DictCodeListExt3.是否压缩_不生成压缩文件.getValue(), CacheUtil.getSysParam("PBC_SEND_ZIP_MODEL"), DictCodeList.是否_中债_否.getValue(),OrgCode,
 					orgPrdBaseMap.get(OrgCode),orgPrdEndMap.get(OrgCode));
 			/***4、数据入库*/
 			/***5.1、清除DAT表中的未报送数据*/

@@ -490,12 +490,12 @@
     </update>
 
     <update id="updateCancelMannultSendZipDatFile" parameterType="java.util.Map">
-        update PBC_SEND_ZIP_DAT_FILE set SEND_STATUS = '01',SUBMIT_FEEDBACK_STATUS = NULL
+        update PBC_SEND_ZIP_DAT_FILE set ZIP_SEND_STATUS = '01',DAT_ZIP_STATUS = '01'
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                REPORTUUID = #{regist.reportuuid,jdbcType=CHAR}
+                REPORTUUID = #{regist.reportuuid,jdbcType=VARCHAR}
                 AND DAT_ZIP_TYPE = 'MIT'
-                AND STATUS_VDATE =#{regist.statusDate,jdbcType=VARCHAR2}
+                AND STATUS_VDATE =#{regist.statusDate,jdbcType=VARCHAR}
             </foreach>
         </where>
     </update>
@@ -971,9 +971,10 @@
     </select>
 
     <select id="selectTermIdList" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport">
-        select TERMID,REPORTTYPE,ORG_CODE,REPORTUUID
+        select TERMID,REPORTTYPE,nvl(ORG_CODE,'All') ORG_CODE,REPORTUUID
         from PBC_REPORT
         where reporttype != 'ONEPRD_ASSET_DEBT'
+        and ORG_CODE is not null
         <foreach collection="list" item="item" open="and SEND_STATUS in (" separator="," close=")">
               #{item,jdbcType=VARCHAR}
         </foreach>
@@ -987,5 +988,18 @@
         select PROD_ID prodId
         from chb_prd_baseinfo
     </select>
+
+
+    <update id="updatePbcReportSendInfo" >
+        update PBC_REPORT set
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+        SUBMIT_TIME=#{submitTime,jdbcType=TIMESTAMP},
+        SUBMIT_FEEDBACK_STATUS=#{submitFeedbackStatus,jdbcType=VARCHAR}
+        <where>
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                REPORTUUID = #{regist,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
 
 </mapper>

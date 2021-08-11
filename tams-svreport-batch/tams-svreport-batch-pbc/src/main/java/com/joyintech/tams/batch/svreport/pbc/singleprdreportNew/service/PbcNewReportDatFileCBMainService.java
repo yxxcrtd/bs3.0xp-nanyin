@@ -41,7 +41,7 @@ public class PbcNewReportDatFileCBMainService extends AutoSendCBBaseService{
 		logInfoBatchStart();
 		try {
 			//生成全部类型的dat文件，产品listProds暂为空
-			pbcNewReportPrdDatFileService.genDataFile(null, prodList, batchDate, null,null);
+			pbcNewReportPrdDatFileService.genDataFile(null, prodList, batchDate, null,OrgCode);
 			
 		} catch (Exception e) {
 			logger.error("人行报表dat文件生成批处理Error",e);

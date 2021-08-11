@@ -1420,4 +1420,13 @@
 		left join PBC_PRD_BASEINFO_SUB  prd on dat.prod_id=prd.prod_id
 		where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
 	</select>
+
+	<select id="selectByDatZipCode" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from PBC_PRD_BASEINFO_SUB_DAT
+		where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
+		and SEND_STATUS = '01'
+		and STATUS not in ('02','03')
+	</select>
 </mapper>

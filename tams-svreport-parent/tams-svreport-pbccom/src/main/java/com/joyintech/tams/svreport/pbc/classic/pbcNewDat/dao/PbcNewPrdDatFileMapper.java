@@ -6,10 +6,13 @@ import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBasei
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resources;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public interface PbcNewPrdDatFileMapper {
     String getMaxZipCode(Map<String,Object> param);
 

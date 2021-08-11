@@ -356,7 +356,7 @@
 	    a.SUBMIT_DEADLINE submitDeadline,
 	    a.STATUS status,
 	    a.CREATE_USER createUser,
-	    a.ORG_CODE orgCode,
+        SI.INSTITUTION_CODE orgCode,
 	    a.CREATE_DEPT createDept,
 	    a.CREATE_TIME createTime,
 	    a.UPDATE_USER updateUser,
@@ -380,6 +380,10 @@
             status='E'
             AND code_type='01'
     )t2 ON t2.inside_prod_id=b.PROD_ID
+      LEFT JOIN CHB_ORG_REGIST_BANK_CODE CORBC
+      ON CORBC.PBC_BANK_CODE = b.ISSUE_PARTY_ID
+      LEFT JOIN SYS_INSTITUTION SI
+      ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
   	<where>
         <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
             <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">

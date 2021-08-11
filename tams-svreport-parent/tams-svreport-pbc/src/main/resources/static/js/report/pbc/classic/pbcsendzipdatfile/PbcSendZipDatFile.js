@@ -119,17 +119,21 @@ $(function() {
     //下载zip文件
     // 导出按钮
     $('#PbcSendZipDatFile_btn_sendFileDownLoad').click(function(){
-        var expArr=table.getAllCheckedRows();
+        var selArr=table.getAllCheckedRows();
         Joyin.confirm("是否确认生成报送文件？", function() {
-            var param = getSearchParams();
+            var arr=new Array();
+            for(var i in selArr){
+                arr.push(selArr[i].registSeqno);
+            }
+            var data = JSON.stringify(arr);
+            var param = {result:data};
             Joyin.ajaxSync(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/createZipFile', param, function(result) {
+                console.log(result);
                 if (result.length < 1) {
-                    layer.alert('所选产品已全部手工处理或没有在日期范围内！');
+                    layer.alert('当前没有带保送的数据，请确认');
                 } else {
-                    for(var key in result) {
-                        param.result = result[key];
-                        Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
-                    }
+                    param.result =result;
+                    Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
                 }
             });
         });

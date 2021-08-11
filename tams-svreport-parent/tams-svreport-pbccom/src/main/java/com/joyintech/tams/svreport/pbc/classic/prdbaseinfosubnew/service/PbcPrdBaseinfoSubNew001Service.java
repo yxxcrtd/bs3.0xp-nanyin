@@ -134,7 +134,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 //			result.setSubmitFeedbackStatus(SysDataUtil.getNameFromDataDict(DictCode.人行报送反馈状态,result.getSubmitFeedbackStatus()));
 		    if (StringUtil.isNotEmpty(result.getIvstorientation())){
 		        result.setIvstorientation(
-		        		SysDataUtil.getNameFromDataDict(DictCode.人行产品类型,result.getIvstorientation()));
+		        		SysDataUtil.getNameFromDataDict(DictCode.新人行产品类型,result.getIvstorientation()));
 		    }
             if (StringUtil.isNotEmpty(result.getPbcProdType())){
                 result.setPbcProdType( SysDataUtil.getNameFromDataDict(DictCode.人行产品种类,result.getPbcProdType()));
@@ -152,7 +152,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
                 result.setFiduciaryDuty( SysDataUtil.getNameFromDataDict(DictCode.人行管理方式,result.getFiduciaryDuty()));
             }
             if (StringUtil.isNotEmpty(result.getOperateMode())){
-                result.setOperateMode(result.getOperateMode() + StringUtil.SPACE + SysDataUtil.getNameFromDataDict(DictCode.人行产品运作模式,result.getOperateMode()));
+                result.setOperateMode(result.getOperateMode() + StringUtil.SPACE + SysDataUtil.getNameFromDataDict(DictCode.新人行产品运作模式,result.getOperateMode()));
             }
             if (StringUtil.isNotEmpty(result.getContMode())){
                 result.setContMode(SysDataUtil.getNameFromDataDict(DictCode.人行合作模式,result.getContMode()));

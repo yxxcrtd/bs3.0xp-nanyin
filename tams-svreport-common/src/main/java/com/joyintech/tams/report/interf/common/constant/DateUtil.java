@@ -840,4 +840,22 @@ public class DateUtil extends DateUtils {
         Date endDate = calendar.getTime();
         return DateUtil.format(endDate);
     }
+
+    /**
+     * 功能：获取本月的最后一天
+     * @since 1.7.0
+     * @version 1.7.0
+     * @author：weiyuqiang 2021年4月22日
+     * @param date
+     * @return
+     * Date
+     */
+    public static String getLastDayOfThisMonth(String  dateStr){
+        Calendar calendar = Calendar.getInstance();
+        Date date=DateUtil.parse(dateStr.substring(0,4)+"-"+dateStr.substring(5,6));
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date endDate = calendar.getTime();
+        return DateUtil.format(endDate);
+    }
 }

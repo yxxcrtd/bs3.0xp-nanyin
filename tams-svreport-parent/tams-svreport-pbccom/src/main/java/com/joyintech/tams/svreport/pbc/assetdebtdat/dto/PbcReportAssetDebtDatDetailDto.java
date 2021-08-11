@@ -182,6 +182,44 @@ public class PbcReportAssetDebtDatDetailDto {
     private Integer totalDiff=0;
 
     /**
+     * 金融机构编码
+     */
+    private String finInstitutionCode;
+    /**
+     * 产品品种
+     */
+    private String prodVariety;
+
+    /**
+     * 期数
+     */
+    private String termid;
+
+    public String getFinInstitutionCode() {
+        return finInstitutionCode;
+    }
+
+    public void setFinInstitutionCode(String finInstitutionCode) {
+        this.finInstitutionCode = finInstitutionCode;
+    }
+
+    public String getProdVariety() {
+        return prodVariety;
+    }
+
+    public void setProdVariety(String prodVariety) {
+        this.prodVariety = prodVariety;
+    }
+
+    public String getTermid() {
+        return termid;
+    }
+
+    public void setTermid(String termid) {
+        this.termid = termid;
+    }
+
+    /**
      * 明细统计uuid
      * @return DETAILUUID 明细统计uuid
      */

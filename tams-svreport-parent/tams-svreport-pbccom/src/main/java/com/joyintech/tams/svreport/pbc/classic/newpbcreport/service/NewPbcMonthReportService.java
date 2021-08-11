@@ -156,7 +156,7 @@ public class NewPbcMonthReportService {
                     sets.add(getSheetName(pbcSendZipDatFile.getDatZipDatType()));
                 }
             }
-            StringBuilder waningReport = new StringBuilder();
+            List<ValidMessage> validMessageList = new ArrayList<>();
             if (sets.size() > 0) {
                 for (String set : sets) {
                     Iterator<Sheet> sheetIterator = workbook.sheetIterator();
@@ -164,13 +164,15 @@ public class NewPbcMonthReportService {
                         Sheet sheet = sheetIterator.next();
                         String sheetName = sheet.getSheetName();
                         if (sheetName.equals(set)) {
-                            waningReport.append("[").append(set).append("]");
+                            ValidMessage message = new ValidMessage();
+                            message.setMessage(set);
+                            validMessageList.add(message);
                         }
                     }
                 }
-                if(StrUtil.isNotEmpty(waningReport)){
-                    String warningInfo = String.format("统计模板%s数据已报送，不支持对数据进行维护", waningReport);
-                    ajaxResult.setMessage(warningInfo);
+                if(CollectionUtil.isNotEmpty(validMessageList)){
+                    ajaxResult.setData("CONFIRM_MSG");
+                    ajaxResult.setErrorList(validMessageList);
                     ajaxResult.setMessageType(MessageType.确认消息);
                     ajaxResult.setStatuCode(HttpStatus.OK.value());
                     return ajaxResult;

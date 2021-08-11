@@ -93,7 +93,12 @@ public class PbcMonthReport001Controller extends BaseController{
 			model.addAttribute("pbc_report_type", map.get("PBC_REPORT_TYPE"));
 			model.addAttribute("isMain", "01");
 		}else{
+
+
+			Date sysDate = DateUtil.platDateFromCache();
 			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(sysDate);
+
 	        // 获取上月的第一天
 	        calendar.add(Calendar.MONTH, -1);
 	        calendar.set(Calendar.DAY_OF_MONTH, 1);

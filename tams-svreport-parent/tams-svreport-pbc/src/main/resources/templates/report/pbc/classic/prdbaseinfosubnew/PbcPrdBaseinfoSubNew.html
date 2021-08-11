@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">内部产品代码</label>
+                    <label class="layui-form-label form-lable">发行机构内部产品代码</label>
                     <div class="layui-input-inline input-inline">
                         <select id="prodId" name="prodId"
                                 data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getProdID}'
@@ -50,7 +50,7 @@
                     <div class="layui-input-inline input-inline">
                         <select id="ivstorientation" name="ivstorientation"
                                 class="layui-input form-input input-select"
-                                data-th-data-result="${SVR_PBC_IVSTORIENTATION}" placeholder="请选择"
+                                data-th-data-result="${SVR_PBC_NEW_IVSTORIENTATION}" placeholder="请选择"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}"
                                 allowClear="true" multiple="multiple">
                         </select>
@@ -63,7 +63,7 @@
                     <div class="layui-input-inline input-inline">
                         <select id="operateMode" name="operateMode"
                                 class="layui-input form-input input-select"
-                                data-th-data-result="${SVR_PBC_OPERATEMODE}"
+                                data-th-data-result="${SVR_PBC_NEW_OPERATEMODE}"
                                 placeholder="请选择"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}"
                                 allowClear="true" multiple="multiple">

@@ -126,6 +126,7 @@
         left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID
         where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
             and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
+          and prp.REPORTTYPE = #{datZipDatType,jdbcType=VARCHAR}
     </select>
 
 </mapper>
