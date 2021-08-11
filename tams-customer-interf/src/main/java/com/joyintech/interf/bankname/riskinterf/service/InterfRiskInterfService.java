@@ -24,6 +24,7 @@ import com.joyintech.tams.common.base.entity.FinTradeProductKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,6 +73,12 @@ import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsService{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    /**
+     * 是否单体服务
+     */
+    @Value("${application.micorservice.contextPath.single:false}")
+    private boolean isSingle;
 
     /**
      * 实占列表
@@ -628,8 +635,14 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
     public Map<String, Object>  riskNameBatch(Map<String, Object> dataMap) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         logger.info("==========调用微服务端风险名单控制批量接口 start==========");
-        Map result = restTemplate.postForObject(ServiceApplication.RISK_SERVICE_NAME + "/RiskNamBatchValidator/batch",
-                dataMap, Map.class);
+        Map result = null;
+        if (isSingle) {
+            result = simpleRestTemplate.postForObject(ServiceApplication.RISK_SERVICE_NAME + "/RiskNamBatchValidator/batch"
+                    ,dataMap, Map.class);
+        } else {
+            result = restTemplate.postForObject(ServiceApplication.RISK_SERVICE_NAME + "/RiskNamBatchValidator/batch",
+                    dataMap, Map.class);
+        }
         List<String> errorList = (List<String>)result.get("errorList");
         if(StringUtil.isEmptyList(errorList)) {
             resultMap.put("rskStatus","0");
@@ -941,7 +954,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
             //不通过，返回
             if(!BussinessDictCodeListRds.指标状态_通过.getValue().equals(rskName.get("rskStatus"))){
                 return rskName;
-            } 
+            }
         }
 
         if (!StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))) {
