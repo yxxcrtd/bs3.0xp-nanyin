@@ -91,10 +91,19 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 				CommonAjaxResult commonAjaxResult = restTemplate.postForObject(
 						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoSubDat/checkBaseInfoSubDat?fileName=" + fileName, param,
 						CommonAjaxResult.class);
-				if(StrUtil.isNotEmpty(commonAjaxResult.getMessage())){
+				if(commonAjaxResult.getData() != null && "CONFIRM_MSG".equals(commonAjaxResult.getData().toString())){
 					AjaxResult ajaxResult = new AjaxResult();
-					JoyinMessage message = new JoyinMessage(commonAjaxResult.getMessage(),MessageType.确认消息);
-					ajaxResult.setJoyinMessages(Arrays.asList(message));
+					List<ValidMessage> errorList = commonAjaxResult.getErrorList();
+					if(CollectionUtil.isNotEmpty(errorList)){
+						StringBuilder builder = new StringBuilder();
+						builder.append("已报送的数据，不支持修改。请在人行客户端直接修复！").append("<br>");
+						builder.append("已报送产品代码如下").append("<br>");
+						for (ValidMessage message : errorList) {
+							builder.append(message.getMessage()).append("<br>");
+						}
+						builder.append("是否继续?");
+						ajaxResult.setMessage(builder.toString());
+					}
 					ajaxResult.setMessageType(MessageType.确认消息);
 					ajaxResult.setStatuCode(HttpStatus.OK.value());
 					return ajaxResult;
@@ -104,10 +113,19 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 				CommonAjaxResult commonAjaxResult = restTemplate.postForObject(
 						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoEndSubDat/checkBaseInfoSubDat?fileName=" + fileName, param,
 						CommonAjaxResult.class);
-				if(StrUtil.isNotEmpty(commonAjaxResult.getMessage())){
+				if(commonAjaxResult.getData() != null && "CONFIRM_MSG".equals(commonAjaxResult.getData().toString())){
 					AjaxResult ajaxResult = new AjaxResult();
-					JoyinMessage message = new JoyinMessage(commonAjaxResult.getMessage(),MessageType.确认消息);
-					ajaxResult.setJoyinMessages(Arrays.asList(message));
+					List<ValidMessage> errorList = commonAjaxResult.getErrorList();
+					if(CollectionUtil.isNotEmpty(errorList)){
+						StringBuilder builder = new StringBuilder();
+						builder.append("已报送的数据，不支持修改。请在人行客户端直接修复！").append("<br>");
+						builder.append("已报送产品代码如下").append("<br>");
+						for (ValidMessage message : errorList) {
+							builder.append(message.getMessage()).append("<br>");
+						}
+						builder.append("是否继续?");
+						ajaxResult.setMessage(builder.toString());
+					}
 					ajaxResult.setMessageType(MessageType.确认消息);
 					ajaxResult.setStatuCode(HttpStatus.OK.value());
 					return ajaxResult;
@@ -161,10 +179,19 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 		AjaxResult commonAjaxResult = restTemplate.postForObject(
 				SvrServiceApplication.PBC_SERVICE_NAME + "/NewPbcMonthReport/checkMonthReport?fileName=" + fileName, new HashMap<>(),
 				CommonAjaxResult.class);
-		if(StrUtil.isNotEmpty(commonAjaxResult.getMessage())){
+		if(commonAjaxResult.getData() != null && "CONFIRM_MSG".equals(commonAjaxResult.getData().toString())){
 			AjaxResult ajaxResult = new AjaxResult();
-			JoyinMessage message = new JoyinMessage(commonAjaxResult.getMessage(),MessageType.确认消息);
-			ajaxResult.setJoyinMessages(Arrays.asList(message));
+			List<ValidMessage> errorList = commonAjaxResult.getErrorList();
+			if(CollectionUtil.isNotEmpty(errorList)){
+				StringBuilder builder = new StringBuilder();
+				builder.append("统计模板数据已报送，不支持对数据进行维护!").append("<br>");
+				builder.append("已报送模板如下").append("<br>");
+				for (ValidMessage message : errorList) {
+					builder.append(message.getMessage()).append("<br>");
+				}
+				builder.append("是否继续?");
+				ajaxResult.setMessage(builder.toString());
+			}
 			ajaxResult.setMessageType(MessageType.确认消息);
 			ajaxResult.setStatuCode(HttpStatus.OK.value());
 			return ajaxResult;
