@@ -11,12 +11,14 @@
 package com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -349,6 +351,10 @@ public class ValuationMethodScheme004Controller extends BaseController {
 				return list.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
 			}
 		}
+
+		//投资目的联动处理start
+		list = valuationMethodScheme001Service.getResultByInvAim(list,param);
+		//投资目的联动处理end
 		return list;
 	}
 
@@ -379,7 +385,9 @@ public class ValuationMethodScheme004Controller extends BaseController {
 				param.put("item_code_parent", DictCodeListExt1.证券品种_计划类资产_收益型.getValue());
 			}
 		}
-
-		return valuationMethodScheme001Service.getLinkSelectOption(param);
+		List<SelectOptionDto> selectOptionDtoList = valuationMethodScheme001Service.getLinkSelectOption(param);
+		//根据投资目的与估值方法过滤估值市价_专家法
+		selectOptionDtoList = valuationMethodScheme001Service.getResultByInvAimAndValuationMethod(selectOptionDtoList,param);
+		return selectOptionDtoList;
 	}
 }
