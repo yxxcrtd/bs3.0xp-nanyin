@@ -925,7 +925,8 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 				//多组合条件下，结算手续费平均分配到每个组合，尾数计到成交额最大的一个组合；
 				BigDecimal settleAmt = settleAmtS.divide(new BigDecimal(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size()),2,BigDecimal.ROUND_HALF_UP);
 				//计算结算手续费尾差Tail
-				BigDecimal settleAmtTail = settleAmtS.subtract(settleAmt.multiply(new BigDecimal(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size()))).setScale(2);
+				BigDecimal a = new BigDecimal(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size());
+				BigDecimal settleAmtTail = settleAmtS.subtract(settleAmt.multiply(new BigDecimal(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size())).setScale(2,BigDecimal.ROUND_HALF_UP));
 				//记录券面总额的和（用于计算费用拆分比列）
 				BigDecimal prinAmtS = new BigDecimal(0);
 				//记录交易金额的和（用于计算费用拆分比列）
@@ -989,7 +990,7 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 				for(int i = 0;i<TrdMatchInfoTemp.size();i++){
 					procedureAmtSum = procedureAmtSum.add(TrdMatchInfoTemp.get(i).getProcedureAmt());
 				}
-				procedureAmtTail = procedureAmtS.subtract(procedureAmtSum).setScale(2);
+				procedureAmtTail = procedureAmtS.subtract(procedureAmtSum).setScale(2,BigDecimal.ROUND_HALF_UP);
 				//组装尾差入库
 				for(int i = 0;i<TrdMatchInfoTemp.size();i++){
 					TrdMatchInfo infoDtos = TrdMatchInfoTemp.get(i);
@@ -997,33 +998,27 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 					if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_券面总额.getValue())){
 						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),newSeqno)){
 							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
-							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
 						}
 					}else if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_成交金额.getValue())){
 						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),traSeqno)){
 							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
-							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
 						}
 					}else{
 						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),newSeqno)){
 							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
-							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
 						}
 					}
 					//结算手续费尾差
 					if(StringUtil.equals(setChargeBasis,BussinessDictCodeList.计费基数_券面总额.getValue())){
 						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),newSeqno)){
-							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
 							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
 						}
 					}else if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_成交金额.getValue())){
 						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),traSeqno)){
-							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
 							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
 						}
 					}else{
 						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),newSeqno)){
-							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
 							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
 						}
 					}
