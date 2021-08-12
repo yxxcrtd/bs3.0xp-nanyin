@@ -10,9 +10,11 @@
  
 package com.joyintech.tams.invest.risk.valtblimport.controller;
 
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalrelateimport.service.RskValRelateImport001Service;
 import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportCommonService;
@@ -43,6 +45,7 @@ import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportServ
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -106,6 +109,19 @@ public class RskValTableImport001Controller extends BaseController{
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupEdit.class}) RskValTableImportParamDto dto, BindingResult result) {
+
+        //新增通过系统参数控制可导入的估值表最小日期   系统参数：MAX_SUB_VALDATE
+        String days = StringUtil.defaultString(CacheUtil.getSysParam("MAX_SUB_VALDATE"),"16");
+        if(DateUtil.compareDate(dto.getValDate(),DateUtil.parse(DateUtil.addDay(DateUtil.getSysDate(),-1*Integer.valueOf(days))))<0){
+            AjaxResult res= new AjaxResult();
+            List<ValidMessage> errorList = new ArrayList<>();
+            ValidMessage validMessage = new ValidMessage(
+                    "超出可导入的估值表日期:" + DateUtil.addDay(DateUtil.getSysDate(),-1*Integer.valueOf(days)));
+            errorList.add(validMessage);
+            res.setErrorList(errorList);
+            res.setMessageType(MessageType.错误消息);
+            return res;
+        }
         return commonCheck(result, dto.getOperateType());
     }
     /**
@@ -158,8 +174,7 @@ public class RskValTableImport001Controller extends BaseController{
     }
     @RequestMapping(value = "/batchUploadFile")
     @ResponseBody
-    public List<ExcelValidDto> batchUploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-            throws Exception {
+    public List<ExcelValidDto> batchUploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model){
         String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID)) == null ? "RskValTableImport001" : StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID));
         String filePath = request.getParameter("fileName");
         progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0.5D, false);
