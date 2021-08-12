@@ -2848,6 +2848,7 @@
             }
             var param = {
                 pageModel:PAGE_MODEL_REFERENCE,
+                isQuickInput:true,
                 finprodId:finprodId
             };
             parent.EtrExchangeTradeMain.dialogSelf.dialog(url,param);
