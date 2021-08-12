@@ -1743,7 +1743,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                             Map<String,Object> positionMap = new HashMap<>();
                             positionMap.put("minDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
                             positionMap.put("maxDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
-                            positionMap.put("amount",amount);
+                            positionMap.put("amount",amount.negate());
                             positionMap.put("hodingType",DictCodeList.持仓类型_实际.getValue());
                             positionMap.put("portfolioId",entrustCommonDto.getEtrEntrust().getPortfolioId());
                             positionMap.put("acctId",acctId);
