@@ -20,17 +20,6 @@ $(function () {
                 return getPageParams();
             }
         },
-        dblclick:function(table, data) {
-            var param = {};
-            param.ptlId = data.ptlId;
-            param.valDate = data.valDate;
-            Joyin.dialog(JoyinUtil.getLabel("估值表明细"),
-                basePath + "invest/risk/valtblimport/RskValTableQuery001/detailedInit",//打开新界面
-                "95%", "70%", {paramJsonStr:JSON.stringify(param)
-                },function(){
-                    dataTable.reload();
-                });
-        },
         checkbox:false,
         lazyload:true,
         searchOnInit: false,
@@ -45,11 +34,11 @@ $(function () {
             ,{title: '净值波动%', colspan: 3,align:'center',sortable: false}
             ,{field:'deviatingAmount',rowspan: 2, title: '偏离金额',sortable: false,type:'number'}
             ,{field:'degreeOfDeviate',rowspan: 2, title: '偏离度',sortable: false,type:'number'}
-//            ,{field:'operation', title: 'SysCommon.operation', type:'action',rowspan: 2,
-//                render:function (data, type, row, meta) {
-//                        return '<i class="btn iconfont config" title="查看">&#xe6ac;</i>';
-//                }
-//            }
+            ,{field:'operation', title: 'SysCommon.operation', type:'action',rowspan: 2,
+                render:function (data, type, row, meta) {
+                        return '<i class="btn iconfont config" title="查看">&#xe6ac;</i>';
+                }
+            }
         ],[
             {field:'totalAssestCost', title: '成本',sortable: false,type:'number'}
             ,{field:'totalAssestValue', title: '市值',sortable: false,type:'number'}
@@ -69,17 +58,17 @@ $(function () {
     /**
      * 明细查看
      */
-//    dataTable.bind('click', '.config', function(data, index) {
-//        var param = {};
-//        param.ptlId = data.ptlId;
-//        param.valDate = data.valDate;
-//        Joyin.dialog(JoyinUtil.getLabel("估值表明细"),
-//            basePath + "invest/risk/valtblimport/RskValTableQuery001/detailedInit",//打开新界面
-//            "95%", "70%", {paramJsonStr:JSON.stringify(param)
-//            },function(){
-//                dataTable.reload();
-//            });
-//    });
+    dataTable.bind('click', '.config', function(data, index) {
+        var param = {};
+        param.ptlId = data.ptlId;
+        param.valDate = data.valDate;
+        Joyin.dialog(JoyinUtil.getLabel("估值表明细"),
+            basePath + "invest/risk/valtblimport/RskValTableQuery001/detailedInit",//打开新界面
+            "95%", "70%", {paramJsonStr:JSON.stringify(param)
+            },function(){
+                dataTable.reload();
+            });
+    });
 
     /**
      * 导出

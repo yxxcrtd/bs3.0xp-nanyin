@@ -1,8 +1,11 @@
 package com.joyintech.service.riskrds.limitmanagement.rskapproval.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +48,38 @@ public class RskApprovalPageService extends BaseService<RskIsupTrialDto> {
     public Page<RskIsupTrialDto> selectForPage(int page, int length, Map<String, Object> param) {
         return super.queryForPage(page, length, () -> rskApprovalMapper.selectIsupTrial(param));
     }
+
+    /**
+     * 查询
+     * @param param
+     * @return
+     */
+    public List<RskIsupTrialDto> findRskIsupTrialList(Map<String, Object> param) throws Exception{
+        List<RskIsupTrialDto> list = new ArrayList<RskIsupTrialDto>();
+        if(param.get("keyList")!=null) {
+            String datas = (String)  param.get("keyList");
+            List<Map> keyList = JsonUtils.json2List(datas, Map.class);
+            for(Map map : keyList ) {
+                if(StringUtil.equals("T49",map.get("ps"))) {
+                    map.put("uuid",null);
+                    map.put("assetCode",null);
+                    map.put("eventId",map.get("eventId")+"T01");
+
+                    List<RskIsupTrialDto> rskIsupTrialDtosT01 = rskApprovalMapper.selectIsupTrial(map);
+                    list.addAll(rskIsupTrialDtosT01);
+
+                    map.put("eventId",map.get("eventId")+"T02");
+                    List<RskIsupTrialDto> rskIsupTrialDtosT02 = rskApprovalMapper.selectIsupTrial(map);
+                    list.addAll(rskIsupTrialDtosT02);
+                } else {
+                    List<RskIsupTrialDto>  rskIsupTrialDtos = rskApprovalMapper.selectIsupTrial(map);
+                    list.addAll(rskIsupTrialDtos);
+                }
+          }
+        }
+        return list;
+    }
+
 
     /**
      * 取得试算结论

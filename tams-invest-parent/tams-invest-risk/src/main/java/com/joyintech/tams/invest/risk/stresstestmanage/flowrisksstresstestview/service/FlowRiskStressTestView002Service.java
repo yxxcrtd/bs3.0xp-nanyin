@@ -55,7 +55,7 @@ public class FlowRiskStressTestView002Service  extends CommonExportService<FlowR
     @Override
     public Page<FlowRiskStressTestView002Dto> selectPageData(Map<String, Object> selectParam) {
         // TODO Auto-generated method stub
-    	return  selectAll(selectParam);
+          return selectAll(selectParam);
     }  
    
     

@@ -114,7 +114,7 @@ $(function() {
         		if(ftrNameList!=null && ftrNameList.length > 0){
         			for(var k=0; k<ftrNameList.length; k++){
         				if(ftrNameList[k].ftrId == PrdScl01002){
-        					//document.getElementsByClassName('laytable-cell-1-remark')[1].textContent=ftrNameList[k].remark;
+        					document.getElementsByClassName('laytable-cell-1-remark')[1].textContent=ftrNameList[k].remark;
         				}
         			}
         		}
@@ -124,7 +124,7 @@ $(function() {
         		if(ftrNameList!=null && ftrNameList.length > 0){
         			for(var k=0; k<ftrNameList.length; k++){
         				if(ftrNameList[k].ftrId == PrdScl01001){
-        					//document.getElementsByClassName('laytable-cell-1-remark')[1].textContent=ftrNameList[k].remark;
+        					document.getElementsByClassName('laytable-cell-1-remark')[1].textContent=ftrNameList[k].remark;
         				}
         			}
         		}
@@ -136,8 +136,9 @@ $(function() {
         	
         },
         done:function(table, allData){
-        	var textA = document.getElementsByClassName('laytable-cell-1-0-1')[1].textContent;
-        	document.getElementsByClassName('laytable-cell-1-0-1')[1].innerHTML=""+textA+"  <i class='iconfont icon-arrow-down pro-down-icon'></i>";
+        	var textA = document.getElementsByClassName('laytable-cell-1-ftrId')[1].textContent;
+        	document.getElementsByClassName('laytable-cell-1-ftrId')[1].innerHTML=""+textA+"  <i class='iconfont icon-arrow-down pro-down-icon'></i>";
+        	//console.log("============"+pageModel+"============="+entity.netOutf);
         	if(workflowId){
         		if(entity.netOutf ==null ){
         			$("input[name=netOutf][value='"+table[0].netOutf+"']").attr("checked", true);
@@ -164,11 +165,11 @@ $(function() {
     //为table中下拉框渲染下拉样式
     var myFunction =function() {
     	//var i=0;
-    	var size=document.getElementsByClassName('laytable-cell-1-0-1').length;
+    	var size=document.getElementsByClassName('laytable-cell-1-ftrId').length;
     	//如果
     	if(size >1){
-    		var textA = document.getElementsByClassName('laytable-cell-1-0-1')[1].textContent;
-        	document.getElementsByClassName('laytable-cell-1-0-1')[1].innerHTML=""+textA+"  <i class='iconfont icon-arrow-down pro-down-icon'></i>";
+    		var textA = document.getElementsByClassName('laytable-cell-1-ftrId')[1].textContent;
+        	document.getElementsByClassName('laytable-cell-1-ftrId')[1].innerHTML=""+textA+"  <i class='iconfont icon-arrow-down pro-down-icon'></i>";
         	//关闭轮询任务
 			clearInterval(c);
     	}
@@ -234,8 +235,8 @@ $(function() {
         height:200,
         cols: [
                	 {field:'indId', visible:false}
-	            ,{field:'indName', title: 'FlowRiskSceneManage002.indName',width:150}
-	             ,{field:'remark' , title: 'FlowRiskSceneManage002.remark',width:350}
+	            ,{field:'indName', title: 'FlowRiskSceneManage002.indName'}
+	             ,{field:'remark' , title: 'FlowRiskSceneManage002.remark'}
             ]
     });
     
@@ -258,8 +259,8 @@ $(function() {
         height:200,
         cols: [
                	 {field:'indId', visible:false}
-	            ,{field:'indName', title: 'FlowRiskSceneManage002.indName',width:170}
-	             ,{field:'remark' , title: 'FlowRiskSceneManage002.remark',width:350}
+	            ,{field:'indName', title: 'FlowRiskSceneManage002.indName'}
+	             ,{field:'remark' , title: 'FlowRiskSceneManage002.remark'}
             ]
     });
 	

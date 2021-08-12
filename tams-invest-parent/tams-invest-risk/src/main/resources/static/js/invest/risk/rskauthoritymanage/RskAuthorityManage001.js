@@ -62,7 +62,7 @@ $(function() {
             ,{field:'tradeMarketStr', width:120 , sortField:"tradeMarket",title: 'RskAuthorityManage001.tradeMarket'}
             ,{field:'tradeDirectionStr', width:120 ,sortField:"tradeDirection",title: 'RskAuthorityManage001.tradeDirection'}           
             ,{field:'authorizeTypeStr' , width:120,sortField:"authorizeType",title: 'RskAuthorityManage001.authorizeType'}
-            ,{field:'authorizeLimitAmt',sortField:"authorizeLimitAmt", width:180 , title: 'RskAuthorityManage001.authorizeLimitAmt'}
+            ,{field:'authorizeLimitAmt',sortField:"authorizeLimitAmt", width:180 , title: 'RskAuthorityManage001.authorizeLimitAmt',type: "number"}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });    

@@ -7,15 +7,12 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccessListDetailDto;
 import com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.service.OrgNameManagementService;
-import com.joyintech.tools.collectors.JoyinCollectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -67,15 +64,7 @@ public class OrgNameManagement005Controller extends BaseController {
         List<RskAccessListDetailDto> handleRskAccessListDetailList= JsonUtils.json2List(this.getParam("rskAccessListLogDtoList"), RskAccessListDetailDto.class);
         param.put("handleRskAccessListDetailList",handleRskAccessListDetailList);
         List<RskAccessListDetailDto> unhandleRskAccessListDetailDtoList = assetNameManagementService.getAdjPriview(param);
-        Map<String, List<RskAccessListDetailDto>> handleRskAccessListDetailMap = handleRskAccessListDetailList.stream().collect(JoyinCollectors.groupingBy(item->item.getListDetailId()));
-        List<RskAccessListDetailDto> unhandleRskAccessListDetailDtoList2 = new ArrayList<RskAccessListDetailDto>();
-        for (RskAccessListDetailDto rskAccessListDetailDto : unhandleRskAccessListDetailDtoList) {
-             if (handleRskAccessListDetailMap.containsKey(rskAccessListDetailDto.getListDetailId())) {
-                 unhandleRskAccessListDetailDtoList2.add(rskAccessListDetailDto);
-            }
-        } 
-        unhandleRskAccessListDetailDtoList.removeAll(unhandleRskAccessListDetailDtoList2);
-        handleRskAccessListDetailList.addAll(unhandleRskAccessListDetailDtoList); 
+        handleRskAccessListDetailList.addAll(unhandleRskAccessListDetailDtoList);
         return handleRskAccessListDetailList;
     }
 

@@ -96,10 +96,6 @@ public class RskAuthorityManage001Controller extends BaseController {
         for (SelectOptionDto dto : selectDto2.getOptions()) {
             listFloatRate.add(dto);
         }
-        SelectDto selectDto3 = this.getSelectDataFromDataDic(DictCode.互换方式, null);
-        for (SelectOptionDto dto : selectDto3.getOptions()) {  
-            listFloatRate.add(dto);
-        }
         return listFloatRate;
     }
 

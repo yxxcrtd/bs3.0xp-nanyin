@@ -128,27 +128,25 @@ public class FlowRiskFlowAssets001Controller extends BaseController{
         for(FlowRiskFlowAssets001Dto dto:treeLis){
         	//去除银行及现金存款
 //        	if(!StringUtil.equals(dto.getpId(), "05")){
-            if(!StringUtil.equals(dto.getpDictCode(),"ASSET_CLASS")) {
-                TreeNode<NodeDto> nod1 = new TreeNode<NodeDto>();
+        		TreeNode<NodeDto> nod1 = new TreeNode<NodeDto>();
                 nod1.setId(dto.getpId());
                 nod1.setName(SysDataUtil.getNameFromDataDict(BussinessDictCode.行内资产二级分类, dto.getpId()));
                 nod1.setOpen(true);
                 tree.add(nod1);
                 String[] nodList = dto.getChild().split(",");
-                for (String chiNod : nodList) {
-                    //去除现金及活期存款
-                    if (!StringUtil.equals(chiNod.substring(chiNod.indexOf("-") + 1, chiNod.length()), BussinessDictCodeList.行内资产三级分类_现金及活期存款.getValue())) {
+                for(String chiNod:nodList){
+                	//去除现金及活期存款
+                	if(!StringUtil.equals(chiNod.substring(chiNod.indexOf("-") + 1, chiNod.length()), BussinessDictCodeList.行内资产三级分类_现金及活期存款.getValue())){
                         TreeNode<NodeDto> nod11 = new TreeNode<NodeDto>();
                         nod11.setId(chiNod);
-                        String a = chiNod.substring(chiNod.indexOf("-") + 1, chiNod.length());
+                        String a =chiNod.substring(chiNod.indexOf("-") + 1, chiNod.length());
                         nod11.setName(SysDataUtil.getNameFromDataDict(BussinessDictCode.行内资产三级分类, chiNod.substring(chiNod.indexOf("-") + 1, chiNod.length())));
                         nod11.setOpen(true);
                         nod11.setpId(dto.getpId());
-                        tree.add(nod11);
+                        tree.add(nod11); 
                     }
                 }
 //        	}
-            }
             
         }
         

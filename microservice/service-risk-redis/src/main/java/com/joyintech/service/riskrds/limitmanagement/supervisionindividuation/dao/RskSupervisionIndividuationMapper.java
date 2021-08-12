@@ -3,6 +3,8 @@ package com.joyintech.service.riskrds.limitmanagement.supervisionindividuation.d
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.RskIndividConditionCustom;
+import com.joyintech.tams.common.base.entity.RskIndividConditionLine;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -53,6 +55,15 @@ public interface RskSupervisionIndividuationMapper {
 
 	String getVdate(String portfolioId);
 
-	
+	List<RskIndividConditionCustom> findAll(Map<String, Object> param);
 
+    int checkExistsUsing(Map<String, Object> param);
+
+	List<SelectOptionDto> queryConditionList(Map<String, Object> param);
+
+    List<RskIndividConditionLine> findAllCustomizedItem(Map<String, Object> param);
+
+	void deleteAllConditionLines(RskSupervisionIndividuationDto dto);
+
+    List<String> findPortfolioByPackId(String prtBagId);
 }

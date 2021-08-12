@@ -10,14 +10,15 @@
  
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.dto;
 
-import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
+import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.util.ExcelUtilForRisk;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.valid.RskValStructureValidator;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -99,9 +100,9 @@ public class RskValStructureDto extends RskValtblStructMapDtl implements ITableR
         return SysDataUtil.getNameFromDataDict(DictCode.估值字段, super.getTgtIndex());
     }
 
-    public String getSrcColIndexLetter(){
+    public String getSrcColIndexLetter() throws Exception {
         if(StringUtil.isNotEmpty(this.getSrcColIndex())){
-            return this.getSrcColIndex();
+            return ExcelUtilForRisk.indexToColumn(Integer.parseInt(String.valueOf(this.getSrcColIndex())));
         }
         return srcColIndexLetter;
     }

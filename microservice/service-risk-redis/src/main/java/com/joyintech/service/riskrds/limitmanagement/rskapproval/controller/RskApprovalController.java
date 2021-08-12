@@ -1,5 +1,6 @@
 package com.joyintech.service.riskrds.limitmanagement.rskapproval.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,22 @@ public class RskApprovalController {
     public Page<RskIsupTrialDto> selectPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                          @PathVariable("length") int length) {
         return approvalService.selectForPage(page, length, param);
+    }
+    /**
+     * 画面查询方法
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @PostMapping("findRskIsupTrialList")
+    public List<RskIsupTrialDto> findRskIsupTrialList(@RequestBody Map<String, Object> param) {
+        List<RskIsupTrialDto> list = new ArrayList<RskIsupTrialDto>();
+        try {
+            list = approvalService.findRskIsupTrialList(param);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     /**

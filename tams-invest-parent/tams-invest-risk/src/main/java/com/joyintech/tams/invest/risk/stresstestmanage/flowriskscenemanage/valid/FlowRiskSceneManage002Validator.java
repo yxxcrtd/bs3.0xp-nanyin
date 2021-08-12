@@ -13,8 +13,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
-import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import org.activiti.editor.language.json.converter.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,10 +47,6 @@ public class FlowRiskSceneManage002Validator implements BeanValidator {
      */
     @Autowired    
     private FlowRiskSceneManage002Service flowRiskSceneManage002Service;
-
-    @Autowired
-    MstWorkflowCommonService mstWorkflowCommonService;
-
     /**
      * {@inheritDoc}
      */
@@ -64,17 +58,6 @@ public class FlowRiskSceneManage002Validator implements BeanValidator {
 //        if (WorkFlowUtil.isNotFromToDoList()) {
             //新建模式
             if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
-
-                if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
-                    WflValidInputParameter param = new WflValidInputParameter();
-                    param.setBusinessDataPk1(dto.getSceneId());
-                    param.setPageId("FlowRiskSceneManage002");
-                    if (null != mstWorkflowCommonService &&
-                            mstWorkflowCommonService.isInWflProcess(param)) {
-                        errorList.add(new ValidMessage(this.getMessage("COMMON_E_0012", dto.getSceneName())));
-                    }
-                }
-
                 int flag = 0;
                 if(StringUtil.isNotEmpty(dto.getFtrList1()) && dto.getFtrList1().size() != 0){
                     FlowRiskSceneManageListDto ftr1 = dto.getFtrList1().get(0);

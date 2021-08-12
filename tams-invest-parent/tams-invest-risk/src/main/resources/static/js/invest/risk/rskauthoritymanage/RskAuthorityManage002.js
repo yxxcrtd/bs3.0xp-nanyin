@@ -169,14 +169,20 @@ $(function() {
         addToLast:true,
         searchOnInit: true,
         checkbox:false,
-        /*editCell: function (value, row, field, cell, column) {
-            if (column.field == 'authorizeType') {
-                if (typeof value != AUTHORIZE_TYPE_02) {
-                    row.authorizeLimitAmt.edit = false;
-                }
-            } 
-            table.renderRow(row.LAY_TABLE_INDEX, row);
-        },*/
+        // editCell: function (value, row, field, cell, column){
+        //     console.log(value)
+        //     var selArr = table.getAllRows();
+        //     if(selArr && selArr.length>0){
+        //         for(var i=0;i<selArr.length;i++){
+        //             var assetType = selArr[i].assetType;
+        //             if(assetType == 'F11'){
+        //                 // selArr[i].tradeMarket
+        //                 // selArr[i].tradeDirection
+        //             }
+        //             // changeTable(assetType);
+        //         }
+        //     }
+        // },
         beforeEditCell : function(preVal, field,data){
         	if(field == 'authorizeLimitAmt' && data.authorizeType != null &&data.authorizeType != AUTHORIZE_TYPE_02){
         		return false;
@@ -188,14 +194,23 @@ $(function() {
              {field:'assetType' , title: 'RskAuthorityManage001.assetType',width:200 , edit:true
             	 ,editOption:{type:'select',childrenIds:'assetSecType,tradeDirection,tradeMarket',id:"assetType",formatoption:true,result:RSK_AUTHORIZE_TYPE1}, sortable:false
              }
-             ,{field:'assetSecType' ,title: 'RskAuthorityManage001.assetSecType', width:200 ,edit:true
-            	 ,editOption:{type:'select',parentIds:'assetType',id:"assetSecType",formatoption:true,result:RSK_AUTHORIZE_TYPE2}, sortable:false
+             ,{field:'assetSecType' ,title: 'RskAuthorityManage001.assetSecType', width:200 ,edit:true,
+                render: function (data, type, row, meta) {
+                    return row.assetSecTypeStr;
+                }
+            	 ,editOption:{type:'select',parentIds:'assetType',id:"assetSecType",formatoption:true,url:JoyinUtil.getRealPath('invest/risk/rskauthoritymanage/RskAuthorityManage002/makeAllAssetSecType')}, sortable:false
              }
-             ,{field:'tradeMarket' ,title: 'RskAuthorityManage001.tradeMarket', width:200 ,edit:true
-            	 ,editOption:{type:'select',id:"tradeMarket",formatoption:true,result:TRADE_PLACE}, sortable:false
+             ,{field:'tradeMarket' ,title: 'RskAuthorityManage001.tradeMarket', width:200 ,edit:true,
+                render: function (data, type, row, meta) {
+                    return row.tradeMarketStr;
+                }
+            	 ,editOption:{type:'select',parentIds:'assetType',id:"tradeMarket",formatoption:true,url:JoyinUtil.getRealPath('invest/risk/rskauthoritymanage/RskAuthorityManage002/makeAlltradeMarket')}, sortable:false
              }
-             ,{field:'tradeDirection',title: 'RskAuthorityManage001.tradeDirection',width:200 , edit:true
-            	 ,editOption:{type:'select',parentIds:'assetType',id:"tradeDirection",formatoption:true,result:PS}, sortable:false
+             ,{field:'tradeDirection',title: 'RskAuthorityManage001.tradeDirection',width:200 , edit:true,
+                render: function (data, type, row, meta) {
+                    return row.tradeDirectionStr;
+                }
+            	 ,editOption:{type:'select',parentIds:'assetType',id:"tradeDirection",formatoption:true,url:JoyinUtil.getRealPath('invest/risk/rskauthoritymanage/RskAuthorityManage002/makeAllPs')}, sortable:false
              }
              // 资产类型改为授权类型 modify by renping 2019-08-06  end
              //------------modify by jjpei 20190710------隐藏授权类型，且默认为授权-------------
@@ -216,7 +231,7 @@ $(function() {
         //         // $('.laytable-cell-1-tradeDirection').hide();
         //     }
         // }
-         
+
     };
 	
 	/*
@@ -229,6 +244,8 @@ $(function() {
     table.bind('click', '.delt', function(data, index) {
         table.removeRow(data);
     });
+
+
     var init = function(){
 	var wfl_operType = $("#wfl_operType").val();
    	if(pageModel==PAGE_MODEL_EDIT){
@@ -236,8 +253,10 @@ $(function() {
    			$('#rolePos').attr("disabled",true);
    			$('#userName').attr("disabled",true);
    		}
-   	}
+   	};
    };
+
+
 
     $(function() {
     	init();

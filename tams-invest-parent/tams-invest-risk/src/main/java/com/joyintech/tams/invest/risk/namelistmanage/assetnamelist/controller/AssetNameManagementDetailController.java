@@ -2,11 +2,8 @@ package com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.controller;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccessListDetailDto;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccessListLogDto;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.service.AssetNameManagementDetailService;
@@ -16,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -98,18 +93,12 @@ public class AssetNameManagementDetailController extends BaseController {
         Map<String, Object>  params=RequestUtil.getParameters(getRequest());
         //分别下载明细列表与履历列表
         if(StringUtil.isNotEmpty(params.get("type")) && params.get("type").equals("record")){
-            String EXPORT_EXCEL_TYPE = CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_TYPE);
-            // 模板文件后缀名
-//            String fileType = GlobalConstant.FILE_POSTFIX_XLSX;
-//            if(StringUtil.equals(EXPORT_EXCEL_TYPE, "02")){
-//                fileType = GlobalConstant.FILE_POSTFIX_XLS;
-//            }
-            return assetNameManagementRecordService.export("名单更新履历",
+            return assetNameManagementRecordService.export("名单更新履历.xlsx",
                 RequestUtil.getParameters(getRequest()));
         }else{
             return assetNameManagementDeatilService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest())); 
         }
        
-    } 
+    }
 }

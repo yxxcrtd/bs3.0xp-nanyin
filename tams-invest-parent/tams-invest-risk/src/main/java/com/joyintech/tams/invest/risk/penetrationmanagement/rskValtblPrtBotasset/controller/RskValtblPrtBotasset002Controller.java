@@ -9,8 +9,11 @@
  */
  
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskValtblPrtBotasset.controller;
- 
-import java.util.Map; 
+
+import java.util.List;
+import java.util.Map;
+
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,13 +21,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.joyintech.framework.grid.Page;
+
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil; 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskValtblPrtBotasset.service.RskValtblPrtBotassetService;
 
@@ -51,7 +57,6 @@ public class RskValtblPrtBotasset002Controller extends BaseController{
         model.addAttribute("subName", this.getParam("subName"));
         model.addAttribute("subClass", this.getParam("subClass"));
         model.addAttribute("finprodId", this.getParam("finprodId"));
-        model.addAttribute("tblMarketId", this.getParam("tblMarketId"));
         if(StringUtil.equals(this.getParam("subClass"), DictCodeListExt1.资产科目类型_债券.getValue())){
             model.addAttribute("finprodType2", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         }else if(StringUtil.equals(this.getParam("subClass"), DictCodeListExt1.资产科目类型_基金.getValue())){
@@ -79,7 +84,7 @@ public class RskValtblPrtBotasset002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("selectAllAsset")
-    public Page<SelectOptionDto> selectAllAsset(){
+    public List<SelectOptionDto> selectAllAsset(){
         Map<String,Object> param = RequestUtil.getPageParam();
         return rskValtblPrtBotassetService.selectAllAsset(param);
     }

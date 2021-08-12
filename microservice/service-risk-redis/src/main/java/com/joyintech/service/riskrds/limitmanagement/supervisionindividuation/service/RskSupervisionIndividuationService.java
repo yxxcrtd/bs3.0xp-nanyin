@@ -3,6 +3,9 @@ package com.joyintech.service.riskrds.limitmanagement.supervisionindividuation.s
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.risktrial.util.RiskUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +22,6 @@ import com.joyintech.service.riskrds.limitmanagement.supervisionindividuation.dt
 import com.joyintech.service.riskrds.limitmanagement.supervisionindividuation.dto.RskIndividSpecialStageDto;
 import com.joyintech.service.riskrds.limitmanagement.supervisionindividuation.dto.RskIndividUniteDto;
 import com.joyintech.service.riskrds.limitmanagement.supervisionindividuation.dto.RskSupervisionIndividuationDto;
-import com.joyintech.tams.common.base.dao.RskIndividAssetDelMapper;
-import com.joyintech.tams.common.base.dao.RskIndividConditionMapper;
-import com.joyintech.tams.common.base.dao.RskIndividSpecialStageMapper;
-import com.joyintech.tams.common.base.dao.RskIndividUniteMapper;
-import com.joyintech.tams.common.base.entity.RskIndividAssetDel;
-import com.joyintech.tams.common.base.entity.RskIndividCondition;
-import com.joyintech.tams.common.base.entity.RskIndividSpecialStage;
-import com.joyintech.tams.common.base.entity.RskIndividUnite;
 
 @Service("backRskSupervisionIndividuationService")
 public class RskSupervisionIndividuationService extends BaseService {
@@ -45,6 +40,9 @@ public class RskSupervisionIndividuationService extends BaseService {
 
     @Autowired
     private RskIndividSpecialStageMapper rskIndividSpecialStageMapper;
+
+    @Autowired
+    private RskIndividConditionLineMapper conditionLineMapper;
 
     public List<RskIndividConditionDto> findPageForCondition(Map<String, Object> param) {
         /*
@@ -75,6 +73,8 @@ public class RskSupervisionIndividuationService extends BaseService {
         rskSupervisionIndividuationMapper.deleteAllAssetDel(dto);
         // 将该组合下指标的特殊阶段都删除
         rskSupervisionIndividuationMapper.deleteAllSpecialStage(dto);
+        // 将该组合下指标的自定义条件都删除
+        rskSupervisionIndividuationMapper.deleteAllConditionLines(dto);
         // 如果条件设置列表不为空
         if (!StringUtil.isEmptyList(dto.getConditionList())) {
             for (RskIndividCondition e : dto.getConditionList()) {
@@ -105,6 +105,26 @@ public class RskSupervisionIndividuationService extends BaseService {
         if (!StringUtil.isEmptyList(dto.getSpecialStageList())) {
             for (RskIndividSpecialStage e : dto.getSpecialStageList()) {
                 rskIndividSpecialStageMapper.insert(e);
+            }
+        }
+        // 插入自定义条件
+        if (!StringUtil.isEmptyList(dto.getConditionLines())) {
+            for (RskIndividConditionLine e : dto.getConditionLines()) {
+                e.setConditionId(IDGenerator.generate());
+                e.setIndId(dto.getIndId());
+                e.setPrtBagId(dto.getPrtBagId());
+                conditionLineMapper.insert(e);
+                // 如果是否计算组合包  === 是
+                if (StringUtil.equals(e.getIsBagCalc(),"Y")){
+                    List<String> list = rskSupervisionIndividuationMapper.findPortfolioByPackId(dto.getPrtBagId());
+                    if (list.size() > 0){
+                        for (String str : list){
+                            e.setConditionId(IDGenerator.generate());
+                            e.setPrtBagId(str);
+                            conditionLineMapper.insert(e);
+                        }
+                    }
+                }
             }
         }
         return 0;
@@ -165,4 +185,20 @@ public class RskSupervisionIndividuationService extends BaseService {
 		return rskSupervisionIndividuationMapper.getVdate(portfolioId);
 	}
 
+    public List<RskIndividConditionCustom> findPageForCustomized(Map<String, Object> param) {
+        return  rskSupervisionIndividuationMapper.findAll(param);
+    }
+
+    public int checkExistsUsing(Map<String, Object> param) {
+        return  rskSupervisionIndividuationMapper.checkExistsUsing(param);
+    }
+
+    public Page<SelectOptionDto> queryConditionList(int page, int length, Map<String, Object> param) {
+        return super.queryForPage(page, length,
+                () -> rskSupervisionIndividuationMapper.queryConditionList(param));
+    }
+
+    public List<RskIndividConditionLine> findPageForCustomizedItem(Map<String, Object> param) {
+        return  rskSupervisionIndividuationMapper.findAllCustomizedItem(param);
+    }
 }

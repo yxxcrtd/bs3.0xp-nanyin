@@ -224,24 +224,15 @@ public class RskAuthorityManageDto extends RskAuthorizeMng implements ProcessEnt
     }
     // 资产类型改为授权类型 modify by renping 2019-08-06  end
     
+    // modify by dubaojun 2020-07-08 缺陷SNSTZJY-210对应：先根据交易方向取得结果，如果取不到则根据回购拆借方向取的名称 start
     public String getTradeDirectionStr(){
-           String tradeDirectionStr = SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getTradeDirection()); 
-           if (!StringUtil.isNotEmpty(tradeDirectionStr) && StringUtil.equals(super.getAssetType() , "17")) {
-               tradeDirectionStr = SysDataUtil.getNameFromDataDict(DictCode.互换方式, super.getTradeDirection());
-           }
-           if (!StringUtil.isNotEmpty(tradeDirectionStr)) {
-               tradeDirectionStr = SysDataUtil.getNameFromDataDict(DictCode.回购拆借方向, super.getTradeDirection());
-           }
-           return tradeDirectionStr;
-//        if(StringUtil.equals(super.getAssetType(), DictCodeList.平安资产类型_拆借.getValue())
-//            || StringUtil.equals(super.getAssetType(), DictCodeList.平安资产类型_质押式回购.getValue())
-//            || StringUtil.equals(super.getAssetType(), DictCodeList.平安资产类型_买断式回购.getValue()) ){
-//            return SysDataUtil.getNameFromDataDict(DictCode.回购拆借方向, super.getTradeDirection());
-//        }
-//        else{
-//            return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getTradeDirection());
-//        }
+        String tradeDirectionName = SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getTradeDirection());
+        if(StringUtil.isNotEmpty(tradeDirectionName)) {
+            return tradeDirectionName;
+        }
+        return SysDataUtil.getNameFromDataDict(DictCode.回购拆借方向, super.getTradeDirection());
     }
+    // modify by dubaojun 2020-07-08 缺陷SNSTZJY-210对应：先根据交易方向取得结果，如果取不到则根据回购拆借方向取的名称 end
     
     public String getWflOperType() {
         return wflOperType;

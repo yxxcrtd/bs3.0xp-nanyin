@@ -17,7 +17,6 @@ import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.service.Asset
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -47,7 +46,7 @@ public class AssetNameManagementValidator implements BeanValidator {
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
             param.setWorkflowId(dto.getWorkflowId());//去除自身这个流程
         }
-        param.setBusinessDataPk1(dto.getListId());
+        param.setBusinessDataPk1(dto.getListId()); 
         if(StringUtil.equals(dto.getListDetailType(),DictCodeListExt2.名单主体类型_机构.getValue())){
             param.setPageId("OrgNameManagement003");
         }else{
@@ -68,7 +67,7 @@ public class AssetNameManagementValidator implements BeanValidator {
                 ExcelUtil excelUtil=null;
                 try {
                     /*excelUtil = ExcelUtil.build(
-                    FileNameUtil.getUploadFilePath(dto.getFileName()), null);*/
+                      FileNameUtil.getUploadFilePath(dto.getFileName()), null);*/
                     excelUtil = ExcelUtil.build(dto.getFileName(), null);
                 }
                 catch (FileNotFoundException e) {
@@ -116,20 +115,29 @@ public class AssetNameManagementValidator implements BeanValidator {
                     otherRskAccessListDetailList =   dto.getRskAccessListDetailList().stream()
                             .filter(rskAccessListDetailDto ->(!StringUtil.equals(rskAccessListDetailDto.getOperatePs(),DictCodeListExt2.名单操作方向_移出名单.getValue())))
                             .collect(Collectors.toList())  ;
-                } 
-                paramMap.put("otherRskAccessListDetailList",otherRskAccessListDetailList); 
-                if (!CollectionUtils.isEmpty(otherRskAccessListDetailList)) {
-                    typerskAccessListDetailList = assetNameManagementService.getOtherRskAccessListDetailDtoList(paramMap); 
-                } 
+                }
+                if(otherRskAccessListDetailList.size()!=0){
+                    paramMap.put("otherRskAccessListDetailList",otherRskAccessListDetailList);
+                    typerskAccessListDetailList = assetNameManagementService.getOtherRskAccessListDetailDtoList(paramMap);
+                }
                 paramLevelMap.put("handleRskAccessListDetailList",dto.getRskAccessListDetailList());
                 paramLevelMap.put("listId",dto.getListId());
                 paramLevelMap.put("listLevel",dto.getListLevel());
                 paramLevelMap.put("listDetailType",dto.getListDetailType());
-                paramLevelMap.put("otherRskAccessListDetailList",otherRskAccessListDetailList);
-                levelrskAccessListDetailList = assetNameManagementService.getOtherRskAccessListDetailDtoList(paramMap);
+                if(otherRskAccessListDetailList.size()!=0){
+                    paramLevelMap.put("otherRskAccessListDetailList",otherRskAccessListDetailList);
+                    levelrskAccessListDetailList = assetNameManagementService.getOtherRskAccessListDetailDtoList(paramMap);
+                }
                 List<RskAccessListDetailDto> unhandleRskAccessListDetailDtoList = assetNameManagementService.getAdjPriview(paramMap);
                 allrskAccessListDetailList.addAll(dto.getRskAccessListDetailList());
                 allrskAccessListDetailList.addAll(unhandleRskAccessListDetailDtoList); 
+                for(RskAccessListDetailDto rskAccessListDetailDto : dto.getRskAccessListDetailList()){
+                    if(StringUtil.isEmpty(rskAccessListDetailDto.getListDetailName())){
+                        resultList.add(new ValidMessage("",
+                                getMessage("COMMON_E_0057", getMessage("AssetNameManagement003.listDetailName"))));
+                        break;
+                    }
+                }
                 for(RskAccessListDetailDto rskAccessListDetailDto : allrskAccessListDetailList){
                     /*if(!StringUtil.equals(rskAccessListDetailDto.getOperatePs(), DictCodeListExt2.名单操作方向_移出名单.getValue())){*/
                         if(!set.add(rskAccessListDetailDto.getListDetailName())){
@@ -156,53 +164,14 @@ public class AssetNameManagementValidator implements BeanValidator {
                             }
 
                         }
-                        //add by yangwenjun 20200905 增加机构名称长度控制
-                        StringBuffer sb = new StringBuffer("");
-                        String str=rskAccessListDetailDto.getListDetailName();
-                        if (StringUtil.isNotEmpty(str)) {
-                            // 中文长度算两位，每一个中文字符总长度+1空格，方便后续解析
-                            String chinese = "[\u4e00-\u9fa5]";
-                            for (int i = 0; i < str.length(); i++) {
-                                String tempStr = str.substring(i, i + 1);
-                                sb.append(tempStr);
-                                if (tempStr.matches(chinese)) {
-                                    // 遇到中文加空格
-                                    sb.append(" ");
-                                }
-                            }
-                        }
-                        if(sb.length()>50) {
-                        	resultList.add(new ValidMessage("",getMessage("RSK_W_0072", getMessage("OrgNameManagement003.listDetailName"),rskAccessListDetailDto.getListDetailName())));
-                        }
-                       //add by yangwenjun 20200905 增加机构名称长度控制
-                       //add by yangwenjun 20200905 增加社会机构代码长度控制
-                        sb = new StringBuffer("");
-                        str=rskAccessListDetailDto.getListDetailId();
-                        if (StringUtil.isNotEmpty(str)) {
-                            // 中文长度算两位，每一个中文字符总长度+1空格，方便后续解析
-                            String chinese = "[\u4e00-\u9fa5]";
-                            for (int i = 0; i < str.length(); i++) {
-                                String tempStr = str.substring(i, i + 1);
-                                sb.append(tempStr);
-                                if (tempStr.matches(chinese)) {
-                                    // 遇到中文加空格
-                                    sb.append(" ");
-                                }
-                            }
-                        }
-                        if(sb.length()>32) {
-                        	resultList.add(new ValidMessage("",getMessage("RSK_W_0072", getMessage("OrgNameManagement003.listDetailId"),rskAccessListDetailDto.getListDetailName())));
-                        }
-                       //add by yangwenjun 20200905 增加社会机构代码长度控制
                    /* }*/
                 }
                 //其他名单属性
-              
                 if(typerskAccessListDetailList!=null&&typerskAccessListDetailList.size()>0){
                     if(StringUtil.equals(dto.getOperateStyle(),DictCodeListExt2.名单操作方式_手工.getValue())){
                         StringBuffer sbf = new StringBuffer();
                         for(RskAccessListDetailDto typeDto:typerskAccessListDetailList){
-                            sbf.append(typeDto.getListDetailName()).append(","); 
+                            sbf.append(typeDto.getListDetailName()).append(",");
                         }
                         if(StringUtil.equals(dto.getListDetailType(),DictCodeListExt2.名单主体类型_资产.getValue())){
                             resultList.add(new ValidMessage("资产已存在"+ SysDataUtil.getNameFromDataDict(DictCode.名单属性, typerskAccessListDetailList.get(0).getListType())+"中，无法提交！资产如下:"+sbf.toString()));
@@ -213,10 +182,9 @@ public class AssetNameManagementValidator implements BeanValidator {
                     }else if(StringUtil.equals(dto.getOperateStyle(),DictCodeListExt2.名单操作方式_批量.getValue())){
                         resultList.add(new ValidMessage(typerskAccessListDetailList.size()+"条信息已存在"+ SysDataUtil.getNameFromDataDict(DictCode.名单属性, typerskAccessListDetailList.get(0).getListType())+"中，无法录入系统"));
                     }
-                } 
+                }
                 //其他名单级别
                 //仅限于资产名单管理
-                if(typerskAccessListDetailList!=null&&typerskAccessListDetailList.size()>0){
                 if(StringUtil.equals(dto.getListDetailType(),DictCodeListExt2.名单主体类型_资产.getValue())){
                     for(RskAccessListDetailDto levelDto:levelrskAccessListDetailList){
                         if(StringUtil.equals(dto.getOperateStyle(),DictCodeListExt2.名单操作方式_手工.getValue())){
@@ -231,8 +199,7 @@ public class AssetNameManagementValidator implements BeanValidator {
 
                     }
                 }
-              }
-           }
+            }
         return resultList;
     }
 }

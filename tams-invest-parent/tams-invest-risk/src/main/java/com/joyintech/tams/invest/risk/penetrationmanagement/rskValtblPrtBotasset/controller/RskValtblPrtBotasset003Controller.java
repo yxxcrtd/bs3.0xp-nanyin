@@ -66,7 +66,6 @@ public class RskValtblPrtBotasset003Controller extends BaseController{
         model.addAttribute("finprodId", this.getParam("finprodId"));
         model.addAttribute("finprodMarketId", this.getParam("finprodMarketId"));
         model.addAttribute("assetSource", this.getParam("assetSource"));
-        model.addAttribute("tblMarketId", this.getParam("tblMarketId"));
         model.addAttribute("countForValUnmapped", getCountForValUnmapped(this.getParam("ptlId"),this.getParam("subCode")));
         model.addAttribute("countForValDiffmapped", getCountForValDiffmapped(this.getParam("ptlId"),this.getParam("subCode"),this.getParam("finprodId")));
         return super.init(model);
@@ -101,7 +100,6 @@ public class RskValtblPrtBotasset003Controller extends BaseController{
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("ptlId", dto.getPtlId());
         paramMap.put("subCode", dto.getSubCode());
-        paramMap.put("tblMarketId", dto.getTblMarketId());
         //需要自动加券
         if(!StringUtil.equals(dto.getAssetSource(), DictCodeListExt1.估值资产来源_系统内.getValue())){
             InterfPayhsrcsecinfoDto interfPayhsrcsecinfoDto = callbackAutoBondCoupon(dto);

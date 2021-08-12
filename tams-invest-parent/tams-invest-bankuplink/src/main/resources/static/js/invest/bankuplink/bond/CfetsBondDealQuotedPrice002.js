@@ -6,6 +6,26 @@
 	var editFlag = true;
 	//这个标志是防止查询结果返回赋值后不停的联动calcAmt;
 	var entrustIdChangeFlag = false;
+
+	/**
+	 * 控制显示行权收益率
+	 */
+	var exerYieldDivContrl = function() {
+		// 是否含权债为是，且未来有行权计划时，行权收益率显示，其余情况不显示；
+		var param = {};
+		param.finprodId = $('#CfetsBondDealQuotedPrice002_hidden_finprodId').val();
+		param.tradeDate = $('#CfetsBondDealQuotedPrice002_settleDate').val();
+		if(param.finprodId&&param.tradeDate){
+			Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/isExerYieldDivShow', param, function (data) {
+				if (data == yesNoFlag_yes) {
+					$("#CfetsBondDealQuotedPrice002_div_exerYield").show();
+				} else {
+					$("#CfetsBondDealQuotedPrice002_div_exerYield").hide();
+				}
+			});
+		}
+	};
+
     /**
 	 * 委托代码
 	 */
@@ -719,24 +739,6 @@
         $('#CfetsBondDealQuotedPrice002_counterTrader').val('').trigger('change');
     }
 
-    /**
-     * 控制显示行权收益率
-     */
-    var exerYieldDivContrl = function() {
-        // 是否含权债为是，且未来有行权计划时，行权收益率显示，其余情况不显示；
-        var param = {};
-        param.finprodId = $('#CfetsBondDealQuotedPrice002_hidden_finprodId').val();
-        param.tradeDate = $('#CfetsBondDealQuotedPrice002_settleDate').val();
-        if(param.finprodId&&param.tradeDate){
-            Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/isExerYieldDivShow', param, function (data) {
-                if (data == yesNoFlag_yes) {
-                    $("#CfetsBondDealQuotedPrice002_div_exerYield").show();
-                } else {
-                    $("#CfetsBondDealQuotedPrice002_div_exerYield").hide();
-                }
-            });
-        }
-    };
 
     window.CfetsBondDealQuotedPrice002 = {
             saveEntrustSelectData: saveEntrustSelectData

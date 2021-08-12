@@ -97,7 +97,7 @@ $(function() {
      		$("#valueRangeDiv").hide();
 		   $("#dateRangeDiv").show();
 		   if(VDATE){
-			   $("#valueStr3").val(VDATE).trigger('change');
+			   $("#valueStr3").val(Date.ofDate(VDATE).format('yyyy-MM-dd')).trigger('change');
 		   }
 	   }else{
 		   $("#dateRangeDiv").hide();

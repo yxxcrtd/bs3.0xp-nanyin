@@ -216,4 +216,53 @@
 	PORTFOLIO_ID = #{portfolioId}
 	</where>
 	</select>
+	<select id="findAll" resultType="com.joyintech.tams.common.base.entity.RskIndividConditionCustom">
+		<include refid="com.joyintech.tams.common.base.dao.RskIndividConditionCustomMapper.Sql_All_Data"></include>
+		<where>
+			<if test="conditionItem != null and conditionItem != ''">
+				CONDITION_ITEM = #{conditionItem}
+			</if>
+			<if test="conditionName != null and conditionName != ''">
+				CONDITION_ITEM = #{conditionName}
+			</if>
+		</where>
+	</select>
+	<select id="checkExistsUsing" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM RSK_INDIVID_CONDITION_LINE T
+		INNER JOIN RSK_INDIVID_CONDITION_CUSTOM T1
+			ON T.CONDITION_ITEM = T1.CONDITION_ITEM
+		WHERE T1.CONDITION_ITEM = #{conditionItem}
+	</select>
+	<select id="queryConditionList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+			A.CONDITION_ITEM ID,
+			A.CONDITION_NAME TEXT
+		FROM RSK_INDIVID_CONDITION_CUSTOM A
+		<where>
+			<if test="search != null and search != ''">
+				AND (A.CONDITION_ITEM LIKE concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
+				OR A.CONDITION_NAME LIKE concat('%',concat(#{search,jdbcType=VARCHAR},'%')))
+			</if>
+			<if test="initValue != null and initValue != ''">
+				and A.CONDITION_ITEM = #{initValue}
+			</if>
+		</where>
+	</select>
+	<select id="findAllCustomizedItem" resultType="com.joyintech.tams.common.base.entity.RskIndividConditionLine">
+		<include refid="com.joyintech.tams.common.base.dao.RskIndividConditionLineMapper.Sql_All_Data"></include>
+		<where>
+			PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR}
+			AND IND_ID = #{indId,jdbcType=VARCHAR}
+		</where>
+	</select>
+	<delete id="deleteAllConditionLines">
+		DELETE FROM RSK_INDIVID_CONDITION_LINE WHERE PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR}
+		AND IND_ID = #{indId,jdbcType=VARCHAR}
+	</delete>
+	<select id="findPortfolioByPackId" resultType="java.lang.String">
+		SELECT T.PORTFOLIO_ID FROM RSK_PORTFOLIO_PACKAGE_DTL T
+	 	INNER JOIN RSK_PORTFOLIO_PACKAGE T1
+		ON T.PTL_BAG_ID = T1.PTL_BAG_ID
+		WHERE T.PTL_BAG_ID = #{prtBagId,jdbcType=VARCHAR}
+	</select>
 </mapper>

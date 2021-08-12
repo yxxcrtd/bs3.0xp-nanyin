@@ -8,32 +8,23 @@ import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.progressbar.ProgressBarService;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.AssetNameManagement004Dto;
-import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccessListDetailDto;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccessListDto;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.service.AssetNameManagementService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -195,27 +186,6 @@ public class AssetNameManagement004Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult result) {
-        AjaxResult ajaxResult = new AjaxResult();
-        //有check错误直接返回
-        if (result != null && result.hasErrors()) {
-            return new AjaxResult(result);
-        }  
-        List<ValidMessage> errorList = new ArrayList<>();
-        if (StringUtil.isNotEmpty(dto.getRskAccessListDetailList())){ 
-             for (RskAccessListDetailDto detailDto : dto.getRskAccessListDetailList()) {
-                if (!StringUtil.isNotEmpty(detailDto.getListDetailId())) { 
-                    errorList.add(new ValidMessage(getMessage("COMMON_E_0057",getMessage("AssetNameManagement003.listDetailId"))));
-                    ajaxResult.setErrorList(errorList);
-                    return ajaxResult;
-                }
-                if (!StringUtil.isNotEmpty(detailDto.getListDetailName())) { 
-                    errorList.add(new ValidMessage(getMessage("COMMON_E_0057",getMessage("AssetNameManagement003.listDetailName"))));
-                    ajaxResult.setErrorList(errorList);
-                    return ajaxResult;
-                }
-            }
-             
-        } 
         return commonCheck(result, dto.getOperateType());
     }
     

@@ -1,6 +1,5 @@
 package com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dao;
 
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParam003Dto;
 import com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParam005Dto;
 import com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParamDto;
@@ -78,12 +77,10 @@ public interface RskSupervisionIndicatorParamMapper {
      */
     List<RskSupervisionIndicatorDto> selectIndHavedType(String paraCode);
 
-	int deleteFixRecode(Map<String, Object> param);
+	int deleteFixRecode(String paraCode);
 
-	List<RskSupervisionIndicatorParam003Dto> selectFixRecode(Map<String, Object> param);
-	
-	List<RskSupervisionIndicatorParam003Dto> selectFixRecod2(Map<String, Object> param);
-	
+	List<RskSupervisionIndicatorParam003Dto> selectFixRecode(String paraCode);
+
 	Integer isExistParaName(Map<String, Object> param);
 
 	List<RskSupervisionIndicatorParam005Dto> selectCustomParam(String paraCode);
@@ -91,6 +88,4 @@ public interface RskSupervisionIndicatorParamMapper {
 	List<SqlDto> getSql(String paraCode);
 
 	List<String> getModelValue(String modelCode);
-	
-	List<SelectOptionDto> getInstitutionId(Map<String, Object> param);
 }

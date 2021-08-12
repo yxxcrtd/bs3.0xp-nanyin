@@ -36,7 +36,7 @@ import com.joyintech.service.risk.stresstestmanage.flowrisksstresstestview.dto.F
  * 〈功能详细描述〉
  * @author wangkang
  * @version 1.0 2019年8月13日
- * @see FlowRiskStressTest001Controller
+ * @see FlowRiskStressTestView001Controller
  * @since 1.0
  */
 @RestController("backFlowRiskStressTestView001Controller")

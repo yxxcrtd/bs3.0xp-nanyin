@@ -21,6 +21,7 @@
 				<li id="tszqqz">特殊证券阈值</li>
 				<li id="tczc">剔除资产</li>
 				<li id="lhsz">联合设置</li>
+				<li id="zdytjfz">自定义条件阈值</li>
 			</ul>
 			<div class="layui-tab-content">
 				<!-- 条件设置 -->
@@ -73,6 +74,50 @@
 					</div>
 					<table class="layui-table" id="dataTable4"
 						data-target="#getdataTable"></table>
+				</div>
+				<!-- 条件设置 -->
+				<div class="layui-tab-item" id="zdytjfzDiv">
+					<input type="hidden" id="oldWarnCond"   data-th-value="${yzInfo?.warnCond}" >
+					<input type="hidden" id="oldFoulCond"   data-th-value="${yzInfo?.foulCond}" >
+					<input type="hidden" id="oldApproveCond"   data-th-value="${yzInfo?.approveCond}" >
+					<div style="color: #5897fb; float: left;">自定义条件</div>
+					<div style="float: right;">
+						<a id="RskSupervisionIndividuation001_btn_zdytjfz_add"
+						   class="layui-btn layui-btn-sm btn-create"
+						   data-th-text="#{SysCommon.create}">新建</a>
+					</div>
+					<table class="layui-table" id="dataTable5_1"
+						   data-target="#getdataTable"></table>
+					<div style="color: #5897fb; float: left;">自定义条件阈值</div>
+					<div class="pro-module-item">
+						<div class="form-inline-wrap">
+							<label class="layui-form-label form-label-wrap"
+								   data-th-text="#{RskSupervisionIndividuation003.comparison}"
+								   style="width: 26% !important">比较符</label>
+							<div class="layui-input-inline input-inline">
+								<select th:id="comparison" name=".comparison"
+										class="layui-input form-input input-select"
+										data-th-placeholder="#{SysCommon.placeholder}"
+										searchable="false" required
+										data-th-data-result="${SUP_OPERATOR}">
+								</select>
+							</div>
+						</div>
+						<div class="form-inline-wrap">
+							<label class="layui-form-label form-label-wrap"
+								   data-th-text="#{RskSupervisionIndividuation003.unit}"
+								   style="width: 26% !important">单位</label>
+							<div class="layui-input-inline input-inline">
+								<select th:id="unit" name="unit"
+										class="layui-input form-input input-select"
+										data-th-placeholder="#{SysCommon.placeholder}"
+										searchable="false" required data-th-data-result="${SUP_UNIT}">
+								</select>
+							</div>
+						</div>
+					</div>
+					<table class="layui-table" id="dataTable5_2"
+						   data-target="#getdataTable"></table>
 				</div>
 			</div>
 		</div>
@@ -213,13 +258,15 @@ span.select2-selection__rendered {
 		/* var UNITE_ID = /*[[${UNITE_ID}]]*/'';//联合指标
 		var FINPROD_ID = /*[[${FINPROD_ID}]]*/'';//金融产品代码 */
 		var SUP_UNIT = /*[[${SUP_UNIT}]]*/'';
+		var CONTROL_TYPE = /*[[${CONTROL_TYPE}]]*/'';
+		var YES_OR_NO = /*[[${YES_OR_NO}]]*/'';
 		var IND_TYPE = /*[[${IND_TYPE}]]*/'';
 		var NONE = /*[[${NONE}]]*/'';
-		var CONDITION_ITEM_03 = /*[[${CONDITION_ITEM_03}]]*/;
-		var CONDITION_ITEM_02 = /*[[${CONDITION_ITEM_02}]]*/;
-		var VDATE = /*[[${VDATE}]]*/;
+		var CONDITION_ITEM_03 = /*[[${CONDITION_ITEM_03}]]*/'';
+		var CONDITION_ITEM_02 = /*[[${CONDITION_ITEM_02}]]*/'';
+		var VDATE = /*[[${VDATE}]]*/'';
 
-		var UNITE_SOURCE=/*[[${UNITE_SOURCE}]]*/;
+		var UNITE_SOURCE=/*[[${UNITE_SOURCE}]]*/'';
 		</script>
 		<script
 			data-th-src="@{/js/invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation001.js}"></script>

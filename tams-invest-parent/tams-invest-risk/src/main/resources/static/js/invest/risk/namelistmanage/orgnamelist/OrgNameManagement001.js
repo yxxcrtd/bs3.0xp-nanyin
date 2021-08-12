@@ -64,33 +64,19 @@
             ,{field:'workflowStatus', width:190 , visible: false,title:'OrgNameManagement001.workflowStatus'}
             ,{field:'listId', width:190 , visible: false,title:'OrgNameManagement001.listId'}
            /* ,{field:'listName', width:400 , title:'OrgNameManagement001.listName',sortField:'LIST_NAME'}*/
-            ,{field:'listName', title : 'OrgNameManagement001.listName', width:400,sortField:'LIST_NAME',
+            ,{field:'listName', title : 'OrgNameManagement001.listName', width:300,sortField:'LIST_NAME',
                 render: function (data, type, row, meta) {
                     var obj = {};
                     return  '<a href="javascript:void(0);" onclick="seeAllInfo('+row.workflowId+','+row.workflowStatus+','+row.listId+');" >'+row.listName+'</a>';
                 }
             }
-            ,{field:'listTypeStr', width:400 ,title:'AssetNameManagement001.listType',type:'date',sortField:'LIST_TYPE'}
-            ,{field:'effdate', width:240 ,title:'OrgNameManagement001.effdate',type:'date',sortField:'EFFDATE'}
-            /*,{field:'operation', width:300 , title: 'SysCommon.operation',sortable:false,
+            ,{field:'listTypeStr', width:300 ,title:'AssetNameManagement001.listType',type:'date',sortField:'LIST_TYPE'}
+            ,{field:'effdate', width:400 ,title:'OrgNameManagement001.effdate',type:'date',sortField:'EFFDATE'}
+            ,{field:'operation', width:400 , title: 'SysCommon.operation',sortable:false,
                 render:function (data, type, row, meta) {
-                    return '<a class="btn layui-btn  manual" title="手工录入" style="color:white">手工录入</a><a class="btn layui-btn batch" title="批量录入" style="color:white">批量录入</a>';
+                    return '<a class="btn layui-btn  manual" title="手工录入" style="color:white">手工录入</a><a class="btn layui-btn batch" title="批量录入" style="color:white">批量录入</a><a class="btn layui-btn del" title="删除" style="color:white">删除</a>';
                 }
-            }*/
-            ,{field:'operation', type:'action',width:240 ,  title: 'SysCommon.operation', sortable:false,
-                render:function (data, type, row, meta) {
-                var buttons = '';
-                if(purviewElements.indexOf('_manual')!=-1){
-                       buttons += '<a class="btn layui-btn  manual" title="手工录入" style="color:white">手工录入</a>';
-                 }
-                 if(purviewElements.indexOf('_batch')!=-1){
-                       buttons += '<a class="btn layui-btn batch" title="批量录入" style="color:white">批量录入</a>';
-                  }
-
-                return buttons;
-        }
-    }
-            ]
+            }]
     });
 
     /**
@@ -107,7 +93,7 @@
                     listDetailType:RSK_SUBJECT_TYPE_01
                 },function(){
                     effTable.reload();//回调函数，表格刷新
-                    // uneffTable.reload();//回调函数，表格刷新
+                    uneffTable.reload();//回调函数，表格刷新
                 });
         });
     });
@@ -126,7 +112,7 @@
                 });
         },function(){
             effTable.reload();//回调函数，表格刷新
-            // uneffTable.reload();//回调函数，表格刷新
+            uneffTable.reload();//回调函数，表格刷新
         });
     });
 
@@ -137,9 +123,9 @@
         var object = {selectedItem: [data], operateType:"delete",listId:data.listId};//请求参数
         Joyin.ajaxJson(basePath + 'invest/risk/namelistmanage/orgnamelist/OrgNameManagement001/check', object, function(result) {//请求路径，请求参数回调函数
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){//删除事件的请求
-                WorkFlow.doDeleteList(basePath + 'invest/risk/namelistmanage/orgnamelist/OrgNameManagement001/delete', object,"OrgNameManagement001_btn_delete", "OrgNameManagement003", function(){
+                WorkFlow.doDeleteList(basePath + 'invest/risk/namelistmanage/orgnamelist/OrgNameManagement001/delete', object,"OrgNameManagement001_btn_delete", "OrgNameManagement002", function(){
                     effTable.reload();//回调函数，表格刷新
-                    // uneffTable.reload();//回调函数，表格刷新
+                    uneffTable.reload();//回调函数，表格刷新
                 });
             });
         });
@@ -156,23 +142,23 @@
     /**
      * 定义数据表格（失效）
      */
-    // var uneffTable=$("#uneffectTable").joyintable({
-    //     ajax: {
-    //         url: 'findPage',
-    //         type: 'POST',
-    //         data: function() {
-    //             return getSearchParamsByDelEff();
-    //         }
-    //     },
-    //     checkbox: false,
-    //     searchOnInit: false,
-    //     cols:[
-    //         {field:'listId', width:190 , visible: false,title:'OrgNameManagement001.listId'}
-    //         ,{field:'listName', width:450 , title:'OrgNameManagement001.listName',sortField:'LIST_NAME'}
-    //         ,{field:'effdate', width:400 ,title:'OrgNameManagement001.effdate',type:'date',sortField:'EFFDATE'}
-    //         ,{field:'deldate', width:400 ,title:'OrgNameManagement001.deldate',type:'date',sortField:'DELDATE'}
-    //     ]
-    // });
+    var uneffTable=$("#uneffectTable").joyintable({
+        ajax: {
+            url: 'findPage',
+            type: 'POST',
+            data: function() {
+                return getSearchParamsByDelEff();
+            }
+        },
+        checkbox: false,
+        searchOnInit: false,
+        cols:[
+            {field:'listId', width:190 , visible: false,title:'OrgNameManagement001.listId'}
+            ,{field:'listName', width:450 , title:'OrgNameManagement001.listName',sortField:'LIST_NAME'}
+            ,{field:'effdate', width:400 ,title:'OrgNameManagement001.effdate',type:'date',sortField:'EFFDATE'}
+            ,{field:'deldate', width:400 ,title:'OrgNameManagement001.deldate',type:'date',sortField:'DELDATE'}
+        ]
+    });
 
     /**
      * 绑定导出事件
@@ -190,7 +176,7 @@
         //初始化查询
         $('#OrgNameManagement001_btn_search').click(function() {
             effTable.load();
-            // uneffTable.load();
+            uneffTable.load();
         });
         //新建
         /*$('#OrgNameManagement001_btn_add').click(showDialog);*/

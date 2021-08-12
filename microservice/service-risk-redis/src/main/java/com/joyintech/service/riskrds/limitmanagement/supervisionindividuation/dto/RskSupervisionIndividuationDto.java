@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.common.base.entity.RskIndividConditionLine;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 
 public class RskSupervisionIndividuationDto extends BaseEntity {
@@ -66,6 +67,11 @@ public class RskSupervisionIndividuationDto extends BaseEntity {
      * 联合设置
      */
     private List<RskIndividUniteDto> uniteList;
+
+    /**
+     * 自定义条件设置
+     */
+    private List<RskIndividConditionLine> conditionLines;
 
     /**
      * 条件设置编号
@@ -242,6 +248,14 @@ public class RskSupervisionIndividuationDto extends BaseEntity {
 
     public void setUniteList(List<RskIndividUniteDto> uniteList) {
         this.uniteList = uniteList;
+    }
+
+    public List<RskIndividConditionLine> getConditionLines() {
+        return conditionLines;
+    }
+
+    public void setConditionLines(List<RskIndividConditionLine> conditionLines) {
+        this.conditionLines = conditionLines;
     }
 
     public String getPrtBagId() {
