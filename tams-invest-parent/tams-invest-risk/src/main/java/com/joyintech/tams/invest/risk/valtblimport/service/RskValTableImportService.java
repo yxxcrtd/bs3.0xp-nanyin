@@ -11,9 +11,11 @@
 package com.joyintech.tams.invest.risk.valtblimport.service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,11 +23,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListRsk;
+import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
 import com.joyintech.tams.invest.risk.valtblimport.filtertools.filter.Filter;
+
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -38,21 +45,28 @@ import org.springframework.stereotype.Service;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.RskValtblSubject;
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.ExcelUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.component.business.common.dto.InfChinamutualfunddescriptionDto;
 import com.joyintech.tams.component.business.common.dto.InterfPayhsrcsecinfoDto;
 import com.joyintech.tams.component.business.common.service.CommonAutoCouponService;
+import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
+import com.joyintech.tams.component.business.riskrds.constant.PageFieldToInterfFactory;
+import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskValtblPrtBotasset.service.RskValtblPrtBotassetService;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.dto.RskValtblAssetSubMapDtlDto;
@@ -63,11 +77,14 @@ import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.serv
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.dto.RskValSumnameDto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.service.RskValSumname001Service;
 import com.joyintech.tams.invest.risk.valtblimport.dto.ColumnMapEntry;
+import com.joyintech.tams.invest.risk.valtblimport.dto.PreOccupActualDetailDto;
+import com.joyintech.tams.invest.risk.valtblimport.dto.PreOccupationChangeDto;
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValTableImportParamDto;
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAssetSubDto;
 import com.joyintech.tams.invest.risk.valtblimport.dto.SubCodeEntry;
 import com.joyintech.tams.invest.risk.valtblimport.dto.SumNameCodeEntry;
 import com.joyintech.tams.invest.risk.valtblimport.dto.ValDataType;
+import com.joyintech.tams.invest.risk.valtblimport.dto.ValTableImpRiskDto;
 import com.joyintech.tams.invest.risk.valtblimport.dto.ValType;
 
 /**
@@ -119,6 +136,11 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
      */
     @Autowired
     private RskValtblPrtBotassetService rskValtblPrtBotassetService;
+    /**
+     * 风险服务
+     */
+    @Autowired
+    private InterfRiskRdsService interfRiskRdsService;
 
     public void insert(RskValtblAssetSubDto dto) throws ParseException {
         RskValtblPrtBotassetMapDto rskValtblPrtBotassetMapDto = new RskValtblPrtBotassetMapDto();
@@ -307,6 +329,10 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         // 调用接口发送数据 add by yufei 20200818 start
         doSendInterf(dto);
         // 调用接口发送数据 add by yufei 20200818 end
+        
+        //上农商个性化_估值表导入预占实占变更  add by zhangpei 20201224 start
+        preOccupationChange(dto);
+        //上农商个性化_估值表导入预占实占变更  add by zhangpei 20201224 end
     }
 
     /**
@@ -1215,5 +1241,290 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getGroupIdInfo", param,
            SelectOptionDto.class);
    }
+   /**
+    * 上农商个性化_估值表导入 
+    * 预占实占变更 
+    * add by zhangpei
+    * 20201222
+ * @throws Exception 
+    */
+   private AjaxResult preOccupationChange(RskValtblAssetSubDto dto){
+	   AjaxResult result=new AjaxResult();
+
+	   //1.估值表文件中各资产的分配明细
+	   List<PreOccupationChangeDto> detailList=restTemplate.postForList(
+	            ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/preOccupationDetail",
+	            dto,PreOccupationChangeDto.class);
+	   //2.预占实占变更
+	   //将指令预占（分配组合+底层资产代码+组合分配金额）的风险指标和授信额度释放
+	   List<PreOccupationChangeDto> needFreeList=restTemplate.postForList(
+	            ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/queryNeedFreedInfo",
+	            dto,PreOccupationChangeDto.class);
+	   if(!StringUtil.isEmptyList(needFreeList)){
+		   //释放授信占用额度
+		   List<CreditLinesInputDto> creditFreeList=getPreListForCreditLinesFreed(needFreeList,DictCodeListExt1.交易状态_撤销.getValue());
+		   AllTradeCommonUtil.handleBeforeTradeComplete(creditFreeList,DictCodeListRsk.授信占用类别_预占.getValue());
+	   }
+	   //释放今日估值表该委外组合已经实占的数据
+	   List<ValTableImpRiskDto> riskActList=restTemplate.postForList(
+	            ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/queryImpRiskInfo",
+	            dto,ValTableImpRiskDto.class);
+	   if(!StringUtil.isEmptyList(riskActList)){
+		   //释放授信占用额度
+		   List<CreditLinesInputDto> creditFreeList=getListForCreditLinesFreed(riskActList,DictCodeListExt1.交易状态_撤销.getValue(),"C");
+		   AllTradeCommonUtil.handleBeforeTradeComplete(creditFreeList,DictCodeListRsk.授信占用类别_实占.getValue());
+		   //删除实际占用授信的留痕数据
+    	   restTemplate.postForObject(
+    	           ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/deleteByPrimaryKeyRisk",
+    	           riskActList,Integer.class);
+	   }
+	   
+
+		// 调用授信接口，按照估值表文件逐条实占
+	    List<Map<String, Object>> actOccpListAll=new ArrayList<>();
+		if (!StringUtil.isEmptyList(detailList)) {
+			for (PreOccupationChangeDto actualDto : detailList) {
+				List<Map<String, Object>> actOccpList = coverActListOccupForMapList(actualDto.getDetailDtos(),
+						actualDto.getPortfolioId(),dto.getValDate());
+				actOccpListAll.addAll(actOccpList);
+			}
+		}
+		//留痕操作
+		if(!StringUtil.isEmptyList(actOccpListAll)){
+			List<ValTableImpRiskDto> listForLh=new ArrayList<>();
+			for(Map<String, Object> map:actOccpListAll){
+				ValTableImpRiskDto valTableImpRiskDto=new ValTableImpRiskDto();
+				valTableImpRiskDto.setTradeId(coverStrForGetMapValue(map.get(PageFieldToInterfFactory.INF_EVENTID)));
+				valTableImpRiskDto.setWwPortfolioid(dto.getPtlId());
+				valTableImpRiskDto.setPortfolioId(coverStrForGetMapValue(map.get(PageFieldToInterfFactory.INF_PORTFOLIOCODE)));
+				valTableImpRiskDto.setFinprodId(coverStrForGetMapValue(map.get(PageFieldToInterfFactory.INF_ASSETCODE)));
+				valTableImpRiskDto.setPs(coverStrForGetMapValue(map.get(PageFieldToInterfFactory.INF_PS)));
+				try {
+					valTableImpRiskDto.setEventDate(DateUtil.parseDate((String)map.get(PageFieldToInterfFactory.INF_EVENTDATE), DateUtil.DEFAULT_DATE_FORMAT_EN));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				valTableImpRiskDto.setAssetType(coverStrForGetMapValue(map.get(PageFieldToInterfFactory.INF_ASSETTYPE)));
+				valTableImpRiskDto.setAmount((BigDecimal)map.get(PageFieldToInterfFactory.INF_AMOUNT));
+				valTableImpRiskDto.setCreditAmount((BigDecimal)map.get("CreditAmount"));
+				listForLh.add(valTableImpRiskDto);
+			}
+			//插入留痕数据表
+			restTemplate.postForObject(
+      	           ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/insertValImpRisk",
+      	         listForLh,Integer.class);
+			//实占授信额度
+			List<CreditLinesInputDto> creditOccpList=getListForCreditLinesFreed(listForLh,DictCodeListExt1.交易状态_初始.getValue(),"C");
+			AllTradeCommonUtil.handleBeforeTradeComplete(creditOccpList,DictCodeListRsk.授信占用类别_实占.getValue());
+		}
+		
+	   //3.指令状态变更
+	   if(!StringUtil.isEmptyList(needFreeList)){
+		   updateEntrustStatus(needFreeList);
+	   }
+	   
+	   
+	   return result;
+   }
    
+   /**
+	 * 上农商个性化_估值表导入
+	 * 根据委托代码，更新指令状态为‘已完成’
+	 * add by zhangpei
+	 * 20201224
+	 * @param list
+	 * @return
+	 */
+   private void updateEntrustStatus(List<PreOccupationChangeDto> list){
+       restTemplate.postForObject(
+           ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/updateEntrustStatus",
+           list,Integer.class);
+   }
+   /**
+    * 上农商个性化_估值表导入
+    * 转换风险实占数据为List<Map<String, Object>>
+    * @param riskActList
+    * @return
+    */
+   @SuppressWarnings("unchecked")
+   private List<Map<String, Object>> coverActListOccupForMapList(List<PreOccupActualDetailDto> detailDtos,String portfolioCode,Date valDate){
+	   List<Map<String, Object>> result = new ArrayList<>();
+	   if(!StringUtil.isEmptyList(detailDtos)){
+		   for(PreOccupActualDetailDto dto:detailDtos){
+			   Map<String, Object> finDto = new HashMap<>();
+			   //设置tradeId
+	           String code = IDGenerator.generate();
+               finDto.put(PageFieldToInterfFactory.INF_EVENTID, code);
+               finDto.put(PageFieldToInterfFactory.INF_PS, BussinessDictCodeList.交易方向_买入.getValue());
+               finDto.put(PageFieldToInterfFactory.INF_EVENTDATE, DateUtil.format(
+            		   valDate, DateUtil.DEFAULT_DATE_FORMAT_EN));
+               finDto.put(PageFieldToInterfFactory.INF_REVOKEFLG, BussinessDictCodeListRds.是否_否.getValue());
+               finDto.put(PageFieldToInterfFactory.INF_ISINNERTRD, BussinessDictCodeListRds.是否_否.getValue());
+               interfRiskRdsService.changeEventId(finDto);
+               finDto.put(PageFieldToInterfFactory.INF_PORTFOLIOCODE, portfolioCode);
+               finDto.put(PageFieldToInterfFactory.INF_ASSETCODE, dto.getAssetFinprodId());
+               finDto.put(PageFieldToInterfFactory.INF_ASSETTYPE, dto.getFinprodType2());
+               finDto.put(PageFieldToInterfFactory.INF_AMOUNT, dto.getAllotAmout());
+               finDto.put(PageFieldToInterfFactory.INF_MARKETCODE, dto.getAssetFinprodId());
+               finDto.put(PageFieldToInterfFactory.INF_ISWARNNEEDCONFIRM, DictCodeList.是否_否.getValue());
+               finDto.put(PageFieldToInterfFactory.INF_ISAPPRNEEDCONFIRM, DictCodeList.是否_否.getValue());
+               finDto.put(PageFieldToInterfFactory.INF_EVENTTYPE, BussinessDictCodeListRds.事件类型_投资交易.getValue());
+               //辅助字段：--传入Redis无用，为Credit
+               finDto.put("CreditAmount", dto.getAllotAmoutCredit());
+			   result.add(finDto);
+		   }
+	   }
+	   return result;
+   }
+   /**
+    * 上农商个性化_估值表导入
+    * 格式转换
+    * @param obj
+    * @return
+    */
+   private String coverStrForGetMapValue(Object obj){
+	   if(StringUtil.isNotEmpty(obj)){
+		   if(obj instanceof String){
+			   return obj.toString();
+		   }
+	   }
+	   return null;
+   }
+   /**
+    * 上农商个性化_估值表导入
+    * 获取授信额度组装的List
+    * add by zhangpei
+    * 20201225
+    * @param riskActList
+    * @return
+    */
+   private List<CreditLinesInputDto> getListForCreditLinesFreed(List<ValTableImpRiskDto> riskActList,String status,String flag){
+	   List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+	   for(ValTableImpRiskDto dto:riskActList){
+		   CreditLinesInputDto creditLinesInputDto = new CreditLinesInputDto();
+		   creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+           creditLinesInputDto.setTradeId(dto.getTradeId());
+           if(StringUtil.equals(DictCodeListExt1.交易状态_撤销.getValue(), status)){
+        	   creditLinesInputDto.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+           }else{
+        	   creditLinesInputDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+           }
+           
+           if(StringUtil.isNotEmpty(dto.getEventDate())){
+        	   creditLinesInputDto.setTradeDate(dto.getEventDate());
+           }else{
+        	   creditLinesInputDto.setTradeDate(DateUtil.platDateFromCache());
+           }
+           creditLinesInputDto.setFinprodId(dto.getFinprodId());
+           creditLinesInputDto.setFinprodType2(dto.getAssetType());
+           creditLinesInputDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+           if(StringUtil.equals("R", flag)){
+        	   creditLinesInputDto.setTradeAmt(dto.getAmount());
+               creditLinesInputDto.setShareAmt(dto.getAmount()); 
+           }else if(StringUtil.equals("C", flag)){
+        	   creditLinesInputDto.setTradeAmt(dto.getCreditAmount());
+               creditLinesInputDto.setShareAmt(dto.getCreditAmount()); 
+           }else{
+        	   creditLinesInputDto.setTradeAmt(dto.getAmount());
+               creditLinesInputDto.setShareAmt(dto.getAmount());  
+           }
+           creditLinesInputDto.setPs(BussinessDictCodeList.交易方向_买入.getValue());
+           creditLinesInputDto.setIsBottom("Y");
+		   inputDtoList.add(creditLinesInputDto);
+	   }
+	   return inputDtoList;
+   }
+   
+   /**
+    * 上农商个性化_估值表导入
+    * 获取预占授信额度组装的List
+    * add by zhangpei
+    * 20201225
+    * @param riskActList
+    * @return
+    */
+   private List<CreditLinesInputDto> getPreListForCreditLinesFreed(List<PreOccupationChangeDto> needFreeList,String status){
+	   List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+	   for(PreOccupationChangeDto dto:needFreeList){
+		   CreditLinesInputDto creditLinesInputDto = new CreditLinesInputDto();
+		   creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
+           creditLinesInputDto.setTradeId(dto.getEntrustId());
+           if(StringUtil.equals(DictCodeListExt1.交易状态_撤销.getValue(), status)){
+        	   creditLinesInputDto.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+           }else{
+        	   creditLinesInputDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+           }
+           
+           creditLinesInputDto.setTradeDate(DateUtil.platDateFromCache());
+           creditLinesInputDto.setFinprodId(dto.getBottomAssetId());
+           creditLinesInputDto.setFinprodType2(dto.getFinprodType2());
+           creditLinesInputDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+           creditLinesInputDto.setTradeAmt(dto.getAmount());
+           creditLinesInputDto.setShareAmt(dto.getAmount());
+           creditLinesInputDto.setPs(BussinessDictCodeList.交易方向_买入.getValue());
+           creditLinesInputDto.setIsBottom("Y");
+		   inputDtoList.add(creditLinesInputDto);
+	   }
+	   return inputDtoList;
+   }
+
+    public int selectGoalCount(Map<String, Object> paramMap) {
+        return restTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME + "/RskValTableImport/selectGoalCount",paramMap,
+                Integer.class);
+    }
+
+	@Override
+	protected void buildExportParam(ExportParam exportParam) {
+		 exportParam.config("/com/joyintech/tams/invest/risk/valtblimport/conf/export_conf002.xml")
+         .dataSource(DataSourceType.MASERT);
+	}
+
+	@Override
+	public Page<RskValtblAssetSubDto> selectPageData(Map<String, Object> selectParam) {
+		RskValTableImportParamDto dto=new RskValTableImportParamDto();
+		dto.setAssetSubMapId(selectParam.get("structMapId")==null?null:selectParam.get("structMapId").toString());
+		dto.setPtlId(selectParam.get("ptlId")==null?null:selectParam.get("ptlId").toString());
+		dto.setValTableFileName(selectParam.get("valTableFileName")==null?null:selectParam.get("valTableFileName").toString());
+	    dto.setValDate(selectParam.get("valDate")==null?null:DateUtil.parse(selectParam.get("valDate").toString()));
+		dto.setSumsubMapId(selectParam.get("sumsubMapId")==null?null:selectParam.get("sumsubMapId").toString());
+		dto.setAssetSubMapId(selectParam.get("assetSubMapId")==null?null:selectParam.get("assetSubMapId").toString());
+		dto.setSubjectCodeCol(selectParam.get("subjectCodeCol")==null?null:selectParam.get("subjectCodeCol").toString());
+		dto.setStartRow(selectParam.get("startRow")==null?null:selectParam.get("startRow").toString());
+		dto.setTrimChars(selectParam.get("trimChars")==null?null:selectParam.get("trimChars").toString());
+		dto.setFilterId(selectParam.get("filterId")==null?null:selectParam.get("filterId").toString());
+		dto.setStructMapId(selectParam.get("structMapId")==null?null:selectParam.get("structMapId").toString());
+		
+		List<RskValtblAssetSubDto> list=new LinkedList<RskValtblAssetSubDto>();
+		try {
+			list = viewValTable(dto);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Page<RskValtblAssetSubDto> page=new Page<RskValtblAssetSubDto>();
+		page.setRoot(list);
+		return page;
+	}
+	
+	/**
+     * 设置预警与违规格式
+     * {@inheritDoc}
+     */
+    @Override
+    public void setCellValue(String beanName, Cell cell, String propName, Object value) {
+    	 DecimalFormat df=new DecimalFormat("###,###.##"); //保留二位小数
+    	if(("securityQuantity".equals(propName)) && value != null){
+             cell.setCellValue(df.format(new BigDecimal(value.toString())));
+         }
+    	 if(("securityCost".equals(propName)) && value != null){
+             cell.setCellValue(df.format(new BigDecimal(value.toString())));
+         }
+    	 if(("smv".equals(propName)) && value != null){
+             cell.setCellValue(df.format(new BigDecimal(value.toString())));
+         }
+    }
+	
+    
+    
 }
