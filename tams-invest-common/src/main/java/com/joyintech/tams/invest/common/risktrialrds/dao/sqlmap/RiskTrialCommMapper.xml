@@ -337,4 +337,11 @@
 			(#{item.portfolioId} , #{item.supFrequency} ,#{item.supDate})
 		</foreach>
 	</delete>
+
+	<select id="getPortfolioInstCode" resultType="java.lang.String">
+       select INSTITUTION_CODE from DATA_AUTH_NOTIFY_INST
+	  WHERE DATA_AUTH_NOTIFY_INST.MODEL_TYPE = '02'
+	    and DATA_AUTH_NOTIFY_INST.DATA_TYPE = 'PTL01'
+	    and DATA_AUTH_NOTIFY_INST.BUSINESS_ID = #{portfolioId,jdbcType=VARCHAR}
+    </select>
 </mapper>

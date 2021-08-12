@@ -283,6 +283,13 @@ public class RiskRefreshRedisServiceImpl extends BaseService implements RiskRefr
             redisWriter.dealProdAssetAmount(cond);
             return;
         }
+        if (StringUtil.equals(key, RedisKeyEnum.资产久期附属信息.key())) {
+            if (!StringUtil.isEmpty(filed)) {
+                cond.setAssetIdArray(filed);
+            }
+            redisWriter.dealAstCashDurationInfo(cond);
+            return;
+        }
     }
 
     private RedisBaseService<?> getRedisBaseService(String key) {

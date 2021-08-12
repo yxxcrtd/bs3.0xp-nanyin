@@ -10,11 +10,12 @@
  
 package com.joyintech.tams.invest.common.redisinit.aop;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.tams.invest.common.constantrds.RedisKeyEnum;
+import com.joyintech.tams.invest.common.riskinfrds.param.entity.IParam;
+import com.joyintech.tams.invest.common.riskinfrds.param.service.IndicatorParamService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -92,6 +93,9 @@ public class AssetInputRedisAop {
     @Autowired
     private IPlatformDate iPlatformDate;
 
+    @Autowired(required = false)
+    private IndicatorParamService indicatorParamService;
+
     @Pointcut("execution(* com.joyintech.tams.common.base.dao.FinProductMapper.insert(..))")
     protected void afterPoint() {
 
@@ -131,6 +135,29 @@ public class AssetInputRedisAop {
                             cond.setPlateDate(iPlatformDate.getSysDate());
                             // 更新Redis
                             redisRriter.dealAssetData(cond);
+                            // 更新指标参数值
+                            if(indicatorParamService!=null) {
+                                String[] keys = {RedisKeyEnum.指标参数配置.key()};
+                                Map<String,Map<String, IParam>> params = indicatorParamService.readAll(Arrays.asList(keys));
+                                ImplCond condp = new ImplCond();
+                                condp.setPlateDate(iPlatformDate.getSysDate());
+                                condp.setDel(false);
+                                condp.setLoadOffset(true);
+                                condp.setIsUpdParVal(true);
+                                condp.setCondList(Arrays.asList(finProduct.getFinprodId()));
+                                Set<String> fields = new HashSet<>();
+                                for(IParam iParam:params.get(RedisKeyEnum.指标参数配置.key()).values()) {
+                                    if(iParam.getRedisFieldArr()!=null&&iParam.getRedisFieldArr().length==1&&StringUtil.equals(iParam.getRedisFieldArr()[0], "assetCode")) {
+                                        String field = iParam.getField();
+                                        field = StringUtil.contains(field, GlobalConstant.COLON)? StringUtil.substring(field, 0, StringUtil.indexOf(field, GlobalConstant.COLON)): field;
+                                        fields.add(field);
+                                    }
+                                }
+                                for(String field: fields) {
+                                    condp.setParamCodeArray(field);
+                                    redisRriter.dealRiskIndParam(condp);
+                                }
+                            }
                             logger.info("===========资产进入redis结束=============");
                         }
                     }catch (Exception e){

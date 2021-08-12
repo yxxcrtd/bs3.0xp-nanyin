@@ -12,18 +12,12 @@ package com.joyintech.tams.invest.common.riskinfrds.base.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,6 +160,15 @@ public class CalcOccupyInfoService {
      * KEY:组合代码
      */
     public static final String PORTFOLIOCODE = "portfolioCode";
+
+    /**
+     * KEY:交易对手
+     */
+    public static final String COUNTERID = "counterid";
+    /**
+     * KEY:资产代码
+     */
+    public static final String ASSETCODE = "assetCode";
 
     /**
      * KEY:交易方向
@@ -335,6 +338,10 @@ public class CalcOccupyInfoService {
     public static final String LOG_INFO_EVENT = "未触发风控事项，试算通过";
     
     public static final String LOG_NO_IND_VAL = "指标参数值不存在";
+
+    protected static final String ASSET_AMT_VAL = "assetAmtVal";
+
+    protected static final List<String> indReplaceList = Arrays.asList("CPZZC","CPJZCJZ");
 
     public void startTransaction() {
         cleanLocalCache();
@@ -1029,7 +1036,7 @@ public class CalcOccupyInfoService {
             // 指标信息存在
             if (!CollectionUtils.isEmpty(indMap)) {
                 // 固定值参数
-                Map<String, Object> map = getFixedParaVal(paramMap);
+                Map<String, Object> map = getFixedParaVal(paramMap,mapData);
                 Map<String, IIndicator> leftIndMap = getIndTrendCalcSrc().execute(indMap, paramMap,
                     getIndTrendCalcSrc().filterValMap(new HashMap<>(), paraValMap), eveList,
                     mapData, (newIndMap, indValMap, newIndValMap) -> {
@@ -1101,8 +1108,7 @@ public class CalcOccupyInfoService {
 
     /**
      * 清除缓存内容
-     * 
-     * @param local 缓存
+     *
      */
     protected void cleanLocalCache() {
         localCache.remove();
@@ -1152,7 +1158,6 @@ public class CalcOccupyInfoService {
      * 
      * @param details 参数计算明细
      * @param mapData 报文
-     * @param occupyCode 预占实占编号
      */
     protected void saveDetails(List<RskIndicatorParaCalcdetail> details,
                                Map<String, Object> mapData) {
@@ -1203,7 +1208,7 @@ public class CalcOccupyInfoService {
      * @see
      * @since 1.0
      */
-    protected Map<String, Object> getFixedParaVal(Map<String, IParam> paramMap) {
+    protected Map<String, Object> getFixedParaVal(Map<String, IParam> paramMap,Map<String, Object> mapData) {
         Map<String, Object> map = new HashMap<>();
         paramMap.entrySet().forEach(en -> {
             String key = en.getKey();
@@ -1215,6 +1220,22 @@ public class CalcOccupyInfoService {
                 map.put(key, value);
             }
         });
+        if (MultilevelDataAuthorityUtil.isEnabled()) {
+            paramMap.entrySet().forEach(en -> {
+                String key = en.getKey();
+                IParam para = en.getValue();
+                String instCode = mapData.get("instCode").toString();
+                if (!StringUtil.isEmpty(instCode)) {
+                    if (para != null && CommonUtil.isType(para.getParaDisplayType(),
+                        BussinessDictCodeListRds.指标参数实现类型_固定值) &&
+                        instCode.toString().equals(para.getInstitutionCode())) {
+                        String content = para.getContent();
+                        BigDecimal value = new BigDecimal(content);
+                        map.put(key.replace(instCode,BussinessDictCodeListRds.指标参数实现类型_固定值.getValue()), value);
+                    }
+                }
+            });
+        }
         return map;
     }
 

@@ -100,7 +100,18 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
      */
     private String issuerCode;
 
-    /**
+
+    private String isInAdvance;
+
+    public String getIsInAdvance() {
+		return isInAdvance;
+	}
+
+	public void setIsInAdvance(String isInAdvance) {
+		this.isInAdvance = isInAdvance;
+	}
+
+	/**
      * 是否有关联方(Y或N)
      */
     private String isCorOrg;
@@ -228,6 +239,9 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
 
     @Override
     public String getBodyGradeType() {
+    	if(bodyGradeType==null) {
+    		return "00";
+    	}
         return bodyGradeType;
     }
 

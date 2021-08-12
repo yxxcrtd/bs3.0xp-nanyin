@@ -12,12 +12,9 @@ package com.joyintech.service.riskrdsinf.event.rsk011.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -266,6 +263,18 @@ public class Rsk011Service extends EventBaseService<Rsk002InEntity> {
               response.setBodyField(RSK_LIST, new ArrayList<>());
               continue;
           }
+          //wangyang1 风险二级法人改造 start
+          if (MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isNotEmpty(mapData.get("instCode"))) {
+              String instCode = mapData.get("instCode").toString();
+              Set<String> paraIdListChd = new HashSet<>();
+              paraIdList.forEach(item->{
+                  if (item.indexOf(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue())!=-1) {
+                      paraIdListChd.add(item.replace(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue(),instCode));
+                  }
+              });
+              paraIdList.addAll(paraIdListChd);
+          }
+          //wangyang1 风险二级法人改造 end
           // 取得所有指标参数信息
           Map<String, IParam> paramMap = getParam(paraIdList);
           // 若指标参数不存在则抛出异常
@@ -350,7 +359,7 @@ public class Rsk011Service extends EventBaseService<Rsk002InEntity> {
               
               if (!CollectionUtils.isEmpty(indMap) && !CollectionUtils.isEmpty(indMap.values())) {
                   // 固定值参数
-                  Map<String, Object> map = getFixedParaVal(paramMap);
+                  Map<String, Object> map = getFixedParaVal(paramMap,mapData);
                   // add by zhangrui1 同向变动特殊处理 start
                   Map<String, IIndicator> leftIndMap = getIndTrendCalcSrc().executeList(indMap, paramMap,
                       getIndTrendCalcSrc().filterValMap(new HashMap<>(), paraValMap), eveList, mapData,

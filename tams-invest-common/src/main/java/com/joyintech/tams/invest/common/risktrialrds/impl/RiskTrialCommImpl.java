@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.common.risktrialrds.service.RiskTrialCommCallab
 import com.joyintech.tams.invest.common.risktrialrds.service.SupervisionCalcSvc;
 import com.joyintech.tams.invest.common.risktrialrds.util.Const;
 import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +106,25 @@ public class RiskTrialCommImpl  implements RiskTrialComm {
                             return item.getParaCode().equals(paramName) && (item.getParaGranularity().equals(BussinessDictCodeListRds.参数粒度_事后_日终.getValue()) || item.getParaGranularity().equals(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue()));
                         }
                     }).collect(Collectors.toList());
+                    //wangyang1  风险二级法人改造 start
+                    List<SupervisionParameterDto> filterFixParamList = filterSupervisionParamList.stream().filter(item -> {
+                        if (item.getParaGranularity().equals(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue())) {
+                             return StringUtil.equals(task.getInstitutionCode(), item.getInstitutionCode());
+                        }
+                        return true;
+                    }).collect(Collectors.toList());
+                    if (CollectionUtils.isEmpty(filterFixParamList)) {
+                         filterFixParamList = filterSupervisionParamList.stream().filter(item -> {
+                            if (item.getParaGranularity().equals(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue())) {
+                                return StringUtil.equals(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue(), item.getInstitutionCode());
+                            }
+                            return true;
+                        }).collect(Collectors.toList());
+                    }
+                    if (!CollectionUtils.isEmpty(filterFixParamList)) {
+                        filterSupervisionParamList = filterFixParamList;
+                    }
+                   //wangyang1  风险二级法人改造 end
                     if (StringUtil.isEmptyList(filterSupervisionParamList)) {
                         logFlag = false;
                         logMap.put("eMsg", " 参数" + paramName + "在指标参数集合不存在\n");

@@ -12,7 +12,7 @@
         if(detailJson!=null){
             /* 限制型 */
             detail = html2Escape(data);
-            if(row.indType.indexOf("LIMIT_")!=-1){
+            if(row.indType.indexOf("LIMIT_")!=-1 ){
                 if(detailJson.threshold_1.value!=null&&detailJson.threshold_1.value!=''){
                     wg = detailJson.threshold_1.op+detailJson.threshold_1.value+valueConvertUnit(detailJson.threshold_1.unit);
                 }

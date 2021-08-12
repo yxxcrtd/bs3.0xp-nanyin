@@ -137,6 +137,30 @@ public class ImplParam  extends RskIsupIndicatorParaDtl implements IParam{
         this.paramDataType = paramDataType;
     }
 
+    /**
+     * 机构号
+     */
+    private String institutionCode;
+
+
+    /**
+     * 获取 institutionCode
+     * @return institutionCode.
+     */
+    public String getInstitutionCode() {
+        return institutionCode;
+    }
+
+
+    /**
+     * 设置 institutionCode
+     * @param institutionCode institutionCode
+     */
+    public void setInstitutionCode(String institutionCode) {
+        this.institutionCode = institutionCode;
+    }
+
+
     @Override
     public String getParamMathType() {
         return paramMathType;

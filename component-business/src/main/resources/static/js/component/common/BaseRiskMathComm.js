@@ -301,6 +301,15 @@
                             var cacheData = table.getRow(0, true);
                             cacheData.totalConclu = JoyinUtil.getLabel("BaseRiskMathComm.clusion");                    
                         }
+                        //修改为同步 防止使用条件出现异常
+                        //---add by xkni 2019/08/27----获取授信使用条件---
+                        // if(object1.data["assetCode"] != undefined&&object1.data.assetCode.length>1 ) {
+                            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', object1, function (result) {
+                                $("#riskTrialSpan").html($("#riskTrialSpan").html() + "!" + "<span style=\"color:#F00\"> " + result.data + "</span>");
+                                // $("#riskTrialSpan").after(result.data);
+                                //修改为同步 防止使用条件出现异常
+                            },false);
+                        // }
                     },false);
                 },false);
             }
@@ -373,6 +382,13 @@
 	                		basePath + "component/common/RiskMathAndCredit/init", 
 	                		"90%", "90%");*/
 	                //sjj add 20190409平安需求变更风险试算 end
+                    //---add by xkni 2019/08/27----获取授信使用条件---
+                    // if(initParam.data["assetCode"] != undefined&&initParam.data.assetCode.length>1 ) {
+                        Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', initParam, function (result) {
+                            $("#riskTrialSpan").html($("#riskTrialSpan").html() + "!" + "<span style=\"color:#F00\"> " + result.data + "</span>");
+                            //  $("#riskTrialSpan").after(result.data);
+                        },false);
+                    // }
 	            },false);
 	        },false);
         }
@@ -450,6 +466,13 @@
                             var cacheData = table.getRow(0, true);
                             cacheData.totalConclu = JoyinUtil.getLabel("BaseRiskMathComm.clusion");                    
                         }
+                        //---add by xkni 2019/08/27----获取授信使用条件---
+                        // if(object1.data["assetCode"] != undefined&&object1.data.assetCode.length>1 ) {
+                            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', object1, function (result) {
+                                //  $("#riskTrialSpan").after(result.data);
+                                $("#riskTrialSpan").html($("#riskTrialSpan").html() + "!" + "<span style=\"color:#F00\"> " + result.data + "</span>");
+                            });
+                        // }
                     },false);
                 },false);
             }
@@ -1023,6 +1046,15 @@
                     $("#riskTrialSpan").empty();
                     $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
                     //---add by jjpei 20190801--------去除当前这笔流程---暂时塞进tradeCode----
+                        //修改为同步 防止使用条件出现异常
+                        //---add by xkni 2019/08/27----获取授信使用条件---
+                        // if(object1.data["assetCode"] != undefined&&object1.data.assetCode.length>1 ) {
+                            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', object1, function (result) {
+                                $("#riskTrialSpan").html($("#riskTrialSpan").html() + "!" + "<span style=\"color:#F00\"> " + result.data + "</span>");
+                                // $("#riskTrialSpan").after(result.data);
+                                //修改为同步 防止使用条件出现异常
+                            },false);
+                        // }
                 },false);
             }
             // zhangrui 风险性能优化 start
@@ -1051,6 +1083,12 @@
 	            }	     
 	            $("#riskTrialSpan").empty();
                 $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
+                //---add by xkni 2019/08/27----获取授信使用条件---
+                Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/getCreditConditionList', initParam, function (result) {
+                    if(typeof result.data != 'undefined') {
+                        $("#riskTrialSpan").html($("#riskTrialSpan").html() + "!" + "<span style=\"color:#F00\"> " + result.data + "</span>");
+                    }
+                },false);
 	        },false);
         }
     };

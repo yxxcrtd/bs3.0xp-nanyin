@@ -5,10 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.batch.riskparamcalc.processor.RskParamReCalcProcessor;
+import com.joyintech.tams.invest.batch.riskparamcalc.reader.RskParamReCalcReader;
+import com.joyintech.tams.invest.batch.riskparamcalc.writer.RskParamReCalcWriter;
+import com.joyintech.tams.invest.common.constantrds.BussinessConstantRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.risktrialrds.dict.LogLvl;
 import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -47,11 +54,6 @@ public class RiskRedisInitTask extends BatchBaseService{
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * BatchBuilder
-     */
-    @Autowired
-    private BatchBuilder<BaseReader<NeedOperateEntity>, BaseProcessor<NeedOperateEntity, NeedToWriteEntity>, BaseWriter<NeedToWriteEntity>> batchBuilder;
-    /**
      * PlatformDate
      */
     @Autowired(required = false)
@@ -61,6 +63,33 @@ public class RiskRedisInitTask extends BatchBaseService{
      */
     @Autowired(required = false)
     private PlatformDate platformDateService;
+
+    /**
+     * BatchBuilder
+     */
+    @Autowired
+    private BatchBuilder<RskParamReCalcReader, RskParamReCalcProcessor, RskParamReCalcWriter> batchBuilder;
+
+    /**
+     * RskParamReCalcReader
+     */
+    @Autowired
+    private RskParamReCalcReader step1Reader;
+
+    /**
+     * RskParamReCalcProcessor
+     */
+    @Autowired
+    private RskParamReCalcProcessor step1Processor;
+
+    /**
+     * RskParamReCalcWriter
+     */
+    @Autowired
+    private RskParamReCalcWriter step1Writer;
+
+    @Autowired(required = false)
+    private IPlatformDate platDataUtil;
 
     @Override
     public JobExecution execute() throws BatchException {
@@ -103,6 +132,21 @@ public class RiskRedisInitTask extends BatchBaseService{
                 }
             }else {
                 result.setStatus(BatchStatus.COMPLETED);
+            }
+
+            if (StringUtil.isNotEmpty(CacheUtil.getSysParam(BussinessConstantRds.IS_REPEATED_REIDSBATCH))
+                && StringUtil.equals(CacheUtil.getSysParam(BussinessConstantRds.IS_REPEATED_REIDSBATCH), DictCodeList.是否_是.getValue()) ) {
+                logger.info("批处理-指标参数重新更新redis开始");
+                Map<String, Object> paramsTwo = new HashMap<>();
+                paramsTwo.put(BatchConstant.KEY_PRODID_LIST, this.getProductIdList());
+                paramsTwo.put("sysDate", platDataUtil.getSysDate());
+                step1Reader.setParams(paramsTwo);
+                step1Processor.setParams(paramsTwo);
+                step1Writer.setParams(paramsTwo);
+                result = batchBuilder.init(this)
+                    .batch("step1", step1Reader, step1Processor, step1Writer)
+                    .builder(this.getBatchTask().getBeanName() + this.getBatchTask().getTaskId())
+                    .run();
             }
         }
         catch (Exception e) {
