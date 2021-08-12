@@ -144,7 +144,10 @@ public class EtrCommonService extends BaseService<ITableRow> {
         }
         if (StringUtil.isNotEmpty(param.get("finprodId"))){
             FinProduct finProduct = finProductMapper.selectByPrimaryKey((String)param.get("finprodId"));
-            List<String> holidayList = dateCalService.getDealCalendarHoliday(sysdate,DateUtil.addDay(sysdate, 15),finProduct.getCalendarId());
+            List<String> holidayList = new ArrayList<>();
+            if (Objects.nonNull(finProduct)) {
+                holidayList = dateCalService.getDealCalendarHoliday(sysdate,DateUtil.addDay(sysdate, 15),finProduct.getCalendarId());
+            }
             Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(sysdate).toString()), 1, holidayList, "1");
             param.put("sysDateT1", DateUtil.format(tradeDay));
         }else {

@@ -76,11 +76,10 @@ $(function () {
         	var valPrice2 = $("#valuationPrice2").val();
         	var num = $("#select2-valuationPrice2-results").find("li").size();
         	if(num > 0 && valPrice == valPrice2){
-        		$("#valuationPrice2").val("").trigger("change");// select清空
+        		$("#valuationPrice2").val("").trigger("");// select清空
             	layer.msg("估值第一市价不可和估值第二市价相同！");
         	}
         });
-        
         $("#quotaDigit").change(function(){
         	var quotaDigit = $('#quotaDigit').val();
             if(quotaDigit<0 || quotaDigit>12){
@@ -264,7 +263,32 @@ $(function () {
 				$("#priceTailMode").val("").trigger("change");
 				$("#priceClass").val("");
 			}
-//		}
+
+			//选择市值法时并且投资目的为收取合同现金流量及出售为目的，将估值第一市价改为市价来源，市价来源枚举值删除专家法，删除估值第二市价；
+			var traget1=document.getElementById("priceFristId");
+			var traget2=document.getElementById("priceSourceId");
+		    if(valMethod == '01' && $("#invAim").val() == 'FVOCI'){
+				traget1.style.display="none";
+				traget2.style.display="inline";
+				$("#c_valuationPrice2").hide();
+			}else if((valMethod == '01' || valMethod == '03')  && $("#invAim").val() == 'FVTPL'){
+				traget1.style.display="none";
+				traget2.style.display="inline";
+				$("#c_valuationPrice2").hide();
+			}else if(valMethod == '05' && $("#invAim").val() == 'FVTPL'){
+				$("#c_valuationPrice").hide();
+				$("#c_valuationPrice2").hide();
+
+
+				$("#c_quotaDigit").show();
+				$("#c_priceTailMode").show();
+				$("#c_valuationDate").show();
+
+				$("#valuationPrice").val("").trigger("change");
+				$("#valuationPrice2").val("").trigger("change");
+			}else{
+
+			}
     };
     
     // 01-债券,估值方法为市值法/市值成本孰低法且估值市价为收盘价、平均价、最高价、最低价、卖一价或者买一价时显示价格类型
@@ -293,7 +317,7 @@ $(function () {
                 }
             }
     };
-	
+
     $(function() {
         // 绑定按钮事件
         $('#ValuationMethodScheme003_btn_save').click(function() {

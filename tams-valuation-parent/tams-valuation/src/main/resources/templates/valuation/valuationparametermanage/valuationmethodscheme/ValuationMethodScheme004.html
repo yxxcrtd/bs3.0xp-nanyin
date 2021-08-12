@@ -89,11 +89,12 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md6" id="c_valuationPrice">
-                    <label class="layui-form-label form-lable-wrap">估值第一市价</label>
+                    <label id="priceFristId" class="layui-form-label form-lable-wrap" style="display: inline" >估值第一市价</label>
+                    <label id="priceSourceId" class="layui-form-label form-lable-wrap" style="display: none">市价来源</label>
                     <div class="layui-input-inline input-inline">
                         <select id="valuationPrice" name="valuationPrice" class="layui-input form-input input-select"
                             allowClear="true" placeholder="请输入" data-th-data-result="${VALUATION_PRICE}"
-                            data-th-initvalue="${entity?.valuationPrice}" data-th-required="true"parentIds="tradeMarket,finprodType"
+                            data-th-initvalue="${entity?.valuationPrice}" data-th-required="true"parentIds="tradeMarket,finprodType,invAim,valuationMethod"
                             data-th-data-url="@{/valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme004/getValuationPrice}">
                             <option></option>
                         </select>
