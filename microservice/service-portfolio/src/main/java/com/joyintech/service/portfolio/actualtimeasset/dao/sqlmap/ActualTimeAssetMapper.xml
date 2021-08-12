@@ -203,12 +203,12 @@
 					left join
 					(
 						select distinct
-							finprodMarketId,
+							finprodId,
 							marketPrice
 						from
 						(
 							SELECT DISTINCT
-								fp.FINPROD_MARKET_ID finprodMarketId,
+								fp.FINPROD_ID finprodId,
 								CASE
 									WHEN fpt.TYPE_8 = 'F01' THEN NVL(mbvi.PRICE,1)
 									WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET = '09' THEN NVL(frv.VALUATION,1)
@@ -228,9 +228,7 @@
 							LEFT JOIN MST_SHARE_PRICE msp
 							ON msp.SHARES_ID = fp.FINPROD_MARKET_ID AND msp.DEAL_DATE = to_date(#{cdate},'yyyy-MM-dd')
 						)gavInfo
-
-
-					) mv on t.FINPROD_ID = mv.finprodMarketId
+					) mv on t.FINPROD_ID = mv.finprodId
 					<where>
 				<if test="type8 != null and type8 !=''">
 					and t5.type_8 = #{type8,jdbcType=VARCHAR}
