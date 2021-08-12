@@ -4,6 +4,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.EtrCashPositionFlowMapper;
@@ -16,6 +17,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.etrbondbiddingresult.dto.Etrbondbiddingresult001Dto;
@@ -37,6 +39,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -237,7 +240,20 @@ public class EtrbondbiddingresultService extends CommonExportService<Etrbondbidd
 		ptlCashPositionFlowDto.setAcctType(acctTypeList2);
 		ptlCashPositionFlowDto.setIsFrozenPositionFlag(BussinessDictCodeList.是否_是.getValue());
 		BigDecimal isFrozenPosition = basePtlCashPositionInfoMapper.selectCashPositionFlow(ptlCashPositionFlowDto);
+		BigDecimal amount = basePtlCashPositionInfoMapper.selectPtlCashPositionFlowAmount(ptlCashPositionFlowDto);
 		basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
+		if(amount!=null){
+			Map<String,Object> positionMap = new HashMap<>();
+			positionMap.put("minDate", DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
+			positionMap.put("maxDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
+			positionMap.put("amount",amount.negate());
+			positionMap.put("hodingType",DictCodeList.持仓类型_实际.getValue());
+			positionMap.put("portfolioId",entrustCommonDto.getEtrEntrust().getPortfolioId());
+			positionMap.put("acctId",acctId);
+			positionMap.put("ccy",entrustCommonDto.getEtrEntrust().getCcy());
+			positionMap.put("orderId",entrustCommonDto.getEtrEntrust().getEntrustId());
+			basePtlCashPositionInfoMapper.updatePosition(positionMap);
+		}
 		//释放组合可用现金结束
 		//2.指令可用现金
 		//释放指令可用现金开始（反塞入）
@@ -248,7 +264,12 @@ public class EtrbondbiddingresultService extends CommonExportService<Etrbondbidd
 			dto.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
 			dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
 			dto.setAmount(ArithmeticUtil.multiply(isFrozenPosition,new BigDecimal("-1")));
-			etrCashPositionFlowMapper.insertSelective(dto);
+			EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+			List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
+			etrCashPositionFlows.add(dto);
+			etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
+			EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+//			etrCashPositionFlowMapper.insertSelective(dto);
 		}
 		//释放指令可用现金结束
 	}
