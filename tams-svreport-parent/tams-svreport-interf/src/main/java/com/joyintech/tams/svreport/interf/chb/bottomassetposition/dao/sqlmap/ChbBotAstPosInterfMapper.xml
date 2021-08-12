@@ -584,7 +584,8 @@ GROUP BY asset.POS_DATE,
         FROM chb_asset_info
         WHERE  ASSET_TYPE2 IN ('1108','1902')
         AND STATUS IN ('E','M')
-        AND #{batchTime,jdbcType=DATE} BETWEEN VDATE AND MDATE
+        and #{batchTime,jdbcType=DATE}>=VDATE
+        AND MDATE>#{batchTime,jdbcType=DATE}
     </select>
     <select id="getCashBotDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
         SELECT
