@@ -584,7 +584,9 @@
             var rs = parent.EtrIbBondinfoHq.queryPositionInfo(finprodIdhid,portfolioId,chlFinprodId,ccy,vdate,calId);
             getPtlCashPositionInfo(rs);
         }
-        window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
+        if(window.EtrInitCash){
+            window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
+        }
     }
     /**
      * 取消,清空指令数据
