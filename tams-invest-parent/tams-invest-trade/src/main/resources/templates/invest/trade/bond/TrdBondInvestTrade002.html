@@ -1009,7 +1009,7 @@
         var shortSellingSupported = /*[[${shortSellingSupported}]]*/'';
         var BANKCODE = [[${bankCode}]];
         var CCY_CNY = /*[[${CCY_CNY}]]*/'';
-        var GEN_PAY_ORDERS_AUTO=/*[[${GEN_PAY_ORDERS_AUTO}]]*/; // 系统参数_是否显示划款指令
+        var GEN_PAY_ORDERS_AUTO=/*[[${GEN_PAY_ORDERS_AUTO}]]*/''; // 系统参数_是否显示划款指令
         var userId=/*[[${userId}]]*/'';
 
         // add by etliu 20210501 银行间场内场外拆分 start
@@ -1018,6 +1018,8 @@
         //配置单位 add by yeming 20210723 end
         var entrustAmtUnit = /*[[${entrustAmtUnit}]]*/'';
         //配置单位 add by yeming 20210723 end
+        var procedureAmt_f = /*[[${procedureAmt_f}]]*/'';
+        var settleAmt_f = /*[[${settleAmt_f}]]*/'';
     </script>
     <script data-th-src="@{/js/component/common/TradeCommon.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/component/autocoupon/AutoCoupon.js}" type="text/javascript"></script>
