@@ -86,4 +86,6 @@ public interface PbcPrdBaseinfoSubDatMapper {
 
 	List<PbcPrdBaseinfoSubDat> selectByDatZipCode(@Param("datZipCode") String datZipCode);
 
+	int updateByDatZipCode(PbcPrdBaseinfoSubDat record);
+
 }

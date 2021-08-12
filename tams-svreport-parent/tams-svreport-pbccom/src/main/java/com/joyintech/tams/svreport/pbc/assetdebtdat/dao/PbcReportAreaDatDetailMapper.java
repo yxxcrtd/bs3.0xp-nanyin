@@ -60,4 +60,7 @@ public interface PbcReportAreaDatDetailMapper {
     int deleteByReportUUid(@Param("reportUuid") String reportUuid);
 
     int insertDataBySelect(@Param("reportUuid") String reportUuid);
+
+    List<PbcReportAreaDatDetailDto> selectByDatZipCode(@Param("datZipCode") String datZipCode, @Param("datZipDatType") String datZipDatType);
+
 }

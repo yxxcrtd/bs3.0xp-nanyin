@@ -12,11 +12,13 @@ package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
 
 import com.joyintech.component.svrreport.chb.contant.DictCodeListExt;
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -307,7 +309,7 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	 * @param param 页面参数
 	 * @return 压缩文件之地
 	 */
-	public String createZipFile(Map<String, Object> param) {
+	public AjaxResult createZipFile(Map<String, Object> param) {
 		param.put("zipSendStatus",DictCodeListExt2.报送状态_未报送.getValue());
 		if(StringUtil.isNotEmpty(param.get("result"))){
 			try {
@@ -333,9 +335,16 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 			}
 			zipInfoMap.put(datZipCode,datFile);
 		});
-		String result = pbcZipDataFileService.genDataFile(map,zipInfoMap);
-
-		return result;
+		AjaxResult ajaxResult = pbcZipDataFileService.genDataFile(map, zipInfoMap);
+		if(CollectionUtils.isNotEmpty(ajaxResult.getErrorList())){
+			List<ValidMessage> errorList = ajaxResult.getErrorList();
+			StringBuilder builder = new StringBuilder();
+			for (ValidMessage message : errorList) {
+				builder.append(message.getMessage() + "<br>");
+			}
+			ajaxResult.setMessage(builder.toString());
+		}
+		return ajaxResult;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package com.joyintech.service.pbc.classic.pbcsendzipdatfile.controller;
 
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
@@ -50,7 +51,7 @@ public class PbcSendZipDatFileController {
 	 * @return 压缩文件之地
 	 */
 	@PostMapping("createZipFile")
-	public String createZipFile(@RequestBody Map<String, Object> param) {
+	public AjaxResult createZipFile(@RequestBody Map<String, Object> param) {
 		return pbcSendZipDatFileService.createZipFile(param);
 	}
 

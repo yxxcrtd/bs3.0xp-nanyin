@@ -1222,4 +1222,16 @@
       PBC_PROD_ID = #{item.pbcProdId,jdbcType=VARCHAR}
       </foreach>
    </select>
+
+	<update id="updateByProdIds" parameterType="java.util.List">
+		update PBC_PRD_BASEINFO_SUB
+		set SEND_STATUS = '03',
+			SUBMIT_TIME = sysdate,
+			SUBMIT_FEEDBACK_STATUS = '03',
+		where  SEND_STATUS = '01'
+		    and PROD_ID in
+		    <foreach collection="list" item="item" open="(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+	</update>
 </mapper>

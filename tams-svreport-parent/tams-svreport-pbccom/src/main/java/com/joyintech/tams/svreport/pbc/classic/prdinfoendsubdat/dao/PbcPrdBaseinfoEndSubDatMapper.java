@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDatDiff;
 import org.apache.ibatis.annotations.Param;
@@ -96,5 +97,7 @@ public interface PbcPrdBaseinfoEndSubDatMapper {
 	List<PbcPrdBaseinfoEndSubDatDiff> queryPbcPrdBaseInfoEndByDatZipCode(String datZipCode);
 
 	List<PbcPrdBaseinfoEndSubDat> selectByDatZipCode(@Param("datZipCode") String datZipCode);
+
+	int updateByDatZipCode(PbcPrdBaseinfoEndSubDat record);
 
 }

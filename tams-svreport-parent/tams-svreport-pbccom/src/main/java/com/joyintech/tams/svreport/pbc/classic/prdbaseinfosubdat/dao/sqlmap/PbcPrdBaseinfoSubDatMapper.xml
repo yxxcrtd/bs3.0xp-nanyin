@@ -1429,4 +1429,13 @@
 		and SEND_STATUS = '01'
 		and STATUS not in ('02','03')
 	</select>
+
+	<update id="updateByDatZipCode" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+		update PBC_PRD_BASEINFO_SUB_DAT
+		set PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
+			SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+			SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+			SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP}
+		where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
+	</update>
 </mapper>

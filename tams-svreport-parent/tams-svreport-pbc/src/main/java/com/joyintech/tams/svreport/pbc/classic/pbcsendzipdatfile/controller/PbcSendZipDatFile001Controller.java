@@ -187,10 +187,9 @@ public class PbcSendZipDatFile001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("/createZipFile")
-	public String createZipFile() {
+	public AjaxResult createZipFile() {
 		Map<String, Object> param = RequestUtil.getPageParam();
-		String fileName=pbcSendZipDatFileMService.createZipFile(param);
-		return StringUtil.trimHtmlTag(fileName);
+		return pbcSendZipDatFileMService.createZipFile(param);
 	}
 
 	/**

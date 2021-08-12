@@ -153,6 +153,56 @@ public class PbcReportAssetIncomeDatDetail {
      */
     private Integer totalDiff;
 
+    /**
+     * 金融机构编码
+     */
+    private String finInstitutionCode;
+    /**
+     * 产品品种
+     */
+    private String prodVariety;
+
+    /**
+     * 期数
+     */
+    private String termid;
+
+    /**
+     * 发行机构代码
+     */
+    private String issuePartyId;
+
+    public String getFinInstitutionCode() {
+        return finInstitutionCode;
+    }
+
+    public void setFinInstitutionCode(String finInstitutionCode) {
+        this.finInstitutionCode = finInstitutionCode;
+    }
+
+    public String getProdVariety() {
+        return prodVariety;
+    }
+
+    public void setProdVariety(String prodVariety) {
+        this.prodVariety = prodVariety;
+    }
+
+    public String getTermid() {
+        return termid;
+    }
+
+    public void setTermid(String termid) {
+        this.termid = termid;
+    }
+
+    public String getIssuePartyId() {
+        return issuePartyId;
+    }
+
+    public void setIssuePartyId(String issuePartyId) {
+        this.issuePartyId = issuePartyId;
+    }
 
     /**
      * 主键

@@ -128,13 +128,17 @@ $(function() {
             var data = JSON.stringify(arr);
             var param = {result:data};
             Joyin.ajaxSync(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/createZipFile', param, function(result) {
-                console.log(result);
-                if (result.length < 1) {
+                var msg = result.message;
+                if(msg != null && msg != ''){
+                    Joyin.warn(msg);
+                }
+                if (result.data.length< 1) {
                     layer.alert('当前没有带保送的数据，请确认');
                 } else {
-                    param.result =result;
+                    param.result =result.data;
                     Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
                 }
+
             });
         });
     })

@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.pbc.assetdebtdat.dao;
 
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportCompanyDatDetailDto;
 import org.apache.ibatis.annotations.Param;
@@ -62,5 +63,7 @@ public interface PbcReportCompanyDatDetailMapper {
 
 
     List<PbcReportCompanyDatDetailDto> selectDatDiffByReport(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
+
+    List<PbcReportCompanyDatDetailDto> selectByDatZipCode(@Param("datZipCode") String datZipCode, @Param("datZipDatType") String datZipDatType);
 
 }
