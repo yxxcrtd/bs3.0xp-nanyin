@@ -3,6 +3,8 @@ package com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.c
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -99,6 +101,18 @@ public class RskSupervisionIndicatorParam003Controller extends BaseController{
             return wr;
     	}
         return commonCheck(result, dto.getOperateType());
+    }
+
+    /**
+     * 新建机构代码联想框
+     * @return List List
+     * @throws Exception Exception
+     */
+    @ResponseBody
+    @RequestMapping("/getInstitutionId")
+    public List<SelectOptionDto> getInstitutionId()
+        throws Exception {
+        return rskSupervisionIndicatorParam003Service.getInstitutionId(RequestUtil.getPageParam());
     }
 
     /**

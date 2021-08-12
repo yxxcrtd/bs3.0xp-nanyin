@@ -2,6 +2,9 @@ package com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorpar
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.riskrds.limitmanagement.rskevent.dao.RskEvent001Mapper;
 import com.joyintech.service.riskrds.limitmanagement.rskevent.dto.RskEvent002Dto;
@@ -104,8 +107,33 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
         pageParam.put("PLUGIN", BussinessDictCodeListRds.指标参数实现类型_类名.getValue());
         pageParam.put("SQL", BussinessDictCodeListRds.指标参数实现类型_SQL.getValue());
         pageParam.put("sysDate", DateUtil.format(DateUtil.platDateFromCache()));
-        return super.queryForPage(page, length,
-            () -> rskSupervisionIndicatorParamMapper.select(pageParam));
+        // wngayang1 二级法人改造  start
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            if (!StringUtil.equals(LoginUserUtil.getUserName(), "admin")) {
+                List<String> institutionLists = new ArrayList<>();
+                institutionLists.addAll(MultilevelDataAuthorityUtil.getService().queryAuthorizedOrgCodeByUserName(LoginUserUtil.getUserName()));
+                String institutionCode =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+                pageParam.put("institutionCode",institutionCode);
+                pageParam.put("institutionList",institutionLists);
+            }
+        }
+        Page<RskSupervisionIndicatorParamDto>  pageList = super.queryForPage(page, length,() -> rskSupervisionIndicatorParamMapper.select(pageParam));
+        //不是admin用户不能修改 机构号为null的指标
+        if (MultilevelDataAuthorityUtil.isEnabled() && !StringUtil.equals(LoginUserUtil.getUserName(), "admin")) {
+            for (RskSupervisionIndicatorParamDto dto : pageList.getRoot()) {
+                if (StringUtil.equals(dto.getParaType(), "FIX")) {
+                    dto.setUpdateFlg(com.joyintech.framework.constant.DictCodeList.是否_是.getValue());
+                } else {
+                    dto.setUpdateFlg(com.joyintech.framework.constant.DictCodeList.是否_否.getValue());
+                }
+            }
+        }else {
+            for (RskSupervisionIndicatorParamDto dto : pageList.getRoot()) {
+                 dto.setUpdateFlg(com.joyintech.framework.constant.DictCodeList.是否_是.getValue());
+            }
+        }
+        //wangyang1 二级法人改造 end
+        return pageList;
     }
 
     /**
@@ -119,7 +147,9 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
         int i = 0;
         i = i + rskIsupIndicatorParaMapper.deleteByPrimaryKey(dto.getParaCode());
         i = i + rskSupervisionIndicatorParamMapper.delete(dto.getParaCode());
-        i = i + rskSupervisionIndicatorParamMapper.deleteFixRecode(dto.getParaCode());
+        Map<String, Object> map =new HashMap<String, Object>();
+        map.put("paraCode", dto.getParaCode());
+        i = i + rskSupervisionIndicatorParamMapper.deleteFixRecode(map);
         //---------add by 裴家俊 2019-10-21 start---------------
         if(StringUtil.isNotEmpty(dto.getParaCode())&&StringUtil.isNotEmpty(dto.getParaType())&&dto.getParaType().equals(BussinessDictCodeListRds.指标参数实现类型_自定义.getValue())){
 			List<RskEvent002Dto> eventList = getEventCodeList(dto.getParaCode());
@@ -285,33 +315,69 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
 
     @Transactional(rollbackFor = Throwable.class)
     public int insertFixRecode(RskSupervisionIndicatorParam003Dto dto) {
-        RskIsupIndicatorPara record = new RskIsupIndicatorPara();
-        BeanUtil.copyPropertiesIgnoreNull(record, dto);
-        record.setIsForbid(DictCodeList.是否_否.getValue());
-		record.setIsUpRedis(DictCodeList.是否_否.getValue());
-        rskIsupIndicatorParaMapper.insert(record);
-        rskIsupFixRecodeMapper.insert(dto);
-        return 1;
+    	 RskIsupIndicatorPara record = new RskIsupIndicatorPara();
+         BeanUtil.copyPropertiesIgnoreNull(record, dto);
+         record.setIsForbid(DictCodeList.是否_否.getValue());
+ 		 record.setIsUpRedis(DictCodeList.是否_否.getValue());
+ 		 record.setParaType(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());
+         rskIsupIndicatorParaMapper.insert(record);
+         if (MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isNotEmpty(dto.getInstitutionCode())) {
+             String [] institutionCodes = dto.getInstitutionCode().split(",");
+             for (String institutionCode : institutionCodes) {
+               dto.setInstitutionCode(institutionCode);
+               rskIsupFixRecodeMapper.insert(dto);
+             }
+         }else {
+             dto.setInstitutionCode(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());
+             rskIsupFixRecodeMapper.insert(dto);
+         }
+         return 1;
     }
 
     @Transactional(rollbackFor = Throwable.class)
     public int updateFixRecode(RskSupervisionIndicatorParam003Dto dto) {
-        rskIsupIndicatorParaMapper.deleteByPrimaryKey(dto.getParaCode());
-        RskIsupIndicatorPara record = new RskIsupIndicatorPara();
-        BeanUtil.copyPropertiesIgnoreNull(record, dto);
-        record.setIsForbid(DictCodeList.是否_否.getValue());
-        rskIsupIndicatorParaMapper.insert(record);
-        rskSupervisionIndicatorParamMapper.deleteFixRecode(dto.getParaCode());
-        if (!StringUtil.isEmptyList(dto.getSelectedItem())) {
-            for (RskSupervisionIndicatorParam003Dto e : dto.getSelectedItem()) {
-                rskIsupFixRecodeMapper.insert(e);
-            }
-        }
-        return 1;
-    }
+    	 rskIsupIndicatorParaMapper.deleteByPrimaryKey(dto.getParaCode());
+         RskIsupIndicatorPara record = new RskIsupIndicatorPara();
+         BeanUtil.copyPropertiesIgnoreNull(record, dto);
+         record.setIsForbid(DictCodeList.是否_否.getValue());
+         record.setParaType(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());
+         rskIsupIndicatorParaMapper.insert(record);
+         if (!StringUtil.isEmptyList(dto.getSelectedItem())) {
+             for (RskSupervisionIndicatorParam003Dto e : dto.getSelectedItem()) {
+                 Map<String, Object> map =new HashMap<String, Object>();
+                 map.put("paraCode", e.getParaCode());
+                 map.put("institutionCode",StringUtil.isNotEmpty(e.getInstitutionCode())?e.getInstitutionCode():BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());
+                 rskSupervisionIndicatorParamMapper.deleteFixRecode(map);
+             }
+             for (RskSupervisionIndicatorParam003Dto e : dto.getSelectedItem()) {
+                 e.setInstitutionCode(StringUtil.isNotEmpty(e.getInstitutionCode())?e.getInstitutionCode():BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());
+                 rskIsupFixRecodeMapper.insert(e);
+             }
+         }
+         return 1;
+     }
 
     public List<RskSupervisionIndicatorParam003Dto> selectFixRecode(String paraCode) {
-        return rskSupervisionIndicatorParamMapper.selectFixRecode(paraCode);
+        Map<String, Object> param = new HashMap<>();
+        // wngayang1 二级法人改造  start
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<String> instCodeList = LoginUserUtil.getTreeInstCode();
+            String institutionCode =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+            param.put("institutionCode",institutionCode);
+            param.put("institutionList",instCodeList);
+        }
+        //wangyang1 二级法人改造 end
+        param.put("paraCode", paraCode);
+        return rskSupervisionIndicatorParamMapper.selectFixRecode(param);
+    }
+
+    public List<RskSupervisionIndicatorParam003Dto> selectFixRecode2(String paraCode) {
+        List<RskSupervisionIndicatorParam003Dto> list = new ArrayList<>();
+        RskSupervisionIndicatorParam003Dto dto003= new RskSupervisionIndicatorParam003Dto();
+        RskIsupIndicatorPara para = rskIsupIndicatorParaMapper.selectByPrimaryKey(paraCode);
+        BeanUtil.copyPropertiesIgnoreNull(dto003,para);
+        list.add(dto003);
+        return list;
     }
 
     public boolean isExistParaName(Map<String, Object> param) {
@@ -320,9 +386,10 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
 
     @Transactional(rollbackFor = Throwable.class)
     public int insertCustomParam(RskSupervisionIndicatorParam005Dto dto) {
-        RskIsupIndicatorPara record = new RskIsupIndicatorPara();
-        BeanUtil.copyPropertiesIgnoreNull(record, dto);
-        record.setIsForbid(DictCodeList.是否_否.getValue());
+    	 RskIsupIndicatorPara record = new RskIsupIndicatorPara();
+         BeanUtil.copyPropertiesIgnoreNull(record, dto);
+         record.setIsForbid(DictCodeList.是否_否.getValue());
+         // 插入参数表
         // 插入参数表
         rskIsupIndicatorParaMapper.insert(record);
         List<RskSupervisionIndicatorParam005Dto> paraDtl = getParaDtlList(dto);
@@ -1266,7 +1333,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
     		}
     		if(StringUtil.equals(map.get("bodyGradeType"), BussinessDictCodeListRds.评级分类_内部评级.getValue())){
     			RskEventItemRule rule = new RskEventItemRule();
-    			//rule.setItemCode(BussinessDictCodeListRds.风险事件特征值类型_.getValue());
+//    			rule.setItemCode("bondInsideType1");
     			rule.setMatchType(BussinessDictCodeListRds.运算符_包含.getValue());
     			rule.setItemValue(bodyGrade);
     			list.add(rule);
@@ -1426,4 +1493,19 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
 		return modelValue;
 	}
 
+	/**
+	 * <一句话功能简述>
+	 * <功能详细描述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public List<SelectOptionDto> getInstitutionId(Map<String, Object> param){
+	    com.joyintech.tams.systemtools.util.CommonUtil.setInstitutionMapByType_ms(param);
+	    if (StringUtil.isNotEmpty(param.get("initValue"))) {
+	        param.put("search", param.get("initValue"));
+        }
+	    List<SelectOptionDto> institutionIdList = rskSupervisionIndicatorParamMapper.getInstitutionId(param);
+	    return institutionIdList;
+	}
 }
