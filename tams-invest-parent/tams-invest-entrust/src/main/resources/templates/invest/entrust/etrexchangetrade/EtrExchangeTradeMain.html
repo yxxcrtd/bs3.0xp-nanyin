@@ -83,15 +83,17 @@
 							 height="100%"  frameborder="0"  style="border:none;"></iframe>
 				</div>
 			</div>
-		</div>
-		<div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 5px;">
-			<div class="text-center">
-				<a id="EtrIbBondinfoMain_btn_fileupload" class="layui-btn layui-btn-sm" data-th-text="#{EtrIbBondinfoMain.fileupload}">风险试算</a>
-				<a id="EtrIbBondinfoMain_btn_riskcal" class="layui-btn layui-btn-sm" data-th-text="#{EtrIbBondinfoMain.riskcal}">风险试算</a>
-				<a id="EtrIbBondinfoMain_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
-				<a id="EtrIbBondinfoMain_btn_submit" class="layui-btn layui-btn-sm  btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
-				<a id="EtrIbBondinfoMain_btn_reset" class="layui-btn layui-btn-sm  btn-reset" data-th-text="#{SysCommon.reset}">重置</a>
+			<div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 5px;">
+				<div class="text-center">
+					<a id="EtrExchangeTrade001_btn_riskcal" class="layui-btn layui-btn-sm" data-th-text="#{EtrIbBondinfoMain.riskcal}">风险试算</a>
+					<a id="EtrExchangeTrade001_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
+					<a id="EtrExchangeTrade001_btn_submit" class="layui-btn layui-btn-sm  btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
+					<a id="EtrExchangeTrade001_btn_reset" class="layui-btn layui-btn-sm  btn-reset" data-th-text="#{SysCommon.reset}">重置</a>
+				</div>
 			</div>
+		</div>
+		<div id="baseRiskMathComm" class="page-component" style="display: none;"  th:data-path="@{/component/common/BaseRiskMathComm/init}"
+			 th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${entrustId}'}|">
 		</div>
 	</div>
 </div>

@@ -1356,6 +1356,7 @@
     var linkFindSecAmountInfo = function() {
         var portfolioId = $("#portfolioId_" + currentTab).val(); // 组合名称
         var acctNo = $("#acctNo_" + currentTab).val(); // 资金账户
+        var acctTradeMarket = $("#acctTradeMarket_" + currentTab).val(); // 资金账户
         var secAcctId = $("#secId_" + currentTab).val(); // 资产名称
         var finprodId = $("#finprodId_" + currentTab).val(); // 资产代码
         var ps = $("#ps_" + currentTab).val(); // 委托方向
@@ -2116,7 +2117,7 @@
         var finprodType2 = $("#finprodType2_" + currentTab).val();
         var ps = $("#ps_" + currentTab).val();
         var priceModel = $("#priceModel_" + currentTab).val();
-        if(ps == PS_T46 || ps == PS_T97 || ps == PS_T03 || ps == PS_T04 || ps == PS_T49 || ps == PS_T68 || ps == PS_T69
+        if(ps == PS_T46 || ps == PS_T97 || ps == PS_T03 ||/* ps == PS_T04 ||*/ ps == PS_T49 || ps == PS_T68 || ps == PS_T69
             /*||((ps == PS_03 || ps == PS_04) && currentTab == 'dz')*/) {
             if(BOND_SCALE){
                 entrustPrice = $("#entrustPrice_" + currentTab).val();
