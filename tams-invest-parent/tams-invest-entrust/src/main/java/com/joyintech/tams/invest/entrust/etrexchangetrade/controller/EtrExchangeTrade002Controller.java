@@ -13,6 +13,8 @@ package com.joyintech.tams.invest.entrust.etrexchangetrade.controller;
 import java.util.Map;
 
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,6 +51,9 @@ public class EtrExchangeTrade002Controller extends BaseController{
      */
     @Autowired
     private EtrExchangeTrade002Service etrExchangeTrade002Service;
+
+    @Autowired
+    private EtrExchangeTrade001Service etrExchangeTrade001Service;
     
     @Override
     public String init(Model model) {
@@ -135,4 +140,10 @@ public class EtrExchangeTrade002Controller extends BaseController{
         return etrExchangeTrade002Service.loadSecNum(RequestUtil.getPageParam());
     }
 
+    @ResponseBody
+    @RequestMapping("selectEtrExchange")
+    public Page<EtrExchangeTrade003Dto> selectEtrExchange(){
+        Page<EtrExchangeTrade003Dto>  result = etrExchangeTrade001Service.selectEtrExchange(RequestUtil.getPageParam());
+        return result;
+    }
 }

@@ -28,7 +28,6 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.riskrds.constant.ModelConstant;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
-import com.joyintech.tams.component.business.riskrds.service.CommonRelatedPartyService;
 import com.joyintech.tams.component.business.riskrds.service.RiskRdsTrialService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.CommonUtil;
@@ -72,12 +71,6 @@ public class RiskRdsTrialController {
             if (CollectionUtils.isEmpty(dataList) || StringUtil.isEmpty(eventType)) {
                 throw new NullPointerException("请求报文或者请求参数为空");
             }
-            boolean isFromExchange = StringUtil.equals(pageId, ModelConstant.ETREXCHANGEIMPORT);
-            if (isFromExchange) dataList.forEach(data -> data.put("fromEtrExchange", DictCodeList.是否_是.getValue()));
-            IRiskRds base = new InterfRiskRdsDto();
-            base.setEventType(eventType);
-            base.setInfCode(BussinessDictCodeListRds.接口系统ID_风险试算批量接口.getValue());
-            CommonRelatedPartyService.doCredit(dataList, base);
             ClientData rsp = service.sendList(pageId,
                 BussinessDictCodeListRds.接口系统ID_风险试算批量接口.getValue(), dataList,
                 map -> map.put(ModelConstant.INF_EVENTTYPE, eventType));

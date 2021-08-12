@@ -1,0 +1,1073 @@
+{
+  "id": "1831806",
+  "name": "新理财产品管理系统",
+  "font_family": "jyiconfont",
+  "css_prefix_text": "jyicon-",
+  "description": "兆尹《理财产品管理系统》导航等图标",
+  "glyphs": [
+    {
+      "icon_id": "16499620",
+      "name": "qq",
+      "font_class": "qq",
+      "unicode": "ed248",
+      "unicode_decimal": 971336
+    },
+    {
+      "icon_id": "16499621",
+      "name": "wechat",
+      "font_class": "wechat",
+      "unicode": "ed247",
+      "unicode_decimal": 971335
+    },
+    {
+      "icon_id": "16499976",
+      "name": "新浪微博",
+      "font_class": "sweibo",
+      "unicode": "ed246",
+      "unicode_decimal": 971334
+    },
+    {
+      "icon_id": "16499983",
+      "name": "腾讯微博",
+      "font_class": "tweibo",
+      "unicode": "ed245",
+      "unicode_decimal": 971333
+    },
+    {
+      "icon_id": "21368591",
+      "name": "提交",
+      "font_class": "btn-submit",
+      "unicode": "ee49",
+      "unicode_decimal": 61001
+    },
+    {
+      "icon_id": "21368592",
+      "name": "刷新",
+      "font_class": "refresh",
+      "unicode": "ee4a",
+      "unicode_decimal": 61002
+    },
+    {
+      "icon_id": "21368593",
+      "name": "保存",
+      "font_class": "btn-save",
+      "unicode": "ee4b",
+      "unicode_decimal": 61003
+    },
+    {
+      "icon_id": "21368594",
+      "name": "取消",
+      "font_class": "btn-cancel",
+      "unicode": "ee4c",
+      "unicode_decimal": 61004
+    },
+    {
+      "icon_id": "21368500",
+      "name": "箭头上",
+      "font_class": "arrow-up",
+      "unicode": "ee45",
+      "unicode_decimal": 60997
+    },
+    {
+      "icon_id": "21368501",
+      "name": "箭头右",
+      "font_class": "arrow-right",
+      "unicode": "ee46",
+      "unicode_decimal": 60998
+    },
+    {
+      "icon_id": "21368502",
+      "name": "箭头下",
+      "font_class": "arrow-down",
+      "unicode": "ee47",
+      "unicode_decimal": 60999
+    },
+    {
+      "icon_id": "21368503",
+      "name": "箭头左",
+      "font_class": "arrow-left",
+      "unicode": "ee48",
+      "unicode_decimal": 61000
+    },
+    {
+      "icon_id": "21368426",
+      "name": "搜索",
+      "font_class": "search",
+      "unicode": "ee43",
+      "unicode_decimal": 60995
+    },
+    {
+      "icon_id": "21368427",
+      "name": "重置",
+      "font_class": "reset",
+      "unicode": "ee44",
+      "unicode_decimal": 60996
+    },
+    {
+      "icon_id": "21368416",
+      "name": "减少",
+      "font_class": "minus",
+      "unicode": "ee42",
+      "unicode_decimal": 60994
+    },
+    {
+      "icon_id": "21368380",
+      "name": "添加",
+      "font_class": "plus",
+      "unicode": "ee41",
+      "unicode_decimal": 60993
+    },
+    {
+      "icon_id": "21368336",
+      "name": "换肤",
+      "font_class": "skin",
+      "unicode": "ee40",
+      "unicode_decimal": 60992
+    },
+    {
+      "icon_id": "21368318",
+      "name": "主题",
+      "font_class": "theme",
+      "unicode": "ee3f",
+      "unicode_decimal": 60991
+    },
+    {
+      "icon_id": "21368279",
+      "name": "三角形上",
+      "font_class": "triangle-top",
+      "unicode": "ee3e",
+      "unicode_decimal": 60990
+    },
+    {
+      "icon_id": "21368273",
+      "name": "三角形左",
+      "font_class": "triangle-left",
+      "unicode": "ee3d",
+      "unicode_decimal": 60989
+    },
+    {
+      "icon_id": "21368254",
+      "name": "三角形右",
+      "font_class": "triangle-right",
+      "unicode": "ee3c",
+      "unicode_decimal": 60988
+    },
+    {
+      "icon_id": "21368249",
+      "name": "三角形下",
+      "font_class": "triangle-down",
+      "unicode": "ee3b",
+      "unicode_decimal": 60987
+    },
+    {
+      "icon_id": "21368233",
+      "name": "男头像",
+      "font_class": "man-avatar",
+      "unicode": "ee3a",
+      "unicode_decimal": 60986
+    },
+    {
+      "icon_id": "21368170",
+      "name": "女头像",
+      "font_class": "lady-avatar",
+      "unicode": "ee39",
+      "unicode_decimal": 60985
+    },
+    {
+      "icon_id": "21368148",
+      "name": "上升",
+      "font_class": "rise",
+      "unicode": "ee38",
+      "unicode_decimal": 60984
+    },
+    {
+      "icon_id": "21368132",
+      "name": "下降",
+      "font_class": "drop",
+      "unicode": "ee37",
+      "unicode_decimal": 60983
+    },
+    {
+      "icon_id": "21368119",
+      "name": "更多",
+      "font_class": "more",
+      "unicode": "ee36",
+      "unicode_decimal": 60982
+    },
+    {
+      "icon_id": "21368110",
+      "name": "省略号更多",
+      "font_class": "still-more",
+      "unicode": "ee35",
+      "unicode_decimal": 60981
+    },
+    {
+      "icon_id": "21368060",
+      "name": "箭头上",
+      "font_class": "up-arrow",
+      "unicode": "ee34",
+      "unicode_decimal": 60980
+    },
+    {
+      "icon_id": "21368053",
+      "name": "箭头下",
+      "font_class": "down-arrow",
+      "unicode": "ee33",
+      "unicode_decimal": 60979
+    },
+    {
+      "icon_id": "21367993",
+      "name": "箭头右",
+      "font_class": "right-arrow",
+      "unicode": "ee32",
+      "unicode_decimal": 60978
+    },
+    {
+      "icon_id": "21367964",
+      "name": "箭头左",
+      "font_class": "left-arrow",
+      "unicode": "ee31",
+      "unicode_decimal": 60977
+    },
+    {
+      "icon_id": "21367855",
+      "name": "维修设置",
+      "font_class": "repair-manage",
+      "unicode": "ee30",
+      "unicode_decimal": 60976
+    },
+    {
+      "icon_id": "21367823",
+      "name": "接口",
+      "font_class": "interface",
+      "unicode": "ee2f",
+      "unicode_decimal": 60975
+    },
+    {
+      "icon_id": "21367763",
+      "name": "批量右翻",
+      "font_class": "batchright",
+      "unicode": "ee2e",
+      "unicode_decimal": 60974
+    },
+    {
+      "icon_id": "21367738",
+      "name": "批量左翻",
+      "font_class": "batchleft",
+      "unicode": "ee2d",
+      "unicode_decimal": 60973
+    },
+    {
+      "icon_id": "21367716",
+      "name": "翻上页",
+      "font_class": "prevpage",
+      "unicode": "ee2c",
+      "unicode_decimal": 60972
+    },
+    {
+      "icon_id": "21367682",
+      "name": "首页",
+      "font_class": "firstpage",
+      "unicode": "ee2b",
+      "unicode_decimal": 60971
+    },
+    {
+      "icon_id": "21367669",
+      "name": "翻下页",
+      "font_class": "nextpage",
+      "unicode": "ee2a",
+      "unicode_decimal": 60970
+    },
+    {
+      "icon_id": "21367648",
+      "name": "尾页",
+      "font_class": "lastpage",
+      "unicode": "ee29",
+      "unicode_decimal": 60969
+    },
+    {
+      "icon_id": "21367133",
+      "name": "降序",
+      "font_class": "desc",
+      "unicode": "ee28",
+      "unicode_decimal": 60968
+    },
+    {
+      "icon_id": "21367104",
+      "name": "升序",
+      "font_class": "asc",
+      "unicode": "ee27",
+      "unicode_decimal": 60967
+    },
+    {
+      "icon_id": "21324589",
+      "name": "用户、角色_无数据",
+      "font_class": "roles-nodata",
+      "unicode": "ee26",
+      "unicode_decimal": 60966
+    },
+    {
+      "icon_id": "21324569",
+      "name": "右下角勾选",
+      "font_class": "selected",
+      "unicode": "ee25",
+      "unicode_decimal": 60965
+    },
+    {
+      "icon_id": "21324563",
+      "name": "筛选列",
+      "font_class": "screen",
+      "unicode": "ee24",
+      "unicode_decimal": 60964
+    },
+    {
+      "icon_id": "21324556",
+      "name": "表格",
+      "font_class": "table",
+      "unicode": "ee23",
+      "unicode_decimal": 60963
+    },
+    {
+      "icon_id": "21324539",
+      "name": "日期时间",
+      "font_class": "datetime",
+      "unicode": "ee22",
+      "unicode_decimal": 60962
+    },
+    {
+      "icon_id": "21324535",
+      "name": "日期",
+      "font_class": "date",
+      "unicode": "ee21",
+      "unicode_decimal": 60961
+    },
+    {
+      "icon_id": "21324523",
+      "name": "左右框架",
+      "font_class": "item-side",
+      "unicode": "ee20",
+      "unicode_decimal": 60960
+    },
+    {
+      "icon_id": "21324517",
+      "name": "上下框架",
+      "font_class": "item-navbar",
+      "unicode": "ee1f",
+      "unicode_decimal": 60959
+    },
+    {
+      "icon_id": "21324485",
+      "name": "退出最大化",
+      "font_class": "shrink",
+      "unicode": "ee1e",
+      "unicode_decimal": 60958
+    },
+    {
+      "icon_id": "21324475",
+      "name": "最大化",
+      "font_class": "arraw-salt",
+      "unicode": "ee1d",
+      "unicode_decimal": 60957
+    },
+    {
+      "icon_id": "21324465",
+      "name": "退出全屏",
+      "font_class": "screen-exit",
+      "unicode": "ee1c",
+      "unicode_decimal": 60956
+    },
+    {
+      "icon_id": "21324460",
+      "name": "全屏",
+      "font_class": "full-screen",
+      "unicode": "ee1b",
+      "unicode_decimal": 60955
+    },
+    {
+      "icon_id": "21324439",
+      "name": "导航展开",
+      "font_class": "navopen",
+      "unicode": "ee1a",
+      "unicode_decimal": 60954
+    },
+    {
+      "icon_id": "21324435",
+      "name": "导航收起",
+      "font_class": "navcutout",
+      "unicode": "ee19",
+      "unicode_decimal": 60953
+    },
+    {
+      "icon_id": "21324426",
+      "name": "拖拽",
+      "font_class": "drag",
+      "unicode": "ee18",
+      "unicode_decimal": 60952
+    },
+    {
+      "icon_id": "21324405",
+      "name": "面包屑",
+      "font_class": "crumb",
+      "unicode": "ee17",
+      "unicode_decimal": 60951
+    },
+    {
+      "icon_id": "21324269",
+      "name": "时间",
+      "font_class": "time",
+      "unicode": "ee16",
+      "unicode_decimal": 60950
+    },
+    {
+      "icon_id": "21324267",
+      "name": "提醒",
+      "font_class": "remind",
+      "unicode": "ee15",
+      "unicode_decimal": 60949
+    },
+    {
+      "icon_id": "21324248",
+      "name": "注销",
+      "font_class": "logout",
+      "unicode": "ee14",
+      "unicode_decimal": 60948
+    },
+    {
+      "icon_id": "21324227",
+      "name": "验证码",
+      "font_class": "vcode",
+      "unicode": "ee13",
+      "unicode_decimal": 60947
+    },
+    {
+      "icon_id": "21324194",
+      "name": "密码",
+      "font_class": "pass",
+      "unicode": "ee12",
+      "unicode_decimal": 60946
+    },
+    {
+      "icon_id": "21324186",
+      "name": "用户",
+      "font_class": "user",
+      "unicode": "ee11",
+      "unicode_decimal": 60945
+    },
+    {
+      "icon_id": "21324143",
+      "name": "投资端",
+      "font_class": "invest-trade",
+      "unicode": "ee10",
+      "unicode_decimal": 60944
+    },
+    {
+      "icon_id": "21324033",
+      "name": "风险提醒",
+      "font_class": "risk-warning",
+      "unicode": "ee0f",
+      "unicode_decimal": 60943
+    },
+    {
+      "icon_id": "21323955",
+      "name": "报送管理",
+      "font_class": "report-manage",
+      "unicode": "ee0e",
+      "unicode_decimal": 60942
+    },
+    {
+      "icon_id": "21323953",
+      "name": "报送登记",
+      "font_class": "report-bookin",
+      "unicode": "ee0d",
+      "unicode_decimal": 60941
+    },
+    {
+      "icon_id": "21323947",
+      "name": "报送检查",
+      "font_class": "report-inspect",
+      "unicode": "ee0c",
+      "unicode_decimal": 60940
+    },
+    {
+      "icon_id": "21323938",
+      "name": "基础管理",
+      "font_class": "basic-manage",
+      "unicode": "ee0b",
+      "unicode_decimal": 60939
+    },
+    {
+      "icon_id": "21323932",
+      "name": "首页",
+      "font_class": "home",
+      "unicode": "ee0a",
+      "unicode_decimal": 60938
+    },
+    {
+      "icon_id": "21323873",
+      "name": "用户信息",
+      "font_class": "user-info",
+      "unicode": "ee09",
+      "unicode_decimal": 60937
+    },
+    {
+      "icon_id": "21323790",
+      "name": "告示",
+      "font_class": "placard",
+      "unicode": "ee08",
+      "unicode_decimal": 60936
+    },
+    {
+      "icon_id": "21323737",
+      "name": "计算公式",
+      "font_class": "formula-count",
+      "unicode": "ee07",
+      "unicode_decimal": 60935
+    },
+    {
+      "icon_id": "21323698",
+      "name": "函数",
+      "font_class": "function-formula",
+      "unicode": "ee06",
+      "unicode_decimal": 60934
+    },
+    {
+      "icon_id": "21323652",
+      "name": "场内交易系统参数",
+      "font_class": "onsite-trade-config",
+      "unicode": "ee05",
+      "unicode_decimal": 60933
+    },
+    {
+      "icon_id": "21323590",
+      "name": "工作流配置",
+      "font_class": "workflow-config",
+      "unicode": "ee04",
+      "unicode_decimal": 60932
+    },
+    {
+      "icon_id": "21323466",
+      "name": "产品存续期",
+      "font_class": "product-duration",
+      "unicode": "ee03",
+      "unicode_decimal": 60931
+    },
+    {
+      "icon_id": "21323425",
+      "name": "系统参数配置",
+      "font_class": "system-config",
+      "unicode": "ee02",
+      "unicode_decimal": 60930
+    },
+    {
+      "icon_id": "21323328",
+      "name": "业务批处理",
+      "font_class": "business-process",
+      "unicode": "ee01",
+      "unicode_decimal": 60929
+    },
+    {
+      "icon_id": "21323286",
+      "name": "日志管理",
+      "font_class": "log-manage",
+      "unicode": "ee00",
+      "unicode_decimal": 60928
+    },
+    {
+      "icon_id": "21323088",
+      "name": "用户角色权限",
+      "font_class": "userrole-rbac",
+      "unicode": "edff",
+      "unicode_decimal": 60927
+    },
+    {
+      "icon_id": "21322756",
+      "name": "系统管理",
+      "font_class": "system-manage",
+      "unicode": "edfe",
+      "unicode_decimal": 60926
+    },
+    {
+      "icon_id": "21322704",
+      "name": "公共业务参数",
+      "font_class": "public-config",
+      "unicode": "edfd",
+      "unicode_decimal": 60925
+    },
+    {
+      "icon_id": "21322688",
+      "name": "交易所业务参数",
+      "font_class": "exchange-bizconfig",
+      "unicode": "edfc",
+      "unicode_decimal": 60924
+    },
+    {
+      "icon_id": "21322678",
+      "name": "银行间业务参数",
+      "font_class": "Interbank-bizconfig",
+      "unicode": "edfb",
+      "unicode_decimal": 60923
+    },
+    {
+      "icon_id": "21322668",
+      "name": "业务参数管理",
+      "font_class": "business-manage",
+      "unicode": "edfa",
+      "unicode_decimal": 60922
+    },
+    {
+      "icon_id": "21320112",
+      "name": "文档管理",
+      "font_class": "doc-manage",
+      "unicode": "edf9",
+      "unicode_decimal": 60921
+    },
+    {
+      "icon_id": "21320105",
+      "name": "监管报送",
+      "font_class": "supervise-submit",
+      "unicode": "edf8",
+      "unicode_decimal": 60920
+    },
+    {
+      "icon_id": "21320099",
+      "name": "信息披露",
+      "font_class": "info-notice",
+      "unicode": "edf7",
+      "unicode_decimal": 60919
+    },
+    {
+      "icon_id": "21320096",
+      "name": "综合信披管理",
+      "font_class": "synthetical-xinpi",
+      "unicode": "edf6",
+      "unicode_decimal": 60918
+    },
+    {
+      "icon_id": "21320095",
+      "name": "组合统计报表",
+      "font_class": "compose-report",
+      "unicode": "edf5",
+      "unicode_decimal": 60917
+    },
+    {
+      "icon_id": "21320087",
+      "name": "组合资产分析",
+      "font_class": "portfolio-assets",
+      "unicode": "edf4",
+      "unicode_decimal": 60916
+    },
+    {
+      "icon_id": "21320083",
+      "name": "组合分析",
+      "font_class": "portfolio-analysis",
+      "unicode": "edf3",
+      "unicode_decimal": 60915
+    },
+    {
+      "icon_id": "21320079",
+      "name": "穿透管理",
+      "font_class": "penetrate-manage",
+      "unicode": "edf2",
+      "unicode_decimal": 60914
+    },
+    {
+      "icon_id": "21320018",
+      "name": "客户关系树",
+      "font_class": "crm-tree",
+      "unicode": "edf1",
+      "unicode_decimal": 60913
+    },
+    {
+      "icon_id": "21320014",
+      "name": "授权管理",
+      "font_class": "empower-manage",
+      "unicode": "edf0",
+      "unicode_decimal": 60912
+    },
+    {
+      "icon_id": "21319956",
+      "name": "限额管理",
+      "font_class": "quota-manage",
+      "unicode": "edef",
+      "unicode_decimal": 60911
+    },
+    {
+      "icon_id": "21319941",
+      "name": "授信管理",
+      "font_class": "creditgrant-manage",
+      "unicode": "edee",
+      "unicode_decimal": 60910
+    },
+    {
+      "icon_id": "21319933",
+      "name": "名单管理",
+      "font_class": "namelist-manage",
+      "unicode": "eded",
+      "unicode_decimal": 60909
+    },
+    {
+      "icon_id": "21319914",
+      "name": "压力测试",
+      "font_class": "stress-testing",
+      "unicode": "edec",
+      "unicode_decimal": 60908
+    },
+    {
+      "icon_id": "21319913",
+      "name": "风险管理",
+      "font_class": "risk-manage",
+      "unicode": "edeb",
+      "unicode_decimal": 60907
+    },
+    {
+      "icon_id": "21319907",
+      "name": "核算统计报表",
+      "font_class": "bnsaccount-standbook",
+      "unicode": "edea",
+      "unicode_decimal": 60906
+    },
+    {
+      "icon_id": "21319904",
+      "name": "核算参数管理",
+      "font_class": "bnsaccount-parameter",
+      "unicode": "ede9",
+      "unicode_decimal": 60905
+    },
+    {
+      "icon_id": "21319899",
+      "name": "账务管理",
+      "font_class": "bill-reminder",
+      "unicode": "ede8",
+      "unicode_decimal": 60904
+    },
+    {
+      "icon_id": "21319893",
+      "name": "日常做账",
+      "font_class": "daily-makebill",
+      "unicode": "ede7",
+      "unicode_decimal": 60903
+    },
+    {
+      "icon_id": "21319880",
+      "name": "核算管理",
+      "font_class": "bnsaccount-manage",
+      "unicode": "ede6",
+      "unicode_decimal": 60902
+    },
+    {
+      "icon_id": "21319876",
+      "name": "估值批处理",
+      "font_class": "valbatch-process",
+      "unicode": "ede5",
+      "unicode_decimal": 60901
+    },
+    {
+      "icon_id": "21319865",
+      "name": "估值参数管理",
+      "font_class": "valparameter-manage",
+      "unicode": "ede4",
+      "unicode_decimal": 60900
+    },
+    {
+      "icon_id": "21319864",
+      "name": "净值管理",
+      "font_class": "netvalue-manage",
+      "unicode": "ede3",
+      "unicode_decimal": 60899
+    },
+    {
+      "icon_id": "21319817",
+      "name": "估值管理",
+      "font_class": "valuation-manage",
+      "unicode": "ede1",
+      "unicode_decimal": 60897
+    },
+    {
+      "icon_id": "21319811",
+      "name": "资产交收",
+      "font_class": "assets-settlement",
+      "unicode": "ede0",
+      "unicode_decimal": 60896
+    },
+    {
+      "icon_id": "21319478",
+      "name": "来账分拣",
+      "font_class": "laizhangfenjian",
+      "unicode": "eddd",
+      "unicode_decimal": 60893
+    },
+    {
+      "icon_id": "21319473",
+      "name": "资产存续期",
+      "font_class": "assets-duration",
+      "unicode": "eddc",
+      "unicode_decimal": 60892
+    },
+    {
+      "icon_id": "21319467",
+      "name": "现金流查询",
+      "font_class": "cashflow-query",
+      "unicode": "eddb",
+      "unicode_decimal": 60891
+    },
+    {
+      "icon_id": "21319463",
+      "name": "交收管理",
+      "font_class": "settlement-manage",
+      "unicode": "edda",
+      "unicode_decimal": 60890
+    },
+    {
+      "icon_id": "21319327",
+      "name": "活期管理",
+      "font_class": "currdeposit-manage",
+      "unicode": "edd8",
+      "unicode_decimal": 60888
+    },
+    {
+      "icon_id": "21319317",
+      "name": "费用支付管理",
+      "font_class": "payexps-manage",
+      "unicode": "edd7",
+      "unicode_decimal": 60887
+    },
+    {
+      "icon_id": "21319280",
+      "name": "清算指令管理",
+      "font_class": "settle-instruct",
+      "unicode": "edd5",
+      "unicode_decimal": 60885
+    },
+    {
+      "icon_id": "21319274",
+      "name": "账户管理",
+      "font_class": "account-manage",
+      "unicode": "edd4",
+      "unicode_decimal": 60884
+    },
+    {
+      "icon_id": "21319203",
+      "name": "清算管理",
+      "font_class": "settle-manage",
+      "unicode": "edd2",
+      "unicode_decimal": 60882
+    },
+    {
+      "icon_id": "21319038",
+      "name": "交易所日常交易",
+      "font_class": "exchange-dailytrade",
+      "unicode": "edd1",
+      "unicode_decimal": 60881
+    },
+    {
+      "icon_id": "21318725",
+      "name": "交易所指令管理",
+      "font_class": "exchange-instruct",
+      "unicode": "edd0",
+      "unicode_decimal": 60880
+    },
+    {
+      "icon_id": "21318640",
+      "name": "沪深所交易下单",
+      "font_class": "hushen-exchange",
+      "unicode": "edcf",
+      "unicode_decimal": 60879
+    },
+    {
+      "icon_id": "21318620",
+      "name": "报价管理",
+      "font_class": "quote-manage",
+      "unicode": "edce",
+      "unicode_decimal": 60878
+    },
+    {
+      "icon_id": "21318512",
+      "name": "银行间交易下单",
+      "font_class": "Interbank-order",
+      "unicode": "edcc",
+      "unicode_decimal": 60876
+    },
+    {
+      "icon_id": "21318475",
+      "name": "资金调拨管理",
+      "font_class": "eft-manage",
+      "unicode": "edcb",
+      "unicode_decimal": 60875
+    },
+    {
+      "icon_id": "21318456",
+      "name": "CSTP管理",
+      "font_class": "cstp-manage",
+      "unicode": "edca",
+      "unicode_decimal": 60874
+    },
+    {
+      "icon_id": "21318409",
+      "name": "预录入交易",
+      "font_class": "preInput-trade",
+      "unicode": "edc9",
+      "unicode_decimal": 60873
+    },
+    {
+      "icon_id": "21318398",
+      "name": "外汇及衍生品交易",
+      "font_class": "foreign-trade",
+      "unicode": "edc8",
+      "unicode_decimal": 60872
+    },
+    {
+      "icon_id": "21318381",
+      "name": "场外交易",
+      "font_class": "outside-trade",
+      "unicode": "edc7",
+      "unicode_decimal": 60871
+    },
+    {
+      "icon_id": "21318313",
+      "name": "场内交易",
+      "font_class": "onsite-trade",
+      "unicode": "edc6",
+      "unicode_decimal": 60870
+    },
+    {
+      "icon_id": "21318294",
+      "name": "银行间交易",
+      "font_class": "Interbank-trade",
+      "unicode": "edc5",
+      "unicode_decimal": 60869
+    },
+    {
+      "icon_id": "21318263",
+      "name": "交易管理",
+      "font_class": "trade-manage",
+      "unicode": "edc4",
+      "unicode_decimal": 60868
+    },
+    {
+      "icon_id": "21318209",
+      "name": "交易中心",
+      "font_class": "trade-center",
+      "unicode": "edc2",
+      "unicode_decimal": 60866
+    },
+    {
+      "icon_id": "21318195",
+      "name": "外汇及衍生品指令",
+      "font_class": "foreign-instruct",
+      "unicode": "edc1",
+      "unicode_decimal": 60865
+    },
+    {
+      "icon_id": "21316992",
+      "name": "场外指令",
+      "font_class": "outside-instruct",
+      "unicode": "edc0",
+      "unicode_decimal": 60864
+    },
+    {
+      "icon_id": "21316979",
+      "name": "场内指令",
+      "font_class": "onsite-instruct",
+      "unicode": "edbf",
+      "unicode_decimal": 60863
+    },
+    {
+      "icon_id": "21316889",
+      "name": "银行间指令",
+      "font_class": "Interbank-instruct",
+      "unicode": "edbe",
+      "unicode_decimal": 60862
+    },
+    {
+      "icon_id": "21316879",
+      "name": "指令查询",
+      "font_class": "instruct-query",
+      "unicode": "edbd",
+      "unicode_decimal": 60861
+    },
+    {
+      "icon_id": "21316851",
+      "name": "指令管理",
+      "font_class": "instruct-manage",
+      "unicode": "edbc",
+      "unicode_decimal": 60860
+    },
+    {
+      "icon_id": "21316839",
+      "name": "行情管理",
+      "font_class": "market-info",
+      "unicode": "edbb",
+      "unicode_decimal": 60859
+    },
+    {
+      "icon_id": "21316611",
+      "name": "标的信息",
+      "font_class": "subject-info",
+      "unicode": "edba",
+      "unicode_decimal": 60858
+    },
+    {
+      "icon_id": "21314602",
+      "name": "合作资产管理",
+      "font_class": "coopassets-manage",
+      "unicode": "edb8",
+      "unicode_decimal": 60856
+    },
+    {
+      "icon_id": "21314578",
+      "name": "资产管理",
+      "font_class": "assets-manage",
+      "unicode": "edb7",
+      "unicode_decimal": 60855
+    },
+    {
+      "icon_id": "21314333",
+      "name": "组合模拟试算",
+      "font_class": "compose-trial",
+      "unicode": "edb6",
+      "unicode_decimal": 60854
+    },
+    {
+      "icon_id": "21314259",
+      "name": "头寸管理",
+      "font_class": "cash-manage",
+      "unicode": "edb5",
+      "unicode_decimal": 60853
+    },
+    {
+      "icon_id": "21314233",
+      "name": "组合创建",
+      "font_class": "compose-setup",
+      "unicode": "edb4",
+      "unicode_decimal": 60852
+    },
+    {
+      "icon_id": "21314193",
+      "name": "组合管理",
+      "font_class": "compose-manage",
+      "unicode": "edb3",
+      "unicode_decimal": 60851
+    },
+    {
+      "icon_id": "21313805",
+      "name": "产品信息调整",
+      "font_class": "product-adjust",
+      "unicode": "edb2",
+      "unicode_decimal": 60850
+    },
+    {
+      "icon_id": "21313760",
+      "name": "产品要素管理",
+      "font_class": "product-eleme",
+      "unicode": "edb1",
+      "unicode_decimal": 60849
+    },
+    {
+      "icon_id": "21313740",
+      "name": "产品管理",
+      "font_class": "product-manage",
+      "unicode": "edb0",
+      "unicode_decimal": 60848
+    }
+  ]
+}

@@ -704,7 +704,11 @@
         var ccy = query('#ccy').val();
         var sysDateT1 = query('#vdate').val();
         var calId = query('#calendarId').val();
-        parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
+        if (parent.EtrIbBondinfoHq) {
+            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
+            // 左边持仓现金信息联动
+            doOther.leftHqReload();
+        }
     });
 
 
@@ -1156,19 +1160,18 @@
 
         Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', res.param, function(result1) {
             if(res.objects.length>0){
+                if (operateType === "save") {
+                    WorkFlow.doSaveList(basePath+'invest/entrust/etribbondinfo/EtribBondInfo003/save',res.param,"EtribBondInfo003_btn_save","EtribBondInfo003");
+                    EtrIbBondinfo003.doReset();
+                } else {
                 Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/check',res.objects,
                     function(result) {
                         Joyin.confirm(result.data,function() {
-                            if (operateType === "save") {
-                                WorkFlow.doSaveList(basePath+'invest/entrust/etribbondinfo/EtribBondInfo003/save',res.param,"EtribBondInfo003_btn_save","EtribBondInfo003");
-                                EtrIbBondinfo003.doReset();
-                            } else {
                                 WorkFlow.doSubmitList(basePath+'invest/entrust/etribbondinfo/EtribBondInfo003/save',res.param,"EtribBondInfo003_btn_submit","EtribBondInfo003");
                                 EtrIbBondinfo003.doReset();
-                            }
-
                         });
                     });
+                }
             }else{
                 Joyin.warn("请添加组合分配！");
                 return;
@@ -1263,8 +1266,11 @@
                     var entrustNum = 0.0;
                     for (var index in object.bussCombDistribtList) {
                         var item = object.bussCombDistribtList[index];
-                        if (item.entrustNum == null || item.entrustNum == "") return;
-                        entrustNum += parseFloat(item.entrustNum) * 10000;
+                        if (item.entrustNum == null || item.entrustNum == ""){
+                            // return;
+                        }else{
+                            entrustNum += parseFloat(item.entrustNum) * 10000;
+                        }
                     }
                     object.entrustNum = String(entrustNum);
                 } else {
@@ -1301,29 +1307,29 @@
     };
 
 
-    // // 绑定提交按钮
-    // $('#EtribBondInfo003_btn_submit').click(function () {
-    //     saveOrSubmit('submit');
-    // });
-    //
-    // // 绑定保存按钮
-    // $('#EtribBondInfo003_btn_save').click(function () {
-    //     saveOrSubmit('save');
-    // });
-    //
-    // // 绑定取消按钮
-    // $('#EtribBondInfo003_btn_reset').click(function () {
-    //     doReset();
-    // });
-    //
-    // // 绑定风险按钮
-    // $('#EtribBondInfo003_btn_riskcal').click(function () {
-    //     doRiskcal();
-    // });
-    //
-    // $('#EtribBondInfo003_btn_fileupload').click(function () {
-    //     fileUpload();
-    // });
+    // 绑定提交按钮
+    $('#EtribBondInfo003_btn_submit').click(function () {
+        saveOrSubmit('submit');
+    });
+
+    // 绑定保存按钮
+    $('#EtribBondInfo003_btn_save').click(function () {
+        saveOrSubmit('save');
+    });
+
+    // 绑定取消按钮
+    $('#EtribBondInfo003_btn_reset').click(function () {
+        doReset();
+    });
+
+    // 绑定风险按钮
+    $('#EtribBondInfo003_btn_riskcal').click(function () {
+        doRiskcal();
+    });
+
+    $('#EtribBondInfo003_btn_fileupload').click(function () {
+        fileUpload();
+    });
 
     query('#finprodId').change(function () {
         doChange.finprodId();

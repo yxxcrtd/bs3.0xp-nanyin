@@ -129,41 +129,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     @Autowired
     private DateCalService dateCalService;
 
-    // add by zhangrui1 设置关联方信息 start
-    protected void setRelatedParty(InterfRiskRdsDto interfRiskRdsDto,
-                                   Map<String, Object> dataMap) {
-        Object isRelatedParty = CommonUtil.findValue(dataMap,
-            CommonRelatedPartyService.ISRELATEDPARTY);
-        Object isRelatedPartyCeOrg = CommonUtil.findValue(dataMap,
-            CommonRelatedPartyService.ISRELATEDPARTYCEORG);
-        Object relatedParty = CommonUtil.findValue(dataMap,
-            CommonRelatedPartyService.RELATEDPARTY);
-        Object relatedPartyAmt = CommonUtil.findValue(dataMap,
-            CommonRelatedPartyService.RELATEDPARTYAMT);
-        if (StringUtil.equals(isRelatedParty, BussinessDictCodeList.是否_是.getValue())) {
-            interfRiskRdsDto.setIsRelatedParty(isRelatedParty.toString());
-            interfRiskRdsDto.setRelatedParty(relatedParty.toString());
-        }
-        if (StringUtil.equals(isRelatedPartyCeOrg, BussinessDictCodeList.是否_是.getValue())) {
-            interfRiskRdsDto.setIsRelatedPartyCeOrg(isRelatedPartyCeOrg.toString());
-            interfRiskRdsDto.setRelatedPartyAmt(new BigDecimal(relatedPartyAmt.toString()));
-        }
-    }
-
-    protected void setRelatedParty(Map<String, Object> infMap, Map<String, Object> dataMap,
-                                   String ps) {
-        Object isRelatedPartyCeOrg = CommonUtil.findValue(dataMap,
-            CommonRelatedPartyService.ISRELATEDPARTYCEORG + ps);
-        Object relatedPartyAmt = CommonUtil.findValue(dataMap,
-            CommonRelatedPartyService.RELATEDPARTYAMT + ps);
-        if (StringUtil.equals(isRelatedPartyCeOrg, BussinessDictCodeList.是否_是.getValue())) {
-            infMap.put(CommonRelatedPartyService.ISRELATEDPARTYCEORG,
-                isRelatedPartyCeOrg.toString());
-            infMap.put(CommonRelatedPartyService.RELATEDPARTYAMT,
-                new BigDecimal(relatedPartyAmt.toString()));
-        }
-    }
-    // add by zhangrui1 设置关联方信息 end
     public ClientData sendRiskRdsDataCommon(Map<String, Object> dataMap,V v) throws Exception {
         // add by zhangrui1 增加批量接口调用逻辑 start
         String infCode = v.getInfCode();
@@ -171,11 +136,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         //是否是股票的分红送转 add by chendijun 20200523
         boolean isStockFHSZ = (StringUtil.equals((String) dataMap.get(InterfUtil.ps), DictCodeList.股票分红类型_分红送转.getValue()) 
             &&StringUtil.equals((String) dataMap.get("finprodType2"), DictCodeListExt1.金融产品类型_投管用_股票.getValue()));
-        // add by zhangrui1 设置关联方信息 start
-        if (!isInnerTrd && !isStockFHSZ) {
-            CommonRelatedPartyService.doCredit(dataMap, v);
-        }
-        // add by zhangrui1 设置关联方信息 end
         // 批量接口或者转仓或者是股票分红送转
         if(CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占批量接口)
             || CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占释放批量接口)
@@ -310,9 +270,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         interfRiskRdsDto.setIsInnerTrd(isInnerTrd ? BussinessDictCodeListRds.是否_是.getValue()
                 : BussinessDictCodeListRds.是否_否.getValue());
         // add by zhangrui1 添加是否内部交易 end
-        // add by zhangrui1 设置关联方信息 start
-        setRelatedParty(interfRiskRdsDto, dataMap);
-        // add by zhangrui1 设置关联方信息 end
         logger.info("==========调用共通方法sendDataCommon==========");
         //wangyang1 风险二级法人改造 start
         interfRiskRdsDto.setInstCode(MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
@@ -456,9 +413,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         interfRiskRdsDto.setIsInnerTrd(
             isInnerTrd ? BussinessDictCodeListRds.是否_是.getValue() : BussinessDictCodeListRds.是否_否.getValue());
 
-        // add by zhangrui1 设置关联方信息 start
-        setRelatedParty(interfRiskRdsDto, dataMap);
-        // add by zhangrui1 设置关联方信息 end
         targetList.add(BeanUtil.object2Map(interfRiskRdsDto));
     }
 
@@ -554,9 +508,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
             // add by zhangrui1 基金转换申请取最新净值 end
         }
-        // add by zhangrui1 设置关联方信息 start
-        CommonRelatedPartyService.doCredit(sourcetList, v);
-        // add by zhangrui1 设置关联方信息 end
+
         // 取出内部交易对手
         Map<String, String> portfolioIds = selectInnerCounter(counterIdSet);
         List<Map<String, Object>> targetList = new ArrayList<>();
@@ -1059,9 +1011,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infMap.put(GROUP_ID, groupId);
             infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
             // add by zhangrui1 正反同步交易特殊处理 end
-            // add by zhangrui1 设置关联方信息 start
-            setRelatedParty(infMap, dataMap, BussinessDictCodeList.交易方向_卖出.getValue());
-            // add by zhangrui1 设置关联方信息 end
             result.add(infMap);
             // 股票
             infMap = new HashMap<>();
@@ -1094,9 +1043,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infMap.put(PageFieldToInterfFactory.INF_PREOCCUPYCODE,
                     entrustId + BussinessDictCodeList.交易方向_买入.getValue());
             }
-            // add by zhangrui1 设置关联方信息 start
-            setRelatedParty(infMap, dataMap, BussinessDictCodeList.交易方向_买入.getValue());
-            // add by zhangrui1 设置关联方信息 end
             result.add(infMap);
         }
         else if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请) || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)) {
@@ -1168,9 +1114,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
             infMap.put("fundConvertFlg",DictCodeList.是否_是.getValue());
             // add by zhangrui1 正反同步交易特殊处理 end
-            // add by zhangrui1 设置关联方信息 start
-            setRelatedParty(infMap, dataMap, BussinessDictCodeList.交易方向_买入.getValue());
-            // add by zhangrui1 设置关联方信息 end
             result.add(infMap);
             // 基金转出
             Object amount = infMap.get(PageFieldToInterfFactory.INF_AMOUNT);
@@ -1208,9 +1151,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infMap.put(PageFieldToInterfFactory.INF_PREOCCUPYCODE,
                     entrustId + BussinessDictCodeList.交易方向_买入.getValue());
             }
-            // add by zhangrui1 设置关联方信息 start
-            setRelatedParty(infMap, dataMap, BussinessDictCodeList.交易方向_买入.getValue());
-            // add by zhangrui1 设置关联方信息 end
             result.add(infMap);
         }
         else if (CommonUtil.isType(ps, BussinessDictCodeList.交易方向_卖出)) {

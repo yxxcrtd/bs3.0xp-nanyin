@@ -27,7 +27,6 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.riskrds.constant.ModelConstant;
-import com.joyintech.tams.component.business.riskrds.service.CommonRelatedPartyService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.CommonUtil;
@@ -196,32 +195,11 @@ public class PageModel {
             doSpecialAsset(resMap, dto);
             // 交易方向转换
             changePs(resMap, dto);
-            // 设置关联方信息
-            setRelatedParty(resMap, dto, ps);
         }
         return resMap;
     }
 
-    protected void setRelatedParty(Map<String, Object> infMap, Map<String, Object> dataMap,
-                                   String ps) {
-        String temp = isReverse(dataMap) ? ps : "";
-        Object isRelatedParty = CommonUtil.findValue(dataMap,
-            CommonRelatedPartyService.ISRELATEDPARTY + temp);
-        Object isRelatedPartyCeOrg = CommonUtil.findValue(dataMap,
-            CommonRelatedPartyService.ISRELATEDPARTYCEORG + temp);
-        Object relatedParty = CommonUtil.findValue(dataMap,
-            CommonRelatedPartyService.RELATEDPARTY + temp);
-        Object relatedPartyAmt = CommonUtil.findValue(dataMap,
-            CommonRelatedPartyService.RELATEDPARTYAMT + temp);
-        if (StringUtil.equals(isRelatedParty, BussinessDictCodeList.是否_是.getValue())) {
-            infMap.put(CommonRelatedPartyService.ISRELATEDPARTY, isRelatedParty);
-            infMap.put(CommonRelatedPartyService.RELATEDPARTY, relatedParty);
-        }
-        if (StringUtil.equals(isRelatedPartyCeOrg, BussinessDictCodeList.是否_是.getValue())) {
-            infMap.put(CommonRelatedPartyService.ISRELATEDPARTYCEORG, isRelatedPartyCeOrg);
-            infMap.put(CommonRelatedPartyService.RELATEDPARTYAMT, relatedPartyAmt);
-        }
-    }
+
 
     /**
      * 需要生成方向交易的

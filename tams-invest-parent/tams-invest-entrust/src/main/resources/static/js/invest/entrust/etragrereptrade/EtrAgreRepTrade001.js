@@ -2243,16 +2243,16 @@
             object.operateType = operateType;
             //object.pageModel = pageModel;
 
-            // var riskdata = getriskdata(object);
-            // if(BaseRiskMathComm && (object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
-            //     s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-            //     if(!s && s != ''){
-            //         return;
-            //     }
-            //     if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
-            //         return;
-            //     }
-            // }
+            var riskdata = getriskdata(object);
+            if(BaseRiskMathComm && (object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if(!s && s != ''){
+                    return;
+                }
+                if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
+                    return;
+                }
+            }
             //验证
 //        if(!checkDbClickData(object)){
 //            return;

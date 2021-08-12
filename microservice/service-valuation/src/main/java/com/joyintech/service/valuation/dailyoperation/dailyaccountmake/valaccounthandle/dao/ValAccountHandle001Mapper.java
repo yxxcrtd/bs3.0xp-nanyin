@@ -13,6 +13,7 @@ package com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valaccou
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.valuation.accounadjustmanage.valbalancestatementquery.dto.ValBalanceStatementQuery001Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -251,4 +252,6 @@ public interface ValAccountHandle001Mapper {
      * @return
      */
     List<String> getMdateForBookSet(Map<String, Object> map);
+
+    ValBalanceStatementQuery001Dto selectCorrespondingFrame(Map<String, Object> params);
 }

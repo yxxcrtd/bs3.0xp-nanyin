@@ -40,7 +40,7 @@ import com.joyintech.workflow.engine.constant.OperationType;
  * @since 1.0
  */
 @RestController(value="serviceValTrdAccountmfConfig001Controller")
-@RequestMapping("/${application.service}/ValTrdAccountmfConfig001")
+@RequestMapping("/ValTrdAccountmfConfig001")
 public class ValTrdAccountmfConfig001Controller extends BaseController {
     
     /**

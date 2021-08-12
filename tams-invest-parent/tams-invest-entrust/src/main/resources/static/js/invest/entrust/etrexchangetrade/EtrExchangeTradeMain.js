@@ -30,16 +30,16 @@ var correctData;
       object.operateType = operateType;
       //object.pageModel = pageModel;
             
-      // var riskdata = EtrExchangeTrade001.getriskdata(object);
-      // if(BaseRiskMathComm && EtrExchangeTrade001.isNeedRiskcal()) {
-      //     s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-      //     if(!s && s != ''){
-      //         return;
-      //     }
-      //     if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
-      //         return;
-      //     }
-      // }
+      var riskdata = EtrExchangeTrade001.getriskdata(object);
+      if(BaseRiskMathComm && EtrExchangeTrade001.isNeedRiskcal()) {
+          s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+          if(!s && s != ''){
+              return;
+          }
+          if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
+              return;
+          }
+      }
       //验证
       if(!checkDbClickData(object)){
           return;
@@ -359,33 +359,17 @@ var importEtr = function() {
 $(function() {
 
 	var init = function() {
-		if (pageModel==PAGE_MODEL_REFERENCE || pageModel==PAGE_MODEL_EDIT) {
-			$('.right_panel').css('display','none');
-			$('#EtrExchangeTrade001_btn_reset').css('display','none');
-		} else {
-            $('#left_top_div').show();
-            Split(['#left_panel_div', '#right_panel_div'], {
-                sizes: [25, 75],
-                minSize: [300,800],
-                direction: 'horizontal',
-            });
+        Split(["#top_panel_dev", "#bottom_panel_dev"], {
+            sizes: [48, 44],
+            minSize: 100,
+            direction: "vertical"
+        });
 
-            Split(['#left_top_div', '#left_bottom_panel_div'], {
-                sizes: [48, 44],
-                minSize: 100,
-                direction: 'vertical',
-            });
-
-            Split(['#right_top_panel_div', '#right_bottom_panel_div'], {
-                sizes: [48, 49],
-                minSize: 100,
-                direction: 'vertical',
-            });
-        }
-		//窗口容器的高度，设置为页面左右容器的高度
-		var height = window.innerHeight;
-        $('.right_panel').css('height', height);
-        $('.left_panel').css('height', height);
+        Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
+            sizes: [25, 75],
+            minSize: [200, 700],
+            direction: "horizontal"
+        });
 	}
 	
 	init();

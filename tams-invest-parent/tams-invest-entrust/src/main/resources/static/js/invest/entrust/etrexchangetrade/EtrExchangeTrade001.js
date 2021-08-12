@@ -1405,7 +1405,7 @@
             };
             Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/calCanBuyAmount', param, function (result) {
                 if (result) {
-                    document.getElementById('canBuyAmount').innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万元';
+                    document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万元';
                 }
             }, false);
         }
@@ -2832,7 +2832,7 @@
     var searchDetail = function() {
         var finprodId =  $('#finprodId_' + currentTab).val();
         var finprodType2 =  $('#finprodType2_' + currentTab).val();
-        if (finprodId != ""){
+        if (finprodId != "" && FINPROD_TYPE_TG_ZYSHG != finprodType2){
             var url = "invest/asset/bond/FinBondTargetAsset002/init"; // 默认债券标的
             if (FINPROD_TYPE_TG_F06 == finprodType2){
                 var flagStr = finprodId.substr(finprodId.length-2,finprodId.length);
@@ -2848,9 +2848,12 @@
             }
             var param = {
                 pageModel:PAGE_MODEL_REFERENCE,
+                isQuickInput:true,
                 finprodId:finprodId
             };
             parent.EtrExchangeTradeMain.dialogSelf.dialog(url,param);
+        } else if (FINPROD_TYPE_TG_ZYSHG == finprodType2){
+            Joyin.error("质押式回购不支持查看资产详情")
         } else {
             Joyin.error("资产名称不能为空")
         }

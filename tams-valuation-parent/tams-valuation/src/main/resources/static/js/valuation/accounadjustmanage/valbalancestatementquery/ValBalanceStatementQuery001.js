@@ -29,14 +29,22 @@ $(function () {
         tree:true,
         treeId: 'id',
         treeUpId: 'parentId',
-        treeShowName: 'name',
+        treeShowName: 'id',
         lazyload:true,
         // height: 270,
         searchOnInit: false,
         checkbox: false,
         page : false,
         cols: [
-            {field:'id', width:160, title: 'ValBalanceStatementQuery001.subjectno'}
+            {field:'id', width:160, title: 'ValBalanceStatementQuery001.subjectno',render:function (data, type, row, meta) {
+                    if(row.level == 1) {
+                        return '<strong>' + data + '</strong>';
+                    }
+                    if (row.leaf==true){
+                        return "<a id='mingxi' class='portfolioId-link' style='cursor: pointer;'>"+data+"</a>";
+                    }
+                    return data;
+                }}
             ,{field:'name', width:300, title: 'ValBalanceStatementQuery001.subjectName', render: function (data, type, row, meta) {
                     if(row.level == 1) {
                         return '<strong>' + data + '</strong>';
@@ -50,53 +58,143 @@ $(function () {
             ,{field:'oCost', type:"money", width:150, title: 'ValBalanceStatementQuery001.oCost'}
             ,{field:'cost', type:"money", width:150, title: 'ValBalanceStatementQuery001.cost'}
             ,{field:'costPercent', type:"money", digit: 4, width:150,  title: 'ValBalanceStatementQuery001.costPercent'}
-            ,{field:'closePrice', type:"money", digit: 4, width:150, title: 'ValBalanceStatementQuery001.closePrice'}
+            ,{field:'closePrice', type:"money", digit: 4, width:150, title: 'ValBalanceStatementQuery001.closePrice',
+                render : function(data, type, row, meta) {
+                    return "<a  class='pro-link closePriceLink' style='cursor: pointer;'>"+data+"</ a>";
+                }
+            }
             ,{field:'oMarketValue', type:"money", width:150, title: 'ValBalanceStatementQuery001.oMarketValue'}
             ,{field:'marketValue', type:"money", width:150, title: 'ValBalanceStatementQuery001.marketValue'}
             ,{field:'valuePercent',type:"money", digit: 4, width:150,  title: 'ValBalanceStatementQuery001.valuePercent'}
             ,{field:'valueIncrement', type:"money", width:150, title: 'ValBalanceStatementQuery001.valueIncrement'}
-//            ,{field:'balFlagFmt',  sortField:"balFlag", width:150, title: 'ValBalanceStatementQuery001.balFlag'}
-            //,{field:'marketDate', visible:flag2, width:150, title: 'ValBalanceStatementQuery001.marketDate'}
             ,{field:'shadowPriceValue', visible:flag1, type:"money", width:150, title: 'ValBalanceStatementQuery001.shadowPriceValue'}
             ,{field:'marketDate',visible:true,width:150, title: 'ValBalanceStatementQuery001.marketDate'}
         ]
     });
-//     var tableSum=$("#dataTableSum").joyintable({
-//         ajax: {
-//             url: 'selectSum',
-//             type: 'POST',
-//             data: function() {
-//                 return getPageParams();
-//             }
-//         },
-//         searchOnInit: false,
-//         checkbox: false,
-//         height: 170,
-//         page : false,
-//         cols: [
-//             {field:'subjectNo', width:160, title: 'ValBalanceStatementQuery001.subjectno'}
-//             ,{field:'subjectName', align : "right", width:300, title: 'ValBalanceStatementQuery001.subjectName'}
-//             ,{field:'oCcyFmt', width:150, title: 'ValBalanceStatementQuery001.oCcyForGZB'}
-//             ,{field:'exchangeRate',type:"money", digit: 4, width:150,  title: 'ValBalanceStatementQuery001.exchangeRate'}
-//             ,{field:'numAmt', type:"number", width:150, title: 'ValBalanceStatementQuery001.numAmt'}
-//             ,{field:'unitCost', type:"money",width:150, title: 'ValBalanceStatementQuery001.unitCost'}
-//             ,{field:'oCost', type:"money", width:150, title: 'ValBalanceStatementQuery001.oCost'}
-//             ,{field:'cost', type:"money", width:150, title: 'ValBalanceStatementQuery001.cost'}
-//             ,{field:'costPercent', width:150, align : "right", title: 'ValBalanceStatementQuery001.costPercent'}
-//             ,{field:'closePrice', type:"money", width:150, title: 'ValBalanceStatementQuery001.closePrice'}
-//             ,{field:'oMarketValue', type:"money", width:150, title: 'ValBalanceStatementQuery001.oMarketValue'}
-//             ,{field:'marketValue', type:"money", width:150, title: 'ValBalanceStatementQuery001.marketValue'}
-//             ,{field:'valuePercent', width:150, align : "right", title: 'ValBalanceStatementQuery001.valuePercent'}
-//             ,{field:'valueIncrement', type:"money", width:150, title: 'ValBalanceStatementQuery001.valueIncrement'}
-// //            ,{field:'balFlagFmt',  sortField:"balFlag", width:150, title: 'ValBalanceStatementQuery001.balFlag'}
-//             //,{field:'marketDate', visible:flag2, width:150, title: 'ValBalanceStatementQuery001.marketDate'}
-//             ,{field:'shadowPriceValue', visible:flag1, type:"money", width:150, title: 'ValBalanceStatementQuery001.shadowPriceValue'}
-//             ,{field:'marketDate',visible:true,width:150, title: 'ValBalanceStatementQuery001.marketDate'}
-//         ],
-//         done : function(data){
-//             $("#dataTableSum").next().find('.layui-table-header').remove();
-//         }
-//     });
+
+    /**
+     * 绑定数据溯源信息查看的按钮
+     */
+    table.bind('click', '#mingxi', function(data, index) {
+        data.pageModel = PAGE_MODEL_EDIT;
+        Joyin.ajaxJson('/valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery001/check', data, function(result) {
+            Joyin.dialog(JoyinUtil.getLabel("数据溯源信息查看"),
+                "/valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002/init",
+                "95%", "90%",data,function() {
+                });
+        });
+    });
+
+    /**
+     * 行情价格链接
+     */
+    table.bind('click','.closePriceLink', function(row) {
+        if (!row.marketDate){
+            Joyin.alert("行情日期为空时，不能确定基础信息行情界面！");
+            return;
+        }
+        var data = {
+            subjectName: row.name,
+            subjectno: row.id,
+            booksetId: $('#booksetId').val(),
+            valueDate: row.marketDate
+        }
+        Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery001/selectCorrespondingFrame', data,
+            function (resultObj) {
+                if (resultObj) {
+                    //"F17" "计划类资产"
+                    if (resultObj.finprodType === 'F17'){
+                        //计划类资产行情信息
+                        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                            basePath + "valuation/basedata/marketdata/valnetassetquotationinfo/ValNetAssetQuotationInfo002/init",
+                            "95%", "80%", {
+                                pageModel: PAGE_MODEL_REFERENCE,
+                                finprodId: resultObj.detailSubjectNoTail,
+                                valDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
+                            });
+                    }
+                    //基金类资产行情信息
+                    else if (resultObj.finprodType === 'F06'){
+                        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                            basePath + "valuation/basedata/marketdata/valcoinfundquotationinfo/ValCoinFundQuotationInfo002/init",
+                            "95%", "80%", {
+                                pageModel: PAGE_MODEL_REFERENCE,
+                                finprodMarketId: resultObj.finprodMarketId,
+                                valDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
+                            });
+                    }
+                    //股票行情信息
+                    else if (resultObj.finprodType === 'F10'){
+                        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                            basePath + "valuation/basedata/marketdata/valshareprice/ValSharePrice002/init",
+                            "95%", "80%", {
+                                pageModel: PAGE_MODEL_REFERENCE,
+                                sharesId: resultObj.finprodMarketId,
+                                dealDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
+                            });
+                    }
+                    //债券行情信息
+                    else if (resultObj.finprodType === 'F01'){
+                        if (resultObj.valueSource) {
+                            Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                                basePath + "valuation/basedata/marketdata/valbondquotationinfo/ValBondQuotationInfo002/init",
+                                "95%", "80%", {
+                                    pageModel: PAGE_MODEL_REFERENCE,
+                                    secId: resultObj.finprodMarketId,
+                                    valueSource: resultObj.valueSource,
+                                    valueDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
+                                });
+                        } else {
+                            Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                                basePath + "valuation/basedata/marketdata/bondmarketinfo/ValBondMarketInfo002/init",
+                                "95%", "80%", {
+                                    pageModel: PAGE_MODEL_REFERENCE,
+                                    secId: resultObj.finprodMarketId,
+                                    valueDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
+                                });
+                        }
+                    }
+                    //外汇行情信息
+                    else if (resultObj.finprodType === 'F11' || resultObj.finprodType === 'F12' || resultObj.finprodType === 'F13'){
+
+                        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                            basePath + "valuation/basedata/marketdata/valfxvaluztioninfo/ValFxValuztionInfo002/init",
+                            "95%", "80%", {
+                                pageModel: PAGE_MODEL_REFERENCE,
+                                finprodId2: resultObj.finprodMarketId,
+                                valmodelId:resultObj.valmodelId,
+                                datasourceType: resultObj.datasourceType,
+                                operateType:"view",
+                                valueDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
+                            });
+                    }
+                    //利率互换估值信息
+                    else if (resultObj.finprodType === 'F14'){
+                        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                            basePath + "valuation/basedata/marketdata/rateswapvaluationinfo/ValRateSwapValuationInfo002/init",
+                            "95%", "80%", {
+                                pageModel: PAGE_MODEL_REFERENCE,
+                                finprodId2: resultObj.finprodMarketId,
+                                datasourceType: resultObj.datasourceType,
+                                operateType:"view",
+                                valueDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
+                            });
+                    }
+                    // TODO 汇率行情信息[换汇] 无数据，待确定
+                    else {
+                        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                            basePath + "valuation/basedata/marketdata/valexchangerateinfo/ValExchangeQuotationInfo002/init",
+                            "95%", "80%", {
+                                pageModel: PAGE_MODEL_REFERENCE,
+                                exchargeCode:resultObj.finprodMarketId,
+                                tradeDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
+                            });
+                    }
+
+                }
+            });
+    });
+
     var exportExcel = function() {
         Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery001/check', getPageParams(), function(result) {
             Joyin.exportExcel('export', getPageParams());
