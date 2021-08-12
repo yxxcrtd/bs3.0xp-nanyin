@@ -4,9 +4,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.serivce.PrdBaseinfoEndSubNewService001;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.serivce.PrdBaseinfoEndSubNew001Service;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +33,7 @@ public class PbcPrdBaseinfoEndSubNewController {
      * 产品终止信息service
      */
     @Autowired
-    private PrdBaseinfoEndSubNewService001 pbcPrdBaseinfoEndSubNewService001;
+    private PrdBaseinfoEndSubNew001Service pbcPrdBaseinfoEndSubNew001Service;
 
     /**
     *
@@ -47,7 +46,7 @@ public class PbcPrdBaseinfoEndSubNewController {
    @PostMapping("findPage/{page}/{length}")
    public Page<PbcPrdBaseinfoEndSubNew> searchPage(@RequestBody Map<String, Object> param) {
        
-       Page<PbcPrdBaseinfoEndSubNew> page = pbcPrdBaseinfoEndSubNewService001.searchPage(param);
+       Page<PbcPrdBaseinfoEndSubNew> page = pbcPrdBaseinfoEndSubNew001Service.searchPage(param);
        return page;
    }
    /**
@@ -61,7 +60,7 @@ public class PbcPrdBaseinfoEndSubNewController {
     */
    @PostMapping("updateSumStaus")
    public void updateSumStaus(@RequestBody Map<String, Object> map) {
-       pbcPrdBaseinfoEndSubNewService001.doManul(map);
+       pbcPrdBaseinfoEndSubNew001Service.doManul(map);
    }
    /**
     * 取消手工处理功能
@@ -74,7 +73,7 @@ public class PbcPrdBaseinfoEndSubNewController {
     */
    @PostMapping("cancelMannul")
    public String cancelMannul(@RequestBody Map<String, Object> map) {
-       return pbcPrdBaseinfoEndSubNewService001.doCancelManul(map);
+       return pbcPrdBaseinfoEndSubNew001Service.doCancelManul(map);
    }
    
    /**
@@ -89,7 +88,7 @@ public class PbcPrdBaseinfoEndSubNewController {
        List<String> keyList = new ArrayList<String>();
        Map<String, Object> param = map;
        if(!param.containsKey("checkKeys")){
-           keyList=pbcPrdBaseinfoEndSubNewService001.getCheckRepList(param);
+           keyList= pbcPrdBaseinfoEndSubNew001Service.getCheckRepList(param);
        }
        else{
            keyList=StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("checkKeys"));
@@ -99,7 +98,7 @@ public class PbcPrdBaseinfoEndSubNewController {
            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "无报送数据",null));
            return checkResult;
        }
-       return pbcPrdBaseinfoEndSubNewService001.checkData(keyList);
+       return pbcPrdBaseinfoEndSubNew001Service.checkData(keyList);
    }
     
 }

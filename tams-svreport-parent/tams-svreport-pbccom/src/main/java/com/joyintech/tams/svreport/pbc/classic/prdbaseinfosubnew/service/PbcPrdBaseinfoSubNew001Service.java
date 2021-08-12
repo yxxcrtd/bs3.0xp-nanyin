@@ -14,6 +14,7 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.SysDataUtil;
@@ -47,6 +48,8 @@ import java.text.Format;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * 	产品基本信息service
@@ -121,6 +124,15 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 			resultList.add(resultDto);
 		}
 		return resultList;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void beforeExprot() {
+		super.beforeExprot();
+		Map<String, String> cacheValue = CacheUtil.getAppCache(GlobalConstant.SYS_PARA_KEY, Map.class);
+		cacheValue.put(GlobalConstant.EXPORT_EXCEL_TYPE, DictCodeList.是否_中债_否.getValue());
+		CacheUtil.putAppCache(GlobalConstant.SYS_PARA_KEY, cacheValue);
 	}
 	/**
 	 * 查询结果处理
@@ -217,55 +229,88 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 	}
 
 
-	private void dealResult(List<PbcPrdBaseinfoSubNew> listDetail) {
 
+
+	private void dealResult(List<PbcPrdBaseinfoSubNew> listDetail) {
+		int count = 1;
 		for(PbcPrdBaseinfoSubNew result : listDetail){
+			result.setNum(count++);
 		    if (StringUtil.isNotEmpty(result.getIvstorientation())){
-		        result.setIvstorientation(
-		        		SysDataUtil.getNameFromDataDict(DictCode.人行产品类型,result.getIvstorientation()));
+		        result.setIvstorientation(result.getIvstorientation()+"-"+
+		        		SysDataUtil.getNameFromDataDict(DictCode.新人行产品类型,result.getIvstorientation()));
 		    }
             if (StringUtil.isNotEmpty(result.getPbcProdType())){
-                result.setPbcProdType( SysDataUtil.getNameFromDataDict(DictCode.人行产品种类,result.getPbcProdType()));
+                result.setPbcProdType( result.getPbcProdType() + "-" + "银行非保本理财");
+//						SysDataUtil.getNameFromDataDict(DictCode.人行产品种类,result.getPbcProdType()));
             }
             if (StringUtil.isNotEmpty(result.getCustomerType())){
-                result.setCustomerType( SysDataUtil.getNameFromDataDict(DictCode.人行客户类型,result.getCustomerType()));
+                result.setCustomerType( result.getCustomerType() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行客户类型,result.getCustomerType()));
             }
             if (StringUtil.isNotEmpty(result.getRaiseType())){
-			result.setRaiseType( SysDataUtil.getNameFromDataDict(DictCode.人行募集方式,result.getRaiseType()));
+			result.setRaiseType( result.getRaiseType() + "-" +
+					SysDataUtil.getNameFromDataDict(DictCode.新人行募集方式,result.getRaiseType()));
             }
             if (StringUtil.isNotEmpty(result.getManageType())){
-                result.setManageType( SysDataUtil.getNameFromDataDict(DictCode.人行管理类型,result.getManageType()));
+                result.setManageType( result.getManageType() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行管理类型,result.getManageType()));
             }
             if (StringUtil.isNotEmpty(result.getFiduciaryDuty())){
-                result.setFiduciaryDuty( SysDataUtil.getNameFromDataDict(DictCode.人行管理方式,result.getFiduciaryDuty()));
+                result.setFiduciaryDuty( result.getFiduciaryDuty() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行管理方式,result.getFiduciaryDuty()));
             }
             if (StringUtil.isNotEmpty(result.getOperateMode())){
-                result.setOperateMode(SysDataUtil.getNameFromDataDict(DictCode.人行产品运作模式,result.getOperateMode()));
+                result.setOperateMode(result.getOperateMode() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.新人行产品运作模式,result.getOperateMode()));
             }
             if (StringUtil.isNotEmpty(result.getContMode())){
-                result.setContMode(SysDataUtil.getNameFromDataDict(DictCode.人行合作模式,result.getContMode()));
+                result.setContMode(result.getContMode() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行合作模式,result.getContMode()));
             }
             if (StringUtil.isNotEmpty(result.getBusiModel())){
-                result.setBusiModel( SysDataUtil.getNameFromDataDict(DictCode.人行业务模式,result.getBusiModel()));
+                result.setBusiModel( result.getBusiModel() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行业务模式,result.getBusiModel()));
             }
+
+
             if (StringUtil.isNotEmpty(result.getIncomeGuaranIdent())){
-                result.setIncomeGuaranIdent(StringUtil.SPACE + SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getIncomeGuaranIdent()));
+                result.setIncomeGuaranIdent(result.getIncomeGuaranIdent() + "-" +
+						StringUtil.SPACE + SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getIncomeGuaranIdent()));
             }
             if (StringUtil.isNotEmpty(result.getPrinGuaranIdent())){
-                result.setPrinGuaranIdent( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getPrinGuaranIdent()));
+                result.setPrinGuaranIdent( result.getPrinGuaranIdent() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getPrinGuaranIdent()));
             }
+			if (StringUtil.isNotEmpty(result.getIsMarketFund())){
+				result.setBusiModel( result.getIsMarketFund() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getIsMarketFund()));
+			}
             if (StringUtil.isNotEmpty(result.getTermRightFlag())){
-                result.setTermRightFlag( SysDataUtil.getNameFromDataDict(DictCode.人行有无,result.getTermRightFlag()));
+                result.setTermRightFlag( result.getTermRightFlag() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行有无,result.getTermRightFlag()));
             }
             if (StringUtil.isNotEmpty(result.getCusRedeemFlag())){
-                result.setCusRedeemFlag( SysDataUtil.getNameFromDataDict(DictCode.人行有无,result.getCusRedeemFlag()));
+                result.setCusRedeemFlag( result.getCusRedeemFlag() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行有无,result.getCusRedeemFlag()));
             }
             if (StringUtil.isNotEmpty(result.getCreditFlag())){
-                result.setCreditFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCreditFlag()));
+                result.setCreditFlag( result.getCreditFlag() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCreditFlag()));
             }
-            if (StringUtil.isNotEmpty(result.getCreditType())){
-                result.setCreditType( SysDataUtil.getNameFromDataDict(DictCode.人行信誉机构类型,result.getCreditType()));
-            }
+			if (StringUtil.isNotEmpty(result.getCreditType())){
+				//多个用,切开
+				String [] creditModes=result.getCreditType().split(GlobalConstant.COMMA);
+				String creditMode="";
+				int i=0;
+				for(String single:creditModes){
+					i++;
+					creditMode=creditMode+ single + "-" +SysDataUtil.getNameFromDataDict(DictCode.借款人类型,single);
+					if(i<creditModes.length){
+						creditMode= creditMode+GlobalConstant.COMMA;
+					}
+				}
+				result.setCreditType(creditMode);
+			}
             if (StringUtil.isNotEmpty(result.getCreditMode())){
             	//多个用,切开
             	String [] creditModes=result.getCreditMode().split(GlobalConstant.COMMA);
@@ -273,21 +318,24 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             	int i=0;
             	for(String single:creditModes){
             		i++;
-            		creditMode=creditMode+SysDataUtil.getNameFromDataDict(DictCode.人行增信形式,single);
+            		creditMode=creditMode+ single + "-" +SysDataUtil.getNameFromDataDict(DictCode.人行增信形式,single);
             		if(i<creditModes.length){
-            			creditMode=creditMode+GlobalConstant.COMMA;
+            			creditMode= creditMode+GlobalConstant.COMMA;
             		}
             	}
                 result.setCreditMode(creditMode);
             }
             if (StringUtil.isNotEmpty(result.getIsConstracte())){
-                result.setIsConstracte( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getIsConstracte()));
+                result.setIsConstracte(result.getIsConstracte() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getIsConstracte()));
             }
             if (StringUtil.isNotEmpty(result.getTransferType())){
-                result.setTransferType( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getTransferType()));
+                result.setTransferType(result.getTransferType() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getTransferType()));
             }
             if (StringUtil.isNotEmpty(result.getIdentiFlag())){
-                result.setIdentiFlag( SysDataUtil.getNameFromDataDict(DictCode.人行理财产品发起机构标识,result.getIdentiFlag()));
+                result.setIdentiFlag( result.getIdentiFlag() + "-" +
+						SysDataUtil.getNameFromDataDict(DictCode.人行理财产品发起机构标识,result.getIdentiFlag()));
             }
             if(result.getOutDepCtry()!=null){
 				List<String> outDepCtrys=StringUtil.splitToList(GlobalConstant.COMMA, result.getOutDepCtry());
@@ -304,17 +352,17 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             //募集资金币种
             if (StringUtil.isNotEmpty(result.getRaiseCcy())){
             	String raiseCcyStr= getRaiseCcy(result.getRaiseCcy());
-            	result.setRaiseCcy(raiseCcyStr);
+            	result.setRaiseCcy(result.getRaiseCcy()+"-"+raiseCcyStr);
             }
             //兑付本金币种
             if (StringUtil.isNotEmpty(result.getCashPrinCcy())){
             	String raiseCcyStr= getRaiseCcy(result.getCashPrinCcy());
-            	result.setCashPrinCcy(raiseCcyStr);
+            	result.setCashPrinCcy(result.getCashPrinCcy()+"-"+raiseCcyStr);
             }
             //兑付收益币种
             if (StringUtil.isNotEmpty(result.getCashProfCcy())){
             	String raiseCcyStr= getRaiseCcy(result.getCashProfCcy());
-            	result.setCashProfCcy(raiseCcyStr);
+            	result.setCashProfCcy(result.getCashProfCcy()+"-"+raiseCcyStr);
             }
             //预计客户最高年收益率
             if (result.getHighYieldIssue() != null && BigDecimal.ZERO.compareTo(result.getHighYieldIssue()) != 0) {
@@ -325,25 +373,25 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             	result.setLowYieldIssueToString(df.format(result.getLowYieldIssue()));
             }
             
-           /* //日期转String，用于excel数据填充
+            //日期转String，用于excel数据填充
             if (StringUtil.isNotEmpty(result.getRaiseEnddate())){
-            	String date= dateString(result.getRaiseEnddate());
+            	String date= DateUtil.format(result.getRaiseEnddate());
             	result.setRaiseEnddate01(date);
             }
             if (StringUtil.isNotEmpty(result.getRaiseVdate())){
-            	String date= dateString(result.getRaiseVdate());
+            	String date= DateUtil.format(result.getRaiseVdate());
             	result.setRaiseVdate01(date);
             }
             //产品预计终止日期
             if (StringUtil.isNotEmpty(result.getMdate())){
-            	String date= dateString(result.getMdate());
+            	String date= DateUtil.format(result.getMdate());
             	result.setMdate01(date);
             }
             //产品起始日期
             if (StringUtil.isNotEmpty(result.getVdate())){
-            	String date= dateString(result.getVdate());
+            	String date= DateUtil.format(result.getVdate());
             	result.setVdate01(date);
-            }*/
+            }
 		}
 	}
 
@@ -658,6 +706,21 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 		/**当全选时.直接连接查询起始募集信息.如果没有.则不导出***/
 
 		List<PbcPrdBaseinfoSubNew> reportList = pbcPrdBaseinfoSubNewMapper.searchPage(searchParam);
+		return reportList;
+
+	}
+
+
+	public List<PbcPrdBaseinfoSubNew> searchByExcel(Map<String, Object> searchParam) {
+		deaSearchParam(searchParam);
+		List<PbcPrdBaseinfoSubNew> reportList = pbcPrdBaseinfoSubNewMapper.searchPage(searchParam);
+		//数据去除多法人字段
+		reportList = reportList.stream().map(item -> {
+			item.setBelongInstitutionCode(null);
+			return item;
+		}).collect(toList());
+		dealResult(reportList);
+
 		return reportList;
 
 	}
