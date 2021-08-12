@@ -22,7 +22,9 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.ValtblImportDateTraceMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.risk.valtblimport.dto.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -685,7 +687,13 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            dealHandValList(handval_List);
            //底层---一级汇总
            valHand_oneList = sum_handValList(handval_List, vtaccountMap,rskValtblSubjectList, vtsumCodeMap);
-
+           // 一二三级科目的币种,汇率设为空
+           for (RskValtblAssetSubDto handledDto : valHand_oneList) {
+               if (handledDto.getSubCode().length() <= 8) {
+                   handledDto.setCcy(null);
+                   handledDto.setExchangeRate(null);
+               }
+           }
            //多条科目需汇总（不同投资目的可生成多条信息）
            Map<String,Integer> indexMap = new HashMap<>();
            int i=0;
@@ -1035,6 +1043,16 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                    }
                }
            }  
+       }
+       // 特殊处理100201科目 & 120401科目
+       for(RskValtblAssetSubDto two_handval:two_handval_List) {
+           String subjCode = two_handval.getSubCode();
+           if (subjCode.startsWith("100201") && !"100201".equals(subjCode)) {
+               subjCode = "100201" + SysDataUtil.getNameFromDataDict(DictCode.估值币种映射, two_handval.getCcy());
+           } else if (subjCode.startsWith("120401") && !"120401".equals(subjCode)) {
+               subjCode = "120401" + SysDataUtil.getNameFromDataDict(DictCode.估值币种映射, two_handval.getCcy());
+           }
+           two_handval.setSubCode(subjCode);
        }
        valList.clear();
        valList.addAll(sum_val_List);
