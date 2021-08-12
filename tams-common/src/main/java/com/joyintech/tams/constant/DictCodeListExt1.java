@@ -334,6 +334,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	估值方法_成本法(DictCode.估值方法,"02","成本法"),
 	估值方法_市值成本孰低法(DictCode.估值方法,"03","市值成本孰低法"),
 	估值方法_摊余成本法(DictCode.估值方法,"04","摊余成本法"),
+	估值方法_模型法(DictCode.估值方法,"05","模型法"),
 	估值日期_行情日减1(DictCode.估值日期,"01","行情日-1"),
 	估值日期_行情日(DictCode.估值日期,"02","行情日"),
 	估值日期_行情日加1(DictCode.估值日期,"03","行情日+1"),
