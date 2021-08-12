@@ -1445,8 +1445,10 @@ $(function(){
                 ,{  field:'assetType1', visible: false}
                 ,{  field:'priceMode', visible: false}
                 ,{  field:'totleTradeId', visible: false}
-                ,{  field:'procedureAmt', visible: false}
-                ,{  field:'settleAmt', visible: false}
+                ,{  field:'procedureAmt',title: '交易手续费',
+                    width: 110, visible: true}
+                ,{  field:'settleAmt',title: '结算手续费',
+                    width: 110, visible: true}
             ],
             done: function (tables, allData) {
                 $.each(tables, function (index, obj) {

@@ -1759,12 +1759,18 @@ var table;
                         if(v.feeType==FEE_TYPE_06&&v.feeAmt){
                             cntP++;
                             $("#procedureAmt").val(v.feeAmt).trigger("blur");
+                            if(procedureAmt_f){
+                                $('#procedureAmt').val(procedureAmt_f);
+                            }
                             $("#procedureAmtRate").val(v.feeRate).trigger("blur");
                         }
 
                         if(v.feeType=='B08' && v.feeAmt){
                             cntSS++;
                             $("#settleServiceAmt").val(v.feeAmt).trigger("blur");
+                            if(settleAmt_f){
+                                $('#settleServiceAmt').val(settleAmt_f);
+                            }
                         }
 
                         //加入结算费经手费
@@ -3084,6 +3090,12 @@ var table;
                     calcFeeDataByFTradeId();
                 }
             })
+            if(procedureAmt_f){
+                $('#procedureAmt').val(procedureAmt_f);
+            }
+            if(settleAmt_f){
+                $('#settleServiceAmt').val(settleAmt_f);
+            }
         }else{
             /*if ($('#finprodId').val()){
                 $('#finprodName').val('');
@@ -3291,10 +3303,16 @@ var table;
                         }
                         if(v.feeType==FEE_TYPE_06&&v.feeAmt){
                             $("#procedureAmt").val(v.feeAmt).trigger("blur");
+                            if(procedureAmt_f){
+                                $('#procedureAmt').val(procedureAmt_f);
+                            }
                             $("#procedureAmtRate").val(v.feeRate).trigger("blur");
                         }
                         if(v.feeType == 'B08' && v.feeAmt){
                             $("#settleServiceAmt").val(v.feeAmt).trigger("blur");
+                            if(settleAmt_f){
+                                $('#settleServiceAmt').val(settleAmt_f);
+                            }
                         }
                         /*if(v.feeType==FEE_TYPE_04&&v.feeAmt){
                             $("#transferAmt").val(v.feeAmt).trigger("blur");

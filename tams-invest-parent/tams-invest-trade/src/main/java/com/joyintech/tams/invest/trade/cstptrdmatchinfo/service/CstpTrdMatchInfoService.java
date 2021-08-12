@@ -923,7 +923,7 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 				//交易手续费尾差
 				BigDecimal procedureAmtTail = new BigDecimal(0);
 				//多组合条件下，结算手续费平均分配到每个组合，尾数计到成交额最大的一个组合；
-				BigDecimal settleAmt = settleAmtS.divide(new BigDecimal(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size()),2,BigDecimal.ROUND_DOWN);
+				BigDecimal settleAmt = settleAmtS.divide(new BigDecimal(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size()),2,BigDecimal.ROUND_HALF_UP);
 				//计算结算手续费尾差Tail
 				BigDecimal settleAmtTail = settleAmtS.subtract(settleAmt.multiply(new BigDecimal(cstpTrdMatchInfoDto.getTrdCommandReceive001DtoList().size()))).setScale(2);
 				//记录券面总额的和（用于计算费用拆分比列）
@@ -966,12 +966,19 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 					TrdMatchInfo infoDto = trdMatchInfoMapper.selectByPrimaryKey(cstpSelectDtoListTemp.get(i).getSeqno());
 					//计算比例，计算交易手续费
 					if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_券面总额.getValue())){
-						BigDecimal procedureAmt = procedureAmtS.multiply((cstpSelectDtoListTemp.get(i).getPrinAmt())
-								.divide(prinAmtS,2,BigDecimal.ROUND_DOWN)).setScale(2,BigDecimal.ROUND_DOWN);
+						BigDecimal procedureAmt = procedureAmtS.multiply((cstpSelectDtoListTemp.get(i).getPrinAmt()))
+								.divide(prinAmtS,2,BigDecimal.ROUND_HALF_UP)
+								.setScale(2,BigDecimal.ROUND_HALF_UP);
+						infoDto.setProcedureAmt(procedureAmt);
+					}else if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_成交金额.getValue())){
+						BigDecimal procedureAmt = procedureAmtS.multiply((cstpSelectDtoListTemp.get(i).getTradeAmt()))
+								.divide(tradeAmtS,2,BigDecimal.ROUND_HALF_UP)
+								.setScale(2,BigDecimal.ROUND_HALF_UP);
 						infoDto.setProcedureAmt(procedureAmt);
 					}else{
-						BigDecimal procedureAmt = procedureAmtS.multiply((cstpSelectDtoListTemp.get(i).getTradeAmt())
-								.divide(tradeAmtS,2,BigDecimal.ROUND_DOWN)).setScale(2,BigDecimal.ROUND_DOWN);
+						BigDecimal procedureAmt = procedureAmtS.multiply((cstpSelectDtoListTemp.get(i).getPrinAmt()))
+								.divide(prinAmtS,2,BigDecimal.ROUND_HALF_UP)
+								.setScale(2,BigDecimal.ROUND_HALF_UP);
 						infoDto.setProcedureAmt(procedureAmt);
 					}
 					infoDto.setSettleAmt(settleAmt);
@@ -992,8 +999,13 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
 							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
 						}
-					}else{
+					}else if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_成交金额.getValue())){
 						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),traSeqno)){
+							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
+							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
+						}
+					}else{
+						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),newSeqno)){
 							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
 							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
 						}
@@ -1004,8 +1016,13 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
 							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
 						}
-					}else{
+					}else if(StringUtil.equals(proChargeBasis,BussinessDictCodeList.计费基数_成交金额.getValue())){
 						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),traSeqno)){
+							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
+							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
+						}
+					}else{
+						if(StringUtil.equals(TrdMatchInfoTemp.get(i).getSeqno(),newSeqno)){
 							infoDtos.setProcedureAmt(infoDtos.getProcedureAmt().add(procedureAmtTail));
 							infoDtos.setSettleAmt(infoDtos.getSettleAmt().add(settleAmtTail));
 						}
