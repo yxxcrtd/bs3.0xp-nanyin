@@ -156,14 +156,6 @@ public class TrdDepositInvestTrade001Validator implements TradeCommonValidator{
                     }
                 }
             }
-            //add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏start
-            if(!(StringUtil.equals(dto.getFinprodType(), DictCodeListExt3.存款类资产类型_活期存放.getValue())
-               && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))){
-            	 if (!StringUtil.isNotEmpty(dto.getIntAmt())) {
-                     errorList.add(new ValidMessage("请输入应计利息总额。"));
-                 } 
-               }
-            //add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏end
             if (StringUtil.isNotEmpty(dto.getBussTrdTransfenpeiDto())){
                 Map<String, List<BussTrdTransfenpeiDto>> map = dto.getBussTrdTransfenpeiDto().stream().collect(JoyinCollectors.groupingBy(item->item.getPortfolioId()));
                 if (map.keySet().size()<dto.getBussTrdTransfenpeiDto().size()){
