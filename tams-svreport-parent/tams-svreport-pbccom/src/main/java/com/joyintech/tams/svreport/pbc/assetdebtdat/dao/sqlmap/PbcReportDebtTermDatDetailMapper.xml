@@ -190,7 +190,7 @@
       AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
   </delete>
 
-  <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto"
+  <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail"
           parameterType="java.lang.String" >
     select
       ppd.*,

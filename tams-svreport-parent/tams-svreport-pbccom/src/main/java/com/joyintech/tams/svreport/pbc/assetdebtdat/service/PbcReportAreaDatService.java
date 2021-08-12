@@ -1,6 +1,9 @@
 package com.joyintech.tams.svreport.pbc.assetdebtdat.service;
 
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -40,9 +43,10 @@ public class PbcReportAreaDatService extends PbcDatPriviewService {
 
     @Autowired
     private PbcReportAreaDatDetailMapper pbcReportAreaDatDetailMapper;
-
-    @Autowired
-    private PbcMonthReportMapper pbcMonthReportMapper;
+	@Autowired
+	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
+	@Autowired
+	private PbcMonthReportMapper pbcMonthReportMapper;
 
     @Override
     public Map<Object, Object> createData(Map<String,Object> param){
@@ -52,12 +56,11 @@ public class PbcReportAreaDatService extends PbcDatPriviewService {
     	}
     	String reportuuid = param.get("reportuuid").toString();
 		String reporttype = param.get("reporttype").toString();
-    	PbcMonthReport pbcReport = pbcMonthReportMapper.selectByPrimaryKey(reportuuid);
-        // 如果报表为空则返回data
+		PbcSendZipDatFile pbcReport = pbcSendZipDatFileMapper.selectByUUIDAndType(reportuuid,reporttype);
+		// 如果报表为空则返回data
         if (pbcReport == null){
             return data;
         }
-    	pbcReport.setProdVariety(pbcReport.getProdVariety() + "-" + SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
     	data.put("report", JsonUtils.object2Map(pbcReport));
     	// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
@@ -155,8 +158,8 @@ public class PbcReportAreaDatService extends PbcDatPriviewService {
 	 */
 	public void dealAreaListForDiff(PbcReportAreaDatDetailDto detail) {
 		//余额
-		if(!detail.getBalance().equals(detail.getBalancePrd())){
-			detail.setBalanceDiff(1);
+		if(!StringUtil.equals(detail.getBalance(),detail.getBalancePrd())){
+				detail.setBalanceDiff(1);
 		}
 	}
 }

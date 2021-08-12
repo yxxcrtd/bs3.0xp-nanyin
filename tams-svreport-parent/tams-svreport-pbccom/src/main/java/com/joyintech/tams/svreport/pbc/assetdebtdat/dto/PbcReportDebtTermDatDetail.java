@@ -77,22 +77,22 @@ public class PbcReportDebtTermDatDetail {
     /**
      * 债务工具
      */
-    private Integer debtInstrumentDiff;
+    private Integer debtInstrumentDiff=0;
 
     /**
      * 股权
      */
-    private Integer stockRightDiff;
+    private Integer stockRightDiff=0;
 
     /**
      * 特定目的载体份额
      */
-    private Integer specialShareDiff;
+    private Integer specialShareDiff=0;
 
     /**
      * 实收本金
      */
-    private Integer actualAmtDiff;
+    private Integer actualAmtDiff=0;
 
     /**
      * 产品品种

@@ -26,4 +26,6 @@ public interface PbcSendZipDatFileMapper {
     List<PbcSendZipDatFile> selectBySendStatusSeqnoList(Map<String,Object> paramsMap);
 
    int updateByZipCodeAndZipType(@Param("list") List<PbcSendZipDatFile> list,@Param("datZipType")String datZipType);
+
+    PbcSendZipDatFile selectByUUIDAndType(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
 }

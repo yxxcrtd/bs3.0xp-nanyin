@@ -165,7 +165,7 @@ public class PbcZipDataFileService {
 					) {
 					datZipCodePath=genReport1_1_6_3_2FileDat(pbcSendZipDatFile,datType);
 					reslut.add(datZipCodePath);
-				}else if(DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue().equals(datType)){
+				}else if(DictCodeListExt2.人行报送明细类型_资管产品资产负债剩余期限统计.getValue().equals(datType)){
 					datZipCodePath=genReport3_3FileDat(pbcSendZipDatFile,datType);
 					reslut.add(datZipCodePath);
 				}else if(DictCodeListExt2.人行报送明细类型_资管产品资产负债统计.getValue().equals(datType)){

@@ -295,4 +295,12 @@ ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
         </foreach>
     </update>
 
+    <select id="selectByUUIDAndType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_SEND_ZIP_DAT_FILE
+        where DAT_ZIP_DAT_TYPE = #{reporttype,jdbcType=VARCHAR}
+        and REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </select>
+
 </mapper>

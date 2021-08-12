@@ -53,6 +53,8 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
                 //处理数据
                 dealPbcPrdBaseinfoSubDat(detail);
             }
+        }else{
+            listDetail.add(new PbcPrdBaseinfoSubDatDiffDto());
         }
         data.put("report", listDetail);
         return data;

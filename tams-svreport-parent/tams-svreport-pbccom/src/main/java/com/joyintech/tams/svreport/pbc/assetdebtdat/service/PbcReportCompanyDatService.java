@@ -1,13 +1,14 @@
 package com.joyintech.tams.svreport.pbc.assetdebtdat.service;
 
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportCompanyDatDetailMapper;
-import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportCompanyDatDetailDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
@@ -40,9 +41,10 @@ public class PbcReportCompanyDatService extends PbcDatPriviewService {
 
 	@Autowired
 	private PbcReportCompanyDatDetailMapper pbcReportCompanyDatDetailMapper;
-
 	@Autowired
-	private PbcMonthReportMapper pbcMonthReportMapper;
+	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
+	@Autowired
+	private  PbcMonthReportMapper pbcMonthReportMapper;
 
 	@Override
 	public Map<Object, Object> createData(Map<String, Object> param) {
@@ -52,13 +54,12 @@ public class PbcReportCompanyDatService extends PbcDatPriviewService {
 		}
 		String reportuuid = param.get("reportuuid").toString();
 		String reporttype = param.get("reporttype").toString();
-		PbcMonthReport pbcReport = pbcMonthReportMapper.selectByPrimaryKey(reportuuid);
-		 // 如果报表为空则返回data
+		PbcSendZipDatFile pbcReport = pbcSendZipDatFileMapper.selectByUUIDAndType(reportuuid,reporttype);
+
+		// 如果报表为空则返回data
         if (pbcReport == null){
             return data;
         }
-		pbcReport.setProdVariety(pbcReport.getProdVariety() + "-"
-				+ SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
 		data.put("report", JsonUtils.object2Map(pbcReport));
 		List<PbcReportCompanyDatDetailDto> listDetail = pbcReportCompanyDatDetailMapper.selectDatDiffByReport(reportuuid,reporttype);
 		// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
@@ -202,22 +203,22 @@ public class PbcReportCompanyDatService extends PbcDatPriviewService {
 	 * @return
 	 */
 	public void dealCompanyListForDiff(PbcReportCompanyDatDetailDto detail) {
-		if(!detail.getLargeCompanyAmt().equals(detail.getLargeCompanyAmt())){
+		if(!StringUtil.equals(detail.getLargeCompanyAmt(),detail.getLargeCompanyAmtPrd())){
 			detail.setLargeCompanyAmtDiff(1);
 		}
-		if(!detail.getMediumCompanyAmt().equals(detail.getMediumCompanyAmt())){
+		if(!StringUtil.equals(detail.getMediumCompanyAmt(),detail.getMediumCompanyAmtPrd())){
 			detail.setMicroCompanyAmtDiff(1);
 		}
-		if(!detail.getSmallCompanyAmt().equals(detail.getSmallCompanyAmt())){
+		if(!StringUtil.equals(detail.getSmallCompanyAmt(),detail.getSmallCompanyAmtPrd())){
 			detail.setSmallCompanyAmtDiff(1);
 		}
-		if(!detail.getMicroCompanyAmt().equals(detail.getMicroCompanyAmt())){
+		if(!StringUtil.equals(detail.getMicroCompanyAmt(),detail.getMicroCompanyAmtPrd())){
 			detail.setMediumCompanyAmtDiff(1);
 		}
-		if(!detail.getOthAmt().equals(detail.getOthAmt())){
+		if(!StringUtil.equals(detail.getOthAmt(),detail.getOthAmtPrd())){
 			detail.setOthAmtDiff(1);
 		}
-		if(!detail.getSumAmt().equals(detail.getSumAmt())){
+		if(!StringUtil.equals(detail.getSumAmt(),detail.getSumAmtPrd())){
 			detail.setSumAmtDiff(1);
 		}
 	}

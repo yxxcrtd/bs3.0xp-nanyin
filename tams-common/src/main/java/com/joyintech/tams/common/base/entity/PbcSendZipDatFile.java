@@ -452,7 +452,8 @@ public class PbcSendZipDatFile extends BaseEntity {
      */
     public String getDatZipDatTypeStr() {
         if(StringUtil.isNotEmpty(this.getDatZipDatType())){
-            return SysDataUtil.getNameFromDataDict(DictCode.人行报送明细类型, this.getDatZipDatType());
+            String str=SysDataUtil.getNameFromDataDict(DictCode.人行报送明细类型, this.getDatZipDatType());
+            return str;
         }
         return "" ;
     }

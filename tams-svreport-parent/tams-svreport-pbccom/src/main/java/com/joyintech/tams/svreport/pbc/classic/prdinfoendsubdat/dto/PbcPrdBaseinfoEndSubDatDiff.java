@@ -208,7 +208,6 @@ public class PbcPrdBaseinfoEndSubDatDiff extends BaseEntity {
 
 
     private String pbcProdIdPrd;
-    private String prodIdPrd;
     private Date mdatePrd;
     private String cusYearYieldPrd;
     private String ccyPrd;
@@ -888,13 +887,6 @@ public class PbcPrdBaseinfoEndSubDatDiff extends BaseEntity {
         return DateUtil.format(mdatePrd,"yyyy-MM-dd");
     }
 
-    public String getProdIdPrd() {
-        return prodIdPrd;
-    }
-
-    public void setProdIdPrd(String prodIdPrd) {
-        this.prodIdPrd = prodIdPrd;
-    }
 
     public Integer getProdIdDiff() {
         return prodIdDiff;

@@ -27,7 +27,7 @@ $(function() {
             }
         },
         cols:[
-            { title: "压缩包编号", field: 'datZipCode',width:200,sortable:false},
+            { title: "压缩包名称", field: 'datZipCode',width:200,sortable:false},
             { title: '压缩包放置路径',field:'datZipPath',width:150,sortable:false},
             { title: "报送类型", field: 'datZipTypeStr',width:100, type: 'datetime',sortable:false},
             { title: "报送明细类型", field: 'datZipDatTypeStr',width:150,sortable:false},
@@ -63,7 +63,7 @@ $(function() {
             return;
         }
 
-        var param={reportuuid:data.reportuuid,
+        var param={uuid:data.registSeqno,reportuuid:data.reportuuid,
             reporttype:data.datZipDatType,datZipCode:data.datZipCode}
 
         Joyin.ajax('preView', param, function(result) {
@@ -133,7 +133,7 @@ $(function() {
                     Joyin.warn(msg);
                 }
                 if (result.data.length< 1) {
-                    layer.alert('当前没有带保送的数据，请确认');
+                    layer.alert('当前没有带报送的数据，请确认');
                 } else {
                     param.result =result.data;
                     Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
