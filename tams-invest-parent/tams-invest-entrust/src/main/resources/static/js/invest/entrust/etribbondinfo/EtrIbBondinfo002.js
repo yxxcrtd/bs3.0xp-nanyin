@@ -1004,10 +1004,10 @@
             if (pageModel !== PAGE_MODEL_REFERENCE) {
                 if (query("#priceModel").val() === PRICEMODEL_03) {
                     query("#price").val("").attr("disabled", true).removeAttr("required"); // 净价
-                    query("#calculateField_price").prop('checked', false).attr('disabled', true);
+                    // query("#calculateField_price").prop('checked', false).attr('disabled', true);
                     query("#fpriceAmt").val("").attr("disabled", true); // 全价
                     query("#matureYield").val("").attr("disabled", true); // 到期收益率
-                    query("#calculateField_matureYield").prop('checked', false).attr('disabled', true);
+                    // query("#calculateField_matureYield").prop('checked', false).attr('disabled', true);
 
                     doChange.exerYield_setDisabled(true); // 行权收益率
                 } else {
