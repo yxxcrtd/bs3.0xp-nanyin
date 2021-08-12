@@ -63,7 +63,7 @@ $(function() {
             return;
         }
 
-        var param={uuid:data.registSeqno,reportuuid:data.reportuuid,
+        var param={reportuuid:data.reportuuid,
             reporttype:data.datZipDatType,datZipCode:data.datZipCode}
 
         Joyin.ajax('preView', param, function(result) {
