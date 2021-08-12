@@ -109,6 +109,8 @@ public class PbcZipDataFileService {
 	@Autowired
 	private PbcPrdBaseinfoEndSubMapper pbcPrdBaseinfoEndSubMapper;
 
+	public final static String PBC_PROD_BASEINFO_SEQCODE = "PBCPRDBASEINFO";
+
 	/**
      * 生成数据文件
      * @see
@@ -432,22 +434,11 @@ public class PbcZipDataFileService {
 						pbcPrdBaseinfoSubDatsNew.add(subDat);
 						innerProdIdMapping.put(prodId,first.get().getPbcCode());
 					}else{
-						String pbcProdId = PbcClassicsUtil.getPbcProdId(subDat.getIssuePartyId(), subDat.getProfitType(), null, subDat.getVdate());
-						if(StrUtil.isEmpty(pbcProdId)){
-							noPbcIdsList.add(prodId);
-						}else{
-							innerProdIdsNew.add(subDat.getProdId());
-							pbcPrdBaseinfoSubDatsNew.add(subDat);
-							innerProdIdMapping.put(prodId, pbcProdId);
-						}
+						String pbcProdId = PbcClassicsUtil.getPbcProdId(subDat.getIssuePartyId(), subDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, subDat.getVdate());
+						innerProdIdsNew.add(subDat.getProdId());
+						pbcPrdBaseinfoSubDatsNew.add(subDat);
+						innerProdIdMapping.put(prodId, pbcProdId);
 					}
-				}else{
-					noPbcIdsList.add(prodId);
-				}
-			}
-			if(CollectionUtil.isNotEmpty(noPbcIdsList)){
-				for (String ids : noPbcIdsList) {
-					DatDownloadDto.newErrorMsg(datDownloadDto,ids+":生成人行代码失败!");
 				}
 			}
 		}
@@ -591,71 +582,17 @@ public class PbcZipDataFileService {
 		if(CollectionUtil.isNotEmpty(innerProdIds)){
 			pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds);
 		}
-		String model = CacheUtil.getSysParam("PBC_REPORT_MODEL");
-		String pbcReportModel =  StrUtil.isEmpty(model) ? "01" : model;
-		List<String> noPbcIdsList = new ArrayList<>();
 		Map<String,String> innerProdIdMapping = new HashMap<>();
 		List<PbcPrdBaseinfoEndSubDat> pbcPrdBaseinfoSubDatsNew = new ArrayList<>();
 		List<String> innerProdIdsNew = new ArrayList<>();
-		if("01".equals(pbcReportModel)){
-			for (PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoSubDat : pbcPrdBaseinfoEndSubDats) {
-				if(CollectionUtils.isNotEmpty(pbcProdAssetpoolCodes)){
-					Optional<PbcProdAssetpoolCode> first = pbcProdAssetpoolCodes.stream().filter(pbcProdAssetpoolCode ->
-							pbcPrdBaseinfoSubDat.getProdId().equals(pbcProdAssetpoolCode.getInsideProdId())).findFirst();
-					if(first.isPresent()){
-						innerProdIdsNew.add(pbcPrdBaseinfoSubDat.getProdId());
-						pbcPrdBaseinfoSubDatsNew.add(pbcPrdBaseinfoSubDat);
-						innerProdIdMapping.put(pbcPrdBaseinfoSubDat.getProdId(),first.get().getPbcCode());
-					}else{
-						noPbcIdsList.add(pbcPrdBaseinfoSubDat.getProdId());
-					}
-				}else{
-					noPbcIdsList.add(pbcPrdBaseinfoSubDat.getProdId());
-				}
-			}
-			if(CollectionUtil.isNotEmpty(noPbcIdsList)){
-				for (String ids : noPbcIdsList) {
-					DatDownloadDto.newErrorMsg(datDownloadDto,ids);
-				}
-			}
-		}else{
-			for (PbcPrdBaseinfoEndSubDat subDat : pbcPrdBaseinfoEndSubDats) {
-				String prodId = subDat.getProdId();
-				if(StrUtil.isNotEmpty(prodId)){
-					if(CollectionUtils.isNotEmpty(pbcProdAssetpoolCodes)){
-						Optional<PbcProdAssetpoolCode> first = pbcProdAssetpoolCodes.stream().filter(pbcProdAssetpoolCode ->
-								prodId.equals(pbcProdAssetpoolCode.getInsideProdId())).findFirst();
-						if(first.isPresent()){
-							innerProdIdsNew.add(subDat.getProdId());
-							pbcPrdBaseinfoSubDatsNew.add(subDat);
-							innerProdIdMapping.put(prodId,first.get().getPbcCode());
-						}else{
-							String pbcProdId = PbcClassicsUtil.getPbcProdId(subDat.getOrgCode(), PbcClassicsUtil.PROD_PROFIT_TYPE_NOCOVERCOSTF, null, subDat.getVdate());
-							if(StrUtil.isEmpty(pbcProdId)){
-								noPbcIdsList.add(prodId);
-							}else{
-								innerProdIdsNew.add(subDat.getProdId());
-								pbcPrdBaseinfoSubDatsNew.add(subDat);
-								innerProdIdMapping.put(prodId, pbcProdId);
-							}
-						}
-					}else{
-						String pbcProdId = PbcClassicsUtil.getPbcProdId(subDat.getOrgCode(), PbcClassicsUtil.PROD_PROFIT_TYPE_NOCOVERCOSTF, null, subDat.getVdate());
-						if(StrUtil.isEmpty(pbcProdId)){
-							noPbcIdsList.add(prodId);
-						}else{
-							innerProdIdsNew.add(subDat.getProdId());
-							pbcPrdBaseinfoSubDatsNew.add(subDat);
-							innerProdIdMapping.put(prodId, pbcProdId);
-						}
-					}
-				}else{
-					noPbcIdsList.add(prodId);
-				}
-			}
-			if(CollectionUtil.isNotEmpty(noPbcIdsList)){
-				for (String ids : noPbcIdsList) {
-					DatDownloadDto.newErrorMsg(datDownloadDto,ids+":生成人行代码失败!");
+		for (PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoSubDat : pbcPrdBaseinfoEndSubDats) {
+			if(CollectionUtils.isNotEmpty(pbcProdAssetpoolCodes)){
+				Optional<PbcProdAssetpoolCode> first = pbcProdAssetpoolCodes.stream().filter(pbcProdAssetpoolCode ->
+						pbcPrdBaseinfoSubDat.getProdId().equals(pbcProdAssetpoolCode.getInsideProdId())).findFirst();
+				if(first.isPresent()){
+					innerProdIdsNew.add(pbcPrdBaseinfoSubDat.getProdId());
+					pbcPrdBaseinfoSubDatsNew.add(pbcPrdBaseinfoSubDat);
+					innerProdIdMapping.put(pbcPrdBaseinfoSubDat.getProdId(),first.get().getPbcCode());
 				}
 			}
 		}

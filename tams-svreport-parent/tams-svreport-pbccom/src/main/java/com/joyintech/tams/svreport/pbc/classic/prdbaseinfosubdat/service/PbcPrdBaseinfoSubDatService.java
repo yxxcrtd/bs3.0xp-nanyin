@@ -6,29 +6,29 @@ import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode;
+import com.joyintech.tams.common.base.entity.PbcProdAssetpoolCodeKey;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.svreport.pbc.classic.pbcNewDat.service.PbcDatUtil;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dao.PbcPrdBaseinfoSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDto;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
-import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
-import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
-import org.apache.axis2.databinding.types.xsd._byte;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +49,19 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
      */
     private static Logger logger = LoggerFactory.getLogger(PbcPrdBaseinfoSubDatService.class);
 
-    private static final String TIPS_SUFFIX_ERROR = "只支持2003版的excel导入，请修改文件重新导入";
+    private static final String TIPS_SUFFIX_ERROR = "只支持2003版(文件后缀为.xls)的excel导入，请修改文件重新导入";
 
     @Autowired
     private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
 
     @Autowired
+    private PbcPrdBaseinfoSubMapper pbcPrdBaseinfoSubMapper;
+
+    @Autowired
     private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
+
+    @Autowired
+    private PbcProdAssetpoolCodeMapper pbcProdAssetpoolCodeMapper;
 
     /**
      *
@@ -103,19 +109,6 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
             if(CollectionUtil.isNotEmpty(prodIds)){
                 boolean flag = false;
                 pbcPrdBaseinfoSubDats = pbcPrdBaseinfoSubDatMapper.queryPbcPrdBaseInfoByprodId(prodIds);
-                /*StringBuilder builder = new StringBuilder();
-                builder.append("已报送的数据，不支持修改。请在人行客户端直接修复！").append("\n").append("产品内部代码:[");
-                for (PbcPrdBaseinfoSubDatDto pbcPrdBaseinfoSubDatDto : pbcPrdBaseinfoSubDatDtos) {
-                    Optional<PbcPrdBaseinfoSubDat> any = pbcPrdBaseinfoSubDats.stream().filter(baseinfoDat -> baseinfoDat.getProdId().equals(pbcPrdBaseinfoSubDatDto.getProdId())).findAny();
-                    if(any.isPresent()){
-                        PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat = any.get();
-                        String sendStatus = pbcPrdBaseinfoSubDat.getSendStatus();
-                        if(!DictCodeListExt2.报送状态_未报送.getValue().equals(sendStatus)){
-                            flag = true;
-                            builder.append(pbcPrdBaseinfoSubDat.getProdId()).append(",").append("\n");
-                        }
-                    }
-                }*/
                 List<ValidMessage> validMessages = new ArrayList<>();
                 for (PbcPrdBaseinfoSubDatDto pbcPrdBaseinfoSubDatDto : pbcPrdBaseinfoSubDatDtos) {
                     Optional<PbcPrdBaseinfoSubDat> any = pbcPrdBaseinfoSubDats.stream().filter(baseinfoDat -> baseinfoDat.getProdId().equals(pbcPrdBaseinfoSubDatDto.getProdId())).findAny();
@@ -385,7 +378,21 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 //发行机构内部产品代码
                 String prodId = rowsData.get(row++);
                 if(checkIsNotEmpty(prodId,rowNumber,"发行机构内部产品代码",errorMessage)){
-                    dto.setProdId(prodId);
+                    int count = pbcPrdBaseinfoSubMapper.countByProdId(prodId);
+                    if(count > 0){
+                        PbcProdAssetpoolCodeKey codeKey = new PbcProdAssetpoolCodeKey();
+                        codeKey.setInsideProdId(prodId);
+                        codeKey.setCodeType(DictCodeListExt3.代码类型_产品.getValue());
+                        PbcProdAssetpoolCode pbcProdAssetpoolCode = pbcProdAssetpoolCodeMapper.selectByPrimaryKey(codeKey);
+                        if(pbcProdAssetpoolCode == null || StrUtil.isEmpty(pbcProdAssetpoolCode.getPbcCode())){
+                            errorMessage.add(new ExcelValidDto("发行机构内部产品代码",String.valueOf(rowNumber),"第"+rowNumber+"行:发行机构内部产品代码无对应人行代码！"));
+                        }else{
+                            dto.setProdId(prodId);
+                        }
+                    }else{
+                        errorMessage.add(new ExcelValidDto("发行机构内部产品代码",String.valueOf(rowNumber),"第"+rowNumber+"行:发行机构内部产品代码不存在！"));
+                    }
+
                 }
                 //募集方式
                 String raiseType = rowsData.get(row++);
@@ -512,7 +519,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 String creditType = rowsData.get(row++);
                 if("是".equals(creditFlag)){
                     if(checkIsNotEmpty(creditType,rowNumber,"增信机构类型",errorMessage)){
-                        dto.setCreditType(splitByDot(creditType,true));
+                        dto.setCreditType(PbcDictCodeEnums.getCodeByName(creditType));
                     }
                 }
                 //增信形式
@@ -540,27 +547,6 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
         return null;
     }
 
-    public String splitByDot(String msg,boolean isTransfer){
-        StringBuilder builder = new StringBuilder();
-        if(StrUtil.isNotEmpty(msg)){
-            String[] split = msg.split(",");
-            if(split.length > 0){
-                for (int i = 0; i < split.length; i++) {
-                    String s = split[i];
-                    if(i == split.length - 1){
-                        builder.append(isTransfer ? PbcDictCodeEnums.getCodeByName(s) : s);
-                    }else{
-                        builder.append(isTransfer ? PbcDictCodeEnums.getCodeByName(s) : s);
-                        builder.append(",");
-                    }
-                }
-                return builder.toString();
-            }else{
-                return isTransfer ? PbcDictCodeEnums.getCodeByName(msg) : msg;
-            }
-        }
-        return null;
-    }
     /**
      * 判断是否为空
      * @return 返回boolean
