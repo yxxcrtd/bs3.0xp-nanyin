@@ -11,6 +11,7 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.math.MathUtil;
 import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -52,6 +53,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -711,14 +713,14 @@ public class PbcZipDataFileService {
 						return null;
 					}
 				     //数值为空或者0的情况下跳过
-					if(null==filedValue||filedValue.equals("0")){
+					if(!(StringUtil.isNotEmpty(filedValue)&&!new BigDecimal("0").equals(filedValue))){
                          continue;
 					}
 					//组装数据
 					LinkedHashMap<String, String> data = new LinkedHashMap<String, String>();
 					data.put("date", DateUtil.getLastDayOfThisMonth(sub.getTermid()));
-					data.put("issuePartyId", sub.getIssuePartyId());
-					data.put("prodVariety", sub.getProdVariety());
+					data.put("issuePartyId", "A1234567891234");
+					data.put("prodVariety", "1");
 					data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
 					data.put("filedValue", filedValue.toString());
 					dataList.add(data);
@@ -753,15 +755,15 @@ public class PbcZipDataFileService {
 				} catch (Exception e) {
 					return null;
 				}
-				//数值当为空、或者0的情况下
-				if(null==filedValue||filedValue.equals("0")){
+				//数值为空或者0的情况下跳过
+				if(!(StringUtil.isNotEmpty(filedValue)&&!new BigDecimal("0").equals(filedValue))){
 					continue;
 				}
 				//组装数据
 				LinkedHashMap<String, String> data = new LinkedHashMap<String, String>();
 				data.put("date", DateUtil.getLastDayOfThisMonth(sub.getTermid()));
-				data.put("issuePartyId", sub.getIssuePartyId());
-				data.put("prodVariety", sub.getProdVariety());
+				data.put("issuePartyId", "A1234567891234");
+				data.put("prodVariety", "1");
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
 				data.put("filedValue", filedValue.toString());
 				dataList.add(data);

@@ -851,8 +851,15 @@ public class DateUtil extends DateUtils {
      * Date
      */
     public static String getLastDayOfThisMonth(String  dateStr){
+        if(StringUtil.isNotEmpty(dateStr)){
+            if(6==dateStr.length()){  //202111
+                dateStr=dateStr.substring(0,4)+"-"+dateStr.substring(5,6);
+            }
+        }else{
+            dateStr=DateUtil.getCurrentDate();
+        }
         Calendar calendar = Calendar.getInstance();
-        Date date=DateUtil.parse(dateStr.substring(0,4)+"-"+dateStr.substring(5,6));
+        Date date=DateUtil.parse(dateStr);
         calendar.setTime(date);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date endDate = calendar.getTime();
