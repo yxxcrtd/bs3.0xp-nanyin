@@ -211,8 +211,8 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
             }
         }
 
-        String actMarketCode = null;
         for(RskValtblAssetSubDto entity:dto.getSelectedItem()){
+            String actMarketCode = null;
             String subCode=entity.getSubCode();
             String subName=entity.getSubName();
             if(StringUtil.equals(entity.getValType().getDesc(), ValType.ASSET.getDesc())
