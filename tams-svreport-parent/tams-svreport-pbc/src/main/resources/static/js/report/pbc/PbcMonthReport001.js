@@ -684,7 +684,7 @@ $(function () {
             }, 500);
         } else {
             setTimeout(function () {
-                $('#submitDeadLine').val(searchDataStart + ' - ' + searchDataEnd);
+                // $('#submitDeadLine').val(searchDataStart + ' - ' + searchDataEnd);
                 $('#submitDate').val(searchDataStart + ' - ' + searchDataEnd);
                 table.load();
             }, 500);
