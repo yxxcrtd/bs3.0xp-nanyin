@@ -44,4 +44,7 @@ public interface PbcReportAssetIncomeDatDetailMapper {
 
     int deleteByUUIDAndType(Map<String,Object> paramsMap);
 
+    List<PbcReportAssetIncomeDatDetail> selectByDatZipCode(@Param("datZipCode") String datZipCode, @Param("datZipDatType") String datZipDatType);
+
+
 }

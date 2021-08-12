@@ -496,19 +496,18 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 //募集资金币种
                 String raiseCcy = rowsData.get(row++);
                 if(checkIsNotEmpty(raiseCcy,rowNumber,"募集资金币种",errorMessage)){
-                    dto.setRaiseCcy(splitByDot(raiseCcy,false));
+                    dto.setRaiseCcy(dealCcyInfo(raiseCcy));
                 }
                 //兑付本金币种
                 String cashPrinCcy = rowsData.get(row++);
                 if(checkIsNotEmpty(cashPrinCcy,rowNumber,"兑付本金币种",errorMessage)){
-                    dto.setCashPrinCcy(splitByDot(cashPrinCcy,false));
+                    dto.setCashPrinCcy(dealCcyInfo(cashPrinCcy));
                 }
                 //兑付收益币种
                 String cashProfCcy = rowsData.get(row++);
                 if(checkIsNotEmpty(cashProfCcy,rowNumber,"兑付收益币种",errorMessage)){
-                    dto.setCashProfCcy(splitByDot(cashProfCcy,false));
+                    dto.setCashProfCcy(dealCcyInfo(cashProfCcy));
                 }
-
                 //增信机构类型
                 String creditType = rowsData.get(row++);
                 if("是".equals(creditFlag)){
@@ -516,7 +515,6 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                         dto.setCreditType(splitByDot(creditType,true));
                     }
                 }
-
                 //增信形式
                 String creditMode = rowsData.get(row++);
                 if("是".equals(creditFlag)){
@@ -533,6 +531,13 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
         }
         return checkResult;
 
+    }
+
+    public String dealCcyInfo(String msg){
+        if(StrUtil.isNotEmpty(msg)){
+            return msg.substring(0,3);
+        }
+        return null;
     }
 
     public String splitByDot(String msg,boolean isTransfer){

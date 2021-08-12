@@ -195,6 +195,19 @@ public class PbcReportAssetDebtDatDetailDto {
      */
     private String termid;
 
+    /**
+     * 发行机构代码
+     */
+    private String issuePartyId;
+
+    public String getIssuePartyId() {
+        return issuePartyId;
+    }
+
+    public void setIssuePartyId(String issuePartyId) {
+        this.issuePartyId = issuePartyId;
+    }
+
     public String getFinInstitutionCode() {
         return finInstitutionCode;
     }

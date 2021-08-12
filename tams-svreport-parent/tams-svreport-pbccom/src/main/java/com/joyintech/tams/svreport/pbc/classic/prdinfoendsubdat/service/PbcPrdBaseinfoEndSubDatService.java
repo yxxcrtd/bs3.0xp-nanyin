@@ -331,7 +331,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 //币种代码
                 String ccy = rowsData.get(row++);
                 if(checkIsNotEmpty(ccy,i,"币种代码",errorMessage)){
-                    dto.setCcy(ccy);
+                    dto.setCcy(dealCcyInfo(ccy));
                 }
 
                 //兑付客户收益
@@ -362,6 +362,13 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
         }
         return checkResult;
 
+    }
+
+    public String dealCcyInfo(String msg){
+        if(StrUtil.isNotEmpty(msg)){
+            return msg.substring(0,3);
+        }
+        return null;
     }
 
     /**
