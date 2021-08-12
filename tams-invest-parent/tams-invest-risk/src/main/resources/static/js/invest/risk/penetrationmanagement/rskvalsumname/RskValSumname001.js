@@ -16,14 +16,6 @@ var loadTree = function (callback) {
     $("#mixTree").load(basePath +'invest/risk/penetrationmanagement/rskvalsumname/RskValSumname001/getSumName',
         {name: $('#name').val()}, function (data) {
             nodeId = '';
-          //update by yantianyuan 二级法人按钮改造 start
-            if(purviewElements.indexOf('_edit')==-1){
-            	$(".node_modify").hide();
-            }
-            if(purviewElements.indexOf('_delete')==-1){
-            	$(".node_delete").hide();
-            }
-        	//update by yantianyuan 二级法人按钮改造 end
             if (typeof callback == 'function') {
                 callback();
             }

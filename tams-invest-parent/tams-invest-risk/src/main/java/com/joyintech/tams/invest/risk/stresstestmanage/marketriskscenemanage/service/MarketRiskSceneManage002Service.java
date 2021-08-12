@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.constant.DictCodeList;
@@ -59,12 +58,6 @@ public class MarketRiskSceneManage002Service extends CommonExportService<MarketR
             action = "insert";
         }else{
             action = "update";
-        }
-
-        if(MultilevelDataAuthorityUtil.isEnabled()){
-
-            String institutionCode = MultilevelDataAuthorityUtil.getOrganizationCode(entity.getCreateUser());
-            entity.setInstitutionCode(institutionCode);
         }
         
         restTemplate.postForObject(

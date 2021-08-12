@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,12 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.common.BussCommonSelectService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto;
 
@@ -57,19 +59,9 @@ public class RskValtblPrtBotassetService extends CommonExportService<RskValtblPr
 //        }else{
 //            pageParam.put("mappingStat", "MAPPED");
 //        }
-    	Page<RskValtblPrtBotassetMapDto> res = restTemplate.postForPage(ServiceApplication.RISK_SERVICE_NAME + "/RskValtblPrtBotasset/findPage",
+        return restTemplate.postForPage(
+            ServiceApplication.RISK_SERVICE_NAME + "/RskValtblPrtBotasset/findPage",
             pageParam, RskValtblPrtBotassetMapDto.class);
-    	if(res!=null && res.getRoot()!=null) {
-    		for(RskValtblPrtBotassetMapDto dto : res.getRoot()) {
-//    			if(!SecurityUtil.isPermitted("RskValtblPrtBotasset001_btn_edit")){
-    			if(!SecurityUtil.isPermitted("RskValtblPrtBotasset001_TBLROW_edit")){
-    				dto.setFlg("02");
-                }else {
-                	dto.setFlg("01");
-                }
-    		}
-    	}
-        return res;
     }
     
     /**
@@ -207,24 +199,22 @@ public class RskValtblPrtBotassetService extends CommonExportService<RskValtblPr
      * @see
      * @since 1.0
      */
-    public Page<SelectOptionDto> selectAllAsset(Map<String, Object> param){
-        Page<SelectOptionDto> resultPage = new Page<SelectOptionDto>(); 
+    public List<SelectOptionDto> selectAllAsset(Map<String, Object> param){
+        List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
+        if(StringUtil.isNotEmpty(param.get("finprodType2"))){
+            resultList.addAll(selectAsset(param));
+        }
         if(StringUtil.equals(param.get("finprodType2"), DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
             //是否排除系统内资产
             param.put("isExclude", true);
-            resultPage=selectWindBondAsset(param);
+            resultList.addAll(selectWindBondAsset(param));
         }else if(StringUtil.equals(param.get("finprodType2"), DictCodeListExt1.金融产品类型_投管用_基金.getValue())){
             //是否排除系统内资产
             param.put("isExclude", true);
-            resultPage=selectWindFundAsset(param);
+            resultList.addAll(selectWindFundAsset(param));
         }
-        if(StringUtil.isNotEmpty(param.get("finprodType2")) ){
-//            resultPage.addAll(selectAsset(param).getRoot()); 
-            resultPage.setRoot(selectAsset(param));
-            resultPage.setTotal(resultPage.getRoot().size());
-        }
-        if(StringUtil.isNotEmpty(resultPage) && StringUtil.isNotEmpty(resultPage.getRoot())){
-            for(SelectOptionDto selectOptionDto:resultPage.getRoot()){
+        if(null!=resultList&&!resultList.isEmpty()){
+            for(SelectOptionDto selectOptionDto:resultList){
                 if(null!=selectOptionDto.getObject()){
                     String obj = selectOptionDto.getObject().toString();
                     if(obj.contains(",")){
@@ -236,7 +226,7 @@ public class RskValtblPrtBotassetService extends CommonExportService<RskValtblPr
                 }
             }
         }
-        return resultPage;
+        return resultList;
     }
     
     /**
@@ -260,9 +250,9 @@ public class RskValtblPrtBotassetService extends CommonExportService<RskValtblPr
      * @see
      * @since 1.0
      */
-    private Page<SelectOptionDto> selectWindBondAsset(Map<String, Object> param){
+    private List<SelectOptionDto> selectWindBondAsset(Map<String, Object> param){
         /*return bussCommonSelectService.selectCommonSelectList("WindBondAsset", param);*/
-        return bussCommonSelectService.selectCommonSelectForPage("WindBondAsset", param);
+        return bussCommonSelectService.selectCommonSelect("WindBondAsset", param);
     }
     
     /**
@@ -273,8 +263,8 @@ public class RskValtblPrtBotassetService extends CommonExportService<RskValtblPr
      * @see
      * @since 1.0
      */
-    private Page<SelectOptionDto> selectWindFundAsset(Map<String, Object> param){
-        return bussCommonSelectService.selectCommonSelectForPage("WindFundAsset", param);
+    private List<SelectOptionDto> selectWindFundAsset(Map<String, Object> param){
+        return bussCommonSelectService.selectCommonSelect("WindFundAsset", param);
     }
     
     @Override

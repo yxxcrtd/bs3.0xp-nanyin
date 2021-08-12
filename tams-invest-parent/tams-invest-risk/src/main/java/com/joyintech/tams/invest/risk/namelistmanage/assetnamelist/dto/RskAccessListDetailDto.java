@@ -27,7 +27,7 @@ public class RskAccessListDetailDto extends RskAccessListDetail {
      * 审批人
      */
     private String spr;
-     
+
     /**
      * 名单类型，白名单、黑名单
      */
@@ -37,7 +37,7 @@ public class RskAccessListDetailDto extends RskAccessListDetail {
      * 名单级别，一级库、二级库
      */
     private String listLevel;
-
+ 
     public String getOldlistDetailName() {
         return oldlistDetailName;
     }
@@ -79,7 +79,6 @@ public class RskAccessListDetailDto extends RskAccessListDetail {
     public String getListDateStr() {
         return DateUtil.format(super.getListDate());
     }
-
     public String getListType() {
         return listType;
     }

@@ -12,10 +12,7 @@ package com.joyintech.tams.invest.risk.stresstestmanage.flowriskscenemanage.vali
 import java.util.ArrayList;
 import java.util.List;
 
-import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
-import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import org.activiti.editor.language.json.converter.util.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,16 +26,12 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  * 情景管理验证类（删除、启用停用）
  * @author Jiaoxujin
  * @version 1.0 2019年8月26日
- * @see
+ * @see SceneBatchValidator
  * @since 1.0
  */
 @Transactional
 @Component
 public class FlowRiskSceneManageValidator implements BeanValidator {
-
-
-    @Autowired
-    MstWorkflowCommonService mstWorkflowCommonService;
 
     /**
      * {@inheritDoc}
@@ -61,21 +54,6 @@ public class FlowRiskSceneManageValidator implements BeanValidator {
                         errorList.add(new ValidMessage("FlowRiskSceneManage001_btn_neffective", getMessage("FlowRiskSceneManage001.atleastOneScene")));
                     }
                 }
-            }else{
-
-                if (StringUtil.equals(dto.getOperateType(), "delete")  ) {
-                    for (FlowRiskSceneManage001Dto temp : dto.getSelectedItem()) {
-                        WflValidInputParameter param = new WflValidInputParameter();
-                        param.setBusinessDataPk1(temp.getSceneId());
-                        param.setPageId("FlowRiskSceneManage002");
-                        if (null != mstWorkflowCommonService &&
-                                mstWorkflowCommonService.isInWflProcess(param)) {
-                            errorList.add(new ValidMessage(this.getMessage("COMMON_E_0012", temp.getSceneName())));
-                        }
-
-                    }
-                }
-
             }
         }
 

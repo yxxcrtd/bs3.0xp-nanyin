@@ -65,11 +65,6 @@ public class RskValtblAssetSubDto extends RskValtblAssetSub implements Comparabl
      */
     private boolean isUpdatebotAssetMap;
     
-    /**
-     * 债券市场代码
-     */
-    private String marketId;
-    
     public ValType getValType() {
         return valType;
     }
@@ -185,14 +180,7 @@ public class RskValtblAssetSubDto extends RskValtblAssetSub implements Comparabl
     public void setUpdatebotAssetMap(boolean isUpdatebotAssetMap) {
         this.isUpdatebotAssetMap = isUpdatebotAssetMap;
     }
-    
-    public String getMarketId() {
-		return marketId;
-	}
-	public void setMarketId(String marketId) {
-		this.marketId = marketId;
-	}
-	/**
+    /**
      * {@inheritDoc}
      */
     @Override

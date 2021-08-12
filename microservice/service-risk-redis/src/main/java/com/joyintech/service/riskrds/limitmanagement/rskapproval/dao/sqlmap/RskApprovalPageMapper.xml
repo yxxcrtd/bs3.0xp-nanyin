@@ -11,7 +11,9 @@
         from RSK_ISUP_TRIAL a, RSK_ISUP_INDICATOR b
         where TRADE_ID = #{eventId, jdbcType=VARCHAR}
         and a.IND_ID = b.IND_ID
-        and a.SEQ_NO = #{uuid, jdbcType=VARCHAR}
+        <if test="uuid != null and uuid != ''">
+            and a.SEQ_NO = #{uuid, jdbcType=VARCHAR}
+        </if>
         <if test="assetCode != null and assetCode != ''">
             and ASSET_CODE = #{assetCode, jdbcType=VARCHAR}
         </if>

@@ -2292,6 +2292,84 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 retMap.add(dataReMap);
             });
         }
+        else if(StringUtil.equals(DictCodeList.平安资产类型_拆借.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
+            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
+                Map<String, Object> dataReMap=new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                retMap.add(dataReMap);
+            });
+        }
+        else if(StringUtil.equals(DictCodeList.平安资产类型_基金.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
+            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
+                Map<String, Object> dataReMap=new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                retMap.add(dataReMap);
+            });
+        }
+        else if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_净值型.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
+            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
+                Map<String, Object> dataReMap=new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                retMap.add(dataReMap);
+            });
+        }
+        else if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_利率型.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
+            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
+                Map<String, Object> dataReMap=new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                retMap.add(dataReMap);
+            });
+        }else if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_货币型.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
+            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
+                Map<String, Object> dataReMap=new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                retMap.add(dataReMap);
+            });
+        }else if(StringUtil.equals(DictCodeList.平安资产类型_存款.getValue(),v.getAssetType())
+                || StringUtil.equals(DictCodeList.平安资产类型_项目类资产.getValue(),v.getAssetType())
+                &&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
+            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
+                Map<String, Object> dataReMap=new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                retMap.add(dataReMap);
+            });
+        }
+        else if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussRepoSecPtl"))){
+            Map bussRepoSecPtlMap = JsonUtils.object2Map(dataMap.get("bussRepoSecPtl")) ;
+            if(StringUtil.isNotEmpty(bussRepoSecPtlMap.get("pledgeBondList"))){
+                ((List)bussRepoSecPtlMap.get("pledgeBondList")).forEach(en->{
+                    Map<String, Object> dataReMap=new HashMap<>();
+                    dataReMap.putAll(dataMap);
+                    dataReMap.putAll((Map)en);
+                    retMap.add(dataReMap);
+                });
+            }
+        }
+        else if(StringUtil.equals(DictCodeList.平安资产类型_买断式回购.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("trdOutRightRepoTradePtl"))){
+            ((List)dataMap.get("trdOutRightRepoTradePtl")).forEach(en->{
+                Map<String, Object> dataReMap=new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                if (StringUtil.isNotEmpty(dataReMap.get("firstSettleAmt"))) {
+                    dataReMap.put("fSettleAmt", dataReMap.get("firstSettleAmt"));
+                }
+                retMap.add(dataReMap);
+            });
+        }
+        if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussCombDistribtList"))){
+            ((List)dataMap.get("bussCombDistribtList")).forEach(en->{
+                Map<String, Object> dataReMap=new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                retMap.add(dataReMap);
+            });
+        }
         return retMap;
     }
 

@@ -75,26 +75,12 @@
                 }
                 ,{field:'listTypeStr', width:300 ,title:'AssetNameManagement001.listType',sortField:'LIST_TYPE'}
                 ,{field:'listLevelStr', width:300 ,title:'AssetNameManagement001.listLevel',sortField:'LIST_LEVEL'}
-                ,{field:'effdate', width:200 ,title:'AssetNameManagement001.effdate',type:'date',sortField:'EFFDATE'}
-                /*,{field:'operation', width:300 , title: 'SysCommon.operation', sortable:false,
+                ,{field:'effdate', width:400 ,title:'AssetNameManagement001.effdate',type:'date',sortField:'EFFDATE'}
+                ,{field:'operation', width:400 , title: 'SysCommon.operation', sortable:false,
                             render:function (data, type, row, meta) {
-                            return '<a class="btn layui-btn  manual" title="手工录入" style="color:white">手工录入</a><a class="btn layui-btn batch" title="批量录入" style="color:white">批量录入</a>';
+                            return '<a class="btn layui-btn  manual" title="手工录入" style="color:white">手工录入</a><a class="btn layui-btn batch" title="批量录入" style="color:white">批量录入</a><a class="btn layui-btn del" title="删除" style="color:white">删除</a>';
                     }
-                }*/
-                
-                ,{field:'operation', width:300 ,type:'action',  title: 'SysCommon.operation', sortable:false,
-                    render:function (data, type, row, meta) {
-                    var buttons = '';
-                    if(purviewElements.indexOf('_manual')!=-1){
-                           buttons += '<a class="btn layui-btn  manual" title="手工录入" style="color:white">手工录入</a>';
-                     }
-                     if(purviewElements.indexOf('_batch')!=-1){
-                           buttons += '<a class="btn layui-btn batch" title="批量录入" style="color:white">批量录入</a>';
-                      }
-
-                    return buttons;
-            }
-        }]
+                }]
     });
 
     /**
@@ -145,7 +131,7 @@
         var object = {selectedItem: [data], operateType:"delete",listId:data.listId};//请求参数
         Joyin.ajaxJson(basePath + 'invest/risk/namelistmanage/assetnamelist/AssetNameManagement001/check', object, function(result) {//请求路径，请求参数回调函数
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){//删除事件的请求
-                WorkFlow.doDeleteList(basePath + 'invest/risk/namelistmanage/assetnamelist/AssetNameManagement001/delete', object,"AssetNameManagement001_btn_delete", "AssetNameManagement003", function(){
+                WorkFlow.doDeleteList(basePath + 'invest/risk/namelistmanage/assetnamelist/AssetNameManagement001/delete', object,"AssetNameManagement001_btn_delete", "AssetNameManagement002", function(){
                     effTable.reload();//回调函数，表格刷新
                     uneffTable.reload();//回调函数，表格刷新
             });

@@ -74,24 +74,11 @@ $(function(){
               },
               {field:'dataStatus', title: '数据状态',width:'8%'},
               {field:'remark', title: '备注',width:'7%', sortField:'remark'},
-              {field:'operation', type:'action',
-              title: 'SysCommon.operation', width:'120', sortable:false,
-              //fixed:'right',
+              {field:'operation', title: 'SysCommon.operation', width:'120', sortable:false,fixed:'right',
                   render: function (data, type, row, meta) {
-                	  	var html = "";
-                	  	if(purviewElements.indexOf('_batch')!=-1){
-                	  		html +='<i class="btn detail jyiconfont jyicon-detail batch" title="情景详细" data-ignore="undefined"></i>';
-                	  	}
-                	  	if(purviewElements.indexOf('_edit')!=-1){
-                	  		html += '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i>';
-                	  	}
-                	  	if(purviewElements.indexOf('_delete')!=-1){
-                	  		html += '<i class="btn layui-icon delt delete" title="删除" data-ignore="false"></i>';
-                	  	}
-                	  	return html;
-//                      return '<i class="btn detail jyiconfont jyicon-detail" title="情景详细" data-ignore="undefined"></i>'+
-//                             '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i>'+
-//                             '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
+                      return '<i class="btn detail jyiconfont jyicon-detail" title="情景详细" data-ignore="undefined"></i>'+
+                             '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i>'+
+                             '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
                   }
               }
               ]}
@@ -113,7 +100,7 @@ $(function(){
     /**
      * 绑定删除事件
      */
-    table.bind('click', '.delete', function(data, index) {
+    table.bind('click', '.delt', function(data, index) {
         //operType: DELETE
         data.operateType = 'delete';
 //        Joyin.ajaxJson(basePath + 'invest/risk/stresstestmanage/marketriskscenemanage/MarketRiskSceneManage001/checkDelete', data, function(result) {
@@ -126,7 +113,7 @@ $(function(){
 //        });
     });
     
-    table.bind('click', '.batch', function(data, index) {
+    table.bind('click', '.detail', function(data, index) {
         var object = {sceneId: data.sceneId, origin:"manage"};//请求参数
         Joyin.dialog('历史情景详细信息展示',
                 basePath + "invest/risk/stresstestmanage/marketriskscenemanage/MarketRiskSceneManage003/init",

@@ -44,7 +44,7 @@ $(function () {
             , {
                 field: 'finprodMarketId', title: '操作', width: 80,fixed:'right',
                 render: function (data, type, row, meta) {
-                    if (row.configid == 'N'|| purviewElements.indexOf('_batch')==-1) {
+                    if (row.configid == 'N') {
 
                     } else {
                         return '<span class="jyiconfont jyicon-history-data batch btn " title="历史数据" style="color:#208fff;margin-left:6px;"></span>';

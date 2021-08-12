@@ -10,10 +10,13 @@
 
 package com.joyintech.tams.invest.riskredis.quota.rskapproval.aspect;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.riskredis.quota.rskapproval.service.RskApprovalService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -114,6 +117,13 @@ public class WorkflowDobackAspect extends BaseService {
         // 模糊委托
         else if (StringUtil.equals(pageId, "RskApproval003")) {
             send(mark, rejectReason, "RSK008");
+        }// 风险批量审批
+        else if (StringUtil.equals(pageId, "RskApproval004")) {
+            //将审批结果 通知给交易系统
+            String eventId = mark.getBusinessDataPk1();
+            sendApprovalResultToExchange(eventId,rejectReason,mark.getBusinessData());
+            //流程作废
+           //WorkFlowUtil.deleteProcess(mark.getWorkflowId(), processInstanceId);
         }
     }
 
@@ -150,6 +160,74 @@ public class WorkflowDobackAspect extends BaseService {
             data.put(BussinessConstantRds.INTERFCODE, rsk);
         }
         ClientUtil.sendRequest(CacheUtil.getSysParam(RskApprovalService.APPROVAL_SYS + sysCode), data,restTemplate);
+    }
+
+    protected void sendApprovalResultToExchange(String eventId,String rejectReason,String businessData) {
+        logger.info("通知交易系统审批状态接口【{}】  接口URL："+ ServiceApplication.EXCHANGE_SERVICE_NAME +
+                "/joyin/instruction/examine");
+
+        //调用批量释放接口
+        Map<String,Object> mapTrd=JsonUtils.stringToMap(businessData);
+
+        Map<String, Object> rskMap = new HashMap<String, Object>();
+        rskMap.put("assetType",mapTrd.get("assetType"));
+        rskMap.put("eventType","1");
+        List<Map<String, Object>> rskList = new ArrayList<Map<String, Object>>();
+
+        List<Map<String, Object>> rskListtmp =  (List<Map<String, Object>>)mapTrd.get("rsklist");
+
+        if(!StringUtil.isEmptyList(rskListtmp)) {
+            rskListtmp.forEach(r ->{
+                Map<String, Object> tmpMap = new HashMap<String, Object>();
+                tmpMap.put("eventDate",r.get("eventDate"));
+                tmpMap.put("eventId",r.get("eventId"));
+                tmpMap.put("entrustCode",r.get("entrustCode"));
+                tmpMap.put("eventType",r.get("eventType"));
+                tmpMap.put("amount",r.get("amount"));
+                tmpMap.put("assetCode",r.get("finprodMarketId"));
+                tmpMap.put("assetType",r.get("assetType"));
+                tmpMap.put("ps",r.get("ps"));
+                tmpMap.put("netPrice",r.get("netPrice"));
+                tmpMap.put("allPrice",r.get("allPrice"));
+                tmpMap.put("unitNet",r.get("unitNet"));
+                tmpMap.put("assetRate",r.get("assetRate"));
+                tmpMap.put("portfolioCode",r.get("portfolioCode"));
+                tmpMap.put("priceAmt",r.get("priceAmt"));
+                tmpMap.put("tradeNum",r.get("tradeNum"));
+                tmpMap.put("seqNo",r.get("eventId"));
+                tmpMap.put("revokeFlg",r.get("revokeFlg"));
+                tmpMap.put("tradeId",r.get("eventId"));
+                tmpMap.put("counterId",r.get("counterId"));
+
+                tmpMap.put("conShareId",r.get("conShareId"));
+                tmpMap.put("conPrice",r.get("conPrice"));
+                tmpMap.put("conNum",r.get("conNum"));
+                //撤销
+                tmpMap.put("tradeStatu","03");
+                rskList.add(tmpMap);
+            });
+        }
+
+        rskMap.put("rskList",rskList);
+
+        //调用批量释放接口
+        simpleRestTemplate.postForObject(ServiceApplication.CUSTOMER_INTERF_NAME +
+                        "/interf/risk/doOccupyReleasBatchData",
+                rskMap, Map.class);
+
+//        restTemplate.postForObject(ServiceApplication.CUSTOMER_INTERF_NAME +
+//                        "/interf/risk/doOccupyReleasBatchData",
+//                rskMap, Map.class);
+
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("eventId", eventId);
+        paramMap.put("approveResult", "2");
+        logger.info("请求报文【{}】","eventId = "+ eventId+";approveResult=2;approveReason="+rejectReason);
+        Map<String, Object> result = simpleRestTemplate.postForObject(ServiceApplication.EXCHANGE_SERVICE_NAME +
+                        "/joyin/instruction/examine?eventId="+eventId+"&approveResult=2&approveReason="+rejectReason,
+                paramMap, Map.class);
+        logger.info("应答报文【{}】", "errorCode:"+(Integer)result.get("errorCode")+";errorMsg:"+(String)result.get("errorMsg"));
+
     }
 
     private String findValue(JsonNode node, String key) {

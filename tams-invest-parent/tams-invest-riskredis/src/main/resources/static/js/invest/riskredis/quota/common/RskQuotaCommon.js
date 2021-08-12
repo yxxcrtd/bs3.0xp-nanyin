@@ -12,7 +12,7 @@
         if(detailJson!=null){
             /* 限制型 */
             detail = html2Escape(data);
-            if(row.indType.indexOf("LIMIT_")!=-1){
+            if(row.indType.indexOf("LIMIT_")!=-1||row.indType.indexOf("INNER_")!=-1){
                 if(detailJson.threshold_1.value!=null&&detailJson.threshold_1.value!=''){
                     wg = detailJson.threshold_1.op+detailJson.threshold_1.value+valueConvertUnit(detailJson.threshold_1.unit);
                 }
@@ -84,22 +84,24 @@
     		if(row.supStat == "ERROR"){
                   return '<span style="color: red">'+JoyinUtil.getLabel("RskSupervisionRiskAnalyze001.exceptionMessage")+'</span>';
              }
-    		wg = JoyinMath.doMul(parseFloat(new Number(wg)), 1, 10);
+    		wg = JoyinMath.doMul(parseFloat(new Number(wg)), 1, 6);
     		wg = Number(wg);
     		var detailJson = JSON.parse(row.foulCond);
     		var curunit=valueConvertUnit(detailJson.threshold_1.unit);
     		if(detailJson.threshold_1.unit=='PERCENT'){
-    			wg=toDecimal(wg*100,4)+curunit;
+    			wg=toDecimal(wg*100,4);
     		}
     		else if(detailJson.threshold_1.unit=='WRMB'){
 //    			wg=String(new Number(wg/10000)).replace(/^(.*\..{6}).*$/,"$1")+curunit;NumberObject.toFixed(num)
-    			wg=JoyinMath.doMul(parseFloat(new Number(wg/10000)), 1, 4)+curunit;
-    		}else if(detailJson.threshold_1.unit=='BP'){
-                wg=toDecimal(wg*10000,4)+curunit;
+    			wg=JoyinMath.doMul(parseFloat(new Number(wg/10000)), 1, 4);
+    		}
+            else if(detailJson.threshold_1.unit=='BP'){
+                wg=JoyinMath.doMul(parseFloat(new Number(wg*10000)), 1, 4);
             }
     		else{
-    			wg=JoyinMath.doMul(parseFloat(new Number(wg)), 1, 6)+curunit;
+    			wg=JoyinMath.doMul(parseFloat(new Number(wg)), 1, 6);
     		}
+            wg=wg==Number(wg)?Number(wg)+curunit:wg+curunit;
     	}
     	return wg;
     }

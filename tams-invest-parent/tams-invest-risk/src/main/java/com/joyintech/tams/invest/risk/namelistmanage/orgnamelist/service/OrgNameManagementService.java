@@ -366,7 +366,6 @@ public class OrgNameManagementService extends CommonExportService<RskAccessListD
                            }
                         }
                         if(StringUtil.isNotEmpty(dataList.get(i).get(0))){
-                        	dto.setListId(listId);
                             dto.setListDetailId(dataList.get(i).get(0));
                         }
                         

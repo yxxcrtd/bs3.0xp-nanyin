@@ -15,19 +15,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.progressbar.ProgressBarService;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.customerrelationtree.agencydetailsinf.dto.AgencyDetailsInf001Dto;
 import com.joyintech.tams.invest.risk.customerrelationtree.agencydetailsinf.dto.TreeNode;
@@ -42,7 +42,7 @@ import com.joyintech.tams.invest.risk.customerrelationtree.agencydetailsinf.dto.
  */
 @Service
 @Transactional(rollbackFor=Exception.class)
-public class AgencyDetailsInf001Service extends AgencyExportService<AgencyDetailsInf001Dto> {
+public class AgencyDetailsInf001Service extends CommonExportService<AgencyDetailsInf001Dto> {
     
 	// 平台日期
 	@Autowired(required = false)
@@ -83,7 +83,7 @@ public class AgencyDetailsInf001Service extends AgencyExportService<AgencyDetail
 	
 	/**
 	 * 删除机构
-	 * @param agencyId
+	 * @param seqNo
 	 * @return
 	 * @see
 	 * @since 1.0
@@ -97,7 +97,6 @@ public class AgencyDetailsInf001Service extends AgencyExportService<AgencyDetail
 	/**
 	 * 查询树数据
 	 * @param agencyId
-	 * @param twoNodeId
 	 * @return
 	 * @see
 	 * @since 1.0

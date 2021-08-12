@@ -6,7 +6,6 @@ $(function() {
         var object = $.serializeToObject('#submitForm');
         object.operateType = "submit";
         object.pageModel = pageModel;
-        object.srcColIndex = object.srcColIndexLetter;
         //判断是新建界面还是编辑界面
         if(pageModel===PAGE_MODEL_NEW){
             Joyin.ajaxJson(basePath + 'invest/risk/penetrationmanagement/rskvalstructure/RskValStructure003/check',object, function(result) {

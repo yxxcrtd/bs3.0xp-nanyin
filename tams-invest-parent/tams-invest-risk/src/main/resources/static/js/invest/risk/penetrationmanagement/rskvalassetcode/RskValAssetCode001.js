@@ -17,14 +17,6 @@ var loadTree = function (callback) {
     $("#mixTree").load(basePath +'invest/risk/penetrationmanagement/rskvalassetcode/RskValAssetCode001/selectAll',
         {/*structName: $('#structName').val()*/}, function (data) {
             nodeId = '';
-          //update by yantianyuan 二级法人按钮改造 start
-            if(purviewElements.indexOf('_edit')==-1){
-            	$(".node_modify").hide();
-            }
-            if(purviewElements.indexOf('_delete')==-1){
-            	$(".node_delete").hide();
-            }
-          //update by yantianyuan 二级法人按钮改造 end
             if (typeof callback == 'function') {
                 callback();
             }
@@ -173,12 +165,19 @@ $(function () {
      * 新建明细
      */
     function showMxDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('RskValAssetCode003.title'), '../RskValAssetCode003/init',
+        // 新建明细前校验是否有科目 modify by yufei 20200718 start
+        if(nodeId){
+            Joyin.dialog(JoyinUtil.getLabel('RskValAssetCode003.title'), '../RskValAssetCode003/init',
                 '90%', '90%',{pageModel: PAGE_MODEL_NEW,id:nodeId,name:nodeName},function () {
                     loadTree(function () {
                         $(".mixtree-node:first").trigger('click')
                     });
                 });
+        }
+        else {
+            JoyinUtil.showMessage("请选择一个资产科目映射名称","error");
+        }
+        // 新建明细前校验是否有科目 modify by yufei 20200718 end
     } 
     
     $(function(){

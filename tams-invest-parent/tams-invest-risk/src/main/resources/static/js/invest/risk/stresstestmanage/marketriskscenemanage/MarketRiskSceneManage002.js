@@ -27,24 +27,13 @@ $(function() {
 	    var ftrTypeList = tableA.getAllRows();//因子
 	    
 	    //将选中的因子状态设置选中
-        if(pageModel == PAGE_MODEL_NEW){
-            for(var index in ftrTypeList){
-                if(ftrTypeList[index].LAY_CHECKED){        //语句不需要优化，LAY_CHECKED有可能是undefined
-                    ftrTypeList[index].ftrChecked = true;
-                }else{
-                    ftrTypeList[index].ftrChecked = false;
-                }
-            }
-        }else{
-            for(var index in ftrTypeList){
-                if(ftrTypeList[index].ftrChecked){        //语句不需要优化，LAY_CHECKED有可能是undefined
-                    ftrTypeList[index].ftrChecked = true;
-                }else{
-                    ftrTypeList[index].ftrChecked = false;
-                }
-            }
-        }
-
+	    for(var index in ftrTypeList){
+	        if(ftrTypeList[index].LAY_CHECKED){        //语句不需要优化，LAY_CHECKED有可能是undefined
+	            ftrTypeList[index].ftrChecked = true;
+	        }else{
+	            ftrTypeList[index].ftrChecked = false;
+	        }
+	    }
 		var proIndList = tableB.getAllRows();//产品指标
 		var strIndList = tableC.getAllRows();//承压指标
         var object = $.serializeToObject('#marketRiskSceneManage002Form');

@@ -41,7 +41,6 @@ public class FlowRiskStressTest001Service extends CommonExportService<FlowRiskSt
 	    Map<String, Object> param = new HashMap<>();
 	    param.put("scene", search);
 	    param.put("riskType", DictCodeListRsk.情景风险分类_流动性风险.getValue());
-		param.put("effStatus", "01");
         return restTemplate.postForList(
             ServiceApplication.RISK_SERVICE_NAME +"/FlowRiskStressTest001/querySceneOption", param,
                SelectOptionDto.class);
@@ -75,7 +74,6 @@ public class FlowRiskStressTest001Service extends CommonExportService<FlowRiskSt
 	     param.put("in_test_id", dto.getTestId());//测试代码
 	     param.put("sceneId", dto.getSceneId());//情景代码
 	     param.put("portfolioSingleName", dto.getPortfolioSingleName());//所选产品
-		 param.put("in_object_ids", dto.getPortfolioSingleName());//所选产品
 	     param.put("analysisVdate", dto.getAnalysisVdate());//开始日期
 	     param.put("analysisMdate", dto.getAnalysisMdate());//结束日期
          restTemplate.postForObject(

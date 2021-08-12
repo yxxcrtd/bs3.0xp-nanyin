@@ -55,10 +55,22 @@ public class RskSupervisionIndicatorParamDto extends RskIsupIndicatorParaDtl {
      * 是否更新redis
      */
     private String isUpRedis;
+
     /**
      * 参数数据类型
      */
     private String paramDataType;
+
+    /**
+     * 参数计算方式
+     */
+    private String paramMathType;
+
+    /**
+     * 参数为空设显示值
+     */
+    private String paramValueNone;
+
     /**
      * 获取 paraName
      *
@@ -124,6 +136,7 @@ public class RskSupervisionIndicatorParamDto extends RskIsupIndicatorParaDtl {
     public void setParaType(String paraType) {
         this.paraType = paraType;
     }
+
     public String getIsUpRedis() {
         return isUpRedis;
     }
@@ -131,11 +144,28 @@ public class RskSupervisionIndicatorParamDto extends RskIsupIndicatorParaDtl {
     public void setIsUpRedis(String isUpRedis) {
         this.isUpRedis = isUpRedis;
     }
+
     public String getParamDataType() {
         return paramDataType;
     }
 
     public void setParamDataType(String paramDataType) {
         this.paramDataType = paramDataType;
+    }
+
+    public String getParamMathType() {
+        return paramMathType;
+    }
+
+    public void setParamMathType(String paramMathType) {
+        this.paramMathType = paramMathType;
+    }
+
+    public String getParamValueNone() {
+        return paramValueNone;
+    }
+
+    public void setParamValueNone(String paramValueNone) {
+        this.paramValueNone = paramValueNone;
     }
 }
