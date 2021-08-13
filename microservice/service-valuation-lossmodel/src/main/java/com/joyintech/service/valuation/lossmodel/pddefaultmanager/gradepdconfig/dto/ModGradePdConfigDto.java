@@ -51,6 +51,10 @@ public class ModGradePdConfigDto extends BaseEntity implements ITableRow, Proces
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal forwardYearPd;
 
+    /**
+     * 评级PD类型
+     */
+    private String pdConfigType;
 
     /**
      * 操作类型
@@ -75,8 +79,13 @@ public class ModGradePdConfigDto extends BaseEntity implements ITableRow, Proces
     private String type;
 
 
+    public String getPdConfigType() {
+        return pdConfigType;
+    }
 
-
+    public void setPdConfigType(String pdConfigType) {
+        this.pdConfigType = pdConfigType;
+    }
 
     public String getOperateType() {
         return operateType;

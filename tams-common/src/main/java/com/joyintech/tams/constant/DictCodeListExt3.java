@@ -1408,6 +1408,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     减值要素_公司评级信息低于(DictCode.减值要素,"03","公司评级信息低于（含）"),
     减值要素_风险五级分类(DictCode.减值要素,"04","风险五级分类"),
     减值要素_公司评级信息下调级数(DictCode.减值要素,"05","公司评级信息下调级数"),
+
+    评级PD类型_债券_其他债权(DictCode.评级PD类型,"01","债券、其他债权"),
+    评级PD类型_回购(DictCode.评级PD类型,"02","回购"),
+    评级PD类型_存款(DictCode.评级PD类型,"03","存款"),
     //20210803 by yuzj end
     ;
     /**
