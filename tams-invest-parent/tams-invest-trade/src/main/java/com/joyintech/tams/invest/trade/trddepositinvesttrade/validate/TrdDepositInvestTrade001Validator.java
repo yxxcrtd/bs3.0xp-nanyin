@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.trade.trddepositinvesttrade.validate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -146,6 +147,10 @@ public class TrdDepositInvestTrade001Validator implements TradeCommonValidator{
                     if (StringUtil.isEmpty(order.getRecAcctNo())) {
                         errorList.add(new ValidMessage("",getMessage("FW_E_0006",getMessage("TrdDepositInvestTrade002.recAcctNo"))));
                     }
+                }
+                if(dto.getIntAmt() != null && dto.getIntAmt() != null
+                        && dto.getIntAmt().compareTo(BigDecimal.ZERO) < 0){
+                    errorList.add(new ValidMessage("intAmt",getMessage("REPORT_COMMON_E_0023",getMessage("TrdDepositInvestTrade002.intAmt"),"0")));
                 }
             }
             else if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs())) {

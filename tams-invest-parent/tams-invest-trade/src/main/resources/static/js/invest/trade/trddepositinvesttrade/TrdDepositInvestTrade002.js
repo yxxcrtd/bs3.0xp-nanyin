@@ -534,6 +534,9 @@
                             }else {
                                 $('#intAmt').val('');
                             }
+                            if ($('#finprodType').val() == 'D03'){
+                                 $('#intAmt').val('');
+                            }
                         });
                         //终止协议勾选时，本金金额不可编辑，等于资产可用持仓
                         $("#prinAmt").val($("#bottomAssetAmount").val());
@@ -800,24 +803,24 @@
                     if($('#ps').val() && $('#ps').val() == buy){
                     	 $('#intAmt').val(0).trigger('blur');
                          changeTradeAmtAndFee();
-                    }else{
-                    	
-                    	var param = {
-                                portfolioId:$('#portfolioId').val(),
-                                finprodMarketId:$('#finprodMarketId').val(),
-                                cDate:$('#tradeDate').val()
-                            };
-                            if(param.finprodMarketId != null && param.finprodMarketId != null &&
-                                param.portfolioId != '' && param.portfolioId != '' && param.cDate != null && param.cDate != ''
-                                && $("#prinAmt").val() && Number($("#prinAmt").val())>0){
-                                Joyin.ajaxJson(basePath+ "invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002/getTdyIntincexp", param,function(result){
-                                    $('#intAmt').val(Number(result)).trigger('blur');
-                                    changeTradeAmtAndFee();
-                                    // $('#tradeAmt').val(parseFloat(result.data)+parseFloat($('#prinAmt').val().valueOf())).trigger('blur');
-                                });
-                            }
-                    	
                     }
+//                    else{
+//                    	var param = {
+//                                portfolioId:$('#portfolioId').val(),
+//                                finprodMarketId:$('#finprodMarketId').val(),
+//                                cDate:$('#tradeDate').val()
+//                            };
+//                            if(param.finprodMarketId != null && param.finprodMarketId != null &&
+//                                param.portfolioId != '' && param.portfolioId != '' && param.cDate != null && param.cDate != ''
+//                                && $("#prinAmt").val() && Number($("#prinAmt").val())>0){
+//                                Joyin.ajaxJson(basePath+ "invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002/getTdyIntincexp", param,function(result){
+//                                    $('#intAmt').val(Number(result)).trigger('blur');
+//                                    changeTradeAmtAndFee();
+//                                    // $('#tradeAmt').val(parseFloat(result.data)+parseFloat($('#prinAmt').val().valueOf())).trigger('blur');
+//                                });
+//                            }
+//
+//                    }
                     
                 }
             }else {
