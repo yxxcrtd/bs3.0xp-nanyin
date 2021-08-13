@@ -497,14 +497,14 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 }
                 //增信机构类型
                 String creditType = rowsData.get(row++);
-                if("是".equals(creditFlag)){
+                if("1-是".equals(creditFlag)){
                     if(checkIsNotEmpty(creditType,rowNumber,"增信机构类型",errorMessage)){
                         dto.setCreditType(PbcDictCodeEnums.getCodeByName(creditType));
                     }
                 }
                 //增信形式
                 String creditMode = rowsData.get(row++);
-                if("是".equals(creditFlag)){
+                if("1-是".equals(creditFlag)){
                     if(checkIsNotEmpty(creditMode,rowNumber,"增信形式",errorMessage)){
                         dto.setCreditMode(PbcDictCodeEnums.getCodeByName(creditMode));
                     }
