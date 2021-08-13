@@ -457,6 +457,7 @@ public class ValRiftService {
             PtlSecPierceValutionDto bjDto = mapAsset.get("REMAININGCASH_BJ");
             PtlSecPierceValutionDto lxDto = mapAsset.get("REMAININGCASH_LX");
             bjDto.setTdyIntincexp(lxDto.getTdyIntincexp());
+            bjDto.setFinprodId("REMAININGCASH");
             mapAsset.put("REMAININGCASH",bjDto);
             mapAsset.remove("REMAININGCASH_LX");
             mapAsset.remove("REMAININGCASH_BJ");
