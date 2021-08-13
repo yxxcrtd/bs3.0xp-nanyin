@@ -120,11 +120,12 @@
     </delete>
 
     <select id="selectByDatZipCode"   resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto">
-        select     prp.*,psz.STATUS_VDATE as termid
+        select     prp.*
         from PBC_REPORT_PROD_DAT prp
         left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID and  psz.DAT_ZIP_DAT_TYPE =prp.REPORTTYPE
         where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
             and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
     </select>
+
 
 </mapper>
