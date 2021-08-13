@@ -42,6 +42,7 @@
             <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
                 #{item,jdbcType=VARCHAR}
             </foreach>
+            and ORG_CODE = #{OrgCode,jdbcType=VARCHAR}
         </delete>
 
 
@@ -51,6 +52,7 @@
             <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
                 #{item,jdbcType=VARCHAR}
             </foreach>
+            and ORG_CODE = #{OrgCode,jdbcType=VARCHAR}
         </delete>
 
         <select id="getDatZipNum" resultType="Map">
