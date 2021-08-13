@@ -462,28 +462,49 @@ public class ValRiftService {
             mapAsset.remove("REMAININGCASH_BJ");
         }
 
-        PtlSecPierceValutionDto cashDto = mapAsset.get("REMAININGCASH") == null ? new PtlSecPierceValutionDto() : mapAsset.get("REMAININGCASH");
-        //初始化数据
-        cashDto.setTdyIntincexp(cashDto.getTdyIntincexp() == null ? BigDecimal.ZERO : cashDto.getTdyIntincexp());
-        cashDto.setMarketValue(cashDto.getMarketValue() == null ? BigDecimal.ZERO : cashDto.getMarketValue());
-
-        List<String> idList = new ArrayList<>();
-        //现金数据相加
-        mapAsset.keySet().forEach(item->{
-            //如果资产代码中包含：则为现金数据
-            if(StringUtil.indexOf(mapAsset.get(item).getFinprodId(),":")>0){
-                idList.add(mapAsset.get(item).getFinprodId());
-                PtlSecPierceValutionDto itemDto = mapAsset.get(item) == null ? new PtlSecPierceValutionDto() : mapAsset.get(item);
-                cashDto.setTdyIntincexp(cashDto.getTdyIntincexp().add(itemDto.getTdyIntincexp() == null?BigDecimal.ZERO : itemDto.getTdyIntincexp()));
-                cashDto.setMarketValue(cashDto.getMarketValue().add(itemDto.getMarketValue() == null?BigDecimal.ZERO : itemDto.getMarketValue()));
+        if(mapAsset.keySet() != null &&  mapAsset.keySet().size()> 0){
+            PtlSecPierceValutionDto cashDto = new PtlSecPierceValutionDto();
+            if (mapAsset.get("REMAININGCASH") == null){
+                String portfolioId = null;
+                Date cDate = null;
+                for (String s : mapAsset.keySet()) {
+                    if(StringUtil.isEmpty(portfolioId)){
+                        portfolioId = mapAsset.get(s).getPortfolioId();
+                    }
+                    if(cDate == null){
+                        cDate = mapAsset.get(s).getCdate();
+                    }
+                }
+                cashDto.setPortfolioId(portfolioId);
+                cashDto.setCdate(cDate);
+                cashDto.setFinprodId("REMAININGCASH");
+            } else{
+                cashDto = mapAsset.get("REMAININGCASH");
             }
-        });
-        mapAsset.put("REMAININGCASH",cashDto);
 
-        //移除已经合并的数据
-        idList.forEach(item->{
-            mapAsset.remove(item);
-        });
+            //初始化数据
+            cashDto.setTdyIntincexp(cashDto.getTdyIntincexp() == null ? BigDecimal.ZERO : cashDto.getTdyIntincexp());
+            cashDto.setMarketValue(cashDto.getMarketValue() == null ? BigDecimal.ZERO : cashDto.getMarketValue());
+
+            List<String> idList = new ArrayList<>();
+            //现金数据相加
+            PtlSecPierceValutionDto finalCashDto = cashDto;
+            mapAsset.keySet().forEach(item->{
+                //如果资产代码中包含：则为现金数据
+                if(StringUtil.indexOf(mapAsset.get(item).getFinprodId(),":")>0){
+                    idList.add(mapAsset.get(item).getFinprodId());
+                    PtlSecPierceValutionDto itemDto = mapAsset.get(item);
+                    finalCashDto.setTdyIntincexp(finalCashDto.getTdyIntincexp().add(itemDto.getTdyIntincexp() == null?BigDecimal.ZERO : itemDto.getTdyIntincexp()));
+                    finalCashDto.setMarketValue(finalCashDto.getMarketValue().add(itemDto.getMarketValue() == null?BigDecimal.ZERO : itemDto.getMarketValue()));
+                }
+            });
+            mapAsset.put("REMAININGCASH",finalCashDto);
+
+            //移除已经合并的数据
+            idList.forEach(item->{
+                mapAsset.remove(item);
+            });
+        }
 
         //-----add by 裴家俊  2019/04/03----重新构造避免重复金融产品代码---start----
     	for (Entry<String, PtlSecPierceValutionDto> entry : mapAsset.entrySet()) {
