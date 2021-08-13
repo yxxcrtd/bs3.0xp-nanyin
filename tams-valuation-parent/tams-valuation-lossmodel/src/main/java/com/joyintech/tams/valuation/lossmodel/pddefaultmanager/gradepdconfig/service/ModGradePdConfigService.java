@@ -21,8 +21,6 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 //import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 //import com.joyintech.tams.invest.common.util.ExcelUtil;
@@ -144,7 +142,6 @@ public class ModGradePdConfigService extends  CommonExportService<ModGradePdConf
     @Override
     public void doComplete(ModGradePdConfigDto entity, OperationType type) {
         String action = StringUtil.EMPTY;
-        entity.setPdConfigType(DictCodeListExt3.评级PD类型_债券_其他债权.getValue());
         if (OperationType.DELETE.equals(type)) {
             action = "delete";
         } else if (OperationType.NEW.equals(type)) {
@@ -327,7 +324,6 @@ public class ModGradePdConfigService extends  CommonExportService<ModGradePdConf
                 dto.setVouchYear(dataList.get(i).get(0));
                 dto.setGradeResult((dataList.get(i).get(1).split(":"))[0]);//模板格式为 03:AAA-，保存只要 03，所以此处处理
                 dto.setForwardYearPd(new BigDecimal(dataList.get(i).get(2)));
-                dto.setPdConfigType(DictCodeListExt3.评级PD类型_债券_其他债权.getValue());
                 dtoList.add(dto);
             }
             this.saveModGradePdConfigDtoList(dtoList,type);

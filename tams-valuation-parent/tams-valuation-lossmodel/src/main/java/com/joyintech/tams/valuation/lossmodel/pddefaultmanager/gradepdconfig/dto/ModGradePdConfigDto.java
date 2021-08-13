@@ -62,12 +62,6 @@ public class ModGradePdConfigDto  extends BaseEntity implements ITableRow, Proce
      * 评级类型名称
      */
     private String oTypeName;
-
-    /**
-     * 评级PD类型
-     */
-    private String pdConfigType;
-
     /**
      * 操作类型
      */
@@ -94,14 +88,6 @@ public class ModGradePdConfigDto  extends BaseEntity implements ITableRow, Proce
 
 
 
-
-    public String getPdConfigType() {
-        return pdConfigType;
-    }
-
-    public void setPdConfigType(String pdConfigType) {
-        this.pdConfigType = pdConfigType;
-    }
     public String getGradeOrgName() {
         return gradeOrgName;
     }
