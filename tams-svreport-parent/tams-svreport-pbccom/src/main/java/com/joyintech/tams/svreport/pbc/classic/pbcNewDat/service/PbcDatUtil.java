@@ -109,8 +109,8 @@ public class PbcDatUtil {
 		//循环日期-如果有
 		for(Date date :dateSet){
 			int  num = 1;
-			List<PbcPrdBaseinfoSubDat> prdDatList = baseMap.get(date);
-			List<PbcPrdBaseinfoEndSubDat> prdEndDatList = endMap.get(date);
+			List<PbcPrdBaseinfoSubDat> prdDatList = null!=baseMap.get(date)?baseMap.get(date):new ArrayList<>();
+			List<PbcPrdBaseinfoEndSubDat> prdEndDatList = null!=endMap.get(date)?endMap.get(date):new ArrayList<>();
 				//※、当入参.srcModel = '02：报送文件管理页面调用',进行【2.1、2.2】的处理，否则直接开始 【2.3】的处理
 				if(DictCodeList.是否_中债_否.getValue().equals(srcModel)){
 					dataSearch.put("statusDate", DateUtil.format(date));
@@ -172,6 +172,12 @@ public class PbcDatUtil {
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
 						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
+						//重置相关数据
+						codeCount.put("prdCount",0);
+						codeCount.put("endCount",0);
+						count = 0;
+						num++;
+						zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 					}
 				}
 			}
@@ -182,6 +188,12 @@ public class PbcDatUtil {
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
 						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
+						//重置相关数据
+						codeCount.put("prdCount",0);
+						codeCount.put("endCount",0);
+						count = 0;
+						num++;
+						zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 					}
 				}
 			}
@@ -193,7 +205,12 @@ public class PbcDatUtil {
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
 						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
-
+						//重置相关数据
+						codeCount.put("prdCount",0);
+						codeCount.put("endCount",0);
+						count = 0;
+						num++;
+						zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 					}
 				}
 			}
@@ -255,13 +272,6 @@ public class PbcDatUtil {
 			}
 			resultMap.get("zipList").add(endZipFile);
 //		}
-
-		//超过大小进入的将数据重新编辑
-		if(isend){
-			count = 0;
-			maxCode++;
-			zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,maxCode,OrgCode);
-		}
 
 	}
 
