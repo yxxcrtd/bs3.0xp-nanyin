@@ -449,6 +449,135 @@ $(function() {
     /**
      * 定义数据表格
      */
+    var tableR5 = $("#dataTableR5").joyintable(
+        {
+            ajax : {
+                url : 'selramind',
+                type : 'POST',
+                data : function() {
+                    return searchform();
+                }
+            },
+            cols : [
+                {
+                    field : 'remTypeStr',
+                    title : 'PaActiveRemind002.remType',
+                    width : 200
+                },
+                {
+                    field : 'assetCode',
+                    title : '参数代码',
+                    width : 200
+                },
+                {
+                    field : 'assetName',
+                    title : '参数名称',
+                    width : 300
+                },
+                {
+                    field : 'reminder',
+                    title : 'PaActiveRemind002.reminder',
+                    width : 300
+                },
+                {
+                    field : 'remType',
+                    visible : false
+                },
+                {
+                    field : 'assetId',
+                    visible : false
+                },
+                {
+                    field : 'feeId',
+                    visible : false
+                },
+                {
+                    field : 'dealF',
+                    visible : false
+                },
+                {
+                    field : 'url',
+                    visible : false
+                },
+                {
+                    field : 'lable',
+                    visible : false
+                },
+                {
+                    field : 'dealF',
+                    visible : false
+                },
+                {
+                    field : 'closF',
+                    visible : false
+                },
+                {
+                    field : 'days',
+                    visible : false
+                },
+                {
+                    field : 'mdate',
+                    visible : false
+                },
+                // add by jiangpeng on 20200728 债券存续期 计息截止日与支付日不同时 交易查询用 start
+                {
+                    field : 'dDate',
+                    visible : false
+                },
+                {
+                    field : 'dDateStr',
+                    visible : false
+                },
+                // add by jiangpeng on 20200728 债券存续期 计息截止日与支付日不同时 交易查询用 end
+                {
+                    field : 'objType',
+                    visible : false
+                },
+                {
+                    field : 'orgId',
+                    visible : false
+                },
+                {
+                    field : 'orgName',
+                    visible : false
+                },
+                {
+                    field : 'mdateStr',
+                    visible : false
+                },
+                {
+                    field : 'menuId',
+                    visible : false
+                },
+                /*OPEX-612【主动提醒】项目类和计划类利率型资产 315检查中的提醒出来2条一样的提醒 guyunfei start*/
+                {
+                    field : 'cashType',
+                    visible : false
+                },
+                /*OPEX-612【主动提醒】项目类和计划类利率型资产 315检查中的提醒出来2条一样的提醒 guyunfei end*/
+                {
+                    field : 'operating',
+                    title : 'PaActiveRemind002.operating',
+                    align : 'center',
+                    width : 200,
+                    render : function(data, type, row, meta) {
+                        var operating = ""
+                        if(row.dealF == "Y"){
+                            operating = operating+"<a id=\"PaActiveRemind002_btnDeal_action\" style='color: #fff;' class=\"layui-btn layui-btn-sm\">"+JoyinUtil.getLabel("PaActiveRemind002.deal")+"</a>"
+                        };
+                        if(row.closF == "Y"){
+                            operating = operating+"<a id=\"PaActiveRemind002_btnClose_action\" style='color: #fff;' class=\"layui-btn layui-btn-sm\">"+JoyinUtil.getLabel("PaActiveRemind002.close")+"</a>"
+                        };
+                        return operating
+                    },
+                } ],
+            loadonce:true,
+            searchOnInit:false
+        });
+
+    /**
+     * 定义数据表格
+     */
     var tableR3 = $("#dataTableR3").joyintable(
         {
             ajax : {
@@ -690,6 +819,12 @@ $(function() {
         }
     });
 
+    tableR5.bind('click','#PaActiveRemind002_btnDeal_action', function(row) {
+       if(row.remType=='R5S3') {
+           dealRemind(row.url, row.lable, row.assetName, row.remType, row.days, row.feeId, row.menuId, tableR2, row.odateStr);
+       }
+    });
+
     /**
      * 查询要素变更后需重新点击查询
      */
@@ -704,19 +839,22 @@ $(function() {
             $('#dataTableR3_div').toggle(false);
             $('#dataTableR1_div').toggle(true);
             $('#dataTableR9_div').toggle(false);
+            $('#dataTableR5_div').toggle(false);
             tableR1.table? tableR1.reload() : tableR1.load();
         }else if($('#mainCategory') && $('#mainCategory').val() === 'R5'){
             if($('#smallCategory') && $('#smallCategory').val() === 'R5S3'){
                 $('#dataTableR1_div').toggle(false);
-                $('#dataTableR2_div').toggle(true);
+                $('#dataTableR2_div').toggle(false);
                 $('#dataTableR3_div').toggle(false);
                 $('#dataTableR9_div').toggle(false);
-                tableR2.table? tableR2.reload() : tableR2.load();
+                $('#dataTableR5_div').toggle(true);
+                tableR5.table? tableR5.reload() : tableR5.load();
             }else{
                 $('#dataTableR1_div').toggle(false);
                 $('#dataTableR3_div').toggle(true);
                 $('#dataTableR2_div').toggle(false);
                 $('#dataTableR9_div').toggle(false);
+                $('#dataTableR5_div').toggle(false);
                 tableR3.table? tableR3.reload() : tableR3.load();
             }
         }else if($('#mainCategory') && $('#mainCategory').val() === 'R9'){
@@ -724,12 +862,14 @@ $(function() {
             $('#dataTableR3_div').toggle(false);
             $('#dataTableR2_div').toggle(false);
             $('#dataTableR9_div').toggle(true);
+            $('#dataTableR5_div').toggle(false);
             tableR9.table? tableR9.reload() : tableR9.load();
         }else{
             $('#dataTableR1_div').toggle(false);
             $('#dataTableR2_div').toggle(true);
             $('#dataTableR3_div').toggle(false);
             $('#dataTableR9_div').toggle(false);
+            $('#dataTableR5_div').toggle(false);
             tableR2.table? tableR2.reload() : tableR2.load();
         }
         $('#mainCategory').change(itemChange);
