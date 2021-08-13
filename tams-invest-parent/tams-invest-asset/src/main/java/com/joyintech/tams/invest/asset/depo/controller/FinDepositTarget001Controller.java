@@ -1,5 +1,5 @@
 /*
- * 文件名：FinDepositTarget001Controller.java
+ * 文件名：cFinDepositTarget001Controller.java
  * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
  * 描述：理财资管管理系统V2.0
  * 修改人：zhangnian

@@ -5688,6 +5688,17 @@ public enum BussinessDictCodeListRds implements BaseDictCodeList {
     ), 参数数据类型_日期(
             DictCode.报表数据格式类型, "Date", "日期"
     )
+    //add by libaisong 2020-12-29 start
+    /**
+     * 商业银行净资产维护_有效状态
+     */
+    ,商业银行净资产维护_有效状态_有效(BussinessDictCodeRds.商业银行净资产维护_有效状态,"E","有效")
+    ,商业银行净资产维护_有效状态_失效(BussinessDictCodeRds.商业银行净资产维护_有效状态,"D","失效")
+    //add by libaisong 2020-12-29 end
+
+    ,共通业务类型_商业银行净资产维护(
+            BussinessDictCodeRds.共通业务类型, "RSK37", "商业银行净资产维护"
+    )
   ;
 
 
