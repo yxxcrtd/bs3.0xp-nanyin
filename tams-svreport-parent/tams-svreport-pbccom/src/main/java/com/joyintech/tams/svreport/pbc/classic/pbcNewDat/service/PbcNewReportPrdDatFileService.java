@@ -157,7 +157,9 @@ public class PbcNewReportPrdDatFileService {
 
 		pbcNewPrdDatFileMapper.deleteZipDataMI(OrgCode);
 		//批量插入月报时间  因为月报不存在大数据量.不处理
-		pbcNewPrdDatFileMapper.insertBatchZipData(zipFileList);
+		if(null!=zipFileList){
+			pbcNewPrdDatFileMapper.insertBatchZipData(zipFileList);
+		}
 
     }
 
