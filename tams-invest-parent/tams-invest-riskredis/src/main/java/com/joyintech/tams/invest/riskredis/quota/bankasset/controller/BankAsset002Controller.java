@@ -32,11 +32,12 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.riskredis.quota.bankasset.dto.BankAsset001Dto;
 import com.joyintech.tams.invest.riskredis.quota.bankasset.service.BankAsset001Service;
-import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
-import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+
 
 /**
  * 商业银行净资产维护
@@ -56,7 +57,7 @@ public class BankAsset002Controller extends BaseController{
 	/**
      * 流程组件
      */
-    @Autowired
+    @Autowired(required = false)
     private MstWorkflowCommonService mstWorkflowCommonService;
 	/**
      * 界面初始化
