@@ -81,7 +81,7 @@
 								   LEFT join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
 										where 1=1
 										and ((fp.FINPROD_TYPE2 is not null and fp.FINPROD_TYPE2 != 'F28') OR RAI.ORG_ASSET_TYPE1 is NOT NULL
-											OR ATD.PINAN_ASSET_TYPE = 'F07')
+											OR ATD.PINAN_ASSET_TYPE = 'F07' OR ATD.PINAN_ASSET_TYPE = 'F10')
 										<if test="finprodIdList != null and finprodIdList.size()>0">
 										   AND fp.FINPROD_MARKET_ID IN
 										   <foreach collection="finprodIdList" item="item" separator="," open="(" close =")">
