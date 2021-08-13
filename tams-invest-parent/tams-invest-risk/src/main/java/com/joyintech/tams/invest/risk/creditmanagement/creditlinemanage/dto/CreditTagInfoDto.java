@@ -224,7 +224,7 @@ public class CreditTagInfoDto extends CreditTagInfo  implements ProcessEntity{
      * 取得 扣减规则
      * @return 扣减规则
      */
-    @NotEmpty(fieldName = "CeLine002.deductRule", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "CeLine002.deductRule", groups = {ValidateGroupEdit.class})
     public String getDeductRule() {
         return deductRule;
     }

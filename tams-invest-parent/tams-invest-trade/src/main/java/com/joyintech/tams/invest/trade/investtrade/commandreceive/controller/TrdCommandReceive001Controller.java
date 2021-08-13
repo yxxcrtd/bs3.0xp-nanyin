@@ -133,6 +133,7 @@ public class TrdCommandReceive001Controller extends BaseController{
         map.put("entrustStatus", "99");
         /**add by chendijun 查询条数时没有带上完成状态 end**/
         model.addAttribute("NUMBER", trdCommandReceive001Service.otherSelectList(map,false).size());
+        map.put("secondaryMarketTrade", DictCodeList.是否_否.getValue());
         model.addAttribute("NUMBERRECEIVE", trdCommandReceive001Service.otherSelectList(map,true).size());
         model.addAttribute("ISTRADERECOMMANDrECEIVE",trdCommandReceive001Service.isTradeRdCommandReceive());
         //add by daizhiwei 2020-02-04,交易场所：银行间 start
