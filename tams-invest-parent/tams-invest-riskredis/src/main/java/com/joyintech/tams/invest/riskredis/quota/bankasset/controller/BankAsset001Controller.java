@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,8 +33,6 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.invest.riskredis.quota.bankasset.dto.BankAsset001Dto;
 import com.joyintech.tams.invest.riskredis.quota.bankasset.service.BankAsset001Service;
-import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
-import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -51,11 +51,11 @@ public class BankAsset001Controller extends BaseController{
 
 	@Autowired
 	private BankAsset001Service bankAsset001Service;
-	
-	/**
-     * 流程组件
+
+    /**
+     * bussRepFundInfoService
      */
-    @Autowired
+    @Autowired(required = false)
     private MstWorkflowCommonService mstWorkflowCommonService;
 	/**
      * 界面初始化
