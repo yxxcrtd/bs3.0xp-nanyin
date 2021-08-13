@@ -114,14 +114,21 @@ public class PbcNewPrdDatFileService {
     	List<PbcPrdBaseinfoSubDat> prdList = getPrdBaseinfoList(searchParam);
     	/***2、取得产品终止信息待处理数据*/
 		List<PbcPrdBaseinfoEndSubDat> endList = getPrdEndList(searchParam);
-
-		Map<String,List<PbcPrdBaseinfoSubDat>> orgPrdBaseMap = prdList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoSubDat::getOrgCode));
-		Map<String,List<PbcPrdBaseinfoEndSubDat>> orgPrdEndMap = endList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoEndSubDat::getOrgCode));
-
+		Map<String,List<PbcPrdBaseinfoSubDat>> orgPrdBaseMap = new HashMap<>();
+		Map<String,List<PbcPrdBaseinfoEndSubDat>> orgPrdEndMap = new HashMap<>();
 		Set<String> dateSet = new HashSet<>();
+		if(null!=prdList&&prdList.size()>0){
+			orgPrdBaseMap = prdList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoSubDat::getOrgCode));
+			dateSet.addAll(orgPrdBaseMap.keySet());
+		}
 
-		dateSet.addAll(orgPrdBaseMap.keySet());
-		dateSet.addAll(orgPrdEndMap.keySet());
+		if(null!=endList&&endList.size()>0){
+			orgPrdEndMap = endList.stream().collect(Collectors.groupingBy(PbcPrdBaseinfoEndSubDat::getOrgCode));
+			dateSet.addAll(orgPrdEndMap.keySet());
+		}
+
+
+
 
 		for(String OrgCode : dateSet){
 			/**3、调用共通处理【DAT生成共通处理-产品端】**/

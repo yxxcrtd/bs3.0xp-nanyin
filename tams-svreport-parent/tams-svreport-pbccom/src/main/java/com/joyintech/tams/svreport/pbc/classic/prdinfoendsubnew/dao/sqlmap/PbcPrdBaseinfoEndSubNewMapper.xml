@@ -407,7 +407,7 @@
         <if test="keyList != null and keyList.size > 0">
             and trim(a.REGIST_SEQNO) in
             <foreach collection="keyList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
+               TRIM(#{item,jdbcType=VARCHAR})
             </foreach>
         </if>
         <if test="sendStatusList != null and sendStatusList.size > 0">
@@ -811,11 +811,11 @@
 <delete id="deleteBatch"
 	parameterType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew">
 	delete from PBC_PRD_BASEINFO_END_SUB_NEW
-	where PBC_PROD_ID in
+	where prod_id in
 	<if test="list!=null and list.size()>0">
 		<foreach collection="list" item="dto" open="(" separator=","
 			close=")">
-			#{dto.pbcProdId,jdbcType=VARCHAR}
+			#{dto.prodId,jdbcType=VARCHAR}
 		</foreach>
 		AND SEND_STATUS = '01'
 	</if>

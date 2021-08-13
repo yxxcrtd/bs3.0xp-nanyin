@@ -21,6 +21,19 @@ import com.joyintech.tams.report.interf.common.constant.DateUtil;
  */
 @TableName("PBC_PRD_BASEINFO_SUB_NEW")
 public class PbcPrdBaseinfoSubNew extends BaseEntity{
+
+
+    /**序号**/
+    private int num;
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
     /**
      * 主键uuid
      */

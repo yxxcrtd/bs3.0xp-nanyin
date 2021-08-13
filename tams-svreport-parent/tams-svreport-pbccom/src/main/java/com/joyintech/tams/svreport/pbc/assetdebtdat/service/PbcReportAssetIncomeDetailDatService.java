@@ -1,5 +1,8 @@
 package com.joyintech.tams.svreport.pbc.assetdebtdat.service;
 
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -37,6 +40,8 @@ public class PbcReportAssetIncomeDetailDatService extends PbcDatPriviewService {
     @Autowired
     private PbcReportAssetIncomeDatDetailMapper PbcReportAssetIncomeDatDetailMapper;
     @Autowired
+    private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
+    @Autowired
     private PbcMonthReportMapper pbcMonthReportMapper;
 
     @Override
@@ -47,19 +52,19 @@ public class PbcReportAssetIncomeDetailDatService extends PbcDatPriviewService {
         }
         String reportuuid = param.get("reportuuid").toString();
         String reporttype = param.get("reporttype").toString();
-        PbcMonthReport pbcReport = pbcMonthReportMapper.selectByPrimaryKey(reportuuid);
+        PbcSendZipDatFile pbcReport = pbcSendZipDatFileMapper.selectByUUIDAndType(reportuuid,reporttype);
+
         // 如果报表为空则返回data
         if (pbcReport == null) {
             return data;
         }
-        pbcReport.setProdVariety(pbcReport.getProdVariety() + "-" + SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
-        data.put("report", pbcReport);
+        data.put("report", JsonUtils.object2Map(pbcReport));
         // 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
         List<PbcReportAssetIncomeDatDetail> listDetail = PbcReportAssetIncomeDatDetailMapper.selectByReportuuid(reportuuid);
         for (PbcReportAssetIncomeDatDetail detail : listDetail) {
             dealProdData(detail, isShowZero);
-            data.put(detail.getPropertycode(), processDataForExport(detail));
+            data.put(detail.getPropertycode(), JsonUtils.object2Map(processDataForExport(detail)));
         }
         return data;
     }
@@ -137,7 +142,7 @@ public class PbcReportAssetIncomeDetailDatService extends PbcDatPriviewService {
     @SuppressWarnings("unchecked")
     @Override
     public Map<Object, Object> createDataMS(Map<String, Object> param) {
-        return restTemplate.postForObject(SvrServiceApplication.PBC_SERVICE_NAME + "/PbcMonthReportAsset/createDataAssetIncomeDetail", param, Map.class);
+        return createData(param);
     }
 
     /**

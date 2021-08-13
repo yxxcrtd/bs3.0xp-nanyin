@@ -24,6 +24,18 @@ import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
  */
 @TableName("PBC_PRD_BASEINFO_END_SUB_NEW")
 public class PbcPrdBaseinfoEndSubNew extends BaseEntity {
+
+
+    private int num;
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
     /**
      * 主键uuid
      */
@@ -187,7 +199,6 @@ public class PbcPrdBaseinfoEndSubNew extends BaseEntity {
      *  内部产品代码
      */
     private String insideProdId;
-    
     /**
      *  人行代码
      */
@@ -212,6 +223,7 @@ public class PbcPrdBaseinfoEndSubNew extends BaseEntity {
     public void setPbcProdIdShow(String pbcProdIdShow) {
     	this.pbcProdIdShow = pbcProdIdShow;
     }
+
     
     /** 人行代码
      * @return PBC_CODE 人行代码

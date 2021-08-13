@@ -106,6 +106,51 @@ public class PbcSendZipDatFile extends BaseEntity {
     private String orgCode;
 
     /**
+     * 发行机构代码
+     */
+    private String issuePartyId;
+
+    /**
+     * 发行机构名称
+     */
+    private String issuePartyName;
+
+    /**
+     * 填报机构名称
+     */
+    private String reportOrgName;
+
+    /**
+     * 社会信用代码
+     */
+    private String socialCreditCode;
+
+    /**
+     * 金融机构编码
+     */
+    private String finInstitutionCode;
+
+    /**
+     * 产品品种
+     */
+    private String prodVariety;
+
+    /**
+     * 责任人
+     */
+    private String personLiable;
+
+    /**
+     * 联系方式
+     */
+    private String contact;
+
+    /**
+     * 制表日期
+     */
+    private Date reportDate;
+
+    /**
      * 取得 主键uuid
      * @return 主键uuid
      */
@@ -437,6 +482,152 @@ public class PbcSendZipDatFile extends BaseEntity {
     }
 
     /**
+     * 取得 发行机构代码
+     * @return 发行机构代码
+     */
+    public String getIssuePartyId() {
+        return issuePartyId;
+    }
+
+    /**
+     * 设置 发行机构代码
+     * @param issuePartyId 发行机构代码
+     */
+    public void setIssuePartyId(String issuePartyId) {
+        this.issuePartyId = issuePartyId == null ? null : issuePartyId.trim();
+    }
+
+    /**
+     * 取得 发行机构名称
+     * @return 发行机构名称
+     */
+    public String getIssuePartyName() {
+        return issuePartyName;
+    }
+
+    /**
+     * 设置 发行机构名称
+     * @param issuePartyName 发行机构名称
+     */
+    public void setIssuePartyName(String issuePartyName) {
+        this.issuePartyName = issuePartyName == null ? null : issuePartyName.trim();
+    }
+
+    /**
+     * 取得 填报机构名称
+     * @return 填报机构名称
+     */
+    public String getReportOrgName() {
+        return reportOrgName;
+    }
+
+    /**
+     * 设置 填报机构名称
+     * @param reportOrgName 填报机构名称
+     */
+    public void setReportOrgName(String reportOrgName) {
+        this.reportOrgName = reportOrgName == null ? null : reportOrgName.trim();
+    }
+
+    /**
+     * 取得 社会信用代码
+     * @return 社会信用代码
+     */
+    public String getSocialCreditCode() {
+        return socialCreditCode;
+    }
+
+    /**
+     * 设置 社会信用代码
+     * @param socialCreditCode 社会信用代码
+     */
+    public void setSocialCreditCode(String socialCreditCode) {
+        this.socialCreditCode = socialCreditCode == null ? null : socialCreditCode.trim();
+    }
+
+    /**
+     * 取得 金融机构编码
+     * @return 金融机构编码
+     */
+    public String getFinInstitutionCode() {
+        return finInstitutionCode;
+    }
+
+    /**
+     * 设置 金融机构编码
+     * @param finInstitutionCode 金融机构编码
+     */
+    public void setFinInstitutionCode(String finInstitutionCode) {
+        this.finInstitutionCode = finInstitutionCode == null ? null : finInstitutionCode.trim();
+    }
+
+    /**
+     * 取得 产品品种
+     * @return 产品品种
+     */
+    public String getProdVariety() {
+        return prodVariety;
+    }
+
+    /**
+     * 设置 产品品种
+     * @param prodVariety 产品品种
+     */
+    public void setProdVariety(String prodVariety) {
+        this.prodVariety = prodVariety == null ? null : prodVariety.trim();
+    }
+
+    /**
+     * 取得 责任人
+     * @return 责任人
+     */
+    public String getPersonLiable() {
+        return personLiable;
+    }
+
+    /**
+     * 设置 责任人
+     * @param personLiable 责任人
+     */
+    public void setPersonLiable(String personLiable) {
+        this.personLiable = personLiable == null ? null : personLiable.trim();
+    }
+
+    /**
+     * 取得 联系方式
+     * @return 联系方式
+     */
+    public String getContact() {
+        return contact;
+    }
+
+    /**
+     * 设置 联系方式
+     * @param contact 联系方式
+     */
+    public void setContact(String contact) {
+        this.contact = contact == null ? null : contact.trim();
+    }
+
+    /**
+     * 取得 制表日期
+     * @return 制表日期
+     */
+    public Date getReportDate() {
+        return reportDate;
+    }
+
+    /**
+     * 设置 制表日期
+     * @param reportDate 制表日期
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setReportDate(Date reportDate) {
+        this.reportDate = reportDate;
+    }
+
+
+    /**
      * 取得 报送类型
      * @return 报送类型
      */
@@ -452,7 +643,8 @@ public class PbcSendZipDatFile extends BaseEntity {
      */
     public String getDatZipDatTypeStr() {
         if(StringUtil.isNotEmpty(this.getDatZipDatType())){
-            return SysDataUtil.getNameFromDataDict(DictCode.人行报送明细类型, this.getDatZipDatType());
+            String str=SysDataUtil.getNameFromDataDict(DictCode.人行报送明细类型, this.getDatZipDatType());
+            return str;
         }
         return "" ;
     }

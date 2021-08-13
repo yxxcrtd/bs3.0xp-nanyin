@@ -11,6 +11,9 @@
 package com.joyintech.tams.svreport.pbc.assetdebtdat.service;
 
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -45,7 +48,8 @@ public class PbcReportDebtTermDetailDatService extends PbcDatPriviewService {
 
 	@Autowired
 	private PbcReportDebtTermDatDetailMapper pbcReportDebtTermDatDetailMapper;
-
+	@Autowired
+	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
 	@Autowired
 	private PbcMonthReportMapper pbcMonthReportMapper;
 
@@ -59,20 +63,19 @@ public class PbcReportDebtTermDetailDatService extends PbcDatPriviewService {
 		String reportuuid = param.get("reportuuid").toString();
 		String reporttype = param.get("reporttype").toString();
 
-		PbcMonthReport pbcReport = pbcMonthReportMapper.selectByPrimaryKey(reportuuid);
+		PbcSendZipDatFile pbcReport = pbcSendZipDatFileMapper.selectByUUIDAndType(reportuuid,reporttype);
 		// 如果报表为空则返回data
         if (pbcReport == null){
             return data;
         }
-		pbcReport.setProdVariety(pbcReport.getProdVariety() + "-"
-				+ SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
 		data.put("report", JsonUtils.object2Map(pbcReport));
 		List<PbcReportDebtTermDatDetail> listDetail = pbcReportDebtTermDatDetailMapper.selectDatDiffByReport(reportuuid,reporttype);
 		// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
     	String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
     	for (PbcReportDebtTermDatDetail detail : listDetail) {
-			dealProdData(detail, isShowZero);
-			data.put(detail.getPropertycode(), divide10000(detail));
+			dealProdDataListForDiff(detail);
+    		dealProdData(detail, isShowZero);
+			data.put(detail.getPropertycode(), JsonUtils.object2Map(divide10000(detail)));
 		}
 		return data;
 	}
@@ -80,9 +83,7 @@ public class PbcReportDebtTermDetailDatService extends PbcDatPriviewService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<Object, Object> createDataMS(Map<String, Object> param) {
-		return restTemplate.postForObject(
-				SvrServiceApplication.PBC_SERVICE_NAME + "/PbcMonthReportAsset/createDataDebtTermDetail", param,
-				Map.class);
+		return createData(param);
 	}
 
 	private PbcReportDebtTermDatDetail divide10000(PbcReportDebtTermDatDetail detail) {
@@ -128,7 +129,7 @@ public class PbcReportDebtTermDetailDatService extends PbcDatPriviewService {
      * @Description 导出预览为零的数据显示空还是显示零
      * @param detail
      * @version 1.7 2019年7月4日
-     * @param isShowZero 
+     * @param isShowZero
      */
     private void dealProdData(PbcReportDebtTermDatDetail model, String isShowZero) {
     	// 显示成零
@@ -169,16 +170,16 @@ public class PbcReportDebtTermDetailDatService extends PbcDatPriviewService {
 	 */
 	private void dealProdDataListForDiff(PbcReportDebtTermDatDetail detail) {
 		// 显示成零
-			if(!detail.getDebtInstrument().equals(detail.getDebtInstrument())){
+			if(!StringUtil.equals(detail.getDebtInstrument(),detail.getDebtInstrumentPrd())){
 				detail.setDebtInstrumentDiff(1);
 			}
-			if(detail.getStockRight()==null){
+		if(!StringUtil.equals(detail.getStockRight(),detail.getStockRightPrd())){
 				detail.setStockRightDiff(1);
 			}
-			if(detail.getSpecialShare()==null){
+			if(!StringUtil.equals(detail.getSpecialShare(),detail.getSpecialSharePrd())){
 				detail.setSpecialShareDiff(1);
 			}
-			if(detail.getActualAmt()==null){
+				if(!StringUtil.equals(detail.getActualAmt(),detail.getActualAmtPrd())){
 				detail.setActualAmtDiff(1);
 			}
 	}

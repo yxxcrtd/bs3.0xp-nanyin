@@ -2,13 +2,13 @@ package com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub;
 /**
  * 人行报表 服务
  * 〈功能详细描述〉
@@ -18,7 +18,7 @@ import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoE
  * @since 1.0
  */
 @Service
-public class PbcPrdBaseinfoEndSubNewMService extends CommonExportService<PbcPrdBaseinfoEndSub> {
+public class PbcPrdBaseinfoEndSubNewMService extends CommonExportService<PbcPrdBaseinfoEndSubNew> {
     /**
     *
     * 业务画面查询事件
@@ -27,10 +27,10 @@ public class PbcPrdBaseinfoEndSubNewMService extends CommonExportService<PbcPrdB
     * @see
     * @since 1.0
     */
-   public Page<PbcPrdBaseinfoEndSub> searchPage(Map<String, Object> param) {
+   public Page<PbcPrdBaseinfoEndSubNew> searchPage(Map<String, Object> param) {
        return restTemplate.postForPage(
                SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseinfoEndSubNew/findPage",param,
-               PbcPrdBaseinfoEndSub.class);
+               PbcPrdBaseinfoEndSubNew.class);
    }
 
    /**

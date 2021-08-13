@@ -1,5 +1,8 @@
 package com.joyintech.tams.svreport.pbc.assetdebtdat.service;
 
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -8,7 +11,7 @@ import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.svreport.pbc.assetdebt.dao.PbcReportCompanyDetailMapper;
 import com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportCompanyDetailDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
-import com.joyintech.tams.svreport.pbc.common.constants.PbcTemplateName;
+import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
 import com.joyintech.tams.svreport.pbc.common.service.PbcExportService;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
@@ -30,7 +33,7 @@ import java.util.Map;
  * @since 1.0
  */
 @Service
-@TemplateName(PbcTemplateName.PBC_REPORT_2_5)
+@TemplateName(PbcDatTemplateName.PBC_DAT_REPORT_2_5)
 public class PbcReportCompanyBondDatService extends PbcExportService {
 
 	@SuppressWarnings("unused")
@@ -40,6 +43,8 @@ public class PbcReportCompanyBondDatService extends PbcExportService {
 	private PbcReportCompanyDetailMapper pbcReportCompanyDetailMapper;
 	@Autowired
 	private PbcMonthReportMapper pbcMonthReportMapper;
+	@Autowired
+	private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
 
 	@Override
 	public Map<Object, Object> createData(Map<String, Object> param) {
@@ -48,14 +53,13 @@ public class PbcReportCompanyBondDatService extends PbcExportService {
 			return data;
 		}
 		String reportuuid = param.get("reportuuid").toString();
-		PbcMonthReport pbcReport = pbcMonthReportMapper.selectByPrimaryKey(reportuuid);
+		String reporttype = param.get("reporttype").toString();
+		PbcSendZipDatFile pbcReport = pbcSendZipDatFileMapper.selectByUUIDAndType(reportuuid,reporttype);
 		// 如果报表为空则返回data
         if (pbcReport == null){
             return data;
         }
-		pbcReport.setProdVariety(pbcReport.getProdVariety() + "-"
-				+ SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
-		data.put("report", pbcReport);
+		data.put("report", JsonUtils.object2Map(pbcReport));
 		// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
 		List<PbcReportCompanyDetailDto> listDetail = pbcReportCompanyDetailMapper.selectByReportuuid(reportuuid);
@@ -64,7 +68,7 @@ public class PbcReportCompanyBondDatService extends PbcExportService {
 				// 处理数据
 				dealCompanyDateListForExport(detail);
 				dealProdData(detail, isShowZero);
-				data.put(detail.getPropertycode(), detail);
+				data.put(detail.getPropertycode(), JsonUtils.object2Map(detail));
 			}
 		}
 		return data;
@@ -126,9 +130,7 @@ public class PbcReportCompanyBondDatService extends PbcExportService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<Object, Object> createDataMS(Map<String, Object> param) {
-		return restTemplate.postForObject(
-				SvrServiceApplication.PBC_SERVICE_NAME + "/PbcMonthReportAsset/createDataCompanyBond", param,
-				Map.class);
+		return createData(param);
 	}
 
 	public void dealCompanyDateListForExport(PbcReportCompanyDetailDto detail) {

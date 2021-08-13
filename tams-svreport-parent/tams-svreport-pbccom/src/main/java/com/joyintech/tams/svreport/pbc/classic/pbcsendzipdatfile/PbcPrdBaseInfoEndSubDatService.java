@@ -51,6 +51,8 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
                 dealPbcPrdBaseinfoEndSubDatDiff(detail);
                 dealPbcPrdBaseinfoEndSubDat(detail);
             }
+        }else{
+            listDetail.add(new PbcPrdBaseinfoEndSubDatDiff());  //为空
         }
         data.put("report", listDetail);
         return data;
@@ -87,9 +89,6 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
     public void dealPbcPrdBaseinfoEndSubDatDiff(PbcPrdBaseinfoEndSubDatDiff result){
         if (!StringUtil.equals(result.getPbcProdId(),result.getPbcProdIdPrd())){
             result.setPbcProdIdDiff(1);
-        }
-        if (!StringUtil.equals(result.getProdId(),result.getProdIdPrd())){
-            result.setProdIdDiff(1);
         }
         if (!StringUtil.equals(result.getMdate(),result.getMdatePrd())){
             result.setMdateDiff(1);

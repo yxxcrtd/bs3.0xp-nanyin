@@ -997,7 +997,7 @@
             <if test="keyList != null and keyList.size > 0">
                 and trim(REGIST_SEQNO) in
                 <foreach collection="keyList" open="(" close=")" separator="," item="item">
-                    #{item,jdbcType=VARCHAR}
+                    TRIM(#{item,jdbcType=VARCHAR})
                 </foreach>
             </if>
             <if test="sendStatusList != null and sendStatusList.size > 0">

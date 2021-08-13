@@ -190,7 +190,7 @@
       AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
   </delete>
 
-  <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto"
+  <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail"
           parameterType="java.lang.String" >
     select
       ppd.*,
@@ -206,13 +206,11 @@
       and ppd.REPORTTYPE=#{reporttype,jdbcType=CHAR}
   </select>
 
-  <select id="selectByDatZipCode"   resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto">
-    select     prp.*,pr.TERMID,pr.ISSUE_PARTY_ID,pr.PROD_VARIETY
+  <select id="selectByDatZipCode"   resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail">
+    select     prp.*,psz.STATUS_VDATE as termid
     from PBC_REPORT_BALANCETERM_DAT prp
-           left join  PBC_REPORT pr on prp.REPORTUUID=pr.REPORTUUID
-           left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID
+           left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID and  psz.DAT_ZIP_DAT_TYPE =prp.REPORTTYPE
     where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
       and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
-      and prp.REPORTTYPE = #{datZipDatType,jdbcType=VARCHAR}
   </select>
 </mapper>

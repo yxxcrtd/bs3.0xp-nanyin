@@ -2,10 +2,13 @@ package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
@@ -28,6 +31,8 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * 
@@ -122,7 +127,7 @@ public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("export")
 	public ResponseEntity<byte[]> export() {
-		return pbcPrdRaiseSub001Service.export(this.getPageId(), RequestUtil.getPageParam());
+		return pbcPrdRaiseSub001Service.export("PIB产品基本信息(资产管理)"+ DateUtil.formatDate(DateUtil.getCurrentDate()), RequestUtil.getPageParam());
 	}
 	
 	/**
@@ -169,19 +174,20 @@ public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
 		List<PbcPrdBaseinfoSubNew> dtoList;
 
 		if(null==datas){
-			dtoList = pbcPrdRaiseSub001Service.searchByCondition(paraMap);
+			dtoList = pbcPrdRaiseSub001Service.searchByExcel(paraMap);
 		}else{
 			dtoList = JsonUtils.json2List(datas, PbcPrdBaseinfoSubNew.class);
+			String seqno = dtoList.stream().map(PbcPrdBaseinfoSubNew :: getRegistSeqno).collect(toList()).toString();
+			paraMap.put("keyList", seqno.substring(1,seqno.length()-1));
+			dtoList = pbcPrdRaiseSub001Service.searchByExcel(paraMap);
 		}
 
 		File outFile = pbcPrdRaiseSub001Service.makeFile(
 				"/com/joyintech/tams/svreport/pbc/classic/prdbaseinfosubnew/conf/export_confNew.xml",
 				dtoList);
-		return ExportUtil.export(
-				"产品终止信息报送内容_"
-						+ DateUtil.format(new Date())
-						+ SystemGlobalConstant.POINT
-						+ ".xls",
+		return ExportUtil.export(" PIB产品基本信息(资产管理)报送内容_"
+						+ DateUtil.formatDate(DateUtil.getCurrentDate())
+						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 				outFile, true);
 	}
 

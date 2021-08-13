@@ -2,6 +2,8 @@ package com.joyintech.tams.svreport.pbc.assetdebtdat.service;
 
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -42,10 +44,10 @@ public class PbcReportAssetDebtDatService extends PbcDatPriviewService {
 
     @Autowired
     private PbcReportAssetDebtDatDetailMapper pbcReportAssetDebtDatDetailMapper;
-
+    @Autowired
+    private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
     @Autowired
     private PbcMonthReportMapper pbcMonthReportMapper;
-
     private DecimalFormat df = new DecimalFormat("0.000000");
 
     @Override
@@ -56,12 +58,11 @@ public class PbcReportAssetDebtDatService extends PbcDatPriviewService {
         }
         String reportuuid = param.get("reportuuid").toString();
         String reporttype = param.get("reporttype").toString();
-        PbcMonthReport pbcReport = pbcMonthReportMapper.selectByPrimaryKey(reportuuid);
+        PbcSendZipDatFile pbcReport = pbcSendZipDatFileMapper.selectByUUIDAndType(reportuuid,reporttype);
         // 如果报表为空则返回data
         if (pbcReport == null) {
             return data;
         }
-        pbcReport.setProdVariety(pbcReport.getProdVariety() + "-" + SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
         data.put("report", JsonUtils.object2Map(pbcReport));
         // 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
@@ -264,41 +265,31 @@ public class PbcReportAssetDebtDatService extends PbcDatPriviewService {
      */
     public void dealAreaDateListForDiff(PbcReportAssetDebtDatDetailDto detail) {
         // 人民币
-        if(!detail.getCny().equals(detail.getCnyPrd())){
+        if(!StringUtil.equals(detail.getCny(),detail.getCnyPrd())){
             detail.setCnyDiff(1);
-        }else{
-            detail.setCnyDiff(0);
         }
-        //外币
-//		if(detail.getForeignCcy() != null){
-//			detail.setForeignCcy(detail.getForeignCcy().divide(tenthousand));
-//		}
         //美元折人民币
-        if(!detail.getUsdToCny().equals(detail.getUsdToCnyPrd())){
+        if(!StringUtil.equals(detail.getUsdToCny(),detail.getUsdToCnyPrd())){
             detail.setUsdToCnyDiff(1);
-        }else{
-            detail.setUsdToCnyDiff(0);
         }
         //欧元折人民币
-        if(!detail.getEurToCny().equals(detail.getUsdToCnyPrd())){
+        if(!StringUtil.equals(detail.getEurToCny(),detail.getUsdToCnyPrd())){
             detail.setEurToCnyDiff(1);
-        }else{
-            detail.setEurToCnyDiff(0);
         }
         //英镑折人民币
-        if(!detail.getGbpToCny().equals(detail.getGbpToCnyPrd())){
+        if(!StringUtil.equals(detail.getGbpToCny(),detail.getGbpToCnyPrd())){
             detail.setGbpToCnyDiff(1);
         }
         //日元折人民币
-        if(!detail.getJpyToCny().equals(detail.getJpyToCnyPrd())){
+        if(!StringUtil.equals(detail.getJpyToCny(),detail.getJpyToCnyPrd())){
             detail.setJpyToCnyDiff(1);
         }
         //其他币种(外币)折人民币
-        if(!detail.getOthToCny().equals(detail.getOthToCnyPrd())){
+        if(!StringUtil.equals(detail.getOthToCny(),detail.getOthToCnyPrd())){
             detail.setOthToCnyDiff(1);
         }
         //合计
-        if(!detail.getTotal().equals(detail.getTotalPrd())){
+        if(!StringUtil.equals(detail.getTotal(),detail.getTotalPrd())){
             detail.setTotalDiff(1);
         }
     }

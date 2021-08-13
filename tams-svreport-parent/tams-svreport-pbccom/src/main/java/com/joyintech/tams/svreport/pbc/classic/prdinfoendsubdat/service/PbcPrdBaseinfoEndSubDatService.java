@@ -13,10 +13,14 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
+import com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode;
+import com.joyintech.tams.common.base.entity.PbcProdAssetpoolCodeKey;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
@@ -55,6 +59,9 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
 
     @Autowired
     private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
+
+    @Autowired
+    private PbcProdAssetpoolCodeMapper pbcProdAssetpoolCodeMapper;
 
     /**
      *
@@ -293,6 +300,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
         List<String> message = new ArrayList<>();
         if(CollectionUtil.isNotEmpty(dataList)){
             for (int i = 0; i < dataList.size(); i++ ) {
+                int rowNumer = i + 1;
                 // 验证消息
                 List<ExcelValidDto> errorMessage = new ArrayList<>();
                 List<String> rowsData = dataList.get(i);
@@ -306,50 +314,58 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 dto.setPbcProdId(pbcProdId);
                 //发行机构内部产品代码
                 String prodId = rowsData.get(row++);
-                if(checkIsNotEmpty(prodId,i,"发行机构内部产品代码",errorMessage)){
-                    dto.setProdId(prodId);
+                if(checkIsNotEmpty(prodId,rowNumer,"发行机构内部产品代码",errorMessage)){
+                    PbcProdAssetpoolCodeKey codeKey = new PbcProdAssetpoolCodeKey();
+                    codeKey.setInsideProdId(prodId);
+                    codeKey.setCodeType(DictCodeListExt3.代码类型_产品.getValue());
+                    PbcProdAssetpoolCode pbcProdAssetpoolCode = pbcProdAssetpoolCodeMapper.selectByPrimaryKey(codeKey);
+                    if(pbcProdAssetpoolCode == null || StrUtil.isEmpty(pbcProdAssetpoolCode.getPbcCode())){
+                        errorMessage.add(new ExcelValidDto("发行机构内部产品代码",String.valueOf(rowNumer),"第"+rowNumer+"行:发行机构内部产品代码["+prodId+"]无对应人行代码！"));
+                    }else{
+                        dto.setProdId(prodId);
+                    }
                 }
                 //产品实际终止日期
                 String mdate = rowsData.get(row++);
-                if(checkIsNotEmpty(mdate,i,"产品实际终止日期",errorMessage)){
+                if(checkIsNotEmpty(mdate,rowNumer,"产品实际终止日期",errorMessage)){
                     if(checkDate(mdate)){
                         dto.setMdate(DateUtil.parse(mdate));
                     }else{
-                        errorMessage.add(new ExcelValidDto("产品实际终止日期",String.valueOf(i),"第"+i+"行:产品预计终止日期格式不正确！"));
+                        errorMessage.add(new ExcelValidDto("产品实际终止日期",String.valueOf(rowNumer),"第"+rowNumer+"行:产品预计终止日期格式不正确！"));
                     }
                 }
                 //兑付客户收益率
                 String cusYearYield = rowsData.get(row++);
-                if(checkIsNotEmpty(cusYearYield,i,"兑付客户收益率",errorMessage)){
+                if(checkIsNotEmpty(cusYearYield,rowNumer,"兑付客户收益率",errorMessage)){
                     if(checkFigure(cusYearYield)){
                         dto.setCusYearYield(new BigDecimal(cusYearYield));
                     }else{
-                        errorMessage.add(new ExcelValidDto("兑付客户收益率",String.valueOf(i),"第"+i+"行:兑付客户收益率非数字！"));
+                        errorMessage.add(new ExcelValidDto("兑付客户收益率",String.valueOf(rowNumer),"第"+rowNumer+"行:兑付客户收益率非数字！"));
                     }
                 }
 
                 //币种代码
                 String ccy = rowsData.get(row++);
-                if(checkIsNotEmpty(ccy,i,"币种代码",errorMessage)){
+                if(checkIsNotEmpty(ccy,rowNumer,"币种代码",errorMessage)){
                     dto.setCcy(dealCcyInfo(ccy));
                 }
 
                 //兑付客户收益
                 String customProfit = rowsData.get(row++);
-                if(checkIsNotEmpty(customProfit,i,"兑付客户收益",errorMessage)){
+                if(checkIsNotEmpty(customProfit,rowNumer,"兑付客户收益",errorMessage)){
                     if(checkFigure(customProfit)){
                         dto.setCustomProfit(new BigDecimal(customProfit));
                     }else{
-                        errorMessage.add(new ExcelValidDto("兑付客户收益",String.valueOf(i),"第"+i+"行:兑付客户收益非数字！"));
+                        errorMessage.add(new ExcelValidDto("兑付客户收益",String.valueOf(rowNumer),"第"+rowNumer+"行:兑付客户收益非数字！"));
                     }
                 }
                 //兑付客户收益折人民币
                 String customProfitCny = rowsData.get(row++);
-                if(checkIsNotEmpty(customProfit,i,"兑付客户收益折人民币",errorMessage)){
+                if(checkIsNotEmpty(customProfit,rowNumer,"兑付客户收益折人民币",errorMessage)){
                     if(checkFigure(customProfitCny)){
                         dto.setCustomProfit(new BigDecimal(customProfitCny));
                     }else{
-                        errorMessage.add(new ExcelValidDto("兑付客户收益折人民币",String.valueOf(i),"第"+i+"行:兑付客户收益折人民币非数字！"));
+                        errorMessage.add(new ExcelValidDto("兑付客户收益折人民币",String.valueOf(rowNumer),"第"+rowNumer+"行:兑付客户收益折人民币非数字！"));
                     }
                 }
 

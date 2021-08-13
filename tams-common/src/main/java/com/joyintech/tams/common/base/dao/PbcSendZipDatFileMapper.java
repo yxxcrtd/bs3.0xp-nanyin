@@ -9,13 +9,19 @@ import java.util.Map;
 
 @Repository
 public interface PbcSendZipDatFileMapper {
-    PbcSendZipDatFile selectByPrimaryKey(String reportuuid);
+    int deleteByPrimaryKey(String registSeqno);
 
     int insert(PbcSendZipDatFile record);
 
     int insertSelective(PbcSendZipDatFile record);
 
     int insertBasicByBasicInfo(PbcSendZipDatFile record);
+
+    PbcSendZipDatFile selectByPrimaryKey(String registSeqno);
+
+    int updateByPrimaryKeySelective(PbcSendZipDatFile record);
+
+    int updateByPrimaryKey(PbcSendZipDatFile record);
 
     List<PbcSendZipDatFile> searchPage(Map<String,Object> map);
 
@@ -25,5 +31,7 @@ public interface PbcSendZipDatFileMapper {
 
     List<PbcSendZipDatFile> selectBySendStatusSeqnoList(Map<String,Object> paramsMap);
 
-   int updateByZipCodeAndZipType(@Param("list") List<PbcSendZipDatFile> list,@Param("datZipType")String datZipType);
+    int updateByZipCodeAndZipType(@Param("list") List<PbcSendZipDatFile> list, @Param("datZipType")String datZipType);
+
+    PbcSendZipDatFile selectByUUIDAndType(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
 }
