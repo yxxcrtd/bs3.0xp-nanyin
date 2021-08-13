@@ -513,12 +513,13 @@
          ),
          /*查询底层剩余现金*/
         cash as (
-            select sum(psv.MARKET_VALUE) MARKET_VALUE,
+            select sum(NVL(psv.MARKET_VALUE,0)) MARKET_VALUE,
+                sum(NVL(psv.TDY_INTINCEXP,0))  TDY_INTINCEXP,
                 psv.PORTFOLIO_ID portfolioId
             from PTL_SEC_PIERCE_VALUTION psv
             WHERE
                 psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
-                AND psv.FINPROD_ID like 'REMAININGCASH_%'
+                AND psv.FINPROD_ID like 'REMAININGCASH%'
                 GROUP BY psv.PORTFOLIO_ID
         ),
          assetHold as (
@@ -962,7 +963,7 @@
             S.marketValue marketValue,
             S.dscCostAmt dscCostAmt,
             null shareAmt,
-            NULL tdyIntincexp,
+            S.tdyIntincexp tdyIntincexp,
             NULL tdyAmtRation,
             NULL ystAmtRation,
             NULL monthAmtRation,
@@ -979,9 +980,9 @@
             pp.portfolio_Name portfolioName,
             #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
             pcp.amount + NVL(CH.MARKET_VALUE,0) marketValue,
-            pcp.amount + NVL(CH.MARKET_VALUE,0) dscCostAmt,
+            null dscCostAmt,
             null shareAmt,
-            NULL tdyIntincexp,
+            NVL(CH.TDY_INTINCEXP,NULL) tdyIntincexp,
             NULL tdyAmtRation,
             NULL ystAmtRation,
             NULL monthAmtRation,
@@ -1023,7 +1024,7 @@
             </if>
             <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
             GROUP BY
-            psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount + NVL(CH.MARKET_VALUE,0),pcp.acct_id
+            psv.cdate,CH.TDY_INTINCEXP,psv.portfolio_Id,pp.portfolio_Name,pcp.amount + NVL(CH.MARKET_VALUE,0),pcp.acct_id
             ) S
             LEFT JOIN (
             SELECT
