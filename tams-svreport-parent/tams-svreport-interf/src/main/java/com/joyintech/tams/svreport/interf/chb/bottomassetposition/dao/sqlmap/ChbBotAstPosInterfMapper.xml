@@ -537,10 +537,11 @@ GROUP BY asset.POS_DATE,
         SELECT
         SUB.VAL_DATE POS_DATE,
         SUB.PTL_ID PLAN_ASSET_ID,
-        SUB.FINPROD_ID ASSET_CODE,
-        nvl(SUM(SUB.SECURITY_QUANTITY), 0) *
-        (CASE WHEN DC.SUB_CLASS = 'ZQ' THEN 100 ELSE 1 END) POS_NUM,
-        case when DC.SUB_CLASS = 'YSP'　and SUM(SUB.SMV)<![CDATA[<]]>0 then 0  else nvl(SUM(SUB.SMV), 0) end as POS_AMT,
+        nvl(info.FINPROD_MARKET_ID,SUB.FINPROD_ID) ASSET_CODE,
+        info2.REP_CCY CCY,
+        NVL(SUM(decode(substr(sub.SUB_CODE,0,1),'2',0,sub.SECURITY_QUANTITY)),0)*DECODE(fp.TYPE_8,'F01',100,1) POS_NUM,
+        case when DC.SUB_CLASS = 'YSP'　and SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV))<![CDATA[<]]>0 then 0
+               else nvl(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV)), 0) end as POS_AMT,
         nvl(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV ELSE 0 END),0) INT_AMT,/** 利息**/
         MAX(nvl(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
         FROM RSK_VALTBL_ASSET_SUB SUB /** 估值表导入后的资产数据**/
@@ -550,15 +551,24 @@ GROUP BY asset.POS_DATE,
         ON SUB.PTL_ID = DC.PTL_ID
         AND SUB.SUB_CODE = DC.SUB_CODE
         AND SUB.FINPROD_ID = DC.FINPROD_ID
-
+        /*获取底层资产的公开市场代码*/
+        LEFT JOIN REP_ASSET_DEPT info
+        ON info.REP_FINPROD_ID = sub.FINPROD_ID
+        /*判断是否为债券*/
+        LEFT JOIN fin_product_type fp
+        ON fp.FINPROD_ID = sub.FINPROD_ID
+        /*获取资管计划币种*/
+        LEFT JOIN REP_ASSET_DEPT info2
+        ON info2.FINPROD_MARKET_ID = sub.PTL_ID
         WHERE  SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
         AND SUB.FINPROD_ID IS NOT NULL
         AND DC.SUB_CLASS NOT IN ('ZHG', 'NHG') /** 过滤回购资产通过三级科目来计算**/
-
         GROUP BY SUB.VAL_DATE,
-        SUB.PTL_ID,
-        SUB.FINPROD_ID,
-        DC.SUB_CLASS
+                 SUB.PTL_ID,
+                 nvl(info.FINPROD_MARKET_ID,SUB.FINPROD_ID),
+                 info2.REP_CCY,
+                 DC.SUB_CLASS,
+                 fp.TYPE_8
     </select>
     <select id="getRepBotDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
         SELECT

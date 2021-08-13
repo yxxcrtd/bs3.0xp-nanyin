@@ -137,7 +137,7 @@
 			  and SUB.SEND_STATUS in ('02','03')
 			  and SUB.STATUS != '03')
 		and POS.STATUS != 'D'
-		AND (POS.CASH_FLAG is null or POS.CASH_FLAG ='02')
+		and POS.ASSET_CODE!='REMAININGCASH'
 	</select>
 	<!-- modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end -->
 	

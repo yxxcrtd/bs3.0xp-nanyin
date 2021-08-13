@@ -109,8 +109,8 @@ public class PbcDatUtil {
 		//循环日期-如果有
 		for(Date date :dateSet){
 			int  num = 1;
-			List<PbcPrdBaseinfoSubDat> prdDatList = baseMap.get(date);
-			List<PbcPrdBaseinfoEndSubDat> prdEndDatList = endMap.get(date);
+			List<PbcPrdBaseinfoSubDat> prdDatList = null!=baseMap.get(date)?baseMap.get(date):new ArrayList<>();
+			List<PbcPrdBaseinfoEndSubDat> prdEndDatList = null!=endMap.get(date)?endMap.get(date):new ArrayList<>();
 				//※、当入参.srcModel = '02：报送文件管理页面调用',进行【2.1、2.2】的处理，否则直接开始 【2.3】的处理
 				if(DictCodeList.是否_中债_否.getValue().equals(srcModel)){
 					dataSearch.put("statusDate", DateUtil.format(date));
@@ -172,6 +172,12 @@ public class PbcDatUtil {
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
 						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
+						//重置相关数据
+						codeCount.put("prdCount",0);
+						codeCount.put("endCount",0);
+						count = 0;
+						num++;
+						zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 					}
 				}
 			}
@@ -182,6 +188,12 @@ public class PbcDatUtil {
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
 						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
+						//重置相关数据
+						codeCount.put("prdCount",0);
+						codeCount.put("endCount",0);
+						count = 0;
+						num++;
+						zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 					}
 				}
 			}
@@ -193,7 +205,12 @@ public class PbcDatUtil {
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
 						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
-
+						//重置相关数据
+						codeCount.put("prdCount",0);
+						codeCount.put("endCount",0);
+						count = 0;
+						num++;
+						zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 					}
 				}
 			}
@@ -215,47 +232,46 @@ public class PbcDatUtil {
 		}
 
 		/**产品基本信息条数汇总**/
-		if(null!=codeCount.get("prdCount")&&codeCount.get("prdCount")>0){
+//		if(null!=codeCount.get("prdCount")&&codeCount.get("prdCount")>0){
+
+			//没有终止信息也要提供zip信息
 			PbcSendZipDatFile zipFile = new PbcSendZipDatFile();
 			zipFile.setDatZipCode(zipFileCode);
 			zipFile.setDatZipDatType(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue());
 			zipFile.setDatZipType(DictCodeListExt2.人行报送类型_产品信息.getValue());
-			zipFile.setDatZipStatus(DictCodeListExt3.zip包状态_可编辑.getValue());
 			zipFile.setStatusVdate(DateUtil.format(date));
 			zipFile.setZipSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 			zipFile.setPibDetailCnt(codeCount.get("prdCount"));
+			zipFile.setOrgCode(OrgCode);
+			//果是因为超过大小限制而进入的修改状态为已使用
+			if(isend){
+				zipFile.setDatZipStatus(DictCodeListExt3.zip包状态_已使用.getValue());
+			}else{
+				zipFile.setDatZipStatus(DictCodeListExt3.zip包状态_可编辑.getValue());
+			}
+
 			resultMap.get("zipList").add(zipFile);
-		}
+//		}
 
 		/**产品终止信息条数汇总**/
-		if(null!=codeCount.get("endCount")&&codeCount.get("endCount")>0){
-			PbcSendZipDatFile zipFile = new PbcSendZipDatFile();
-			zipFile.setDatZipCode(zipFileCode);
-			zipFile.setDatZipDatType(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue());
-			zipFile.setDatZipType(DictCodeListExt2.人行报送类型_产品信息.getValue());
-			zipFile.setDatZipStatus(DictCodeListExt3.zip包状态_可编辑.getValue());
-			zipFile.setStatusVdate(DateUtil.format(date));
-			zipFile.setZipSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
-			zipFile.setPibDetailCnt(codeCount.get("endCount"));
-			resultMap.get("zipList").add(zipFile);
-		}
-
-
-		count = 0;
-		maxCode++;
-		zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,maxCode,OrgCode);
-
-		List<PbcSendZipDatFile> result = (List<PbcSendZipDatFile>)resultMap.get("zipList");
-		//获取当前数组中所有可编辑数据
-		List<PbcSendZipDatFile> doList = result.stream().filter(i-> DictCodeListExt3.zip包状态_可编辑.getValue().equals(i.getDatZipStatus())).collect(Collectors.toList());
-		//将所有数据进行最后处理
-		for(PbcSendZipDatFile dataFile: doList){
-			dataFile.setOrgCode(OrgCode);
-			//是否是最后数据进行修改
+//		if(null!=codeCount.get("endCount")&codeCount.get("endCount")>0){
+			//没有终止信息也要提供zip信息
+			PbcSendZipDatFile endZipFile = new PbcSendZipDatFile();
+			endZipFile.setDatZipCode(zipFileCode);
+			endZipFile.setDatZipDatType(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue());
+			endZipFile.setDatZipType(DictCodeListExt2.人行报送类型_产品信息.getValue());
+			endZipFile.setStatusVdate(DateUtil.format(date));
+			endZipFile.setZipSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+			endZipFile.setPibDetailCnt(codeCount.get("endCount"));
+			endZipFile.setOrgCode(OrgCode);
+			//果是因为超过大小限制而进入的修改状态为已使用
 			if(isend){
-				dataFile.setDatZipStatus(DictCodeListExt3.zip包状态_已使用.getValue());
+				endZipFile.setDatZipStatus(DictCodeListExt3.zip包状态_已使用.getValue());
+			}else{
+				endZipFile.setDatZipStatus(DictCodeListExt3.zip包状态_可编辑.getValue());
 			}
-		}
+			resultMap.get("zipList").add(endZipFile);
+//		}
 
 	}
 
