@@ -75,8 +75,13 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
      * PbcPrdBaseinfoSubDat
      */
     public PbcPrdBaseinfoSubDatDiffDto dealPbcPrdBaseinfoSubDat(PbcPrdBaseinfoSubDatDiffDto result) {
+        if (StringUtil.isNotEmpty(result.getIvstorientation())){
+            result.setIvstorientation(
+                    SysDataUtil.getNameFromDataDict(DictCode.新人行产品类型,result.getIvstorientation()));
+        }
         if (StringUtil.isNotEmpty(result.getPbcProdType())){
-            result.setPbcProdType( SysDataUtil.getNameFromDataDict(DictCode.人行产品种类,result.getPbcProdType()));
+            result.setPbcProdType( result.getPbcProdType() + "-" + "银行非保本理财");
+//						SysDataUtil.getNameFromDataDict(DictCode.人行产品种类,result.getPbcProdType()));
         }
         if (StringUtil.isNotEmpty(result.getCustomerType())){
             result.setCustomerType( SysDataUtil.getNameFromDataDict(DictCode.人行客户类型,result.getCustomerType()));
@@ -91,7 +96,7 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
             result.setFiduciaryDuty( SysDataUtil.getNameFromDataDict(DictCode.人行管理方式,result.getFiduciaryDuty()));
         }
         if (StringUtil.isNotEmpty(result.getOperateMode())){
-            result.setOperateMode(result.getOperateMode() + StringUtil.SPACE + SysDataUtil.getNameFromDataDict(DictCode.人行产品运作模式,result.getOperateMode()));
+            result.setOperateMode(result.getOperateMode() + StringUtil.SPACE + SysDataUtil.getNameFromDataDict(DictCode.新人行产品运作模式,result.getOperateMode()));
         }
         if (StringUtil.isNotEmpty(result.getContMode())){
             result.setContMode(SysDataUtil.getNameFromDataDict(DictCode.人行合作模式,result.getContMode()));
@@ -148,28 +153,13 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
             }
             result.setOutDepCtry(result.getOutDepCtry().substring(1));
         }
-        //募集资金币种
-        if (StringUtil.isNotEmpty(result.getRaiseCcy())){
-            String raiseCcyStr= SysDataUtil.getNameFromDataDict(DictCode.币种,result.getRaiseCcy());
-            result.setRaiseCcy(raiseCcyStr);
-        }
-        //兑付本金币种
-        if (StringUtil.isNotEmpty(result.getCashPrinCcy())){
-            String cashPrinCcy= SysDataUtil.getNameFromDataDict(DictCode.币种,result.getCashPrinCcy());
-            result.setCashPrinCcy(cashPrinCcy);
-        }
-        //兑付收益币种
-        if (StringUtil.isNotEmpty(result.getCashProfCcy())){
-            String cashProfCcy= SysDataUtil.getNameFromDataDict(DictCode.币种,result.getCashProfCcy());
-            result.setCashProfCcy(cashProfCcy);
-        }
         // 境内托管机构名称
         if(result.getInDepName()!=null){
             result.setInDepName(result.getInDepName().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.境内托管机构名称, result.getInDepName()));
         }
-        // 境内托管机构名称
+        // 货币市场基金标识
         if(result.getIsMarketFund()!=null){
-            result.setIsMarketFund(SvrDataUtil.getNameFromDataDict(DictCode.是否_中债, result.getIsMarketFund()));
+            result.setIsMarketFund(SysDataUtil.getNameFromDataDict(DictCode.是否理财子公司, result.getIsMarketFund()));
         }
         return result;
     }

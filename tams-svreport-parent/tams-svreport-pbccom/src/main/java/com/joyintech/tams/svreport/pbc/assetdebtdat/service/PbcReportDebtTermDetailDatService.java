@@ -75,7 +75,8 @@ public class PbcReportDebtTermDetailDatService extends PbcDatPriviewService {
     	for (PbcReportDebtTermDatDetail detail : listDetail) {
 			dealProdDataListForDiff(detail);
     		dealProdData(detail, isShowZero);
-			data.put(detail.getPropertycode(), JsonUtils.object2Map(divide10000(detail)));
+			divide10000(detail);
+			data.put(detail.getPropertycode(), JsonUtils.object2Map(detail));
 		}
 		return data;
 	}
