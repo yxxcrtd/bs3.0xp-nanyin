@@ -55,13 +55,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
     private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
 
     @Autowired
-    private PbcPrdBaseinfoSubMapper pbcPrdBaseinfoSubMapper;
-
-    @Autowired
     private PbcSendZipDatFileMapper pbcSendZipDatFileMapper;
-
-    @Autowired
-    private PbcProdAssetpoolCodeMapper pbcProdAssetpoolCodeMapper;
 
     /**
      *
@@ -378,21 +372,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 //发行机构内部产品代码
                 String prodId = rowsData.get(row++);
                 if(checkIsNotEmpty(prodId,rowNumber,"发行机构内部产品代码",errorMessage)){
-                    int count = pbcPrdBaseinfoSubMapper.countByProdId(prodId);
-                    if(count > 0){
-                        PbcProdAssetpoolCodeKey codeKey = new PbcProdAssetpoolCodeKey();
-                        codeKey.setInsideProdId(prodId);
-                        codeKey.setCodeType(DictCodeListExt3.代码类型_产品.getValue());
-                        PbcProdAssetpoolCode pbcProdAssetpoolCode = pbcProdAssetpoolCodeMapper.selectByPrimaryKey(codeKey);
-                        if(pbcProdAssetpoolCode == null || StrUtil.isEmpty(pbcProdAssetpoolCode.getPbcCode())){
-                            errorMessage.add(new ExcelValidDto("发行机构内部产品代码",String.valueOf(rowNumber),"第"+rowNumber+"行:发行机构内部产品代码无对应人行代码！"));
-                        }else{
-                            dto.setProdId(prodId);
-                        }
-                    }else{
-                        errorMessage.add(new ExcelValidDto("发行机构内部产品代码",String.valueOf(rowNumber),"第"+rowNumber+"行:发行机构内部产品代码不存在！"));
-                    }
-
+                    dto.setProdId(prodId);
                 }
                 //募集方式
                 String raiseType = rowsData.get(row++);
