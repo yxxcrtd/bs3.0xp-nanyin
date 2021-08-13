@@ -142,7 +142,7 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 		String message="";
 		if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue())){
 			// 设置table预览大小
-			selectParam.put("tableWidth", 300);
+			selectParam.put("tableWidth", 600);
 			message=pbcPrdBaseInfoSubDatService.priview(selectParam);
 		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue())){
 			// 设置table预览大小
@@ -344,6 +344,11 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 			}
 			ajaxResult.setMessage(builder.toString());
 		}
+		/*StringBuilder builder = new StringBuilder();
+		for(int i = 0;i<3;i++){
+			builder.append("test" + i + "<br>");
+		}
+		ajaxResult.setMessage(builder.toString());*/
 		return ajaxResult;
 	}
 

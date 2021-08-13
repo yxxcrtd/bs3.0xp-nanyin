@@ -44,7 +44,7 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 
 	private static final String PRODUCT_BASE_INFO_NAME = "产品基本信息";
 	private static final String PRODUCT_END_INFO_NAME = "产品终止信息";
-	private static final String TIPS_SHEET_NAME_ERROR = "文件名称不规范，请确认文件名称后，重新导入";
+	private static final String TIPS_SHEET_NAME_ERROR = "文件名称不规范，请确认文件名称是否包含产品基本信息或产品终止信息，再重新导入";
 
 
 	/**
@@ -87,7 +87,7 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 		String name = FileNameUtil.getName(fileName);
 		String[] strName = name.split("_");
 		if(strName.length > 0){
-			if(strName[0].equals(PRODUCT_BASE_INFO_NAME)){
+			if(strName[0].contains(PRODUCT_BASE_INFO_NAME)){
 				CommonAjaxResult commonAjaxResult = restTemplate.postForObject(
 						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoSubDat/checkBaseInfoSubDat?fileName=" + fileName, param,
 						CommonAjaxResult.class);
@@ -109,7 +109,7 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 					return ajaxResult;
 				}
 				return commonAjaxResult;
-			}else if(strName[0].equals(PRODUCT_END_INFO_NAME)){
+			}else if(strName[0].contains(PRODUCT_END_INFO_NAME)){
 				CommonAjaxResult commonAjaxResult = restTemplate.postForObject(
 						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoEndSubDat/checkBaseInfoSubDat?fileName=" + fileName, param,
 						CommonAjaxResult.class);
@@ -149,11 +149,11 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 		String name = FileNameUtil.getName(fileName);
 		String[] strName = name.split("_");
 		if(strName.length > 0){
-			if(strName[0].equals(PRODUCT_BASE_INFO_NAME)){
+			if(strName[0].contains(PRODUCT_BASE_INFO_NAME)){
 				return restTemplate.postForList(
 						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoSubDat/importBaseInfoSubDat?fileName="+fileName,param,
 						ExcelValidDto.class);
-			}else if(strName[0].equals(PRODUCT_END_INFO_NAME)){
+			}else if(strName[0].contains(PRODUCT_END_INFO_NAME)){
 				return restTemplate.postForList(
 						SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoEndSubDat/importBaseInfoSubDat?fileName="+fileName,param,
 						ExcelValidDto.class);
@@ -196,50 +196,19 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 			ajaxResult.setStatuCode(HttpStatus.OK.value());
 			return ajaxResult;
 		}
+		if(commonAjaxResult.getData() != null && "TEMP_ERROR_MSG".equals(commonAjaxResult.getData().toString())){
+			AjaxResult ajaxResult = new AjaxResult();
+			List<ValidMessage> errorList = commonAjaxResult.getErrorList();
+			StringBuilder builder = new StringBuilder();
+			for (ValidMessage message : errorList) {
+				builder.append(message.getMessage()).append("<br>");
+			}
+			ajaxResult.setMessage(builder.toString());
+			ajaxResult.setMessageType(MessageType.错误消息);
+			ajaxResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return ajaxResult;
+		}
 		return commonAjaxResult;
-		/*if(commonAjaxResult != null && CollectionUtil.isNotEmpty(commonAjaxResult.getErrorList())){
-			return commonAjaxResult;
-		}
-		AjaxResult ajaxResult = new AjaxResult();
-		String name = FileNameUtil.getName(fileName);
-		String[] strName = name.split("_");
-		if(strName.length == 0){
-			ValidMessage message = new ValidMessage();
-			message.setMessage(TIPS_FILE_NAME_ERROR);
-			ajaxResult.setErrorList(Arrays.asList(message));
-			return ajaxResult;
-		}
-		String fName = strName[0];
-		String statusVdate = fName.substring(0,4).concat("-").concat(fName.substring(4,6)).concat("-").concat(fName.substring(6,8));
-		Map<String,Object> paramMap = new HashMap<>();
-		paramMap.put("statusVdate",statusVdate);
-		paramMap.put("datZipType","MI");
-		List<PbcSendZipDatFile> pbcSendZipDatFiles = pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(paramMap);
-		List<JoyinMessage> validMessageList = new ArrayList<>();
-		Set<String> sets = new HashSet<>();
-		for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
-			if(pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_接口报送.getValue())
-					|| pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_手工处理.getValue())){
-				sets.add(pbcSendZipDatFile.getDatZipDatType());
-			}
-		}
-		StringBuilder waningReport = new StringBuilder();
-		if(sets.size() > 0){
-			for (String set : sets) {
-				waningReport.append("[").append(set).append("]");
-			}
-			String warningInfo = String.format("统计模板%s数据已报送，不支持对数据进行维护",waningReport.toString());
-			JoyinMessage message = new JoyinMessage(warningInfo,MessageType.确认消息);
-			validMessageList.add(message);
-		}
-		if(CollectionUtil.isNotEmpty(validMessageList)){
-			ajaxResult.setJoyinMessages(validMessageList);
-			ajaxResult.setMessageType(MessageType.确认消息);
-			ajaxResult.setStatuCode(HttpStatus.OK.value());
-			return ajaxResult;
-		}
-		ajaxResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-		return ajaxResult;*/
 	}
 
 

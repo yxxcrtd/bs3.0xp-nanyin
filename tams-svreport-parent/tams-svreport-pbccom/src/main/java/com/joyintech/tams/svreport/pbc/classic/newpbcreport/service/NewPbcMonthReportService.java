@@ -46,9 +46,8 @@ public class NewPbcMonthReportService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String TIPS_SUFFIX_ERROR = "只支持2003版的excel导入，请修改文件重新导入";
-    private static final String TIPS_SHEET_NAME_ERROR = "只支持规定的14种模板导入，请修改文件后重新导入";
-    private static final String TIPS_FILE_NAME_ERROR = "文件名称不规范，请确认文件名称后，重新导入。";
+    private static final String TIPS_SUFFIX_ERROR = "只支持2003版(文件后缀为.xls)的excel导入，请修改文件重新导入";
+    private static final String TIPS_FILE_NAME_ERROR = "文件名称不规范，前八位必须为年月日且必须是每月的最后一天或者每年的1月1号";
 
     private static final Set<String> sheetNames = new HashSet<>();
     /**
@@ -132,7 +131,13 @@ public class NewPbcMonthReportService {
             Workbook workbook = new HSSFWorkbook(new FileInputStream(fileName));
             List<ValidMessage> validMessages = checkSheetName(workbook);
             if (CollectionUtil.isNotEmpty(validMessages)) {
+                for (ValidMessage validMessage : validMessages) {
+                    ajaxResult.setMessage(validMessage.getMessage());
+                }
                 ajaxResult.setErrorList(validMessages);
+                ajaxResult.setData("TEMP_ERROR_MSG");
+                ajaxResult.setMessageType(MessageType.错误消息);
+                ajaxResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
                 return ajaxResult;
             }
             String name = FileNameUtil.getName(fileName);
@@ -264,8 +269,16 @@ public class NewPbcMonthReportService {
             String sheetName = next.getSheetName();
             if(!sheetNames.contains(sheetName)){
                 ValidMessage message = new ValidMessage();
-                message.setMessage(TIPS_SHEET_NAME_ERROR);
+                message.setMessage("sheet名称:[" + sheetName + "]不规范!");
                 validMessages.add(message);
+                ValidMessage message1 = new ValidMessage();
+                message1.setMessage("14种规范sheet名称如下:");
+                validMessages.add(message1);
+                for (String name : sheetNames) {
+                    ValidMessage message2 = new ValidMessage();
+                    message2.setMessage("[" + name + "]");
+                    validMessages.add(message2);
+                }
                 break;
             }
         }

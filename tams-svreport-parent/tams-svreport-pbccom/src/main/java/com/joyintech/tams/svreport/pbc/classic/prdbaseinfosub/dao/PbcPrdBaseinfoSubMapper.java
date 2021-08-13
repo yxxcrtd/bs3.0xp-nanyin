@@ -57,4 +57,6 @@ public interface PbcPrdBaseinfoSubMapper {
 	List<String> selectRegistSeqnoList(@Param("list")List<PbcPrdBaseinfoSub> registList,@Param("flag")String flag);
 
 	int updateByProdIds(@Param("list")List<String> list);
+
+	int countByProdId(@Param("prodId")String prodId);
 }
