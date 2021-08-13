@@ -43,34 +43,40 @@ $(function() {
                 var data = $('#finprodMarketId').select2('data')[0].object;
                 if (data) {
                     $('#finprodId').val(data.finprodId).trigger('change');
-                    $('#type1').val(data.type9).prop("disabled",true).trigger('change');
-                    $('#type2').val(data.type10).prop("disabled",true).trigger('change');
-                    $('#type3').val(data.type11).prop("disabled",true).trigger('change');
-                    $('#type4').val(data.type12).prop("disabled",true).trigger('change');
+                    $('#assetCode').val(finprodMarketId);
+                    // 20210812 fuyongsheng删除 start
+                    // $('#type1').val(data.type9).prop("disabled",true).trigger('change');
+                    // $('#type2').val(data.type10).prop("disabled",true).trigger('change');
+                    // $('#type3').val(data.type11).prop("disabled",true).trigger('change');
+                    // $('#type4').val(data.type12).prop("disabled",true).trigger('change');
                 }
-            }else{
-                $('#type1').prop("disabled",false);
-                $('#type2').prop("disabled",false);
-                $('#type3').prop("disabled",false);
-                $('#type4').prop("disabled",false);
             }
+            // else{
+            //     $('#type1').prop("disabled",false);
+            //     $('#type2').prop("disabled",false);
+            //     $('#type3').prop("disabled",false);
+            //     $('#type4').prop("disabled",false);
+            // }
+            // 20210812 fuyongsheng删除 start
         }
         finprodMarketIdFlag = true;
     }
 
-    var type1Change = function () {
-        type1Flag = false;
-        if(finprodMarketIdFlag){
-            var type1 = $('#type1').val();
-            if(type1){
-                $('#finprodMarketId').val("").prop("disabled",true).trigger('change');
-            }
-            else{
-                $('#finprodMarketId').prop("disabled",false);
-            }
-        }
-        type1Flag = true;
-    }
+    // 20210812 fuyongsheng删除 start
+    // var type1Change = function () {
+    //     type1Flag = false;
+    //     if(finprodMarketIdFlag){
+    //         var type1 = $('#type1').val();
+    //         if(type1){
+    //             $('#finprodMarketId').val("").prop("disabled",true).trigger('change');
+    //         }
+    //         else{
+    //             $('#finprodMarketId').prop("disabled",false);
+    //         }
+    //     }
+    //     type1Flag = true;
+    // }
+    // 20210812 fuyongsheng删除 end
 
     function saveOrSubmit(operateType) {
         var object = $.serializeToObject('#submitForm', true);
@@ -99,15 +105,19 @@ $(function() {
         $('#finprodMarketId').change(function () {
             finprodMarketIdChange();
         });
-        $('#type1').change(function () {
-            type1Change();
-        });
+
+        // 20210812 fuyongsheng删除 start
+        // $('#type1').change(function () {
+        //     type1Change();
+        // });
         if(pageModel !=PAGE_MODEL_NEW){
             if($('#finprodMarketId').val()){
                 $('#finprodMarketId').trigger('change');
-            }else{
-                $('#type1').trigger('change');
             }
+            // else{
+            //     $('#type1').trigger('change');
+            // }
+            // 20210812 fuyongsheng删除 end
         }
     });
 });
