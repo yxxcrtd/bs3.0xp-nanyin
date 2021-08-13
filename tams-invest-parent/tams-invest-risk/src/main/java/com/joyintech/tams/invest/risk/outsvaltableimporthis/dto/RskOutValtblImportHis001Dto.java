@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.risk.outsvaltableimporthis.dto;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
 import com.joyintech.tams.constant.DictCode;
@@ -46,6 +47,31 @@ public class RskOutValtblImportHis001Dto extends RskOutValtblImportHis implement
     private String errorCodeStr;
 
     private String runFlag;
+
+    private String resultInfo;
+
+    private String resultInfoStr;
+
+    public String getResultInfo() {
+        return resultInfo;
+    }
+
+    public void setResultInfo(String resultInfo) {
+        this.resultInfo = resultInfo;
+    }
+
+    public String getResultInfoStr() {
+        if (StringUtil.isNotEmpty(resultInfo)){
+            resultInfoStr = "详细信息";
+        }else{
+            resultInfoStr = "";
+        }
+        return resultInfoStr;
+    }
+
+    public void setResultInfoStr(String resultInfoStr) {
+        this.resultInfoStr = resultInfoStr;
+    }
 
     public String getFileName() {
         return fileName;

@@ -17,6 +17,7 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="RESULT_INFO" property="resultInfo" jdbcType="CLOB" />
     </resultMap>
     <sql id="Base_Column_List" >
         FILE_NAME FILE_NAME, PORTFOLIO_ID PORTFOLIO_ID, VALDATE VALDATE, FILE_PATH FILE_PATH,
@@ -52,13 +53,13 @@
         insert into RSK_OUT_VALTBL_IMPORT_HIS (FILE_NAME,FILE_PATH,
             PORTFOLIO_ID, PORTFOLIO_NAME, VALDATE, IMPDATE, IMPORT_TYPE,
             ERROR_CODE, START_TIME, END_TIME, CREATE_USER,
-            CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,RESULT_INFO
         )
         values (#{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR},
             #{portfolioName,jdbcType=VARCHAR}, #{valdate,jdbcType=DATE}, #{impdate,jdbcType=DATE},
             #{importType,jdbcType=VARCHAR}, #{errorCode,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP},
             #{endTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{resultInfo,jdbcType=CLOB})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskOutValtblImportHis" >
         insert into RSK_OUT_VALTBL_IMPORT_HIS
@@ -108,6 +109,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="resultInfo != null" >
+                RESULT_INFO,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="fileName != null" >
@@ -154,6 +158,9 @@
             </if>
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="resultInfo != null" >
+                #{resultInfo,jdbcType=CLOB},
             </if>
         </trim>
     </insert>

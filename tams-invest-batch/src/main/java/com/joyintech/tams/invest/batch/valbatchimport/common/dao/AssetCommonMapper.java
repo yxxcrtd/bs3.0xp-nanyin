@@ -10,19 +10,11 @@
 
 package com.joyintech.tams.invest.batch.valbatchimport.common.dao;
 
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.tams.common.base.entity.AssetTypeConfig;
 import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductTypeConfig;
-import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
-import com.joyintech.tams.invest.common.asset.dto.AssetCommonInfoDto;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import com.joyintech.tams.common.base.entity.MstCalendarInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -37,4 +29,13 @@ import java.util.Map;
 public interface AssetCommonMapper {
 
     List<FinProduct> selectAllAsset();
+
+    /**
+     * 日历信息--用于wind 自动加券
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<MstCalendarInfo> getMstCalendarInfo();
 }
