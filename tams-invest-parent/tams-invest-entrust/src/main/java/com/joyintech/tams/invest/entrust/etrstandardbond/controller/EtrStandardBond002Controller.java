@@ -72,6 +72,8 @@ public class EtrStandardBond002Controller extends BaseController {
         dto.setSecAcctId(this.getParam("secAcctId"));
         model.addAttribute("entity", dto);
         this.setSelectOptionToModel(model, DictCode.交易场所);
+        this.setSelectOptionToModel(model, DictCode.资产三级分类);
+        this.setSelectOptionToModel(model, DictCode.评级结果);
         return super.init(model);
     }
 

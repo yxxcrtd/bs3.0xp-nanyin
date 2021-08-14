@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="~{layout/default}">
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
+	  layout:decorator="~{layout/default}">
 <head>
 <title data-th-text="#{FinDepositTarget002}">存款类资产新建</title>
 </head>
@@ -417,12 +417,24 @@
 										<label class="layui-form-label form-label-wrap"
 											   data-th-text="#{FinDepositTarget002.isInAdvance}">是否可提前支取</label>
 										<div class="layui-input-inline input-inline">
-											<input type="checkbox" id="isInAdvance" name="isInAdvance"
-												   lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
-												   data-th-checked="${YES_OR_NO_Y} ==${entity?.isInAdvance}">
+<!--											<input type="checkbox" id="isInAdvance" name="isInAdvance"-->
+<!--												   lay-skin="switch" data-th-value="${YES}" lay-text="是|否"-->
+<!--												   data-th-checked="${YES_OR_NO_Y} ==${entity?.isInAdvance}">-->
+<!--										    </div>-->
+<!--											<select id="isInAdvance" name="isInAdvance" parentIds="type9"-->
+<!--													class="layui-input form-input input-select"-->
+<!--													data-th-data-result="${IS_INADVANCE}">-->
+<!--&lt;!&ndash;													data-th-initValue="${entity?.isInAdvance}"&ndash;&gt;-->
+<!--&lt;!&ndash;													data-th-placeholder="#{SysCommon.placeholder}"&ndash;&gt;-->
+<!--											</select>-->
+											<select id="isInAdvance" name="isInAdvance"
+													class="layui-input form-input input-select"
+													data-th-initValue="${entity?.isInAdvance}"
+													data-th-placeholder="#{SysCommon.placeholder}"
+													data-th-data-result="${IS_INADVANCE}" >
+											</select>
 										</div>
 									</div>
-									
 								</div>
 								<!-- 将备注放在附件信息下 by 赵东东 2019.10.30 start -->
 									<!--<div class="layui-form-item">

@@ -2631,6 +2631,12 @@ public enum BussinessDictCodeRds implements com.joyintech.framework.base.BaseDic
     资管资产大类(
             "INF_ASSET_TYPE"
     ),
+    /**
+     * 商业银行净资产维护_有效状态 add by libaisong 2020-12-29 start
+     */
+    商业银行净资产维护_有效状态(
+            "BANK_ASSET_STATUS"
+    ),
     ;
     /**
      * 对应于数据字典code
