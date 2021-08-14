@@ -61,14 +61,9 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 		List<PbcReportProdDatDto> listDetail = pbcReportProdDatMapper.selectPbcReportPrdDatDiff(reportuuid,reporttype);
 		if (!CollectionUtils.isEmpty(listDetail)){
 			for(PbcReportProdDatDto detail : listDetail){
-				//PBC_REPORT_PROD表和PBC_REPORT_PROD_DAT差异的实体类
 				dealAreaDateListForDiff(detail);
+				dealAreaDateListForExport(detail);
 				dealProdData(detail,isShowZero);
-				// 处理数据
-				if (!DictCodeListExt2.人行报表名称_资管产品只数情况统计表.getValue().equals(pbcReport.getDatZipDatType())){
-					// 处理数据
-					dealAreaDateListForExport(detail);
-				}
 				data.put(detail.getPropertyCode(), JsonUtils.object2Map(detail));
 			}
 		}
