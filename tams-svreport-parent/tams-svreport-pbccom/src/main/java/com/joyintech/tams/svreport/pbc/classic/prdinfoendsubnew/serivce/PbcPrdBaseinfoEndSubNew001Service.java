@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class PrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPrdBaseinfoEndSubNew> {
+public class PbcPrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPrdBaseinfoEndSubNew> {
 	/**
 	 * 产品终止信息mapper
 	 */
