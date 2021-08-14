@@ -34,43 +34,43 @@ public class ExcelPbcReportProdDat1_2DQMJDto {
     /**
      * 人民币
      */
-    @ExcelCell(columnNumber = 10)
+    @ExcelCell(columnNumber = 3)
     private BigDecimal cny;
 
     /**
      * 美元折人民币
      */
-    @ExcelCell(columnNumber = 11)
+    @ExcelCell(columnNumber = 4)
     private BigDecimal usdToCny;
 
     /**
      * 欧元折人民币
      */
-    @ExcelCell(columnNumber = 12)
+    @ExcelCell(columnNumber = 5)
     private BigDecimal eurToCny;
 
     /**
      * 英镑折人民币
      */
-    @ExcelCell(columnNumber = 13)
+    @ExcelCell(columnNumber = 6)
     private BigDecimal gbpToCny;
 
     /**
      * 日元折人民币
      */
-    @ExcelCell(columnNumber = 14)
+    @ExcelCell(columnNumber = 7)
     private BigDecimal jpyToCny;
 
     /**
      * 其他币种(外币)折人民币
      */
-    @ExcelCell(columnNumber = 15)
+    @ExcelCell(columnNumber = 8)
     private BigDecimal othToCny;
 
     /**
      * 合计		
      */
-    @ExcelCell(columnNumber = 16)
+    @ExcelCell(columnNumber = 9)
     private BigDecimal total;
 
     public String getPropertyCode() {

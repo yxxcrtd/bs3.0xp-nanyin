@@ -14,6 +14,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ExcelCell {
     //列号
     int columnNumber() default -1;
+    //行号，当行号为默认值时，无效
+    int rowNumber() default -1;
     //报表propertyCode 由开发人员指定
     boolean isPropertyCode() default false;
     //报表类型 由开发人员指定

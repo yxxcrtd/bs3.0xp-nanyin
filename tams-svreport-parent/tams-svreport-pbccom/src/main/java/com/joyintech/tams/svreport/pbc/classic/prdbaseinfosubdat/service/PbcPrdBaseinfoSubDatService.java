@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.service;
 
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -275,6 +276,13 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 }
                 List<PbcPrdBaseinfoSubDat> prdList = resultMap.get("prdList");
                 List<PbcSendZipDatFile> zipList = resultMap.get("zipList");
+                for (PbcPrdBaseinfoSubDat subDat : prdList) {
+                    Optional<PbcPrdBaseinfoSubDat> any = baseinfoSubDatsNoSendProdIds.stream()
+                            .filter(baseinfoSubDat -> subDat.getProdId().equals(baseinfoSubDat.getProdId())).findAny();
+                    if(!any.isPresent()){
+                        baseinfoSubDatsNoSendProdIds.add(subDat);
+                    }
+                }
                 //删除未报送有修改的记录
                 if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendProdIds)){
                     pbcPrdBaseinfoSubDatMapper.deleteByProdid(baseinfoSubDatsNoSendProdIds);
@@ -288,22 +296,13 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(zipList)){
                     for (PbcSendZipDatFile pbcSendZipDatFile : zipList) {
+                        if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
+                            pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
+                        }
                         pbcSendZipDatFileMapper.insert(pbcSendZipDatFile);
                     }
                 }
             }
-            /*if(CollectionUtil.isNotEmpty(baseinfoSubDatsSend)){
-                List<ExcelValidDto> warnList = new ArrayList<>();
-                for (PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat : baseinfoSubDatsSend) {
-                    ExcelValidDto excelValidDto = new ExcelValidDto();
-                    excelValidDto.setErrorInfo("已报送的数据，不支持修改。请在人行客户端直接修复！");
-                    excelValidDto.setValidKey(pbcPrdBaseinfoSubDat.getProdId());
-                    excelValidDto.setCheckResult(excelValidDto.getCheckResult());
-                    warnList.add(excelValidDto);
-                }
-                return warnList;
-            }*/
-
             return errorList;
         }else{
             ExcelValidDto excelValidDto = new ExcelValidDto();

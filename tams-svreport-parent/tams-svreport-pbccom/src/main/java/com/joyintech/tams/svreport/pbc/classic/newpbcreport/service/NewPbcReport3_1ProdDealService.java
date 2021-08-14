@@ -16,10 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 表1-1资管产品募集余额导入
@@ -64,5 +61,29 @@ public class NewPbcReport3_1ProdDealService extends AbstractNewPbcMonthProdRepor
     @Override
     public String sheetName() {
         return SHEET_3_1;
+    }
+
+    @Override
+    public Map<String, String> excelBaseInfo() {
+        Map<String, String> baseMap = new HashMap<>();
+        //发行机构代码
+        baseMap.put(ISSUE_PARTYID,"");
+        //发行机构名称
+        baseMap.put(ISSUE_PARTY_NAME,"");
+        //填报机构名称
+        baseMap.put(REPORT_ORG_NAME,"2,1");
+        //社会信用代码
+        baseMap.put(SOCIAL_CREDIT_CODE,"2,4");
+        //金融机构编码
+        baseMap.put(FININSTITUTION_CODE,"2,6");
+        //产品品种
+        baseMap.put(PROD_VARIETY,"3,1");
+        //责任人
+        baseMap.put(PERSON_LIABLE,"44,1");
+        //联系方式
+        baseMap.put(CONTACT,"44,4");
+        //制表日期
+        baseMap.put(REPORT_DATE,"44,6");
+        return baseMap;
     }
 }
