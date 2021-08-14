@@ -117,6 +117,17 @@ public class PbcNewReportPrdDatFileService {
 				zipFile.setOrgCode(report.getOrgCode());
 				zipFile.setPibDetailCnt(1);
 				zipFile.setReportuuid(report.getReportuuid());
+
+				zipFile.setIssuePartyId(report.getIssuePartyId());
+				zipFile.setIssuePartyName(report.getIssuePartyName());
+				zipFile.setReportOrgName(report.getReportOrgName());
+				zipFile.setSocialCreditCode(report.getSocialCreditCode());
+				zipFile.setFinInstitutionCode(report.getFinInstitutionCode());
+				zipFile.setProdVariety(report.getProdVariety());
+				zipFile.setPersonLiable(report.getPersonLiable());
+				zipFile.setContact(report.getContact());
+				zipFile.setReportDate(report.getReportDate());
+
 				zipFileList.add(zipFile);
 				//产品类型的报表处理
 				if(prodList.contains(report.getReporttype())){

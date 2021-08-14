@@ -24,6 +24,9 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsDataFileHelper;
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.service.PbcPrdAccountSubService001;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dao.PbcPrdBaseinfoEndSubNewMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew;
 import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubCheck;
@@ -56,6 +59,9 @@ public class PrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPrdBa
 	 */
 	@Autowired
 	private PbcPrdBaseinfoEndSubNewMapper pbcPrdBaseinfoEndSubNewMapper;
+
+	@Autowired
+	private PbcPrdBaseinfoEndSubDatMapper pbcPrdBaseinfoEndSubDatMapper;
 
 	/**
 	 * 资产池基本信息service
@@ -272,6 +278,8 @@ public class PrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPrdBa
 				pbcPrdBaseinfoEndSubNewMapper.deleteBatchBySendStatus(list1);
 				// 原始表更新状态
 				pbcPrdBaseinfoEndSubNewMapper.doManul(list1,map.get("submitadd")==null?null:map.get("submitadd").toString());
+
+				pbcPrdBaseinfoEndSubDatMapper.doManul(list1,map.get("submitadd")==null?null:map.get("submitadd").toString());
 			}
 			idx += 	PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		}
@@ -283,6 +291,8 @@ public class PrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPrdBa
 			pbcPrdBaseinfoEndSubNewMapper.deleteBatchBySendStatus(list2);
 			// 原始表更新状态
 			pbcPrdBaseinfoEndSubNewMapper.doManul(list2,map.get("submitadd")==null?null:map.get("submitadd").toString());
+
+			pbcPrdBaseinfoEndSubDatMapper.doManul(list2,map.get("submitadd")==null?null:map.get("submitadd").toString());
 		}
 		/* 手工处理数据批量进行 update by gaojian 2019-06-22 end */
 		logger.debug("手工处理结束:------------------------------"+new Date());
@@ -322,6 +332,8 @@ public class PrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPrdBa
 			if ( list1.size()>0 ) {
 				// 更新状态
 				pbcPrdBaseinfoEndSubNewMapper.cancelManul(list1);
+
+				pbcPrdBaseinfoEndSubDatMapper.cancelManul(list1);
 				// His表数据插入sub表
 				pbcPrdBaseinfoEndSubNewMapper.insetBatchSubFromHisByUpdateTime(list1);
 				// 删除his表中移走的数据
@@ -333,6 +345,8 @@ public class PrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPrdBa
 		if ( list2.size()>0 ) {
 			// 更新状态
 			pbcPrdBaseinfoEndSubNewMapper.cancelManul(list2);
+			pbcPrdBaseinfoEndSubDatMapper.cancelManul(list2);
+
 			// His表数据插入sub表
 			pbcPrdBaseinfoEndSubNewMapper.insetBatchSubFromHisByUpdateTime(list2);
 			// 删除his表中移走的数据

@@ -481,9 +481,9 @@
         <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
         , STATUS_DATE = sysdate
         <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
-  	where  PBC_PROD_ID in  
+  	where  PROD_ID in
   	<foreach collection="list" open="(" close=")" separator="," item="item">
-  		#{item.pbcProdId,jdbcType=CHAR}
+  		#{item.prodId,jdbcType=CHAR}
   	</foreach>
   </update>
   <!-- 取消手工处理 -->
@@ -494,9 +494,9 @@
 		UPDATE_TIME = sysdate,
 		SUBMIT_TIME = null,
 		SUBMIT_FEEDBACK_STATUS = null
-  	where  PBC_PROD_ID in  
+  	where  PROD_ID in
   	<foreach collection="list" open="(" close=")" separator="," item="item">
-  		#{item.pbcProdId,jdbcType=CHAR}
+  		#{item.prodId,jdbcType=CHAR}
   	</foreach>
   </update>
    <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">

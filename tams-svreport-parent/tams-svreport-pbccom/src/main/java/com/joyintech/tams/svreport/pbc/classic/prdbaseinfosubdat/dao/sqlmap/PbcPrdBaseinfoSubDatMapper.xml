@@ -1103,9 +1103,9 @@
 		UPDATE_TIME = sysdate,
 		SUBMIT_TIME = null,
 		SUBMIT_FEEDBACK_STATUS = null
-  	where  trim(REGIST_SEQNO) in  
+  	where  trim(PROD_ID) in
   	<foreach collection="list" open="(" close=")" separator="," item="item">
-  		#{item.registSeqno,jdbcType=CHAR}
+  		#{item.prodId,jdbcType=CHAR}
   	</foreach>
   </update>
      <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">

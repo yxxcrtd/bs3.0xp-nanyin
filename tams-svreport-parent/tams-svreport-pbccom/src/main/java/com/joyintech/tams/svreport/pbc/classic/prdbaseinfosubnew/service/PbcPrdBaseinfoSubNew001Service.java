@@ -22,9 +22,11 @@ import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsDataFileHelper;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dao.PbcPrdBaseinfoSubNewMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.service.PbcPrdCashRaiseSubService001;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dao.PbcInitProdRaisingSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSubVo;
 import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubCheck;
@@ -64,6 +66,9 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 	 */
 	@Autowired
 	private PbcPrdBaseinfoSubNewMapper pbcPrdBaseinfoSubNewMapper;
+
+	@Autowired
+	private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
 	@Autowired
     private CheckReport001Mapper checkReport001Mapper;
 	 @Autowired
@@ -582,6 +587,8 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 			if ( list1.size()>0 ) {
 				// 更新状态
 				pbcPrdBaseinfoSubNewMapper.cancelManul(list1);
+
+				pbcPrdBaseinfoSubDatMapper.cancelManul(list1);
 				// His表数据插入sub表
 				pbcPrdBaseinfoSubNewMapper.insetBatchSubFromHisByUpdateTime(list1);
 				// 删除his表中移走的数据
@@ -593,6 +600,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 		if ( list2.size()>0 ) {
 			// 更新状态
 			pbcPrdBaseinfoSubNewMapper.cancelManul(list2);
+			pbcPrdBaseinfoSubDatMapper.cancelManul(list2);
 			// His表数据插入sub表
 			pbcPrdBaseinfoSubNewMapper.insetBatchSubFromHisByUpdateTime(list2);
 			// 删除his表中移走的数据

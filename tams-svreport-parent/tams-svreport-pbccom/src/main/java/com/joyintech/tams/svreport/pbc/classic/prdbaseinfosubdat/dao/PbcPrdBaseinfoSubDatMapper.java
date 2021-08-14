@@ -4,6 +4,7 @@ import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDet
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -34,9 +35,9 @@ public interface PbcPrdBaseinfoSubDatMapper {
     
     List<PbcPrdBaseinfoSubDat> searchPage(Map<String, Object> searchParam);
 
-	int cancelManul(List<PbcPrdBaseinfoSubDat> updateList);
+	int cancelManul(List<PbcPrdBaseinfoSubNew> updateList);
 	
-	int doManul(@Param("list") List<PbcPrdBaseinfoSubDat> updateList, @Param("submitadd") String submitadd);
+	int doManul(@Param("list") List<String> updateList, @Param("submitadd") String submitadd);
 	
 	int insetBatchSubFromHisByUpdateTime(List<PbcPrdBaseinfoSubDat> insertList);
 	
