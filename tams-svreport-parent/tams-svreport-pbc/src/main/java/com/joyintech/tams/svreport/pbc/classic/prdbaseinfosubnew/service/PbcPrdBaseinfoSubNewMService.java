@@ -3,6 +3,8 @@ package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import org.springframework.stereotype.Service;
@@ -64,7 +66,7 @@ public class PbcPrdBaseinfoSubNewMService extends BaseService<PbcPrdBaseinfoSubN
                SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseinfoSubNew/updateSumStaus",map,
                Integer.class);
    }
-   
+
    public String recalReport(Map<String, Object> map){
        return restTemplate.postForObject(
                SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseinfoSubNew/recalReport",map,

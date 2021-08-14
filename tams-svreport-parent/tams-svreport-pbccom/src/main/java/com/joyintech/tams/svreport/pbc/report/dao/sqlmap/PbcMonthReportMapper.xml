@@ -971,7 +971,20 @@
     </select>
 
     <select id="selectTermIdList" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport">
-        select TERMID,REPORTTYPE,nvl(ORG_CODE,'All') ORG_CODE,REPORTUUID
+        select  TERMID,
+                REPORTTYPE,
+                nvl(ORG_CODE,'All') ORG_CODE,
+                REPORTUUID,
+                ISSUE_PARTY_ID,
+                issue_party_name    ,
+                reportfrequ         ,
+                report_org_name     ,
+                social_credit_code  ,
+                fin_institution_code,
+                prod_variety        ,
+                person_liable       ,
+                contact             ,
+                report_date
         from PBC_REPORT
         where reporttype != 'ONEPRD_ASSET_DEBT'
         and ORG_CODE is not null
@@ -981,7 +994,21 @@
         <if test="orgCode != null">
             and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
         </if>
-        group by TERMID,REPORTTYPE,ORG_CODE,REPORTUUID
+        group by
+        TERMID,
+        REPORTTYPE,
+        ORG_CODE ORG_CODE,
+        REPORTUUID,
+        ISSUE_PARTY_ID,
+        issue_party_name    ,
+        reportfrequ         ,
+        report_org_name     ,
+        social_credit_code  ,
+        fin_institution_code,
+        prod_variety        ,
+        person_liable       ,
+        contact             ,
+        report_date
     </select>
 
     <select id="findProductByName" resultType="java.lang.String">

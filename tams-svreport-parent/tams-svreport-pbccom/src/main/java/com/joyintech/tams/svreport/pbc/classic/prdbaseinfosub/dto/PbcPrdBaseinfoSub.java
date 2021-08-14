@@ -161,6 +161,17 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
      */
     private String raiseVdate01;
 
+
+    private String pbcPoolCode;
+
+    public String getPbcPoolCode() {
+        return pbcPoolCode;
+    }
+
+    public void setPbcPoolCode(String pbcPoolCode) {
+        this.pbcPoolCode = pbcPoolCode;
+    }
+
     /**
      * 募集结束日期
      */

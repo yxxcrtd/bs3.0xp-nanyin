@@ -35,10 +35,10 @@
                 #{item.returnMsg,jdbcType=VARCHAR}, #{item.returnErrorCnt,jdbcType=DECIMAL}, #{item.returnPassCnt,jdbcType=DECIMAL},
                 #{item.createUser,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
                 #{item.updateTime,jdbcType=TIMESTAMP},#{item.updateUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
-                #{issuePartyId,jdbcType=VARCHAR}, #{issuePartyName,jdbcType=VARCHAR}, #{reportOrgName,jdbcType=VARCHAR},
-                #{socialCreditCode,jdbcType=VARCHAR}, #{finInstitutionCode,jdbcType=VARCHAR},
-                #{prodVariety,jdbcType=VARCHAR}, #{personLiable,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR},
-                #{reportDate,jdbcType=DATE}
+                #{item.issuePartyId,jdbcType=VARCHAR}, #{item.issuePartyName,jdbcType=VARCHAR}, #{item.reportOrgName,jdbcType=VARCHAR},
+                #{item.socialCreditCode,jdbcType=VARCHAR}, #{item.finInstitutionCode,jdbcType=VARCHAR},
+                #{item.prodVariety,jdbcType=VARCHAR}, #{item.personLiable,jdbcType=VARCHAR}, #{item.contact,jdbcType=VARCHAR},
+                #{item.reportDate,jdbcType=DATE}
             </foreach>
 
         </insert>

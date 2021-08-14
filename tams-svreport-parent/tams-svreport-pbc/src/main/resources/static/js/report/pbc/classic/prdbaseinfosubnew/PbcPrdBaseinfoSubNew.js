@@ -41,6 +41,8 @@ $(function () {
             {title: "报送截止日", field: 'pbcSubmitDeadline', width: 150, type: 'datetime', sortField: 'pbcSubmitDeadline'},
             {title: "反馈状态", field: 'submitFeedbackStatusStr', width: 150, sortField: 'submitFeedbackStatus'},
             {field: 'pbcProdId', visible: false},
+            {field: 'pbcPoolCode', visible: false},
+
 //				{ title: "产品代码(内部)", field: 'pbcProdIdShow',width:150,sortField:''},
 //				{ title: "产品代码(外部)", field: 'pbcCode',width:150,sortField:''},
             {title: "产品代码", field: 'pbcProdIdShow', width: 150, sortField: 'pbcProdIdShow'},
@@ -200,7 +202,7 @@ $(function () {
     $('#PbcPrdBaseinfoSubNew001_btn_manual').click(function () {
         var rows = table.getAllCheckedRows();
         if (rows.length === 0) {
-//            return Joyin.error("请至少选择一条记录");
+           return Joyin.error("请至少选择一条记录");
             //add by liubin
             var sendStatus = $("#sendStatus").val();
             var submitFeedbackStatus = $("#submitFeedbackStatus").val();
@@ -256,6 +258,12 @@ $(function () {
                     )
                 ) {
                     Joyin.error("报送状态为【手工处理】，或者报送状态为【接口报送】并且反馈状态为【人行通过】、【发送成功】的数据不可进行手工处理。");
+                    return;
+                }
+
+
+                if(rows[i].pbcPoolCode==null||rows[i].pbcPoolCode==''){
+                    Joyin.error("请先维护人行产品代码后，在进行手工处理。");
                     return;
                 }
             }

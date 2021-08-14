@@ -26,7 +26,6 @@ import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBasei
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dao.PbcPrdBaseinfoSubNewMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.service.PbcPrdCashRaiseSubService001;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dao.PbcInitProdRaisingSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSubVo;
 import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubCheck;
@@ -192,9 +191,23 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             if (StringUtil.isNotEmpty(result.getCreditFlag())){
                 result.setCreditFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCreditFlag()));
             }
-            if (StringUtil.isNotEmpty(result.getCreditType())){
-                result.setCreditType( SysDataUtil.getNameFromDataDict(DictCode.人行信誉机构类型,result.getCreditType()));
-            }
+
+
+			if (StringUtil.isNotEmpty(result.getCreditType())){
+				//多个用,切开
+				String [] creditModes=result.getCreditType().split(GlobalConstant.COMMA);
+				String creditMode="";
+				int i=0;
+				for(String single:creditModes){
+					i++;
+					creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.人行信誉机构类型,single);
+					if(i<creditModes.length){
+						creditMode=creditMode+GlobalConstant.COMMA;
+					}
+				}
+				result.setCreditType(creditMode);
+			}
+
             if (StringUtil.isNotEmpty(result.getCreditMode())){
             	//多个用,切开
             	String [] creditModes=result.getCreditMode().split(GlobalConstant.COMMA);
@@ -202,7 +215,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             	int i=0;
             	for(String single:creditModes){
             		i++;
-            		creditMode=creditMode+SysDataUtil.getNameFromDataDict(DictCode.人行增信形式,single);
+            		creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.人行增信形式,single);
             		if(i<creditModes.length){
             			creditMode=creditMode+GlobalConstant.COMMA;
             		}
