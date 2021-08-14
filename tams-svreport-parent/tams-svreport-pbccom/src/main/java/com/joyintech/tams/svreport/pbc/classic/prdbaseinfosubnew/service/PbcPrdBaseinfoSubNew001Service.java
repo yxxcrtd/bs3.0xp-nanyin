@@ -160,7 +160,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
                 result.setCustomerType( SysDataUtil.getNameFromDataDict(DictCode.人行客户类型,result.getCustomerType()));
             }
             if (StringUtil.isNotEmpty(result.getRaiseType())){
-			result.setRaiseType( SysDataUtil.getNameFromDataDict(DictCode.人行募集方式,result.getRaiseType()));
+			result.setRaiseType( SysDataUtil.getNameFromDataDict(DictCode.新人行募集方式,result.getRaiseType()));
             }
             if (StringUtil.isNotEmpty(result.getManageType())){
                 result.setManageType( SysDataUtil.getNameFromDataDict(DictCode.人行管理类型,result.getManageType()));
