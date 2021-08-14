@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface IDealNewPbcMonthReport {
@@ -14,4 +15,6 @@ public interface IDealNewPbcMonthReport {
     List<ExcelValidDto> dealExcelData(ReportDealParamDto paramDto);
 
     String sheetName();
+
+    Map<String,String> excelBaseInfo();
 }

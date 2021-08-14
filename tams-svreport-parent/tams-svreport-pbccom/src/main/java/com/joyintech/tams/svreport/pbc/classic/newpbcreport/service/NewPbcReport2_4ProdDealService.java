@@ -99,4 +99,28 @@ public class NewPbcReport2_4ProdDealService extends AbstractDealNewPbcMonthRepor
             pbcSendZipDatFileMapper.insert(pbcSendZipDatFile);
         }
     }
+
+    @Override
+    public Map<String, String> excelBaseInfo() {
+        Map<String, String> baseMap = new HashMap<>();
+        //发行机构代码
+        baseMap.put(ISSUE_PARTYID,"");
+        //发行机构名称
+        baseMap.put(ISSUE_PARTY_NAME,"");
+        //填报机构名称
+        baseMap.put(REPORT_ORG_NAME,"2,2");
+        //社会信用代码
+        baseMap.put(SOCIAL_CREDIT_CODE,"2,5");
+        //金融机构编码
+        baseMap.put(FININSTITUTION_CODE,"2,9");
+        //产品品种
+        baseMap.put(PROD_VARIETY,"3,1");
+        //责任人
+        baseMap.put(PERSON_LIABLE,"14,1");
+        //联系方式
+        baseMap.put(CONTACT,"14,5");
+        //制表日期
+        baseMap.put(REPORT_DATE,"14,10");
+        return baseMap;
+    }
 }
