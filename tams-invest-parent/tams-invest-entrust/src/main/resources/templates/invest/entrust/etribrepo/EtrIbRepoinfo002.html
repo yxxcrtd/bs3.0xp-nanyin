@@ -4,7 +4,7 @@
     <head> 
     </head>
     <body>
-        <div layout:fragment="content">
+        <div layout:fragment="content" id="EtrIbRepoinfo002_bodydiv">
             <div class="joyin-form-wrap">
                 <form class="layui-form pro-module-form" id="searchForm">
                     <input type="hidden" id="finprodIdhid" name="finprodId" th:value="${entity?.finprodId}" />
@@ -27,6 +27,7 @@
                         <div class="form-inline-wrap"  style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbRepoinfo002.portfolioId}">组合名称</label>
                             <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
+                                <div style="width: 80%">
                                 <select
                                         required
                                         type="text"
@@ -40,6 +41,11 @@
                                         formatoption="true"
                                         th:initValue="${entity?.portfolioId}"
                                 ></select>
+                                </div>
+
+                            <div style="width: 20%">
+                                <a id="EtrIbRepoinfo002_portfolioId_btn_search" class="layui-btn layui-btn-sm form-input-text">查看</a>
+                            </div>
                             </div>
                         </div>
                       <!--   <div class="form-inline-wrap"  style=" width: 50%; padding:0px;">
