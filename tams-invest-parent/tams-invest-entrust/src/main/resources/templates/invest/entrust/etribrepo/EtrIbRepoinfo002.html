@@ -237,6 +237,16 @@
                                 />
                             </div>
                         </div>
+                        <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                            <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.trader}">本方交易员</label>
+                            <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
+                                <select type="text" id="trader" name="trader"
+                                        class="layui-input form-input input-select"
+                                        data-th-placeholder="#{SysCommon.placeholder}"  placeholder="请输入内容"
+                                        data-th-data-url="@{/component/trade/BussEtrInvestPersonInfo/getTrader}"
+                                        data-th-initvalue="${entity?.termType}" ></select>
+                            </div>
+                        </div>
                     </div>
                     <div class="layui-form-item" style="padding:0px;">
                    
