@@ -26,6 +26,10 @@
             <input type="text" id="entrustStatus" name="entrustId" disabled="disabled" style="display:none;"
                    data-th-value="${entity?.entrustStatus}"/>
             <input type="hidden" id="tradeMarket" name="tradeMarket" value="01" />
+            <div class="layui-tab-item layui-show" style="height:30px;" id="cash_div">
+                <iframe th:src="@{/invest/entrust/EtrCommonController/initCash}" width="100%"
+                        height="100%" frameborder="0" style="border:none;"></iframe>
+            </div>
 
             <div class="layui-form-item" >
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
