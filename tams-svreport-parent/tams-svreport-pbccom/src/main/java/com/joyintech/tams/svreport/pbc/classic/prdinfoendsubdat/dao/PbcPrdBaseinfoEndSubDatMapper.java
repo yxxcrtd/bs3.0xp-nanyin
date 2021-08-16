@@ -8,6 +8,7 @@ import java.util.Map;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDatDiff;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition;
@@ -29,9 +30,9 @@ public interface PbcPrdBaseinfoEndSubDatMapper {
     
     List<PbcPrdBaseinfoEndSubDat> searchPage(Map<String, Object> map);
 
-	int doManul(@Param("list") List<PbcPrdBaseinfoEndSubDat> updateList, @Param("submitadd") String submitadd);
+	int doManul(@Param("list") List<PbcPrdBaseinfoEndSubNew> updateList, @Param("submitadd") String submitadd);
 
-	int cancelManul(List<PbcPrdBaseinfoEndSubDat> updateList);
+	int cancelManul(@Param("list") List<PbcPrdBaseinfoEndSubNew> updateList);
 
 	List<PbcPrdBaseinfoEndSubDat> getProdInfoByEndSub(@Param("list") List<PbcPrdBaseinfoEndSubDat> list);
 

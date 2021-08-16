@@ -17,7 +17,7 @@ public class ExcelPbcReportProdDat2_1ZCHJDto {
      * 属性代码
      */
     @ExcelCell(isPropertyCode = true)
-    private String propertyCode;
+    private String propertycode;
 
     /**
      * 报表类型：MJYE-募集余额报表,MJDF-募集兑付报表,ZSQK-只数情况报表,MJYEFDQ-募集余额报表分地区报表,TQJYQDF-提前及延期兑付报表,DQWDF-到期未兑付报表
@@ -73,12 +73,12 @@ public class ExcelPbcReportProdDat2_1ZCHJDto {
     @ExcelCell(columnNumber = 9)
     private BigDecimal total;
 
-    public String getPropertyCode() {
-        return propertyCode;
+    public String getPropertycode() {
+        return propertycode;
     }
 
-    public void setPropertyCode(String propertyCode) {
-        this.propertyCode = propertyCode;
+    public void setPropertycode(String propertycode) {
+        this.propertycode = propertycode;
     }
 
     public String getReporttype() {

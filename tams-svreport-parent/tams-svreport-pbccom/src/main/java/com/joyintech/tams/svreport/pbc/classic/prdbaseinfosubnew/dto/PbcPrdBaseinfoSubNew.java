@@ -189,7 +189,18 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
      * 产品预计终止日期
      */
     private String mdate01;
-    
+
+
+    private String pbcPoolCode;
+
+    public String getPbcPoolCode() {
+        return pbcPoolCode;
+    }
+
+    public void setPbcPoolCode(String pbcPoolCode) {
+        this.pbcPoolCode = pbcPoolCode;
+    }
+
     /**
      * 发行机构提前终止权标识，1-有，2-无
      */

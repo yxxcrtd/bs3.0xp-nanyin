@@ -48,10 +48,11 @@
   	PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE
   </sql>
   <sql id="PBC_PRD_BASEINFO_SUB">
-  (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,ISSUE_PARTY_ID,
-	row_number() OVER (partition BY PBC_PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME)
+  (select a.* from (SELECT nvl(pac.pbc_code,pbs.PBC_PROD_ID) PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,pbs.status status,RAISE_ENDDATE,pbs.ORG_CODE,ISSUE_PARTY_ID,
+	row_number() OVER (partition BY PBC_PROD_ID ORDER BY NVL(pbs.UPDATE_TIME,pbs.CREATE_TIME)
 	DESC) AS myrank
-	FROM pbc_prd_baseinfo_sub_new) a
+	FROM pbc_prd_baseinfo_sub_new pbs
+  LEFT JOIN pbc_prod_assetpool_code pac ON pac.status='E'AND pac.code_type='01' AND pac.INSIDE_PROD_ID = pbs.PROD_ID) a
 	WHERE a.myrank=1)
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >

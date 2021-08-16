@@ -22,6 +22,7 @@ import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsDataFileHelper;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dao.PbcPrdBaseinfoSubNewMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.service.PbcPrdCashRaiseSubService001;
@@ -64,6 +65,9 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 	 */
 	@Autowired
 	private PbcPrdBaseinfoSubNewMapper pbcPrdBaseinfoSubNewMapper;
+
+	@Autowired
+	private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
 	@Autowired
     private CheckReport001Mapper checkReport001Mapper;
 	 @Autowired
@@ -155,7 +159,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
                 result.setCustomerType( SysDataUtil.getNameFromDataDict(DictCode.人行客户类型,result.getCustomerType()));
             }
             if (StringUtil.isNotEmpty(result.getRaiseType())){
-			result.setRaiseType( SysDataUtil.getNameFromDataDict(DictCode.人行募集方式,result.getRaiseType()));
+			result.setRaiseType( SysDataUtil.getNameFromDataDict(DictCode.新人行募集方式,result.getRaiseType()));
             }
             if (StringUtil.isNotEmpty(result.getManageType())){
                 result.setManageType( SysDataUtil.getNameFromDataDict(DictCode.人行管理类型,result.getManageType()));
@@ -187,9 +191,23 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             if (StringUtil.isNotEmpty(result.getCreditFlag())){
                 result.setCreditFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCreditFlag()));
             }
-            if (StringUtil.isNotEmpty(result.getCreditType())){
-                result.setCreditType( SysDataUtil.getNameFromDataDict(DictCode.人行信誉机构类型,result.getCreditType()));
-            }
+
+
+			if (StringUtil.isNotEmpty(result.getCreditType())){
+				//多个用,切开
+				String [] creditModes=result.getCreditType().split(GlobalConstant.COMMA);
+				String creditMode="";
+				int i=0;
+				for(String single:creditModes){
+					i++;
+					creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.人行信誉机构类型,single);
+					if(i<creditModes.length){
+						creditMode=creditMode+GlobalConstant.COMMA;
+					}
+				}
+				result.setCreditType(creditMode);
+			}
+
             if (StringUtil.isNotEmpty(result.getCreditMode())){
             	//多个用,切开
             	String [] creditModes=result.getCreditMode().split(GlobalConstant.COMMA);
@@ -197,7 +215,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             	int i=0;
             	for(String single:creditModes){
             		i++;
-            		creditMode=creditMode+SysDataUtil.getNameFromDataDict(DictCode.人行增信形式,single);
+            		creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.人行增信形式,single);
             		if(i<creditModes.length){
             			creditMode=creditMode+GlobalConstant.COMMA;
             		}
@@ -582,6 +600,8 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 			if ( list1.size()>0 ) {
 				// 更新状态
 				pbcPrdBaseinfoSubNewMapper.cancelManul(list1);
+
+				pbcPrdBaseinfoSubDatMapper.cancelManul(list1);
 				// His表数据插入sub表
 				pbcPrdBaseinfoSubNewMapper.insetBatchSubFromHisByUpdateTime(list1);
 				// 删除his表中移走的数据
@@ -593,6 +613,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 		if ( list2.size()>0 ) {
 			// 更新状态
 			pbcPrdBaseinfoSubNewMapper.cancelManul(list2);
+			pbcPrdBaseinfoSubDatMapper.cancelManul(list2);
 			// His表数据插入sub表
 			pbcPrdBaseinfoSubNewMapper.insetBatchSubFromHisByUpdateTime(list2);
 			// 删除his表中移走的数据

@@ -78,48 +78,9 @@ public class MonthReportUtil {
             if(reqType.equals(String.class)){
                 return value;
             }else{
-                if(reqType == Double.class){
-                    return Double.parseDouble(value.toString());
-                }
-                if(reqType == double.class){
-                    return Double.parseDouble(value.toString());
-                }
-                if(reqType == Integer.class){
-                    return Integer.parseInt(value.toString());
-                }
-                if(reqType == int.class){
-                    return Integer.parseInt(value.toString());
-                }
-                if(reqType == Long.class){
-                    return Long.parseLong(value.toString());
-                }
-                if(reqType == long.class){
-                    return Long.parseLong(value.toString());
-                }
-                if(reqType == Float.class){
-                    return Float.parseFloat(value.toString());
-                }
-                if(reqType == float.class){
-                    return Float.parseFloat(value.toString());
-                }
-                if(reqType == Date.class){
-                    DateTime parse = cn.hutool.core.date.DateUtil.parse(value.toString(), DateUtil.DEFAULT_OTHER_FORMAT);
-                    return parse.toJdkDate();
-                }
                 if(reqType == BigDecimal.class){
-                    return new BigDecimal(value.toString());
-                }
-                if(reqType == Boolean.class){
-                    return Boolean.parseBoolean(value.toString());
-                }
-                if(reqType == boolean.class){
-                    return Boolean.parseBoolean(value.toString());
-                }
-                if(reqType == Short.class){
-                    return Short.parseShort(value.toString());
-                }
-                if(reqType == short.class){
-                    return Short.parseShort(value.toString());
+                    BigDecimal multiply = new BigDecimal(value.toString()).multiply(new BigDecimal(10000));
+                    return multiply;
                 }
             }
         }

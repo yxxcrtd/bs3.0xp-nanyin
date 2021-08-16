@@ -78,7 +78,7 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 		/***新人行获取ex映射时候取getSrcfield2 字段**/
 		 List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
 	                .selectByMappingcode(PbcAssetPositionConstants.MAPPINGCODE_DEPT_CODE_CHBTOPBC);
-	        Map<String,ChbTypeMappingEx> inDepCodeMap = subjectNoMappingList.stream().collect(Collectors.toMap(ChbTypeMappingEx::getSrcfield2, a -> a,(k1,k2)->k1));
+	        Map<String,ChbTypeMappingEx> inDepCodeMap = subjectNoMappingList.stream().collect(Collectors.toMap(ChbTypeMappingEx::getSrcfield1, a -> a,(k1,k2)->k1));
 		Map<String,PbcPrdBaseinfoSubNew> regMap = new HashMap<String,PbcPrdBaseinfoSubNew>();
 		Map<String,String > pbcProdIdMap = new HashMap<String,String>();
 		//查询已生成人行产品代码的数据
@@ -149,7 +149,7 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 	        // 处理产品发行登记
 	        for(PbcPrdBaseinfoSubNew sub : needRegistSubList){
 	        	if(sub.getInDepName() != null && inDepCodeMap.containsKey(sub.getInDepName())){
-	        		sub.setInDepCode(inDepCodeMap.get(sub.getInDepName()).getObjfield());
+	        		sub.setInDepCode(inDepCodeMap.get(sub.getInDepName()).getObjfield2());
 	        	}
 	        	String pbcProdId;
 	        	if(pbcProdIdMap.containsKey(sub.getProdId())){

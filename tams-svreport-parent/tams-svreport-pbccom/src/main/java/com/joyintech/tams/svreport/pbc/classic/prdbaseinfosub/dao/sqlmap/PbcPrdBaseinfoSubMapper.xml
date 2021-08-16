@@ -875,6 +875,7 @@
   	select 
 	        t1.REGIST_SEQNO registSeqno,
 			t1.pbc_prod_id pbcProdId,
+	  		T2.pbc_code pbcPoolCode,
 			t1.ISSUE_PARTY_ID issuePartyId,
 	        SI.INSTITUTION_NAME issuePartyName,
 			t1.PBC_PROD_TYPE pbcProdType,

@@ -481,9 +481,9 @@
         <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
         , STATUS_DATE = sysdate
         <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
-  	where  PBC_PROD_ID in  
+  	where  PROD_ID in
   	<foreach collection="list" open="(" close=")" separator="," item="item">
-  		#{item.pbcProdId,jdbcType=CHAR}
+  		#{item.prodId,jdbcType=CHAR}
   	</foreach>
   </update>
   <!-- 取消手工处理 -->
@@ -494,9 +494,9 @@
 		UPDATE_TIME = sysdate,
 		SUBMIT_TIME = null,
 		SUBMIT_FEEDBACK_STATUS = null
-  	where  PBC_PROD_ID in  
+  	where  PROD_ID in
   	<foreach collection="list" open="(" close=")" separator="," item="item">
-  		#{item.pbcProdId,jdbcType=CHAR}
+  		#{item.prodId,jdbcType=CHAR}
   	</foreach>
   </update>
    <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
@@ -972,7 +972,7 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
             prd.CUSTOM_PROFIT as customProfitPrd,
             prd.CUSTOM_PROFIT_CNY as customProfitCnyPrd
         from PBC_PRD_BASEINFO_END_SUB_DAT dat
-            left join PBC_PRD_BASEINFO_END_SUB  prd on dat.PBC_PROD_ID=prd.PBC_PROD_ID
+            left join PBC_PRD_BASEINFO_END_SUB_NEW  prd on dat.prod_id=prd.prod_id
         where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
     </select>
 

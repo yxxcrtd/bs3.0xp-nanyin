@@ -20,7 +20,11 @@
                 RETURN_ZIP_SEND_STATUS, RETURN_ZIP_CODE, RETURN_TIME,
                 RETURN_MSG, RETURN_ERROR_CNT, RETURN_PASS_CNT,
                 CREATE_USER, ORG_CODE, CREATE_DEPT,
-                CREATE_TIME, UPDATE_USER, UPDATE_TIME
+                CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+                ISSUE_PARTY_ID, ISSUE_PARTY_NAME, REPORT_ORG_NAME,
+                SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE,
+                PROD_VARIETY, PERSON_LIABLE, CONTACT,
+                REPORT_DATE
                 )
             <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
                 sys_guid(), #{item.datZipCode,jdbcType=VARCHAR}, #{item.datZipPath,jdbcType=VARCHAR},
@@ -30,7 +34,11 @@
                 #{item.returnZipSendStatus,jdbcType=VARCHAR}, #{item.returnZipCode,jdbcType=VARCHAR}, #{item.returnTime,jdbcType=DATE},
                 #{item.returnMsg,jdbcType=VARCHAR}, #{item.returnErrorCnt,jdbcType=DECIMAL}, #{item.returnPassCnt,jdbcType=DECIMAL},
                 #{item.createUser,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
-                #{item.updateTime,jdbcType=TIMESTAMP},#{item.updateUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}
+                #{item.updateTime,jdbcType=TIMESTAMP},#{item.updateUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
+                #{item.issuePartyId,jdbcType=VARCHAR}, #{item.issuePartyName,jdbcType=VARCHAR}, #{item.reportOrgName,jdbcType=VARCHAR},
+                #{item.socialCreditCode,jdbcType=VARCHAR}, #{item.finInstitutionCode,jdbcType=VARCHAR},
+                #{item.prodVariety,jdbcType=VARCHAR}, #{item.personLiable,jdbcType=VARCHAR}, #{item.contact,jdbcType=VARCHAR},
+                #{item.reportDate,jdbcType=DATE}
             </foreach>
 
         </insert>

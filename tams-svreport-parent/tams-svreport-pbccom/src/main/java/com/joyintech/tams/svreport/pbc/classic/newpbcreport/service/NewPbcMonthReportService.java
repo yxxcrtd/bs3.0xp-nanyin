@@ -149,7 +149,7 @@ public class NewPbcMonthReportService {
                 return ajaxResult;
             }
             String fName = strName[0];
-            String statusVdate = fName.substring(0, 4).concat("-").concat(fName.substring(4, 6)).concat("-").concat(fName.substring(6, 8));
+            String statusVdate = fName.substring(0, 4).concat(fName.substring(4, 6));
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("statusVdate", statusVdate);
             paramMap.put("datZipType", "MI");
@@ -206,7 +206,8 @@ public class NewPbcMonthReportService {
                 return errorList;
             }
             String fName = strName[0];
-            String statusVdate = fName.substring(0,4).concat("-").concat(fName.substring(4,6)).concat("-").concat(fName.substring(6,8));
+            String statusVdate1 = fName.substring(0,4).concat("-").concat(fName.substring(4,6)).concat("-").concat(fName.substring(6,8));
+            String statusVdate = fName.substring(0,4).concat(fName.substring(4,6));//.concat("-").concat(fName.substring(6,8));
             Map<String,Object> paramMap = new HashMap<>();
             paramMap.put("statusVdate",statusVdate);
             paramMap.put("datZipType","MI");
@@ -231,7 +232,7 @@ public class NewPbcMonthReportService {
                 paramDto.setHasRecord(true);
             }else{
                 paramDto.setReportUUID(UUID.randomUUID().toString());
-                paramDto.setDatZipCode(PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_统计模板数据.getValue(),DateUtil.parse(statusVdate, com.joyintech.framework.util.DateUtil.DEFAULT_DATE_FORMAT_EN),1,orgCode));
+                paramDto.setDatZipCode(PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_统计模板数据.getValue(),DateUtil.parse(statusVdate1, com.joyintech.framework.util.DateUtil.DEFAULT_DATE_FORMAT_EN),1,orgCode));
                 paramDto.setHasRecord(false);
             }
             while(sheetIterator.hasNext()){

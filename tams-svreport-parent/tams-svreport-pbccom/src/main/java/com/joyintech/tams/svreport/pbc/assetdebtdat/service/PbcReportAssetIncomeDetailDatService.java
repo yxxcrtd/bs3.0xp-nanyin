@@ -63,8 +63,9 @@ public class PbcReportAssetIncomeDetailDatService extends PbcDatPriviewService {
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
         List<PbcReportAssetIncomeDatDetail> listDetail = PbcReportAssetIncomeDatDetailMapper.selectByReportuuid(reportuuid);
         for (PbcReportAssetIncomeDatDetail detail : listDetail) {
+            processDataForExport(detail);
             dealProdData(detail, isShowZero);
-            data.put(detail.getPropertycode(), JsonUtils.object2Map(processDataForExport(detail)));
+            data.put(detail.getPropertycode(), JsonUtils.object2Map(detail));
         }
         return data;
     }

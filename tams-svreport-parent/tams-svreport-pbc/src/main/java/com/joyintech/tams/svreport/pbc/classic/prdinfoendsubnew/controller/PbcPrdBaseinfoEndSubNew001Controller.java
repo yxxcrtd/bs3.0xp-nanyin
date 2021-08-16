@@ -7,9 +7,8 @@ import java.util.Map;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.serivce.PrdBaseinfoEndSubNew001Service;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.serivce.PbcPrdBaseinfoEndSubNew001Service;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.service.PbcPrdBaseinfoEndSubNewMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub;
 
 import static java.util.stream.Collectors.toList;
 
@@ -44,7 +42,7 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 	 * 产品终止登记service
 	 */
 	@Autowired
-	private PrdBaseinfoEndSubNew001Service prdBaseinfoEndSubNew001Service;
+	private PbcPrdBaseinfoEndSubNew001Service prdBaseinfoEndSubNew001Service;
 	@Autowired
 	private PbcPrdBaseinfoEndSubNewMService pbcPrdBaseinfoEndSubNewMService;
 
@@ -94,7 +92,7 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("export")
 	public ResponseEntity<byte[]> export() {
-		return prdBaseinfoEndSubNew001Service.export("PIB产品终止信息(资产管理)"+ GlobalConstant.POINT +"xlsx", RequestUtil.getPageParam());
+		return prdBaseinfoEndSubNew001Service.export("PIB产品终止信息(资产管理)"+ GlobalConstant.POINT +"xls", RequestUtil.getPageParam());
 	}
 
 	/**

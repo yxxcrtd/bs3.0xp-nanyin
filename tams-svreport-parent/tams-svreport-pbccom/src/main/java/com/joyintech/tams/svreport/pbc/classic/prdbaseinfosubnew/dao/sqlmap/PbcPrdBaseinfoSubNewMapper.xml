@@ -806,14 +806,13 @@
         info.STATUS,
         info.CREATE_USER,
         info.UPDATE_USER,
-        info.ORG_CODE,
+        cbc.ORG_CODE ORG_CODE,
         info.DEPT_CODE CREATE_DEPT
         from chb_prd_baseinfo info
 
         left join CHB_ORG_REGIST_BANK_CODE cbc on
         cbc.REGIST_BANK_CODE=info.ISSUE_PARTY_ID
         and CBC.STATUS='E'
-
         /****add by leipeng 人行产品基本信息，人行产品代码一旦生成，修改基本信息数据在重新跑批也不会改变了 start**/
         LEFT JOIN (
         select nvl(DEAL.FPROD_ID,DEAL.PROD_ID) PROD_ID, max(UPDATE_TIME) UPDATE_TIME,max(CREATE_TIME) CREATE_TIME
@@ -883,7 +882,8 @@
             resultType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew">
         select
         t1.REGIST_SEQNO registSeqno,
-        t1.pbc_prod_id pbcProdId,
+        NVL(T2.pbc_code,t1.pbc_prod_id) pbcProdId,
+        T2.pbc_code pbcPoolCode,
         t1.ISSUE_PARTY_ID issuePartyId,
         SI.INSTITUTION_NAME issuePartyName,
         t1.PBC_PROD_TYPE pbcProdType,
@@ -943,7 +943,7 @@
         t1.UPDATE_USER updateUser,
         t1.UPDATE_TIME updateTime,
         t2.PBC_CODE pbcCode,
-        t1.PBC_PROD_ID pbcProdIdShow
+        NVL(T2.pbc_code,t1.pbc_prod_id) pbcProdIdShow
         from PBC_PRD_BASEINFO_SUB_NEW t1
         LEFT JOIN(
         SELECT
@@ -1087,7 +1087,7 @@
     <select id="searchDat" resultType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
         select
             t1.REGIST_SEQNO registSeqno,
-            t1.pbc_prod_id pbcProdId,
+            NVL(T2.pbc_code,t1.pbc_prod_id) pbcProdId,
             t1.ISSUE_PARTY_ID issuePartyId,
             SI.INSTITUTION_NAME issuePartyName,
             t1.PBC_PROD_TYPE pbcProdType,
@@ -1147,7 +1147,7 @@
             t1.UPDATE_USER updateUser,
             t1.UPDATE_TIME updateTime,
             t2.PBC_CODE pbcCode,
-            t1.PBC_PROD_ID pbcProdIdShow
+             NVL(T2.pbc_code,t1.pbc_prod_id) pbcProdIdShow
             from PBC_PRD_BASEINFO_SUB_NEW t1
             LEFT JOIN(
             SELECT
@@ -1168,7 +1168,7 @@
             pbc_prod_assetpool_code
             WHERE
             status='E'
-            AND code_type='02'
+            AND code_type='01'
             )t3 ON t3.inside_prod_id=t1.PROD_ID
             <!-- add by zhangliang 20210220 工单号:YHZGCPB20210129004 end -->
             LEFT JOIN CHB_ORG_REGIST_BANK_CODE CORBC
@@ -1411,11 +1411,7 @@
 
     <delete id="updateBaseSubDat" parameterType="map">
         UPDATE PBC_PRD_BASEINFO_SUB_DAT SET SEND_STATUS =  '03',SUBMIT_FEEDBACK_STATUS = '03'
-        WHERE trim(SUMIT_SEQ) in
-        <foreach collection="list" open="(" close=")" separator="," item="item">
-            #{item.sumitSeq,jdbcType=VARCHAR}
-        </foreach>
-        and trim(PROD_ID) in
+        WHERE  trim(PROD_ID) in
         <foreach collection="list" open="(" close=")" separator="," item="item">
             #{item.prodId,jdbcType=CHAR}
         </foreach>
@@ -1447,11 +1443,21 @@
     </delete>
 
     <select id="queryAllPbcPrdBaseInfo" resultMap="BaseResultMap">
-        select PBC_PROD_ID, prod_name,ACCOUNT_ID,PROD_ID
+        select PBC_PROD_ID, prod_name,ACCOUNT_ID,PROD_ID,ORG_CODE
         from (
-        select PBC_PROD_ID,prod_name,ACCOUNT_ID,PROD_ID,
+        select nvl(T3.pbc_code,t1.PBC_PROD_ID) PBC_PROD_ID,prod_name,ACCOUNT_ID,PROD_ID,ORG_CODE,
         rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
-        from PBC_PRD_BASEINFO_SUB_NEW
+        from PBC_PRD_BASEINFO_SUB_NEW t1
+        LEFT JOIN(
+        SELECT
+        inside_prod_id,
+        pbc_code
+        FROM
+        pbc_prod_assetpool_code
+        WHERE
+        status='E'
+        AND code_type='01'
+        )t3 ON t3.inside_prod_id=t1.PROD_ID
         where STATUS != 'D'
         <if test="search != null and search !='' ">
             AND (PBC_PROD_ID LIKE concat(concat('%', #{search}),'%')

@@ -5,7 +5,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dto.PbcPrdBaseinfoEndSubNew;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.serivce.PrdBaseinfoEndSubNew001Service;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.serivce.PbcPrdBaseinfoEndSubNew001Service;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +33,7 @@ public class PbcPrdBaseinfoEndSubNewController {
      * 产品终止信息service
      */
     @Autowired
-    private PrdBaseinfoEndSubNew001Service pbcPrdBaseinfoEndSubNew001Service;
+    private PbcPrdBaseinfoEndSubNew001Service pbcPrdBaseinfoEndSubNew001Service;
 
     /**
     *

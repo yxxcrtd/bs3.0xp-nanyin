@@ -1103,9 +1103,9 @@
 		UPDATE_TIME = sysdate,
 		SUBMIT_TIME = null,
 		SUBMIT_FEEDBACK_STATUS = null
-  	where  trim(REGIST_SEQNO) in  
+  	where  trim(PROD_ID) in
   	<foreach collection="list" open="(" close=")" separator="," item="item">
-  		#{item.registSeqno,jdbcType=CHAR}
+  		#{item.prodId,jdbcType=CHAR}
   	</foreach>
   </update>
      <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
@@ -1417,7 +1417,7 @@
 		prd.CREATE_TIME createTimePrd,
 		prd.IS_MARKET_FUND isMarketFundPrd
 		from PBC_PRD_BASEINFO_SUB_DAT dat
-		left join PBC_PRD_BASEINFO_SUB  prd on dat.prod_id=prd.prod_id
+		left join PBC_PRD_BASEINFO_SUB_NEW  prd on dat.prod_id=prd.prod_id
 		where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
 	</select>
 

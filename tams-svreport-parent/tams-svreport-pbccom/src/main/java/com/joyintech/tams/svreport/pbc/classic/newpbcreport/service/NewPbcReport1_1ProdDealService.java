@@ -8,6 +8,7 @@ import com.joyintech.tams.svreport.pbc.classic.newpbcreport.dto.ExcelPbcReportPr
 import com.joyintech.tams.svreport.pbc.classic.newpbcreport.dto.ReportDealParamDto;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcReportType;
 import com.joyintech.tams.svreport.pbc.common.util.MonthReportUtil;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +25,7 @@ public class NewPbcReport1_1ProdDealService extends AbstractNewPbcMonthProdRepor
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String PBC_REPORT = PbcReportType.PBC_REPORT_1_1;
+
 
     @Override
     public List<ExcelValidDto> dealExcelData(ReportDealParamDto paramDto) {
@@ -57,5 +59,29 @@ public class NewPbcReport1_1ProdDealService extends AbstractNewPbcMonthProdRepor
     @Override
     public String sheetName() {
         return SHEET_1_1;
+    }
+
+    @Override
+    public Map<String, String> excelBaseInfo() {
+        Map<String, String> baseMap = new HashMap<>();
+        //发行机构代码
+        baseMap.put(ISSUE_PARTYID,"");
+        //发行机构名称
+        baseMap.put(ISSUE_PARTY_NAME,"");
+        //填报机构名称
+        baseMap.put(REPORT_ORG_NAME,"2,2");
+        //社会信用代码
+        baseMap.put(SOCIAL_CREDIT_CODE,"2,5");
+        //金融机构编码
+        baseMap.put(FININSTITUTION_CODE,"2,9");
+        //产品品种
+        baseMap.put(PROD_VARIETY,"3,1");
+        //责任人
+        baseMap.put(PERSON_LIABLE,"38,1");
+        //联系方式
+        baseMap.put(CONTACT,"38,4");
+        //制表日期
+        baseMap.put(REPORT_DATE,"38,9");
+        return baseMap;
     }
 }
