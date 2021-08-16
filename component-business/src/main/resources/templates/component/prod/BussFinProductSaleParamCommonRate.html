@@ -116,7 +116,7 @@
 								th:name="|${entityName}.raiseAmtPlan|" data-textrange="2" maxlength="19"
 								data-th-value="${entity?.raiseAmtPlan}"
 								data-th-required="${pageId} neq 'FinProductModule002'"
-								   onkeyup="if(/^\d{1,16}(\.\d{1,2})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,16) }"
+								   onkeyup="if(/^\d{1,17}(\.\d{1,2})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,16) }"
 								class="layui-input form-input text-number"> <span
 								class="input-right-show">元</span>
 						</div>
@@ -127,7 +127,7 @@
 						<div class="layui-input-inline input-inline">
 							<input type="text" th:id="|${entityName}_saleMax|"
 								th:name="|${entityName}.saleMax|" th:value="${entity?.saleMax}"
-								   onkeyup="if(/^\d{1,16}(\.\d{1,2})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,16) }"
+								   onkeyup="if(/^\d{1,17}(\.\d{1,2})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,16) }"
 								class="layui-input form-input text-number" data-textrange="2" maxlength="19" />
 							<span class="input-right-show">元</span>
 						</div>
@@ -139,7 +139,7 @@
 							<input type="text" th:id="|${entityName}_saleMin|"
 								th:name="|${entityName}.saleMin|" 
 								th:value="${entity?.saleMin}"
-								   onkeyup="if(/^\d{1,16}(\.\d{1,2})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,16) }"
+								   onkeyup="if(/^\d{1,17}(\.\d{1,2})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,16) }"
 								class="layui-input form-input text-number" data-textrange="2" maxlength="19" />
 							<span class="input-right-show">元</span>
 						</div>
@@ -153,7 +153,7 @@
 							<input type="text" th:id="|${entityName}_toffStart|"
 								th:name="|${entityName}.toffStart|"
 								th:value="${entity?.toffStart}"
-								   onkeyup="if(/^\d{1,16}(\.\d{1,2})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,16) }"
+								   onkeyup="if(/^\d{1,17}(\.\d{1,2})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,16) }"
 								data-th-required="(${pageId} eq 'FinProductBuild002') or (${pageId} eq 'FinNetValueProductBuild002')"
 								class="layui-input form-input text-number" data-textrange="2" maxlength="19" />
 							<span class="input-right-show">元</span>
@@ -166,7 +166,7 @@
 							<input type="text" th:id="|${entityName}_lowestAmt|"
 								th:name="|${entityName}.lowestAmt|"
 								th:value="${entity?.lowestAmt}"
-								   onkeyup="if(/^\d{1,16}(\.\d{1,2})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,16) }"
+								   onkeyup="if(/^\d{1,17}(\.\d{1,2})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,16) }"
 								class="layui-input form-input text-number" data-textrange="2" maxlength="19" />
 							<span class="input-right-show">元</span>
 						</div>
