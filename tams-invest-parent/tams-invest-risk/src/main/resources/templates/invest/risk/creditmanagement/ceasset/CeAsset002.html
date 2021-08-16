@@ -68,7 +68,7 @@ var entity=/*[[${entity}]]*/'';
 												   <select th:id="|${pageId}_creditFlag|" name="creditFlag" formatoption="false"
 														class="layui-input form-input input-select"
 														data-th-placeholder="#{SysCommon.placeholder}"
-														data-th-initValue='${NO}' required disabled
+														data-th-initValue='${entity?.creditFlag}' required
 														data-th-data-result="${YES_OR_NO}">
 													</select>	
 							                    </div>
