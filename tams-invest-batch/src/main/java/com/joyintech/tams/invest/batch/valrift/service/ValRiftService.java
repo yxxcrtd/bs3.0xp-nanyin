@@ -10,29 +10,25 @@
  
 package com.joyintech.tams.invest.batch.valrift.service;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Map.Entry;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.calculation.util.ArithmeticUtil;
-import com.joyintech.tams.common.base.dao.PtlSecPierceValutionMapper;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.PtlSecPierceValutionMapper;
+import com.joyintech.tams.common.base.dao.RskPreOccupyInfoMapper;
+import com.joyintech.tams.common.base.entity.RskPreOccupyInfo;
 import com.joyintech.tams.invest.batch.valrift.dao.ValRiftMapper;
 import com.joyintech.tams.invest.batch.valrift.dto.PtlSecPierceValutionDto;
 import com.joyintech.tams.invest.batch.valrift.dto.PtlSecValutionDto;
 import com.joyintech.tams.invest.batch.valrift.dto.SubPtlNode;
 import com.joyintech.tams.invest.batch.valrift.dto.ValtblAssetSubDto;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 /**
@@ -51,6 +47,9 @@ public class ValRiftService {
     
     @Autowired
     private PtlSecPierceValutionMapper ptlSecPierceValutionMapper;
+
+    @Autowired
+    private RskPreOccupyInfoMapper rskPreOccupyInfoMapper;
     
     /**
      * 穿透处理
@@ -112,6 +111,9 @@ public class ValRiftService {
                     result.add(ptlSecPierceValutionDto);
                 }
             }
+            //上农商个性化_对redis预占进行释放  add by zhangpei 20210120 start
+            freedAmPreRskOccupy(ptlValList,currentDate);
+            //上农商个性化_对redis预占进行释放  add by zhangpei 20210120 end
             //计算穿透后指标---modify by 裴家俊 2019/04/03---start--------
             List<PtlSecPierceValutionDto> resultRep = calValIndex(result);
             //删除当日跑批数据
@@ -119,6 +121,28 @@ public class ValRiftService {
             //入库
             writeValRift(resultRep);
             //计算穿透后指标---modify by 裴家俊 2019/04/03---end--------
+        }
+    }
+
+    /**
+     * 释放自主管理预占数据
+     */
+    private void freedAmPreRskOccupy(List<PtlSecValutionDto> ptlValList,Date currentDate){
+        Map<String,Object> paramMap = new HashMap<String,Object>();
+        for (PtlSecValutionDto ptlVal : ptlValList) {
+            String portfolioId = StringUtil.isNotEmpty(ptlVal.getFinprodMarketId()) ? ptlVal.getFinprodMarketId()
+                    : ptlVal.getPortfolioId();
+            paramMap.put("cdate", DateUtil.format(currentDate));
+            paramMap.put("portfolioId", portfolioId);
+            List<String> uuidList=valRiftMapper.selectFreedAmPreRskOccupy(paramMap);
+            if(!StringUtil.isEmptyList(uuidList)){
+                for(String uuid:uuidList){
+                    RskPreOccupyInfo info=new RskPreOccupyInfo();
+                    info.setUuid(uuid);
+                    info.setOccupyDate(currentDate);
+                    rskPreOccupyInfoMapper.updateByPrimaryKeySelective(info);
+                }
+            }
         }
     }
     
@@ -253,7 +277,6 @@ public class ValRiftService {
     /**
      * 处理穿透底层资产---add by 裴家俊---2019/04/03-----
      * <功能详细描述>
-     * @param leafAssetPlan
      * @param portfolioId
      * @param vdate
      * @param shareAmt 理财产品数量

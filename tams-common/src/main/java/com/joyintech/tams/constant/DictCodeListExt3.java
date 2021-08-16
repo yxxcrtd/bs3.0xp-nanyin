@@ -19,6 +19,11 @@ import com.joyintech.framework.util.StringUtil;
  * @since 1.0
  */
 public enum DictCodeListExt3 implements BaseDictCodeList {
+    // add by shulifu 20210811
+    是否可提前支取_不可提前支取(DictCode.是否可提前支取,"01","不可提前支取"),
+    是否可提前支取_有条件可提前支取(DictCode.是否可提前支取,"02","有条件可提前支取"),
+    是否可提前支取_无条件可提前支取(DictCode.是否可提前支取,"03","无条件可提前支取"),
+
     // add by wanshiwei 20200731
     共通业务类型_场内交易下单(DictCode.共通业务类型,"EXC01","场内交易下单"),
     共通业务类型_场内交易撤销(DictCode.共通业务类型,"EXC02","场内交易撤销"),

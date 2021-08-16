@@ -309,13 +309,13 @@ var revokeEtr = function(){
 }
 
 function hideLeftTopPanel(){
-    $("div.left_top_panel").each(function(i,v){
+    $("div.left_bottom_panel").each(function(i,v){
         $(v).css("display","none");
     });
 }
 
 function showLeftTopPanel(){
-    $("div.left_top_panel").each(function(i,v){
+    $("div.left_bottom_panel").each(function(i,v){
         $(v).css("display","inline");
     });
 }
@@ -323,7 +323,7 @@ function showLeftTopPanel(){
 
 // 指令导入
 var importEtr = function() {
-    var currentTab=$('div.left_top_panel').find('iframe:eq(0)').contents().find("ul#tradePlatform_ul_tab li[class='layui-this']").attr('lay-id');
+    var currentTab=$('div.left_bottom_panel').find('iframe:eq(0)').contents().find("ul#tradePlatform_ul_tab li[class='layui-this']").attr('lay-id');
 	Joyin.uploadFile({pageId :SHARES_TRADE_PLATFORM_04==currentTab?'EtrExchangeDzImport':SHARES_TRADE_PLATFORM_03==currentTab?'EtrExchangeGsImport':'EtrExchangeImport'}, function(fileName) {
         Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/checkImportData', {fileName: fileName,currentTab:currentTab}, function(checkResult) {
             setTimeout( function () {

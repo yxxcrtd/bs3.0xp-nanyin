@@ -11,6 +11,10 @@
     //默认新增指令 指令操作类型  NEW 是新增指令  EDIT 修改指令
     var operType = ENTRUST_RECORD_NEW;
 
+    function query(ele){
+        return $("#EtrIbRepoinfo002_bodydiv " + ele);
+    }
+
     var getriskdata = function () {
     	if($('#ps').val() == ps_03){
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype_zhg,isEnabled:'01'}
@@ -583,6 +587,22 @@
                 $('#repoTerm').val(day);
             }
             
+        });
+
+
+
+        /**
+         * 查看组合详情事件
+         */
+        $('#EtrIbRepoinfo002_portfolioId_btn_search').click(function() {
+            if(query("#portfolioId").val()){
+                // 在父页面全屏展示
+                parent.EtrIbRepoMain.dialogSelf.dialog(JoyinUtil.getLabel("SysCommon.refrence"),basePath
+                    + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+                    {pageModel:PAGE_MODEL_REFERENCE, portfolioId:query("#portfolioId").val()});
+            }else {
+                Joyin.error("组合名称不能为空")
+            }
         });
         
 /*        $('#mdate').change(function(){
