@@ -39,9 +39,11 @@ import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsUtil;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dao.PbcPrdBaseinfoSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dao.PbcPrdBaseinfoSubNewMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dao.PbcPrdBaseinfoEndSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dao.PbcPrdBaseinfoEndSubNewMapper;
 import com.joyintech.tams.svreport.pbc.common.dto.DatDownloadDto;
 import com.joyintech.tams.svreport.pbc.common.util.SftpUtil;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
@@ -104,10 +106,10 @@ public class PbcZipDataFileService {
 	private PbcProdAssetpoolCodeMapper pbcProdAssetpoolCodeMapper;
 
 	@Autowired
-	private PbcPrdBaseinfoSubMapper pbcPrdBaseinfoSubMapper;
+	private PbcPrdBaseinfoSubNewMapper pbcPrdBaseinfoSubNewMapper;
 
 	@Autowired
-	private PbcPrdBaseinfoEndSubMapper pbcPrdBaseinfoEndSubMapper;
+	private PbcPrdBaseinfoEndSubNewMapper pbcPrdBaseinfoEndSubNewMapper;
 
 	public final static String PBC_PROD_BASEINFO_SEQCODE = "PBCPRDBASEINFO";
 
@@ -900,8 +902,8 @@ public class PbcZipDataFileService {
 				}
 				//更新产品基本信息表 PBC_PRD_BASEINFO_SUB  终止信息表PBC_PRD_BASEINFO_END_SUB
 				if(CollectionUtils.isNotEmpty(prodIds)) {
-					pbcPrdBaseinfoSubMapper.updateByProdIds(prodIds);
-					pbcPrdBaseinfoEndSubMapper.updateByProdIds(prodIds);
+					pbcPrdBaseinfoSubNewMapper.updateByProdIds(prodIds);
+					pbcPrdBaseinfoEndSubNewMapper.updateByProdIds(prodIds);
 				}
 				//更新人行产品资产池代码管理表（PBC_PROD_ASSETPOOL_CODE）
 				if(newPbcId != null && newPbcId.size() > 0) {
