@@ -11,7 +11,6 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.math.MathUtil;
 import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -36,11 +35,9 @@ import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.*;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.*;
 import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsUtil;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dao.PbcPrdBaseinfoSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dao.PbcPrdBaseinfoSubNewMapper;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dao.PbcPrdBaseinfoEndSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dao.PbcPrdBaseinfoEndSubNewMapper;
@@ -48,6 +45,8 @@ import com.joyintech.tams.svreport.pbc.common.dto.DatDownloadDto;
 import com.joyintech.tams.svreport.pbc.common.util.SftpUtil;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +70,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class PbcZipDataFileService {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private  ChbTypeMappingExMapper chbTypeMappingExMapper;
@@ -409,6 +410,7 @@ public class PbcZipDataFileService {
 		List<PbcPrdBaseinfoSubDat> pbcPrdBaseinfoSubDatsNew = new ArrayList<>();
 		List<String> innerProdIdsNew = new ArrayList<>();
 		String model = CacheUtil.getSysParam("PBC_REPORT_MODEL");
+		logger.info("获取新人行报送模式配置参数:{}",model);
 		String pbcReportModel =  StrUtil.isEmpty(model) ? "01" : model;
 		List<String> noPbcIdsList = new ArrayList<>();
 		Map<String,String> innerProdIdMapping = new HashMap<>();
@@ -931,6 +933,11 @@ public class PbcZipDataFileService {
 							prodAssetpoolCode.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
 							prodAssetpoolCode.setUpdateTime(new Date());
 							pbcProdAssetpoolCodeMapper.insert(prodAssetpoolCode);
+						}else{
+							pbcProdAssetpoolCode.setPbcCode(pbcProdId);
+							pbcProdAssetpoolCode.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+							pbcProdAssetpoolCode.setUpdateTime(new Date());
+							pbcProdAssetpoolCodeMapper.updateByPrimaryKey(pbcProdAssetpoolCode);
 						}
 					}
 
