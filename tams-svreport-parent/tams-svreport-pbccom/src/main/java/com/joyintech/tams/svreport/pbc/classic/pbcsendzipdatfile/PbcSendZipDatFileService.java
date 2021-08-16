@@ -336,14 +336,13 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 			zipInfoMap.put(datZipCode,datFile);
 		});
 		AjaxResult ajaxResult = pbcZipDataFileService.genDataFile(map, zipInfoMap);
+		String url = ajaxResult.getData() == null ? "" : ajaxResult.getData().toString();
+		Map<String,String> rst = new HashMap<>();
+		rst.put("result",url);
 		if(CollectionUtils.isNotEmpty(ajaxResult.getErrorList())){
-			List<ValidMessage> errorList = ajaxResult.getErrorList();
-			StringBuilder builder = new StringBuilder();
-			for (ValidMessage message : errorList) {
-				builder.append(message.getMessage() + "<br>");
-			}
-			ajaxResult.setMessage(builder.toString());
+			rst.put("flag","NO_PBC_CODE");
 		}
+		ajaxResult.setData(rst);
 		return ajaxResult;
 	}
 
