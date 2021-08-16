@@ -293,10 +293,10 @@ width: 90px !important;
 						<label class="layui-form-label form-label-wrap"
 							data-th-text="#{FinProductOpenRule.purSpeed}">申赎确认天数</label>
 						<div class="layui-input-inline input-inline text-number">
-							<span class="input-left-show">T+</span> <input type="number"
+							<span class="input-left-show">T+</span> <input type="text"
 								th:id="|${bussFinProductOpenPlanDto}_purSpeed|" th:name="|purSpeed|" min="0"
 								class="layui-input form-input form-input-left text-number"
-								data-textrange="0" placeholder="请输入内容" maxlength=5
+								data-textrange="0" placeholder="请输入内容" maxlength="2"
 								data-th-placeholder="#{SysCommon.placeholder}" required
 								data-th-value='${purSpeed?:1}'>
 						</div>
@@ -602,10 +602,10 @@ width: 90px !important;
 					  <label class="layui-form-label form-label-wrap"
 							data-th-text="#{FinProductOpenRule.purSpeed}">确认天数</label>
 						<div class="layui-input-inline input-inline text-number">
-							<span class="input-left-show">T+</span> <input type="number"
+							<span class="input-left-show">T+</span> <input type="text"
 								th:id="|${bussFinProductOpenPlanRedDto}_redSpeed|" th:name="|redSpeed|" min="0"
 								class="layui-input form-input form-input-left text-number"
-								data-textrange="0" placeholder="请输入内容" maxlength=5
+								data-textrange="0" placeholder="请输入内容" maxlength="2"
 								data-th-placeholder="#{SysCommon.placeholder}" required
 								data-th-value='${redSpeed}?:1'>
 						</div>
