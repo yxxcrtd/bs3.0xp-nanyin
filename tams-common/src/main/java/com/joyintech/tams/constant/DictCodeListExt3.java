@@ -1349,7 +1349,13 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_回购类资产(DictCode.共通业务类型,"V34","回购类资产"),
     共通业务类型_债券借贷标的信息(DictCode.共通业务类型,"V35","债券借贷标的信息"),
     /** add by tanxuan on 20210315 多级法人权限控制改造 end**/
-	
+	/** add by fanyunhan on 20210811 风险五级分类 start**/
+    风险五级分类_关注(DictCode.风险五级分类,"01","关注"),
+    风险五级分类_次级(DictCode.风险五级分类,"02","次级"),
+    风险五级分类_可疑(DictCode.风险五级分类,"03","可疑"),
+    风险五级分类_损失(DictCode.风险五级分类,"04","损失"),
+    风险五级分类_正常(DictCode.风险五级分类,"05","正常"),
+	/** add by fanyunhan on 20210811 风险五级分类 end**/
      /** add by tanxuan on 20210318 新增功能费用预提配置 start**/
     共通业务类型_预提费用配置(DictCode.共通业务类型,"V36","预提费用配置"),
     /** add by tanxuan on 20210318 新增功能费用预提配置 end**/

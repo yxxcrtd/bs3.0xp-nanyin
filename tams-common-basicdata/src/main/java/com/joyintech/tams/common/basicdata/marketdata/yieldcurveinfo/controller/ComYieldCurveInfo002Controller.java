@@ -66,6 +66,7 @@ public class ComYieldCurveInfo002Controller extends BaseController{
         String curveCode = getParam("curveCode");
         String curveDate = getParam("curveDate");
         String curveType = getParam("curveType");
+        String curveName = getParam("remark");
         String workflowId = getParam("workflowId");
         //修改时
         if (StringUtil.isNotEmpty(curveCode)) {
@@ -74,6 +75,7 @@ public class ComYieldCurveInfo002Controller extends BaseController{
             pageParam.put("curveCode", curveCode);
             pageParam.put("curveDate", curveDate);
             pageParam.put("curveType", curveType);
+            pageParam.put("remark", curveType);
             List<ComYieldCurveInfoDto> selectAllList = comYieldCurveInfoService.selectAllList(pageParam);
             if(selectAllList!=null && selectAllList.size()>0){
                 comYieldCurveInfoDto = selectAllList.get(0);

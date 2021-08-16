@@ -137,6 +137,18 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      */
     private String assetType;
 
+    public String getRisktype() {
+        return risktype;
+    }
+
+    public void setRisktype(String risktype) {
+        this.risktype = risktype;
+    }
+
+    /**
+     * 风险类型
+     */
+    private String risktype;
     /**
      * 核算分类
      */
