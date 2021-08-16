@@ -142,11 +142,11 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 		String message="";
 		if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue())){
 			// 设置table预览大小
-			selectParam.put("tableWidth", 600);
+			selectParam.put("tableWidth", 120);
 			message=pbcPrdBaseInfoSubDatService.priview(selectParam);
 		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue())){
 			// 设置table预览大小
-			selectParam.put("tableWidth", 200);
+			selectParam.put("tableWidth", 60);
 			message=pbcPrdBaseInfoEndSubDatService.priview(selectParam);
 		}else if(reporttype.equals(DictCodeListExt2.人行报送明细类型_募集余额报表.getValue())){
 			// 设置table预览大小

@@ -26,6 +26,10 @@ public class PbcPrdBaseinfoSubDatDiffDto {
      * 主键uuid
      */
     private String registSeqno;
+    /**
+     * 人行代码（外部）
+     */
+    private String pbcProdIdExternal;
 
     /**
      * 人行产品代码
@@ -2174,5 +2178,13 @@ public class PbcPrdBaseinfoSubDatDiffDto {
 
     public void setIsMarketFundPrd(String isMarketFundPrd) {
         this.isMarketFundPrd = isMarketFundPrd;
+    }
+
+    public String getPbcProdIdExternal() {
+        return pbcProdIdExternal;
+    }
+
+    public void setPbcProdIdExternal(String pbcProdIdExternal) {
+        this.pbcProdIdExternal = pbcProdIdExternal;
     }
 }
