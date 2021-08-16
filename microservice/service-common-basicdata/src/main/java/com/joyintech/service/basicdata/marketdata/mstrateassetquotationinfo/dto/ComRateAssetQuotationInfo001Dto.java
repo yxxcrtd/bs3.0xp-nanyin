@@ -249,6 +249,13 @@ public class ComRateAssetQuotationInfo001Dto extends FinProductValuation{
         this.fundManager = fundManager;
     }
 
+    /**
+     * 获取 估值来源
+     * @return
+     */
+    public String getValueSource() {
+        return super.getValueSource();
+    }
     public String getProfitType() {
         return profitType;
     }

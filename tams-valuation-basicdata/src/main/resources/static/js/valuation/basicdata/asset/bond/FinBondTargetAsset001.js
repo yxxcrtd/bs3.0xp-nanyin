@@ -50,6 +50,7 @@
             ,{field:'accountintTypeFmt',title:'FinBondTargetAsset002.accountintType',sortField:'accountintType',width:150}//核算分类
             ,{field:'rate',title:'FinBondTargetAsset002.rate',type:'number',width:130}//当前利率(%)
             ,{field:'assetTypeFmt',title:'FinBondTargetAsset002.assetType',sortField:'ASSET_TYPE',width:150,visible:false}//资产分类
+            ,{field:'riskTypeFmt',title:'FinBondTargetAsset002.riskType',sortField:'BOND_RISK_TYPE',width:150}//风险五级分类
             ,{field:'basisName',title:'FinBondTargetAsset002.basis',sortField:'basis',width:130}//计息基础
             ,{field:'issuePrice',title:'FinBondTargetAsset002.issuePrice',width:150,type:'money'}//发行价格
             ,{field:'finprodName',  title: 'FinBondTargetAsset002.finprodName',width:200}//资产名称

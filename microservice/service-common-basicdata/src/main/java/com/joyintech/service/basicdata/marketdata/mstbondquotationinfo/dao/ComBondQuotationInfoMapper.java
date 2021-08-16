@@ -18,6 +18,14 @@ import com.joyintech.service.basicdata.marketdata.mstbondquotationinfo.dto.ComBo
  */
 @Repository
 public interface ComBondQuotationInfoMapper {
+	/**
+	 * 根据条件查找数据
+	 *
+	 * @param pageParam
+	 *            查询条件
+	 * @return 返回数据库里符合条件的数据
+	 */
+	List<ComBondQuotationInfoDto> selectForMod(Map<String, Object> pageParam);
 
 	/**
 	 * 根据条件查找数据

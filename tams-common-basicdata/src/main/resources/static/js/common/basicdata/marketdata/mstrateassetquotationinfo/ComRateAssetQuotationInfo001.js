@@ -39,6 +39,7 @@ $(function () {
             {field: 'finprodId', visible: false}
             , {field: 'finProdMarketId', width: 200, title: '资产代码'}
             , {field: 'finProdName', title: '资产简称'}
+            , {field: 'valueSource', title: '估值来源',sortField:'valueSource'}
             , {field: 'valDate', width: 200, title: '估值日期', type: 'date'}
             , {field: 'valuation', title: '估值',type:'number',digit:4}
             , {field: 'importDate', width: 200, title: '导入日'}

@@ -19,6 +19,9 @@ import com.joyintech.framework.util.StringUtil;
  * @since 1.0
  */
 public enum DictCodeListExt3 implements BaseDictCodeList {
+    //add by fanyunhan 20210816
+    项目类计划类估值来源_手工(DictCode.项目类计划类估值来源,"01","手工"),
+    项目类计划类估值来源_模型(DictCode.项目类计划类估值来源,"02","模型"),
     // add by shulifu 20210811
     是否可提前支取_不可提前支取(DictCode.是否可提前支取,"01","不可提前支取"),
     是否可提前支取_有条件可提前支取(DictCode.是否可提前支取,"02","有条件可提前支取"),
