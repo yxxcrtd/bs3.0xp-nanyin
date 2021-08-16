@@ -68,6 +68,8 @@ public class ComYieldCurveInfo001Controller extends BaseController{
     @Override
     public String init(Model model) {
         //添加曲线利率类型数据字典 add by lishuping 20191008 start
+        this.setSelectOptionToModel(model, DictCode.曲线代码);
+
         this.setSelectOptionToModel(model, DictCode.收益率曲线类型,DictCode.收益率曲线,DictCode.曲线利率类型);
         //添加曲线利率类型数据字典 add by lishuping 20191008 end
         return super.init(model);

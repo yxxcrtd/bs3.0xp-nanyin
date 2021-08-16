@@ -69,8 +69,10 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         oneStepInfo = null;
         creditLinesOrg = null;
         creditLinesOrgItem = null;
-        compareAmt = null;
-        releaseAmt = null;
+        compareAmtAst = null;
+        compareAmtOrg = null;
+        releaseAmtAst = null;
+        releaseAmtOrg = null;
     }
 
     /**
@@ -151,11 +153,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             // STEP 3 查询机构授信
             getOrgCreditLines(inputDto,oneStepInfo);
         }
-
-        // TODO 构设置了授信（金额），资产设置了授信（份额），仅校验机构的授信额度(将资产授信置空)
-        if (creditLinesOrgItem != null && creditLinesAst != null && StringUtil.equals(creditLinesAst.getCreditObj(),BussinessDictCodeList.授信对象_份额.getValue())){
-            this.creditLinesAst = null;
-        }
     }
 
     /**
@@ -165,7 +162,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
      * @param 剩余占用额度
      * @param outputDto
      */
-    private void creditLinesOccupy(CreditLinesInputDto inputDto, String occupyType,BigDecimal 占用额度, CreditLinesOutputDto outputDto){
+    private void creditLinesOccupy(CreditLinesInputDto inputDto, String occupyType, CreditLinesOutputDto outputDto){
         // 机构禁投校验
         if (checkOrgCreditForbidden(inputDto,creditLinesOrg,outputDto)){
             return;
@@ -179,7 +176,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         // 债券一级投标的汇总确认和中标结果维护需要更新指令的预占额度
         if (StringUtil.equals(DictCodeListRsk.授信占用类别_实占.getValue(),inputDto.getCreditCallType())
                 && StringUtil.equals(inputDto.getFinprodType2(),DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue())){
-            updateCreditOccupy(inputDto,占用额度);
+            updateCreditOccupy(inputDto,compareAmtOrg);
             return;
         }
         // 针对一级指令编辑特殊处理
@@ -188,7 +185,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                 && StringUtil.equals(inputDto.getFinprodType2(),DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue())){
             revokeCreditOccupyF32(inputDto);
         }
-        BigDecimal 剩余占用额度=占用额度;
         // 资产授信禁投校验
         if (creditLinesAst != null){
             // 释放前置交易额度-资产授信
@@ -196,16 +192,16 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                 CreditLinesInputDto creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
-                releaseCreditLinesPre(creditLinesInputDto,占用额度,DictCodeListRsk.授信占用方式_资产授信.getValue());
+                releaseCreditLinesPre(creditLinesInputDto,compareAmtAst,DictCodeListRsk.授信占用方式_资产授信.getValue());
             }
-            剩余占用额度 = dealCreditOccupy(inputDto,creditLinesAst,occupyType,占用额度);
-        }
-        // 资产授信额度不够时，根据是否软控提示信息
-        if (剩余占用额度.compareTo(BigDecimal.ZERO) > 0){
-            if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_否.getValue())){
-                outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_12"));
-            }else if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_是.getValue())){
-                outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_14"));
+            BigDecimal 剩余占用额度 = dealCreditOccupy(inputDto,creditLinesAst,occupyType,compareAmtAst);
+            // 资产授信额度不够时，根据是否软控提示信息
+            if (剩余占用额度.compareTo(BigDecimal.ZERO) > 0){
+                if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_否.getValue())){
+                    outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_12"));
+                }else if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_是.getValue())){
+                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_14"));
+                }
             }
         }
         //如果存在资产授信，并且资产授信配置是否占用主题授信为否，返回不继续占用机构授信
@@ -234,9 +230,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                 CreditLinesInputDto creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
-                releaseCreditLinesPre(creditLinesInputDto,占用额度,DictCodeListRsk.授信占用方式_机构授信.getValue());
+                releaseCreditLinesPre(creditLinesInputDto,compareAmtOrg,DictCodeListRsk.授信占用方式_机构授信.getValue());
             }
-            剩余占用额度 = dealCreditOccupy(inputDto,creditLinesOrgItem,occupyType,占用额度);
+            BigDecimal 剩余占用额度 = dealCreditOccupy(inputDto,creditLinesOrgItem,occupyType,compareAmtOrg);
             // 非法人主体授信额度扣减之后剩余待扣减或释放额度
             if (剩余占用额度.compareTo(BigDecimal.ZERO) > 0){
                 outputDto.setTradeId(inputDto.getFinprodId());
@@ -259,18 +255,18 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             }
             // 记录机构授信占用额度
             outputDto.setCustomerId(creditLinesOrg.getCustomerId());
-            outputDto.setOccupyAmtOrg(占用额度);
+            outputDto.setOccupyAmtOrg(compareAmtOrg);
             // 释放前置交易额度-机构授信
             if (StringUtil.isNotEmpty(inputDto.getEntrustId()) && !StringUtil.equals(inputDto.getFinprodType2(),DictCodeListExt2.共通业务类型_可转债申购交易.getValue())){
                 CreditLinesInputDto creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
-                releaseCreditLinesPre(creditLinesInputDto,占用额度,DictCodeListRsk.授信占用方式_机构授信.getValue());
+                releaseCreditLinesPre(creditLinesInputDto,compareAmtOrg,DictCodeListRsk.授信占用方式_机构授信.getValue());
             }
             // 主体授信
-            BigDecimal 剩余占用额度1 = dealCreditOccupy(inputDto,creditLinesOrg,occupyType,占用额度);
+            BigDecimal 剩余占用额度1 = dealCreditOccupy(inputDto,creditLinesOrg,occupyType,compareAmtOrg);
             // 主体分项授信
-            BigDecimal 剩余占用额度2 = dealCreditOccupy(inputDto,creditLinesOrgItem,occupyType,占用额度);
+            BigDecimal 剩余占用额度2 = dealCreditOccupy(inputDto,creditLinesOrgItem,occupyType,compareAmtOrg);
 
             if (剩余占用额度1.compareTo(BigDecimal.ZERO) > 0 || 剩余占用额度2.compareTo(BigDecimal.ZERO) > 0){
                 outputDto.setTradeId(inputDto.getFinprodId());
@@ -316,9 +312,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
      * @param occupyType
      * @param outputDto
      */
-    private void creditLinesRelease(CreditLinesInputDto inputDto, String occupyType, BigDecimal 待释放额度, CreditLinesOutputDto outputDto){
+    private void creditLinesRelease(CreditLinesInputDto inputDto, String occupyType, CreditLinesOutputDto outputDto){
         //
-        releaseAstFirst(inputDto,occupyType,待释放额度,outputDto);
+        releaseAstFirst(inputDto,occupyType,outputDto);
 //        releaseOrgFirst(inputDto,occupyType,待释放额度);
 
     }
@@ -466,18 +462,18 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         }
     }
 
-    private void releaseAstFirst(CreditLinesInputDto inputDto, String occupyType, BigDecimal 待释放额度, CreditLinesOutputDto outputDto) {
+    private void releaseAstFirst(CreditLinesInputDto inputDto, String occupyType, CreditLinesOutputDto outputDto) {
 
         if (creditLinesAst != null && StringUtil.equals(creditLinesAst.getIsLoopAmt(),DictCodeList.是否_是.getValue())){
             if (StringUtil.equals(creditLinesAst.getCreditObj(),BussinessDictCodeList.授信对象_份额.getValue())){
                 // 释放 占用额度
                 BigDecimal 已占用额度 = creditLinesAst.getHapCreditAmt();
                 // 已占用额度（可释放）小于 待释放额度 ，只能释放已占用额度（可释放）
-                if (已占用额度.compareTo(待释放额度) < 0){
+                if (已占用额度.compareTo(compareAmtAst) < 0){
                     generateDealResult(inputDto,creditLinesAst,已占用额度,已占用额度,occupy,occupyType);
                 }else {
                     // 释放 占用额度
-                    generateDealResult(inputDto,creditLinesAst,待释放额度,待释放额度,occupy,occupyType);
+                    generateDealResult(inputDto,creditLinesAst,compareAmtAst,compareAmtAst,occupy,occupyType);
                 }
             }else {
                 // 查询资产类型
@@ -583,20 +579,20 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     // 释放 占用额度
                     BigDecimal 已占用额度 = creditLinesAst.getHapCreditAmt();
                     // 已占用额度（可释放）小于 待释放额度 ，只能释放已占用额度（可释放）
-                    if (已占用额度.compareTo(待释放额度) < 0){
+                    if (已占用额度.compareTo(compareAmtAst) < 0){
                         generateDealResult(inputDto,creditLinesAst,已占用额度,已占用额度,occupy,occupyType);
                     }else {
                         // 释放 占用额度
-                        generateDealResult(inputDto,creditLinesAst,待释放额度,待释放额度,occupy,occupyType);
+                        generateDealResult(inputDto,creditLinesAst,compareAmtAst,compareAmtAst,occupy,occupyType);
                     }
                 }
             }
         }else if (creditLinesAst != null){
             BigDecimal 已使用额度 = creditLinesAst.getCreditAmtAdd();
-            if (已使用额度.compareTo(BigDecimal.ZERO) > 0 && 已使用额度.compareTo(待释放额度) < 0){
+            if (已使用额度.compareTo(BigDecimal.ZERO) > 0 && 已使用额度.compareTo(compareAmtAst) < 0){
                 generateDealResult(inputDto,creditLinesAst,BigDecimal.ZERO,已使用额度,occupy,occupyType);
-            }else if (已使用额度.compareTo(待释放额度) >= 0){
-                generateDealResult(inputDto,creditLinesAst,BigDecimal.ZERO,待释放额度,occupy,occupyType);
+            }else if (已使用额度.compareTo(compareAmtAst) >= 0){
+                generateDealResult(inputDto,creditLinesAst,BigDecimal.ZERO,compareAmtAst,occupy,occupyType);
             }
         }
         //当存在资产授信，并且资产授信配置是否占用主题授信字段为否时，返回，不释放机构授信额度
@@ -608,29 +604,29 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             CreditLinesInputDto creditLinesInputDto = new CreditLinesInputDto();
             BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
             creditLinesInputDto.setTradeId(inputDto.getEntrustId());
-            releaseCreditLinesPre(creditLinesInputDto,待释放额度,DictCodeListRsk.授信占用方式_机构授信.getValue());
+            releaseCreditLinesPre(creditLinesInputDto,compareAmtOrg,DictCodeListRsk.授信占用方式_机构授信.getValue());
         }
         if (creditLinesOrg != null && StringUtil.equals(creditLinesOrg.getIsLoopAmt(),DictCodeList.是否_是.getValue())){
-            generateDealResult(inputDto,creditLinesOrg,待释放额度,待释放额度,occupy,occupyType);
+            generateDealResult(inputDto,creditLinesOrg,compareAmtOrg,compareAmtOrg,occupy,occupyType);
             // 记录机构授信占用额度
             outputDto.setCustomerId(creditLinesOrg.getCustomerId());
-            outputDto.setOccupyAmtOrg(待释放额度.negate());
+            outputDto.setOccupyAmtOrg(compareAmtOrg.negate());
         }else if (creditLinesOrg != null){
             BigDecimal 已使用额度 = creditLinesOrg.getCreditAmtAdd();
-            if (已使用额度.compareTo(BigDecimal.ZERO) > 0 && 已使用额度.compareTo(待释放额度) < 0){
+            if (已使用额度.compareTo(BigDecimal.ZERO) > 0 && 已使用额度.compareTo(compareAmtOrg) < 0){
                 generateDealResult(inputDto,creditLinesOrg,BigDecimal.ZERO,已使用额度,occupy,occupyType);
-            }else if (已使用额度.compareTo(待释放额度) >= 0){
-                generateDealResult(inputDto,creditLinesOrg,BigDecimal.ZERO,待释放额度,occupy,occupyType);
+            }else if (已使用额度.compareTo(compareAmtOrg) >= 0){
+                generateDealResult(inputDto,creditLinesOrg,BigDecimal.ZERO,compareAmtOrg,occupy,occupyType);
             }
         }
         if (creditLinesOrgItem != null && StringUtil.equals(creditLinesOrgItem.getIsLoopAmt(),DictCodeList.是否_是.getValue())){
-            generateDealResult(inputDto,creditLinesOrgItem,待释放额度,待释放额度,occupy,occupyType);
+            generateDealResult(inputDto,creditLinesOrgItem,compareAmtOrg,compareAmtOrg,occupy,occupyType);
         }else if (creditLinesOrgItem != null){
             BigDecimal 已使用额度 = creditLinesOrgItem.getCreditAmtAdd();
-            if (已使用额度.compareTo(BigDecimal.ZERO) > 0 && 已使用额度.compareTo(待释放额度) < 0){
+            if (已使用额度.compareTo(BigDecimal.ZERO) > 0 && 已使用额度.compareTo(compareAmtOrg) < 0){
                 generateDealResult(inputDto,creditLinesOrgItem,BigDecimal.ZERO,已使用额度,occupy,occupyType);
-            }else if (已使用额度.compareTo(待释放额度) >= 0){
-                generateDealResult(inputDto,creditLinesOrgItem,BigDecimal.ZERO,待释放额度,occupy,occupyType);
+            }else if (已使用额度.compareTo(compareAmtOrg) >= 0){
+                generateDealResult(inputDto,creditLinesOrgItem,BigDecimal.ZERO,compareAmtOrg,occupy,occupyType);
             }
         }
     }
@@ -901,8 +897,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         }
     }
 
-    private BigDecimal cal占用额度(CreditLinesInputDto inputDto, CreditLines creditLinesAst) {
-        BigDecimal 占用额度;
+    private void cal占用额度(CreditLinesInputDto inputDto) {
         // 债券根据最新面值计算
         if ((DictCodeList.交易方向_买入.getValue().equals(inputDto.getPs()) || DictCodeList.交易方向_卖出.getValue().equals(inputDto.getPs()))
                 && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(inputDto.getFinprodType2())){
@@ -917,17 +912,17 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         }
         // 先根据资产授信规则初步判断 授信对象是 金额 还是 份额
         if (creditLinesAst != null && StringUtil.equals(creditLinesAst.getCreditObj(),BussinessDictCodeList.授信对象_份额.getValue())){
-            占用额度 = inputDto.getShareAmt();
+            compareAmtAst = inputDto.getShareAmt();
+            releaseAmtAst = inputDto.getShareAmt();
         }else {
-            占用额度 = inputDto.getTradeAmt();
+            compareAmtAst = inputDto.getTradeAmt();
+            releaseAmtAst = inputDto.getTradeAmt();
         }
         // 存在机构授信(金额)
         if (creditLinesOrgItem != null){
-            占用额度 = inputDto.getTradeAmt();
+            compareAmtOrg = inputDto.getTradeAmt();
+            releaseAmtOrg = inputDto.getTradeAmt();
         }
-        compareAmt = 占用额度;
-        releaseAmt = 占用额度;
-        return 占用额度;
     }
 
     private List<CreditComInfoOneStepDto> getCreditInfoOneStep(CreditLinesInputDto creditLinesInputDto) {
@@ -1190,7 +1185,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setCustomerId(creditLines.getCustomerId());
             item.setCdate(creditLinesInputDto.getTradeDate());
             // 记录交易实际值，用于报表统计
-            item.setLastAmount(occupy ? compareAmt : compareAmt.negate());
+            item.setLastAmount(occupy ? compareAmtOrg : compareAmtOrg.negate());
             item.setAmount(扣减额度);
             // 用于交易撤销，恢复前置交易占用时，判断最多可恢复到的占用额度
             item.setAmountAdd(扣减额度);
@@ -1210,7 +1205,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setFinprodId(creditLinesInputDto.getFinprodId());
             item.setBranch(0L);
             item.setCdate(creditLinesInputDto.getTradeDate());
-            item.setLastAmount(occupy ? compareAmt : compareAmt.negate());
+            item.setLastAmount(occupy ? compareAmtAst : compareAmtAst.negate());
             item.setAmount(扣减额度);
             // 用于交易撤销，恢复前置交易占用时，判断最多可恢复到的占用额度
             item.setAmountAdd(扣减额度);
@@ -1230,7 +1225,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setSeqno(IDGenerator.generate());
             item.setAstSeriesId(creditLines.getCustomerId());
             item.setCdate(creditLinesInputDto.getTradeDate());
-            item.setLastAmount(occupy ? compareAmt : compareAmt.negate());
+            item.setLastAmount(occupy ? compareAmtAst : compareAmtAst.negate());
             item.setAmount(扣减额度);
             // 用于交易撤销，恢复前置交易占用时，判断最多可恢复到的占用额度
             item.setAmountAdd(扣减额度);
@@ -1253,7 +1248,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setCustomerId(creditLines.getCustomerId());
             item.setCreditMstId(creditLines.getCreditMstId());
             item.setCdate(creditLinesInputDto.getTradeDate());
-            item.setLastAmount(occupy ? compareAmt : compareAmt.negate());
+            item.setLastAmount(occupy ? compareAmtOrg : compareAmtOrg.negate());
             item.setAmount(扣减额度);
             // 用于交易撤销，恢复前置交易占用时，判断最多可恢复到的占用额度
             item.setAmountAdd(扣减额度);
@@ -1327,7 +1322,8 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             return;
         }
         if (StringUtil.equals(inputDto.getCreditCheckType(),DictCodeListRsk.授信占用来源_接口.getValue())
-            && (releaseAmt == null || releaseAmt.compareTo(BigDecimal.ZERO) == 0)){
+            && (releaseAmtAst == null || releaseAmtAst.compareTo(BigDecimal.ZERO) == 0)
+            && (releaseAmtOrg == null || releaseAmtOrg.compareTo(BigDecimal.ZERO) == 0)){
             logger.info(getMessage("==========场内交易撤销，无金额数据，无法判断是否是部分撤销!"));
             return;
         }
@@ -1348,13 +1344,13 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     // 通过三合一接口调用，并且撤销金额和占用金额不相等，视为部分撤销
                     BigDecimal revokeAmt;
                     if (StringUtil.equals(inputDto.getCreditCheckType(),DictCodeListRsk.授信占用来源_接口.getValue())
-                            && compareAmt != null  && compareAmt.compareTo(item.getLastAmount().abs()) <= 0){
+                            && compareAmtOrg != null  && compareAmtOrg.compareTo(item.getLastAmount().abs()) <= 0){
                         // 部撤额度小于0 时 终止处理
-                        if (releaseAmt.compareTo(BigDecimal.ZERO) <= 0){
+                        if (releaseAmtOrg.compareTo(BigDecimal.ZERO) <= 0){
                             return;
                         }
                         // 部撤额度 >= 当前循环占用额度时，当前循环的占用记录失效，并记录撤销的机构额度
-                        if (releaseAmt.compareTo(item.getNewAmount().abs()) >= 0){
+                        if (releaseAmtOrg.compareTo(item.getNewAmount().abs()) >= 0){
                             item.setStatus(DictCodeListExt1.交易状态_撤销.getValue());
                             reCalcuUsedAmt(creditLinesOrg,inputDto,item.getAmount().negate());
                             outputDto.setOccupyAmtOrg(outputDto.getOccupyAmtOrg().add(item.getAmount().negate()));
@@ -1362,13 +1358,13 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                         }
                         // 部撤额度 < 当前循环占用额度时，当前循环的占用额度更新，并记录撤销的机构额度
                         else {
-                            item.setNewAmount(item.getNewAmount().subtract(occupy ? releaseAmt : releaseAmt.negate()));
+                            item.setNewAmount(item.getNewAmount().subtract(occupy ? releaseAmtOrg : releaseAmtOrg.negate()));
                             if (occupy || StringUtil.equals(creditLinesOrg.getIsLoopAmt(),DictCodeList.是否_是.getValue())){
                                 item.setAmount(item.getNewAmount());
-                                reCalcuUsedAmt(creditLinesOrg,inputDto,occupy ? releaseAmt.negate(): releaseAmt);
-                                outputDto.setOccupyAmtOrg(outputDto.getOccupyAmtOrg().add(occupy ? releaseAmt.negate(): releaseAmt));
+                                reCalcuUsedAmt(creditLinesOrg,inputDto,occupy ? releaseAmtOrg.negate(): releaseAmtOrg);
+                                outputDto.setOccupyAmtOrg(outputDto.getOccupyAmtOrg().add(occupy ? releaseAmtOrg.negate(): releaseAmtOrg));
                             }
-                            revokeAmt = occupy ? releaseAmt: releaseAmt.negate();
+                            revokeAmt = occupy ? releaseAmtOrg: releaseAmtOrg.negate();
                         }
                     }
                     // 全部撤销时，当前循环的占用记录失效，并记录撤销的机构额度
@@ -1422,25 +1418,25 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     // 通过三合一接口调用，并且撤销金额和占用金额不相等，视为部分撤销
                     BigDecimal revokeAmt;
                     if (StringUtil.equals(inputDto.getCreditCheckType(),DictCodeListRsk.授信占用来源_接口.getValue())
-                            && compareAmt != null  && compareAmt.compareTo(item.getLastAmount().abs()) <= 0){
+                            && compareAmtOrg != null  && compareAmtOrg.compareTo(item.getLastAmount().abs()) <= 0){
                         // 部撤额度小于0 时 终止处理
-                        if (releaseAmt.compareTo(BigDecimal.ZERO) <= 0){
+                        if (releaseAmtOrg.compareTo(BigDecimal.ZERO) <= 0){
                             return;
                         }
                         // 部撤额度 >= 当前循环占用额度时，当前循环的占用记录失效，并记录撤销的机构额度
-                        if (releaseAmt.compareTo(item.getNewAmount().abs()) >= 0){
+                        if (releaseAmtOrg.compareTo(item.getNewAmount().abs()) >= 0){
                             item.setStatus(DictCodeListExt1.交易状态_撤销.getValue());
                             reCalcuUsedAmt(creditLinesOrgItem,inputDto,item.getAmount().negate());
                             revokeAmt = item.getNewAmount();
                         }
                         // 部撤额度 < 当前循环占用额度时，当前循环的占用额度更新，并记录撤销的机构额度
                         else {
-                            item.setNewAmount(item.getNewAmount().subtract(occupy ? releaseAmt : releaseAmt.negate()));
+                            item.setNewAmount(item.getNewAmount().subtract(occupy ? releaseAmtOrg : releaseAmtOrg.negate()));
                             if (occupy || StringUtil.equals(creditLinesOrgItem.getIsLoopAmt(),DictCodeList.是否_是.getValue())){
                                 item.setAmount(item.getNewAmount());
-                                reCalcuUsedAmt(creditLinesOrgItem,inputDto,occupy ? releaseAmt.negate(): releaseAmt);
+                                reCalcuUsedAmt(creditLinesOrgItem,inputDto,occupy ? releaseAmtOrg.negate(): releaseAmtOrg);
                             }
-                            revokeAmt = occupy ? releaseAmt: releaseAmt.negate();
+                            revokeAmt = occupy ? releaseAmtOrg: releaseAmtOrg.negate();
                         }
                     }
                     // 全部撤销时，当前循环的占用记录失效，并记录撤销的机构额度
@@ -1503,9 +1499,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             });
         }
         // 待撤销的资产授信额度 = 原始撤销额度 - 机构撤销额度
-        if (StringUtil.equals(inputDto.getCreditCheckType(),DictCodeListRsk.授信占用来源_接口.getValue())){
-            releaseAmt = releaseAmt.subtract(outputDto.getOccupyAmtOrg().abs());
-        }
+//        if (StringUtil.equals(inputDto.getCreditCheckType(),DictCodeListRsk.授信占用来源_接口.getValue())){
+//            releaseAmt = releaseAmt.subtract(outputDto.getOccupyAmtOrg().abs());
+//        }
 
         if(!StringUtil.isEmptyList(系列额度占用明细)){
             系列额度占用明细.forEach(item->{
@@ -1515,14 +1511,14 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     BigDecimal shareAmt;
                     BigDecimal revokeAmt;
                     if (StringUtil.equals(inputDto.getCreditCheckType(),DictCodeListRsk.授信占用来源_接口.getValue())
-                        && compareAmt != null  && compareAmt.compareTo(item.getLastAmount().abs()) <= 0){
+                        && compareAmtAst != null  && compareAmtAst.compareTo(item.getLastAmount().abs()) <= 0){
                         // 部撤额度小于0 时 终止处理
-                        if (releaseAmt.compareTo(BigDecimal.ZERO) <= 0){
+                        if (releaseAmtAst.compareTo(BigDecimal.ZERO) <= 0){
                             return;
                         }
                         // 部撤额度 >= 当前循环占用额度时，当前循环的占用记录失效
-                        if (releaseAmt.compareTo(item.getNewAmount().abs()) >= 0){
-                            releaseAmt = releaseAmt.subtract(item.getNewAmount().abs());
+                        if (releaseAmtAst.compareTo(item.getNewAmount().abs()) >= 0){
+                            releaseAmtAst = releaseAmtAst.subtract(item.getNewAmount().abs());
                             shareAmt = item.getShareAmt();
                             item.setStatus(DictCodeListExt1.交易状态_撤销.getValue());
                             reCalcuUsedAmt(creditLinesAst,inputDto,item.getAmount().negate());
@@ -1530,14 +1526,14 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                         }
                         // 部撤额度 < 当前循环占用额度时，当前循环的占用额度更新
                         else {
-                            shareAmt = releaseAmt.divide(item.getNetPrice(),2,RoundingMode.HALF_UP);
-                            item.setNewAmount(item.getNewAmount().subtract(occupy ? releaseAmt : releaseAmt.negate()));
+                            shareAmt = releaseAmtAst.divide(item.getNetPrice(),2,RoundingMode.HALF_UP);
+                            item.setNewAmount(item.getNewAmount().subtract(occupy ? releaseAmtAst : releaseAmtAst.negate()));
                             if (occupy || StringUtil.equals(creditLinesAst.getIsLoopAmt(),DictCodeList.是否_是.getValue())){
                                 item.setAmount(item.getNewAmount());
-                                reCalcuUsedAmt(creditLinesAst,inputDto,occupy ? releaseAmt.negate(): releaseAmt);
+                                reCalcuUsedAmt(creditLinesAst,inputDto,occupy ? releaseAmtAst.negate(): releaseAmtAst);
                             }
-                            revokeAmt = occupy ? releaseAmt : releaseAmt.negate();
-                            releaseAmt = BigDecimal.ZERO;
+                            revokeAmt = occupy ? releaseAmtAst : releaseAmtAst.negate();
+                            releaseAmtAst = BigDecimal.ZERO;
                         }
                     }
                     // 全部撤销时，当前循环的占用记录失效，并记录撤销的机构额度
@@ -1592,14 +1588,14 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     BigDecimal shareAmt = BigDecimal.ZERO;
                     BigDecimal revokeAmt;
                     if (StringUtil.equals(inputDto.getCreditCheckType(),DictCodeListRsk.授信占用来源_接口.getValue())
-                            && compareAmt != null  && compareAmt.compareTo(item.getLastAmount().abs()) <= 0){
+                            && compareAmtAst != null  && compareAmtAst.compareTo(item.getLastAmount().abs()) <= 0){
                         // 部撤额度小于0 时 终止处理
-                        if (releaseAmt.compareTo(BigDecimal.ZERO) <= 0){
+                        if (releaseAmtAst.compareTo(BigDecimal.ZERO) <= 0){
                             return;
                         }
                         // 部撤额度 >= 当前循环占用额度时，当前循环的占用记录失效
-                        if (releaseAmt.compareTo(item.getNewAmount().abs()) >= 0){
-                            releaseAmt = releaseAmt.subtract(item.getNewAmount().abs());
+                        if (releaseAmtAst.compareTo(item.getNewAmount().abs()) >= 0){
+                            releaseAmtAst = releaseAmtAst.subtract(item.getNewAmount().abs());
                             shareAmt = item.getShareAmt();
                             item.setStatus(DictCodeListExt1.交易状态_撤销.getValue());
                             reCalcuUsedAmt(creditLinesAst,inputDto,item.getAmount().negate());
@@ -1607,14 +1603,14 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                         }
                         // 部撤额度 < 当前循环占用额度时，当前循环的占用额度更新
                         else {
-                            shareAmt = releaseAmt.divide(item.getNetPrice(),2,RoundingMode.HALF_UP);
-                            item.setNewAmount(item.getNewAmount().subtract(occupy ? releaseAmt : releaseAmt.negate()));
+                            shareAmt = releaseAmtAst.divide(item.getNetPrice(),2,RoundingMode.HALF_UP);
+                            item.setNewAmount(item.getNewAmount().subtract(occupy ? releaseAmtAst : releaseAmtAst.negate()));
                             if (occupy || StringUtil.equals(creditLinesAst.getIsLoopAmt(),DictCodeList.是否_是.getValue())){
                                 item.setAmount(item.getNewAmount());
-                                reCalcuUsedAmt(creditLinesAst,inputDto,occupy ? releaseAmt.negate(): releaseAmt);
+                                reCalcuUsedAmt(creditLinesAst,inputDto,occupy ? releaseAmtAst.negate(): releaseAmtAst);
                             }
-                            revokeAmt = occupy ? releaseAmt : releaseAmt.negate();
-                            releaseAmt = BigDecimal.ZERO;
+                            revokeAmt = occupy ? releaseAmtAst : releaseAmtAst.negate();
+                            releaseAmtAst = BigDecimal.ZERO;
                         }
                     }
                     // 全部撤销时，当前循环的占用记录失效，并记录撤销的机构额度
@@ -1756,7 +1752,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             }
         }
         // STEP  2 计算占用额度
-        BigDecimal 占用额度 = cal占用额度(inputDto,creditLinesAst);
+        cal占用额度(inputDto);
         // STEP  3 判断初始交易 or 撤销
         // STEP  3.1 撤销 交易撤销或者指令关闭
         if (StringUtil.equals(inputDto.getTradeStatus(), DictCodeListExt1.交易状态_撤销.getValue())){
@@ -1766,10 +1762,10 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         }else {
             // 占用
             if (occupy){
-                creditLinesOccupy(inputDto,occupyType,占用额度,outputDto);
+                creditLinesOccupy(inputDto,occupyType,outputDto);
                 // 释放
             }else {
-                creditLinesRelease(inputDto,occupyType,占用额度,outputDto);
+                creditLinesRelease(inputDto,occupyType,outputDto);
             }
         }
         return outputDto;

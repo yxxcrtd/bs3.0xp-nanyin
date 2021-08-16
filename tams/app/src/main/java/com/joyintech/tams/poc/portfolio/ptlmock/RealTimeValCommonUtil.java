@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.joyintech.tams.invest.common.constant.ValDictCodeList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +57,6 @@ import com.joyintech.tams.poc.portfolio.ptlmock.dto.mock.portfolio.MockPtlSecVal
 import com.joyintech.tams.poc.portfolio.ptlmock.dto.mock.portfolio.MockSingleAssetChanging;
 import com.joyintech.tams.poc.portfolio.ptlmock.dto.mock.trade.MockTradeInfoDto;
 import com.joyintech.tams.poc.portfolio.ptlmock.dto.mock.trade.MockTrdProductDealDto;
-import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.tools.collectors.JoyinCollectors;
 
 /**

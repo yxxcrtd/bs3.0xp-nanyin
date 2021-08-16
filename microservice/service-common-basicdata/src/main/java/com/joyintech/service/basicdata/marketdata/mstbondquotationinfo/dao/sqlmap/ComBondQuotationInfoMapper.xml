@@ -9,6 +9,44 @@
 	 */v
 	Page<MarketInformation001Dto> select(Map<String, Object> pageParam);
 	 -->
+	<select id="selectForMod" resultType="com.joyintech.service.basicdata.marketdata.mstbondquotationinfo.dto.ComBondQuotationInfoDto"
+	>
+		SELECT
+		distinct
+		BOND.SEC_ID AS secId,
+		BOND.VALUE_DATE AS valueDate,
+		FIN.FINPROD_ABBR AS finprodAbbr,
+
+		BOND.PRICE AS price,
+		BOND.NETPRICE AS netprice,
+		BOND.VALUE_SOURCE valueSource,
+		<!-- 市场收益率查询乘100 by 赵东东 2019.11.4 -->
+		/** modify by yanya on 20210329 更新日期代替创建日期作为导入日**/
+		NVL(BOND.UPDATE_TIME, BOND.CREATE_TIME) importDay
+		FROM
+		MST_BOND_VALUATION_INFO BOND
+		left join FIN_PRODUCT FIN on
+		FIN.FINPROD_MARKET_ID = BOND.SEC_ID
+		WHERE
+		<!-- modify by yanya on 20210207 产品类型接口接入时，不接入finprod_type2,此处过滤条件用估值自身类型-->
+		<!--FIN.FINPROD_TYPE2 = #{FINPROD_TYPE_F01}	-->
+		FIN.FINPROD_TYPE = #{FINPROD_TYPE_F01}
+		<if test="secId !=null and secId !=''">
+			AND BOND.SEC_ID LIKE CONCAT(CONCAT('%',#{secId}),'%')
+		</if>
+		<if test="finprodAbbr !=null and finprodAbbr !=''">
+			AND FIN.FINPROD_ABBR LIKE CONCAT(CONCAT('%',#{finprodAbbr}),'%')
+		</if>
+
+		<if test="valueDate !=null and valueDate !=''">
+			AND BOND.VALUE_DATE = to_date(#{valueDate},'yyyy-mm-dd')
+		</if>
+		<if test="valueSource != null and valueSource != ''">
+			AND BOND.VALUE_SOURCE = #{valueSource}
+		</if>
+	</select>
+
+
 	<select id="select" resultType="com.joyintech.service.basicdata.marketdata.mstbondquotationinfo.dto.ComBondQuotationInfoDto"
 	>
 		SELECT 

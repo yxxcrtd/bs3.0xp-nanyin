@@ -45,6 +45,12 @@ public class ComBondQuotationInfoService extends CommonExportService<ComBondQuot
      * @throws Exception 异常信息
      */
     public Page<ComBondQuotationInfoDto> selectForPage(Map<String, Object> pageParam) {
+        if (pageParam.get("valueSource") == "MOD") {
+            return restTemplate.postForPage(
+                    ServiceApplication.CommonBasicDataService + "/ComBondQuotationInfo/findPageformod",
+                    pageParam, ComBondQuotationInfoDto.class);
+        }
+
         return restTemplate.postForPage(
             ServiceApplication.CommonBasicDataService + "/ComBondQuotationInfo/findPage",
             pageParam, ComBondQuotationInfoDto.class);

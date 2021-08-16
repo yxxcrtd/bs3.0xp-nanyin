@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.MstYieldCurveInfo;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -285,5 +286,17 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     @NotEmpty(fieldName = "ComYieldCurveInfo001.keyPoint", groups = {ValidateGroupEdit.class})
     public BigDecimal getKeyPoint() {
         return super.getKeyPoint();
+    }
+
+    /**
+     * 获取 曲线代码转换数据字典
+     *
+     * @return 曲线代码转换数据字典
+     */
+    public String getCurveCodeFmt() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.曲线代码, getCurveCode()))?
+                SysDataUtil.getNameFromDataDict(DictCode.曲线代码, getCurveCode()):getCurveCode();
+
+//        return SysDataUtil.getNameFromDataDict(DictCode.会计场景代码, tableId);
     }
 }

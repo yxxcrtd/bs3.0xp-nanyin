@@ -258,7 +258,8 @@ public class EtrIbRepoInfo004Controller extends BaseController {
                 String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(
                     param) : IDGenerator.generate();
                 dto.setEntrustId(code);
-                dto.setZyqk(etrIbRepoInfo004Service.getZyqkId(dto.getZyqk()));
+//                dto.setZyqk(etrIbRepoInfo004Service.getZyqkId(dto.getZyqk()));
+                dto.setZyqk("999999");
             }
             dto.setWorkflowParameter("new|||1|EtrIbRepoinfo002|EtrIbRepoMain_btn_submit|true");
         }
