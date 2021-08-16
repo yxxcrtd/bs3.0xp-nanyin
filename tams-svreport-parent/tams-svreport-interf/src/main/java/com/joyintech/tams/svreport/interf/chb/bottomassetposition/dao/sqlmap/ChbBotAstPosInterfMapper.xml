@@ -610,8 +610,12 @@ GROUP BY asset.POS_DATE,
         FROM RSK_VALTBL_ASSET_SUB SUB
         WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
         /** 活期存款、清算款、备付金、保证金**/
-        /** AND SUB.SUB_CODE IN ('1002', '1021', '1031', '3003','120401','120402','120403')**/
-        AND SUB.SUB_CODE IN ('1002', '1021', '1031', '3003')
+        <if test="monthReport!=null and monthReport=='01'">
+            AND SUB.SUB_CODE IN ('1002', '1021', '1031', '3003','120401','120402','120403')
+        </if>
+        <if test="monthReport!=null and monthReport=='02'">
+            AND SUB.SUB_CODE IN ('1002', '1021', '1031', '3003')
+        </if>
         GROUP BY SUB.VAL_DATE,SUB.PTL_ID
     </select>
     <select id="getNoBotAstCashDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">

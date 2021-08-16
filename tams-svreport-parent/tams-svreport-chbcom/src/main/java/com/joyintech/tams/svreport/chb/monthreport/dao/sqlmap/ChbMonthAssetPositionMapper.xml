@@ -843,7 +843,7 @@
   <select id="selectBotCashListEx" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"  
   		parameterType="date">
   		WITH ap AS (
-            SELECT DISTINCT cbap.UNINVEST_CASH, cbap.PLAN_ASSET_ID,cbap.TOTAL_NUM
+            SELECT DISTINCT decode(cbap.ASSET_CODE,'REMAININGCASH',cbap.POS_AMT,cbap.UNINVEST_CASH) as UNINVEST_CASH, cbap.PLAN_ASSET_ID,cbap.TOTAL_NUM
             FROM chb_bot_ast_pos cbap
             inner join chb_asset_position deal
             on cbap.PLAN_ASSET_ID=deal.ASSET_CODE
@@ -855,8 +855,10 @@
                AND prd.PROFIT_TYPE = '03'
             where cbap.pos_date = #{cdate,jdbcType=DATE}
                AND cbap.status != 'D'
-               AND cbap.ASSET_CODE = 'REMAININGCASH'
-			)
+               AND (cbap.ASSET_CODE = 'REMAININGCASH'
+                   or (cbap.UNINVEST_CASH !=0 and not exists(select TT.PLAN_ASSET_ID from chb_bot_ast_pos TT  where  TT.ASSET_CODE = 'REMAININGCASH' and cbap.PLAN_ASSET_ID =TT.PLAN_ASSET_ID))
+                   )
+		)
 		SELECT cp.PROD_ID AS prodId
 			, Round(cp.accuqty / ap.TOTAL_NUM * ap.UNINVEST_CASH, 2) AS cashamt
 			, AP.PLAN_ASSET_ID AS oldAssetCode, ci.ccy,prd.IS_FHXGCP  isFhxgcp
