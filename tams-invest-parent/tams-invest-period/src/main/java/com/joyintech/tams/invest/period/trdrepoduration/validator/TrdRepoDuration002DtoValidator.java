@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.period.trdrepoduration.validator;
 
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
@@ -9,6 +10,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdrepoduration.dto.TrdRepoDuration002Dto;
+import com.joyintech.tams.invest.period.trdrepoduration.service.TrdRepoDuration002Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,8 @@ public class TrdRepoDuration002DtoValidator implements BeanValidator {
     private PeriodCommonService periodCommonService;
     @Autowired
     private BussTrdTransferOrderService bussTrdTransferOrderService;
+    @Autowired
+    private TrdRepoDuration002Service trdRepoDuration002Service;
     /**
      * 平台日期
      */
@@ -48,6 +52,13 @@ public class TrdRepoDuration002DtoValidator implements BeanValidator {
             }
             if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_投资端_逾期返售.getValue())&&dto.getPenaltyIntamt()==null){
                 errorList.add(new ValidMessage("penaltyIntamt",getMessage("FW_E_0006",getMessage("TrdRepoDuration002.penaltyIntamt"))));
+            }
+            //校验其前置的现金流信息所对应的交易 是否在流程中
+            TrdRepoDuration002Dto  trdRepoDurationCheckDto=new TrdRepoDuration002Dto();
+            BeanUtil.copyPropertiesIgnoreNull(trdRepoDurationCheckDto, dto);
+            trdRepoDurationCheckDto.setBusiCode(null);
+            if(trdRepoDuration002Service.checkBusinessDataInFlow(trdRepoDurationCheckDto)){
+                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0027", "原始交易编号", trdRepoDurationCheckDto.getFinprodId())));
             }
             if("T56".equals(dto.getPstype())){//新建时对续做页面做校验
                 errorList.addAll(bussValid(dto));
