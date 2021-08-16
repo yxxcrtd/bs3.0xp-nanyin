@@ -540,7 +540,7 @@ GROUP BY asset.POS_DATE,
         nvl(info.FINPROD_MARKET_ID,SUB.FINPROD_ID) ASSET_CODE,
         info2.REP_CCY CCY,
         NVL(SUM(decode(substr(sub.SUB_CODE,0,1),'2',0,sub.SECURITY_QUANTITY)),0)*DECODE(fp.TYPE_8,'F01',100,1) POS_NUM,
-        case when DC.SUB_CLASS = 'YSP'　and SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV))<![CDATA[<]]>0 then 0
+        case when fp.TYPE_8 in ('F16','F18','F19')　and SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV))<![CDATA[<]]>0 then 0
                else nvl(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV)), 0) end as POS_AMT,
         nvl(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV ELSE 0 END),0) INT_AMT,/** 利息**/
         MAX(nvl(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
@@ -567,7 +567,7 @@ GROUP BY asset.POS_DATE,
                  SUB.PTL_ID,
                  nvl(info.FINPROD_MARKET_ID,SUB.FINPROD_ID),
                  info2.REP_CCY,
-                 DC.SUB_CLASS,
+                 <!--DC.SUB_CLASS,-->
                  fp.TYPE_8
     </select>
     <select id="getRepBotDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
