@@ -435,7 +435,6 @@ public class AssetInfoDetailRiskUtil {
             messages.add(new ValidMessage("发行机构所属行业数据不能为空。"));
         }
         dto.setIndustry(dict.get("industry"+dto.getIndustryLevel2()));
-        dto.setIndustryLevel2(null);
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("*起息日")))) {
             if (CommonUtil.isEnDateStr(list.get(headList.indexOf("*起息日")))){
                 dto.setVdate(DateUtil.parse(list.get(headList.indexOf("*起息日"))));

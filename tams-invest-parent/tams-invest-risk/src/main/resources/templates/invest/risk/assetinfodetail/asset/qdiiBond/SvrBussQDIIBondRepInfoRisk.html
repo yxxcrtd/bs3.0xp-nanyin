@@ -77,13 +77,32 @@
                         <select th:id="|${entityName}_industry|" th:name="|${entityName}.industry|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}"
                                 th:initValue="${entity?.industry}"
+                                th:childrenIds="|${entityName}_industryLevel2|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"                                
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
                     </div>
                 </div>
 
-               <div class="form-inline-wrap" th:id="|${entityName}_rate_div|">
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap"
+                           data-th-utext="#{SvrBussQDIIBondRepInfo.industryLevel2}">发行机构所属二级行业</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_industryLevel2|" th:name="|${entityName}.industryLevel2|"
+                                data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
+                                th:initValue="${entity?.industryLevel2}"
+                                data-th-parentids="|${entityName}_industry|"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}" required>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+
+                <div class="form-inline-wrap" th:id="|${entityName}_rate_div|">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussQDIIBondRepInfo.termMonth}">期限（月）</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_termMonth|" th:name="|${entityName}.termMonth|"
@@ -91,10 +110,7 @@
                                class="layui-input form-input text-number" data-textrange="0"/>
                     </div>
                 </div>
-            </div>
 
-
-            <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussQDIIBondRepInfo.partyGrade}">发行机构主体信用评级</label>
                     <div class="layui-input-inline input-inline">
@@ -116,8 +132,12 @@
                                data-th-placeholder="#{SysCommon.placeholder}" required>
                     </div>
                 </div>
-                
-                  <div class="form-inline-wrap" th:id="|${entityName}_investRate_div|">
+            </div>
+
+
+            <div class="layui-form-item">
+
+                <div class="form-inline-wrap" th:id="|${entityName}_investRate_div|">
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussQDIIBondRepInfo.assetYield}">票面利率%</label>
                     <div class="layui-input-inline input-inline">
@@ -127,11 +147,6 @@
                         <span class="input-right-show">%</span>
                     </div>
                 </div>
-            </div>
-
-
-            <div class="layui-form-item">
-
               
 
                 <div class="form-inline-wrap">
@@ -155,19 +170,20 @@
                                data-th-placeholder="#{SysCommon.placeholder}" required>
                     </div>
                 </div>
-                
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap"
-                           data-th-text="#{SvrBussQDIIBondRepInfo.specialCmt}">是否含权等特殊条款情况说明</label>
-                    <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_specialCmt|"
-                               th:name="|${entityName}.specialCmt|" data-th-value="${entity?.specialCmt}"
-                               class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}" required>
-                    </div>
-                </div>
             </div>
-         
+
+            <div class="layui-form-item">
+              <div class="form-inline-wrap">
+                <label class="layui-form-label form-label-wrap"
+                       data-th-text="#{SvrBussQDIIBondRepInfo.specialCmt}">是否含权等特殊条款情况说明</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" th:id="|${entityName}_specialCmt|"
+                           th:name="|${entityName}.specialCmt|" data-th-value="${entity?.specialCmt}"
+                           class="layui-input form-input" placeholder="请输入内容"
+                           data-th-placeholder="#{SysCommon.placeholder}" required>
+                </div>
+              </div>
+            </div>
 
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style="width: 100% !important;">

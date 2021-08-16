@@ -217,6 +217,10 @@ public class AssetInfoDetailRiskValidator implements BeanValidator{
         		resultList.add(new ValidMessage("svrBussRepQDIIBondInfoRiskDto.industry",
         				getMessage("COMMON_E_0057", getMessage("发行机构所属一级行业"))));      		
         	}
+		    if(!StringUtil.isNotEmpty(dto.getSvrBussRepQDIIBondInfoRiskDto().getIndustryLevel2())) {
+			  resultList.add(new ValidMessage("svrBussRepQDIIBondInfoRiskDto.industryLevel2",
+					  getMessage("COMMON_E_0057", getMessage("发行机构所属二级行业"))));
+		    }
         	if(!StringUtil.isNotEmpty(dto.getSvrBussRepQDIIBondInfoRiskDto().getTermMonth())) {
         		resultList.add(new ValidMessage("svrBussRepQDIIBondInfoRiskDto.termMonth",
         				getMessage("COMMON_E_0057", getMessage("期限（月）"))));      		
