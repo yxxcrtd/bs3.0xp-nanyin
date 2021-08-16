@@ -451,7 +451,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//发行机构代码
 			data.put("issuePartyId",subDat.getIssuePartyId());
 			//产品名称
@@ -512,7 +512,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种种类1-募集资金币种
 			//2-兑付本金币种
 			//3-兑付收益币种
@@ -523,7 +523,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data1= new LinkedHashMap<String,String>();
 			//产品代码
-			data1.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data1.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种种类1-募集资金币种
 			//2-兑付本金币种
 			//3-兑付收益币种
@@ -534,7 +534,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data2 = new LinkedHashMap<String,String>();
 			//产品代码
-			data2.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data2.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种种类1-募集资金币种
 			//2-兑付本金币种
 			//3-兑付收益币种
@@ -547,7 +547,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//增信机构类型
 			data.put("creditType",subDat.getCreditType());
 			dataList.add(data);
@@ -556,7 +556,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//增信形式
 			data.put("creditMode",subDat.getCreditMode());
 			dataList.add(data);
@@ -605,7 +605,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//产品实际终止日期
 			data.put("mDate",subDat.getMdate() == null ? "" : DateUtil.format(subDat.getMdate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
 			//兑付客户收益率
@@ -616,7 +616,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种代码
 			data.put("mDate",subDat.getCcy());
 			//兑付客户收益
