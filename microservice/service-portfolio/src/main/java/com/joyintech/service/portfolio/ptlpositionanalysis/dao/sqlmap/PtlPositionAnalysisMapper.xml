@@ -629,7 +629,7 @@
 								</foreach>
 							 </if>
 							 <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-	                         AND psv.DSC_COST_AMT>0
+	                         AND psv.DSC_COST_AMT &lt; > 0
                     ) A
                 left join(
                            select psv.CDATE as cdate,psv.PORTFOLIO_ID as portfolioId,
