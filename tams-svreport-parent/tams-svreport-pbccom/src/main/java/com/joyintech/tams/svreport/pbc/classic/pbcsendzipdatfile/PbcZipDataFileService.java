@@ -767,7 +767,7 @@ public class PbcZipDataFileService {
         }
         File[] allFiles = new SafelyFile[size];
         // 最终文件路径
-    	String finalZipPath = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH") + "temporary" + File.separator + "手工生成人行数据文件" + dateStr + ".zip";
+    	String finalZipPath = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH")  + "手工生成人行数据文件" + dateStr + ".zip";
     	File outFile =  new SafelyFile(finalZipPath);
     	for (int i = 0; i < size; i ++) {
     		allFiles[i] = new SafelyFile(zipFileName.get(i));
