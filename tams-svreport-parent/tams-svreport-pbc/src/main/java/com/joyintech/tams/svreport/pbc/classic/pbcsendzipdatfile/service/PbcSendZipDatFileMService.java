@@ -18,6 +18,7 @@ import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
@@ -228,9 +229,32 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 	 * @return 压缩文件存放地址
 	 */
 	public AjaxResult createZipFile(Map<String, Object> param) {
-		return restTemplate.postForObject(
-				SvrServiceApplication.PBC_SERVICE_NAME + "/PbcSendZipDatFile/createZipFile",param,
+		CommonAjaxResult ajaxResult = restTemplate.postForObject(
+				SvrServiceApplication.PBC_SERVICE_NAME + "/PbcSendZipDatFile/createZipFile", param,
 				CommonAjaxResult.class);
+		Object data = ajaxResult.getData();
+		String url = "";
+		String flag = "";
+		if(data != null){
+			Map<String,String> rstMap = (HashMap)data;
+			url = rstMap.get("result");
+			flag = rstMap.get("flag");
+		}
+		ajaxResult.setData(url);
+		if(CollectionUtils.isNotEmpty(ajaxResult.getErrorList()) && "NO_PBC_CODE".equals(flag)){
+			List<ValidMessage> errorList = ajaxResult.getErrorList();
+			StringBuilder builder = new StringBuilder();
+			builder.append("以下内部产品代码没有对应的人行产品代码:<br>");
+			for (ValidMessage message : errorList) {
+				builder.append(message.getMessage() + "<br>");
+			}
+			builder.append("请等待老人行报送完成!");
+			ajaxResult.setMessage(builder.toString());
+			ajaxResult.setMessageType(MessageType.警告消息);
+			ajaxResult.setStatuCode(HttpStatus.OK.value());
+			return ajaxResult;
+		}
+		return ajaxResult;
 	}
 
 
