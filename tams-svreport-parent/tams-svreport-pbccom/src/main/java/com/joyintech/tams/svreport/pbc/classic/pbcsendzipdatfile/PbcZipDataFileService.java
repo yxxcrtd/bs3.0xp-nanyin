@@ -461,7 +461,7 @@ public class PbcZipDataFileService {
 			//产品品牌
 			data.put("prodBrand",subDat.getProdBrand());
 			//产品期次
-			data.put("prodStage",subDat.getProdStage().toPlainString());
+			data.put("prodStage",subDat.getProdStage() == null ? null : subDat.getProdStage().toPlainString());
 			//发行机构内部产品代码
 			data.put("prodId",subDat.getProdId());
 			//募集方式
@@ -607,7 +607,7 @@ public class PbcZipDataFileService {
 			//产品实际终止日期
 			data.put("mDate",subDat.getMdate() == null ? "" : DateUtil.format(subDat.getMdate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
 			//兑付客户收益率
-			data.put("cusYearYield",subDat.getCusYearYield().toPlainString());
+			data.put("cusYearYield",subDat.getCusYearYield() == null ? null : subDat.getCusYearYield().toPlainString());
 			dataList.add(data);
 		}
 		for (PbcPrdBaseinfoEndSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
@@ -618,9 +618,9 @@ public class PbcZipDataFileService {
 			//币种代码
 			data.put("mDate",subDat.getCcy());
 			//兑付客户收益
-			data.put("customProfit",subDat.getCustomProfit().toPlainString());
+			data.put("customProfit",subDat.getCustomProfit() == null ? null : subDat.getCustomProfit().toPlainString());
 			//兑付客户收益转人民币
-			data.put("profitCny",subDat.getProfitCny().toPlainString());
+			data.put("profitCny",subDat.getProfitCny() == null ? null : subDat.getProfitCny().toPlainString());
 			dataList.add(data);
 		}
 		datDownloadDto.setUrl(PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList));

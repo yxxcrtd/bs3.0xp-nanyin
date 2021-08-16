@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.service;
 
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -251,6 +252,13 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 }
                 List<PbcPrdBaseinfoEndSubDat> endList = resultMap.get("endList");
                 List<PbcSendZipDatFile> zipList = resultMap.get("zipList");
+                for (PbcPrdBaseinfoEndSubDat subDat : endList) {
+                    Optional<PbcPrdBaseinfoEndSubDat> any = baseinfoSubDatsNoSendProdIds.stream()
+                            .filter(baseinfoSubDat -> subDat.getProdId().equals(baseinfoSubDat.getProdId())).findAny();
+                    if(!any.isPresent()){
+                        baseinfoSubDatsNoSendProdIds.add(subDat);
+                    }
+                }
                 //删除未报送有修改的记录 并重新插入
                 if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendProdIds)){
                     pbcPrdBaseinfoEndSubDatMapper.deleteBatchByProdId(baseinfoSubDatsNoSendProdIds);
@@ -264,6 +272,10 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(zipList)){
                     for (PbcSendZipDatFile pbcSendZipDatFile : zipList) {
+                        if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
+                            pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
+                        }
+                        pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(endList) ? endList.size() : 0);
                         pbcSendZipDatFileMapper.insert(pbcSendZipDatFile);
                     }
                 }
