@@ -67,4 +67,6 @@ public interface PbcPrdBaseinfoSubNewMapper {
     List<PbcPrdAccountSub> selectAllRegisteAccountData(@Param("reglist") List<PbcPrdBaseinfoSubNew> reglist);
 
     List<String> selectRegistSeqnoList(@Param("list") List<PbcPrdBaseinfoSubNew> registList, @Param("flag") String flag);
+
+    int updateByProdIds(@Param("list")List<String> list);
 }

@@ -117,8 +117,8 @@ public class PbcZipDataFileHelper {
 	public static void init() {
 		if (DATATYPEMAP == null) {
 			DATATYPEMAP = new HashMap<String, String>();
-			DATATYPEMAP.put("PIB", "PIB.dat");
-			DATATYPEMAP.put("PIE", "PIE.dat");
+			DATATYPEMAP.put("PIB", "PIB");
+			DATATYPEMAP.put("PIE", "PIE");
 			DATATYPEMAP.put("1_1", "MIT1-1");
 			DATATYPEMAP.put("1_2", "MIT1-2");
 			DATATYPEMAP.put("1_3", "MIT1-3");

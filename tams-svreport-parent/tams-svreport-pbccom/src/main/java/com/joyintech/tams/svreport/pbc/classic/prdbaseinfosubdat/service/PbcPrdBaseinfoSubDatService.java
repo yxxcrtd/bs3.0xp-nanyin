@@ -299,6 +299,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                         if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
                             pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
                         }
+                        pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(prdList) ? prdList.size() : 0);
                         pbcSendZipDatFileMapper.insert(pbcSendZipDatFile);
                     }
                 }

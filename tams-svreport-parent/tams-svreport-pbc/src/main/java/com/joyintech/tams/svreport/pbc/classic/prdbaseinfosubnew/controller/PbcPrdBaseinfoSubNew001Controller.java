@@ -131,7 +131,7 @@ public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("export")
 	public ResponseEntity<byte[]> export() {
-		return pbcPrdRaiseSub001Service.export("PIB产品基本信息(资产管理)"+ DateUtil.formatDate(DateUtil.getCurrentDate())+ GlobalConstant.POINT +"xls", RequestUtil.getPageParam());
+		return pbcPrdRaiseSub001Service.export("PIB产品基本信息(资产管理)_"+ DateUtil.formatDate(DateUtil.getCurrentDate())+ GlobalConstant.POINT +"xls", RequestUtil.getPageParam());
 	}
 	
 	/**

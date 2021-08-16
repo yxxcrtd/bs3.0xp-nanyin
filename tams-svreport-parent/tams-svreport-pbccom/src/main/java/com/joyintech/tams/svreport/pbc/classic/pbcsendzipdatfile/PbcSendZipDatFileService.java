@@ -344,11 +344,6 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 			}
 			ajaxResult.setMessage(builder.toString());
 		}
-		/*StringBuilder builder = new StringBuilder();
-		for(int i = 0;i<3;i++){
-			builder.append("test" + i + "<br>");
-		}
-		ajaxResult.setMessage(builder.toString());*/
 		return ajaxResult;
 	}
 

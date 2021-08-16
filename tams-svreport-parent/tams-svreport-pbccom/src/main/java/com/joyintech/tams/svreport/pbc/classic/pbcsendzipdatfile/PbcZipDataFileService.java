@@ -39,9 +39,11 @@ import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsUtil;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dao.PbcPrdBaseinfoSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dao.PbcPrdBaseinfoSubNewMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dao.PbcPrdBaseinfoEndSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
+import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dao.PbcPrdBaseinfoEndSubNewMapper;
 import com.joyintech.tams.svreport.pbc.common.dto.DatDownloadDto;
 import com.joyintech.tams.svreport.pbc.common.util.SftpUtil;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
@@ -104,10 +106,10 @@ public class PbcZipDataFileService {
 	private PbcProdAssetpoolCodeMapper pbcProdAssetpoolCodeMapper;
 
 	@Autowired
-	private PbcPrdBaseinfoSubMapper pbcPrdBaseinfoSubMapper;
+	private PbcPrdBaseinfoSubNewMapper pbcPrdBaseinfoSubNewMapper;
 
 	@Autowired
-	private PbcPrdBaseinfoEndSubMapper pbcPrdBaseinfoEndSubMapper;
+	private PbcPrdBaseinfoEndSubNewMapper pbcPrdBaseinfoEndSubNewMapper;
 
 	public final static String PBC_PROD_BASEINFO_SEQCODE = "PBCPRDBASEINFO";
 
@@ -449,7 +451,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//发行机构代码
 			data.put("issuePartyId",subDat.getIssuePartyId());
 			//产品名称
@@ -461,7 +463,7 @@ public class PbcZipDataFileService {
 			//产品品牌
 			data.put("prodBrand",subDat.getProdBrand());
 			//产品期次
-			data.put("prodStage",subDat.getProdStage().toPlainString());
+			data.put("prodStage",subDat.getProdStage() == null ? null : subDat.getProdStage().toPlainString());
 			//发行机构内部产品代码
 			data.put("prodId",subDat.getProdId());
 			//募集方式
@@ -510,7 +512,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种种类1-募集资金币种
 			//2-兑付本金币种
 			//3-兑付收益币种
@@ -521,7 +523,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data1= new LinkedHashMap<String,String>();
 			//产品代码
-			data1.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data1.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种种类1-募集资金币种
 			//2-兑付本金币种
 			//3-兑付收益币种
@@ -532,7 +534,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data2 = new LinkedHashMap<String,String>();
 			//产品代码
-			data2.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data2.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种种类1-募集资金币种
 			//2-兑付本金币种
 			//3-兑付收益币种
@@ -545,7 +547,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//增信机构类型
 			data.put("creditType",subDat.getCreditType());
 			dataList.add(data);
@@ -554,7 +556,7 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//增信形式
 			data.put("creditMode",subDat.getCreditMode());
 			dataList.add(data);
@@ -603,24 +605,24 @@ public class PbcZipDataFileService {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//产品实际终止日期
 			data.put("mDate",subDat.getMdate() == null ? "" : DateUtil.format(subDat.getMdate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
 			//兑付客户收益率
-			data.put("cusYearYield",subDat.getCusYearYield().toPlainString());
+			data.put("cusYearYield",subDat.getCusYearYield() == null ? null : subDat.getCusYearYield().toPlainString());
 			dataList.add(data);
 		}
 		for (PbcPrdBaseinfoEndSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getPbcProdId()));
+			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种代码
 			data.put("mDate",subDat.getCcy());
 			//兑付客户收益
-			data.put("customProfit",subDat.getCustomProfit().toPlainString());
+			data.put("customProfit",subDat.getCustomProfit() == null ? null : subDat.getCustomProfit().toPlainString());
 			//兑付客户收益转人民币
-			data.put("profitCny",subDat.getProfitCny().toPlainString());
+			data.put("profitCny",subDat.getProfitCny() == null ? null : subDat.getProfitCny().toPlainString());
 			dataList.add(data);
 		}
 		datDownloadDto.setUrl(PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList));
@@ -900,8 +902,8 @@ public class PbcZipDataFileService {
 				}
 				//更新产品基本信息表 PBC_PRD_BASEINFO_SUB  终止信息表PBC_PRD_BASEINFO_END_SUB
 				if(CollectionUtils.isNotEmpty(prodIds)) {
-					pbcPrdBaseinfoSubMapper.updateByProdIds(prodIds);
-					pbcPrdBaseinfoEndSubMapper.updateByProdIds(prodIds);
+					pbcPrdBaseinfoSubNewMapper.updateByProdIds(prodIds);
+					pbcPrdBaseinfoEndSubNewMapper.updateByProdIds(prodIds);
 				}
 				//更新人行产品资产池代码管理表（PBC_PROD_ASSETPOOL_CODE）
 				if(newPbcId != null && newPbcId.size() > 0) {

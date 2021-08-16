@@ -92,7 +92,7 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("export")
 	public ResponseEntity<byte[]> export() {
-		return prdBaseinfoEndSubNew001Service.export("PIB产品终止信息(资产管理)"+ GlobalConstant.POINT +"xls", RequestUtil.getPageParam());
+		return prdBaseinfoEndSubNew001Service.export("PIB产品终止信息(资产管理)_" +DateUtil.formatDate(DateUtil.getCurrentDate())+ GlobalConstant.POINT +"xls", RequestUtil.getPageParam());
 	}
 
 	/**
