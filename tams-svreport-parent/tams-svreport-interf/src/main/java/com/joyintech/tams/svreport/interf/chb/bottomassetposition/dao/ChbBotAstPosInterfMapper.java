@@ -67,7 +67,7 @@ public interface ChbBotAstPosInterfMapper {
 	 * @param batchTime
 	 * @return
 	 */
-	List<ChbBotAstPosition> getCashBotDataFromRsk(Date batchTime);
+	List<ChbBotAstPosition> getCashBotDataFromRsk(@Param("batchTime")Date batchTime,@Param("monthReport")String monthReport);
 	/**
 	 * 排除是否无底层资产只有剩余现金
 	 * @param batchTime
