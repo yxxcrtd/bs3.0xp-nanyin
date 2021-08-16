@@ -260,6 +260,7 @@
                 INNER JOIN DATA_AUTH_NOTIFY_INST dani
                 on dani.BUSINESS_ID = T1.PORTFOLIO_ID
                 AND dani.DATA_TYPE ='PTL01'
+                AND dani.model_type ='02'
                 AND dani.INSTITUTION_CODE=#{institutionCode}
             </if>
             <!-- 多级法人改造 add by caiqun 20200615 -->
