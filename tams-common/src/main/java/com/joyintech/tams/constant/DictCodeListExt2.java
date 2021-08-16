@@ -1569,8 +1569,8 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
     排序类型_降序(DictCode.排序类型, "DESC", "排序类型_降序"),
    // add by chufengjie 20190708 合并主版本批处理  end
     共通业务类型_利率互换投资委托(DictCode.共通业务类型,"ETR13","利率互换投资委托"),
-    互换方式_收取固定(DictCode.互换方式,"01","互换方式_收取固定"),
-    互换方式_收取浮动(DictCode.互换方式,"02","互换方式_收取浮动"),
+    互换方式_收取固定(DictCode.互换方式,"IRS01","互换方式_收取固定"),
+    互换方式_收取浮动(DictCode.互换方式,"IRS02","互换方式_收取浮动"),
     期限品种_利率互换_7D(DictCode.期限品种_利率互换,"7D","7D"),
     期限品种_利率互换_9D(DictCode.期限品种_利率互换,"9D","9D"),
     期限品种_利率互换_14D(DictCode.期限品种_利率互换,"14D","14D"),
