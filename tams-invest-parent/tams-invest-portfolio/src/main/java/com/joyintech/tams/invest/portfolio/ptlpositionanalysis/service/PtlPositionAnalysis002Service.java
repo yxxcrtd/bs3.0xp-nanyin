@@ -56,12 +56,6 @@ import java.util.stream.Collectors;
 @Service
 public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositionAnalysis003Dto> {
 
-    @Autowired
-    private AssetTargetDbMapper assetTargetDbMapper;
-
-    @Autowired
-    private TargetDetailMapper targetDetailMapper;
-
     /**
      * 交易对手
      */
@@ -109,7 +103,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                 if (remainList != null){
                     for (PtlPositionAnalysis003Dto ptlPositionAnalysis003Dto : remainList) {
                         dzhCash = dzhCash.add(ptlPositionAnalysis003Dto.getPosValue() == null? BigDecimal.ZERO: ptlPositionAnalysis003Dto.getPosValue());
-                        dzhLx =  dzhCash.add(ptlPositionAnalysis003Dto.getTdyIntincexp() == null? BigDecimal.ZERO: ptlPositionAnalysis003Dto.getTdyIntincexp());
+                        dzhLx =  dzhLx.add(ptlPositionAnalysis003Dto.getTdyIntincexp() == null? BigDecimal.ZERO: ptlPositionAnalysis003Dto.getTdyIntincexp());
                     }
                 }
             }else{
@@ -118,7 +112,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                         //同一个组合的剩余现金汇总  存入map
                         if (item.getPosValue() != null){
                             dzhMap.put(item.getPortfolioId(), dzhMap.get(item.getPortfolioId()) == null?item.getPosValue() : dzhMap.get(item.getPortfolioId()).add(item.getPosValue()));
-                            dzhLxMap.put(item.getPortfolioId(), dzhMap.get(item.getPortfolioId()) == null?item.getTdyIntincexp() : dzhMap.get(item.getPortfolioId()).add(item.getTdyIntincexp()));
+                            dzhLxMap.put(item.getPortfolioId(), dzhLxMap.get(item.getPortfolioId()) == null?item.getTdyIntincexp() : dzhLxMap.get(item.getPortfolioId()).add(item.getTdyIntincexp()));
                         }
                     });
                 }
