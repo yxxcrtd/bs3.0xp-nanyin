@@ -13,6 +13,18 @@
         if($('#portfolioId').val()){
             data.portfolioId = $('#portfolioId').val().join(",");
         }
+        if($('#type9').val()){
+            data.type9 = $('#type9').val().join(",");
+        }
+        if($('#type10').val()){
+            data.type10 = $('#type10').val().join(",");
+        }
+        if($('#type11').val()){
+            data.type11 = $('#type11').val().join(",");
+        }
+        if($('#type12').val()){
+            data.type12 = $('#type12').val().join(",");
+        }
         return data;
     };
     /** 
