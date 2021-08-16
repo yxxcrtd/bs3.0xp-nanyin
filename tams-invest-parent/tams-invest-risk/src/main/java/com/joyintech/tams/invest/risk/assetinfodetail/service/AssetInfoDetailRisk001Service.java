@@ -204,6 +204,13 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 			finProductType.setType10(dto.getOrgAssetType3());
 			finProductType.setType11(dto.getOrgAssetType4());
 			finProductType.setType12(dto.getOrgAssetType5());
+		}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_QDII股票.getValue())){
+			finProductAdd.setInvestNature(DictCodeList.投资性质_权益类.getValue());
+			finProductType.setType8(DictCodeListExt2.平安资产类型_股票.getValue());
+			finProductType.setType9(dto.getOrgAssetType2());
+			finProductType.setType10(dto.getOrgAssetType3());
+			finProductType.setType11(dto.getOrgAssetType4());
+			finProductType.setType12(dto.getOrgAssetType5());
 		}else{
 			if(dto.getSvrBussQDIISharesInfoRiskDto()!=null) {
 				finProductAdd.setInvestNature(dto.getSvrBussQDIISharesInfoRiskDto().getInvestNature());
@@ -469,6 +476,13 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 			}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_QDII债券.getValue())){
 				finProductAdd.setInvestNature(DictCodeList.投资性质_固定收益类.getValue());
 				finProductType.setType8(DictCodeList.平安资产类型_债券.getValue());
+				finProductType.setType9(dto.getOrgAssetType2());
+				finProductType.setType10(dto.getOrgAssetType3());
+				finProductType.setType11(dto.getOrgAssetType4());
+				finProductType.setType12(dto.getOrgAssetType5());
+			}else if(StringUtil.equals(dto.getAssetType2(), DictCodeListExt2.资产_负债二级类别_QDII股票.getValue())){
+				finProductAdd.setInvestNature(DictCodeList.投资性质_权益类.getValue());
+				finProductType.setType8(DictCodeListExt2.平安资产类型_股票.getValue());
 				finProductType.setType9(dto.getOrgAssetType2());
 				finProductType.setType10(dto.getOrgAssetType3());
 				finProductType.setType11(dto.getOrgAssetType4());
