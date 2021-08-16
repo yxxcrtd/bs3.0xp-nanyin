@@ -199,16 +199,21 @@
             }
             objects.push(temp);
         }
-        if(operateType === 'save'){
-            WorkFlow.doSaveList(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/save', objects, "EtrBondFirstLBidding002_btn_save","EtrBondFirstLBidding002");
-        }else{
-            Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/check', objects,
+        var allDto = {};
+        allDto.importFlow = true;
+        allDto.selectedItem = objects;
+        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', allDto, function(result1) {
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/check', allDto,
                 function (result) {
                     Joyin.confirm(result.data, function () {
-                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/save', objects, "EtrBondFirstLBidding002_btn_submit","EtrBondFirstLBidding002");
+                        if (operateType === 'save') {
+                            WorkFlow.doSaveList(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/save', allDto, "EtrBondFirstLBidding002_btn_save","EtrBondFirstLBidding002");
+                        } else {
+                            WorkFlow.doSubmitList(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/save', allDto, "EtrBondFirstLBidding002_btn_submit","EtrBondFirstLBidding002");
+                        }
                     });
                 });
-        }
+        })
     }
 
     $(function () {
