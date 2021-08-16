@@ -529,7 +529,8 @@ width: 90px !important;
 								data-th-required="${pageId} eq 'FinProductBuild002'">
 							</select>-->
                         <select th:id="|${bussFinProductOpenPlanRedDto}_calcMethod|" th:name="|${bussFinProductOpenPlanRedDto}.calcMethod|"
-								th:initValue="${pageModel} eq ${pageModelNew} and ${isDraft}=='false'? ${CALC_RULE_01} : ${redentity?.calcMethod}" searchable="false"
+								 searchable="false"
+								th:initValue="${pageModel} eq ${pageModelNew} and (${workflowId}=='' or ${workflowId}== null)? ${CALC_RULE_01} : ${redentity?.calcMethod}"
 								class="layui-input form-input input-select" placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-data-result="${CALC_RULE}"
