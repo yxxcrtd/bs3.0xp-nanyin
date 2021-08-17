@@ -76,6 +76,13 @@ public class RskValBotDetailReportService extends BaseService<RskValBotDetailRep
                 ||"1902".equals(x.getAssettype2())){
                 x.sethColumn(null);
             }
+            //add by yjp ZGBSEI-292 20210817 估值表内应收利息/股利：其他负债和回购显示为空 start
+            if("2000".equals(x.getAssettype2())
+                    ||"1108".equals(x.getAssettype2())
+                    ||"1902".equals(x.getAssettype2())){
+                x.setkColumn(null);
+            }
+            //add by yjp ZGBSEI-292 20210817 估值表内应收利息/股利：其他负债和回购显示为空 end
             //最新债项评级
             x.setpColumn(SysDataUtil.getNameFromDataDict(DictCode.评级结果, x.getpColumn()));
             //最新主体评级
