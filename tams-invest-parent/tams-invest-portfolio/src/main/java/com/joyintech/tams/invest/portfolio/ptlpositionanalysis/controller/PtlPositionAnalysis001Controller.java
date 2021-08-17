@@ -22,6 +22,8 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis001Dto;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis002Dto;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.service.PtlPositionAnalysis001Service;
+import com.joyintech.tools.util.ListUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -100,15 +102,29 @@ public class PtlPositionAnalysis001Controller extends BaseController {
 
         if (StringUtil.equals(map.get("sex"),"02")){
             List<PtlPositionAnalysis002Dto> cashList =  ptlPositionAnalysis001Service.selectRemain(map);
-            for (PtlPositionAnalysis002Dto ptlPositionAnalysis002Dto : list) {
-                if (StringUtil.equals(ptlPositionAnalysis002Dto.getFinprodType2(),"现金")){
-                    cashList.forEach(item->{
-                        ptlPositionAnalysis002Dto.setMarketValue(ptlPositionAnalysis002Dto.getMarketValue().add(item.getMarketValue()));
-                        if (ptlPositionAnalysis002Dto.getTdyIntincexp() == null){
-                            ptlPositionAnalysis002Dto.setTdyIntincexp(BigDecimal.ZERO);
-                        }
-                        ptlPositionAnalysis002Dto.setTdyIntincexp(ptlPositionAnalysis002Dto.getTdyIntincexp().add(item.getTdyIntincexp()));
-                    });
+            if(cashList != null && cashList.size() > 0){
+                for (PtlPositionAnalysis002Dto ptlPositionAnalysis002Dto : list) {
+                    if (StringUtil.equals(ptlPositionAnalysis002Dto.getFinprodType2(),"现金")){
+                        ptlPositionAnalysis002Dto.setTdyIntincexp(BigDecimal.ZERO);
+                        ptlPositionAnalysis002Dto.setDscCostAmt(BigDecimal.ZERO);
+                        ptlPositionAnalysis002Dto.setMarketValue(BigDecimal.ZERO);
+                        cashList.forEach(item->{
+                            ptlPositionAnalysis002Dto.setMarketValue(ptlPositionAnalysis002Dto.getMarketValue().add(item.getMarketValue()));
+                            ptlPositionAnalysis002Dto.setTdyIntincexp(ptlPositionAnalysis002Dto.getTdyIntincexp().add(item.getTdyIntincexp()));
+                            ptlPositionAnalysis002Dto.setDscCostAmt(ptlPositionAnalysis002Dto.getMarketValue());
+                        });
+                    }
+                }
+            }else{
+                //穿透后剩余现金无数据则去除
+                int cashIndex = -1;
+                for (PtlPositionAnalysis002Dto ptlPositionAnalysis002Dto : list) {
+                    if (StringUtil.equals(ptlPositionAnalysis002Dto.getFinprodType2(),"现金")){
+                        cashIndex = list.indexOf(ptlPositionAnalysis002Dto);
+                    }
+                }
+                if (cashIndex >= 0){
+                    list.remove(cashIndex);
                 }
             }
         }
