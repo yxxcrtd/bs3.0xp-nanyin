@@ -20,7 +20,7 @@
     };
     var showCash = function (autoHide) {
         getElementById('div_cash').show();
-        getElementById('div_channelCash').show();
+        // getElementById('div_channelCash').show();
         if(autoHide){
             getElementById('div_position').hide();
         }
@@ -29,7 +29,7 @@
     //计划类利率型不需要通道剩余现金 新增 张庚林 2019/07/02 start
     var showCash2 = function (autoHide) {
         getElementById('div_cash').show();
-        getElementById('div_channelCash').show();
+        // getElementById('div_channelCash').show();
         if(autoHide){
             getElementById('div_position').hide();
             getElementById('div_channelCash').hide();
