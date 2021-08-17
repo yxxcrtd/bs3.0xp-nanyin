@@ -427,20 +427,13 @@ public class ValRiftService {
                         //市值
                         if(StringUtil.isNotEmpty(ptlSecPierceValutionDto.getMarketValue())){
                              if(StringUtil.isNotEmpty(bean.getMarketValue())){
-                                if(!StringUtil.startsWith(ptlSecPierceValutionDto.getSubCode(),"1204")
-                                        && !StringUtil.startsWith(ptlSecPierceValutionDto.getSubCode(),"1203")
-                                ){
-                                    bean.setMarketValue(ArithmeticUtil.doAdd(2,RoundingMode.HALF_UP,ArithmeticUtil.multiply(ptlSecPierceValutionDto.getMarketValue(),ptlSecPierceValutionDto.getPositionRatio()),
-                                            ArithmeticUtil.multiply(bean.getMarketValue(),bean.getPositionRatio())));
-                                }else{
-                                    //update by xr for TISHKBS-405
-                                    bean.setMarketValue(ArithmeticUtil.multiply(2,RoundingMode.HALF_UP,ptlSecPierceValutionDto.getMarketValue(),ptlSecPierceValutionDto.getPositionRatio()));
-                                }
-                            }
+                                bean.setMarketValue(ArithmeticUtil.doAdd(2,RoundingMode.HALF_UP,ArithmeticUtil.multiply(ptlSecPierceValutionDto.getMarketValue(),ptlSecPierceValutionDto.getPositionRatio()),
+                                        ArithmeticUtil.multiply(bean.getMarketValue(),bean.getPositionRatio())));
+                             }else{
+                                 bean.setMarketValue(ArithmeticUtil.multiply(2,RoundingMode.HALF_UP,ptlSecPierceValutionDto.getMarketValue(),ptlSecPierceValutionDto.getPositionRatio()));
+                             }
                         }else{
-                            if(StringUtil.isNotEmpty(bean.getMarketValue()) && !StringUtil.startsWith(ptlSecPierceValutionDto.getSubCode(),"1204")
-                                    && !StringUtil.startsWith(ptlSecPierceValutionDto.getSubCode(),"1203")
-                            ){
+                            if(StringUtil.isNotEmpty(bean.getMarketValue())){
                                 bean.setMarketValue(ArithmeticUtil.multiply(2,RoundingMode.HALF_UP,bean.getMarketValue(),bean.getPositionRatio()));
                             }
                         }
