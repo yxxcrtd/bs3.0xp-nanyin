@@ -25,7 +25,7 @@
 				(
 					select t.PORTFOLIO_ID portfolioId, pp.PORTFOLIO_NAME portfolioName, nvl(nvl(chl.FINPROD_MARKET_ID, chl1.FINPROD_MARKET_ID), t.SEC_ACCT_ID) secAcctId, nvl(t4.SEC_ACCT_NAME, nvl(chl.FINPROD_ABBR, chl1.FINPROD_ABBR)) secAcctName,
 					t.FINPROD_ID finprodId, nvl(fp.FINPROD_MARKET_ID, t.FINPROD_ID) finprodMarketId, nvl(fp.FINPROD_ABBR, t.FINPROD_ID) finprodAbbr, t5.TYPE_9 type9, t5.TYPE_10 type10, t5.TYPE_11 type11, t5.TYPE_12 type12,
-						t5.TYPE_8 type8, t5.TYPE_7 type7, t5.TYPE_6 type6, mv.marketPrice marketPrice, fp.TRADE_MARKET tradeMarket
+						t5.TYPE_8 type8, t5.TYPE_7 type7, t5.TYPE_6 type6, mv.marketPrice marketPrice, fp.TRADE_MARKET tradeMarket,
 						nvl(sum(PTL_AMOUNT03),0) as PTL_AMOUNT03,
 						nvl(sum(PTL_AMOUNT04),0) as PTL_AMOUNT04,
 						nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
