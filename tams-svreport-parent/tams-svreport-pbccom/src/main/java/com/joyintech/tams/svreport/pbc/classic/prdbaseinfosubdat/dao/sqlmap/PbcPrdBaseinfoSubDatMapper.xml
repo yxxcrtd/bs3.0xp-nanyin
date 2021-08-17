@@ -146,7 +146,7 @@
 		PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
 		STATUS, CREATE_USER, ORG_CODE,
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-		UPDATE_TIME)
+		UPDATE_TIME,DAT_ZIP_CODE)
 		values (
 		#{subProdId,jdbcType=VARCHAR},
 		#{registSeqno,jdbcType=CHAR}, #{pbcProdId,jdbcType=VARCHAR},
@@ -177,7 +177,7 @@
 		#{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
 		#{createDept,jdbcType=VARCHAR}, sysdate,
 		#{updateUser,jdbcType=VARCHAR},
-		sysdate)
+		sysdate,#{datZipCode,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective"
 		parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
