@@ -125,11 +125,7 @@
                     <if test="null!=OrgCode">
                         and ORG_CODE = #{OrgCode,jdbcType=VARCHAR}
                     </if>
-                AND (
-                not exists (SELECT 1 FROM PBC_PRD_BASEINFO_SUB_DAT PD WHERE PD.DAT_ZIP_CODE=F.DAT_ZIP_CODE AND PD.SEND_STATUS IN ('02','03'))
-                and
-                not exists (SELECT 1 FROM PBC_PRD_BASEINFO_END_SUB_DAT PD WHERE PD.DAT_ZIP_CODE=F.DAT_ZIP_CODE AND PD.SEND_STATUS IN ('02','03'))
-                )
+
         </delete>
 
 

@@ -362,12 +362,12 @@
 	    a.CREATE_TIME createTime,
 	    a.UPDATE_USER updateUser,
 	    a.UPDATE_TIME updateTime,
-	    b.PROD_ID prodId,
+	    a.PROD_ID prodId,
 	    b.OPERATE_MODE operateMode,
 	    b.IVSTORIENTATION ivstorientation,
 	    b.VDATE vdate,
 	    t2.PBC_CODE pbcCode,
-	    a.PBC_PROD_ID pbcProdIdShow
+        NVL(T2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
   	from PBC_PRD_BASEINFO_END_SUB_NEW a 
   	left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID 
   	<!-- and a.ORG_CODE = b.ORG_CODE -->
@@ -480,7 +480,7 @@
     <select id="searchDat" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat" flushCache="true" useCache="false">
         select
         a.REGIST_SEQNO registSeqno,
-        a.PBC_PROD_ID PBC_PROD_ID,
+        NVL(T2.pbc_code,a.PBC_PROD_ID) PBC_PROD_ID,
         a.MDATE mdate,
         a.CCY ccy,
         a.PROFIT profit,
@@ -507,8 +507,9 @@
         b.IVSTORIENTATION ivstorientation,
         b.VDATE vdate,
         t2.PBC_CODE pbcCode,
-        a.PBC_PROD_ID pbcProdIdShow
-        from PBC_PRD_BASEINFO_END_SUB_NEW a
+        NVL(T2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
+
+      from PBC_PRD_BASEINFO_END_SUB_NEW a
         left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID
         <!-- and a.ORG_CODE = b.ORG_CODE -->
         LEFT JOIN(

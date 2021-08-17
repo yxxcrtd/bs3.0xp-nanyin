@@ -263,7 +263,7 @@ $(function () {
 
 
                 if(rows[i].pbcPoolCode==null||rows[i].pbcPoolCode==''){
-                    Joyin.error("请先维护人行产品代码后，在进行手工处理。");
+                    Joyin.error("请先维护人行产品代码后，再进行手工处理。");
                     return;
                 }
             }

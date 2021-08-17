@@ -218,9 +218,9 @@ public class PbcNewPrdDatFileService {
 		pbcNewPrdDatFileMapper.deletePrdBatchByProdId(OrgCode,listProds);
 		//删除所有未报送终止信息
 		pbcNewPrdDatFileMapper.deleteEndBatchByProdId(OrgCode,listProds);
-
-		/**根据机构将zipSend表中的数据进行修改**/
-		pbcNewPrdDatFileMapper.updateZipSendCount(OrgCode,listProds);
+//
+//		/**根据机构将zipSend表中的数据进行修改**/
+//		pbcNewPrdDatFileMapper.updateZipSendCount(OrgCode,listProds);
 		/**删除所有不包含未报送数据的dat文件*/
 		pbcNewPrdDatFileMapper.deleteZipData(OrgCode);
 

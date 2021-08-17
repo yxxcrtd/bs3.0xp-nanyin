@@ -25,6 +25,7 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001
 import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsDataFileHelper;
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.service.PbcPrdAccountSubService001;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dao.PbcPrdBaseinfoSubNewMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dao.PbcPrdBaseinfoEndSubNewMapper;
@@ -62,6 +63,10 @@ public class PbcPrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPr
 
 	@Autowired
 	private PbcPrdBaseinfoEndSubDatMapper pbcPrdBaseinfoEndSubDatMapper;
+
+
+	@Autowired
+	private PbcPrdBaseinfoSubNewMapper pbcPrdBaseinfoSubNewMapper;
 
 	/**
 	 * 资产池基本信息service
@@ -280,6 +285,9 @@ public class PbcPrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPr
 				pbcPrdBaseinfoEndSubNewMapper.doManul(list1,map.get("submitadd")==null?null:map.get("submitadd").toString());
 
 				pbcPrdBaseinfoEndSubDatMapper.doManul(list1,map.get("submitadd")==null?null:map.get("submitadd").toString());
+
+				//找到不包含未报送的zip数据,修改zip状态为手工处理
+				pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_手工处理.getValue(),DictCodeListExt2.报送状态_未报送.getValue());
 			}
 			idx += 	PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		}
@@ -293,6 +301,9 @@ public class PbcPrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPr
 			pbcPrdBaseinfoEndSubNewMapper.doManul(list2,map.get("submitadd")==null?null:map.get("submitadd").toString());
 
 			pbcPrdBaseinfoEndSubDatMapper.doManul(list2,map.get("submitadd")==null?null:map.get("submitadd").toString());
+
+			//找到不包含未报送的zip数据,修改zip状态为手工处理
+			pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_手工处理.getValue(),DictCodeListExt2.报送状态_未报送.getValue());
 		}
 		/* 手工处理数据批量进行 update by gaojian 2019-06-22 end */
 		logger.debug("手工处理结束:------------------------------"+new Date());
@@ -338,6 +349,9 @@ public class PbcPrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPr
 				pbcPrdBaseinfoEndSubNewMapper.insetBatchSubFromHisByUpdateTime(list1);
 				// 删除his表中移走的数据
 				pbcPrdBaseinfoEndSubNewMapper.deleteBatchSubFromHisByUpdateTime(list1);
+
+				//找到不包含手工处理的zip数据,修改zip状态为未报送
+				pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_未报送.getValue(),DictCodeListExt2.报送状态_手工处理.getValue());
 			}
 			idx += 	PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		}
@@ -351,6 +365,9 @@ public class PbcPrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPr
 			pbcPrdBaseinfoEndSubNewMapper.insetBatchSubFromHisByUpdateTime(list2);
 			// 删除his表中移走的数据
 			pbcPrdBaseinfoEndSubNewMapper.deleteBatchSubFromHisByUpdateTime(list2);
+
+			//找到不包含手工处理的zip数据,修改zip状态为未报送
+			pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_未报送.getValue(),DictCodeListExt2.报送状态_手工处理.getValue());
 		}
 		/* 取消手工处理批量进行 update by gaojian 2019-06-22 end */
 		logger.debug("取消手工处理结束:------------------------------"+new Date());
