@@ -159,5 +159,92 @@
 }
 </update>
 
+
+	<insert id="nologgingParrel">
+		ALTER TABLE ${newTableName} NOLOGGING PARALLEL 8
+	</insert>
+
+	<insert id="loggingNoparallel">
+		ALTER TABLE ${newTableName} LOGGING NOPARALLEL
+	</insert>
+
+	<update id="createChbInvestHoldInfoCheckEx">
+		CREATE TABLE ${newTableName} AS SELECT * FROM  CHB_INVESTHOLD_INFO_CHECK sub where 1=0
+	</update>
+	
+		<select id="queryIndexName" resultType="java.lang.String">
+		SELECT
+		   DISTINCT T.INDEX_NAME
+		FROM USER_IND_COLUMNS T,USER_INDEXES I
+		WHERE T.INDEX_NAME = I.INDEX_NAME
+		AND T.TABLE_NAME = I.TABLE_NAME
+		AND T.TABLE_NAME = #{tableName,jdbcType=VARCHAR}
+	</select>
+	
+		<!-- 插入 ChbSubmitStatus数据-->
+	<insert id="insertChbSubmitStatusDataEx">
+		INSERT /*+ append */ INTO ${newTableName}
+		SELECT /*+ parallel(CHB_SUBMIT_STATUS,8) */ CHB_SUBMIT_STATUS.* FROM CHB_SUBMIT_STATUS
+		LEFT JOIN CHB_INVESTHOLD_INFO_SUB
+		ON CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
+		WHERE CHB_INVESTHOLD_INFO_SUB.HOLD_DATE BETWEEN to_date(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND to_date(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+		AND CHB_SUBMIT_STATUS.SUBMIT_TYPE = '16'
+	</insert>
+
+	<!-- 插入 ChbSubmitStatus数据-->
+	<delete id="deleteChbSubmitStatusDataEx">
+		DELETE FROM CHB_SUBMIT_STATUS WHERE CHB_SUBMIT_STATUS.SEQNO IN(
+		SELECT SUMIT_SEQ FROM CHB_INVESTHOLD_INFO_SUB
+		WHERE CHB_INVESTHOLD_INFO_SUB.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+		AND CHB_SUBMIT_STATUS.SUBMIT_TYPE = '16'
+		)
+	</delete>
+
+
+	<!-- 插入 ChbInvestHoldInfo数据-->
+	<insert id="insertChbInvestHoldInfoDataEx">
+		INSERT /*+ append */ INTO ${newTableName}
+		SELECT /*+ parallel(INFO,8) */ INFO.* from CHB_INVESTHOLD_INFO INFO
+		WHERE info.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+	</insert>
+
+	<!-- 创建表备份ChbInvestHoldInfoSub -->
+	<update id="createChbInvestHoldInfoSub">
+		CREATE TABLE ${newTableName} AS SELECT * from  CHB_INVESTHOLD_INFO_SUB SUB WHERE 1=0
+	</update>
+
+	<!-- 插入 ChbInvestHoldInfoSub数据-->
+	<insert id="insertChbInvestHoldInfoSubDataEx">
+		INSERT /*+ append */ INTO ${newTableName}
+		SELECT /*+ parallel(SUB,8) */ sub.* FROM  CHB_INVESTHOLD_INFO_SUB SUB
+		WHERE SUB.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+	</insert>
+	
+	
+	
+	<select id="queryPartitions" resultType="java.lang.String">
+		SELECT
+		   PARTITION_NAME
+		FROM USER_TAB_PARTITIONS
+		WHERE TABLE_NAME = #{tableName,jdbcType=VARCHAR} AND PARTITION_POSITION!=1
+	</select>
+
+	<select id="isHaveData" resultType="java.lang.Integer">
+		SELECT 1 FROM ${tableName} partition (${patitionName})
+		WHERE HOLD_DATE BETWEEN to_date(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND to_date(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+	</select>
+
+	<select id="dropPartition">
+		ALTER TABLE ${tableName} DROP PARTITION(${patitionName})
+	</select>
+	
+	
+		<insert id="insertChbInvestHoldInfoCheckDataEx">
+		INSERT /*+ append */ INTO ${newTableName}
+		SELECT /*+ parallel(T,8) */ T.* FROM  CHB_INVESTHOLD_INFO_CHECK T
+		WHERE T.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+		AND T.OPERATE_STATUS ='02'
+	</insert>
+	
     <!-- add by zcw 增加处理分区逻辑 end -->
 </mapper>

@@ -148,13 +148,13 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
         		logger.info("创建"+ tableName +"表结束！");
         	}
 			logger.info("插入chb_submit_status表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表开始！");
-			mapper.insertChbSubmitStatusData(tableName,startDate,endDate);
+			mapper.insertChbSubmitStatusDataEx(tableName,startDate,endDate);
 			logger.info("插入chb_submit_status表"+  startDate + "~" + endDate + "日数据归档至"+tableName+"表结束！");
 			//关闭并发，否则dml语句不可执行
 			mapper.loggingNoparallel(tableName_ori);
 			logger.info("删除chb_submit_status表" + startDate + "~" + endDate + "日数据开始！");
 			//状态表中有身份数据，不能删除分区，还是按照原逻辑delete
-			mapper.deleteChbSubmitStatusData(startDate,endDate);
+			mapper.deleteChbSubmitStatusDataEx(startDate,endDate);
 			logger.info("删除chb_submit_status表" + startDate + "~" + endDate + "日数据结束！");
     	}
     	else if(flag == 2){
@@ -165,7 +165,7 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
         		logger.info("创建"+ tableName +"表结束！");
         	}
 			logger.info("插入chb_investhold_info表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表开始！");
-			mapper.insertChbInvestHoldInfoData(tableName,startDate,endDate);
+			mapper.insertChbInvestHoldInfoDataEx(tableName,startDate,endDate);
 			logger.info("插入chb_investhold_info表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表结束！");
 			//下述直接删除分区
 //			logger.info("删除chb_investhold_info表" + startDate + "~" + endDate + "日数据开始！");
@@ -180,7 +180,7 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
         		logger.info("创建"+ tableName +"表结束！");
         	}
 			logger.info("插入chb_investhold_info_sub表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表开始！");
-			mapper.insertChbInvestHoldInfoSubData(tableName,startDate,endDate);
+			mapper.insertChbInvestHoldInfoSubDataEx(tableName,startDate,endDate);
 			logger.info("插入chb_investhold_info_sub表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表结束！");
 			//下述直接删除分区
 //			logger.info("删除chb_investhold_info_sub表" + startDate + "~" + endDate + "日数据开始！");
@@ -190,12 +190,12 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
 		else if(flag == 4){
 			if(StringUtil.isEmpty(reportDataBackup)){
 				logger.info("创建"+ tableName +"表开始！");
-				mapper.createChbInvestHoldInfoCheck(tableName);
+				mapper.createChbInvestHoldInfoCheckEx(tableName);
 				mapper.nologgingParrel(tableName);
 				logger.info("创建"+ tableName +"表结束！");
 			}
 			logger.info("插入chb_investhold_info_check表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表开始！");
-			mapper.insertChbInvestHoldInfoCheckData(tableName,startDate,endDate);
+			mapper.insertChbInvestHoldInfoCheckDataEx(tableName,startDate,endDate);
 			logger.info("插入chb_investhold_info_check表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表结束！");
 			//下述直接删除分区
 //			logger.info("删除chb_investhold_info_check表" + startDate + "~" + endDate + "日数据开始！");

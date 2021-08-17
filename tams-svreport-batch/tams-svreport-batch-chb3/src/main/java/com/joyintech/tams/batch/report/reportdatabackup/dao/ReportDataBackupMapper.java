@@ -168,4 +168,103 @@ public interface ReportDataBackupMapper {
 	void callChbInvesthold(Map<String,Object> param);
 	
 	void callInterfAnalyzeTable();
+	/**
+	 * 关闭日志，开启并发
+	 * @param newTableName
+	 */
+	void nologgingParrel(@Param("newTableName") String newTableName);
+
+	/**
+	 * 开启日志，关闭并发
+	 * @param newTableName
+	 */
+	void loggingNoparallel(@Param("newTableName") String newTableName);
+	
+
+	/**
+	 * 插入chb_submit_status备份表
+	 * @param newTableName
+	 * @param startDate
+	 * @param endDate
+	 */
+	void insertChbSubmitStatusDataEx(@Param("newTableName") String newTableName,
+								   @Param("startDate") String startDate,
+								   @Param("endDate") String endDate);
+	
+	/**
+	 * 查询某张表的索引名称
+	 * @param tableName
+	 * @return
+	 */
+	List<String> queryIndexName(@Param("tableName")String tableName);
+
+	/**
+	 * 查询某个表某个分区块是否有数据
+	 * @param tableName
+	 * @param patitionName
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	int isHaveData(@Param("tableName")String tableName,
+				   @Param("patitionName")String patitionName,
+				   @Param("startDate")String startDate,
+				   @Param("endDate")String endDate);
+
+	/**
+	 * 删除分区块数据
+	 * @param tableName
+	 * @param patitionName
+	 */
+	void dropPartition(@Param("tableName")String tableName,
+					   @Param("patitionName")String patitionName);
+	/**
+	 * 查询某张表下的分区快
+	 * @param tableName
+	 * @return
+	 */
+	List<String> queryPartitions(@Param("tableName")String tableName);
+	
+	/**
+	 * 插入chb_investhold_info_check备份表
+	 * @param tableName
+	 * @param startDate
+	 * @param endDate
+	 */
+	void insertChbInvestHoldInfoCheckDataEx(String tableName, String startDate, String endDate);
+	
+	/**
+	 * 删除chb_submit_status备份表
+	 * @param startDate
+	 * @param endDate
+	 */
+	void  deleteChbSubmitStatusDataEx(@Param("startDate") String startDate,@Param("endDate") String endDate);
+	
+
+	/**
+	 * 插入chb_investhold_info备份表
+	 * @param newTableName
+	 * @param startDate
+	 * @param endDate
+	 */
+	void  insertChbInvestHoldInfoDataEx(@Param("newTableName") String newTableName,
+									 @Param("startDate") String startDate,
+									 @Param("endDate") String endDate);
+
+	/**
+	 * 插入chb_investhold_info_sub备份表
+	 * @param newTableName
+	 * @param startDate
+	 * @param endDate
+	 */
+	void  insertChbInvestHoldInfoSubDataEx(@Param("newTableName") String newTableName,
+										@Param("startDate") String startDate,
+										@Param("endDate") String endDate);
+	
+	
+	/**
+	 * 创建check的备份表
+	 * @param tableName
+	 */
+	void createChbInvestHoldInfoCheckEx(String tableName);
 }
