@@ -551,7 +551,7 @@
                 item.entrustNum = entrustNum;
             }
         }
-         window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/0/RSK002/F01', param,getriskdatas());
+         window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/0/RSK002/F01', object,getriskdatas());
          // add by zhangrui1 start
          //$("#riskMathFlag").val("02");
          // var object = $.serializeToObject('#searchForm');
