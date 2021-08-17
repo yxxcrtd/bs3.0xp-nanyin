@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dao.LgdSpecialConfigMapper;
 import com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto;
@@ -178,6 +179,30 @@ public class LgdSpecialConfigService extends BaseService<LgdSpecialConfigDto> {
      */
     public int delete(LgdSpecialConfigDto dto) {
         return lgdSpecialConfigMapper.deleteByPrimaryKey(dto.getSeqNo());
+    }
+
+
+
+    /**
+     * 查询资产名称根据系统减值参数lossType=01
+     * @auther: yuzj
+     * @date: 2021-8-14
+     * @param:
+     * @return:
+     */
+    public List<SuggestDto> getFinprodIdByLossTypeOne(Map<String, Object> params){
+        return  lgdSpecialConfigMapper.getFinprodIdByLossTypeOne(params);
+    }
+
+    /**
+     * 查询资产名称根据系统减值参数lossType=02
+     * @auther: yuzj
+     * @date: 2021-8-14
+     * @param:
+     * @return:
+     */
+    public List<SuggestDto> getFinprodIdByLossTypeTwo(Map<String, Object> params){
+        return  lgdSpecialConfigMapper.getFinprodIdByLossTypeTwo(params);
     }
 
 }

@@ -13,6 +13,7 @@ package com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto;
 import com.joyintech.tams.common.base.entity.RepProdIssue;
 import org.springframework.stereotype.Repository;
@@ -52,6 +53,25 @@ public interface LgdSpecialConfigMapper {
     List<LgdSpecialConfigDto> selectRepetList(LgdSpecialConfigDto dto);
 
     void updateRepetDto(LgdSpecialConfigDto dto);
+
+    /**
+     * @Description:查询资产名称根据系统减值参数lossType=01
+     * @auther: yuzj
+     * @date: 2021/8/14
+     * @param:
+     * @return:
+     */
+    List<SuggestDto> getFinprodIdByLossTypeOne(Map<String, Object> pageParam);
+
+    /**
+     * @Description:查询资产名称根据系统减值参数lossType=02
+     * @auther: yuzj
+     * @date: 2021/8/14
+     * @param:
+     * @return:
+     */
+    List<SuggestDto> getFinprodIdByLossTypeTwo(Map<String, Object> pageParam);
+
 
 
 }

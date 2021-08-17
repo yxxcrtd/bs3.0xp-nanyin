@@ -13,6 +13,7 @@ package com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.servi
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.dao.ModLgdConfigDtoMapper;
 import com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.dto.ModLgdConfigDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,10 @@ public class LossGivenDefaultMaintainService extends BaseService<ModLgdConfigDto
     }
     public int delete(ModLgdConfigDto dto){
     	return modLgdConfigDtoMapper.deleteByPrimaryKey(dto.getSeqno());
+    }
+
+    public  List<SelectOptionDto>  getLinkSelectOption(Map<String, Object> param){
+        return modLgdConfigDtoMapper.getLinkSelectOption(param);
     }
     		
    

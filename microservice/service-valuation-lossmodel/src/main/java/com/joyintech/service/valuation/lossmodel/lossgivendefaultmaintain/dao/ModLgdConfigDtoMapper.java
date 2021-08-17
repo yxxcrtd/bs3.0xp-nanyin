@@ -3,6 +3,7 @@ package com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.dto.ModLgdConfigDto;
 
 public interface ModLgdConfigDtoMapper {
@@ -20,4 +21,7 @@ public interface ModLgdConfigDtoMapper {
 
     int updateByPrimaryKey(ModLgdConfigDto record);
     List<ModLgdConfigDto> selectForPage(Map<String, Object> parm);
+
+    List<SelectOptionDto> getLinkSelectOption(Map<String, Object> parm);
+
 }

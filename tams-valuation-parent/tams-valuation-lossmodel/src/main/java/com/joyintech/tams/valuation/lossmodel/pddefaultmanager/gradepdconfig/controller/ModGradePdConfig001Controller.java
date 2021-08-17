@@ -17,6 +17,7 @@ import com.joyintech.system.constant.SystemGlobalConstant;
 //import com.joyintech.tams.model.impairment.pddefaultmanager.gradepdconfig.service.ModGradePdConfigService;
 //import com.joyintech.tams.model.impairment.pddefaultmanager.pdfactorconfig.service.PdFactorConfig001Service;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.gradepdconfig.dto.ModGradePdConfigDto;
 import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.gradepdconfig.service.ModGradePdConfigService;
@@ -116,7 +117,7 @@ public class ModGradePdConfig001Controller extends BaseController {
 //        }
         Map<String, Object> map = RequestUtil.getPageParam();
         map.put("seqNo",dto.getSeqNo());
-        map.put("configType","03");//03为评级PD维护配置类型
+        map.put("configType", ModelDictCodeList.模型_减值配置类型_评级PD配置.getValue());//03为评级PD维护配置类型
         int exists = modGradePdConfigService.checkBySeqNoAndType(map);
         //评级PD维护是否被PD生成批处理调用过
         if(exists>0) {
@@ -167,7 +168,7 @@ public class ModGradePdConfig001Controller extends BaseController {
                 "/com/joyintech/tams/valuation/lossmodel/pddefaultmanager/gradepdconfig/conf/export_gradepdconfig.xml",
                 listdto);
         return ExportUtil.export(
-                this.getMessage(DateUtil.format(new Date())+"_评级PD维护记录")
+                this.getMessage(DateUtil.format(new Date())+"_债券、其他债权评级PD维护记录")
                         + SystemGlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
                 outFile, true);
     }

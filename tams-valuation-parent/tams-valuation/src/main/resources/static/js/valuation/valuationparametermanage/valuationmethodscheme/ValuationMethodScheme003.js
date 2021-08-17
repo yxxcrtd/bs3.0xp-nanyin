@@ -75,10 +75,10 @@ $(function () {
         	var valPrice = $("#valuationPrice").val();
         	var valPrice2 = $("#valuationPrice2").val();
         	var num = $("#select2-valuationPrice2-results").find("li").size();
-        	if(num > 0 && valPrice == valPrice2){
+        	/*if(num > 0 && valPrice == valPrice2){
         		$("#valuationPrice2").val("").trigger("");// select清空
             	layer.msg("估值第一市价不可和估值第二市价相同！");
-        	}
+        	}*/
         });
         $("#quotaDigit").change(function(){
         	var quotaDigit = $('#quotaDigit').val();
@@ -144,9 +144,9 @@ $(function () {
 			
     	} else if(secType === '02') {// 隐藏并且置空
     		$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").hide();
     		$("#c_tradeMarket").show();
     		$("#c_invAim").hide();
-    		
     	}else if(secType === '03') {// 换汇
 			$("#c_tradeMarket").hide();
 			$("#c_secDetailType").hide();
@@ -179,13 +179,35 @@ $(function () {
 //			$("#c_tradeMarket").show();
 //			$("#c_secDetailType").hide();
 //			$("#c_invAim").hide();
-//			
+//
 //			$("#valuationMethod").val("04").trigger("change");
 //            $("#valuationMethod").attr("disabled", "disabled");
 			
-    	}else if(secType === '10' || secType === '11') {
-			$("#c_tradeMarket").hide();
+    	}else if(secType === '07') {
+			$("#c_tradeMarket").show();
 			$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").hide();
+			$("#c_invAim").hide();
+
+
+		}else if(secType === '08') {
+			$("#c_tradeMarket").show();
+			$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").hide();
+			$("#c_invAim").hide();
+
+		}else if(secType === '09') {
+			$("#c_tradeMarket").show();
+			$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").hide();
+			$("#c_invAim").hide();
+
+		}else if(secType === '10' || secType === '11') {
+			$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").hide();
+			$("#c_tradeMarket").show();
+
+
 			$("#c_invAim").show();
 			
 			$("#invAim").val("FVTPL").trigger("change");
@@ -209,10 +231,18 @@ $(function () {
 //	        	}
 //	        });
     	}else if(secType === '12') {
+			$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").hide();
+
 			$("#c_tradeMarket").hide();
 			$("#c_secDetailType").hide();
 			$("#c_invAim").show();
+			$("#invAim").disabled=false;
+		}else if(secType === '13'){
+			$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").show();
 		}
+
     };
 	
  // 估值方法为市值法/市值成本孰低法 显示：估值第一市价、估值第二市价、行情日期、行情位数、行情位数处理
@@ -220,11 +250,10 @@ $(function () {
             var secType = $("#secType").val();
 			var valMethod = $("#valuationMethod").val();
             var valuationPrice = $("#valuationPrice").val();
-            var valuationPrice2 = $("#valuationPrice2").val();
+            /*var valuationPrice2 = $("#valuationPrice2").val();*/
 			if(valMethod == '01' || valMethod == '03'){
 		    	if(secType === '03'){// 03-换汇
 					$("#c_valuationPrice").show();
-					$("#c_valuationPrice2").hide();
 					$("#c_valuationDate").hide();
 					$("#c_quotaDigit").hide();
 					$("#c_priceTailMode").hide();
@@ -233,7 +262,7 @@ $(function () {
 					$("#valuationPrice").val("08").trigger("change");
 		            $("#valuationPrice").attr("disabled", "disabled");
 
-					$("#valuationPrice2").val("").trigger("change");
+					/*$("#valuationPrice2").val("").trigger("change");*/
 					$("#valuationDate").next().find("li").removeClass("laytable-checkbox-selected");
 					$("#valuationDate").val("").trigger("change");
 					$("#quotaDigit").val("");
@@ -242,21 +271,21 @@ $(function () {
 		    	}else{
 	    	        $("#valuationPrice").attr("disabled", false);
 					$("#c_valuationPrice").show();
-					$("#c_valuationPrice2").show();
+					/*$("#c_valuationPrice2").show();*/
 					$("#c_valuationDate").show();
 					$("#c_quotaDigit").show();
 					$("#c_priceTailMode").show();
 		    	}
 			}else{// 隐藏并且置空
 				$("#c_valuationPrice").hide();
-				$("#c_valuationPrice2").hide();
+				/*$("#c_valuationPrice2").hide();*/
 				$("#c_valuationDate").hide();
 				$("#c_quotaDigit").hide();
 				$("#c_priceTailMode").hide();
 	    		$("#c_priceClass").hide();
 
 				$("#valuationPrice").val("").trigger("change");
-				$("#valuationPrice2").val("").trigger("change");
+				/*$("#valuationPrice2").val("").trigger("change");*/
 				$("#valuationDate").next().find("li").removeClass("laytable-checkbox-selected");
 				$("#valuationDate").val("").trigger("change");
 				$("#quotaDigit").val("");
@@ -264,31 +293,6 @@ $(function () {
 				$("#priceClass").val("");
 			}
 
-			//选择市值法时并且投资目的为收取合同现金流量及出售为目的，将估值第一市价改为市价来源，市价来源枚举值删除专家法，删除估值第二市价；
-			var traget1=document.getElementById("priceFristId");
-			var traget2=document.getElementById("priceSourceId");
-		    if(valMethod == '01' && $("#invAim").val() == 'FVOCI'){
-				traget1.style.display="none";
-				traget2.style.display="inline";
-				$("#c_valuationPrice2").hide();
-			}else if((valMethod == '01' || valMethod == '03')  && $("#invAim").val() == 'FVTPL'){
-				traget1.style.display="none";
-				traget2.style.display="inline";
-				$("#c_valuationPrice2").hide();
-			}else if(valMethod == '05' && $("#invAim").val() == 'FVTPL'){
-				$("#c_valuationPrice").hide();
-				$("#c_valuationPrice2").hide();
-
-
-				$("#c_quotaDigit").show();
-				$("#c_priceTailMode").show();
-				$("#c_valuationDate").show();
-
-				$("#valuationPrice").val("").trigger("change");
-				$("#valuationPrice2").val("").trigger("change");
-			}else{
-
-			}
     };
     
     // 01-债券,估值方法为市值法/市值成本孰低法且估值市价为收盘价、平均价、最高价、最低价、卖一价或者买一价时显示价格类型

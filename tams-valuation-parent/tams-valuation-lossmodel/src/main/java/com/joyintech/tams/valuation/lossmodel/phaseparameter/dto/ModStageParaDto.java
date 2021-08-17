@@ -2,6 +2,8 @@ package com.joyintech.tams.valuation.lossmodel.phaseparameter.dto;
 
 import java.util.List;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.ModelDictCode;
 import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.pdfactorconfig.dto.PdFactorConfigDto;
 import org.apache.commons.lang3.StringUtils;
 
@@ -125,7 +127,7 @@ public class ModStageParaDto extends BaseEntity implements ITableRow, ProcessEnt
 	public String getElementsValue() {
 		return elementsValue;
 	}
-	
+
 	public String getElementsValueStr() {
 		String result = this.getElementsValue();
 		if("03".equals(this.getElements())) {

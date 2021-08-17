@@ -14,8 +14,15 @@
 			    <span data-th-text="#{PdFactorConfig001}">前瞻因子维护</span>
 		    </li>
 		    <li  th:if="${isShowMyHome}">&nbsp;
-			    <span data-th-text="评级PD维护">评级PD维护</span>
+			    <span data-th-text="债券、其他债权评级PD维护">债券、其他债权评级PD维护</span>
 		    </li>
+		    <li  th:if="${isShowHgPd}">&nbsp;
+			    <span data-th-text="回购评级PD维护">回购评级PD维护</span>
+		    </li>
+			<li  th:if="${isShowCkPd}">&nbsp;
+				  <span data-th-text="存款评级PD维护">存款评级PD维护</span>
+			</li>
+
 		  </ul>
 		  <div class="layui-tab-content">
 		    <!--  前瞻因子维护 -->
@@ -23,11 +30,21 @@
                 <iframe th:src="@{/model/impairment/pddefaultmanager/pdfactorconfig/PdFactorConfig001/init}" width="100%"
                         height="100%" frameborder="0" style="border:none;min-height:600px;"></iframe>
             </div>
-             <!-- 评级PD维护    -->
+             <!-- 债券、其他债权评级PD维护    -->
 		    <div class="layui-tab-item" >
             	<iframe th:src="@{/model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig001/init}" width="100%"
                         height="100%" frameborder="0" style="border:none;min-height:600px;"></iframe>
             </div>
+		    <!-- 回购评级PD维护    -->
+		    <div class="layui-tab-item" >
+				<iframe th:src="@{/model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig001/init}" width="100%"
+					  height="100%" frameborder="0" style="border:none;min-height:600px;"></iframe>
+			</div>
+		    <!-- 存款评级PD维护    -->
+		    <div class="layui-tab-item" >
+			    <iframe th:src="@{/model/impairment/pddefaultmanager/ckgradepdconfig/ModCkGradePdConfig001/init}" width="100%"
+					  height="100%" frameborder="0" style="border:none;min-height:600px;"></iframe>
+		    </div>
 		  </div>
 		</div>
     </div>

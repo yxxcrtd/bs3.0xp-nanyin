@@ -54,4 +54,10 @@ public class ValComponentConstant {
      * 授信模式
      */
     public final static String CEMODEL = "CE_MODEL";
+
+    /**
+     * 减值方案系统参数
+     */
+    public final static String LOSSTYPE = "LOSS_TYPE";
+
 }

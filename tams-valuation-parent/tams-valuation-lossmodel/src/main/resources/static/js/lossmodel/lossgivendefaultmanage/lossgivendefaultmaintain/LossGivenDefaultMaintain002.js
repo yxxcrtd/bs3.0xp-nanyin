@@ -23,21 +23,40 @@ $(function() {
     var assetTypeChange = function() {
     	var traget1=document.getElementById("isContainPledgeDiv");
     	var traget2=document.getElementById("assetDetailTypeDiv");
-	if ($("#assetType").val().startsWith("F01")) {
-		if(traget1.style.display=="inline"||traget1.style.display==""){
-			traget1.style.display="none";
-		}
-		if(traget2.style.display=="none"){
-			traget2.style.display="inline";
-		}
-	} else if ($("#assetType").val().startsWith("F18")) {
-		if(traget2.style.display=="inline"||traget2.style.display==""){
-			traget2.style.display="none";
-		}
-		if(traget1.style.display=="none"){
-			traget1.style.display="inline";
-		}
-	}
+        var traget3=document.getElementById("ckAssetDetailTypeDiv");
+        if ($("#assetType").val().startsWith("01") || $("#assetType").val().startsWith("09")) {
+            if(traget1.style.display=="inline"||traget1.style.display==""){
+                traget1.style.display="none";
+            }
+            if(traget2.style.display=="none"){
+                traget2.style.display="inline";
+            }
+            if(traget3.style.display=="inline"){
+                traget3.style.display="none";
+            }
+
+        } else if ($("#assetType").val().startsWith("07")) {
+            if(traget1.style.display=="inline"){
+                traget1.style.display="none";
+            }
+            if(traget2.style.display=="none"){
+                traget2.style.display="inline";
+            }
+            if(traget3.style.display=="inline"){
+                traget3.style.display="none";
+            }
+        }else if($("#assetType").val().startsWith("13")){
+            if(traget1.style.display=="none"){
+                traget1.style.display="inline";
+            }
+            if(traget2.style.display=="inline"){
+                traget2.style.display="none";
+            }
+            if(traget3.style.display=="inline"){
+                traget3.style.display="none";
+            }
+
+        }
 
 	};
 	function init(){

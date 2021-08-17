@@ -29,7 +29,7 @@ $(function(){
         searchOnInit: false, //初始化的时候就请求后台数据
         cols:[	
 				{ field: 'seqno',visible:false},
-				{ title: "资产类别", field: 'assetTypeStr',sortField:'ASSET_TYPE',align:'center'},
+				{ title: "资产类别", field: 'assetTypeStr',sortField:'BOND_TYPE',align:'center'},
 				{ title: "债券类型", field: 'assetDetailTypeStr',sortField:'ASSET_DETAIL_TYPE',align:'center'},
 				{ title: "是否含有抵质押物", field: 'isContainPledgeStr',sortField:'IS_CONTAIN_PLEDGE',align:'center'},
 				{ title: "LGD%", field: 'lgd',sortField:'LGD',type:'number',align:'center'},
