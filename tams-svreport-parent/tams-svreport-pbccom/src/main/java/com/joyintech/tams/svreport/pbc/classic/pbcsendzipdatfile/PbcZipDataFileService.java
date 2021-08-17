@@ -570,15 +570,38 @@ public class PbcZipDataFileService {
 			dataList.add(data);
 		}
 		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			//序号
-			data.put("number","4");
-			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
-			//增信形式
-			data.put("creditMode",subDat.getCreditMode());
-			dataList.add(data);
+			String creditMode = subDat.getCreditMode();
+			if(StrUtil.isNotEmpty(creditMode) && "3".equals(creditMode)){
+				//组装数据
+				LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+				//序号
+				data.put("number","4");
+				//产品代码
+				data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+				//增信形式
+				data.put("creditMode","1");
+				dataList.add(data);
+				//组装数据
+				LinkedHashMap<String,String> data1 = new LinkedHashMap<String,String>();
+				//序号
+				data1.put("number","4");
+				//产品代码
+				data1.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+				//增信形式
+				data1.put("creditMode","2");
+				dataList.add(data1);
+			}else{
+				//组装数据
+				LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+				//序号
+				data.put("number","4");
+				//产品代码
+				data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+				//增信形式
+				data.put("creditMode",subDat.getCreditMode());
+				dataList.add(data);
+			}
+
 		}
 		datDownloadDto.setUrl(PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList));
 		return datDownloadDto;
