@@ -6,6 +6,7 @@ import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUt
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +115,16 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 	                }
 	            }
 	        }
+			if (StringUtil.equals(dto.getOperateType(), "save") ||StringUtil.equals(dto.getOperateType(), "submit")){
+				for(FinCashPlan finCashPlan : dto.getFinPayInterestStdInfoDto().getFinCashPlanList()){
+					//计息开始日=到期日 或者 计息开始日等于计息结束日都不给提交
+					if(finCashPlan.getVdate().compareTo(dto.getMdate())==0 ||
+							finCashPlan.getVdate().compareTo(finCashPlan.getMdate())==0){
+						errorList.add(new ValidMessage("存在计息开始日等于到期日/计息开始日等于计息结束日的付息记录!"));
+						break;
+					}
+				}
+			}
         }
 		if (StringUtil.equals(dto.getOperateType(), "delete")) {
 			if (dto.getSelectedItem() != null || dto.getSelectedItem().size() > 0) {
