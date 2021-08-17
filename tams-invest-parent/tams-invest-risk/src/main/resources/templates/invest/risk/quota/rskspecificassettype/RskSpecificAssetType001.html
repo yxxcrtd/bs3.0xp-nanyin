@@ -17,57 +17,61 @@
         </div>
         <div class="joyin-form-wrap joyin-filter-form condition-area">
             <form class="layui-form" id="searchForm">
+                    <!--20210812 fuyongsheng删除 start-->
+<!--                <div class="layui-form-item">-->
+<!--                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">-->
+<!--                        <label class="layui-form-label form-lable"-->
+<!--                               data-th-text="#{RskSpecificAssetType001.type1}">资产一级类型</label>-->
+<!--                        <div class="layui-input-inline input-inline">-->
+<!--                            <select type="text" id="type1" name="type1"-->
+<!--                                    class="layui-input form-input input-select" multiple-->
+<!--                                    data-th-data-result='${RSK_AUTHORIZE_TYPE1}'-->
+<!--                                    allowClear="true" childrenids="type2,type3,type4"-->
+<!--                                    data-th-placeholder="#{SysCommon.placeholder}" >-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">-->
+<!--                        <label class="layui-form-label form-label-wrap"-->
+<!--                               data-th-text="#{RskSpecificAssetType001.type2}">资产二级类型</label>-->
+<!--                        <div class="layui-input-inline input-inline">-->
+<!--                            <select type="text" id="type2" name="type2"  class="layui-input form-input input-select"-->
+<!--                                    allowClear="true" placeholder="请输入内容"-->
+<!--                                    data-th-data-result='${RSK_AUTHORIZE_TYPE2}' multiple="true"-->
+<!--                                    childrenids="type3,type4" parentids="type1"-->
+<!--                                    data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">-->
+<!--                        <label class="layui-form-label form-label-wrap"-->
+<!--                               data-th-text="#{RskSpecificAssetType001.type3}">资产三级类型</label>-->
+<!--                        <div class="layui-input-inline input-inline">-->
+<!--                            <select type="text" id="type3" name="type3"  class="layui-input form-input input-select"-->
+<!--                                    allowClear="true" placeholder="请输入内容"-->
+<!--                                    childrenids="type4" parentids="type2"-->
+<!--                                    data-th-data-result='${RSK_AUTHORIZE_TYPE3}' multiple="true"-->
+<!--                                    data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <!--20210812 fuyongsheng删除 end-->
                 <div class="layui-form-item">
-                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                        <label class="layui-form-label form-lable"
-                               data-th-text="#{RskSpecificAssetType001.type1}">资产一级类型</label>
-                        <div class="layui-input-inline input-inline">
-                            <select type="text" id="type1" name="type1"
-                                    class="layui-input form-input input-select" multiple
-                                    data-th-data-result='${RSK_AUTHORIZE_TYPE1}'
-                                    allowClear="true" childrenids="type2,type3,type4"
-                                    data-th-placeholder="#{SysCommon.placeholder}" >
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                        <label class="layui-form-label form-label-wrap"
-                               data-th-text="#{RskSpecificAssetType001.type2}">资产二级类型</label>
-                        <div class="layui-input-inline input-inline">
-                            <select type="text" id="type2" name="type2"  class="layui-input form-input input-select"
-                                    allowClear="true" placeholder="请输入内容"
-                                    data-th-data-result='${RSK_AUTHORIZE_TYPE2}' multiple="true"
-                                    childrenids="type3,type4" parentids="type1"
-                                    data-th-placeholder="#{SysCommon.placeholder}">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                        <label class="layui-form-label form-label-wrap"
-                               data-th-text="#{RskSpecificAssetType001.type3}">资产三级类型</label>
-                        <div class="layui-input-inline input-inline">
-                            <select type="text" id="type3" name="type3"  class="layui-input form-input input-select"
-                                    allowClear="true" placeholder="请输入内容"
-                                    childrenids="type4" parentids="type2"
-                                    data-th-data-result='${RSK_AUTHORIZE_TYPE3}' multiple="true"
-                                    data-th-placeholder="#{SysCommon.placeholder}">
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                        <label class="layui-form-label form-label-wrap"
-                               data-th-text="#{RskSpecificAssetType001.type4}">业务类型</label>
-                        <div class="layui-input-inline input-inline">
-                            <select type="text" id="type4" name="type4"  class="layui-input form-input input-select"
-                                    allowClear="true" placeholder="请输入内容"
-                                    parentids="type3"
-                                    data-th-data-result='${RSK_AUTHORIZE_TYPE4}' multiple="true"
-                                    data-th-placeholder="#{SysCommon.placeholder}">
-                            </select>
-                        </div>
-                    </div>
+                    <!--20210812 fuyongsheng删除 start-->
+<!--                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">-->
+<!--                        <label class="layui-form-label form-label-wrap"-->
+<!--                               data-th-text="#{RskSpecificAssetType001.type4}">业务类型</label>-->
+<!--                        <div class="layui-input-inline input-inline">-->
+<!--                            <select type="text" id="type4" name="type4"  class="layui-input form-input input-select"-->
+<!--                                    allowClear="true" placeholder="请输入内容"-->
+<!--                                    parentids="type3"-->
+<!--                                    data-th-data-result='${RSK_AUTHORIZE_TYPE4}' multiple="true"-->
+<!--                                    data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <!--20210812 fuyongsheng删除 end-->
                     <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
                         <label class="layui-form-label form-label-wrap"
                                data-th-text="#{RskSpecificAssetType001.finprodId}">资产代码</label>

@@ -50,7 +50,7 @@ public class ClientData implements Serializable {
     }
 
     public Object getBodyField(String key) {
-        return head.get(key);
+        return body.get(key);
     }
 
     public Map<String, Object> convertToMap() {

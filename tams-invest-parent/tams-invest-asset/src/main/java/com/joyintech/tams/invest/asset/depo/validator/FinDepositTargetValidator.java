@@ -127,13 +127,13 @@ public class FinDepositTargetValidator implements BeanValidator{
                 }
             }
         }
-        //存款类型:资产类型选择存放同业时必填，其他情况不可填
-        if(StringUtil.equals(dto.getType6(), DictCodeList.存款类资产类型_存放同业.getValue())){
-            if(StringUtil.isEmpty(dto.getType7())){
-                resultList.add(new ValidMessage("type7",
-                    getMessage("COMMON_E_0057", getMessage("FinDepositTarget002.type7"))));
-            }
-        }
+        //存款类型:资产类型选择存放同业时必填，其他情况不可填    modify  xxg  存款类标的信息新建时，无法保存、提交
+//        if(StringUtil.equals(dto.getType6(), DictCodeList.存款类资产类型_存放同业.getValue())){
+//            if(StringUtil.isEmpty(dto.getType7())){
+//                resultList.add(new ValidMessage("type7",
+//                    getMessage("COMMON_E_0057", getMessage("FinDepositTarget002.type7"))));
+//            }
+//        }
         if ( dto.getBussRepDepositInfoDto()!=null&&!StringUtil.equals(dto.getOperateType(), "delete") && StringUtil.equals(DictCodeList.是否_中债_是.getValue(),
                 dto.getBussRepDepositInfoDto().getRepIsStruct())) {
             if (StringUtil.isEmpty(dto.getBussRepDepositInfoDto().getRepTargetType())) {

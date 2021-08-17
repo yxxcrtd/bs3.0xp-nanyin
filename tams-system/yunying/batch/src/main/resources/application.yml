@@ -363,14 +363,14 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
-    username: CVR30INIT
-    password: CVR30INIT 
+    username: CVR30INIT_DEV
+    password: CVR30INIT_DEV
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  sqldiruserName: CVR30INIT
-  sqldirpassword: CVR30INIT
+  sqldiruserName: CVR30INIT_DEV
+  sqldirpassword: CVR30INIT_DEV
   loadbalance: false
   micorservice:
     contextPath:
@@ -402,14 +402,14 @@ application:
 base:
   datasource:
     url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
-    username: CVR30INIT
-    password: CVR30INIT
+    username: CVR30INIT_DEV
+    password: CVR30INIT_DEV
 #interf数据源配置
 interf:  
    datasource:
     url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
-    username: CVR30INIT
-    password: CVR30INIT
+    username: CVR30INIT_DEV
+    password: CVR30INIT_DEV
 #日志路径配置
 log:
   path: /home/tams/logs/batch

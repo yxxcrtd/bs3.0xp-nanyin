@@ -29,5 +29,6 @@ public interface RskValTableImportMapper {
     void deleteValTable(RskValtblAssetSubDto dto);
     
     void deleteSumValTable(RskValtblAssetSubDto dto);
-     
+
+    int selectGoalCount(Map<String, Object> paramMap);
 }

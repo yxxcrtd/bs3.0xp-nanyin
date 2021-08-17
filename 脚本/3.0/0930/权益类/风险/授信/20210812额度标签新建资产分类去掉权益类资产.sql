@@ -1,0 +1,1 @@
+delete from SYS_DATADICT_LIST where DICT_CODE='RISK_ASSET_TYPE' and ITEM_CODE='F19';

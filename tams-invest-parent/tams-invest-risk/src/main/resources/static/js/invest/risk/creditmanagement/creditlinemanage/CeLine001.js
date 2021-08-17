@@ -41,7 +41,7 @@
              {field:'creditTagId', width:50 ,visible: false}
             ,{field:'creditTypeText', width:150 , title: 'CeLine001.creditType', sortField:'t.CREDIT_TYPE'}
             ,{field:'creditTagName', width:200 , title: 'CeLine001.creditTagName', sortField:'t.CREDIT_TAG_NAME'}
-            ,{field:'deductRuleText', width:200 , title: 'CeLine001.deductRule', sortField:'t.DEDUCT_RULE'}
+            // ,{field:'deductRuleText', width:200 , title: 'CeLine001.deductRule', sortField:'t.DEDUCT_RULE'}
             ,{field:'isPerpetualSecText', width:200 , title: 'CeLine001.isPerpetualSec', sortField:'t.IS_PERPETUAL_SEC'}
             ,{field:'issueTypeText', width:200 ,title: 'CeLine001.issueType', sortField:'t.ISSUE_TYPE'}
             ,{field:'creditUsingTypeText',visible: false,width:150 , title: 'CeLine001.creditUsingType', sortField:'t.CREDIT_USING_TYPE'}

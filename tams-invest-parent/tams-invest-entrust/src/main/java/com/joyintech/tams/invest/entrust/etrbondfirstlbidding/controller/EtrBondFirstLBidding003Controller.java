@@ -15,8 +15,12 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.service.EtrBondFirstBiddingService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
@@ -113,7 +117,7 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
     /**
      * 保存按钮点击时的check
      *
-     * @param dtoList dto
+     * @param allDto dto
      * @param result BindingResult
      * @return check结果
      * @see
@@ -121,8 +125,9 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody List<EtrBondFirstLBiddingDto> dtoList, BindingResult result) {
+    public AjaxResult check(@RequestBody EtrBondFirstLBiddingDto allDto, BindingResult result) {
         List<ValidMessage> messages = new ArrayList<>();
+        List<EtrBondFirstLBiddingDto> dtoList = allDto.getSelectedItem();
         for (int i = 0; i < dtoList.size(); i++ ) {
             ValidationUtil.ValidResult itemResult = ValidationUtil.validateBean(dtoList.get(i),
                     ValidateGroupEdit.class);
@@ -146,7 +151,7 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
 
     /**
      * 导入文件时的check
-     * @param map 数据
+     * @param fileName 数据
      * @return check结果
      * @see
      * @since 1.0
@@ -161,19 +166,20 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
     /**
      * 保存/提交
      * 
-     * @param dtoList dto
+     * @param allDto dto
      * @param br br
      * @return 结果
      * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody List<EtrBondFirstLBiddingDto> dtoList, BindingResult br)
+    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto allDto, BindingResult br)
         throws Exception {
-        AjaxResult ajaxResult = this.check(dtoList, br);
+        AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;
         }
+        List<EtrBondFirstLBiddingDto> dtoList = allDto.getSelectedItem();
         for (EtrBondFirstLBiddingDto dto : dtoList) {
             if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
                 BussinessCodeParameter param = new BussinessCodeParameter();
@@ -183,6 +189,17 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
             }
             dto.setWorkflowParameter("new|||1|EtrBondFirstLBidding002|EtrBondFirstLBidding002_btn_submit|true");
         }
+        // ----------add by yushilong 20200721 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
+                    DictCodeListExt2.平安资产类型_一级市场债.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                    false, null);
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by yushilong 20200721 预占功能 end----------
 
         ProcessParameter<EtrBondFirstLBiddingDto> processParameter = new ProcessParameter<EtrBondFirstLBiddingDto>();
         WorkFlowParameter<EtrBondFirstLBiddingDto> params = new WorkFlowParameter<EtrBondFirstLBiddingDto>();

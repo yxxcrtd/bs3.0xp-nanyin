@@ -612,68 +612,113 @@
         
         var forbidFlag=false;
         // del 批量试算 by zhangrui1 start
-//        if(null!=checkParam&&Array.isArray(checkParam.data)){
-//            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', checkParam, function() {
-//                var results = [];
-//                Joyin.ajaxJson(url, initParam, function (resultArrList) {
-//                    $("#riskTrialSpan").empty();
-//                    $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
-//                    table.reload({data:[]});
-//                    var cluflag=true;
-//                    for(var row in resultArrList) {
-//                        var resultArr=JSON.parse(resultArrList[row]);
-//                        if (resultArr && resultArr.head && resultArr.head.std400msgt) {
-//                            if (resultArr.head.std400msgt == 'E') {
-//                                Joyin.error(resultArr.head.stdrtninfo)
-//                                return;
-//                            }
-//                        }
-//                        if (!resultArr || !resultArr.body || !resultArr.body.RSK_LIST || !resultArr.body.rskStatus) {
-//                            return;
-//                        }
-//                        var result = resultArr.body.RSK_LIST
-//
-//                        for(var row in result){
-//                            result[row].kriValue=forbidVal(result[row].kriValue,result[row].kriType);
-//                            checkRiskStatus(result[row]);
-//                            changeHtml(result[row]);
-//                            results.push(result[row]);
-//                            if(result[row].kriStatus=='3'&&result[row].kriTrend!="向好" ){
-//                                forbidFlag=true
-//                            }
-//                        }
-//                        //当置为不通过时就不再进来了
-//                        if(cluflag) {
-//                            if(resultArr.body.rskStatus!="3"){
-//                                if(resultArr.body.rskStatus=="4"&&forbidFlag){
-//                                    cluflag=false;
-//                                    resultArr.body.rskStatus="3";
-//                                }
-//                            }else{
-//                                cluflag=false;
-//                            }
-//                            //cluflag = resultArr.body.rskStatus!="3"?resultArr.body.rskStatus=="4"&&forbidFlag?false:true:true;;
-//                            if (!cluflag) {
-//                                $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.noclusion"))
-//
-//                            } else {
-//                                $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
-//                            }
-//                            //把总结论也放在列表中隐藏以方便保存到库中
-//                            var cacheData = table.getRow(0, true);
-//                            cacheData.totalConclu = resultArr.body.rskStatus;
-//                        }
-//                    }
-//                    table.reload({data:results});
-//                    /**
-//                     * add by chendijun 20200710 上农商场内交易页面试算和展示不在同一个页面，需要回调传出数据
-//                     */
-//                    if(callback) {
-//                        callback(results,cluflag);
-//                    }
-//                }, true);
-//            },true);
-//        }else{
+       if(null!=checkParam&&Array.isArray(checkParam.data)){
+           Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', checkParam, function() {
+               var results = [];
+               Joyin.ajaxJson(url, initParam, function (resultArrList) {
+                   $("#riskTrialSpan").empty();
+                   $("#riskMathFlag").val("02");//---add by 裴家俊 2019/03/20----置为已点击风险试算---
+                   table.reload({data:[]});
+                   var cluflag=true;
+                   if(null!=resultArrList && Array.isArray(resultArrList)){
+                       for(var row in resultArrList) {
+                           var resultArr=JSON.parse(resultArrList[row]);
+                           if (resultArr && resultArr.head && resultArr.head.std400msgt) {
+                               if (resultArr.head.std400msgt == 'E') {
+                                   Joyin.error(resultArr.head.stdrtninfo)
+                                   return;
+                               }
+                           }
+                           if (!resultArr || !resultArr.body || !resultArr.body.RSK_LIST || !resultArr.body.rskStatus) {
+                               return;
+                           }
+                           var result = resultArr.body.RSK_LIST
+
+                           for(var row in result){
+                               result[row].kriValue=forbidVal(result[row].kriValue,result[row].kriType);
+                               checkRiskStatus(result[row]);
+                               changeHtml(result[row]);
+                               results.push(result[row]);
+                               if(result[row].kriStatus=='3'&&result[row].kriTrend!="向好" ){
+                                   forbidFlag=true
+                               }
+                           }
+                           //当置为不通过时就不再进来了
+                           if(cluflag) {
+                               if(resultArr.body.rskStatus!="3"){
+                                   if(resultArr.body.rskStatus=="4"&&forbidFlag){
+                                       cluflag=false;
+                                       resultArr.body.rskStatus="3";
+                                   }
+                               }else{
+                                   cluflag=false;
+                               }
+                               //cluflag = resultArr.body.rskStatus!="3"?resultArr.body.rskStatus=="4"&&forbidFlag?false:true:true;;
+                               if (!cluflag) {
+                                   $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.noclusion"))
+
+                               } else {
+                                   $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
+                               }
+                               //把总结论也放在列表中隐藏以方便保存到库中
+                               var cacheData = table.getRow(0, true);
+                               cacheData.totalConclu = resultArr.body.rskStatus;
+                           }
+                       }
+                   }else{
+                       var resultArr=resultArrList;
+                       if (resultArr && resultArr.head && resultArr.head.std400msgt) {
+                           if (resultArr.head.std400msgt == 'E') {
+                               Joyin.error(resultArr.head.stdrtninfo)
+                               return;
+                           }
+                       }
+                       if (!resultArr || !resultArr.body || !resultArr.body.RSK_LIST || !resultArr.body.rskStatus) {
+                           return;
+                       }
+                       var result = resultArr.body.RSK_LIST
+
+                       for(var row in result){
+                           result[row].kriValue=forbidVal(result[row].kriValue,result[row].kriType);
+                           checkRiskStatus(result[row]);
+                           changeHtml(result[row]);
+                           results.push(result[row]);
+                           if(result[row].kriStatus=='3'&&result[row].kriTrend!="向好" ){
+                               forbidFlag=true
+                           }
+                       }
+                       //当置为不通过时就不再进来了
+                       if(cluflag) {
+                           if(resultArr.body.rskStatus!="3"){
+                               if(resultArr.body.rskStatus=="4"&&forbidFlag){
+                                   cluflag=false;
+                                   resultArr.body.rskStatus="3";
+                               }
+                           }else{
+                               cluflag=false;
+                           }
+                           //cluflag = resultArr.body.rskStatus!="3"?resultArr.body.rskStatus=="4"&&forbidFlag?false:true:true;;
+                           if (!cluflag) {
+                               $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.noclusion"))
+
+                           } else {
+                               $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
+                           }
+                           //把总结论也放在列表中隐藏以方便保存到库中
+                           var cacheData = table.getRow(0, true);
+                           cacheData.totalConclu = resultArr.body.rskStatus;
+                       }
+                   }
+                   table.reload({data:results});
+                   /**
+                    * add by chendijun 20200710 上农商场内交易页面试算和展示不在同一个页面，需要回调传出数据
+                    */
+                   if(callback) {
+                       callback(results,cluflag);
+                   }
+               }, true);
+           },true);
+       }else{
         // del 批量试算 by zhangrui1 end
             Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', checkParam, function() {
                 Joyin.ajaxJson(url, initParam, function(resultArr) {
@@ -748,9 +793,9 @@
                     }
                 },true);
             },true);
-            // del 批量试算 by zhangrui1 start
-//        }
-            // del 批量试算 by zhangrui1 end
+        // del 批量试算 by zhangrui1 start
+       }
+        // del 批量试算 by zhangrui1 end
     };
     var changeHtml = function(result) {
         for(var key in result) {

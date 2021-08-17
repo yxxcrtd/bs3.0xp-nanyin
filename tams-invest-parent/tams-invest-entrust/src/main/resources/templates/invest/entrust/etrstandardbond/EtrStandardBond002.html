@@ -57,6 +57,37 @@
                             </div>
                         </div>
                     </div>
+                    <!-- repo_pledge_model=01时查询条件增加【债券品种】【主体评级】add by yeming 20210811 start-->
+                    <div class="layui-form-item">
+                        <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                            <label class="layui-form-label form-lable"
+                                   th:utext="#{EtrStandardBond002.pledgeColModel.secType}">债券品种</label>
+                            <div class="layui-input-inline input-inline">
+                                <select type="text" id="secType" name="secType"
+                                        class="layui-input form-input input-select"
+                                        placeholder="请输入内容"
+                                        th:placeholder="#{SysCommon.placeholder}"
+                                        th:data-result='${CUSTOM_ASSET_TYPE_THREE}'
+                                        allowClear="true" formatoption="true">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                            <label class="layui-form-label form-lable"
+                                   th:utext="#{EtrStandardBond002.pledgeColModel.mainGrade}">主体评级</label>
+                            <div class="layui-input-inline input-inline">
+                                <select type="text" id="mainGrade" name="mainGrade"
+                                        class="layui-input form-input input-select"
+                                        placeholder="请输入内容"
+                                        th:placeholder="#{SysCommon.placeholder}"
+                                        th:data-result='${MAIN_GRADE_RESULT}'
+                                        allowClear="true" formatoption="true">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- repo_pledge_model=01时查询条件增加【债券品种】【主体评级】add by yeming 20210811 end-->
                 </form>
             </div>
             <div class="repo-trade-wrap">

@@ -23,10 +23,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductClass;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.valuation.basicdata.asset.bond.dto.FinBondTargetAssetDto;
 import com.joyintech.tams.valuation.basicdata.asset.bond.service.FinBondTargetAssetService;
 import com.joyintech.tams.valuation.basicdata.asset.common.service.ValAssetCommonService;
@@ -88,15 +85,24 @@ public class FinBondTargetAsset002Controller extends BaseController{
             DictCode.本金收益特征,
             DictCode.债券核算分类,
             DictCode.增值税资产分类,
-            DictCode.债券类型
+            DictCode.债券类型,
+            DictCode.风险五级分类
     };
     @Override
     public String init(Model model){
         //初始化基本信息画面数据字典
         setSelectOptionToModel(model, DICT_CODES);
+
+//        setSelectOptionToModel(model,  DictCode.风险五级分类);
+
         String finprodId = this.getParam("finprodId");
         //String status = getParam("status");
         String workflowId = getParam("workflowId");
+//        model.addAttribute("BOND_RISK_TYPE_01", DictCodeListExt3.风险五级分类_关注.getValue());
+//        model.addAttribute("BOND_RISK_TYPE_02", DictCodeListExt3.风险五级分类_可疑.getValue());
+//        model.addAttribute("BOND_RISK_TYPE_03", DictCodeListExt3.风险五级分类_损失.getValue());
+//        model.addAttribute("BOND_RISK_TYPE_04", DictCodeListExt3.风险五级分类_次级.getValue());
+//        model.addAttribute("BOND_RISK_TYPE_05", DictCodeListExt3.风险五级分类_正常.getValue());
         model.addAttribute("YES",DictCodeList.是否_是.getValue());
         model.addAttribute("isTradeCalendar",DictCodeList.是否_是.getValue());
         model.addAttribute("FINPROD_TYPE_F01",DictCodeListExt1.金融产品类型_债券.getValue());

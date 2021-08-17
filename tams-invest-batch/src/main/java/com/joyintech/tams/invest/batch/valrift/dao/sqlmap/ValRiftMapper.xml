@@ -200,4 +200,27 @@
           and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
     </delete>
 
+	<!-- 获取自主管理待释放的预占数据  add by zhanpei -->
+	<select id="selectFreedAmPreRskOccupy"  resultType="java.lang.String">
+		SELECT rpoi.uuid
+		FROM rsk_pre_occupy_info rpoi
+		WHERE rpoi.occupy_date>TO_DATE(#{cdate},'YYYY-MM-DD')
+		AND rpoi.event_type   ='0'
+		AND EXISTS
+		  (SELECT 1
+		  FROM ETR_ENTRUST_WW eew
+		  LEFT JOIN ETR_ENTRUST_WW_DETAIL eewd
+		  ON eewd.entrust_id    =eew.entrust_id
+		  WHERE eew.portfolio_id= #{portfolioId,jdbcType=VARCHAR}
+		  AND eew.ENTRUST_DATE <![CDATA[<=]]>
+		  (SELECT MAX(t.val_date)
+		  FROM RSK_VALTBL_ASSET_SUB t
+		  WHERE t.ptl_id =#{portfolioId,jdbcType=VARCHAR}
+		  AND t.val_date<![CDATA[<=]]>TO_DATE(#{cdate},'YYYY-MM-DD')
+		  )
+		  AND rpoi.event_id     =(eewd.ENTRUST_ID
+		    ||eewd.PORTFOLIO_ID)
+		  )
+    </select>
+
 </mapper>

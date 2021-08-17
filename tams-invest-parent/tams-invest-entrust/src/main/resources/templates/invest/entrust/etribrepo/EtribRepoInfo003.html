@@ -26,6 +26,10 @@
             <input type="text" id="entrustStatus" name="entrustId" disabled="disabled" style="display:none;"
                    data-th-value="${entity?.entrustStatus}"/>
             <input type="hidden" id="tradeMarket" name="tradeMarket" value="01" />
+            <div class="layui-tab-item layui-show" style="height:30px;" id="cash_div">
+                <iframe th:src="@{/invest/entrust/EtrCommonController/initCash}" width="100%"
+                        height="100%" frameborder="0" style="border:none;"></iframe>
+            </div>
 
             <div class="layui-form-item" >
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
@@ -38,6 +42,16 @@
                                 required data-th-data-result="${PORTFOLIO_SERIES}"
                                 data-th-initvalue="${entity?.portfolioSeries}">
                         </select>
+                    </div>
+                </div>
+                <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                    <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.trader}">本方交易员</label>
+                    <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
+                        <select type="text" id="trader" name="trader"
+                                class="layui-input form-input input-select"
+                                data-th-placeholder="#{SysCommon.placeholder}"  placeholder="请输入内容"
+                                data-th-data-url="@{/component/trade/BussEtrInvestPersonInfo/getTrader}"
+                                data-th-initvalue="${entity?.termType}" ></select>
                     </div>
                 </div>
             </div>
