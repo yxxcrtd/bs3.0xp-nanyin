@@ -88,8 +88,10 @@ public class GeneralJob extends GeneralBaseJob {
 						if(SecurityCoreFactory.getTableIDProperties()!=null) {
 							if (generalCooa.getOffVouch() != null && !generalCooa.getVoucher().equals("")) {
 								tableID = SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.GENERAL + "," + sec.getIssueType() + "," + generalCooa.getOffVouch());
+								tableID = tableID == null ? "" : tableID;
 							} else
 								tableID = SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.GENERAL + "," + sec.getIssueType());
+							    tableID = tableID == null ? "" : tableID;
 						}
 						generalCooa.setTableID(tableID);
 						List<VoucherDetails> voucherDetailsList=generalCooa.getVoucherDetails();

@@ -44,7 +44,7 @@ public class AdapterCoreUtility {
  			//读取配置文件，获取请求下游系统的接口地址
  			Properties prop = AdapterWebserviceIntefUtil.getProperties("webservice.properties");
  			if(prop!=null) {
-				webserviceUrl = prop.getProperty("webseviceUrl");
+				webserviceUrl = prop.getProperty("webseviceUrl")== null ? "" :prop.getProperty("webseviceUrl");
 			}
  		} catch (IOException e) {
 			logger.error(e.getMessage(),e);

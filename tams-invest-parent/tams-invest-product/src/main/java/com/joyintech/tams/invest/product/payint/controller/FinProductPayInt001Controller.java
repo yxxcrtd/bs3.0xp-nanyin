@@ -146,7 +146,7 @@ public class FinProductPayInt001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<FinProductPayInt001Dto> findPage() throws Exception {
+    public Page<FinProductPayInt001Dto> findPage(){
         return finProductPayInt001Service.findPage(RequestUtil.getPageParam());
     }
 

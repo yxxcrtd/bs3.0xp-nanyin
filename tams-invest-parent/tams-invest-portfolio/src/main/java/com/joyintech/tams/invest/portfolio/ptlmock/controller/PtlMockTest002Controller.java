@@ -12,6 +12,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -426,8 +427,7 @@ public class PtlMockTest002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) PtlMockTest002Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) PtlMockTest002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

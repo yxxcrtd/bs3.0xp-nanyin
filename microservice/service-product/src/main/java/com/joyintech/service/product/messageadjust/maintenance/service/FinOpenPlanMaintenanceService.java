@@ -72,9 +72,7 @@ public class FinOpenPlanMaintenanceService  extends BaseService<FinOpenPlanMaint
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param param
      * @return
-     * @throws Exception 
      * @see
      * @since 1.0
      */
@@ -116,7 +114,7 @@ public class FinOpenPlanMaintenanceService  extends BaseService<FinOpenPlanMaint
         List<FinOpenPlanMaintenanceDto> listDto = dto.getSelectedDto();
         List<FinOpenPlan> finOpenPlanList = new ArrayList<FinOpenPlan>();
         if(listDto != null && listDto.size()>0){
-            String openType = new String();
+            String openType = "";
             for (FinOpenPlanMaintenanceDto finOpenPlanMaintenanceDto : listDto) {
                 if(StringUtil.isNotEmpty(finOpenPlanMaintenanceDto.getOpenType())){
                     openType = finOpenPlanMaintenanceDto.getOpenType();
@@ -206,7 +204,6 @@ public class FinOpenPlanMaintenanceService  extends BaseService<FinOpenPlanMaint
     /**
      * 根据母产品代码查询子产品代码和开放计划现金流代码
      * <功能详细描述>
-     * @param pfinprodId
      * @return
      * @see
      * @since 1.0

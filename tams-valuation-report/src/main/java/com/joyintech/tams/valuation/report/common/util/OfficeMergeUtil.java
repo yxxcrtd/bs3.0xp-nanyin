@@ -7,6 +7,7 @@ package com.joyintech.tams.valuation.report.common.util;
 import java.io.*;
 import java.util.List;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -48,7 +49,7 @@ public class OfficeMergeUtil {
                     srcBodyTmp= srcDocumentTmp.getDocument().getBody();
                 }
                 catch (IOException | InvalidFormatException e) {
-                    throw e;
+                    throw new BusinessException(e);
                 }
                 finally {
                     if (srcDocumentTmp != null) {
@@ -66,7 +67,7 @@ public class OfficeMergeUtil {
                 appendBody(srcBodyTmp, srcBody);
             }
             catch (IOException | InvalidFormatException | XmlException e) {
-                throw e;
+                throw new BusinessException(e);
             }
             finally {
                 if (srcDocument != null) {

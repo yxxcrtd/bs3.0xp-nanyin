@@ -757,7 +757,7 @@ public class DisTargetIndexService {
 			ps.setDate(5, new java.sql.Date(startDate.getTime()));
 			//执行语句
 			rs = ps.executeQuery();
-			if(rs.next()){
+			if(rs != null && rs.next()){
 				map.put("BQYSX", rs.getBigDecimal("BQYSX"));
 				map.put("BQLR", rs.getBigDecimal("BQLR"));
 				map.put("SSZB", rs.getBigDecimal("SSZB"));
@@ -1211,7 +1211,7 @@ public class DisTargetIndexService {
 					// 执行语句
 					 rs = ps.executeQuery();
 					Map<String,Object> dataMap = null;
-					while (rs.next()) {
+					while (rs!= null && rs.next()) {
 						dataMap = new HashMap<String,Object>();
 						dataMap.put("TDY_COST_AMT", rs.getBigDecimal("TDY_COST_AMT"));// 估值
 						dataMap.put("END_DAYS_2", rs.getInt("END_DAYS_2"));// 剩余存续期限

@@ -139,8 +139,7 @@ public class ValNetPlanQuotation001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@PostMapping("/findPageout")
-	public List<ValNetPlanQuotation001Dto> findPageout(@RequestBody Map<String, Object> params)
-			throws Exception {
+	public List<ValNetPlanQuotation001Dto> findPageout(@RequestBody Map<String, Object> params){
 			return  valNetPlanQuotation001Service.findPageout(params);		
 	}
 

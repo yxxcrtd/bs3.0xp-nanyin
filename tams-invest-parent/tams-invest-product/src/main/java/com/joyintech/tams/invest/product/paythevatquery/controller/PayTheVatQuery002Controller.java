@@ -118,7 +118,7 @@ public class PayTheVatQuery002Controller extends BaseController{
      */
     @RequestMapping("search")
     @ResponseBody
-    public Page<PayTheVatQuery002Dto> search(Map<String, Object> params) throws Exception {
+    public Page<PayTheVatQuery002Dto> search(Map<String, Object> params){
         return payTheVatQuery002Service.search(RequestUtil.getPageParam());
     }
     

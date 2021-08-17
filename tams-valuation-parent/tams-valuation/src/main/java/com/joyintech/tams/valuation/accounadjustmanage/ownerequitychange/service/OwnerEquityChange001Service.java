@@ -67,7 +67,7 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * @since 1.0
      */
     public List<OwnerEquityChange001Dto> selectList(Map<String, Object> pageParam) {
-        if(pageParam.get("booksetId") !=null || StringUtil.isNotEmpty(pageParam.get("booksetId"))){
+        if(StringUtil.isNotEmpty(pageParam.get("booksetId"))){
             // 调用共通方法【详细设计-标的类共通方法设计】-核算主体查询
             FinProduct finProduct = finProductCommonBatchService.queryAcctSubject(
                     (String)pageParam.get("booksetId"));
