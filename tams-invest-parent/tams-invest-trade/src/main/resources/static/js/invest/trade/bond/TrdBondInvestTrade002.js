@@ -1129,7 +1129,9 @@ var table;
     				paramObj.portfolioId = $("#portfolioId").val();
     				paramObj.finprodId = $("#finprodId").val();
     				paramObj.invAim = $("#invAim").val();
-    				paramObj.chlId = $("#chlId").val();
+                    if($("#chlId").val()){
+                        paramObj.chlId = $("#chlId").val();
+                    }
     				paramObj.counterId = $("#trdInvestPersonInfo_counterId").val();
     				paramObj.tradeDate = $("#tradeDate").val();
     				Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getCprice'), paramObj, function (result) {
@@ -1911,7 +1913,9 @@ var table;
 	            		dealinfo.tradePlat = $("#tradePlat").val();
 	            		dealinfo.secManageAcctId = $("#secManageAcctId").val();
                         // 通道交易 新增 强成西 2019/03/26 start
-	            		dealinfo.chlId = $("#chlId").val();
+                        if($("#chlId").val()) {
+                            dealinfo.chlId = $("#chlId").val();
+                        }
 	            		// 通道交易 新增 强成西 2019/03/26 end
                         dealObj.tradeMarketMode = $("#tradeMarketMode").val();
 	            		list.push(dealinfo);
@@ -1952,7 +1956,9 @@ var table;
                         }
                     }
                     // 通道交易 新增 强成西 2019/03/26 start
-                    dealObj.chlId = $("#chlId").val();
+                    if($("#chlId").val()) {
+                        dealObj.chlId = $("#chlId").val();
+                    }
                     // 通道交易 新增 强成西 2019/03/26 end
                     dealObj.tradeMarketMode = $("#tradeMarketMode").val();
                     list.push(dealObj);
@@ -3409,7 +3415,9 @@ var table;
     				paramObj.portfolioId = $("#portfolioId").val();
     				paramObj.finprodId = $("#finprodId").val();
     				paramObj.invAim = $("#invAim").val();
-    				paramObj.chlId = $("#chlId").val();
+                    if($("#chlId").val()) {
+                        paramObj.chlId = $("#chlId").val();
+                    }
     				paramObj.counterId = $("#trdInvestPersonInfo_counterId").val();
     				paramObj.tradeDate = $("#tradeDate").val();
     				Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getCprice'), paramObj, function (result) {
