@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.classic.newpbcreport.service;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.StrUtil;
 import com.joyintech.tams.common.base.dao.PbcSendZipDatFileMapper;
 import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
@@ -68,7 +69,12 @@ public class NewPbcReport2_1ProdDealService extends AbstractDealNewPbcMonthRepor
             saveZipDatFile(debtDatDetailDtos,sendZipDatFile);
         }catch (Exception e){
             ExcelValidDto dto = new ExcelValidDto();
-            dto.setErrorInfo("导入"+sheetName()+"失败");
+            String message = e.getMessage();
+            if(StrUtil.isNotEmpty(message)){
+                dto.setErrorInfo(message);
+            }else{
+                dto.setErrorInfo("导入"+sheetName()+"失败");
+            }
             excelValidDtos.add(dto);
             logger.error("导入"+sheetName()+"异常",e);
         }

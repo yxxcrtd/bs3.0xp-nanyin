@@ -23,4 +23,6 @@ public interface PbcProdAssetpoolCodeMapper {
     int updateByPrimaryKey(PbcProdAssetpoolCode record);
 
     List<PbcProdAssetpoolCode> selectByInsideProdList(List<String> list);
+
+    int batchInsertPbcCode(List<PbcProdAssetpoolCode> list);
 }

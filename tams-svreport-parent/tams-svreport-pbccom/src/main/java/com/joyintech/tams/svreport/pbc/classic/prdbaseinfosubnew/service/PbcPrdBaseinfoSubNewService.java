@@ -149,7 +149,7 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 	        // 处理产品发行登记
 	        for(PbcPrdBaseinfoSubNew sub : needRegistSubList){
 	        	if(sub.getInDepName() != null && inDepCodeMap.containsKey(sub.getInDepName())){
-	        		sub.setInDepCode(inDepCodeMap.get(sub.getInDepName()).getObjfield2());
+	        		sub.setInDepCode(inDepCodeMap.get(sub.getInDepName()).getSrcfield2());
 	        	}
 	        	String pbcProdId;
 	        	if(pbcProdIdMap.containsKey(sub.getProdId())){
@@ -175,7 +175,7 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 	            sub.setUpdateUser(CommonUtil.getUserName());
 	            sub.setCreateDept(CommonUtil.getDeptCode());
 //	            sub.setStatusDate(batchTime);
-	            sub.setOrgCode(CommonUtil.getOrgCode());
+//	            sub.setOrgCode(CommonUtil.getOrgCode());
 	            sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 	            if(sub.getHighYieldIssue()!=null){
 		            sub.setHighYieldIssue(sub.getHighYieldIssue().setScale(5,BigDecimal.ROUND_HALF_UP));

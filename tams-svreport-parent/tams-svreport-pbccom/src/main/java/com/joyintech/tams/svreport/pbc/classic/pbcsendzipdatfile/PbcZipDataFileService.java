@@ -11,7 +11,6 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.math.MathUtil;
 import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -36,11 +35,9 @@ import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.*;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.*;
 import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsUtil;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dao.PbcPrdBaseinfoSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dao.PbcPrdBaseinfoSubNewMapper;
-import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dao.PbcPrdBaseinfoEndSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dao.PbcPrdBaseinfoEndSubNewMapper;
@@ -48,6 +45,8 @@ import com.joyintech.tams.svreport.pbc.common.dto.DatDownloadDto;
 import com.joyintech.tams.svreport.pbc.common.util.SftpUtil;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +70,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class PbcZipDataFileService {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private  ChbTypeMappingExMapper chbTypeMappingExMapper;
@@ -120,7 +121,7 @@ public class PbcZipDataFileService {
      */
     public AjaxResult genDataFile(Map<String,Set<String>> paramMap, Map<String, PbcSendZipDatFile> zipInfoMap) {
     	List<String> zipFileName = new ArrayList<String>();
-		AjaxResult result = new AjaxResult();
+		AjaxResult ajaxResult = new AjaxResult();
 		List<ValidMessage> errorList = new ArrayList<>();
 		chbTypeMappingExList=initReportConfig();
 		//去重
@@ -137,16 +138,17 @@ public class PbcZipDataFileService {
 			Set<String> set=entry.getValue();
 			PbcSendZipDatFile pbcSendZipDatFile=zipInfoMap.get(datZipCode);
 			String datZipCodePath="";
+			Set<String> rst = new HashSet<String>();
 			for(String datType:set) {  //生成dat文件
 				if(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType)){
 					DatDownloadDto datDownloadDto = genReportPrdBaseInfoFileDat(pbcSendZipDatFile, datType);
 					datDownloadDtos.add(datDownloadDto);
 					if(CollectionUtil.isNotEmpty(datDownloadDto.getValidMessages())){
 						errorList.addAll(datDownloadDto.getValidMessages());
-						result.setMessageType(MessageType.警告消息);
+						ajaxResult.setMessageType(MessageType.警告消息);
 					}else{
 						if(StringUtil.isNotEmpty(datDownloadDto.getUrl())){
-							reslut.add(datDownloadDto.getUrl());
+							rst.add(datDownloadDto.getUrl());
 						}
 					}
 				}else if(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
@@ -154,10 +156,10 @@ public class PbcZipDataFileService {
 					datDownloadDtos.add(datDownloadDto);
 					if(CollectionUtil.isNotEmpty(datDownloadDto.getValidMessages())){
 						errorList.addAll(datDownloadDto.getValidMessages());
-						result.setMessageType(MessageType.警告消息);
+						ajaxResult.setMessageType(MessageType.警告消息);
 					}else{
 						if(StringUtil.isNotEmpty(datDownloadDto.getUrl())){
-							reslut.add(datDownloadDto.getUrl());
+							rst.add(datDownloadDto.getUrl());
 						}
 					}
 				}else if (DictCodeListExt2.人行报送明细类型_募集余额报表.getValue().equals(datType)
@@ -170,37 +172,42 @@ public class PbcZipDataFileService {
 						||DictCodeListExt2.人行报送明细类型_新发产品分期限募集金额报表.getValue().equals(datType)
 					) {
 					datZipCodePath=genReport1_1_6_3_2FileDat(pbcSendZipDatFile,datType);
-					reslut.add(datZipCodePath);
+					rst.add(datZipCodePath);
 				}else if(DictCodeListExt2.人行报送明细类型_资管产品资产负债剩余期限统计.getValue().equals(datType)){
 					datZipCodePath=genReport3_3FileDat(pbcSendZipDatFile,datType);
-					reslut.add(datZipCodePath);
+					rst.add(datZipCodePath);
 				}else if(DictCodeListExt2.人行报送明细类型_资管产品资产负债统计.getValue().equals(datType)){
 					//2_1
 					datZipCodePath = genReport2_1FileDat(pbcSendZipDatFile, datType);
 					if(StringUtil.isNotEmpty(datZipCodePath)){
-						reslut.add(datZipCodePath);
+						rst.add(datZipCodePath);
 					}
 				}else if(DictCodeListExt2.人行报送明细类型_除回购和拆借外贷款分行业企业规模统计.getValue().equals(datType)
 						||DictCodeListExt2.人行报送明细类型_企业债券分行业企业规模统计.getValue().equals(datType)){
 					//2_2 2_5
 					datZipCodePath = genReport2_2_2_5FileDat(pbcSendZipDatFile, datType);
 					if(StringUtil.isNotEmpty(datZipCodePath)){
-						reslut.add(datZipCodePath);
+						rst.add(datZipCodePath);
 					}
 				}else if(DictCodeListExt2.人行报送明细类型_除回购和拆借外贷款分地区统计表.getValue().equals(datType)){
 					//2_3
 					datZipCodePath = genReport2_3FileDat(pbcSendZipDatFile, datType);
 					if(StringUtil.isNotEmpty(datZipCodePath)){
-						reslut.add(datZipCodePath);
+						rst.add(datZipCodePath);
 					}
 				}else if(DictCodeListExt2.人行报送明细类型_资产收益权按基础资产投向分类统计报表.getValue().equals(datType)){
 					//2_4
 					datZipCodePath = genReport2_4FileDat(pbcSendZipDatFile, datType);
 					if(StringUtil.isNotEmpty(datZipCodePath)){
-						reslut.add(datZipCodePath);
+						rst.add(datZipCodePath);
 					}
 				}
 			}
+			if(CollectionUtil.isNotEmpty(errorList)){
+				ajaxResult.setErrorList(errorList);
+				continue;
+			}
+			reslut.addAll(rst);
 			//添加zip路径
 			if(DictCodeListExt2.人行报送类型_统计模板数据.getValue().equals(pbcSendZipDatFile.getDatZipType())) {
 				PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date);
@@ -213,19 +220,17 @@ public class PbcZipDataFileService {
 			}
 		}
 		//生成压缩包
-		List<String> zipFileList = genCompressFile(reslut);
-		zipFileName.addAll(zipFileList);
-
-		String finalZipFile = genFinalCompressFile(zipFileName);
+		if(reslut.size() > 0){
+			List<String> zipFileList = genCompressFile(reslut);
+			zipFileName.addAll(zipFileList);
+			String finalZipFile = genFinalCompressFile(zipFileName);
+			ajaxResult.setData(finalZipFile);
+		}
 		//更新数据状态
 		updateFileDatAndPbcReport(zipDatFileList,pbcReportUuidList,date);
 		//更新产本基本和终止信息状态
 		updateBaseFileDatAndPbcReport(baseZipDatFileList,datDownloadDtos);
-		if(CollectionUtil.isNotEmpty(errorList)){
-			result.setErrorList(errorList);
-		}
-		result.setData(finalZipFile);
-		return result;
+		return ajaxResult;
 
     }
 
@@ -405,6 +410,7 @@ public class PbcZipDataFileService {
 		List<PbcPrdBaseinfoSubDat> pbcPrdBaseinfoSubDatsNew = new ArrayList<>();
 		List<String> innerProdIdsNew = new ArrayList<>();
 		String model = CacheUtil.getSysParam("PBC_REPORT_MODEL");
+		logger.info("获取新人行报送模式配置参数:{}",model);
 		String pbcReportModel =  StrUtil.isEmpty(model) ? "01" : model;
 		List<String> noPbcIdsList = new ArrayList<>();
 		Map<String,String> innerProdIdMapping = new HashMap<>();
@@ -424,6 +430,7 @@ public class PbcZipDataFileService {
 				for (String ids : noPbcIdsList) {
 					DatDownloadDto.newErrorMsg(datDownloadDto,ids);
 				}
+				return datDownloadDto;
 			}
 		}else{
 			for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDats) {
@@ -926,6 +933,11 @@ public class PbcZipDataFileService {
 							prodAssetpoolCode.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
 							prodAssetpoolCode.setUpdateTime(new Date());
 							pbcProdAssetpoolCodeMapper.insert(prodAssetpoolCode);
+						}else{
+							pbcProdAssetpoolCode.setPbcCode(pbcProdId);
+							pbcProdAssetpoolCode.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+							pbcProdAssetpoolCode.setUpdateTime(new Date());
+							pbcProdAssetpoolCodeMapper.updateByPrimaryKey(pbcProdAssetpoolCode);
 						}
 					}
 

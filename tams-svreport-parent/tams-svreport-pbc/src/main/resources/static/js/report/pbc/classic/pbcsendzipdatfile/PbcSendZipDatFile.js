@@ -129,11 +129,11 @@ $(function() {
             var param = {result:data};
             Joyin.ajaxSync(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/createZipFile', param, function(result) {
                 var msg = result.message;
-                if(msg != null && msg != ''){
+                /*if(msg != null && msg != ''){
                     Joyin.warn(msg);
-                }
+                }*/
                 if (result.data.length< 1) {
-                    layer.alert('当前没有带报送的数据，请确认');
+                    layer.alert('当前没有待报送的数据，请确认');
                 } else {
                     param.result =result.data;
                     Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
