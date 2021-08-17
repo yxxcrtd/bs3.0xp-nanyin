@@ -989,7 +989,13 @@ public class InvestorsHoldInfo001InterfService{
            List<ChbInvestholdInfoSub> subListIn = new ArrayList<>();
            // 更新操作
            List<ChbInvestholdInfoSub> subListUp = new ArrayList<>();
-
+           
+           List<String> sequenceList = null;
+       	if(  listE != null){
+			sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, listE.size());
+		 }
+       	 int index = 0;
+          
            for (InvestorsHoldInfo001InterfDto action : listE) {
                // 数据来源
                action.setDataSource(DictCodeListExt2.数据来源_系统新建.getValue());
@@ -1028,7 +1034,9 @@ public class InvestorsHoldInfo001InterfService{
                            .get(dataKey + GlobalConstant.UNDER_LINE + SEND_STATUS_01).getRegistSeqno());
                    subListUp.add(chbInvestholdInfoSub);
                } else {
-                   chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+//                   chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+            	   chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceStr(sequenceList, index));
+            	    index++;
                    subListIn.add(chbInvestholdInfoSub);
                }
            }

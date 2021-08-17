@@ -45,6 +45,8 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
@@ -198,7 +200,11 @@ public class EquityInfoRegist001Controller extends BaseController {
 //            outFile, true);
 
         Map<String, Object> pageParam = RequestUtil.getPageParam();
-        pageParam.put("export_method_flg", "export");
+        if(StringUtil.isNotEmpty((String) pageParam.get("keyList"))){
+            pageParam.put("export_method_flg", "exportSelect");
+        }else{
+            pageParam.put("export_method_flg", "export");
+        }
 
         return equityInfoRegist001Service.export(this.getPageId(), pageParam);
     }
@@ -468,4 +474,63 @@ public class EquityInfoRegist001Controller extends BaseController {
      }
      
      
+     /**
+      * 导出中债excel之前检查数据量
+      *
+      * @param param 查询条件
+      * @return 处理结果
+      */
+     @ResponseBody
+     @RequestMapping(value = "countExportNum")
+     public int countExportNum(@RequestParam Map<String, Object> param) {
+         int dataNum = equityInfoRegist001Service.countExportNum(param);
+         return dataNum;
+
+     }
+     /**
+      * 导出检查
+      * @param param
+      * @return
+      */
+     @ResponseBody
+     @RequestMapping(value = "checkExport")
+ 	public AjaxResult checkExport(@RequestBody Map<String, Object> param) {
+ 		AjaxResult ajaxResult = new AjaxResult();
+ 		boolean batchExport = false;
+ 		// 未勾选
+ 		if (!RequestUtil.getPageParam().containsKey("keyList")) {
+ 			// 中债报送批处理导出数据量。大于等于此参数则需要批处理导出。
+ 			String batchExportNum = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SUBINFO_BATCH_EXPORT_NUM);
+ 			if (!StringUtil.isNotEmpty(batchExportNum)) {
+ 				batchExportNum = "1000000"; // 默认为100w
+ 			}
+ 			int dataNum = equityInfoRegist001Service.countExportNum(param);
+ 			if (dataNum >= Integer.parseInt(batchExportNum)) {
+ 				batchExport = true;
+ 			}
+ 		}
+ 		ajaxResult.setData(batchExport);
+ 		return ajaxResult;
+ 	}
+     /**
+      * 启动批处理导出
+      * @param param
+      * @return
+      */
+     @ResponseBody
+     @RequestMapping(value = "batchExport")
+ 	public AjaxResult batchExport(@RequestParam Map<String, Object> param) {
+     	return equityInfoRegist001Service.batchExport(param);
+ 	}
+     
+     /**
+      * 启动批处理导出和手工处理
+      * @param param
+      * @return
+      */
+     @ResponseBody
+     @RequestMapping(value = "batchExportAndDoManual")
+ 	public AjaxResult batchExportAndDoManual(@RequestParam Map<String, Object> param) {
+     	return equityInfoRegist001Service.batchExportAndDoManual(param);
+ 	}
 }

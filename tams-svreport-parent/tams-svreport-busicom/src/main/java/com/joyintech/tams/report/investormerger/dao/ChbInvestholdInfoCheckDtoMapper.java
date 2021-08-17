@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.investormerger.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -44,7 +45,7 @@ public interface ChbInvestholdInfoCheckDtoMapper {
      * @return
      */
     int updateChbInvestholdCheckAftermerged();
-    List<String> selectLastMergerIndentifyMarkAndBankcode(); 
+    List<ChbInvestholdInfoCheckDto> selectLastMergerIndentifyMarkAndBankcode(); 
     /**
      * @Description 通过model查询正式表（维护表）
      * @param record
@@ -56,19 +57,22 @@ public interface ChbInvestholdInfoCheckDtoMapper {
      * @param record
      * @return
      */
-   int updateOperatestatusW(ChbInvestholdInfoCheckDto record);
+   int updateOperatestatusW(List<ChbInvestholdInfoCheckDto> list);
+   
+   int updateOperatestatus(ChbInvestholdInfoCheckDto dto);
    /**
     * 删除维护表中数据 根据识别标识和登记银行代码
     * @param record
     * @return
     */
-   int deleteByBankcodeAndIndentifyMarkWH(ChbInvestholdInfoCheckDto record);
+   int deleteByBankcodeAndIndentifyMarkWH();
+   
    /**
     * 删除登记表中数据 根据识别标识和登记银行代码
     * @param record
     * @return
     */
-   int deleteByBankcodeAndIndentifyMarkDJ(ChbInvestholdInfoCheckDto record);
+   int deleteByBankcodeAndIndentifyMarkDJ();
    
    int updateHoldInfoCheck(ChbEquHoldCheckDto record);
    
@@ -98,5 +102,23 @@ public interface ChbInvestholdInfoCheckDtoMapper {
 	int deleteChbInvestholdInfoSub(ChbEquHoldCheckDto chbEquHoldCheckDto);
 
 	int insertChbInvestholdInfoSub(ChbInvestholdInfoSub holdsub);
+	
+	
+	
+	int deleteInvestholdInfoBatchDto(@Param("keys")List<InvestorsHoldInfo001Dto> keys);
+
+	int deleteInvestholdInfoSubBatchDto(@Param("keys")List<InvestorsHoldInfo001Dto> keys);
+
+	int insertListToTmp(List<Map<String, String>> list);
+
+	List<ChbInvestholdInfoCheckDto> selectNeedCheckList( );
+
+	
+	List<ChbInvestholdInfoCheckDto> selectNeedCheckDtoList(List<Map<String, String>> list);
+
+	
+	List<ChbEquHoldCheckDto> getMergerindentifymark(ChbInvestholdInfoCheckDto dto);
+
+	int isExistsMergerindentifymark(ChbInvestholdInfoCheckDto queryModel);
 
 }

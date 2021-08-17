@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -42,6 +41,7 @@ import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.base.entity.RepScreen;
 import com.joyintech.tams.common.base.entity.RepTree;
+import com.joyintech.tams.common.util.JacksonUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
@@ -695,7 +695,8 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     	if(null!=params.get("portnum")){ 
     		List<String> prdList = new ArrayList<>();
     		if(params.get("portnum").toString().indexOf("[")==0){
-    			prdList = JSONArray.parseArray(params.get("portnum").toString(),String.class);
+    			//prdList = JSONArray.parseArray(params.get("portnum").toString(),String.class);
+    			prdList =JacksonUtil.toJavaObjectList(params.get("portnum").toString(),String.class);
     		}else{
     			prdList.add(params.get("portnum").toString());
     		}

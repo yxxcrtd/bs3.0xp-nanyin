@@ -78,6 +78,10 @@ public class GenerateInvestorsHoldInfoRegistAutoSendCBMainService{
             List<InvestorsHoldInfoRegist001Dto> insertDataList = new ArrayList<>();
             if(CollectionUtils.isNotEmpty(resultData)){
                 Map<String,BigDecimal> rateMap= new HashMap<>();
+                
+                List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, resultData.size());
+	            int index = 0;
+	            
                 for (InvestorsHoldInfoRegist001Dto dto : resultData) {
                     if(StringUtil.equals(dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue())){
                         dto.setCnyAmt(dto.getAmount());
@@ -110,7 +114,10 @@ public class GenerateInvestorsHoldInfoRegistAutoSendCBMainService{
                     }
                     dto.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
                     dto.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-                    dto.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                    dto.setRegistSeqno(//CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
+                    		CommonUtil.getSequenceStr(sequenceList, index)
+                    		);
+                    index++;
                     dto.setHoldDate(DateUtil.parse(executeDateStr));
                     dto.setStatusDate(dto.getUpdateTime());
                     //区分已存在的数据和不存在的数据

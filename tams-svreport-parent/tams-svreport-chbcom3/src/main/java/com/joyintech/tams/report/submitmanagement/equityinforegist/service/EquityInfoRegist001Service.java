@@ -10,7 +10,6 @@
 
 package com.joyintech.tams.report.submitmanagement.equityinforegist.service;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -32,32 +31,35 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.batch.batchstart.service.SysBatchStart001Service;
 import com.joyintech.tams.common.base.dao.ChbBatchParaMapper;
 import com.joyintech.tams.common.base.entity.ChbBatchPara;
 import com.joyintech.tams.common.base.entity.ChbSubmitStatus;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.service.SvrBaseCommonService;
 import com.joyintech.tams.report.common.util.DateCalcUtil;
-import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.cnbond.dto.CnBondInterfItem;
@@ -71,6 +73,7 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001
 import com.joyintech.tams.report.submitmanagement.equityinforegist.common.EquityInfoRegistCommonUtil;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.dao.EquityInfoRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto;
+import com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
@@ -116,6 +119,9 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
     
     @Autowired
     private ChbBatchParaMapper chbBatchParaMapper;
+    
+    @Autowired
+    private SysBatchStart001Service sysBatchStart001Service;
     
     /**
      * 长sql最大一次插入或者更新条数
@@ -515,7 +521,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
      * @since 1.0
      */
     public void updateSumStaus(String upKey){
-        List<String> keys = StringUtil.splitToList(GlobalConstant.COMMA, upKey);
+        List<String> list = StringUtil.splitToList(GlobalConstant.COMMA, upKey);
         //权益人报送表主键
         List<EquityInfoRegist001Dto> equiytRegistList = new ArrayList<EquityInfoRegist001Dto>();
         EquityInfoRegist001Dto equityInfoRegist001Dto = null;
@@ -527,25 +533,29 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
         List<String> sumitSeqList = new ArrayList<String>();
         List<EquityInfoRegist001Dto> equiytRegistAlreadySendList = new ArrayList<EquityInfoRegist001Dto>();
 
-        for (String string : keys) {
+        List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, list.size());
+        int index = 0;
+        for (String data : list) {
             //投资者报送表主键组装
             equityInfoRegist001Dto = new EquityInfoRegist001Dto();
 //            String[] key=StringUtil.split(string, "|");
-            String[] key=string.split("\\|",-1);
-            equityInfoRegist001Dto.setBankCode(key[0]);
-            equityInfoRegist001Dto.setIndentifyMark(key[1]);
-            equityInfoRegist001Dto.setSubmitStatus(key[2]);
+            String[] keyArr=data.split("\\|",-1);
+            equityInfoRegist001Dto.setBankCode(keyArr[0]);
+            equityInfoRegist001Dto.setIndentifyMark(keyArr[1]);
+            equityInfoRegist001Dto.setSubmitStatus(keyArr[2]);
             //报送状态表插入组装
             chbSubmitStatus = new ChbSubmitStatus();
             String seqno = "";
-            if(StringUtil.isEmpty(key[3])){
-            	seqno = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+            if(StringUtil.isEmpty(keyArr[3])){
+//            	seqno = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+            	seqno =CommonUtil.getSequenceStr(sequenceList, index);
+            	index++;
                 chbSubmitStatus.setSeqno(seqno);
                 equityInfoRegist001Dto.setSumitSeq(seqno);
             }
             else {
-                chbSubmitStatus.setSeqno(key[3]);
-                equityInfoRegist001Dto.setSumitSeq(key[3]);
+                chbSubmitStatus.setSeqno(keyArr[3]);
+                equityInfoRegist001Dto.setSumitSeq(keyArr[3]);
             }
 
             if (StringUtil.equals(DictCodeListExt2.报送状态_未报送.getValue(), equityInfoRegist001Dto.getSubmitStatus())) {
@@ -706,11 +716,16 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
         // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
         List<String> sumitSeqList = new ArrayList<String>();
         List<EquityInfoRegist001Dto> equiytRegistAlreadySendList = new ArrayList<EquityInfoRegist001Dto>();
+        
+        List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, list.size());
+        int index = 0;
         for(EquityInfoRegist001Dto registDto : list){
         	chbSubmitStatus = new ChbSubmitStatus();
         	String seqno = "";
         	if(StringUtil.isEmpty(registDto.getSumitSeq())){
-        		seqno = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+//        		seqno = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+        		seqno =CommonUtil.getSequenceStr(sequenceList, index);
+            	index++;
         		chbSubmitStatus.setSeqno(seqno);
         		registDto.setSumitSeq(seqno);
         	}else{
@@ -1638,7 +1653,9 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
     private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,
     		List<EquityInfoRegist001Dto> entities,String deptCode,String orgCode) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
-        EquityInfoRegist001Dto entity =null;
+        
+        List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, dataList.size());
+        
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
             if (null == list || list.size() !=23) {
@@ -1646,7 +1663,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
                     this.getMessage("REPORT_COMMON_FILE_E_0021", "投资者信息登记导入")));
                 continue;
             }
-            entity = new EquityInfoRegist001Dto();
+            EquityInfoRegist001Dto entity = new EquityInfoRegist001Dto();
             entity.setBankCode(list.get(0));
             if(!EquityInfoCheckUtil.isEmpty(list.get(6))){
                 entity.setType(EquityInfoCheckUtil.subDictcode(list.get(6), " "));
@@ -1691,7 +1708,9 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
             if(!EquityInfoCheckUtil.isEmpty(list.get(18))){
                 entity.setHolderRiskPrefer(EquityInfoCheckUtil.subDictcode(list.get(18)," "));
             }
-            entity.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+            entity.setSumitSeq(//CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
+            		CommonUtil.getSequenceStr(sequenceList, i)
+            		);
             entity.setHolderCellphone(list.get(19));
             entity.setHolderTelephone(list.get(20));
             entity.setHolderEmail(list.get(21));
@@ -2063,19 +2082,26 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
            //仅支持录入11 位定长数字，不得填写“无”。如无手机号码，应统一填写“11111111111”（11个 1）。
            //            不得填写“无”，如无固定电话，应统一填写“11111111”（8 个1）。
            //            不得填写“无”，如无固定电话，应统一填写“11@11.com”。
+    	   
+    	   List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, registList.size());
+           int index = 0;
            for (EquityInfoRegist001Dto dto : registList) {
                //针对取消手工处理再报送
                String currRegistSeq = "";
                if(DictCodeListExt2.报送反馈状态_发送失败.getValue().equals(dto.getSubmitFeedbackStatusCode())
                        ||DictCodeListExt2.报送反馈状态_中债退回.getValue().equals(dto.getSubmitFeedbackStatusCode())){
-                   currRegistSeq = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+//                   currRegistSeq = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+            	   currRegistSeq = CommonUtil.getSequenceStr(sequenceList, index);
+            	   index++;
                    registSeq.add(currRegistSeq);
                    //将报送流水为空的放入list
                    dto.setSumitSeq(currRegistSeq);
                    unSubmitSeqList.add(dto);
                }
                else if(StringUtil.isEmpty(dto.getSumitSeq())){
-                   currRegistSeq = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+//                   currRegistSeq = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+            	   currRegistSeq = CommonUtil.getSequenceStr(sequenceList, index);
+            	   index++;
                    registSeq.add(currRegistSeq);
                    //将报送流水为空的放入list
                    dto.setSumitSeq(currRegistSeq);
@@ -2211,4 +2237,131 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
        return equityInfoRegist001Mapper.selectNoendCountByTaskBeanName(beanname);
    }
    
+   public void dealSearchParam(Map<String, Object> param){
+	   String orgCode = (String)param.get("orgCode");
+       List<String> orgCodeList = StringUtil.splitToList(GlobalConstant.COMMA, orgCode);
+       if (StringUtil.isBlank(orgCode)) {
+           orgCodeList = CommonUtil.getOrgCodeListForSearch();
+       }
+       param.put("orgCodeList", orgCodeList);
+       String personalIdentifyType = (String)param.get("personalIdentifyType");
+       String institutionIdentifyType = (String)param.get("institutionIdentifyType");
+       String status = (String)param.get("status");
+       String submitStatus = (String)param.get("submitStatus");
+       String submitFeedbackStatus = (String)param.get("submitFeedbackStatus");
+       String holderType = (String)param.get("holderType");
+       // 增加发送状态
+       String sendStatus = (String)param.get("sendStatus");
+       param.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, sendStatus));
+       param.put("holderTypeList", StringUtil.splitToList(GlobalConstant.COMMA, holderType));
+       param.put("personalIdentifyTypeList", StringUtil.splitToList(GlobalConstant.COMMA, personalIdentifyType));
+       param.put("institutionIdentifyTypeList", StringUtil.splitToList(GlobalConstant.COMMA, institutionIdentifyType));
+       param.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
+       param.put("submitStatusList", StringUtil.splitToList(GlobalConstant.COMMA, submitStatus));
+       param.put("submitFeedbackStatusList", StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
+//       param.put("submitDeadLineStart", DateCalcUtil.getEndOfDay((String)param.get("submitDeadLineStart")));
+       param.put("submitDeadLineStart", param.get("submitDeadLineStart"));
+       param.put("submitDeadLineEnd", DateCalcUtil.getEndOfDay((String)param.get("submitDeadLineEnd")));
+   }
+   
+   /**
+    * 导出功能查询
+    *
+    * @param pageParam 查询参数
+    * @return 结果集
+    * @see
+    * @since 1.0
+    */
+   public int countExportNum(Map<String, Object> pageParam) {
+       dealSearchParam(pageParam);
+       int dataNum = equityInfoRegist001Mapper.countExportNum(pageParam);
+       return dataNum;
+   }
+   
+   /**
+    * 启动批处理导出
+    * @param param
+    */
+	public AjaxResult batchExport(Map<String, Object> param) {
+		AjaxResult ajaxResult = new AjaxResult();
+		// 是否未执行或正在执行中
+		if (!checkIfInBatchByTaskBeanName(
+           BatchBeanName.投资者身份信息登记导出.getTaskId())) {
+           ajaxResult.setMessage("投资者身份信息登记导出批处理正在执行中或待执行！", MessageType.错误消息);
+           return ajaxResult;
+       }
+		ChbSubinfoBatchLog log = new ChbSubinfoBatchLog();
+		log.setBatchExeId(IDGenerator.generate());
+		log.setTaskId(BatchBeanName.投资者身份信息登记导出.getTaskId());
+		log.setBusiConfirmDate(param.get("busiConfirmDate")==null?"":param.get("busiConfirmDate").toString());
+		log.setOperator(LoginUserUtil.getUserName());
+		log.setFileType(DictCodeListExt3.报送文件类别_投资者身份信息登记.getValue());
+		log.setDealStatus(DictCodeListExt3.报送处理状态_未处理.getValue());
+		log.setGenCondition(param.get("key")==null?"":param.get("key").toString());
+		log.setCreateUser(LoginUserUtil.getUserName());
+		log.setCreateTime(new Date());
+		log.setUpdateUser(LoginUserUtil.getUserName());
+		log.setUpdateTime(new Date());
+		// 日志存表
+		simpleRestTemplate.postForObject(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/insert", log,
+				ChbSubinfoBatchLog.class);
+		// 启动批处理
+		sysBatchStart001Service.executeBatch();
+		// 批处理启动成功，可在批处理监控页面查看进度
+//		return new AjaxResult("导出excel文件批处理启动成功，可在批处理监控页面查看进度");
+		ajaxResult.setData(true);
+		return ajaxResult;
+	}
+	
+	
+	 /**
+	    * 启动批处理导出
+	    * @param param
+	    */
+		public AjaxResult batchExportAndDoManual(Map<String, Object> param) {
+			AjaxResult ajaxResult = new AjaxResult();
+			// 是否未执行或正在执行中
+			if (!checkIfInBatchByTaskBeanName(
+	           BatchBeanName.投资者身份信息登记导出.getTaskId())) {
+	           ajaxResult.setMessage("投资者身份信息登记导出批处理正在执行中或待执行！", MessageType.错误消息);
+	           return ajaxResult;
+	       }
+			if (!checkIfInBatchByTaskBeanName(
+			           BatchBeanName.投资者身份信息登记手工处理.getTaskId())) {
+			           ajaxResult.setMessage("投资者身份信息登记手工处理批处理正在执行中或待执行！", MessageType.错误消息);
+			           return ajaxResult;
+			       }
+			ChbSubinfoBatchLog log = new ChbSubinfoBatchLog();
+			log.setBatchExeId(IDGenerator.generate());
+			log.setTaskId(BatchBeanName.投资者身份信息登记导出.getTaskId());
+			log.setBusiConfirmDate(param.get("busiConfirmDate")==null?"":param.get("busiConfirmDate").toString());
+			log.setOperator(LoginUserUtil.getUserName());
+			log.setFileType(DictCodeListExt3.报送文件类别_投资者身份信息登记.getValue());
+			log.setDealStatus(DictCodeListExt3.报送处理状态_未处理.getValue());
+			log.setGenCondition(param.get("key")==null?"":param.get("key").toString());
+			log.setCreateUser(LoginUserUtil.getUserName());
+			log.setCreateTime(new Date());
+			log.setUpdateUser(LoginUserUtil.getUserName());
+			log.setUpdateTime(new Date());
+			// 日志存表
+			simpleRestTemplate.postForObject(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/insert", log,
+					ChbSubinfoBatchLog.class);
+			
+			//手工处理
+			ChbBatchPara record = new ChbBatchPara();
+		    record.setTaskId(BatchBeanName.投资者身份信息登记手工处理.getTaskId());
+		    record.setParaId(IDGenerator.generate());
+		    if (param.get("key") != null) {
+		        record.setParas(param.get("key").toString());
+		        simpleRestTemplate.postForObject(
+         	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/insert", record,
+         	       	ChbBatchPara.class);
+		    }
+			// 启动批处理
+			sysBatchStart001Service.executeBatch();
+			// 批处理启动成功，可在批处理监控页面查看进度
+//			return new AjaxResult("导出excel文件批处理启动成功，可在批处理监控页面查看进度");
+			ajaxResult.setData(true);
+			return ajaxResult;
+		}
 }

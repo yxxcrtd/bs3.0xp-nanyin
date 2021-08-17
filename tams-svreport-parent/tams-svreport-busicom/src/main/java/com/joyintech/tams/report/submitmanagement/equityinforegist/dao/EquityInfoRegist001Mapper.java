@@ -309,4 +309,7 @@ public interface EquityInfoRegist001Mapper {
     int updateEquityRegistSendStatus(List<EquityInfoRegist001Dto> equityInfoRegistUpdateList);
     
     int selectNoendCountByTaskBeanName(String beanname);
+    
+    
+    int countExportNum(Map<String,Object> map);
 }

@@ -45,6 +45,8 @@ import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInf
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tools.collectors.JoyinCollectors;
+
+
 @Service
 public class EquityInfoDistinctService {
 	/**
@@ -76,104 +78,111 @@ public class EquityInfoDistinctService {
 	 * @param intype 01 为进检查表 02 为不进检查表
 	 */
 	@SuppressWarnings("unchecked")
-	public void checkSendedData(@SuppressWarnings("rawtypes") List equityList,List<String> keys,String intype,String flag){
+	public void checkSendedData(@SuppressWarnings("rawtypes") List equityList,List<String> keys,String intype){
 		if(StringUtil.isEmptyList(equityList)){
 			return;
 		}
-
-		//step1、根据三要素信息查询已报送数据
-//		List<String> keys = getKeys(equityList);
-		List<EquityInfoRegist001Dto> ybs = null;
-		logger.info("getEquInfoSubListYbs开始");
-		if("01".equals(flag)){
-			List<Map<String, String>> equityMapList = new ArrayList<Map<String, String>>();
-			for(Object dto : equityList){
-				Map<String,String> equityMap = modelToMapByPrpperties((EquityInfo001Dto)dto);
-				equityMapList.add(equityMap);
-			}
-			ybs = getEquInfoSubListYbs(equityMapList);
-		}else{
-			ybs = getEquInfoSubListYbs(equityList);
-		}
-		logger.info("getEquInfoSubListYbs结束");
+		List<EquityInfoRegist001Dto> ybs = getEquInfoSubListYbs(keys);
+ 
 		if(StringUtil.isEmptyList(ybs)){
 			return;
 		}
+		
+//		String key = "";
+//        String key1 = "";	
+//        Object tmpMap = null;
 
-		String key = "";
-		String key1 = "";
-		Object tmpMap = null;
-
-		Map<String,EquityInfoRegist001Dto> mapYbs = new HashMap<String,EquityInfoRegist001Dto>();
+        /**
+        Map<String,EquityInfoRegist001Dto> mapYbs = new HashMap<String,EquityInfoRegist001Dto>();
 		if ( ybs!=null ) {
-			for ( EquityInfoRegist001Dto v:ybs ) {
-				String k = getKey(v);
-				mapYbs.put(k, v);
-			}
+    		for ( EquityInfoRegist001Dto v:ybs ) {
+    		    String k = getKey(v);
+    		    mapYbs.put(k, v);
+    		}
 		}
-		// 有时候ybs数据量会过大,而此时ybs已经没有作用，可以将其指向null，并建议JVM进行一次垃圾回收，释放堆内存空间
+		 **/
+	  //add by dengyu 
+		Map<String, EquityInfoRegist001Dto> mapYbs = ybs.stream().collect(JoyinCollectors.toMap(x -> getKey(x), x -> x));
+         
 		ybs = null;
 		System.gc();
-		HashMap<String,EquityInfoRegist001Dto> existList = new HashMap<String,EquityInfoRegist001Dto>();
-		//step2、跟已报送的数据进行对比,有重复则按照已报送的识别标识更新源数据的合并识别标识并入库
-		logger.info("step2跟已报送的数据进行对比合并入库开始");
-		List<String> keys1=new ArrayList<String>();
-		String indentifyMark ="";
-		for (Iterator<T> iteror = equityList.iterator();iteror.hasNext();) {
-			tmpMap = iteror.next();
-			//当前不校验【原识别标识】有值的数据,(后续【重要信息变更】会对这种场景check)
-			if(tmpMap  instanceof Map) {
-				if(StringUtil.isNotEmpty(((Map<String,String>)tmpMap).get("ORG_INDENTIFY_MARK"))){
-					continue;
-				}
-				indentifyMark= ((Map<String,String>)tmpMap).get("INDENTIFY_MARK");
-			}else if(tmpMap instanceof EquityInfo001Dto){
-				if(StringUtil.isNotEmpty(((EquityInfo001Dto) tmpMap).getOrgIndentifyMark())){
-					continue;
-				}
-				indentifyMark= ((EquityInfo001Dto) tmpMap).getIndentifyMark();
-			}
-			key = getKey(tmpMap);
-			EquityInfoRegist001Dto  dto = mapYbs.get(key);
-			if(dto!=null && !indentifyMark.equals(dto.getIndentifyMark()) ){
-				key1 = getKey(dto);
+		
+		 HashSet<String> existList = new HashSet<String>();
+        //step2、跟已报送的数据进行对比,有重复则按照已报送的识别标识更新源数据的合并识别标识并入库
+		
+		// logger.info("step2跟已报送的数据进行对比合并入库开始");
+		 
+		 List<String> keyList=new ArrayList<String>();
+		
+		 String indentifyMark ="";
+		for (Iterator<T> iterator = equityList.iterator();iterator.hasNext();) {
+			Object tmpMap = iterator.next();
+			 
+			 //当前不校验【原识别标识】有值的数据,(后续【重要信息变更】会对这种场景check)
+			 if(tmpMap  instanceof Map) {
+				 if(StringUtil.isNotEmpty(((Map<String,String>)tmpMap).get("ORG_INDENTIFY_MARK"))){
+					 continue;
+				 }
+				 indentifyMark= ((Map<String,String>)tmpMap).get("INDENTIFY_MARK");
+			 }else if(tmpMap instanceof EquityInfo001Dto){
+				 if(StringUtil.isNotEmpty(((EquityInfo001Dto) tmpMap).getOrgIndentifyMark())){
+					 continue;
+				 }
+				 indentifyMark= ((EquityInfo001Dto) tmpMap).getIndentifyMark();
+			 }
+			 String key = getKey(tmpMap);
+			 EquityInfoRegist001Dto  yibaosongModel = mapYbs.get(key);
+			 
+			 if(yibaosongModel!=null && !indentifyMark.equals(yibaosongModel.getIndentifyMark())){
+				String yibaosongkey = getKey(yibaosongModel);
 
-				if(key!=null)
-				{
-					if(key.equals(key1) && !indentifyMark.equals(dto.getIndentifyMark()) ){
-						//插入CHECK表
-						EquityInfo001Dto tmp = new EquityInfo001Dto();
-						if(tmpMap  instanceof Map){
-							EquityInfoMaintenanceService.maptoDto((Map<String,String>)tmpMap, tmp);
-						}else if(tmpMap  instanceof EquityInfo001Dto){
-							tmp = (EquityInfo001Dto)tmpMap;
-						}
-						if("01".equals(intype)){
-							ChbEquHoldCheckDto tempModel = transformModelToTemp(tmp);
-							tempModel.setMergerindentifymark(dto.getIndentifyMark());
-							tempModel.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
-							chbEquHoldCheckDtoMapper.deleteCheckDataByPrimarykey(tempModel);
-							chbEquHoldCheckDtoMapper.insert(tempModel);
-							if(!existList.containsKey(dto.getIndentifyMark())){
-								if(null == chbEquHoldCheckDtoMapper.selectByPrimarykey(dto.getIndentifyMark())){
-									existList.put(dto.getIndentifyMark(), dto);
-									ChbEquHoldCheckDto regDto = transformRegModelToTemp(dto);
-									regDto.setMergerindentifymark(dto.getIndentifyMark());
-									regDto.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
-									chbEquHoldCheckDtoMapper.insert(regDto);
-								}
-							}
-						}
-						//此数据不入维护表
-						keys1.add(key);
-						iteror.remove();
-						continue;
-					}
-				}
-			}
+				 if(key!=null){
+					 //五要素一致，且识别标识不一致的情况
+					 if(key.equals(yibaosongkey) && !indentifyMark.equals(yibaosongModel.getIndentifyMark())){
+						 //插入CHECK表
+						 EquityInfo001Dto model = new EquityInfo001Dto();
+						 if(tmpMap  instanceof Map){
+							 EquityInfoMaintenanceService.maptoDto((Map<String,String>)tmpMap, model);
+						 }else if(tmpMap  instanceof EquityInfo001Dto){
+							 model = (EquityInfo001Dto)tmpMap;
+						 }
+						 if("01".equals(intype)){//是否进check表
+							 ChbEquHoldCheckDto checkModel = transformModelToCheck(model);
+							 checkModel.setMergerindentifymark(yibaosongModel.getIndentifyMark());
+							 checkModel.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
+							 chbEquHoldCheckDtoMapper.deleteCheckDataByPrimarykey(checkModel);
+							 chbEquHoldCheckDtoMapper.insert(checkModel);
+							 if(!existList.contains(yibaosongModel.getIndentifyMark())){
+								 if(null == chbEquHoldCheckDtoMapper.selectByPrimarykey(yibaosongModel.getIndentifyMark())){
+									 existList.add(yibaosongModel.getIndentifyMark());
+									 ChbEquHoldCheckDto regDto = transformRegModelToCheck(yibaosongModel);
+									 regDto.setMergerindentifymark(yibaosongModel.getIndentifyMark());
+									 regDto.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
+									 chbEquHoldCheckDtoMapper.insert(regDto);
+								 }
+							 }
+						 }
+						 //此数据不入维护表
+						 keyList.add(key);
+						 //从equityList中删除，不做后续处理。
+						 iterator.remove();
+						 //continue;
+					 }
+				 }
+			 }
 		}
-		keys.removeAll(keys1);
-		logger.info("step2跟已报送的数据进行对比合并入库结束");
+		keys.removeAll(keyList);
+		//logger.info("step2跟已报送的数据进行对比合并入库结束");
+		
+		/**
+		 * 
+		 * 此处可以改造，如果后续出现卡慢的情况，可以按如下代码设计处理：
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 */
 	}
 
 
@@ -548,7 +557,7 @@ public class EquityInfoDistinctService {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	public List<EquityInfoRegist001Dto> getEquInfoSubListYbs(List equityList){
+	public List<EquityInfoRegist001Dto> getEquInfoSubListYbs(List<String> keys){
 		List<EquityInfoRegist001Dto> resultList = new ArrayList<EquityInfoRegist001Dto>();
 //		int maxDataCountOneTime =(null == reportSelectOrDeleteCountForShenFen ? 100:Integer.parseInt(reportSelectOrDeleteCountForShenFen));
 //        int dataCount = 0;
@@ -556,7 +565,7 @@ public class EquityInfoDistinctService {
 //    	 dataCount=equityList.size();
 //     }
 		Map<String,Object> params = new HashMap<>();
-		List<String> keys = getKeys(equityList);
+//		 List<String> keys = getKeys(equityList);
 		params.put("keys", keys);
 		template.select("com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper.queryAllEquityInfo",params,
 				new ResultHandler() {
@@ -767,7 +776,7 @@ public class EquityInfoDistinctService {
 			int count = 0;
 			ChbEquHoldCheckDto model = null;
 			for(EquityInfo001Dto dto : list){
-				model = transformModelToTemp(dto);
+				model = transformModelToCheck(dto);
 				model.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
 				if(!DictCodeListExt2.处理状态_中债_已合并.getValue().equals(model.getOperatestatus())){
 					model.setOperatestatus(DictCodeListExt2.处理状态_中债_未合并.getValue());
@@ -1034,24 +1043,24 @@ public class EquityInfoDistinctService {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param equityInfo001Dto
 	 * @return
 	 */
-	private ChbEquHoldCheckDto transformModelToTemp(EquityInfo001Dto equityInfo001Dto){
+	private ChbEquHoldCheckDto transformModelToCheck(EquityInfo001Dto equityInfo001Dto){
 		ChbEquHoldCheckDto temp=new ChbEquHoldCheckDto();
 		BeanUtils.copyProperties(equityInfo001Dto,temp);
 		temp.setRegistBankCode(equityInfo001Dto.getBankCode());
 		return temp;
-
+		
 	}
-
+	
 	/**
 	 *
 	 * @param equityInfo001Dto
 	 * @return
 	 */
-	private ChbEquHoldCheckDto transformRegModelToTemp(EquityInfoRegist001Dto equityInfo001Dto){
+	private ChbEquHoldCheckDto transformRegModelToCheck(EquityInfoRegist001Dto equityInfo001Dto){
 		ChbEquHoldCheckDto temp=new ChbEquHoldCheckDto();
 		BeanUtils.copyProperties(equityInfo001Dto,temp);
 		temp.setRegistBankCode(equityInfo001Dto.getBankCode());

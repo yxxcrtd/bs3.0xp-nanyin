@@ -11,6 +11,7 @@
 package com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dao;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -323,7 +324,7 @@ public interface InvestorsHoldInfo001Mapper {
      * @see
      * @since 1.0
      */
-    Integer selectInvestHoldInfoDataCount(Map<String, Object> map);
+    int selectInvestHoldInfoDataCount(Date date);
     /**
      * 通过主键批量获取登记表中的数据
      * @param keyList 传入参数

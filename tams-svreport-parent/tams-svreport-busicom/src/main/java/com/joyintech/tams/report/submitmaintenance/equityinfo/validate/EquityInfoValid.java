@@ -110,7 +110,9 @@ public class EquityInfoValid {
     /**
      * 座机号码检查
      */
-    public static final String PATTERN_OFFICE_PHONE = "^(0[0-9]{2,3})+(\\-[0-9]{7,8})?(\\-[0-9]{1,8})?$";
+    //public static final String PATTERN_OFFICE_PHONE = "^(0[0-9]{2,3})+(\\-[0-9]{7,8})?(\\-[0-9]{1,8})?$";
+    public static final String PATTERN_OFFICE_PHONE = "^(0[0-9]{2,3}-)?([0-9]{7,8}){1}(-[0-9]{1,8})?$";
+    		//^([0-9]{3,4}-)?([0-9]{7,8}){1}(-[0-9]{1,8})?$
     /**
      * 白名单验证
      */
@@ -2611,6 +2613,14 @@ public class EquityInfoValid {
             }
             else if("03".equals(map.get("type02"))){
                 message.add(this.getMessage("CHB_EQUITYINFO_E_034",list.get(1)));
+                EquityInfoRegist001Dto equityRegist = null;
+                if (StringUtil.isNotBlank(list.get(2)) && list.get(2).length() <= 30) {
+                    equityRegist = equityInfoRegist001Mapper.queryBatchForEquityInfoSingle(list.get(0),
+                            list.get(2));
+                }
+                if(equityRegist==null){
+                    message.add(this.getMessage("原识别标识为{0}的投资者信息未登记！",list.get(2)));
+                }
             }
             if ("01".equals(type) || "03".equals(type)) {
                 // 投资者是否属于本行
@@ -2699,7 +2709,6 @@ public class EquityInfoValid {
                     for (int k = 0; k < submitFeedbackStatusList.size(); k++) {
                         if ("01".equals(submitFeedbackStatusList.get(k))
                                 || "02".equals(submitFeedbackStatusList.get(k))
-                                || "03".equals(submitFeedbackStatusList.get(k))
                                 || "05".equals(submitFeedbackStatusList.get(k))
                                 || StringUtil.isBlank(submitFeedbackStatusList.get(k))) {
                             message.add(this.getMessage("该数据存在中债报送流程中的数据，不允许修改，请稍后再试！"));

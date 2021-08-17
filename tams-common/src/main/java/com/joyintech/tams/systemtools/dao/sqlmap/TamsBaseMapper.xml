@@ -167,8 +167,15 @@
 		SELECT incr FROM SYS_SEQUENCE WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
 	</select>
 
-    <update id="updateSequenceIndexData" >
-		 UPDATE SYS_SEQUENCE SET begin_num = ((#{incrNum,jdbcType=INTEGER} * incr) + begin_num) WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+    <update id="updateSequenceIndexData" parameterType= "map" statementType="CALLABLE">
+    
+       <if test="databaseType == 'Oracle'"> 
+          {call UPDATE_SEQUENCE_CHB(
+		#{incrNum, jdbcType=VARCHAR, mode=IN},
+		#{sequenceName, jdbcType=VARCHAR, mode=IN} 
+		)
+	  }	
+        </if>
 	</update>
 
 </mapper>

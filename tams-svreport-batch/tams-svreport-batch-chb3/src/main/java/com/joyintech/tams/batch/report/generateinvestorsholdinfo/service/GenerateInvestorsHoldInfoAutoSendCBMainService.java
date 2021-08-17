@@ -96,7 +96,12 @@ public class GenerateInvestorsHoldInfoAutoSendCBMainService  extends AutoSendCBB
         			Date holdDate = DateUtil.parse(generateDate);
         			List<ChbInvestholdInfoSub> subList = new ArrayList<ChbInvestholdInfoSub>();
         			ChbInvestholdInfoSub chbInvestholdInfoSub = null;
+        			 
+        			if(investHoldList!=null){
         			//处理维护信息表
+        			   List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, investHoldList.size()*2);
+        	            int index = 0;
+        	            
         			for (ChbInvestholdInfo chbInvestholdInfo : investHoldList) {
         				chbInvestholdInfo.setHoldDate(holdDate);
         				chbInvestholdInfo.setCreateUser("system");
@@ -123,14 +128,20 @@ public class GenerateInvestorsHoldInfoAutoSendCBMainService  extends AutoSendCBB
         				chbInvestholdInfoSub.setProdid(chbInvestholdInfo.getProdid());
         				chbInvestholdInfoSub.setQty(chbInvestholdInfo.getQty());
         				chbInvestholdInfoSub.setRegistBankCode(chbInvestholdInfo.getRegistBankCode());
-        				chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+//        				chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+        				chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceStr(sequenceList,index));
+        				index++;
         				chbInvestholdInfoSub.setRemark(chbInvestholdInfo.getRemark());
         				chbInvestholdInfoSub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
         				chbInvestholdInfoSub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-        				chbInvestholdInfoSub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+        				
+//        				chbInvestholdInfoSub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+        				chbInvestholdInfoSub.setSumitSeq(CommonUtil.getSequenceStr(sequenceList,index));
+        				index++;
         				chbInvestholdInfoSub.setUpdateUser("system");
         				subList.add(chbInvestholdInfoSub);
 					}
+        		}
         			int  singalCount = reportSelectOrDeleteCount;
         			int totalCount = investHoldList.size();
         			//批量插入表

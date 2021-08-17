@@ -9,7 +9,6 @@
 	<artifactId>tams-disclosure</artifactId>
 	<packaging>jar</packaging>
 <!-- 	<packaging>war</packaging> -->
-
 	<properties>
 		<start-class>com.joyintech.tams.disclosure.DisclosureApplication</start-class>
 	</properties>

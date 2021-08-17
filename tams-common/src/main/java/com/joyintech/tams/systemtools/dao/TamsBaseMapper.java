@@ -103,9 +103,10 @@ public interface TamsBaseMapper {
 
     String getCreateInstByID(@Param("businessId") String businessId,@Param("dataType") String dataType);
 
-
     Long getSequenceIndexByParam(Map<String, Object> param);
+    
     Long getSequenceIncrByParam(Map<String, Object> param);
-    int updateSequenceIndexData(Map<String, Object> param);
+    
+    int updateSequenceIndexData(Map<String, String> param);
 
 }

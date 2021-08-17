@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
-import com.joyintech.tams.batch.report.reportdatabackup.service.ReportDataBackupMainService;
+import com.joyintech.tams.batch.report.reportdatabackup.InvestholdDataBackupMainService;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
 
@@ -42,9 +42,12 @@ public class ReportDataBackupService extends BatchBaseService {
     /**
      * 数据归档service
      */
+//    @Autowired
+//    private ReportDataBackupMainService mainService;
+//
+//    
     @Autowired
-    private ReportDataBackupMainService mainService;
-
+    private InvestholdDataBackupMainService mainServiceEx;
     @Override
     public JobExecution execute() {
         JobExecution result = new JobExecution(1l);
@@ -56,7 +59,8 @@ public class ReportDataBackupService extends BatchBaseService {
         }
 
         try {
-            mainService.generateRegistData(DateUtil.format(batchExecuteInfo.getExecuteDate()));
+           // mainService.generateRegistData(DateUtil.format(batchExecuteInfo.getExecuteDate()));
+        	  mainServiceEx.generateRegistData(DateUtil.format(batchExecuteInfo.getExecuteDate()));
         }
         catch (Exception e) {
             logger.error("数据备份批处理Error",e);

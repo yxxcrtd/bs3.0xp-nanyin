@@ -19,7 +19,7 @@ public interface ChbEquHoldCheckDtoMapper {
      * @return List<ChbEquHoldCheckDto>
      */
     List<ChbEquHoldCheckDto> selectAllData(Map<String, Object> pageParam);
-    
+    List<ChbEquHoldCheckDto> selectAllDataForHold();
     List<ChbEquHoldCheckDto> queryAllCheckData(@Param("keys")List<String> keyList);
     
     List<ChbEquHoldCheckDto> selectBymodel(ChbEquHoldCheckDto record);

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,13 +34,9 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.DeadlineUtil;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto;
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dao.PbcProdRaiseSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub;
-import com.joyintech.tams.svreport.pbc.common.constants.PbcReportType;
 import com.joyintech.tams.svreport.pbc.common.service.PbcClassicsSubService;
-import com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto;
-import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
 /**
@@ -507,7 +504,35 @@ public class PbcPrdCashRaiseSubService extends PbcClassicsSubService<PbcProdRais
             insertList.addAll(prdCashRaiseListToReg);
             deleteList.addAll(prdCashRaiseListToReg);
         }
-		// 数据入库
+        
+        //当期申购金额、当期申购份额、当期兑付/赎回金额、当期兑付/赎回份额、期末产品金额、期末产品份额字段同时为空或为0时，应该不生成pbc_prod_raising_sub表的数据 start 20200514
+        Iterator<PbcProdRaiseSub> iterator = insertList.iterator();
+        while(iterator.hasNext()){
+        	PbcProdRaiseSub pbcProdRaiseSub = (PbcProdRaiseSub) iterator.next();
+        	//当期申购金额
+        	BigDecimal raisingAmtsum = pbcProdRaiseSub.getRaisingAmtsum();
+        	//当期申购份额
+        	BigDecimal raisingQty = pbcProdRaiseSub.getRaisingQty();
+        	//当期兑付/赎回金额
+        	BigDecimal redamt = pbcProdRaiseSub.getRedamt();
+        	//当期兑付/赎回份额
+        	BigDecimal redqty = pbcProdRaiseSub.getRedqty();
+        	//期末产品金额
+        	BigDecimal endamtsum = pbcProdRaiseSub.getEndamtsum();
+        	//期末产品份额
+        	BigDecimal endqty = pbcProdRaiseSub.getEndqty();
+        	if(raisingAmtsum == null && raisingQty == null && redamt == null && redqty == null && endamtsum == null && endqty == null){
+        			iterator.remove();
+        	}
+        	if(raisingAmtsum.compareTo(BigDecimal.ZERO) == 0 && raisingQty.compareTo(BigDecimal.ZERO) == 0 &&
+        			redamt.compareTo(BigDecimal.ZERO) == 0 && redqty.compareTo(BigDecimal.ZERO) == 0 && 
+        			endamtsum.compareTo(BigDecimal.ZERO) == 0 && endqty.compareTo(BigDecimal.ZERO) == 0){
+    			iterator.remove();
+        	}
+        }
+        //当期申购金额、当期申购份额、当期兑付/赎回金额、当期兑付/赎回份额、期末产品金额、期末产品份额字段同时为空或为0时，应该不生成pbc_prod_raising_sub表的数据 start 20200514
+
+        // 数据入库
         // 先删后插
 		intoDatabase(insertList,deleteList);
 	}

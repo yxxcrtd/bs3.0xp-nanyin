@@ -887,14 +887,23 @@ public class EquityBusiInfoRegist001Service extends CommonExportService<EquityBu
 //        List<EquityBusiInfoRegist001Dto> alreadySendList = new ArrayList<EquityBusiInfoRegist001Dto>();
         List<EquityBusiInfoRegist001Dto> notSendList = new ArrayList<EquityBusiInfoRegist001Dto>();
 
+        List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, investorsHoldInfoRegistList.size());
+        int index = 0;
+        
+        
         for (EquityBusiInfoRegist001Dto dto : investorsHoldInfoRegistList) {
             // 报送状态表插入组装
             chbSubmitStatus = new ChbSubmitStatus();
             if (StringUtil.isEmpty(dto.getSumitSeq())) {
                 chbSubmitStatus.setSeqno(
-                        CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                   // CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
+                		CommonUtil.getSequenceStr(sequenceList, index)
+                		);
                 dto.setSumitSeq(chbSubmitStatus.getSeqno());
+                
+                index++;
             }
+            
             else {
                 chbSubmitStatus.setSeqno(dto.getSumitSeq());
             }
@@ -995,13 +1004,19 @@ public class EquityBusiInfoRegist001Service extends CommonExportService<EquityBu
         List<EquityBusiInfoRegist001Dto> alreadySendList = new ArrayList<EquityBusiInfoRegist001Dto>();
         List<EquityBusiInfoRegist001Dto> notSendList = new ArrayList<EquityBusiInfoRegist001Dto>();
 
+        
+        List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, investorsHoldInfoRegistList.size());
+        int index = 0;
         for (EquityBusiInfoRegist001Dto dto : investorsHoldInfoRegistList) {
             // 报送状态表插入组装
             chbSubmitStatus = new ChbSubmitStatus();
             if (StringUtil.isEmpty(dto.getSumitSeq())) {
                 chbSubmitStatus.setSeqno(
-                        CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                    //CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
+                    CommonUtil.getSequenceStr(sequenceList, index)
+                    );
                 dto.setSumitSeq(chbSubmitStatus.getSeqno());
+                index ++;
             }
             else {
                 chbSubmitStatus.setSeqno(dto.getSumitSeq());
@@ -1298,20 +1313,28 @@ public class EquityBusiInfoRegist001Service extends CommonExportService<EquityBu
         Map<String, String> registSeqKeyMap = new HashMap<String, String>();
         List<EquityBusiInfoRegist001Dto> unSubmitSeqList = new ArrayList<EquityBusiInfoRegist001Dto>();
         if (CollectionUtils.isNotEmpty(registList)) {
+        	
+        	   List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, registList.size());
+	            int index = 0;
+	            
             for (EquityBusiInfoRegist001Dto dto : registList) {
                 // 针对取消手工处理再报送
                 String registSeqNo = "";
                 String currRegistSeq = "";
                 if(DictCodeListExt2.报送反馈状态_发送失败.getValue().equals(dto.getSubmitFeedbackStatus())
                         ||DictCodeListExt2.报送反馈状态_中债退回.getValue().equals(dto.getSubmitFeedbackStatus())){
-                    registSeqNo = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+//                    registSeqNo = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+                	 registSeqNo = CommonUtil.getSequenceStr(sequenceList, index);
+                	 index++;
                     //将报送流水为空的放入list
                     currRegistSeq = registSeqNo;
                     dto.setSumitSeq(currRegistSeq);
                     unSubmitSeqList.add(dto);
                 }
                 else if (StringUtil.isEmpty(dto.getSumitSeq())) {
-                    registSeqNo = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+//                    registSeqNo = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+                    registSeqNo = CommonUtil.getSequenceStr(sequenceList, index);
+                    index++;
                     dto.setSumitSeq(registSeqNo);
                     currRegistSeq = registSeqNo;
                     unSubmitSeqList.add(dto);
