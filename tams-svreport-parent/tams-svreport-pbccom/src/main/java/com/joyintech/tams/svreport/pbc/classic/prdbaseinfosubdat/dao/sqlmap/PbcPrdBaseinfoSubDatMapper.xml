@@ -865,8 +865,8 @@
 	
 	<delete id="deleteByProdid" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
 	  delete from PBC_PRD_BASEINFO_SUB_DAT
-      where SEND_STATUS = '01'
-        <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+      where PROD_ID in
+        <foreach collection="deleteList" item="item" index="index" open="(" close=")" separator=",">
         #{item.prodId,jdbcType=VARCHAR} 
         </foreach>
 	</delete>

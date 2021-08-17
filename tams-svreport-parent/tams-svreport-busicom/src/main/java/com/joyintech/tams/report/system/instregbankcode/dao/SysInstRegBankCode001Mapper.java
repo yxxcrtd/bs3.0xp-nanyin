@@ -54,4 +54,6 @@ public interface SysInstRegBankCode001Mapper {
      */
     SysInstRegBankCode001Dto queryForPageWithMode(Map<String, Object> param);
 
+    SysInstRegBankCode001Dto selectRegistBankCode(@Param("pbcBankCode") String pbcBankCode);
+
 }
