@@ -1861,16 +1861,16 @@
                 row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_two order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_three order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_four order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three ,atd.custom_asset_type_four order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_five order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three ,atd.custom_asset_type_four,atd.custom_asset_type_five order by atd.cdate desc) row_number
             </if>
         </if>
         <if test="displayType != null and displayType != '' and displayType=='02'">
@@ -1879,16 +1879,16 @@
                 row_number() over(partition by  atd.pinan_asset_type order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                row_number() over(partition by atd.custom_asset_type_two order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                row_number() over(partition by atd.custom_asset_type_three order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                row_number() over(partition by atd.custom_asset_type_four order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three,atd.custom_asset_type_four order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                row_number() over(partition by atd.custom_asset_type_five order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three,atd.custom_asset_type_four,atd.custom_asset_type_five order by atd.cdate desc) row_number
             </if>
         </if>
         from ASSET_TARGET_DB atd
