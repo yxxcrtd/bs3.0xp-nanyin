@@ -768,8 +768,8 @@ public class PbcZipDataFileService {
     			  outFile.delete();
     		  }
     		  try {
-				  ZipFileUtil.compressZip(outFile, false, allFiles);//压缩文件
-//                new File(folderPath).delete();//删除文件夹
+				  ZipFileUtil.compressZip(outFile, true, allFiles);//压缩文件
+                new File(folderPath).delete();//删除文件夹
               }catch (Exception e) {
             	  e.printStackTrace();
               }
@@ -989,5 +989,6 @@ public class PbcZipDataFileService {
 		}
 		return bigDecimal.toString();
 	}
+
 
 }
