@@ -315,7 +315,7 @@
 				AND FIN_PRODUCT_ADD.ISSUE_STATUS = #{issueStatus}
 			</if>
 			<if test="pltDate != null and pltDate !=''">
-				AND to_date(#{pltDate},'yyyy-MM-dd') > BOK_BOOKSET.END_DATE
+				AND  BOK_BOOKSET.END_DATE  <![CDATA[>=]]>  to_date(#{pltDate},'yyyy-MM-dd')
 			</if>
 		</where>
 	</select>
