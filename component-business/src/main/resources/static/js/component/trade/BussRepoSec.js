@@ -298,11 +298,13 @@
         for (var i in allRows) {
             var pledgePrin = allRows[i].pledgePrin;
             // if(isDzh == 'Y'){
-            if(entrustAmtUnit == '01'){
-                pledgePrin = JoyinMath.doMul(pledgePrin,10000,4,JoyinMath.ROUND_HALF_UP);
+            if(entrustAmtUnit == '01'){     //传过来的数据就是以万元为单位
+                pledgePrin = JoyinMath.doMul(pledgePrin,10000,2,JoyinMath.ROUND_HALF_UP);
+                totalPrinAmtSum += pledgePrin / 10000;
+            }else{
+                totalPrinAmtSum += pledgePrin;      //以万元为单位验证
             }
             totalPrinAmt += pledgePrin * allRows[i].pledgeRatio / 100;
-            totalPrinAmtSum += pledgePrin / 10000;
             if(allRows[i].repRegistOrg=='01'){
                 zzdPrinAmt+=pledgePrin * allRows[i].pledgeRatio / 100;
             }
@@ -310,11 +312,6 @@
                 sqsPrinAmt+=pledgePrin * allRows[i].pledgeRatio / 100;
             }
         }
-        // //配置单位 add by yeming 20210721 end
-        // if(entrustAmtUnit == '02' ){
-        //     totalPrinAmt = JoyinMath.doDiv(totalPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
-        // }
-        // //配置单位 add by yeming 20210721 end
         getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
         getElementById("zzdTotalPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
         getElementById("sqsTotalPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
@@ -341,7 +338,8 @@
                 for (var i in pledgeRows) {
                     var obj = pledgeRows[i];
                     totalPrinAmt += obj.pledgePrin * obj.pledgeRatio / 100;
-                    totalPrinAmtSum += obj.pledgePrin / 10000; //以万元为单位
+                    // totalPrinAmtSum += obj.pledgePrin / 10000; //以万元为单位
+                    totalPrinAmtSum += obj.pledgePrin; //显示就是万元，不需要转换
                     if(obj.repRegistOrg=='01'){
                         zzdPrinAmt+=obj.pledgePrin * obj.pledgeRatio / 100;
                     }
@@ -358,11 +356,6 @@
                     zzdPrinAmt = zzdPrinAmt*10000;
                     sqsPrinAmt = sqsPrinAmt*10000;
                 }
-                // //配置单位 add by yeming 20210721 end
-                // if(entrustAmtUnit == '02' ){
-                //     totalPrinAmt = JoyinMath.doDiv(totalPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
-                // }
-                // //配置单位 add by yeming 20210721 end
                 getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
                 getElementById("zzdTotalPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
                 getElementById("sqsTotalPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
