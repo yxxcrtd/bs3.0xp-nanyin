@@ -163,6 +163,8 @@ public interface TrdPlanNetInvestTradeMapper {
      * @since 1.0
      */
     Integer selectConfirmInfo(Map<String, Object> param);
+
+    List<TrdPlanNetInvestTradeDto> selectConfirmTradeList(Map<String, Object> param);
     /**
      * 
      * 查询交易确认信息

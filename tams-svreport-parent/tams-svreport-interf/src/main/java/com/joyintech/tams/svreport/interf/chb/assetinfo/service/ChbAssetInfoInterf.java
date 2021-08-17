@@ -1,11 +1,7 @@
 package com.joyintech.tams.svreport.interf.chb.assetinfo.service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
@@ -376,7 +372,7 @@ public class ChbAssetInfoInterf  extends BaseService{
      * 从数据字典中获取参数值
      *
      * @param dictCode 数据字典
-     * @param itemCode 数据代码
+     * @param dictItemCode 数据代码
      * @return 参数值
      * @see
      * @since 1.0
@@ -561,6 +557,10 @@ public class ChbAssetInfoInterf  extends BaseService{
      * @param saveFlag:F－全量，I－增量
      */
     public void insertDataMerge(List<ChbAssetInfo> assetInfoList,String saveFlag) {
+
+        // 先根据属性 assetcode 将重复数据过滤 否则下面会报错
+        assetInfoList = assetInfoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(ChbAssetInfo::getAssetCode))), ArrayList::new));
+
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;

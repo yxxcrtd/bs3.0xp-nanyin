@@ -424,6 +424,12 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                         this.getMessage("BUSS_COM_E_0038",
                             this.getMessage("BussFinProductFeeInfo.provisionFirstDay"))));
                 }
+
+                if (!StringUtil.isNotEmpty(entity.getLiquidationDate())) {
+                    validList.add(new ValidMessage("liquidationDate", this.getMessage("BUSS_COM_E_0038",
+                            this.getMessage("FinProductBuild002.liquidationDate"))));
+                }
+
                  //计提结束日
                 if(!StringUtil.isNotEmpty(bussFinProductFeeInfoDto.geteAccrDate())){
                     //ZGBUG-175计提结束日未输入时提示信息建议加上产品费用模块 guyunfei  20200310 start
@@ -440,7 +446,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                         //计提结束日应该大于产品起息日
                         validList.add(new ValidMessage("", getMessage("FIN_PROD_E_0106")));
                     }
-                    if(DateUtil.compareDate(entity.getLiquidationDate(), bussFinProductFeeInfoDto.geteAccrDate()) <= 0){
+                    if(StringUtil.isNotEmpty(entity.getLiquidationDate()) && DateUtil.compareDate(entity.getLiquidationDate(), bussFinProductFeeInfoDto.geteAccrDate()) <= 0){
                         //计提结束日应该小于产品清盘日
                         validList.add(new ValidMessage("", getMessage("FIN_PROD_E_0107")));
                     }
@@ -455,7 +461,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                         //首次计费结束日应该大于产品起息日
                         validList.add(new ValidMessage("", getMessage("FIN_PROD_E_0109")));
                     }
-                    if(DateUtil.compareDate(entity.getLiquidationDate(), bussFinProductFeeInfoDto.getFirstCalEndDate()) < 0){
+                    if(StringUtil.isNotEmpty(entity.getLiquidationDate()) && DateUtil.compareDate(entity.getLiquidationDate(), bussFinProductFeeInfoDto.getFirstCalEndDate()) < 0){
                         //首次计费结束日应该小于产品清盘日
                         validList.add(new ValidMessage("", getMessage("FIN_PROD_E_0110")));
     

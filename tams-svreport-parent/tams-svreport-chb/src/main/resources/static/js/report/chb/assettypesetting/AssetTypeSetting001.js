@@ -97,10 +97,10 @@
         cols : [
             {field: 'typeuuid', title: "主键",width:120 ,visible:false},
             {field: 'mappinguuid', title: "主键",width:120 ,visible:false},
-            {field: 'chbAssetTypeStr', title: "资产负债类别",width:150 ,sortField:'chbAssetType'},//资产负债类别
-            {field: 'chbAssetType', title: "资产负债类别",width:150 ,visible:false},
-            {field: 'chbAssetType2Str', title: "资产负债二级类别",width:150 ,sortField:'chbAssetType2'},//资产负债二级类别
-            {field: 'chbAssetType2', title: "资产负债二级类别",width:150 ,visible:false},
+            {field: 'chbAssetTypeStr', title: "资产/负债类别",width:150 ,sortField:'chbAssetType'},//资产负债类别
+            {field: 'chbAssetType', title: "资产/负债类别",width:150 ,visible:false},
+            {field: 'chbAssetType2Str', title: "资产/负债二级类别",width:150 ,sortField:'chbAssetType2'},//资产负债二级类别
+            {field: 'chbAssetType2', title: "资产/负债二级类别",width:150 ,visible:false},
             {field: 'operation', title: "操作",type: 'action',buttons: ['delt']}//操作
         ]
     });
@@ -116,14 +116,22 @@
         })
     });
 
+        /**
+         * 导出事件
+         */
+        var exportExcel = function() {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        };
+
     /**
      * 画面加载完成
      */
     $(function () {
         //导出按钮隐藏
-        $('#AssetTypeSetting001_btn_export').hide();
+//        $('#AssetTypeSetting001_btn_export').hide();
         //筛选按钮隐藏
-        $('#AssetTypeSetting001_btn_filter').hide();
+//        $('#AssetTypeSetting001_btn_filter').hide();
         // 查询
         $('#AssetTypeSetting001_btn_search').click(function() {
             tableA.load();
@@ -137,7 +145,7 @@
         });
         // 导出
         $('#AssetTypeSetting001_btn_export').click(function() {
-
+            exportExcel();
         });
     });
 }());

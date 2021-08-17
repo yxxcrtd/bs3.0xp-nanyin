@@ -2,7 +2,9 @@ package com.joyintech.tams.svreport.chb.assettypesetting.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbAssetTypeMappingExMapper;
@@ -202,4 +204,21 @@ public class AssetTypeSetting001Service extends CommonExportService<AssetTypeSet
         List<AssetTypeSetting001Dto> dtoList = assetTypeSetting001Mapper.findExPage(param);
         return dtoList;
     }
+
+    /**
+     * 导出
+     */
+    @Override
+    protected void buildExportParam(ExportParam exportParam) {
+        exportParam.config(
+                "/com/joyintech/tams/svreport/chb/assettypesetting/conf/export_conf.xml").dataSource(DataSourceType.MASERT);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<AssetTypeSetting001Dto> selectPageData(Map<String, Object> selectParam) {
+        return selectForPage(selectParam);
+    }
+
 }

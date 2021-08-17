@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
@@ -96,6 +98,9 @@ public class TrdConBond002Controller extends BaseController {
     @Autowired(required = false)
     private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
 
+    @Autowired
+    private PlatformDate platformDate;
+
     @Override
     public String init(Model model) {
         setSelectOptions(model);
@@ -122,7 +127,8 @@ public class TrdConBond002Controller extends BaseController {
                     dto.setRemark("");
                 }
             }
-            dto.setPurchDate(CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class));
+//            dto.setPurchDate(CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class));
+            dto.setPurchDate(platformDate.getSysDate(LoginUserUtil.getUserName()));
         }
         dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         if (StringUtil.isNotBlank(tradeId)) {

@@ -40,6 +40,9 @@ public interface EntrustCommonPersonSelectMapper {
     List<SelectOptionDto> getCounterId(Map<String, Object> map);
 
     List<SelectOptionDto> getCounterIdDepat(Map<String, Object> param);
+
+
+    List<SelectOptionDto> getMarketInsCounterId(Map<String, Object> param);
     /**
      * 
      * 查询本方交易员

@@ -77,6 +77,33 @@
             </where>
         <!-- 委托交易对手的查询逻辑保持与交易的一致 modify by renping 20190925 end -->
     </select>
+
+	<select id="getMarketInsCounterId" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+		T1.COUNTER_ID id,
+		T1.COUNTER_NAME text
+		FROM
+		MST_COUNTER_PARTY T1
+		INNER JOIN
+		MST_CUSTOMER_INFO T2
+		ON
+		T1.LINK_ID = T2.CUSTOMER_ID
+		INNER JOIN MST_CUSTOMER_INFO_ADD T3
+		ON
+		T2.CUSTOMER_ID = T3.CUSTOMER_ID
+		<where>
+			<if test="search != null and search != ''">
+				(
+				T1.COUNTER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR
+				T1.COUNTER_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				)
+			</if>
+			<if test="initValue != null and initValue != ''">
+				T3.INSITITUTE_CODE = #{initValue}
+			</if>
+		</where>
+	</select>
     
 	<select id="getTrader" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT
