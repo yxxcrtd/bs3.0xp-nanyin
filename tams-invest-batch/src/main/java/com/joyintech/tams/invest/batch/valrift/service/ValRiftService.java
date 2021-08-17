@@ -453,7 +453,8 @@ public class ValRiftService {
             //处理结束后将利息放入现金数据中
             PtlSecPierceValutionDto bjDto = mapAsset.get("REMAININGCASH_BJ");
             PtlSecPierceValutionDto lxDto = mapAsset.get("REMAININGCASH_LX");
-            bjDto.setTdyIntincexp(lxDto.getTdyIntincexp());
+            bjDto.setMarketValue(ArithmeticUtil.multiply(2,RoundingMode.HALF_UP,bjDto.getMarketValue(),bjDto.getPositionRatio()));
+            bjDto.setTdyIntincexp(ArithmeticUtil.multiply(2,RoundingMode.HALF_UP,lxDto.getTdyIntincexp(),lxDto.getPositionRatio()));
             bjDto.setFinprodId("REMAININGCASH");
             mapAsset.put("REMAININGCASH",bjDto);
             mapAsset.remove("REMAININGCASH_LX");
@@ -508,28 +509,28 @@ public class ValRiftService {
     	for (Entry<String, PtlSecPierceValutionDto> entry : mapAsset.entrySet()) {
 			if (entry.getValue().getShareAmt() != null
 					) {
-				entry.getValue().setShareAmt(ArithmeticUtil.multiply(entry.getValue().getShareAmt()
+				entry.getValue().setShareAmt(ArithmeticUtil.multiply(2,RoundingMode.HALF_UP,entry.getValue().getShareAmt()
 						,entry.getValue().getPositionRatio()));
 			}
 			if (entry.getValue().getDscCostAmt() != null ) {
-				entry.getValue().setDscCostAmt(ArithmeticUtil.multiply(entry.getValue().getDscCostAmt()
+				entry.getValue().setDscCostAmt(ArithmeticUtil.multiply(2,RoundingMode.HALF_UP,entry.getValue().getDscCostAmt()
 						,entry.getValue().getPositionRatio()));
 			}
             //市值单独计算
             // 市值= 摊销总成本+isnull(公允价值变动,当日应计利息)
 			if (entry.getValue().getMarketValue() == null) {
-				entry.getValue().setMarketValue(ArithmeticUtil.multiply(
+				entry.getValue().setMarketValue(ArithmeticUtil.multiply(2,RoundingMode.HALF_UP,
 				        ArithmeticUtil.doAdd(
 				                null!=entry.getValue().getDscCostAmt()?entry.getValue().getDscCostAmt():BigDecimal.ZERO
                                 ,null!=entry.getValue().getTdyFloatIngpl()?entry.getValue().getTdyFloatIngpl():BigDecimal.ZERO
                                 ,null!=entry.getValue().getTdyIntincexp()?entry.getValue().getTdyIntincexp():BigDecimal.ZERO)
 						,entry.getValue().getPositionRatio()));
 			}else{
-                entry.getValue().setMarketValue(ArithmeticUtil.multiply(entry.getValue().getMarketValue()
+                entry.getValue().setMarketValue(ArithmeticUtil.multiply(2,RoundingMode.HALF_UP,entry.getValue().getMarketValue()
                         ,entry.getValue().getPositionRatio()));
             }
 			if (entry.getValue().getTdyIntincexp() != null ) {
-				entry.getValue().setTdyIntincexp(ArithmeticUtil.multiply(entry.getValue().getTdyIntincexp()
+				entry.getValue().setTdyIntincexp(ArithmeticUtil.multiply(2,RoundingMode.HALF_UP,entry.getValue().getTdyIntincexp()
 						,entry.getValue().getPositionRatio()));
 			}
 			resultRep.add(entry.getValue());
