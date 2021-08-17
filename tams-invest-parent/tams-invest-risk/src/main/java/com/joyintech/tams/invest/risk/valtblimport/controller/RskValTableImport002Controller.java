@@ -150,8 +150,12 @@ public class RskValTableImport002Controller extends BaseController{
             //保存委托估值导入记录表
             String chbValSplitStr = CacheUtil.getSysParam(BussinessConstant.CHB_VAL_SPLIT_STR);
             String fileName=import001Dto.getName()+chbValSplitStr+DateUtil.format(dto.getValDate(),"yyyyMMdd");
+            String errorCode=StringUtil.EMPTY;
+            if(StringUtil.isNotEmpty(errorList) && errorList.size()>0){
+                errorCode=DictCodeListExt1.估值表自动解析错误码_自动加券失败.getValue();
+            }
             rskValTableImportCommonService.saveRskOutValtblImportHis(fileName,fileName, dto.getPtlId(), import001Dto.getName(), dto.getValDate(),
-                    DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue(),StringUtil.EMPTY,startDate,DateUtil.parse(DateUtil.getSysDate()),deptCode,sb.toString());
+                    DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue(),errorCode,startDate,DateUtil.parse(DateUtil.getSysDate()),deptCode,sb.toString());
         }
         String eMsg="";
         if(!StringUtil.isEmptyList(errorList)){

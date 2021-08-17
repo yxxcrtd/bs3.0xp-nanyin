@@ -544,25 +544,6 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         //保存估值表
 
         saveValTbl(dto);
-        //处理成功的文件入库估值表导入日期记录表
-      /*  if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
-            String deptCode=(LoginUserUtil.getInstCode()!= null && LoginUserUtil.getInstCode().size()>0) ? LoginUserUtil.getInstCode().get(0):null;
-            Date startDate = DateUtil.now();
-            StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
-            for (String item : errorInfoList) {
-                sb.append("[");
-                sb.append(item);
-                sb.append("]");
-                sb.append(GlobalConstant.HTML_NEWLINE);
-            }
-            //根据组合信息，查询是否有对应的映射信息
-            RskValRelateImport001Dto import001Dto = rskValRelateImport002Service.selectInfoById(dto.getPtlId());
-            //保存委托估值导入记录表
-            String chbValSplitStr = CacheUtil.getSysParam(BussinessConstant.CHB_VAL_SPLIT_STR);
-            String fileName=import001Dto.getName()+chbValSplitStr+DateUtil.format(dto.getValDate(),"yyyyMMdd");
-            rskValTableImportCommonService.saveRskOutValtblImportHis(fileName,fileName, dto.getPtlId(), import001Dto.getName(), dto.getValDate(),
-                    DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue(),StringUtil.EMPTY,startDate,DateUtil.parse(DateUtil.getSysDate()),deptCode,sb.toString());
-        }*/
         return errorInfoList;
     }
     

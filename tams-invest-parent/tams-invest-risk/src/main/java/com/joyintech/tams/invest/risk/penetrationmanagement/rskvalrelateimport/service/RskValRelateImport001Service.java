@@ -337,10 +337,14 @@ public class RskValRelateImport001Service extends CommonExportService<RskValRela
                     sb.append("]");
                     sb.append(GlobalConstant.HTML_NEWLINE);
                 }
+                String errorCode=StringUtil.EMPTY;
+                if(StringUtil.isNotEmpty(errorList) && errorList.size()>0){
+                    errorCode=DictCodeListExt1.估值表自动解析错误码_自动加券失败.getValue();
+                }
                 //保存委托估值导入记录表
                 String chbValSplitStr = CacheUtil.getSysParam(BussinessConstant.CHB_VAL_SPLIT_STR);
                 rskValTableImportCommonService.saveRskOutValtblImportHis(fileNameText, filePath, assetCode, assetName, valDate,
-                        DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue(),StringUtil.EMPTY,startDate,supDate,deptCode,sb.toString());
+                        DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue(),errorCode,startDate,supDate,deptCode,sb.toString());
             }
         } catch (ParseException e) {
             return assetName + ",保存失败";
