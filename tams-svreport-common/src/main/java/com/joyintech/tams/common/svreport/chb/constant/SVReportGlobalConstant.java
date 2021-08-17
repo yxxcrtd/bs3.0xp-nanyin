@@ -577,4 +577,8 @@ public class SVReportGlobalConstant {
      */
     public static final String DEALSUB_BALANCEAMT_SUM_TYPE = "DEALSUB_BALANCEAMT_SUM_TYPE";
     
+
+    /**统一数据维护删除逻辑***/
+    public static final String SVR_OPER_DELETE_FLAG = "SVR_OPER_DELETE_FLAG";
+    
 }
