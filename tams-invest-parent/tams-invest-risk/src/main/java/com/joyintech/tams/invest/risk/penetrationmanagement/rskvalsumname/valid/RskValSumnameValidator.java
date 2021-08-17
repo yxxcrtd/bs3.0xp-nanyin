@@ -164,6 +164,12 @@ public class RskValSumnameValidator implements BeanValidator{
                     }
                 }
             }
+            if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
+                //选中记录在业务表中已关联组合时
+                if(rskValSumname001Service.getCountById(dto)){
+                    errorList.add(new ValidMessage(this.getMessage("RSK_W_0073",getMessage("RskValSumname001.id"),dto.getId())));
+                }
+            }
         }
         return errorList;
     }
