@@ -961,7 +961,7 @@
             S.portfolioName portfolioName,
             #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
             S.marketValue marketValue,
-            S.dscCostAmt dscCostAmt,
+            NULL dscCostAmt,
             null shareAmt,
             S.tdyIntincexp tdyIntincexp,
             NULL tdyAmtRation,
@@ -975,36 +975,27 @@
             NULL ystTdyIntincexp
             FROM(
             SELECT
-            psv.cdate cdate,
-            psv.portfolio_Id portfolioId,
-            pp.portfolio_Name portfolioName,
-            #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
-            pcp.amount + NVL(CH.MARKET_VALUE,0) marketValue,
-            null dscCostAmt,
-            null shareAmt,
-            NVL(CH.TDY_INTINCEXP,NULL) tdyIntincexp,
-            NULL tdyAmtRation,
-            NULL ystAmtRation,
-            NULL monthAmtRation,
-            NULL yearAmtRation,
-            NULL ystAmtRationTemp,
-            NULL monthAmtRationExTemp,
-            NULL yearAmtRationTemp,
-            NULL ystMarketValue,
-            NULL ystTdyIntincexp
-             ,pcp.acct_id
+                psv.cdate cdate,
+                psv.portfolio_Id portfolioId,
+                pp.portfolio_Name portfolioName,
+                NVL(psv.MARKET_VALUE,0) marketValue,
+                NVL(psv.TDY_INTINCEXP,NULL) tdyIntincexp
             FROM PTL_SEC_PIERCE_VALUTION psv
-            LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
-            LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-            LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
-            LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
-            left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
-            LEFT JOIN cash CH on psv.PORTFOLIO_ID = CH.portfolioId
+            LEFT JOIN FIN_PRODUCT
+            ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
+            LEFT JOIN FIN_PRODUCT_ADD
+            ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+            LEFT JOIN PTL_PORTFOLIO pp
+            ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+            LEFT JOIN FIN_PRODUCT_TYPE fpt
+            ON fpt.FINPROD_ID = psv.FINPROD_ID
+            AND fpt.TYPE_8 IS NOT NULL
             WHERE
             psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
-            and pcp.portfolio_Id is not NULL
+            AND psv.FINPROD_ID like 'REMAININGCASH%'
+            and pp.portfolio_Id is not NULL
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-                AND pcp.PORTFOLIO_ID IN
+                AND pp.PORTFOLIO_ID IN
                 <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
@@ -1023,28 +1014,31 @@
                 </foreach>
             </if>
             <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-            GROUP BY
-            psv.cdate,CH.TDY_INTINCEXP,psv.portfolio_Id,pp.portfolio_Name,pcp.amount + NVL(CH.MARKET_VALUE,0),pcp.acct_id
+            GROUP BY psv.cdate, psv.portfolio_Id, pp.portfolio_Name, psv.TDY_INTINCEXP,
+            psv.MARKET_VALUE
             ) S
             LEFT JOIN (
-            SELECT
-            psv.cdate cdate,
-            psv.portfolio_Id portfolioId,
-            pcp.amount marketValue,
-            pcp.amount dscCostAmt
-            ,pcp.acct_id
-            FROM PTL_SEC_PIERCE_VALUTION psv
-            LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
-            LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-            LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
-            LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
-            left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
-            inner join tempA E on E.portfolioId=psv.PORTFOLIO_ID
-            WHERE
-            psv.CDATE=E.maxCdate
-            and pcp.portfolio_Id is not NULL
+            SELECT psv.cdate cdate,
+                psv.portfolio_Id portfolioId,
+                psv.MARKET_VALUE marketValue,
+                psv.MARKET_VALUE dscCostAmt
+                FROM PTL_SEC_PIERCE_VALUTION psv
+                LEFT JOIN FIN_PRODUCT
+                ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
+                LEFT JOIN FIN_PRODUCT_ADD
+                ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+                LEFT JOIN PTL_PORTFOLIO pp
+                ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                LEFT JOIN FIN_PRODUCT_TYPE fpt
+                ON fpt.FINPROD_ID = psv.FINPROD_ID
+                AND fpt.TYPE_8   IS NOT NULL
+                INNER JOIN tempA E
+                ON E.portfolioId                  =psv.PORTFOLIO_ID
+            WHERE psv.CDATE                   =E.maxCdate
+            and pp.portfolio_Id is not NULL
+            AND psv.FINPROD_ID like 'REMAININGCASH%'
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-                AND pcp.PORTFOLIO_ID IN
+                AND pp.PORTFOLIO_ID IN
                 <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
@@ -1063,9 +1057,8 @@
                 </foreach>
             </if>
             <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-            GROUP BY
-            psv.cdate,psv.portfolio_Id,pcp.amount,pcp.acct_id
-            ) SS ON S.portfolioId = SS.portfolioId and S.acct_id=SS.acct_id
+            GROUP BY psv.cdate, psv.portfolio_Id, psv.MARKET_VALUE
+            ) SS ON S.portfolioId = SS.portfolioId
           )
 	</sql>
 
