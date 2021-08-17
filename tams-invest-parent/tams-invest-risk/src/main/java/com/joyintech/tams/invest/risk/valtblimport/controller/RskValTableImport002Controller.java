@@ -12,13 +12,21 @@ package com.joyintech.tams.invest.risk.valtblimport.controller;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalrelateimport.dto.RskValRelateImport001Dto;
+import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalrelateimport.service.RskValRelateImport002Service;
+import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportCommonService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,6 +62,10 @@ public class RskValTableImport002Controller extends BaseController{
 
     @Autowired
     private RskValTableImportService rskValTableImportService;
+    @Autowired
+    private RskValRelateImport002Service rskValRelateImport002Service;
+    @Autowired
+    private RskValTableImportCommonService rskValTableImportCommonService;
     @Override
     public String init(Model model) {
         model.addAttribute("ptlId", this.getParam("ptlId"));
@@ -122,6 +134,25 @@ public class RskValTableImport002Controller extends BaseController{
     public AjaxResult save(@RequestBody RskValtblAssetSubDto dto) throws ParseException {
         dto.setImpMode(DictCodeListExt1.导入方式_手工.getValue());
         List<String> errorList=rskValTableImportService.insert(dto);
+        //处理成功的文件入库估值表导入日期记录表
+        if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
+            String deptCode=(LoginUserUtil.getInstCode()!= null && LoginUserUtil.getInstCode().size()>0) ? LoginUserUtil.getInstCode().get(0):null;
+            Date startDate = DateUtil.now();
+            StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+            for (String item : errorList) {
+                sb.append("[");
+                sb.append(item);
+                sb.append("]");
+                sb.append(GlobalConstant.HTML_NEWLINE);
+            }
+            //根据组合信息，查询是否有对应的映射信息
+            RskValRelateImport001Dto import001Dto = rskValRelateImport002Service.selectInfoById(dto.getPtlId());
+            //保存委托估值导入记录表
+            String chbValSplitStr = CacheUtil.getSysParam(BussinessConstant.CHB_VAL_SPLIT_STR);
+            String fileName=import001Dto.getName()+chbValSplitStr+DateUtil.format(dto.getValDate(),"yyyyMMdd");
+            rskValTableImportCommonService.saveRskOutValtblImportHis(fileName,fileName, dto.getPtlId(), import001Dto.getName(), dto.getValDate(),
+                    DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue(),StringUtil.EMPTY,startDate,DateUtil.parse(DateUtil.getSysDate()),deptCode,sb.toString());
+        }
         String eMsg="";
         if(!StringUtil.isEmptyList(errorList)){
         	for(String errorInfo:errorList){

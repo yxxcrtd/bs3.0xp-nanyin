@@ -44,10 +44,10 @@ $(function(){
 				{ title: "产品代码", field: 'pbcProdIdShow',width:150,sortField:'pbcProdIdShow'},
 				{ title: "发行机构内部产品代码", field: 'prodId',width:150,sortField:'prodId'},
 				{ title: "产品实际终止日期", field: 'mdate',width:150,type:'date',sortField:'mdate'},
-			{ title: "兑付客户收益率", field: 'cusYearYield',width:150,type: 'number',digit:5,sortField:'cusYearYield'},
+				{ title: "兑付客户实际收益率", field: 'cusYearYield',width:150,type: 'number',digit:5,sortField:'cusYearYield'},
 				{ title: "币种代码", field: 'ccy',width:150,sortField:'ccy'},
-			{ title: "兑付客户收益", field: 'customProfit',width:150,type:'money',digit:2,sortField:'customProfit'},
-			{ title: "兑付客户收益折人民币", field: 'customProfitCny',width:150,type:'money',digit:2,sortField:'customProfitCny'},
+				{ title: "兑付客户收益", field: 'customProfit',width:150,type:'money',digit:2,sortField:'customProfit'},
+				{ title: "兑付客户收益转人民币", field: 'customProfitCny',width:150,type:'money',digit:2,sortField:'customProfitCny'},
 
 			// { title: "发行机构实现收入", field: 'profit',width:150,type:'money',digit:2,sortField:'profit'},
 				// { title: "发行机构实现收入折人民币", field: 'profitCny',width:150,type:'money',digit:2,sortField:'profitCny'},

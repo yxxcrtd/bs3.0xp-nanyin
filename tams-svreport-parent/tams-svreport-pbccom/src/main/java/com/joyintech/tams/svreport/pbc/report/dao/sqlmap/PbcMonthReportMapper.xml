@@ -1024,7 +1024,8 @@
         SUBMIT_FEEDBACK_STATUS=#{submitFeedbackStatus,jdbcType=VARCHAR}
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                REPORTUUID = #{regist,jdbcType=VARCHAR}
+                REPORTUUID = #{regist.reportuuid,jdbcType=VARCHAR}
+                and REPORTTYPE=#{regist.datZipDatType,jdbcType=VARCHAR}
             </foreach>
         </where>
     </update>

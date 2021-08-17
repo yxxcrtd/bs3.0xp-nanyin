@@ -130,14 +130,15 @@ public class PbcZipDataFileService {
 		List<PbcSendZipDatFile> zipDatFileList=new ArrayList<>();
 		List<PbcSendZipDatFile> baseZipDatFileList=new ArrayList<>();
 		//pbcReport更新数据
-		List<String> pbcReportUuidList=new ArrayList<>();
 		List<DatDownloadDto> datDownloadDtos = new ArrayList<>();
 		Date date= DateUtil.parse(DateUtil.getCurrentDate());
+
 		for (Map.Entry<String, Set<String>> entry : paramMap.entrySet()) {  //循环datZipCode
 			String datZipCode=entry.getKey();
 			Set<String> set=entry.getValue();
 			PbcSendZipDatFile pbcSendZipDatFile=zipInfoMap.get(datZipCode);
 			String datZipCodePath="";
+			String reportuuid=pbcSendZipDatFile.getReportuuid();
 			Set<String> rst = new HashSet<String>();
 			for(String datType:set) {  //生成dat文件
 				if(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType)){
@@ -202,22 +203,22 @@ public class PbcZipDataFileService {
 						rst.add(datZipCodePath);
 					}
 				}
+				//添加生成更新表状态的list
+				if(!DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType)&&
+				  !DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
+					PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,datType,reportuuid);
+					zipDatFileList.add(zipDatFile);
+				}else{
+					PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,pbcSendZipDatFile.getDatZipType(),reportuuid);
+					baseZipDatFileList.add(zipDatFile);
+				}
+
 			}
 			if(CollectionUtil.isNotEmpty(errorList)){
 				ajaxResult.setErrorList(errorList);
 				continue;
 			}
 			reslut.addAll(rst);
-			//添加zip路径
-			if(DictCodeListExt2.人行报送类型_统计模板数据.getValue().equals(pbcSendZipDatFile.getDatZipType())) {
-				PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date);
-				zipDatFileList.add(zipDatFile);
-				pbcReportUuidList.add(pbcSendZipDatFile.getReportuuid());
-			}
-			if(DictCodeListExt2.人行报送类型_产品信息.getValue().equals(pbcSendZipDatFile.getDatZipType())) {
-				PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date);
-				baseZipDatFileList.add(zipDatFile);
-			}
 		}
 		//生成压缩包
 		if(reslut.size() > 0){
@@ -227,7 +228,7 @@ public class PbcZipDataFileService {
 			ajaxResult.setData(finalZipFile);
 		}
 		//更新数据状态
-		updateFileDatAndPbcReport(zipDatFileList,pbcReportUuidList,date);
+		updateFileDatAndPbcReport(zipDatFileList,date);
 		//更新产本基本和终止信息状态
 		updateBaseFileDatAndPbcReport(baseZipDatFileList,datDownloadDtos);
 		return ajaxResult;
@@ -882,8 +883,10 @@ public class PbcZipDataFileService {
 	}
 
 	//数据报送文件管理表PBC_SEND_ZIP_DAT_FILE
-    private PbcSendZipDatFile getPbcSendZipDatFile(String ZipCode,String datZipPath,Date date){
+    private PbcSendZipDatFile getPbcSendZipDatFile(String ZipCode,String datZipPath,Date date,String datType,String reportuuid){
 		PbcSendZipDatFile datFile=new PbcSendZipDatFile();
+		datFile.setDatZipDatType(datType);
+		datFile.setReportuuid(reportuuid);
 		datFile.setDatZipCode(ZipCode);
 		datFile.setDatZipPath(datZipPath);
 		datFile.setDatZipStatus(DictCodeListExt3.zip包状态_已使用.getValue());
@@ -895,14 +898,13 @@ public class PbcZipDataFileService {
 		return datFile;
 	}
 	//更新数据状态
-	private  void updateFileDatAndPbcReport(List<PbcSendZipDatFile> datFileList,List<String> pbcReportUuidList,Date date){
+	private  void updateFileDatAndPbcReport(List<PbcSendZipDatFile> datFileList,Date date){
 		if(!CollectionUtils.isEmpty(datFileList)){
 			//更新PBC_SEND_ZIP_DAT_FILE
-			pbcSendZipDatFileMapper.updateByZipCodeAndZipType(datFileList,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
-		}
-	    //更新报表
-		if(!CollectionUtils.isEmpty(pbcReportUuidList)) {
-			pbcMonthReportMapper.updatePbcReportSendInfo(DictCodeListExt2.报送状态_手工处理.getValue(), date, DictCodeListExt2.人行报送反馈状态_人行通过.getValue(), pbcReportUuidList);
+			pbcSendZipDatFileMapper.updateByZipCodeAndZipType(datFileList);
+			//更新报表
+			pbcMonthReportMapper.updatePbcReportSendInfo(DictCodeListExt2.报送状态_手工处理.getValue(), date, DictCodeListExt2.人行报送反馈状态_人行通过.getValue(), datFileList);
+
 		}
 		}
 	//更新数据状态
@@ -910,7 +912,7 @@ public class PbcZipDataFileService {
 		//更新报送文件管理表PBC_SEND_ZIP_DAT_FILE
 		if(CollectionUtils.isNotEmpty(datFileList)){
 			//更新PBC_SEND_ZIP_DAT_FILE
-			pbcSendZipDatFileMapper.updateByZipCodeAndZipType(datFileList,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+			pbcSendZipDatFileMapper.updateByZipCodeAndZipType(datFileList);
 		}
 		if(CollectionUtils.isNotEmpty(datDownloadDtos)){
 			for (DatDownloadDto datDownloadDto : datDownloadDtos) {
