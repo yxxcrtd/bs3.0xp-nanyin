@@ -172,7 +172,7 @@
 					 GROUP BY PTL_ID, SUB.FINPROD_ID
 				 ) SUB
 				 ON SUB.PTL_ID = PLAN_ASSET_ID
-				 AND SUB.FINPROD_ID = DC.ASSET_CODE
+				 AND   (SUB.FINPROD_ID = DC.ASSET_CODE or substr(SUB.FINPROD_ID,5) = DC.ASSET_CODE)
 
 				 /** 估值表对应的资产科目类型,债券的数量需要乘以面值**/
 				 LEFT JOIN (

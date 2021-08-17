@@ -75,6 +75,7 @@ public class RskValBotDetailReportService extends BaseService<RskValBotDetailRep
                 ||"1108".equals(x.getAssettype2())
                 ||"1902".equals(x.getAssettype2())){
                 x.sethColumn(null);
+                x.setiColumn(null);
             }
             //add by yjp ZGBSEI-292 20210817 估值表内应收利息/股利：其他负债和回购显示为空 start
             if("2000".equals(x.getAssettype2())
