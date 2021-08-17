@@ -23,6 +23,7 @@
             isEnabled: '01',
             assetCode: $('#finprodIdhid').val()
         }
+        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
         var object = {
             tradeDirection: ['ps', 'EtrInvestBondInfo002.ps'],
             portfolioCode: ['portfolioId', 'EtrInvestBondInfo002.portfolioId'],
@@ -30,6 +31,7 @@
             assetType: ['assetType1', 'EtrInvestBondInfo002.bondType'],
             data: obj
         }
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
         return object;
     }
 

@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeCSTPDto;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.codec.binary.StringUtils;
@@ -445,6 +446,10 @@ public class TrdStock002Controller extends BaseController {
 			if (StringUtil.isNotEmpty(ar)) {
 				return ar;
 			}
+			// add by zhangrui1 start
+			// 将实占信息设置到线程缓存出错时撤销用
+			TradeRdsCommonAop.setLocalCache(dto);
+			// add by zhangrui1 end
 		}
 		//----------add by jjpei 20200114 核风险版本 end----------
 		ProcessParameter<TrdStockDto> processParameter = new ProcessParameter<>();
