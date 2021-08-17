@@ -45,7 +45,7 @@ $(function(){
 //				{ title: "产品代码(内部)", field: 'pbcProdIdShow',width:150,sortField:''},
 //				{ title: "产品代码(外部)", field: 'pbcCode',width:150,sortField:''},
 				{ title: "产品代码", field: 'pbcProdIdShow',width:150,sortField:'pbcProdIdShow'},
-				{ title: "反馈产品代码", field: 'pbcCode',width:150,sortField:'pbcCode'},
+				{ title: "反馈产品代码", field: 'pbcCode',width:150,sortField:'pbcCode' ,visible: false},
 				{ title: "发起机构代码", field: 'issuePartyId',width:150,sortField:'issuePartyId'},
 				{ title: "发起机构名称", field: 'issuePartyName',width:150,sortField:'issuePartyName'},
 				{ title: "产品种类", field: 'pbcProdType',width:150,sortField:'pbcProdType'},
@@ -212,7 +212,7 @@ $(function(){
               }
 
 				if(rows[i].pbcPoolCode==null||rows[i].pbcPoolCode==''){
-					Joyin.error("请先维护人行产品代码后，在进行手工处理。");
+					Joyin.error("请先维护人行产品代码后，再进行手工处理。");
 					return;
 				}
           }

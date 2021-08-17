@@ -467,7 +467,7 @@
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        ) ORDER BY STATUS_VDATE desc
+        ) ORDER BY DAT_ZIP_CODE desc,DAT_ZIP_TYPE desc,DAT_ZIP_DAT_TYPE asc
     </select>
 
     <select id="selectByZipTypeAndStatusVdate" resultMap="BaseResultMap" parameterType="java.util.Map" >

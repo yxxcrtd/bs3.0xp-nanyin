@@ -265,7 +265,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", filedValue.toString());
+				data.put("filedValue", dealDataBaseForDat(filedValue));
 				dataList.add(data);
 			}
 		}
@@ -303,7 +303,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", filedValue.toString());
+				data.put("filedValue", dealDataBaseForDat(filedValue));
 				dataList.add(data);
 			}
 		}
@@ -341,7 +341,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", sub.getIssuePartyId());
 				data.put("prodVariety", sub.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", filedValue.toString());
+				data.put("filedValue", dealDataBaseForDat(filedValue));
 				dataList.add(data);
 			}
 		}
@@ -379,7 +379,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", sub.getIssuePartyId());
 				data.put("prodVariety", sub.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", filedValue.toString());
+				data.put("filedValue", dealDataBaseForDat(filedValue));
 				dataList.add(data);
 			}
 		}
@@ -457,6 +457,8 @@ public class PbcZipDataFileService {
 		for(PbcPrdBaseinfoSubDat subDat :pbcPrdBaseinfoSubDatsNew){
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+			//序号
+			data.put("number","1");
 			//产品代码
 			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//发行机构代码
@@ -518,6 +520,8 @@ public class PbcZipDataFileService {
 		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+			//序号
+			data.put("number","2");
 			//产品代码
 			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种种类1-募集资金币种
@@ -529,6 +533,8 @@ public class PbcZipDataFileService {
 			dataList.add(data);
 			//组装数据
 			LinkedHashMap<String,String> data1= new LinkedHashMap<String,String>();
+			//序号
+			data1.put("number","2");
 			//产品代码
 			data1.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种种类1-募集资金币种
@@ -540,6 +546,8 @@ public class PbcZipDataFileService {
 			dataList.add(data1);
 			//组装数据
 			LinkedHashMap<String,String> data2 = new LinkedHashMap<String,String>();
+			//序号
+			data2.put("number","2");
 			//产品代码
 			data2.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种种类1-募集资金币种
@@ -553,6 +561,8 @@ public class PbcZipDataFileService {
 		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+			//序号
+			data.put("number","3");
 			//产品代码
 			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//增信机构类型
@@ -560,13 +570,38 @@ public class PbcZipDataFileService {
 			dataList.add(data);
 		}
 		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
-			//增信形式
-			data.put("creditMode",subDat.getCreditMode());
-			dataList.add(data);
+			String creditMode = subDat.getCreditMode();
+			if(StrUtil.isNotEmpty(creditMode) && "3".equals(creditMode)){
+				//组装数据
+				LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+				//序号
+				data.put("number","4");
+				//产品代码
+				data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+				//增信形式
+				data.put("creditMode","1");
+				dataList.add(data);
+				//组装数据
+				LinkedHashMap<String,String> data1 = new LinkedHashMap<String,String>();
+				//序号
+				data1.put("number","4");
+				//产品代码
+				data1.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+				//增信形式
+				data1.put("creditMode","2");
+				dataList.add(data1);
+			}else{
+				//组装数据
+				LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+				//序号
+				data.put("number","4");
+				//产品代码
+				data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+				//增信形式
+				data.put("creditMode",subDat.getCreditMode());
+				dataList.add(data);
+			}
+
 		}
 		datDownloadDto.setUrl(PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList));
 		return datDownloadDto;
@@ -667,7 +702,7 @@ public class PbcZipDataFileService {
 					data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 					data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 					data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-					data.put("filedValue", filedValue.toString());
+					data.put("filedValue", dealDataBaseForDat(filedValue));
 					dataList.add(data);
 			}
 		}
@@ -710,7 +745,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", filedValue.toString());
+				data.put("filedValue", dealDataBaseForDat(filedValue));
 				dataList.add(data);
 			}
 		}
@@ -944,6 +979,15 @@ public class PbcZipDataFileService {
 				}
 			}
 		}
+	}
+    //取出来的数据库值除以10000成真实的值
+	public String dealDataBaseForDat(Object data) {
+		BigDecimal bigDecimal = new BigDecimal(data.toString());
+		BigDecimal tenthousand = new BigDecimal(10000);
+		if (data != null) {
+			bigDecimal = bigDecimal.divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP);
+		}
+		return bigDecimal.toString();
 	}
 
 }
