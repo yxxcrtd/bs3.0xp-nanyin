@@ -83,10 +83,15 @@
 										and ((fp.FINPROD_TYPE2 is not null and fp.FINPROD_TYPE2 != 'F28') OR RAI.ORG_ASSET_TYPE1 is NOT NULL
 											OR ATD.PINAN_ASSET_TYPE = 'F07' OR ATD.PINAN_ASSET_TYPE = 'F10')
 										<if test="finprodIdList != null and finprodIdList.size()>0">
-										   AND fp.FINPROD_MARKET_ID IN
-										   <foreach collection="finprodIdList" item="item" separator="," open="(" close =")">
-											#{item}
-										   </foreach>
+                                            AND (atd.FINPROD_MARKET_ID IN
+                                            <foreach collection="finprodIdList" item="item" separator="," open="(" close =")">
+                                                #{item}
+                                            </foreach>
+                                            OR RAI.ASSET_CODE IN
+                                            <foreach collection="finprodIdList" item="item" separator="," open="(" close =")">
+                                                #{item}
+                                            </foreach>
+                                            )
 										</if>
 										<if test="searchDate != null and searchDate != ''">
 											and to_char(psv.CDATE,'yyyy-mm-dd') = #{searchDate}
@@ -171,6 +176,18 @@
 			OR FINPROD_NAME LIKE CONCAT('%',CONCAT(#{search},'%'))
 			OR FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{search},'%')))
 		</if>
+
+        UNION ALL
+
+        SELECT ASSET_CODE id, ASSET_NAME text
+        FROM RSK_ASSET_INFO
+        <where>
+            <if test="search != null and search != ''">
+                AND (ASSET_CODE LIKE CONCAT('%',CONCAT(#{search},'%'))
+                OR ASSET_NAME LIKE CONCAT('%',CONCAT(#{search},'%'))
+                )
+            </if>
+        </where>
     </select>
     
     <!-- 导出数据 -->
