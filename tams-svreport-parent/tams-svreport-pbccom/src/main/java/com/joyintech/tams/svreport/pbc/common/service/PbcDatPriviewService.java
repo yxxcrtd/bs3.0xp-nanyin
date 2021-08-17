@@ -73,8 +73,8 @@ public class PbcDatPriviewService extends BaseService<ITableRow>{
 		}
 		if(data.get("report") instanceof Map){
 			Map pbcReport = (Map)data.get("report");
-			if(null!=pbcReport.get("enddate")){
-				Date enddate = new Date(Long.parseLong(pbcReport.get("enddate").toString()));
+			if(null!=pbcReport.get("createTime")){
+				Date enddate = new Date(Long.parseLong(pbcReport.get("createTime").toString()));
 				pbcReport.put("enddate",DateUtil.format(enddate));
 			}
 			if(null!=pbcReport.get("reportDate")){

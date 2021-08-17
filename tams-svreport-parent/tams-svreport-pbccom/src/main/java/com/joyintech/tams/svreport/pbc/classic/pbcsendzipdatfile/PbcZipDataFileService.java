@@ -265,7 +265,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", filedValue.toString());
+				data.put("filedValue", dealDataBaseForDat(filedValue));
 				dataList.add(data);
 			}
 		}
@@ -303,7 +303,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", filedValue.toString());
+				data.put("filedValue", dealDataBaseForDat(filedValue));
 				dataList.add(data);
 			}
 		}
@@ -341,7 +341,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", sub.getIssuePartyId());
 				data.put("prodVariety", sub.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", filedValue.toString());
+				data.put("filedValue", dealDataBaseForDat(filedValue));
 				dataList.add(data);
 			}
 		}
@@ -379,7 +379,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", sub.getIssuePartyId());
 				data.put("prodVariety", sub.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", filedValue.toString());
+				data.put("filedValue", dealDataBaseForDat(filedValue));
 				dataList.add(data);
 			}
 		}
@@ -702,7 +702,7 @@ public class PbcZipDataFileService {
 					data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 					data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 					data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-					data.put("filedValue", filedValue.toString());
+					data.put("filedValue", dealDataBaseForDat(filedValue));
 					dataList.add(data);
 			}
 		}
@@ -745,7 +745,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", filedValue.toString());
+				data.put("filedValue", dealDataBaseForDat(filedValue));
 				dataList.add(data);
 			}
 		}
@@ -979,6 +979,15 @@ public class PbcZipDataFileService {
 				}
 			}
 		}
+	}
+    //取出来的数据库值除以10000成真实的值
+	public String dealDataBaseForDat(Object data) {
+		BigDecimal bigDecimal = new BigDecimal(data.toString());
+		BigDecimal tenthousand = new BigDecimal(10000);
+		if (data != null) {
+			bigDecimal = bigDecimal.divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP);
+		}
+		return bigDecimal.toString();
 	}
 
 }
