@@ -1,10 +1,18 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper;
+import com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsUtil;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBaseinfoSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
@@ -15,10 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -37,6 +42,9 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
 
     @Autowired
     private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
+    @Autowired
+    private PbcProdAssetpoolCodeMapper pbcProdAssetpoolCodeMapper;
+    public final static String PBC_PROD_BASEINFO_SEQCODE = "PBCPRDBASEINFO";
 
     @Override
     public Map<Object, Object> createData(Map<String,Object> param){
@@ -46,6 +54,8 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
         }
         String datZipCode=StringUtil.isNotEmpty(param.get("datZipCode"))?param.get("datZipCode").toString():"";
         List<PbcPrdBaseinfoSubDatDiffDto> listDetail=pbcPrdBaseinfoSubDatMapper.queryPbcPrdBaseInfoByDatZipCode(datZipCode);
+        //查询人行产品代码(外部)
+        dealIsspartList(listDetail);
         if (!CollectionUtils.isEmpty(listDetail)){
             for(PbcPrdBaseinfoSubDatDiffDto detail : listDetail){
                 //登记表和DAT表数据差异比较
@@ -172,9 +182,9 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
      * PbcPrdBaseinfoSubDat
      */
     public void dealPbcPrdBaseinfoSubDatDiff(PbcPrdBaseinfoSubDatDiffDto result) {
-        if (!StringUtil.equals(result.getPbcProdId(),result.getPbcProdIdPrd())){
-            result.setPbcProdIdDiff(1);
-        }
+//        if (!StringUtil.equals(result.getPbcProdId(),result.getPbcProdIdPrd())){
+//            result.setPbcProdIdDiff(1);
+//        }
         if (!StringUtil.equals(result.getIssuePartyId(),result.getIssuePartyIdPrd())){
             result.setIssuePartyIdDiff(1);
         }
@@ -261,5 +271,57 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
         }
 
     }
+    /**
+     * 功能:获取人行代码(外部)
+     * @since 1.6.0
+     * @version 1.6.0
+     * @param listDetail
+     */
+    private void dealIsspartList(List<PbcPrdBaseinfoSubDatDiffDto> listDetail){
+        List<String> innerProdIds = new ArrayList<>();
+        List<PbcProdAssetpoolCode> poolCodeList = new ArrayList<>();
+        Map<String,String> innerProdIdMapping = new HashMap<>();
+        for (PbcPrdBaseinfoSubDatDiffDto pbcPrdBaseinfoSubDat : listDetail) {
+            String prodId = pbcPrdBaseinfoSubDat.getProdId();
+            if(StrUtil.isNotEmpty(prodId) && !innerProdIds.contains(prodId)){
+                innerProdIds.add(prodId);
+            }
+        }
+        List<PbcProdAssetpoolCode> pbcProdAssetpoolCodes = new ArrayList<>();
+        if(CollectionUtil.isNotEmpty(innerProdIds)){
+            pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds);
+        }
+        for (PbcPrdBaseinfoSubDatDiffDto pbcPrdBaseinfoSubDat : listDetail) {
+            String prodId = pbcPrdBaseinfoSubDat.getProdId();
+            Optional<PbcProdAssetpoolCode> first = pbcProdAssetpoolCodes.stream().filter(pbcProdAssetpoolCode ->
+                    prodId.equals(pbcProdAssetpoolCode.getInsideProdId())).findFirst();
+            if(first.isPresent()){
+                pbcPrdBaseinfoSubDat.setPbcProdIdExternal(first.get().getPbcCode());
+            }else{
+                String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(pbcPrdBaseinfoSubDat.getIssuePartyId(), pbcPrdBaseinfoSubDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, pbcPrdBaseinfoSubDat.getVdate());
+                pbcPrdBaseinfoSubDat.setPbcProdIdExternal(pbcProdIdExternal);
+                innerProdIdMapping.put(prodId,pbcProdIdExternal);
+            }
+        }
+        Date date=DateUtil.parse(DateUtil.getCurrentDate());
+        //没有查询到的插入
+        for(Map.Entry<String, String> entry : innerProdIdMapping.entrySet()){
+            PbcProdAssetpoolCode prodAssetpoolCode = new PbcProdAssetpoolCode();
+            prodAssetpoolCode.setInsideProdId(entry.getKey());
+            prodAssetpoolCode.setPbcCode(entry.getValue());
+            prodAssetpoolCode.setCodeType(DictCodeListExt3.代码类型_产品.getValue());
+            prodAssetpoolCode.setStatus("E");
+            prodAssetpoolCode.setCreateUser(SecurityUtil.getLoginUser().getUserName());
+            prodAssetpoolCode.setCreateTime(date);
+            prodAssetpoolCode.setOrgCode(SecurityUtil.getLoginUser().getOrgCode());
+            prodAssetpoolCode.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+            prodAssetpoolCode.setUpdateTime(date);
+            poolCodeList.add(prodAssetpoolCode);
+        }
+        if(!CollectionUtils.isEmpty(poolCodeList)){
+            pbcProdAssetpoolCodeMapper.batchInsertPbcCode(poolCodeList);
+        }
+    }
+
 
 }

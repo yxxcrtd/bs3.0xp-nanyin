@@ -220,6 +220,9 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                         //设置报送流水号   重新生成报送流水号
                         baseinfoSubDat.setSumitSeq(null);
                         //设置压缩包编码为空
+//                        String statusVdate1 = fName.substring(0,4).concat("-").concat(fName.substring(4,6)).concat("-").concat(fName.substring(6,8));
+                        String orgCode = SecurityUtil.getLoginUser().getOrgCode();
+//                        baseinfoSubDat.setDatZipCode(PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(), cn.hutool.core.date.DateUtil.parse(statusVdate1, com.joyintech.framework.util.DateUtil.DEFAULT_DATE_FORMAT_EN),1,orgCode));
                         baseinfoSubDat.setDatZipCode(null);
                         baseinfoSubDatsSend.add(baseinfoSubDat);
                     }
