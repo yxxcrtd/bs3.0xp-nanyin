@@ -114,6 +114,20 @@ public class RskValBotDetailReportService extends BaseService<RskValBotDetailRep
                 if (singleRule.getPropertyName().contains("合计")) {
                     continue;
                 }
+                //add by yjp  ZGBSEI-286  20210817 start
+                if (singleRule.getPropertyCode().contains("AMT3_1_1") || singleRule.getPropertyCode().contains("AMT3_1_2")
+                        ||singleRule.getPropertyCode().contains("AMT3_1_3")
+                        ||singleRule.getPropertyCode().contains("AMT3_2_1") ||singleRule.getPropertyCode().contains("AMT3_2_2")
+                        ||singleRule.getPropertyCode().contains("AMT3_2_3") ||singleRule.getPropertyCode().contains("AMT3_2_4")
+                        ||singleRule.getPropertyCode().contains("AMT3_2_5") ||singleRule.getPropertyCode().contains("AMT3_2_6")
+                        ||singleRule.getPropertyCode().contains("AMT3_3_1") ||singleRule.getPropertyCode().contains("AMT3_3_2")
+                        ||singleRule.getPropertyCode().contains("AMT3_3_3") ||singleRule.getPropertyCode().contains("AMT3_3_4")
+                        ||singleRule.getPropertyCode().contains("AMT3_3_5") ||singleRule.getPropertyCode().contains("AMT3_3_6")
+                        ||singleRule.getPropertyCode().contains("AMT3_3_7") ||singleRule.getPropertyCode().contains("AMT3_3_8")
+                        ||singleRule.getPropertyCode().contains("AMT3_3_9")) {
+                    continue;
+                }
+                //add by yjp  ZGBSEI-286  20210817 end
                 // 根据配置规则代码匹配资产头寸中相应属性
                 if (!StringUtil.isEmptyList(singleRule.getRuleCodeList())
                         && !StringUtil.isEmptyList(singleRule.getRuleValueList())) {
