@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.busicommon.productRating.service.CommonProductRatingService;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -71,6 +73,12 @@ public class ChbAssetInfoInterf  extends BaseService{
     
     @Autowired
     private ChbTypeMappingMapper chbTypeMappingMapper;
+
+    /**
+     * 角色权限service
+     */
+    @Autowired
+    private TamsBaseCommonService baseCommonService;
     
     /**
      * 映射service
@@ -100,7 +108,7 @@ public class ChbAssetInfoInterf  extends BaseService{
      * @param isSynchronizeTask 是否为轮训批处理
      * void
      */
-    public Map<String,List<String>> generateAssetInfoData(Date batchDate,List<String> prodList,boolean isSynchronizeTask) { 
+    public Map<String,List<String>> generateAssetInfoData(Date batchDate,List<String> prodList,boolean isSynchronizeTask,String institutionCode) {
         logger.debug("上游资产要素信息入库:----开始------" +  df.format(new Date()));
         // 通道交易是否穿透報送 01 是 02 否
         String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
@@ -136,7 +144,27 @@ public class ChbAssetInfoInterf  extends BaseService{
         List<ChbAssetInfo> insertDataList = new ArrayList<ChbAssetInfo>();
         // 发行机构代码
         //String issueId = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID);
-        String issueId = CommonUtil.selectBankCode();
+        //String issueId = CommonUtil.selectBankCode();
+        String issueId = "";
+        //根据登录用户获取当前机构的登记编码
+        if(institutionCode!=null) {
+            String orgCode = "";
+            if (MultilevelDataAuthorityUtil.isEnabled()) {
+                orgCode = institutionCode;
+            } else {
+                // 银行模式下 只有一个总行  直接查总行对应的 code
+                orgCode = baseCommonService.getYHGeneralBankCode();
+            }
+
+            String code = baseCommonService.selectBankCode(orgCode);
+
+            if (MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isEmpty(code)) {
+                code = CacheUtil.getSysParam("SVR_ISSUE_PARTY_ID");
+            }
+            issueId = null!=code?code:"";
+        }else{
+            issueId = CommonUtil.selectBankCode();
+        }
         // 映射源数据和中债所需数据
         List<ChbTypeMapping> assetTypeTwoMappingList = chbTypeMappingMapper.selectMappingBySrcDataType(InterfMappingConstants.MAAPING_ASSETTYPETWO_ZG);
         Map<String, ChbTypeMapping> assetTypeTwoMappingMap  = new HashMap<String, ChbTypeMapping>();
