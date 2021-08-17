@@ -407,7 +407,7 @@ public class AssetInfoDetailRisk001Service extends CommonExportService<AssetInfo
 		List<List<String>> data = ExcelUtil.getDataList2(fileName);
 		List<AssetInfoDetailRisk001Dto> list = new ArrayList<>();
 		List<ExcelValidDto> checkResult = assetInfoDetailUtil.convertToBean(list,data);
-		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list)){
+		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list) && list.size()>0 ){
 			int dataCount =restTemplate.postForObject(
 		            ServiceApplication.RISK_SERVICE_NAME +
 		            "/AssetInfoDetailRiskController/selectDataCount",list,

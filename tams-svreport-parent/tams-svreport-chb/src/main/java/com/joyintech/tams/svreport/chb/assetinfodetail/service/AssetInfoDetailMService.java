@@ -315,7 +315,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		List<List<String>> data = ExcelUtil.getDataList2(fileName);
 		List<AssetInfoDetailDto> list = new ArrayList<>();
 		List<ExcelValidDto> checkResult = assetInfoDetailUtil.convertToBean(list,data);
-		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list)){
+		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list) && list.size()>0 ){
 			int dataCount = this.assetInfoDetailMapper.selectDataCount(list);
 			if (dataCount > 0) {
 				webResult.setMessage(this.getMessage("REPORT_ASSET_C_0003"), MessageType.确认消息);
