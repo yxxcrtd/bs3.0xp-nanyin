@@ -70,7 +70,7 @@ public class AssetTypeSetting002Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
     public AjaxResult doAdd(@RequestBody @Validated({
-            ValidateGroupEdit.class})AssetTypeSetting001Dto dto , BindingResult result) throws Exception {
+            ValidateGroupEdit.class})AssetTypeSetting001Dto dto , BindingResult result) {
         if (result.hasErrors()) {
             return new AjaxResult();
         }

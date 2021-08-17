@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +58,11 @@ import com.joyintech.tams.invest.risk.stresstestmanage.marketrisksstresstest.ser
 @PageId("MarketRiskStressTest001")
 @RequestMapping("/invest/risk/stresstestmanage/marketrisksstresstest/MarketRiskStressTest001")
 public class MarketRiskStressTest001Controller extends BaseController{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MarketRiskStressTest001Controller.class);
+
     @Autowired(required = false)
     private MarketRiskStressTest001Service MarketRiskStressTest001Service;
     
@@ -81,7 +88,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
         setSelectOptionToModel(model, DICT_CODES);
         SelectDto selectZhccDto = this.getSelectDataFromDataDic(DictCode.组合层次, null);
         List<SelectOptionDto> optionZhcc = selectZhccDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         model.addAttribute("mapZhcc",mapZhcc);
         SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
         Date sysDate = iPlatformDate.getSysDate();
@@ -93,12 +100,11 @@ public class MarketRiskStressTest001Controller extends BaseController{
             analysisDate = dft.parse(dft.format(date.getTime()));
         }
         catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         /*SelectDto selects = this.getSelectDataFromDataDic(DictCode.风险因子的异常处理, null);
         List<SelectOptionDto> options = selects.getOptions();
-        Map<String,List<SelectOptionDto>> maps = options.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> maps = options.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         //model.addAttribute("RISK_FAC_HANDLING",maps);
         model.addAttribute("RISK_FAC_HANDLING",this.getSelectDataFromDataDic(DictCode.风险因子的异常处理, null));*/
         model.addAttribute("analysisDate",analysisDate);
@@ -117,7 +123,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
     @RequestMapping("/getAllPortfolioBySort")
     public List<TreeNode> getAllPortfolioBySort(@RequestParam(name="type", required=false) String type,@RequestParam(name="indId", required=false) String indId,@RequestParam(name="portfName", required=false) String portfName,@RequestParam(name="profitType", required=false) String profitType
             ,@RequestParam(name="issueMode", required=false) String issueMode,@RequestParam(name="raiseType", required=false) String raiseType,@RequestParam(name="investType", required=false) String investType)
-        throws Exception {
+         {
         return MarketRiskStressTest001Service.getAllPortfolioBySort(type,indId,portfName,profitType,issueMode,raiseType,investType);
         
     }
@@ -143,7 +149,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
      * */
     @ResponseBody
     @RequestMapping("querySceneOption")
-    public List<SelectOptionDto> querySceneOption(@RequestParam Map<String, Object> param)throws Exception {
+    public List<SelectOptionDto> querySceneOption(@RequestParam Map<String, Object> param) {
         return MarketRiskStressTest001Service.querySceneOption(getParam("search"));
     }
     

@@ -4,6 +4,8 @@ import com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode;
 import com.joyintech.tams.common.base.entity.PbcProdAssetpoolCodeKey;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PbcProdAssetpoolCodeMapper {
     int deleteByPrimaryKey(PbcProdAssetpoolCodeKey key);
@@ -19,4 +21,8 @@ public interface PbcProdAssetpoolCodeMapper {
     int updateByPrimaryKeySelective(PbcProdAssetpoolCode record);
 
     int updateByPrimaryKey(PbcProdAssetpoolCode record);
+
+    List<PbcProdAssetpoolCode> selectByInsideProdList(List<String> list);
+
+    int batchInsertPbcCode(List<PbcProdAssetpoolCode> list);
 }

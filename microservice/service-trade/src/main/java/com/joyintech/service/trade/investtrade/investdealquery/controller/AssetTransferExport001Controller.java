@@ -41,7 +41,7 @@ public class AssetTransferExport001Controller {
     @PostMapping("selectTransExportPage/{page}/{length}")
     public Page<AssetTransferExport001Dto> selectTransExportPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                            @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<AssetTransferExport001Dto> pageList = assetTransferExport001Service.selectForPage(page, length, param);
         
         return pageList;

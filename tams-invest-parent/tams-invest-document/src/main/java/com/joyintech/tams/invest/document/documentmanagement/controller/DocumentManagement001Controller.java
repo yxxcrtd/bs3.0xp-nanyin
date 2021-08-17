@@ -87,28 +87,24 @@ public class DocumentManagement001Controller extends BaseController{
     /**
      * 分页查询
      * @return Page<DocumentManagementDto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/findPage")
-    public Page<DocumentManagementDto> findPage()
-        throws Exception {
+    public Page<DocumentManagementDto> findPage(){
         return documentManagementService.selectForPage(RequestUtil.getParameters(getRequest()));
     }
     /**
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return documentManagementService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

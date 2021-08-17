@@ -205,7 +205,6 @@ public class EquityBusiInfoRegist001Service extends CommonExportService<EquityBu
                 pageParam.put("investList", investList);
             }
             catch (IOException e) {
-                // e.printStackTrace();
                 logger.error(e.getMessage(), e);
             }
         }

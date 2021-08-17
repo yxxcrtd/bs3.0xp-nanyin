@@ -10,81 +10,18 @@
 
 package com.joyintech.tams.component.business.common.service;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.calculation.util.ArithmeticUtil;
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.MstCustomerInfoAddMapper;
 import com.joyintech.tams.common.base.dao.MstCustomerInfoMapper;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinCashPayRule;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.FinProductTypeConfig;
-import com.joyintech.tams.common.base.entity.FinProductValuation;
-import com.joyintech.tams.common.base.entity.FinRateInfo;
-import com.joyintech.tams.common.base.entity.FinStdsecConverseRadio;
-import com.joyintech.tams.common.base.entity.InfCmoneymarketfscarryoverm;
-import com.joyintech.tams.common.base.entity.InterfBondMarketInfo;
-import com.joyintech.tams.common.base.entity.InterfCbonddescription;
-import com.joyintech.tams.common.base.entity.InterfCbondindustrywind;
-import com.joyintech.tams.common.base.entity.InterfCbondspecialconditions;
-import com.joyintech.tams.common.base.entity.InterfCmfunddescrip;
-import com.joyintech.tams.common.base.entity.InterfCmfundnav;
-import com.joyintech.tams.common.base.entity.InterfFMarketInfo;
-import com.joyintech.tams.common.base.entity.InterfFloatcouprate;
-import com.joyintech.tams.common.base.entity.InterfPayhsrccbvlt;
-import com.joyintech.tams.common.base.entity.InterfPayhsrcsecoption;
-import com.joyintech.tams.common.base.entity.InterfPayhsrcsecrating;
-import com.joyintech.tams.common.base.entity.InterfPayhsrcsecschedule;
-import com.joyintech.tams.common.base.entity.InterfStdsecConRadio;
-import com.joyintech.tams.common.base.entity.JxsIssueInfo;
-import com.joyintech.tams.common.base.entity.MstBondCreditRating;
-import com.joyintech.tams.common.base.entity.MstBondMarketInfo;
-import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
-import com.joyintech.tams.common.base.entity.MstCalendarInfo;
-import com.joyintech.tams.common.base.entity.MstCustomerInfo;
-import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
-import com.joyintech.tams.common.base.entity.MstCustomerInfoAddWithBLOBs;
-import com.joyintech.tams.common.base.entity.MstFundMarketInfo;
-import com.joyintech.tams.common.base.entity.RepAssetBond;
-import com.joyintech.tams.common.base.entity.RepAssetDept;
-import com.joyintech.tams.common.base.entity.RepAssetEquity;
-import com.joyintech.tams.common.base.entity.RepFund;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.report.dto.BaseRepAssetEquityInfoDto;
 import com.joyintech.tams.component.business.asset.dto.FinPayInterestStdInfoDto;
 import com.joyintech.tams.component.business.common.constant.FundDateType;
-import com.joyintech.tams.component.business.common.dto.AutoCouponDto;
-import com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto;
-import com.joyintech.tams.component.business.common.dto.FinBondTargetAssetDto;
-import com.joyintech.tams.component.business.common.dto.FinFundTargetDto;
-import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
-import com.joyintech.tams.component.business.common.dto.InfChinamutualfunddescriptionDto;
-import com.joyintech.tams.component.business.common.dto.InterfPayhsrcsecinfoDto;
-import com.joyintech.tams.component.business.common.dto.InterfStockInfoDto;
+import com.joyintech.tams.component.business.common.dto.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRepInfoDto;
 import com.joyintech.tams.component.business.report.asset.fund.dto.BussRepFundInfoDto;
@@ -104,6 +41,15 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationInputParaDto;
 import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationOutputDto;
 import com.joyintech.tams.invest.common.util.xmlrelation.XmlRelationUtil;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  *  自动加券
@@ -133,9 +79,9 @@ public class CommonAutoCouponService extends BaseService{
      */
     @Autowired
     private DateCalService dateCalService;
-    
+
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private ChbDataCheckService chbDataCheckService;
 
     /**
      * 获取wind资产信息(债券)
@@ -399,7 +345,7 @@ public class CommonAutoCouponService extends BaseService{
                     finProduct.setCapiIncomeFeature(DictCodeList.产品收益标识_保证收益.getValue());
                 }*/
 //                if(null!=interfPayhsrcsecinfo && null!=interfPayhsrcsecinfo.getIssuetype()){
-//                    if(interfPayhsrcsecinfo.getIssuetype().toString().startsWith("43901")){
+//                    if(interfPayhsrcsecinfo.getIssuetype().startsWith("43901")){
 //                        finProduct.setIssueType(BussinessDictCodeList.发行方式_公开发行.getValue()); 
 //                    }else{
 //                        finProduct.setIssueType(BussinessDictCodeList.发行方式_非公开发行.getValue());
@@ -1442,8 +1388,7 @@ public class CommonAutoCouponService extends BaseService{
     /**
      * 根据外部代码1获取客户代码
      * <功能详细描述>
-     * @param linkId1
-     * @param type 类型
+     * @param interfPayhsrcsecinfo
      * @return
      * @see
      * @since 1.0
@@ -1660,7 +1605,7 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询是否存在债券估值行情count
-     * @param sInfoWindcode(新增)
+     * @param finprodMarketId
      * @return
      */
     public int selectMstBondValuationInfoCount(String finprodMarketId){
@@ -1670,7 +1615,9 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_债券市价估值list
-     * @param sInfoWindcode(新增)
+     * @param finprodMarketId
+     * @param sysDate
+     * @param newDate 
      * @return
      */
     public List<InterfPayhsrccbvlt> selectInterfPayhsrccbvlt(String finprodMarketId,String sysDate,String newDate){
@@ -1720,7 +1667,9 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_基金净值list-基金加券
-     * @param sInfoWindcode
+     * @param finprodMarketId
+     * @param sysDate 
+     * @param newDate
      * @return
      */
     public List<InterfCmfundnav> selectInterfCmfundnav(String finprodMarketId,String sysDate,String newDate){
@@ -1739,7 +1688,9 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_基金市场行情list-基金加券
-     * @param sInfoWindcode
+     * @param  finprodMarketId
+     * @param newDate
+     * @param sysDate
      * @return
      */
     public List<InterfFMarketInfo> selectInterfFMarketInfo(String finprodMarketId,String sysDate,String newDate){
@@ -1803,7 +1754,7 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询客户信息附属表list-债券中债
-     * @param sInfoWindcode
+     * @param customerid
      * @return
      */
     public List<MstCustomerInfoAdd> selectMstCustomerInfoAdd(String customerid){
@@ -1812,7 +1763,7 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_债券评级信息表
-     * @param sInfoWindcode
+     * @param secid
      * @return
      */
     public List<InterfPayhsrcsecrating> selectInterfPayhsrcsecrating(String secid){
@@ -1821,7 +1772,8 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_债券评级中主体评级结果
-     * @param sInfoWindcode
+     * @param secid
+     * @param date
      * @return
      */
     public String selectRating(String secid,String date){
@@ -1832,7 +1784,7 @@ public class CommonAutoCouponService extends BaseService{
     /**
      *  自动加券(债券)
      * <功能详细描述>
-     * @param objIdList
+     * @param dto
      * @see
      * @since 1.0
      */
@@ -2196,7 +2148,7 @@ public class CommonAutoCouponService extends BaseService{
     /**
      * 获取wind资产信息(股票)
      * <功能详细描述>
-     * @param secid
+     * @param stockCode
      * @return
      * @see
      * @since 1.0
@@ -2248,13 +2200,22 @@ public class CommonAutoCouponService extends BaseService{
     			bondTargetDto.setMdate(baseInfoDto1.getFinProduct().getMdate());
     			bondTargetDto.setRegistOrg(baseInfoDto1.getRepAssetBond().getRepRegistOrg());
     			List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-    			resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, bondTargetDto, "FinBondTargetAsset002Interf", bondTargetDto.getRepAssetType(), ValidMessage.class);
+    			resultList = chbDataCheckService.chbCheckCommon(resultList, bondTargetDto, "FinBondTargetAsset002Interf", bondTargetDto.getRepAssetType());
     			//中债校验通过
     			if(StringUtil.isEmptyList(resultList)){
     				baseFinProductBaseInfoList.add(baseInfoDto1);
     			}else{
     				//中债校验不通过的数据
-    				errorAssetInfo.add("债券代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+"，"+"债券名称："+baseInfoDto1.getFinProduct().getFinprodAbbr());
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+                    sb.append(GlobalConstant.HTML_NEWLINE + "债券代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("债券名称："+baseInfoDto1.getFinProduct().getFinprodAbbr()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+    				errorAssetInfo.add(sb.toString());
     			}
     		}
     		interfPayhsrcsecinfoDtoNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
@@ -2317,13 +2278,22 @@ public class CommonAutoCouponService extends BaseService{
     			finFundTargetDto.setFinprodName(baseInfoDto1.getFinProduct().getFinprodName());
     			finFundTargetDto.setBussRepFundInfoDto(bussRepFundInfoDto);
     			List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-    			resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, finFundTargetDto, "FinFundTarget002Interf", null, ValidMessage.class);
+    			resultList = chbDataCheckService.chbCheckCommon(resultList, finFundTargetDto, "FinFundTarget002Interf", null);
     			//中债校验通过
     			if(StringUtil.isEmptyList(resultList)){
     				baseFinProductBaseInfoList.add(baseInfoDto1);
     			}else{
     				//中债校验不通过的数据
-    				errorAssetInfo.add("基金代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+"，"+"基金名称："+baseInfoDto1.getFinProduct().getFinprodAbbr());
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+                    sb.append(GlobalConstant.HTML_NEWLINE + "基金代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("基金名称："+baseInfoDto1.getFinProduct().getFinprodAbbr() + GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+                    errorAssetInfo.add(sb.toString());
     			}
     		}
     		infChinamutualfunddescriptionNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
@@ -2362,13 +2332,23 @@ public class CommonAutoCouponService extends BaseService{
     			finStockInfoDto.setFinprodMarketId(baseInfoDto1.getFinProduct().getFinprodMarketId());
     			finStockInfoDto.setFinprodName(baseInfoDto1.getFinProduct().getFinprodName());
     			List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-    			resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, finStockInfoDto, "FinStockInfo002Interf", null, ValidMessage.class);
+    			resultList = chbDataCheckService.chbCheckCommon(resultList, finStockInfoDto, "FinStockInfo002Interf", null);
     			//中债校验通过
     			if(StringUtil.isEmptyList(resultList)){
     				baseFinProductBaseInfoList.add(baseInfoDto1);
     			}else{
     				//中债校验不通过的数据
-    				errorAssetInfo.add("股票代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+"，"+"股票名称："+baseInfoDto1.getFinProduct().getFinprodAbbr());
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+
+                    sb.append(GlobalConstant.HTML_NEWLINE + "股票代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("股票名称："+baseInfoDto1.getFinProduct().getFinprodAbbr() + GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+                    errorAssetInfo.add(sb.toString());
     			}
     		}
     		interfStockInfoDtoNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);

@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.portfolio.ptlsubfundsmange.controller;
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class PtlSubFundsMange001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getPortfolioId")
-	public Page<SelectOptionDto> getPortfolioId() throws Exception {
+	public Page<SelectOptionDto> getPortfolioId(){
 		return ptlSubFundsAllocate001Service.getPortfolioId(RequestUtil.getPageParam());
 	}
 
@@ -78,7 +79,7 @@ public class PtlSubFundsMange001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getSubPortfolioId")
-	public Page<SelectOptionDto> getSubPortfolioId() throws Exception {
+	public Page<SelectOptionDto> getSubPortfolioId(){
 		return ptlSubFundsAllocate001Service.getSubPortfolioId(RequestUtil.getPageParam());
 	}
 
@@ -90,7 +91,7 @@ public class PtlSubFundsMange001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findFundsAllocatePage")
-	public Page<PtlSubFundsAllocate001Dto> findFundsAllocatePage() throws Exception {
+	public Page<PtlSubFundsAllocate001Dto> findFundsAllocatePage(){
 		return ptlSubFundsAllocate001Service.findFundsAllocatePage(RequestUtil.getPageParam());
 	}
 	
@@ -104,7 +105,7 @@ public class PtlSubFundsMange001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping("exportPtlSubFundsAllocate")
-	public ResponseEntity<byte[]> exportPtlSubFundsAllocate() throws Exception {
+	public ResponseEntity<byte[]> exportPtlSubFundsAllocate() throws IOException {
 		String datas = this.getParam("datas");
 		Map<String, Object> paraMap = RequestUtil.getPageParam();
 		List<PtlSubFundsAllocate001Dto> listdto;
@@ -155,21 +156,18 @@ public class PtlSubFundsMange001Controller extends BaseController {
      * <一句话功能简述> <功能详细描述>
      * 
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @RequestMapping("findIncomeStatisticsPage")
     @ResponseBody
-    public List<PtlSubFundsMange001Dto> findIncomeStatisticsPage()
-        throws Exception {
+    public List<PtlSubFundsMange001Dto> findIncomeStatisticsPage() {
         return ptlSubFundsMange001Service.findPage(RequestUtil.getPageParam());
     }
     
     @SuppressWarnings("unchecked")
 	@RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	Map<String, Object> paraMap = RequestUtil.getPageParam();
 		String datas = this.getParam("datas");		
 		List<PtlSubFundsMange001Dto> listdto = null;

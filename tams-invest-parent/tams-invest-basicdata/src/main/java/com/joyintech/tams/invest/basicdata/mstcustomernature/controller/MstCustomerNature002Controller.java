@@ -10,6 +10,7 @@
 package com.joyintech.tams.invest.basicdata.mstcustomernature.controller;
 import java.util.*;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -114,14 +115,12 @@ public class MstCustomerNature002Controller extends BaseController {
     /**
      * 代码的联想文本框的查询方法
      * @return List<SuggestDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getCustomerId")
-    public List<SuggestDto> getCustomerId()
-        throws Exception {
+    public List<SuggestDto> getCustomerId() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("customerId", super.getRequest().getParameter("param"));
         List<SuggestDto> list = mstCustomerNatureService.getCustomerId(param);;
@@ -131,14 +130,12 @@ public class MstCustomerNature002Controller extends BaseController {
     /**
      * 名称的联想文本框的查询方法
      * @return List<SuggestDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getName")
-    public List<SuggestDto> getName()
-        throws Exception {
+    public List<SuggestDto> getName() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("customerName", super.getRequest().getParameter("param"));
         List<SuggestDto> list = mstCustomerNatureService.getName(param);;
@@ -150,14 +147,12 @@ public class MstCustomerNature002Controller extends BaseController {
      * <一句话功能简述> 
      * <功能详细描述>
      * @return Page<MstCustomerNatureDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("searchMstCustomerNature")
-    public Page<MstCustomerNatureDto> search()
-        throws Exception {
+    public Page<MstCustomerNatureDto> search() {
         Page<MstCustomerNatureDto> page = mstCustomerNatureService.searchMstCustomerNature(
             RequestUtil.getPageParam());
         return page;
@@ -170,15 +165,14 @@ public class MstCustomerNature002Controller extends BaseController {
      * @param dto 实体类
      * @param br 接口
      * @return AjaxResult
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstCustomerNatureDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstCustomerNatureDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

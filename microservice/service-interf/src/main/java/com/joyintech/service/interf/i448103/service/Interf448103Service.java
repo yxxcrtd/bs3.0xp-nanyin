@@ -68,8 +68,7 @@ public class Interf448103Service extends SendEsbService<Interf448103InEntity, In
      * {@inheritDoc}
      */
     @Override
-    public Interf448103InEntity preparedLocalData(Object param)
-        throws Exception {
+    public Interf448103InEntity preparedLocalData(Object param) throws ParseException {
         InterfFinProdDto dto = (InterfFinProdDto)param;
         String finProdId = dto.getFinProdId();
         Map<String, Object> map = new HashMap<>();
@@ -107,7 +106,7 @@ public class Interf448103Service extends SendEsbService<Interf448103InEntity, In
      */
     @Override
     public int saveInterfData(Interf448103OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -116,7 +115,7 @@ public class Interf448103Service extends SendEsbService<Interf448103InEntity, In
      */
     @Override
     public int saveBusinessData(Interf448103OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 

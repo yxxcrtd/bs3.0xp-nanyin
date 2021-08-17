@@ -49,8 +49,7 @@ public class ValSubjectInfo001Controller {
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValSubjectInfo001Dto> findPage(@RequestBody Map<String, Object> param,
                                                @PathVariable("page") int page,
-                                               @PathVariable("length") int length)
-        throws Exception {
+                                               @PathVariable("length") int length) {
         return valSubjectInfo001Service.findPage(page, length, param);
     }
 

@@ -53,8 +53,7 @@ public class TaxScheme005Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("/findAsset/{page}/{length}")
-    public Page<SelectOptionDto> findAsset(@PathVariable("page") int page, @PathVariable("length") int length,@RequestBody Map<String, Object> param)
-        throws Exception {
+    public Page<SelectOptionDto> findAsset(@PathVariable("page") int page, @PathVariable("length") int length,@RequestBody Map<String, Object> param){
         return taxScheme005Service.findAsset(page,length,param);
     }
 
@@ -65,8 +64,7 @@ public class TaxScheme005Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("getAssetInfo")
-    public TaxScheme005Dto getAssetInfo(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public TaxScheme005Dto getAssetInfo(@RequestBody Map<String, Object> param){
         return taxScheme005Service.getAssetInfo(param);
     }
     

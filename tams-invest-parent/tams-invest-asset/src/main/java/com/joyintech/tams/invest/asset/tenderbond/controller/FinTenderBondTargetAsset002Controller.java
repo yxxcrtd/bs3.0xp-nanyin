@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -169,8 +170,7 @@ public class FinTenderBondTargetAsset002Controller extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinTenderBondTargetAssetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinTenderBondTargetAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -242,8 +242,7 @@ public class FinTenderBondTargetAsset002Controller extends BaseController{
 
     @ResponseBody
     @RequestMapping("/getBasicInfo")
-    public FinTenderBondTargetAssetDto getBasicInfo(@RequestBody FinTenderBondTargetAssetDto finBondTargetAssetDto)
-            throws Exception {
+    public FinTenderBondTargetAssetDto getBasicInfo(@RequestBody FinTenderBondTargetAssetDto finBondTargetAssetDto){
     	FinTenderBondTargetAssetDto resultDto = finTenderBondTargetAssetService.getBasicInfo(
                 finBondTargetAssetDto.getFinprodId());
         return resultDto;

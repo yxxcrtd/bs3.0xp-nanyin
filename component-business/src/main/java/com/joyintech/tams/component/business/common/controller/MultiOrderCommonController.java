@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,8 +142,7 @@ public class MultiOrderCommonController extends BaseController {
 
     @RequestMapping("select")
     @ResponseBody
-    public List<SelectOptionDto> select()
-        throws Exception {
+    public List<SelectOptionDto> select() throws IOException {
         String selectValue = getParam("selectValue");
         List<SelectOptionDto> tempList = new ArrayList<>();
         if(selectValue.indexOf("isUsePageAcctTrue")!=-1){

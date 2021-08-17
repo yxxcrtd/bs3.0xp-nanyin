@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -71,14 +72,12 @@ public class MstNaturalPerson001Controller extends BaseController {
      * 查询 <功能详细描述>
      * 
      * @return page分页参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstNaturalPerson001Dto> selectAllMstCaptialAccount()
-        throws Exception {
+    public Page<MstNaturalPerson001Dto> selectAllMstCaptialAccount(){
         Page<MstNaturalPerson001Dto> page = mstNaturalPerson001Service.selectForPage(
             RequestUtil.getPageParam());
         return page;
@@ -88,14 +87,12 @@ public class MstNaturalPerson001Controller extends BaseController {
      * 用户名联想文本框 <功能详细描述>
      * 
      * @return temp 返回联想文本框参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getcName")
-    public List<SuggestDto> getcName()
-        throws Exception {
+    public List<SuggestDto> getcName() {
         String param = super.getRequest().getParameter("param");
         Map<String, String> map = new HashMap<String, String>();
         map.put("naturalp", DictCodeList.客户类型_自然人.getValue());
@@ -109,14 +106,12 @@ public class MstNaturalPerson001Controller extends BaseController {
      * 身份证联想文本框 <功能详细描述>
      * 
      * @return temp 联想文本框参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getcID")
-    public List<SuggestDto> getcID()
-        throws Exception {
+    public List<SuggestDto> getcID(){
         String param = super.getRequest().getParameter("param");
         List<SuggestDto> temp = mstNaturalPerson001Service.getcID(param);
         return temp;
@@ -145,15 +140,14 @@ public class MstNaturalPerson001Controller extends BaseController {
      * @param dto 删除参数
      * @param br 删除参数
      * @return 删除返回参数
-     * @throws Exception 抛出异常
+     * @throws WorkFlowException 抛出异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("delete")
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstNaturalPerson001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstNaturalPerson001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -182,13 +176,11 @@ public class MstNaturalPerson001Controller extends BaseController {
      * 文件导出 <功能详细描述>
      * 
      * @return 导出返回参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstNaturalPerson001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

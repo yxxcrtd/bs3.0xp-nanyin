@@ -13,6 +13,8 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.trade.channel.feepay.dto.ChannelFeePay001Dto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,10 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 @Service("ChannelFeePay001Service")
 @Transactional(rollbackFor = Exception.class)
 public class ChannelFeePay001Service extends CommonExportService<ChannelFeePay001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ChannelFeePay001Service.class);
 
     /**
      * 分页查询 <功能详细描述>
@@ -67,7 +73,7 @@ public class ChannelFeePay001Service extends CommonExportService<ChannelFeePay00
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

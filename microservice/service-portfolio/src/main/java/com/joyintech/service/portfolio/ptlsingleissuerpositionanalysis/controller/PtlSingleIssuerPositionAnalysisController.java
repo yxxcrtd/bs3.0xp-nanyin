@@ -34,7 +34,7 @@ public class PtlSingleIssuerPositionAnalysisController {
 	@PostMapping("findPage/{page}/{length}")
 	public Page<PtlSingleIssuerPositionAnalysisDto> selectAll(@RequestBody Map<String, Object> param,
 			@PathVariable("page") int page, @PathVariable("length") int length)
-					throws Exception {
+	{
 		return ptlSingleIssuerPositionAnalysisService.selectForPage(page, length, param);
 	}
 	
@@ -50,7 +50,7 @@ public class PtlSingleIssuerPositionAnalysisController {
 	@PostMapping("findPageForExport/{page}/{length}")
 	public Page<PtlSingleIssuerPositionAnalysisDto> selectForExport(@RequestBody Map<String, Object> param,
 			@PathVariable("page") int page, @PathVariable("length") int length)
-					throws Exception {
+	{
 		return ptlSingleIssuerPositionAnalysisService.selectForExport(page, length, param);
 	}
 					
@@ -66,7 +66,7 @@ public class PtlSingleIssuerPositionAnalysisController {
     @PostMapping("findPageForExportTwo/{page}/{length}")
     public Page<PtlSingleIssuerPositionAnalysisDto> selectForExportTwo(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length)
-                    throws Exception {
+	{
         return ptlSingleIssuerPositionAnalysisService.selectForExportTwo(page, length, param);
     }
 	 /**

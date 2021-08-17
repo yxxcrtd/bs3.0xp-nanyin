@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.documentmanagement.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -86,7 +87,7 @@ public class DocumentManagement002Controller extends BaseController {
 	@RequestMapping(value = "/uploadFile")
 	@ResponseBody
 	public AjaxResult uploadFile(HttpServletRequest request,HttpServletResponse response, ModelMap model)
-			throws Exception {
+			  {
 		 AjaxResult res = new AjaxResult();
 		 String fileType = request.getParameter("fileType");
 		 if(StringUtil.isNotEmpty(fileType)){			 
@@ -122,10 +123,9 @@ public class DocumentManagement002Controller extends BaseController {
     @RequestMapping(value = "fileUpload", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
     @ResponseBody
     public String fileUpload(HttpServletRequest request, HttpServletResponse response,
-                             ModelMap model)
-        throws Exception {
+                             ModelMap model) throws IOException {
         // 画面ID
-        String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID));
+        String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID)==null?"":request.getParameter(GlobalConstant.PAGE_ID));
         // 初始化进度条
         progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0D, true);
         String uploadFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);

@@ -47,41 +47,62 @@
             <input id="startRow" name="startRow" hidden>
             <input id="trimChars" name="trimChars" hidden>
             <input id="filterId" name="filterId" hidden>
+            <input id="ptlId" name="ptlId" hidden>
+            <div class="layui-form-item" style="padding-bottom: 8px;">
+                <div class="layui-inline layui-col-xs8 layui-col-sm8 layui-col-md8 layui-col-lg8">
+                    <label class="layui-form-label form-lable" data-th-text="#{RskValTableImport001.valTableFileName}" style="width: 18%;">Excel模板</label>
+                    <div class="layui-inline rsk-line">
+                        <div class="upload" id="valtable" required
+                             data-option="{allowFileType: 'xls|xlsx', callback: 'RskValTableImport001.uploadCallback'}">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                    <label class="layui-form-label form-lable" data-th-text="#{RskValTableImport001.tipMessage}">提示信息</label>
+                </div>
+            </div>
             <div class="layui-form-item" style="padding-bottom: 8px;">
                 <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
                     <label class="layui-form-label form-lable" data-th-text="#{RskValTableImport001.ptlId}">组合名称</label>
                     <div class="layui-input-inline input-inline">
-                            <select type="text" name="ptlId" id="ptlId"
+                           <!-- <select type="text" name="ptlId" id="ptlId"
                                 class="layui-input form-input input-select" allowClear="true"
                                 placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}"
                                 formatoption=false required="required"
                                 data-th-data-url="@{/invest/risk/penetrationmanagement/rskvalrelateimport/RskValRelateImport001/queryGroupIdInfo}">
-                            </select>
+                            </select>-->
+                        <input required disabled type="text" id="ptlName" name="ptlName"
+                               class="layui-input form-input" placeholder="请输入内容"
+                               th:placeholder="#{SysCommon.placeholder}"/>
                     </div>
                 </div>
                 <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
                     <label class="layui-form-label form-lable" data-th-text="#{RskValTableImport001.valDate}">估值日期</label>
                     <div class="layui-input-inline input-inline">
-                        <input class="layui-input form-input input-dateSelect" name="valDate" id="valDate" required="required" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}">
+                        <input required disabled type="text" id="valDate" name="valDate"
+                               class="layui-input form-input" placeholder="请输入内容"
+                               th:placeholder="#{SysCommon.placeholder}">
                     </div>
                 </div>
-                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+               <!-- <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
                     <div class="layui-input-inline input-inline">
                         <a id="RskValTableImport001_btn_see" class="layui-btn layui-btn-sm form-input-text" style="width: 60px;"><i class="iconfont icon-browse_fill"></i><span>预览</span></a>
                     </div>
+                </div>-->
+                <div class="form-button-area" export="false" filter="false">
+                    <!-- 预览 -->
+                    <button type="button" class="layui-btn layui-btn-sm btn-default"
+                            id="RskValTableImport001_btn_see">
+                        <i class="iconfont icon-browse_fill"></i>预览
+                    </button>
+                    <!-- 批量导入 -->
+                    <button type="button" class="layui-btn layui-btn-sm btn-default"
+                            id="RskValTableImport001_btn_batchUpload">
+                        <i class="iconfont icon-upload" ></i>批量导入
+                    </button>
                 </div>
             </div>
-            <div class="layui-form-item" style="padding-bottom: 8px;">
-                    <div class="layui-inline layui-col-xs8 layui-col-sm8 layui-col-md8 layui-col-lg8">
-                    <label class="layui-form-label form-lable" data-th-text="#{RskValTableImport001.valTableFileName}" style="width: 18%;">Excel模板</label>
-                    <div class="layui-inline rsk-line">
-                        <div class="upload" id="valtable" required
-                        data-option="{allowFileType: 'xls|xlsx', callback: 'RskValTableImport001.uploadCallback'}">
-                        </div>
-                    </div>
-                    </div>
-                </div>
         </form>
     </div>
     <div class="rsk-dl-wrap" style="display: none">
@@ -128,6 +149,9 @@
     </div>
 </div>
 <div layout:fragment="script">
+    <script data-th-inline="javascript" type="text/javascript">
+        var chbValSplitStr = /*[[${chbValSplitStr}]]*/'';
+    </script>
     <script data-th-src="@{/js/invest/risk/valtblimport/RskValTableImport001.js}"> </script>
 </div>
 </body>

@@ -15,6 +15,7 @@ import java.util.*;
 import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.component.business.asset.FinPayInterestStdInfoService;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -207,8 +208,7 @@ public class FinRepayPlanController extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinPayPlanDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinPayPlanDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

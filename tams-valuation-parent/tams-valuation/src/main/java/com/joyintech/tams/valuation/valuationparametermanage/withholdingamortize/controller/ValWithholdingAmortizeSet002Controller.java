@@ -1,5 +1,6 @@
 package com.joyintech.tams.valuation.valuationparametermanage.withholdingamortize.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -86,7 +87,7 @@ public class ValWithholdingAmortizeSet002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getFinprodId")
     public List<SelectOptionDto> getFinprodId()
-        throws Exception {
+         {
         Map<String, Object> param = RequestUtil.getPageParam();
         return valWithholdingAmortizeSet002Service.getFinprodId(param);
     }
@@ -100,7 +101,7 @@ public class ValWithholdingAmortizeSet002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getFinprodInfo")
     public ValWithholdingAmortizeSet001Dto getFinprodInfo()
-        throws Exception {
+        {
         return valWithholdingAmortizeSet002Service.getFinprodInfo(RequestUtil.getPageParam());
     }
     
@@ -113,7 +114,7 @@ public class ValWithholdingAmortizeSet002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getTradeDate")
     public ValWithholdingAmortizeSet001Dto getTradeDate()
-        throws Exception {
+         {
         return valWithholdingAmortizeSet002Service.getTradeDate(RequestUtil.getPageParam());
     }
 
@@ -129,7 +130,7 @@ public class ValWithholdingAmortizeSet002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupEdit.class}) ValWithholdingAmortizeSet002Dto dto, BindingResult bindingResult)
-        throws Exception {
+            throws ParseException {
         String msg = StringUtil.EMPTY;
         String operateType = dto.getOperateType();
         String pageModel = dto.getPageModel();

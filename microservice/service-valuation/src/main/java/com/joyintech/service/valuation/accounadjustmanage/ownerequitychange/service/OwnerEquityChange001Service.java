@@ -26,6 +26,8 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,10 @@ import java.util.stream.Collectors;
  */
 @Service(value = "serviceOwnerEquityChange001Service")
 public class OwnerEquityChange001Service extends CommonExportService<OwnerEquityChange001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(OwnerEquityChange001Service.class);
 
     @Autowired
     private OwnerEquityChange001Mapper ownerEquityChange001Mapper;
@@ -64,8 +70,7 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * @see
      * @since 1.0
      */
-    public List<OwnerEquityChange001Dto> selectList(Map<String, Object> pageParam, OwnerEquityChange001Dto dto)
-            throws Exception {
+    public List<OwnerEquityChange001Dto> selectList(Map<String, Object> pageParam, OwnerEquityChange001Dto dto) throws ParseException {
         changeMapData(pageParam);
         Map<String, OwnerEquityChange001Dto> dtoMap = new HashMap<String, OwnerEquityChange001Dto>();
         List<OwnerEquityChange001Dto> list = new ArrayList<OwnerEquityChange001Dto>();
@@ -265,7 +270,7 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
         try {
             changeMapData(pageParam);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         Map<String, OwnerEquityChange001Dto> dtoMap = new HashMap<String, OwnerEquityChange001Dto>();
         List<OwnerEquityChange001Dto> list1 = new ArrayList<OwnerEquityChange001Dto>();
@@ -656,8 +661,7 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * @see
      * @since 1.0
      */
-    public void changeMapData(Map<String, Object> pageParam)
-            throws Exception {
+    public void changeMapData(Map<String, Object> pageParam) throws ParseException {
         String reportTermType = (String) pageParam.get("reportTermType");
         String valDate = DateUtil.format(analyseDate(pageParam), DateUtil.DEFAULT_DATE_FORMAT_EN);
         int thisYear = DateUtil.getYear(valDate);

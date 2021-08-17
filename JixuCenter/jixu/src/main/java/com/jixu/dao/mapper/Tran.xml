@@ -242,7 +242,7 @@
 		<foreach item="item" collection="portList" index="index" open="(" separator="," close=")">
 			#{item}
 		</foreach>
-		order by id desc
+		order by tran.id desc
 	</select>
 
 	<select id="loadCusipTrans" resultMap="BaseResultMap">

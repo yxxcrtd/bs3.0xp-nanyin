@@ -50,7 +50,7 @@ public class InterfSMS004SendService extends SendEsbService<InterfSMS004Entity, 
      */
     @Override
     public InterfSMS004Entity preparedLocalData(Object param)
-        throws Exception {
+    {
         InterfSMS004Entity inEntity = (InterfSMS004Entity)param;
         inEntity.setCosumerId(getConsumerId());
         inEntity.setFileRcdNum(1);
@@ -62,7 +62,7 @@ public class InterfSMS004SendService extends SendEsbService<InterfSMS004Entity, 
      */
     @Override
     public int saveInterfData(InterfSMS003Entity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -71,7 +71,7 @@ public class InterfSMS004SendService extends SendEsbService<InterfSMS004Entity, 
      */
     @Override
     public int saveBusinessData(InterfSMS003Entity entity)
-        throws Exception {
+    {
         return 0;
     }
 

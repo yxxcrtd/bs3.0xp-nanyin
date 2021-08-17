@@ -53,8 +53,7 @@ public class ExBlockBond001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public List<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public List<SelectOptionDto> getfinprodIdForAdd(){
         List<SelectOptionDto> temp = exBlockBond001Service.getfinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }

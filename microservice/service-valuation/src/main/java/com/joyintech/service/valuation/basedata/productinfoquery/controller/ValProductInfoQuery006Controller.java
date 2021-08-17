@@ -49,7 +49,7 @@ public class ValProductInfoQuery006Controller extends BaseController{
 
 	@PostMapping("/findBankdesc/{page}/{length}")
     public Page<ValProductInfoAcctDto> findBankdesc(@RequestBody Map<String, Object> params,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    		@PathVariable("page") int page, @PathVariable("length") int length) {
         return valProductInfoQuery006Service.findBankdesc(page,length,params);
     }
 

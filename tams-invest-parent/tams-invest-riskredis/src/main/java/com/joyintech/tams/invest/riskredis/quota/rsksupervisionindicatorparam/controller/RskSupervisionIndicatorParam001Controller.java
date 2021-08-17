@@ -17,6 +17,7 @@ import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.dt
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -86,7 +87,7 @@ public class RskSupervisionIndicatorParam001Controller extends BaseController {
         Enumeration<String> paramNames = request.getParameterNames();
         while (paramNames.hasMoreElements()){
             String key=paramNames.nextElement();
-            model.addAttribute(key,request.getParameter(key));
+            model.addAttribute(key,request.getParameter(key)==null?"":request.getParameter(key));
         }
         setSelectOptionToModel(model, DICT_CODES);
         model.addAttribute("FIX", BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());
@@ -105,7 +106,7 @@ public class RskSupervisionIndicatorParam001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskSupervisionIndicatorParamDto> selectAll()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RskSupervisionIndicatorParamDto> page = rskSupervisionIndicatorParamService.selectForPage(map);
         return page;
@@ -136,8 +137,7 @@ public class RskSupervisionIndicatorParam001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) RskSupervisionIndicatorParamDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) RskSupervisionIndicatorParamDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -174,7 +174,7 @@ public class RskSupervisionIndicatorParam001Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return rskSupervisionIndicatorParamService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

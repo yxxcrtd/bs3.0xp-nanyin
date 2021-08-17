@@ -48,13 +48,11 @@ public class TotalMaintain001Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return totalMaintain001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 }

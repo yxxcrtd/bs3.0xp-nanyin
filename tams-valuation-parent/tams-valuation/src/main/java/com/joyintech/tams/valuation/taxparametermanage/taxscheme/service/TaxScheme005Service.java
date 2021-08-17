@@ -66,7 +66,7 @@ public class TaxScheme005Service extends CommonExportService<TaxScheme005Dto> im
      * @throws Exception
      */
     public Page<SelectOptionDto> findAsset(Map<String, Object> pageParam)
-        throws Exception {
+          {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/TaxScheme005/findAsset",
             pageParam, SelectOptionDto.class);
     }

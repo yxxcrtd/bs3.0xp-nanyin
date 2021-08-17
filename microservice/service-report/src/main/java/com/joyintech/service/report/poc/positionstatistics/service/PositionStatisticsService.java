@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +39,11 @@ import com.joyintech.service.report.poc.positionstatistics.dto.PositionStatistic
  */
 @Service
 public class PositionStatisticsService extends BaseService<PositionStatisticsDto>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PositionStatisticsService.class);
+
     @Autowired
     private PositionStatisticsMapper positionStatisticsMapper;
     
@@ -79,7 +87,7 @@ public class PositionStatisticsService extends BaseService<PositionStatisticsDto
             datesearch = format.parse(searchDate);
         }
         catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         String searchDateFuture = DateUtil.addDay(DateUtil.format(datesearch),1);
         param.put("searchDateFuture", searchDateFuture);

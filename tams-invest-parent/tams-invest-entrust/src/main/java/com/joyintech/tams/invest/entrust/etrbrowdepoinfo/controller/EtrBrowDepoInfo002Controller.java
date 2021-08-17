@@ -33,6 +33,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -151,8 +152,7 @@ public class EtrBrowDepoInfo002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getSelectPortfolioId")
-    public Page<SelectOptionDto> getSelectPortfolioId()
-        throws Exception {
+    public Page<SelectOptionDto> getSelectPortfolioId(){
         Page<SelectOptionDto> temp = etrBrowDepoInfoService.getSelectPortfolioId(RequestUtil.getPageParam());
         return temp;
     }
@@ -164,8 +164,7 @@ public class EtrBrowDepoInfo002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getChannelId")
-    public Page<SelectOptionDto> getChannelId()
-            throws Exception {
+    public Page<SelectOptionDto> getChannelId(){
         Page<SelectOptionDto> temp = etrBrowDepoInfoService.getChannelId(RequestUtil.getPageParam());
         return temp;
     }
@@ -195,8 +194,7 @@ public class EtrBrowDepoInfo002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getSelectFinprodMarketId")
-    public Page<SelectOptionDto> getSelectFinprodMarketId() 
-        throws Exception {
+    public Page<SelectOptionDto> getSelectFinprodMarketId() {
         Page<SelectOptionDto> temp = etrBrowDepoInfoService.getSelectFinprodMarketId(RequestUtil.getPageParam());
         return temp;
     }
@@ -255,7 +253,7 @@ public class EtrBrowDepoInfo002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrBrowDepoInfoDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrBrowDepoInfoDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

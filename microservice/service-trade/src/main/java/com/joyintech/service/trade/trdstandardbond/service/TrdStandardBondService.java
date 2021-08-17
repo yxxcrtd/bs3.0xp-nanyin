@@ -103,7 +103,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      */
     public Page<TrdStandardBondSearchDto> selectSearchDataList(int page, int length,
                                                                Map<String, Object> pageParam)
-            throws Exception {
+    {
         this.setParam(pageParam);
         pageParam.put("isStandardPage", DictCodeListExt1.是否_是.getValue());
         Page<TrdStandardBondSearchDto> pageResult = this.queryForPage(page, length,
@@ -207,7 +207,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      * @since 1.0
      */
     public List<TrdStandardBondInDto> selectAvaPledgeBondList(Map<String, Object> pageParam)
-            throws Exception {
+    {
         this.setParam(pageParam);
         return this.trdStandardBondMapper.selectAvaPledgeBondList(pageParam);
     }
@@ -221,7 +221,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      * @see
      * @since 1.0
      */
-    public List<TrdStandardBondOutDto> selectOutListData(Map<String, Object> pageParam) throws Exception {
+    public List<TrdStandardBondOutDto> selectOutListData(Map<String, Object> pageParam) {
         this.setParam(pageParam);
 
         List<TrdStandardBondOutDto> resultList = this.trdStandardBondMapper.selectOutListData(pageParam);
@@ -283,7 +283,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      * @see
      * @since 1.0
      */
-    public Long inSave(TrdStandardBondInDto dto) throws Exception {
+    public Long inSave(TrdStandardBondInDto dto) {
         Long saveCount = 0L;
         Date sysDate = platformDateImpl.getSysDate();
 
@@ -456,7 +456,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      * @see
      * @since 1.0
      */
-    public Long outSave(TrdStandardBondOutDto dto) throws Exception {
+    public Long outSave(TrdStandardBondOutDto dto) {
         Long saveCount = 0L;
         Date sysDate = platformDateImpl.getSysDate();
 

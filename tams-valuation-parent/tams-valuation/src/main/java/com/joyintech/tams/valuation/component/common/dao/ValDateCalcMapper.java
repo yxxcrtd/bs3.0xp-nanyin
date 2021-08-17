@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * 付息计划，开放计划，利率重置，申购计划，赎回计划计算用和日期关联的Mapper
@@ -23,6 +24,7 @@ import org.apache.ibatis.annotations.Param;
  * @see ValDateCalcMapper
  * @since 1.0
  */
+@Repository
 public interface ValDateCalcMapper {
 
     /**

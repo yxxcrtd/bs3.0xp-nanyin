@@ -39,7 +39,7 @@ public class PltMedianManagementService extends BaseService<PltMedianManagementD
      * @since 1.0
      */
     public Page<PltMedianManagementDto> selectForPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> pltMedianManagementMapper.selectForPage(map));
     }
@@ -55,7 +55,7 @@ public class PltMedianManagementService extends BaseService<PltMedianManagementD
      */
     public Page<SelectOptionDto> selectMedianManagement(int page, int length,
                                                         Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPageForSelectReturn(page, length,
             () -> pltMedianManagementMapper.selectMedianManagement(pageParam));
     }

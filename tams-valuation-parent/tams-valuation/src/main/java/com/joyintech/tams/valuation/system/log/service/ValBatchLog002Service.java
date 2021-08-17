@@ -36,7 +36,7 @@ public class ValBatchLog002Service extends CommonExportService<BokBatchMarketwar
     private ValBatchLog002Mapper valBatchLog002Mapper;
  
     
-	public Page<BokBatchMarketwarningInfoDto> findWarnLogDetail(Map<String, Object> pageParam) throws Exception {
+	public Page<BokBatchMarketwarningInfoDto> findWarnLogDetail(Map<String, Object> pageParam) {
         return super.queryForPage(ValBatchLog002Mapper.class, "findWarnLogDetail", pageParam);
 	}
 	

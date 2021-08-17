@@ -12,6 +12,6 @@ public interface PluginClass {
 
 		void setSysParameter(SystemParam sysPass, PluginClassDao assetDao);
 		
-		Object getParamterValue() throws Exception;
+		Object getParamterValue();
 
 }

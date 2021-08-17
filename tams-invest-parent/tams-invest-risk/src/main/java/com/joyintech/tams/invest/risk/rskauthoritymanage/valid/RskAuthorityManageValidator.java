@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +44,11 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Component
 public class RskAuthorityManageValidator implements BeanValidator{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskAuthorityManageValidator.class);
+
     @Autowired
     private RskAuthorityManageService rskAuthorityManageService;
     /**
@@ -54,7 +61,7 @@ public class RskAuthorityManageValidator implements BeanValidator{
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             // 删除check
             List<RskAuthorityManageDto> list = dto.getSelectedItem();
-            if(list.size()>0 && list!=null){
+            if(list!=null && list.size()>0){
                 for (RskAuthorityManageDto e : list) {
                     RskAuthorityManageDto entity = rskAuthorityManageService.selectBySecNo(e);
                     if(entity == null){
@@ -72,7 +79,7 @@ public class RskAuthorityManageValidator implements BeanValidator{
                 }
             }
         }
-        else if(!StringUtil.equals(dto.getOperateType(), "delete") && dto.getOperateType() != null
+        else if(dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")
             && !StringUtil.equals(dto.getOperateType(), "")){
             List<RskAuthorityManageDto> newListDto = dto.getSelectedItem();
             List<RskAuthorityManageDto> list = rskAuthorityManageService.getListDto(dto);
@@ -245,8 +252,7 @@ public class RskAuthorityManageValidator implements BeanValidator{
                                   }
                               }
                         catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                           
                       }

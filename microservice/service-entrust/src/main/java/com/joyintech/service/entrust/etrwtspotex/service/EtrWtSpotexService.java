@@ -106,7 +106,7 @@ public class EtrWtSpotexService extends BaseService<EtrWtSpotexDto> {
      * @since 1.0
      */
     public Page<EtrWtSpotexDto> selectForPage(int page, int length, Map<String, Object> param)
-        throws Exception {
+    {
         String portfolioId = (String)param.get("portfolioId");
         if (StringUtil.isNotEmpty(portfolioId)) {
             param.put("portfolioIdList",

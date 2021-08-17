@@ -204,7 +204,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 //              
 //              flag = insertRepReveal(params, fileKey,fileName,reptree.getTreeName()+"集合",null);
 //        } catch (Exception e) {
-////            e.printStackTrace();
 //        	logger.error("error:",e);
 //        }
 //        return flag;
@@ -296,7 +295,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 
                   fileList.add(uploadFile.getTargetFile().getPath());
             } catch (Exception e) {
-//                e.printStackTrace();
             	logger.error("error:",e);
             }
         }
@@ -314,7 +312,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
      * @see
      * @since 1.0
      */
-    public ResponseEntity<byte[]> mergeExport(Map<String,Object> params) throws Exception {
+    public ResponseEntity<byte[]> mergeExport(Map<String,Object> params) throws IOException {
         
 //        RepTree reptree = repTreeMapper.selectByPrimaryKey(params.get("repId").toString());
 
@@ -446,7 +444,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 //              flag = insertRepReveal(params, uploadFile.getFileNo(),uploadFile.getSrcName(),repInfo.getReportName(),repInfo.getReportCategory());
 //              logger.info("生成信息主表!");
 //        } catch (Exception e) {
-////            e.printStackTrace();
 //        	logger.error("error:",e);
 //        }
 //        return flag;
@@ -487,7 +484,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 //                }
 //        	}
 //        } catch (Exception e) {
-////            e.printStackTrace();
 //        	logger.error("error:",e);
 //        }
 //        for(int i=0;i<list.size();i++){
@@ -743,7 +739,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 			try {
 				return (Date)CommonUtil.getValueByClassNameObject(prodInfoListEntity, CommonUtil.dealString(repRule.getBasisDateType(),true), ProdInfoListEntity.class);
 			} catch (Exception e) {
-//				e.printStackTrace();
 				logger.error("error:",e);
 			}
 		}
@@ -756,7 +751,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
      * @return 产品信息
 	 * @throws Exception 
      */
-    public String showDetailHtml(String uri,RepReveal repReveal) throws Exception{
+    public String showDetailHtml(String uri,RepReveal repReveal) throws IOException {
 	    //后台批处理报表地址单独啦出来
 		String serverUrl = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_SERVER_URL);
 		//用户名

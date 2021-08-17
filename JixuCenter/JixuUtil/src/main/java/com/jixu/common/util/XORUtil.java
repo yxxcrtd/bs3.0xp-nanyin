@@ -25,9 +25,9 @@ public class XORUtil {
         return res[0];
 	}
 	
-	public static void main(String[] args) {
-		XORUtil xor=new XORUtil();
-//		String str=xor.twoStringXor("123", "jgH23");
-//		System.out.println(str);
-	}
+//	public static void main(String[] args) {
+//		XORUtil xor=new XORUtil();
+////		String str=xor.twoStringXor("123", "jgH23");
+////		System.out.println(str);
+//	}
 }

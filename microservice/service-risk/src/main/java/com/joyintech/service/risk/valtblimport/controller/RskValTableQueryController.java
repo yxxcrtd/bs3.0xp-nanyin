@@ -37,7 +37,7 @@ public class RskValTableQueryController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RskValtblAssetSumDto> selectAll(@RequestBody Map<String, Object> param,
-                                                @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskValTableQueryService.selectForPage(page, length, param);
     }
 

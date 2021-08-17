@@ -73,7 +73,8 @@
                         <label class="layui-form-label form-label-wrap" data-th-text="#{FinInterestFactor.rate}">初始利率</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" th:id="|${entityName}_rate|" th:name="|${entityName}.rate|"   th:value="${entity?.rate}"  required
-                                   class="layui-input form-input text-number" data-textrange="4"/>
+                                   class="layui-input form-input text-number" data-textrange="12"
+                                   onkeyup="if(/^\d{1,7}(\.\d{1,12})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,6) }" maxlength="19" />
                             <span class="input-right-show begin-show">%<a id="FinInterestFactor_btn_calRate" class="layui-btn layui-btn-sm form-input-text" >计算</a></span>
                         </div>
                     </div>
@@ -99,7 +100,8 @@
                             <!-- 一体化对应etliu -->
                             <!-- <input type="text" th:id="|${entityName}_rateMax|" th:name="|${entityName}.rateMax|"  th:value="${entity?.rateMax}" --> 
                             <input type="text" th:id="|${entityName}_rateMax|" th:name="|${entityName}.highestRate|"  th:value="${entity?.highestRate}"
-                                   class="layui-input form-input text-number"/>
+                                   class="layui-input form-input text-number" data-textrange="12"
+                                   onkeyup="if(/^\d{1,7}(\.\d{1,12})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,6) }" maxlength="19" />
                             <span class="input-right-show">%</span>
                         </div>
                     </div>
@@ -111,7 +113,8 @@
 							<!-- 一体化对应etliu -->
                             <!-- <input type="text" th:id="|${entityName}_rateMin|" th:name="|${entityName}.rateMin|"  th:value="${entity?.rateMin}" --> 
                             <input type="text" th:id="|${entityName}_rateMin|" th:name="|${entityName}.lowestRate|"  th:value="${entity?.lowestRate}" 
-                                   class="layui-input form-input text-number"/>
+                                   class="layui-input form-input text-number" data-textrange="12"
+                                   onkeyup="if(/^\d{1,7}(\.\d{1,12})?$/.test(this.value) ){ }else{this.value= this.value.substr(0,6) }" maxlength="19"/>
                             <span class="input-right-show">%</span>
                         </div>
                     </div>

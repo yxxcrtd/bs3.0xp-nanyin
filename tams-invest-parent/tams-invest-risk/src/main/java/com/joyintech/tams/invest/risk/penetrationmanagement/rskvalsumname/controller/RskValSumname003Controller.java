@@ -13,6 +13,8 @@ package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.contr
 
 import java.util.List;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,6 +76,9 @@ public class RskValSumname003Controller  extends BaseController {
         }
         this.setSelectOptionToModel(model, DictCode.估值字段类型);
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
+        if(rskValSumname001Service.getCountById(dto)){
+            model.addAttribute("IS_MAP", DictCodeList.是否_是.getValue());
+        }
         return super.init(model);
     }
     /**
@@ -149,7 +154,7 @@ public class RskValSumname003Controller  extends BaseController {
     }
     @ResponseBody
     @RequestMapping("selecctRskValtblSubjectCodeList")
-    public List<SelectOptionDto> selecctRskValtblSubjectCodeList(){
-        return rskValSumname003Service.selecctRskValtblSubjectCodeList();
+    public Page<SelectOptionDto> selecctRskValtblSubjectCodeList(){
+        return rskValSumname003Service.selecctRskValtblSubjectCodeList(RequestUtil.getPageParam());
     }
 }

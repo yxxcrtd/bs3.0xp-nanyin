@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -110,8 +111,7 @@ public class FinNetProductBonusScheme001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinNetProductBonusSchemeDto> selectAll()
-            throws Exception {
+    public Page<FinNetProductBonusSchemeDto> selectAll(){
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         map.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         map.put("FINPROD_TYPE_TG_F24", DictCodeListExt1.金融产品类型_投管用_理财产品分层.getValue());
@@ -141,13 +141,12 @@ public class FinNetProductBonusScheme001Controller extends BaseController {
      * @param dto 费用品种
      * @param br br
      * @return 删除结果
-     * @throws Exception Exception
+     * @throws WorkFlowException
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) FinNetProductBonusSchemeDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) FinNetProductBonusSchemeDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -179,8 +178,7 @@ public class FinNetProductBonusScheme001Controller extends BaseController {
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
     	Map<String,Object> map = RequestUtil.getParameters(getRequest());
     	map.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         map.put("FINPROD_TYPE_TG_F24", DictCodeListExt1.金融产品类型_投管用_理财产品分层.getValue());
@@ -219,7 +217,7 @@ public class FinNetProductBonusScheme001Controller extends BaseController {
     /**
      * 产品分红方案-发送销售接口状态
      *
-     * @param FinNetProductBonusSchemeDto
+     * @param finNetProductBonusSchemeDto
      * @return 发送结果
      * @see
      * @since 1.0

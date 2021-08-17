@@ -678,8 +678,10 @@ public class InProdDeclareInfoBatchService extends FileImpService {
         	   info.setCreateUser("system");
         	   //状态
         	   info.setStatus("E");
-        	   System.out.println(info.getProduuid());
-        	   System.out.println(info.getProdId());
+//        	   System.out.println(info.getProduuid());
+        	   logger.info(info.getProduuid());
+//        	   System.out.println(info.getProdId());
+        	   logger.info(info.getProdId());
         	   insertInfo.add(info);
            }
     	   }

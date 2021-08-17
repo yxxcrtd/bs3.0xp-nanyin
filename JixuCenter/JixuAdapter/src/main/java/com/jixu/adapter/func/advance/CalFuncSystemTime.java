@@ -31,7 +31,7 @@ public class CalFuncSystemTime extends AdditionFunc{
 		return funcname;
 	}
 	
-	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		Date date=new Date();
 		return DateUtil.convertD2YYYY_MM_DDHHMMSS(date);
 	}
@@ -42,7 +42,7 @@ public class CalFuncSystemTime extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+		 {
 		// TODO Auto-generated method stub
 		return null;
 	}

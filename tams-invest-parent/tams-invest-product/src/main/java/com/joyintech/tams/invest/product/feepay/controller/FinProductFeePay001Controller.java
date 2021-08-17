@@ -21,6 +21,7 @@ import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.dto.FinFloatMgtExpQuotation001Dto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -257,13 +258,12 @@ public class FinProductFeePay001Controller extends BaseController {
      * @param inputDto 画面输入参数dto
      * @param finProductFeePay001Dto 
      * @return 撤销结果
-     * @throws Exception 异常信息
      * @see
      * @since 1.0
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody FinProductFeePay002Dto inputDto, TrdProductDeal finProductFeePay001Dto) throws Exception {
+    AjaxResult doRevoke(@RequestBody FinProductFeePay002Dto inputDto, TrdProductDeal finProductFeePay001Dto) throws WorkFlowException {
 
         ProcessParameter<FinProductFeePay002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<FinProductFeePay002Dto> workFlowParameter = new WorkFlowParameter<>();
@@ -345,8 +345,7 @@ public class FinProductFeePay001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return finProductFeePay001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

@@ -17,6 +17,7 @@ import com.joyintech.tams.invest.riskredis.quota.superviseindicator.dto.RskSuper
 import com.joyintech.tams.invest.riskredis.quota.superviseindicator.dto.RskSupervisionIndicatorDto;
 import com.joyintech.tams.invest.riskredis.quota.superviseindicator.service.RskSupervisionIndicator001Service;
 import com.joyintech.tams.invest.riskredis.quota.superviseindicator.service.RskSupervisionIndicator002Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -92,13 +93,13 @@ public class RskSupervisionIndicator002Controller extends BaseController {
         setSelectOptionToModel(model, DICT_CODES);
         SelectDto selectJdsfDto = this.getSelectDataFromDataDic(BussinessDictCodeRds.监督时分, null);
         List<SelectOptionDto> optionJdsf = selectJdsfDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapJdsf = optionJdsf.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapJdsf = optionJdsf.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         SelectDto selectJsmsDto = this.getSelectDataFromDataDic(BussinessDictCodeRds.组合层次, null);
         List<SelectOptionDto> optionJsms = selectJsmsDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapZhcc = optionJsms.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapZhcc = optionJsms.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         SelectDto selectJdlxDto = this.getSelectDataFromDataDic(BussinessDictCodeRds.监督类型, null);
         List<SelectOptionDto> optionJdlx = selectJdlxDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapJdlx = optionJdlx.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapJdlx = optionJdlx.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         //查询指标参数
         List<SelectOptionDto> mapZbcs = rskSupervisionIndicator001Service.getIndicatorParamList();
         model.addAttribute("mapJdsf",mapJdsf);
@@ -180,7 +181,7 @@ public class RskSupervisionIndicator002Controller extends BaseController {
 	@ResponseBody
     @RequestMapping("/getIndTypeRelateItems")
     public List<SelectOptionDto> getIndTypeRelateItems(@RequestParam(name="dictCode", required=false) String dictCode)
-        throws Exception {
+         {
 		  DataDict dataDict = CacheUtil.getDictCode(dictCode);
     	List<? extends DataDictItem> itemList =  dataDict.getItems();
         List<SelectOptionDto> options = new ArrayList<>(itemList.size());
@@ -208,7 +209,7 @@ public class RskSupervisionIndicator002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getForbidEnumInfo")
     public List<SelectOptionDto> getForbidEnumInfo(@RequestParam(name="forbidEnum", required=false) String forbidEnum)
-            throws Exception {
+             {
         List<SelectOptionDto> options = rskSupervisionIndicator001Service.getForbidEnumInfo(forbidEnum);
         return options;
     }
@@ -223,7 +224,7 @@ public class RskSupervisionIndicator002Controller extends BaseController {
     @RequestMapping("/getAllPortfolioBySort")
     public List<TreeNode> getAllPortfolioBySort(@RequestParam(name="type", required=false) String type,@RequestParam(name="indId", required=false) String indId,@RequestParam(name="portfName", required=false) String portfName,@RequestParam(name="profitType", required=false) String profitType
     		,@RequestParam(name="issueMode", required=false) String issueMode,@RequestParam(name="raiseType", required=false) String raiseType,@RequestParam(name="investType", required=false) String investType)
-        throws Exception {
+         {
         return rskSupervisionIndicator001Service.getAllPortfolioBySort(type,indId,portfName,profitType,issueMode,raiseType,investType);
         
     }
@@ -238,7 +239,7 @@ public class RskSupervisionIndicator002Controller extends BaseController {
 	@ResponseBody
     @RequestMapping("/getAllPortfolioBag")
     public List<TreeNode> getAllPortfolioBag(@RequestParam(name="bagName", required=false) String bagName,@RequestParam(name="indId", required=false) String indId)
-        throws Exception {
+         {
         return rskSupervisionIndicator001Service.getAllPortfolioBag(bagName,indId);
     }
     
@@ -278,8 +279,7 @@ public class RskSupervisionIndicator002Controller extends BaseController {
     @DTXTransaction
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody RskSupervisionIndicator002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody RskSupervisionIndicator002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

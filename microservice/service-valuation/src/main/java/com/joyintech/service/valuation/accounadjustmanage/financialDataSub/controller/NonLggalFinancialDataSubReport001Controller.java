@@ -76,9 +76,14 @@ public class NonLggalFinancialDataSubReport001Controller extends BaseController 
 
 	@PostMapping("/findPage/{page}/{length}")
 	public Page<NonLggalFinancialDataSubReport001Dto> findPage(@RequestBody Map<String, Object> params,
-	                                                           @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+	                                                           @PathVariable("page") int page, @PathVariable("length") int length) {
 //		  Map<String, Object> params= this.getRequestMap();
-	    NonLggalFinancialDataSubReport001Dto dto = (NonLggalFinancialDataSubReport001Dto)JsonUtils.map2entity(params, NonLggalFinancialDataSubReport001Dto.class);	     
+		NonLggalFinancialDataSubReport001Dto dto = null;
+		try {
+			dto = (NonLggalFinancialDataSubReport001Dto) JsonUtils.map2entity(params, NonLggalFinancialDataSubReport001Dto.class);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("数据转换异常");
+		}
 		return  NonLggalFinancialDataSubReport001Service.selectForPage(page,length,dto);
 		
 	}
@@ -106,7 +111,7 @@ public class NonLggalFinancialDataSubReport001Controller extends BaseController 
      * @throws Exception
      */
     @PostMapping("/findPageout")
-     public List<NonLggalFinancialDataSubReport001Dto> findPageout(@RequestBody NonLggalFinancialDataSubReport001Dto dto) throws Exception{
+     public List<NonLggalFinancialDataSubReport001Dto> findPageout(@RequestBody NonLggalFinancialDataSubReport001Dto dto) {
         return NonLggalFinancialDataSubReport001Service.findPageout(dto);
          
      }

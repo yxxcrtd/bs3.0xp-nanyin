@@ -19,6 +19,8 @@ import javax.validation.Valid;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.workflow.engine.WorkflowContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,6 +75,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("ValManualVoucher003")
 @RequestMapping("/valuation/accounadjustmanage/manualvoucher/ValManualVoucher003")
 public class ValManualVoucher003Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValManualVoucher003Controller.class);
 
     @Autowired
     private ValManualVoucher003Service valManualVoucher003Service;
@@ -164,7 +170,7 @@ public class ValManualVoucher003Controller extends BaseController {
                 processMark.setPageId("ValManualVoucher003");
                 dto = valManualVoucher003Service.getBussinessEntityByPk(processMark);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             dto.setSeqno(null);
             model.addAttribute("entity", dto);
@@ -264,7 +270,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getSubjectNo")
     public AjaxResult getSubjectNo(@RequestBody ValManualVoucher003SubjectDto dto)
-        throws Exception {
+         {
         String booksetId = dto.getBooksetId();
         String subjectNo = dto.getSubjectNo();
 //        String busiId = dto.getBusiId();
@@ -293,7 +299,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getBookDate")
     public AjaxResult getBookDate(@RequestBody ValManualVoucher003SubjectDto dto)
-        throws Exception {
+         {
         String booksetId = dto.getBooksetId();
         if (StringUtil.isNotEmpty(booksetId) ) {
             AjaxResult ajaxResult = new AjaxResult();
@@ -320,7 +326,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getSubjectNoPullDw")
     public List<SelectOptionDto> getSubjectNoPullDw()
-        throws Exception {
+         {
 //        String param = this.getParam("param");
         String booksetId = this.getParam("booksetId");
         if (StringUtil.isNotEmpty(booksetId)) {
@@ -342,7 +348,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getAcctId")
     public List<SelectOptionDto> getAcctId()
-        throws Exception {
+         {
         String param = this.getParam("param");
         String booksetId = this.getParam("booksetId");
         if (StringUtil.isNotEmpty(booksetId)) {
@@ -364,7 +370,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getBranch")
     public List<SelectOptionDto> getBranch()
-        throws Exception {
+         {
         String param = this.getParam("param");
         String booksetId = this.getParam("booksetId");
         String finprodType = this.getParam("finprodType");
@@ -537,7 +543,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2()
-        throws Exception {
+         {
 //        String param = super.getRequest().getParameter("param");
         return valAssetBook001Service.getBooksetIdAll(RequestUtil.getPageParam());
     }
@@ -572,7 +578,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getInvAim")
     public AjaxResult getInvAim(@RequestBody ValManualVoucher003Dto dto)
-        throws Exception {
+         {
         String busiId = dto.getBusiId();
         if (StringUtil.isNotEmpty(busiId) ) {
             AjaxResult ajaxResult = new AjaxResult();

@@ -24,6 +24,8 @@
     <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
     <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR" />
+    <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL"/>
+    <result column="CASH_FLAG" property="cashFlag" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
     POS_ID, ISSUE_PARTY_ID, POS_DATE, PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, ISSUE_AMT, 
@@ -151,7 +153,7 @@ GROUP BY asset.POS_DATE,
       WORKFLOW_ID, STATUS, ORG_CODE, 
       DEPT_CODE, CREATE_USER, CREATE_DEPT, 
       CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-      DATASOURCE
+      DATASOURCE,INT_AMT,CASH_FLAG
       )
      values(
       #{posId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{posDate,jdbcType=TIMESTAMP}, 
@@ -161,7 +163,7 @@ GROUP BY asset.POS_DATE,
       #{workflowId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
       #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
       sysdate, #{updateUser,jdbcType=VARCHAR}, sysdate, 
-      #{datasource,jdbcType=VARCHAR}
+      #{datasource,jdbcType=VARCHAR},#{intAmt,jdbcType=DECIMAL},#{cashFlag,jdbcType=VARCHAR}
       )
   </insert>
 
@@ -508,4 +510,132 @@ GROUP BY asset.POS_DATE,
 	select distinct CDATE from ptl_sec_valution
 	where nvl(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
 </select>
+    <select id="getUnInvestBotListFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
+        SELECT
+        SUB.VAL_DATE AS POS_DATE,
+        SUB.PTL_ID AS PLAN_ASSET_ID,
+        SUM(nvl(SUB.SMV,0))  AS POS_AMT
+        FROM RSK_VALTBL_ASSET_SUB SUB
+        WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+        /** 活期存款、清算款、备付金、保证金**/
+        AND SUB.SUB_CODE IN ('1002','1021','1031','3003')
+        GROUP BY SUB.VAL_DATE,SUB.PTL_ID
+    </select>
+    <select id="getBotTotalNumFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
+        SELECT
+        HZ.PTL_ID PLAN_ASSET_ID,
+        HZ.SUB_CODE ASSET_CODE,
+        SUM(nvl(SMV,0))  POS_AMT
+        FROM RSK_VALTBL_SUM_ASSET_SUB HZ
+        WHERE HZ.VAL_DATE = #{batchTime,jdbcType=DATE}
+        /** 实收资本、资产净值**/
+        AND HZ.SUB_CODE IN ('601', '701')
+        GROUP BY HZ.PTL_ID,HZ.SUB_CODE
+    </select>
+    <select id="getOtherBotDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        SELECT
+        SUB.VAL_DATE POS_DATE,
+        SUB.PTL_ID PLAN_ASSET_ID,
+        nvl(info.FINPROD_MARKET_ID,SUB.FINPROD_ID) ASSET_CODE,
+        info2.REP_CCY CCY,
+        NVL(SUM(decode(substr(sub.SUB_CODE,0,1),'2',0,sub.SECURITY_QUANTITY)),0)*DECODE(fp.TYPE_8,'F01',100,1) POS_NUM,
+        case when fp.TYPE_8 in ('F16','F18','F19')　and SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV))<![CDATA[<]]>0 then 0
+               else nvl(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV)), 0) end as POS_AMT,
+        nvl(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV ELSE 0 END),0) INT_AMT,/** 利息**/
+        MAX(nvl(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
+        FROM RSK_VALTBL_ASSET_SUB SUB /** 估值表导入后的资产数据**/
+
+        /** 估值表对应的资产科目类型，债券的数量需要乘以100**/
+        INNER JOIN RSK_VALTBL_PRT_BOTASSET_MAP DC
+        ON SUB.PTL_ID = DC.PTL_ID
+        AND SUB.SUB_CODE = DC.SUB_CODE
+        AND SUB.FINPROD_ID = DC.FINPROD_ID
+        /*获取底层资产的公开市场代码*/
+        LEFT JOIN REP_ASSET_DEPT info
+        ON info.REP_FINPROD_ID = sub.FINPROD_ID
+        /*判断是否为债券*/
+        LEFT JOIN fin_product_type fp
+        ON fp.FINPROD_ID = sub.FINPROD_ID
+        /*获取资管计划币种*/
+        LEFT JOIN REP_ASSET_DEPT info2
+        ON info2.FINPROD_MARKET_ID = sub.PTL_ID
+        WHERE  SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+        AND SUB.FINPROD_ID IS NOT NULL
+        AND DC.SUB_CLASS NOT IN ('ZHG', 'NHG') /** 过滤回购资产通过三级科目来计算**/
+        GROUP BY SUB.VAL_DATE,
+                 SUB.PTL_ID,
+                 nvl(info.FINPROD_MARKET_ID,SUB.FINPROD_ID),
+                 info2.REP_CCY,
+                 <!--DC.SUB_CLASS,-->
+                 fp.TYPE_8
+    </select>
+    <select id="getRepBotDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
+        SELECT
+        SUB.VAL_DATE POS_DATE,/** 持仓日期**/
+        SUB.PTL_ID PLAN_ASSET_ID,/** 资管计划行内资产/负债编码**/
+        SUB.SUB_CODE ASSET_CODE,
+        SUM(nvl(SUB.SMV,0)) POS_AMT,
+        MAX(nvl(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
+        FROM RSK_VALTBL_ASSET_SUB SUB
+        WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+        /** 上交所买入返售证券、银行间买入返售、深交所买入返售证券、应收买入返售证券利息
+        上交所卖出回购证券款、银行间卖出回购证券款、深交所卖出回购证券款、应付回购利息**/
+        AND SUB.SUB_CODE IN ('120201','120202','120203','120410','220201','220202','220203','223101')
+        GROUP BY SUB.VAL_DATE,SUB.PTL_ID,SUB.SUB_CODE
+    </select>
+    <select id="selectRepAstByBatchDate" parameterType="java.util.Date" resultType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+        SELECT
+        ASSET_CODE assetCode,
+        CHECK_CODE checkCode,
+        TARGET_AMT targetAmt,
+        ASSET_TYPE2 assetType2,
+        TRADE_MARKET tradeMarket
+        FROM chb_asset_info
+        WHERE  ASSET_TYPE2 IN ('1108','1902')
+        AND STATUS IN ('E','M')
+        and #{batchTime,jdbcType=DATE}>=VDATE
+        AND MDATE>#{batchTime,jdbcType=DATE}
+    </select>
+    <select id="getCashBotDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
+        SELECT
+        SUB.VAL_DATE POS_DATE,/** 持仓日期**/
+        SUB.PTL_ID PLAN_ASSET_ID,/** 资管计划行内资产/负债编码**/
+        'REMAININGCASH' ASSET_CODE,/** 行内资产/负债编码**/
+        SUM(CASE WHEN SUB.SUB_CODE IN ('1002', '1021', '1031', '3003') THEN nvl(SUB.SMV,0) ELSE 0 END) UNINVEST_CASH,/** 未投资头寸**/
+        SUM(CASE WHEN SUB.SUB_CODE IN ('1002', '1021', '1031', '3003') THEN nvl(SUB.SMV,0) ELSE 0 END) POS_NUM,/** 持仓数量**/
+        SUM(nvl(SUB.SMV,0)) POS_AMT, /** 底层资产折算人民币币值（元）**/
+        SUM(CASE WHEN SUB.SUB_CODE IN ('120401','120402','120403') THEN nvl(SUB.SMV, 0) ELSE 0 END) INT_AMT, /** 利息**/
+        MAX(nvl(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
+        FROM RSK_VALTBL_ASSET_SUB SUB
+        WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+        /** 活期存款、清算款、备付金、保证金**/
+        <if test="monthReport!=null and monthReport=='01'">
+            AND SUB.SUB_CODE IN ('1002', '1021', '1031', '3003','120401','120402','120403')
+        </if>
+        <if test="monthReport!=null and monthReport=='02'">
+            AND SUB.SUB_CODE IN ('1002', '1021', '1031', '3003')
+        </if>
+        GROUP BY SUB.VAL_DATE,SUB.PTL_ID
+    </select>
+    <select id="getNoBotAstCashDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
+        SELECT
+        SUB.PTL_ID PLAN_ASSET_ID,/** 资管计划行内资产/负债编码**/
+        COUNT(1) ASSET_CODE /** 其他科目数量**/
+        FROM RSK_VALTBL_ASSET_SUB SUB
+        WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+        /** 除活期存款1002、清算款3003、应收银行活期存款利息120401**/
+        AND SUB.SUB_CODE NOT LIKE '1002%'			/** 排除活期存款1002**/
+        AND SUB.SUB_CODE NOT LIKE '3003%'			/** 排除清算款3003**/
+        AND SUB.SUB_CODE NOT LIKE '120401%'			/** 排除应收银行活期存款利息120401**/
+        AND SUB.SUB_CODE NOT LIKE '2206%'			/** 排除应付管理人报酬2206**/
+        AND SUB.SUB_CODE NOT LIKE '2207%'			/** 排除应付托管费2207**/
+        AND SUB.SUB_CODE NOT LIKE '2209%'			/** 排除应付交易费用2209**/
+        AND SUB.SUB_CODE NOT LIKE '2221%'			/** 排除应付税费2221**/
+        AND SUB.SUB_CODE NOT LIKE '2222%'			/** 排除预估税费2222**/
+        AND SUB.SUB_CODE NOT LIKE '2501%'			/** 排除预提费用2501**/
+        AND SUB.SUB_CODE NOT LIKE '2801%'			/** 排除其他应付款2801**/
+        GROUP BY SUB.PTL_ID
+
+    </select>
 </mapper>

@@ -51,7 +51,7 @@ public class TradeAccount001Controller extends BaseController {
 //    }
 
     @PostMapping("/queryTradeAccount")
-    public TradeAccountDto queryTradeAccount(@RequestBody Map<String, Object> param) throws Exception {
+    public TradeAccountDto queryTradeAccount(@RequestBody Map<String, Object> param) {
         String tradeId = (String) param.get("tradeId");
         String prodId = (String) param.get("prodId");
         return tradeAccount001Service.queryTradeAccount(tradeId, prodId);

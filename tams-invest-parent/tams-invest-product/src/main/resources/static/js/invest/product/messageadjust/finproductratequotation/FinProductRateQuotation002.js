@@ -198,6 +198,7 @@ $(function() {
     		if(wfl_operType == null || wfl_operType != 'NEW'){
     			$('#finprodMarketId').attr("disabled",true);
     			$('#effDate').attr("disabled",true);
+    			$('#prodStyle').attr("disabled",true);
     		}
     		
     	}

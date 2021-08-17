@@ -14,6 +14,8 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +71,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("backInvestFeePayService")
 public class InvestFeePayService extends BaseService<InvestFeePayDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(InvestFeePayService.class);
 
     /**
      * {@linkplain}
@@ -139,8 +145,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
      * @return Page类 Page
      * @throws Exception 异常信息
      */
-    public Page<InvestFeePayDto> selectForPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    public Page<InvestFeePayDto> selectForPage(int page, int length, Map<String, Object> map) throws NoSuchFieldException {
         map.put("pendingStatus", DictCodeListExt1.有效状态_流程中.getValue());
         map.put("effectStatus", DictCodeListExt1.有效状态_有效.getValue());
         map.put("cancleStatus", DictCodeListExt1.有效状态_撤销.getValue());
@@ -179,7 +184,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
      * @param clazz 类
      * @param <T>
      */
-    private <T> void sort(List<T> list, String key, String order, Class<T> clazz) throws Exception {
+    private <T> void sort(List<T> list, String key, String order, Class<T> clazz) throws NoSuchFieldException {
         if(StringUtil.isEmpty(key)){
             return ;
         }
@@ -211,7 +216,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
                 return "asc".equals (order)  ? ((Comparable) o1).compareTo(o2) : ((Comparable) o2).compareTo(o1);
             }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return 0;
     }
@@ -1624,7 +1629,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
     }
     
     public Page<InvestFeePayFeeDetailDto> selectDetail(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         return this.queryForPageForSelectReturn(page,length,() -> investFeePayMapper.selectDetail(pageParam));
     }
 

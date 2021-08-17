@@ -41,7 +41,7 @@ public class FilterNotMatchChar extends AdditionFunc {
 	}
 	
 	@Override
-	public boolean filterField(Object field, String compareField) throws Exception{
+	public boolean filterField(Object field, String compareField) {
 		if(compareField.contains("*") && !compareField.contains(".*")){
 			compareField=compareField.replaceAll("\\*", ".\\*");
 		}
@@ -60,14 +60,14 @@ public class FilterNotMatchChar extends AdditionFunc {
 	}
 
 	@Override
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception {
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

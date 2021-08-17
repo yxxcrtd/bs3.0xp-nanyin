@@ -1031,7 +1031,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		try {
 			responseEntity = chbAssetListToExcel(tableId,tableName, title, dataList, enumIndexMap, mergeIndexList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return responseEntity;
 	}
@@ -1157,7 +1157,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			responseEntity = objListToExcel(tableId,tableName, title, dataList, false, enumIndexMap);
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 		return responseEntity;
 	}
@@ -1402,7 +1401,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 			return responseEntity;
 
@@ -1605,7 +1603,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	@SuppressWarnings("deprecation")
 	private ResponseEntity<byte[]> chbAssetListToExcel(String tableId,String tableName, String[] title, List<Object[]> objList, Map<Integer, String> enumIndexMap, List<Integer> mergeIndexList) {
 		ResponseEntity<byte[]> responseEntity= null;
-		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date()).toString();
+		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		String exportFilePath = SvrDataUtil.getSysParam("access_exportfilepath");
 		List<BaseInformationDto> baseInformationDtoList = baseInformationMapper.queryBaseInfoByTableId(tableId);
 		// modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 start
@@ -1669,7 +1667,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				for (int j = 0; j < obj.length; j++) {
 					XSSFCell cell = null; // 设置单元格的数据类型
 					cell = row.createCell(j, CellType.STRING);
-					if (!"".equals(obj[j]) && obj[j] != null) {
+					if (obj[j] != null && !"".equals(obj[j])) {
 						cell.setCellValue(obj[j].toString()); // 设置单元格的值
 					}
 				}
@@ -1694,7 +1692,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				for (int j = 0; j < length; j++) {
 					XSSFCell cell = null; // 设置单元格的数据类型
 					cell = row.createCell(j, CellType.STRING);
-					if (!"".equals(dictArr[j]) && dictArr[j] != null) {
+					if (dictArr[j] != null && !"".equals(dictArr[j])) {
 						cell.setCellValue(dictArr[j]); // 设置单元格的值
 					}
 				}
@@ -1735,7 +1733,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					out.close();
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}finally {
 					if(out != null){
 						out.close();
@@ -1744,7 +1742,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return responseEntity;
 	}
@@ -1761,7 +1759,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	@SuppressWarnings("deprecation")
 	private ResponseEntity<byte[]> objListToExcel(String tableId,String tableName, String[] title, List<Object[]> objList, boolean flag,Map<Integer, String> enumIndexMap) {
 		ResponseEntity<byte[]> responseEntity= null;
-		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date()).toString();
+		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		String exportFilePath = SvrDataUtil.getSysParam("access_exportfilepath");
 		String fileName = "";
 		String exportFileName = "";
@@ -1818,7 +1816,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				for (int j = 0; j < obj.length; j++) {
 					XSSFCell cell = null; // 设置单元格的数据类型
 					cell = row.createCell(j, CellType.STRING);
-					if (!"".equals(obj[j]) && obj[j] != null) {
+					if (obj[j] != null && !"".equals(obj[j])) {
 						cell.setCellValue(obj[j].toString()); // 设置单元格的值
 					}
 				}
@@ -1844,7 +1842,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					for (int j = 0; j < length; j++) {
 						XSSFCell cell = null; // 设置单元格的数据类型
 						cell = row.createCell(j, CellType.STRING);
-						if (!"".equals(dictArr[j]) && dictArr[j] != null) {
+						if (dictArr[j] != null && !"".equals(dictArr[j])) {
 							cell.setCellValue(dictArr[j]); // 设置单元格的值
 						}
 					}
@@ -1864,21 +1862,23 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             // 处理中文不能自动调整列宽的问题
             this.setSizeColumn(sheet, columnNum);
 			if (workbook != null) {
+				FileOutputStream out = null;
 				try {
 					File exportFile = new SafelyFile(fileName);
-					FileOutputStream out = new FileOutputStream(exportFile);
+					out = new FileOutputStream(exportFile);
 					workbook.write(out);
-					out.close();
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
-					e.printStackTrace();
+				} finally {
+					if (out != null){
+						out.close();
+					}
 				}
 			}
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 		return responseEntity;
 	}
@@ -3089,7 +3089,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				svrReportGenetorService.generateReport(businessDate, dataObject, prodList, assetList);
 			} catch (ParseException e) {
 				logger.error(e.getMessage(),e);
-				e.printStackTrace();
 			}  
     	}
     	return count;
@@ -3223,7 +3222,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			svrReportGenetorService.generateReport(businessDate, dataObject, prodList, assetList);
 		} catch (ParseException e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}  
     	return count;
     }
@@ -3798,18 +3796,20 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
         try{   
             Reader inStreamDoc = clob.getCharacterStream();   
                
-            char[] tempDoc = new char[(int) clob.length()];   
-            inStreamDoc.read(tempDoc);   
+            char[] tempDoc = new char[(int) clob.length()];
+            if(inStreamDoc!=null) {
+				inStreamDoc.read(tempDoc);
+			}
             inStreamDoc.close();   
             return new String(tempDoc);   
         }   
         catch (IOException e)   
-        {   
-            e.printStackTrace();   
+        {
+			logger.error(e.getMessage(),e);
         }   
         catch (SQLException es)   
         {   
-            es.printStackTrace();
+        	logger.error(es.getMessage(),es);
           }   
              
           return null;   

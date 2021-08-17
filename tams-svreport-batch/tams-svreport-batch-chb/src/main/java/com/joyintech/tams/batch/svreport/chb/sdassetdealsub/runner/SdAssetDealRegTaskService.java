@@ -61,12 +61,7 @@ public class SdAssetDealRegTaskService extends BatchBaseService {
         	List<String> prodList = getProdList();
             mainService.sdAssetDealRegData(ToolsUtil.getCurrentTime(batchExecuteInfo.getExecuteDate()),prodList);
             result.setStatus(BatchStatus.COMPLETED);
-        }
-        catch (BatchException e) {
-            logger.error("【资产交易信息登记】直连报送批处理Error",e);
-        	throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 			logger.info("批处理异常" + e.getMessage());
         	logger.error("批处理异常Error",e);
         }finally{

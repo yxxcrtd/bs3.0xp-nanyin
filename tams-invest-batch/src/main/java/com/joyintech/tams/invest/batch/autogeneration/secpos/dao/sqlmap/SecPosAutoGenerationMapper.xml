@@ -793,7 +793,7 @@
                   FROM view_fin_product_rating
                  where
                    (MARKETID IS NULL OR ORGID IS NULL)
-                   AND OCODE = #{finprodId}
+                   AND OCODE = #{finprodId,jdbcType=VARCHAR}
                    AND INNEROUTER = #{gradeType})
        ) TEMP
     </select>

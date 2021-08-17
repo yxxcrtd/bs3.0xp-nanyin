@@ -107,7 +107,7 @@ public class FinPlanAssetCService extends BaseService<FinPlanAssetCDto> {
      * @since 1.0
      */
     public Page<FinPlanAssetCDto> selectForPage(int page, int length,
-                                                  Map<String, Object> pageParam) throws Exception {
+                                                  Map<String, Object> pageParam) {
         pageParam.put("FINPROD_TYPE_TG_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         pageParam.put("PROFIT_TYPE_03", DictCodeList.收益类型_货币型.getValue());
         /*lishuping 2019/7/19 start*/

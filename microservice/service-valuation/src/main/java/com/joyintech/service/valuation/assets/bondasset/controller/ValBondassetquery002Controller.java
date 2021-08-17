@@ -191,7 +191,7 @@ public class ValBondassetquery002Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/workflowCheck")
-    public int workflowCheck(@RequestBody ProcessMark processMark) throws Exception {
+    public int workflowCheck(@RequestBody ProcessMark processMark){
         return valBondassetquery002Service.workflowCheck(processMark);
     }
     

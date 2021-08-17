@@ -35,6 +35,8 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +54,11 @@ import java.util.*;
  */
 @Service("finProductAnapleroticService")
 public class FinProductAnapleroticService extends BaseService<FinProductAnapleroticInfoDto>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinProductAnapleroticService.class);
+
     @Autowired
     private FinProductAnapleroticMapper finProductAnapleroticMapper;
     @Autowired
@@ -421,7 +428,7 @@ public class FinProductAnapleroticService extends BaseService<FinProductAnaplero
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
 
 
@@ -478,7 +485,7 @@ public class FinProductAnapleroticService extends BaseService<FinProductAnaplero
 						}
 						//result.setEffDate(prod.getVdate());
 					} catch (Exception e) {
-						e.printStackTrace();
+                        logger.error(e.getMessage(),e);
 					}
     	        	
     	        	 

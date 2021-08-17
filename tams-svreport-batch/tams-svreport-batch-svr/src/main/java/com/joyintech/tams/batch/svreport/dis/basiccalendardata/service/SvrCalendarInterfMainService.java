@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.batch.svreport.dis.basiccalendardata.service;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,7 @@ public class SvrCalendarInterfMainService extends AutoSendCBBaseService {
      * @see
      * @since 1.0
      */
-    public HashMap<String, List<String>> generateData(Date batchDate,List<String> prodIdList) {
+    public HashMap<String, List<String>> generateData(Date batchDate,List<String> prodIdList) throws ParseException {
         // 设置批处理bean
         setBatchBeanName(BatchBeanName.基础日历信息数据接入);
         logInfoBatchStart();

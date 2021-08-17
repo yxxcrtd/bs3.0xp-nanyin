@@ -89,8 +89,7 @@ public class RiskMonitorIndicators001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception { 
+    public ResponseEntity<byte[]> export() {
         return riskMonitorIndicators001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
     

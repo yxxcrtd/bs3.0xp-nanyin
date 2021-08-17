@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.trade.bondtostock.service.TrdBondToStock002Serv
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -95,7 +96,7 @@ public class TrdBondToStock001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return trdBondToStock001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
     /**
@@ -124,8 +125,7 @@ public class TrdBondToStock001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdBondToStock001Dto inputDto)
-            throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdBondToStock001Dto inputDto) throws WorkFlowException {
         //判断流程中是否存在,如果流程不存在则说明是生成的反向交易，组装撤销dto yjm start 20191015
         WflValidInputParameter parameter = new WflValidInputParameter();
         parameter.setPageId("TrdBondToStock002");

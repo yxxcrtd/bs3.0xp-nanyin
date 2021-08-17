@@ -3,8 +3,11 @@ package com.joyintech.service.entrust.etrmoneycalculation.dao;
 import com.joyintech.service.entrust.etrmoneycalculation.dto.EtrMoneyCalculationDto;
 import com.joyintech.service.entrust.etrmoneycalculation.dto.RatingDto;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
+@Repository
 public interface EtrMoneyCalculationMapper {
     /**
      *

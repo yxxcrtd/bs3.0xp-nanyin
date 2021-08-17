@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chbsd.employeeinfo.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +53,7 @@ public class SdEmployInfoBatchService {
 	@Autowired
 	private SdEmployeeInfoSvrMapper sdEmployeeInfoSvrMapper;
 	
-	public void sendEmployeeInfoMsg(Date batchDate) throws Exception {
+	public void sendEmployeeInfoMsg(Date batchDate) throws InvocationTargetException, IllegalAccessException {
 	
 			logger.debug("从业人员信息登记未报送数据检索开始------" + df.format(new Date()));
 			// 1、报送数据检索,取得 List
@@ -101,7 +102,7 @@ public class SdEmployInfoBatchService {
 	}
 
 	public void sendBatchCommon(List<ChbEmployeeInfoDto> dataList, SendDataCheckType sendDataCheckType)
-			throws Exception {
+			 {
 		//获取单批次发送条目数
 		int dataCountPerTime = Integer.valueOf(
 		        CacheUtil.getSysParam(ReportGlobalConstant.SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST));

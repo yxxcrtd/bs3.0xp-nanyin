@@ -192,7 +192,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 			 try {
 					infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcProdRaiseSub.class);
 				} catch (IOException e) {
-					e.printStackTrace();
+				 	logger.error(e.getMessage(),e);
 					logger.debug("数据转换异常",e.getMessage(),e);
 					return ;
 				}
@@ -259,7 +259,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 			 try {
 					infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcProdRaiseSub.class);
 				} catch (IOException e) {
-					e.printStackTrace();
+				 	logger.error(e.getMessage(),e);
 					logger.debug("数据转换异常",e.getMessage(),e);
 					return "fail";
 				}

@@ -17,6 +17,8 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,7 +53,11 @@ import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 @PageId("ValProdSchemeConfig002")
 @RequestMapping("/valuation/valuationparametermanage/prodschemeconfig/ValProdSchemeConfig002")
 public class ValProdSchemeConfig002Controller extends BaseController{
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValProdSchemeConfig002Controller.class);
+
     @Autowired
     private ValProdSchemeConfig001Service valProdSchemeConfig001Service;
     
@@ -104,7 +110,7 @@ public class ValProdSchemeConfig002Controller extends BaseController{
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public List<ValProdSchemeConfig002Dto> findPage() throws Exception {
+    public List<ValProdSchemeConfig002Dto> findPage()  {
         return valProdSchemeConfig002Service.findPage(RequestUtil.getPageParam());
     }
     
@@ -129,7 +135,7 @@ public class ValProdSchemeConfig002Controller extends BaseController{
             valProdSchemeConfig002Service.doInsertOrupdate(schId, schemeType, datas);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return new AjaxResult(this.getMessage("VAL_COMMON_I_0008") + e.getMessage(),
                 MessageType.错误消息);
         }

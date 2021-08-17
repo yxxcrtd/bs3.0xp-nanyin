@@ -41,124 +41,126 @@
     </select>
     
     <select id="queryFeeInfoByFinprodId" resultType="com.joyintech.service.product.common.dto.BussFinProductFeeInfoDto">
-       select FIN_CASH_INFO.CASH_ID cashId,
-       	      FIN_CASH_INFO.FEE_ID feeId,
-       		  MST_FEEINFO.FEE_TYPE feeType,
+       select FCI.CASH_ID cashId,
+       	      FCI.FEE_ID feeId,
+       		  MF.FEE_TYPE feeType,
        		  <!--计息基础 计费基数可编辑 不走费用品种信息 yzg 20191020 start  -->
        		 <!--  MST_FEEINFO.BASIC_BILL basicBill,
        		  MST_FEEINFO.BASIS basis, -->
-       		  FIN_CASH_CALC_RULE.BASIS basis,
-       		  FIN_CASH_CALC_RULE.BASE_TYPE basicBill,
-       		  FIN_FLOAT_COUNTING_RULE.FIRST_BASE_TYPE firstBaseType,
+       		  FCCR.BASIS basis,
+       		  FCCR.BASE_TYPE basicBill,
+       		  FFCR.FIRST_BASE_TYPE firstBaseType,
        		  <!--计息基础 计费基数可编辑 不走费用品种信息 yzg 20191020 start  -->
-       		  FIN_CASH_PAY_RULE.END_TDAY_RULE calcFeeTradeRule,
-       		  FIN_CASH_PAY_RULE.PAY_TDAY_RULE payFeeTradeRule,
-       		  FIN_CASH_PAY_RULE.PAY_CYCLE payFeeRule,
-       		  FIN_FLOAT_COUNTING_RULE.F_ACCR_DATE provisionFirstDay,
-       		  FIN_CASH_CALC_RULE.YIELD * 100 feeRate,
-       		  FIN_CASH_CALC_RULE.BASE_DATE_TYPE netAssetValueDay,
-       		  FIN_FLOAT_COUNTING_RULE.E_ACCR_DATE eAccrDate,
-       		  FIN_CASH_PAY_RULE.FIRST_PAY_DATE firstCalEndDate,
-       		  MST_FEEINFO.CHARGE_TYPE chargeType,
-       		  prd_layer_param.PROD_STYLE prodStyle
-    	 from FIN_CASH_INFO, MST_FEEINFO, FIN_CASH_PAY_RULE, FIN_CASH_CALC_RULE, FIN_FLOAT_COUNTING_RULE, FIN_PRODUCT
-    	 left join prd_layer_param 
-   		   on FIN_PRODUCT.FINPROD_ID = prd_layer_param.FINPROD_ID   
-    	WHERE FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
-    	  and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-    	  and FIN_CASH_INFO.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
-    	  and (FIN_CASH_CALC_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2})
-    	  and FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
-    	  and (FIN_CASH_PAY_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2})
-    	  and FIN_CASH_INFO.CASH_ID = FIN_FLOAT_COUNTING_RULE.CASH_ID
-    	  and (FIN_FLOAT_COUNTING_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2})
-    	  and (FIN_CASH_INFO.FINPROD_ID = #{finprodId} or prd_layer_param.P_FINPROD_ID = #{finprodId})
-		  and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
-		  and MST_FEEINFO.FEE_TYPE in (#{feeTypeTrust}, #{feeTypeFix}, #{feeTypeSale}, #{feeTypeOthSale}, #{feeTypeThService},#{feeTypeInvest})
-		  and FIN_CASH_INFO.FINPROD_TYPE = #{finprodType}
+       		  FCPR.END_TDAY_RULE calcFeeTradeRule,
+       		  FCPR.PAY_TDAY_RULE payFeeTradeRule,
+       		  FCPR.PAY_CYCLE payFeeRule,
+       		  FFCR.F_ACCR_DATE provisionFirstDay,
+       		  FCCR.YIELD * 100 feeRate,
+       		  FCCR.BASE_DATE_TYPE netAssetValueDay,
+       		  FFCR.E_ACCR_DATE eAccrDate,
+       		  FCPR.FIRST_PAY_DATE firstCalEndDate,
+       		  MF.CHARGE_TYPE chargeType,
+       		  PLP.PROD_STYLE prodStyle
+    	 from FIN_CASH_INFO FCI, MST_FEEINFO MF, FIN_CASH_PAY_RULE FCPR, FIN_CASH_CALC_RULE FCCR, FIN_FLOAT_COUNTING_RULE FFCR, FIN_PRODUCT FP
+    	 left join prd_layer_param PLP
+   		   on FP.FINPROD_ID = PLP.FINPROD_ID   
+    	WHERE FCI.FEE_ID = MF.FEE_ID
+    	  and FCI.FINPROD_ID = FP.FINPROD_ID
+    	  and FCI.CASH_ID = FCCR.CASH_ID
+    	  and (FCCR.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2=#{finprodType2})
+    	  and FCI.CASH_ID = FCPR.CASH_ID
+    	  and (FCPR.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2=#{finprodType2})
+    	  and FCI.CASH_ID = FFCR.CASH_ID
+    	  and (FFCR.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2=#{finprodType2})
+    	  and (FCI.FINPROD_ID = #{finprodId} or PLP.P_FINPROD_ID = #{finprodId})
+		  and FCI.CASH_TYPE_1 = #{cashType1}
+		  and MF.FEE_TYPE in (#{feeTypeTrust}, #{feeTypeFix}, #{feeTypeSale}, #{feeTypeOthSale}, #{feeTypeThService},#{feeTypeInvest})
+		  and FCI.FINPROD_TYPE = #{finprodType}
     </select>
 
 
 	<select id="queryFeeInfoByFinprodIdForChannel" resultType="com.joyintech.service.product.common.dto.BussFinProductFeeInfoDto">
-       select FIN_CASH_INFO.CASH_ID cashId,
-       	      FIN_CASH_INFO.FEE_ID feeId,
-       		  MST_FEEINFO.FEE_TYPE feeType,
-       		  MST_FEEINFO.BASIC_BILL basicBill,
-       		  MST_FEEINFO.BASIS basis,
-       		  FIN_CASH_CALC_RULE.YIELD * 100 feeRate,
-       		  FIN_CASH_CALC_RULE.BASE_DATE_TYPE netAssetValueDay,
-       		  MST_FEEINFO.CHARGE_TYPE chargeType
-    	 from FIN_CASH_INFO, MST_FEEINFO, FIN_CASH_CALC_RULE, FIN_PRODUCT
-    	WHERE FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
-    	  and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-    	  and FIN_CASH_INFO.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
-    	  and (FIN_CASH_CALC_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2})
-    	  and FIN_CASH_INFO.FINPROD_ID = #{finprodId}
-		  and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
-		  and MST_FEEINFO.FEE_TYPE in (#{feeType10}, #{feeType11}, #{feeType99})
-		  and FIN_CASH_INFO.FINPROD_TYPE = #{finprodType}
+       select FCI.CASH_ID cashId,
+       	      FCI.FEE_ID feeId,
+       		  MF.FEE_TYPE feeType,
+       		  MF.BASIC_BILL basicBill,
+       		  MF.BASIS basis,
+       		  FCCR.YIELD * 100 feeRate,
+       		  FCCR.BASE_DATE_TYPE netAssetValueDay,
+       		  MF.CHARGE_TYPE chargeType
+    	 from FIN_CASH_INFO FCI, MST_FEEINFO MF, FIN_CASH_CALC_RULE FCCR, FIN_PRODUCT FP
+    	WHERE FCI.FEE_ID = MF.FEE_ID
+    	  and FCI.FINPROD_ID = FP.FINPROD_ID
+    	  and FCI.CASH_ID = FCCR.CASH_ID
+    	  and (FCCR.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2=#{finprodType2})
+    	  and FCI.FINPROD_ID = #{finprodId}
+		  and FCI.CASH_TYPE_1 = #{cashType1}
+		  and MF.FEE_TYPE in (#{feeType10}, #{feeType11}, #{feeType99})
+		  and FCI.FINPROD_TYPE = #{finprodType}
     </select>
     
     <select id="queryFeeInfoByFinprodIdEx" resultType="com.joyintech.service.product.common.dto.BussFinProductFeeInfoDto">
        <!-- 不是分层产品或者费用挂母产品 -->
-       select FIN_CASH_INFO.CASH_ID cashId,
-       	      FIN_CASH_INFO.FEE_ID feeId,
-       		  MST_FEEINFO.FEE_TYPE feeType,
-       		  MST_FEEINFO.BASIC_BILL basicBill,
-       		  MST_FEEINFO.BASIS basis,
-       		  FIN_CASH_PAY_RULE.END_TDAY_RULE calcFeeTradeRule,
-       		  FIN_CASH_PAY_RULE.PAY_TDAY_RULE payFeeTradeRule,
-       		  FIN_CASH_PAY_RULE.PAY_CYCLE payFeeRule,
-       		  FIN_FLOAT_COUNTING_RULE.F_ACCR_DATE provisionFirstDay,
+       select FCI.CASH_ID cashId,
+       	      FCI.FEE_ID feeId,
+       		  MF.FEE_TYPE feeType,
+       		  MF.BASIC_BILL basicBill,
+       		  MF.BASIS basis,
+       		  FCPR.END_TDAY_RULE calcFeeTradeRule,
+       		  FCPR.PAY_TDAY_RULE payFeeTradeRule,
+       		  FCPR.PAY_CYCLE payFeeRule,
+       		  FFCR.F_ACCR_DATE provisionFirstDay,
        		  FIN_CASH_CALC_RULE.YIELD * 100 feeRate,
        		  FIN_CASH_CALC_RULE.BASE_DATE_TYPE netAssetValueDay,
-       		  FIN_FLOAT_COUNTING_RULE.E_ACCR_DATE eAccrDate,
-       		  FIN_CASH_PAY_RULE.FIRST_PAY_DATE firstCalEndDate,
-       		  MST_FEEINFO.CHARGE_TYPE chargeType,
-       		  FIN_CASH_INFO.FINPROD_ID finprodId
-    	 from FIN_CASH_INFO, MST_FEEINFO, FIN_CASH_PAY_RULE, (SELECT YIELD,BASE_DATE_TYPE,CASH_ID,EFF_DATE FROM FIN_CASH_CALC_RULE UNION SELECT NULL,BASE_DATE_TYPE,CASH_ID,EFF_DATE FROM FIN_FLOAT_CALC_RULE)FIN_CASH_CALC_RULE, FIN_FLOAT_COUNTING_RULE, FIN_PRODUCT
-    	WHERE FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
-    	  and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-    	  and FIN_CASH_INFO.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
-    	  and (FIN_CASH_CALC_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2})
-    	  and FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
-    	  and (FIN_CASH_PAY_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2})
-    	  and FIN_CASH_INFO.CASH_ID = FIN_FLOAT_COUNTING_RULE.CASH_ID
-    	  and (FIN_FLOAT_COUNTING_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2})
-    	  and FIN_CASH_INFO.FINPROD_ID = #{finprodId}
-		  and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
-		  and MST_FEEINFO.FEE_TYPE in (#{feeTypeTrust}, #{feeTypeFix}, #{feeTypeSale}, #{feeTypeOthSale}, #{feeTypeThService},#{feeTypeFloat},#{feeTypeInvest})
-		  and FIN_CASH_INFO.FINPROD_TYPE = #{finprodType}
+       		  FFCR.E_ACCR_DATE eAccrDate,
+       		  FCPR.FIRST_PAY_DATE firstCalEndDate,
+       		  MF.CHARGE_TYPE chargeType,
+       		  FCI.FINPROD_ID finprodId
+    	 from FIN_CASH_INFO FCI, MST_FEEINFO MF, FIN_CASH_PAY_RULE FCPR, (SELECT YIELD,BASE_DATE_TYPE,CASH_ID,EFF_DATE FROM FIN_CASH_CALC_RULE UNION SELECT NULL,BASE_DATE_TYPE,CASH_ID,EFF_DATE FROM FIN_FLOAT_CALC_RULE)FIN_CASH_CALC_RULE, 
+    	 FIN_FLOAT_COUNTING_RULE FFCR, FIN_PRODUCT FP
+    	WHERE FCI.FEE_ID = MF.FEE_ID
+    	  and FCI.FINPROD_ID = FP.FINPROD_ID
+    	  and FCI.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
+    	  and (FIN_CASH_CALC_RULE.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2=#{finprodType2})
+    	  and FCI.CASH_ID = FCPR.CASH_ID
+    	  and (FCPR.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2=#{finprodType2})
+    	  and FCI.CASH_ID = FFCR.CASH_ID
+    	  and (FFCR.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2=#{finprodType2})
+    	  and FCI.FINPROD_ID = #{finprodId}
+		  and FCI.CASH_TYPE_1 = #{cashType1}
+		  and MF.FEE_TYPE in (#{feeTypeTrust}, #{feeTypeFix}, #{feeTypeSale}, #{feeTypeOthSale}, #{feeTypeThService},#{feeTypeFloat},#{feeTypeInvest})
+		  and FCI.FINPROD_TYPE = #{finprodType}
 		  <!-- 费用挂子产品上 -->
 		  UNION ALL
-		  select FIN_CASH_INFO.CASH_ID cashId,
-       	      FIN_CASH_INFO.FEE_ID feeId,
-       		  MST_FEEINFO.FEE_TYPE feeType,
-       		  MST_FEEINFO.BASIC_BILL basicBill,
-       		  MST_FEEINFO.BASIS basis,
-       		  FIN_CASH_PAY_RULE.END_TDAY_RULE calcFeeTradeRule,
-       		  FIN_CASH_PAY_RULE.PAY_TDAY_RULE payFeeTradeRule,
-       		  FIN_CASH_PAY_RULE.PAY_CYCLE payFeeRule,
-       		  FIN_FLOAT_COUNTING_RULE.F_ACCR_DATE provisionFirstDay,
+		  select FCI.CASH_ID cashId,
+       	      FCI.FEE_ID feeId,
+       		  MF.FEE_TYPE feeType,
+       		  MF.BASIC_BILL basicBill,
+       		  MF.BASIS basis,
+       		  FCPR.END_TDAY_RULE calcFeeTradeRule,
+       		  FCPR.PAY_TDAY_RULE payFeeTradeRule,
+       		  FCPR.PAY_CYCLE payFeeRule,
+       		  FFCR.F_ACCR_DATE provisionFirstDay,
        		  FIN_CASH_CALC_RULE.YIELD * 100 feeRate,
        		  FIN_CASH_CALC_RULE.BASE_DATE_TYPE netAssetValueDay,
-       		  FIN_FLOAT_COUNTING_RULE.E_ACCR_DATE eAccrDate,
-       		  FIN_CASH_PAY_RULE.FIRST_PAY_DATE firstCalEndDate,
-       		  MST_FEEINFO.CHARGE_TYPE chargeType,
-       		  FIN_CASH_INFO.FINPROD_ID finprodId
-    	 from FIN_CASH_INFO, MST_FEEINFO, FIN_CASH_PAY_RULE, (SELECT YIELD,BASE_DATE_TYPE,CASH_ID,EFF_DATE FROM FIN_CASH_CALC_RULE UNION SELECT NULL,BASE_DATE_TYPE,CASH_ID,EFF_DATE FROM FIN_FLOAT_CALC_RULE)FIN_CASH_CALC_RULE, FIN_FLOAT_COUNTING_RULE, FIN_PRODUCT
-    	WHERE FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
-    	  and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-    	  and FIN_CASH_INFO.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
-    	  and (FIN_CASH_CALC_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2})
-    	  and FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
-    	  and (FIN_CASH_PAY_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2})
-    	  and FIN_CASH_INFO.CASH_ID = FIN_FLOAT_COUNTING_RULE.CASH_ID
-    	  and (FIN_FLOAT_COUNTING_RULE.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2=#{finprodType2})
-    	  and FIN_PRODUCT.P_FINPROD_ID = #{finprodId}
-		  and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
-		  and MST_FEEINFO.FEE_TYPE in (#{feeTypeTrust}, #{feeTypeFix}, #{feeTypeSale}, #{feeTypeOthSale}, #{feeTypeThService},#{feeTypeFloat},#{feeTypeInvest})
-		  and FIN_CASH_INFO.FINPROD_TYPE = #{finprodType}
+       		  FFCR.E_ACCR_DATE eAccrDate,
+       		  FCPR.FIRST_PAY_DATE firstCalEndDate,
+       		  MF.CHARGE_TYPE chargeType,
+       		  FCI.FINPROD_ID finprodId
+    	 from FIN_CASH_INFO FCI, MST_FEEINFO MF, FIN_CASH_PAY_RULE FCPR, (SELECT YIELD,BASE_DATE_TYPE,CASH_ID,EFF_DATE FROM FIN_CASH_CALC_RULE UNION SELECT NULL,BASE_DATE_TYPE,CASH_ID,EFF_DATE FROM FIN_FLOAT_CALC_RULE)FIN_CASH_CALC_RULE, 
+    	 FIN_FLOAT_COUNTING_RULE FFCR, FIN_PRODUCT FP
+    	WHERE FCI.FEE_ID = MF.FEE_ID
+    	  and FCI.FINPROD_ID = FP.FINPROD_ID
+    	  and FCI.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
+    	  and (FIN_CASH_CALC_RULE.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2=#{finprodType2})
+    	  and FCI.CASH_ID = FFCR.CASH_ID
+    	  and (FCPR.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2=#{finprodType2})
+    	  and FCI.CASH_ID = FFCR.CASH_ID
+    	  and (FFCR.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2=#{finprodType2})
+    	  and FP.P_FINPROD_ID = #{finprodId}
+		  and FCI.CASH_TYPE_1 = #{cashType1}
+		  and MF.FEE_TYPE in (#{feeTypeTrust}, #{feeTypeFix}, #{feeTypeSale}, #{feeTypeOthSale}, #{feeTypeThService},#{feeTypeFloat},#{feeTypeInvest})
+		  and FCI.FINPROD_TYPE = #{finprodType}
     </select>
     
     <select id="queryFeePlanListByFinprodId" resultMap="com.joyintech.tams.common.base.dao.FinCashPlanMapper.BaseResultMap">
@@ -176,40 +178,40 @@
 	</select>
     
     <select id="queryFeeInfoByPtlId" resultType="com.joyintech.service.product.common.dto.BussFinProductFeeInfoDto">
-	select distinct FIN_CASH_INFO.FEE_ID feeId,
-		                MST_FEEINFO.FEE_TYPE feeType,
-		                MST_FEEINFO.BASIC_BILL basicBill,
-		                MST_FEEINFO.BASIS basis,
-		                FIN_CASH_PAY_RULE.PAY_CYCLE payFeeRule,
-		                FIN_CASH_PAY_RULE.END_TDAY_RULE calcFeeTradeRule,
-		                FIN_CASH_PAY_RULE.PAY_TDAY_RULE payFeeTradeRule,
-		                FIN_CASH_CALC_RULE.YIELD * 100 feeRate,
-		                FIN_FLOAT_COUNTING_RULE.F_ACCR_DATE provisionFirstDay,
-		                FIN_CASH_CALC_RULE.BASE_DATE_TYPE netAssetValueDay,
-		                FIN_FLOAT_COUNTING_RULE.E_ACCR_DATE eAccrDate,
-		                FIN_CASH_PAY_RULE.FIRST_PAY_DATE firstCalEndDate,
-		                MST_FEEINFO.CHARGE_TYPE chargeType
-		  from FIN_CASH_INFO,
-		       MST_FEEINFO,
-		       PTL_MANAGE_OBJ,
-		       FIN_CASH_CALC_RULE,
-		       FIN_FLOAT_COUNTING_RULE,
-		       FIN_CASH_PAY_RULE,
-		       FIN_PRODUCT
-		  left join prd_layer_param
-		      on FIN_PRODUCT.FINPROD_ID = prd_layer_param.FINPROD_ID
-		 WHERE FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
-		   and FIN_CASH_INFO.FINPROD_ID = PTL_MANAGE_OBJ.MANAGE_OBJ_ID
-		   and FIN_CASH_INFO.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
-		   and FIN_CASH_INFO.CASH_ID = FIN_FLOAT_COUNTING_RULE.CASH_ID
-		   and FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
-		   and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-    	  and PTL_MANAGE_OBJ.PORTFOLIO_ID = #{ptlId}
-		  and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
-		  and MST_FEEINFO.FEE_TYPE in (#{feeTypeTrust}, #{feeTypeFix}, #{feeTypeSale}, #{feeTypeOthSale}, #{feeTypeThService},#{feeTypeInvest})
-		  and FIN_CASH_INFO.FINPROD_TYPE = #{finprodType}
+	select distinct FCI.FEE_ID feeId,
+		                MF.FEE_TYPE feeType,
+		                MF.BASIC_BILL basicBill,
+		                MF.BASIS basis,
+		                FCPR.PAY_CYCLE payFeeRule,
+		                FCPR.END_TDAY_RULE calcFeeTradeRule,
+		                FCPR.PAY_TDAY_RULE payFeeTradeRule,
+		                FCCR.YIELD * 100 feeRate,
+		                FFCR.F_ACCR_DATE provisionFirstDay,
+		                FCCR.BASE_DATE_TYPE netAssetValueDay,
+		                FFCR.E_ACCR_DATE eAccrDate,
+		                FCPR.FIRST_PAY_DATE firstCalEndDate,
+		                MF.CHARGE_TYPE chargeType
+		  from FIN_CASH_INFO FCI,
+		       MST_FEEINFO MF,
+		       PTL_MANAGE_OBJ PMO,
+		       FIN_CASH_CALC_RULE FCCR,
+		       FIN_FLOAT_COUNTING_RULE FFCR,
+		       FIN_CASH_PAY_RULE FCPR,
+		       FIN_PRODUCT FP
+		  left join prd_layer_param PLP
+		      on FP.FINPROD_ID = PLP.FINPROD_ID
+		 WHERE FCI.FEE_ID = MF.FEE_ID
+		   and FCI.FINPROD_ID = PMO.MANAGE_OBJ_ID
+		   and FCI.CASH_ID = FCCR.CASH_ID
+		   and FCI.CASH_ID = FFCR.CASH_ID
+		   and FCI.CASH_ID = FCPR.CASH_ID
+		   and FCI.FINPROD_ID = FP.FINPROD_ID
+    	  and PMO.PORTFOLIO_ID = #{ptlId}
+		  and FCI.CASH_TYPE_1 = #{cashType1}
+		  and MF.FEE_TYPE in (#{feeTypeTrust}, #{feeTypeFix}, #{feeTypeSale}, #{feeTypeOthSale}, #{feeTypeThService},#{feeTypeInvest})
+		  and FCI.FINPROD_TYPE = #{finprodType}
 		  <if test="branch != null">
-	    	and FIN_CASH_INFO.BRANCH = #{branch}
+	    	and FCI.BRANCH = #{branch}
 	      </if>
     </select>
       <select id="queryFundFeeInfoList" resultType="com.joyintech.framework.select.SelectOptionDto" parameterType="java.lang.String">

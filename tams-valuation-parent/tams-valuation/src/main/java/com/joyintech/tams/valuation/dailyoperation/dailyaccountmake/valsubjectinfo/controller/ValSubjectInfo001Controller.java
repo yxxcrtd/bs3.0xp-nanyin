@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
+
+import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,7 +79,7 @@ public class ValSubjectInfo001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValSubjectInfo001Dto> findPage()
-        throws Exception {
+         {
         Page<ValSubjectInfo001Dto> page = valSubjectInfo001Service.findPage(
             RequestUtil.getPageParam());
         return page;
@@ -155,8 +157,7 @@ public class ValSubjectInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<ValSubjectInfo001Dto> listdto;
 
@@ -180,8 +181,7 @@ public class ValSubjectInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("down")
-    public String sztDown()
-        throws Exception {
+    public String sztDown() throws IOException, DocumentException {
         SztXmlMessageDto sztXmlMessageDto = new SztXmlMessageDto();
         String prodId = this.getParam("prodId");
         String cdate = DateUtil.formatDate(DateUtil.getCurrentDate());

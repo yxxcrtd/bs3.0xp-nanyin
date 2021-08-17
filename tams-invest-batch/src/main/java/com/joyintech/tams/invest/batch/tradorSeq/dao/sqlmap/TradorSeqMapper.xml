@@ -3,6 +3,7 @@
 <mapper namespace="com.joyintech.tams.invest.batch.tradorSeq.dao.TradorSeqForwardMapper">
     <delete id="deleteTradorSeq">
         delete from TRADOR_SEQ
+        where 1=1
     </delete>
 
     <select id="selectTradorSeqByRole" resultType="com.joyintech.tams.invest.batch.tradorSeq.dto.TradorSeqForwardDto">

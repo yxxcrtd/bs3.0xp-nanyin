@@ -70,7 +70,9 @@ public class ChbFileDownloadController extends BaseController {
         fits=new FileInputStream(path);
         fis = new BufferedInputStream(fits);
         byte[] buffer = new byte[fis.available()];
-        fis.read(buffer);
+        if(fis!=null) {
+            fis.read(buffer);
+        }
         fits.close();
         fis.close();
         response.reset();
@@ -93,8 +95,7 @@ public class ChbFileDownloadController extends BaseController {
         toClient.flush();
         toClient.close();
         }
-        catch(IOException e){ 
-//            e.printStackTrace();
+        catch(IOException e){
             logger.error(e.getMessage(),e);
         }
         finally{
@@ -103,7 +104,6 @@ public class ChbFileDownloadController extends BaseController {
                 fits.close();
             }
             catch (IOException e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
             }
           }  
@@ -112,7 +112,6 @@ public class ChbFileDownloadController extends BaseController {
                   fis.close();
               }
               catch (IOException e) {
-//                  e.printStackTrace();
                   logger.error(e.getMessage(),e);
               }
           }  
@@ -121,7 +120,6 @@ public class ChbFileDownloadController extends BaseController {
                   toClient.close();
               }
               catch (IOException e) {
-//                  e.printStackTrace();
                   logger.error(e.getMessage(),e);
               }
           }  

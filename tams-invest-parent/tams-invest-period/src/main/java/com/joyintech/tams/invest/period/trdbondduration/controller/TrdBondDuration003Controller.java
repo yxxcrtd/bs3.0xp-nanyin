@@ -12,6 +12,7 @@ import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdbondduration.dto.SecPositionExerciseInfo003Dto;
 import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration003ProcessDto;
 import com.joyintech.tams.invest.period.trdbondduration.service.TrdBondDuration003Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -109,12 +110,10 @@ public class TrdBondDuration003Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBondDuration003ProcessDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBondDuration003ProcessDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

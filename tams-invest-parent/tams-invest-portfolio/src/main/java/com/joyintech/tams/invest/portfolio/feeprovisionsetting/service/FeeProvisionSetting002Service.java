@@ -61,8 +61,7 @@ public class FeeProvisionSetting002Service extends BaseService<FeeProvisionSetti
 	 * @see
 	 * @since 1.0
 	 */
-	public Page<TrdAccountmfConfigdetailDto> selectDetail(Map<String, Object> pageParam)
-			throws Exception {
+	public Page<TrdAccountmfConfigdetailDto> selectDetail(Map<String, Object> pageParam){
 		String workflowId = (String)pageParam.get("workflowId");
 		if (StringUtil.isNotEmpty(workflowId)) {
 			FeeProvisionSetting001Dto feeProvisionSetting001Dto = this.getBussinessEntityByWorkflowId(

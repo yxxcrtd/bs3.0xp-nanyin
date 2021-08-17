@@ -1,6 +1,5 @@
 package com.joyintech.tams.invest.trade.transfer.trdassetsProject.service;
 
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.grid.Page;
@@ -42,6 +41,8 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,11 @@ import java.util.*;
 
 @Service
 public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001Dto> implements BaseProcessService<TrdAssetsProject001Dto> {
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdAssetsProject001Service.class);
+
 	@Autowired
     private TrdPlanRateInvestTradeTransfer001Service trdPlanRateInvestTradeTransfer001Service;
 	@Autowired
@@ -531,7 +536,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         TrdAssetsProject001Dto dto = BeanUtil.mapToObject(param,TrdAssetsProject001Dto.class);
         List<TrdAssetsProject001Dto> list = new ArrayList<>();
         if(StringUtil.isNotEmpty(param.get("projectListInfoList"))){
-            list = JsonUtils.json2List(JsonUtil.objToString(param.get("projectListInfoList")),TrdAssetsProject001Dto.class);
+            list = JsonUtils.json2List(JsonUtils.object2Json(param.get("projectListInfoList")),TrdAssetsProject001Dto.class);
             dto.setProjectListInfoList(list);
         }
         if(StringUtil.isNotEmpty(dto)){
@@ -963,7 +968,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         for (TrdAssetsProject001Dto dto:entity.getProjectListInfoList()) {
             saveDataWhenStartWorkflow(dto);

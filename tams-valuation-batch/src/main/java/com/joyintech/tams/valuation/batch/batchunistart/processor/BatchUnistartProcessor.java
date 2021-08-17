@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,8 +53,7 @@ public class BatchUnistartProcessor extends BaseProcessor<NeedOperateEntity, Bat
     private BatchUnistartCommonService batchUnistartCommonService;
 
     @Override
-    public BatchUnistartDto process(NeedOperateEntity item)
-        throws Exception {
+    public BatchUnistartDto process(NeedOperateEntity item) throws UnsupportedEncodingException {
         // 读取需要处理的任务模块
         SysParaKey key = new SysParaKey();
         key.setSystemCode("SYS");
@@ -193,7 +193,7 @@ public class BatchUnistartProcessor extends BaseProcessor<NeedOperateEntity, Bat
         }
     }
 
-    public String subStrByBytes(String s, int num)throws Exception{
+    public String subStrByBytes(String s, int num) throws UnsupportedEncodingException {
         if (StringUtil.isEmpty(s)) {
             return "";
         }

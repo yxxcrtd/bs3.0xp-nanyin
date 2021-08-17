@@ -59,8 +59,7 @@ public class ValBalanceUnusualQuery001Controller extends BaseController {
      */
    
     @PostMapping("/findPage")
-    public List<ValBalanceUnusualQuery001Dto> findPage(@RequestBody Map<String, Object> params)
-        throws Exception {
+    public List<ValBalanceUnusualQuery001Dto> findPage(@RequestBody Map<String, Object> params){
         return valBalanceUnusualQuery001Service.getAllList(params);
     }
     

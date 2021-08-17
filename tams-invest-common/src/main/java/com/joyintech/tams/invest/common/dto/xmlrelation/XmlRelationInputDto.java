@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.common.dto.xmlrelation;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.joyintech.framework.util.StringUtil;
 
@@ -90,5 +91,10 @@ public class XmlRelationInputDto extends Object implements Serializable {
         }
 
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(paraDtoList);
     }
 }

@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.MstCustomerInfo;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface SvrMstCustomerInfoImpMapper {
     int deleteByPrimaryKey(String customerId);
 

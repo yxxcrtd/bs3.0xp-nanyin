@@ -180,7 +180,7 @@ public class ValAccountHandle001Contoller extends BaseController {
 
     @RequestMapping("/findLogPage")
     @ResponseBody
-    public List<ValAccountHandle001Dto> findLogPage() throws Exception{
+    public List<ValAccountHandle001Dto> findLogPage() {
     	Map<String,Object> map =RequestUtil.getPageParam();
 
         return valAccountHandle001Service.findLogPage(map);
@@ -196,7 +196,7 @@ public class ValAccountHandle001Contoller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public List<ValAccountHandle002Dto> selectBalanceStatement()
-        throws Exception {
+          {
     	List<ValAccountHandle002Dto> list = new ArrayList<ValAccountHandle002Dto>();
     	Map<String,Object> map = RequestUtil.getPageParam();
     	List<String> prodList=new ArrayList<String>();

@@ -30,7 +30,7 @@ public class PbcMonthReportCBMainService  extends AutoSendCBBaseService{
      * @param isEdit 是否是修改的数据
      * @throws Exception 
      */
-    public void generateReport(Date batchDate,List<String> prodIdList,boolean isEdit) throws Exception{
+    public void generateReport(Date batchDate,List<String> prodIdList,boolean isEdit) {
         pbcMonthReportRegistBatchService.generateReport(batchDate, prodIdList, isEdit);
     }
 }

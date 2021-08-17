@@ -98,7 +98,7 @@ public class TaxScheme002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) TaxScheme002Dto dto, BindingResult bindingResult) throws Exception {
+	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) TaxScheme002Dto dto, BindingResult bindingResult) {
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
 		

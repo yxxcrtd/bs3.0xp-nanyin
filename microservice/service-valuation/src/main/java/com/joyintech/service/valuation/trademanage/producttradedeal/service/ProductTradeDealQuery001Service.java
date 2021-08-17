@@ -46,7 +46,7 @@ public class ProductTradeDealQuery001Service extends CommonExportService<Product
      * @return
      * @throws Exception
      */
-    public Page<ProductTradeDealQuery001Dto> findByPage(int pageNum, int length, Map<String, Object> params) throws Exception{
+    public Page<ProductTradeDealQuery001Dto> findByPage(int pageNum, int length, Map<String, Object> params) {
     	Page<ProductTradeDealQuery001Dto> page = super.queryForPage(pageNum, length, ()->productTradeDealQuery001Mapper.selectList(params));
     	List<ProductTradeDealQuery001Dto> list = page.getRoot();
     	
@@ -76,7 +76,7 @@ public class ProductTradeDealQuery001Service extends CommonExportService<Product
      * @return
      * @throws Exception
      */
-    public List<ProductTradeDealQuery001Dto> findAll(Map<String, Object> params) throws Exception{
+    public List<ProductTradeDealQuery001Dto> findAll(Map<String, Object> params) {
 //    	导出数据不对： 默认导出不会查父节点（WHERE .. AND DECODE(cp.p_finprod_id, NULL, 'root', cp.p_finprod_id) = root）
     	params.put("parentId", "root");// 手动添加：只查根节点
     	List<ProductTradeDealQuery001Dto> list = productTradeDealQuery001Mapper.selectList(params);

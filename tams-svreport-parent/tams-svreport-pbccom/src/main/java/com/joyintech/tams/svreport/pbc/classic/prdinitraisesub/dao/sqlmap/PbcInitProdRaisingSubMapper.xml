@@ -966,7 +966,7 @@
 	    b.IVSTORIENTATION ivstorientation,
 	    b.VDATE vdate,
 	    t2.PBC_CODE pbcCode,
-	    a.PBC_PROD_ID pbcProdIdShow
+        nvl(t2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
   	from PBC_INIT_PROD_RAISING_SUB a 
   	left join (<include refid="PBC_PRD_BASEINFO_SUB" />) b on a.PBC_PROD_ID = b.PBC_PROD_ID 
   	<!-- and a.ORG_CODE = b.ORG_CODE -->

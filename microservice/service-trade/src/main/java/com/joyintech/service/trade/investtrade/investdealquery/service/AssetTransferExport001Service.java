@@ -30,7 +30,7 @@ public class AssetTransferExport001Service  extends BaseService<AssetTransferExp
      * @since 1.0
      */
     public Page<AssetTransferExport001Dto> selectForPage(int page, int length,Map<String, Object> pageParam)
-			throws Exception {
+	{
 //		setParams(pageParam);
 		Page<AssetTransferExport001Dto>  pageLimit = super.queryForPage(page, length, () -> assetTransferExport001Mapper.selectForPage(pageParam));
 		//finprodType2PinAn(pageLimit.getRoot());

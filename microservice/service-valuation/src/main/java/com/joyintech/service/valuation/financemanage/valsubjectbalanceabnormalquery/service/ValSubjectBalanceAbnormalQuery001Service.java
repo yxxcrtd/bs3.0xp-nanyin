@@ -36,8 +36,7 @@ public class ValSubjectBalanceAbnormalQuery001Service extends CommonExportServic
     @Autowired
     private ValSubjectBalanceAbnormalQuery001Mapper valSubjectBalanceAbnormalQuery001Mapper;
 
-    public Page<ValSubjectBalanceAbnormalQuery001Dto> queryPageList(int page, int length, Map<String, Object> params)
-        throws Exception {
+    public Page<ValSubjectBalanceAbnormalQuery001Dto> queryPageList(int page, int length, Map<String, Object> params){
         String booksetId = (String)params.get("booksetId");
         String[] booksetIdArr = null;
         if (StringUtil.isNotEmpty(booksetId)) {

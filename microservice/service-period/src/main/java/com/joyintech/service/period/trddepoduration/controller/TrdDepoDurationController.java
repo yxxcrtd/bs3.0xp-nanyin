@@ -131,7 +131,7 @@ public class TrdDepoDurationController {
     public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdDepoDurationService.getFinprodMarketId(page, length, param);
     }
     /**
@@ -164,7 +164,7 @@ public class TrdDepoDurationController {
     public Page<SelectOptionDto> getPortfolioId(@RequestBody Map<String, Object> param,
                                                 @PathVariable("page") int page,
                                                 @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdDepoDurationService.getPortfolioId(page, length, param);
     }
     //add by yujiaping 2020-12-5 BS-1562【存款类存续期】同一资产同一计息结束日只能做一次活期存放结息start

@@ -32,7 +32,7 @@ public class DeviationRateBond implements PluginClass {
     }
 
     @Override
-    public Object getParamterValue() throws Exception {
+    public Object getParamterValue() {
         if (StringUtil.isEmpty(investTradeTrialInput.getTrdProductDeal()) || StringUtil.isEmpty(investTradeTrialInput.getTrdProductDeal().getUnitCprice())) {
             return null;
         }

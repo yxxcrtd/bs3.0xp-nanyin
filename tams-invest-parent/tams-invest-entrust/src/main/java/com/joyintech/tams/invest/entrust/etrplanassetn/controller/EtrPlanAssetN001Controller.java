@@ -96,8 +96,7 @@ public class EtrPlanAssetN001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getentrustId")
-    public List<SuggestDto> getentrustId(String param)
-        throws Exception {
+    public List<SuggestDto> getentrustId(String param){
         List<SuggestDto> temp = etrPlanAssetNService.getentrustId(param);
         return temp;
     }
@@ -112,8 +111,7 @@ public class EtrPlanAssetN001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getfinprodId")
-    public List<SuggestDto> getfinprodId(String param)
-        throws Exception {
+    public List<SuggestDto> getfinprodId(String param){
         List<SuggestDto> temp = etrPlanAssetNService.getfinprodId(param);
         return temp;
     }
@@ -205,8 +203,7 @@ public class EtrPlanAssetN001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return etrPlanAssetNService.export(this.getPageId(),

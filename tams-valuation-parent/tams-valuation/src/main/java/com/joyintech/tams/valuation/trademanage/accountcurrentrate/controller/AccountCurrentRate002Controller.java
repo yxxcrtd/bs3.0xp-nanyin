@@ -262,7 +262,7 @@ public class AccountCurrentRate002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("commitCheck")
     public AjaxResult check(@Valid @RequestBody AccountCurrentRate002Dto dto, BindingResult result)
-        throws Exception {
+         {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -280,7 +280,7 @@ public class AccountCurrentRate002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getAccNo")
     public List<SelectOptionDto> getAccNo(HttpServletRequest request)
-        throws Exception {
+        {
         Map<String, Object> map = RequestUtil.getPageParam();
         String accountType = this.getParam("accountType");
         map.put("accountType", accountType);

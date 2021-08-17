@@ -6,7 +6,9 @@ import java.util.Map;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition;
 import com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthPrdPosition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbTransMonthReportDetailMapper {
 
     /**

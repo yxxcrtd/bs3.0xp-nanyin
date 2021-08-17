@@ -44,12 +44,12 @@ public class AdapterSysInit implements CommandLineRunner{
 	public static String AdapterProjectGroup;
 	
 	@Transactional(value="jixuTXManager", rollbackFor = Exception.class)
-	public void run(String... arg0) throws Exception {
+	public void run(String... arg0) throws SchedulerException {
 		initAutoJob();
 		initCallClasses();
 	}
 	
-	private void initAutoJob(){
+	private void initAutoJob() throws SchedulerException {
 		logger.info("开始初始化自动运行任务");
 		
 		List<InterfaceSource> isList=interfaceSourceDao.loadAutoExecuteJobs();

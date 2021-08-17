@@ -61,7 +61,7 @@ public class DataFileUpload001Controller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<DataFileUpload001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
         return dataFileUpload001Service.findPage(page, length, param);
     }
     
@@ -75,7 +75,7 @@ public class DataFileUpload001Controller extends BaseController {
     @DTXTransaction
     @ResponseBody
     @RequestMapping(value = "delete", method = RequestMethod.POST)
-    public AjaxResult deleteScheme(@RequestBody DataFileUpload001Dto dto) throws Exception {
+    public AjaxResult deleteScheme(@RequestBody DataFileUpload001Dto dto) {
         String msg = StringUtils.EMPTY;
 
         dataFileUpload001Service.deleteByPrimaryKey(dto.getFileId());

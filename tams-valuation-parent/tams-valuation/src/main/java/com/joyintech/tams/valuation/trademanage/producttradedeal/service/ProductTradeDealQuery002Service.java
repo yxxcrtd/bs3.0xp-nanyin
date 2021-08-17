@@ -39,7 +39,7 @@ public class ProductTradeDealQuery002Service extends CommonExportService<Product
      * @throws Exception
      */
     public Page<ProductTradeDealQuery002Dto> findPageByCondition(Map<String, Object> params)
-        throws Exception {
+          {
         return restTemplate.postForPage(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ProductTradeDealQuery002/findPage", params,
             ProductTradeDealQuery002Dto.class);
@@ -53,7 +53,7 @@ public class ProductTradeDealQuery002Service extends CommonExportService<Product
      * @throws Exception
      */
     public List<ProductTradeDealQuery002Dto> findAllByCondition(Map<String, Object> params)
-        throws Exception {
+         {
         return restTemplate.postForList(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ProductTradeDealQuery002/findAllByCondition", params,
             ProductTradeDealQuery002Dto.class);

@@ -126,7 +126,7 @@
         } else {
             getElementById('div').show();
         }
-        getElementById('publishType').val('').trigger('change');
+        getElementById('publishType').val('02').trigger('change');
         getElementById('rateType').val('').trigger('change');
     }
     /**
@@ -143,7 +143,7 @@
         	else{
                 getElementById('div').show();
         	} 
-            getElementById('publishType').val('').trigger('change');
+            getElementById('publishType').val('02').trigger('change');
             getElementById('rateType').val('').trigger('change');
     	}
     }

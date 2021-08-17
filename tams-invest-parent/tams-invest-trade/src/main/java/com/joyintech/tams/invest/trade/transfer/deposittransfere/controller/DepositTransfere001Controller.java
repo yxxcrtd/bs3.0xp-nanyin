@@ -28,6 +28,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -158,7 +159,7 @@ public class DepositTransfere001Controller extends BaseController {
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
     public List<SelectOptionDto> queryProdIdInfo()
-            throws Exception {
+             {
         return depositTransfere001Service.selectPortoId(RequestUtil.getPageParam());
     }
 
@@ -178,7 +179,7 @@ public class DepositTransfere001Controller extends BaseController {
     @RequestMapping("queryPortoAmtAndChlAmt")
     @ResponseBody
     public Map<String, Object> queryPortoAmtAndChlAmt(@RequestParam Map<String, Object> param)
-            throws Exception {
+             {
         PtlCashPositionFlowDto dto = new PtlCashPositionFlowDto();
         Date sysdate = DateUtil.parse((String) param.get("cDate"));
         dto.setCdate(sysdate);
@@ -294,8 +295,7 @@ public class DepositTransfere001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) DepositTransfere001Dto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) DepositTransfere001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

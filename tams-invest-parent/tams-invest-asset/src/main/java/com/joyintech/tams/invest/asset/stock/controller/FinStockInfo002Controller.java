@@ -21,10 +21,15 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.RepAssetEquity;
+import com.joyintech.tams.component.business.report.asset.project.BussRepEquityInfoService;
+import com.joyintech.tams.component.business.report.asset.project.dto.BussRepEquityInfoDto;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -79,6 +84,9 @@ public class FinStockInfo002Controller extends BaseController {
     @Autowired(required = false)
     private FileAttachmentProcess fileAttachmentProcess;
 
+    @Autowired
+    private BussRepEquityInfoService bussRepEquityInfoService;
+
     private static final IDictCode[] DICT_CODES = new DictCode[] {DictCode.交易场所,DictCode.币种,
         DictCode.是否沪港通或深港通,DictCode.上市板,DictCode.是否,DictCode.股票类型};
 
@@ -113,11 +121,15 @@ public class FinStockInfo002Controller extends BaseController {
             FinStockInfoDto dto = finStockInfoService.selectByFinprodId(finprodId);
             dto.setRealFinProductId(finprodId);
             //commonBusinessService.setTradeMarketId(dto,model);
-            if("03".equals(dto.getTradeMarket())){ 
-            	dto.setTradeMarketId(".SH");
-            }else{
+            //modify by yjp ZGBSEI-138 香港联合交易所得标的查看和编辑页面也变成.SZ 20210806 START
+            if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())){
+                dto.setTradeMarketId(".SH");
+            }else if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
             	dto.setTradeMarketId(".SZ");
+            }else if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_香港联合交易所.getValue())){
+                dto.setTradeMarketId(".HK");
             }
+            //modify by yjp ZGBSEI-138 香港联合交易所得标的查看和编辑页面也变成.SZ 20210806 END
             if(null != dto){
                 model.addAttribute("businessId", dto.getFinprodId());
               //  model.addAttribute("businessId", dto.getFinprodId().substring(0,dto.getFinprodId().indexOf(".")));
@@ -134,7 +146,7 @@ public class FinStockInfo002Controller extends BaseController {
            // dto.setFinprodId(IDGenerator.generate());
             dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             dto.setIsMarginFinprod(DictCodeList.是否_否.getValue());
-            dto.setShOrZh(DictCodeListExt2.是否沪港通或深港通_否.getValue());
+//            dto.setShOrZh(DictCodeListExt2.是否沪港通或深港通_否.getValue());
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
             //commonBusinessService.setTradeMarketId(dto,model);
             model.addAttribute("entity", dto);
@@ -227,14 +239,38 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
                                        @RequestParam("tradeMarketId") String tradeMarketId) throws ParseException{
 
         AjaxResult ar = new AjaxResult();
-        FinStockInfoDto dto = finStockInfoService.getInterfStockDto(finprodMarketId + tradeMarketId);
+        //add by yjp 20210813 ZGBSEI-220 start
+        String finprodId = commonBusinessService.getFinProdId(finprodMarketId+tradeMarketId, BussinessDictCodeList.金融产品类型_股票.getValue(),StringUtil.EMPTY);
+        FinStockInfoDto dto = finStockInfoService.selectByFinprodId(finprodId);
+        BussRepEquityInfoDto bussRepEquityInfoDto = bussRepEquityInfoService.getBussRepEquityInfoByProductId(finprodId);
+        if(bussRepEquityInfoDto!=null){
+//            RepAssetEquity repAssetEquity = new RepAssetEquity();
+//            BeanUtil.copyPropertiesIgnoreNull(repAssetEquity, bussRepEquityInfoDto);
+            dto.setRepAssetEquity(bussRepEquityInfoDto);
+        }
         if (StringUtil.isNotEmpty(dto)) {
+            dto.setRealFinProductId(finprodId);
             dto.setFinprodMarketId(finprodMarketId);
+            dto.setFinprodName(dto.getFinprodAbbr());
+            if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())){
+                dto.setTradeMarketId(".SH");
+            }else if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                dto.setTradeMarketId(".SZ");
+            }else if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_香港联合交易所.getValue())){
+                dto.setTradeMarketId(".HK");
+            }
             ar.setData(dto);
         }else {
-            List<ValidMessage> errList = new ArrayList<ValidMessage>();
-            errList.add(new ValidMessage(this.getMessage("COMMON_E_0008",this.getMessage("FinStockInfo001.finprodMarketId"))));
-            ar.setData(errList);
+            //add by yjp 20210813 ZGBSEI-220 end
+            dto = finStockInfoService.getInterfStockDto(finprodMarketId + tradeMarketId);
+            if (StringUtil.isNotEmpty(dto)) {
+                dto.setFinprodMarketId(finprodMarketId);
+                ar.setData(dto);
+            } else {
+                List<ValidMessage> errList = new ArrayList<ValidMessage>();
+                errList.add(new ValidMessage(this.getMessage("COMMON_E_0008", this.getMessage("FinStockInfo001.finprodMarketId"))));
+                ar.setData(errList);
+            }
         }
         return ar;
     }
@@ -255,8 +291,7 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
     public AjaxResult save(@RequestBody
                                @Validated({
         ValidateGroupEdit.class})
-                                   FinStockInfoDto dto, BindingResult br)
-        throws Exception {
+                                   FinStockInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -314,8 +349,7 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
      */
     @ResponseBody
     @RequestMapping("/getCustomerName")
-    public List<SuggestDto> getCustomerName()
-            throws Exception {
+    public List<SuggestDto> getCustomerName(){
         String param = super.getRequest().getParameter("param");
         List<SuggestDto> temp = finStockInfoService.getCustomerName(param);
         return temp;
@@ -329,7 +363,7 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
      */
     @ResponseBody
     @RequestMapping("/getCalendarId")
-    public AjaxResult getCalendarId(@RequestParam("tradeMarket") String tradeMarket) throws ParseException{
+    public AjaxResult getCalendarId(@RequestParam("tradeMarket") String tradeMarket) {
         AjaxResult ar = new AjaxResult();
         if(tradeMarket.equals("03")){
             tradeMarket = "04";
@@ -338,6 +372,22 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
             tradeMarket = "05";
         }
         List<SuggestDto> temp =  finStockInfoService.getCalendarId(tradeMarket);
+        ar.setData(temp);
+        return ar;
+    }
+
+    /**
+     * 沪港通&深港通交易日历
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getShOrZhCalendarId")
+    public AjaxResult getShOrZhCalendarId() {
+        AjaxResult ar = new AjaxResult();
+        List<SuggestDto> temp =  finStockInfoService.getShOrZhCalendarId();
         ar.setData(temp);
         return ar;
     }

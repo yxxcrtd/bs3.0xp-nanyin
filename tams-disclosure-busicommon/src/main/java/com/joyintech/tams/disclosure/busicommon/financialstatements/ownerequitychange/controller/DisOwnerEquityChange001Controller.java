@@ -55,7 +55,7 @@ import com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitque
  * 
  * @author zhangzhao
  * @version 1.0 2018年9月18日
- * @see OwnerEquityChange001Controller
+ * @see DisOwnerEquityChange001Controller
  * @since 1.0
  */
 @Controller
@@ -89,7 +89,7 @@ public class DisOwnerEquityChange001Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Valid DisOwnerEquityChange001Dto dto, BindingResult result) throws Exception {
+    public AjaxResult check(@RequestBody @Valid DisOwnerEquityChange001Dto dto, BindingResult result) throws ParseException {
         AjaxResult ajaxResult = new AjaxResult();
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
@@ -176,8 +176,7 @@ public class DisOwnerEquityChange001Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public List<DisOwnerEquityChange001Dto> selectBalanceStatement()
-        throws Exception {
+    public List<DisOwnerEquityChange001Dto> selectBalanceStatement(){
         return ownerEquityChange001Service.selectList(RequestUtil.getParameters(getRequest()));
          
     }
@@ -192,8 +191,7 @@ public class DisOwnerEquityChange001Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getBooksetId2")
-    public List<SuggestDto> getBooksetId2()
-        throws Exception {
+    public List<SuggestDto> getBooksetId2(){
         String param = super.getRequest().getParameter("param");
         return valAssetBook001Service.getBooksetId2(param);
     }
@@ -207,8 +205,7 @@ public class DisOwnerEquityChange001Controller  extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> exportExcel()
-        throws Exception {
+    public ResponseEntity<byte[]> exportExcel() throws ParseException {
     	Map<String, Object> params = RequestUtil.getParameters(getRequest());
     	return ownerEquityChange001Service.exportExcel(params);
     }
@@ -221,7 +218,7 @@ public class DisOwnerEquityChange001Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getTermLink")
-    public List<SelectOptionDto> getTradeMarket() throws Exception {
+    public List<SelectOptionDto> getTradeMarket() {
         Map<String, Object> param = RequestUtil.getPageParam();
         String reportTermType = (String) param.get("reportTermType");
 

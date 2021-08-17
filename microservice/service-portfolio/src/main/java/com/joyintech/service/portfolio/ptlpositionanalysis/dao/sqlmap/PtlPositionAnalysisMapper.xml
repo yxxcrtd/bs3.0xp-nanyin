@@ -511,6 +511,17 @@
 	        </if>
             group by PORTFOLIO_ID
          ),
+         /*查询底层剩余现金*/
+        cash as (
+            select sum(NVL(psv.MARKET_VALUE,0)) MARKET_VALUE,
+                sum(NVL(psv.TDY_INTINCEXP,0))  TDY_INTINCEXP,
+                psv.PORTFOLIO_ID portfolioId
+            from PTL_SEC_PIERCE_VALUTION psv
+            WHERE
+                psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
+                AND psv.FINPROD_ID like 'REMAININGCASH%'
+                GROUP BY psv.PORTFOLIO_ID
+        ),
          assetHold as (
                     select A.cdate,A.portfolioId,A.portfolioName,A.finprodType2,A.type5,A.finprodMarketId,A.finprodAbbr,A.marketValue,
                     <!--CASE WHEN A.finprodType2 IN ('F08', 'F09', 'F16') THEN NULL ELSE A.dscCostAmt END dscCostAmt, --> <!--BS-1790 拆借，计划类货币型，利率互换也显示成本字段-->
@@ -568,13 +579,15 @@
                         AND fpt.TYPE_7 = '03' THEN
                         - 1 * psv.TDY_INTINCEXP ELSE psv.TDY_INTINCEXP
                         END AS tdyIntincexp,
-                       fpt.TYPE_8 as finprodType2,
+                       nvl(fpt.TYPE_8,RAI.ORG_ASSET_TYPE1) as finprodType2,
                        nvl(fp.FINPROD_MARKET_ID,psv.FINPROD_ID) as finprodMarketId,
                        NVL(fp.FINPROD_ID,psv.FINPROD_ID)   AS finprodId,
                        nvl(fp.FINPROD_ABBR, fp.FINPROD_NAME) as finprodAbbr,
                        decode(fpt.TYPE_8,'F07',fpt.TYPE_7,'F10',fpt.TYPE_7,fpt.TYPE_6) as type5
-                           from PTL_SEC_PIERCE_VALUTION psv
-                      left join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID
+                        from PTL_SEC_PIERCE_VALUTION psv
+                        left join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID
+                        LEFT join RSK_ASSET_INFO RAI
+                            ON psv.FINPROD_ID = RAI.ASSET_CODE
                        LEFT JOIN
                          PTL_PORTFOLIO pp
                         ON
@@ -587,12 +600,12 @@
                         FIN_PRODUCT FP1
                         ON
                         FPA.FINPROD_ID = FP1.FINPROD_ID
-                        INNER JOIN
+                        LEFT JOIN
                         FIN_PRODUCT_TYPE fpt
                         ON
                         fpt.FINPROD_ID=psv.FINPROD_ID
-                        AND fpt.TYPE_8 IS NOT NULL
-                           where  FP1.FINPROD_TYPE2 = 'F16'
+                       where  FP1.FINPROD_TYPE2 = 'F16'
+                            AND (fpt.TYPE_8 IS NOT NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
                             <if test="searchDate != null and searchDate != ''">
                                 and psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
                              </if>
@@ -616,7 +629,7 @@
 								</foreach>
 							 </if>
 							 <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-	                         AND psv.DSC_COST_AMT>0
+	                         AND psv.DSC_COST_AMT &lt; > 0
                     ) A
                 left join(
                            select psv.CDATE as cdate,psv.PORTFOLIO_ID as portfolioId,
@@ -948,9 +961,9 @@
             S.portfolioName portfolioName,
             #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
             S.marketValue marketValue,
-            S.dscCostAmt dscCostAmt,
+            NULL dscCostAmt,
             null shareAmt,
-            NULL tdyIntincexp,
+            S.tdyIntincexp tdyIntincexp,
             NULL tdyAmtRation,
             NULL ystAmtRation,
             NULL monthAmtRation,
@@ -962,35 +975,27 @@
             NULL ystTdyIntincexp
             FROM(
             SELECT
-            psv.cdate cdate,
-            psv.portfolio_Id portfolioId,
-            pp.portfolio_Name portfolioName,
-            #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
-            pcp.amount marketValue,
-            pcp.amount dscCostAmt,
-            null shareAmt,
-            NULL tdyIntincexp,
-            NULL tdyAmtRation,
-            NULL ystAmtRation,
-            NULL monthAmtRation,
-            NULL yearAmtRation,
-            NULL ystAmtRationTemp,
-            NULL monthAmtRationExTemp,
-            NULL yearAmtRationTemp,
-            NULL ystMarketValue,
-            NULL ystTdyIntincexp
-             ,pcp.acct_id
+                psv.cdate cdate,
+                psv.portfolio_Id portfolioId,
+                pp.portfolio_Name portfolioName,
+                NVL(psv.MARKET_VALUE,0) marketValue,
+                NVL(psv.TDY_INTINCEXP,NULL) tdyIntincexp
             FROM PTL_SEC_PIERCE_VALUTION psv
-            LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
-            LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-            LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
-            LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
-            left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
+            LEFT JOIN FIN_PRODUCT
+            ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
+            LEFT JOIN FIN_PRODUCT_ADD
+            ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+            LEFT JOIN PTL_PORTFOLIO pp
+            ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+            LEFT JOIN FIN_PRODUCT_TYPE fpt
+            ON fpt.FINPROD_ID = psv.FINPROD_ID
+            AND fpt.TYPE_8 IS NOT NULL
             WHERE
             psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
-            and pcp.portfolio_Id is not NULL
+            AND psv.FINPROD_ID like 'REMAININGCASH%'
+            and pp.portfolio_Id is not NULL
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-                AND pcp.PORTFOLIO_ID IN
+                AND pp.PORTFOLIO_ID IN
                 <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
@@ -1009,28 +1014,31 @@
                 </foreach>
             </if>
             <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-            GROUP BY
-            psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount,pcp.acct_id
+            GROUP BY psv.cdate, psv.portfolio_Id, pp.portfolio_Name, psv.TDY_INTINCEXP,
+            psv.MARKET_VALUE
             ) S
             LEFT JOIN (
-            SELECT
-            psv.cdate cdate,
-            psv.portfolio_Id portfolioId,
-            pcp.amount marketValue,
-            pcp.amount dscCostAmt
-            ,pcp.acct_id
-            FROM PTL_SEC_PIERCE_VALUTION psv
-            LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
-            LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-            LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
-            LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
-            left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
-            inner join tempA E on E.portfolioId=psv.PORTFOLIO_ID
-            WHERE
-            psv.CDATE=E.maxCdate
-            and pcp.portfolio_Id is not NULL
+            SELECT psv.cdate cdate,
+                psv.portfolio_Id portfolioId,
+                psv.MARKET_VALUE marketValue,
+                psv.MARKET_VALUE dscCostAmt
+                FROM PTL_SEC_PIERCE_VALUTION psv
+                LEFT JOIN FIN_PRODUCT
+                ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
+                LEFT JOIN FIN_PRODUCT_ADD
+                ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+                LEFT JOIN PTL_PORTFOLIO pp
+                ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                LEFT JOIN FIN_PRODUCT_TYPE fpt
+                ON fpt.FINPROD_ID = psv.FINPROD_ID
+                AND fpt.TYPE_8   IS NOT NULL
+                INNER JOIN tempA E
+                ON E.portfolioId                  =psv.PORTFOLIO_ID
+            WHERE psv.CDATE                   =E.maxCdate
+            and pp.portfolio_Id is not NULL
+            AND psv.FINPROD_ID like 'REMAININGCASH%'
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-                AND pcp.PORTFOLIO_ID IN
+                AND pp.PORTFOLIO_ID IN
                 <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
@@ -1049,9 +1057,8 @@
                 </foreach>
             </if>
             <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-            GROUP BY
-            psv.cdate,psv.portfolio_Id,pcp.amount,pcp.acct_id
-            ) SS ON S.portfolioId = SS.portfolioId and S.acct_id=SS.acct_id
+            GROUP BY psv.cdate, psv.portfolio_Id, psv.MARKET_VALUE
+            ) SS ON S.portfolioId = SS.portfolioId
           )
 	</sql>
 
@@ -1424,7 +1431,7 @@
         select * from (select A.finprodType2,A.marketValue,A.dscCostAmt,A.tdyIntincexp,
         round((nvl(A.marketValue,0)+nvl(A.tdyIntincexp,0))*100/B.typeMarketValue,2) as amtRation
         from (
-        select psv.CDATE as cdate,fpt.TYPE_8 as finprodType2,
+        select psv.CDATE as cdate,nvl(fpt.TYPE_8,RAI.ORG_ASSET_TYPE1) as finprodType2,
         CASE
         WHEN fpt.TYPE_8 = 'F08'
         AND fpt.TYPE_7 = '01'
@@ -1462,11 +1469,14 @@
         ELSE psv.MARKET_VALUE
         END                                      AS marketValue
         from PTL_SEC_PIERCE_VALUTION psv
+        LEFT join RSK_ASSET_INFO RAI
+            ON psv.FINPROD_ID = RAI.ASSET_CODE
         <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
-        inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
+        LEFT join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID
         left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID　 and fpa.lay_type is null
         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON psv.PORTFOLIO_ID = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
         where 1=1
+        AND (fpt.TYPE_8  IS NOT NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
         <if test="searchDate != null and searchDate != ''">
             and psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
         </if>
@@ -1826,34 +1836,34 @@
     <!-- 根据groupby 条件获取对象下的分类-->
     <select   id="getFinpordType" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis003Dto">
         select a.*,b.posCost as posCost,b.posValue as posValue,b.tdyIntincexp tdyIntincexp  from (select portfolioId,
-        pinanAssetType,
-        customAssetTypeTwo,
-        customAssetTypeThree,
-        customAssetTypeFour,
-        customAssetTypeFive,
+        NVL(pinanAssetType,'null') pinanAssetType,
+        NVL(customAssetTypeTwo,'null') customAssetTypeTwo,
+        NVL(customAssetTypeThree,'null') customAssetTypeThree,
+        NVL(customAssetTypeFour,'null') customAssetTypeFour,
+        NVL(customAssetTypeFive,'null') customAssetTypeFive,
         belongInstitutionCode belongInstitutionNameNew
         from (select atd.portfolio_id as portfolioId,
-        atd.pinan_asset_type as pinanAssetType,
-        atd.custom_asset_type_two as customAssetTypeTwo,
-        atd.custom_asset_type_three as customAssetTypeThree,
-        atd.custom_asset_type_four as customAssetTypeFour,
-        atd.custom_asset_type_five as customAssetTypeFive,
+        nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)  AS pinanAssetType,
+        nvl(atd.custom_asset_type_two,NVL(RAI.ORG_ASSET_TYPE2,'null'))   AS customAssetTypeTwo,
+        nvl(atd.custom_asset_type_three,NVL(RAI.ORG_ASSET_TYPE3,'null')) AS customAssetTypeThree,
+        nvl(atd.custom_asset_type_four,NVL(RAI.ORG_ASSET_TYPE4,'null'))  AS customAssetTypeFour,
+        nvl(atd.custom_asset_type_five,NVL(RAI.ORG_ASSET_TYPE5,'null'))  AS customAssetTypeFive,
         DATAINST.BELONG_INSTITUTION_CODE belongInstitutionCode,
         <if test="displayType != null and displayType != '' and displayType=='01'">
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
                 row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_two order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_three order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_four order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three ,atd.custom_asset_type_four order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_five order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three ,atd.custom_asset_type_four,atd.custom_asset_type_five order by atd.cdate desc) row_number
             </if>
         </if>
         <if test="displayType != null and displayType != '' and displayType=='02'">
@@ -1862,19 +1872,21 @@
                 row_number() over(partition by  atd.pinan_asset_type order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                row_number() over(partition by atd.custom_asset_type_two order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                row_number() over(partition by atd.custom_asset_type_three order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                row_number() over(partition by atd.custom_asset_type_four order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three,atd.custom_asset_type_four order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                row_number() over(partition by atd.custom_asset_type_five order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three,atd.custom_asset_type_four,atd.custom_asset_type_five order by atd.cdate desc) row_number
             </if>
         </if>
         from ASSET_TARGET_DB atd
+        LEFT JOIN RSK_ASSET_INFO RAI
+            ON ATD.FINPROD_ID = RAI.ASSET_CODE
         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON atd.portfolio_id = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
         WHERE 1 = 1
         and atd.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
@@ -1892,7 +1904,7 @@
         </if>
 
         <if test="type != null and type != ''">
-            and atd.pinan_asset_type= #{type}
+            and (atd.pinan_asset_type= #{type} OR RAI.ORG_ASSET_TYPE1 = #{type})
         </if>
         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
             AND DATAINST.INSTITUTION_CODE IN
@@ -1900,7 +1912,12 @@
                 #{item}
             </foreach>
         </if>
-        and atd.pinan_asset_type is not NULL) t
+        <if test="pass != null and pass != '' and pass == '02'.toString()">
+            and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+        </if>
+        <if test="pass != null and pass != '' and pass == '01'.toString()">
+            and atd.pinan_asset_type is not NULL
+        </if>) t
         where t.row_number = 1)a
         left join ( select
         <if test="displayType != null and displayType != '' and displayType=='01'">
@@ -1943,36 +1960,36 @@
         <if test="displayType != null and displayType != '' and displayType=='01'">
             atd.portfolio_id as portfolioId,
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
-                atd.pinan_asset_type as pinanAssetType,
+                nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1) as pinanAssetType,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                atd.custom_asset_type_two as customAssetTypeTwo,
+                nvl(atd.custom_asset_type_two,NVL(RAI.ORG_ASSET_TYPE2,'null')) as customAssetTypeTwo,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                atd.custom_asset_type_three as customAssetTypeThree,
+                nvl(atd.custom_asset_type_three,NVL(RAI.ORG_ASSET_TYPE3,'null')) as customAssetTypeThree,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                atd.custom_asset_type_four  as customAssetTypeFour,
+                nvl(atd.custom_asset_type_four,NVL(RAI.ORG_ASSET_TYPE4,'null'))  as customAssetTypeFour,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                atd.custom_asset_type_five as customAssetTypeFive,
+                nvl(atd.custom_asset_type_five,NVL(RAI.ORG_ASSET_TYPE5,'null')) as customAssetTypeFive,
             </if>
         </if>
         <if test="displayType != null and displayType != '' and displayType=='02'">
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
-                atd.pinan_asset_type as pinanAssetType,
+                nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1) as pinanAssetType,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                atd.custom_asset_type_two as customAssetTypeTwo,
+                nvl(atd.custom_asset_type_two,NVL(RAI.ORG_ASSET_TYPE2,'null')) as customAssetTypeTwo,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                atd.custom_asset_type_three as customAssetTypeThree,
+                nvl(atd.custom_asset_type_three,NVL(RAI.ORG_ASSET_TYPE3,'null'))  as customAssetTypeThree,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                atd.custom_asset_type_four  as customAssetTypeFour,
+                nvl(atd.custom_asset_type_four,NVL(RAI.ORG_ASSET_TYPE4,'null')) as customAssetTypeFour,
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                atd.custom_asset_type_five as customAssetTypeFive,
+                nvl(atd.custom_asset_type_five,NVL(RAI.ORG_ASSET_TYPE5,'null')) as customAssetTypeFive,
             </if>
         </if>
 
@@ -1995,6 +2012,8 @@
         SUM(atd.tdy_intincexp)
         end tdyIntincexp
         from ASSET_TARGET_DB atd
+        LEFT JOIN RSK_ASSET_INFO RAI
+            ON ATD.FINPROD_ID = RAI.ASSET_CODE
         LEFT JOIN FIN_TRADE_PRODUCT FTP
         ON atd.FINPROD_ID = FTP.FINPROD_ID
         AND FTP.BRANCH = '0'
@@ -2028,7 +2047,7 @@
         </if>
 
         <if test="type != null and type != ''">
-            and atd.pinan_asset_type= #{type}
+            and (atd.pinan_asset_type= #{type} OR RAI.ORG_ASSET_TYPE1 = #{type})
         </if>
         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
             AND dani.INSTITUTION_CODE IN
@@ -2036,42 +2055,47 @@
                 #{item}
             </foreach>
         </if>
-        and atd.pinan_asset_type is not NULL
+        <if test="pass != null and pass != '' and pass == '02'.toString()">
+            and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+        </if>
+        <if test="pass != null and pass != '' and pass == '01'.toString()">
+            and atd.pinan_asset_type is not NULL
+        </if>
 
         group by  FTP.FINPROD_TYPE2,
         <if test="displayType != null and displayType != '' and displayType=='01'">
             atd.portfolio_id,
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
-                atd.pinan_asset_type
+                nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                atd.custom_asset_type_two
+                nvl(atd.custom_asset_type_two,NVL(RAI.ORG_ASSET_TYPE2,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                atd.custom_asset_type_three
+                nvl(atd.custom_asset_type_three,NVL(RAI.ORG_ASSET_TYPE3,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                atd.custom_asset_type_four
+                nvl(atd.custom_asset_type_four,NVL(RAI.ORG_ASSET_TYPE4,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                atd.custom_asset_type_five
+                nvl(atd.custom_asset_type_five,NVL(RAI.ORG_ASSET_TYPE5,'null'))
             </if>
         </if>
         <if test="displayType != null and displayType != '' and displayType=='02'">
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='01'">
-                atd.pinan_asset_type
+                nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                atd.custom_asset_type_two
+                nvl(atd.custom_asset_type_two,NVL(RAI.ORG_ASSET_TYPE2,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                atd.custom_asset_type_three
+                nvl(atd.custom_asset_type_three,NVL(RAI.ORG_ASSET_TYPE3,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                atd.custom_asset_type_four
+                nvl(atd.custom_asset_type_four,NVL(RAI.ORG_ASSET_TYPE4,'null'))
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                atd.custom_asset_type_five
+                nvl(atd.custom_asset_type_five,NVL(RAI.ORG_ASSET_TYPE5,'null'))
             </if>
         </if>
         )lx
@@ -2155,7 +2179,18 @@
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                 belongInstitutionCode belongInstitutionNameNew,
             </if>
-            portfolioId,hasChildren,childInfo,parentInfo,pinanAssetType,customAssetTypeTwo,customAssetTypeThree,customAssetTypeFour,customAssetTypeFive from  (select  atd.portfolio_id as portfolioId,atd.finprod_id as finprodId,atd.branch,atd.is_perne as isPerne,atd.cdate ,atd.finprod_market_id as finprodMarketId,atd.finprod_name as finprodName,atd.pinan_asset_type as pinanAssetType,atd.custom_asset_type_two as customAssetTypeTwo,atd.custom_asset_type_three as customAssetTypeThree,atd.custom_asset_type_four as customAssetTypeFour,atd.custom_asset_type_five as customAssetTypeFive,atd.faire_price as fairePrice,atd.pos_amount as posAmount,atd.prin,atd.pos_cost as posCost,atd.pos_value as posValue,atd.tdy_intincexp as tdyIntincexp,atd.issue_party as issueParty,atd.is_soe as isSoe,atd.is_listed_company as isListedCompany,atd.company_nature as companyNature,atd.industry ,atd.industry2 ,
+            portfolioId,hasChildren,childInfo,parentInfo,pinanAssetType,customAssetTypeTwo,customAssetTypeThree,customAssetTypeFour,customAssetTypeFive from  (select  atd.portfolio_id as portfolioId,
+            atd.finprod_id as finprodId,
+            atd.branch,atd.is_perne as isPerne,
+            atd.cdate ,
+            nvl(atd.finprod_market_id,RAI.ASSET_CODE) as finprodMarketId,
+            nvl(atd.finprod_name,RAI.ASSET_NAME) as finprodName,
+            nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)  AS pinanAssetType,
+            nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2)   AS customAssetTypeTwo,
+            nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3) AS customAssetTypeThree,
+            nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4)  AS customAssetTypeFour,
+            nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE5)  AS customAssetTypeFive,
+            atd.faire_price as fairePrice,atd.pos_amount as posAmount,atd.prin,atd.pos_cost as posCost,atd.pos_value as posValue,atd.tdy_intincexp as tdyIntincexp,atd.issue_party as issueParty,atd.is_soe as isSoe,atd.is_listed_company as isListedCompany,atd.company_nature as companyNature,atd.industry ,atd.industry2 ,
             atd.vdate ,atd.mdate,atd.term_days as termDays,atd.counter_id as counterId,atd.last_period as lastPeriod,atd.latest_deal_date as latestDealDate,atd.bshare_face_value as bshareFaceValue,atd.issue_face_value as issueFaceValue,atd.rate,atd.cost_rate as costRate,atd.bpyield ,atd.m_convexity mConvexity,atd.ex_info as exInfo,atd.ex_next_date as exNextDate,atd.last_ex_period as lastExPeriod,atd.m_grade_result mGradeResult,atd.m_grade_org mGradeOrg,atd.b_grade_result bGradeResult,atd.b_grade_org bGradeOrg,atd.m_grade_result_in mGradeResultIn,atd.b_grade_result_in bGradeResultIn,atd.is_city_bond isCityBond,atd.city_bond_lev cityBondLev,atd.c_shares cShares,atd.s_shares sShares,
             atd.trade_market tradeMarket,atd.is_sus isSus,atd.is_right isRight,atd.ex_date exDate,atd.m_grade_org_in mGradeOrgIn,atd.b_grade_org_in bGradeOrgIn,atd.bshare_scale bshareScale,atd.profit_type profitType,atd.M_DURATION mDuration,atd.MDURATION mdurationAmend
             , '02' hasChildren,
@@ -2165,11 +2200,13 @@
             </if>
 
             <if test="deepLevel!= null and deepLevel != ''">
-                CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),'') childInfo,
+                CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVL(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),'') childInfo,
                 row_number() over(partition by atd.portfolio_id order by atd.cdate desc) row_number,
             </if>
-
-            'root' parentInfo from ASSET_TARGET_DB atd
+            'root' parentInfo
+            from ASSET_TARGET_DB atd
+            LEFT JOIN RSK_ASSET_INFO RAI
+                ON ATD.FINPROD_ID = RAI.ASSET_CODE
              <!-- 多级法人改造 add by hxy 20200629 start-->
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                inner join data_auth_notify_inst dani 
@@ -2201,15 +2238,12 @@
                 </foreach>
             </if>
             <if test=" prodManagerList !=null and prodManagerList.size()>0 " >
-
                 and atd.portfolio_id in (select  PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where  user_id in
 
                 <foreach collection="prodManagerList" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
                 )
-
-
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
                 AND atd.FINPROD_MARKET_ID IN
@@ -2217,8 +2251,10 @@
                     #{item}
                 </foreach>
             </if>
-
-            <if test="pass != null and pass != ''">
+            <if test="pass != null and pass != '' and pass == '02'.toString()">
+                and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+            </if>
+            <if test="pass != null and pass != '' and pass == '01'.toString()">
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
             ) t
@@ -2245,6 +2281,8 @@
             SUM(atd.tdy_intincexp)
             end tdyIntincexp
             from ASSET_TARGET_DB atd
+            LEFT JOIN RSK_ASSET_INFO RAI
+                ON ATD.FINPROD_ID = RAI.ASSET_CODE
             LEFT JOIN FIN_TRADE_PRODUCT FTP
             ON atd.FINPROD_ID = FTP.FINPROD_ID
             AND FTP.BRANCH = '0'
@@ -2285,8 +2323,6 @@
                     #{item}
                 </foreach>
                 )
-
-
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
                 AND atd.FINPROD_MARKET_ID IN
@@ -2294,11 +2330,12 @@
                     #{item}
                 </foreach>
             </if>
-
-            <if test="pass != null and pass != ''">
+            <if test="pass != null and pass != '' and pass == '02'.toString()">
+                and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+            </if>
+            <if test="pass != null and pass != '' and pass == '01'.toString()">
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
-
             group by  FTP.FINPROD_TYPE2,atd.portfolio_id)lx
             group by lx.portfolioId
             ) b
@@ -2313,7 +2350,21 @@
              dani.belong_institution_code  belongInstitutionCode,
             </if>
            <!-- 多级法人改造 add by hxy 20200629 end--> 
-            atd.portfolio_id as portfolioId,atd.finprod_id as finprodId,atd.branch,atd.is_perne as isPerne,atd.cdate ,atd.finprod_market_id as finprodMarketId,atd.finprod_name as finprodName,atd.pinan_asset_type as pinanAssetType,atd.custom_asset_type_two as customAssetTypeTwo,atd.custom_asset_type_three as customAssetTypeThree,atd.custom_asset_type_four as customAssetTypeFour,atd.custom_asset_type_five as customAssetTypeFive,atd.faire_price as fairePrice,sum(atd.pos_amount) as posAmount,atd.prin,sum(atd.pos_cost) as posCost,CASE
+            atd.portfolio_id as portfolioId,
+            atd.finprod_id as finprodId,
+            atd.branch,atd.is_perne as isPerne,
+            atd.cdate ,
+            nvl(atd.finprod_market_id,RAI.ASSET_CODE) as finprodMarketId,
+            nvl(atd.finprod_name,RAI.ASSET_NAME) as finprodName,
+            nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)  AS pinanAssetType,
+            nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2)   AS customAssetTypeTwo,
+            nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3) AS customAssetTypeThree,
+            nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4)  AS customAssetTypeFour,
+            nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE5)  AS customAssetTypeFive,
+            atd.faire_price as fairePrice,
+            sum(atd.pos_amount) as posAmount,
+            atd.prin,sum(atd.pos_cost) as posCost,
+            CASE
             WHEN (FTP.FINPROD_TYPE2 ='F02'
             OR  FTP.FINPROD_TYPE2 ='F25'
             OR  FTP.FINPROD_TYPE2 ='F04')
@@ -2332,37 +2383,38 @@
             <choose>
                 <!-- 下钻层级 1级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='01'">
-                    CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),'')  parentInfo,
-                    CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'), nvl(atd.pinan_asset_type, 'null')), nvl(atd.custom_asset_type_two, 'null')), nvl(atd.finprod_id, 'null')),'') childInfo
+                    CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),'')  parentInfo,
+                    CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')), nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')), nvl(atd.finprod_id, 'null')),'') childInfo
 
                 </when>
                 <!-- 下钻层级 2级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='02'">
-                    CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),'') parentInfo,
-                    CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),'') childInfo
+                    CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),'') parentInfo,
+                    CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),'') childInfo
 
                 </when>
                 <!-- 下钻层级 3级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='03'">
-                    CONCAT( CONCAT(  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'), nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),'') parentInfo,
-                    CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),'') childInfo
+                    CONCAT( CONCAT(  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),'') parentInfo,
+                    CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),'') childInfo
 
                 </when>
                 <!-- 下钻层级 4级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='04'">
-                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')  parentInfo,
-                    CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),'') childInfo
+                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')  parentInfo,
+                    CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),'') childInfo
 
                 </when>
                 <!-- 下钻层级 5级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='05'">
-                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')  parentInfo,
-                    CONCAT( CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),nvl(atd.FINPROD_ID,'null')),'') childInfo
+                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')  parentInfo,
+                    CONCAT( CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),nvl(atd.FINPROD_ID,'null')),'') childInfo
 
                 </when>
             </choose>
-
             from ASSET_TARGET_DB atd
+            LEFT JOIN RSK_ASSET_INFO RAI
+                ON ATD.FINPROD_ID = RAI.ASSET_CODE
             LEFT JOIN FIN_TRADE_PRODUCT FTP ON atd.FINPROD_ID = FTP.FINPROD_ID AND FTP.BRANCH='0'
             <!-- 多级法人改造 add by hxy 20200629 start-->
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
@@ -2375,7 +2427,6 @@
                       open="in ("  close=")">
                    #{item}
                    </foreach>
-             
             </if>
            <!-- 多级法人改造 add by hxy 20200629 end--> 
             WHERE 1=1
@@ -2395,15 +2446,11 @@
                 </foreach>
             </if>
             <if test=" prodManagerList !=null and prodManagerList.size()>0 " >
-
                 and atd.portfolio_id in (select  PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where  user_id in
-
                 <foreach collection="prodManagerList" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
                 )
-
-
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
                 AND atd.FINPROD_MARKET_ID IN
@@ -2412,29 +2459,32 @@
                 </foreach>
             </if>
 
-            <if test="pass != null and pass != ''">
+            <if test="pass != null and pass != '' and pass == '02'.toString()">
+                and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+            </if>
+            <if test="pass != null and pass != '' and pass == '01'.toString()">
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
 
             <!-- 下钻层级 1级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='01'">
-                and  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),'')= #{parentId}
+                and  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 2级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='02'">
-                and   CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 3级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='03'">
-                and   CONCAT( CONCAT(  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'), nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT(  CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'), nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 4级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='04'">
-                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 5级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='05'">
-                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(atd.pinan_asset_type, 'null')),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.portfolio_id, 'null'),nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null')),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')= #{parentId}
             </if>
             group by 
              <!-- 多级法人改造 add by hxy 20200629 start-->
@@ -2454,6 +2504,13 @@
             atd.custom_asset_type_three ,
             atd.custom_asset_type_four ,
             atd.custom_asset_type_five ,
+            nvl(atd.finprod_market_id,RAI.ASSET_CODE),
+            nvl(atd.finprod_name,RAI.ASSET_NAME),
+            nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),
+            nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),
+            nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3),
+            nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4),
+            nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE5),
             atd.faire_price  ,
             atd.pos_amount,
             atd.prin,
@@ -2511,7 +2568,15 @@
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                 belongInstitutionCode belongInstitutionNameNew,
             </if>
-            pinanAssetType,hasChildren,childInfo,parentInfo,customAssetTypeTwo,customAssetTypeThree,customAssetTypeFour,customAssetTypeFive from  (select  atd.portfolio_id as portfolioId,atd.finprod_id as finprodId,atd.branch,atd.is_perne as isPerne,atd.cdate ,atd.finprod_market_id as finprodMarketId,atd.finprod_name as finprodName,atd.pinan_asset_type as pinanAssetType,atd.custom_asset_type_two as customAssetTypeTwo,atd.custom_asset_type_three as customAssetTypeThree,atd.custom_asset_type_four as customAssetTypeFour,atd.custom_asset_type_five as customAssetTypeFive,atd.faire_price as fairePrice,atd.pos_amount as posAmount,atd.prin,atd.pos_cost as posCost,atd.pos_value as posValue,atd.tdy_intincexp as tdyIntincexp,atd.issue_party as issueParty,atd.is_soe as isSoe,atd.is_listed_company as isListedCompany,atd.company_nature as companyNature,atd.industry ,atd.industry2 ,
+            pinanAssetType,hasChildren,childInfo,parentInfo,customAssetTypeTwo,customAssetTypeThree,customAssetTypeFour,customAssetTypeFive from  (select  atd.portfolio_id as portfolioId,atd.finprod_id as finprodId,atd.branch,atd.is_perne as isPerne,atd.cdate ,
+            nvl(atd.finprod_market_id,RAI.ASSET_CODE) as finprodMarketId,
+            nvl(atd.finprod_name,RAI.ASSET_NAME) as finprodName,
+            nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)  AS pinanAssetType,
+            nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2)   AS customAssetTypeTwo,
+            nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3) AS customAssetTypeThree,
+            nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4)  AS customAssetTypeFour,
+            nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE4)  AS customAssetTypeFive,
+            atd.faire_price as fairePrice,atd.pos_amount as posAmount,atd.prin,atd.pos_cost as posCost,atd.pos_value as posValue,atd.tdy_intincexp as tdyIntincexp,atd.issue_party as issueParty,atd.is_soe as isSoe,atd.is_listed_company as isListedCompany,atd.company_nature as companyNature,atd.industry ,atd.industry2 ,
             <!--多级法人改造 add by jingqiongqiong 20200615-->
             atd.vdate ,atd.mdate,atd.term_days as termDays,atd.counter_id as counterId,atd.last_period as lastPeriod,atd.latest_deal_date as latestDealDate,atd.bshare_face_value as bshareFaceValue,atd.issue_face_value as issueFaceValue,atd.rate,atd.cost_rate as costRate,atd.bpyield ,atd.m_convexity mConvexity,atd.ex_info as exInfo,atd.ex_next_date as exNextDate,atd.last_ex_period as lastExPeriod,atd.m_grade_result mGradeResult,atd.m_grade_org mGradeOrg,atd.b_grade_result bGradeResult,atd.b_grade_org bGradeOrg,atd.m_grade_result_in mGradeResultIn,atd.b_grade_result_in bGradeResultIn,atd.is_city_bond isCityBond,atd.city_bond_lev cityBondLev,atd.c_shares cShares,atd.s_shares sShares,
             atd.trade_market tradeMarket,atd.is_sus isSus,atd.is_right isRight,atd.ex_date exDate,atd.m_grade_org_in mGradeOrgIn,atd.b_grade_org_in bGradeOrgIn,atd.bshare_scale bshareScale,atd.profit_type profitType,atd.M_DURATION mDuration,atd.MDURATION mdurationAmend
@@ -2522,13 +2587,15 @@
             <choose>
                 <!-- 下钻层级 1级-->
                 <when test="deepLevel!= null and deepLevel != '' ">
-                    CONCAT( nvl(atd.pinan_asset_type, 'null'),'') childInfo,
+                    CONCAT( nvl(NVL(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),'') childInfo,
                     row_number() over(partition by atd.pinan_asset_type order by atd.cdate desc) row_number,
                 </when>
 
 
             </choose>
-            'root' parentInfo from ASSET_TARGET_DB atd 
+            'root' parentInfo from ASSET_TARGET_DB atd
+            LEFT JOIN RSK_ASSET_INFO RAI
+                ON ATD.FINPROD_ID = RAI.ASSET_CODE
             <!-- 多级法人改造 add by hxy 20200629 start-->
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                inner join data_auth_notify_inst dani 
@@ -2573,14 +2640,17 @@
                 </foreach>
             </if>
 
-            <if test="pass != null and pass != ''">
+            <if test="pass != null and pass != '' and pass == '02'.toString()">
+                and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+            </if>
+            <if test="pass != null and pass != '' and pass == '01'.toString()">
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
             ) t
             where t.row_number=1)a
             left join ( select lx.pinanAssetType,sum(lx.posCost)as posCost,sum(lx.posValue) posValue,sum(lx.tdyIntincexp) tdyIntincexp
             from (select FTP.FINPROD_TYPE2,
-            atd.pinan_asset_type as pinanAssetType,
+            nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)as pinanAssetType,
             sum(atd.pos_amount) as posAmount,
             sum(atd.pos_cost) as posCost,
             CASE
@@ -2600,6 +2670,8 @@
             SUM(atd.tdy_intincexp)
             end tdyIntincexp
             from ASSET_TARGET_DB atd
+            LEFT JOIN RSK_ASSET_INFO RAI
+                ON ATD.FINPROD_ID = RAI.ASSET_CODE
             LEFT JOIN FIN_TRADE_PRODUCT FTP
             ON atd.FINPROD_ID = FTP.FINPROD_ID
             AND FTP.BRANCH = '0'
@@ -2650,10 +2722,13 @@
                 </foreach>
             </if>
 
-            <if test="pass != null and pass != ''">
+            <if test="pass != null and pass != '' and pass == '02'.toString()">
+                and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+            </if>
+            <if test="pass != null and pass != '' and pass == '01'.toString()">
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
-            group by  FTP.FINPROD_TYPE2,atd.pinan_asset_type)lx
+            group by  FTP.FINPROD_TYPE2,nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1))lx
             group by lx.pinanAssetType
             ) b
             on a.pinanAssetType=b.pinanAssetType
@@ -2679,13 +2754,13 @@
                     atd.branch,
                     atd.is_perne as isPerne,
                     atd.cdate,
-                    atd.finprod_market_id as finprodMarketId,
-                    atd.finprod_name as finprodName,
-                    atd.pinan_asset_type as pinanAssetType,
-                    atd.custom_asset_type_two as customAssetTypeTwo,
-                    atd.custom_asset_type_three as customAssetTypeThree,
-                    atd.custom_asset_type_four as customAssetTypeFour,
-                    atd.custom_asset_type_five as customAssetTypeFive,
+                    nvl(atd.finprod_market_id,RAI.ASSET_CODE) as finprodMarketId,
+                    nvl(atd.finprod_name,RAI.ASSET_NAME) as finprodName,
+                    nvl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1)  AS pinanAssetType,
+                    nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2)   AS customAssetTypeTwo,
+                    nvl(atd.custom_asset_type_three,RAI.ORG_ASSET_TYPE3) AS customAssetTypeThree,
+                    nvl(atd.custom_asset_type_four,RAI.ORG_ASSET_TYPE4)  AS customAssetTypeFour,
+                    nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE4)  AS customAssetTypeFive,
                     atd.issue_party as issueParty,
                     atd.is_soe as isSoe,
                     atd.is_listed_company as isListedCompany,
@@ -2729,55 +2804,57 @@
             <choose>
                 <!-- 下钻层级 1级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='01'">
-                    CONCAT( nvl(atd.pinan_asset_type, 'null'),'') parentInfo,
-                    CONCAT(CONCAT(CONCAT(nvl(atd.pinan_asset_type,'null'),nvl(atd.finprod_id,'null')),nvl(custom_asset_type_two,'null')),'')
+                    CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),'') parentInfo,
+                    CONCAT(CONCAT(CONCAT(nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null'),nvl(atd.finprod_id,'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),'')
                     childInfo
 
                 </when>
                 <!-- 下钻层级 2级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='02'">
-                    CONCAT( CONCAT(nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two,
+                    CONCAT( CONCAT(nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),
                     'null')),'') parentInfo,
                     CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')),
-                    nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),'')
+                    nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),'')
                     childInfo
 
                 </when>
                 <!-- 下钻层级 3级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='03'">
-                    CONCAT( CONCAT( CONCAT( nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two,
+                    CONCAT( CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),
                     'null')),nvl(atd.custom_asset_type_three, 'null')),'') parentInfo,
                     CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID, 'null'),nvl(atd.finprod_id,'null')),
-                    nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),'')
+                    nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),'')
                     childInfo
 
                 </when>
                 <!-- 下钻层级 4级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='04'">
-                    CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.pinan_asset_type,
-                    'null'),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three,
+                    CONCAT( CONCAT( CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),
+                    'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three,
                     'null')),nvl(atd.custom_asset_type_four, 'null')),'') parentInfo,
                     CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID,
                     'null'),nvl(atd.finprod_id,'null')),
-                    nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),'')
+                    nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),'')
                     childInfo
 
                 </when>
                 <!-- 下钻层级 5级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='05'">
-                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.pinan_asset_type,
-                    'null'),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three,
+                    CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),
+                    'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three,
                     'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five,
                     'null')),'') parentInfo,
                     CONCAT( CONCAT( CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(nvl(atd.PORTFOLIO_ID,
                     'null'),nvl(atd.finprod_id,'null')),
-                    nvl(atd.pinan_asset_type,'null')),nvl(custom_asset_type_two,'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),nvl(atd.FINPROD_ID,'null')),'')
+                    nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1),'null')),NVl(Nvl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2),'null')),nvl(custom_asset_type_three,'null')),nvl(custom_asset_type_four,'null')),nvl(custom_asset_type_five,'null')),nvl(atd.FINPROD_ID,'null')),'')
                     childInfo
 
                 </when>
             </choose>
             ,row_number() over(partition by atd.finprod_id order by atd.cdate desc) row_number
-            from ASSET_TARGET_DB atd 
+            from ASSET_TARGET_DB atd
+            LEFT join RSK_ASSET_INFO RAI
+                ON atd.FINPROD_ID = RAI.ASSET_CODE
              <!-- 多级法人改造 add by hxy 20200629 start-->
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                inner join data_auth_notify_inst dani 
@@ -2826,34 +2903,44 @@
                 </foreach>
             </if>
 
-            <if test="pass != null and pass != ''">
+            <if test="pass != null and pass != '' and pass == '02'.toString()">
+                and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+            </if>
+            <if test="pass != null and pass != '' and pass == '01'.toString()">
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
             <!-- 下钻层级 1级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='01'">
-                and  CONCAT(nvl(atd.pinan_asset_type, 'null'),'')= #{parentId}
+                and  CONCAT(nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),'')= #{parentId}
             </if>
             <!-- 下钻层级 2级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='02'">
-                and    CONCAT( CONCAT( nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two, 'null')),'')= #{parentId}
+                and    CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 3级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='03'">
-                and  CONCAT(  CONCAT( CONCAT(  nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),'')= #{parentId}
+                and  CONCAT(  CONCAT( CONCAT(  nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 4级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='04'">
-                and   CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT( CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),'')= #{parentId}
             </if>
             <!-- 下钻层级 5级-->
             <if test="deepLevel!= null and deepLevel != '' and deepLevel=='05'">
-                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(atd.pinan_asset_type, 'null'),nvl(atd.custom_asset_type_two, 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')= #{parentId}
+                and   CONCAT( CONCAT( CONCAT( CONCAT( CONCAT( nvl(NVl(atd.pinan_asset_type,RAI.ORG_ASSET_TYPE1), 'null'),nvl(NVl(atd.custom_asset_type_two,RAI.ORG_ASSET_TYPE2), 'null')),nvl(atd.custom_asset_type_three, 'null')),nvl(atd.custom_asset_type_four, 'null')),nvl(atd.custom_asset_type_five, 'null')),'')= #{parentId}
             </if>
             group by atd.portfolio_id,
             atd.finprod_id ,
             atd.branch,
             atd.is_perne ,
             atd.cdate,
+            RAI.ASSET_CODE,
+            RAI.ASSET_NAME,
+            RAI.ORG_ASSET_TYPE1,
+            RAI.ORG_ASSET_TYPE2,
+            RAI.ORG_ASSET_TYPE3,
+            RAI.ORG_ASSET_TYPE4,
+            RAI.ORG_ASSET_TYPE5,
             atd.finprod_market_id ,
             atd.finprod_name ,
             atd.pinan_asset_type ,
@@ -2917,6 +3004,8 @@
                     THEN SUM(atd.tdy_intincexp)*-1
                     ELSE SUM(atd.tdy_intincexp) end tdyIntincexp
             from ASSET_TARGET_DB atd
+            LEFT join RSK_ASSET_INFO RAI
+                ON atd.FINPROD_ID = RAI.ASSET_CODE
             LEFT JOIN FIN_TRADE_PRODUCT FTP ON atd.FINPROD_ID = FTP.FINPROD_ID AND FTP.BRANCH='0'
              <!-- 多级法人改造 add by hxy 20200629 start-->
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
@@ -2964,7 +3053,10 @@
                 </foreach>
             </if>
 
-            <if test="pass != null and pass != ''">
+            <if test="pass != null and pass != '' and pass == '02'.toString()">
+                and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
+            </if>
+            <if test="pass != null and pass != '' and pass == '01'.toString()">
                 and atd.IS_PERNE= #{pass} and atd.pinan_asset_type is not NULL
             </if>
             group by
@@ -3158,4 +3250,98 @@
         group by parentInfo
 	</select>
 
+    <!-- 剩余现金明细-->
+    <select id="selectRemain" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis003Dto">
+        <if test="pass != null and pass != '' and pass != '02'.toString() ">
+            SELECT
+            P.PORTFOLIO_ID  AS portfolioId,
+            '01' hasChildren,
+            'SYXJ' pinanAssetType,
+            decode(A.SUBJECT_NO,'120401',nvl(A.COST,0),'120402',nvl(A.COST,0),'120403',nvl(A.COST,0),0) AS tdyIntincexp,
+            decode(A.SUBJECT_NO,'1002',nvl(A.COST,0),'1021',nvl(A.COST,0),'1031',nvl(A.COST,0),0) AS posValue
+            FROM PTL_PORTFOLIO P
+            INNER JOIN BOK_VAL_TABLE_DATA A ON ('F16_'||P.PORTFOLIO_ID = A.BOOKSET_ID OR P.PORTFOLIO_ID = A.BOOKSET_ID)
+            <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+                inner join data_auth_notify_inst dani
+                on dani.BUSINESS_ID =P.PORTFOLIO_ID
+                and dani.data_type='PTL01'
+                and dani.model_type = '02'
+                and dani.institution_code
+                <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                         open="in ("  close=")">
+                    #{item}
+                </foreach>
+            </if>
+            WHERE
+            A.val_DATE = to_date(#{searchDate},'yyyy-mm-dd')
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            AND A.DETAIL_DIST = '01'
+            AND DECODE (A.FSUBJECT_ID, NULL, 'root', DECODE (A.FSUBJECT_ID, ' ', 'root', A.FSUBJECT_ID)) = 'root'
+            and A.SUBJECT_NO in ('120401','1002','120402','1021','120403','1031')
+        </if>
+        <if test="pass != null and pass != '' and pass == '02'.toString() ">
+            /* 穿透后剩余现金数据查询*/
+            SELECT
+            A.PORTFOLIO_ID AS portfolioId,
+            '01' hasChildren,
+            'SYXJ' pinanAssetType,
+            nvl(A.TDY_INTINCEXP,0)  tdyIntincexp,
+            nvl(A.MARKET_VALUE,0)  AS posValue
+            FROM PTL_SEC_PIERCE_VALUTION A
+            <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+                inner join data_auth_notify_inst dani
+                on dani.BUSINESS_ID =A.PORTFOLIO_ID
+                and dani.data_type='PTL01'
+                and dani.model_type = '02'
+                and dani.institution_code
+                <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                         open="in ("  close=")">
+                    #{item}
+                </foreach>
+            </if>
+            WHERE
+            A.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            AND A.FINPROD_ID like 'REMAININGCASH%'
+        </if>
+    </select>
+
+    <select id="selectPeiZhiRemain" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis002Dto">
+        /* 穿透后剩余现金数据查询*/
+        SELECT
+        A.PORTFOLIO_ID AS portfolioId,
+        nvl(A.TDY_INTINCEXP,0) AS tdyIntincexp,
+        nvl(A.MARKET_VALUE,0)  AS marketValue
+        FROM PTL_SEC_PIERCE_VALUTION A
+        <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+            inner join data_auth_notify_inst dani
+            on dani.BUSINESS_ID =A.PORTFOLIO_ID
+            and dani.data_type='PTL01'
+            and dani.model_type = '02'
+            and dani.institution_code
+            <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                     open="in ("  close=")">
+                #{item}
+            </foreach>
+        </if>
+        WHERE
+        A.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            AND PORTFOLIO_ID IN
+            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
+        AND A.FINPROD_ID like 'REMAININGCASH%'
+    </select>
 </mapper>

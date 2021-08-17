@@ -95,7 +95,7 @@ public class ReportWorkManage001Service extends CommonExportService<ReportWorkMa
 	 * @return 表格信息
 	 * @throws Exception
 	 */
-	public Page<ReportWorkManage001Dto> findPage(Map<String, Object> params) throws Exception {
+	public Page<ReportWorkManage001Dto> findPage(Map<String, Object> params) {
 
 		// 获取获取理财产品类型
 //		String jobId = (String) params.get("jobId");
@@ -1365,7 +1365,7 @@ public class ReportWorkManage001Service extends CommonExportService<ReportWorkMa
 //    			}
 //    		}
 //		} catch (Exception e) {
-////			e.printStackTrace();
+////			logger.error(e.getMessage(),e);
 //			log.error("error:",e);
 //		}
 //    	return flag;

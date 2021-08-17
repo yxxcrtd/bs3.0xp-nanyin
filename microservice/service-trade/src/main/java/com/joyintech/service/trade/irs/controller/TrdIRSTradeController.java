@@ -53,7 +53,7 @@ public class TrdIRSTradeController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<TrdIRSTradeDto> queryForPage(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
     	Page<TrdIRSTradeDto> returnPage= trdIRSTradeService.selectForPage(page, length, param);
     	return returnPage;
     }
@@ -69,7 +69,7 @@ public class TrdIRSTradeController {
      */
     @RequestMapping("getTrdIRSTradeDto/{tradeId}/{branch}")
     public TrdIRSTradeDto getTrdIRSTradeDto(@PathVariable("tradeId") String tradeId,@PathVariable("branch")Long branch)
-            throws Exception {
+    {
         return trdIRSTradeService.getTrdIRSTradeDto(tradeId,branch);
     }
 
@@ -97,7 +97,7 @@ public class TrdIRSTradeController {
      */
     @RequestMapping("getCashPlanList/{tradeId}")
     public List<FinCashPlanEntity> getCashPlanList(@PathVariable("tradeId") String tradeId)
-            throws Exception {
+    {
         return trdIRSTradeService.getCashPlanList(tradeId);
     }
 
@@ -112,7 +112,7 @@ public class TrdIRSTradeController {
      */
     @GetMapping("getFinCashInfoList")
     public  List<FinCashInfo> getFinCashInfoList(String tradeId)
-            throws Exception {
+    {
         return trdIRSTradeService.getFinCashInfoList(tradeId);
     }
 }

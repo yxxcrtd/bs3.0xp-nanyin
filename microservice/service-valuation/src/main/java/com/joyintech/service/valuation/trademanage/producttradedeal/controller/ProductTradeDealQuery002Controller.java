@@ -51,8 +51,7 @@ public class ProductTradeDealQuery002Controller extends BaseController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<ProductTradeDealQuery002Dto> findPage(@RequestBody Map<String, Object> param,
                                                       @PathVariable("page") int page,
-                                                      @PathVariable("length") int length)
-        throws Exception {
+                                                      @PathVariable("length") int length){
         return productTradeDealQuery002Service.findPageByCondition(page, length, param);
     }
 
@@ -65,8 +64,7 @@ public class ProductTradeDealQuery002Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/findAllByCondition")
-    public List<ProductTradeDealQuery002Dto> findAllByCondition(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<ProductTradeDealQuery002Dto> findAllByCondition(@RequestBody Map<String, Object> param){
         return productTradeDealQuery002Service.findAllByCondition(param);
     }
 

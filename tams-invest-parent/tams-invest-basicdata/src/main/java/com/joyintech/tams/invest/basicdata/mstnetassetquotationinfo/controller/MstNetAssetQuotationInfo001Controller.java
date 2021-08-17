@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -93,8 +94,7 @@ public class MstNetAssetQuotationInfo001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstNetAssetQuotationInfo001Dto> selectAllAsset()
-        throws Exception {       
+    public Page<MstNetAssetQuotationInfo001Dto> selectAllAsset(){
         return mstnetassetquotationinfo001service.selectForPage(RequestUtil.getPageParam());
     }
     
@@ -108,8 +108,7 @@ public class MstNetAssetQuotationInfo001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getAssetName")
-    public List<SuggestDto> getAssetName()
-        throws Exception { 
+    public List<SuggestDto> getAssetName(){
         Map<String,Object> map = new HashMap<>();
         String param = super.getRequest().getParameter("param");   
         map.put("finProdName", param);
@@ -130,8 +129,7 @@ public class MstNetAssetQuotationInfo001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getAssetCode")
-    public List<SuggestDto> getAssetCode()
-        throws Exception {
+    public List<SuggestDto> getAssetCode() {
         Map<String,Object> map = new HashMap<>();
         String param = super.getRequest().getParameter("param");   
         map.put("finProdMarketId", param);
@@ -168,8 +166,7 @@ public class MstNetAssetQuotationInfo001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) MstNetAssetQuotationInfo001Dto dto, BindingResult br)
-        throws Exception{
+    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) MstNetAssetQuotationInfo001Dto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -198,8 +195,7 @@ public class MstNetAssetQuotationInfo001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() 
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstnetassetquotationinfo001service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
     

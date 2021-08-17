@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.base.intf.IDictCode;
@@ -33,6 +34,7 @@ import com.joyintech.service.riskrdsinf.cache.entity.InterfDataDictInfo;
  * @since 1.0
  */
 @Component
+@Lazy(false)
 public class InterfCacheUtil {
 
     /**
@@ -70,7 +72,7 @@ public class InterfCacheUtil {
     @Autowired
     protected void setCacheManager(CacheManager cacheManager) {
         if (null == cacheManager) {
-            throw new RuntimeException("请配置CacheManager.");
+            throw new IllegalArgumentException("请配置CacheManager.");
         }
         else {
             interfCache = cacheManager.getCache("appCache");

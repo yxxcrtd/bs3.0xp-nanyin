@@ -42,7 +42,7 @@ public class ProductTradeDealQuery002Service extends CommonExportService<Product
      * @return
      * @throws Exception
      */
-    public Page<ProductTradeDealQuery002Dto> findPageByCondition(int pageNum, int length, Map<String, Object> params) throws Exception{
+    public Page<ProductTradeDealQuery002Dto> findPageByCondition(int pageNum, int length, Map<String, Object> params){
     	return  super.queryForPage(pageNum, length, ()->productTradeDealQuery002Mapper.selectByCondition(params));
     }
     
@@ -52,7 +52,7 @@ public class ProductTradeDealQuery002Service extends CommonExportService<Product
      * @return
      * @throws Exception
      */
-    public List<ProductTradeDealQuery002Dto> findAllByCondition(Map<String, Object> params) throws Exception{
+    public List<ProductTradeDealQuery002Dto> findAllByCondition(Map<String, Object> params) {
     	return  productTradeDealQuery002Mapper.selectByCondition(params);
     }
 

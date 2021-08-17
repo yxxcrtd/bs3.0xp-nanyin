@@ -60,7 +60,7 @@ public class RepurchaseTradeQuery001Controller extends BaseController{
 //    }
     
     @PostMapping("/findByTradeId")
-    public RepurchaseTradeDto findByTradeId(@RequestBody Map<String, Object> param) throws Exception {
+    public RepurchaseTradeDto findByTradeId(@RequestBody Map<String, Object> param) {
         return repurchaseTradeQuery001Service.findByTradeId(param);
     }
     

@@ -92,7 +92,7 @@ public class InvestorMerger001Service extends CommonExportService<ChbEquHoldChec
 						ChbEquHoldCheckDto.class);
 				pageParam.put("investorList", investList);
 			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(),e);
 	            logger.error(e.getMessage(),e);
 			}
 		}else{
@@ -144,7 +144,7 @@ public class InvestorMerger001Service extends CommonExportService<ChbEquHoldChec
 //					record = investList.get(0);
 //				}
 //			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(),e);
 //			}
 //		}
 		record = chbEquHoldCheckDtoMapper.selectByPrimarykey((String)pageParam.get("indentifyMark"));

@@ -90,7 +90,7 @@ public class ValReconcileSchemeInfo001Service extends CommonExportService<ValRec
      * @throws Exception 错误
      * @since 1.0
      */
-    public Page<ValReconcileSchemeInfo001Dto> findSchemeList(Map<String, Object> params) throws Exception{
+    public Page<ValReconcileSchemeInfo001Dto> findSchemeList(Map<String, Object> params) {
 //        return super.queryForPage(()-> reconcileSchemeInfo001Mapper.findSchemeList(params)); 
     	return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValReconcileSchemeInfo001/findSchemeList",
@@ -125,7 +125,7 @@ public class ValReconcileSchemeInfo001Service extends CommonExportService<ValRec
      * @throws Exception 数据库操作错误
      */
     public void doSaveOrUpdate(ValReconcileSchemeInfo001Dto schemeDto)
-        throws Exception {
+         {
 //        // 账套估值方案
 //        BokBooksetPlan bokBooksetPlan = new BokBooksetPlan();
 //        BeanUtil.copyPropertiesIgnoreNull(bokBooksetPlan, schemeDto);

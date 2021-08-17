@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.intf.DataDict;
@@ -26,8 +28,12 @@ import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
 import com.joyintech.tams.valuation.common.utils.ValStringUtil;
 
 @Service
-public class InterfHelper { 
-    
+public class InterfHelper {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(InterfHelper.class);
+
     public static String getMd5CashId_(String ... cashId){
     	String md5CashId = "";
     	if(cashId !=null && cashId.length>0){
@@ -35,7 +41,7 @@ public class InterfHelper {
     			md5CashId += FinalString.SPLIT+cashId[i];
     		}
     	}
-    	md5CashId = MD5Util.string2MD5(md5CashId);
+    	md5CashId = EncryptUtil.getInstance().md5(md5CashId);
     	return md5CashId;
     }
     
@@ -122,7 +128,7 @@ public class InterfHelper {
             personNameField.setAccessible(true);
             personNameField.set(result, key);
         } catch (Exception e) {
-        	e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
     }
     
@@ -135,7 +141,7 @@ public class InterfHelper {
             field.setAccessible(true);
             keylog = (String)field.get(object) ;  
         } catch (Exception e) {
-        	e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }   
         return keylog;  
     }  
@@ -156,7 +162,7 @@ public class InterfHelper {
     			}
     		}
     	}catch (Exception e) {
-        	e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }  
 		return colvalue;
     }

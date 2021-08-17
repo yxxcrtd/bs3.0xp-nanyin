@@ -158,7 +158,6 @@ public class ReportWorkManage002Contoller extends BaseController {
 //				i = reportWorkManage002Service.update(dto);
 //			}
 //		} catch (Exception e) {
-////			e.printStackTrace();
 //			logger.error("error:",e);
 //			result = new AjaxResult("保存失败", MessageType.错误消息);
 //		}
@@ -176,7 +175,6 @@ public class ReportWorkManage002Contoller extends BaseController {
 //				result = new AjaxResult("作业编号不存在", MessageType.错误消息);
 //			}
 //		} catch (Exception e) {
-////			e.printStackTrace();
 //			logger.error("error:",e);
 //			result = new AjaxResult("修改失败", MessageType.错误消息);
 //		}
@@ -217,7 +215,6 @@ public class ReportWorkManage002Contoller extends BaseController {
 //			}
 //			
 //		} catch (Exception e) {
-////			e.printStackTrace();
 //			logger.error("error:",e);
 //			result = new AjaxResult("删除失败", MessageType.错误消息);
 //		}

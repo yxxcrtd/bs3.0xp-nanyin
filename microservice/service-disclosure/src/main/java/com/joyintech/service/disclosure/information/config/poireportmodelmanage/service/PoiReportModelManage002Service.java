@@ -177,7 +177,7 @@ public class PoiReportModelManage002Service extends CommonExportService<RepInfo>
 	 * @param request
 	 * @return
 	 */
-	public void removePercent(HttpServletRequest request) throws Exception {
+	public void removePercent(HttpServletRequest request) {
 		progressBarService.removePercent("ReportModelManage002", ProgressBarService.FILE_UPLOAD_ID);
 	}
 	/**
@@ -185,7 +185,7 @@ public class PoiReportModelManage002Service extends CommonExportService<RepInfo>
 	 * @param request
 	 * @return
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
 		progressBarService.updatePercent("ReportModelManage002", ProgressBarService.FILE_UPLOAD_ID, 1D, false);
 	}
 	/**

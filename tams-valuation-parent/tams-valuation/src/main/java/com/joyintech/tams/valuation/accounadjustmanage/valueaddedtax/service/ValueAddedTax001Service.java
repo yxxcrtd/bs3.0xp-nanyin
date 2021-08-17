@@ -80,7 +80,7 @@ public class ValueAddedTax001Service extends CommonExportService<ValueAddedTax00
 //    private FinProductMapper finProductMapper;
 
     public Page<ValueAddedTax001Dto> selectForPage(Map<String, Object> pageParam)
-        throws Exception {
+         {
 
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ValueAddedTaxQuery001/findPage", pageParam, ValueAddedTax001Dto.class);
 //        
