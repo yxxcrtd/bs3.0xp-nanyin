@@ -491,8 +491,10 @@
         select
         <include refid="Base_Column_List" />
         from PBC_SEND_ZIP_DAT_FILE
-        where ZIP_SEND_STATUS = #{zipSendStatus,jdbcType=VARCHAR}
-        and DAT_ZIP_CODE is not null
+        where  DAT_ZIP_STATUS not  in ('02','03') and DAT_ZIP_CODE is not null
+        <if test="seqnoList ==null or seqnoList.size() &lt;= 0">
+            and  ZIP_SEND_STATUS = #{zipSendStatus,jdbcType=VARCHAR}
+        </if>
         <if test="seqnoList != null and seqnoList.size() &gt; 0">
             <foreach close=")" collection="seqnoList" item="item" open=" AND REGIST_SEQNO IN (" separator=",">
                 #{item,jdbcType=VARCHAR}
@@ -513,6 +515,7 @@
             where
             DAT_ZIP_DAT_TYPE= #{item.datZipDatType,jdbcType=VARCHAR}
             and DAT_ZIP_CODE= #{item.datZipCode,jdbcType=VARCHAR}
+            and ZIP_SEND_STATUS='01'
         </foreach>
     </update>
 
