@@ -1327,8 +1327,8 @@ public class TisUtil {
 			cell.setCellValue((Double)value);
 		}
 		else if (value instanceof BigDecimal) {
-			BigDecimal cellValue = (BigDecimal)value;
-			cell.setCellValue(cellValue.doubleValue());
+			//BigDecimal cellValue = (BigDecimal)value;
+			cell.setCellValue(value.toString());
 		}
 		else if (value instanceof Integer) {
 			Integer cellValue = (Integer)value;//转为整形会变成.0,转为字符串正常
@@ -1349,12 +1349,4 @@ public class TisUtil {
 		}
 	}
 
-	private static Integer replaceInteger(String key, Map<String, Integer> datas) {
-		if(key.contains(".")&&null!=datas) {
-			String subKey = key.substring(key.indexOf(".")+1, key.length());
-			Integer index = datas.get(subKey);
-			return index;
-		}
-		return 0;
-	}
 }

@@ -35,6 +35,7 @@
         <result column="PERSON_LIABLE" property="personLiable" jdbcType="VARCHAR" />
         <result column="CONTACT" property="contact" jdbcType="VARCHAR" />
         <result column="REPORT_DATE" property="reportDate" jdbcType="DATE" />
+        <result column="ENDDATE" property="enddate" jdbcType="DATE" />
     </resultMap>
     <sql id="Base_Column_List" >
         REGIST_SEQNO REGIST_SEQNO, DAT_ZIP_CODE DAT_ZIP_CODE, DAT_ZIP_PATH DAT_ZIP_PATH, 
@@ -47,7 +48,7 @@
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, ISSUE_PARTY_ID ISSUE_PARTY_ID, 
         ISSUE_PARTY_NAME ISSUE_PARTY_NAME, REPORT_ORG_NAME REPORT_ORG_NAME, SOCIAL_CREDIT_CODE SOCIAL_CREDIT_CODE, 
         FIN_INSTITUTION_CODE FIN_INSTITUTION_CODE, PROD_VARIETY PROD_VARIETY, PERSON_LIABLE PERSON_LIABLE, 
-        CONTACT CONTACT, REPORT_DATE REPORT_DATE
+        CONTACT CONTACT, REPORT_DATE REPORT_DATE,ENDDATE
     </sql>
     <sql id="Sql_All_Data" >
         select 

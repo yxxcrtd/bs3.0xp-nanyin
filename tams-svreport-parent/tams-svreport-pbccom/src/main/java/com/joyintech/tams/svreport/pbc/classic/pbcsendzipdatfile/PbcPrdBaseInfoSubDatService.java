@@ -130,7 +130,22 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
             result.setCreditFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCreditFlag()));
         }
         if (StringUtil.isNotEmpty(result.getCreditType())){
-            result.setCreditType( SysDataUtil.getNameFromDataDict(DictCode.人行信誉机构类型,result.getCreditType()));
+            //多个用,切开
+            String [] creditModes=result.getCreditType().split(GlobalConstant.COMMA);
+            String creditMode="";
+            int i=0;
+            for(String single:creditModes){
+                if(single.equals(DictCodeListExt3.借款人类型_特定目的载体.getValue())){ //去掉5
+                    continue;
+                }
+                i++;
+                creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.借款人类型,single);
+                if(i<creditModes.length){
+                    creditMode=creditMode+GlobalConstant.COMMA;
+                }
+            }
+            creditMode=creditMode.endsWith(GlobalConstant.COMMA)?creditMode.substring(0,creditMode.length()-1):creditMode;
+            result.setCreditType(creditMode);
         }
         if (StringUtil.isNotEmpty(result.getCreditMode())){
             //多个用,切开
