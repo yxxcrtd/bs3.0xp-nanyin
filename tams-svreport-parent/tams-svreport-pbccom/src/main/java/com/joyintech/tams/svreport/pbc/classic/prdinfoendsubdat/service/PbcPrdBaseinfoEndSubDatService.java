@@ -274,6 +274,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 }
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(zipList)){
+                    List<PbcSendZipDatFile> insertList = new ArrayList<>();
                     for (PbcSendZipDatFile pbcSendZipDatFile : zipList) {
                         if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
                             pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
@@ -285,8 +286,11 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                         }
                         int pi = pbcSendZipDatFileMapper.countByDatZipCode(pbcSendZipDatFile.getDatZipCode(), "PI");
                         if(pi == 0){
-                            pbcSendZipDatFileMapper.insert(pbcSendZipDatFile);
+                            insertList.add(pbcSendZipDatFile);
                         }
+                    }
+                    for (PbcSendZipDatFile sendZipDatFile : insertList) {
+                        pbcSendZipDatFileMapper.insert(sendZipDatFile);
                     }
                 }
             }
