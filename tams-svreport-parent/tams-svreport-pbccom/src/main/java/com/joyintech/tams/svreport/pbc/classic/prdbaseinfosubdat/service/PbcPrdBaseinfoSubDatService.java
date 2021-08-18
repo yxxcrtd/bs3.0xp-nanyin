@@ -279,16 +279,27 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 }
                 List<PbcPrdBaseinfoSubDat> prdList = resultMap.get("prdList");
                 List<PbcSendZipDatFile> zipList = resultMap.get("zipList");
+                List<String> reqIds = new ArrayList<>();
                 for (PbcPrdBaseinfoSubDat subDat : prdList) {
-                    Optional<PbcPrdBaseinfoSubDat> any = baseinfoSubDatsNoSendProdIds.stream()
-                            .filter(baseinfoSubDat -> subDat.getProdId().equals(baseinfoSubDat.getProdId())).findAny();
-                    if(!any.isPresent()){
-                        baseinfoSubDatsNoSendProdIds.add(subDat);
+                    if(StrUtil.isNotEmpty(subDat.getProdId())){
+                        Optional<PbcPrdBaseinfoSubDat> any = baseinfoSubDatsNoSendProdIds.stream()
+                                .filter(baseinfoSubDat -> subDat.getProdId().equals(baseinfoSubDat.getProdId())).findAny();
+                        if(!any.isPresent()){
+                            baseinfoSubDatsNoSendProdIds.add(subDat);
+                        }
+                    }else{
+                        reqIds.add(subDat.getRegistSeqno());
                     }
+
                 }
                 //删除未报送有修改的记录
                 if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendProdIds)){
                     pbcPrdBaseinfoSubDatMapper.deleteByProdid(baseinfoSubDatsNoSendProdIds);
+                }
+                if(CollectionUtil.isNotEmpty(reqIds)){
+                    for (String reqId : reqIds) {
+                        pbcPrdBaseinfoSubDatMapper.deleteByPrimaryKey(reqId);
+                    }
                 }
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(prdList)){
@@ -302,24 +313,26 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(zipList)){
                     List<PbcSendZipDatFile> insertList = new ArrayList<>();
+                    List<PbcSendZipDatFile> updateList = new ArrayList<>();
                     for (PbcSendZipDatFile pbcSendZipDatFile : zipList) {
                         if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
                             pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
                         }
                         String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
                         pbcSendZipDatFile.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);
-                        if("PIB".equals(pbcSendZipDatFile.getDatZipDatType())){
-                            pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(prdList) ? prdList.size() : 0);
-                        }else{
-                            pbcSendZipDatFile.setPibDetailCnt(0);
-                        }
-                        int pi = pbcSendZipDatFileMapper.countByDatZipCode(pbcSendZipDatFile.getDatZipCode(), "PI");
-                        if(pi == 0){
+                        PbcSendZipDatFile sendZipDatFile = pbcSendZipDatFileMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), "PIB");
+                        if(sendZipDatFile == null){
                             insertList.add(pbcSendZipDatFile);
+                        }else{
+                            pbcSendZipDatFile.setRegistSeqno(sendZipDatFile.getRegistSeqno());
+                            updateList.add(pbcSendZipDatFile);
                         }
                     }
                     for (PbcSendZipDatFile sendZipDatFile : insertList) {
                         pbcSendZipDatFileMapper.insert(sendZipDatFile);
+                    }
+                    for (PbcSendZipDatFile sendZipDatFile : updateList) {
+                        pbcSendZipDatFileMapper.updateByPrimaryKey(sendZipDatFile);
                     }
                 }
             }
@@ -341,6 +354,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
         pbcPrdBaseinfoSubDat.setInDepCode(pbcPrdBaseinfoSubDatDto.getInDepCode());
         pbcPrdBaseinfoSubDat.setOutDepName(pbcPrdBaseinfoSubDatDto.getInDepName());
         pbcPrdBaseinfoSubDat.setOutDepCtry(pbcPrdBaseinfoSubDatDto.getOutDepCtry());
+        pbcPrdBaseinfoSubDat.setIsMarketFund(pbcPrdBaseinfoSubDatDto.getTransferType1());
         pbcPrdBaseinfoSubDat.setRegistSeqno(cn.hutool.core.lang.UUID.randomUUID().toString());
         return pbcPrdBaseinfoSubDat;
     }
@@ -427,7 +441,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 String raiseEnddate01 = rowsData.get(row++);
                 if(checkIsNotEmpty(raiseEnddate01,rowNumber,"募集结束日期",errorMessage)){
                     if(checkDate(raiseEnddate01)){
-                        dto.setRaiseVdate01(DateUtil.parse(raiseEnddate01));
+                        dto.setRaiseEnddate01(DateUtil.parse(raiseEnddate01));
                     }else{
                         errorMessage.add(new ExcelValidDto("募集结束日期",String.valueOf(rowNumber),"第"+rowNumber+"行:募集结束日期格式不正确！"));
                     }
