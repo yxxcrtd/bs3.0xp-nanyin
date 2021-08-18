@@ -54,7 +54,7 @@ public class RskValBotDetailReportService extends BaseService<RskValBotDetailRep
             //对部分数据进行处理
             calDetailList(result);
             //按照资产二级分类升序排序
-            result = result.stream().sorted(Comparator.comparing(RskValBotDetailReportDto::getAssettype2)).collect(Collectors.toList());
+            //result = result.stream().sorted(Comparator.comparing(RskValBotDetailReportDto::getAssettype2)).collect(Collectors.toList());
             pg.setRoot(result);
             pg.setRecords(result.size());
             Double totle = ArithmeticUtil.divide(new BigDecimal(result.size()),new BigDecimal(length)).doubleValue();

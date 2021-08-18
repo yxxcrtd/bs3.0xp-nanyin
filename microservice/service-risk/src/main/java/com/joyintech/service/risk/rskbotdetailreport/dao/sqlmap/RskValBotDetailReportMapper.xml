@@ -67,7 +67,8 @@
 					 ELSE DC.POS_NUM end                                                AS hColumn,
 					 SUB.MAP                                                            AS iColumn,
 					 DC.INT_AMT                                                         AS kColumn,
-					 DC.POS_AMT                                                         AS lColumn,					 
+					 DC.POS_AMT                                                         AS lColumn,
+					 G06.BOT_AMT                                                        AS nColumn,
 					 CASE WHEN DC.ASSET_CODE = 'OD' THEN '2000'
 					      WHEN DC.ASSET_CODE = 'CASH' THEN '1001'
 					 ELSE G06.ASSETTYPE2
@@ -103,7 +104,10 @@
 						 POS.ASSET_CODE
 					    ,POS.OLD_ASSET_CODE
 						,POS.ASSETTYPE2
-						,POS.RATING                     
+						,POS.RATING
+						,CASE WHEN SUM(NVL(POS.ASSETVALUE_B,0)) != 0
+						      THEN SUM(NVL(POS.ASSETVALUE_B,0)) - SUM(NVL(POS.ASSETVALUE_A,0))
+						      ELSE 0 END AS BOT_AMT
 						,POS.INDUSTRY1
 						,POS.IN_ASSET_TYPE
 						,POS.MONIT_TYPE
@@ -198,7 +202,19 @@
 
 				 WHERE POS_DATE = #{valDate,jdbcType=DATE}
 				 /**AND (CASH_FLAG is null or CASH_FLAG = '01') 有底层的剩余现金也展示**/
-			 ) T
+			 ) T order by/**按照资产负债类别（二级）结果进行排序：正回购 -> 其它负债 –> 银行存款 –> 债券 –> 基金 –>股票 -> 逆回购 –> 项目类 -> 衍生品-> 其它**/
+		(case  when assettype2 in ('1902') then 1
+         when assettype2 in ('1901','2000') then 2
+         when assettype2 in ('1107','1001','1002','1003','1004','1005') then 3
+         when assettype2 in ('1101','1110','1109','1102','1111','1112','1113','1114','1115','1116','1117','2501','2502') then 4
+         when assettype2 in ('1106','2401','1303','2403','2402','2499','2601','2602','2604','2605','2606','2607',
+         '2610','2611','2612','2617','2613','2614','2616','2618','2619','2620','2699') then 5
+         when assettype2 in ('1302','1305') then 6
+         when assettype2 in ('1108') then 7
+         when assettype2 in ('1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299','1301','1399','2201','2202','2101','2299') then 8
+         when assettype2 in ('1401','1402','1403','1404','1405','1406','1499','1501','1504','1506','1502','1505','1507','1508','1509','1503','1599') then 9
+         when assettype2 in ('1601','1602','1699','2301','2302','2303','2304','2305','1603') then 10
+         else 11 end),assettype2
 		 ]]>
 	 </select>
 </mapper>
