@@ -1,0 +1,1 @@
+delete from SYS_MYTODOANDWORK_PSL;

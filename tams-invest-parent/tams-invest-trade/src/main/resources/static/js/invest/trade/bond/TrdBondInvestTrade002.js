@@ -1129,7 +1129,9 @@ var table;
     				paramObj.portfolioId = $("#portfolioId").val();
     				paramObj.finprodId = $("#finprodId").val();
     				paramObj.invAim = $("#invAim").val();
-    				paramObj.chlId = $("#chlId").val();
+                    if($("#chlId").val()){
+                        paramObj.chlId = $("#chlId").val();
+                    }
     				paramObj.counterId = $("#trdInvestPersonInfo_counterId").val();
     				paramObj.tradeDate = $("#tradeDate").val();
     				Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getCprice'), paramObj, function (result) {
@@ -1605,243 +1607,6 @@ var table;
     }
 
     /**
-     * 1.7计算按钮点击事件
-     */
-    $('#TrdBondInvestTrade002_btn_calculate').click(function() {
-        var paramObj = getCalcParam();
-        Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/calculateData'), paramObj, function (result) {
-            if (result && result.data) {
-                var data = result.data;
-                if(!$('#fTradeId').val()){
-                    $("#tradeAmt").val(JoyinMath.doDiv(data.tradeAmt,unitNum,4,JoyinMath.ROUND_HALF_UP)).change().trigger("blur");
-                }
-                $("#unitCprice").val(data.unitCprice).trigger("blur");
-                $("#unitInt").val(data.unitInt).trigger("blur");
-                $("#unitFprice").val(data.unitFprice).trigger("blur");
-                $("#cpriceAmt").val(data.cpriceAmt).trigger("blur");
-                $("#integrateCpriceAmt").val(data.integrateCpriceAmt).trigger("blur");
-                $("#intAmt").val(data.intAmt).trigger("blur");
-                $("#integrateIntAmt").val(data.integrateIntAmt).trigger("blur");
-                $("#ownIntAmt").val(JoyinMath.doMinus(data.intAmt, data.integrateIntAmt, 2, JoyinMath.ROUND_HALF_UP)).trigger("blur");
-                if($("#zhilingtype").val()=="02"){
-                	for(var i=0;i<table.getAllRows().length;i++){
-                		if($("#unitFprice").val()){
-                			//获取i行的券面总额
-                    		//全价总额
-                    		var fpriceAmtSum=Number(0);
-			        		   for(var i=0;i<table.getAllRows().length;i++){
-			        			   //券面总额
-				        		   var tradeAmt=table.getAllRows()[i].tradeAmt;
-				        		   table.renderRow(i, {"fpriceAmt": Number($("#unitFprice").val())*Number(tradeAmt)/100});
-				        		   fpriceAmtSum=Number(fpriceAmtSum)+Number(Number($("#unitFprice").val())*Number(tradeAmt)/100);
-				        	   }
-				        	$("#fpriceAmt").val(fpriceAmtSum).trigger('change');
-                		}else{
-                			table.renderRow(i, {"fpriceAmt": 0});
-                		}
-
-                		if($("#unitInt").val()){
-                    		//应计利息总额
-                    		var unitIntSum=Number(0);
-			        		   for(var i=0;i<table.getAllRows().length;i++){
-			        			   //券面总额
-				        		   var tradeAmt=table.getAllRows()[i].tradeAmt;
-				        		   table.renderRow(i, {"intAmt": Number($("#unitInt").val())*Number(tradeAmt)/100});
-				        		   unitIntSum=Number(unitIntSum)+Number(Number($("#unitInt").val())*Number(tradeAmt)/100);
-				        	   }
-                		}else{
-                			table.renderRow(i, {"intAmt": 0});
-                		}
-                		
-                	}
-                }else{
-//                 	$("#fpriceAmt").val(Number($("#intAmt").val())+Number($("#cpriceAmt").val())).trigger("blur").trigger('change');
-                    // $("#fpriceAmt").val(data.fpriceAmt).trigger("blur").trigger('change');
-                    var calculateField =  $("[name=calculateField]:checked").val();
-                    if(calculateField=='fpriceAmt'){
-                        var intAmt = JoyinMath.doMinus(data.fpriceAmt,data.cpriceAmt,2);
-                        $("#intAmt").val(intAmt).trigger("blur");
-                        $("#fpriceAmt").val(data.fpriceAmt).trigger("blur").trigger('change');
-                        var integrateIntAmt = JoyinMath.doMinus(data.integrateFpriceAmt,data.integrateCpriceAmt,2);
-                        $("#integrateIntAmt").val(integrateIntAmt).trigger("blur");
-                        $("#integrateFpriceAmt").val(data.integrateFpriceAmt).trigger("blur").trigger('change');
-
-                        $("#ownIntAmt").val(JoyinMath.doMinus(intAmt, integrateIntAmt, 2, JoyinMath.ROUND_HALF_UP)).trigger("blur");
-                        $("#ownFpriceAmt").val(JoyinMath.doMinus(data.fpriceAmt, data.integrateFpriceAmt, 2, JoyinMath.ROUND_HALF_UP)).trigger("blur");
-                    }
-                    else{
-                        $("#fpriceAmt").val(Number($("#intAmt").val())+Number($("#cpriceAmt").val())).trigger("blur").trigger('change');
-                        $("#integrateFpriceAmt").val(Number($("#integrateIntAmt").val())+Number($("#integrateCpriceAmt").val())).trigger("blur").trigger('change');
-                        $("#ownFpriceAmt").val(JoyinMath.doMinus($("#fpriceAmt").val(), $("#integrateFpriceAmt").val(), 2, JoyinMath.ROUND_HALF_UP)).trigger("blur");
-                    }
-                }
-                $("#exerYield").val(data.exerYield).trigger("blur");
-                $("#yield").val(data.yield).trigger("blur");
-                // 记录隐藏值
-                $("#unitCprice_calc").val(data.unitCprice);
-                $("#unitInt_calc").val(data.unitInt);
-                $("#unitFprice_calc").val(data.unitFprice);
-                $("#cpriceAmt_calc").val(data.cpriceAmt);
-                $("#intAmt_calc").val(data.intAmt);
-                $("#fpriceAmt_calc").val(data.fpriceAmt);
-                $("#exerYield_calc").val(data.exerYield);
-                $("#yield_calc").val(data.yield);
-                saveCalcParam = getCalcParam();
-            }
-                
-              //---add by 裴家俊  费用设置  2019/03/28----start--------
-                //$("#tradeAmtAndFee").val('');//交易金额置空
-                // $("#commissionAmt").val('').trigger("blur");
-                // $("#procedureAmt").val('').trigger("blur");
-                // $("#settleAmt").val('').trigger("blur");
-                if(data.tradeFeeList&&data.tradeFeeList.length>0){
-                    // 交易手续费条数
-                    var cntP = 0;
-                    // 结算服务费条数
-                    var cntSS = 0;
-                    // 结算费条数
-                    var cntS = 0;
-                    // 经手费条数
-                    var cntM = 0;
-                    // 佣金条数
-                    var cntC = 0;
-                 // 印花税条数
-                    var cntST = 0;
-                    $.each(data.tradeFeeList,function(i,v){
-                        if(v.feeType==FEE_TYPE_05&&v.feeAmt){
-                            cntC++;
-                            isPayWithTrade = v.isPayWithTrade;
-                            // add by wangguoxian 费用设置 20190808 start
-                            $("#isPayWithTrade").val(isPayWithTrade);
-                            // add by wangguoxian 费用设置 20190808 end
-                            commissionAmt = v.feeAmt;
-                            $("#commissionAmtRate").val(v.feeRate).trigger("blur");
-                            var feeAmt = v.feeAmt;
-                            var tradeMarket = $('#tradeMarket').val();
-                            /*if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
-                                var tradeMarketMode = $("#tradeMarketMode").val();
-                                if (tradeMarketMode == SHARES_TRADE_MARKET_01) {
-                                    $("#commissionAmt").val(0).prop('disabled', true).trigger("change");
-                                    feeAmt = 0;
-                                }
-                            }*/
-                            if (feeAmt) {
-                                $("#commissionAmt").val(v.feeAmt).prop('disabled', false).trigger("blur").trigger("change");
-                            }
-                            // modified by wangguoxian 费用设置 20190808 start
-                            changeTradeAmtAndFee();
-                            /*if (isPayWithTrade == YES_OR_NO_Y) {
-
-                                if($("#ps").val()==PS_T01){
-                                    $("#tradeAmtAndFee").val(Number(data.fpriceAmt)+Number(feeAmt)).trigger("blur");
-                                }
-                                if($("#ps").val()==PS_T02){
-                                    $("#tradeAmtAndFee").val(Number(data.fpriceAmt)-Number(feeAmt)).trigger("blur");
-                                }
-                            }else{
-                                $("#tradeAmtAndFee").val(Number(data.fpriceAmt)).trigger("blur");
-                            }*/
-                            // modified by wangguoxian 费用设置 20190808 end
-                        }
-                        if(v.feeType==FEE_TYPE_02&&v.feeAmt){
-                        	cntST++;
-                        	stampDutyIsPayWithTrade = v.isPayWithTrade;
-                            $("#stampDutyIsPayWithTrade").val(stampDutyIsPayWithTrade);
-                            stampDutyAmt = v.feeAmt;
-                            var feeAmt = v.feeAmt;
-                            var tradeMarket = $('#tradeMarket').val();
-                            if (feeAmt) {
-                                $("#stampDutyAmt").val(v.feeAmt).prop('disabled', false).trigger("blur").trigger("change");
-                            }
-                            changeTradeAmtAndFee();
-                        }
-
-                        if(v.feeType==FEE_TYPE_06&&v.feeAmt){
-                            cntP++;
-                            $("#procedureAmt").val(v.feeAmt).trigger("blur");
-                            if(procedureAmt_f){
-                                $('#procedureAmt').val(procedureAmt_f);
-                            }
-                            $("#procedureAmtRate").val(v.feeRate).trigger("blur");
-                        }
-
-                        if(v.feeType=='B08' && v.feeAmt){
-                            cntSS++;
-                            $("#settleServiceAmt").val(v.feeAmt).trigger("blur");
-                            if(settleAmt_f){
-                                $('#settleServiceAmt').val(settleAmt_f);
-                            }
-                        }
-
-                        //加入结算费经手费
-                        if(v.feeType==FEE_TYPE_07&&v.feeAmt){
-                            cntS++;
-                            settleIsPayWithTrade = v.isPayWithTrade;
-                            $("#settleIsPayWithTrade").val(settleIsPayWithTrade);
-                            $("#settleAmt").val(v.feeAmt).trigger("blur");
-                        }
-                        if(v.feeType==FEE_TYPE_01&&v.feeAmt){
-                            cntM++;
-                            exchangeIsPayWithTrade = v.isPayWithTrade;
-                            $("#exchangeIsPayWithTrade").val(exchangeIsPayWithTrade);
-                            $("#exchangeAmt").val(v.feeAmt).trigger("blur");
-                        }
-
-                        /*if(v.feeType==FEE_TYPE_04&&v.feeAmt){
-                            $("#transferAmt").val(v.feeAmt).trigger("blur");
-                        }*/
-                     });
-                    // 按照最新费用规则计算相关费用无结果则清空相关费用
-                    if(cntP == 0){
-                        $("#procedureAmt").val("").trigger("blur");
-                    }
-                    if(cntSS == 0){
-                        $("#settleServiceAmt").val("").trigger("blur");
-                    }
-                    if(cntS == 0){
-                        //结算费置空
-                        $("#settleAmt").val("").trigger("blur");
-                    }
-                    if(cntM == 0){
-                        //经手费置空
-                        $("#exchangeAmt").val("").trigger("blur");
-                    }
-                    if(cntC == 0){
-                        $("#commissionAmt").val("").trigger("blur");
-                    }
-                    if(cntST == 0){
-                        $("#stampDutyAmt").val("").trigger("blur");
-                }
-                }
-                else{
-                    $("#exchangeAmt").val("").trigger("blur");
-                    $("#commissionAmt").val("").trigger("change").trigger("blur");
-                    $("#stampDutyAmt").val("").trigger("change").trigger("blur");
-                    $("#procedureAmt").val("").trigger("blur");
-                    $("#settleServiceAmt").val("").trigger("blur");
-                    $("#settleAmt").val("").trigger("blur");
-                    $("#procedureAmtRate").val("").trigger("blur");
-                    $("#commissionAmtRate").val("").trigger("blur");
-                    $("#transferAmt").val("").trigger("blur");
-                }
-
-                //一级缴款,所有费用为0
-                if($("#payType").val()=="02"){
-                    $("#commissionAmt").val('').trigger("blur");
-                    $("#settleAmt").val('').trigger("blur");
-                    $("#exchangeAmt").val('').trigger("blur");
-                    $("#stampDutyAmt").val('').trigger("blur");
-                    $("#procedureAmt").val('').trigger("blur");
-                    $("#settleServiceAmt").val("").trigger("blur");
-                }
-
-                counterIdChangeFee();
-                // 将甲类户对应的交易手续费、结算费、佣金设置为不可编辑
-                // controllFeeItem();
-                //---add by 裴家俊  费用设置  2019/03/28----end--------
-            },false);
-       });
-    /**
      * 净价change事件
      * 1.6计算偏离度
      */
@@ -2148,7 +1913,9 @@ var table;
 	            		dealinfo.tradePlat = $("#tradePlat").val();
 	            		dealinfo.secManageAcctId = $("#secManageAcctId").val();
                         // 通道交易 新增 强成西 2019/03/26 start
-	            		dealinfo.chlId = $("#chlId").val();
+                        if($("#chlId").val()) {
+                            dealinfo.chlId = $("#chlId").val();
+                        }
 	            		// 通道交易 新增 强成西 2019/03/26 end
                         dealObj.tradeMarketMode = $("#tradeMarketMode").val();
 	            		list.push(dealinfo);
@@ -2189,7 +1956,9 @@ var table;
                         }
                     }
                     // 通道交易 新增 强成西 2019/03/26 start
-                    dealObj.chlId = $("#chlId").val();
+                    if($("#chlId").val()) {
+                        dealObj.chlId = $("#chlId").val();
+                    }
                     // 通道交易 新增 强成西 2019/03/26 end
                     dealObj.tradeMarketMode = $("#tradeMarketMode").val();
                     list.push(dealObj);
@@ -2610,6 +2379,244 @@ var table;
              $('#baseRiskMathComm').hide();
              $('#TrdBondInvestTrade002_btn_risk').hide();
          }
+
+        /**
+         * 1.7计算按钮点击事件
+         */
+        $('#TrdBondInvestTrade002_btn_calculate').click(function() {
+            var paramObj = getCalcParam();
+            Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/calculateData'), paramObj, function (result) {
+                if (result && result.data) {
+                    var data = result.data;
+                    if(!$('#fTradeId').val()){
+                        $("#tradeAmt").val(JoyinMath.doDiv(data.tradeAmt,unitNum,4,JoyinMath.ROUND_HALF_UP)).change().trigger("blur");
+                    }
+                    $("#unitCprice").val(data.unitCprice).trigger("blur");
+                    $("#unitInt").val(data.unitInt).trigger("blur");
+                    $("#unitFprice").val(data.unitFprice).trigger("blur");
+                    $("#cpriceAmt").val(data.cpriceAmt).trigger("blur");
+                    $("#integrateCpriceAmt").val(data.integrateCpriceAmt).trigger("blur");
+                    $("#intAmt").val(data.intAmt).trigger("blur");
+                    $("#integrateIntAmt").val(data.integrateIntAmt).trigger("blur");
+                    $("#ownIntAmt").val(JoyinMath.doMinus(data.intAmt, data.integrateIntAmt, 2, JoyinMath.ROUND_HALF_UP)).trigger("blur");
+                    if($("#zhilingtype").val()=="02"){
+                        for(var i=0;i<table.getAllRows().length;i++){
+                            if($("#unitFprice").val()){
+                                //获取i行的券面总额
+                                //全价总额
+                                var fpriceAmtSum=Number(0);
+                                for(var i=0;i<table.getAllRows().length;i++){
+                                    //券面总额
+                                    var tradeAmt=table.getAllRows()[i].tradeAmt;
+                                    table.renderRow(i, {"fpriceAmt": Number($("#unitFprice").val())*Number(tradeAmt)/100});
+                                    fpriceAmtSum=Number(fpriceAmtSum)+Number(Number($("#unitFprice").val())*Number(tradeAmt)/100);
+                                }
+                                $("#fpriceAmt").val(fpriceAmtSum).trigger('change');
+                            }else{
+                                table.renderRow(i, {"fpriceAmt": 0});
+                            }
+
+                            if($("#unitInt").val()){
+                                //应计利息总额
+                                var unitIntSum=Number(0);
+                                for(var i=0;i<table.getAllRows().length;i++){
+                                    //券面总额
+                                    var tradeAmt=table.getAllRows()[i].tradeAmt;
+                                    table.renderRow(i, {"intAmt": Number($("#unitInt").val())*Number(tradeAmt)/100});
+                                    unitIntSum=Number(unitIntSum)+Number(Number($("#unitInt").val())*Number(tradeAmt)/100);
+                                }
+                            }else{
+                                table.renderRow(i, {"intAmt": 0});
+                            }
+
+                        }
+                    }else{
+//                 	$("#fpriceAmt").val(Number($("#intAmt").val())+Number($("#cpriceAmt").val())).trigger("blur").trigger('change');
+                        // $("#fpriceAmt").val(data.fpriceAmt).trigger("blur").trigger('change');
+                        var calculateField =  $("[name=calculateField]:checked").val();
+                        if(calculateField=='fpriceAmt'){
+                            var intAmt = JoyinMath.doMinus(data.fpriceAmt,data.cpriceAmt,2);
+                            $("#intAmt").val(intAmt).trigger("blur");
+                            $("#fpriceAmt").val(data.fpriceAmt).trigger("blur").trigger('change');
+                            var integrateIntAmt = JoyinMath.doMinus(data.integrateFpriceAmt,data.integrateCpriceAmt,2);
+                            $("#integrateIntAmt").val(integrateIntAmt).trigger("blur");
+                            $("#integrateFpriceAmt").val(data.integrateFpriceAmt).trigger("blur").trigger('change');
+
+                            $("#ownIntAmt").val(JoyinMath.doMinus(intAmt, integrateIntAmt, 2, JoyinMath.ROUND_HALF_UP)).trigger("blur");
+                            $("#ownFpriceAmt").val(JoyinMath.doMinus(data.fpriceAmt, data.integrateFpriceAmt, 2, JoyinMath.ROUND_HALF_UP)).trigger("blur");
+                        }
+                        else{
+                            $("#fpriceAmt").val(Number($("#intAmt").val())+Number($("#cpriceAmt").val())).trigger("blur").trigger('change');
+                            $("#integrateFpriceAmt").val(Number($("#integrateIntAmt").val())+Number($("#integrateCpriceAmt").val())).trigger("blur").trigger('change');
+                            $("#ownFpriceAmt").val(JoyinMath.doMinus($("#fpriceAmt").val(), $("#integrateFpriceAmt").val(), 2, JoyinMath.ROUND_HALF_UP)).trigger("blur");
+                        }
+                    }
+                    $("#exerYield").val(data.exerYield).trigger("blur");
+                    $("#yield").val(data.yield).trigger("blur");
+                    // 记录隐藏值
+                    $("#unitCprice_calc").val(data.unitCprice);
+                    $("#unitInt_calc").val(data.unitInt);
+                    $("#unitFprice_calc").val(data.unitFprice);
+                    $("#cpriceAmt_calc").val(data.cpriceAmt);
+                    $("#intAmt_calc").val(data.intAmt);
+                    $("#fpriceAmt_calc").val(data.fpriceAmt);
+                    $("#exerYield_calc").val(data.exerYield);
+                    $("#yield_calc").val(data.yield);
+                    saveCalcParam = getCalcParam();
+                }
+
+                //---add by 裴家俊  费用设置  2019/03/28----start--------
+                //$("#tradeAmtAndFee").val('');//交易金额置空
+                // $("#commissionAmt").val('').trigger("blur");
+                // $("#procedureAmt").val('').trigger("blur");
+                // $("#settleAmt").val('').trigger("blur");
+                if(data.tradeFeeList&&data.tradeFeeList.length>0){
+                    // 交易手续费条数
+                    var cntP = 0;
+                    // 结算服务费条数
+                    var cntSS = 0;
+                    // 结算费条数
+                    var cntS = 0;
+                    // 经手费条数
+                    var cntM = 0;
+                    // 佣金条数
+                    var cntC = 0;
+                    // 印花税条数
+                    var cntST = 0;
+                    $.each(data.tradeFeeList,function(i,v){
+                        if(v.feeType==FEE_TYPE_05&&v.feeAmt){
+                            cntC++;
+                            isPayWithTrade = v.isPayWithTrade;
+                            // add by wangguoxian 费用设置 20190808 start
+                            $("#isPayWithTrade").val(isPayWithTrade);
+                            // add by wangguoxian 费用设置 20190808 end
+                            commissionAmt = v.feeAmt;
+                            $("#commissionAmtRate").val(v.feeRate).trigger("blur");
+                            var feeAmt = v.feeAmt;
+                            var tradeMarket = $('#tradeMarket').val();
+                            /*if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
+                                var tradeMarketMode = $("#tradeMarketMode").val();
+                                if (tradeMarketMode == SHARES_TRADE_MARKET_01) {
+                                    $("#commissionAmt").val(0).prop('disabled', true).trigger("change");
+                                    feeAmt = 0;
+                                }
+                            }*/
+                            if (feeAmt) {
+                                $("#commissionAmt").val(v.feeAmt).prop('disabled', false).trigger("blur").trigger("change");
+                            }
+                            // modified by wangguoxian 费用设置 20190808 start
+                            changeTradeAmtAndFee();
+                            /*if (isPayWithTrade == YES_OR_NO_Y) {
+
+                                if($("#ps").val()==PS_T01){
+                                    $("#tradeAmtAndFee").val(Number(data.fpriceAmt)+Number(feeAmt)).trigger("blur");
+                                }
+                                if($("#ps").val()==PS_T02){
+                                    $("#tradeAmtAndFee").val(Number(data.fpriceAmt)-Number(feeAmt)).trigger("blur");
+                                }
+                            }else{
+                                $("#tradeAmtAndFee").val(Number(data.fpriceAmt)).trigger("blur");
+                            }*/
+                            // modified by wangguoxian 费用设置 20190808 end
+                        }
+                        if(v.feeType==FEE_TYPE_02&&v.feeAmt){
+                            cntST++;
+                            stampDutyIsPayWithTrade = v.isPayWithTrade;
+                            $("#stampDutyIsPayWithTrade").val(stampDutyIsPayWithTrade);
+                            stampDutyAmt = v.feeAmt;
+                            var feeAmt = v.feeAmt;
+                            var tradeMarket = $('#tradeMarket').val();
+                            if (feeAmt) {
+                                $("#stampDutyAmt").val(v.feeAmt).prop('disabled', false).trigger("blur").trigger("change");
+                            }
+                            changeTradeAmtAndFee();
+                        }
+
+                        if(v.feeType==FEE_TYPE_06&&v.feeAmt){
+                            cntP++;
+                            $("#procedureAmt").val(v.feeAmt).trigger("blur");
+                            if(procedureAmt_f){
+                                $('#procedureAmt').val(procedureAmt_f);
+                            }
+                            $("#procedureAmtRate").val(v.feeRate).trigger("blur");
+                        }
+
+                        if(v.feeType=='B08' && v.feeAmt){
+                            cntSS++;
+                            $("#settleServiceAmt").val(v.feeAmt).trigger("blur");
+                            if(settleAmt_f){
+                                $('#settleServiceAmt').val(settleAmt_f);
+                            }
+                        }
+
+                        //加入结算费经手费
+                        if(v.feeType==FEE_TYPE_07&&v.feeAmt){
+                            cntS++;
+                            settleIsPayWithTrade = v.isPayWithTrade;
+                            $("#settleIsPayWithTrade").val(settleIsPayWithTrade);
+                            $("#settleAmt").val(v.feeAmt).trigger("blur");
+                        }
+                        if(v.feeType==FEE_TYPE_01&&v.feeAmt){
+                            cntM++;
+                            exchangeIsPayWithTrade = v.isPayWithTrade;
+                            $("#exchangeIsPayWithTrade").val(exchangeIsPayWithTrade);
+                            $("#exchangeAmt").val(v.feeAmt).trigger("blur");
+                        }
+
+                        /*if(v.feeType==FEE_TYPE_04&&v.feeAmt){
+                            $("#transferAmt").val(v.feeAmt).trigger("blur");
+                        }*/
+                    });
+                    // 按照最新费用规则计算相关费用无结果则清空相关费用
+                    if(cntP == 0){
+                        $("#procedureAmt").val("").trigger("blur");
+                    }
+                    if(cntSS == 0){
+                        $("#settleServiceAmt").val("").trigger("blur");
+                    }
+                    if(cntS == 0){
+                        //结算费置空
+                        $("#settleAmt").val("").trigger("blur");
+                    }
+                    if(cntM == 0){
+                        //经手费置空
+                        $("#exchangeAmt").val("").trigger("blur");
+                    }
+                    if(cntC == 0){
+                        $("#commissionAmt").val("").trigger("blur");
+                    }
+                    if(cntST == 0){
+                        $("#stampDutyAmt").val("").trigger("blur");
+                    }
+                }
+                else{
+                    $("#exchangeAmt").val("").trigger("blur");
+                    $("#commissionAmt").val("").trigger("change").trigger("blur");
+                    $("#stampDutyAmt").val("").trigger("change").trigger("blur");
+                    $("#procedureAmt").val("").trigger("blur");
+                    $("#settleServiceAmt").val("").trigger("blur");
+                    $("#settleAmt").val("").trigger("blur");
+                    $("#procedureAmtRate").val("").trigger("blur");
+                    $("#commissionAmtRate").val("").trigger("blur");
+                    $("#transferAmt").val("").trigger("blur");
+                }
+
+                //一级缴款,所有费用为0
+                if($("#payType").val()=="02"){
+                    $("#commissionAmt").val('').trigger("blur");
+                    $("#settleAmt").val('').trigger("blur");
+                    $("#exchangeAmt").val('').trigger("blur");
+                    $("#stampDutyAmt").val('').trigger("blur");
+                    $("#procedureAmt").val('').trigger("blur");
+                    $("#settleServiceAmt").val("").trigger("blur");
+                }
+
+                counterIdChangeFee();
+                // 将甲类户对应的交易手续费、结算费、佣金设置为不可编辑
+                // controllFeeItem();
+                //---add by 裴家俊  费用设置  2019/03/28----end--------
+            },false);
+        });
     });
 
     var updateBussTrdTransfenpeiTable =function(){
@@ -3408,7 +3415,9 @@ var table;
     				paramObj.portfolioId = $("#portfolioId").val();
     				paramObj.finprodId = $("#finprodId").val();
     				paramObj.invAim = $("#invAim").val();
-    				paramObj.chlId = $("#chlId").val();
+                    if($("#chlId").val()) {
+                        paramObj.chlId = $("#chlId").val();
+                    }
     				paramObj.counterId = $("#trdInvestPersonInfo_counterId").val();
     				paramObj.tradeDate = $("#tradeDate").val();
     				Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getCprice'), paramObj, function (result) {

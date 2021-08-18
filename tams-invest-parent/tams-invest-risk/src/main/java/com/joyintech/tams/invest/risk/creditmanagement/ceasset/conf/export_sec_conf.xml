@@ -7,7 +7,8 @@
             <Cell order="3" name="授信总额度(亿元)">creditAmt</Cell>
             <Cell order="4" name="生效日">vdate</Cell>
             <Cell order="5" name="到期日">mdate</Cell>
-            <Cell order="6" name="备注">remark</Cell>
+            <Cell order="6" name="价格">creditPrice</Cell>
+            <Cell order="7" name="备注">remark</Cell>
   		</Row>
     </Worksheet>
 </Workbook>

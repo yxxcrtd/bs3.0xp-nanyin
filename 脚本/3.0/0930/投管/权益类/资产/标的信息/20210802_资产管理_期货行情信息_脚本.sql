@@ -1,12 +1,17 @@
 -- ----------------------------
 -- Table structure for SYS_MENU
 -- ----------------------------
+DELETE FROM SYS_MENU WHERE MENU_ID='ASSET_MANAGEMENT_001_003_021';
 INSERT INTO SYS_MENU ("MENU_ID", "SYSTEM_CODE", "ICON", "PARENT_MENU_ID", "PAGE_ID", "ORDER_NO", "IS_SPREAD", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") 
 VALUES ('ASSET_MANAGEMENT_001_003_021', 'FIN', NULL, 'ASSET_MANAGEMENT_001_003', 'MstFuturesPriceInfo001', '21', '02', '期货行情信息', 'system', NULL, SYSDATE, 'system', SYSDATE);
 
 -- ----------------------------
 -- Table structure for SYS_PAGE
 -- ----------------------------
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID='MstFuturesPriceInfo001';
+DELETE FROM SYS_PAGE WHERE PAGE_ID='MstFuturesPriceInfo002';
+
 INSERT INTO SYS_PAGE ("PAGE_ID", "SYSTEM_CODE", "PAGE_URL", "PAGE_FILE", "MENU_ID", "HEIGHT", "WIDTH", "IS_HP_SELECT", "IS_NEED_WORKFLOW", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") 
 VALUES ('MstFuturesPriceInfo001', 'MST', '/invest/basicdata/mstfuturespriceinfo/MstFuturesPriceInfo001', 'invest/basicdata/mstfuturespriceinfo/MstFuturesPriceInfo001', 'ASSET_MANAGEMENT_001_003_021', NULL, NULL, '02', '01', '期货行情信息', 'system', NULL, SYSDATE, 'system', SYSDATE);
 
@@ -16,6 +21,7 @@ VALUES ('MstFuturesPriceInfo002', 'MST', '/invest/basicdata/mstfuturespriceinfo/
 -- ----------------------------
 -- Table structure for MST_FUTURES_PRICE
 -- ----------------------------
+DROP TABLE MST_FUTURES_PRICE;
 CREATE TABLE "MST_FUTURES_PRICE" (
   "FUTURES_ID" VARCHAR2(100 BYTE) NOT NULL,
   "TRADE_DATE" DATE NOT NULL,
@@ -76,13 +82,12 @@ ALTER TABLE "MST_FUTURES_PRICE" ADD CONSTRAINT "SYS_C00134207" CHECK ("UPDATE_US
 ALTER TABLE "MST_FUTURES_PRICE" ADD CONSTRAINT "SYS_C00134208" CHECK ("UPDATE_TIME" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 
-
-
-
-
 -- ----------------------------
 -- Table structure for SYS_WFL_BUSINESS_MODULE
 -- ----------------------------
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='MstFuturesPriceInfo002' AND ELEMENT_ID='MstFuturesPriceInfo001_btn_delete';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='MstFuturesPriceInfo002' AND ELEMENT_ID='MstFuturesPriceInfo002_btn_save';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='MstFuturesPriceInfo002' AND ELEMENT_ID='MstFuturesPriceInfo002_btn_submit';
 INSERT INTO SYS_WFL_BUSINESS_MODULE ("PAGE_ID", "ELEMENT_ID", "MODULE_ID", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('MstFuturesPriceInfo002', 'MstFuturesPriceInfo001_btn_delete', 'oneApproval', 'system', NULL, SYSDATE, 'system', SYSDATE);
 INSERT INTO SYS_WFL_BUSINESS_MODULE ("PAGE_ID", "ELEMENT_ID", "MODULE_ID", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('MstFuturesPriceInfo002', 'MstFuturesPriceInfo002_btn_save', 'oneApproval', 'system', NULL, SYSDATE, 'system', SYSDATE);
 INSERT INTO SYS_WFL_BUSINESS_MODULE ("PAGE_ID", "ELEMENT_ID", "MODULE_ID", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('MstFuturesPriceInfo002', 'MstFuturesPriceInfo002_btn_submit', 'oneApproval', 'system', NULL, SYSDATE, 'system', SYSDATE);

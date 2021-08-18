@@ -137,6 +137,19 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      */
     private String assetType;
 
+
+    public String getRiskType() {
+        return riskType;
+    }
+
+    public void setRiskType(String riskType) {
+        this.riskType = riskType;
+    }
+
+    /**
+     * 风险五级分类
+     */
+    private String riskType;
     /**
      * 核算分类
      */
@@ -1736,7 +1749,15 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
             return this.getAssetType();
         }
     }
-
+    public String getRiskTypeFmt() {
+        if(StringUtil.isNotEmpty(this.getRiskType())
+                && StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.风险五级分类, this.getRiskType()))) {
+            return SysDataUtil.getNameFromDataDict(DictCode.风险五级分类, this.getRiskType());
+        }
+        else {
+            return this.getRiskType();
+        }
+    }
     public String getDataSourceFmt() {
         if(StringUtil.isNotEmpty(this.getDataSource())
                 && StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.估值数据来源, this.getDataSource()))) {

@@ -339,18 +339,18 @@
         CREDIT_LINES.MDATE mdate,
         CREDIT_LINES.CREDIT_AMT/100000000 creditAmt,
         table1.creditAmt creditAmtNl,
-        CASE WHEN NVL(DECODE(CREDIT_LINES.SEQNO,'0001',table2.amountSum,table3.amountSum),0)&lt;0 THEN 0
-        ELSE NVL(DECODE(CREDIT_LINES.SEQNO,'0001',table2.amountSum,table3.amountSum),0)
+        CASE WHEN NVL(DECODE(CREDIT_LINES.CREDIT_MST_ID,'0001',table2.amountSum,table3.amountSum),0)&lt;0 THEN 0
+        ELSE NVL(DECODE(CREDIT_LINES.CREDIT_MST_ID,'0001',table2.amountSum,table3.amountSum),0)
         END AS usedAmt,
         CASE WHEN
-        NVL(DECODE(CREDIT_LINES.SEQNO,'0001',table5.amountSum,table7.amountSum),0)&lt;0 THEN 0
+        NVL(DECODE(CREDIT_LINES.CREDIT_MST_ID,'0001',table5.amountSum,table7.amountSum),0)&lt;0 THEN 0
         ELSE
-        NVL(DECODE(CREDIT_LINES.SEQNO,'0001',table5.amountSum,table7.amountSum),0)
+        NVL(DECODE(CREDIT_LINES.CREDIT_MST_ID,'0001',table5.amountSum,table7.amountSum),0)
         END AS usedZizhuAmt,
         CASE WHEN
-        NVL(DECODE(CREDIT_LINES.SEQNO,'0001',table6.amountSum,table8.amountSum),0)&lt;0 THEN 0
+        NVL(DECODE(CREDIT_LINES.CREDIT_MST_ID,'0001',table6.amountSum,table8.amountSum),0)&lt;0 THEN 0
         ELSE
-        NVL(DECODE(CREDIT_LINES.SEQNO,'0001',table6.amountSum,table8.amountSum),0)
+        NVL(DECODE(CREDIT_LINES.CREDIT_MST_ID,'0001',table6.amountSum,table8.amountSum),0)
         END AS usedEnstustAmt,
         CASE WHEN
         NVL(table4.amountSum,0)&lt;0 THEN 0
@@ -663,6 +663,7 @@
         CREDIT_LINES.SEQNO SEQNO,
         CREDIT_LINES.PFLSH PFLSH,
         CREDIT_LINES.CUSTOMER_ID customerId,
+        CREDIT_LINES.CREDIT_PRICE creditPrice,
         FIN_PRODUCT.FINPROD_NAME customerName,
         CREDIT_LINES.VDATE VDATE,
         CREDIT_LINES.MDATE MDATE,

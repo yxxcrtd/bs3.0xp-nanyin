@@ -20,7 +20,7 @@
                         <div class="layui-input-inline input-inline">
                             <select type="text" id="curveCode" name="curveCode"
                                     class="layui-input form-input input-select"
-                                    data-th-data-url="@{/common/basicdata/marketdata/yieldcurveinfo/ComYieldCurveInfo001/getCurveName}" allowClear="true"
+                                    data-th-data-result="${CURVE_CODE}" allowClear="true"
                                     placeholder="请输入内容" data-th-initValue="${entity?.curveCode}"
                                     required="required" data-th-placeholder="#{SysCommon.placeholder}"
                                     formatoption="true">

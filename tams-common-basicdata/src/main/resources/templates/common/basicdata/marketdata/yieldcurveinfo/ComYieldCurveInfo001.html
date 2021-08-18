@@ -20,8 +20,9 @@
                     <label class="layui-form-label form-lable" data-th-text="#{ComYieldCurveInfo001.curveName}">曲线名称</label>
                      <div class="layui-input-inline input-inline">
 	                 <select type="text" id="curveCode" name="curveCode" class="layui-input form-input input-select"  
-                             data-th-data-url="@{/common/basicdata/marketdata/yieldcurveinfo/ComYieldCurveInfo001/getCurveName}" allowClear="true"
+
 		                     placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                             data-th-data-result="${CURVE_CODE}" allowClear="true"
 		                     formatoption = "true">
                         <option></option>
                      </select>

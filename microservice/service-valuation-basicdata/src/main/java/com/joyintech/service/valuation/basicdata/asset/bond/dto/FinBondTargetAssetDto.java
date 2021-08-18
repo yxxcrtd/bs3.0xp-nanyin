@@ -228,6 +228,19 @@ public class FinBondTargetAssetDto extends FinProduct{
      */
     private Date exerciseDate;
 
+    public String getRisktype() {
+        return risktype;
+    }
+
+    public void setRisktype(String risktype) {
+        this.risktype = risktype;
+    }
+
+    /**
+     * 风险类型
+     */
+    private String risktype;
+
     /**
      * 转债信息
      */

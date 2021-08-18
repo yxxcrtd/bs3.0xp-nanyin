@@ -50,6 +50,17 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
         return super.queryForPage(page, length, () -> comBondQuotationInfoMapper.select(pageParam));
     }
     /**
+     * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
+     * @param pageParam pageParam
+     * @return Page类  Page
+     * @throws Exception 异常信息
+     */
+    public Page<ComBondQuotationInfoDto> selectForMod(int page, int length, Map<String, Object> pageParam)
+            throws Exception {
+        pageParam.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_债券.getValue());
+        return super.queryForPage(page, length, () -> comBondQuotationInfoMapper.selectForMod(pageParam));
+    }
+    /**
      * 资产代码的联想下拉框
      * @param secId
      * @return List
