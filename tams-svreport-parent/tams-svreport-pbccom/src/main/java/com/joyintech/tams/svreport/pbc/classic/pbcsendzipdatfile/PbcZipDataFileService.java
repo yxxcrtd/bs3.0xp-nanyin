@@ -32,6 +32,8 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.system.instregbankcode.dao.SysInstRegBankCode001Mapper;
+import com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode001Dto;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.*;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.*;
 import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsUtil;
@@ -84,6 +86,9 @@ public class PbcZipDataFileService {
 	@Autowired
 	private PbcMonthReportMapper pbcMonthReportMapper;
     private  List<ChbTypeMappingEx> chbTypeMappingExList=null;
+
+	@Autowired
+	private SysInstRegBankCode001Mapper sysInstRegBankCode001Mapper;
 
 	@Autowired
 	private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
@@ -420,9 +425,14 @@ public class PbcZipDataFileService {
 				Optional<PbcProdAssetpoolCode> first = pbcProdAssetpoolCodes.stream().filter(pbcProdAssetpoolCode ->
 						pbcPrdBaseinfoSubDat.getProdId().equals(pbcProdAssetpoolCode.getInsideProdId())).findFirst();
 				if(first.isPresent()){
-					innerProdIdsNew.add(pbcPrdBaseinfoSubDat.getProdId());
-					pbcPrdBaseinfoSubDatsNew.add(pbcPrdBaseinfoSubDat);
-					innerProdIdMapping.put(pbcPrdBaseinfoSubDat.getProdId(),first.get().getPbcCode());
+					PbcProdAssetpoolCode prodAssetpoolCode = first.get();
+					if(StrUtil.isNotEmpty(prodAssetpoolCode.getPbcCode())){
+						innerProdIdsNew.add(pbcPrdBaseinfoSubDat.getProdId());
+						pbcPrdBaseinfoSubDatsNew.add(pbcPrdBaseinfoSubDat);
+						innerProdIdMapping.put(pbcPrdBaseinfoSubDat.getProdId(),prodAssetpoolCode.getPbcCode());
+					}else{
+						noPbcIdsList.add(pbcPrdBaseinfoSubDat.getProdId());
+					}
 				}else{
 					noPbcIdsList.add(pbcPrdBaseinfoSubDat.getProdId());
 				}
@@ -444,10 +454,16 @@ public class PbcZipDataFileService {
 						pbcPrdBaseinfoSubDatsNew.add(subDat);
 						innerProdIdMapping.put(prodId,first.get().getPbcCode());
 					}else{
-						String pbcProdId = PbcClassicsUtil.getPbcProdId(subDat.getIssuePartyId(), subDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, subDat.getVdate());
+						if(StrUtil.isNotEmpty(subDat.getIssuePartyId())){
+							SysInstRegBankCode001Dto sysInstRegBankCode001Dto = sysInstRegBankCode001Mapper.selectRegistBankCode(subDat.getIssuePartyId());
+							if(StrUtil.isNotEmpty(sysInstRegBankCode001Dto.getRegistBankCode())){
+								String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(sysInstRegBankCode001Dto.getRegistBankCode(), subDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, subDat.getVdate());
+								subDat.setPbcProdId(pbcProdIdExternal);
+								innerProdIdMapping.put(prodId, pbcProdIdExternal);
+							}
+						}
 						innerProdIdsNew.add(subDat.getProdId());
 						pbcPrdBaseinfoSubDatsNew.add(subDat);
-						innerProdIdMapping.put(prodId, pbcProdId);
 					}
 				}
 			}

@@ -266,17 +266,31 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(endList)){
                     for (PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoEndSubDat : endList) {
+                        if(StrUtil.isEmpty(pbcPrdBaseinfoEndSubDat.getRegistSeqno())){
+                            pbcPrdBaseinfoEndSubDat.setRegistSeqno(UUID.randomUUID().toString());
+                        }
                         pbcPrdBaseinfoEndSubDatMapper.insert(pbcPrdBaseinfoEndSubDat);
                     }
                 }
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(zipList)){
+                    List<PbcSendZipDatFile> insertList = new ArrayList<>();
                     for (PbcSendZipDatFile pbcSendZipDatFile : zipList) {
                         if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
                             pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
                         }
-                        pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(endList) ? endList.size() : 0);
-                        pbcSendZipDatFileMapper.insert(pbcSendZipDatFile);
+                        if("PIB".equals(pbcSendZipDatFile.getDatZipDatType())){
+                            pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(endList) ? endList.size() : 0);
+                        }else{
+                            pbcSendZipDatFile.setPibDetailCnt(0);
+                        }
+                        int pi = pbcSendZipDatFileMapper.countByDatZipCode(pbcSendZipDatFile.getDatZipCode(), "PI");
+                        if(pi == 0){
+                            insertList.add(pbcSendZipDatFile);
+                        }
+                    }
+                    for (PbcSendZipDatFile sendZipDatFile : insertList) {
+                        pbcSendZipDatFileMapper.insert(sendZipDatFile);
                     }
                 }
             }

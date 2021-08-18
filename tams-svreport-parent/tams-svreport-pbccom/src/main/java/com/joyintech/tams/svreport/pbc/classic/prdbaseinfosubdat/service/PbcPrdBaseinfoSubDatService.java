@@ -293,17 +293,31 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(prdList)){
                     for (PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat : prdList) {
+                        if(StrUtil.isEmpty(pbcPrdBaseinfoSubDat.getRegistSeqno())){
+                            pbcPrdBaseinfoSubDat.setRegistSeqno(UUID.randomUUID().toString());
+                        }
                         pbcPrdBaseinfoSubDatMapper.insert(pbcPrdBaseinfoSubDat);
                     }
                 }
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(zipList)){
+                    List<PbcSendZipDatFile> insertList = new ArrayList<>();
                     for (PbcSendZipDatFile pbcSendZipDatFile : zipList) {
                         if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
                             pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
                         }
-                        pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(prdList) ? prdList.size() : 0);
-                        pbcSendZipDatFileMapper.insert(pbcSendZipDatFile);
+                        if("PIB".equals(pbcSendZipDatFile.getDatZipDatType())){
+                            pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(prdList) ? prdList.size() : 0);
+                        }else{
+                            pbcSendZipDatFile.setPibDetailCnt(0);
+                        }
+                        int pi = pbcSendZipDatFileMapper.countByDatZipCode(pbcSendZipDatFile.getDatZipCode(), "PI");
+                        if(pi == 0){
+                            insertList.add(pbcSendZipDatFile);
+                        }
+                    }
+                    for (PbcSendZipDatFile sendZipDatFile : insertList) {
+                        pbcSendZipDatFileMapper.insert(sendZipDatFile);
                     }
                 }
             }
