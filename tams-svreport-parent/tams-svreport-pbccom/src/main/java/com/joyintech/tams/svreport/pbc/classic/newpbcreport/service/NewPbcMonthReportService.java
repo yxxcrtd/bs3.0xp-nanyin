@@ -206,8 +206,19 @@ public class NewPbcMonthReportService {
                 return errorList;
             }
             String fName = strName[0];
-            String statusVdate1 = fName.substring(0,4).concat("-").concat(fName.substring(4,6)).concat("-").concat(fName.substring(6,8));
-            String statusVdate = fName.substring(0,4).concat(fName.substring(4,6));//.concat("-").concat(fName.substring(6,8));
+            String year = fName.substring(0, 4);
+            String mon = fName.substring(4, 6);
+            String day = fName.substring(6, 8);
+            String statusVdate1;
+            String statusVdate;
+            if("01".equals(mon) && "01".equals(day)){
+                int lastYear = Integer.parseInt(year) - 1;
+                statusVdate1 = String.valueOf(lastYear).concat("-").concat("12").concat("-").concat("31");
+                statusVdate = String.valueOf(lastYear).concat("12");//.concat("-").concat(fName.substring(6,8));
+            }else{
+                statusVdate1 = year.concat("-").concat(fName.substring(4,6)).concat("-").concat(fName.substring(6,8));
+                statusVdate = year.concat(fName.substring(4,6));//.concat("-").concat(fName.substring(6,8));
+            }
             Map<String,Object> paramMap = new HashMap<>();
             paramMap.put("statusVdate",statusVdate);
             paramMap.put("datZipType","MI");
