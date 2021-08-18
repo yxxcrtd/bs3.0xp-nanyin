@@ -252,16 +252,27 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 }
                 List<PbcPrdBaseinfoEndSubDat> endList = resultMap.get("endList");
                 List<PbcSendZipDatFile> zipList = resultMap.get("zipList");
+                List<String> reqIds = new ArrayList<>();
                 for (PbcPrdBaseinfoEndSubDat subDat : endList) {
-                    Optional<PbcPrdBaseinfoEndSubDat> any = baseinfoSubDatsNoSendProdIds.stream()
-                            .filter(baseinfoSubDat -> subDat.getProdId().equals(baseinfoSubDat.getProdId())).findAny();
-                    if(!any.isPresent()){
-                        baseinfoSubDatsNoSendProdIds.add(subDat);
+                    if(StrUtil.isNotEmpty(subDat.getProdId())){
+                        Optional<PbcPrdBaseinfoEndSubDat> any = baseinfoSubDatsNoSendProdIds.stream()
+                                .filter(baseinfoSubDat -> subDat.getProdId().equals(baseinfoSubDat.getProdId())).findAny();
+                        if(!any.isPresent()){
+                            baseinfoSubDatsNoSendProdIds.add(subDat);
+                        }
+                    }else{
+                        reqIds.add(subDat.getRegistSeqno());
                     }
+
                 }
                 //删除未报送有修改的记录 并重新插入
                 if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendProdIds)){
                     pbcPrdBaseinfoEndSubDatMapper.deleteBatchByProdId(baseinfoSubDatsNoSendProdIds);
+                }
+                if(CollectionUtil.isNotEmpty(reqIds)){
+                    for (String reqId : reqIds) {
+                        pbcPrdBaseinfoEndSubDatMapper.deleteByPrimaryKey(reqId);
+                    }
                 }
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(endList)){
@@ -275,24 +286,26 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(zipList)){
                     List<PbcSendZipDatFile> insertList = new ArrayList<>();
+                    List<PbcSendZipDatFile> updateList = new ArrayList<>();
                     for (PbcSendZipDatFile pbcSendZipDatFile : zipList) {
                         if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
                             pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
                         }
                         String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
                         pbcSendZipDatFile.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);
-                        if("PIE".equals(pbcSendZipDatFile.getDatZipDatType())){
-                            pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(endList) ? endList.size() : 0);
-                        }else{
-                            pbcSendZipDatFile.setPibDetailCnt(0);
-                        }
-                        int pi = pbcSendZipDatFileMapper.countByDatZipCode(pbcSendZipDatFile.getDatZipCode(), "PI");
-                        if(pi == 0){
+                        PbcSendZipDatFile sendZipDatFile = pbcSendZipDatFileMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), "PIB");
+                        if(sendZipDatFile == null){
                             insertList.add(pbcSendZipDatFile);
+                        }else{
+                            pbcSendZipDatFile.setRegistSeqno(sendZipDatFile.getRegistSeqno());
+                            updateList.add(pbcSendZipDatFile);
                         }
                     }
                     for (PbcSendZipDatFile sendZipDatFile : insertList) {
                         pbcSendZipDatFileMapper.insert(sendZipDatFile);
+                    }
+                    for (PbcSendZipDatFile sendZipDatFile : updateList) {
+                        pbcSendZipDatFileMapper.updateByPrimaryKey(sendZipDatFile);
                     }
                 }
             }
