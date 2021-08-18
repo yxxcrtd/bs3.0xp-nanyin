@@ -275,24 +275,26 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(zipList)){
                     List<PbcSendZipDatFile> insertList = new ArrayList<>();
+                    List<PbcSendZipDatFile> updateList = new ArrayList<>();
                     for (PbcSendZipDatFile pbcSendZipDatFile : zipList) {
                         if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
                             pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
                         }
                         String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
                         pbcSendZipDatFile.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);
-                        if("PIE".equals(pbcSendZipDatFile.getDatZipDatType())){
-                            pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(endList) ? endList.size() : 0);
-                        }else{
-                            pbcSendZipDatFile.setPibDetailCnt(0);
-                        }
-                        int pi = pbcSendZipDatFileMapper.countByDatZipCode(pbcSendZipDatFile.getDatZipCode(), "PI");
-                        if(pi == 0){
+                        PbcSendZipDatFile sendZipDatFile = pbcSendZipDatFileMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), "PIB");
+                        if(sendZipDatFile == null){
                             insertList.add(pbcSendZipDatFile);
+                        }else{
+                            pbcSendZipDatFile.setRegistSeqno(sendZipDatFile.getRegistSeqno());
+                            updateList.add(pbcSendZipDatFile);
                         }
                     }
                     for (PbcSendZipDatFile sendZipDatFile : insertList) {
                         pbcSendZipDatFileMapper.insert(sendZipDatFile);
+                    }
+                    for (PbcSendZipDatFile sendZipDatFile : updateList) {
+                        pbcSendZipDatFileMapper.updateByPrimaryKey(sendZipDatFile);
                     }
                 }
             }

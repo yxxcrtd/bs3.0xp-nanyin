@@ -527,12 +527,45 @@
         and REPORTUUID = #{reportuuid,jdbcType=CHAR}
     </select>
 
-    <select id="countByDatZipCode" resultType="integer" >
+    <select id="selectByDatZipCode" resultType="integer" resultMap="BaseResultMap"  >
         select
-        count(1)
+        <include refid="Base_Column_List" />
         from PBC_SEND_ZIP_DAT_FILE
         where
-        DAT_ZIP_TYPE= #{datZipType,jdbcType=VARCHAR}
+        DAT_ZIP_DAT_TYPE= #{datZipType,jdbcType=VARCHAR}
         and DAT_ZIP_CODE= #{datZipCode,jdbcType=VARCHAR}
     </select>
+    <update id="updateByZipCode" parameterType="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
+        update PBC_SEND_ZIP_DAT_FILE
+        set DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR},
+            DAT_ZIP_PATH = #{datZipPath,jdbcType=VARCHAR},
+            DAT_ZIP_TYPE = #{datZipType,jdbcType=VARCHAR},
+            DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR},
+            DAT_ZIP_STATUS = #{datZipStatus,jdbcType=VARCHAR},
+            ZIP_DOWNLOAD_TIME = #{zipDownloadTime,jdbcType=DATE},
+            STATUS_VDATE = #{statusVdate,jdbcType=VARCHAR},
+            REPORTUUID = #{reportuuid,jdbcType=CHAR},
+            PIB_DETAIL_CNT = #{pibDetailCnt,jdbcType=DECIMAL},
+            SUBMIT_TIME = #{submitTime,jdbcType=DATE},
+            ZIP_SEND_STATUS = #{zipSendStatus,jdbcType=VARCHAR},
+            RETURN_ZIP_SEND_STATUS = #{returnZipSendStatus,jdbcType=VARCHAR},
+            RETURN_ZIP_CODE = #{returnZipCode,jdbcType=VARCHAR},
+            RETURN_TIME = #{returnTime,jdbcType=DATE},
+            RETURN_MSG = #{returnMsg,jdbcType=VARCHAR},
+            RETURN_ERROR_CNT = #{returnErrorCnt,jdbcType=DECIMAL},
+            RETURN_PASS_CNT = #{returnPassCnt,jdbcType=DECIMAL},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+            REPORT_ORG_NAME = #{reportOrgName,jdbcType=VARCHAR},
+            SOCIAL_CREDIT_CODE = #{socialCreditCode,jdbcType=VARCHAR},
+            FIN_INSTITUTION_CODE = #{finInstitutionCode,jdbcType=VARCHAR},
+            PROD_VARIETY = #{prodVariety,jdbcType=VARCHAR},
+            PERSON_LIABLE = #{personLiable,jdbcType=VARCHAR},
+            CONTACT = #{contact,jdbcType=VARCHAR},
+            REPORT_DATE = #{reportDate,jdbcType=DATE}
+        where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR} and DAT_ZIP_TYPE = 'PI'
+    </update>
 </mapper>
