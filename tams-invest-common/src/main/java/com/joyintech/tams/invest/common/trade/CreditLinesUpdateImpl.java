@@ -922,6 +922,10 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         if (creditLinesOrgItem != null){
             compareAmtOrg = inputDto.getTradeAmt();
             releaseAmtOrg = inputDto.getTradeAmt();
+            if(compareAmtOrg!=null&&releaseAmtOrg!=null&&oneStepInfo!=null&&oneStepInfo.getRiskRatio()!=null){
+                releaseAmtOrg=releaseAmtOrg.multiply(oneStepInfo.getRiskRatio().divide(new BigDecimal(100)));
+                compareAmtOrg=compareAmtOrg.multiply(oneStepInfo.getRiskRatio().divide(new BigDecimal(100)));
+            }
         }
     }
 
