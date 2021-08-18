@@ -176,6 +176,15 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 			if (CollectionUtils.isNotEmpty(dataList)) {
 				List<String> data = new ArrayList<String>();
 				List<ProPeoplebankcodeManagement001Dto> entities = convertToBean(dataList);
+
+				for(ProPeoplebankcodeManagement001Dto dto : entities){
+					if(dto.getPbcCode().length()>15){
+						webResult.setMessage("人行产品代码长度不得大于15");
+						webResult.setMessageType(MessageType.错误消息);
+						return webResult;
+					}
+				}
+
 				if (entities.size() > 100) {
 					List<ProPeoplebankcodeManagement001Dto> newDataList = new ArrayList<ProPeoplebankcodeManagement001Dto>();
 					newDataList.addAll(entities);
