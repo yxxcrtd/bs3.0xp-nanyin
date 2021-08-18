@@ -65,7 +65,9 @@
                                   round(nvl(gavInfo.marketValue,0)/ppvInfo.tdyAssetValue*100,2) as
 		                          marketValueRatio,gavInfo.portfolioId,ppvInfo.tdyAssetValue,gavInfo.portfolioId1
 		                     from (select psv.CDATE cdate,psv.PORTFOLIO_ID portfolioId,psv.FINPROD_ID finprodId,
-		                                  psv.MARKET_VALUE marketValue,psv.SHARE_AMT shareAmt,psv.DSC_COST_AMT dscCostAmt,
+									decode(FPT.TYPE_7,'03',-1 * NVL(psv.MARKET_VALUE,0),psv.MARKET_VALUE) marketValue,
+									psv.SHARE_AMT shareAmt,
+									decode(FPT.TYPE_7,'03',-1 * NVL(psv.DSC_COST_AMT,0),psv.DSC_COST_AMT) dscCostAmt,
 		                                  pp.PORTFOLIO_NAME portFolioName,NVL(fp.FINPROD_MARKET_ID,NVL(RAI.ASSET_CODE,ATD.FINPROD_ID)) finprodMarketId,
 										  NVL(fp.FINPROD_ABBR,RAI.ASSET_NAME) finprodAbbr,
 										  pp.PORTFOLIO_ID portfolioId1
@@ -79,6 +81,8 @@
 									 and ATD.IS_PERNE = '03'
 								   inner join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
 								   LEFT join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
+									LEFT JOIN FIN_PRODUCT_TYPE FPT
+									ON FPT.FINPROD_ID = psv.FINPROD_ID
 										where 1=1
 										and ((fp.FINPROD_TYPE2 is not null and fp.FINPROD_TYPE2 != 'F28') OR RAI.ORG_ASSET_TYPE1 is NOT NULL
 											OR ATD.PINAN_ASSET_TYPE = 'F07' OR ATD.PINAN_ASSET_TYPE = 'F10')
