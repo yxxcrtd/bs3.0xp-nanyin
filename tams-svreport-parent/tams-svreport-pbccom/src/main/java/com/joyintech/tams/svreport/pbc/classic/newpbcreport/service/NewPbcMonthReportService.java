@@ -305,12 +305,8 @@ public class NewPbcMonthReportService {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(dateTime);
             if("01".equals(month)){
-                if(!(calendar.get(Calendar.DAY_OF_MONTH) == 1)){
-                    ValidMessage dto = new ValidMessage();
-                    dto.setMessage(TIPS_FILE_NAME_ERROR);
-                    validMessages.add(dto);
-                }else if(!(calendar.get(Calendar.DAY_OF_MONTH) == calendar
-                        .getActualMaximum(Calendar.DAY_OF_MONTH))){
+                int day1 = calendar.get(Calendar.DAY_OF_MONTH);
+                if(!(day1 == 1 || day1 == 31)){
                     ValidMessage dto = new ValidMessage();
                     dto.setMessage(TIPS_FILE_NAME_ERROR);
                     validMessages.add(dto);

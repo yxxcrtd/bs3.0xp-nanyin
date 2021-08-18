@@ -950,7 +950,6 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
                      close=")">
                 #{item.prodId,jdbcType=VARCHAR}
             </foreach>
-            AND SEND_STATUS = '01'
         </if>
     </delete>
 

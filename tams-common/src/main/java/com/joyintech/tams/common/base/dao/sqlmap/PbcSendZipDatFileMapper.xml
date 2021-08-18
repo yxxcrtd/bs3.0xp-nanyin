@@ -522,4 +522,13 @@
         where DAT_ZIP_DAT_TYPE = #{reporttype,jdbcType=VARCHAR}
         and REPORTUUID = #{reportuuid,jdbcType=CHAR}
     </select>
+
+    <select id="countByDatZipCode" resultType="integer" >
+        select
+        count(1)
+        from PBC_SEND_ZIP_DAT_FILE
+        where
+        DAT_ZIP_TYPE= #{datZipType,jdbcType=VARCHAR}
+        and DAT_ZIP_CODE= #{datZipCode,jdbcType=VARCHAR}
+    </select>
 </mapper>

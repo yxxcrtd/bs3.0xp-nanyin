@@ -62,4 +62,13 @@
             and rownum=1
        </select>
 
+    <select id="selectRegistBankCode" resultType="com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode001Dto">
+        select
+            regist_bank_code  registBankCode
+        from CHB_ORG_REGIST_BANK_CODE
+        where status = 'E'
+        and pbc_bank_code = #{pbcBankCode,jdbcType=VARCHAR}
+            and rownum = 1
+    </select>
+
 </mapper>

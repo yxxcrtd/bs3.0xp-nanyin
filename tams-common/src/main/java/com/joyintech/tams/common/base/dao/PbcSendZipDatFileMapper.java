@@ -34,4 +34,8 @@ public interface PbcSendZipDatFileMapper {
     int updateByZipCodeAndZipType(@Param("list") List<PbcSendZipDatFile> list);
 
     PbcSendZipDatFile selectByUUIDAndType(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
+
+    int countByDatZipCode(@Param("datZipCode")String datZipCode, @Param("datZipType")String datZipType);
+
+
 }
