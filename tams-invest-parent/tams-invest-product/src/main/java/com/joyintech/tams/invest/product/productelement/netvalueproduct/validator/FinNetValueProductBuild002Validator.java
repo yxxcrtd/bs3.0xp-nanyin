@@ -389,6 +389,11 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                         this.getMessage("FinProductBuild002.continueFlag"))));
             }
         }
+
+        if (!StringUtil.isNotEmpty(entity.getLiquidationDate())) {
+            validList.add(new ValidMessage("liquidationDate", this.getMessage("BUSS_COM_E_0038",
+                    this.getMessage("FinProductBuild002.liquidationDate"))));
+        }
         
         // 付费计划业务组件
         if (entity.getBussFinProductFeeInfoDto() != null && !StringUtil.isEmptyList(entity.getBussFinProductFeeInfoDto().getBussFinProductFeeInfoDtoList()))  {
@@ -421,11 +426,6 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                         "bussFinProductFeeInfoDto.bussFinProductFeeInfoDtoList",
                         this.getMessage("BUSS_COM_E_0038",
                             this.getMessage("BussFinProductFeeInfo.provisionFirstDay"))));
-                }
-
-                if (!StringUtil.isNotEmpty(entity.getLiquidationDate())) {
-                    validList.add(new ValidMessage("liquidationDate", this.getMessage("BUSS_COM_E_0038",
-                            this.getMessage("FinProductBuild002.liquidationDate"))));
                 }
 
                  //计提结束日
