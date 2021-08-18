@@ -1026,6 +1026,7 @@
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
                 REPORTUUID = #{regist.reportuuid,jdbcType=VARCHAR}
                 and REPORTTYPE=#{regist.datZipDatType,jdbcType=VARCHAR}
+                and SEND_STATUS='01'
             </foreach>
         </where>
     </update>
