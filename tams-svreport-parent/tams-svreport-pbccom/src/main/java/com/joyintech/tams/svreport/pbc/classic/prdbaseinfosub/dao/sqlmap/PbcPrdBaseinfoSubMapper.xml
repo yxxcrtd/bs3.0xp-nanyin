@@ -966,7 +966,7 @@
   	<where>
   		t1.STATUS !='04'
         <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
-            <foreach collection="pbcProdIdList" item="items" open="and PBC_PROD_ID in (" separator="," close =")">
+            <foreach collection="pbcProdIdList" item="items" open="and NVL(T2.pbc_code,t1.pbc_prod_id) in (" separator="," close =")">
             #{items,jdbcType=VARCHAR}
             </foreach>
         </if>
