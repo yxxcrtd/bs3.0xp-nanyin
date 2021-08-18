@@ -38,7 +38,7 @@ $(function(){
             }
         },
         rowno: true,
-        searchOnInit: REM_TYPE && (REM_TYPE == 'R7S3'),
+        searchOnInit: false,
         checkbox:false,
         cols:[
               {field:'objTypeName', title: '对象类型',width:300, sortField:'objType'},
@@ -49,12 +49,7 @@ $(function(){
               {field:'pubDate' , title: '日期', type:'date', width:200,},
               {field:'source' , title: '来源', width:150,},
               {field:'operation', width: 200,title: 'SysCommon.operation', style:"text-align: left;",render:function(value,visible,row,options){
-            	  if(purviewElements.indexOf('_manual')!=-1){
-            		  return "<div class='detail manual'>机构信息查询</div>";
-            	  }
-            	  else{
-            		  return "";
-            	  }
+                  return "<div class='detail'>机构信息查询</div>";
               }}
 //              {field:'operation', title: 'SysCommon.operation', width:200, style:"text-align: left;",
 //                    buttons: [{text: '机构信息查询',clas: 'detail',title: '机构信息查询'}]
@@ -72,7 +67,7 @@ $(function(){
     });
 
     //打开机构详细页面
-    table.bind('click', '.manual', function(data, index) {
+    table.bind('click', '.detail', function(data, index) {
         var pageDate = {
             icon: "",
             id: "RISK_MANAGEMENT_001_011_002",

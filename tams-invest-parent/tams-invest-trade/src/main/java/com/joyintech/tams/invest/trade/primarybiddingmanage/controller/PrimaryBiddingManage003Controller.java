@@ -118,25 +118,29 @@ public class PrimaryBiddingManage003Controller extends BaseController {
                      entity.setBidOrderBidPriceList(bidDetailByBidId);
                  }
              }
-             //配置单位 edit by yeming 20210805 start
-             List<BidOrderBidPriceDto> BidOrderBidPriceDtoList = entity.getBidOrderBidPriceList();
-             for (BidOrderBidPriceDto dto : BidOrderBidPriceDtoList) {
-                 if(dto.getBidPrinAmt() != null) {
-                     dto.setBidPrinAmt(dto.getBidPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-                 }
-                 if(dto.getTheWinPrinAmt() != null) {
-                     dto.setTheWinPrinAmt(dto.getTheWinPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-                 }
-                 if(dto.getWinPrinAmt() != null) {
-                     dto.setWinPrinAmt(dto.getWinPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-                 }
-             }
-             //配置单位 edit by yeming 20210805 end
          }
+         //配置单位 edit by yeming 20210805 start
+         if(entity.getWinPrinAmt() != null) {
+             entity.setWinPrinAmt(entity.getWinPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+         }
+         List<BidOrderBidPriceDto> BidOrderBidPriceDtoList = entity.getBidOrderBidPriceList();
+         for (BidOrderBidPriceDto dto : BidOrderBidPriceDtoList) {
+             if(dto.getBidPrinAmt() != null) {
+                 dto.setBidPrinAmt(dto.getBidPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+             }
+             if(dto.getTheWinPrinAmt() != null) {
+                 dto.setTheWinPrinAmt(dto.getTheWinPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+             }
+             if(dto.getWinPrinAmt() != null) {
+                 dto.setWinPrinAmt(dto.getWinPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+             }
+         }
+         //配置单位 edit by yeming 20210805 end
          if (entity.getTrdInvestPersonInfo() != null) {
              model.addAttribute("trdInvestPersonInfo002Dto", JsonUtils.object2Json(entity.getTrdInvestPersonInfo()));
          }
          model.addAttribute(GlobalConstant.ENTITY, entity);
+        model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
         return super.init(model);
     }
     /**

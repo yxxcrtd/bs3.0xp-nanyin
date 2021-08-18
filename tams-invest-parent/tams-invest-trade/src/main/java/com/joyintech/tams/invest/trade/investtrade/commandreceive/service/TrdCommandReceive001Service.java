@@ -144,6 +144,11 @@ public class TrdCommandReceive001Service extends CommonExportService<TrdCommandR
         if (StringUtil.isNotEmpty(matchTypeOld)) {
         	pageParam.put("matchTypeList", StringUtil.splitToList(GlobalConstant.COMMA, matchTypeOld));
         }
+        //是否显示二级指令
+        String secondaryMarketTrade = (String)pageParam.get("secondaryMarketTrade");
+        if (StringUtil.isNotEmpty(secondaryMarketTrade)) {
+            pageParam.put("secondaryMarketTrade", secondaryMarketTrade);
+        }
         String finprodType2Old = (String)pageParam.get("finprodType2");
         List<String> list1=new ArrayList<>();
         List<String> list2=new ArrayList<>();

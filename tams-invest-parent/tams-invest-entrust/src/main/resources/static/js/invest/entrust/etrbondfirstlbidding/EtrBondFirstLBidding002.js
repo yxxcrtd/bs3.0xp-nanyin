@@ -13,7 +13,13 @@
         }
         //配置单位 edit by yeming 20210721 end
         var obj = {tradeDirection:etrPs,timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:entrustNum,assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val(),tradeAmt:$('#tradeAmt').val(),counterId:$('#etrInvestPersonInfo_counterId').val()}
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {tradeDirection:['ps','EtrBondFirstLBidding002.ps'],portfolioCode:['portfolioId','EtrBondFirstLBidding002.portfolioId'],tradeAmount:['entrustNum','EtrBondFirstLBidding002.entrustAmt'],assetType:['assetType1','EtrBondFirstLBidding002.bondType'],counterId:['counterId','trdInvestPersonInfo_counterId'],assetCode:['finprodId','EtrBondFirstLBidding002.finprodId'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
 	/**

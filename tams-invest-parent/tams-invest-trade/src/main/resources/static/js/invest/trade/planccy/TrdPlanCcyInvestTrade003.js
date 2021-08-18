@@ -4,7 +4,13 @@
 $(function() {
     var getriskdata = function () {
         var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#tradeDate').val(),portfolioCode:$('#portfolioId').val(),tradeAmount:$('#shareAmt').val(),assetType:$('#type6').val(),isEnabled:'01',assetCode:$('#finprodId').val()}
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {valDate:['tradeDate','TrdPlanCcyInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdPlanCcyInvestTrade002.portfolioId'],tradeAmount:['shareAmt','TrdPlanCcyInvestTrade003.tradeSha'],assetType:['type6','TrdPlanCcyInvestTrade002.type6'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
     function saveOrSubmit(operateType) {
@@ -376,6 +382,9 @@ $(function() {
         });
       //风险试算
         $('#TrdPlanCcyInvestTrade003_btn_risk').click(function(){
+            if($("#ps").val()==ps_T05){
+                return;
+            }
             var object = $.serializeToObject('#submitForm',true);
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/1/RSK002/F09', object,getriskdata());
             

@@ -25,8 +25,11 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.service.riskrdsinf.event.rsk007.service.Rsk007Service;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.CollectionUtils;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
@@ -164,6 +167,12 @@ public abstract class EventBaseService<V> extends InfBaseService<V> {
     private CalendarService calendarSrc;
 
     /**
+     * 审批接口
+     */
+    @Autowired
+    private Rsk007Service apprService;
+
+    /**
      * 资产索引
      */
     @Autowired
@@ -171,6 +180,12 @@ public abstract class EventBaseService<V> extends InfBaseService<V> {
     
     @Autowired
     private OccupyDbService busiService;
+
+    /**
+     * 线程池
+     */
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Autowired(required = false)
     public IPlatformDate platformDate;
@@ -801,6 +816,47 @@ public abstract class EventBaseService<V> extends InfBaseService<V> {
             });
             //---------update by 裴家俊 20200713 为了指标久期及偏离度所用，数据库算参数会返回两个，一个原值一个现值 end--------
         }
+    }
+
+    /**
+     * 固定值参数值
+     * wangyang1 二级法人改造
+     *
+     * @param paramMap 指标参数
+     * @param mapData 指标参数
+     * @return 固定值参数值
+     * @see
+     * @since 1.0
+     */
+    protected Map<String, Object> getFixedParaVal(Map<String, IParam> paramMap,Map<String, Object> mapData) {
+        Map<String, Object> map = new HashMap<>();
+        paramMap.entrySet().forEach(en -> {
+            String key = en.getKey();
+            IParam para = en.getValue();
+            if (para != null && CommonUtil.isType(para.getParaDisplayType(),
+                    BussinessDictCodeListRds.指标参数实现类型_固定值)) {
+                String content = para.getContent();
+                BigDecimal value = new BigDecimal(content);
+                map.put(key, value);
+            }
+        });
+        if (MultilevelDataAuthorityUtil.isEnabled()) {
+            paramMap.entrySet().forEach(en -> {
+                String key = en.getKey();
+                IParam para = en.getValue();
+                String instCode = mapData.get("instCode").toString();
+                if (!StringUtil.isEmpty(instCode)) {
+                    if (para != null && CommonUtil.isType(para.getParaDisplayType(),
+                            BussinessDictCodeListRds.指标参数实现类型_固定值) &&
+                            instCode.toString().equals(para.getInstitutionCode())) {
+                        String content = para.getContent();
+                        BigDecimal value = new BigDecimal(content);
+                        map.put(key.replace(instCode,BussinessDictCodeListRds.指标参数实现类型_固定值.getValue()), value);
+                    }
+                }
+            });
+        }
+        return map;
     }
 
     /**

@@ -334,6 +334,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	估值方法_成本法(DictCode.估值方法,"02","成本法"),
 	估值方法_市值成本孰低法(DictCode.估值方法,"03","市值成本孰低法"),
 	估值方法_摊余成本法(DictCode.估值方法,"04","摊余成本法"),
+	估值方法_模型法(DictCode.估值方法,"05","模型法"),
 	估值日期_行情日减1(DictCode.估值日期,"01","行情日-1"),
 	估值日期_行情日(DictCode.估值日期,"02","行情日"),
 	估值日期_行情日加1(DictCode.估值日期,"03","行情日+1"),
@@ -1330,6 +1331,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	录入方式_接口导入(DictCode.录入方式,"05","接口导入"),
 	录入方式_销售平台(DictCode.录入方式,"06","销售平台"),
 	估值来源_专家法_EXP(DictCode.估值来源,"EXP","专家法(EXP)"),
+	估值来源_模型法_MOD(DictCode.估值来源,"MOD","模型法(MOD)"),
 	指令类型_质押式逆回购首期_资金交收(DictCode.指令类型,"2716","质押式逆回购首期（资金交收）"),
 	指令类型_质押式逆回购到期_资金到账(DictCode.指令类型,"2717","质押式逆回购到期-资金到账"),
 	指令类型_质押式正回购首期_资金到账(DictCode.指令类型,"2718","质押式正回购首期-资金到账"),
@@ -1846,6 +1848,11 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	ETF基金类型_黄金ETF(DictCode.ETF基金类型,"09","黄金ETF"),
 	ETF基金类型_商品期货ETF(DictCode.ETF基金类型,"10","商品期货ETF"),
 	ETF基金类型_跨境ETF(DictCode.ETF基金类型,"11","跨境ETF"),
+
+	// add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
+	行情价格数据来源_行情信息(DictCode.行情价格数据来源,"01","行情信息"),
+	行情价格数据来源_系统生成(DictCode.行情价格数据来源,"02","系统生成"),
+	// add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
 
 
 	//add by meifaxin 20210713  end

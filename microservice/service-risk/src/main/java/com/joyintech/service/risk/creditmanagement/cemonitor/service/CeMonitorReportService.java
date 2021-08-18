@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,9 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
      */
     public Page<CreditLinesDealDto> selectOrgForPage(int page, int length, Map<String, Object> pageParam)
             throws Exception {
+        if(StringUtil.isEmpty((String)pageParam.get("vdate"))){
+            pageParam.put("vdate", DateUtil.getSysDate());
+        }
         pageParam.put("creditTypeOrg", DictCodeListRsk.授信占用方式_机构授信.getValue());
         pageParam.put("limitType13", DictCodeListRsk.额度分类_非法人机构.getValue());
         pageParam.put("yes01", DictCodeListRsk.是否_是.getValue());
@@ -66,6 +70,9 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));
         }
+        if(StringUtil.isEmpty((String)pageParam.get("vdate"))){
+            pageParam.put("vdate", DateUtil.getSysDate());
+        }
         return super.queryForPage(page, length, () -> ceMonitorReportMapper.selectAssetForPage(pageParam));
     }
     /**
@@ -81,6 +88,9 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
         if (pageParam.get("customerId") != null && StringUtil.isNotEmpty((String)pageParam.get("customerId"))) {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));
+        }
+        if(StringUtil.isEmpty((String)pageParam.get("vdate"))){
+            pageParam.put("vdate", DateUtil.getSysDate());
         }
         return super.queryForPage(page, length, () -> ceMonitorReportMapper.selectAssetGroupForPage(pageParam));
     }

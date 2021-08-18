@@ -144,6 +144,9 @@ $(function() {
 	        	}
 				obj.tradeAmount = bussTrdTransfenpeiDto[i].tradeAmt;
 			}
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
 			list[i]=obj;
 		}
 		if(list.length>1){
@@ -158,6 +161,9 @@ $(function() {
 			if(ps == ps_T06){
 				object.tradeAmount = ['shareAmt','TrdPlanNetInvestTrade002.tradeSha']
 			}
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
 			return object;
 		}else{
 			var object = {
@@ -171,6 +177,9 @@ $(function() {
 			if(ps == ps_T06){
 				object.tradeAmount = ['shareAmt','TrdPlanNetInvestTrade002.tradeSha']
 			}
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
 			return object;
 		}
     }

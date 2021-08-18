@@ -11,14 +11,10 @@
 package com.joyintech.service.riskrdsinf.event.rsk006.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IProdInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -297,6 +293,18 @@ public class Rsk006Service extends EventBaseService<Rsk006InEntity> {
         // 风险事件相关参数与指标相关参数糅合去重(并集)
         Map<String, Set<String>> ptlIndMap = ptlInd.getPtlIndicator();
         unionParamId(indMap, paraIdList, ptlIndMap);
+        //wangyang1 风险二级法人改造 start
+        if (MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isNotEmpty(mapData.get("instCode"))) {
+            String instCode = mapData.get("instCode").toString();
+            Set<String> paraIdListChd = new HashSet<>();
+            paraIdList.forEach(item->{
+                if (item.indexOf(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue())!=-1) {
+                    paraIdListChd.add(item.replace(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue(),instCode));
+                }
+            });
+            paraIdList.addAll(paraIdListChd);
+        }
+        //wangyang1 风险二级法人改造 end
         // 取得所有指标参数信息
         Map<String, IParam> paramMap = getParam(paraIdList);
         // 若指标参数不存在则抛出异常
@@ -334,7 +342,7 @@ public class Rsk006Service extends EventBaseService<Rsk006InEntity> {
             Map<String, Map<String, IValue<Object>>> newValMap = calcParamVal(eveList,
                 paraValMap, null, details);
             // 固定值参数
-            Map<String, Object> map = getFixedParaVal(paramMap);
+            Map<String, Object> map = getFixedParaVal(paramMap,mapData);
             Map<String, IIndicator> leftIndMap = getIndTrendCalcSrc().execute(indMap, paramMap,
                 getIndTrendCalcSrc().filterValMap(new HashMap<>(), paraValMap), eveList, mapData,
                 (newIndMap, indValMap, newIndValMap) -> {

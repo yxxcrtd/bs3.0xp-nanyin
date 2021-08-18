@@ -140,6 +140,19 @@ public class CreditLinesInputDto extends BaseEntity {
      */
     private BigDecimal netPrice;
 
+    /**
+     * 是否是 净值型产品、货币型产品、基金
+     */
+    private String isSpecial;
+
+    public String getIsSpecial() {
+        return isSpecial;
+    }
+
+    public void setIsSpecial(String isSpecial) {
+        this.isSpecial = isSpecial;
+    }
+
     public String getEntrustId() {
         return entrustId;
     }

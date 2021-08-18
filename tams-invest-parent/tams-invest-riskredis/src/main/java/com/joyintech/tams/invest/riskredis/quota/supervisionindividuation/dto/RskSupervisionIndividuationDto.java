@@ -70,8 +70,13 @@ public class RskSupervisionIndividuationDto extends BaseEntity implements ITable
      * 联合设置
      */
     private List<RskIndividUniteDto> uniteList;
+
 	/**
-     * 条件设置编号
+	 * 自定义条件设置
+	 */
+	private List<RskIndividConditionLineDto> conditionLines;
+	/**
+	 * 条件设置编号
      */
     private String conditionId;
 	/**
@@ -237,6 +242,14 @@ public class RskSupervisionIndividuationDto extends BaseEntity implements ITable
 
 	public void setSpecialAssetList(List<RskIndividSpecialAssetDto> specialAssetList) {
 		this.specialAssetList = specialAssetList;
+	}
+
+	public List<RskIndividConditionLineDto> getConditionLines() {
+		return conditionLines;
+	}
+
+	public void setConditionLines(List<RskIndividConditionLineDto> conditionLines) {
+		this.conditionLines = conditionLines;
 	}
 
 	public List<RskIndividUniteDto> getUniteList() {

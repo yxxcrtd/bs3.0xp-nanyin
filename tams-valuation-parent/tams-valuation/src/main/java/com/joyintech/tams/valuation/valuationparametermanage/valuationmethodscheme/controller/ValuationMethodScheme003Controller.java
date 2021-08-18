@@ -10,11 +10,13 @@
 
 package com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.constant.ModelDictCodeList;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -382,10 +384,13 @@ public class ValuationMethodScheme003Controller extends BaseController {
 			param.put("item_code_parent", param.get("invAim"));
 		}
 		List<SelectOptionDto> linkSelectOption = valuationMethodScheme001Service.getLinkSelectOption(param);
-		if (Arrays.asList(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue()).contains(param.get("invAim"))){
-			//过滤掉 估值方法_摊余成本法
-			return linkSelectOption.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
-		}
+//		if (Arrays.asList(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue()).contains(param.get("invAim"))){
+//			//过滤掉 估值方法_摊余成本法
+//			linkSelectOption.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
+//		}
+		//投资目的联动处理start
+		linkSelectOption = valuationMethodScheme001Service.getResultByInvAim(linkSelectOption,param);
+		//投资目的联动处理end
 		return linkSelectOption;
 	}
 
@@ -409,7 +414,11 @@ public class ValuationMethodScheme003Controller extends BaseController {
 			param.put("dict_code_child", DictCode.估值市价.getValue());
 			param.put("item_code_parent", param.get("secType"));
 		}
-		return valuationMethodScheme001Service.getLinkSelectOption(param);
+        List<SelectOptionDto> selectOptionDtoList = valuationMethodScheme001Service.getLinkSelectOption(param);
+		//根据投资目的与估值方法过滤估值市价_专家法
+		selectOptionDtoList = valuationMethodScheme001Service.getResultByInvAimAndValuationMethod(selectOptionDtoList,param);
+
+        return selectOptionDtoList;
 	}
 
 }

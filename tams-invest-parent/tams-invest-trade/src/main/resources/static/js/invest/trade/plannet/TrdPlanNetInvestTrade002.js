@@ -8,6 +8,9 @@ $(function() {
         if($('#type7').val() && $('#type7').val() != ''){
             obj.assetSecType = $('#type7').val();
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         //---add by 裴家俊  2019/03/20  添加资产二级类型条件---end-----
         var object = {valDate:['tradeDate','TrdPlanNetInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdPlanNetInvestTrade002.portfolioId'],tradeAmount:['tradeAmt','TrdPlanNetInvestTrade003.tradeAmt'],assetType:['type6','TrdPlanNetInvestTrade002.type6'],tradeDirection:['ps','TrdPlanNetInvestTrade001.ps'],data:obj}
         if($('#shareAmt').val() != null && $('#shareAmt').val() != ''){
@@ -15,6 +18,9 @@ $(function() {
             obj.amtType = '1';
             object.tradeAmount = ['shareAmt','TrdPlanNetInvestTrade002.tradeSha']
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
 

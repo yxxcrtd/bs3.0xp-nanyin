@@ -36,13 +36,21 @@ public abstract class CreditLinesUpdateAbs implements CreditLinesUpdate, BeanVal
      */
     String RELEASE_MODE;
     /**
-     * 记录金额、场内部撤时比对用
+     * 记录资产授信的占用金额或者份额
      */
-    BigDecimal compareAmt;
+    BigDecimal compareAmtAst;
     /**
-     * 记录金额、场内部撤时比对用
+     * 记录机构授信的占用金额
      */
-    BigDecimal releaseAmt;
+    BigDecimal compareAmtOrg;
+    /**
+     * 记录资产授信占用金额或者份额、场内部撤时比对用
+     */
+    BigDecimal releaseAmtAst;
+    /**
+     * 记录机构授信占用金额或者份额、场内部撤时比对用
+     */
+    BigDecimal releaseAmtOrg;
     /**
      * 处理结果集合
      */

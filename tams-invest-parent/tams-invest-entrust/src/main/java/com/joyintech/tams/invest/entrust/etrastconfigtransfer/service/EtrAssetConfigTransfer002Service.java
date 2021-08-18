@@ -7,6 +7,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -15,6 +16,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
 import com.joyintech.tams.invest.entrust.etrastconfigtransfer.dto.EtrAssetConfigDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTradeDzImportDto;
@@ -47,7 +49,18 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
 
     public List<EtrAssetConfigDto> getAstPosition(Map<String, Object> param) {
         param.put(KEY_ARRAY[0],DateUtil.format(DateUtil.platDateFromCache()));
-        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAssetConfigTransfer/getAstPosition", param, EtrAssetConfigDto.class);
+        List<EtrAssetConfigDto> result=  restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAssetConfigTransfer/getAstPosition", param, EtrAssetConfigDto.class);
+
+        for(EtrAssetConfigDto dto:result){
+            Map<String, Object> costParam = new HashMap<>();
+            costParam.put("sysDate",DateUtil.format(DateUtil.platDateFromCache()));
+            costParam.put("portfolioId",param.get("portfolioId"));
+            costParam.put("finprodId",dto.getFinprodId());
+            EtrCommonController etrCommonController = SpringContextUtil.getBean(
+                    EtrCommonController.class);
+            dto.setBuyCost(etrCommonController.getCostPrice(costParam));
+        }
+        return result;
     }
 
     /**

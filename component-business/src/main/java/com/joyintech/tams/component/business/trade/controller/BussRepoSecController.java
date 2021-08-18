@@ -10,11 +10,13 @@
 
 package com.joyintech.tams.component.business.trade.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +106,19 @@ public class BussRepoSecController extends BaseController {
             }
             if (entity != null) {
                 // 已质押券信息一览
+                //万元转换 add  by yeming 20210817 start
+                if( entity.getTotalPrinAmt()  != null){
+                    entity.setTotalPrinAmt(ArithmeticUtil.divide(entity.getTotalPrinAmt(),new BigDecimal(10000),4));
+                }
+                for (PledgeBondInfoDto dto : entity.getPledgeBondList()) {
+                    if (dto.getAvaPledgePrin() != null) {
+                        dto.setAvaPledgePrin(ArithmeticUtil.divide(dto.getAvaPledgePrin(), new BigDecimal(10000),4));
+                    }
+                    if (dto.getPledgePrin() != null) {
+                        dto.setPledgePrin(ArithmeticUtil.divide(dto.getPledgePrin(), new BigDecimal(10000),4));
+                    }
+                }
+                //万元转换 add  by yeming 20210817 start
                 model.addAttribute("entity", entity);
             }
         }

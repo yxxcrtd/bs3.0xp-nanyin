@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.batch.common.accountingmethod.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.tams.common.base.entity.BokAssetMarketInfo;
 import com.joyintech.tams.common.base.entity.BokBatchMarketwarningInfo;
 import com.joyintech.tams.common.base.entity.BokBookdetailCurrentExt;
 import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
@@ -41,9 +42,14 @@ public class BookGenerateResultWithBokSummary extends BookGenerateResult {
      * 行情价格警告信息
      */
     private List<BokBatchMarketwarningInfo> bokBatchMarketwarningInfoList = new ArrayList<BokBatchMarketwarningInfo>();
-    
- 
-        
+
+    /**
+     * 资产行情信息
+     */
+    private List<BokAssetMarketInfo> bokAssetMarketInfoList = new ArrayList<BokAssetMarketInfo>();
+
+
+
     public List<BokStatDetPosiiton> getBokSummaryList() {
         return bokSummaryList;
     }
@@ -78,5 +84,19 @@ public class BookGenerateResultWithBokSummary extends BookGenerateResult {
 		this.bokBatchMarketwarningInfoList = bokBatchMarketwarningInfoList;
 	}
 
-    
+    /**
+     * @return 资产行情信息
+     */
+    public List<BokAssetMarketInfo> getBokAssetMarketInfoList() {
+        return bokAssetMarketInfoList;
+    }
+
+    /**
+     * 设置 资产行情信息
+     *
+     * @param bokAssetMarketInfoList 资产行情信息
+     */
+    public void setBokAssetMarketInfoList(List<BokAssetMarketInfo> bokAssetMarketInfoList){
+        this.bokAssetMarketInfoList = bokAssetMarketInfoList;
+    }
 }

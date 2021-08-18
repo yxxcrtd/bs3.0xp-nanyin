@@ -7,10 +7,8 @@ import java.util.Map;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividConditionDto;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividSpecialAssetDto;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividSpecialStageDto;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividUniteDto;
+import com.joyintech.tams.invest.riskredis.quota.superviseindicator.service.RskSupervisionIndicator002Service;
+import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,8 +29,6 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividAssetDelDto;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskSupervisionIndividuationDto;
 import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.service.RskSupervisionIndividuation001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -48,22 +44,27 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 @PageId("RskSupervisionIndividuation001")
 @RequestMapping("/invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation001")
 public class RskSupervisionIndividuation001Controller extends BaseController{
+
 	@Autowired
 	private RskSupervisionIndividuation001Service rskSupervisionIndividuation001Service;
+
+	@Autowired(required = false)
+	private RskSupervisionIndicator002Service rskSupervisionIndicator002Service;
+
 	/**
      * 初始化的查询条件
      */
-    private static final IDictCode[] DICT_CODES = new BussinessDictCodeRds[] {BussinessDictCodeRds.指标类型,
+    private static final IDictCode[] DICT_CODES = new BussinessDictCodeRds[] {BussinessDictCodeRds.指标类型,BussinessDictCodeRds.控制类型,
         BussinessDictCodeRds.监督类型, BussinessDictCodeRds.运算符, BussinessDictCodeRds.连接符,BussinessDictCodeRds.操作符,BussinessDictCodeRds.监控方向,
         BussinessDictCodeRds.单位, BussinessDictCodeRds.监督时分,  BussinessDictCodeRds.组合层次,BussinessDictCodeRds.监督频率,
         BussinessDictCodeRds.分类维度,BussinessDictCodeRds.申万行业一级类型,BussinessDictCodeRds.收益类型,BussinessDictCodeRds.开放类型,BussinessDictCodeRds.募集方式,
-        BussinessDictCodeRds.投资性质,BussinessDictCodeRds.监控方向,BussinessDictCodeRds.触警操作
+        BussinessDictCodeRds.投资性质,BussinessDictCodeRds.监控方向,BussinessDictCodeRds.触警操作,BussinessDictCodeRds.是否
        };
 	@Override
     public String init(Model model) {
 		setSelectOptionToModel(model, DICT_CODES);
 		Map<String,Object > uniteMap=new HashMap<>();
-
+		String indvId = this.getParam("indId");
 		if(StringUtil.isNotEmpty(this.getParam("workflowId"))){
 			RskSupervisionIndividuationDto dto = rskSupervisionIndividuation001Service.getBussinessEntityByWorkflowId((String)this.getParam("workflowId"));
 			model.addAttribute("entity", dto);
@@ -71,6 +72,9 @@ public class RskSupervisionIndividuation001Controller extends BaseController{
 
 			uniteMap.put("indId",dto.getIndId());
 			uniteMap.put("prtBagId",dto.getPrtBagId());
+            // add by zhangrui1 start
+            indvId = dto.getIndId();
+            // add by zhangrui1 end
 		}else{
 			String portfolioId = this.getParam("portfolioId");
 			String indId = this.getParam("indId");
@@ -94,6 +98,11 @@ public class RskSupervisionIndividuation001Controller extends BaseController{
 		model.addAttribute("NONE", BussinessDictCodeListRds.单位_无.getValue());
 		model.addAttribute("CONDITION_ITEM_03", BussinessDictCodeListRds.条件项_建仓期时间.getValue());
 		model.addAttribute("CONDITION_ITEM_02", BussinessDictCodeListRds.条件项_单位净值控制.getValue());
+		//-------add by 裴家俊 2019-12-03----获取阈值方向与单位 start---------------
+        if (StringUtil.isNotEmpty(indvId)) {
+		model.addAttribute("yzInfo", rskSupervisionIndicator002Service.getBussinessEntityByIndId(indvId));
+        }
+		//-------add by 裴家俊 2019-12-03----获取阈值方向与单位  end---------------
 		return super.init(model);
     }
 	
@@ -107,6 +116,16 @@ public class RskSupervisionIndividuation001Controller extends BaseController{
     @RequestMapping("queryFinprodIdList")
 	public Page<SelectOptionDto> queryFinprodIdList() {
 		return rskSupervisionIndividuation001Service.queryFinprodIdList(RequestUtil.getPageParam());
+	}
+	/**
+	 * 自定义条件阈值画面条件项下拉框
+	 * @return 所有数据
+	 * @throws Exception 异常
+	 */
+	@ResponseBody
+	@RequestMapping("queryConditionList")
+	public Page<SelectOptionDto> queryConditionList() {
+		return rskSupervisionIndividuation001Service.queryConditionList(RequestUtil.getPageParam());
 	}
 	/**
      * 画面查询方法
@@ -158,7 +177,20 @@ public class RskSupervisionIndividuation001Controller extends BaseController{
 	public List<RskIndividSpecialAssetDto> findPageForSpecialAsset(){
 		return rskSupervisionIndividuation001Service.findPageForSpecialAsset(RequestUtil.getPageParam());
 	}
-    
+
+	@ResponseBody
+	@RequestMapping("findPageForCustomized")
+	public List<RskIndividConditionCustomDto> findPageForCustomized(){
+		Map<String, Object> params = new HashMap<>();
+		return rskSupervisionIndividuation001Service.findPageForCustomized(params);
+	}
+	@ResponseBody
+	@RequestMapping("findPageForCustomizedItem")
+	public List<RskIndividConditionLineDto> findPageForCustomizedItem(){
+		Map<String, Object> params = RequestUtil.getPageParam();
+		return rskSupervisionIndividuation001Service.findPageForCustomizedItem(params);
+	}
+
     /**
      * 画面联合指标名称
      * @return 所有数据

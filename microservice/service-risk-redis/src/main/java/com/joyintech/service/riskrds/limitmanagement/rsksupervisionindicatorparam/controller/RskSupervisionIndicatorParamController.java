@@ -99,12 +99,12 @@ public class RskSupervisionIndicatorParamController {
     public List<RskSupervisionIndicatorParam003Dto> selectFixRecode(String paraCode){
         return rskSupervisionIndicatorParamService.selectFixRecode(paraCode);
     }
-    
+
     @GetMapping("selectFixRecode2")
     public List<RskSupervisionIndicatorParam003Dto> selectFixRecode2(String paraCode){
         return rskSupervisionIndicatorParamService.selectFixRecode2(paraCode);
     }
-    
+
     /**
      * 查询参数代码
      *
@@ -162,7 +162,7 @@ public class RskSupervisionIndicatorParamController {
     public String getModelValue(String modelCode){
     	return rskSupervisionIndicatorParamService.getModelValue(modelCode);
     }
-    
+
     @PostMapping("getInstitutionId")
     public List<SelectOptionDto> getInstitutionId(@RequestBody Map<String, Object> param){
         return rskSupervisionIndicatorParamService.getInstitutionId(param);

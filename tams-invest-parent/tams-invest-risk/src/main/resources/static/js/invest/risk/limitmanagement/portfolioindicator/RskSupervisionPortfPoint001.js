@@ -256,6 +256,9 @@
 		
     	//默认选择第一个（单组合）
 		 $("input[name='portfolioLevel'][value='01']").attr('checked','true');
+		// 风险启动按钮显示 add by yufei 2020819 start
+		$("#RskSupervisionPortfPoint001_btn_play").show();
+		// 风险启动按钮显示 add by yufei 2020819 end
 		 layui.form.render('radio')
     	// 绑定按钮事件
         $('#RskSupervisionPortfPoint001_btn_search').click(function() {

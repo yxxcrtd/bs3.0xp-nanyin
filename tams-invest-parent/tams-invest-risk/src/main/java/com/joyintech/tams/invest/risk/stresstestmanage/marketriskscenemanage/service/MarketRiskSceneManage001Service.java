@@ -12,9 +12,7 @@ package com.joyintech.tams.invest.risk.stresstestmanage.marketriskscenemanage.se
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;

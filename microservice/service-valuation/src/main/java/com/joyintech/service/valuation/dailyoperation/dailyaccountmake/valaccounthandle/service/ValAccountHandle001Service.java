@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.joyintech.service.valuation.accounadjustmanage.valbalancestatementquery.dto.ValBalanceStatementQuery001Dto;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -501,5 +502,9 @@ public class ValAccountHandle001Service extends CommonExportService<ValAccountHa
         }
         map.put("booksetIdArr", booksetIdArr);
         return valAccountHandle001Mapper.getMdateForBookSet(map);
+    }
+
+    public ValBalanceStatementQuery001Dto selectCorrespondingFrame(Map<String, Object> params) {
+        return valAccountHandle001Mapper.selectCorrespondingFrame(params);
     }
 }

@@ -276,18 +276,18 @@ public class TrdLendInvestTrade002Controller extends BaseController {
             }
         }
         //----------add by jjpei 20200114 核风险版本 start----------
-//        if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
-//            AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
-//                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_拆借.getValue(),
-//                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//            // add by zhangrui1 start
-//            // 将实占信息设置到线程缓存出错时撤销用
-//            TradeRdsCommonAop.setLocalCache(dto);
-//            // add by zhangrui1 end
-//        }
+        if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
+            AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_拆借.getValue(),
+                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+            // add by zhangrui1 start
+            // 将实占信息设置到线程缓存出错时撤销用
+            TradeRdsCommonAop.setLocalCache(dto);
+            // add by zhangrui1 end
+        }
         //----------add by jjpei 20200114 核风险版本 end----------
         ProcessParameter<TrdLendInvestTradeDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdLendInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();

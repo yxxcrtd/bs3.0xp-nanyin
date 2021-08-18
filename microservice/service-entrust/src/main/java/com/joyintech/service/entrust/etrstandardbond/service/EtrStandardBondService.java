@@ -141,7 +141,9 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
                 etrEntrustPledge.setBranch(temp.getBranch());
                 etrEntrustPledge.setSecAcctId(temp.getSecAcctId());
                 etrEntrustPledge.setScale(temp.getScale());
-                
+                // 质押券库 ???? 临时解决报错
+                etrEntrustPledge.setPledgeStockId("999999");
+
                 EtrEntrustPledgeKey etrEntrustPledgeKey = new EtrEntrustPledge();
                 etrEntrustPledgeKey.setPortfolioId(temp.getPortfolioId());
                 etrEntrustPledgeKey.setFinprodId(temp.getFinProdId());

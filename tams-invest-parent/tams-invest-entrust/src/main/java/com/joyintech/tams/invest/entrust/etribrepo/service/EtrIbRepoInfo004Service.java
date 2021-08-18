@@ -1,29 +1,16 @@
 package com.joyintech.tams.invest.entrust.etribrepo.service;
 
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeList;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
@@ -34,6 +21,12 @@ import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepoinfo002Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.*;
 
 
 /**
@@ -95,6 +88,8 @@ public class EtrIbRepoInfo004Service extends CommonExportService<EtrIbRepoinfo00
                 etrRepoDto.setMdate(DateUtil.parse(rowData.get(2).toString()));
                 // 组合代码
                 etrRepoDto.setPortfolioId(rowData.get(3).toString());
+                //组合名称  add by xxg
+                etrRepoDto.setPortfolioName(etrCommonService.getPortfolioName(rowData.get(3).toString()));
                 // 交易方向
                 etrRepoDto.setPs(rowData.get(4).toString().split(":")[0]);
                 // 币种

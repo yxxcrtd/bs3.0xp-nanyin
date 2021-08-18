@@ -72,6 +72,8 @@ public class ValBokBookDetailDelWriter extends BaseWriter<NeedToWriteEntity> {
         accountingCommonMapper.deleteBokClawbackInfoDetail(this.getParams());
         //删除统计分析明细表（资产减值）
         lossCommonService.deleteBokStatLossPosiiton(this.getParams());
+        //删除资产行情信息表
+        accountingCommonMapper.deleteBokAssetMarketInfo(this.getParams());
     }
 
 }

@@ -9,6 +9,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -101,6 +102,7 @@ public class EtrIbBondinfo002Controller extends BaseController {
         model.addAttribute("type03", DictCodeList.收益类型_货币型.getValue());
         model.addAttribute("type02", DictCodeList.收益类型_收益型.getValue());
         model.addAttribute("N", DictCodeList.是否_否.getValue());
+        model.addAttribute("Y", DictCodeList.是否_是.getValue());
         model.addAttribute("CCY", DictCodeList.币种_人民币_CNY.getValue());
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE") == null ? "01" : CacheUtil.getSysParam("IS_SHOW_TYPE"));
         
@@ -359,17 +361,17 @@ public class EtrIbBondinfo002Controller extends BaseController {
         }
 
         // ----------预占功能 start----------
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
-//            EtrIbBondinfo002Dto dtoOne=new EtrIbBondinfo002Dto();
-//            BeanUtil.copyPropertiesIgnoreNull(dtoOne, dto);
-//            dtoOne.setEntrustNum(ArithmeticUtil.multiply(dtoOne.getEntrustNum(),BigDecimal.valueOf(10000)));
-//            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dtoOne,
-//                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
-//                    DictCodeList.平安资产类型_债券.getValue());
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            EtrIbBondinfo002Dto dtoOne=new EtrIbBondinfo002Dto();
+            BeanUtil.copyPropertiesIgnoreNull(dtoOne, dto);
+            dtoOne.setEntrustNum(ArithmeticUtil.multiply(dtoOne.getEntrustNum(),BigDecimal.valueOf(10000)));
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dtoOne,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    DictCodeList.平安资产类型_债券.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
         // ----------预占功能 end----------
         ProcessParameter<EtrIbBondinfo002Dto> processParameter = new ProcessParameter<EtrIbBondinfo002Dto>();
         WorkFlowParameter<EtrIbBondinfo002Dto> params = new WorkFlowParameter<EtrIbBondinfo002Dto>();

@@ -63,6 +63,7 @@ var table;
             object.uploadFileList = FileCommon.getUploadFileInfo();
         }
         object.entrustNum = entrustNum; // 委托时的券面总额
+        object.shareAmt = JoyinMath.doMul($('#shareAmt').val(),unitNum,2,JoyinMath.ROUND_HALF_UP);; // 券面总额装换
         object.entrustPrice = entrustPrice; // 委托时的借贷费率
         object.assetPosition = $("#bussTrdAvailableCashQuery_assetPosition").val(); // 资产可用持仓
         object.inputValue1 = PINAN_ASSET_TYPE_F12; 

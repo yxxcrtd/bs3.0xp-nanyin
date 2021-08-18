@@ -70,7 +70,7 @@
 	 	where 
 	 		FIN.FINPROD_TYPE2 = #{FINPROD_TYPE_F01}
 	 		<if test="secId !=null and secId !=''">
-				and BOND.SEC_ID like concat(#{secId,jdbcType=VARCHAR},'%')
+				and BOND.SEC_ID like concat('%',#{secId,jdbcType=VARCHAR},'%')
 			</if>
 	 		
 	 </select>
@@ -93,7 +93,7 @@
 	 	where 
 	 		FIN.FINPROD_TYPE2 = #{FINPROD_TYPE_F01}
 	 		<if test="finprodAbbr !=null and finprodAbbr !=''">
-				and FIN.FINPROD_ABBR like concat(#{finprodAbbr,jdbcType=VARCHAR},'%')
+				and FIN.FINPROD_ABBR like concat('%',#{finprodAbbr,jdbcType=VARCHAR},'%')
 			</if>
 	    </select>
 	    <!-- 

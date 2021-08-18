@@ -4,7 +4,9 @@
 (function() {
     var getriskdata = function () {
         var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustNum').val(),assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodId').val()}
+        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
         var object = {tradeDirection:['ps','EtrOption002.ps'],portfolioCode:['portfolioId','EtrOption002.portfolioId'],tradeAmount:['entrustAmt','EtrOption002.entrustNum'],assetType:['assetType1','EtrOption002.assetType1'],assetCode:['finprodId','EtrOption002.contractSubMatter'],data:obj}
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
         return object;
     }
     /**
@@ -75,6 +77,24 @@
             }
         }
     }
+
+    /**
+     * 查看资产详情事件
+     */
+    $('#EtrOption002_btn_search').click(function() {
+        var finprodId =$('#finprodId').val();
+        var url = "/invest/asset/option/FinOptionTarget002/init";
+        if (finprodId != ""){
+            var params = {
+                'pageModel':PAGE_MODEL_REFERENCE,
+                'targetId':finprodId
+            };
+            EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
+        } else {
+            Joyin.error("资产名称不能为空")
+        }
+    });
+
     /**
      * 绑定事件
      */

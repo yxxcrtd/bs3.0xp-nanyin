@@ -564,6 +564,9 @@ $(function () {
                 }
                 obj.tradeAmount = bussTrdTransfenpeiDto[i].tradeAmt;
             }
+            // add by zhangrui1 交易对手影响风险试算 start
+            obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+            // add by zhangrui1 交易对手影响风险试算 end
             list[i]=obj;
         }
         var object = {
@@ -574,6 +577,9 @@ $(function () {
             tradeDirection: ['ps', 'TrdFundInvestTrade002.ps'],
             data: list
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         if(ps == ps_T06 || $("#ps").val() == T65){
             object.tradeAmount = ["shareAmt", "TrdFundInvestTrade002.tradeSha"];
         }
@@ -1669,11 +1675,11 @@ $(function () {
 
         window.componentLoadCallback = function (isDone, pagePath, params) {
             if (isDone) {
-                // var riskparam = getriskdata();
-                // if (pageModel == PAGE_MODEL_NEW) {
-                //     riskparam.data = null;
-                // }
-                // window.BaseRiskMathComm.getparam(riskparam);
+                var riskparam = getriskdata();
+                if (pageModel == PAGE_MODEL_NEW) {
+                    riskparam.data = null;
+                }
+                window.BaseRiskMathComm.getparam(riskparam);
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                     var selectData = $('#finprodId').select2('data')[0].object;
                     if (!selectData) {

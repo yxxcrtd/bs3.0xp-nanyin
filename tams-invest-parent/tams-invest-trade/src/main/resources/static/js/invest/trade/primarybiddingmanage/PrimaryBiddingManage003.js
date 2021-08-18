@@ -165,17 +165,19 @@
         //自动分配
         $("#autoAllocation").click(function () {
             var object = $.serializeToObject('#informationForm', true);
+            //配置单位 add by yeming 20210723 start
             if($("#allBidPrinAmt").val()) {
                 object.allBidPrinAmt = JoyinMath.doMul($("#allBidPrinAmt").val(), 10000, 2);
             }
             if($("#winPrinAmt").val()){
                 object.winPrinAmt = JoyinMath.doMul($("#winPrinAmt").val(), 10000 , 2) ;
             }
+            //配置单位 add by yeming 20210723 end
             object.operateType = "autoAllocation";
             var data = {};
             data.winPrice = $("#winPrice").val();
             data.winType = $("#winType").val();
-            data.winPrinAmt = $("#winPrinAmt").val() * 10000;
+            data.winPrinAmt = JoyinMath.doMul($("#winPrinAmt").val(), 10000 , 2) ;
             data.finprodId = $("#finprodId").val();
             data.counterId = entity.counterId;
             data.bidId = entity.bidId;
@@ -187,6 +189,11 @@
                             table.deleteRow(i);
                         }
                         for (var row in retPrice) {
+                            //配置单位 add by yeming 20210723 start
+                            retPrice[row].bidPrinAmt = JoyinMath.doDiv(retPrice[row].bidPrinAmt,entrustAmtUnit == '02'? 10000:1,4,JoyinMath.ROUND_HALF_UP);
+                            retPrice[row].theWinPrinAmt = JoyinMath.doDiv(retPrice[row].theWinPrinAmt,entrustAmtUnit == '02'? 10000:1,4,JoyinMath.ROUND_HALF_UP);
+                            retPrice[row].winPrinAmt = JoyinMath.doDiv(retPrice[row].winPrinAmt,entrustAmtUnit == '02'? 10000:1,4,JoyinMath.ROUND_HALF_UP);
+                            //配置单位 add by yeming 20210723 end
                             table.addRow(retPrice[row]);
                         }
 

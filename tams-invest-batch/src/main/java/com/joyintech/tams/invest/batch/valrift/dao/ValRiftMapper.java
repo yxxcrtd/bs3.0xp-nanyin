@@ -39,5 +39,7 @@ public interface ValRiftMapper {
     BigDecimal selectValCapital(Map<String,Object> paramMap);
     
     void deleteValRift(Map<String,Object> paramMap);
+
+    List<String> selectFreedAmPreRskOccupy(Map<String,Object> paramMap);
     
 }

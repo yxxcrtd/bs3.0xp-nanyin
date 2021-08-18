@@ -2,6 +2,8 @@
   * wangzehui
  */
 (function(){
+	var dataTable5_1;
+	var dataTable5_2;
 	var dataTable4;
 	var dataTable3;
 	var dataTable2;
@@ -301,7 +303,81 @@
             }
         ]
     });
-    
+
+	var dataTable5_1 = $("#dataTable5_1").joyintable({
+		ajax: {
+			url : JoyinUtil.getRealPath('invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation001/findPageForCustomized'),
+			type: 'POST',
+			data: function() {
+				return getSearchParams();
+			}
+		},
+		checkbox:false,
+		searchOnInit:true,
+		loadonce:true,
+		height:'250',
+		cols:[
+			{field: 'uniteId',visible: false}
+			,{field:'conditionItem', width:200, title: 'RskSupervisionIndividuation001.conditionItem', sortable: false} //条件代码
+			,{field:'conditionName', sortable:false,width:120 , title: 'RskSupervisionIndividuation001.conditionName'}//条件名称
+			,{field:'conditionUnitStr', title: 'RskSupervisionIndividuation001.conditionUnit', width:330,sortable: false}//单位
+			,{field:'conditionUnit', visible: false}//单位
+			,{field:'conditionType',title: 'RskSupervisionIndividuation001.conditionType', width:320, sortable: false}//类型
+			, {field: 'operation', width: 100, title: 'SysCommon.operation', type: 'action',buttons: ['delt','edit']}
+		]
+	})
+	function isJSON(str) {
+		if (typeof str == 'string') {
+			try {
+				JSON.parse(str);
+				return true;
+			} catch(e) {
+				return false;
+			}
+		}
+		return false;
+	}
+	function  parseValue (data, type, row, meta) {
+		if (isJSON(data) && JSON.parse(data).threshold_1 !== undefined){
+			return JSON.parse(data).threshold_1.value
+		} else {
+			return data
+		}
+	}
+	var dataTable5_2 = $("#dataTable5_2").joyintable({
+		ajax: {
+			url : JoyinUtil.getRealPath('invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation001/findPageForCustomizedItem'),
+			type: 'POST',
+			data: function() {
+				return getSearchParams();
+			}
+		},
+		checkbox:false,
+		searchOnInit:true,
+		loadonce:true,
+		addbtn:true,
+		height:'250',
+		cols:[
+			{field: 'uniteId',visible: false}
+			,{field:'conditionItem', width:200, title: 'RskSupervisionIndividuation001.ruleName', sortable: false,edit:true,
+				editOption:{id:'conditionItem',type:'select',showField:'text',formatoption:true,page:true,
+					url: JoyinUtil.getRealPath("invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation001/queryConditionList")
+				}
+			} //条件项
+			,{field:'controlType', sortable:false,width:120 , title: 'RskSupervisionIndividuation001.controlType',edit:true
+				,editOption:{type:'select',id:"controlType",formatoption:true,result: CONTROL_TYPE}}//控制类型
+			,{field:'valueStr', title: 'RskSupervisionIndividuation001.valueStart', width:200,sortable: false,edit:true}//数值
+			,{field:'valueEnd', title: 'RskSupervisionIndividuation001.valueEnd', width:150,sortable: false,edit:true}//数值
+			,{field:'isBagCalc',title: 'RskSupervisionIndividuation001.isBagCalc', width:200, sortable: false,edit:true
+				,editOption:{type:'select',id:"isBagCalc",formatoption:true,result: YES_OR_NO}}//是否计算组合包
+			,{field:'warnCond', width:200, title: 'RskSupervisionIndividuation001.warnCond', type: 'number', sortable: false,edit:true,render: parseValue}//预警线
+			,{field:'approveCond', width:200, title: 'RskSupervisionIndividuation001.approveCond', type: 'number',sortable: false,edit:true,render: parseValue}//审批线
+			,{field:'foulCond', width:200, title: 'RskSupervisionIndividuation001.foulCond', type: 'number',sortable: false,edit:true,render: parseValue}//禁止线
+			,{field: 'operation', width: 100, title: 'SysCommon.operation', type: 'action',
+				buttons: ['delt']
+			}
+		]
+	})
     
     /*var load = function(){
     	debugger;
@@ -403,6 +479,42 @@
     	
     	dataTable4.deleteRow(index);
     });
+	/**
+	 * 绑定删除事件
+	 */
+	dataTable5_1.bind('click', '.delt', function(data, index) {
+		data.operateType = 'delete';
+		Joyin.ajaxJson(basePath + 'invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation007/check', data, function(result) {
+			Joyin.confirm(result.data, function() {
+				Joyin.ajaxJson(basePath + 'invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation007/save', data, function(result) {
+					dataTable5_1.reload();
+				});
+			});
+		});
+	});
+	/**
+	 * 绑定删除事件
+	 */
+	dataTable5_1.bind('click', '.edit', function(data, index) {
+		data.pageModel = PAGE_MODEL_EDIT;
+		data.operateType = 'edit';
+		Joyin.dialog(JoyinUtil.getLabel("RskSupervisionIndividuation007"),
+			basePath + "invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation007/init",
+			"90%", "95%", data, function (result) {
+				flag = true;
+			}, function() {
+				dataTable5_1.reload();
+			}
+		);
+		operateType = 'edit'
+
+	});
+	/**
+	 * 绑定删除事件
+	 */
+	dataTable5_2.bind('click', '.delt', function(data, index) {
+		dataTable5_2.deleteRow(index);
+	});
     /**
      * 绑定编辑事件
      *//*
@@ -458,7 +570,38 @@
     	}
     	return "";
     }
+	/*
+      初始化单位与阈值方向
+    */
+	var initUnitOrDirection=function(){
+		var warnDetail=$('#zdytjfzDiv').find('[id="oldWarnCond"]').val();
+		var warnDetailJson = warnDetail==''?'':JSON.parse(warnDetail);
+		var foulDetail=$('#zdytjfzDiv').find('[id="oldFoulCond"]').val();
+		var foulDetailJson = foulDetail==''?'':JSON.parse(foulDetail);
+		var approveDetail=$('#zdytjfzDiv').find('[id="oldApproveCond"]').val();
+		var approveDetailJson = approveDetail==''?'':JSON.parse(approveDetail);
+		var comparison = '';
+		var unit = '';
+		//预警
+		if(warnDetailJson.threshold_1.value!=null&&warnDetailJson.threshold_1.value!=''){
+			comparison = warnDetailJson.threshold_1.op;
+			unit = warnDetailJson.threshold_1.unit;
+		}
+		//审批
+		if(approveDetailJson.threshold_1.value!=null&&approveDetailJson.threshold_1.value!=''){
+			comparison = approveDetailJson.threshold_1.op;
+			unit =  approveDetailJson.threshold_1.unit;
+		}
+		//禁止
+		if(foulDetailJson.threshold_1.value!=null&&foulDetailJson.threshold_1.value!=''){
+			comparison = foulDetailJson.threshold_1.op;
+			unit =  foulDetailJson.threshold_1.unit;
+		}
+		$('#zdytjfzDiv').find('[id="comparison"]').val(comparison).trigger('change').attr("disabled",true);
+		$('#zdytjfzDiv').find('[id="unit"]').val(unit).trigger('change').attr("disabled",true);
+	}
     var init = function(){
+		initUnitOrDirection();
     	//debugger;
     	/*Joyin.ajax(basePath + 'invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation001/findPage', getSearchParams(), function(result) {
     		if(result){
@@ -573,6 +716,32 @@
     		}*/
     		object.uniteList = selArr4;
     	}
+    	if (dataTable5_2 != null && dataTable5_2 !== ''){
+			var selArr5 = dataTable5_2.getAllRows();
+		}
+		if(selArr5 && selArr5.length !== 0){
+			var warnDetail=$('#zdytjfzDiv').find('[id="oldWarnCond"]').val();
+			var warnDetailJson = warnDetail==''?'':JSON.parse(warnDetail);
+			var foulDetail=$('#zdytjfzDiv').find('[id="oldFoulCond"]').val();
+			var foulDetailJson = foulDetail==''?'':JSON.parse(foulDetail);
+			var approveDetail=$('#zdytjfzDiv').find('[id="oldApproveCond"]').val();
+			var approveDetailJson = approveDetail==''?'':JSON.parse(approveDetail);
+			for(var i=0;i<selArr5.length;i++){
+				if (isJSON(selArr5[i].warnCond) && JSON.parse(selArr5[i].warnCond).threshold_1 === undefined){
+					warnDetailJson.threshold_1.value = selArr5[i].warnCond;
+					selArr5[i].warnCond = JSON.stringify(warnDetailJson);
+				}
+				if (isJSON(selArr5[i].foulCond) && JSON.parse(selArr5[i].foulCond).threshold_1 === undefined){
+					foulDetailJson.threshold_1.value = selArr5[i].foulCond;
+					selArr5[i].foulCond = JSON.stringify(foulDetailJson);
+				}
+				if (isJSON(selArr5[i].approveCond) && JSON.parse(selArr5[i].approveCond).threshold_1 === undefined){
+					approveDetailJson.threshold_1.value = selArr5[i].approveCond;
+					selArr5[i].approveCond = JSON.stringify(approveDetailJson);
+				}
+			}
+			object.conditionLines = selArr5;
+		}
     	Joyin.ajaxJson(basePath + 'invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation001/check', object, function(result) {
             Joyin.confirm(result.data, function() {
             	if(operateType === 'save') {
@@ -624,6 +793,15 @@
     	    			
     	            });
     	});
+		$("#RskSupervisionIndividuation001_btn_zdytjfz_add").click(function() {
+			Joyin.dialog(JoyinUtil.getLabel("RskSupervisionIndividuation007"),
+				basePath + "invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation007/init",
+				"90%", "95%", {pageModel: PAGE_MODEL_NEW,operateType:'save'}, function () {
+					flag = true;
+					dataTable5_1.reload();
+				});
+		});
+
     	$("#RskSupervisionIndividuation001_btn_tszqsz_add").click(function() {
     		if(IND_TYPE.indexOf("LIMIT_")!=-1){
     			Joyin.dialog(JoyinUtil.getLabel("RskSupervisionIndividuation004"),

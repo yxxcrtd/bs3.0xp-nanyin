@@ -5,12 +5,10 @@
         var assetSource = $('#assetSource').val();
         var ptlId = $('#ptlId').val();
         var subCode = $('#subCode').text();
-        var tblMarketId = $('#tblMarketId').val();
         object.finprodId = finprodId;
         object.assetSource = assetSource;
         object.ptlId = ptlId;
         object.subCode = subCode;
-        object.tblMarketId = tblMarketId;
         return object;
     }
     

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.sso.interf.dao.InterfSsoMapper">
+    <select id="selectInstitution" resultType="com.joyintech.sso.interf.dto.InterfInstitution">
+        SELECT
+            INSTITUTION_CODE INSTITUTION_CODE,
+            SYSTEM_CODE SYSTEM_CODE,
+            INSTITUTION_NAME INSTITUTION_NAME,
+            INSTITUTION_ABBR INSTITUTION_ABBR,
+            INSTITUTION_TYPE INSTITUTION_TYPE,
+            UPPER_INSTITUTION_CODE UPPER_INSTITUTION_CODE,
+            INSITITUTE_CODE INSITITUTE_CODE,
+            ASS_PEOPLE ASS_PEOPLE,
+            ASS_PHONE ASS_PHONE,
+            GRD_INFO GRD_INFO,
+            PROVINCE PROVINCE,
+            CITY CITY,
+            COUNTIES COUNTIES,
+            OTHER OTHER,
+            REMARK REMARK
+        FROM
+        SYS_INSTITUTION
+    </select>
+
+    <select id="selectUser" resultType="com.joyintech.sso.login.dto.SsoUser">
+        SELECT
+            USER_ID USER_ID,
+            SYSTEM_CODE SYSTEM_CODE,
+            USER_NAME USER_NAME,
+            REAL_NAME REAL_NAME,
+            MAIL_ADDR MAIL_ADDR,
+            PHONE_NUM PHONE_NUM,
+            PASSWORD PASSWORD,
+            SALT SALT,
+            DEPT_CODE DEPT_CODE,
+            SSO_USER_ID SSO_USER_ID,
+            MOB_NUM MOB_NUM,
+            WECHAT_NUM WECHAT_NUM,
+            ADMIN_FLAG ADMIN_FLAG,
+            LAST_PASS_DATE LAST_PASS_DATE,
+            IS_FROZEN IS_FROZEN,
+            REMARK REMARK
+        FROM
+            SYS_USER
+    </select>
+</mapper>

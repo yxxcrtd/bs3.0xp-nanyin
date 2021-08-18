@@ -6,247 +6,259 @@
     <select id="findPage" resultType="com.joyintech.service.portfolio.actualtimeasset.dto.ActualTimeAssetDto">
         select distinct tt.* from
         (
-			select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr, type9, type10, type11, type12, type8, type7, type6,
-				nvl(marketValue, 0) as marketValue,
-				case when type8= #{finprodType2_F01} then (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06)*100 else (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06) end as actualPositionAmount,
-				<!-- etliu modify 20210227 start -->
-				case when type8= #{finprodType2_F01} then (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08 + andOneDataAmout)*100
-				<!-- etliu modify 20210227 end -->
-					else (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08) end as tradePositionAmount,
-				case when type8= #{finprodType2_F01} then ETR_FLOW_AMOUNTE01*100 else ETR_FLOW_AMOUNTE01 end as instructionsAmount,
-				case when type8= #{finprodType2_F01} then ETR_FLOW_AMOUNT04*100 else ETR_FLOW_AMOUNT04 end as pledgeAmount,
-				case when type8= #{finprodType2_F01} then (PTL_AMOUNT04)*100 else (PTL_AMOUNT04) end as preReductionAmount
-			from
-			(
-				select t.PORTFOLIO_ID portfolioId, pp.PORTFOLIO_NAME portfolioName, nvl(nvl(chl.FINPROD_MARKET_ID, chl1.FINPROD_MARKET_ID), t.SEC_ACCT_ID) secAcctId, nvl(t4.SEC_ACCT_NAME, nvl(chl.FINPROD_ABBR, chl1.FINPROD_ABBR)) secAcctName,
-				t.FINPROD_ID finprodId, nvl(fp.FINPROD_MARKET_ID, t.FINPROD_ID) finprodMarketId, nvl(fp.FINPROD_ABBR, t.FINPROD_ID) finprodAbbr, t5.TYPE_9 type9, t5.TYPE_10 type10, t5.TYPE_11 type11, t5.TYPE_12 type12,
-					t5.TYPE_8 type8, t5.TYPE_7 type7, t5.TYPE_6 type6, mv.marketValue marketValue,
-					nvl(sum(PTL_AMOUNT03),0) as PTL_AMOUNT03,
-					nvl(sum(PTL_AMOUNT04),0) as PTL_AMOUNT04,
-					nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
-					nvl(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
-					nvl(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
-					nvl(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
-					nvl(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
-					nvl(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04
-					<!-- etliu add 20210227 start -->
-					, nvl(sum(andOneDataAmout),0) as andOneDataAmout
-					<!-- etliu add 20210227 end -->
-				from (
-					SELECT
-						   t6.portfolio_id, DECODE(t6.sec_acct_id, '999999', NULL, t6.sec_acct_id) sec_acct_id, t6.finprod_id, t6.PTL_AMOUNT03, t6.PTL_AMOUNT04, t6.PTL_AMOUNT05,
-						   t6.PTL_AMOUNT06, t6.PTL_AMOUNT08, t7.PTL_FLOW_AMOUNT01, t8.ETR_FLOW_AMOUNTE01, t8.ETR_FLOW_AMOUNT04
-						   <!-- etliu add 20210227 start -->
-						   , t_andOneData.andOneDataAmout
-						   <!-- etliu add 20210227 end -->
-					FROM (
-						select
-							portfolio_id,
-							sec_acct_id,
-							finprod_id,
-							nvl(sum(case when hoding_type = '03' then AMOUNT end),0) PTL_AMOUNT03,
-							nvl(sum(case when hoding_type = '04' then AMOUNT end),0) PTL_AMOUNT04,
-							nvl(sum(case when hoding_type = '05' then AMOUNT end),0) PTL_AMOUNT05,
-							nvl(sum(case when hoding_type = '06' then AMOUNT end),0) PTL_AMOUNT06,
-							nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08
-						from PTL_SEC_POSITION
-						<!-- modify by swwan 多组合查询 20210719 start -->
-						where 1=1
-						<if test="portfolioIdList != null and portfolioIdList.size() >0">
-							<foreach collection="portfolioIdList" index="index" item="prot" separator=",">
-								<if test="(index % 998) == 0">
-									and portfolio_id in (
-								</if>
-								#{prot,jdbcType=VARCHAR}
-							</foreach>)
-						</if>
-						and cdate = to_date(#{cdate},'yyyy-MM-dd')
-						<!-- modify by swwan 多组合查询 20210719 end -->
-						<if test="finprodId != null and finprodId !=''">
-							and finprod_id = #{finprodId,jdbcType=VARCHAR}
-						</if>
-						<if test="hodingTypeList != null and hodingTypeList.size > 0">
-							<foreach collection="hodingTypeList"
-									 open="and hoding_type in (" item="secHodingType" separator=","
-									 close=")">
-								#{secHodingType,jdbcType=VARCHAR}
-							</foreach>
-						</if>
-						group by portfolio_id, sec_acct_id, finprod_id
-					) t6
-					left join (
-						select
-							portfolio_id,
-							finprod_id,sec_acct_id,
-							nvl(sum(case when hoding_type = '01' then AMOUNT end),0) PTL_FLOW_AMOUNT01
-						from PTL_SEC_POSITION_FLOW
-						<!-- modify by swwan 多组合查询 20210719 start -->
-						where 1=1
-						<if test="portfolioIdList != null and portfolioIdList.size() >0">
-							<foreach collection="portfolioIdList" index="index" item="prot" separator=",">
-								<if test="(index % 998) == 0">
-									and portfolio_id in (
-								</if>
-								#{prot,jdbcType=VARCHAR}
-							</foreach>)
-						</if>
-						<!-- modify by swwan 多组合查询 20210719 end -->
-						<if test="finprodId != null and finprodId !=''">
-							and finprod_id = #{finprodId,jdbcType=VARCHAR}
-						</if>
-						and cdate <![CDATA[  <= ]]> to_date(#{cdate},'yyyy-MM-dd')
-						<if test="secFlowHodingTypeList != null and secFlowHodingTypeList.size > 0">
-							<foreach collection="secFlowHodingTypeList" open="and hoding_type in (" item="secFlowHodingType" separator="," close=")">
-								#{secFlowHodingType,jdbcType=VARCHAR}
-							</foreach>
-						</if>
-						group by portfolio_id,finprod_id,sec_acct_id
-					) t7
-					on t7.portfolio_id = t6.portfolio_id and t7.finprod_id = t6.finprod_id and t7.sec_acct_id=t6.sec_acct_id
-					left join (
-						select
-							A.portfolio_id,
-							A.finprod_id,
-							A.sec_acct_id,
-							nvl(sum(case when A.hoding_type = 'E01' then A.AMOUNT end),0) ETR_FLOW_AMOUNTE01,
-							nvl(sum(case when A.hoding_type = '04' then A.AMOUNT end),0) ETR_FLOW_AMOUNT04
-						from (
+            select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr, type9, type10, type11, type12, type8, type7, type6,
+                   actualPositionAmount, tradePositionAmount, instructionsAmount, pledgeAmount, preReductionAmount,
+                   marketPrice*actualPositionAmount marketValue
+            from
+              (
+				select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr, type9, type10, type11, type12, type8, type7, type6,
+					case when type8 in ('F01','F04','F11') or (type8 = 'F02' and tradeMarket in ('03','04','09')) then marketPrice else 1 end as marketPrice,
+					case when type8 in (#{finprodType2_F01},#{finprodType2_F07},#{finprodType2_F10}) then (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06)*100 else (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06) end as actualPositionAmount,
+					<!-- etliu modify 20210227 start -->
+					case when type8 in (#{finprodType2_F01},#{finprodType2_F07},#{finprodType2_F10}) then (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08 + andOneDataAmout)*100
+					<!-- etliu modify 20210227 end -->
+						else (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08) end as tradePositionAmount,
+					case when type8 in (#{finprodType2_F01},#{finprodType2_F07},#{finprodType2_F10}) then ETR_FLOW_AMOUNTE01*100 else ETR_FLOW_AMOUNTE01 end as instructionsAmount,
+					case when type8 in (#{finprodType2_F01},#{finprodType2_F07},#{finprodType2_F10}) then ETR_FLOW_AMOUNT04*100 else ETR_FLOW_AMOUNT04 end as pledgeAmount,
+					case when type8 in (#{finprodType2_F01},#{finprodType2_F07},#{finprodType2_F10}) then (PTL_AMOUNT04)*100 else (PTL_AMOUNT04) end as preReductionAmount
+				from
+				(
+					select t.PORTFOLIO_ID portfolioId, pp.PORTFOLIO_NAME portfolioName, nvl(nvl(chl.FINPROD_MARKET_ID, chl1.FINPROD_MARKET_ID), t.SEC_ACCT_ID) secAcctId, nvl(t4.SEC_ACCT_NAME, nvl(chl.FINPROD_ABBR, chl1.FINPROD_ABBR)) secAcctName,
+					t.FINPROD_ID finprodId, nvl(fp.FINPROD_MARKET_ID, t.FINPROD_ID) finprodMarketId, nvl(fp.FINPROD_ABBR, t.FINPROD_ID) finprodAbbr, t5.TYPE_9 type9, t5.TYPE_10 type10, t5.TYPE_11 type11, t5.TYPE_12 type12,
+						t5.TYPE_8 type8, t5.TYPE_7 type7, t5.TYPE_6 type6, mv.marketPrice marketPrice, fp.TRADE_MARKET tradeMarket,
+						nvl(sum(PTL_AMOUNT03),0) as PTL_AMOUNT03,
+						nvl(sum(PTL_AMOUNT04),0) as PTL_AMOUNT04,
+						nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
+						nvl(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
+						nvl(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
+						nvl(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
+						nvl(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
+						nvl(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04
+						<!-- etliu add 20210227 start -->
+						, nvl(sum(andOneDataAmout),0) as andOneDataAmout
+						<!-- etliu add 20210227 end -->
+					from (
+						SELECT
+							   t6.portfolio_id, DECODE(t6.sec_acct_id, '999999', NULL, t6.sec_acct_id) sec_acct_id, t6.finprod_id, t6.PTL_AMOUNT03, t6.PTL_AMOUNT04, t6.PTL_AMOUNT05,
+							   t6.PTL_AMOUNT06, t6.PTL_AMOUNT08, t7.PTL_FLOW_AMOUNT01, t8.ETR_FLOW_AMOUNTE01, t8.ETR_FLOW_AMOUNT04
+							   <!-- etliu add 20210227 start -->
+							   , t_andOneData.andOneDataAmout
+							   <!-- etliu add 20210227 end -->
+						FROM (
 							select
-								A.portfolio_id,
-								A.sec_acct_id,
-								A.finprod_id,
-								A.AMOUNT,
-								A.hoding_type
-							from ETR_SEC_POSITION A
+								portfolio_id,
+								sec_acct_id,
+								finprod_id,
+								nvl(sum(case when hoding_type = '03' then AMOUNT end),0) PTL_AMOUNT03,
+								nvl(sum(case when hoding_type = '04' then AMOUNT end),0) PTL_AMOUNT04,
+								nvl(sum(case when hoding_type = '05' then AMOUNT end),0) PTL_AMOUNT05,
+								nvl(sum(case when hoding_type = '06' then AMOUNT end),0) PTL_AMOUNT06,
+								nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08
+							from PTL_SEC_POSITION
 							<!-- modify by swwan 多组合查询 20210719 start -->
 							where 1=1
 							<if test="portfolioIdList != null and portfolioIdList.size() >0">
 								<foreach collection="portfolioIdList" index="index" item="prot" separator=",">
 									<if test="(index % 998) == 0">
-										and A.portfolio_id in (
+										and portfolio_id in (
 									</if>
 									#{prot,jdbcType=VARCHAR}
 								</foreach>)
 							</if>
-							and A.cdate = to_date(#{cdate},'yyyy-MM-dd')
+							and cdate = to_date(#{cdate},'yyyy-MM-dd')
 							<!-- modify by swwan 多组合查询 20210719 end -->
 							<if test="finprodId != null and finprodId !=''">
 								and finprod_id = #{finprodId,jdbcType=VARCHAR}
 							</if>
-							<if test="etrHodingTypeList != null and etrHodingTypeList.size > 0">
-								<foreach collection="etrHodingTypeList" open="and A.hoding_type in (" item="etrFlowHodingType" separator="," close=")">
-									#{etrFlowHodingType,jdbcType=VARCHAR}
+							<if test="hodingTypeList != null and hodingTypeList.size > 0">
+								<foreach collection="hodingTypeList"
+										 open="and hoding_type in (" item="secHodingType" separator=","
+										 close=")">
+									#{secHodingType,jdbcType=VARCHAR}
 								</foreach>
 							</if>
-						)A
-						group by A.portfolio_id, A.finprod_id, A.sec_acct_id
-					) t8
-					on t8.portfolio_id = t6.portfolio_id and t8.finprod_id = t6.finprod_id and t8.sec_acct_id =  t6.sec_acct_id
-					<!-- etliu add 20210227 start -->
-					left join (
-                        select
-                            portfolio_id,
-                            finprod_id,sec_acct_id,
-                            sum(AMOUNT) andOneDataAmout
-                        from PTL_SEC_POSITION_FLOW
-						<!-- modify by swwan 多组合查询 20210719 start -->
-						where 1=1
-						<if test="portfolioIdList != null and portfolioIdList.size() >0">
-							<foreach collection="portfolioIdList" index="index" item="prot" separator=",">
-								<if test="(index % 998) == 0">
-									and portfolio_id in (
-								</if>
-								#{prot,jdbcType=VARCHAR}
-							</foreach>)
-						</if>
-						<!-- modify by swwan 多组合查询 20210719 end -->
-                        <if test="finprodId != null and finprodId !=''">
-                            and finprod_id = #{finprodId,jdbcType=VARCHAR}
-                        </if>
-                        and cdate > to_date(#{cdate},'yyyy-MM-dd')
-                        AND AMOUNT &lt; 0
-                        AND HODING_TYPE = '03'
-			            AND TRADE_ID IN (
-			                SELECT
-			                    TOTLE_TRADE_ID
-			                FROM
-			                    TRD_FIN_PRODUCT_DEAL_TOTAL
-			                WHERE
-			                    FINPROD_TYPE2 = 'F01'
-			                    AND TRADE_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
-			                    AND SETTLE_DATE > to_date(#{cdate},'yyyy-MM-dd')
-			                    AND TRADE_STATUS = '01'
-			                    AND (IS_CANCEL = 'N' OR IS_CANCEL IS NULL) 
-			            )
-                        group by portfolio_id,finprod_id,sec_acct_id
-					) t_andOneData
-                    on t_andOneData.portfolio_id = t6.portfolio_id and t_andOneData.finprod_id = t6.finprod_id and t_andOneData.sec_acct_id =  t6.sec_acct_id
-					<!-- etliu add 20210227 end -->
-				) t
-				left join PTL_PORTFOLIO pp on t.PORTFOLIO_ID = pp.PORTFOLIO_ID
-				left join STL_SEC_ACCT_INFO t4 on t4.sec_acct_id = t.sec_acct_id
-				left join FIN_PRODUCT chl on t.SEC_ACCT_ID = chl.FINPROD_ID
-				left join FIN_PRODUCT fp on t.FINPROD_ID = fp.FINPROD_ID
-				left JOIN fin_product_type t5 on t5.finprod_id = t.finprod_id
-				left join (select distinct FINPROD_ID, CHL_FINPROD_ID from FIN_CASH_INFO fci where CHL_FINPROD_ID is not null
-							<if test="finprodId != null and finprodId !=''">
-								and fci.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+							group by portfolio_id, sec_acct_id, finprod_id
+						) t6
+						left join (
+							select
+								portfolio_id,
+								finprod_id,sec_acct_id,
+								nvl(sum(case when hoding_type = '01' then AMOUNT end),0) PTL_FLOW_AMOUNT01
+							from PTL_SEC_POSITION_FLOW
+							<!-- modify by swwan 多组合查询 20210719 start -->
+							where 1=1
+							<if test="portfolioIdList != null and portfolioIdList.size() >0">
+								<foreach collection="portfolioIdList" index="index" item="prot" separator=",">
+									<if test="(index % 998) == 0">
+										and portfolio_id in (
+									</if>
+									#{prot,jdbcType=VARCHAR}
+								</foreach>)
 							</if>
-				) fci on fci.FINPROD_ID = t.FINPROD_ID
-				left join fin_product chl1 on fci.CHL_FINPROD_ID = chl1.FINPROD_ID
-				<!-- modify by swwan 增加市值列 20210720 start -->
-				left join
-				(
-					select
-						finprodMarketId,
-						sum(marketValue) as marketValue
-					from
+							<!-- modify by swwan 多组合查询 20210719 end -->
+							<if test="finprodId != null and finprodId !=''">
+								and finprod_id = #{finprodId,jdbcType=VARCHAR}
+							</if>
+							and cdate <![CDATA[  <= ]]> to_date(#{cdate},'yyyy-MM-dd')
+							<if test="secFlowHodingTypeList != null and secFlowHodingTypeList.size > 0">
+								<foreach collection="secFlowHodingTypeList" open="and hoding_type in (" item="secFlowHodingType" separator="," close=")">
+									#{secFlowHodingType,jdbcType=VARCHAR}
+								</foreach>
+							</if>
+							group by portfolio_id,finprod_id,sec_acct_id
+						) t7
+						on t7.portfolio_id = t6.portfolio_id and t7.finprod_id = t6.finprod_id and t7.sec_acct_id=t6.sec_acct_id
+						left join (
+							select
+								A.portfolio_id,
+								A.finprod_id,
+								A.sec_acct_id,
+								nvl(sum(case when A.hoding_type = 'E01' then A.AMOUNT end),0) ETR_FLOW_AMOUNTE01,
+								nvl(sum(case when A.hoding_type = '04' then A.AMOUNT end),0) ETR_FLOW_AMOUNT04
+							from (
+								select
+									A.portfolio_id,
+									A.sec_acct_id,
+									A.finprod_id,
+									A.AMOUNT,
+									A.hoding_type
+								from ETR_SEC_POSITION A
+								<!-- modify by swwan 多组合查询 20210719 start -->
+								where 1=1
+								<if test="portfolioIdList != null and portfolioIdList.size() >0">
+									<foreach collection="portfolioIdList" index="index" item="prot" separator=",">
+										<if test="(index % 998) == 0">
+											and A.portfolio_id in (
+										</if>
+										#{prot,jdbcType=VARCHAR}
+									</foreach>)
+								</if>
+								and A.cdate = to_date(#{cdate},'yyyy-MM-dd')
+								<!-- modify by swwan 多组合查询 20210719 end -->
+								<if test="finprodId != null and finprodId !=''">
+									and finprod_id = #{finprodId,jdbcType=VARCHAR}
+								</if>
+								<if test="etrHodingTypeList != null and etrHodingTypeList.size > 0">
+									<foreach collection="etrHodingTypeList" open="and A.hoding_type in (" item="etrFlowHodingType" separator="," close=")">
+										#{etrFlowHodingType,jdbcType=VARCHAR}
+									</foreach>
+								</if>
+							)A
+							group by A.portfolio_id, A.finprod_id, A.sec_acct_id
+						) t8
+						on t8.portfolio_id = t6.portfolio_id and t8.finprod_id = t6.finprod_id and t8.sec_acct_id =  t6.sec_acct_id
+						<!-- etliu add 20210227 start -->
+						left join (
+							select
+								portfolio_id,
+								finprod_id,sec_acct_id,
+								sum(AMOUNT) andOneDataAmout
+							from PTL_SEC_POSITION_FLOW
+							<!-- modify by swwan 多组合查询 20210719 start -->
+							where 1=1
+							<if test="portfolioIdList != null and portfolioIdList.size() >0">
+								<foreach collection="portfolioIdList" index="index" item="prot" separator=",">
+									<if test="(index % 998) == 0">
+										and portfolio_id in (
+									</if>
+									#{prot,jdbcType=VARCHAR}
+								</foreach>)
+							</if>
+							<!-- modify by swwan 多组合查询 20210719 end -->
+							<if test="finprodId != null and finprodId !=''">
+								and finprod_id = #{finprodId,jdbcType=VARCHAR}
+							</if>
+							and cdate > to_date(#{cdate},'yyyy-MM-dd')
+							AND AMOUNT &lt; 0
+							AND HODING_TYPE = '03'
+							AND TRADE_ID IN (
+								SELECT
+									TOTLE_TRADE_ID
+								FROM
+									TRD_FIN_PRODUCT_DEAL_TOTAL
+								WHERE
+									FINPROD_TYPE2 = 'F01'
+									AND TRADE_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+									AND SETTLE_DATE > to_date(#{cdate},'yyyy-MM-dd')
+									AND TRADE_STATUS = '01'
+									AND (IS_CANCEL = 'N' OR IS_CANCEL IS NULL)
+							)
+							group by portfolio_id,finprod_id,sec_acct_id
+						) t_andOneData
+						on t_andOneData.portfolio_id = t6.portfolio_id and t_andOneData.finprod_id = t6.finprod_id and t_andOneData.sec_acct_id =  t6.sec_acct_id
+						<!-- etliu add 20210227 end -->
+					) t
+					left join PTL_PORTFOLIO pp on t.PORTFOLIO_ID = pp.PORTFOLIO_ID
+					left join STL_SEC_ACCT_INFO t4 on t4.sec_acct_id = t.sec_acct_id
+					left join FIN_PRODUCT chl on t.SEC_ACCT_ID = chl.FINPROD_ID
+					left join FIN_PRODUCT fp on t.FINPROD_ID = fp.FINPROD_ID
+					left JOIN fin_product_type t5 on t5.finprod_id = t.finprod_id
+					left join (select distinct FINPROD_ID, CHL_FINPROD_ID from FIN_CASH_INFO fci where CHL_FINPROD_ID is not null
+								<if test="finprodId != null and finprodId !=''">
+									and fci.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+								</if>
+					) fci on fci.FINPROD_ID = t.FINPROD_ID
+					left join fin_product chl1 on fci.CHL_FINPROD_ID = chl1.FINPROD_ID
+					<!-- modify by swwan 增加市值列 20210720 start -->
+					left join
 					(
-						select
-						fp.FINPROD_MARKET_ID finprodMarketId,
-						case when fpt.TYPE_8 = 'F08' AND fpt.TYPE_6 = 'L01' then -1*(NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0))
-						when fpt.TYPE_6 = 'L02' then -1*(NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0))
-						when fpt.TYPE_8 = 'F07' AND fpt.TYPE_7 = '03' then -1*(NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0))
-						else (NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0))
-						end as marketValue
-						from PTL_SEC_VALUTION psv
-						inner join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
-						and fp.FINPROD_TYPE2 != 'F28' and fp.FINPROD_TYPE2 is not null
-						inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID
-						where 1=1
-						and psv.CDATE = to_date(#{cdate},'yyyy-MM-dd')
-					)gavInfo
-					group by finprodMarketId
-				) mv on t.FINPROD_ID = mv.finprodMarketId
-				<where>
-			<if test="type8 != null and type8 !=''">
-				and t5.type_8 = #{type8,jdbcType=VARCHAR}
-			</if>
-			<if test="type9 != null and type9 !=''">
-				and t5.type_9 = #{type9,jdbcType=VARCHAR}
-			</if>
-			<if test="type10 != null and type10 !=''">
-				and t5.type_10 = #{type10,jdbcType=VARCHAR}
-			</if>
-			<if test="type11 != null and type11 !=''">
-				and t5.type_11 = #{type11,jdbcType=VARCHAR}
-			</if>
-			<if test="type12 != null and type12 !=''">
-				and t5.type_12 = #{type12,jdbcType=VARCHAR}
-			</if>
-			<if test="secManageAcctIdList != null and secManageAcctIdList.size() >0">
-				<foreach collection="secManageAcctIdList" index="index" item="secManageAcctId" separator=",">
-					<if test="(index % 998) == 0">
-						and t.SEC_ACCT_ID in (
-					</if>
-					#{secManageAcctId,jdbcType=VARCHAR}
-				</foreach>)
-			</if>
-		</where>
-				group by t.PORTFOLIO_ID, pp.PORTFOLIO_NAME, NVL(NVL(chl.FINPROD_MARKET_ID, chl1.FINPROD_MARKET_ID), t.SEC_ACCT_ID ), t4.SEC_ACCT_NAME, chl.FINPROD_ABBR, chl1.FINPROD_ABBR, t.FINPROD_ID, fp.FINPROD_MARKET_ID, fp.FINPROD_ABBR,
-				t5.TYPE_9, t5.TYPE_10, t5.TYPE_11, t5.TYPE_12, t5.TYPE_8, t5.TYPE_7, T5.TYPE_6, mv.marketValue
-				<!-- modify by swwan 增加市值列 20210720 end -->
-			) mm
+						select distinct
+							finprodId,
+							marketPrice
+						from
+						(
+							SELECT DISTINCT
+								fp.FINPROD_ID finprodId,
+								CASE
+									WHEN fpt.TYPE_8 = 'F01' THEN mbvi.PRICE
+									WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET = '09' THEN frv.VALUATION
+									WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET in ('03','04') THEN mfmi.CLOSE_PRICE
+									WHEN fpt.TYPE_8 = 'F04' THEN frv.VALUATION
+									WHEN fpt.TYPE_8 = 'F11' THEN msp.CLOSE_PRICE
+								END AS marketPrice
+							FROM
+							FIN_PRODUCT fp
+							INNER JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = fp.FINPROD_ID
+							LEFT JOIN MST_BOND_VALUATION_INFO mbvi
+							ON mbvi.SEC_ID = fp.FINPROD_MARKET_ID AND mbvi.VALUE_DATE = to_date(#{cdate},'yyyy-MM-dd')
+							LEFT JOIN FIN_PRODUCT_VALUATION frv
+							ON frv.FINPROD_ID = fp.FINPROD_MARKET_ID AND frv.VAL_DATE = to_date(#{cdate},'yyyy-MM-dd')
+							LEFT JOIN MST_FUND_MARKET_INFO mfmi
+							ON mfmi.FUND_CODE = fp.FINPROD_MARKET_ID AND mfmi.VALUE_DATE = to_date(#{cdate},'yyyy-MM-dd')
+							LEFT JOIN MST_SHARE_PRICE msp
+							ON msp.SHARES_ID = fp.FINPROD_MARKET_ID AND msp.DEAL_DATE = to_date(#{cdate},'yyyy-MM-dd')
+						)gavInfo
+					) mv on t.FINPROD_ID = mv.finprodId
+					<where>
+				<if test="type8 != null and type8 !=''">
+					and t5.type_8 = #{type8,jdbcType=VARCHAR}
+				</if>
+				<if test="type9 != null and type9 !=''">
+					and t5.type_9 = #{type9,jdbcType=VARCHAR}
+				</if>
+				<if test="type10 != null and type10 !=''">
+					and t5.type_10 = #{type10,jdbcType=VARCHAR}
+				</if>
+				<if test="type11 != null and type11 !=''">
+					and t5.type_11 = #{type11,jdbcType=VARCHAR}
+				</if>
+				<if test="type12 != null and type12 !=''">
+					and t5.type_12 = #{type12,jdbcType=VARCHAR}
+				</if>
+				<if test="secManageAcctIdList != null and secManageAcctIdList.size() >0">
+					<foreach collection="secManageAcctIdList" index="index" item="secManageAcctId" separator=",">
+						<if test="(index % 998) == 0">
+							and t.SEC_ACCT_ID in (
+						</if>
+						#{secManageAcctId,jdbcType=VARCHAR}
+					</foreach>)
+				</if>
+			</where>
+					group by t.PORTFOLIO_ID, pp.PORTFOLIO_NAME, NVL(NVL(chl.FINPROD_MARKET_ID, chl1.FINPROD_MARKET_ID), t.SEC_ACCT_ID ), t4.SEC_ACCT_NAME, chl.FINPROD_ABBR, chl1.FINPROD_ABBR, t.FINPROD_ID, fp.FINPROD_MARKET_ID, fp.FINPROD_ABBR,
+					t5.TYPE_9, t5.TYPE_10, t5.TYPE_11, t5.TYPE_12, t5.TYPE_8, t5.TYPE_7, T5.TYPE_6, mv.marketPrice,	fp.trade_market
+					<!-- modify by swwan 增加市值列 20210720 end -->
+				) mm
+			) yy
 			<!-- add by swwan 增加现金资产 20210719 start -->
 			UNION ALL
 			SELECT
@@ -261,7 +273,7 @@
 				null as type10,
 				null as type11,
 				null as type12,
-				'cash' as type8,
+				#{finprodType2_F19} as type8,
 				null as type7,
 				null as type6,
 				SUM(cashBalance) AS actualPositionAmount,
@@ -269,7 +281,7 @@
 				SUM(cashAvailable) AS instructionsAmount,
 				SUM(preReductionCash) AS pledgeAmount,
 				0 AS preReductionAmount,
-				0 AS marketValue
+				SUM(cashBalance) AS marketValue
 			FROM
 			(
 				select
@@ -429,7 +441,14 @@
 									from etr_entrust t, etr_entrust_add t1
 									where
 										t.entrust_id = t1.entrust_id
-										and t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+										<if test="portfolioIdList != null and portfolioIdList.size() >0">
+											<foreach collection="portfolioIdList" index="index" item="prot" separator=",">
+												<if test="(index % 998) == 0">
+													and t.portfolio_id in (
+												</if>
+												#{prot,jdbcType=VARCHAR}
+											</foreach>)
+										</if>
 										and t1.busi_ps = '01'
 										and t.entrust_date = to_date(#{cdate},'yyyy-MM-dd')
 								) bb
@@ -459,6 +478,9 @@
 			<!-- add by swwan 增加现金资产 20210719 end -->
 		) tt
         where (<![CDATA[  actualPositionAmount <> 0 or tradePositionAmount <> 0 or instructionsAmount <> 0 or pledgeAmount <> 0 or preReductionAmount <> 0  ]]>)
+		<if test="type8 != null and type8 != ''">
+			and type8 = #{type8,jdbcType=VARCHAR}
+		</if>
         order by portfolioId desc,type8 desc,secAcctId desc,finprodMarketId desc
     </select>
 

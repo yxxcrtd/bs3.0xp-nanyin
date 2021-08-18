@@ -25,7 +25,6 @@
         object.subName = $('#subName').text();
         object.subClass = $('#subClass').text();
         object.ptlId = $('#ptlId').val();
-        object.tblMarketId = $('#tblMarketId').val();
         if(operateType == 'save'){
             if($('#finprodId').val()==''){
                 msg = JoyinUtil.getMessage('COMMON_E_0057',JoyinUtil.getLabel("RskValtblPrtBotasset001.finprodId"));

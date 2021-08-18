@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
+import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtrIbBondinfo002Service;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtribBondInfo003Service;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ import java.util.*;
  */
 @Component
 public class EtribBondInfo003Validator implements EtrCommonValidator  {
+
+    @Autowired
+    private EtrIbBondinfo002Service etrIbBondinfo002Service;
 
     @Autowired
     private EtribBondInfo003Service etribBondInfo003Service;

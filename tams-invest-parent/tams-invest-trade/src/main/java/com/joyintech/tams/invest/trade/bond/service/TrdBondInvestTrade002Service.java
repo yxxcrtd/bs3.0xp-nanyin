@@ -53,6 +53,7 @@ import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -1736,7 +1737,20 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     BigDecimal isFrozenPosition = basePtlCashPositionInfoMapper.selectCashPositionFlow(ptlCashPositionFlowDto);
                     //判断是否已释放头寸
                     if(isFrozenPosition != null && isFrozenPosition.compareTo(BigDecimal.ZERO) != 0){
+                        BigDecimal amount = basePtlCashPositionInfoMapper.selectPtlCashPositionFlowAmount(ptlCashPositionFlowDto);
                         basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
+                        if(amount!=null){
+                            Map<String,Object> positionMap = new HashMap<>();
+                            positionMap.put("minDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
+                            positionMap.put("maxDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
+                            positionMap.put("amount",amount.negate());
+                            positionMap.put("hodingType",DictCodeList.持仓类型_实际.getValue());
+                            positionMap.put("portfolioId",entrustCommonDto.getEtrEntrust().getPortfolioId());
+                            positionMap.put("acctId",acctId);
+                            positionMap.put("ccy",entrustCommonDto.getEtrEntrust().getCcy());
+                            positionMap.put("orderId",entrustCommonDto.getEtrEntrust().getEntrustId());
+                            basePtlCashPositionInfoMapper.updatePosition(positionMap);
+                        }
                         //释放组合可用现金结束
                         //2.指令可用现金
                         //释放指令可用现金开始（反塞入）
@@ -1745,8 +1759,13 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                         dto.setSeqno(IDGenerator.generate());
                         dto.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
                         dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-                        dto.setAmount(ArithmeticUtil.multiply(isFrozenPosition,new BigDecimal("-1")));
-                        etrCashPositionFlowMapper.insertSelective(dto);
+                        dto.setAmount(ArithmeticUtil.multiply(isFrozenPosition,new BigDecimal("-1")));// 处理结果
+                        EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                        List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
+                        etrCashPositionFlows.add(dto);
+                        etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
+                        EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+//                        etrCashPositionFlowMapper.insertSelective(dto);
                         //释放指令可用现金结束
                     }
                 }
@@ -3916,7 +3935,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             if(!StringUtil.isEmptyList(ptlAllocationDtos)){
                 Map<String,Object> map = new HashMap<>();
                 map.put("shareAmt",null!=prinamt?prinamt:BigDecimal.ZERO);
-                map.put("fpriceAmt",null!=fpriceAmt?prinamt:BigDecimal.ZERO);
+                map.put("fpriceAmt",null!=fpriceAmt?fpriceAmt:BigDecimal.ZERO);
                 ptlAllocationDtos = cstpCommonService.组合分配拆分(ptlAllocationDtos,map);
                 map.put("trdTradeFeeDetails",trdTradeFeeDetails);
                 ptlAllocationDtos = cstpCommonService.交易费用拆分(ptlAllocationDtos,map);
@@ -3946,7 +3965,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             //全价总额
             BigDecimal cpriceAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(bondCstpInfo.getPrice8(), prinamt2),BigDecimal.valueOf(100), 2);
             //应计利息总额
-            BigDecimal intAmt = ArithmeticUtil.subtract(fpriceAmt2,prinamt2);
+            BigDecimal intAmt = ArithmeticUtil.subtract(fpriceAmt2,cpriceAmt);
             // 交易编号
             BussinessCodeParameter codeParameter = new BussinessCodeParameter();
             if (StringUtil.equals(BussinessDictCodeList.交易方向_买入.getValue(), trdBondInvestTradeDto.getPs())) {
@@ -4146,6 +4165,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
     public void dealAutoTradeFeeDetial(TrdBondInvestTradeDto trdBondInvestTradeDto){
         if(!StringUtil.isEmptyList(trdBondInvestTradeDto.getTradeFeeList())){
             for(TrdTradeFeeDetail tradeFeeDto:trdBondInvestTradeDto.getTradeFeeList()){
+                if(!StringUtil.isNotEmpty(tradeFeeDto.getIsPayWithTrade()))tradeFeeDto.setIsPayWithTrade("N");
                 //给对应页面的佣金，结算费，手续费成员变量字段设置值
                 if(StringUtil.equals(tradeFeeDto.getFeeType(), BussinessDictCodeList.费用类型_佣金.getValue())&& tradeFeeDto.getFeeAmt()!=null){
                     trdBondInvestTradeDto.setCommissionAmt(trdBondInvestTradeDto.getFeeAmt());
@@ -4166,7 +4186,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     trdBondInvestTradeDto.setProcedureAmtRate(tradeFeeDto.getFeeRate());
                 }
                 if(StringUtil.equals(tradeFeeDto.getFeeType(), BussinessDictCodeList.费用类型_结算手续费.getValue())&& tradeFeeDto.getFeeAmt()!=null){
-                    trdBondInvestTradeDto.setSettleAmt(tradeFeeDto.getFeeAmt());
+//                    trdBondInvestTradeDto.setSettleAmt(tradeFeeDto.getFeeAmt());
+                    trdBondInvestTradeDto.setSettleServiceAmt(tradeFeeDto.getFeeAmt());
                 }
             }
         }
@@ -4402,7 +4423,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
             entity.getPtlTrade().forEach(trdTradeFeeDetail -> ptlTradeMapper.insertSelective(trdTradeFeeDetail));
 
-            entity.getTrdTradeFeeTotals().forEach(trdTradeFeeDetail -> trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail));
+            entity.getTrdTradeFeeTotals().forEach(trdTradeFeeDetail -> {
+                if(!StringUtil.isNotEmpty(trdTradeFeeDetail.getIsPayWithTrade()))trdTradeFeeDetail.setIsPayWithTrade("N");
+                trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail);
+            });
 
             this.deleteBussFlowData(entity.getWorkflowId());
 

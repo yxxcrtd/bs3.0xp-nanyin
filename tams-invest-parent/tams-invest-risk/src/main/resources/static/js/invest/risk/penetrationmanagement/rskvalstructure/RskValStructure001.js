@@ -16,14 +16,6 @@ var loadTree = function (callback) {
     $("#mixTree").load(basePath +'invest/risk/penetrationmanagement/rskvalstructure/RskValStructure001/getStructName',
         {structName: $('#structName').val()}, function (data) {
             nodeId = '';
-          //update by yantianyuan 二级法人按钮改造 start
-            if(purviewElements.indexOf('_edit')==-1){
-            	$(".node_modify").hide();
-            }
-            if(purviewElements.indexOf('_delete')==-1){
-            	$(".node_delete").hide();
-            }
-          //update by yantianyuan 二级法人按钮改造 end
             if (typeof callback == 'function') {
                 callback();
             }
@@ -101,7 +93,7 @@ $(function () {
         cols: [
               {field: 'id',visible: false}
             ,{field: 'srcColIndex',visible: false, title:'RskValStructure001.srcColIndex'}
-            ,{field: 'srcColIndexLetter', title:'RskValStructure001.srcColIndex',sortField:'TO_NUMBER(SRC_COL_INDEX)'}/**修复bug： 理财资产管理系统BS2.1.3 BS-807。修改排序问题 ，这种方式修改只支持oracle和db2*/
+            ,{field: 'srcColIndexLetter', title:'RskValStructure001.srcColIndex',sortField:'cast(SRC_COL_INDEX as int)'}
             , {field: 'srcColDataTypeStr',sortField:"srcColDataType", title: 'RskValStructure001.srcColDataType'}
             , {field: 'tgtIndexStr', sortField:"tgtIndex",title: 'RskValStructure001.tgtIndex'}
             , {field: 'memo', title: 'RskValStructure001.memo'}

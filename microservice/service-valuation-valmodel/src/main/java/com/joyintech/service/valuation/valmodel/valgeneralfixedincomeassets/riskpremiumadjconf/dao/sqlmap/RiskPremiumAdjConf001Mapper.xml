@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dao.RiskPremiumAdjConf001Mapper">
+	<select id="queryList" resultType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf001Dto">
+		SELECT
+		A.SEQNO seqno,
+		A.SEC_TYPE_MODEL secTypeModel,
+		A.SEC_DETAIL_TYPE_MODEL secDetailTypeModel,
+		A.FINPROD_ID finprodId,
+		A.FINPROD_NAME finprodName,
+		A.GRADE_SOURCE gradeSource,
+		A.GRADE_RESULT gradeResult,
+		A.BASEDATE basedate,
+		A.SPREAD spread,
+		A.SPREAD_ADJ spreadAdj,
+		A.B_FULLPRICE bFullprice,
+		A.B_QTY bQty,
+		A.MOD_METHOD modMethod
+        FROM MOD_RISK_PREMIUM A
+        WHERE 1=1
+		<if test="assetId!=null and !''.equals(assetId.trim())">
+			AND A.FINPROD_ID in
+			<foreach collection="assetId.split(',')" item="item" index= "index" open="(" close=")" separator="," >
+				#{item}
+			</foreach>
+		</if>
+		<if test="assetType!=null and !''.equals(assetType.trim())">
+			AND A.SEC_TYPE_MODEL in
+			<foreach collection="assetType.split(',')" item="item" index= "index" open="(" close=")" separator="," >
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="findByPrimaryKey"
+			resultType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf002Dto">
+		SELECT
+		A.SEQNO seqno,
+		A.SEC_TYPE_MODEL secTypeModel,
+		A.SEC_DETAIL_TYPE_MODEL secDetailTypeModel,
+		A.FINPROD_ID finprodId,
+		A.FINPROD_NAME finprodName,
+		A.GRADE_SOURCE gradeSource,
+		A.GRADE_RESULT gradeResult,
+		A.BASEDATE basedate,
+		A.SPREAD spread,
+		A.SPREAD_ADJ spreadAdj,
+		A.B_FULLPRICE bFullprice,
+		A.B_QTY bQty,
+		A.MOD_METHOD modMethod
+        FROM MOD_RISK_PREMIUM A
+        WHERE A.SEQNO = #{seqNo}
+	</select>
+
+	<select id="getFinprodIdForRiskPremium" resultType="com.joyintech.framework.select.SelectOptionDto" parameterType="Map">
+		SELECT
+		A.FINPROD_ID id,A.FINPROD_ABBR text
+		FROM FIN_PRODUCT A
+		INNER JOIN FIN_PRODUCT_TYPE B
+		ON A.FINPROD_ID = B.FINPROD_ID
+		WHERE A.FINPROD_TYPE2 IN ('F01','F18')
+		AND B.TYPE_11 NOT IN ('011','013','023')
+		AND NOT EXISTS (
+		SELECT 1 FROM FIN_PRODUCT C
+		WHERE C.IS_SUS = 'Y'
+		AND NOT EXISTS (
+		SELECT 1 FROM FIN_EXERCISE_PLAN D
+		WHERE C.FINPROD_ID = D.FINPROD_ID
+		AND EXERCISE_TYPE = '01'
+		)
+		AND C.FINPROD_ID = A.FINPROD_ID
+		)
+		<if test="search != null and search != ''">
+			and (A.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
+			or A.FINPROD_ABBR like concat(concat('%',#{search}),'%'))
+		</if>
+	</select>
+</mapper>

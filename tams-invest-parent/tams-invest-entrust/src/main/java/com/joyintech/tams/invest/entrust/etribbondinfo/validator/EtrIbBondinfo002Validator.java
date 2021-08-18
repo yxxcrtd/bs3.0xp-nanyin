@@ -98,14 +98,14 @@ public class EtrIbBondinfo002Validator implements EtrCommonValidator {
                             DictCodeListExt1.是或否_否.getValue())
                             && StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())
                             && proAvailableCash != null) {
-                        if (dto.getEntrustNum().multiply(new BigDecimal(10000)).compareTo(proAvailableCash) == 1) {
-                            errorList.add(
-                                    new ValidMessage("entrustNum", this.getMessage("ETR_BOND_003")));
-                        }
+//                        if (dto.getEntrustNum().multiply(new BigDecimal(10000)).compareTo(proAvailableCash) == 1) {
+//                            errorList.add(
+//                                    new ValidMessage("entrustNum", this.getMessage("ETR_BOND_003")));
+//                        }
                     }
-                    if (entrustNum.compareTo(zero) != 1) {
-                        errorList.add(new ValidMessage("entrustNum", this.getMessage("ETR_BOND_004")));
-                    }
+//                    if (entrustNum.compareTo(zero) != 1) {
+//                        errorList.add(new ValidMessage("entrustNum", this.getMessage("ETR_BOND_004")));
+//                    }
                 }
             }
             if ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())

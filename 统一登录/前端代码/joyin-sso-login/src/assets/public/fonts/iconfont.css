@@ -1,0 +1,623 @@
+@font-face {
+  font-family: "jyiconfont"; /* Project id 1831806 */
+  src: url('iconfont.woff2?t=1621302268169') format('woff2'),
+  url('iconfont.woff?t=1621302268169') format('woff'),
+  url('iconfont.ttf?t=1621302268169') format('truetype');
+}
+
+.jyiconfont {
+  font-family: "jyiconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.jyicon-qq:before {
+  content: "\ed248";
+}
+
+.jyicon-wechat:before {
+  content: "\ed247";
+}
+
+.jyicon-sweibo:before {
+  content: "\ed246";
+}
+
+.jyicon-tweibo:before {
+  content: "\ed245";
+}
+
+.jyicon-btn-submit:before {
+  content: "\ee49";
+}
+
+.jyicon-refresh:before {
+  content: "\ee4a";
+}
+
+.jyicon-btn-save:before {
+  content: "\ee4b";
+}
+
+.jyicon-btn-cancel:before {
+  content: "\ee4c";
+}
+
+.jyicon-arrow-up:before {
+  content: "\ee45";
+}
+
+.jyicon-arrow-right:before {
+  content: "\ee46";
+}
+
+.jyicon-arrow-down:before {
+  content: "\ee47";
+}
+
+.jyicon-arrow-left:before {
+  content: "\ee48";
+}
+
+.jyicon-search:before {
+  content: "\ee43";
+}
+
+.jyicon-reset:before {
+  content: "\ee44";
+}
+
+.jyicon-minus:before {
+  content: "\ee42";
+}
+
+.jyicon-plus:before {
+  content: "\ee41";
+}
+
+.jyicon-skin:before {
+  content: "\ee40";
+}
+
+.jyicon-theme:before {
+  content: "\ee3f";
+}
+
+.jyicon-triangle-top:before {
+  content: "\ee3e";
+}
+
+.jyicon-triangle-left:before {
+  content: "\ee3d";
+}
+
+.jyicon-triangle-right:before {
+  content: "\ee3c";
+}
+
+.jyicon-triangle-down:before {
+  content: "\ee3b";
+}
+
+.jyicon-man-avatar:before {
+  content: "\ee3a";
+}
+
+.jyicon-lady-avatar:before {
+  content: "\ee39";
+}
+
+.jyicon-rise:before {
+  content: "\ee38";
+}
+
+.jyicon-drop:before {
+  content: "\ee37";
+}
+
+.jyicon-more:before {
+  content: "\ee36";
+}
+
+.jyicon-still-more:before {
+  content: "\ee35";
+}
+
+.jyicon-up-arrow:before {
+  content: "\ee34";
+}
+
+.jyicon-down-arrow:before {
+  content: "\ee33";
+}
+
+.jyicon-right-arrow:before {
+  content: "\ee32";
+}
+
+.jyicon-left-arrow:before {
+  content: "\ee31";
+}
+
+.jyicon-repair-manage:before {
+  content: "\ee30";
+}
+
+.jyicon-interface:before {
+  content: "\ee2f";
+}
+
+.jyicon-batchright:before {
+  content: "\ee2e";
+}
+
+.jyicon-batchleft:before {
+  content: "\ee2d";
+}
+
+.jyicon-prevpage:before {
+  content: "\ee2c";
+}
+
+.jyicon-firstpage:before {
+  content: "\ee2b";
+}
+
+.jyicon-nextpage:before {
+  content: "\ee2a";
+}
+
+.jyicon-lastpage:before {
+  content: "\ee29";
+}
+
+.jyicon-desc:before {
+  content: "\ee28";
+}
+
+.jyicon-asc:before {
+  content: "\ee27";
+}
+
+.jyicon-roles-nodata:before {
+  content: "\ee26";
+}
+
+.jyicon-selected:before {
+  content: "\ee25";
+}
+
+.jyicon-screen:before {
+  content: "\ee24";
+}
+
+.jyicon-table:before {
+  content: "\ee23";
+}
+
+.jyicon-datetime:before {
+  content: "\ee22";
+}
+
+.jyicon-date:before {
+  content: "\ee21";
+}
+
+.jyicon-item-side:before {
+  content: "\ee20";
+}
+
+.jyicon-item-navbar:before {
+  content: "\ee1f";
+}
+
+.jyicon-shrink:before {
+  content: "\ee1e";
+}
+
+.jyicon-arraw-salt:before {
+  content: "\ee1d";
+}
+
+.jyicon-screen-exit:before {
+  content: "\ee1c";
+}
+
+.jyicon-full-screen:before {
+  content: "\ee1b";
+}
+
+.jyicon-navopen:before {
+  content: "\ee1a";
+}
+
+.jyicon-navcutout:before {
+  content: "\ee19";
+}
+
+.jyicon-drag:before {
+  content: "\ee18";
+}
+
+.jyicon-crumb:before {
+  content: "\ee17";
+}
+
+.jyicon-time:before {
+  content: "\ee16";
+}
+
+.jyicon-remind:before {
+  content: "\ee15";
+}
+
+.jyicon-logout:before {
+  content: "\ee14";
+}
+
+.jyicon-vcode:before {
+  content: "\ee13";
+}
+
+.jyicon-pass:before {
+  content: "\ee12";
+}
+
+.jyicon-user:before {
+  content: "\ee11";
+}
+
+.jyicon-invest-trade:before {
+  content: "\ee10";
+}
+
+.jyicon-risk-warning:before {
+  content: "\ee0f";
+}
+
+.jyicon-report-manage:before {
+  content: "\ee0e";
+}
+
+.jyicon-report-bookin:before {
+  content: "\ee0d";
+}
+
+.jyicon-report-inspect:before {
+  content: "\ee0c";
+}
+
+.jyicon-basic-manage:before {
+  content: "\ee0b";
+}
+
+.jyicon-home:before {
+  content: "\ee0a";
+}
+
+.jyicon-user-info:before {
+  content: "\ee09";
+}
+
+.jyicon-placard:before {
+  content: "\ee08";
+}
+
+.jyicon-formula-count:before {
+  content: "\ee07";
+}
+
+.jyicon-function-formula:before {
+  content: "\ee06";
+}
+
+.jyicon-onsite-trade-config:before {
+  content: "\ee05";
+}
+
+.jyicon-workflow-config:before {
+  content: "\ee04";
+}
+
+.jyicon-product-duration:before {
+  content: "\ee03";
+}
+
+.jyicon-system-config:before {
+  content: "\ee02";
+}
+
+.jyicon-business-process:before {
+  content: "\ee01";
+}
+
+.jyicon-log-manage:before {
+  content: "\ee00";
+}
+
+.jyicon-userrole-rbac:before {
+  content: "\edff";
+}
+
+.jyicon-system-manage:before {
+  content: "\edfe";
+}
+
+.jyicon-public-config:before {
+  content: "\edfd";
+}
+
+.jyicon-exchange-bizconfig:before {
+  content: "\edfc";
+}
+
+.jyicon-Interbank-bizconfig:before {
+  content: "\edfb";
+}
+
+.jyicon-business-manage:before {
+  content: "\edfa";
+}
+
+.jyicon-doc-manage:before {
+  content: "\edf9";
+}
+
+.jyicon-supervise-submit:before {
+  content: "\edf8";
+}
+
+.jyicon-info-notice:before {
+  content: "\edf7";
+}
+
+.jyicon-synthetical-xinpi:before {
+  content: "\edf6";
+}
+
+.jyicon-compose-report:before {
+  content: "\edf5";
+}
+
+.jyicon-portfolio-assets:before {
+  content: "\edf4";
+}
+
+.jyicon-portfolio-analysis:before {
+  content: "\edf3";
+}
+
+.jyicon-penetrate-manage:before {
+  content: "\edf2";
+}
+
+.jyicon-crm-tree:before {
+  content: "\edf1";
+}
+
+.jyicon-empower-manage:before {
+  content: "\edf0";
+}
+
+.jyicon-quota-manage:before {
+  content: "\edef";
+}
+
+.jyicon-creditgrant-manage:before {
+  content: "\edee";
+}
+
+.jyicon-namelist-manage:before {
+  content: "\eded";
+}
+
+.jyicon-stress-testing:before {
+  content: "\edec";
+}
+
+.jyicon-risk-manage:before {
+  content: "\edeb";
+}
+
+.jyicon-bnsaccount-standbook:before {
+  content: "\edea";
+}
+
+.jyicon-bnsaccount-parameter:before {
+  content: "\ede9";
+}
+
+.jyicon-bill-reminder:before {
+  content: "\ede8";
+}
+
+.jyicon-daily-makebill:before {
+  content: "\ede7";
+}
+
+.jyicon-bnsaccount-manage:before {
+  content: "\ede6";
+}
+
+.jyicon-valbatch-process:before {
+  content: "\ede5";
+}
+
+.jyicon-valparameter-manage:before {
+  content: "\ede4";
+}
+
+.jyicon-netvalue-manage:before {
+  content: "\ede3";
+}
+
+.jyicon-valuation-manage:before {
+  content: "\ede1";
+}
+
+.jyicon-assets-settlement:before {
+  content: "\ede0";
+}
+
+.jyicon-laizhangfenjian:before {
+  content: "\eddd";
+}
+
+.jyicon-assets-duration:before {
+  content: "\eddc";
+}
+
+.jyicon-cashflow-query:before {
+  content: "\eddb";
+}
+
+.jyicon-settlement-manage:before {
+  content: "\edda";
+}
+
+.jyicon-currdeposit-manage:before {
+  content: "\edd8";
+}
+
+.jyicon-payexps-manage:before {
+  content: "\edd7";
+}
+
+.jyicon-settle-instruct:before {
+  content: "\edd5";
+}
+
+.jyicon-account-manage:before {
+  content: "\edd4";
+}
+
+.jyicon-settle-manage:before {
+  content: "\edd2";
+}
+
+.jyicon-exchange-dailytrade:before {
+  content: "\edd1";
+}
+
+.jyicon-exchange-instruct:before {
+  content: "\edd0";
+}
+
+.jyicon-hushen-exchange:before {
+  content: "\edcf";
+}
+
+.jyicon-quote-manage:before {
+  content: "\edce";
+}
+
+.jyicon-Interbank-order:before {
+  content: "\edcc";
+}
+
+.jyicon-eft-manage:before {
+  content: "\edcb";
+}
+
+.jyicon-cstp-manage:before {
+  content: "\edca";
+}
+
+.jyicon-preInput-trade:before {
+  content: "\edc9";
+}
+
+.jyicon-foreign-trade:before {
+  content: "\edc8";
+}
+
+.jyicon-outside-trade:before {
+  content: "\edc7";
+}
+
+.jyicon-onsite-trade:before {
+  content: "\edc6";
+}
+
+.jyicon-Interbank-trade:before {
+  content: "\edc5";
+}
+
+.jyicon-trade-manage:before {
+  content: "\edc4";
+}
+
+.jyicon-trade-center:before {
+  content: "\edc2";
+}
+
+.jyicon-foreign-instruct:before {
+  content: "\edc1";
+}
+
+.jyicon-outside-instruct:before {
+  content: "\edc0";
+}
+
+.jyicon-onsite-instruct:before {
+  content: "\edbf";
+}
+
+.jyicon-Interbank-instruct:before {
+  content: "\edbe";
+}
+
+.jyicon-instruct-query:before {
+  content: "\edbd";
+}
+
+.jyicon-instruct-manage:before {
+  content: "\edbc";
+}
+
+.jyicon-market-info:before {
+  content: "\edbb";
+}
+
+.jyicon-subject-info:before {
+  content: "\edba";
+}
+
+.jyicon-coopassets-manage:before {
+  content: "\edb8";
+}
+
+.jyicon-assets-manage:before {
+  content: "\edb7";
+}
+
+.jyicon-compose-trial:before {
+  content: "\edb6";
+}
+
+.jyicon-cash-manage:before {
+  content: "\edb5";
+}
+
+.jyicon-compose-setup:before {
+  content: "\edb4";
+}
+
+.jyicon-compose-manage:before {
+  content: "\edb3";
+}
+
+.jyicon-product-adjust:before {
+  content: "\edb2";
+}
+
+.jyicon-product-eleme:before {
+  content: "\edb1";
+}
+
+.jyicon-product-manage:before {
+  content: "\edb0";
+}
+

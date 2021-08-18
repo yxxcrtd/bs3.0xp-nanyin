@@ -64,7 +64,7 @@ public class EtrExchangeTradeMainController extends BaseController{
         model.addAttribute("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         model.addAttribute("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         model.addAttribute("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
-        model.addAttribute("FINPROD_TYPE_TG_ZYSHG", "ZYSHG");
+        model.addAttribute("FINPROD_TYPE_TG_ZYSHG", "ZYSHG");// 质押式回购
 
         // 交易平台
         model.addAttribute("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());

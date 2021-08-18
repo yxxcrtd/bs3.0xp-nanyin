@@ -23,6 +23,7 @@
             isEnabled: '01',
             assetCode: $('#finprodIdhid').val()
         }
+        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
         var object = {
             tradeDirection: ['ps', 'EtrInvestBondInfo002.ps'],
             portfolioCode: ['portfolioId', 'EtrInvestBondInfo002.portfolioId'],
@@ -30,6 +31,7 @@
             assetType: ['assetType1', 'EtrInvestBondInfo002.bondType'],
             data: obj
         }
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
         return object;
     }
 
@@ -125,47 +127,43 @@
                 object.closePrice = result;
             }, false);
         }*/
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-        	Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/checkAuthorization', object, function(result2) {
-	            Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/check', object,
-	                function (result) {
-                        if(isautobond == true){
-                            Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
-                                Joyin.confirm(result.data, function () {
-                                    if (operateType === 'save') {
-                                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_save");
-                                    } else {
+        if (operateType === 'save') {// 指令暂存，去掉校验项  add by xxg 20210805
+            WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/checkAuthorization', object, function(result2) {
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/check', object,
+                        function (result) {
+                            if(isautobond == true){
+                                Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
+                                    Joyin.confirm(result.data, function () {
                                         WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_submit");
-                                    }
+                                    });
                                 });
-                            });
-                        }else{
-                            Joyin.confirm(result.data, function () {
-                                if (operateType === 'save') {
-                                    WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_save");
-                                } else {
+                            }else{
+                                Joyin.confirm(result.data, function () {
                                     WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_submit");
-                                }
-                            });
-                        }
-	                },false,function (result) {
-                        var disabledFlag = $('#invAim').attr('disabled');
-                        if(disabledFlag) return;
-                        var msg = result.errorList;
-                        var message ="";
-                        for(var i=0;i<msg.length;i++){
-                            message = msg[i];
-                            if(message.field!=null && message.field=='invAim'){
-                                if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
-                                    $('#invAim').textSelect('setValue', "FVTPL");
-                                    break;
+                                });
+                            }
+                        },false,function (result) {
+                            var disabledFlag = $('#invAim').attr('disabled');
+                            if(disabledFlag) return;
+                            var msg = result.errorList;
+                            var message ="";
+                            for(var i=0;i<msg.length;i++){
+                                message = msg[i];
+                                if(message.field!=null && message.field=='invAim'){
+                                    if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
+                                        $('#invAim').textSelect('setValue', "FVTPL");
+                                        break;
+                                    }
                                 }
                             }
-                        }
 
-                    });
-        	});
-        });
+                        });
+                });
+            });
+        }
     }
 
     var getIsautobond = function(){

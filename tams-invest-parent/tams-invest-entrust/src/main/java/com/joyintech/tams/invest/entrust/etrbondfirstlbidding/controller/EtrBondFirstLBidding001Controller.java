@@ -9,7 +9,11 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.service.EtrBondFirstBiddingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 债券一级投标委托
@@ -121,12 +126,19 @@ public class EtrBondFirstLBidding001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("recall")
-    public AjaxResult recallDelegate(@RequestBody EtrBondFirstLBiddingDto dto) {
+    public AjaxResult recallDelegate(@RequestBody EtrBondFirstLBiddingDto dto)
+    // modify by yushilong start
+            throws Exception {
+        // modify by yushilong end
         List<EtrBondFirstLBiddingDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && !dtolist.isEmpty()){
             for(EtrBondFirstLBiddingDto entity : dtolist){
                 service.recallDelegate(entity);
             }
+            // add by yushilong 批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeListExt2.平安资产类型_一级市场债.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by yushilong 批量撤销预占 end
             return new AjaxResult(this.getMessage("ETR_X_001"));
         }
         return new AjaxResult(this.getMessage("ETR_X_002"));
@@ -141,17 +153,25 @@ public class EtrBondFirstLBidding001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("close")
-    public AjaxResult closeDelegate(@RequestBody EtrBondFirstLBiddingDto dto) {
+    public AjaxResult closeDelegate(@RequestBody EtrBondFirstLBiddingDto dto)
+    // modify by yushilong start
+            throws Exception {
+        // modify by yushilong end
         List<EtrBondFirstLBiddingDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && !dtolist.isEmpty()){
             for(EtrBondFirstLBiddingDto entity : dtolist){
                 service.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
             }
+            // add by zhangrui1 批量委托关闭 start
+            // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
+            List<String> entrustIdList = dtolist.stream().map(
+                    EtrBondFirstLBiddingDto::getEntrustId).collect(Collectors.toList());
+            EntrustCompleteUtil.doComplete(entrustIdList);
+            // add by zhangrui1 批量委托关闭 end
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }
         return new AjaxResult(this.getMessage("ETR_X_004"));
     }
-    
     
     /**
      * 文件导出 <功能详细描述>

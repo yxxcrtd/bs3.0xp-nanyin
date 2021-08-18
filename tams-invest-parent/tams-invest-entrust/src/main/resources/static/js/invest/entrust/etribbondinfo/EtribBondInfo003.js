@@ -78,54 +78,55 @@
             var chlFinprodId = query("#chlFinprodId").val();
             var finprodIdhid = query("#finprodIdhid").val();
             var sysDateT1 = query('#vdate').val();
-            parent.EtrIbBondinfoHq.queryAmountInfoMuti(finprodIdhid,portfolioIds,chlFinprodId,query('#ccy').val(),sysDateT1, query('#calendarId').val());
-            parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,query('#ccy').val(),query('#vdate').val(),query('#price').val());
-
-            let ccy = query('#ccy').val();
-            let vdate = query('#vdate').val();
-            let calId = query('#calendarId').val();
-            let finprodId = query("#finprodIdhid").val();
-
-            var leftPositionData = {
-                proAvailableCash:Number(0),
-                proAvailableCashT1:Number(0),
-                secManageAvailablePosition:Number(0),
-                secManageAvailablePositionT1:Number(0),
-                assetPositionEntrustAmt:Number(0),
-                assetAvailableEntrustAmt:Number(0)
-            };
-            var datas = table.getAllRows();
-            for (var i in datas) {
-                if (datas[i].portfolioId !== '' && datas[i].portfolioId !== undefined) {
-                    var params = {
-                        portfolioId:datas[i].portfolioId,
-                        ccy:ccy,
-                        vdate:vdate,
-                        calId:calId,
-                        finprodId:finprodId
-                    };
-                    Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', params,
-                        function (result) {
-                            if (result) {
-                                // 组合T日可用现金
-                                if (result.proAvailableCash) leftPositionData.proAvailableCash += Number(result.proAvailableCash);
-                                // 组合T+1日可用现金
-                                if(result.proAvailableCashT1) leftPositionData.proAvailableCashT1 += Number(result.proAvailableCashT1);
-                                // 托管户T日可用现金
-                                if(result.secManageAvailablePosition) leftPositionData.secManageAvailablePosition += Number(result.secManageAvailablePosition);
-                                // 托管户T+1日可用现金
-                                if(result.secManageAvailablePositionT1) leftPositionData.secManageAvailablePositionT1+= Number(result.secManageAvailablePositionT1);
-
-                                if (result) {
-                                    if(result.assetPositionEntrustAmt) leftPositionData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
-                                    if(result.assetAvailableEntrustAmt) leftPositionData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
-                                }
-                            }
-                            // 左边联动
-                            parent.EtrIbBondinfoHq.viewPositionInfo(leftPositionData);
-                        });
-                }
+            if(parent.EtrIbBondinfoHq){
+                parent.EtrIbBondinfoHq.queryAmountInfoMuti(finprodIdhid,portfolioIds,chlFinprodId,query('#ccy').val(),sysDateT1, query('#calendarId').val());
+                parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,query('#ccy').val(),query('#vdate').val(),query('#price').val());
             }
+            // let ccy = query('#ccy').val();
+            // let vdate = query('#vdate').val();
+            // let calId = query('#calendarId').val();
+            // let finprodId = query("#finprodIdhid").val();
+            //
+            // var leftPositionData = {
+            //     proAvailableCash:Number(0),
+            //     proAvailableCashT1:Number(0),
+            //     secManageAvailablePosition:Number(0),
+            //     secManageAvailablePositionT1:Number(0),
+            //     assetPositionEntrustAmt:Number(0),
+            //     assetAvailableEntrustAmt:Number(0)
+            // };
+            // var datas = table.getAllRows();
+            // for (var i in datas) {
+            //     if (datas[i].portfolioId !== '' && datas[i].portfolioId !== undefined) {
+            //         var params = {
+            //             portfolioId:datas[i].portfolioId,
+            //             ccy:ccy,
+            //             vdate:vdate,
+            //             calId:calId,
+            //             finprodId:finprodId
+            //         };
+            //         Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', params,
+            //             function (result) {
+            //                 if (result) {
+            //                     // 组合T日可用现金
+            //                     if (result.proAvailableCash) leftPositionData.proAvailableCash += Number(result.proAvailableCash);
+            //                     // 组合T+1日可用现金
+            //                     if(result.proAvailableCashT1) leftPositionData.proAvailableCashT1 += Number(result.proAvailableCashT1);
+            //                     // 托管户T日可用现金
+            //                     if(result.secManageAvailablePosition) leftPositionData.secManageAvailablePosition += Number(result.secManageAvailablePosition);
+            //                     // 托管户T+1日可用现金
+            //                     if(result.secManageAvailablePositionT1) leftPositionData.secManageAvailablePositionT1+= Number(result.secManageAvailablePositionT1);
+            //
+            //                     if (result) {
+            //                         if(result.assetPositionEntrustAmt) leftPositionData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
+            //                         if(result.assetAvailableEntrustAmt) leftPositionData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
+            //                     }
+            //                 }
+            //                 // 左边联动
+            //                 parent.EtrIbBondinfoHq.viewPositionInfo(leftPositionData);
+            //             });
+            //     }
+            // }
         },
         exerYield_setDisabled : function(isDisabled){
             // 行权收益率可用判断通用设置
@@ -134,10 +135,10 @@
                 exerYield.val('').attr('disabled', true).removeAttr("required");
                 query('#calculateField_exerYield').prop('checked', false).attr('disabled', true);
             }else{
-                if(query("#isRight").val() !== N && query("#priceModel").val() !== PRICEMODEL_03){
+                if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
                     // 含权债或为空 且 价格模式不是市价
                     exerYield.val('').attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
-                    query('#calculateField_exerYield').val('').attr('disabled', false);
+                    query('#calculateField_exerYield').attr('disabled', false);
                 }
             }
             return exerYield;
@@ -408,7 +409,6 @@
                 type: 'select',
                 id: 'portfolioId',
                 parentIds:'portfolioSeries',
-                /*childrenIds : 'portfolioId',*/
                 multiple: false,
                 showField: 'text',
                 searchable: true,
@@ -434,12 +434,13 @@
             type: 'number',
             digit: 2
         }, {/*证券账户*/
-            field: 'secAcct',
+            field: 'secManageAcctId',
             width: 100,
             title: 'EtribBondInfo003.secAcct',
             edit:true,
             sortable: false,
-            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId', multiple: false, showField:'text',searchable: true,
+            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId',
+                multiple: false, showField:'text',searchable: true,
                 url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
             }
         },  {/*投资目的*/
@@ -550,6 +551,28 @@
         doOther.refreshTradAmt();
         doOther.leftHqReload();
     });
+
+
+    window.componentLoadCallback = function(isDone, pagePath, params) {
+        if (isDone) {
+            // 代办事项中 行权收益率置灰问题
+            let exerYield = query('#exerYield');
+            exerYield.attr('disabled', true).removeAttr("required");
+            query('#calculateField_exerYield').attr('disabled', true);
+            var finprodId = query("#finprodId").val();
+            if (finprodId) {
+                var data = query("#finprodId").select2("data")[0].object;
+                query("#isRight").val(data.isRight).trigger("change");
+            }
+            if(query("#isRight").val() === Y && query("#priceModel").val() !== PRICEMODEL_03){
+                // 含权债或为空 且 价格模式不是市价
+                exerYield.attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
+                query('#calculateField_exerYield').attr('disabled', false);
+            }
+            calDeviationDegree();
+        }
+    };
+
 
     var init = function () {
         document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
@@ -681,7 +704,11 @@
         var ccy = query('#ccy').val();
         var sysDateT1 = query('#vdate').val();
         var calId = query('#calendarId').val();
-        parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
+        if (parent.EtrIbBondinfoHq) {
+            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
+            // 左边持仓现金信息联动
+            doOther.leftHqReload();
+        }
     });
 
 
@@ -752,6 +779,7 @@
             tradeMarket = temp.tradeMarket;
             temp.entrustId = item.entrustId;
             ps = temp.ps;
+            temp.settleAmt = item.settleAmt;
             temp.invAim = item.invAim;
             temp.secAcctId = item.secManageAcctId;
             temp.proAvailableCash = item.proAvailableCash;
@@ -812,6 +840,7 @@
         query("#mdate").val(sysDate).trigger("change");
         query("#counterId1").val("").trigger("change");
         query("#counterId2").val("").trigger("change");
+        query("#portfolioSeries").val("").trigger("change");
         query("#tradeAmt").removeAttr("auto");// 劵面总额汇总方式
         document.getElementById('deviationDegree').innerHTML = '';
         table.clear();
@@ -1131,19 +1160,18 @@
 
         Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', res.param, function(result1) {
             if(res.objects.length>0){
+                if (operateType === "save") {
+                    WorkFlow.doSaveList(basePath+'invest/entrust/etribbondinfo/EtribBondInfo003/save',res.param,"EtribBondInfo003_btn_save","EtribBondInfo003");
+                    EtrIbBondinfo003.doReset();
+                } else {
                 Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/check',res.objects,
                     function(result) {
                         Joyin.confirm(result.data,function() {
-                            if (operateType === "save") {
-                                WorkFlow.doSaveList(basePath+'invest/entrust/etribbondinfo/EtribBondInfo003/save',res.param,"EtribBondInfo003_btn_save","EtribBondInfo003");
-                                EtrIbBondinfo003.doReset();
-                            } else {
                                 WorkFlow.doSubmitList(basePath+'invest/entrust/etribbondinfo/EtribBondInfo003/save',res.param,"EtribBondInfo003_btn_submit","EtribBondInfo003");
                                 EtrIbBondinfo003.doReset();
-                            }
-
                         });
                     });
+                }
             }else{
                 Joyin.warn("请添加组合分配！");
                 return;
@@ -1214,8 +1242,6 @@
             if (!query("#finprodId").val()) {
                 return;
             }
-            // 根据净价计算净价偏离度
-            calDeviationDegree();
             //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 start
             var calculateField =  query("input[name=calculateField]:checked").val();
             if(calflag != calculateField){
@@ -1240,8 +1266,11 @@
                     var entrustNum = 0.0;
                     for (var index in object.bussCombDistribtList) {
                         var item = object.bussCombDistribtList[index];
-                        if (item.entrustNum == null || item.entrustNum == "") return;
-                        entrustNum += parseFloat(item.entrustNum) * 10000;
+                        if (item.entrustNum == null || item.entrustNum == ""){
+                            // return;
+                        }else{
+                            entrustNum += parseFloat(item.entrustNum) * 10000;
+                        }
                     }
                     object.entrustNum = String(entrustNum);
                 } else {
@@ -1261,7 +1290,9 @@
                     var data = result.data;
                     if (data.price) {
                         query("#price").val(data.price).trigger("blur");
-                        query("#fpriceAmt").val(data.unitFprice).trigger("change");
+                        query("#fpriceAmt").val(data.unitFprice).trigger("blur");
+                        // 根据净价计算净价偏离度
+                        calDeviationDegree();
                     } else {
                         query("#price").val("");
                         query("#fpriceAmt").val("");
@@ -1276,29 +1307,29 @@
     };
 
 
-    // // 绑定提交按钮
-    // $('#EtribBondInfo003_btn_submit').click(function () {
-    //     saveOrSubmit('submit');
-    // });
-    //
-    // // 绑定保存按钮
-    // $('#EtribBondInfo003_btn_save').click(function () {
-    //     saveOrSubmit('save');
-    // });
-    //
-    // // 绑定取消按钮
-    // $('#EtribBondInfo003_btn_reset').click(function () {
-    //     doReset();
-    // });
-    //
-    // // 绑定风险按钮
-    // $('#EtribBondInfo003_btn_riskcal').click(function () {
-    //     doRiskcal();
-    // });
-    //
-    // $('#EtribBondInfo003_btn_fileupload').click(function () {
-    //     fileUpload();
-    // });
+    // 绑定提交按钮
+    $('#EtribBondInfo003_btn_submit').click(function () {
+        saveOrSubmit('submit');
+    });
+
+    // 绑定保存按钮
+    $('#EtribBondInfo003_btn_save').click(function () {
+        saveOrSubmit('save');
+    });
+
+    // 绑定取消按钮
+    $('#EtribBondInfo003_btn_reset').click(function () {
+        doReset();
+    });
+
+    // 绑定风险按钮
+    $('#EtribBondInfo003_btn_riskcal').click(function () {
+        doRiskcal();
+    });
+
+    $('#EtribBondInfo003_btn_fileupload').click(function () {
+        fileUpload();
+    });
 
     query('#finprodId').change(function () {
         doChange.finprodId();

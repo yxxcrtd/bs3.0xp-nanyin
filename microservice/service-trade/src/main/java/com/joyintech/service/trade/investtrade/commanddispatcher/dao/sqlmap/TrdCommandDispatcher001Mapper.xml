@@ -178,9 +178,17 @@
 			<if test="ccy != null and ccy!='' ">
 				AND ETR_ENTRUST.CCY  = #{ccy}
 			</if>
-			<if test="entrustStatus != null and entrustStatus!=''">
-				AND ETR_ENTRUST.ENTRUST_STATUS  = #{entrustStatus}
+			<!--有效状态多项输入修改 edit by yeming 20210810 start-->
+<!--			<if test="entrustStatus != null and entrustStatus!=''">-->
+<!--				AND ETR_ENTRUST.ENTRUST_STATUS  = #{entrustStatus}-->
+<!--			</if>-->
+			<if test="entrustStatusList != null and entrustStatusList.size() > 0">
+				AND ETR_ENTRUST.ENTRUST_STATUS IN
+				<foreach collection="entrustStatusList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
 			</if>
+			<!--有效状态多项输入修改 edit by yeming 20210810 end-->
 			<if test="vdateBegin != null and vdateBegin != ''">
 				<![CDATA[ AND to_char(ETR_ENTRUST.VDATE,'yyyy-MM-dd')  >= #{vdateBegin} ]]> 
 			</if>
@@ -314,9 +322,17 @@
 			<if test="ccy != null and ccy!='' ">
 				AND ETR_ENTRUST.CCY  = #{ccy}
 			</if>
-			<if test="entrustStatus != null and entrustStatus!=''">
-				AND ETR_ENTRUST.ENTRUST_STATUS  = #{entrustStatus}
+			<!--有效状态多项输入修改 edit by yeming 20210810 start-->
+<!--			<if test="entrustStatus != null and entrustStatus!=''">-->
+<!--				AND ETR_ENTRUST.ENTRUST_STATUS  = #{entrustStatus}-->
+<!--			</if>-->
+			<if test="entrustStatusList != null and entrustStatusList.size() > 0">
+				AND ETR_ENTRUST.ENTRUST_STATUS IN
+				<foreach collection="entrustStatusList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
 			</if>
+			<!--有效状态多项输入修改 edit by yeming 20210810 end-->
 			<if test="vdateBegin != null and vdateBegin != ''">
 				<![CDATA[ AND to_char(ETR_ENTRUST.VDATE,'yyyy-MM-dd')  >= #{vdateBegin} ]]>
 			</if>
@@ -474,7 +490,7 @@
 	</select>
 	<!-- 投资经理联想框 -->
 	<select id="getManagers" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT
+		SELECT distinct
 			SYS_USER.USER_NAME id,
 			SYS_USER.REAL_NAME text
 			,SYS_USER.DEPT_CODE deptCode /* add by songyawei */

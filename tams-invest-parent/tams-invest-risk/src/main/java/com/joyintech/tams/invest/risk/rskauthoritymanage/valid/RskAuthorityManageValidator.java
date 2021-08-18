@@ -67,7 +67,7 @@ public class RskAuthorityManageValidator implements BeanValidator{
             }
             // 增加有资产交易在流程中的情况下，不准删除授权数据
             if (list != null && list.size() > 0) {
-                if (rskAuthorityManageService.selectAssetTrade(list) > 0) {
+                if (rskAuthorityManageService.selectAssetTrade() > 0) {
                     resultList.add(new ValidMessage(this.getMessage("RSK_E_0057")));
                 }
             }
@@ -131,10 +131,6 @@ public class RskAuthorityManageValidator implements BeanValidator{
                     //用户不能为空
                     if(e.getUserName() == null){
                         resultList.add(new ValidMessage(this.getMessage("FW_E_0006", getMessage("RskAuthorityManage001.userName"))));
-                    }
-                    //交易方向不能为空
-                    if(e.getTradeDirection() == null || "".equals(e.getTradeDirection())){
-                        resultList.add(new ValidMessage(this.getMessage("FW_E_0006", getMessage("RskAuthorityManage001.tradeDirection"))));
                     }
                     //资产类型不能为空
                     if(e.getAssetType() == null || "".equals(e.getAssetType())){

@@ -78,6 +78,22 @@ public abstract class RskApprovalService<V extends ITableRow> extends BaseServic
             RskIsupTrialDto.class);
     }
 
+    /**
+     * 取得 指标计算结论
+     *
+     * @return 指标计算结论
+     * @see
+     * @since 1.0
+     */
+    public Page<RskIsupTrialDto> selectForList(Map<String, Object> param) {
+        Page<RskIsupTrialDto> dto = new Page<RskIsupTrialDto>();
+        List<RskIsupTrialDto> rskIsupTrialDtos = restTemplate.postForList(
+                ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskApproval/findRskIsupTrialList", param,
+                RskIsupTrialDto.class);
+        dto.setRoot(rskIsupTrialDtos);
+        return dto;
+    }
+
     protected void send(String code, String rsk, String sysCode) {
         Map<String, Object> data = new HashMap<>();
         data.put("sysCode", StringUtil.contains(sysCode, GlobalConstant.UNDER_LINE) ?
@@ -98,6 +114,29 @@ public abstract class RskApprovalService<V extends ITableRow> extends BaseServic
             data.put(BussinessConstantRds.INTERFCODE, rsk);
         }
         ClientUtil.sendRequest(CacheUtil.getSysParam(APPROVAL_SYS + sysCode), data,restTemplate);
+    }
+
+    /**
+     * 将审批结果 通知给交易系统
+     *
+     * @param eventId 编号
+     * @see
+     * @since 1.0
+     */
+    protected void sendApprovalResultToExchange(String eventId) {
+        logger.info("通知交易系统审批状态接口【{}】  接口URL："+ServiceApplication.EXCHANGE_SERVICE_NAME +
+                "/joyin/instruction/examine");
+
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("eventId", eventId);
+        paramMap.put("approveResult", "1");
+        logger.info("请求报文【{}】","eventId = "+ eventId+";approveResult=1");
+
+        Map<String, Object> result = restTemplate.postForObject(ServiceApplication.EXCHANGE_SERVICE_NAME +
+                        "/joyin/instruction/examine?eventId="+eventId+"&approveResult=1",
+                paramMap, Map.class);
+        logger.info("应答报文【{}】", "errorCode:"+(Integer)result.get("errorCode")+";errorMsg:"+(String)result.get("errorMsg"));
+
     }
 
     protected Logger getLogger(){

@@ -277,9 +277,15 @@ public class RiskUtil {
 			return exp;
 		}
 		String[] expArr=new String[]{exp};
+		//无禁止线不出指标 start
 		if(cond.indexOf(">")>-1||cond.indexOf(">=")>-1){
 			expMap=dealParamMinMax(fixParamList,expArr,expMap,RiskUtil.MAX);
+		}else if(cond.indexOf("<")>-1||cond.indexOf("<=")>-1){
+			expMap=dealParamMinMax(fixParamList,expArr,expMap,RiskUtil.MIN);
+		}else{
+			expMap=dealParamMinMax(fixParamList,expArr,expMap,RiskUtil.MAX);
 		}
+		//无禁止线不出指标end
 		if(cond.indexOf("<")>-1||cond.indexOf("<=")>-1){
 			expMap=dealParamMinMax(fixParamList,expArr,expMap,RiskUtil.MIN);
 		}

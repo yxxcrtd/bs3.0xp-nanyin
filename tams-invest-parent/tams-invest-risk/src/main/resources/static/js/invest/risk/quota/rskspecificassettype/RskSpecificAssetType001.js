@@ -1,16 +1,16 @@
 $(function() {
     var columns = [
         {field:'specificId', visible: false}
-        ,{field:'type1Name', sortField:"TYPE_1", width:140 , title: 'RskSpecificAssetType001.type1'}
-        ,{field:'type2Name', sortField:"TYPE_2", width:140 , title: 'RskSpecificAssetType001.type2'}
-        ,{field:'type3Name', sortField:"TYPE_3", width:140 , title: 'RskSpecificAssetType001.type3'}
-        ,{field:'type4Name', sortField:"TYPE_4", width:140 , title: 'RskSpecificAssetType001.type4'}
-        ,{field:'finprodMarketId', sortField:"FINPROD_MARKET_ID", width:140 , title: 'RskSpecificAssetType001.finprodId'}
-        ,{field:'finprodName', sortField:"FINPROD_NAME", width:140 , title: 'RskSpecificAssetType001.finprodName'}
-        ,{field:'isBadassetName', sortField:"IS_BADASSET", width:150 , title: 'RskSpecificAssetType001.isBadasset'}
-        ,{field:'isRegulationName', sortField:"IS_REGULATION", width:150 , title: 'RskSpecificAssetType001.isRegulation'}
-        ,{field:'isCreditAssetName', sortField:"IS_CREDIT_ASSET", width:150 , title: 'RskSpecificAssetType001.isCreditAsset'}
-        ,{field:'isFlowLimitedStr', sortField:"IS_FLOW_LIMITED", width:150 , title: '是否流动性受限'}
+        ,{field:'type1Name', visible: false}
+        ,{field:'type2Name', visible: false}
+        ,{field:'type3Name', visible: false}
+        ,{field:'type4Name', visible: false}
+        ,{field:'finprodMarketId', sortField:"FINPROD_MARKET_ID", width:165 , title: 'RskSpecificAssetType001.finprodId'}
+        ,{field:'finprodName', sortField:"FINPROD_NAME", width:165 , title: 'RskSpecificAssetType001.finprodName'}
+        ,{field:'isBadassetName', sortField:"IS_BADASSET", width:185 , title: 'RskSpecificAssetType001.isBadasset'}
+        ,{field:'isRegulationName', sortField:"IS_REGULATION", width:190 , title: 'RskSpecificAssetType001.isRegulation'}
+        ,{field:'isCreditAssetName', sortField:"IS_CREDIT_ASSET", width:190 , title: 'RskSpecificAssetType001.isCreditAsset'}
+        ,{field:'isFlowLimitedStr', sortField:"IS_FLOW_LIMITED", width:190 , title: '是否流动性受限'}
         ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
     ];
     /**
@@ -18,18 +18,20 @@ $(function() {
      */
     var getSearchParams = function() {
         var param = $.serializeToObject('#searchForm');
-        if(param.type1){
-            param.type1 = $('#type1').val().join(",");
-        }
-        if(param.type2){
-            param.type2 = $('#type2').val().join(",");
-        }
-        if(param.type3){
-            param.type3 = $('#type3').val().join(",");
-        }
-        if(param.type4){
-            param.type4 = $('#type4').val().join(",");
-        }
+        // 20210812 fuyongsheng删除 start
+        // if(param.type1){
+        //     param.type1 = $('#type1').val().join(",");
+        // }
+        // if(param.type2){
+        //     param.type2 = $('#type2').val().join(",");
+        // }
+        // if(param.type3){
+        //     param.type3 = $('#type3').val().join(",");
+        // }
+        // if(param.type4){
+        //     param.type4 = $('#type4').val().join(",");
+        // }
+        // 20210812 fuyongsheng删除 end
         return param;
     }
     /**

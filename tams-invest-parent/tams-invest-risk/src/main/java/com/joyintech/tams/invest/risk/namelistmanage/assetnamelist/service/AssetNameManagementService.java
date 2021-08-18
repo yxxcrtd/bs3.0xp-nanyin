@@ -330,10 +330,10 @@ public class AssetNameManagementService extends CommonExportService<RskAccessLis
         List<RskAccessListDetailDto> list = new ArrayList<RskAccessListDetailDto>();
         // 检查文件名是否为空
         if (StringUtil.isNotEmpty(fileName)) {
-            /*ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(fileName),
-                null);*/
-            ExcelUtil excelUtil = ExcelUtil.build(fileName,
-                    null);
+           /*ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(fileName),
+            null);*/
+           ExcelUtil excelUtil = ExcelUtil.build(fileName,
+                null);
             List<List<String>> dataList = excelUtil.readToList(0, 0, 0);
             //检查读出信息是否为空
             if (null != dataList) {

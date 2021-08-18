@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.service.riskrdsinf.event.rsk004.service.Rsk004Service;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IProdInfo;
@@ -261,6 +262,18 @@ public class Rsk003Service extends EventBaseService<Rsk003InEntity> {
             response.setBodyField(RSK_LIST, new ArrayList<>());
             return;
         }
+      //wangyang1 风险二级法人改造 start
+        if (MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isNotEmpty(mapData.get("instCode"))) {
+            String instCode = mapData.get("instCode").toString();
+            Set<String> paraIdListChd = new HashSet<>();
+            paraIdList.forEach(item->{
+                if (item.indexOf(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue())!=-1) {
+                    paraIdListChd.add(item.replace(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue(),instCode));
+                }
+            });
+            paraIdList.addAll(paraIdListChd);
+        }
+        //wangyang1 风险二级法人改造 end
         // 取得所有指标参数信息
         Map<String, IParam> paramMap = getParam(paraIdList);
         // 若指标参数不存在则抛出异常
@@ -355,7 +368,7 @@ public class Rsk003Service extends EventBaseService<Rsk003InEntity> {
             // 存在预占信息的实在不计算指标
             if (!CollectionUtils.isEmpty(indMap) && !CollectionUtils.isEmpty(indMap.values())) {
                 // 固定值参数
-                Map<String, Object> map = getFixedParaVal(paramMap);
+                Map<String, Object> map = getFixedParaVal(paramMap,mapData);
                 // add by zhangrui1 同向变动特殊处理 start
                 Map<String, IIndicator> leftIndMap = getIndTrendCalcSrc().execute(indMap, paramMap,
                     getIndTrendCalcSrc().filterValMap(new HashMap<>(), paraValMap), eveList,

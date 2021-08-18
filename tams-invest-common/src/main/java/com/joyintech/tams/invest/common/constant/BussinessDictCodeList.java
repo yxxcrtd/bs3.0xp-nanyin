@@ -4570,6 +4570,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 是否需要监控授信开关
      */
     监控授信开关_关(BussinessDictCode.是否占用授信, "N", "否"),
+    /**
+     * 授信使用条件开关_关
+     */
+    授信使用条件开关_关(BussinessDictCode.是否占用授信, "N", "否"),
   /**
    * 发行方式_公开发行
    */

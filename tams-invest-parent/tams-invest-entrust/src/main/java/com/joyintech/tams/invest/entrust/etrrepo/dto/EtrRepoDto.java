@@ -10,19 +10,10 @@
  
 package com.joyintech.tams.invest.entrust.etrrepo.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -30,15 +21,22 @@ import com.joyintech.framework.validation.annotation.Rate;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etrrepo.validator.EtrRepoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 回购投资委托画面dto
@@ -205,6 +203,19 @@ public class EtrRepoDto extends EtrEntrust implements ProcessEntity {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal APPentrustAmtTWO;
 
+
+    /**
+     * 质押券信息
+     */
+    private List<PledgeBondInfoDto> pledgeBondList;
+
+    public List<PledgeBondInfoDto> getPledgeBondList() {
+        return pledgeBondList;
+    }
+
+    public void setPledgeBondList(List<PledgeBondInfoDto> pledgeBondList) {
+        this.pledgeBondList = pledgeBondList;
+    }
 
     public String getAssetAvailablePosition1() {
         return assetAvailablePosition1;

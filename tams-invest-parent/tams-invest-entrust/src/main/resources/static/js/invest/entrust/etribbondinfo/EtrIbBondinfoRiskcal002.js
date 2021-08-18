@@ -7,22 +7,6 @@ $(function() {
     var cols = [
                 {field:'portfolioCode', visible: false}
                 ,{field:'kriCode', visible: false}
-                ,{field:'kriName',  title: 'BaseRiskMathComm.indName', width:250,sortable:false}
-                ,{field:'kriTypeCn',  title: 'BaseRiskMathComm.indType', width:100,sortable:false}
-                ,{field:'portfolioName',  title: 'BaseRiskMathComm.portfolioName', width:150,sortable:false}
-                ,{field:'assetName',  title: 'BaseRiskMathComm.assetName', width:150,sortable:false}
-                ,{field:'warningLine',  title: 'BaseRiskMathComm.wthreshold', width:150,sortable:false}
-                ,{field:'approveLine',  title: 'BaseRiskMathComm.approveold', width:150,sortable:false}
-                ,{field:'forbiddenLn',  title: 'BaseRiskMathComm.vthreshold', width:150,sortable:false}
-                ,{field:'kriValue',  title: 'BaseRiskMathComm.currValue',width:150,sortable:false,render: function(data, type, row, meta){
-                        if(data&&row.kriType.indexOf("FORBID_")!=-1){
-                            return forbidVal(data,row.kriType);
-                        }
-                        return data;
-                    }}
-                ,{field:'oldValue',  title: 'BaseRiskMathComm.preValue',width:150,sortable:false/*,render: transferSupVal*/}
-                ,{field:'kriTrend',  title: 'BaseRiskMathComm.kriTrend',width:70}
-                ,{field:'kriStatus' ,visible: false}
                 ,{field:'kriStatusCn', width:70, title: 'BaseRiskMathComm.currStatus',sortable:false,
                     render: function (data, type, row, meta) {
                         if(row.kriStatus == 0){
@@ -42,8 +26,24 @@ $(function() {
                         }
                         return row.kriStatus;
                     }
-                },
-                {field:'totalConclu', visible: false}
+                }
+                ,{field:'kriName',  title: 'BaseRiskMathComm.indName', width:250,sortable:false}
+                ,{field:'kriTypeCn',  title: 'BaseRiskMathComm.indType', width:100,sortable:false}
+                ,{field:'portfolioName',  title: 'BaseRiskMathComm.portfolioName', width:150,sortable:false}
+                ,{field:'assetName',  title: 'BaseRiskMathComm.assetName', width:150,sortable:false}
+                ,{field:'warningLine',  title: 'BaseRiskMathComm.wthreshold', width:150,sortable:false}
+                ,{field:'approveLine',  title: 'BaseRiskMathComm.approveold', width:150,sortable:false}
+                ,{field:'forbiddenLn',  title: 'BaseRiskMathComm.vthreshold', width:150,sortable:false}
+                ,{field:'kriValue',  title: 'BaseRiskMathComm.currValue',width:150,sortable:false,render: function(data, type, row, meta){
+                        if(data&&row.kriType.indexOf("FORBID_")!=-1){
+                            return forbidVal(data,row.kriType);
+                        }
+                        return data;
+                    }}
+                ,{field:'oldValue',  title: 'BaseRiskMathComm.preValue',width:150,sortable:false/*,render: transferSupVal*/}
+                ,{field:'kriTrend',  title: 'BaseRiskMathComm.kriTrend',width:70}
+                ,{field:'kriStatus' ,visible: false}
+                ,{field:'totalConclu', visible: false}
             ];
     
     var table = $("#baseRiskMathTable").joyintable({

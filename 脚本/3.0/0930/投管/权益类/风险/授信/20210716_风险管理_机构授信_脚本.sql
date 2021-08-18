@@ -1,6 +1,8 @@
 -- ----------------------------
 -- Table structure for CREDIT_CONF_INFO
 -- ----------------------------
+DROP TABLE CREDIT_CONF_INFO;
+
 CREATE TABLE "CREDIT_CONF_INFO" (
 "CREDIT_MST_ID" VARCHAR2(32 BYTE) NOT NULL ,
 "CREDIT_TAG_ID" VARCHAR2(32 BYTE) NULL ,
@@ -43,6 +45,8 @@ ALTER TABLE "CREDIT_CONF_INFO" ADD PRIMARY KEY ("CREDIT_MST_ID");
 -- ----------------------------
 -- Table structure for CREDIT_TAG_INFO
 -- ----------------------------
+DROP TABLE CREDIT_TAG_INFO;
+
 CREATE TABLE "CREDIT_TAG_INFO" (
 "CREDIT_TAG_ID" VARCHAR2(32 BYTE) NOT NULL ,
 "CREDIT_TAG_NAME" VARCHAR2(200 BYTE) NULL ,
@@ -108,39 +112,51 @@ ALTER TABLE "CREDIT_TAG_INFO" ADD PRIMARY KEY ("CREDIT_TAG_ID");
 -- ----------------------------
 -- Table structure for CREDIT_LINES
 -- ----------------------------
+alter table CREDIT_LINES drop column SINGER_SEC_RATIO;
 alter table CREDIT_LINES add SINGER_SEC_RATIO NUMBER(30,14);
 comment on column CREDIT_LINES.SINGER_SEC_RATIO is '单债占机构限额';
 
+alter table CREDIT_LINES drop column CREDIT_TYPE;
 alter table CREDIT_LINES add CREDIT_TYPE VARCHAR2(32 BYTE);
 comment on column CREDIT_LINES.CREDIT_TYPE is '授信类型';
 
+alter table CREDIT_LINES drop column CREDIT_AMT_ADD;
 alter table CREDIT_LINES add CREDIT_AMT_ADD NUMBER(30,14);
 comment on column CREDIT_LINES.CREDIT_AMT_ADD is '叠加授信额度';
 
+alter table CREDIT_LINES drop column CCY;
 alter table CREDIT_LINES add CCY VARCHAR2(50 BYTE);
 comment on column CREDIT_LINES.CCY is '币种';
 
+alter table CREDIT_LINES drop column IS_INTERBANK;
 alter table CREDIT_LINES add IS_INTERBANK VARCHAR2(50 BYTE);
 comment on column CREDIT_LINES.IS_INTERBANK is '是否同业';
 
+alter table CREDIT_LINES drop column IS_LOOP_AMT;
 alter table CREDIT_LINES add IS_LOOP_AMT VARCHAR2(50 BYTE);
 comment on column CREDIT_LINES.IS_LOOP_AMT is '是否循环额度';
 
+alter table CREDIT_LINES drop column CREDIT_OBJ;
 alter table CREDIT_LINES add CREDIT_OBJ VARCHAR2(50 BYTE);
 comment on column CREDIT_LINES.CREDIT_OBJ is '授信对象';
 
+alter table CREDIT_LINES drop column APPR_VDATE;
 alter table CREDIT_LINES add APPR_VDATE DATE;
 comment on column CREDIT_LINES.APPR_VDATE is '审批开始日';
 
+alter table CREDIT_LINES drop column APPR_MDATE;
 alter table CREDIT_LINES add APPR_MDATE DATE;
 comment on column CREDIT_LINES.APPR_MDATE is '审批结束日';
 
+alter table CREDIT_LINES drop column CREDIT_VDATE;
 alter table CREDIT_LINES add CREDIT_VDATE DATE;
 comment on column CREDIT_LINES.CREDIT_VDATE is '首次开贷开始日';
 
+alter table CREDIT_LINES drop column CREDIT_MDATE;
 alter table CREDIT_LINES add CREDIT_MDATE DATE;
 comment on column CREDIT_LINES.CREDIT_MDATE is '首次开贷结束日';
 
+alter table CREDIT_LINES drop column HOLD_MATURITY;
 alter table CREDIT_LINES add HOLD_MATURITY VARCHAR2(2 BYTE);
 comment on column CREDIT_LINES.HOLD_MATURITY is '是否持有至到期';
 

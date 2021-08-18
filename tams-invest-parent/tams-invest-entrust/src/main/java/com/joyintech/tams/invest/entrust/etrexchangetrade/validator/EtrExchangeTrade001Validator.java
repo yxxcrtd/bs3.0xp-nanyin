@@ -105,10 +105,10 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 			if (!StringUtil.isNotEmpty(dto.getTargetType())) {
 				errorList.add(new ValidMessage("targetType", this.getMessage("ETR_ERROR_0022")));
 			}
-//			//资金账户不为空、证券账户为空才check 账户不匹配
-//			if (StringUtil.isNotEmpty(dto.getAcctNo()) && !StringUtil.isNotEmpty(dto.getSecAcctId())) {
-//				errorList.add(new ValidMessage("secAcctId", this.getMessage("ETR_ERROR_0023")));
-//			}
+			//资金账户不为空、证券账户为空才check 账户不匹配
+			if (StringUtil.isNotEmpty(dto.getAcctNo()) && !StringUtil.isNotEmpty(dto.getSecAcctId())) {
+				errorList.add(new ValidMessage("secAcctId", this.getMessage("ETR_ERROR_0023")));
+			}
 			if (null == dto.getEntrustNum() || dto.getEntrustNum().compareTo(BigDecimal.ZERO) == 0) {
 				errorList.add(new ValidMessage("entrustNum", this.getMessage("ETR_ERROR_0027")));
 			}

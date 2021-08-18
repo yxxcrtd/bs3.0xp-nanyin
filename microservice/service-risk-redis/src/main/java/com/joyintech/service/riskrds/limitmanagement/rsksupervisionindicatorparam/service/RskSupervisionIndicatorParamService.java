@@ -1,47 +1,17 @@
 package com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.constantrds.BussinessConstantRds;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-
-import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;
-import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.service.riskrds.limitmanagement.rskevent.dao.RskEvent001Mapper;
 import com.joyintech.service.riskrds.limitmanagement.rskevent.dto.RskEvent002Dto;
 import com.joyintech.service.riskrds.limitmanagement.rskevent.service.RskEventService;
 import com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dao.RskSupervisionIndicatorParamMapper;
-import com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dto.ParamConditionDto;
-import com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParam003Dto;
-import com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParam005Dto;
-import com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParamDto;
-import com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dto.SqlDto;
+import com.joyintech.service.riskrds.limitmanagement.rsksupervisionindicatorparam.dto.*;
 import com.joyintech.service.riskrds.limitmanagement.superviseindicator.dao.RskSupervisionIndicatorMapper;
-import com.joyintech.service.riskrds.limitmanagement.superviseindicator.dto.RskSupervisionIndicator002Dto;
 import com.joyintech.service.riskrds.limitmanagement.superviseindicator.dto.RskSupervisionIndicatorDto;
 import com.joyintech.tams.common.base.dao.RskIsupFixRecodeMapper;
 import com.joyintech.tams.common.base.dao.RskIsupIndicatorMapper;
@@ -138,7 +108,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
         pageParam.put("SQL", BussinessDictCodeListRds.指标参数实现类型_SQL.getValue());
         pageParam.put("sysDate", DateUtil.format(DateUtil.platDateFromCache()));
         // wngayang1 二级法人改造  start
-        if(MultilevelDataAuthorityUtil.isEnabled()){  
+        if(MultilevelDataAuthorityUtil.isEnabled()){
             if (!StringUtil.equals(LoginUserUtil.getUserName(), "admin")) {
                 List<String> institutionLists = new ArrayList<>();
                 institutionLists.addAll(MultilevelDataAuthorityUtil.getService().queryAuthorizedOrgCodeByUserName(LoginUserUtil.getUserName()));
@@ -161,8 +131,8 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
             for (RskSupervisionIndicatorParamDto dto : pageList.getRoot()) {
                  dto.setUpdateFlg(com.joyintech.framework.constant.DictCodeList.是否_是.getValue());
             }
-        }  
-        //wangyang1 二级法人改造 end 
+        }
+        //wangyang1 二级法人改造 end
         return pageList;
     }
 
@@ -178,7 +148,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
         i = i + rskIsupIndicatorParaMapper.deleteByPrimaryKey(dto.getParaCode());
         i = i + rskSupervisionIndicatorParamMapper.delete(dto.getParaCode());
         Map<String, Object> map =new HashMap<String, Object>();
-        map.put("paraCode", dto.getParaCode()); 
+        map.put("paraCode", dto.getParaCode());
         i = i + rskSupervisionIndicatorParamMapper.deleteFixRecode(map);
         //---------add by 裴家俊 2019-10-21 start---------------
         if(StringUtil.isNotEmpty(dto.getParaCode())&&StringUtil.isNotEmpty(dto.getParaType())&&dto.getParaType().equals(BussinessDictCodeListRds.指标参数实现类型_自定义.getValue())){
@@ -248,7 +218,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
             for (RskIsupIndicatorParaDtl e : dto.getRskIsupIndicatorParaDtlList()) {
             	//特殊字符转换
 				e.setContent(RiskUtil.specialCharacterConversion(e.getContent(),true));
-            	i = i + rskIsupIndicatorParaDtlMapper.insertSelective(e);
+                i = i + rskIsupIndicatorParaDtlMapper.insertSelective(e);
             }
         }
         return i;
@@ -261,7 +231,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
      * @return 结果
      */
     public List<RskSupervisionIndicatorParamDto> selectInfo(String paraCode) {
-    	List<RskSupervisionIndicatorParamDto> listRet = rskSupervisionIndicatorParamMapper.selectInfo(paraCode);
+		List<RskSupervisionIndicatorParamDto> listRet = rskSupervisionIndicatorParamMapper.selectInfo(paraCode);
 		listRet.forEach(en->{
 				//特殊字符转换
 			en.setContent(RiskUtil.specialCharacterConversion(en.getContent(),false));
@@ -357,10 +327,10 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
                dto.setInstitutionCode(institutionCode);
                rskIsupFixRecodeMapper.insert(dto);
              }
-         }else { 
+         }else {
              dto.setInstitutionCode(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());
              rskIsupFixRecodeMapper.insert(dto);
-         } 
+         }
          return 1;
     }
 
@@ -371,11 +341,11 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
          BeanUtil.copyPropertiesIgnoreNull(record, dto);
          record.setIsForbid(DictCodeList.是否_否.getValue());
          record.setParaType(BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());
-         rskIsupIndicatorParaMapper.insert(record); 
+         rskIsupIndicatorParaMapper.insert(record);
          if (!StringUtil.isEmptyList(dto.getSelectedItem())) {
              for (RskSupervisionIndicatorParam003Dto e : dto.getSelectedItem()) {
                  Map<String, Object> map =new HashMap<String, Object>();
-                 map.put("paraCode", e.getParaCode()); 
+                 map.put("paraCode", e.getParaCode());
                  map.put("institutionCode",StringUtil.isNotEmpty(e.getInstitutionCode())?e.getInstitutionCode():BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());
                  rskSupervisionIndicatorParamMapper.deleteFixRecode(map);
              }
@@ -390,7 +360,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
     public List<RskSupervisionIndicatorParam003Dto> selectFixRecode(String paraCode) {
         Map<String, Object> param = new HashMap<>();
         // wngayang1 二级法人改造  start
-        if(MultilevelDataAuthorityUtil.isEnabled()){  
+        if(MultilevelDataAuthorityUtil.isEnabled()){
             List<String> instCodeList = LoginUserUtil.getTreeInstCode();
             String institutionCode =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
             param.put("institutionCode",institutionCode);
@@ -400,7 +370,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
         param.put("paraCode", paraCode);
         return rskSupervisionIndicatorParamMapper.selectFixRecode(param);
     }
-    
+
     public List<RskSupervisionIndicatorParam003Dto> selectFixRecode2(String paraCode) {
         List<RskSupervisionIndicatorParam003Dto> list = new ArrayList<>();
         RskSupervisionIndicatorParam003Dto dto003= new RskSupervisionIndicatorParam003Dto();
@@ -409,7 +379,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
         list.add(dto003);
         return list;
     }
-    
+
     public boolean isExistParaName(Map<String, Object> param) {
         return rskSupervisionIndicatorParamMapper.isExistParaName(param) > 0;
     }
@@ -1363,7 +1333,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
     		}
     		if(StringUtil.equals(map.get("bodyGradeType"), BussinessDictCodeListRds.评级分类_内部评级.getValue())){
     			RskEventItemRule rule = new RskEventItemRule();
-    			rule.setItemCode("bondInsideType1");
+//    			rule.setItemCode("bondInsideType1");
     			rule.setMatchType(BussinessDictCodeListRds.运算符_包含.getValue());
     			rule.setItemValue(bodyGrade);
     			list.add(rule);
@@ -1381,14 +1351,14 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
     			rule.setMatchType(BussinessDictCodeListRds.运算符_包含.getValue());
     			rule.setItemValue(bondGrade);
     			list.add(rule);
-    		}
+    		}/*
     		if(StringUtil.equals(map.get("bondGradeType"), BussinessDictCodeListRds.评级分类_内部评级.getValue())){
     			RskEventItemRule rule = new RskEventItemRule();
-    			rule.setItemCode("bondInsideType");
+    			//rule.setItemCode(BussinessDictCodeListRds.风险事件特征值类型_.getValue());
     			rule.setMatchType(BussinessDictCodeListRds.运算符_包含.getValue());
     			rule.setItemValue(bondGrade);
     			list.add(rule);
-    		}
+    		}*/
     	}
     	if(StringUtil.isNotEmpty(map.get("mdateRange"))){
     		if(StringUtil.equals(map.get("mdateRange"), BussinessDictCodeListRds.日期范围类型_一年内.getValue())){
@@ -1522,7 +1492,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
 		}
 		return modelValue;
 	}
-	
+
 	/**
 	 * <一句话功能简述>
 	 * <功能详细描述>
@@ -1530,9 +1500,9 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
 	 * @see
 	 * @since 1.0
 	 */
-	public List<SelectOptionDto> getInstitutionId(Map<String, Object> param){ 
+	public List<SelectOptionDto> getInstitutionId(Map<String, Object> param){
 	    com.joyintech.tams.systemtools.util.CommonUtil.setInstitutionMapByType_ms(param);
-	    if (StringUtil.isNotEmpty(param.get("initValue"))) { 
+	    if (StringUtil.isNotEmpty(param.get("initValue"))) {
 	        param.put("search", param.get("initValue"));
         }
 	    List<SelectOptionDto> institutionIdList = rskSupervisionIndicatorParamMapper.getInstitutionId(param);

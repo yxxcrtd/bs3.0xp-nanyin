@@ -1428,6 +1428,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	估值来源_中债登_CBC(DictCode.估值来源,"CBC","中债登(CBC)"),
 	估值来源_中证登_CSD(DictCode.估值来源,"CSD","中证登(CSD)"),
 	估值来源_上清所_SCH(DictCode.估值来源,"SCH","上清所(SCH)"),
+	估值来源_模型法_MOD(DictCode.估值来源,"MOD","模型法(MOD)"),
 	行情类型_指数(DictCode.行情类型,"02","指数"),
 	行情类型_收益率曲线(DictCode.行情类型,"03","收益率曲线"),
 	行情类型_利率(DictCode.行情类型,"04","利率"),

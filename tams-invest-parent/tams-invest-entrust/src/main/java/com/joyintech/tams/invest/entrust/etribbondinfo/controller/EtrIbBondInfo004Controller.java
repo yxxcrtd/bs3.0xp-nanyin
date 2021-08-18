@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtrIbBondInfo004Service;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtrIbBondinfo002Service;
@@ -48,7 +49,7 @@ import java.util.*;
  * 
  * @author hechuan
  * @version 1.0 2021年3月29日
- * @see EtrIbBondInfo004Controllers
+ * @see EtrIbBondInfo004Controller
  * @since 1.0
  */
 @Controller
@@ -100,7 +101,7 @@ public class EtrIbBondInfo004Controller extends BaseController {
     /**
      * 导入excel数据时check
      *
-     * @param map dto
+     * @param fileName fileName
      * @return check结果
      * @see
      * @since 1.0
@@ -244,7 +245,7 @@ public class EtrIbBondInfo004Controller extends BaseController {
     /**
      * 保存/提交
      * 
-     * @param dtoList dto
+     * @param allDto dto
      * @param br BindingResult
      * @return 结果
      * @throws Exception 异常
@@ -268,21 +269,21 @@ public class EtrIbBondInfo004Controller extends BaseController {
             }
 //            dto.setWorkflowParameter("new|||1|EtrRepo003|EtrRepo003_btn_submit|true");
         }
-//        // ----------add by zhangrui1 20200704 预占功能 start----------
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
-//            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
-//                    DictCodeList.平安资产类型_债券.getValue(),
-//                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
-//                    false, null);
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
-//        // ----------add by zhangrui1 20200704 预占功能 end----------
-//        // add by zhangrui1 批量提交设置风控指标明细 start
-//        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
-//                (dto, list) -> dto.setRiskTrialRetDto(list));
-//        // add by zhangrui1 批量提交设置风控指标明细 end
+        // ----------add by zhangrui1 20200704 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
+                    DictCodeList.平安资产类型_债券.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                    false, null);
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by zhangrui1 20200704 预占功能 end----------
+        // add by zhangrui1 批量提交设置风控指标明细 start
+        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
+                (dto, list) -> dto.setRiskTrialRetDto(list));
+        // add by zhangrui1 批量提交设置风控指标明细 end
         ProcessParameter<EtrIbBondinfo002Dto> processParameter = new ProcessParameter<EtrIbBondinfo002Dto>();
         WorkFlowParameter<EtrIbBondinfo002Dto> params = new WorkFlowParameter<EtrIbBondinfo002Dto>();
         params.setPageId("EtrIbBondinfo002");

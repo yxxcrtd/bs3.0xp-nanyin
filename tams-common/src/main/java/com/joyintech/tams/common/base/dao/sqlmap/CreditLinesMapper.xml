@@ -81,7 +81,7 @@
             CREDIT_AMT_ADD, CCY, IS_INTERBANK, 
             IS_LOOP_AMT, CREDIT_OBJ, APPR_VDATE, 
             APPR_MDATE, CREDIT_VDATE, CREDIT_MDATE, 
-            HOLD_MATURITY)
+            HOLD_MATURITY,CREDIT_PRICE)
         values (#{seqno,jdbcType=VARCHAR}, #{creditMstId,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, 
             #{term,jdbcType=DECIMAL}, #{pflsh,jdbcType=VARCHAR}, #{creditAmt,jdbcType=DECIMAL}, 
             #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{internalRating,jdbcType=VARCHAR}, 
@@ -93,7 +93,7 @@
             #{creditAmtAdd,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, #{isInterbank,jdbcType=VARCHAR}, 
             #{isLoopAmt,jdbcType=VARCHAR}, #{creditObj,jdbcType=VARCHAR}, #{apprVdate,jdbcType=DATE}, 
             #{apprMdate,jdbcType=DATE}, #{creditVdate,jdbcType=DATE}, #{creditMdate,jdbcType=DATE}, 
-            #{holdMaturity,jdbcType=VARCHAR})
+            #{holdMaturity,jdbcType=VARCHAR},#{creditPrice,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CreditLines" >
         insert into CREDIT_LINES
@@ -414,6 +414,9 @@
             </if>
             <if test="holdMaturity != null" >
                 HOLD_MATURITY = #{holdMaturity,jdbcType=VARCHAR},
+            </if>
+            <if test="creditPrice != null" >
+                CREDIT_PRICE = #{creditPrice,jdbcType=DECIMAL},
             </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}

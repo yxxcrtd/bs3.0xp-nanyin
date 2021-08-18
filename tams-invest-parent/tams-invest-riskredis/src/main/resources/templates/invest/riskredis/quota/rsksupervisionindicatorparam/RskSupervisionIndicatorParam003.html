@@ -74,6 +74,21 @@
 									</div>
 								</div>
 							</div>
+                            <div class="layui-form-item">
+                                <div class="layui-col-md12 layui-col-sm12 layui-col-lg12">
+                                    <label class="layui-form-label form-lable" style="width: 22%;"
+                                        data-th-text="#{RskSupervisionIndicatorParam003.institutionName}">机构名称</label>
+                                    <div class="layui-input-inline input-inline" style="width:60%!important">
+                                       <select type="text" id="institutionId"
+                                        name="institutionId" required="required"
+                                        class="layui-input form-input input-select" placeholder=""
+                                        data-th-placeholder="#{SysCommon.placeholder}" multiple="true"
+                                        data-th-data-url="@{/invest/riskredis/quota/rsksupervisionindicatorparam/RskSupervisionIndicatorParam003/getInstitutionId}"
+                                        data-th-initValue="${entity?.institutionCode}">
+                                       </select>
+                                   </div>
+                                </div>
+                            </div>
 						</div>
 					</div>
 				</div>

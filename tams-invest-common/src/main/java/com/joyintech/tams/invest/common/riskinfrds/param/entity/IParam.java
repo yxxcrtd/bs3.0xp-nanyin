@@ -123,6 +123,12 @@ public interface IParam extends IBusiness {
     String getParamDataType();
 
     /**
+     * 机构号
+     * @return
+     */
+ 	 String getInstitutionCode();
+
+    /**
      * 参数计算方式
      * @return
      */

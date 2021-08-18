@@ -126,7 +126,7 @@ public class TrdBondLendInvestTradeService extends BaseService {
             resultDto.getEtrEntrust().setPrice(ArithmeticUtil.multiply(
                 resultDto.getEtrEntrust().getPrice(), BigDecimal.valueOf(100)));
             resultDto.getEtrEntrust().setEntrustAmt(ArithmeticUtil.divide(
-                resultDto.getEtrEntrust().getEntrustAmt(), BigDecimal.valueOf(10000),2));
+                resultDto.getEtrEntrust().getEntrustAmt(), BigDecimal.valueOf(10000),4));
             if(resultDto.getEtrEntrust().getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())){
                 resultDto.getEtrEntrust().setPs(DictCodeList.回购拆借方向_融入.getValue());
             }

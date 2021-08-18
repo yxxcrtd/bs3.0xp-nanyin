@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.joyintech.framework.base.entity.ProcessMark;
@@ -277,6 +278,9 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
     private List<EtrPledge> getEtrPledgeListByBussRepoSecDto(BussRepoSecDto bussRepoSec,String bizCode){
     	 if(StringUtil.isNotEmpty(bussRepoSec)){
     		 List<EtrPledge> etrPledgeList = new ArrayList<>();
+    		 if(CollectionUtils.isEmpty(bussRepoSec.getPledgeBondList())){
+                 return etrPledgeList;
+             }
     		 for (PledgeBondInfoDto pledgeBond : bussRepoSec.getPledgeBondList()) {
                  // 回购委托新建
                  EtrPledge etrPledge = new EtrPledge();

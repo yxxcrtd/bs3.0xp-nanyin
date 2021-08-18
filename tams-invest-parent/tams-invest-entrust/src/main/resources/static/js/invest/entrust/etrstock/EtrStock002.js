@@ -19,7 +19,9 @@
             })
         }
         var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_01,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:tradeAmt,assetType:fintype,isEnabled:USE_STATUS_01,assetCode:$('#finprodIdhid').val()}
+        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
         var object = {assetCode: ['finprodMarketId', 'EtrStock002.finprodId'],tradeDirection:['ps','EtrStock002.ps'],portfolioCode:['portfolioId','EtrStock002.portfolioId'],tradeAmount:['','EtrStock002.priceAndNum'],data:obj}
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
         return object;
     }
     //---add by jjpei 20190718----end---获取风险试算画面要素与Label提示文本

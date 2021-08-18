@@ -1634,6 +1634,18 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				//在前面无错误提示情况下才校验此逻辑
 				return StringUtil.isNotEmpty(promptMsg.toString())?StringUtil.EMPTY:this.checkSecAcctCount(dzImportDto);
 			});
+			// 证券代码
+			Map<String, Object> map = new HashMap<>();
+			map.put("portfolioId",dzImportDto.getPortfolioId());
+			map.put("acctNo",dzImportDto.getAcctNo());
+			List<SelectOptionDto> secAcctInfoList = this.getPtlSecAcctInfo(map);
+			if(secAcctInfoList!=null&&secAcctInfoList.size()>0&&secAcctInfoList.get(0)!=null){
+				if(!StringUtil.isNotEmpty(dzImportDto.getSecAcctId())){
+					List<LinkedHashMap<String,Object>> secAcctInfoMapList = (ArrayList) secAcctInfoList.get(0).getObject();
+					if(secAcctInfoMapList.get(0)!=null)
+						dzImportDto.setSecAcctId((String) secAcctInfoMapList.get(0).get("secAcctId"));
+				}
+			}
 			// 资产代码为空与资产是否存在(债券，基金，股票)
 			checkElement(dzImportDto,promptMsg,null,obj-> {
 				return etrCommonService.checkIsBlank(dzImportDto.getFinprodId(), "EtrExchangeTrade001.secId", lineNo);
@@ -1646,9 +1658,11 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				return etrCommonService.checkIsBlank(dzImportDto.getPs(), "EtrExchangeTrade001.ps", lineNo);
 			});
 			//投资目的
-			checkElement(dzImportDto,promptMsg,null,obj-> {
-				return etrCommonService.checkIsBlank(dzImportDto.getInvAim(), "EtrExchangeTrade001.invAim", lineNo);
-			});
+			if(StringUtil.equals(dzImportDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+				checkElement(dzImportDto,promptMsg,null,obj-> {
+					return etrCommonService.checkIsBlank(dzImportDto.getInvAim(), "EtrExchangeTrade001.invAim", lineNo);
+				});
+			}
 			// 价格模式
 			checkElement(dzImportDto,promptMsg,null,obj-> {
 				return etrCommonService.checkIsBlank(dzImportDto.getPriceModel(), "EtrExchangeTrade001.priceModel", lineNo);
@@ -1679,6 +1693,22 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				//指令数量控制在最小交易单位的整数倍（在前面数据无错误的情况下才校验，以防止资产代码为空等缺失条件）
 				return StringUtil.isNotEmpty(promptMsg.toString())?StringUtil.EMPTY:this.checkEntrustMinTrdUnit(obj);
 			});
+
+			// 交易对手是否存在
+			if(StringUtil.isNotEmpty(dzImportDto.getCounterId())){
+				checkElement(dzImportDto,promptMsg,null,obj-> {
+					Map<String, Object> param = new HashMap();
+					param.put("counterIdName",obj.getCounterId());
+					List<SelectOptionDto> result = this.selectCounterIdByCounterType(param);
+					if(result!=null&&result.size()>0){
+						dzImportDto.setCounterId(result.get(0).getId());
+					}else{
+						dzImportDto.setCounterId("");
+					}
+					return StringUtil.EMPTY;
+				});
+			}
+
 			if (StringUtil.isBlank(promptMsg.toString())) {
 				dzImportDto.setSeqNo(String.valueOf(jsonArrays.size()+1));
 				getEntrustListData(dzImportDto);
@@ -1836,7 +1866,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		}else{
 			if(StringUtil.isEmpty(t.getAcctNo())||ptlSecAcctList.size()==1){
 				t.setAcctNo(ptlSecAcctList.get(0).getId());
-			}else if(!ptlSecAcctList.stream().anyMatch(e->StringUtil.equals(e,t.getAcctNo()))&&ptlSecAcctList.size()>1){
+			}else if(!ptlSecAcctList.stream().anyMatch(e->StringUtil.equals(e.getId(),t.getAcctNo()))&&ptlSecAcctList.size()>1){
 				return getMessage("ETR_E_0038", t.getPortfolioId(), Integer.valueOf(t.getSeqNo())+1);
 			}
 			return StringUtil.EMPTY;
@@ -2753,6 +2783,42 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
             else {
             	etrExchangeTrade001Dto.setProAvailableCash(BigDecimal.ZERO);
             }
+
+			//指令可用持仓查询
+			Map<String, Object> mapSec = new HashMap<String, Object>();
+			mapSec.put("portfolioId", etrExchangeTrade001Dto.getPortfolioId());
+			mapSec.put("finprodId", etrExchangeTrade001Dto.getFinprodId());
+			mapSec.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
+			mapSec.put("secAcctId", etrExchangeTrade001Dto.getSecAcctId());
+			BigDecimal vailableNum = selectAvailableNum(mapSec);
+			if (StringUtil.isNotEmpty(vailableNum)) {
+				etrExchangeTrade001Dto.setAccAvailablePos(vailableNum);
+			}
+			//交易方向 价格模式
+			if (StringUtil.equals(DictCodeListExt3.交易方向_正回购.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
+			}
+			else if (StringUtil.equals(DictCodeListExt3.交易方向_逆回购.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeListExt3.交易方向_逆回购.getValue());
+			}
+			else if (StringUtil.equals(DictCodeList.交易方向_买入.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeList.交易方向_买入.getValue());
+			}
+			else if (StringUtil.equals(DictCodeList.交易方向_卖出.getCodeName(),etrExchangeTrade001Dto.getPs())){
+				etrExchangeTrade001Dto.setPs(DictCodeList.交易方向_卖出.getValue());
+			}
+
+			if (StringUtil.equals(DictCodeListExt2.价格模式_指定价格.getCodeName(),etrExchangeTrade001Dto.getPriceModel())){
+				etrExchangeTrade001Dto.setPriceModel(DictCodeListExt2.价格模式_指定价格.getValue());
+			}
+			else if (StringUtil.equals(DictCodeListExt2.价格模式_市价指令.getCodeName(),etrExchangeTrade001Dto.getPriceModel())){
+				etrExchangeTrade001Dto.setPriceModel(DictCodeListExt2.价格模式_市价指令.getValue());
+			}
+			else if (StringUtil.equals(DictCodeListExt2.价格模式_限价指令.getCodeName(),etrExchangeTrade001Dto.getPriceModel())){
+				etrExchangeTrade001Dto.setPriceModel(DictCodeListExt2.价格模式_限价指令.getValue());
+			}
+
+
             /*if(StringUtil.isNotEmpty(etrExchangeTrade001Dto.getPs()) && (etrExchangeTrade001Dto.getPs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())
 					|| etrExchangeTrade001Dto.getPs().equals(DictCodeListExt3.交易方向_质押券出库.getValue()))){
             	etrExchangeTrade001Dto.setEntrustAmt(etrExchangeTrade001Dto.getEntrustNum().multiply(etrExchangeTrade001Dto.getEntrustPrice().divide(new BigDecimal(100))));
@@ -3114,7 +3180,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			}
 			if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
 					&& null != minTrdUnitLimitDto.getMinAmt()) {
-				confirmMsg += "，应至少不超过其中一个！";
+				confirmMsg += "，应至少不低于其中一个！";
 			}
 		}
 

@@ -11,11 +11,21 @@
         }
         var list=[];
         for(var i in bussCombDistribtList){
-            	var item = bussCombDistribtList[i];
-	    		var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:item.portfolioId,tradeAmount:item.entrustNum, assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val()}
-	            list[i]=obj;
+            var item = bussCombDistribtList[i];
+            var entrustNum =item.entrustNum;
+            if (entrustNum) {
+                //配置单位 edit by yeming 20210721 start
+                if(entrustAmtUnit == '02' ){
+                    entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                }
+                //配置单位 edit by yeming 20210721 end
+            }
+            var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:item.portfolioId,tradeAmount:entrustNum, assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+             obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+            list[i]=obj;
         } 
         var object = {tradeDirection:['ps','EtrInvestBondInfo002.ps'],portfolioCode:['portfolioId','EtrInvestBondInfo002.portfolioId'],tradeAmount:['entrustNum','EtrInvestBondInfo002.entrustAmt'],assetType:['assetType1','EtrInvestBondInfo002.bondType'],data:list}
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
         return object;
     }
  
@@ -34,14 +44,18 @@
                      //配置单位 edit by yeming 20210721 end
                  }
 	    		var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:item.portfolioId,tradeAmount:entrustNum, assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+                obj.counterId = $('#etrInvestPersonInfo_counterId').val();
 	            var object = {tradeDirection:['ps','EtrInvestBondInfo002.ps'],portfolioCode:['portfolioId','EtrInvestBondInfo002.portfolioId'],tradeAmount:['entrustNum','EtrInvestBondInfo002.entrustAmt'],assetType:['assetType1','EtrInvestBondInfo002.bondType'],data:obj}
+                object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
 	            objects.push(object);
 	    	}
     		return objects;
 		}else{//若组合分配列表为空，则单个check
 			var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate, assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
             var object = {tradeDirection:['ps','EtrInvestBondInfo002.ps'],portfolioCode:['portfolioId','EtrInvestBondInfo002.portfolioId'],tradeAmount:['entrustNum','EtrInvestBondInfo002.entrustAmt'],assetType:['assetType1','EtrInvestBondInfo002.bondType'],data:obj}
-    		return object;
+            object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
+            return object;
 		} 
     }
 	
@@ -220,7 +234,9 @@
                 if(!s && s != ''){
                     return;
                 }
-                if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdatas())){
+                var checkData = {};
+                checkData.data= getriskdata();
+                if (window.BaseRiskMathComm.isCalcConditionChanged(checkData)){
                     return;
                 }
             }
@@ -236,7 +252,8 @@
         object.entrustStatus = $('#entrustStatus').val();
         object.finvdate = $('#finvdate').val();
         if ($('#etrInvestPersonInfo_counterId').select2('data') && $('#etrInvestPersonInfo_counterId').select2('data')[0]) {
-            object.counterType = $('#etrInvestPersonInfo_counterId').select2('data')[0].object;;
+            object.counterType = $('#etrInvestPersonInfo_counterId').select2('data')[0].object;
+            object.etrInvestPersonInfo.counterId = $('#etrInvestPersonInfo_counterId').val();
         }
         object.finmdate = $('#finmdate').val();
         object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
@@ -283,6 +300,8 @@
         	temp.assetAvailablePosition  = item.assetAvailablePosition;
         	temp.elementId = 'EtrInvestBondInfo003_btn_submit';
             temp.riskTrialRetDto = object.riskTrialRetDto;
+            temp.operateType = operateType;
+            temp.pageModel = pageModel;
         	objects.push(temp);
         }
 	
@@ -516,7 +535,46 @@
      */
     $('#EtrInvestBondInfo003_btn_riskcal').click(function(){  
          var object = $.serializeToObject('#searchForm');
+        var bussCombDistribtList=null;
+        if(object!=null&&object!=""&&object.bussCombDistribtList!=null&&object.bussCombDistribtList!=""){
+            bussCombDistribtList=object.bussCombDistribtList;
+        }
+        for(var i in bussCombDistribtList) {
+            var item = bussCombDistribtList[i];
+            var entrustNum = item.entrustNum;
+            if (entrustNum) {
+                //配置单位 edit by yeming 20210721 start
+                if (entrustAmtUnit == '02') {
+                    entrustNum = JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                }
+                //配置单位 edit by yeming 20210721 end
+                item.entrustNum = entrustNum;
+            }
+        }
          window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/0/RSK002/F01', object,getriskdatas());
+         // add by zhangrui1 start
+         //$("#riskMathFlag").val("02");
+         // var object = $.serializeToObject('#searchForm');
+         // var checkParam = {};
+         // checkParam.data = getriskdata();
+         // var param = [];
+         // if (checkParam.data.length > 0) {
+         //     for(var index in checkParam.data){
+         //         var item = checkParam.data[index];
+         //         item.data.assetCode = object.finprodId;
+         //         item.data.finprodId = object.finprodId;
+         //         item.data.counterId = object.counterId;
+         //         item.data.tradeMarket = object.tradeMarket;
+         //         item.data.ps = object.ps;
+         //         item.data.ccy = object.ccy;
+         //         item.data.portfolioId = item.data.portfolioCode;
+         //         item.data.price=object.price;
+         //         item.data.entrustAmt=item.data.tradeAmt;
+         //         param.push(item.data);
+         //     }
+         // }
+         // window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F01', param, checkParam);
+         // add by zhangrui1 end
     });
     /**
      * 提交
@@ -530,10 +588,10 @@
     }else{
     	$('#assetType11Div').hide();
     }
-    $(function () {
-    	 $('#EtrInvestBondInfo003_btn_riskcal').click(function(){  
-             var object = $.serializeToObject('#searchForm');
-             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/0/RSK002/F01', object,getriskdatas());
-        }); 
-    });
+    // $(function () {
+    // 	 $('#EtrInvestBondInfo003_btn_riskcal').click(function(){
+    //          var object = $.serializeToObject('#searchForm');
+    //          window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/0/RSK002/F01', object,getriskdatas());
+    //     });
+    // });
 }());

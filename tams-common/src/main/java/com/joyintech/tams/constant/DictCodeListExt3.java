@@ -19,6 +19,14 @@ import com.joyintech.framework.util.StringUtil;
  * @since 1.0
  */
 public enum DictCodeListExt3 implements BaseDictCodeList {
+    //add by fanyunhan 20210816
+    项目类计划类估值来源_手工(DictCode.项目类计划类估值来源,"01","手工"),
+    项目类计划类估值来源_模型(DictCode.项目类计划类估值来源,"02","模型"),
+    // add by shulifu 20210811
+    是否可提前支取_不可提前支取(DictCode.是否可提前支取,"01","不可提前支取"),
+    是否可提前支取_有条件可提前支取(DictCode.是否可提前支取,"02","有条件可提前支取"),
+    是否可提前支取_无条件可提前支取(DictCode.是否可提前支取,"03","无条件可提前支取"),
+
     // add by wanshiwei 20200731
     共通业务类型_场内交易下单(DictCode.共通业务类型,"EXC01","场内交易下单"),
     共通业务类型_场内交易撤销(DictCode.共通业务类型,"EXC02","场内交易撤销"),
@@ -1349,7 +1357,13 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_回购类资产(DictCode.共通业务类型,"V34","回购类资产"),
     共通业务类型_债券借贷标的信息(DictCode.共通业务类型,"V35","债券借贷标的信息"),
     /** add by tanxuan on 20210315 多级法人权限控制改造 end**/
-	
+	/** add by fanyunhan on 20210811 风险五级分类 start**/
+    风险五级分类_关注(DictCode.风险五级分类,"01","关注"),
+    风险五级分类_次级(DictCode.风险五级分类,"02","次级"),
+    风险五级分类_可疑(DictCode.风险五级分类,"03","可疑"),
+    风险五级分类_损失(DictCode.风险五级分类,"04","损失"),
+    风险五级分类_正常(DictCode.风险五级分类,"05","正常"),
+	/** add by fanyunhan on 20210811 风险五级分类 end**/
      /** add by tanxuan on 20210318 新增功能费用预提配置 start**/
     共通业务类型_预提费用配置(DictCode.共通业务类型,"V36","预提费用配置"),
     /** add by tanxuan on 20210318 新增功能费用预提配置 end**/
@@ -1379,6 +1393,36 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_港股通投资委托(DictCode.共通业务类型,"ETR_HKSE","港股通投资委托"),
     共通业务类型_额度管理(DictCode.共通业务类型,"RSK25","额度管理"),
     风险管理_质押式回购导入白名单(DictCode.共通业务类型,"REPRISKWHITE","质押式回购导入白名单"),
+
+    /**add by fanyunhan on 20210804 start**/
+    平滑区间_3个月(DictCode.平滑区间,"02","3个月"),
+    收益率曲线类型_SP即期(DictCode.收益率曲线类型,"01","SP即期"),
+    共通业务类型_现金流折现模型曲线配置(DictCode.共通业务类型,"MOD06","现金流折现模型曲线配置"),
+    共通业务类型_风险溢价调整配置(DictCode.共通业务类型,"MOD12","风险溢价调整配置"),
+    资产四级分类_优先股(DictCode.资产四级分类,"023","优先股"), // add by zhangfei 2021年6月30日18:00:24
+    共通业务类型_预期股息增长率配置(DictCode.共通业务类型,"STCOKDIVITRATE","预期股息增长率配置"),
+
+    /**add by fanyunhan on 20210804 end**/
+
+    //20210803 by yuzj start
+    共通业务类型_评级PD维护信息(DictCode.共通业务类型,"MOD07","评级PD维护信息"),
+    共通业务类型_资产重分类交易(DictCode.共通业务类型,"TRD77","资产重分类交易"),
+    共通业务类型_资产大类评级配置(DictCode.共通业务类型,"MOD01","资产大类评级配置"),
+    共通业务类型_特殊资产评级配置(DictCode.共通业务类型,"MOD02","特殊资产评级配置"),
+    共通业务类型_LGD违约损失率维护(DictCode.共通业务类型,"MOD05","LGD违约损失率维护"),
+    共通业务类型_二叉树模型参数配置(DictCode.共通业务类型,"MOD09","二叉树模型参数配置"),
+    共通业务类型_内外部评级映射管理(DictCode.共通业务类型,"MOD03","内外部评级映射管理"),
+    共通业务类型_前瞻因子维护(DictCode.共通业务类型,"PDFACTOR","前瞻因子维护"),
+    共通业务类型_特殊资产LGD维护信息(DictCode.共通业务类型,"MOD08","特殊资产LGD维护信息"),
+    共通业务类型_减值阶段参数管理(DictCode.共通业务类型,"STAGEPARA","减值阶段参数管理"),
+    共通业务类型_前瞻因子权重配置(DictCode.共通业务类型,"PDWEIGHT","前瞻因子权重配置"),
+
+    减值要素_本金逾期超过天数(DictCode.减值要素,"01","本金逾期超过天数（含）"),
+    减值要素_利息逾期超过天数(DictCode.减值要素,"02","利息逾期超过天数（含）"),
+    减值要素_公司评级信息低于(DictCode.减值要素,"03","公司评级信息低于（含）"),
+    减值要素_风险五级分类(DictCode.减值要素,"04","风险五级分类"),
+    减值要素_公司评级信息下调级数(DictCode.减值要素,"05","公司评级信息下调级数"),
+    //20210803 by yuzj end
     ;
     /**
      * 对应于数据字典code

@@ -1,0 +1,1 @@
+delete from sys_datadict_list where dict_code = 'COUNTER_TYPE' and item_code = '06';

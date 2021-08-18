@@ -22,6 +22,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.service.EtrBrowDepoInfoService;
 import com.joyintech.tams.invest.entrust.etrconbond.dto.EtrConBondDto;
@@ -201,21 +202,21 @@ public class EtrLendSpecInfo003Controller extends BaseController {
             dto.getEtrInvestPersonInfo().setRoom(dto.getCreateDept());
         }
         // ----------add by yushilong 20200721 预占功能 start----------
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
-//            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
-//                    DictCodeList.平安资产类型_拆借.getValue(),
-//                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
-//                    false, null);
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
-//        
-//        // add by zhangrui1 批量提交设置风控指标明细 start
-//        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
-//                (dto, list) -> dto.setRiskTrialRetDto(list));
+        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
+                    DictCodeList.平安资产类型_拆借.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                    false, null);
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+
+        // add by zhangrui1 批量提交设置风控指标明细 start
+        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
+                (dto, list) -> dto.setRiskTrialRetDto(list));
         // add by zhangrui1 批量提交设置风控指标明细 end
-        
+
         // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrLendSpecInfoDto> processParameter = new ProcessParameter<EtrLendSpecInfoDto>();
         WorkFlowParameter<EtrLendSpecInfoDto> params = new WorkFlowParameter<EtrLendSpecInfoDto>();

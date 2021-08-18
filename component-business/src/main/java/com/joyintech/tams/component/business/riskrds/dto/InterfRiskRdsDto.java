@@ -289,6 +289,26 @@ public class InterfRiskRdsDto implements IRiskRds {
     private String prdMdate;
 
     /**
+     * 投资性质(虚拟组合所用)
+     */
+    private String investNature;
+
+    /**
+     * 是否非标(虚拟组合所用)
+     */
+    private String isStandard;
+
+    /**
+     * 发行规模(虚拟组合所用)
+     */
+    private String publicAmount;
+
+    /**
+     * 分组代码(多对多指令，为了区分是哪一笔计算的指标，格式[类型_委托/交易_序号])
+     */
+    private String groupCode;
+
+    /**
      * 是否虚拟资产(是/否)
      */
     private String isVirtual;
@@ -343,8 +363,14 @@ public class InterfRiskRdsDto implements IRiskRds {
      */
     private String revokeFlg= BussinessDictCodeListRds.是否_否.getValue();
 
+    /**
+     * 机构代码
+     */
+    private String instCode;
 
     /**
+     *
+     *
      * 取得 流水号
      * @return 流水号
      */
@@ -1062,16 +1088,6 @@ public class InterfRiskRdsDto implements IRiskRds {
     private String isRelatedParty;
 
     /**
-     * 关联方是否授信机构
-     */
-    private String isRelatedPartyCeOrg;
-
-    /**
-     * 关联方机构授信额度
-     */
-    private BigDecimal relatedPartyAmt;
-
-    /**
      * 获取 关联方
      * 
      * @return 关联方.
@@ -1107,49 +1123,61 @@ public class InterfRiskRdsDto implements IRiskRds {
         this.isRelatedParty = isRelatedParty;
     }
 
-    /**
-     * 获取 关联方是否授信机构
-     * 
-     * @return 关联方是否授信机构.
-     */
-    public String getIsRelatedPartyCeOrg() {
-        return isRelatedPartyCeOrg;
-    }
-
-    /**
-     * 设置 关联方是否授信机构
-     * 
-     * @param isRelatedPartyCeOrg 关联方是否授信机构
-     */
-    public void setIsRelatedPartyCeOrg(String isRelatedPartyCeOrg) {
-        this.isRelatedPartyCeOrg = isRelatedPartyCeOrg;
-    }
-
-    /**
-     * 获取 关联方机构授信额度
-     * 
-     * @return 关联方机构授信额度.
-     */
-    public BigDecimal getRelatedPartyAmt() {
-        return relatedPartyAmt;
-    }
-
-    /**
-     * 设置 关联方机构授信额度
-     * 
-     * @param relatedPartyAmt 关联方机构授信额度
-     */
-    public void setRelatedPartyAmt(BigDecimal relatedPartyAmt) {
-        this.relatedPartyAmt = relatedPartyAmt;
-    }
-    // add by zhangrui1 关联方信息 end
-
-
     public String getIgnoreStatus() {
         return ignoreStatus;
     }
 
     public void setIgnoreStatus(String ignoreStatus) {
         this.ignoreStatus = ignoreStatus;
+    }
+
+    /**
+     * 获取 instCode
+     * @return instCode.
+     */
+    public String getInstCode() {
+        return instCode;
+    }
+
+    /**
+     * 设置 instCode
+     * @param instCode instCode
+     */
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
+    }
+    /**
+     * 设置期限变量，非标用此变量作为资产的存续时长
+     */
+    private BigDecimal deadline;
+
+    public BigDecimal getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(BigDecimal deadline) {
+        this.deadline = deadline;
+    }
+
+    public BigDecimal getTradeAmtReal() {
+        return tradeAmtReal;
+    }
+    /**
+     * 实付本息，区别于金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tradeAmtReal;
+
+    public void setTradeAmtReal(BigDecimal tradeAmtReal) {
+        this.tradeAmtReal = tradeAmtReal;
+    }
+    private Boolean notCalcAmount;
+
+    public Boolean getNotCalcAmount() {
+        return notCalcAmount;
+    }
+
+    public void setNotCalcAmount(Boolean notCalcAmount) {
+        this.notCalcAmount = notCalcAmount;
     }
 }

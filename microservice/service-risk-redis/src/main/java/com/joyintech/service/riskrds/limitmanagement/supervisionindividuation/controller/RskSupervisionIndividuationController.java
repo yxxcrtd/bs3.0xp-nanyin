@@ -3,6 +3,8 @@ package com.joyintech.service.riskrds.limitmanagement.supervisionindividuation.c
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.RskIndividConditionCustom;
+import com.joyintech.tams.common.base.entity.RskIndividConditionLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,7 +91,33 @@ public class RskSupervisionIndividuationController {
         throws Exception {
         return rskSupervisionIndividuationService.findPageForSpecialAsset(param);
     }
-
+    /**
+     * 画面查询方法
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @PostMapping("/findPageForCustomized")
+    public List<RskIndividConditionCustom> findPageForCustomized(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return rskSupervisionIndividuationService.findPageForCustomized(param);
+    }
+    /**
+     * 画面查询方法
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @PostMapping("/findPageForCustomizedItem")
+    public List<RskIndividConditionLine> findPageForCustomizedItem(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return rskSupervisionIndividuationService.findPageForCustomizedItem(param);
+    }
+    @PostMapping("/checkExistsUsing")
+    public int checkExistsUsing(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return rskSupervisionIndividuationService.checkExistsUsing(param);
+    }
     @Transactional
     @DTXTransaction
     @PostMapping("/insert")
@@ -108,6 +136,12 @@ public class RskSupervisionIndividuationController {
         throws Exception {
         return rskSupervisionIndividuationService.queryFinprodIdList(page,length,param);
     }
+    @PostMapping("/queryConditionList/{page}/{length}")
+    public Page<SelectOptionDto> queryConditionList(@RequestBody Map<String, Object> param,@PathVariable("page") int page, @PathVariable("length") int length)
+            throws Exception {
+        return rskSupervisionIndividuationService.queryConditionList(page,length,param);
+    }
+
 
     @GetMapping("/getIndType")
     public String getIndType(String indId) {

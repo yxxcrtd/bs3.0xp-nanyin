@@ -338,8 +338,6 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <!-- 一级债券 新增 葛佳傲 2019/07/30 start -->
                                 <div class="form-inline-wrap" id="payType_div">
                                     <label class="layui-form-label form-lable" >缴款方式</label>
@@ -351,6 +349,8 @@
 
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 一级债券 新增 葛佳傲 2019/07/30 end -->
                                 <!-- 资产推荐方 新增 zhuyongkang 20191023 start-->
                                 <div class="form-inline-wrap" Style="display: none">
@@ -875,9 +875,10 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- 新增 返款费率 返款金额 by caozhenming 20210802 end-->
                     </div>
+                        <!-- 新增 返款费率 返款金额 by caozhenming 20210802 end-->
                 </div>
+            </div>
 
             <!-- 组合分配 -->
 <!--             <div class="page-component" th:data-path="@{/component/trade/TrdInvestFenPeiInfo002/init}"></div> -->
@@ -1009,7 +1010,7 @@
         var shortSellingSupported = /*[[${shortSellingSupported}]]*/'';
         var BANKCODE = [[${bankCode}]];
         var CCY_CNY = /*[[${CCY_CNY}]]*/'';
-        var GEN_PAY_ORDERS_AUTO=/*[[${GEN_PAY_ORDERS_AUTO}]]*/; // 系统参数_是否显示划款指令
+        var GEN_PAY_ORDERS_AUTO=/*[[${GEN_PAY_ORDERS_AUTO}]]*/''; // 系统参数_是否显示划款指令
         var userId=/*[[${userId}]]*/'';
 
         // add by etliu 20210501 银行间场内场外拆分 start
@@ -1018,6 +1019,8 @@
         //配置单位 add by yeming 20210723 end
         var entrustAmtUnit = /*[[${entrustAmtUnit}]]*/'';
         //配置单位 add by yeming 20210723 end
+        var procedureAmt_f = /*[[${procedureAmt_f}]]*/'';
+        var settleAmt_f = /*[[${settleAmt_f}]]*/'';
     </script>
     <script data-th-src="@{/js/component/common/TradeCommon.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/component/autocoupon/AutoCoupon.js}" type="text/javascript"></script>

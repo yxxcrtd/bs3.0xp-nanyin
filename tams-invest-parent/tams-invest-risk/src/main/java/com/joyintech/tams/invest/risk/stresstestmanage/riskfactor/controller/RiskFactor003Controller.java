@@ -110,16 +110,8 @@ public class RiskFactor003Controller extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
             throws Exception {
-        Map<String, Object> map = RequestUtil.getParameters(getRequest());
-        if(!map.get("twoClass").equals("")&&map.get("twoClass")!=null){
-            map.put("investtype1", null);
-            map.put("investtype2", null);
-            map.put("FTRVALUESTRUCT", null);
-            map.put("twoClass", map.get("twoClass"));
-            map.put("FTRSTATUS", null);
-        }
         return RiskFactor003Service01.export(this.getPageId(),
-                map);
+                RequestUtil.getParameters(getRequest()));
 
     }
    

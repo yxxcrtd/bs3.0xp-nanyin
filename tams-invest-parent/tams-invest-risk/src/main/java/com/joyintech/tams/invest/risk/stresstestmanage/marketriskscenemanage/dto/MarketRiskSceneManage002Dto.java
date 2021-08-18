@@ -175,17 +175,10 @@ public class MarketRiskSceneManage002Dto extends BaseEntity implements ProcessEn
      * 是否是新增的情景
      */
     private String newType;
+    
 
-    private String institutionCode;
-
-    public String getInstitutionCode() {
-        return institutionCode;
-    }
-
-    public void setInstitutionCode(String institutionCode) {
-        this.institutionCode = institutionCode;
-    }
-
+    
+    
     /**
      * 
      */

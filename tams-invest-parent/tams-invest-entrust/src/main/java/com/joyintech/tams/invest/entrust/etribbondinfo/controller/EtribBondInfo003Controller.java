@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.BussCombDistribtDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
@@ -137,6 +138,7 @@ public class EtribBondInfo003Controller extends BaseController {
         model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
         model.addAttribute("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
         model.addAttribute("N", DictCodeList.是否_否.getValue());
+        model.addAttribute("Y", DictCodeList.是否_是.getValue());
         model.addAttribute("CCY", DictCodeList.币种_人民币_CNY.getValue());
         
         model.addAttribute("sysDate",DateUtil.format(sysDate));
@@ -320,17 +322,17 @@ public class EtribBondInfo003Controller extends BaseController {
             }
             // ----------add by zhangrui1 20200715 预占功能 end----------
         }
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, bondInfoDto.getOperateType())) {
-//            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
-//                    dataList, DictCodeList.平安资产类型_债券.getValue(),
-//                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
-//                    true, bondInfoDto.getEtrInvestPersonInfo());
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
-//        EntrustRdsCommonAop.riskListToChildren(bondInfoDto.getRiskTrialRetDto(), bondInfoDto.getEtrInvestBondInfoDtos(),
-//                (dto, list) -> dto.setRiskTrialRetDto(list));
+        if (StringUtil.equals(BussinessConstant.SUBMIT, bondInfoDto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
+                    dataList, DictCodeList.平安资产类型_债券.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                    true, bondInfoDto.getEtrInvestPersonInfo());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        EntrustRdsCommonAop.riskListToChildren(bondInfoDto.getRiskTrialRetDto(), bondInfoDto.getEtrInvestBondInfoDtos(),
+                (dto, list) -> dto.setRiskTrialRetDto(list));
 
         // 临时主键
         BussinessCodeParameter param = new BussinessCodeParameter();

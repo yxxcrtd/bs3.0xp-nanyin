@@ -62,7 +62,7 @@ public class RskSupervisionIndicatorParam003Dto extends RskIsupFixRecode{
      * 机构名称
      */
     private String institutionName;
-    
+
     /**
      * 获取 institutionName
      * @return institutionName.
@@ -70,7 +70,7 @@ public class RskSupervisionIndicatorParam003Dto extends RskIsupFixRecode{
     public String getInstitutionName() {
         return institutionName;
     }
-    
+
     /**
      * 设置 institutionName
      * @param institutionName institutionName
@@ -78,6 +78,6 @@ public class RskSupervisionIndicatorParam003Dto extends RskIsupFixRecode{
     public void setInstitutionName(String institutionName) {
         this.institutionName = institutionName;
     }
-	
-    
+
+
 }

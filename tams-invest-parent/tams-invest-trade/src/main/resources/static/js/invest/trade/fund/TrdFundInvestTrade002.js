@@ -279,6 +279,9 @@ $(function () {
             assetCode: finprodId,
             tradeDirection: $('#ps').val()
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {
             valDate: ['tradeDate', 'TrdFundInvestTrade002.tradeDate'],
             portfolioCode: ['portfolioId', 'TrdFundInvestTrade002.portfolioId'],
@@ -287,6 +290,9 @@ $(function () {
             tradeDirection: ['ps', 'TrdFundInvestTrade002.ps'],
             data: obj
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         if (ps == ps_T06 || $("#ps").val() == T65) {
             obj.tradeAmount = $('#shareAmt').val();
             obj.amtType = "1";

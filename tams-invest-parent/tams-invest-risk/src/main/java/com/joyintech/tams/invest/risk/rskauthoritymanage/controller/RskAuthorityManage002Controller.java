@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 风险授权管理新建
@@ -79,33 +80,21 @@ public class RskAuthorityManage002Controller extends BaseController {
     @Override
     public String init(Model model) {
         setSelectOptionToModel(model, DICT_CODES);
-        List<SelectOptionDto> assetSecTypeList = makeAllAssetSecType();
-        model.addAttribute("ASSET_SEC_TYPE", JsonUtils.objectArray2Json(assetSecTypeList.toArray()));
-        List<SelectOptionDto> psList = makeAllPs();
-        model.addAttribute("PS", JsonUtils.objectArray2Json(psList.toArray()));
+//        List<SelectOptionDto> assetSecTypeList = makeAllAssetSecType();
+//        model.addAttribute("ASSET_SEC_TYPE", JsonUtils.objectArray2Json(assetSecTypeList.toArray()));
         String seqNo = getParam("seqNo");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         if (workflowId != null && !StringUtil.equals(workflowId, "")) {
             RskAuthorityManageDto dto = rskAuthorityManageService.getBussinessEntityByWorkflowId(
                 workflowId);
             dto.setWorkflowId(workflowId);
-            
-            RskAuthorityManageDto e = new RskAuthorityManageDto();
-            e.setSeqNo(dto.getSeqNo());
-            //根据金融产品代码和生效日获得页面展示元素
-        	RskAuthorityManageDto dtore = rskAuthorityManageService.selectBySecNo(e); 
-            if(dtore != null) {
-                dtore.setWorkflowId(workflowId);
-                model.addAttribute(GlobalConstant.ENTITY, dtore);
-            }else {
-            	model.addAttribute(GlobalConstant.ENTITY, dto);
-            }
+            model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         else if (StringUtil.isNotEmpty(seqNo)){
             RskAuthorityManageDto e = new RskAuthorityManageDto();
             e.setSeqNo(seqNo);
             //根据金融产品代码和生效日获得页面展示元素
-            RskAuthorityManageDto dto = rskAuthorityManageService.selectBySecNo(e); 
+            RskAuthorityManageDto dto = rskAuthorityManageService.selectBySecNo(e);
             model.addAttribute("entity", dto);
         }
         model.addAttribute("RSK02", DictCodeList.共通业务类型_授权管理.getValue());
@@ -119,7 +108,10 @@ public class RskAuthorityManage002Controller extends BaseController {
      * @see
      * @since 1.0
      */
-    private List<SelectOptionDto> makeAllPs() {
+    @ResponseBody
+    @RequestMapping("makeAllPs")
+    public List<SelectOptionDto> makeAllPs() {
+
         List<SelectOptionDto> listFloatRate = new ArrayList<SelectOptionDto>();
         SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.交易方向, null);
         for (SelectOptionDto dto : selectDto1.getOptions()) {
@@ -129,12 +121,96 @@ public class RskAuthorityManage002Controller extends BaseController {
         for (SelectOptionDto dto : selectDto2.getOptions()) {
             listFloatRate.add(dto);
         }
-        SelectDto selectDto3 = this.getSelectDataFromDataDic(DictCode.互换方式, null);
-        for (SelectOptionDto dto : selectDto3.getOptions()) {
-            dto.setId(dto.getCol()+dto.getId());
+
+        List<SelectOptionDto> listRate = new ArrayList<SelectOptionDto>();
+        String key = getParam("assetType");
+        if(key.equals ("F03") || key.equals ("F05") || key.equals ("F06")){
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (1));
+        }else if(key.equals ("F02")){
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (3));
+            listRate.add (listFloatRate.get (4));
+            listRate.add (listFloatRate.get (10));
+        }else if(key.equals ("F01") || key.equals ("F17")){
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (2));
+        }else if(key.equals ("F07") || key.equals ("F10")){
+            listRate.add (listFloatRate.get (13));
+            listRate.add (listFloatRate.get (14));
+        }else if(key.equals ("F11")){
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (7));
+            listRate.add (listFloatRate.get (8));
+            listRate.add (listFloatRate.get (9));
+            listRate.add (listFloatRate.get (3));
+        }else if(key.equals ("F04") || key.equals ("F09")){
+            listRate.add (listFloatRate.get (4));
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (3));
+        }else if(key.equals ("F08") ){
+            listRate.add (listFloatRate.get (11));
+            listRate.add (listFloatRate.get (12));
+        }else if (key.equals ("F19") ){
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (3));
+            listRate.add (listFloatRate.get (4));
+        }
+        return listRate;
+    }
+
+
+
+    /**
+     * 生成交易场所的枚举值
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("makeAlltradeMarket")
+    public List<SelectOptionDto> makeAlltradeMarket() {
+
+        List<SelectOptionDto> listFloatRate = new ArrayList<SelectOptionDto>();
+        SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.交易场所, null);
+        for (SelectOptionDto dto : selectDto1.getOptions()) {
             listFloatRate.add(dto);
         }
-        return listFloatRate;
+
+        List<SelectOptionDto> listRate = new ArrayList<SelectOptionDto>();
+        String key = getParam("assetType");
+        if(key.equals ("F02")){
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (2));
+            listRate.add (listFloatRate.get (4));
+        }else if(key.equals ("F01")){
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (2));
+            listRate.add (listFloatRate.get (3));
+            listRate.add (listFloatRate.get (5));
+        }else if(key.equals ("F07") || key.equals ("F10")){
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (2));
+        }else if(key.equals ("F11")){
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (2));
+        }else if(key.equals ("F17")){
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (2));
+        }else if(key.equals ("F08")){
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (4));
+        }
+        return listRate;
     }
 
     /**
@@ -144,37 +220,82 @@ public class RskAuthorityManage002Controller extends BaseController {
      * @see
      * @since 1.0
      */
-    private List<SelectOptionDto> makeAllAssetSecType() {
+    @ResponseBody
+    @RequestMapping("makeAllAssetSecType")
+    public Page<SelectOptionDto> makeAllAssetSecType() {
         List<SelectOptionDto> listFloatRate = new ArrayList<SelectOptionDto>();
-        SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.WIND一级分类_含债券一级分类等, null);
+        SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.授权类型二级, null);
         for (SelectOptionDto dto : selectDto1.getOptions()) {
             listFloatRate.add(dto);
         }
-        SelectDto selectDto2 = this.getSelectDataFromDataDic(DictCode.存款类资产类型, null);
-        for (SelectOptionDto dto : selectDto2.getOptions()) {
-            listFloatRate.add(dto);
+
+        List<SelectOptionDto> listRate = new ArrayList<SelectOptionDto>();
+        String key = getParam("assetType");
+        if(key.equals ("F01") || key.equals ("F17")){
+            listRate.add (listFloatRate.get (1));
+            listRate.add (listFloatRate.get (2));
+            listRate.add (listFloatRate.get (3));
+            listRate.add (listFloatRate.get (4));
+            listRate.add (listFloatRate.get (5));
+            listRate.add (listFloatRate.get (6));
+            listRate.add (listFloatRate.get (7));
+            listRate.add (listFloatRate.get (8));
+            listRate.add (listFloatRate.get (9));
+            listRate.add (listFloatRate.get (10));
+            listRate.add (listFloatRate.get (11));
+            listRate.add (listFloatRate.get (12));
+            listRate.add (listFloatRate.get (13));
+            listRate.add (listFloatRate.get (14));
+            listRate.add (listFloatRate.get (15));
+            listRate.add (listFloatRate.get (16));
+            listRate.add (listFloatRate.get (17));
+            listRate.add (listFloatRate.get (18));
+            listRate.add (listFloatRate.get (39));
+            listRate.add (listFloatRate.get (40));
+            listRate.add (listFloatRate.get (41));
+            listRate.add (listFloatRate.get (42));
+            listRate.add (listFloatRate.get (43));
+            listRate.add (listFloatRate.get (44));
+            listRate.add (listFloatRate.get (45));
+            listRate.add (listFloatRate.get (46));
+            listRate.add (listFloatRate.get (47));
+            listRate.add (listFloatRate.get (48));
+            listRate.add (listFloatRate.get (49));
+        }else if(key.equals ("F02")){
+            listRate.add (listFloatRate.get (21));
+            listRate.add (listFloatRate.get (22));
+            listRate.add (listFloatRate.get (23));
+            listRate.add (listFloatRate.get (24));
+            listRate.add (listFloatRate.get (25));
+            listRate.add (listFloatRate.get (51));
+        }else if(key.equals ("F03") || key.equals ("F04") || key.equals ("F09") ){
+            listRate.add (listFloatRate.get (37));
+            listRate.add (listFloatRate.get (38));
+        }else if(key.equals ("F05")){
+            listRate.add (listFloatRate.get (0));
+            listRate.add (listFloatRate.get (19));
+            listRate.add (listFloatRate.get (20));
+            listRate.add (listFloatRate.get (50));
+        }else if(key.equals ("F06")){
+            listRate.add (listFloatRate.get (26));
+            listRate.add (listFloatRate.get (27));
+            listRate.add (listFloatRate.get (28));
+            listRate.add (listFloatRate.get (29));
+            listRate.add (listFloatRate.get (30));
+            listRate.add (listFloatRate.get (31));
+            listRate.add (listFloatRate.get (32));
+            listRate.add (listFloatRate.get (33));
+            listRate.add (listFloatRate.get (34));
+            listRate.add (listFloatRate.get (35));
+            listRate.add (listFloatRate.get (36));
+            listRate.add (listFloatRate.get (52));
+        }else if (key.equals("F19")){
+            listRate.add (listFloatRate.get (53));
+            listRate.add (listFloatRate.get (54));
         }
-        SelectDto selectDto3 = this.getSelectDataFromDataDic(DictCode.项目类一级分类, null);
-        for (SelectOptionDto dto : selectDto3.getOptions()) {
-            listFloatRate.add(dto);
-        }
-        SelectDto selectDto4 = this.getSelectDataFromDataDic(DictCode.基金类资产类型, null);
-        for (SelectOptionDto dto : selectDto4.getOptions()) {
-            listFloatRate.add(dto);
-        }
-        SelectDto selectDto5 = this.getSelectDataFromDataDic(DictCode.计划类资产一级分类, null);
-        for (SelectOptionDto dto : selectDto5.getOptions()) {
-            listFloatRate.add(dto);
-        }
-        SelectDto selectDto6 = this.getSelectDataFromDataDic(DictCode.拆借类型, null);
-        for (SelectOptionDto dto : selectDto6.getOptions()) {
-            listFloatRate.add(dto);
-        }
-        SelectDto selectDto7 = this.getSelectDataFromDataDic(DictCode.回购类型, null);
-        for (SelectOptionDto dto : selectDto7.getOptions()) {
-            listFloatRate.add(dto);
-        }
-        return listFloatRate;
+        Page<SelectOptionDto> page =new Page<SelectOptionDto>();
+        page.setRoot (listRate);
+        return page;
     }
     /**
      * 编辑修改页面表格查询 <功能详细描述>
@@ -190,13 +311,6 @@ public class RskAuthorityManage002Controller extends BaseController {
         throws Exception {
         Page<RskAuthorityManageDto> page = rskAuthorityManageService.select(
             RequestUtil.getPageParam());
-        if (StringUtil.isNotEmpty(page.getRoot())) {
-           for (RskAuthorityManageDto manageDto : page.getRoot()) {
-               if(StringUtil.equals(DictCodeListExt2.资产_负债类别_其他_负债_类资产.getValue(),manageDto.getAssetType())) {
-                   manageDto.setTradeDirection(DictCode.互换方式.getValue()+manageDto.getTradeDirection()); 
-               } 
-           }
-        }
         return page;
     }
     /**
@@ -239,10 +353,6 @@ public class RskAuthorityManage002Controller extends BaseController {
         throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
-        }
-        dto.setAllData(dto.getAllData().replace(DictCode.互换方式.getValue(), ""));
-        for (RskAuthorityManageDto dto2 : dto.getSelectedItem()) {
-            dto2.setTradeDirection(dto2.getTradeDirection().replace(DictCode.互换方式.getValue(), ""));
         }
         ProcessParameter<RskAuthorityManageDto> processParameter = new ProcessParameter<RskAuthorityManageDto>();
         WorkFlowParameter<RskAuthorityManageDto> params = new WorkFlowParameter<RskAuthorityManageDto>();

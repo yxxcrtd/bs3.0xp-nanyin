@@ -84,6 +84,10 @@ public class PtlRepoPledgeSearchDto extends FinDealPledge {
      * 企业性质
      */
     private String companyNature;
+    /**
+     * 交易对手
+     */
+    private String counter;
 
     /**
      * 获取 counterId
@@ -360,7 +364,7 @@ public class PtlRepoPledgeSearchDto extends FinDealPledge {
             case "F04":
                 name = "买断式正回购的融出券";
                 break;
-            case "标准券":
+            case "标准债":
                 name = "标准券入库的券";
                 break;
             case "F15":
@@ -375,5 +379,13 @@ public class PtlRepoPledgeSearchDto extends FinDealPledge {
 
     public void setFinprodType2Name(String finprodType2Name) {
         this.finprodType2Name = finprodType2Name;
+    }
+
+    public String getCounter() {
+        return counter;
+    }
+
+    public void setCounter(String counter) {
+        this.counter = counter;
     }
 }

@@ -301,7 +301,8 @@ public class EtrSecLendService extends BaseService {
            etrEntrust.setPs(DictCodeList.交易方向_买入.getValue());
            etrEntrust.setIsOutTrade(DictCodeList.是否_是.getValue());
            etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
-           etrEntrust.setEntrustAmt(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+//           etrEntrust.setEntrustAmt(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+           etrEntrust.setEntrustAmt(dto.getTotalAmt());
            etrEntrust.setEntrustNum(dto.getTotalAmt().multiply(new BigDecimal(100)));
            etrEntrust.setAvailableNum(dto.getObjectAvailablePosition());
            etrEntrust.setPrice(dto.getBusiRate());
@@ -324,7 +325,8 @@ public class EtrSecLendService extends BaseService {
             BeanUtil.copyProperties(etrTarget, dto);
             etrTarget.setTargetFinprodId(dto.getFinprodId());
             //标的金融产品类型???
-            etrTarget.setTargetFaceValue(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+//            etrTarget.setTargetFaceValue(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+            etrTarget.setTargetFaceValue(dto.getTotalAmt());
             etrTargetMapper.insert(etrTarget);
             
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
@@ -363,6 +365,39 @@ public class EtrSecLendService extends BaseService {
             }
             entity.setEtrEntrust(etrEntrust);
             entity.setEtrEntrustAdd(etrEntrustAdd);
+            //插入数据表 add  by yeming 20210817 start
+            if( dto.getBussRepoSec().getTotalPrinAmt()  != null){
+                dto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply( dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
+            }
+            for (PledgeBondInfoDto pledgeBond :  dto.getBussRepoSec().getPledgeBondList()) {
+                if (pledgeBond.getAvaPledgePrin() != null) {
+                    pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPledgePrin() != null) {
+                    pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+                }
+            }
+            List<EtrPledge> etrPledgeList = new ArrayList<>();
+            if(StringUtil.isNotEmpty(dto.getBussRepoSec()) && !StringUtil.isEmptyList(dto.getBussRepoSec().getPledgeBondList())) {
+                for(PledgeBondInfoDto pledgeBond : dto.getBussRepoSec().getPledgeBondList()) {
+                    EtrPledge etrPledge = new EtrPledge();
+                    // 委托代码 = 委托代码
+                    etrPledge.setEntrustId(dto.getEntrustId());
+                    // 金融产品代码 = 输出质押品DTO.金融产品代码
+                    etrPledge.setFinprodId(pledgeBond.getFinprodId());
+                    // 质押面值 = 输出质押品DTO.质押面值
+                    etrPledge.setPledgeFaceValue(new BigDecimal("100"));
+                    // 质押数量 = 输出质押品DTO.质押数量
+                    etrPledge.setPledgeNumber(ArithmeticUtil.divide(pledgeBond.getPledgePrin(), new BigDecimal("100"), 4));
+                    // 质押率 = 输出质押品DTO.质押率
+                    etrPledge.setPledgeRatio(ArithmeticUtil.divide(pledgeBond.getPledgeRatio(), new BigDecimal("100"), 4));
+                    // 质押金额 = 输出质押品DTO.质押金额
+                    etrPledge.setPledgeAmt(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), etrPledge.getPledgeRatio()));
+                    etrPledgeList.add(etrPledge);
+                }
+            }
+            entity.setEtrPledgeList(etrPledgeList);
+            //插入数据表 add  by yeming 20210817 end
             baseEtrInvestInfoService.newDelegate(entity);
             // 文件
             MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
@@ -386,7 +421,8 @@ public class EtrSecLendService extends BaseService {
            etrEntrust.setPs(DictCodeList.交易方向_买入.getValue());
            etrEntrust.setIsOutTrade(DictCodeList.是否_是.getValue());
            etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
-           etrEntrust.setEntrustAmt(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+//           etrEntrust.setEntrustAmt(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+           etrEntrust.setEntrustAmt(dto.getTotalAmt());
            etrEntrust.setEntrustNum(dto.getTotalAmt().multiply(new BigDecimal(100)));
            etrEntrust.setAvailableNum(dto.getObjectAvailablePosition());
            etrEntrust.setPrice(dto.getBusiRate());
@@ -409,7 +445,8 @@ public class EtrSecLendService extends BaseService {
             BeanUtil.copyProperties(etrTarget, dto);
             etrTarget.setTargetFinprodId(dto.getFinprodId());
             //标的金融产品类型???
-            etrTarget.setTargetFaceValue(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+            etrTarget.setTargetFaceValue(dto.getTotalAmt());
+//            etrTarget.setTargetFaceValue(dto.getTotalAmt().multiply(new BigDecimal(10000)));
             etrTargetMapper.updateByPrimaryKey(etrTarget);
             
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
@@ -495,7 +532,8 @@ public class EtrSecLendService extends BaseService {
            etrEntrust.setPs(DictCodeList.交易方向_买入.getValue());
            etrEntrust.setIsOutTrade(DictCodeList.是否_是.getValue());
            etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
-           etrEntrust.setEntrustAmt(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+//           etrEntrust.setEntrustAmt(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+           etrEntrust.setEntrustAmt(dto.getTotalAmt());
            etrEntrust.setEntrustNum(dto.getTotalAmt().multiply(new BigDecimal(100)));
            etrEntrust.setAvailableNum(dto.getObjectAvailablePosition());
            etrEntrust.setPrice(dto.getBusiRate());
@@ -518,9 +556,23 @@ public class EtrSecLendService extends BaseService {
             BeanUtil.copyPropertiesIgnoreNull(wflEtrTarget, dto);
             wflEtrTarget.setTargetFinprodId(dto.getFinprodId());
             //标的金融产品类型???
-            wflEtrTarget.setTargetFaceValue(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+//            wflEtrTarget.setTargetFaceValue(dto.getTotalAmt().multiply(new BigDecimal(10000)));
+            wflEtrTarget.setTargetFaceValue(dto.getTotalAmt());
             wflEtrTargetMapper.insert(wflEtrTarget);
             //质押券信息
+            //万元转换 add  by yeming 20210817 start
+            if( dto.getBussRepoSec().getTotalPrinAmt()  != null){
+                dto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply( dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
+            }
+            for (PledgeBondInfoDto pledgeBond :  dto.getBussRepoSec().getPledgeBondList()) {
+                if (pledgeBond.getAvaPledgePrin() != null) {
+                    pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPledgePrin() != null) {
+                    pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+                }
+            }
+            //万元转换 add  by yeming 20210817 end
             List<EtrPledge> etrPledgeList = new ArrayList<>();
             if(StringUtil.isNotEmpty(dto.getBussRepoSec()) && !StringUtil.isEmptyList(dto.getBussRepoSec().getPledgeBondList())) {
             	for(PledgeBondInfoDto pledgeBond : dto.getBussRepoSec().getPledgeBondList()) {

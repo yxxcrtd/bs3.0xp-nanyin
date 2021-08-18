@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepoinfo002Dto;
 import com.joyintech.tams.invest.entrust.etribrepo.service.EtrIbRepoInfo004Service;
 import com.joyintech.tams.invest.entrust.etribrepo.service.EtrIbRepoinfo002Service;
@@ -257,25 +258,26 @@ public class EtrIbRepoInfo004Controller extends BaseController {
                 String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(
                     param) : IDGenerator.generate();
                 dto.setEntrustId(code);
-                dto.setZyqk(etrIbRepoInfo004Service.getZyqkId(dto.getZyqk()));
+//                dto.setZyqk(etrIbRepoInfo004Service.getZyqkId(dto.getZyqk()));
+                dto.setZyqk("999999");
             }
             dto.setWorkflowParameter("new|||1|EtrIbRepoinfo002|EtrIbRepoMain_btn_submit|true");
         }
         // ----------add by yushilong 20200721 预占功能 start----------
-//        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
-//            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
-//                    DictCodeList.平安资产类型_质押式回购.getValue(),
-//                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
-//                    false, null);
-//            if (StringUtil.isNotEmpty(ar)) {
-//                return ar;
-//            }
-//        }
-//
-//        // add by zhangrui1 批量提交设置风控指标明细 start
-//        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
-//                (dto, list) -> dto.setRiskTrialRetDto(list));
-//        // add by zhangrui1 批量提交设置风控指标明细 end
+        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
+                    DictCodeList.平安资产类型_质押式回购.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                    false, null);
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+
+        // add by zhangrui1 批量提交设置风控指标明细 start
+        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
+                (dto, list) -> dto.setRiskTrialRetDto(list));
+        // add by zhangrui1 批量提交设置风控指标明细 end
 
         // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrIbRepoinfo002Dto> processParameter = new ProcessParameter<EtrIbRepoinfo002Dto>();

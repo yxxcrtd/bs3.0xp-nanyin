@@ -3,10 +3,9 @@ package com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.servi
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividConditionDto;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividSpecialAssetDto;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividSpecialStageDto;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividUniteDto;
+import com.joyintech.tams.common.base.dao.RskIndividConditionCustomMapper;
+import com.joyintech.tams.common.base.entity.RskIndividConditionCustom;
+import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +21,6 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;
 import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividAssetDelDto;
-import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskSupervisionIndividuationDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
@@ -35,6 +32,9 @@ implements BaseProcessService<RskSupervisionIndividuationDto> {
      */
     @Autowired
     private RiskRedisInitService<ImplCond> redisRriter;
+
+	@Autowired
+	private RskIndividConditionCustomMapper rskIndividConditionCustomMapper;
 
 	public List<RskIndividConditionDto> findPageForCondition(Map<String, Object> pageParam) {
 		if(StringUtil.isNotEmpty(pageParam.get("workflowId"))){
@@ -244,4 +244,48 @@ implements BaseProcessService<RskSupervisionIndividuationDto> {
 				String.class);
 	}
 
+    public List<RskIndividConditionCustomDto> findPageForCustomized(Map<String, Object> pageParam) {
+		return restTemplate.postForList(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionIndividuation/findPageForCustomized",
+				pageParam, RskIndividConditionCustomDto.class);
+    }
+
+	public RskIndividConditionCustom findRskIndividConditionCustom(String conditionItem) {
+		return rskIndividConditionCustomMapper.selectByPrimaryKey(conditionItem);
+	}
+
+	public void save(RskIndividConditionCustomDto dto) {
+		RskIndividConditionCustom rskIndividConditionCustom = new RskIndividConditionCustom();
+		BeanUtil.copyPropertiesIgnoreNull(rskIndividConditionCustom,dto);
+		if ("edit".equals(dto.getOperateType())){
+			rskIndividConditionCustomMapper.updateByPrimaryKeySelective(rskIndividConditionCustom);
+		}else if ("delete".equals(dto.getOperateType())){
+			rskIndividConditionCustomMapper.deleteByPrimaryKey(rskIndividConditionCustom.getConditionItem());
+		}else {
+			rskIndividConditionCustomMapper.insertSelective(rskIndividConditionCustom);
+		}
+	}
+
+	public int checkExistsUsing(RskIndividConditionCustomDto dto) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("conditionItem",dto.getConditionItem());
+		return restTemplate.postForObject(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionIndividuation/checkExistsUsing",
+				params, Integer.class);
+	}
+
+	public Page<SelectOptionDto> queryConditionList(Map<String, Object> pageParam) {
+		return restTemplate.postForPage(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionIndividuation/queryConditionList",
+				pageParam, SelectOptionDto.class);
+	}
+
+	public List<RskIndividConditionLineDto> findPageForCustomizedItem(Map<String, Object> params) {
+		if(StringUtil.isNotEmpty(params.get("workflowId"))){
+			RskSupervisionIndividuationDto dto = this.getBussinessEntityByWorkflowId((String)params.get("workflowId"));
+			if(dto!=null&&dto.getConditionLines()!=null&&dto.getConditionLines().size()>0){
+				return dto.getConditionLines();
+			}
+			return new ArrayList<RskIndividConditionLineDto>();
+		}
+		return restTemplate.postForList(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionIndividuation/findPageForCustomizedItem",
+				params, RskIndividConditionLineDto.class);
+	}
 }

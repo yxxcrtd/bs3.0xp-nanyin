@@ -81,9 +81,9 @@ public interface RskSupervisionIndicatorParamMapper {
 	int deleteFixRecode(Map<String, Object> param);
 
 	List<RskSupervisionIndicatorParam003Dto> selectFixRecode(Map<String, Object> param);
-	
+
 	List<RskSupervisionIndicatorParam003Dto> selectFixRecod2(Map<String, Object> param);
-	
+
 	Integer isExistParaName(Map<String, Object> param);
 
 	List<RskSupervisionIndicatorParam005Dto> selectCustomParam(String paraCode);
@@ -91,6 +91,6 @@ public interface RskSupervisionIndicatorParamMapper {
 	List<SqlDto> getSql(String paraCode);
 
 	List<String> getModelValue(String modelCode);
-	
+
 	List<SelectOptionDto> getInstitutionId(Map<String, Object> param);
 }

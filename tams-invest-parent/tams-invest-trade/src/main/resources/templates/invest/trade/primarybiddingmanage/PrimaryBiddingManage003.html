@@ -98,7 +98,7 @@
                                     <label class="layui-form-label form-label-wrap">汇总投标券面总额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="allBidPrinAmt" name="allBidPrinAmt"  placeholder="请输入内容" class="layui-input form-input text-number" disabled
-                                                   data-th-value="${entity?.allBidPrinAmt}" data-textrange="6" data-pattern=""/>
+                                                   data-th-value="${entity?.allBidPrinAmt}" data-textrange="4" data-pattern=""/>
                                         <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
@@ -194,7 +194,8 @@
       <script th:inline="javascript" type="text/javascript">
         var entity = /*[[${entity}]]*/'';
         var YES_OR_NO = /*[[${YES_OR_NO}]]*/'';
-    </script>
+        var entrustAmtUnit = /*[[${entrustAmtUnit}]]*/'';
+      </script>
     <script data-th-src="@{/js/invest/trade/primarybiddingmanage/PrimaryBiddingManage003.js}" type="text/javascript">
     </script>
 </div>
