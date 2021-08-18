@@ -790,7 +790,7 @@
         decode(CREDIT_MODE,'01','1','02','2','03','1,2')CREDIT_MODE,
         IN_DEP_NAME,
         IN_DEP_CODE,
-        substrb(OUT_DEP_CTRY,0,3) OUT_DEP_CTRY,
+        DECODE(OUT_DEP_CTRY,NULL,'',substrb(OUT_DEP_CTRY,0,3)) OUT_DEP_CTRY,
         case
         when lengthb(OUT_DEP_NAME)>120
         then substrb(OUT_DEP_NAME,0,120)
