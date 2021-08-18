@@ -119,7 +119,7 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 	public AjaxResult cancelManul(@RequestBody Map<String, Object> map) {
 		String result = pbcPrdBaseinfoEndSubNewMService.cancelMannul(map);
 		if ("fail".equals(result)) {
-			AjaxResult ajaxresult = new AjaxResult("有未报送的数据", MessageType.错误消息);
+			AjaxResult ajaxresult = new AjaxResult("存在未报送的数据，无法撤销", MessageType.错误消息);
 			ajaxresult.setStatuCode(HttpStatus.OK.value());
 			return ajaxresult;
 		}
