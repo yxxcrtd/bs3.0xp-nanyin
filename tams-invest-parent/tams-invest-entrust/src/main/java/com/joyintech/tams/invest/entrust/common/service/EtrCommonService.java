@@ -1185,8 +1185,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
                     creditLinesInputDto.setTradeStatus(status);
                     creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
                     creditLinesInputDto.setCounterId(inputDto.getCounterId());
-                    creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
-                    creditLinesInputDto.setShareAmt(inputDto.getEntrustNum());
+                    creditLinesInputDto.setTradeAmt(inputDto.getStocketrPriceTotal());
+                    creditLinesInputDto.setShareAmt(new BigDecimal(inputDto.getExpConNum()));
                 }
             }
         }

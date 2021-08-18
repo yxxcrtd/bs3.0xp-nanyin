@@ -11,6 +11,7 @@
 	             ,{field:'mdate',  title: 'CeAsset001.mdate',type:'date'}
 	             ,{field:'creditObjStr', width:180 ,  title: 'CeAsset001.creditObj',sortField:"creditObj"}
 	             ,{field:'creditShareAmt', width:180 ,  title: 'CeAsset001.creditShareAmt',type:'number',digit:'4'}
+                ,{field:'creditPrice', width:180 ,  title: 'CeAsset002.creditPrice',type:'number',digit:'4'}
                 ,{field:'isLoopAmtStr', width:180 ,  title: '是否循环额度',sortField:"isLoopAmt"}
                 ,{field:'holdMaturityStr', width:180 ,  title: '是否持有至到期',sortField:"holdMaturity"}
                 ,{field:'creditCondition', width:180 ,  title: '附加条件',sortField:"creditCondition"}
@@ -28,6 +29,7 @@
 	             ,{field:'mdate',  title: 'CeAsset001.mdate',type:'date'}
                  ,{field:'creditObjStr', width:180 ,  title: 'CeAsset001.creditObj',sortField:"creditObj"}
                  ,{field:'creditShareAmt', width:180 ,  title: 'CeAsset001.creditShareAmt'}
+                 ,{field:'creditPrice', width:180 ,  title: 'CeAsset002.creditPrice',type:'number',digit:'4'}
 	             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
 	         ]
 	}

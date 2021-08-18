@@ -19,6 +19,7 @@
         A.VDATE VDATE,
         A.MDATE MDATE,
         A.REMARK,
+		A.CREDIT_PRICE creditPrice,
         A.HAP_CREDIT_AMT as hapCreditAmt,
          A.CREDIT_FLAG as creditFlag,
         C.FINPROD_NAME as customerName
