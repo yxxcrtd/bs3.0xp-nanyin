@@ -279,16 +279,27 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 }
                 List<PbcPrdBaseinfoSubDat> prdList = resultMap.get("prdList");
                 List<PbcSendZipDatFile> zipList = resultMap.get("zipList");
+                List<String> reqIds = new ArrayList<>();
                 for (PbcPrdBaseinfoSubDat subDat : prdList) {
-                    Optional<PbcPrdBaseinfoSubDat> any = baseinfoSubDatsNoSendProdIds.stream()
-                            .filter(baseinfoSubDat -> subDat.getProdId().equals(baseinfoSubDat.getProdId())).findAny();
-                    if(!any.isPresent()){
-                        baseinfoSubDatsNoSendProdIds.add(subDat);
+                    if(StrUtil.isNotEmpty(subDat.getProdId())){
+                        Optional<PbcPrdBaseinfoSubDat> any = baseinfoSubDatsNoSendProdIds.stream()
+                                .filter(baseinfoSubDat -> subDat.getProdId().equals(baseinfoSubDat.getProdId())).findAny();
+                        if(!any.isPresent()){
+                            baseinfoSubDatsNoSendProdIds.add(subDat);
+                        }
+                    }else{
+                        reqIds.add(subDat.getRegistSeqno());
                     }
+
                 }
                 //删除未报送有修改的记录
                 if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendProdIds)){
                     pbcPrdBaseinfoSubDatMapper.deleteByProdid(baseinfoSubDatsNoSendProdIds);
+                }
+                if(CollectionUtil.isNotEmpty(reqIds)){
+                    for (String reqId : reqIds) {
+                        pbcPrdBaseinfoSubDatMapper.deleteByPrimaryKey(reqId);
+                    }
                 }
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(prdList)){
