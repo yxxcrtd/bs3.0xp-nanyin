@@ -2559,7 +2559,7 @@ public class FinProductCommonService extends BaseService {
 			            }
 		}
 
-    private void execFirstPeriodProductData(FinProductCommonInfoDto finProductCommonInfoDto, FinTradeProduct finTradeProduct, String resetType,String termType,FinProductFloatFeeDto finProductFloatFeeDto) throws Exception{
+    private void execFirstPeriodProductData(FinProductCommonInfoDto finProductCommonInfoDto, FinTradeProduct finTradeProduct, String resetType,String termType,FinProductFloatFeeDto finProductFloatFeeDto) throws InvocationTargetException, IllegalAccessException {
 		    //
 
 //            if(termType!=)
