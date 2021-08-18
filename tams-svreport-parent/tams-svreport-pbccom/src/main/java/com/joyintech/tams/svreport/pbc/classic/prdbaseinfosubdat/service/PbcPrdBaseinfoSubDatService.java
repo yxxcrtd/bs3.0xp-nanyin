@@ -306,6 +306,8 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                         if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
                             pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
                         }
+                        String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
+                        pbcSendZipDatFile.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);
                         if("PIB".equals(pbcSendZipDatFile.getDatZipDatType())){
                             pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(prdList) ? prdList.size() : 0);
                         }else{
@@ -334,6 +336,11 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
 
     private PbcPrdBaseinfoSubDat updatePbcPrdBaseinfoSubDat(PbcPrdBaseinfoSubDatDto pbcPrdBaseinfoSubDatDto,PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat) throws InvocationTargetException, IllegalAccessException {
         BeanUtil.copyProperties(pbcPrdBaseinfoSubDat,pbcPrdBaseinfoSubDatDto);
+        pbcPrdBaseinfoSubDat.setRaiseVdate(pbcPrdBaseinfoSubDatDto.getRaiseVdate01());
+        pbcPrdBaseinfoSubDat.setRaiseEnddate(pbcPrdBaseinfoSubDatDto.getRaiseEnddate01());
+        pbcPrdBaseinfoSubDat.setInDepCode(pbcPrdBaseinfoSubDatDto.getInDepCode());
+        pbcPrdBaseinfoSubDat.setOutDepName(pbcPrdBaseinfoSubDatDto.getInDepName());
+        pbcPrdBaseinfoSubDat.setOutDepCtry(pbcPrdBaseinfoSubDatDto.getOutDepCtry());
         pbcPrdBaseinfoSubDat.setRegistSeqno(cn.hutool.core.lang.UUID.randomUUID().toString());
         return pbcPrdBaseinfoSubDat;
     }
