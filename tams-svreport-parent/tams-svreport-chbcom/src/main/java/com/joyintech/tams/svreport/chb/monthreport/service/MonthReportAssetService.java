@@ -273,23 +273,26 @@ public class MonthReportAssetService {
                                 m=chbMonthAssetPositionMapper.selectPlanInfoByCommon(qm);
                             }
                         }
-                        //评级结果 add by jiangxiao start
-                        if(m.getRating()!=null){
-                        	m.setRating(SvrDataUtil.getNameFromDataDict(DictCode.资产评级,m.getRating()));
-                        }
-                        //评级结果 add by jiangxiao end
-                        m.setProdId(p1.getProdId());
-                        m.setAssetCode(p11.getAssetCode());
-                        m.setAssetvalueA(null);
-                        m.setAssetvalueB(p11.getAccuamt());
-                        m.setAssetvalueB(m.getAssetvalueB().setScale(2,RoundingMode.HALF_UP));
-                        m.setPosuuid(IDGenerator.generate(36));
-                        m.setStartdate(firstday);
+						if (m != null) {
+							//评级结果 add by jiangxiao start
+							if(m.getRating()!=null){
+								m.setRating(SvrDataUtil.getNameFromDataDict(DictCode.资产评级,m.getRating()));
+							}
+							//评级结果 add by jiangxiao end
+							m.setProdId(p1.getProdId());
+							m.setAssetCode(p11.getAssetCode());
+							m.setAssetvalueA(null);
+							m.setAssetvalueB(p11.getAccuamt());
+							m.setAssetvalueB(m.getAssetvalueB().setScale(2,RoundingMode.HALF_UP));
+							m.setPosuuid(IDGenerator.generate(36));
+							m.setStartdate(firstday);
 //                        chbMonthAssetPositionMapper.insert(m);
-                        m.setOldAssetCode(p1.getAssetCode());
-                        //新加字段
-						m.setIsFhxgcp(p1.getIsFhxgcp());
-                        positionList.add(m);
+							m.setOldAssetCode(p1.getAssetCode());
+							//新加字段
+							m.setIsFhxgcp(p1.getIsFhxgcp());
+							positionList.add(m);
+						}
+
                     }
                 }
             }

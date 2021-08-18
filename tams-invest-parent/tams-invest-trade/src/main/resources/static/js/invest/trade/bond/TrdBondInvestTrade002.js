@@ -1297,6 +1297,7 @@ var table;
      */
     $("#invAim").on("change", function () {
         updateCash();
+        priceInitByInCpy();
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 start //
         if (IS_SHOW_CPRICE == 'Y') {
         	changeUnitCprice();
@@ -1502,7 +1503,9 @@ var table;
         if ($("#yield_calc").val()) {
             paramObj.yield = $("#yield_calc").val();
         }
-
+        if($("#tradeMarketCash").val() == 0 ||$("#tradeMarketCash").val() == 0.00){
+            paramObj.tradeMarketCash = null;
+        }
         // 行权计算时用数据库中的理论行权日 add by renping 20191105 start
         if(paramObj.finprodId && ($("#ps").val() == PS_T03 || $("#ps").val() == PS_T39)) {
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getExerciseDate'), paramObj, function (result) {
@@ -2261,7 +2264,42 @@ var table;
             }
         });
     };
-
+    /**
+     *
+     * 若委托开始日和指令结束日均等于平台日期时：
+     * a．若投资目的选择摊余成本类，净价默认带出该债券平台日期前一估值日的摊销净价，可修改；
+     */
+    var priceInitByInCpy = function () {
+        // // 委托开始日
+        // var vdate = $("#vdate").val();
+        // // 委托终止日
+        // var mdate = $("#mdate").val();
+        // // 投资目的
+        var invAim = $("#invAim").val();
+        // // 委托开始日或指令结束日不等于平台日期时
+        // if (new Date(platDate).DateDiff('d', vdate) !== 0
+        //     || new Date(platDate).DateDiff('d', mdate) !== 0) {
+        //     return;
+        // }
+        var portfolioId = $('#portfolioId').val();
+        var finprodId = $('#finprodId').val();
+        if (portfolioId && finprodId) {
+            var data = {
+                sysdate: platDate,
+                portfolioId: portfolioId,
+                finprodId:finprodId
+            }
+            //投资目的选择摊余成本
+            if (invAim == 'AC') {
+                Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getLastNetAmortizationPrice', data,
+                    function (result) {
+                        if(result.data){
+                            $('#unitCprice').val(result.data).trigger('blur').trigger('change');
+                        }
+                    });
+            }
+        }
+    }
     /**
      * 币种change事件
      */
@@ -3226,4 +3264,6 @@ var table;
     }
     // 查询交易对手是否为净值高频或者货币  2020年1月3日  wangyang1 end // 
     initFlag = false;
+
+
 }());

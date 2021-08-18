@@ -52,7 +52,7 @@ public class MarketRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/selectSceneTmpl")
-    public MarketRiskSceneManage002Dto selectSceneTmpl(@RequestBody Map<String, Object> param) throws Exception {
+    public MarketRiskSceneManage002Dto selectSceneTmpl(@RequestBody Map<String, Object> param){
         return marketRiskSceneManage002Service.selectSceneTmpl(param);
     }
     

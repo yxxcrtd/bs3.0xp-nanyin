@@ -28,10 +28,7 @@ import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -760,7 +757,6 @@ public class TisUtil {
 
 		//cell.setCellType(CellType.NUMERIC);
 		cell.setCellValue(result);
-
 //
 		if (result.contains("${") && result.contains("}")) {
 			replaceData(cell, datas);
@@ -1015,7 +1011,7 @@ public class TisUtil {
 		}
 		else if (value instanceof Integer) {
 			Integer cellValue = (Integer)value;
-			cell.setCellValue(cellValue.doubleValue());
+			cell.setCellValue(cellValue);
 		}
 	}
 
@@ -1065,5 +1061,300 @@ public class TisUtil {
 		// if (rowIndex == lastRowNum) {
 		// sheet.removeRow(row);
 		// }
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public static File createFileIfCellRed(Map<String, Object> paraMap, String exceltemplate, String flieName) {
+		// 模板路径pbc/
+		String template = FileNameUtil.getTplFile(exceltemplate + ".xls");
+		// 模板文件后缀名
+		String fileType = GlobalConstant.POINT + FilenameUtils.getExtension(template);
+		// 存放地址
+		String depositfilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+		// 文件名称
+		String outputFilepath = depositfilePath + File.separator + flieName;
+
+		// 工作表对象
+		HSSFWorkbook wb = null;
+		InputStream inputStream = null;
+		try {
+			// 原文件
+			File srcFile = new SafelyFile(template);
+			if (srcFile.exists()) {
+				inputStream = new FileInputStream(srcFile);
+			} else {
+				inputStream = TisUtil.class.getResourceAsStream("/tpl/" + exceltemplate + ".xls");
+			}
+			// 工作表对象初始化
+			wb = new HSSFWorkbook(inputStream);
+
+			for (Sheet sheet : wb) {
+				List<HSSFRow> listRows = new ArrayList<HSSFRow>();
+
+				int rownum = sheet.getLastRowNum();
+				for (int i = 0; i <= rownum; i++ ) {
+					HSSFRow row = (HSSFRow)sheet.getRow(i);
+					/*
+					 * if (row == null||row.getCell(0)==null) { continue; }
+					 */
+					// 解决第二个或之后的单元格有参数却不替换的问题 modify by liupeilin 20200301 begin
+					if (row == null) {
+						continue;
+					}
+					//解决第二个或之后的单元格有参数却不替换的问题 modify by liupeilin 20200301 end
+					int cellnum = row.getLastCellNum();
+
+					for (int j = 0; j < cellnum; j++ ) {
+						//
+						if(row.getCell(j)==null){
+							continue;
+						}
+						CellType cellType = row.getCell(j).getCellType();
+						if (cellType != CellType.STRING) {
+							continue;
+						}
+						String cellvalue = row.getCell(j).getStringCellValue();
+						if (StringUtil.isNotEmpty(cellvalue)) {
+							if (cellvalue.contains("${") && cellvalue.contains("}")) {
+								replaceData(row.getCell(j), paraMap);
+							}
+							if (cellvalue.contains("!{") && cellvalue.contains("}")) {
+								replaceData2(row.getCell(j), paraMap);
+							}
+							if (cellvalue.contains("@{") && cellvalue.contains("}")) {
+								replaceData3(row.getCell(j), paraMap);
+							}
+							if (cellvalue.contains("#{") && cellvalue.contains("}")) {
+								listRows.add(0, row);
+								break;
+							}
+						}
+					}
+				}
+				//for(int index=0;index<listRows.size();index++){
+				//HSSFRow row=listRows.get(index);
+				for (HSSFRow row : listRows) {
+					List list = null;
+					for(int index=0;index<row.getLastCellNum();index++){
+						//for (Cell cell : row) {
+						Cell cell=row.getCell(index);
+						if(cell==null){
+							continue;
+						}
+						CellType cellType = cell.getCellType();
+						if (cellType != CellType.STRING) {
+							continue;
+						}
+						String cellvalue = cell.getStringCellValue();
+						if (StringUtil.isNotEmpty(cellvalue)) {
+							if (cellvalue.contains("#{") && cellvalue.contains("}")) {
+								String key = cellvalue.substring(cellvalue.indexOf("#{") + 2,
+										cellvalue.indexOf("."));
+
+								if(paraMap.get(key) instanceof List){
+									list = (List)paraMap.get(key);
+									break;
+								}else if(paraMap.get(key) instanceof Map){
+									String valKey = cellvalue.substring(cellvalue.indexOf(".")+1,
+											cellvalue.indexOf("}"));
+									Map<String,Object> resultMap = new HashMap<>();
+									resultMap = (Map)paraMap.get(key);
+									String value=null;
+									if(resultMap.get(valKey)!=null){
+										value=resultMap.get(valKey).toString();
+										if(!StringUtil.isNotEmpty(value)||value==""){
+											value = "";
+										}
+
+									}else{
+										value = "";
+									}
+									HSSFCell baseCell = (HSSFCell) row.getCell(index);
+									HSSFCell newcell = (HSSFCell) row.createCell(index);
+									copyCell((HSSFWorkbook) wb, baseCell, newcell, true);
+									if(exceltemplate.contains("Monthreport")){
+										try {
+											newcell.setCellValue(Double.parseDouble(value));
+											if(!exceltemplate.contains("G06")){
+												newcell.setCellType(baseCell.getCellType());
+											}
+										}catch(Exception e){
+											newcell.setCellValue(value);
+										}
+									}else{
+										if(StringUtil.isNotEmpty(resultMap.get(valKey+"Diff"))){ //【DAT表、登记表】有数据的内容，并且不一致的内容红色标记
+											Integer keyDiff=Integer.parseInt(resultMap.get(valKey+"Diff").toString());
+											if(1==keyDiff) {
+												CellStyle newStyle = wb.createCellStyle();
+												newStyle.cloneStyleFrom(newcell.getCellStyle());
+												// 修改字体颜色为红色
+												Font ztFont1 = wb.createFont();
+												ztFont1.setColor(Font.COLOR_RED); // 将字体设置为“红色”
+												// 字体颜色设置
+												newStyle.setFont(ztFont1);
+												newcell.setCellStyle(newStyle);
+											}
+										}
+										newcell.setCellValue(value);
+									}
+								}else if(paraMap.get(key)==null){
+									insertRow(row, 1);
+									Map<String, Object> value2=new HashMap<String, Object>();
+									insertRow(row, 1);
+
+									Row newrow = sheet.createRow(row.getRowNum() + 1);
+
+
+									for (int i = 0; i < row.getLastCellNum(); i++) {
+										HSSFCell cell2 = (HSSFCell) row.getCell(i);
+										HSSFCell newcell2 = (HSSFCell) newrow.createCell(i);
+										copyNullCell((HSSFWorkbook) wb, cell2, newcell2, true);
+
+										String cellvalue2 = newcell2.getStringCellValue();
+										if (StringUtil.isNotEmpty(cellvalue2)) {
+											if (cellvalue2.contains("#{") && cellvalue2.contains("}")) {
+												replaceListData(newcell2, value2);
+											}
+										}
+									}
+									removeRow(row);
+									break;
+								}
+
+							}
+						}
+					}
+
+					// 增加新行
+					if(list != null) {
+						insertRow(row, list.size());
+
+						for (Object obj : list) {
+							Map<String, Object> value = transBean2Map(obj);
+							// // 获取需要设值的行
+							Row newrow = sheet.getRow(row.getRowNum() + list.indexOf(obj) + 1);// sheet.createRow(row.getRowNum()
+							// +
+							// list.indexOf(obj)
+							// + 1);
+							if (newrow == null) {
+								newrow = sheet.createRow(row.getRowNum() + list.indexOf(obj) + 1);
+							}
+							for (int i = 0; i < row.getLastCellNum(); i++) {
+								HSSFCell cell = (HSSFCell) row.getCell(i);
+								HSSFCell newcell = (HSSFCell) newrow.createCell(i);
+								copyCell((HSSFWorkbook) wb, cell, newcell, true);
+
+								CellType cellType = newcell.getCellType();
+								if (cellType != CellType.STRING) {
+									continue;
+								}
+								String cellvalue = newcell.getStringCellValue();
+								if (StringUtil.isNotEmpty(cellvalue)) {
+									if (cellvalue.contains("#{") && cellvalue.contains("}")) {
+										replaceListDataDiffRed(wb,newcell, value);
+									}
+								}
+							}
+						}
+
+						removeRow(row);
+					}
+				}
+				sheet.setForceFormulaRecalculation(true);
+			}
+
+			File file = new SafelyFile(outputFilepath);
+			if (!file.getParentFile().exists()) {
+				file.getParentFile().mkdirs();
+			}
+			FileOutputStream outputStream = new FileOutputStream(file);
+
+			wb.write(outputStream);
+			outputStream.flush();
+			outputStream.close();
+			return file;
+		}
+		catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		finally {
+			try {
+				if(wb != null) {
+					wb.close();
+				}
+				if(inputStream != null) {
+					inputStream.close();
+				}
+			}
+			catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		return null;
+	}
+
+	private static void replaceListDataDiffRed(HSSFWorkbook wb,Cell cell, Map<String, Object> datas) {
+		String result = cell.getStringCellValue();
+
+		if (!result.contains("#{") || !result.contains("}")) {
+			return;
+		}
+		String cellvalue = result.substring(result.indexOf("#{") + 2, result.indexOf("}"));
+		String[] keys = cellvalue.split("\\.");
+        String valKey=keys[1];
+		Object value = datas.get(valKey);
+		if (value == null) {
+			cell.setCellValue("");
+			return;
+		}
+		if (value instanceof Date) {
+			cell.setCellValue((Date)value);
+		}
+		else if (value instanceof String) {
+			cell.setCellValue((String)value);
+		}
+		else if (value instanceof Boolean) {
+			cell.setCellValue((Boolean)value);
+		}
+		else if (value instanceof Calendar) {
+			cell.setCellValue((Calendar)value);
+		}
+		else if (value instanceof RichTextString) {
+			cell.setCellValue((RichTextString)value);
+		}
+		else if (value instanceof Double) {
+			cell.setCellValue((Double)value);
+		}
+		else if (value instanceof BigDecimal) {
+			BigDecimal cellValue = (BigDecimal)value;
+			cell.setCellValue(cellValue.doubleValue());
+		}
+		else if (value instanceof Integer) {
+			Integer cellValue = (Integer)value;//转为整形会变成.0,转为字符串正常
+			cell.setCellValue(value.toString());
+		}
+		if(StringUtil.isNotEmpty(datas.get(valKey+"Diff"))){ //【DAT表、登记表】有数据的内容，并且不一致的内容红色标记
+			Integer keyDiff=Integer.parseInt(datas.get(valKey+"Diff").toString());
+			if(1==keyDiff) {
+				CellStyle newStyle = wb.createCellStyle();
+				newStyle.cloneStyleFrom(cell.getCellStyle());
+				// 修改字体颜色为红色
+				Font ztFont1 = wb.createFont();
+				ztFont1.setColor(Font.COLOR_RED); // 将字体设置为“红色”
+				// 字体颜色设置
+				newStyle.setFont(ztFont1);
+				cell.setCellStyle(newStyle);
+			}
+		}
+	}
+
+	private static Integer replaceInteger(String key, Map<String, Integer> datas) {
+		if(key.contains(".")&&null!=datas) {
+			String subKey = key.substring(key.indexOf(".")+1, key.length());
+			Integer index = datas.get(subKey);
+			return index;
+		}
+		return 0;
 	}
 }

@@ -202,6 +202,10 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             model.addAttribute("tradeId", dto.getTotleTradeId());
             //---------add by zxjjpei 风险试算需要交易编号 20200325 start------
             model.addAttribute("tradeEntrustId", dto.getTotleTradeId()==null?this.getParam("entrustId"):dto.getTotleTradeId());
+            if(StringUtil.equals(dto.getOperateType(),"revoke")){
+                model.addAttribute("tradeEntrustId", dto.getTotleTradeId()==null?null:dto.getTotleTradeId().substring(0, dto.getTotleTradeId().length() - 1));
+
+            }
             //---------add by zxjjpei 风险试算需要交易编号 20200325 end------
         }
         if (StringUtil.isNotBlank(workflowId)) {
@@ -897,4 +901,18 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     public Map<String, Object> getTradeMarketCash(@RequestBody Map<String, Object> params) {
         return trdBondInvestTrade002Service.getTradeMarketCash(params);
     }
+
+    /**
+     *  查询平台日前摊销净价
+     *
+     * @author yangxiaoteng
+     */
+    @ResponseBody
+    @RequestMapping("getLastNetAmortizationPrice")
+    public AjaxResult getLastNetAmortizationPrice(@RequestBody Map<String, Object> param){
+        AjaxResult result = new AjaxResult();
+        result.setData(trdBondInvestTrade002Service.getLastNetAmortizationPrice(param));
+        return result;
+    }
+
 }

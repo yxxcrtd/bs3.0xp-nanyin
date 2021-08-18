@@ -231,7 +231,10 @@ public class ValueAddedTax001Service extends CommonExportService<ValueAddedTax00
             map.put("foreDeclar", foreDeclar);
             //账套代码
             map.put("booksetId", dto.getBooksetId());
-            
+
+            //加入年份
+            map.put("year", year);
+
             //上一征期纳税申报表信息
             List<TaxDeclareSumInfo> listTax = valueAddedTax001Mapper.quryTaxDeclarSumInfoFore(map);
             if(listTax == null || listTax.size() == 0){

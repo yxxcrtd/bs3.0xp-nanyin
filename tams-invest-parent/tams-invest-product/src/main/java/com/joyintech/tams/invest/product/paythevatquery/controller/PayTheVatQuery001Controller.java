@@ -115,7 +115,7 @@ public class PayTheVatQuery001Controller extends BaseController {
      */
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
-    public List<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param){
+    public Page<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param){
         return payTheVatQuery001Service.queryProdIdInfo(param);
     }
     

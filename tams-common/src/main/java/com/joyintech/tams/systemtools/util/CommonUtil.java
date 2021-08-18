@@ -835,6 +835,24 @@ public class CommonUtil {
 		}
 		return null!=codeName?codeName:"";
 	}
+
+	/**
+	 * 根据登录用户获取当前机构的登记编码
+	 * “机构登记银行代码管理”模块没有维护当前机构机构代码时，也为空，提交时提醒，现在这种情况还是展示默认值只C1111； update by leipeng 20200727
+	 * @return
+	 */
+	public static String selectPbcBankCode(String orgCode){
+		if(StringUtil.isEmpty(orgCode)){
+			if(MultilevelDataAuthorityUtil.isEnabled()){
+				orgCode = getInstitutionCodeByLoginUser_ms();
+			}else{
+				// 银行模式下 只有一个总行  直接查总行对应的 code
+				orgCode = baseCommonService.getYHGeneralBankCode();
+			}
+		}
+		String code = baseCommonService.selectPbcBankCode(orgCode);
+		return null!=code?code:"";
+	}
 	
 	
 	// 微服务版本获取登录用户的机构类型
@@ -902,6 +920,24 @@ public class CommonUtil {
 	 */
 	public static String getYHGeneralBankCode(){
 		return baseCommonService.getYHGeneralBankCode();
+	}
+	
+	/**
+	 * 主要功能:判断字符串是否为日期 注意事项:无
+	 *
+	 * @param str
+	 *            日期字符串 yyyy-MM-dd
+	 * @return 是否
+	 */
+	public static boolean isEnDateStr(String str) {
+		SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_DATE_FORMAT_EN);
+		try {
+			format.setLenient(false);
+			format.parse(str);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 
 

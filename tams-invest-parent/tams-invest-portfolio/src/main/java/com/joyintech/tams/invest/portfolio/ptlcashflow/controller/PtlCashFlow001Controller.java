@@ -17,6 +17,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -175,8 +176,7 @@ public class PtlCashFlow001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult revoke(@RequestBody @Validated({
-        ValidateGroupDelete.class}) PtlCashFlowDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) PtlCashFlowDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

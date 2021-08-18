@@ -22,7 +22,7 @@
                     <label class="layui-form-label form-lable">资产一级分类</label>
                     <div class="layui-input-inline input-inline">
                         <select id="assetType1" name="assetType1" style="width: 120px"
-                                class="input-select"
+                                class="input-select" childrenIds="assetType2"
                                 data-th-data-result='${SVR_ORG_ASSET_TYPE1}'
                                 placeholder="请选择" data-th-value="${entity?.assetType1}"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}"
@@ -34,7 +34,7 @@
                     <label class="layui-form-label form-lable">资产二级分类</label>
                     <div class="layui-input-inline input-inline" id="assetTypeInput">
                         <select id="assetType2" name="assetType2" style="width: 120px"
-                                class="input-select"
+                                class="input-select" parentIds="assetType1"
                                 data-th-data-result='${SVR_ORG_ASSET_TYPE2}'
                                 placeholder="请选择" data-th-value="${entity?.assetType2}"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}"
@@ -56,20 +56,20 @@
                 </div>
             </div>
             <!-- 第二行 -->
-            <div class="layui-form-item">
-                <div class="ayui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">
-                    <label class="layui-form-label form-lable">业务分类</label>
-                    <div class="layui-input-inline input-inline" id="assetTypeThr">
-                        <select id="assetBusiType" name="assetBusiType" style="width: 120px"
-                                class="input-select"
-                                data-th-data-result='${SVR_ORG_ASSET_TYPE4}'
-                                placeholder="请选择" data-th-value="${entity?.assetBusiType}"
-                                data-th-placeholder="#{SysCommon.selectplaceholder}"
-                                allowClear="true">
-                        </select>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="layui-form-item">-->
+<!--                <div class="ayui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">-->
+<!--                    <label class="layui-form-label form-lable">业务分类</label>-->
+<!--                    <div class="layui-input-inline input-inline" id="assetTypeThr">-->
+<!--                        <select id="assetBusiType" name="assetBusiType" style="width: 120px"-->
+<!--                                class="input-select"-->
+<!--                                data-th-data-result='${SVR_ORG_ASSET_TYPE4}'-->
+<!--                                placeholder="请选择" data-th-value="${entity?.assetBusiType}"-->
+<!--                                data-th-placeholder="#{SysCommon.selectplaceholder}"-->
+<!--                                allowClear="true">-->
+<!--                        </select>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </form>
     </div>
     <div>

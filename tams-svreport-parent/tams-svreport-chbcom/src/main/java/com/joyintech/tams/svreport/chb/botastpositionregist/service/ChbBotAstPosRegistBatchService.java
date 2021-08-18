@@ -77,16 +77,8 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 			//得到底层资产持仓信息
 			String isChbBtm = "01";//通道是否穿透，默认“是”
 			isChbBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
-			List<Date> dateList = null;
 	    	Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
-			dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资管计划底层持仓信息登记.getValue(), DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
-					posDate);
-			Date chbSubmitDeadline = null;
-			Date submitDeadline = null;
-			if (CollectionUtils.isNotEmpty(dateList)) {
-				chbSubmitDeadline = dateList.get(0);
-				submitDeadline = dateList.get(1);
-			}
+
 			//删除数据
 			Map<String,Object> para = new HashMap<String,Object>();
 			para.put("posDate", DateUtil.format(posDate));
@@ -110,8 +102,14 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 				sub.setCreateTime(new Date());
 				// 数据日期
 				sub.setStatusDate(batchTime);
-				sub.setChbSubmitDeadline(chbSubmitDeadline);
-				sub.setSubmitDeadline(submitDeadline);
+
+				List<Date>  dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资管计划底层持仓信息登记.getValue(),
+						sub.getStatus(), dateMap,posDate);
+				if (CollectionUtils.isNotEmpty(dateList)) {
+					sub.setChbSubmitDeadline(dateList.get(0));
+					sub.setSubmitDeadline(dateList.get(1));
+				}
+
 				sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 				chbBotAstPositionSubMapper.insert(sub);
 			}
@@ -120,10 +118,20 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
             //生成数据状态为“新建”，报送状态为“未报送”的登记
             // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
             List<ChbBotAstPositionSub> insertDataList = chbBotAstPosCBMapper.queryInsertGenerateList(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
-                    chbSubmitDeadline, submitDeadline,InstitutionCode);
+                    null, null,InstitutionCode);
+
+			for (ChbBotAstPositionSub sub:insertDataList) {
+				List<Date>  dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资管计划底层持仓信息登记.getValue(),
+						sub.getStatus(), dateMap,posDate);
+				if (CollectionUtils.isNotEmpty(dateList)) {
+					sub.setChbSubmitDeadline(dateList.get(0));
+					sub.setSubmitDeadline(dateList.get(1));
+				}
+			}
+
+
             insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.底层资产持仓信息登记表SUB);
-//            chbBotAstPosCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
-//                    chbSubmitDeadline, submitDeadline);
+
             for(ChbBotAstPositionSub sub : insertDataList) {
 				// 报送流水号
 				sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));

@@ -44,7 +44,7 @@ $(function(){
 //				{ title: "产品代码(内部)", field: 'pbcProdIdShow',width:150,sortField:''},
 //				{ title: "产品代码(外部)", field: 'pbcCode',width:150,sortField:''},
 				{ title: "产品代码", field: 'pbcProdIdShow',width:150,sortField:'pbcProdIdShow'},
-				{ title: "反馈产品代码", field: 'pbcCode',width:150,sortField:'pbcCode'},
+				{ title: "反馈产品代码", field: 'pbcCode',width:150,sortField:'pbcCode',visible: false},
 				{ title: "内部产品代码", field: 'prodId',width:150,sortField:'prodId'},
 				{ title: "产品实际终止日期", field: 'mdate',width:150,type:'date',sortField:'mdate'},
 				{ title: "币种", field: 'ccy',width:150,sortField:'ccy'},

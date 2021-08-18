@@ -92,9 +92,11 @@ public class PtlPositionAnalysis002Controller extends BaseController {
                     item.setCostRate(ArithmeticUtil.round(item.getCostRate().multiply(BigDecimal.valueOf(100)), 4, RoundingMode.HALF_UP));
                 }
                 // 资产的持仓市值为0时不显示
-                if (BigDecimal.ZERO.compareTo(item.getPosValue()) != 0) {
-                    ptlPositionAnalysis003Dtos.add(item);
-                }
+                 if (item.getPosValue() != null) {
+                      if (BigDecimal.ZERO.compareTo(item.getPosValue()) != 0) {
+                                ptlPositionAnalysis003Dtos.add(item);
+                      }
+                 }
             });
         }
         //modify by jiangpeng on 20210528 ZGBSSE-173 资产的持仓市值为0时不显示

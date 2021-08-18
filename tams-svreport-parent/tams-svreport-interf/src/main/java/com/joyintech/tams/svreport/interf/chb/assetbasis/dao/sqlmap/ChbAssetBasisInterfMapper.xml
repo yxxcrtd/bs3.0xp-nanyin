@@ -341,6 +341,7 @@
 	  left join PTL_PORTFOLIO pp
 	  on pp.portfolio_id = tpda.portfolio_id
 	  where tpd.finprod_type2 = 'F01'
+	  and tpd.chl_id is not null
 	  and tpd.inv_aim = 'AC'
 	  and tpd.ps = 'T01'
 	  and tpd.trade_date <![CDATA[<]]> fp.vdate

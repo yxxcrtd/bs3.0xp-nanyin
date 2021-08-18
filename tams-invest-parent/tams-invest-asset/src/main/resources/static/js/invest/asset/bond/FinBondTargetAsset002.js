@@ -708,6 +708,7 @@ $(function() {
                     //股票一级市场  则显示  是否债转股
                     	$('#bussRepEquityInfoDto_repDeptEquity_div').show();
                     	$('#repDeptEquity').attr('required',true);
+                    	$('#bussRepEquityInfoDto_repInvestStage').parent().parent().find('i.must').remove();
                 }
                 
             }else {
@@ -772,6 +773,8 @@ $(function() {
         //修改  资产代码置灰
         if(pageModel!=PAGE_MODEL_NEW){
             $("#finprodMarketId").attr('disabled',true);
+            //提交流程确认后，交易场所置灰不允许修改
+            $("#tradeMarket").attr('disabled',true);
             $('.btn-save').hide();
         }
         //是否含权债change

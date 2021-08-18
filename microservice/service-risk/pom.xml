@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
-		<version>0.0.3-BOOTVIS</version>
+		<version>0.0.3</version>
 	</parent>
 	<artifactId>service-risk</artifactId>
 	<version>2.1.1</version>
@@ -49,7 +49,11 @@
 		    <artifactId>tomcat-jdbc</artifactId>
 		    <version>8.5.23</version>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>joyintech-system</artifactId>
+        </dependency>
+    </dependencies>
 	<properties>
         <start-class>com.joyintech.service.risk.RiskApplication</start-class>
 		<hibernate.version>5.3.6.Final</hibernate.version>

@@ -265,12 +265,14 @@ public class Joyin2JixuInterfaceService {
 		String cashglcode = "";
 		if(SecurityCoreFactory.getBkcashacctProperties()!=null && dto.getAcc_type()!=null && dto.getCcy()!=null) {
 			cashglcode = SecurityCoreFactory.getBkcashacctProperties().getProperty(dto.getAcc_type() + "_" + dto.getCcy());
+			cashglcode = cashglcode == null ? "" : cashglcode;
 		}
 		bka.setCashglcode(cashglcode);
 		//获取汇兑损益科目
 		String hdsy = "";
 		if(SecurityCoreFactory.getBkcashacctProperties()!=null) {
 			hdsy = SecurityCoreFactory.getBkcashacctProperties().getProperty("HDSY");
+			hdsy = hdsy == null ? "" : hdsy;
 		}
 		bka.setCashrealfxgnls(hdsy);
 		bka.setCashunrealfxgnls(hdsy);

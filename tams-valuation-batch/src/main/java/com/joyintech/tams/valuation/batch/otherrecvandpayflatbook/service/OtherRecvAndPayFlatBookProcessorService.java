@@ -245,8 +245,8 @@ public class OtherRecvAndPayFlatBookProcessorService {
                 accountNatrueBranchMap.put(BookConstant.BRANCH, dto.getBranch());
                 accountNatrueMap.put(DictCodeBaseSubjectNatrue.其他应收款_利息.getValue(), accountNatrueBranchMap);
                 accountNatrueMap.put(DictCodeBaseSubjectNatrue.其他应付款_利息.getValue(), accountNatrueBranchMap);
-                // 1） 变量.其他应收款-利息.abs()≥变量.其他应付款-融入券利息.abs()时:
-                if(otherIntAmt.abs().compareTo(otherPayIntAmt.abs()) >= 0){
+                // 1） 变量.其他应收款-利息.abs()>变量.其他应付款-融入券利息.abs()时:
+                if(otherIntAmt.abs().compareTo(otherPayIntAmt.abs()) > 0){
                     // a)   变量.其他应付款-融入券利息余额在借方时，
                     if(DictCodeList.余额方向_借方.getValue().equals(otherPayBalFlag)){
                         // 其他应收款-利息_借 -> 变量.其他应付款-融入券利息科目余额.abs()
@@ -262,8 +262,8 @@ public class OtherRecvAndPayFlatBookProcessorService {
                         accountAmountMap.put(BookConstant.OTHER_INT_C, otherPayIntAmt.abs());
                     }
                 }
-                // 2） 凭证前科目变量.其他应收款-利息.abs()<变量.其他应付款-融入券利息.abs()时:
-                if(otherIntAmt.abs().compareTo(otherPayIntAmt.abs()) < 0){
+                // 2） 凭证前科目变量.其他应收款-利息.abs()<=变量.其他应付款-融入券利息.abs()时:
+                if(otherIntAmt.abs().compareTo(otherPayIntAmt.abs()) <= 0){
                     // b)   变量.其他应收款-利息余额在借方时，
                     if(DictCodeList.余额方向_借方.getValue().equals(otherBalFlag)){
                         // 其他应付款-融入券利息_借 -> 变量.其他应收款-利息科目余额.abs()

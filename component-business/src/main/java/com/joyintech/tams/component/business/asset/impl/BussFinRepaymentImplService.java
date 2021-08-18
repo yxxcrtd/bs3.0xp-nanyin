@@ -11,7 +11,9 @@
 package com.joyintech.tams.component.business.asset.impl;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -318,9 +320,11 @@ public class BussFinRepaymentImplService extends BaseService<BussFinRepaymentDto
      */
     @Override
     public String genPayDate(Map<String, Object> paramMap) {
-        String mdate = (String) paramMap.get("mdate");
+        Long date = Long.valueOf((String)paramMap.get("mdate"));
+        Date ddate = new Date(date);
+        String mdate = DateUtil.format(ddate);
         String finprodId = (String) paramMap.get("finprodId");
-        
+
         if (StringUtil.isBlank(mdate) || StringUtil.isBlank(finprodId)
             || !DateUtil.isDateStr(mdate)) {
             return null;
@@ -334,7 +338,7 @@ public class BussFinRepaymentImplService extends BaseService<BussFinRepaymentDto
         Date vdate = finProduct.getVdate(); // 起息日
         String calendarId = finProduct.getCalendarId(); // 交易日历
         Date tempMdate = DateUtil.parse(mdate);
-        
+
         // 付息营业日准则
         Map<String, Object> paramSelectMap = new HashMap<String, Object>();
         paramSelectMap.put("finprodId", finprodId);

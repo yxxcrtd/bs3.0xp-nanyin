@@ -1204,15 +1204,15 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
         tidList.add(tradId);
         // 场内基金改造 add by renping 20191117 start
         // 实时申赎的时候，申购确认赎回确认赎回到账需要一起撤销
-        Map<String, Object> param = new HashMap<>();
-        param.put("bTradeId", tradId);
-        param.put("yes", DictCodeList.是否_是.getValue());
-        param.put("tradeStatus", DictCodeListExt1.交易状态_初始.getValue());
-        param.put("TRM_FUND_TYPE05", DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue());
-        List<String> tradeList = trdFundInvestTradeMapper.selectFollowTradeInfo(param);
-        if (!StringUtil.isEmptyList(tradeList)) {
-            tidList.addAll(tradeList);
-        }
+//        Map<String, Object> param = new HashMap<>();
+//        param.put("bTradeId", tradId);
+//        param.put("yes", DictCodeList.是否_是.getValue());
+//        param.put("tradeStatus", DictCodeListExt1.交易状态_初始.getValue());
+//        param.put("TRM_FUND_TYPE05", DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue());
+//        List<String> tradeList = trdFundInvestTradeMapper.selectFollowTradeInfo(param);
+//        if (!StringUtil.isEmptyList(tradeList)) {
+//            tidList.addAll(tradeList);
+//        }
             // 场内基金改造 add by renping 20191117 end
         List<BaseTradeProductDealDto> result = baseTradeProductDealService.select(tidList);
         if (result == null || result.isEmpty()) {

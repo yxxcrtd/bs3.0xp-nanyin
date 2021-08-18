@@ -78,6 +78,8 @@
 		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="PBC_CODE" property="pbcCode" jdbcType="VARCHAR" />
 		<result column="pbcProdIdShow" property="pbcProdIdShow" jdbcType="VARCHAR" />
+		<result column="IS_MARKET_FUND" property="isMarketFund" jdbcType="VARCHAR" />
+
 	</resultMap>
 	<sql id="Base_Column_List">
 		REGIST_SEQNO, PBC_PROD_ID, ISSUE_PARTY_ID, PBC_PROD_TYPE, PROD_NAME, PROD_BRAND,
@@ -91,7 +93,7 @@
 		IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, VDATE, MDATE, ACCOUNT_ID,
 		IS_CONSTRACTE,
 		TRANSFER_TYPE, IDENTI_FLAG, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS,
-		SUMIT_SEQ,
+		SUMIT_SEQ,IS_MARKET_FUND,
 		STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE,
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
 	</sql>
@@ -107,7 +109,7 @@
 		IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, VDATE, MDATE, ACCOUNT_ID,
 		IS_CONSTRACTE,
 		TRANSFER_TYPE, IDENTI_FLAG, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS,
-		SUMIT_SEQ,
+		SUMIT_SEQ,IS_MARKET_FUND,
 		STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE,
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
 	</sql>
@@ -139,7 +141,7 @@
 		OUT_DEP_NAME, VDATE, MDATE,
 		ACCOUNT_ID, IS_CONSTRACTE, TRANSFER_TYPE,
 		IDENTI_FLAG, SEND_STATUS, SUBMIT_TIME,
-		SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE,
+		SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE,IS_MARKET_FUND,
 		PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
 		STATUS, CREATE_USER, ORG_CODE,
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
@@ -168,7 +170,7 @@
 		#{transferType,jdbcType=CHAR},
 		#{identiFlag,jdbcType=CHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP},
 		#{submitFeedbackStatus,jdbcType=VARCHAR},
-		#{sumitSeq,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP},
+		#{sumitSeq,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP},#{isMarketFund,jdbcType=VARCHAR},
 		#{pbcSubmitDeadline,jdbcType=TIMESTAMP},
 		#{submitDeadline,jdbcType=TIMESTAMP},
 		#{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
@@ -302,6 +304,9 @@
 			</if>
 			<if test="sendStatus != null">
 				SEND_STATUS,
+			</if>
+			<if test="isMarketFund != null">
+				IS_MARKET_FUND,
 			</if>
 			<if test="submitTime != null">
 				SUBMIT_TIME,
@@ -466,6 +471,9 @@
 			</if>
 			<if test="sendStatus != null">
 				#{sendStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="isMarketFund != null">
+				#{isMarketFund,jdbcType=VARCHAR},
 			</if>
 			<if test="submitTime != null">
 				#{submitTime,jdbcType=TIMESTAMP},
@@ -632,6 +640,9 @@
 			<if test="sendStatus != null">
 				SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
 			</if>
+			<if test="isMarketFund != null">
+				IS_MARKET_FUND = #{isMarketFund,jdbcType=VARCHAR},
+			</if>
 			<if test="submitTime != null">
 				SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
 			</if>
@@ -717,6 +728,7 @@
 		TRANSFER_TYPE = #{transferType,jdbcType=CHAR},
 		IDENTI_FLAG = #{identiFlag,jdbcType=CHAR},
 		SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+		IS_MARKET_FUND = #{isMarketFund,jdbcType=VARCHAR},
 		SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
 		SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
 		SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
@@ -788,6 +800,7 @@
 		decode(TRANSFER_TYPE,'01','1','99','2')TRANSFER_TYPE,
 		decode(cbc.IS_FIN_SUB_COMPANY,'01','2','1') IDENTI_FLAG,
 		sysdate STATUS_DATE,
+		DECODE(info.IS_MARKET_FUND，01,1,2) IS_MARKET_FUND,
 		info.STATUS,
 		info.CREATE_USER,
 		info.UPDATE_USER,
@@ -861,7 +874,8 @@
   <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">
   	select 
 	        t1.REGIST_SEQNO registSeqno,
-			t1.pbc_prod_id pbcProdId,
+	  		t1.pbc_prod_id pbcProdId,
+	  		T2.pbc_code pbcPoolCode,
 			t1.ISSUE_PARTY_ID issuePartyId,
 	        SI.INSTITUTION_NAME issuePartyName,
 			t1.PBC_PROD_TYPE pbcProdType,
@@ -910,6 +924,7 @@
 			t1.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
 			t1.SUMIT_SEQ sumitSeq,
 			t1.STATUS_DATE statusDate,
+			t1.IS_MARKET_FUND isMarketFund,
 			t1.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
 			t1.SUBMIT_DEADLINE submitDeadline,
 			t1.STATUS status,
@@ -920,7 +935,7 @@
 			t1.UPDATE_USER updateUser,
 			t1.UPDATE_TIME updateTime,
 			t2.PBC_CODE pbcCode,
-			t1.PBC_PROD_ID pbcProdIdShow
+	  		NVL(T2.pbc_code,t1.pbc_prod_id) pbcProdIdShow
 		from PBC_PRD_BASEINFO_SUB t1
 	    LEFT JOIN(
 	        SELECT
@@ -1103,7 +1118,7 @@
 		IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, VDATE, MDATE, ACCOUNT_ID,
 		IS_CONSTRACTE,
 		TRANSFER_TYPE, IDENTI_FLAG, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS,
-		SUMIT_SEQ,
+		SUMIT_SEQ,IS_MARKET_FUND,
 		STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE,
 		CREATE_DEPT, sysdate, UPDATE_USER, sysdate
     from PBC_PRD_BASEINFO_SUB
@@ -1128,7 +1143,7 @@
 		IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, VDATE, MDATE, ACCOUNT_ID,
 		IS_CONSTRACTE,
 		TRANSFER_TYPE, IDENTI_FLAG, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS,
-		SUMIT_SEQ,
+		SUMIT_SEQ,IS_MARKET_FUND,
 		STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE,
 		CREATE_DEPT, sysdate, UPDATE_USER, sysdate
       from (
@@ -1170,18 +1185,28 @@
  </delete>
  
  <select id="queryAllPbcPrdBaseInfo" resultMap="BaseResultMap">
-    select PBC_PROD_ID, prod_name,ACCOUNT_ID,PROD_ID
-    from (
-		select PBC_PROD_ID,prod_name,ACCOUNT_ID,PROD_ID,
-		rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
-		from PBC_PRD_BASEINFO_SUB
-		where STATUS != 'D'
-		<if test="search != null and search !='' ">
-		AND (PBC_PROD_ID LIKE concat(concat('%', #{search}),'%')
-		or prod_name LIKE concat(concat('%', #{search}),'%'))
-		</if>
-	)
-	where ranknum = 1
+	 select PBC_PROD_ID, prod_name,ACCOUNT_ID,PROD_ID,ORG_CODE
+		 from (
+		 select nvl(T3.pbc_code,t1.PBC_PROD_ID) PBC_PROD_ID,prod_name,ACCOUNT_ID,PROD_ID,ORG_CODE,
+		 rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
+		 from PBC_PRD_BASEINFO_SUB t1
+		 LEFT JOIN(
+		 SELECT
+		 inside_prod_id,
+		 pbc_code
+		 FROM
+		 pbc_prod_assetpool_code
+		 WHERE
+		 status='E'
+		 AND code_type='01'
+		 )t3 ON t3.inside_prod_id=t1.PROD_ID
+		 where STATUS != 'D'
+		 <if test="search != null and search !='' ">
+			 AND (PBC_PROD_ID LIKE concat(concat('%', #{search}),'%')
+			 or prod_name LIKE concat(concat('%', #{search}),'%'))
+		 </if>
+		 )
+		 where ranknum = 1
  </select>
 	<select id="selectAllRegisteAccountData" resultType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">
 		select DISTINCT trim(ACCOUNT_ID) accountId,trim(PBC_ACCOUNT_ID) pbcAccountId  
@@ -1208,4 +1233,22 @@
       PBC_PROD_ID = #{item.pbcProdId,jdbcType=VARCHAR}
       </foreach>
    </select>
+
+	<update id="updateByProdIds" parameterType="java.util.List">
+		update PBC_PRD_BASEINFO_SUB
+		set SEND_STATUS = '03',
+			SUBMIT_TIME = sysdate,
+			SUBMIT_FEEDBACK_STATUS = '03'
+		where  SEND_STATUS = '01'
+		    and PROD_ID in
+		    <foreach collection="list" item="item" open="(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+	</update>
+
+	<select id="countByProdId" parameterType="java.lang.String" resultType="int">
+		select count(1) as num
+		from PBC_PRD_BASEINFO_SUB
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+	</select>
 </mapper>

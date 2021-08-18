@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,8 +158,7 @@ public class CommonMapperDelegateController {
      */
     @RequestMapping("batchModify/{methodName}")
     public Map<String, Object> batchModify(@PathVariable("methodName") String methodName,
-                                           @RequestBody Map<String, Object> param)
-            throws Exception {
+                                           @RequestBody Map<String, Object> param){
         Map<String, Object> retMap = new HashMap<>();
         for (Map.Entry<String, Object> entry : param.entrySet()) {
             Map<String, Object> methodParam = (Map<String, Object>)entry.getValue();
@@ -186,7 +186,7 @@ public class CommonMapperDelegateController {
             catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
                 retMap.put(entry.getKey(), -1);
                 logger.error("操作数据库失败", e);
-                throw new Exception(e);
+                throw new BusinessException(e);
             }
         }
         return retMap;

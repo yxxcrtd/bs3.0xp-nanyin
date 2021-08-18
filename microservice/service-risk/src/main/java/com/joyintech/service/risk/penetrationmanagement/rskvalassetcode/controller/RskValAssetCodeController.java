@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -193,4 +194,28 @@ public class RskValAssetCodeController {
     public int getCountByPtl(String assetSubMapId){
         return rskValAssetCodeService.getCountByPtl(assetSubMapId);
     }
+    /**
+     * 查询目标汇总科目代码
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("selecctRskValtblSubjectSumCodeList/{page}/{length}")
+    public Page<SelectOptionDto> selecctRskValtblSubjectSumCodeList(@PathVariable("page") int page, @PathVariable("length") int length, @RequestBody Map<String, Object> pageParam){
+        return rskValAssetCodeService.selecctRskValtblSubjectSumCodeList(page,length,pageParam);
+    }
+    /**
+     * 获取所有明细查询
+     * <功能详细描述>
+     * @param id
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("findListDtl")
+    public List<RskValtblAssetSubMapDtlDto> findListDtl(@RequestBody Map<String, Object> param) {
+        return rskValAssetCodeService.findListDtl(param);
+    }
+
 }

@@ -697,9 +697,12 @@ public class VatDrawProcessorBService {
 
         Map<String, List<BookLatestInfoDto>> totalDataMap = listBookLatestInfotemp1.stream().collect(
                 JoyinCollectors.groupingBy(x ->x.getBookId()));
+
         for (String key : totalDataMap.keySet()) {
-            if(!(totalDataMap.get(key).contains(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue())
-                    ||totalDataMap.get(key).contains(DictCodeBaseSubjectNatrue.综合收益类利息调整.getValue()))){
+            List<BookLatestInfoDto> bookLatestInfoDtotemp1 = totalDataMap.get(key).stream().filter(
+                    item -> (item.getBaseSubjectNature().equals(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue())
+                            || item.getBaseSubjectNature().equals(DictCodeBaseSubjectNatrue.综合收益类利息调整.getValue()))).collect(Collectors.toList());
+            if(bookLatestInfoDtotemp1 == null || bookLatestInfoDtotemp1.isEmpty()){
                 listBookLatestInfotemp.addAll(totalDataMap.get(key));
             }
         }

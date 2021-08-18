@@ -189,4 +189,16 @@ public class FinStockInfoController {
         return finStockInfoService.getIsInWorkFlowReturnUser(param);
     }
 
+    /**
+     * 沪港通&深港通交易日历
+     * @param //counterType
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("getShOrZhCalendarId")
+    public List<SuggestDto> getShOrZhCalendarId(){
+        return finStockInfoService.getShOrZhCalendarId();
+    }
+
 }

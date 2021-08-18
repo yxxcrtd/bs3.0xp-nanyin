@@ -372,7 +372,6 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      * 取得 起息日
      * @return 起息日
      */
-    @NotEmpty(fieldName = "FinStockInfo002.vDate",groups={ValidateGroupEdit.class})//非空校验
     public Date getVdate() {
         return super.getVdate();
     }
@@ -437,7 +436,7 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      * 交易日历非空校验
      * @return
      */
-    @NotEmpty(fieldName = "FinStockInfo002.calendarId", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "FinStockInfo002.calendarId", groups = {ValidateGroupEdit.class})
     public String getCalendarId() {
         return super.getCalendarId();
     }
@@ -488,7 +487,7 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      * 是否沪港通或深港通
      * @return
      */
-    @NotEmpty(fieldName = "FinStockInfo002.shOrZh",groups={ValidateGroupEdit.class})//是否沪港通或深港通非空校验
+//    @NotEmpty(fieldName = "FinStockInfo002.shOrZh",groups={ValidateGroupEdit.class})//是否沪港通或深港通非空校验
 
     public String getShOrZh() {
         return shOrZh;

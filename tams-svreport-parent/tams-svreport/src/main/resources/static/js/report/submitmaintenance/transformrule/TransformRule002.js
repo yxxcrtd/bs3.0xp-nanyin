@@ -22,12 +22,9 @@ $(function() {
 		if ($("#orgField").val() == "" || $("#pinyin").val() == "") {
 			return;
 		} else {
-			var pinyinStr=$("#pinyin").val().trim();
 			var orgFieldStr=$("#orgField").val().trim();
-			var unicodeStr=ch2Unicdoe(orgFieldStr);
-			var targetField=pinyinStr+"["+unicodeStr+"]";
-			$("#fieldUnicode").attr("value",unicodeStr);
-			$("#targetField").attr("value",targetField);
+			ch2Unicdoe(orgFieldStr);
+
 		}
 	};
 	
@@ -43,17 +40,24 @@ $(function() {
 			return;
 		}
 		var unicode = '';
-		for (var i = 0; i <  str.length; i++) {
-			var temp = str.charAt(i);
-			unicode +=  temp.charCodeAt(0).toString(16);
-//			if(isChinese(temp)){
-//				unicode +=  temp.charCodeAt(0).toString(16);
-//			}
-//			else{
-//				unicode += temp;
-//			}
-		}
-		return preZeroFill(unicode);
+// 		for (var i = 0; i <  str.length; i++) {
+// 			var temp = str.charAt(i);
+// 			unicode +=  temp.charCodeAt(0).toString(16);
+// //			if(isChinese(temp)){
+// //				unicode +=  temp.charCodeAt(0).toString(16);
+// //			}
+// //			else{
+// //				unicode += temp;
+// //			}
+// 		}
+
+		Joyin.ajaxJson("ch2Unicdoe",str,function(result){
+			var pinyinStr=$("#pinyin").val().trim();
+			var  unicodeStr =  preZeroFill(result.fieldUnicode);
+			var targetField=pinyinStr+"["+unicodeStr+"]";
+			$("#fieldUnicode").attr("value",unicodeStr);
+			$("#targetField").attr("value",targetField);
+		})
 	};
 	
 	//补足长度

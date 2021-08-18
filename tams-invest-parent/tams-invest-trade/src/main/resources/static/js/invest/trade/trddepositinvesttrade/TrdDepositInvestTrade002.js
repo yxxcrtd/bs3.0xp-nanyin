@@ -307,19 +307,13 @@
 
                         if($('#ps').val() && $('#ps').val() != buy){
                             $("#isClean_div").show();
-                          //add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏start
-                            $("#intAmt_div").hide();
-                            //$("#intAmt").attr('disabled',false).trigger("change");
-                        }else{
-                        	$("#intAmt_div").show();                       	
+                           $("#intAmt").attr('disabled',false).trigger("change");
                         }
-                        //add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏end
                         $("#mdate_div").hide();
                         $("#termDays_div").hide();
                     }else {
                         $("#trdInvestPersonInfo002Dto_counterId").attr("disabled",false);
                         $("#isClean_div").hide();
-                        $("#intAmt_div").show();   
                         $("#intAmt").attr('disabled',true).trigger("change");
                         $("#mdate_div").show();
                         $("#termDays_div").show();
@@ -540,6 +534,9 @@
                             }else {
                                 $('#intAmt').val('');
                             }
+                            if ($('#finprodType').val() == 'D03'){
+                                 $('#intAmt').val('');
+                            }
                         });
                         //终止协议勾选时，本金金额不可编辑，等于资产可用持仓
                         $("#prinAmt").val($("#bottomAssetAmount").val());
@@ -564,13 +561,9 @@
             //如果是卖出并且资产类型是 活期存放
             if ($('#finprodType').val() == 'D03'){
                 $("#isClean_div").show();
-//add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏start
-                $("#intAmt_div").hide();
-               // $("#intAmt").attr('disabled',false).trigger("change");
-//add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏end
+                $("#intAmt").attr('disabled',false).trigger("change");
             }else {
                 $("#isClean_div").hide();
-                $("#intAmt_div").show();
                 $("#intAmt").attr('disabled',true).trigger("change");
             }
         }else{
@@ -580,7 +573,6 @@
             // <!-- 通道交易 新增 强成西 2019/03/26 end -->
             $('#Sale').css('display','none');
             $("#isClean_div").hide();
-            $("#intAmt_div").show();
             $("#intAmt").attr('disabled',true).trigger("change");
             $("#prinAmt").attr('disabled',false).trigger("change");
         }
@@ -811,24 +803,24 @@
                     if($('#ps').val() && $('#ps').val() == buy){
                     	 $('#intAmt').val(0).trigger('blur');
                          changeTradeAmtAndFee();
-                    }else{
-                    	
-                    	var param = {
-                                portfolioId:$('#portfolioId').val(),
-                                finprodMarketId:$('#finprodMarketId').val(),
-                                cDate:$('#tradeDate').val()
-                            };
-                            if(param.finprodMarketId != null && param.finprodMarketId != null &&
-                                param.portfolioId != '' && param.portfolioId != '' && param.cDate != null && param.cDate != ''
-                                && $("#prinAmt").val() && Number($("#prinAmt").val())>0){
-                                Joyin.ajaxJson(basePath+ "invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002/getTdyIntincexp", param,function(result){
-                                    $('#intAmt').val(Number(result)).trigger('blur');
-                                    changeTradeAmtAndFee();
-                                    // $('#tradeAmt').val(parseFloat(result.data)+parseFloat($('#prinAmt').val().valueOf())).trigger('blur');
-                                });
-                            }
-                    	
                     }
+//                    else{
+//                    	var param = {
+//                                portfolioId:$('#portfolioId').val(),
+//                                finprodMarketId:$('#finprodMarketId').val(),
+//                                cDate:$('#tradeDate').val()
+//                            };
+//                            if(param.finprodMarketId != null && param.finprodMarketId != null &&
+//                                param.portfolioId != '' && param.portfolioId != '' && param.cDate != null && param.cDate != ''
+//                                && $("#prinAmt").val() && Number($("#prinAmt").val())>0){
+//                                Joyin.ajaxJson(basePath+ "invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002/getTdyIntincexp", param,function(result){
+//                                    $('#intAmt').val(Number(result)).trigger('blur');
+//                                    changeTradeAmtAndFee();
+//                                    // $('#tradeAmt').val(parseFloat(result.data)+parseFloat($('#prinAmt').val().valueOf())).trigger('blur');
+//                                });
+//                            }
+//
+//                    }
                     
                 }
             }else {

@@ -249,6 +249,12 @@ public class EtrBoutRepo002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupEdit.class}) EtrBoutRepoDto dto, BindingResult result) {
+
+        AjaxResult ajax= commonCheck(result, dto.getOperateType());
+        if(ajax.getErrorList()!=null&&!ajax.getErrorList().isEmpty()){
+            return ajax;
+        }
+
         String confirmMsg = "";
         String changeLineMark = "<br/>";
         // 指令可用持仓软校验 by 赵东东 20200121 start

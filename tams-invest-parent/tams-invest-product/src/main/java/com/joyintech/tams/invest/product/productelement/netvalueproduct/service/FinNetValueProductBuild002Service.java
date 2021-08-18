@@ -5,6 +5,7 @@
 
 package com.joyintech.tams.invest.product.productelement.netvalueproduct.service;
 
+import com.google.common.collect.Maps;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.base.intf.DataDictItem;
@@ -40,6 +41,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.service.WorkFlowService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -122,6 +124,12 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
 
     @Autowired(required = false)
     private FinNetValueProductBuild002Service finNetValueProductBuild002Service;
+
+    /**
+     * 业务流程表service
+     */
+    @Autowired(required = false)
+    private WorkFlowService workflowService;
 
     /**
      * 处理其他信息（待处理的组合信息、费用信息）
@@ -238,7 +246,8 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
                     FundAccountInfoDto fundAccountInfo = new FundAccountInfoDto();
                     fundAccountInfo.setPortfolioId(ptlPortfolioInfoDto.getPortfolioId());
                     fundAccountInfo.setAcctType(temp_account.getAcctType());
-                    fundAccountInfo.setAcctNo(temp_account.getAcctNo().concat("_" + temp_account.getCcy()));
+                    //fundAccountInfo.setAcctNo(temp_account.getAcctNo().concat("_" + temp_account.getCcy()));
+                    fundAccountInfo.setAcctNo(temp_account.getAcctNo());
                     fundAccountInfo.setAcctName(temp_account.getAcctName());
                     fundAccountInfo.setBankDep(temp_account.getBankDep());
                     fundAccountInfo.setLargePayno(temp_account.getLargePayno());
@@ -886,6 +895,18 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
 
     @Override
     public void doUpdate(FinNetValueProductBuild002Dto entity) {
+        Map<String, Object> map = Maps.newConcurrentMap();
+        map.put("title",this.getMessage("FinProductBuild002.finprodMarketId") + "("
+                + entity.getFinprodMarketId() + ")"
+                + this.getMessage("FinProductBuild002.finprodAbbr") + "("
+                + entity.getFinprodAbbr() + ")" + this.getMessage("FinProductBuild002.vdate")
+                + "(" + DateUtil.format(entity.getVdate()) + ")"
+                + this.getMessage("FinProductBuild002.mdate") + "("
+                + DateUtil.format(entity.getMdate()) + ")");
+        map.put("workFlowId",entity.getWorkflowId());
+        map.put("updateUser", LoginUserUtil.getUserName());
+        map.put("updateTime",DateUtil.now());
+        workflowService.updateTitle(map);
         updateFiles(entity);
     }
 

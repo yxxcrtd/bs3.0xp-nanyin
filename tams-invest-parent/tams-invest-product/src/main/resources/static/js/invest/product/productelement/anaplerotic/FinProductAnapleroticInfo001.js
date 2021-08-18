@@ -32,7 +32,8 @@ $(function() {
         cellMinWidth : 200,
         cols:[
              {field:'anapleroticId', visible : false} //回补代码
-            ,{field:'finprodId', title: 'FinProductAnapleroticInfo.finprodId', width:200, sort : true} //产品代码
+            ,{field:'finprodId', title: 'FinProductAnapleroticInfo.finprodId',visible: false} //产品代码
+            ,{field:'finprodMarketId', title: 'FinProductAnapleroticInfo.finprodId', width:200, sort : true} //页面显示的产品代码
             ,{field:'finprodAbbr', title: 'FinProductAnapleroticInfo.finprodAbbr',sort : true}//产品简称
             ,{field:'prodStyle', title: 'BussFinProductAnapleroticInfo.prodStyle',sort : true}//适用款型
             ,{field:'effDateStr', title: 'FinProductAnapleroticInfo.effDate',sort : true,sortField:'effDate'}//生效日
@@ -45,7 +46,7 @@ $(function() {
             , {field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}//编辑和删除事件
         ],
         dblclick:function(table, data) {
-            Joyin.dialog(JoyinUtil.getLabel("FinProductAnapleroticInfo002.update"), JoyinUtil.getRealPath('invest/product/productelement/anaplerotic/FinProductAnapleroticInfo002/init'),
+            Joyin.dialog(JoyinUtil.getLabel("FinProductAnapleroticInfo002.reference"), JoyinUtil.getRealPath('invest/product/productelement/anaplerotic/FinProductAnapleroticInfo002/init'),
                     "98%", "95%", {pageModel:PAGE_MODEL_REFERENCE, anapleroticId : data.anapleroticId,effDateStr:data.effDateStr},function(){table.reload()})
         },
     });

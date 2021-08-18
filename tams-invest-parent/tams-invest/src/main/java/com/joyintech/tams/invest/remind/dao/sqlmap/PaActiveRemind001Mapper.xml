@@ -469,6 +469,12 @@
 		INNER JOIN FIN_CASH_PLAN T2
 		ON T1.FINPROD_ID = T2.FINPROD_ID
 		AND T1.FINPROD_TYPE2 = T2.FINPROD_TYPE2
+		left join (
+			select sum(psp.amount) amount, psp.finprod_id
+			  from ptl_sec_position psp
+			 where psp.cdate = #{quaryDate}
+			 group by psp.finprod_id)pposition
+		  on pposition.finprod_id = T1.FINPROD_ID
 		<!-- 关联配置表查出配置 -->
 		LEFT JOIN REMINDER_SET
 		ON REMINDER_SET.REM_TYPE = #{R2S1}
@@ -484,6 +490,7 @@
 		<!--add  by liupengfei for 多级法人改造 E-->
 		<where>
 			AND T2.FINPROD_TYPE2 = #{finType_F18}
+			AND pposition.amount > 0
 			AND T2.MDATE-5 &lt;= #{quaryDate}+REMINDER_SET.DAYS
 			AND T2.MDATE-5 &gt;= #{quaryDate}
 			AND T2.CASH_TYPE in
@@ -525,6 +532,12 @@
 		INNER JOIN FIN_CASH_PLAN T2
 		ON T1.FINPROD_ID = T2.FINPROD_ID
 		AND T1.FINPROD_TYPE2 = T2.FINPROD_TYPE2
+		left join (
+			select sum(psp.amount) amount, psp.finprod_id
+			from ptl_sec_position psp
+			where psp.cdate = #{quaryDate}
+			group by psp.finprod_id)pposition
+		on pposition.finprod_id = T1.FINPROD_ID
 		<!-- 关联配置表查出配置 -->
 		LEFT JOIN REMINDER_SET
 		ON REMINDER_SET.REM_TYPE = #{R2S2}
@@ -540,6 +553,7 @@
 		<!--add  by liupengfei for 多级法人改造 E-->
 		<where>
 			AND T2.FINPROD_TYPE2 = #{finType_F18}
+			AND pposition.amount > 0
 			AND add_months(T2.MDATE,-1) &lt;= #{quaryDate}+REMINDER_SET.DAYS
 			AND add_months(T2.MDATE,-1) &gt;= #{quaryDate}
 			AND T2.CASH_TYPE in
@@ -581,6 +595,12 @@
 		INNER JOIN FIN_CASH_PLAN T2
 		ON T1.FINPROD_ID = T2.FINPROD_ID
 		AND T1.FINPROD_TYPE2 = T2.FINPROD_TYPE2
+		left join (
+			select sum(psp.amount) amount, psp.finprod_id
+			from ptl_sec_position psp
+			where psp.cdate = #{quaryDate}
+			group by psp.finprod_id)pposition
+		on pposition.finprod_id = T1.FINPROD_ID
 		<!-- 关联配置表查出配置 -->
 		LEFT JOIN REMINDER_SET
 		ON REMINDER_SET.REM_TYPE = #{R2S3}
@@ -596,6 +616,7 @@
 		<!--add  by liupengfei for 多级法人改造 E-->
 		<where>
 			AND T2.FINPROD_TYPE2 = #{finType_F18}
+			AND pposition.amount > 0
 			AND add_months(T2.MDATE,-3) &lt;= #{quaryDate}+REMINDER_SET.DAYS
 			AND add_months(T2.MDATE,-3) &gt;= #{quaryDate}
 			AND T2.CASH_TYPE in
@@ -637,6 +658,12 @@
 		INNER JOIN FIN_CASH_PLAN T2
 		ON T1.FINPROD_ID = T2.FINPROD_ID
 		AND T1.FINPROD_TYPE2 = T2.FINPROD_TYPE2
+		left join (
+			select sum(psp.amount) amount, psp.finprod_id
+			from ptl_sec_position psp
+			where psp.cdate = #{quaryDate}
+			group by psp.finprod_id)pposition
+		on pposition.finprod_id = T1.FINPROD_ID
 		<!-- 关联配置表查出配置 -->
 		LEFT JOIN REMINDER_SET
 		ON REMINDER_SET.REM_TYPE = #{R2S4}
@@ -652,6 +679,7 @@
 		<!--add  by liupengfei for 多级法人改造 E-->
 		<where>
 			AND T2.FINPROD_TYPE2 = #{finType_F17}
+			AND pposition.amount > 0
 			AND T2.MDATE-5 &lt;= #{quaryDate}+REMINDER_SET.DAYS
 			AND T2.MDATE-5 &gt;= #{quaryDate}
 			AND T2.CASH_TYPE in
@@ -693,6 +721,12 @@
 		INNER JOIN FIN_CASH_PLAN T2
 		ON T1.FINPROD_ID = T2.FINPROD_ID
 		AND T1.FINPROD_TYPE2 = T2.FINPROD_TYPE2
+		left join (
+			select sum(psp.amount) amount, psp.finprod_id
+			from ptl_sec_position psp
+			where psp.cdate = #{quaryDate}
+			group by psp.finprod_id)pposition
+		on pposition.finprod_id = T1.FINPROD_ID
 		<!-- 关联配置表查出配置 -->
 		LEFT JOIN REMINDER_SET
 		ON REMINDER_SET.REM_TYPE = #{R2S5}
@@ -708,6 +742,7 @@
 		<!--add  by liupengfei for 多级法人改造 E-->
 		<where>
 			AND T2.FINPROD_TYPE2 = #{finType_F17}
+			AND pposition.amount > 0
 			AND add_months(T2.MDATE,-1) &lt;= #{quaryDate}+REMINDER_SET.DAYS
 			AND add_months(T2.MDATE,-1) &gt;= #{quaryDate}
 			AND T2.CASH_TYPE in
@@ -749,6 +784,12 @@
 		INNER JOIN FIN_CASH_PLAN T2
 		ON T1.FINPROD_ID = T2.FINPROD_ID
 		AND T1.FINPROD_TYPE2 = T2.FINPROD_TYPE2
+		left join (
+			select sum(psp.amount) amount, psp.finprod_id
+			from ptl_sec_position psp
+			where psp.cdate = #{quaryDate}
+			group by psp.finprod_id)pposition
+		on pposition.finprod_id = T1.FINPROD_ID
 		<!-- 关联配置表查出配置 -->
 		LEFT JOIN REMINDER_SET
 		ON REMINDER_SET.REM_TYPE = #{R2S6}
@@ -764,6 +805,7 @@
 		<!--add  by liupengfei for 多级法人改造 E-->
 		<where>
 			AND T2.FINPROD_TYPE2 = #{finType_F17}
+			AND pposition.amount > 0
 			AND add_months(T2.MDATE,-3) &lt;= #{quaryDate}+REMINDER_SET.DAYS
 			AND add_months(T2.MDATE,-3) &gt;= #{quaryDate}
 			AND T2.CASH_TYPE in

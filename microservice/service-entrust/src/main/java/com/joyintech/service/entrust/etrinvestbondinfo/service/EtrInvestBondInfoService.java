@@ -693,4 +693,14 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
         Date vDate = etrInvestBondInfoMapper.getBondVDate(finprodMarketId);
         return vDate;
     }
+
+    /**
+     * 查询平台日前摊销净价
+     *
+     * @author yangxiaoteng
+     */
+    public BigDecimal getLastNetAmortizationPrice(Map<String, Object> param) {
+        return etrInvestBondInfoMapper.getLastNetAmortizationPrice(param);
+    }
+
 }

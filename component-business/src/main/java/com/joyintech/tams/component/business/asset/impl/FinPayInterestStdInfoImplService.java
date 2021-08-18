@@ -34,9 +34,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 〈一句话功能简述〉
@@ -231,6 +229,21 @@ public class FinPayInterestStdInfoImplService extends BaseService<FinPayInterest
              // 仅计算付息区间利息
             scheList = InterestScheduleCalReset.interestScheduleCalA(scheList, scai, invRepayList, null,
                     rateList, is, holidayList,platDate, null, FinCashPlanDetailDto.class);
+            //排序
+            Collections.sort(scheList, new Comparator<FinCashPlanDto>() {
+                @Override
+                public int compare(FinCashPlanDto o1, FinCashPlanDto o2) {
+                    return o1.getVdate().compareTo(o2.getVdate());
+                }
+            });
+            for(int i = 0; i<scheList.size();i++) {
+                if(i == 0){
+                    scheList.get(i).setMdateTerm(scheList.get(i).getMdate());
+                }else{
+                    scheList.get(i).setVdateTerm(scheList.get(i-1).getMdateTerm());
+                    scheList.get(i).setMdateTerm(scheList.get(i).getMdate());
+                }
+            }
         }else{
             //重新生成计划
             //前台传入的交易中的付息计划
@@ -265,6 +278,20 @@ public class FinPayInterestStdInfoImplService extends BaseService<FinPayInterest
             //计算付息区间利息
             scheList = InterestScheduleCal.interestScheduleCalA(scheList, scai, invRepayList, null,
                 rateList, is, holidayList, scai.getAmount(), FinCashPlanDetailDto.class);
+            //排序
+            Collections.sort(scheList, new Comparator<FinCashPlanDto>() {
+                @Override
+                public int compare(FinCashPlanDto o1, FinCashPlanDto o2) {
+                    return o2.getVdate().compareTo(o1.getVdate());
+                }
+            });
+            //最后一条付息计划
+            FinCashPlanDto finCashPlanDtoLast =scheList.get(0);
+            if(finCashPlanDtoLast !=null
+                    && finCashPlanDtoLast.getMdate() !=null && finCashPlanDtoLast.getMdateTerm() !=null
+                    &&finCashPlanDtoLast.getMdate().compareTo(finCashPlanDtoLast.getMdateTerm()) < 0){
+                scheList.get(0).setMdateTerm(finCashPlanDtoLast.getMdate());
+            }
         }
         //计算完整周期天数，年付息次数
         for(FinCashPlanDto entity : scheList){

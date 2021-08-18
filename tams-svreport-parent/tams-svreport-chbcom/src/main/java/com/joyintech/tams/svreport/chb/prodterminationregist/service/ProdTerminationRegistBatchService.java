@@ -415,15 +415,7 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
         }
         //数据日期
         result.setStatusDate(executeDate);
-        // 报送截止日生成
-        //当前批次报送时点集合
-        Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
-        List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品终止登记.getValue(),
-                DictCodeListExt2.报送数据状态_新建.getValue(),dateMap, endDate);
-        if (!StringUtil.isEmptyList(dateList)) {
-            result.setChbSubmitDeadline(dateList.get(0));
-            result.setSubmitDeadline(dateList.get(1));
-        }
+
 
         //-----add by lingxq on 2021-06-07 for 费用计算后保留两位小数------>>>>>
         setFeeScale(result);
@@ -432,6 +424,19 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
         // add by zhangliang 20201109 数据流向处理 ===================================start
         result.setStatus(arg0.getStatus());
         // add by zhangliang 20201109 数据流向处理 ===================================end
+
+
+        // 报送截止日生成
+        //当前批次报送时点集合
+        Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+        List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品终止登记.getValue(),
+                arg0.getStatus(),dateMap, endDate);
+        if (!StringUtil.isEmptyList(dateList)) {
+            result.setChbSubmitDeadline(dateList.get(0));
+            result.setSubmitDeadline(dateList.get(1));
+        }
+
+
         return result;
     }
 
@@ -509,23 +514,23 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
         //-------费用因四舍五入差一分导致check不过进行倒减处理-------<<<<<<<
     }
 
-    public static void main(String[] args) {
-        BigDecimal A = new BigDecimal("90");
-        BigDecimal B = new BigDecimal("20");
-        BigDecimal C = new BigDecimal("140");
-        BigDecimal D = new BigDecimal("240");
-        BigDecimal E = new BigDecimal("50");
-        List<BigDecimal> tmpList = new ArrayList<>();
-        tmpList.add(A);
-        tmpList.add(B);
-        tmpList.add(C);
-        tmpList.add(D);
-        tmpList.add(E);
-        Collections.sort(tmpList);
-        tmpList.forEach(x-> {            
-            logger.info(x.toString());
-        });
-    }
+//    public static void main(String[] args) {
+//        BigDecimal A = new BigDecimal("90");
+//        BigDecimal B = new BigDecimal("20");
+//        BigDecimal C = new BigDecimal("140");
+//        BigDecimal D = new BigDecimal("240");
+//        BigDecimal E = new BigDecimal("50");
+//        List<BigDecimal> tmpList = new ArrayList<>();
+//        tmpList.add(A);
+//        tmpList.add(B);
+//        tmpList.add(C);
+//        tmpList.add(D);
+//        tmpList.add(E);
+//        Collections.sort(tmpList);
+//        tmpList.forEach(x-> {
+//            logger.info(x.toString());
+//        });
+//    }
 
 
     /**

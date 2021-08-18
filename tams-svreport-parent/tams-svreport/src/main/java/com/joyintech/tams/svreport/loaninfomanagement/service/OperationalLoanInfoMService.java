@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.loaninfomanagement.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,8 +59,8 @@ public class OperationalLoanInfoMService extends BaseService<OperationalLoanInfo
 	 * @param map
 	 * @return
 	 */
-	public List<SelectOptionDto> queryPbcAssetCode(Map<String, Object> map){
-		return restTemplate.postForList(
+	public Page<SelectOptionDto> queryPbcAssetCode(Map<String, Object> map){
+		return restTemplate.postForPage(
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalLoanInfo/queryPbcAssetCode", map, 
 				SelectOptionDto.class);
 	}
@@ -99,8 +100,8 @@ public class OperationalLoanInfoMService extends BaseService<OperationalLoanInfo
      * @param param Map<String,Object>
      * @return List<SelectOptionDto>
      */
-    public List<SelectOptionDto> getAddressSelectOption(Map<String,Object> param) {
-        return restTemplate.postForList(
+    public Page<SelectOptionDto> getAddressSelectOption(Map<String,Object> param) {
+        return restTemplate.postForPage(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalLoanInfo/getAddressSelectOption",
             param, SelectOptionDto.class);
     }

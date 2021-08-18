@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.pbc.report.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,11 @@ public interface PbcMonthReportMapper {
     
     void updateInterfSubmitAndSeqBatch(@Param("sendStatus")String sendStatus, @Param("registList")List<PbcMonthReport> registList
     		,@Param("submitadd")String submitadd);
-    
+
+    void updateDoMannultSendZipDatFile(@Param("registList")List<PbcMonthReport> registList);
+
+    void updateCancelMannultSendZipDatFile(@Param("registList")List<PbcMonthReport> registList);
+
     Integer cancelMannultRegist(List<PbcMonthReport> list);
     
     /**
@@ -52,6 +57,7 @@ public interface PbcMonthReportMapper {
     List<PbcMonthReport> selectSendDataByTermId(String termid);
     
     PbcMonthReport selectByTermId(String termid);
+
     /**
      * 功能:将已报送数据移入履历表
      * @since 1.7.0
@@ -79,6 +85,7 @@ public interface PbcMonthReportMapper {
      * @since 1.0
      */
     void insertReportDataFromHis(@Param("registList")List<PbcMonthReport> registList);
+
     /**
      * 功能:删除履历表中的最新已报送数据
      * @since 1.7.0
@@ -137,6 +144,14 @@ public interface PbcMonthReportMapper {
     int insertOnePrd(PbcMonthReport record);
     
     List<String> selectRegistSeqnoList(@Param("list")List<PbcMonthReport> registList,@Param("flag")String flag);
+
+    List<PbcMonthReport> selectTermIdList(@Param("list")List<String> statusList,@Param("orgCode")String orgCode);
+
+
     List<String> findProductByName(Map<String,Object> map);
+
+
+    int updatePbcReportSendInfo(@Param("sendStatus")String sendStatus,@Param("submitTime") Date submitTime
+            ,@Param("submitFeedbackStatus")String submitFeedbackStatus,@Param("registList")List<String> registList);
 
 }

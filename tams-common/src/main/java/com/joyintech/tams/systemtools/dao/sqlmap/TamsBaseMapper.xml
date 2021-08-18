@@ -29,6 +29,17 @@
     	where 
     	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </select>
+
+    <!-- 根据机构代码和用户id查询用户的登记银行编码 -->
+    <select id="selectPbcBankCode" parameterType="java.lang.String" resultType="java.lang.String">
+    	select
+    	corb.PBC_BANK_CODE
+    	from CHB_ORG_REGIST_BANK_CODE corb
+    	where
+    	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
+
     <select id="selectBankCodeName" parameterType="java.lang.String" resultType="java.lang.String">
         select
         SI.INSTITUTION_NAME

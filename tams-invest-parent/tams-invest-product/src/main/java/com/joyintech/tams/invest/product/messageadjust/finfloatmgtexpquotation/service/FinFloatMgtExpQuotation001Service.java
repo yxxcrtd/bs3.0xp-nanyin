@@ -148,7 +148,8 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
         if(!StringUtil.isNotEmpty(param.get("initValue"))){
             param.put("userId", SecurityUtil.getLoginUser().getUserName());
         }
-        param.put("initValue", null);
+        //注释下面一行代码，使得双击后明细页面能展示产品信息。
+//      param.put("initValue", null);
         return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME
                 + "/FinFloatMgtExpQuotation/getFinprodId",param,SelectOptionDto.class);      
     }

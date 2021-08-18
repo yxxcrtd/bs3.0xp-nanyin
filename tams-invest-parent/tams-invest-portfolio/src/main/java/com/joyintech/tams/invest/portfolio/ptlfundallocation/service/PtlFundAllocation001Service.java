@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.portfolio.ptlfundallocation.service;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -277,7 +278,7 @@ public class PtlFundAllocation001Service extends CommonExportService<PtlFundAllo
      * 导入
      * @param fileName
      */
-    public Map<String,Object> importData(String fileName) throws Exception {
+    public Map<String,Object> importData(String fileName) throws FileNotFoundException {
         Map<String,Object> result = new HashMap<>();
         // 检查文件名是否为空
         List<ValidMessage> errorMessage = new ArrayList<ValidMessage>();

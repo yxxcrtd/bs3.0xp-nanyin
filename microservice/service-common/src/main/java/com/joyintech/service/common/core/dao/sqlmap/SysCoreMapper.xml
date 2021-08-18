@@ -1093,4 +1093,21 @@ SELECT F.FINPROD_NAME,
             #{countrycode,jdbcType=VARCHAR},sysdate,#{createdept,jdbcType=VARCHAR},sysdate,#{updateuser,jdbcType=VARCHAR},#{createuser,jdbcType=VARCHAR},#{cashflowcfg,jdbcType=VARCHAR}
             ,#{cashflowcfg2,jdbcType=VARCHAR})
     </insert>
+
+	<select id = "isTransInAssetTwo" resultType="java.lang.Integer">
+		SELECT
+		SUM (num)
+		FROM(
+		SELECT COUNT(TRADE_ID) num
+		FROM TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId}
+		AND PS NOT IN ('T09','T08','T07','T27','T30','T33')
+		UNION ALL
+		SELECT COUNT(TRADE_ID) num
+		FROM WFL_TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId}
+		AND PS NOT IN ('T09','T08','T07','T27','T30','T33')
+		)
+
+	</select>
 </mapper>

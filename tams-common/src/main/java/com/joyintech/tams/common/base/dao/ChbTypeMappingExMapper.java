@@ -3,7 +3,10 @@ package com.joyintech.tams.common.base.dao;
 import java.util.List;
 
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import javax.annotation.Resource;
 
 @Repository
 public interface ChbTypeMappingExMapper {
@@ -22,4 +25,9 @@ public interface ChbTypeMappingExMapper {
     List<ChbTypeMappingEx> select();
     
     List<ChbTypeMappingEx> selectByMappingcode(String mappingcode);
+
+    List<ChbTypeMappingEx> selectByMappingname(String mappingname);
+
+    ChbTypeMappingEx selectBySrcfieldSrcfield1(@Param("srcfield") String srcfield,@Param("srcfield1")String srcfield1);
+
 }

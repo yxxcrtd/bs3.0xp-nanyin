@@ -271,10 +271,10 @@
 									</div>
 								</div>
 								<div class="layui-form-item">
-									<div class="form-inline-wrap"  id="intAmt_div" >
+									<div class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap" data-th-utext="#{TrdDepositInvestTrade002.intAmt}">应计利息总额</label>
 										<div class="layui-input-inline input-inline">
-											<input type="text" th:id="intAmt" th:name="intAmt" required th:value="${entity?.intAmt}" maxlength="16"
+											<input type="text" th:id="intAmt" th:name="intAmt" th:value="${entity?.intAmt}" maxlength="16"
 												   data-textrange="2" data-fixtype="2" class="layui-input form-input text-number hidden"
 												   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"/>
 										</div>
@@ -319,8 +319,10 @@
 						<!--</div> -->
 					<!--</div> -->
 					<!-- 附件信息 -->
+<!--					<div name="fileArray" class="page-component" th:data-path="@{/component/core/FileCommon/init}"-->
+<!--						 th:data-params="|{entityName: 'fileArray', businessId: '${TRADESTATU03=='03' ? (PTRADEID?:'') : (entity?.tradeId ?: '') } '}|"></div>-->
 					<div name="fileArray" class="page-component" th:data-path="@{/component/core/FileCommon/init}"
-						 th:data-params="|{entityName: 'fileArray', businessId: '${TRADESTATU03=='03' ? (PTRADEID?:'') : (tradeId ?: '') } '}|"></div>
+						 th:data-params="|{entityName: 'fileArray', businessId: '${TRADESTATU03=='03' ? (PTRADEID?:'') : (entity?.tradeId ?: '') } '}|"></div>
 					<div class="pro-module-wrap">
 						<div class="pro-module">
 							<h3 class="pro-module-title"><span class="title-des">备注</span><i class="iconfont icon-arrow-down pro-down-icon"></i></h3>

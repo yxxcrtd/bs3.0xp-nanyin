@@ -66,29 +66,31 @@
 		                          marketValueRatio,gavInfo.portfolioId,ppvInfo.tdyAssetValue,gavInfo.portfolioId1
 		                     from (select psv.CDATE cdate,psv.PORTFOLIO_ID portfolioId,psv.FINPROD_ID finprodId,
 		                                  psv.MARKET_VALUE marketValue,psv.SHARE_AMT shareAmt,psv.DSC_COST_AMT dscCostAmt,
-		                                  pp.PORTFOLIO_NAME portFolioName,fp.FINPROD_MARKET_ID finprodMarketId,
-		                                  fp.FINPROD_ABBR finprodAbbr,
+		                                  pp.PORTFOLIO_NAME portFolioName,NVL(fp.FINPROD_MARKET_ID,NVL(RAI.ASSET_CODE,ATD.FINPROD_ID)) finprodMarketId,
+										  NVL(fp.FINPROD_ABBR,RAI.ASSET_NAME) finprodAbbr,
 										  pp.PORTFOLIO_ID portfolioId1
 		                             from PTL_SEC_PIERCE_VALUTION psv
-		                       inner join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
-		                       inner join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
-		                    <!--   add  by yujiaping 2020-11-24 ZGBUGTWO-244【单一资产持仓分析】改为不可以查询到通道的信息start --> 
-		                       and fp.FINPROD_TYPE2 != 'F28' and fp.FINPROD_TYPE2 is not null
-		                    <!--   add  by yujiaping 2020-11-24 ZGBUGTWO-244【单一资产持仓分析】改为不可以查询到通道的信息end -->
-		                            where 1=1
-		                            <if test="finprodIdList != null and finprodIdList.size()>0">
-		                               AND fp.FINPROD_MARKET_ID IN
-		                               <foreach collection="finprodIdList" item="item" separator="," open="(" close =")">
-			                            #{item}
-		                               </foreach>
-	                                </if>
-									<if test="searchDate != null and searchDate != ''">
-										and to_char(psv.CDATE,'yyyy-mm-dd') = #{searchDate}
-									</if>
-		                            <!--<if test="searchDateStart != null and searchDateStart != ''">
-			                            AND (psv.CDATE BETWEEN TO_DATE(#{searchDateStart},'YYYY-MM-DD')
-			                                 AND TO_DATE(#{searchDateEnd},'YYYY-MM-DD'))
-		                            </if>-->
+									 LEFT join RSK_ASSET_INFO RAI
+									   	ON psv.FINPROD_ID = RAI.ASSET_CODE
+									 LEFT JOIN ASSET_TARGET_DB ATD
+									 ON psv.CDATE = ATD.CDATE
+									 AND psv.PORTFOLIO_ID = ATD.PORTFOLIO_ID
+									 AND psv.FINPROD_ID = ATD.FINPROD_ID
+									 and ATD.IS_PERNE = '03'
+								   inner join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
+								   LEFT join FIN_PRODUCT fp on fp.FINPROD_ID=psv.FINPROD_ID
+										where 1=1
+										and ((fp.FINPROD_TYPE2 is not null and fp.FINPROD_TYPE2 != 'F28') OR RAI.ORG_ASSET_TYPE1 is NOT NULL
+											OR ATD.PINAN_ASSET_TYPE = 'F07' OR ATD.PINAN_ASSET_TYPE = 'F10')
+										<if test="finprodIdList != null and finprodIdList.size()>0">
+										   AND fp.FINPROD_MARKET_ID IN
+										   <foreach collection="finprodIdList" item="item" separator="," open="(" close =")">
+											#{item}
+										   </foreach>
+										</if>
+										<if test="searchDate != null and searchDate != ''">
+											and to_char(psv.CDATE,'yyyy-mm-dd') = #{searchDate}
+										</if>
 		                          )gavInfo
 		                left join (select ppv.CDATE cdate,ppv.PORTFOLIO_ID portfolioId,nvl(ppv.TDY_ASSET_VALUE,0) tdyAssetValue
 		                             from PTL_PORTFOLIO_VALUATION ppv
@@ -96,10 +98,6 @@
 									<if test="searchDate != null and searchDate != ''">
 										and to_char(ppv.CDATE,'yyyy-mm-dd')= #{searchDate}
 									</if>
-		                            <!--<if test="searchDateStart != null and searchDateStart != ''">
-			                          AND (ppv.CDATE BETWEEN TO_DATE(#{searchDateStart},'YYYY-MM-DD')
-			                               AND TO_DATE(#{searchDateEnd},'YYYY-MM-DD'))
-		                            </if>-->
 		                           )ppvInfo on ppvInfo.portfolioId=gavInfo.portfolioId and ppvInfo.cdate=gavInfo.cdate
 		                    where ppvInfo.tdyAssetValue !=0
 		)
@@ -248,7 +246,7 @@
 				</foreach>
 			</if>
 			) assetHold1
-			WHERE NVL(assetHold1.shareAmt,0)!=0
+			WHERE decode(NVL(assetHold1.shareAmt,0),0,NVL(assetHold1.marketValue,0),NVL(assetHold1.shareAmt,0)) !=0
 			group by assetHold1.finprodMarketId,assetHold1.finprodAbbr
 		</if>
 		<if test="parentId != null and parentId neq 'root'">
@@ -270,7 +268,8 @@
 				</foreach>
 			</if>
 			) assetHold1
-			where assetHold1.finprodMarketId = #{parentId} AND NVL(assetHold1.shareAmt,0)!=0
+			where assetHold1.finprodMarketId = #{parentId}
+			AND decode(NVL(assetHold1.shareAmt,0),0,NVl(assetHold1.marketValue,0),0) !=0
 		</if>
 		<if test="parentId == null or parentId == ''">
 			select assetHold1.finprodMarketId,assetHold1.finprodAbbr,null portFolioName,sum(assetHold1.marketValue) as marketValue,

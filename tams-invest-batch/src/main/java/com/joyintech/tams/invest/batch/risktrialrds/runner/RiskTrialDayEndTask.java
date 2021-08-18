@@ -1,10 +1,13 @@
 package com.joyintech.tams.invest.batch.risktrialrds.runner;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.invest.common.risktrialrds.dict.LogLvl;
@@ -88,7 +91,7 @@ public class RiskTrialDayEndTask extends BatchBaseService{
 
     @Override
     public JobExecution execute() throws BatchException {
-    	JobExecution result = new JobExecution(1l);
+        JobExecution result = new JobExecution(1l);
         result.setStatus(BatchStatus.FAILED);
         SysBatchExecInfo batchExecuteInfo = this.getBatchExecuteInfo();
         if (batchExecuteInfo == null) {
@@ -99,24 +102,72 @@ public class RiskTrialDayEndTask extends BatchBaseService{
         // 设置此task的序列任务公用的params参数
         Map<String, Object> params = new HashMap<>();
         try{
-	        params.put(BatchConstant.BATCH_INFO, batchExecuteInfo);
-	        if(null!=batchExecuteInfo&&null!=batchExecuteInfo.getExecuteDate()&&!StringUtil.equals("0",batchExecuteInfo.getStartMode())){
-	            params.put(BatchConstant.PLATE_DATE, batchExecuteInfo.getExecuteDate());
-	        }
-	        else{
-	            params.put(BatchConstant.PLATE_DATE, platformDateService.getSysDate(batchExecuteInfo.getCreateUser()));
-	        }
-	        params.put(Const.PROD_LIST,this.getProductIdList());
-	        params.put(Const.SUP_FREQUENCY, BussinessDictCodeListRds.监督频率_日终.getValue());
-	        List<RiskTrialDayTimeReaderResult> readerList=step1Reader.execute(params);
-	        List<RiskTrialDayTimeResult> processList=step1Processor.execute(readerList,params);
-	        step1Writer.execute(processList, params);
-	        result.setStatus(BatchStatus.COMPLETED);
-	    }
-	    catch (Exception e) {
-	        logger.error(e.getMessage(),e);
+            params.put(BatchConstant.BATCH_INFO, batchExecuteInfo);
+            if(null!=batchExecuteInfo&&null!=batchExecuteInfo.getExecuteDate()&&!StringUtil.equals("0",batchExecuteInfo.getStartMode())){
+                params.put(BatchConstant.PLATE_DATE, batchExecuteInfo.getExecuteDate());
+            }
+            else{
+                params.put(BatchConstant.PLATE_DATE, platformDateService.getSysDate());
+            }
+            //add by lpf for 日终指标计算 S 将产品分为指定日期范围内的导入估值表 和没导入估值表的产品
+            Date maxDate = (Date) params.get(BatchConstant.PLATE_DATE);
+            Date minDate = maxDate;
+            String deptCode = batchExecuteInfo.getCreateUser() != null? MultilevelDataAuthorityUtil.getOrganizationCode(batchExecuteInfo.getCreateUser()):null;
+            List<Map<String,Object>> importValTableProdList = step1Reader.selectImportValTableProdList(maxDate,this.getProductIdList(),deptCode);
+            List<String> importProdList = new ArrayList<>();
+            List<String> unImportProdList = new ArrayList<>();
+            if(!StringUtil.isEmptyList(importValTableProdList)){
+                for (Map<String,Object> entry:importValTableProdList) {
+                    //导入了估值表的产品寻找最小跑批日
+                    if(StringUtil.isNotEmpty(entry.get("valDate"))){
+                        if(minDate.compareTo((Date)entry.get("valDate"))>0){
+                            minDate = (Date)entry.get("valDate");
+                        }
+                        importProdList.add((String)entry.get("finprodId"));
+                    }
+                    else {
+                        unImportProdList.add((String)entry.get("finprodId"));
+                    }
+                }
+            }
+
+            params.put(Const.SUP_FREQUENCY, BussinessDictCodeListRds.监督频率_日终.getValue());
+            //未导入估值表的产品仅跑跑批日当日
+            if(!StringUtil.isEmptyList(unImportProdList)){
+                params.put(Const.PROD_LIST,unImportProdList);
+                List<RiskTrialDayTimeReaderResult> readerList=step1Reader.execute(params);
+                List<RiskTrialDayTimeResult> processList=step1Processor.execute(readerList,params);
+                step1Writer.execute(processList, params);
+            }
+            //导入估值表的产品循环最小跑批日到当前跑批日
+            if(!StringUtil.isEmptyList(importProdList)){
+                Date currentDate = minDate;
+                for(int i = 0; i<= DateUtil.getBetweenDayNumber(minDate,maxDate); i++){
+                    params.put(Const.PROD_LIST,importProdList);
+                    params.put(BatchConstant.PLATE_DATE,currentDate);
+                    List<RiskTrialDayTimeReaderResult> readerList=step1Reader.execute(params);
+                    List<RiskTrialDayTimeResult> processList=step1Processor.execute(readerList,params);
+                    step1Writer.execute(processList, params);
+                    currentDate = DateUtil.addDay(currentDate,1);
+                }
+            }
+            //add by lpf for 日终指标计算改造 E
+//	        params.put(Const.PROD_LIST,this.getProductIdList());
+//	        params.put(Const.SUP_FREQUENCY, BussinessDictCodeListRds.监督频率_日终.getValue());
+//	        List<RiskTrialDayTimeReaderResult> readerList=step1Reader.execute(params);
+//	        List<RiskTrialDayTimeResult> processList=step1Processor.execute(readerList,params);
+//	        step1Writer.execute(processList, params);
+//            Map<String,List<Date>> valueDateMap = step1Reader.getBeforeValueDates(params);
+//            if (StringUtil.isNotEmpty(valueDateMap)){
+//                processList=step1Processor.execute(readerList,params,valueDateMap);
+//                step1Writer.execute(processList, params);
+//            }
+            result.setStatus(BatchStatus.COMPLETED);
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage(),e);
             riskRedisInitService.insertTrialLog(RiskUtil.getLogString(e), StringUtil.isNotEmpty(params.get(BatchConstant.PLATE_DATE))? (Date)params.get(BatchConstant.PLATE_DATE):new Date(), LogLvl.ERROR.toString(), BussinessDictCodeListRds.批机能类型_日终指标计算.getValue());
-	    }
+        }
         return result;
     }
 }

@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.background.component.common.pack.common.util.BeanUtil;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,7 @@ import com.joyintech.service.risk.rskValtblPrtBotasset.dto.RskValtblPrtBotassetM
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 估值表底层资产映射
@@ -180,4 +184,134 @@ public class RskValtblPrtBotassetService extends BaseService<RskValtblPrtBotasse
     public void applyMapForValDiffmapped(Map<String,Object> paramMap){
         rskValtblPrtBotassetMapper.applyMapForValDiffmapped(paramMap);
    }
+    /**
+     * 获取无标的信息下拉框数据
+     * @return
+     */
+    public List<SelectOptionDto> selectUnTargetAsset(Map<String,Object> paramMap){
+        return rskValtblPrtBotassetMapper.selectUnTargetAsset(paramMap);
+    }
+    public List<RskValtblPrtBotassetMapDto> selectUnMapSubject(Map<String, Object> paramMap) {
+        return rskValtblPrtBotassetMapper.selectUnMapSubject(paramMap);
+    }
+
+    public Page<RskValtblPrtBotassetMapDto> selectMapSubjectInfoForPage(Map<String, Object> paramMap, int page, int length) {
+        return super.queryForPage(page, length, () -> rskValtblPrtBotassetMapper.selectMapSubjectInfoForPage(paramMap));
+    }
+    /**
+     * @Description: 映射&应用
+     * @Param:
+     * @return:
+     * @Author: liupengfei
+     * @Date: 2021/3/24
+     */
+    @Transactional
+    public void applyMapForSubject(Map<String, Object> paramMap) {
+        String subCode = (String)paramMap.get("subCode");
+        String ptlId = (String)paramMap.get("ptlId");
+        String finprodId = (String)paramMap.get("finprodId");
+        if(StringUtil.isNotEmpty(subCode)){
+            //资产科目
+            String[] subCodeArr = StringUtil.split(subCode, GlobalConstant.COMMA);
+            for(int i = 0;i<subCodeArr.length;i++){
+                //更新：估值表组合底层资产映射表
+                RskValtblPrtBotassetMapDto dto = new RskValtblPrtBotassetMapDto();
+                dto.setPtlId(ptlId);
+                dto.setSubCode(subCodeArr[i]);
+                dto.setFinprodId(finprodId);
+                rskValtblPrtBotassetMapMapper.updateByPrimaryKeySelective(dto);
+
+                //更新：估值表资产科目表RSK_VALTBL_ASSET_SUB
+                rskValtblPrtBotassetMapper.applyMapForSubject(dto);
+
+                //处理期货类科目成本科目和冲销成本科目做特殊处理，以及根据成本自动更新利息科目做特殊处理
+                String befSubCode =StringUtil.substring(subCodeArr[i],0,8);//科目代码　
+                String aftSubCode =StringUtil.substring(subCodeArr[i],8);//资产代码
+                List<String> intSubject = rskValtblPrtBotassetMapper.selectIntSubjectByCostSubject(befSubCode);
+                if(!StringUtil.isEmptyList(intSubject) ){
+                    for(int j=0;j<intSubject.size();j++){
+                        RskValtblPrtBotassetMapDto dto1 = new RskValtblPrtBotassetMapDto();
+                        BeanUtil.copyPropertiesIgnoreNull(dto1,dto);
+                        dto1.setSubCode(intSubject.get(j)+aftSubCode);
+                        //更新：估值表组合底层资产映射表
+                        rskValtblPrtBotassetMapMapper.updateByPrimaryKeySelective(dto1);
+
+                        //更新：估值表资产科目表RSK_VALTBL_ASSET_SUB
+                        rskValtblPrtBotassetMapper.applyMapForSubject(dto1);
+                    }
+
+                }
+            }
+            //修改RSK_OUT_VALTBL_IMPORT_HIS表得状态 让其自动跑估值穿透start
+           // updateRskOutValtblImportHis(ptlId);
+            //修改RSK_OUT_VALTBL_IMPORT_HIS表得状态 让其自动跑估值穿透end
+        }
+    }
+
+    /*private void updateRskOutValtblImportHis(String ptlId) {
+        rskValtblPrtBotassetMapper.updateRskOutValtblImportHis(ptlId);
+    }*/
+
+    /**
+     * @Description: 取消映射&应用
+     * @Param:
+     * @return:
+     * @Author:
+     * @Date:
+     */
+    @Transactional
+    public void cancelApplyMapForSubject(Map<String, Object> paramMap) {
+        String subCode = (String)paramMap.get("subCode");
+        String ptlId = (String)paramMap.get("ptlId");
+        String finprodId = (String)paramMap.get("finprodId");
+        if(StringUtil.isNotEmpty(subCode)){
+            //资产科目
+            //更新：估值表组合底层资产映射表
+            RskValtblPrtBotassetMapDto dto = new RskValtblPrtBotassetMapDto();
+            dto.setPtlId(ptlId);
+            dto.setSubCode(subCode);
+            dto.setFinprodId(finprodId);
+            rskValtblPrtBotassetMapper.cancelApplyMapForSubject(dto);
+            //更新：估值表资产科目表RSK_VALTBL_ASSET_SUB
+            rskValtblPrtBotassetMapper.cancleValmapped(dto.getPtlId(),dto.getSubCode());
+
+            //处理期货类科目成本科目和冲销成本科目做特殊处理，以及根据成本自动更新利息科目做特殊处理
+            String befSubCode = subCode.substring(0,8);//科目代码
+            String aftSubCode = subCode.substring(8);//资产代码
+            List<String> intSubject = rskValtblPrtBotassetMapper.selectIntSubjectByCostSubject(befSubCode);
+            if(!StringUtil.isEmptyList(intSubject) && intSubject.size()>0){
+                for(int j=0;j<intSubject.size();j++){
+                    RskValtblPrtBotassetMapDto dto1 = new RskValtblPrtBotassetMapDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto1,dto);
+                    dto1.setSubCode(intSubject.get(j)+aftSubCode);
+                    //更新：估值表组合底层资产映射表
+                    rskValtblPrtBotassetMapper.cancelApplyMapForSubject(dto1);
+                    //更新：估值表资产科目表RSK_VALTBL_ASSET_SUB
+                    rskValtblPrtBotassetMapper.cancleValmapped(dto1.getPtlId(),dto1.getSubCode());
+                }
+            }
+
+
+        }
+        //add by  修改RSK_OUT_VALTBL_IMPORT_HIS表得状态 让其自动跑估值穿透start
+        //updateRskOutValtblImportHis(ptlId);
+        //add by  修改RSK_OUT_VALTBL_IMPORT_HIS表得状态 让其自动跑估值穿透end
+    }
+
+    /**
+     * 获取资产维护界面维护的资产
+     * @param paramMap
+     * @return
+     */
+    public Page<SelectOptionDto> selectRskAsset(int page, int length, Map<String, Object> paramMap){
+        return super.queryForPageForSelectReturn(page,length,() -> rskValtblPrtBotassetMapper.selectRskAsset(paramMap));
+    }
+
+    /**
+     * 获取底层资产要素信息下拉框数据
+     * @return
+     */
+   /* public List<SelectOptionDto> selectRepAssetDept(Map<String,Object> paramMap){
+        return rskValtblPrtBotassetMapper.selectRepAssetDept(paramMap);
+    }*/
 }

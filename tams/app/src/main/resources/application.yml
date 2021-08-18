@@ -170,7 +170,18 @@ jixu:
 shiro:
   sessionId: JSESSIONID
   casClientName: tams
-  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+  allowUrl: /core/selectWindBondAsset, /core/selectWindFundAsset,/core/selectWindBondAssetBySecId,/openapi/chbDataCheck,
+    /core/selectInterfFloatingcouponsrate,/core/selectInterfCbonddescription,/core/selectWindFundAssetByfInfoWindcode,
+    /core/selectWindBondExercise,/core/selectWindBondSchedule,/core/autoBondCoupon,/core/autoFundCoupon,
+    /core/selectMstBondValuationInfoCount,/core/selectInterfPayhsrccbvlt,/core/selectInterfBondMarketInfo,
+    /core/selectFinStdsecConverseRadioCount,/core/selectInterfStdsecConRadio,
+    /core/selectFinProductValuationCount,/core/selectInterfCmfundnav,
+    /core/selectMstFundMarketInfoCount,/core/selectInterfFMarketInfo,/core/mstBondValuationInfoSave,
+    /core/mstBondMarketInfoSave,/core/finStdsecConverseRadioSave,/core/finProductValuationSave,
+    /core/mstFundMarketInfoSave,/core/selectMstCustomerInfoAdd,/core/selectInterfPayhsrcsecrating,
+    /core/selectRating,/core/selectAutoFinProd,/core/selectWindStockAssetByStockCode,/core/selectWindStockAsset,/EtrProject/getCounterName,
+    /MstMarketCalendarInfo/getMstCalendarInfo,MstCustomerNature/getIssuer,/AssetCommon/getAssetThreeType,/FinBondTargetAsset/getFinCashCalcRule,
+    /core/autoStockCouponSave,/core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
     /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
     /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
     /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
@@ -369,7 +380,18 @@ application:
   sqldirpassword: product_zgtams217_LS
 shiro:
   ssoEnable: false
-  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+  allowUrl: /core/selectWindBondAsset, /core/selectWindFundAsset,/core/selectWindBondAssetBySecId,/openapi/chbDataCheck,
+    /core/selectInterfFloatingcouponsrate,/core/selectInterfCbonddescription,/core/selectWindFundAssetByfInfoWindcode,
+    /core/selectWindBondExercise,/core/selectWindBondSchedule,/core/autoBondCoupon,/core/autoFundCoupon,
+    /core/selectMstBondValuationInfoCount,/core/selectInterfPayhsrccbvlt,/core/selectInterfBondMarketInfo,
+    /core/selectFinStdsecConverseRadioCount,/core/selectInterfStdsecConRadio,
+    /core/selectFinProductValuationCount,/core/selectInterfCmfundnav,
+    /core/selectMstFundMarketInfoCount,/core/selectInterfFMarketInfo,/core/mstBondValuationInfoSave,
+    /core/mstBondMarketInfoSave,/core/finStdsecConverseRadioSave,/core/finProductValuationSave,
+    /core/mstFundMarketInfoSave,/core/selectMstCustomerInfoAdd,/core/selectInterfPayhsrcsecrating,
+     /core/selectRating,/core/selectAutoFinProd,/core/selectWindStockAssetByStockCode,/core/selectWindStockAsset,/EtrProject/getCounterName,
+    /MstMarketCalendarInfo/getMstCalendarInfo,MstCustomerNature/getIssuer,/AssetCommon/getAssetThreeType,/FinBondTargetAsset/getFinCashCalcRule,
+    /core/autoStockCouponSave,/core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
     /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
     /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
     /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
@@ -435,17 +457,28 @@ spring:
   #  redislock:
   #    redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-  sqldiruserName: zgtams217_zzsj0606_ls_08
-  sqldirpassword: zgtams217_zzsj0606_ls_08
+  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldiruserName: zgtams217_v0630_renhang
+  sqldirpassword: zgtams217_v0630_renhang
 shiro:
   ssoEnable: false
-  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+  allowUrl: /core/selectWindBondAsset, /core/selectWindFundAsset,/core/selectWindBondAssetBySecId,/openapi/chbDataCheck,
+    /core/selectInterfFloatingcouponsrate,/core/selectInterfCbonddescription,/core/selectWindFundAssetByfInfoWindcode,
+    /core/selectWindBondExercise,/core/selectWindBondSchedule,/core/autoBondCoupon,/core/autoFundCoupon,
+    /core/selectMstBondValuationInfoCount,/core/selectInterfPayhsrccbvlt,/core/selectInterfBondMarketInfo,
+    /core/selectFinStdsecConverseRadioCount,/core/selectInterfStdsecConRadio,
+    /core/selectFinProductValuationCount,/core/selectInterfCmfundnav,
+    /core/selectMstFundMarketInfoCount,/core/selectInterfFMarketInfo,/core/mstBondValuationInfoSave,
+    /core/mstBondMarketInfoSave,/core/finStdsecConverseRadioSave,/core/finProductValuationSave,
+    /core/mstFundMarketInfoSave,/core/selectMstCustomerInfoAdd,/core/selectInterfPayhsrcsecrating,
+    /core/selectRating,/core/selectAutoFinProd,/core/selectWindStockAssetByStockCode,/core/selectWindStockAsset,/EtrProject/getCounterName,
+    /MstMarketCalendarInfo/getMstCalendarInfo,MstCustomerNature/getIssuer,/AssetCommon/getAssetThreeType,/FinBondTargetAsset/getFinCashCalcRule,
+    /core/autoStockCouponSave,/core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
     /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
     /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
     /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
@@ -454,30 +487,30 @@ shiro:
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
-    username: zgtams217_zzsj0606_ls_08
-    password: zgtams217_zzsj0606_ls_08
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams217_v0630_renhang
+    password: zgtams217_v0630_renhang
 log:
   path: /home/tams/logs/tams
   level: debug

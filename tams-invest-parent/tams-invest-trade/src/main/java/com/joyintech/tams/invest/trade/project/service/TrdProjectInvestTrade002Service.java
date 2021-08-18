@@ -1038,6 +1038,8 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         wflTrdDealTotalAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
 //        转换
 
+        wflTrdFinProductDealTotalMapper.insertSelective(wflTrdFinProductDealTotal);
+
         ////update by wangpeng 通道信息不登表
         String chlid = wflTrdProductDeal.getChlId();
         wflTrdProductDeal.setChlId(null);

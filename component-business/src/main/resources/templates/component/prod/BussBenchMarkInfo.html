@@ -20,7 +20,7 @@ width: 33%!important;
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_publishType|"
 							th:name="|${entityName}.publishType|"
-							class="layui-input form-input input-select"
+							class="layui-input form-input input-select" required
 							data-th-initValue="${entity}?${entity.publishType}:'02'"
 							data-th-data-result="${SVR_YES_OR_NO}" searchable="false"
 							placeholder="请输入内容"

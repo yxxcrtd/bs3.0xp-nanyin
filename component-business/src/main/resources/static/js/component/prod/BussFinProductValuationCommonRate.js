@@ -121,6 +121,29 @@
     	// 额外参数：收益类型
     	getElementById('profitType').val(selectedValue);
     }
+
+    function payTypeChange(){
+        if($('#' + payTypeElement)){
+            //  并且存在 dealLossMode
+            var payTypeValue = $('#' + payTypeElement).val();
+
+            if(getElementById('dealLossMode') && payTypeValue == '01'){
+                getElementById('dealLossMode').empty();
+
+                getElementById('dealLossMode').append("<option value=''></option>");
+
+                getElementById('dealLossMode').append("<option value='02'>延至下期处理</option>");
+
+            }else{
+                getElementById('dealLossMode').empty();
+
+                getElementById('dealLossMode').append("<option value=''></option>");
+                getElementById('dealLossMode').append("<option value='01'>缩减当前份额</option>");
+                getElementById('dealLossMode').append("<option value='02'>延至下期处理</option>");
+
+            }
+        }
+    }
     
     var valInitAction = function(input_finprodId){
     	Joyin.ajax(JoyinUtil.getRealPath('component/prod/BussFinProductValuation/queryValParamByFinprodId'), {finprodId : input_finprodId}, function(data){
@@ -138,5 +161,11 @@
 		$('#' + profitTypeElement).on('change', function () {
 	        rateType();
 	    });
+
+	    // 父画面处理模式联动事件
+        $('#' + payTypeElement).on('change', function () {
+            debugger;
+            payTypeChange();
+        });
 	});
 }());

@@ -127,12 +127,12 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
             }
         }
         // 业务联络人座机
-        if (StringUtil.isNotEmpty(dto.getRepLiaisonTel())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepLiaisonTel(), 30)) {
-                resultList.add(new ValidMessage("repLiaisonTel", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
-            }
-        }
+//        if (StringUtil.isNotEmpty(dto.getRepLiaisonTel())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepLiaisonTel(), 30)) {
+//                resultList.add(new ValidMessage("repLiaisonTel", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
+//            }
+//        }
         // 业务联络人手机
         if (StringUtil.isNotEmpty(dto.getRepLiaisonMobile())) {
         	if(!RepCheckUtil.checkNum11(dto.getRepLiaisonMobile())){
@@ -197,18 +197,18 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
 //                        this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
 //            }
 //        }
-        if (StringUtil.isNotEmpty(dto.getRepRuleComment())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepRuleComment(), 256)) {
-                resultList.add(new ValidMessage("repRuleComment", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repRuleComment"))));
-            }
-        }
-        if (StringUtil.isNotEmpty(dto.getRepOpenBussRemark())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepOpenBussRemark(), 256)) {
-                resultList.add(new ValidMessage("repOpenBussRemark", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repOpenBussRemark"))));
-            }
-        }
+//        if (StringUtil.isNotEmpty(dto.getRepRuleComment())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepRuleComment(), 256)) {
+//                resultList.add(new ValidMessage("repRuleComment", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repRuleComment"))));
+//            }
+//        }
+//        if (StringUtil.isNotEmpty(dto.getRepOpenBussRemark())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepOpenBussRemark(), 256)) {
+//                resultList.add(new ValidMessage("repOpenBussRemark", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repOpenBussRemark"))));
+//            }
+//        }
         if (StringUtil.isNotEmpty(dto.getRepRemark())) {
             if (RepCheckUtil.checkByteLength(dto.getRepRemark(), 256)) {
                 resultList.add(new ValidMessage("repRemark", this.getMessage("FW_E_0002",
@@ -224,12 +224,12 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 resultList.add(new ValidMessage("repInDepCode", getMessage("FW_E_ZZ_0002")));
             }
         }
-        if (StringUtil.isNotEmpty(dto.getRepAvgOpenCount())) {
-            if (dto.getRepAvgOpenCount().compareTo(new BigDecimal(366)) > 0) {
-                resultList.add(
-                    new ValidMessage("repAvgOpenCount", getMessage("REP_E_0008")));
-            }
-        }
+//        if (StringUtil.isNotEmpty(dto.getRepAvgOpenCount())) {
+//            if (dto.getRepAvgOpenCount().compareTo(new BigDecimal(366)) > 0) {
+//                resultList.add(
+//                    new ValidMessage("repAvgOpenCount", getMessage("REP_E_0008")));
+//            }
+//        }
         
         // modify by zhangliang 20190226 start
         // 资金投向地区
@@ -306,11 +306,11 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
 //        // 是否有预期收益率
 //        if (StringUtil.isNotEmpty(dto.getRepIsYield()) && StringUtil.equals(dto.getRepIsYield(),
 //            DictCodeList.是否_是.getValue())) {
-            if (StringUtil.isEmpty(dto.getRepIsYieldBasis())) {
-                resultList.add(
-                    new ValidMessage("repIsYieldBasis", getMessage("BUSS_COM_E_0038",
-                        getMessage("BussRepFinProductInfo.repIsYieldBasis"))));
-            }
+//            if (StringUtil.isEmpty(dto.getRepIsYieldBasis())) {
+//                resultList.add(
+//                    new ValidMessage("repIsYieldBasis", getMessage("BUSS_COM_E_0038",
+//                        getMessage("BussRepFinProductInfo.repIsYieldBasis"))));
+//            }
             // 预计客户最高年收益率%
 //            if (!StringUtil.isNotEmpty(dto.getRepHighYield())) {
 ////                resultList.add(new ValidMessage("repHighYield", getMessage(

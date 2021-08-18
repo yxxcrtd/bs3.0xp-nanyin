@@ -202,7 +202,7 @@ $(function() {
              ,{field:'authorizeType' ,title: 'RskAuthorityManage001.authorizeType',visible:false, edit:true
             	 ,editOption:{type:'select',id:"authorizeType",formatoption:true,result: AUTHORIZE_TYPE,initValue:AUTHORIZE_TYPE_02}, sortable:false
              }
-             ,{field:'authorizeLimitAmt' , title: 'RskAuthorityManage001.authorizeLimitAmt',width:257 , edit:true, type:"number",sortable:false
+             ,{field:'authorizeLimitAmt' , title: 'RskAuthorityManage001.authorizeLimitAmt',width:257 , edit:true, type:"number", digit: 6,sortable:false
              }
              ,{field:'operation',title: 'SysCommon.operation', type:'action', buttons: [addbtn? 'delt':'']}
          ],

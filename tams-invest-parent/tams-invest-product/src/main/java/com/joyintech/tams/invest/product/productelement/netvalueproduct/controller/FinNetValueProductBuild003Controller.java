@@ -162,7 +162,7 @@ public class FinNetValueProductBuild003Controller extends BaseController {
                 if (mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
                     validList.add(new ValidMessage(
                         getMessage("BUSS_COM_E_0027", getMessage("FinProductScheduling002.prodId"),
-                            finProductBuild003Dto.getFinprodId())));
+                                finProductBuild003Dto.getFinprodId())));
                 }
 
                 if (finNetValueProductBuild001Service.queryProdCountByFinprodId(

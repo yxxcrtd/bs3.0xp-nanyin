@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -321,8 +322,20 @@ public class ViewCompareDetailController extends BaseController {
                     this.getLogger().error("ViewCompareDetailController", e);
                 }
             }
-
-            return detailList;
+            //过滤掉隐藏字段
+            List<RegistDetailDto> returndetailList =new ArrayList<RegistDetailDto>();
+            for(RegistDetailDto registDetailDto : detailList){
+                if(!StringUtil.equals("false",registDetailDto.getVisibleFlag())){
+                    returndetailList.add(registDetailDto);
+                }
+                if(StringUtil.isEmpty(registDetailDto.getCurrentValue())){
+                    registDetailDto.setCurrentValue("");
+                }
+                if(StringUtil.isEmpty(registDetailDto.getOldValue())){
+                    registDetailDto.setOldValue("");
+                }
+            }
+            return returndetailList;
         }
         return null;
     }

@@ -751,8 +751,7 @@ public class EquityInfoValid {
             }
             else {
                 // 风险偏好
-                if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderRiskPrefer())
-                        && !equityInfo001Dto.getHolderRiskPrefer().equals(
+                if (!equityInfo001Dto.getHolderRiskPrefer().equals(
                         equityInfoRegist001Dto.getHolderRiskPrefer())) {
                     map.put("HOLDER_RISK_PREFER", equityInfo001Dto.getHolderRiskPrefer());
                     type = "04";
@@ -2696,6 +2695,7 @@ public class EquityInfoValid {
                     for (int k = 0; k < submitFeedbackStatusList.size(); k++) {
                         if ("01".equals(submitFeedbackStatusList.get(k))
                                 || "02".equals(submitFeedbackStatusList.get(k))
+                                || "03".equals(submitFeedbackStatusList.get(k))
                                 || "05".equals(submitFeedbackStatusList.get(k))
                                 || StringUtil.isBlank(submitFeedbackStatusList.get(k))) {
                             message.add(this.getMessage("该数据存在中债报送流程中的数据，不允许修改，请稍后再试！"));

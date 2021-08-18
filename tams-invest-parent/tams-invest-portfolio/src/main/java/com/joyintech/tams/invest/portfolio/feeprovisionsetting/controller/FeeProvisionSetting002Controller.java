@@ -87,7 +87,7 @@ public class FeeProvisionSetting002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<TrdAccountmfConfigdetailDto> selectDetail() throws Exception {
+    public Page<TrdAccountmfConfigdetailDto> selectDetail(){
         Page<TrdAccountmfConfigdetailDto> page = feeProvisionSetting002Service.selectDetail(RequestUtil.getPageParam());
         return page;
     }
