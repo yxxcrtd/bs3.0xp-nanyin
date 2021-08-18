@@ -405,22 +405,10 @@ $(function () {
                         || expArr[i].sendStatus != "01") {
                         statuFlag = true;
                     }
-
-                    // var pbcProd = expArr[i].pbcProdIdShow;
-                    // p.pbcProdId = pbcProd;
-                    // Joyin.ajaxSync(basePath + 'pbc/prdinitraisesub/PbcPrdInitRaiseSub/searchPage', p, function (result) {
-                    //
-                    //     if (!result || result.root.length == 0) {
-                    //         message = message + "&nbsp;&nbsp;" + pbcProd;
-                    //         count++;
-                    //
-                    //         //当
-                    //         expArr1 = expArr1.filter(function (item) {
-                    //             return item.pbcProdId != pbcProd
-                    //         });
-                    //     }
-                    // })
-
+                    if (expArr[i].submitFeedbackStatus == "01" || expArr[i].submitFeedbackStatus == "03"){
+                        Joyin.error("所选记录中包含已报送数据，请重新选择。");
+                        return;
+                    }
                 }
             }
 

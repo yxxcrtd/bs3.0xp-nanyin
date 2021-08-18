@@ -145,6 +145,10 @@ $(function(){
 				}else{
 					keyList = keyList + data.registSeqno+',';
 				}
+				if (data.submitFeedbackStatus == "01" || data.submitFeedbackStatus == "03"){
+					Joyin.error("所选记录中包含已报送数据，请重新选择。");
+					return;
+				}
 			})
 			param.keyList = keyList;
 			Joyin.exportExcel("pedestrianExport",param);

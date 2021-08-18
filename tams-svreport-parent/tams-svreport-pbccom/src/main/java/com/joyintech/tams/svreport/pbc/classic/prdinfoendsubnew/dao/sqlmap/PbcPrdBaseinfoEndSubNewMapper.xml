@@ -423,6 +423,13 @@
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
+        <if test="submitFeedbackStatusListExp != null and submitFeedbackStatusListExp.size > 0">
+          and (SUBMIT_FEEDBACK_STATUS is null or SUBMIT_FEEDBACK_STATUS in
+          <foreach collection="submitFeedbackStatusListExp" open="(" close=")" separator="," item="item">
+            #{item,jdbcType=VARCHAR}
+          </foreach>
+          )
+        </if>
         <if test="operateModeList != null and operateModeList.size > 0">
             and b.OPERATE_MODE in
             <foreach collection="operateModeList" open="(" close=")" separator="," item="item">

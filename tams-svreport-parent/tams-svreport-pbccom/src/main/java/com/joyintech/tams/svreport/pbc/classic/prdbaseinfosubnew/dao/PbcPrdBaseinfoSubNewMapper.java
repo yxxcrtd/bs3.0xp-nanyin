@@ -49,6 +49,8 @@ public interface PbcPrdBaseinfoSubNewMapper {
 
     int updateZipDatStatus(@Param("updateStatus") String updateStatus, @Param("sendStatus") String sendStatus);
 
+    int updateZipDatStatusUn(@Param("updateStatus") String updateStatus, @Param("sendStatus") String sendStatus);
+
     int updateBaseSubDat(@Param("list") List<PbcPrdBaseinfoSubNew> updateList);
 
 

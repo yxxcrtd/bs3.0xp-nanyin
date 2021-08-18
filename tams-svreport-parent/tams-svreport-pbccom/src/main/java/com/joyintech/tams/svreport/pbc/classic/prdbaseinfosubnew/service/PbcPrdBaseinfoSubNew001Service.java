@@ -454,6 +454,8 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 	            StringUtil.splitToList(",",(String) searchParam.get("sendStatus")));
 		searchParam.put("submitFeedbackStatusList",
 	            StringUtil.splitToList(",",(String) searchParam.get("submitFeedbackStatus")));
+		searchParam.put("submitFeedbackStatusListExp",
+				StringUtil.splitToList(",",(String) searchParam.get("submitFeedbackStatusExp")));
 		searchParam.put("operateModeList",
 	            StringUtil.splitToList(",",(String) searchParam.get("operateMode")));
 		searchParam.put("ivstorientationList",
@@ -612,7 +614,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				pbcPrdBaseinfoSubNewMapper.deleteBatchSubFromHisByUpdateTime(list1);
 
 				//找到不包含手工处理的zip数据,修改zip状态为未报送
-				pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_未报送.getValue(),DictCodeListExt2.报送状态_手工处理.getValue());
+				pbcPrdBaseinfoSubNewMapper.updateZipDatStatusUn(DictCodeListExt2.报送状态_未报送.getValue(),DictCodeListExt2.报送状态_未报送.getValue());
 			}
 			idx += 	PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		}
@@ -627,7 +629,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 			pbcPrdBaseinfoSubNewMapper.deleteBatchSubFromHisByUpdateTime(list2);
 
 			//找到不包含手工处理的zip数据,修改zip状态为未报送
-			pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_未报送.getValue(),DictCodeListExt2.报送状态_手工处理.getValue());
+			pbcPrdBaseinfoSubNewMapper.updateZipDatStatusUn(DictCodeListExt2.报送状态_未报送.getValue(),DictCodeListExt2.报送状态_未报送.getValue());
 		}
 		/* 取消手工处理批量进行 update by gaojian 2019-06-22 end */
 		logger.debug("取消手工处理结束:------------------------------"+new Date());
