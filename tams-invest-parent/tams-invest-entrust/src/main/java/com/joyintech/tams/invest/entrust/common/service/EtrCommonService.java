@@ -23,6 +23,8 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
@@ -128,6 +130,9 @@ public class EtrCommonService extends BaseService<ITableRow> {
      */
     @Autowired
     private FinProductTypeMapper finProductTypeMapper;
+
+    @Autowired
+    private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
     /**
      * 组合指令可用现金查询
      *
@@ -1057,8 +1062,23 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
                     creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
                 }
-                creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
-                creditLinesInputDto.setShareAmt(inputDto.getEntrustAmt());
+                List<PledgeBondInfoDto> pledgeBondInfoDtoList = inputDto.getPledgeBondList();
+                if (!StringUtil.isEmptyList(pledgeBondInfoDtoList)){
+                    // 质押券面总额
+                    BigDecimal totalAmt = pledgeBondInfoDtoList.stream().map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);
+                    // 需要扣减额度的券面总额
+                    BigDecimal supAmt = BigDecimal.ZERO;
+                    for (PledgeBondInfoDto pledgeBondInfoDto : pledgeBondInfoDtoList) {
+                        if(riskCreditListCommonValidatorService.checkCallCredit(pledgeBondInfoDto.getFinprodId())){
+                            supAmt = com.joyintech.calculation.util.ArithmeticUtil.doAdd(supAmt,pledgeBondInfoDto.getPledgePrin());
+                        }
+                    }
+                    BigDecimal tradeAmt = supAmt.divide(totalAmt, RoundingMode.HALF_UP).multiply(inputDto.getEntrustAmt()).setScale(2,RoundingMode.HALF_UP);
+                    creditLinesInputDto.setTradeAmt(tradeAmt);
+                    creditLinesInputDto.setShareAmt(inputDto.getEntrustAmt());
+
+                }
+                //add by zhangnian 20210818 end
             }
         }
         // 买断式回购
@@ -1204,8 +1224,10 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 creditLinesInputDto.setSaleCode(inputDto.getPs());
                 creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
                 creditLinesInputDto.setCounterId(inputDto.getCounterId());
-                creditLinesInputDto.setTradeAmt(inputDto.getTradeAmt());
-                creditLinesInputDto.setShareAmt(inputDto.getTradeAmt());
+                if(riskCreditListCommonValidatorService.checkCallCredit(inputDto.getFinprodId())){
+                    creditLinesInputDto.setTradeAmt(inputDto.getTradeAmt());
+                    creditLinesInputDto.setShareAmt(inputDto.getTradeAmt());
+                }
             }
             // 逆回购，到期续做 -> 新的首期
             if (StringUtil.equals(inputDto.getPs(),DictCodeListExt3.交易方向_到期续做.getValue())
@@ -1221,8 +1243,10 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 creditLinesInputDto.setSaleCode(inputDto.getRepPs());
                 creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
                 creditLinesInputDto.setCounterId(inputDto.getCounterId());
-                creditLinesInputDto.setTradeAmt(inputDto.getTradeAmt());
-                creditLinesInputDto.setShareAmt(inputDto.getTradeAmt());
+                if(riskCreditListCommonValidatorService.checkCallCredit(inputDto.getFinprodId())){
+                    creditLinesInputDto.setTradeAmt(inputDto.getTradeAmt());
+                    creditLinesInputDto.setShareAmt(inputDto.getTradeAmt());
+                }
             }
 
         }
