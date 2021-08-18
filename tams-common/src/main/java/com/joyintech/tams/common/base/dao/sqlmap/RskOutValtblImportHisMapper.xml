@@ -220,7 +220,8 @@
             START_TIME = #{startTime,jdbcType=TIMESTAMP},
             END_TIME = #{endTime,jdbcType=TIMESTAMP},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            RESULT_INFO=#{resultInfo,jdbcType=CLOB}
        where VALDATE = #{valdate,jdbcType=DATE}
          and PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR}
          and FILE_NAME = #{fileName,jdbcType=VARCHAR}
