@@ -41,7 +41,7 @@ spring:
     backOffMultiplier: 2
     useExponentialBackOff: true
     maximumRedeliveryDelay: -1
-#base数据源配置  
+#base数据源配置
 base:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
@@ -62,7 +62,7 @@ base:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: false
-  casEnable: false        
+  casEnable: false
 #interf数据源配置
 interf:
   datasource:
@@ -154,7 +154,7 @@ batch:
     maxJobPoolSize: 5 #job线程池
     maxExeUser: 2 #最大并发用户数
     maxThreadPerUser: 5 #任务并发数
-    sleeptime: 500 #轮询时间
+    sleeptime: 3000 #轮询时间
     maxSqlNum: 50 #批量提交数
     needProcessLog: false #process是否记录正常日志
     enableServerDoubleAlive: false #是否启用双活
@@ -177,15 +177,15 @@ spring:
     cluster:
       nodes: 192.168.90.180:6379,192.168.90.180:6380,192.168.90.181:6381,192.168.90.181:6382,192.168.90.182:6383,192.168.90.182:6384
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams217_ceshi_0629_03
-    password: zgtams217_ceshi_0629_03
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
+    reportSqlldrDatabaseName: 192.168.70.1:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams217_ceshi_0629_03
-  sqldirpassword: zgtams217_ceshi_0629_03
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+  sqldiruserName: zgtams217_0618_ZJM
+  sqldirpassword: zgtams217_0618_ZJM
   #以下根据实际ip和端口进行修改
   micorservice:
     contextPath:
@@ -216,15 +216,15 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams217_ceshi_0629_03
-    password: zgtams217_ceshi_0629_03
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
 #interf数据源配置
 interf:
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams217_ceshi_0629_03
-    password: zgtams217_ceshi_0629_03
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
 #日志路径配置
 log:
   path: /home/tams/logs/batch
@@ -245,13 +245,13 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: zgtams214_v1203
     password: zgtams214_v1203
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    reportSqlldrDatabaseName: 192.168.70.1:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
   sqldiruserName: zgtams214_v1203
   sqldirpassword: zgtams214_v1203
   loadbalance: false
@@ -284,13 +284,13 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: zgtams214_v1203
     password: zgtams214_v1203
 #interf数据源配置
 interf:
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: zgtams214_v1203
     password: zgtams214_v1203
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
@@ -337,15 +337,15 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams217_ceshi_0629_03
-    password: zgtams217_ceshi_0629_03
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
+    reportSqlldrDatabaseName: 192.168.70.1:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams217_ceshi_0629_03
-  sqldirpassword: zgtams217_ceshi_0629_03
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+  sqldiruserName: zgtams217_0618_ZJM
+  sqldirpassword: zgtams217_0618_ZJM
   loadbalance: false
   micorservice:
     contextPath:
@@ -377,25 +377,25 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams217_ceshi_0629_03
-    password: zgtams217_ceshi_0629_03
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
 #interf数据源配置
 interf:
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams217_ceshi_0629_03
-    password: zgtams217_ceshi_0629_03
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams217_ceshi_0629_03
-    password: zgtams217_ceshi_0629_03
+    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
 #日志路径配置
 log:
   path: /home/tams/logs/batch
-  level: DEBUG
+  level: INFO
 logging:
   path: /home/tams/logs/batch
 #注册中心配置
@@ -417,9 +417,9 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-    
-    
-    
+
+
+
 ---
 spring:
   profiles: dtx1
@@ -431,13 +431,13 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLS_20210318_LY
-    password: productLS_20210318_LY 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    password: productLS_20210318_LY
+    reportSqlldrDatabaseName: 192.168.70.1:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
   sqldiruserName: productLS_20210318_LY
   sqldirpassword: productLS_20210318_LY
   loadbalance: false
@@ -470,13 +470,13 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLS_20210318_LY
     password: productLS_20210318_LY
 #interf数据源配置
-interf:  
+interf:
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLS_20210318_LY
     password: productLS_20210318_LY
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
@@ -510,8 +510,8 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-    
-    
+
+
 ---
 spring:
   profiles: dtx2
@@ -522,13 +522,13 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLs_20210301_WY
-    password: productLs_20210301_WY 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    password: productLs_20210301_WY
+    reportSqlldrDatabaseName: 192.168.70.1:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
   sqldiruserName: productLs_20210301_WY
   sqldirpassword: productLs_20210301_WY
   loadbalance: false
@@ -561,13 +561,13 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLs_20210301_WY
     password: productLs_20210301_WY
 #interf数据源配置
-interf:  
+interf:
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLs_20210301_WY
     password: productLs_20210301_WY
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
