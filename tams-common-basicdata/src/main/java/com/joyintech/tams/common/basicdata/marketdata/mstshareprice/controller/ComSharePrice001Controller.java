@@ -59,7 +59,8 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 @Controller
 @PageId("ComSharePrice001")
 @RequestMapping("/common/basicdata/marketdata/mstshareprice/ComSharePrice001")
-public class ComSharePrice001Controller extends BaseController{
+public class
+ComSharePrice001Controller extends BaseController{
     /**
      * 股票行情Service
      */

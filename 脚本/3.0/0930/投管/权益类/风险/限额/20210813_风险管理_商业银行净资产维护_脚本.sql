@@ -1,30 +1,37 @@
 -- ----------------------------
 -- Table structure for SYS_MENU
 -- ----------------------------
+DELETE FROM SYS_MENU WHERE MENU_ID='RISK_MANAGEMENT_001_004_012';
 INSERT INTO SYS_MENU ("MENU_ID", "SYSTEM_CODE", "ICON", "PARENT_MENU_ID", "PAGE_ID", "ORDER_NO", "IS_SPREAD", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") 
 VALUES ('RISK_MANAGEMENT_001_004_012', 'RSK', NULL, 'RISK_MANAGEMENT_001_004', 'BankAsset001', '12', '02', '商业银行净资产维护', 'system', NULL, SYSDATE, 'system', SYSDATE);
 
 -- ----------------------------
 -- Table structure for SYS_PAGE
 -- ----------------------------
+DELETE FROM SYS_PAGE WHERE PAGE_ID='BankAsset001';
 INSERT INTO SYS_PAGE ("PAGE_ID", "SYSTEM_CODE", "PAGE_URL", "PAGE_FILE", "MENU_ID", "HEIGHT", "WIDTH", "IS_HP_SELECT", "IS_NEED_WORKFLOW", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('BankAsset001', 'RSK', '/invest/riskredis/quota/bankasset/BankAsset001', 'invest/riskredis/quota/bankasset/BankAsset001', 'RISK_MANAGEMENT_001_004_012', NULL, NULL, '02', '01', '商业银行净资产维护', 'system', NULL, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_PAGE WHERE PAGE_ID='BankAsset002';
 INSERT INTO SYS_PAGE ("PAGE_ID", "SYSTEM_CODE", "PAGE_URL", "PAGE_FILE", "MENU_ID", "HEIGHT", "WIDTH", "IS_HP_SELECT", "IS_NEED_WORKFLOW", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('BankAsset002', 'RSK', '/invest/riskredis/quota/bankasset/BankAsset002', 'invest/riskredis/quota/bankasset/BankAsset002', NULL, NULL, NULL, '02', '01', '商业银行净资产维护', 'system', NULL, SYSDATE, 'system', SYSDATE);
 
 -- ----------------------------
 -- Table structure for SYS_DATADICT
 -- ----------------------------
+DELETE FROM SYS_DATADICT WHERE DICT_CODE='BANK_ASSET_STATUS';
 INSERT INTO SYS_DATADICT ("DICT_CODE", "SYSTEM_CODE", "DICT_CNNAME", "DICT_ENNAME", "UPDATE_FLG", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('BANK_ASSET_STATUS', 'ALL', '商业银行净资产维护_有效状态', NULL, '02', 'system', NULL, SYSDATE, 'system', SYSDATE);
 
 -- ----------------------------
 -- Table structure for SYS_DATADICT_LIST
 -- ----------------------------
+DELETE FROM SYS_DATADICT_LIST WHERE ITEM_CODE='D' AND DICT_CODE='BANK_ASSET_STATUS';
 INSERT INTO SYS_DATADICT_LIST ("DICT_CODE", "ITEM_CODE", "ITEM_VALUE", "ORDER_NO", "DEFAULT_VALUE", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME", "INSTITUTION_CODE") VALUES ('BANK_ASSET_STATUS', 'D', '失效', '2', '0', 'system', NULL, SYSDATE, 'system', SYSDATE, 'ALL');
+DELETE FROM SYS_DATADICT_LIST WHERE ITEM_CODE='E' AND DICT_CODE='BANK_ASSET_STATUS';
 INSERT INTO SYS_DATADICT_LIST ("DICT_CODE", "ITEM_CODE", "ITEM_VALUE", "ORDER_NO", "DEFAULT_VALUE", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME", "INSTITUTION_CODE") VALUES ('BANK_ASSET_STATUS', 'E', '有效', '1', '0', 'system', NULL, SYSDATE, 'system', SYSDATE, 'ALL');
 
 
 -- ----------------------------
 -- Table structure for MST_BANK_NETVALUE
 -- ----------------------------
+DROP TABLE MST_BANK_NETVALUE;
 CREATE TABLE MST_BANK_NETVALUE (
   "SEQNO" NUMBER  NOT NULL,
   "CUSTOMER_ID" VARCHAR2(32 BYTE)  NOT NULL,
