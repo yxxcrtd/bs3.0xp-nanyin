@@ -102,7 +102,6 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 //		if(CommonUtil.isBAmodel()){
 			searchParam.put("model_type", "01");
 //		}
-
 		int pagenum = StringUtil.integerValueOf(""+searchParam.get(GlobalConstant.PARAM_PAGE), 1);
         int length = StringUtil.integerValueOf(""+searchParam.get(GlobalConstant.PARAM_LENGTH), GlobalConstant.DEFAULT_PAGE_SIZE);
 		Page<PbcPrdBaseinfoSubNew> page = queryForPage(pagenum,length,()->pbcPrdBaseinfoSubNewMapper.searchPage(searchParam));
@@ -370,17 +369,17 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             //募集资金币种
             if (StringUtil.isNotEmpty(result.getRaiseCcy())){
             	String raiseCcyStr= getRaiseCcy(result.getRaiseCcy());
-            	result.setRaiseCcy(result.getRaiseCcy()+"-"+raiseCcyStr);
+            	result.setRaiseCcy(result.getRaiseCcy()+" "+raiseCcyStr);
             }
             //兑付本金币种
             if (StringUtil.isNotEmpty(result.getCashPrinCcy())){
             	String raiseCcyStr= getRaiseCcy(result.getCashPrinCcy());
-            	result.setCashPrinCcy(result.getCashPrinCcy()+"-"+raiseCcyStr);
+            	result.setCashPrinCcy(result.getCashPrinCcy()+" "+raiseCcyStr);
             }
             //兑付收益币种
             if (StringUtil.isNotEmpty(result.getCashProfCcy())){
             	String raiseCcyStr= getRaiseCcy(result.getCashProfCcy());
-            	result.setCashProfCcy(result.getCashProfCcy()+"-"+raiseCcyStr);
+            	result.setCashProfCcy(result.getCashProfCcy()+" "+raiseCcyStr);
             }
             //预计客户最高年收益率
             if (result.getHighYieldIssue() != null && BigDecimal.ZERO.compareTo(result.getHighYieldIssue()) != 0) {
@@ -485,7 +484,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 	@Override
 	protected void buildExportParam(ExportParam exportParam) {
 		exportParam.config(
-	            "/com/joyintech/tams/svreport/pbc/classic/prdbaseinfosub/conf/export_conf.xml")
+	            "/com/joyintech/tams/svreport/pbc/classic/prdbaseinfosubnew/conf/export_conf.xml")
 	            .dataSource(DataSourceType.MASERT);
 	}
 	/**
