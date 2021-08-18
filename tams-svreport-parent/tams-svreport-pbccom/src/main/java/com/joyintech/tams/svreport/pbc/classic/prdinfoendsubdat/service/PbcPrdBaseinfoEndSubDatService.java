@@ -279,7 +279,9 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                         if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
                             pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
                         }
-                        if("PIB".equals(pbcSendZipDatFile.getDatZipDatType())){
+                        String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
+                        pbcSendZipDatFile.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);
+                        if("PIE".equals(pbcSendZipDatFile.getDatZipDatType())){
                             pbcSendZipDatFile.setPibDetailCnt(CollectionUtil.isNotEmpty(endList) ? endList.size() : 0);
                         }else{
                             pbcSendZipDatFile.setPibDetailCnt(0);
@@ -317,13 +319,12 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
 
     private PbcPrdBaseinfoEndSubDat updatePbcPrdBaseinfoEndSubDat(PbcPrdBaseinfoEndSubDto pbcPrdBaseinfoSubDatDto,PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoSubDat){
         BeanUtil.copyPropertiesIgnoreNull(pbcPrdBaseinfoSubDat,pbcPrdBaseinfoSubDatDto);
+        pbcPrdBaseinfoSubDat.setCustomProfitCny(pbcPrdBaseinfoSubDatDto.getCustomProfitCny());
         return pbcPrdBaseinfoSubDat;
     }
 
     private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,List<PbcPrdBaseinfoEndSubDto> pbcPrdBaseinfoSubDatDtos){
         List<ExcelValidDto> checkResult = new ArrayList<>();
-        // 验证消息
-        List<String> message = new ArrayList<>();
         if(CollectionUtil.isNotEmpty(dataList)){
             for (int i = 0; i < dataList.size(); i++ ) {
                 int rowNumer = i + 1;
@@ -389,13 +390,13 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 String customProfitCny = rowsData.get(row++);
                 if(checkIsNotEmpty(customProfit,rowNumer,"兑付客户收益折人民币",errorMessage)){
                     if(checkFigure(customProfitCny)){
-                        dto.setCustomProfit(new BigDecimal(customProfitCny));
+                        dto.setCustomProfitCny(new BigDecimal(customProfitCny));
                     }else{
                         errorMessage.add(new ExcelValidDto("兑付客户收益折人民币",String.valueOf(rowNumer),"第"+rowNumer+"行:兑付客户收益折人民币非数字！"));
                     }
                 }
 
-                if(CollectionUtil.isNotEmpty(message)){
+                if(CollectionUtil.isNotEmpty(errorMessage)){
                     checkResult.addAll(errorMessage);
                 }else{
                     pbcPrdBaseinfoSubDatDtos.add(dto);

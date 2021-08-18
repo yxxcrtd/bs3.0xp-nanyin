@@ -449,17 +449,31 @@ public class PbcZipDataFileService {
 				if(StrUtil.isNotEmpty(prodId)){
 					Optional<PbcProdAssetpoolCode> first = pbcProdAssetpoolCodes.stream().filter(pbcProdAssetpoolCode ->
 							prodId.equals(pbcProdAssetpoolCode.getInsideProdId())).findFirst();
-					if(first.isPresent()){
+					if(first.isPresent() && StrUtil.isNotEmpty(first.get().getPbcCode())){
 						innerProdIdsNew.add(subDat.getProdId());
 						pbcPrdBaseinfoSubDatsNew.add(subDat);
 						innerProdIdMapping.put(prodId,first.get().getPbcCode());
 					}else{
 						if(StrUtil.isNotEmpty(subDat.getIssuePartyId())){
 							SysInstRegBankCode001Dto sysInstRegBankCode001Dto = sysInstRegBankCode001Mapper.selectRegistBankCode(subDat.getIssuePartyId());
+							logger.info("查询的机构代码信息为:{}",sysInstRegBankCode001Dto);
 							if(StrUtil.isNotEmpty(sysInstRegBankCode001Dto.getRegistBankCode())){
 								String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(sysInstRegBankCode001Dto.getRegistBankCode(), subDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, subDat.getVdate());
-								subDat.setPbcProdId(pbcProdIdExternal);
-								innerProdIdMapping.put(prodId, pbcProdIdExternal);
+								if(StrUtil.isNotEmpty(pbcProdIdExternal)){
+									subDat.setPbcProdId(pbcProdIdExternal);
+									innerProdIdMapping.put(prodId, pbcProdIdExternal);
+								}else{
+									ValidMessage message = new ValidMessage();
+									message.setMessage(prodId + "生成人行代码失败");
+									List<ValidMessage> validMessages = datDownloadDto.getValidMessages();
+									if(CollectionUtils.isNotEmpty(validMessages)){
+										validMessages.addAll(Collections.singletonList(message));
+										datDownloadDto.setValidMessages(validMessages);
+									}else{
+										datDownloadDto.setValidMessages(Collections.singletonList(message));
+									}
+									return datDownloadDto;
+								}
 							}
 						}
 						innerProdIdsNew.add(subDat.getProdId());
