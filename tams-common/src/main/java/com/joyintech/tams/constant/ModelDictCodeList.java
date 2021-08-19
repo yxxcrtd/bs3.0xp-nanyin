@@ -178,6 +178,8 @@ public enum ModelDictCodeList implements BaseDictCodeList {
     模型_减值配置类型_前瞻因子配置(ModelDictCode.模型_减值配置类型,"04","前瞻因子配置"),
     模型_减值配置类型_资产大类LGD配置(ModelDictCode.模型_减值配置类型,"05","资产大类LGD配置"),
     模型_减值配置类型_特殊资产LGD配置(ModelDictCode.模型_减值配置类型,"06","特殊资产LGD配置"),
+    模型_减值配置类型_回购评级PD配置(ModelDictCode.模型_减值配置类型,"07","回购评级PD配置"),
+    模型_减值配置类型_存款评级PD配置(ModelDictCode.模型_减值配置类型,"08","存款评级PD配置"),
     是_否_是(ModelDictCode.是_否,"Y","是"),
     是_否_否(ModelDictCode.是_否,"N","否"),
 
