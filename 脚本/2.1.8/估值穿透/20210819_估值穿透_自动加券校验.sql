@@ -1,0 +1,1 @@
+delete from chb_datacheck_rule_inv where checkruleid='29b188c5-3c7c-4ed6-8d51-972236e57005' and status='D';
