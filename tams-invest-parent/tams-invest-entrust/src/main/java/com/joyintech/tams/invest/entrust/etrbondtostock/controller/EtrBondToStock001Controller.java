@@ -2,7 +2,14 @@ package com.joyintech.tams.invest.entrust.etrbondtostock.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -150,12 +157,18 @@ public class EtrBondToStock001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("recall")
-    public AjaxResult recallDelegate(@RequestBody EtrBondToStockDto dto) {
+    public AjaxResult recallDelegate(@RequestBody EtrBondToStockDto dto) throws Exception {
         List<EtrBondToStockDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && !dtolist.isEmpty()){
             for(EtrBondToStockDto entity : dtolist){
                 service.recallDelegate(entity);
+                entity.setPs(DictCodeListExt1.交易方向_债转股.getValue());
             }
+
+            // add by yushilong 批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_债券.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by yushilong 批量撤销预占 end
             return new AjaxResult(this.getMessage("ETR_X_001"));
         }
         return new AjaxResult(this.getMessage("ETR_X_002"));
@@ -176,6 +189,13 @@ public class EtrBondToStock001Controller extends BaseController{
             for(EtrBondToStockDto entity : dtolist){
                 service.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
             }
+
+            // add by zhangrui1 批量委托关闭 start
+            // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
+            List<String> entrustIdList = dtolist.stream().map(
+                    EtrBondToStockDto::getEntrustId).collect(Collectors.toList());
+            EntrustCompleteUtil.doComplete(entrustIdList);
+            // add by zhangrui1 批量委托关闭 end
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }
         return new AjaxResult(this.getMessage("ETR_X_004"));
