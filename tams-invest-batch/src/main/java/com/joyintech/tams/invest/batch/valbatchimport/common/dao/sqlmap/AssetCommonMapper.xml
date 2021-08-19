@@ -57,4 +57,18 @@
 	FROM
 		MST_CALENDAR_INFO
 	</select>
+
+	<select id="selectBotAssetMap" resultType="com.joyintech.tams.invest.batch.valbatchimport.dto.RskValtblPrtBotassetMapDto">
+		SELECT
+		PTL_ID,
+		SUB_CODE,
+		FINPROD_ID
+		FROM
+		RSK_VALTBL_PRT_BOTASSET_MAP
+		<where>
+			<if test="ptlId !=null and ptlId !=''">
+				AND	PTL_ID = #{ptlId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 </mapper>
