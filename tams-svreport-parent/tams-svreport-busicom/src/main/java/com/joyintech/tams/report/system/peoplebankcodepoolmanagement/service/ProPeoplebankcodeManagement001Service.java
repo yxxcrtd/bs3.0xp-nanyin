@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -181,6 +182,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 					if(dto.getPbcCode().length()>15){
 						webResult.setMessage("人行产品代码长度不得大于15");
 						webResult.setMessageType(MessageType.错误消息);
+						webResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 						return webResult;
 					}
 				}
