@@ -1426,8 +1426,8 @@
 		<include refid="Base_Column_List" />
 		from PBC_PRD_BASEINFO_SUB_DAT
 		where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
-		and SEND_STATUS = '01'
-		and STATUS not in ('02','03')
+		/*and SEND_STATUS = '01'
+		and STATUS not in ('02','03')*/
 	</select>
 
 	<update id="updateByDatZipCode" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
