@@ -657,15 +657,17 @@ public class RiskCreditListCommonValidatorService {
 	    if(StringUtil.isEmpty(finprodId)){
 	        return false;
 	    }
-        List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
-        // 查询资产类型
-        FinProductTypeKey key = new FinProductTypeKey();
-        key.setFinprodId(finprodId);
-        key.setBranch(0L);
-        FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(key);
-        String astType = finProductType.getType10();
-        if (assetTypeList.contains(astType)){
-            return false;
+	    if(null!=CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03)){
+            List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
+            // 查询资产类型
+            FinProductTypeKey key = new FinProductTypeKey();
+            key.setFinprodId(finprodId);
+            key.setBranch(0L);
+            FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(key);
+            String astType = finProductType.getType10();
+            if (assetTypeList.contains(astType)){
+                return false;
+            }
         }
         return true;
     }
