@@ -128,6 +128,7 @@ public class PbcZipDataFileService {
     	List<String> zipFileName = new ArrayList<String>();
 		AjaxResult ajaxResult = new AjaxResult();
 		List<ValidMessage> errorList = new ArrayList<>();
+		initChbExData();
 		chbTypeMappingExList=initReportConfig();
 		//去重
 		Set<String> reslut = new HashSet<String>();

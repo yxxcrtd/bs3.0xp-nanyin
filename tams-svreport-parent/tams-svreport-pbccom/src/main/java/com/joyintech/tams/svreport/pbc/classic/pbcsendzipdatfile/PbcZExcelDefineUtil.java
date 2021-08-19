@@ -16,10 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -109,11 +106,12 @@ public class PbcZExcelDefineUtil {
                                 String properyFiled=keyVal.substring(keyVal.indexOf(".")+1,keyVal.length());
                                 properyFiled=properyFiled.replace(" ", "");//去掉空格
                                 ChbTypeMappingEx ex=new ChbTypeMappingEx();
-                                ex.setMappingid(properyCode);
+                                ex.setMappingid(UUID.randomUUID().toString());
                                 ex.setMappingcode(reportType);
                                 ex.setMappingname("MI");
                                 ex.setObjfield("");//防止空异常
                                 ex.setSrcfield1(properyFiled);
+                                ex.setSrcfield(properyCode);
                                 ex.setObjfield1(rowNum);
                                 ex.setObjfield2(columnMap.get(cell.getColumnIndex()));
                                 ls.add(ex);
