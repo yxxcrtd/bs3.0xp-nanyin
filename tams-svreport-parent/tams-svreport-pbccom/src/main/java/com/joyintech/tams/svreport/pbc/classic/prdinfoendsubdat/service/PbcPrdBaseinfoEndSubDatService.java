@@ -242,6 +242,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 //调用【DAT生成共通处理-产品端】
                 Map<String,ArrayList> resultMap = new HashMap<>();
                 try {
+                    //do not ask me,most of bugs by this method,I can not controll it,sry!
                     resultMap = PbcDatUtil.genDatZipList(zipType,zipModel,srcModel,orgCode,new ArrayList<>(),endListAll);
                 }catch (Exception e){
                     logger.error("生成dat文件异常",e);
@@ -270,6 +271,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                     pbcPrdBaseinfoEndSubDatMapper.deleteBatchByProdId(baseinfoSubDatsNoSendProdIds);
                 }
                 if(CollectionUtil.isNotEmpty(reqIds)){
+                    //god bless it
                     for (String reqId : reqIds) {
                         pbcPrdBaseinfoEndSubDatMapper.deleteByPrimaryKey(reqId);
                     }
@@ -277,9 +279,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(endList)){
                     for (PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoEndSubDat : endList) {
-                        if(StrUtil.isEmpty(pbcPrdBaseinfoEndSubDat.getRegistSeqno())){
-                            pbcPrdBaseinfoEndSubDat.setRegistSeqno(UUID.randomUUID().toString());
-                        }
+                        pbcPrdBaseinfoEndSubDat.setRegistSeqno(UUID.randomUUID().toString());
                         pbcPrdBaseinfoEndSubDatMapper.insert(pbcPrdBaseinfoEndSubDat);
                     }
                 }

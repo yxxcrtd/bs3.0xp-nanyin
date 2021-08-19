@@ -77,6 +77,10 @@ public class MonthReportUtil {
         if(value != null && !"".equals(value.toString())){
             if(reqType.equals(String.class)){
                 return value;
+            }else if(reqType.equals(Long.class)){
+                return Long.parseLong(value.toString());
+            }else if(reqType.equals(long.class)){
+                return Long.parseLong(value.toString());
             }else{
                 if(reqType == BigDecimal.class){
                     BigDecimal multiply = new BigDecimal(value.toString()).multiply(new BigDecimal(10000));

@@ -155,6 +155,7 @@ public class PbcZipDataFileService {
 					}else{
 						if(StringUtil.isNotEmpty(datDownloadDto.getUrl())){
 							rst.add(datDownloadDto.getUrl());
+							datZipCodePath = datDownloadDto.getUrl();
 						}
 					}
 				}else if(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
@@ -166,6 +167,7 @@ public class PbcZipDataFileService {
 					}else{
 						if(StringUtil.isNotEmpty(datDownloadDto.getUrl())){
 							rst.add(datDownloadDto.getUrl());
+							datZipCodePath = datDownloadDto.getUrl();
 						}
 					}
 				}else if (DictCodeListExt2.人行报送明细类型_募集余额报表.getValue().equals(datType)
@@ -209,12 +211,12 @@ public class PbcZipDataFileService {
 					}
 				}
 				//添加生成更新表状态的list
-				if(!DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType)&&
+				if(!DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType) ||
 				  !DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
-					PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,datType,reportuuid);
+					PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,datType,reportuuid,DictCodeListExt2.人行报送类型_产品信息.getValue());
 					zipDatFileList.add(zipDatFile);
 				}else{
-					PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,pbcSendZipDatFile.getDatZipType(),reportuuid);
+					PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,pbcSendZipDatFile.getDatZipType(),reportuuid,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
 					baseZipDatFileList.add(zipDatFile);
 				}
 
@@ -923,7 +925,7 @@ public class PbcZipDataFileService {
 	}
 
 	//数据报送文件管理表PBC_SEND_ZIP_DAT_FILE
-    private PbcSendZipDatFile getPbcSendZipDatFile(String ZipCode,String datZipPath,Date date,String datType,String reportuuid){
+    private PbcSendZipDatFile getPbcSendZipDatFile(String ZipCode,String datZipPath,Date date,String datType,String reportuuid,String datZipType){
 		PbcSendZipDatFile datFile=new PbcSendZipDatFile();
 		datFile.setDatZipDatType(datType);
 		datFile.setReportuuid(reportuuid);
@@ -934,7 +936,7 @@ public class PbcZipDataFileService {
 		datFile.setSubmitTime(date);
 		datFile.setZipDownloadTime(date);
 		datFile.setZipSendStatus(DictCodeListExt2.报送状态_手工处理.getValue());
-		datFile.setDatZipType(DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+		datFile.setDatZipType(datZipType);
 		return datFile;
 	}
 	//更新数据状态
