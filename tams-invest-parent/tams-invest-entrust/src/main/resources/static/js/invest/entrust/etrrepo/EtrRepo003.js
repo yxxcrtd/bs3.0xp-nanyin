@@ -5,6 +5,38 @@
     var getriskdata = function () {
         var selectedItem = $.serializeToObject('#searchForm').selectedItem;
         if (selectedItem.length > 0) {
+            var list = [];
+            var object = {
+                tradeDirection : [ 'ps', 'EtrRepo002.ps' ],
+                portfolioCode : [ 'portfolioId', 'EtrRepo002.portfolioId' ],
+                tradeAmount : [ 'entrustAmt', 'EtrRepo002.entrustAmt' ],
+                assetType : [ 'assetType1', 'EtrRepo002.assetType1' ],
+                data : list
+            };
+            for ( var index in selectedItem) {
+                var item = selectedItem[index];
+                var trdProductDeal = {};
+                trdProductDeal.tradeAmt = item.entrustAmt;
+                trdProductDeal.unitCprice  = item.price;
+                var obj = {
+                    tradeDirection : item.ps,
+                    timePoint : MY_SUP_TIME_TYPE_02,
+                    valDate : sysDate,
+                    portfolioCode : item.portfolioId,
+                    tradeAmount : item.entrustAmt,
+                    assetType : item.ps == ps_04 ? fintype_nhg : fintype_zhg,
+                    isEnabled : '01',
+                    fullDataFlag : '1',
+                    repoTerm:item.repoTerm,
+                    vdate:item.vdateText,
+                    mdate:item.mdateText,
+                    trdProductDeal : trdProductDeal
+                };
+                list.push(obj);
+            }
+            return object;
+        }
+        /*if (selectedItem.length > 0) {
             var objects = new Array();
             for ( var index in selectedItem) {
                 var item = selectedItem[index];
@@ -58,7 +90,7 @@
                 objects.push(object);
             }
             return objects;
-        }
+        }*/
     }
 
     //初始化委托列表
@@ -167,11 +199,28 @@
      * @returns
      */
     function saveOrSubmit(operateType) {
+        var s;
+        if(BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+            if(!s && s != ''){
+                return;
+            }
+            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+                return;
+            }
+        }
         //校验数据  校验表格
         var tableData = table.getAllRows();
         if (tableData.length == 0) {
             Joyin.alert("委托列表至少有一条数据！", 2);
             return false;
+        }
+        var s;
+        if(BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+            if(!s && s != ''){
+                return;
+            }
         }
         /**
          * 获取列表参数
@@ -180,6 +229,7 @@
         object.operateType = operateType;
         object.pageModel = pageModel;
         var objects = object.selectedItem;
+        var allDto = {};
         for (var index in objects) {
             var temp = objects[index];
             temp.operateType = operateType;
@@ -192,18 +242,104 @@
             } else {
                 temp.elementId = 'EtrRepo002_btn_submit';
             }
+            temp.termType = caltermType(temp.repoTerm,temp.vdateText);
+            allDto.assetType = temp.assetType;
+            allDto.repoTerm = temp.repoTerm;
+            allDto.entrustAmt = temp.entrustAmt;
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo003/check', objects,
+        allDto.importFlow = true;
+        allDto.selectedItem = objects;
+        allDto.riskTrialRetDto = object.riskTrialRetDto;
+        Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo003/check', allDto,
             function (result) {
                 Joyin.confirm(result.data, function () {
                     if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrrepo/EtrRepo003/save', objects, "EtrRepo002_btn_save", "EtrRepo002");
+                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrrepo/EtrRepo003/save', allDto, "EtrRepo002_btn_save", "EtrRepo002");
                     } else {
-                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrrepo/EtrRepo003/save', objects, "EtrRepo002_btn_submit", "EtrRepo002");
+                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrrepo/EtrRepo003/save', allDto, "EtrRepo002_btn_submit", "EtrRepo002");
                     }
                 });
             });
     }
+
+    var caltermType = function (repoterm,vdate) {
+            var re = /^[0-9]*$/;
+            if(repoterm && re.test(repoterm)){
+                if(vdate){
+                    //回购期限联动期限品种
+                    var term = getTermType(vdate,repoterm);
+                  return term;
+                }
+            }
+            return null;
+    }
+
+    /**
+     * 获取期限品种  date(yyyy-MM-dd),repoterm
+     */
+    function getTermType(date,repoterm) {
+        if(repoterm&&repoterm<=21){
+            //期限品种小于21天
+            if(repoterm==0){
+                Joyin.error("期限品种不能为0");
+                return ;
+            }
+            if(repoterm==1){
+                return 'R001';
+            }
+            if(repoterm>1&&repoterm<=7){
+                return 'R007';
+            }
+            if(repoterm>7&&repoterm<=14){
+                return 'R014';
+            }
+            if(repoterm>14&&repoterm<=21){
+                return 'R021';
+            }
+        }
+        var day=0;
+        //date为空时  返回0
+        if(date&&repoterm){
+            //获取日期
+            date =DateUtil.parse(date);
+            //获取之后月00天 即本月最后一天
+            day= new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+1,0).getDate();
+            if(repoterm<=day){
+                return 'R1M';
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+2,0).getDate();
+            if(repoterm<=day){
+                return 'R2M';
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+3,0).getDate();
+            if(repoterm<=day){
+                return 'R3M';
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+4,0).getDate();
+            if(repoterm<=day){
+                return 'R4M';
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+5,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+6,0).getDate();
+            if(repoterm<=day){
+                return 'R6M';
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+7,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+8,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+9,0).getDate();
+            if(repoterm<=day){
+                return 'R9M';
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+10,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+11,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+12,0).getDate();
+            if(repoterm<=day){
+                return 'R1Y';
+            }
+        }
+        return null;
+    }
+
 
     $(function () {
         if (etrRepoList) {
@@ -224,7 +360,27 @@
          */
         $('#EtrRepo003_btn_riskcal').click(function () {
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-            $("#riskMathFlag").val("02");
+            //add by zhangnian strat
+            var list = $.serializeToObject('#searchForm', true).selectedItem;
+            var objectList = [];
+            for(var i in list){
+                var temp = {};
+                temp.portfolioId = list[i].portfolioId;
+                temp.ps = list[i].ps;
+                temp.ccy = list[i].ccy;
+                temp.entrustAmt = list[i].entrustAmt;
+                temp.tradeMarket = list[i].tradeMarket;
+                temp.price = list[i].price;
+                temp.groupCode = 'F07_0_'+i;//格式类型+委托/交易+序号
+                temp.repoTerm = list[i].repoTerm;
+                temp.vdate = list[i].vdateText,
+                temp.mdate=list[i].mdateText,
+                objectList.push(temp);
+            }
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F07',
+                objectList, getriskdata());
+            //add by zhangnian end
+            //$("#riskMathFlag").val("02");
         });
     })
 }());

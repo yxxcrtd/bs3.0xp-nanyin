@@ -102,6 +102,9 @@ public class EtrPlanAssetN002Controller extends BaseController {
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             EtrPlanAssetNDto dto = etrPlanAssetNService.getBussinessEntityByWorkflowId(
                 workflowId);
+            //add by fuyongsheng 2021/08/18 ZGZGST-1273 start
+            dto.setProfitType(DictCodeList.收益类型_净值型.getValue());
+            //add by fuyongsheng 2021/08/18 ZGZGST-1273 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
@@ -110,6 +113,9 @@ public class EtrPlanAssetN002Controller extends BaseController {
         }
         else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(entrustId)) {
             EtrPlanAssetNDto dto = etrPlanAssetNService.selectByKey(entrustId);
+            //add by fuyongsheng 2021/08/18 ZGZGST-1273 start
+            dto.setProfitType(DictCodeList.收益类型_净值型.getValue());
+            //add by fuyongsheng 2021/08/18 ZGZGST-1273 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("tradeId", dto.getEntrustId());
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));

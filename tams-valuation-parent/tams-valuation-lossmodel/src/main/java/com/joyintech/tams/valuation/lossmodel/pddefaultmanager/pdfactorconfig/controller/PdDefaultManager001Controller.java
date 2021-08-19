@@ -25,27 +25,16 @@ public class PdDefaultManager001Controller extends BaseController {
 
 	/**
 	 * 页面初始化
+	 *
+	 *
 	 */
 	@Override
 	@RequestMapping(PAGE_INIT)
 	public String init(Model model) {
-		model.addAttribute("isShowMyHome", true);
-		model.addAttribute("isShowRemind", true);
-
+		model.addAttribute("isShowMyHome", true);//展示前瞻因子配置
+		model.addAttribute("isShowRemind", true);//债券、其他债权评级PD维护
+		model.addAttribute("isShowHgPd", true);  //回购评级PD维护
+		model.addAttribute("isShowCkPd", true);  //存款评级PD维护
 		return super.init(model);
 	}
-	/*
-	 * @RequestMapping("assetcategories") public String
-	 * showAssetCateGoriesPage(Model model) { return "assetcategories"; }
-	 *//**
-		 * 跳转前瞻因子维护页面
-		 * 
-		 * @param model
-		 * @return
-		 *//*
-			 * @RequestMapping("PdFactorConfig001") public String
-			 * showSpecialAssetsPage(Model model) { return
-			 * "/model/impairment/pddefaultmanager/pdfactorconfig/PdFactorConfig001"; }
-			 */
-
 }

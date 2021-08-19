@@ -255,7 +255,7 @@
 				</if>
 			</where>
 					group by t.PORTFOLIO_ID, pp.PORTFOLIO_NAME, NVL(NVL(chl.FINPROD_MARKET_ID, chl1.FINPROD_MARKET_ID), t.SEC_ACCT_ID ), t4.SEC_ACCT_NAME, chl.FINPROD_ABBR, chl1.FINPROD_ABBR, t.FINPROD_ID, fp.FINPROD_MARKET_ID, fp.FINPROD_ABBR,
-					t5.TYPE_9, t5.TYPE_10, t5.TYPE_11, t5.TYPE_12, t5.TYPE_8, t5.TYPE_7, T5.TYPE_6, mv.marketPrice
+					t5.TYPE_9, t5.TYPE_10, t5.TYPE_11, t5.TYPE_12, t5.TYPE_8, t5.TYPE_7, T5.TYPE_6, mv.marketPrice,	fp.trade_market
 					<!-- modify by swwan 增加市值列 20210720 end -->
 				) mm
 			) yy
@@ -441,7 +441,14 @@
 									from etr_entrust t, etr_entrust_add t1
 									where
 										t.entrust_id = t1.entrust_id
-										and t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+										<if test="portfolioIdList != null and portfolioIdList.size() >0">
+											<foreach collection="portfolioIdList" index="index" item="prot" separator=",">
+												<if test="(index % 998) == 0">
+													and t.portfolio_id in (
+												</if>
+												#{prot,jdbcType=VARCHAR}
+											</foreach>)
+										</if>
 										and t1.busi_ps = '01'
 										and t.entrust_date = to_date(#{cdate},'yyyy-MM-dd')
 								) bb

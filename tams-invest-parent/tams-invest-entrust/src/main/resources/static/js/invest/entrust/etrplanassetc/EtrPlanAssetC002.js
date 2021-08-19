@@ -320,32 +320,46 @@
          * 资产代码
          */
         $('#finprodId').on('change', function () {
-            var finprodId = $('#finprodId').val();
             var ps= $('#ps').val();
             var ccy = $('#ccy').val();
             var portfolioId = $('#portfolioId').val();
             var vdate = $('#vdate').val();
             var finprodIdhid = $('#finprodIdhid').val();
-            if(finprodId){
+            var finprodId;
+            $("#purSpeed").val('').trigger('change');
+            $("#redSpeed").val('').trigger('change');
+            if($('#finprodId').val() && $('#finprodId').select2('data') && $('#finprodId').select2('data')[0]){
                 var data = $('#finprodId').select2('data')[0].object;
+                Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade002/getSpeedByFinprodId', data,function (result) {
+                    $("#purSpeed").val(result.PURSPEED).trigger('change');
+                    $("#redSpeed").val(result.REDSPEED).trigger('change');
+                });
+                finprodId = data.finprodId;
                 $('#finprodIdhid').val(data.finprodId).trigger('change');
-                // 修改计划货币型指令新建界面资产代码显示问题 by 赵东东 20200116 start 
-                $('#finprodName').val($('#finprodId').select2('data')[0].id).trigger('change');
+                $('#finprodName').val(data.finprodId).trigger('change');
                 $('#calendarId').val(data.calendarId).trigger('change');
                 $('#finvdate').val(new Date(data.finvdate)).trigger('change');
                 $('#finmdate').val(new Date(data.finmdate)).trigger('change');
-                $('#ccy').val(data.ccy).trigger('change');
+                $('#ccy').val(data.ccy).attr('disabled',true).trigger('change');
                 $('#assetType1').val(data.assetType1).trigger('change');
                 /*添加三四级分类 lishuping 2019/7/30 start*/
                 $('#assetType10').val(data.assetType10).trigger('change');
                 $('#assetType11').val(data.assetType11).trigger('change');
                 /*添加三四级分类 lishuping 2019/7/30 start*/
                 $('#assetType2').val(data.assetType2).trigger('change').change();
-
-                ChannelAssetCommon.setChannelSelectObject($("#chlId"), data.finprodId, false, function () {
-
-                });
+            }else{
+            	$('#finprodIdhid').val('').trigger('change');
+                $('#finprodName').val('').trigger('change');
+                $('#calendarId').val('').trigger('change');
+                $('#finvdate').val('').trigger('change');
+                $('#finmdate').val('').trigger('change');
+                $('#ccy').val('').attr('disabled',false).trigger('change');
+                $('#assetType1').val('').trigger('change');
+                $('#assetType2').val('').trigger('change').change();
             }
+            ChannelAssetCommon.setChannelSelectObject($("#chlId"), finprodId, false, function () {
+
+            });
         });
         $("#chlId").change(function () {
             var ps= $('#ps').val();

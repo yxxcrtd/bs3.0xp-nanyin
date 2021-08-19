@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,8 +44,10 @@ public class InvestDealRevokeProcessor extends BaseProcessor<NeedOperateEntity, 
         if(CollectionUtils.isNotEmpty(tradeIdList) || CollectionUtils.isNotEmpty(totalTradeIdList)) {
             revokeService.doRevoke(tradeIdList, totalTradeIdList);
         }
+        List<String> orderIds = new ArrayList<>();
+        orderIds.addAll(tradeIdList);orderIds.addAll(totalTradeIdList);
         // 删除日间成交数据形成的头寸流水信息
-        investDealRevokeService.deletePositionFlow(item.getTradeDate(), item.getPortfolioIdList(), revokeService.getBusiType());
+        investDealRevokeService.deletePositionFlow(item.getTradeDate(), item.getPortfolioIdList(), revokeService.getBusiType(),orderIds);
         // 根据交易编号删除日间指令现金流水（此逻辑添加时因为日间委托现金流水表的orderId存在值是交易编号的记录）
         investDealRevokeService.deleteEtrCashPositionFlowByTrdId(tradeIdList, totalTradeIdList);
         // 删除日终交易占用的委托完成度信息（此逻辑添加时因为日终批处理生成的数据要删除）

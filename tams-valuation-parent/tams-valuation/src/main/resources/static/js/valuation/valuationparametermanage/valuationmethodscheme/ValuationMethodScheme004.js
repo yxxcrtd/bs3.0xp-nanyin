@@ -120,14 +120,14 @@ $(function () {
         var valMethod = $("#valuationMethod").val();
         if(valMethod == '01' || valMethod == '03'){
         	$("#c_valuationPrice").show();
-        	$("#c_valuationPrice2").show();
+        	/*$("#c_valuationPrice2").show();*/
         	$("#c_valuationDate").show();
         	$("#c_quotaDigit").show();
 			$("#c_priceTailMode").show();
 //    		$("#c_priceClass").show();
         }else{// 隐藏并且置空
         	$("#c_valuationPrice").hide();
-        	$("#c_valuationPrice2").hide();
+        	/*$("#c_valuationPrice2").hide();*/
         	$("#c_valuationDate").hide();
         	$("#c_quotaDigit").hide();
 			$("#c_priceTailMode").hide();
@@ -154,14 +154,14 @@ $(function () {
 		if(valMethod == '01' && $("#invAim").val() == 'FVOCI'){
 			traget1.style.display="none";
 			traget2.style.display="inline";
-			$("#c_valuationPrice2").hide();
+			/*$("#c_valuationPrice2").hide();*/
 		}else if((valMethod == '01' || valMethod == '03')  && $("#invAim").val() == 'FVTPL'){
 			traget1.style.display="none";
 			traget2.style.display="inline";
-			$("#c_valuationPrice2").hide();
+			/*$("#c_valuationPrice2").hide();*/
 		}else if(valMethod == '05' && $("#invAim").val() == 'FVTPL'){
 			$("#c_valuationPrice").hide();
-			$("#c_valuationPrice2").hide();
+			/*$("#c_valuationPrice2").hide();*/
 
 			$("#c_quotaDigit").show();
 			$("#c_priceTailMode").show();

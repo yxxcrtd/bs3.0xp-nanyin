@@ -140,5 +140,12 @@ public class SpecialassetsController {
         return specialassetsService.findAll(param);
     }
 
+    @PostMapping("getSecTypeByFinprodId")
+    public String getSecTypeByFinprodId(@RequestBody Map<String, Object> param) throws Exception {
+        return specialassetsService.getSecTypeByFinprodId(param);
+    }
+
+
+
 
 }

@@ -32,6 +32,10 @@ public class ModAssetGradeSpecialConfigDto extends BaseEntity{
     private String finprodName;
 
     /**
+     * 评级机构类型
+     */
+    private String gradeOrgType;
+    /**
      * 评级机构（数据字典 评级机构）
      */
     private String gradeOrgId;
@@ -192,5 +196,13 @@ public class ModAssetGradeSpecialConfigDto extends BaseEntity{
     @Override
 	public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getGradeOrgType() {
+        return gradeOrgType;
+    }
+
+    public void setGradeOrgType(String gradeOrgType) {
+        this.gradeOrgType = gradeOrgType;
     }
 }

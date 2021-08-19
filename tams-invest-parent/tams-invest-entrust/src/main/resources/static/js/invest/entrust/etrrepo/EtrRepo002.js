@@ -43,7 +43,15 @@
         }else{
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype_zhg,isEnabled:'01'}
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
+        obj.repoTerm = $('#repoTerm').val();
         var object = {tradeDirection:['ps','EtrRepo002.ps'],portfolioCode:['portfolioId','EtrRepo002.portfolioId'],tradeAmount:['entrustAmt','EtrRepo002.entrustAmt'],assetType:['assetType1','EtrRepo002.assetType1'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
+        object.repoTerm = ['repoTerm', 'EtrRepo002.repoTerm'];
         return object;
     }
 

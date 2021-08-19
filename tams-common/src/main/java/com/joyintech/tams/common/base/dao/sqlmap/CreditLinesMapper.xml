@@ -415,6 +415,9 @@
             <if test="holdMaturity != null" >
                 HOLD_MATURITY = #{holdMaturity,jdbcType=VARCHAR},
             </if>
+            <if test="creditPrice != null" >
+                CREDIT_PRICE = #{creditPrice,jdbcType=DECIMAL},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>

@@ -3,8 +3,11 @@ package com.joyintech.tams.invest.entrust.etrbondtostock.controller;
 import java.util.Date;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -215,6 +218,21 @@ public class EtrBondToStock002Controller extends BaseController{
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
         }
+
+        // ----------add by zhangrui1 20200703 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            String finprodType2 =  DictCodeList.平安资产类型_债券.getValue();
+            //债转股需要走批量接口
+            String  infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                    infCode, finprodType2);
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by zhangrui1 20200703 预占功能 end----------
+
         ProcessParameter<EtrBondToStockDto> processParameter = new ProcessParameter<EtrBondToStockDto>();
         WorkFlowParameter<EtrBondToStockDto> params = new WorkFlowParameter<EtrBondToStockDto>();
         params.setPageId(this.getPageId());

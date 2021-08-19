@@ -167,7 +167,13 @@
         var finType = 'paBussType';
         var finMng = 'TrdDepositInvestTrade001.finprodType';
         obj.assetType = FINPROD_TYPE_TG_ZQ;
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {valDate:['tradeDate','TrdBondToStock001.tradeDate'],portfolioCode:['portfolioId','TrdBondToStock001.portfolioId'],tradeAmount:['shareAmt','TrdBondToStock001.shareAmt'],assetType:[finType,finMng],tradeDirection:['busiPs','TrdBondToStock002.ps'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     };
     window.componentLoadCallback = function(isDone, pagePath, params){
@@ -345,7 +351,7 @@
             //-----------add by jjpei 2020-01-07 风险新版本 start----------
             var object = $.serializeToObject('#submitForm', true);
              object.ps=PS_ZZG;
-             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/1/RSK002/F01',object,getriskdata());
+             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/1/RSK011/F01',object,getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 end----------
              window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());
 
@@ -354,12 +360,12 @@
         $("#tradeAmt").change(function () {
             var tradeAmt = $("#tradeAmt").val();
             if(parseInt(tradeAmt|0)==0){
-                $("#settleDate").attr("disabled",true);
+                 $("#settleDate").attr("disabled",true);
                 $("#settleDate").val("");
                 $("#bussTrdTransferOrder_div").hide();
             }
             else{
-                $("#settleDate").attr("disabled",false);
+                 $("#settleDate").attr("disabled",false);
                 // 系统参数GEN_PAY_ORDERS_AUTO不等于隐藏，才能显示 lizhi 2020-2-27
             	if(GEN_PAY_ORDERS_AUTO != '01'){
             		$("#bussTrdTransferOrder_div").show();

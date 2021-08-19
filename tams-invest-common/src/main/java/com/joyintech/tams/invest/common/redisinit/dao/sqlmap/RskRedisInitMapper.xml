@@ -195,7 +195,7 @@
         <where>
           mdate &gt;= to_date('${valDate}','yyyy-MM-dd')
             <if test="paramIdList != null and paramIdList.size() > 0">
-               m.FINPROD_ID in
+               and m.FINPROD_ID in
                 <foreach collection="paramIdList" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>

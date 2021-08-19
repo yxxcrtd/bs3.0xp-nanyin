@@ -52,7 +52,7 @@ public class LossGivenDefaultMaintain002Controller extends BaseController{
 	private LossGivenDefaultMaintain002Service lossGivenDefaultMaintain002Service;
     @Override
     public String init(Model model) {
-    	super.setSelectOptionToModel(model, DictCode.资产类型, DictCode.资产分类,DictCode.是否);
+    	super.setSelectOptionToModel(model, DictCode.资产类型, DictCode.资产分类,DictCode.是否,DictCode.证券品种,DictCode.债券类型,DictCode.存款类资产存款类型);
     	 String workflowId = getParam("workflowId");
          String creditTagId = getParam("seqno");
          // 待办跳转

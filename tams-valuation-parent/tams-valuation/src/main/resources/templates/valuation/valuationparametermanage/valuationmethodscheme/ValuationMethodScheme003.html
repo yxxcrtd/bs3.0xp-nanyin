@@ -46,7 +46,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md6" id="c_secDetailType" >
+                <div class="layui-inline layui-col-md6" id="c_secDetailType" style="display:inline;">
                     <label class="layui-form-label form-lable-wrap">证券细分类</label>
                     <div class="layui-input-inline input-inline">
                         <select id="secDetailType" name="secDetailType" class="layui-input form-input input-select"
@@ -54,6 +54,18 @@
                             data-th-initvalue="${entity?.secDetailType}" parentIds="tradeMarket"
                             data-th-data-url="@{/valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme003/getSecDetailType}">
 <!--                             <option></option>	multiple="multiple" -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline layui-col-md6" id="c_secDetailTypePlan" style="display:none;">
+                    <label class="layui-form-label form-lable-wrap">证券细分类</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="secDetailType" name="secDetailType" class="layui-input form-input input-select"
+                                allowClear="true" placeholder="请输入" data-th-data-result="${PLANNED_TYPE}"
+                                data-th-initvalue="${entity?.secDetailType}" parentIds="secType"
+                                data-th-data-url="@{/valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme003/getSecDetailTypeBySecType}">
+                            <!--                             <option></option>	multiple="multiple" -->
                         </select>
                     </div>
                 </div>
@@ -84,8 +96,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md6" id="c_valuationPrice">
-                    <label id="priceFristId" class="layui-form-label form-lable-wrap" style="display: inline">估值第一市价</label>
-                    <label id="priceSourceId" class="layui-form-label form-lable-wrap" style="display: none">市价来源</label>
+                    <label id="priceSourceId" class="layui-form-label form-lable-wrap" style="display: inline">市价来源</label>
                     <div class="layui-input-inline input-inline">
                         <select id="valuationPrice" name="valuationPrice" class="layui-input form-input input-select"
                             allowClear="true" placeholder="请输入" data-th-data-result="${VALUATION_PRICE}"
@@ -95,17 +106,17 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md6" id="c_valuationPrice2">
+                <!--<div class="layui-inline layui-col-md6" id="c_valuationPrice2">
                     <label class="layui-form-label form-lable-wrap">估值第二市价</label>
                     <div class="layui-input-inline input-inline">
                         <select id="valuationPrice2" name="valuationPrice2" class="layui-input form-input input-select"
                             allowClear="true" placeholder="请输入" data-th-data-result="${VALUATION_PRICE}"
-                            data-th-initvalue="${entity?.valuationPrice2}" parentIds="tradeMarket,secType,invAim,valuationMethod"
+                            data-th-initvalue="${entity?.valuationPrice2}" parentIds="tradeMarket,secType"
                             data-th-data-url="@{/valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme003/getValuationPrice}">
                             <option></option>
                         </select>
                     </div>
-                </div>
+                </div>-->
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md6" id="c_valuationSource">

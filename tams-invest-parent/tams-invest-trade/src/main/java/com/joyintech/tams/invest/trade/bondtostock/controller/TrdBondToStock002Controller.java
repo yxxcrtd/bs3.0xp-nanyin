@@ -7,12 +7,17 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
+import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.trade.bondtostock.dto.TrdBondToStock001Dto;
 import com.joyintech.tams.invest.trade.bondtostock.service.TrdBondToStock002Service;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.common.controller.TrdCommonController;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
@@ -55,6 +60,11 @@ public class TrdBondToStock002Controller extends BaseController {
     
     @Autowired
     private TrdCommonController trdCommonController;
+	
+	//----------add by zhangrui1 20200508 核风险版本 start----------
+    @Autowired(required = false)
+    private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
+    //----------add by zhangrui1 20200508 核风险版本 end----------
     
     @Override
     public String init(Model model) {
@@ -239,6 +249,21 @@ public class TrdBondToStock002Controller extends BaseController {
         else {
             processParameter.setOperationType(OperationType.MODIFY);
         }
+        //----------add by zhangrui1 20200508 核风险版本 start----------
+        if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
+            tempDto.setPs(DictCodeListExt1.交易方向_债转股.getValue());
+            AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue(),DictCodeList.平安资产类型_债券.getValue(),
+                    en->interfRiskRdsService.sendRiskRdsData(tempDto,en));
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+            // add by zhangrui1 start
+            // 将实占信息设置到线程缓存出错时撤销用
+            TradeRdsCommonAop.setLocalCache(tempDto);
+            // add by zhangrui1 end
+        }
+        //----------add by zhangrui1 20200508 核风险版本 end----------
         workFlowParameter.setPageId(this.getPageId());
         workFlowParameter.setElementId(this.getParam("elementId"));
         workFlowParameter.setBusinessCode((entity) -> entity.getBusiCode());

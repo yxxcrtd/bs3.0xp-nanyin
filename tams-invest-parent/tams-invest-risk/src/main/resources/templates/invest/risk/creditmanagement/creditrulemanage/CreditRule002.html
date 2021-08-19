@@ -69,12 +69,12 @@
 					</label>
 					<div class="layui-input-inline input-inline">
 						<select id="astType4" name="astType4"
-								th:initValue="*{entity?.astType4}" multiple="true"
+								th:initValue="*{entity?.astType4}"
 								class="layui-input form-input input-select"
 								allowClear="true" placeholder="请选择"
 								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-data-result="${RISK_ASSET_TYPE_FOUR}"
-								formatoption=true childrenIds="astType5"></select>
+								formatoption=true childrenIds="astType5" parentIds="astType3"></select>
 					</div>
 				</div>
 			</div>
@@ -85,12 +85,12 @@
 					</label>
 					<div class="layui-input-inline input-inline">
 						<select id="astType5" name="astType5"
-								th:initValue="*{entity?.astType5}" multiple="true"
+								th:initValue="*{entity?.astType5}"
 								class="layui-input form-input input-select"
 								allowClear="true" placeholder="请选择"
 								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-data-result="${RISK_ASSET_TYPE_FIVE}"
-								formatoption=true
+								formatoption=true parentIds="astType4"
 								></select>
 					</div>
 				</div>

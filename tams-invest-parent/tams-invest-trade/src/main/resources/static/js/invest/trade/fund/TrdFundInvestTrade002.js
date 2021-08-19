@@ -100,6 +100,7 @@ $(function () {
             $('#tradePrice_label').hide();
             $('.commissionFee_class').hide();
             $('.channel_cash').show();
+            $('#accAvailableCash_c_div').hide();
             $('#assetAvailablePosition_div').hide();
             $('#expectedArrivalDate_div').hide();
             $('#transferInformation').show();
@@ -186,6 +187,7 @@ $(function () {
                 $('#carryAmt').prop("disabled", false);
             }
             $('.channel_cash').show();
+            $('#accAvailableCash_c_div').hide();
             $('#assetAvailablePosition_div').hide();
             $('#expectedArrivalDate_div').hide();
             $('#transferInformation').show();
@@ -755,6 +757,7 @@ $(function () {
                 // $('#accAvailableCash_div').show();
                 // <!-- 通道交易 新增 强成西 2019/03/26 start -->
                 $('.channel_cash').show();
+                $('#accAvailableCash_c_div').hide();
                 // <!-- 通道交易 新增 强成西 2019/03/26 end -->
                 $('#assetAvailablePosition_div').hide();
                 $('#expectedArrivalDate_div').hide();
@@ -831,6 +834,7 @@ $(function () {
                 // $('#accAvailableCash_div').show();
                 // <!-- 通道交易 新增 强成西 2019/03/26 start -->
                 $('.channel_cash').show();
+                $('#accAvailableCash_c_div').hide();
                 // <!-- 通道交易 新增 强成西 2019/03/26 end -->
                 $('#assetAvailablePosition_div').hide();
                 $('#expectedArrivalDate_div').hide();
@@ -1238,7 +1242,7 @@ $(function () {
                     if (!($('#ps').val() == ps_mr || $('#ps').val() == ps_mc)
                         && ($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04)
                         && !$('#chlId').val() && !$('#secManageAcctId').val()) {
-                        Joyin.error("交易所基金交易时，" + JoyinUtil.getMessage('TRD_E_0014',JoyinUtil.getMessage('invest.channelId')))
+                        Joyin.error("交易所基金交易时，" + JoyinUtil.getMessage('TRD_E_0014_1',JoyinUtil.getMessage('invest.channelId')))
                         return;
                     }
                     return {

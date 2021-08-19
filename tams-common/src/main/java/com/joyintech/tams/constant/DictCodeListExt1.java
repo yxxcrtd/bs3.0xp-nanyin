@@ -550,6 +550,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	证券品种_存款(DictCode.证券品种,"07","存款"),
 	证券品种_拆借(DictCode.证券品种,"08","拆借"),
 	证券品种_回购(DictCode.证券品种, "09", "回购"),
+	证券品种_其他债权类(DictCode.证券品种, "13", "其他债权类"),
 	证券品种_计划类资产_净值型(DictCode.证券品种,"10","计划类（净值型）"),
 	证券品种_计划类资产_货币型(DictCode.证券品种,"11","计划类（货币型）"),
 	证券品种_计划类资产_收益型(DictCode.证券品种,"12","计划类（收益型）"),

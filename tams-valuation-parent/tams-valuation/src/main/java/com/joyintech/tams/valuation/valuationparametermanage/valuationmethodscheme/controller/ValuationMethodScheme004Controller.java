@@ -80,12 +80,12 @@ public class ValuationMethodScheme004Controller extends BaseController {
 		String operateType = getParam("operateType");
 		String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);// 工作流ID
 		ValuationMethodScheme004Dto dto = new ValuationMethodScheme004Dto();
-		
+
 		if (StringUtils.isNotEmpty(schemeDetailId)) {
 			dto = valuationMethodScheme004Service.findBySchemeDetailId(schemeDetailId);
 		}else if(StringUtil.isNotEmpty(workflowId)) { // 流程查看页面
             dto = valuationMethodScheme004Service.getBussinessEntityByWorkflowId(workflowId);
-            
+
             schemeDetailId = dto.getSchemeDetailId(); // 避免流程，再生成主键
         }
 		if (StringUtils.isEmpty(schemeDetailId) || "copy".equals(operateType)) { // 新建 和 复制 自动生成主键 并 连接方案
@@ -112,7 +112,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 
 	/**
 	 * 下拉框 ： 产品代码
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -121,7 +121,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	public List<SelectOptionDto> findFinprod() throws Exception {
 		return valuationMethodScheme004Service.findFinprod(RequestUtil.getPageParam());
 	}
-	
+
 	/**
 	 * 通过产品代码，获取产品信息
 	 * @return
@@ -132,9 +132,9 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	public ValuationMethodScheme004Dto getFinprodInfo() throws Exception {
 		return valuationMethodScheme004Service.getFinprodInfo(RequestUtil.getPageParam());
 	}
-	
-	
-	
+
+
+
 
 	@ResponseBody
 	@RequestMapping("check")
@@ -144,27 +144,27 @@ public class ValuationMethodScheme004Controller extends BaseController {
 //        ValuationMethodScheme004Dto dto = list.get(0);
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
-		
+
 		if(StringUtils.isEmpty(dto.getSchemeDetailId())) {
 			bindingResult.rejectValue("schemeDetailId", "NotBlank", "方案明细代码不能为空！");
 		}
-		
+
 		if(StringUtils.isEmpty(dto.getSchemeId())) {
 			bindingResult.rejectValue("schemeId", "NotBlank", "方案代码不能为空！");
 		}
-		
+
 		if(StringUtils.isEmpty(dto.getFinprodId())) {
 			bindingResult.rejectValue("finprodId", "NotBlank", "资产代码不能为空！");
 		}
-		
+
 		if(StringUtils.isEmpty(dto.getFinprodName())) {
 			bindingResult.rejectValue("finprodName", "NotBlank", "资产名称不能为空！");
 		}
-		
+
 		if(StringUtils.isEmpty(dto.getValuationMethod())) {
 			bindingResult.rejectValue("valuationMethod", "NotBlank", "估值方法不能为空！");
 		}
-		
+
 		if(StringUtils.isEmpty(dto.getVdate())) {
 			bindingResult.rejectValue("vdate", "NotBlank", "开始日不能为空！");
 		}
@@ -213,7 +213,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 					return new AjaxResult(msg, MessageType.错误消息);
 				}
 			}
-			
+
 			if (StringUtils.isNotEmpty(dto.getVdate()) && StringUtils.isNotEmpty(dto.getMdate())) {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				Date vDate = sdf.parse(dto.getVdate());
@@ -223,7 +223,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 					return new AjaxResult(msg, MessageType.错误消息);
 				}
 			}
-			
+
 			// 唯一性校验：资产代码、投资目的、开始日相同时，不可提交。
 			Map<String, Object> params1 = Maps.newHashMap();
 			params1.put("schemeId", dto.getSchemeId());
@@ -231,11 +231,11 @@ public class ValuationMethodScheme004Controller extends BaseController {
 			params1.put("invAim", dto.getInvAim());
 			params1.put("vdate", dto.getVdate());
 			params1.put("mdate", dto.getMdate());
-			
+
 			if (GlobalConstant.DETAIL_PAGE_MODEL_EDIT.equals(dto.getPageModel())) {// 修改时忽略本身
 				params1.put("owner", dto.getSchemeDetailId());
 			}
-			
+
 			// 日期重叠校验
 			if(StringUtils.isEmpty(dto.getMdate())) {// 提交没有结束日
 				List<ValuationMethodScheme001Dto> list1 = valuationMethodScheme001Service.findSpecialAssetsByPage(params1)
@@ -259,7 +259,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 					msg = "在此投资目的下，该资产在此区间内存在估值配置，请核对后提交！";
 					return new AjaxResult(msg, MessageType.错误消息);
 				}
-				
+
 				params1.put("vdate", dto.getVdate());
 				List<ValuationMethodScheme001Dto> list1 = valuationMethodScheme001Service.findSpecialAssetsByPage(params1)
 						.getRoot();
@@ -267,9 +267,9 @@ public class ValuationMethodScheme004Controller extends BaseController {
 					msg = "在此投资目的下，该资产在此区间内存在估值配置，请核对后提交！";
 					return new AjaxResult(msg, MessageType.错误消息);
 				}
-				
+
 			}
-			
+
 		}
 
 		return commonCheck(bindingResult, operateType);
@@ -286,12 +286,12 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	public AjaxResult save(@RequestBody ValuationMethodScheme004Dto dto, BindingResult bindingResult) {
 //        List<ValuationMethodScheme004Dto> list = listdto.getListValuationMethodSchemeDto();
 //        ValuationMethodScheme004Dto dto = list.get(0);
-		
+
 		String msg = StringUtil.EMPTY;
-		
+
 		ProcessParameter<ValuationMethodScheme004Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<ValuationMethodScheme004Dto> workFlowParameter = new WorkFlowParameter<>();
-        
+
         try {
             workFlowParameter.setPageId(this.getPageId()); // 页面id
             workFlowParameter.setElementId(this.getParam(GlobalConstant.ELEMENT_ID)); // 元素id
@@ -300,14 +300,14 @@ public class ValuationMethodScheme004Controller extends BaseController {
             workFlowParameter.setComment(entity -> WorkFlowUtil.concatComment(entity.getSchemeDetailId(),
                 entity.getSchemeId(), "特殊资产估值配置"));// 当前工作流备注
             processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
-            
+
             valuationMethodScheme004Service.start(processParameter, dto);
             msg = getMessage("COMMON_I_0001"); // 处理正常结束
         } catch (Exception e) {
             this.getLogger().error("启动估值方案流程失败：", e);
             msg = e.getMessage();
         }
-        
+
         return new AjaxResult(msg);
 	}
 
@@ -326,11 +326,11 @@ public class ValuationMethodScheme004Controller extends BaseController {
 //		param.put("item_code_parent", DictCodeListExt1.证券品种_债券.getValue());
 //		return valuationMethodScheme001Service.getLinkSelectOption(param);
 //	}
-	
-	
+
+
 	/**
 	 * 联动：投资目的 - 估值方法 获得估值方法
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -360,7 +360,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 
 	/**
 	 * 联动：交易市场 - 估值市价 获得估值市价
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */

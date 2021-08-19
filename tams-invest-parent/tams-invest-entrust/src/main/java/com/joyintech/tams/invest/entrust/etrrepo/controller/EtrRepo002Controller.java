@@ -19,13 +19,12 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
 import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
 import com.joyintech.tams.invest.entrust.etrrepo.service.EtrRepo002Service;
@@ -34,6 +33,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -175,7 +175,7 @@ public class EtrRepo002Controller extends BaseController {
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
         model.addAttribute("fintype_zhg", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         model.addAttribute("fintype_nhg", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
-        
+
         // 吉林银行个性化参数
         // add by ZhouYu 2019-12-19 start
         if("004".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
@@ -219,7 +219,7 @@ public class EtrRepo002Controller extends BaseController {
 
     /**
      * 获取组合代码联想文本框信息 <功能详细描述>
-     * 
+     *
      * @return
      * @throws Exception
      * @see
@@ -233,7 +233,7 @@ public class EtrRepo002Controller extends BaseController {
         return temp;
     }
     /**
-     * 
+     *
      * 组合可用现金查询
      * <功能详细描述>
      * @param dto
@@ -247,7 +247,7 @@ public class EtrRepo002Controller extends BaseController {
         return etrRepo002Service.getProAvailableCash(param);
     }
     /**
-     * 
+     *
      * 查询标准券额度
      * <功能详细描述>
      * @param map
@@ -289,7 +289,7 @@ public class EtrRepo002Controller extends BaseController {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
-        
+
         // 可用现金软校验
         if (StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())
             && dto.getProAvailableCash() != null) {
@@ -299,10 +299,10 @@ public class EtrRepo002Controller extends BaseController {
                return ar;
            }
         }
-        
+
         return commonCheck(result, dto.getOperateType());
     }
-    
+
     @RequestMapping("checkAuthorization")
     @ResponseBody
     public AjaxResult checkAuthorization(@RequestBody EtrRepoDto dto) {
@@ -314,10 +314,10 @@ public class EtrRepo002Controller extends BaseController {
         }
         return new AjaxResult();
     }
-    
+
     /**
      * 保存/提交
-     * 
+     *
      * @param dto dto
      * @param br br
      * @return 结果
@@ -336,6 +336,18 @@ public class EtrRepo002Controller extends BaseController {
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
         }
+
+        // ----------add by yushilong 20200721 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    DictCodeList.平安资产类型_质押式回购.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by yushilong 20200721 预占功能 end----------
+
         ProcessParameter<EtrRepoDto> processParameter = new ProcessParameter<EtrRepoDto>();
         WorkFlowParameter<EtrRepoDto> params = new WorkFlowParameter<EtrRepoDto>();
         params.setPageId(this.getPageId());

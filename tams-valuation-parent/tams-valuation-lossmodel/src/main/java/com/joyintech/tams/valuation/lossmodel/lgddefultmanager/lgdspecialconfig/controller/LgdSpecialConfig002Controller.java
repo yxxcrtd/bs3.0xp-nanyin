@@ -13,10 +13,14 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import com.joyintech.tams.valuation.common.interf.invest.constant.BussinessJixuConstant;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import com.joyintech.tams.valuation.lossmodel.lgddefultmanager.lgdspecialconfig.dto.LgdSpecialConfigDto;
 import com.joyintech.tams.valuation.lossmodel.lgddefultmanager.lgdspecialconfig.service.LgdSpecialConfigService;
 import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.gradepdconfig.service.ModGradePdConfigService;
@@ -30,6 +34,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
@@ -176,4 +181,31 @@ public class LgdSpecialConfig002Controller extends BaseController {
         }
         return new AjaxResult(msg);
     }
+
+    
+    /**
+     * @Description:获取资产代码下拉框
+     * @auther: yuzj
+     * @date: 2021/8/14
+     * @param: 
+     * @return: 
+     */
+    @RequestMapping("getFinprodIdByLossType")
+    @ResponseBody
+    public List<SelectOptionDto> getFinprodIdByLossType() {
+        Map<String, Object> params = RequestUtil.getPageParam();
+        //lossType   01 毕马威；02 普华永道
+        List<SelectOptionDto> suggestDtoList = new ArrayList<>();
+        String lossType = (String)params.get("lossType");//不为空，表示已指定类型，为空则使用减值方案系统参数
+        if(StringUtil.isEmpty(lossType)){
+            params.put("lossType",CacheUtil.getSysParam(ValComponentConstant.LOSSTYPE));
+        }
+        suggestDtoList = lgdSpecialConfigService.getFinprodIdByLossType(params);
+        return  suggestDtoList;
+    }
+
+
+
+
+
 }

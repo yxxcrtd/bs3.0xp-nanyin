@@ -10,10 +10,16 @@
  
 package com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcategories.service.AssetCategories001Service;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.dto.ModAssetGradeSpecialConfigDto;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.service.Specialassets002Service;
+import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.service.LossGivenDefaultMaintain001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,9 +56,13 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 public class Specialassets002Controller extends BaseController{
 	@Autowired
 	private Specialassets002Service specialassets002Service;
+    @Autowired
+    private AssetCategories001Service assetCategories001Service;
     @Override
     public String init(Model model) {
     	super.setSelectOptionToModel(model, DictCode.评级机构, DictCode.评级类型_减值);
+        this.setSelectOptionToModel(model, DictCode.评级机构类型);
+        this.setSelectOptionToModel(model, DictCode.证券品种);
     	 String workflowId = getParam("workflowId");
          String creditTagId = getParam("seqno");
          // 待办跳转
@@ -117,4 +127,29 @@ public class Specialassets002Controller extends BaseController{
         String msg = specialassets002Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }
+
+
+    /**
+     * 联动：资产代码找到证券品种 - 获得评级类型
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("getGradeType")
+    public List<SelectOptionDto> getGradeType() throws Exception {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        List<SelectOptionDto> selectOptionList = new ArrayList<>();
+        String finprodId =(String)param.get("finprodId");
+        //根据产品获取产品的证券品种
+        String secType = specialassets002Service.getSecTypeByFinprodId(param);
+        if(StringUtil.isNotEmpty(finprodId)){
+            param.put("dict_code_parent", DictCode.证券品种.getValue());
+            param.put("dict_code_child", DictCode.评级类型_减值.getValue());
+            param.put("item_code_parent", secType);
+            selectOptionList =assetCategories001Service.getLinkSelectOption(param);;
+        }
+        return selectOptionList;
+    }
+
 }

@@ -10,14 +10,20 @@
             valDate:sysDate,
             portfolioCode:$('#portfolioId').val(),
             tradeAmount:$('#stocketrPriceTotal').val(),
-            assetType:PA_TYPE_ZQMC,
+            assetType:fintype,
             isEnabled:'01',
-            tradeDirection:PS_ZQMC
+            tradeDirection:etrPs,
         };
+
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+
+        // add by zhangrui1 交易对手影响风险试算 end
         var finType = 'paBussType';
         var finMng = 'TrdDepositInvestTrade001.finprodType';
-        obj.assetType = fintype;
+        // obj.assetType = fintype;
         var object = {portfolioCode:['portfolioId','EtrBondToStock001.portfolioId'],tradeAmount:['shareAmt','EtrBondToStock002.stocketrPriceTotal'],assetType:[finType,finMng],tradeDirection:['busiPs','TrdBondToStock002.ps'],data:obj}
+        object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
         return object;
     };
 	
@@ -243,7 +249,7 @@
             var object = $.serializeToObject('#searchForm');
             object.entrustAmt=$('#stocketrPriceTotal').val();
             object.ps=etrPs;
-            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F01',object,getriskdata());
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK011/F01',object,getriskdata());
         });
     });
 }());

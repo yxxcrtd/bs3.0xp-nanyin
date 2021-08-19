@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.dto.ModLgdConfigDto;
 import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.service.LossGivenDefaultMaintain001Service;
 import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.service.LossGivenDefaultMaintain002Service;
@@ -69,7 +71,8 @@ public class LossGivenDefaultMaintain001Controller extends BaseController{
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
         // 画面参数设置
-    	super.setSelectOptionToModel(model, DictCode.资产类型);
+//    	super.setSelectOptionToModel(model, DictCode.资产类型);
+        super.setSelectOptionToModel(model, DictCode.证券品种);
         model.addAttribute("entityName", StringUtil.defaultString(this.getParam("entityName"), "fileCommonDto"));
         return super.init(model);
     }
@@ -131,6 +134,25 @@ public class LossGivenDefaultMaintain001Controller extends BaseController{
                  this.getMessage(DateUtil.format(new Date())+"_LGD违约损失率维护")
                          + SystemGlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
                  outFile, true);
+    }
+
+
+
+    /**
+     * 联动：资产类别
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("getSecTypeOption")
+    public List<SelectOptionDto> getSecTypeOption() throws Exception {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        //type 01 毕马威  02 普华永道
+        //当为01时，资产类型显示回购09 和存款07
+//        param.put("type","01");
+        List<SelectOptionDto> linkSelectOption = lossGivenDefaultMaintain001Service.getLinkSelectOption(param);
+        return linkSelectOption;
     }
     
 }

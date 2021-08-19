@@ -4,6 +4,7 @@ package com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.contr
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.dto.ModLgdConfigDto;
 import com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.service.LossGivenDefaultMaintainService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,18 @@ public class LossGivenDefaultMaintainController {
     @PostMapping("delete")
     public int delete(@RequestBody ModLgdConfigDto dto) throws Exception {
         return lossGivenDefaultMaintainService.delete(dto);
+    }
+
+
+    /**
+     * 联动：证券品种 - 交易流通场所 获得交易市场
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("getLinkSelectOption")
+    public List<SelectOptionDto> getLinkSelectOption(@RequestBody Map<String, Object> param) {
+        return lossGivenDefaultMaintainService.getLinkSelectOption(param);
     }
 
 }

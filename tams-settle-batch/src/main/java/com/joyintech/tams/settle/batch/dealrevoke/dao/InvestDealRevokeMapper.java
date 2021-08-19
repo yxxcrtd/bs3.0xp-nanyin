@@ -1,5 +1,9 @@
 package com.joyintech.tams.settle.batch.dealrevoke.dao;
 
+import com.joyintech.tams.common.base.entity.EtrCashPosition;
+import com.joyintech.tams.common.base.entity.EtrSecPosition;
+import com.joyintech.tams.common.base.entity.PtlCashPosition;
+import com.joyintech.tams.common.base.entity.PtlSecPosition;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -89,4 +93,40 @@ public interface InvestDealRevokeMapper {
      * @return
      */
     int deleteEtrCashPositionFlowByTrdId(Map<String, Object> param);
+
+    /**
+     * 组合持仓流水
+     * @param param
+     * @return
+     */
+    List<PtlSecPosition> listPtlSecPositionFlow(Map<String, Object> param);
+
+    /**
+     *组合现金流水
+     * @param param
+     * @return
+     */
+    List<PtlCashPosition> listPtlCashPositionFlow(Map<String, Object> param);
+
+    /**
+     * 委托持仓流水
+     * @param param
+     * @return
+     */
+    List<EtrSecPosition> listEtrSecPositionFlow(Map<String, Object> param);
+
+    /**
+     * 委托现金流水
+     * @param param
+     * @return
+     */
+    List<EtrCashPosition> listEtrCashPositionFlow(Map<String, Object> param);
+
+    int updatePtlCashPosition(PtlCashPosition ptlCashPosition);
+
+    int updatePtlSecPosition(PtlSecPosition ptlSecPosition);
+
+    int updateEtrCashPosition(EtrCashPosition etrCashPosition);
+
+    int updateEtrSecPosition(EtrSecPosition etrSecPosition);
 }
