@@ -304,9 +304,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 //插入新的数据
                 if(CollectionUtil.isNotEmpty(prdList)){
                     for (PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat : prdList) {
-                        if(StrUtil.isEmpty(pbcPrdBaseinfoSubDat.getRegistSeqno())){
-                            pbcPrdBaseinfoSubDat.setRegistSeqno(UUID.randomUUID().toString());
-                        }
+                        pbcPrdBaseinfoSubDat.setRegistSeqno(UUID.randomUUID().toString());
                         pbcPrdBaseinfoSubDatMapper.insert(pbcPrdBaseinfoSubDat);
                     }
                 }
