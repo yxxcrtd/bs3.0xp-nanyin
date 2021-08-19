@@ -1,0 +1,79 @@
+/**风险指标参数:混合基金商品衍生品占比**/
+----风险监督指标参数
+
+DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='HHJJSPYSPZB';
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('HHJJSPYSPZB','混合基金商品衍生品占比','N','','dzw','001',sysdate,'dzw',sysdate,'','','Y','String', '','REDIS', '');
+---监督指标参数明细
+DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='HHJJSPYSPZB';
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HHJJSPYSPZB','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','dzw','001',sysdate,'dzw',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HHJJSPYSPZB','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','dzw','001',sysdate,'dzw',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HHJJSPYSPZB','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','dzw','001',sysdate,'dzw',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HHJJSPYSPZB','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','dzw','001',sysdate,'dzw',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HHJJSPYSPZB','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','dzw','001',sysdate,'dzw',sysdate);
+
+DECLARE
+---- 实时、买入预占、卖出预占
+V_CONTENT_01_02_03 CLOB := 'SELECT NVL(GOAL.COMMODITY_DERV_PER, 0) RVALUE,FP.FINPROD_ID RKEY
+  FROM FIN_PRODUCT FP
+ INNER JOIN FIN_PRODUCT_ADD FPA
+    ON FP.FINPROD_ID = FPA.FINPROD_ID
+  LEFT JOIN (select *
+               from (select FPG.FINPROD_ID,
+                            FPG.COMMODITY_DERV_PER,
+                            row_number() over(partition by FPG.FINPROD_ID order by FPG.GOAL_DATE desc) rn
+                       from FIN_PRODUCT_GOAL FPG
+                      WHERE FPG.GOAL_DATE <= DATE ''${valDate}'')
+              where rn = 1) GOAL
+    ON FP.FINPROD_ID = GOAL.FINPROD_ID
+ WHERE FPA.INVEST_NATURE = ''04''
+   AND FP.FINPROD_TYPE2 = ''F06''';
+
+----事后(日间)
+V_CONTENT_04 CLOB := 'SELECT NVL(GOAL.COMMODITY_DERV_PER, 0) RVALUE,FP.FINPROD_ID RKEY
+  FROM FIN_PRODUCT FP
+ INNER JOIN FIN_PRODUCT_ADD FPA
+    ON FP.FINPROD_ID = FPA.FINPROD_ID
+  LEFT JOIN (select *
+               from (select FPG.FINPROD_ID,
+                            FPG.COMMODITY_DERV_PER,
+                            row_number() over(partition by FPG.FINPROD_ID order by FPG.GOAL_DATE desc) rn
+                       from FIN_PRODUCT_GOAL FPG
+                      WHERE FPG.GOAL_DATE <= DATE ''${valDate}'')
+              where rn = 1) GOAL
+    ON FP.FINPROD_ID = GOAL.FINPROD_ID
+ WHERE FPA.INVEST_NATURE = ''04''
+   AND FP.FINPROD_TYPE2 = ''F06''';
+
+----事后(日终)
+V_CONTENT_05 CLOB := 'SELECT NVL(GOAL.COMMODITY_DERV_PER, 0) RVALUE,FP.FINPROD_ID RKEY
+  FROM FIN_PRODUCT FP
+ INNER JOIN FIN_PRODUCT_ADD FPA
+    ON FP.FINPROD_ID = FPA.FINPROD_ID
+  LEFT JOIN (select *
+               from (select FPG.FINPROD_ID,
+                            FPG.COMMODITY_DERV_PER,
+                            row_number() over(partition by FPG.FINPROD_ID order by FPG.GOAL_DATE desc) rn
+                       from FIN_PRODUCT_GOAL FPG
+                      WHERE FPG.GOAL_DATE <= DATE ''${valDate}'')
+              where rn = 1) GOAL
+    ON FP.FINPROD_ID = GOAL.FINPROD_ID
+ WHERE FPA.INVEST_NATURE = ''04''
+   AND FP.FINPROD_TYPE2 = ''F06''';
+BEGIN
+    UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_01_02_03 WHERE PARA_CODE = 'HHJJSPYSPZB' and PARA_GRANULARITY in('01','02','03');
+
+    UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_04 WHERE PARA_CODE = 'HHJJSPYSPZB' and PARA_GRANULARITY ='04';
+
+    UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_05 WHERE PARA_CODE = 'HHJJSPYSPZB' and PARA_GRANULARITY = '05';
+END;
+/
+
+
+
+
+
+/**风险指标参数:混合基金商品衍生品占比**/

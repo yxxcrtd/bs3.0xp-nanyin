@@ -1,0 +1,72 @@
+/**风险指标参数:正回购剩余期限**/
+----风险监督指标参数
+
+DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='ZHGSYQX';
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZHGSYQX','正回购剩余期限','N','','jjpei','2222222',sysdate,'whmcp',sysdate,'','','Y','String', '','', '');
+---监督指标参数明细
+DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='ZHGSYQX';
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHGSYQX','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','2222222',sysdate,'admin',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHGSYQX','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','2222222',sysdate,'admin',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHGSYQX','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','2222222',sysdate,'admin',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHGSYQX','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','2222222',sysdate,'admin',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHGSYQX','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','2222222',sysdate,'admin',sysdate);
+
+DECLARE
+---- 实时、买入预占、卖出预占
+V_CONTENT_01_02_03 CLOB := 'select 1 from dual';
+
+----事后(日间)
+V_CONTENT_04 CLOB := 'SELECT (nvl(sum(TRADE_AMT*LAST_PERIOD),0)) AS lastPeriod FROM (
+  select
+	DISTINCT TRADE_AMT,
+	 nvl((A1.mdate)-(date''${valDate}''),0)  LAST_PERIOD
+	from
+	(
+		SELECT t1.FINPROD_ID ,
+		( nvl(t1.DSC_COST_AMT,0)+nvl(t1.TDY_FLOAT_INGPL,0)+nvl(t1.TDY_INTINCEXP,0)+ nvl(t1.DELAY_PAY_AMT,0)) as TRADE_AMT,t2.MDATE
+		from PTL_SEC_VALUTION t1
+		INNER JOIN FIN_TRADE_PRODUCT t2 on t2.FINPROD_ID=t1.FINPROD_ID and t2.FINPROD_TYPE =''F02''
+		where t1.PORTFOLIO_ID in ${portfolioCode} and  t1.CDATE = date''${valDate}''-1
+	UNION ALL
+		select n.FINPROD_ID ,
+		 nvl(sum(decode(n.PS,''T06'',n.TRADE_AMT)),0)
+		  -nvl(sum(decode(n.PS,''T08'',n.TRADE_AMT)),0)	 as  TRADE_AMT,t2.MDATE
+		  from TRD_PRODUCT_DEAL n
+		  INNER JOIN TRD_PRODUCT_DEAL_ADD n1 ON n1.trade_id =n.TRADE_ID
+		  INNER JOIN FIN_TRADE_PRODUCT t2 on t2.FINPROD_ID=n.FINPROD_ID and t2.FINPROD_TYPE =''F02''
+		  where n1.PORTFOLIO_ID in ${portfolioCode} and  n.TRADE_DATE = date''${valDate}''
+		  and n.PS in (''T06'',''T08'') group by n.FINPROD_ID,t2.MDATE
+	) A1
+)';
+
+----事后(日终)
+V_CONTENT_05 CLOB := 'SELECT (nvl(sum(TRADE_AMT*LAST_PERIOD),0)) AS lastPeriod FROM
+(
+	select A1.TRADE_AMT,nvl((A1.mdate)-(date''${valDate}''),0) AS LAST_PERIOD
+	from
+	(
+		select
+		( nvl(m.DSC_COST_AMT,0)+nvl(m.TDY_FLOAT_INGPL,0)+nvl(m.TDY_INTINCEXP,0)+ nvl(m.DELAY_PAY_AMT,0)) as TRADE_AMT,n.MDATE
+		from PTL_SEC_VALUTION m
+		INNER JOIN FIN_TRADE_PRODUCT n on m.FINPROD_ID = n.FINPROD_ID and n.FINPROD_TYPE =''F02''
+		where m.PORTFOLIO_ID in ${portfolioCode}  and  m.CDATE =date''${valDate}''
+	) A1
+)';
+BEGIN
+    UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_01_02_03 WHERE PARA_CODE = 'ZHGSYQX' and PARA_GRANULARITY in('01','02','03');
+
+    UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_04 WHERE PARA_CODE = 'ZHGSYQX' and PARA_GRANULARITY ='04';
+
+    UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_05 WHERE PARA_CODE = 'ZHGSYQX' and PARA_GRANULARITY = '05';
+END;
+/
+
+
+
+
+
+/**风险指标参数:正回购剩余期限**/

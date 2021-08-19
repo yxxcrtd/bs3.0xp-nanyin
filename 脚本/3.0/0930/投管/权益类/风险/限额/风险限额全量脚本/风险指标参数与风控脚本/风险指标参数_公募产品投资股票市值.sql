@@ -1,0 +1,210 @@
+/**风险指标参数:公募产品投资股票市值**/
+----风险监督指标参数
+
+DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='GMCPTZGPZZ';
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GMCPTZGPZZ','公募产品投资股票市值','N','','jjpei','2222222',sysdate,'jjpei',sysdate,'','','Y','String', '','REDIS', '');
+---监督指标参数明细
+DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='GMCPTZGPZZ';
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMCPTZGPZZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMCPTZGPZZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMCPTZGPZZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMCPTZGPZZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);
+
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMCPTZGPZZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);
+
+DECLARE
+---- 实时、买入预占、卖出预占
+V_CONTENT_01_02_03 CLOB := 'select
+ NVL(SUM(NVL(t1.MARKET_VALUE,0)+nvl(t1.TDY_INTINCEXP, 0)),0) as RVALUE, t1.PORTFOLIO_ID as RKEY
+from PTL_SEC_PIERCE_VALUTION t1
+inner join FIN_PRODUCT t2  on t1.FINPROD_ID=t2.FINPROD_ID and t2.FINPROD_TYPE2 =''F10''
+where  t1.CDATE = date''${valDate}''-1  AND t1.PORTFOLIO_ID!=t1.FINPROD_ID
+group by t1.PORTFOLIO_ID
+union all
+  select NVL(SUM(NVL(s1.MARKET_VALUE,0)+nvl(s1.TDY_INTINCEXP, 0)),0) as RVALUE, s2.PTL_BAG_ID as RKEY
+ from (select t1.*
+from PTL_SEC_PIERCE_VALUTION t1
+inner join FIN_PRODUCT t2  on t1.FINPROD_ID=t2.FINPROD_ID and t2.FINPROD_TYPE2 =''F10''
+where  t1.CDATE = date''${valDate}''-1  AND t1.PORTFOLIO_ID!=t1.FINPROD_ID
+) s1,( select t1.PORTFOLIO_ID,t1.PTL_BAG_ID from RSK_PORTFOLIO_PACKAGE_DTL t1  inner join PTL_PORTFOLIO t2 on t1.PORTFOLIO_ID=t2.PORTFOLIO_ID and t2.MDATE>date''${valDate}'')
+s2 where s1.PORTFOLIO_ID=s2.PORTFOLIO_ID  group by s2.PTL_BAG_ID';
+
+----事后(日间)
+V_CONTENT_04 CLOB := 'select sum(TRADE_AMT) as tradeAmt from
+(
+  select NVL(SUM(NVL(m.MARKET_VALUE,0)+nvl(m.TDY_INTINCEXP, 0)),0) as  TRADE_AMT from PTL_SEC_PIERCE_VALUTION m
+  inner join FIN_PRODUCT_TYPE fpt on m.FINPROD_ID=fpt.FINPROD_ID  and fpt.TYPE_8 =''F11''
+  where m.PORTFOLIO_ID in ${portfolioCode}  and  m.CDATE =date''${valDate}''-1
+union ALL
+  select
+    nvl(sum(decode(n.PS,''T01'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  +nvl(sum(decode(n.PS,''T04'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  +nvl(sum(decode(n.PS,''T52'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T02'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T03'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T19'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T07'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T08'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T09'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T11'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0) as  TRADE_AMT  from TRD_PRODUCT_DEAL_ADD m
+  inner join TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID
+ inner join FIN_PRODUCT_TYPE fpt on n.FINPROD_ID=fpt.FINPROD_ID  and  fpt.TYPE_8 =''F11''
+  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''T02'',''T03'',''T12'',''T04'',''T05'',''T13'',''T36'',''T14'',''T20'')
+union ALL
+  select
+    nvl(sum(decode(n.PS,''T01'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  +nvl(sum(decode(n.PS,''T04'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  +nvl(sum(decode(n.PS,''T52'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T02'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T03'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T19'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T07'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T08'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T09'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T11'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0) as  TRADE_AMT  from TRD_PRODUCT_TEMP_DEAL_ADD m
+  inner join TRD_PRODUCT_TEMP_DEAL n on m.TRADE_ID=n.TRADE_ID
+ inner join FIN_PRODUCT_TYPE fpt on n.FINPROD_ID=fpt.FINPROD_ID  and  fpt.TYPE_8 =''F11''
+  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''T02'',''T03'',''T12'',''T04'',''T05'',''T13'',''T36'',''T14'',''T20'')
+union ALL
+  select
+ nvl(sum(decode(n.PS,''T01'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  +nvl(sum(decode(n.PS,''T04'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  +nvl(sum(decode(n.PS,''T52'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T02'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T03'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T19'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0) as  TRADE_AMT  from WFL_TRD_PRODUCT_DEAL_ADD m
+  inner join WFL_TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.TRADE_STATUS != ''03''
+  INNER JOIN SYS_WFL_BUSINESS_LIST swbl on n.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
+  inner join FIN_PRODUCT_TYPE fpt on n.FINPROD_ID=fpt.FINPROD_ID  and  fpt.TYPE_8 =''F11''
+  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''T02'',''T03'',''T12'',''T04'',''T05'')
+
+union ALL
+  select
+ nvl(sum(decode(n.PS,''T02'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)) as  TRADE_AMT
+ from WFL_TRD_PRODUCT_DEAL_ADD m
+  inner join WFL_TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.TRADE_STATUS != ''03''
+  INNER JOIN SYS_WFL_BUSINESS_LIST swbl on n.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
+  inner join FIN_PRODUCT_TYPE fpt on n.FINPROD_ID=fpt.FINPROD_ID  and  fpt.TYPE_8 =''F11''
+  where n.counter_id IN ${portfolioCode} AND n.TRADE_DATE = DATE''${valDate}'' AND n.PS = ''T02''
+  AND EXISTS (SELECT 1 FROM SYS_PARA WHERE PARA_CODE = ''is_auto_generate_negate_deal'' AND PARAM_VALUE = ''Y'')
+)';
+
+----事后(日终)
+V_CONTENT_05 CLOB := 'select NVL(SUM(NVL(t1.MARKET_VALUE,0)+nvl(t1.TDY_INTINCEXP, 0)),0) as RVALUE from PTL_SEC_PIERCE_VALUTION t1
+left join FIN_PRODUCT_TYPE t2 on t1.FINPROD_ID=t2.FINPROD_ID
+where t1.PORTFOLIO_ID in ${portfolioCode} and  t1.CDATE=date''${valDate}'' and t2.TYPE_8 =''F11''';
+BEGIN
+    UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_01_02_03 WHERE PARA_CODE = 'GMCPTZGPZZ' and PARA_GRANULARITY in('01','02','03');
+
+    UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_04 WHERE PARA_CODE = 'GMCPTZGPZZ' and PARA_GRANULARITY ='04';
+
+    UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_05 WHERE PARA_CODE = 'GMCPTZGPZZ' and PARA_GRANULARITY = '05';
+END;
+/
+
+
+
+----公募产品投资股票市值-买入预占(不算指标)
+DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_GMCPTZGPZZ_01';
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_GMCPTZGPZZ_01','公募产品投资股票市值-买入预占(不算指标)','N','','admin','001',sysdate,'whmcp',sysdate);
+         
+ 
+DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_01';
+
+DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_01';
+
+----公募产品投资股票市值-卖出预占(不算指标)
+DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_GMCPTZGPZZ_02';
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_GMCPTZGPZZ_02','公募产品投资股票市值-卖出预占(不算指标)','N','','admin','001',sysdate,'whmcp',sysdate);
+         
+ 
+DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_02';
+
+DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_02';
+
+----公募产品投资股票市值-买入实占(不算指标)
+DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_GMCPTZGPZZ_03';
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_GMCPTZGPZZ_03','公募产品投资股票市值-买入实占(不算指标)','N','','admin','001',sysdate,'whmcp',sysdate);
+         
+ 
+DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_03';
+
+DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_03';
+
+----公募产品投资股票市值-卖出实占(不算指标)
+DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_GMCPTZGPZZ_04';
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_GMCPTZGPZZ_04','公募产品投资股票市值-卖出实占(不算指标)','N','','admin','001',sysdate,'jjpei',sysdate);
+         
+ 
+DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_04';
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_04','assetType','11ba3e36ab0c436f9468b79ae110450f','','F11','=','','','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_04','eventType','11ba3e36ab0c436f9468b79ae110450f','','1,2','IN','','','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_04','ps','11ba3e36ab0c436f9468b79ae110450f','','T07,T08,T09,T11,T38,T39,T54','IN','','','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE);
+
+DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_04';
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_04','01','-','amount','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE,'','');
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_04','02','-','amount','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE,'','');
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_04','03','-','amount','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE,'','');
+
+----公募产品投资股票市值-买入预占
+DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_GMCPTZGPZZ_05';
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_GMCPTZGPZZ_05','公募产品投资股票市值-买入预占','Y','','admin','001',sysdate,'whmcp',sysdate);
+         
+ 
+DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_05';
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_05','assetType','852728a50d0d4e30a9c77eb970e8fd8a','','F11','=','','','','system','2222222',SYSDATE,'system',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_05','eventType','852728a50d0d4e30a9c77eb970e8fd8a','','0','IN','','','','system','2222222',SYSDATE,'system',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_05','ps','852728a50d0d4e30a9c77eb970e8fd8a','','T01,T46,T47,T48','IN','','','','system','2222222',SYSDATE,'system',SYSDATE);
+
+DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_05';
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_05','02','+','amount','','system','',SYSDATE,'system',SYSDATE,'','');
+
+----公募产品投资股票市值-卖出预占
+DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_GMCPTZGPZZ_06';
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_GMCPTZGPZZ_06','公募产品投资股票市值-卖出预占','Y','','admin','001',sysdate,'whmcp',sysdate);
+         
+ 
+DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_06';
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_06','assetType','c0ad3bd9bba14fa784012bafc4741cb7','','F11','=','','','','system','2222222',SYSDATE,'system',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_06','eventType','c0ad3bd9bba14fa784012bafc4741cb7','','0','IN','','','','system','2222222',SYSDATE,'system',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_06','ps','c0ad3bd9bba14fa784012bafc4741cb7','','T02','=','','','','system','2222222',SYSDATE,'system',SYSDATE);
+
+DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_06';
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_06','03','-','amount','','system','',SYSDATE,'system',SYSDATE,'','');
+
+----公募产品投资股票市值-买入实占
+DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_GMCPTZGPZZ_07';
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_GMCPTZGPZZ_07','公募产品投资股票市值-买入实占','Y','','admin','001',sysdate,'jjpei',sysdate);
+         
+ 
+DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_07';
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_07','assetType','852728a50d0d4e30a9c77eb970e8fd8a','','F11','=','','','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_07','eventType','852728a50d0d4e30a9c77eb970e8fd8a','','1,2','IN','','','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_07','ps','852728a50d0d4e30a9c77eb970e8fd8a','','T01,T46,T47,T48','IN','','','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE);
+
+DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_07';
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_07','01','+','amount','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE,'','');
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_07','02','+','amount','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE,'','');
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_07','03','+','amount','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE,'','');
+
+----公募产品投资股票市值-卖出实占
+DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_GMCPTZGPZZ_08';
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_GMCPTZGPZZ_08','公募产品投资股票市值-卖出实占','Y','','admin','001',sysdate,'jjpei',sysdate);
+         
+ 
+DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_08';
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_08','assetType','c0ad3bd9bba14fa784012bafc4741cb7','','F11','=','','','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_08','eventType','c0ad3bd9bba14fa784012bafc4741cb7','','1,2','IN','','','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_GMCPTZGPZZ_08','ps','c0ad3bd9bba14fa784012bafc4741cb7','','T02','=','','','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE);
+
+DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_GMCPTZGPZZ_08';
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_08','01','-','mixAmount','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE,'','');
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_08','02','-','mixAmount','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE,'','');
+INSERT INTO RSK_EVENT_PARA_REL VALUES('GMCPTZGPZZ','EVENT_ID_GMCPTZGPZZ_08','03','-','mixAmount','','jjpei','2222222',SYSDATE,'jjpei',SYSDATE,'','');
+
+
+
+/**风险指标参数:公募产品投资股票市值**/

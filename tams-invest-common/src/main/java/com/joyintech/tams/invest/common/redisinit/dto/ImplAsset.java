@@ -100,8 +100,17 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
      */
     private String issuerCode;
 
+    /**
+     * 投管二级类型
+     */
+    private String typeSeven;
 
     private String isInAdvance;
+
+    /**
+     * 是否未上市股权
+     */
+    private String isUnEquity;
 
     public String getIsInAdvance() {
 		return isInAdvance;
@@ -412,4 +421,20 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
         this.customerObjType = customerObjType;
     }
     // add by zhangrui1 增加资产属性:机构主体类型 end
+
+    public String getTypeSeven() {
+        return typeSeven;
+    }
+
+    public void setTypeSeven(String typeSeven) {
+        this.typeSeven = typeSeven;
+    }
+
+    public String getIsUnEquity() {
+        return isUnEquity;
+    }
+
+    public void setIsUnEquity(String isUnEquity) {
+        this.isUnEquity = isUnEquity;
+    }
 }
