@@ -180,9 +180,9 @@ public class LgdSpecialConfigController{
 
     @RequestMapping("getFinprodIdByLossType")
     @ResponseBody
-    public List<SuggestDto> getFinprodIdByLossType(@RequestParam Map<String, Object> params) {
+    public List<SelectOptionDto> getFinprodIdByLossType(@RequestBody Map<String, Object> params) {
         //lossType   01 毕马威；02 普华永道
-        List<SuggestDto> suggestDtoList = new ArrayList<>();
+        List<SelectOptionDto> suggestDtoList = new ArrayList<>();
         String lossType = (String)params.get("lossType");
         if(StringUtil.isNotEmpty(lossType) && "01".equals(lossType)){
             return lgdSpecialConfigService.getFinprodIdByLossTypeOne(params);

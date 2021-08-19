@@ -4,8 +4,9 @@
         <Row>
             <Cell order="1" name="资产代码">finprodId</Cell>
             <Cell order="2" name="资产名称">finprodName</Cell>
-            <Cell order="3" name="评级机构">gradeOrgIdStr</Cell>
-            <Cell order="4" name="评级类型">oTypeStr</Cell>
+            <Cell order="3" name="评级机构类型">gradeOrgTypeStr</Cell>
+            <Cell order="4" name="评级机构">gradeOrgIdStr</Cell>
+            <Cell order="5" name="评级类型">oTypeStr</Cell>
         </Row>
     </Worksheet>
 </Workbook>

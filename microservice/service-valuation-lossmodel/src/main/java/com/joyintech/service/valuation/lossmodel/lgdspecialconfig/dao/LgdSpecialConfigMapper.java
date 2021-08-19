@@ -13,6 +13,7 @@ package com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto;
 import com.joyintech.tams.common.base.entity.RepProdIssue;
@@ -61,7 +62,7 @@ public interface LgdSpecialConfigMapper {
      * @param:
      * @return:
      */
-    List<SuggestDto> getFinprodIdByLossTypeOne(Map<String, Object> pageParam);
+    List<SelectOptionDto> getFinprodIdByLossTypeOne(Map<String, Object> pageParam);
 
     /**
      * @Description:查询资产名称根据系统减值参数lossType=02
@@ -70,7 +71,7 @@ public interface LgdSpecialConfigMapper {
      * @param:
      * @return:
      */
-    List<SuggestDto> getFinprodIdByLossTypeTwo(Map<String, Object> pageParam);
+    List<SelectOptionDto> getFinprodIdByLossTypeTwo(Map<String, Object> pageParam);
 
 
 

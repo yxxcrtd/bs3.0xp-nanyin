@@ -13,6 +13,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -191,14 +192,20 @@ public class LgdSpecialConfig002Controller extends BaseController {
      */
     @RequestMapping("getFinprodIdByLossType")
     @ResponseBody
-    public List<SuggestDto> getFinprodIdByLossType() {
+    public List<SelectOptionDto> getFinprodIdByLossType() {
         Map<String, Object> params = RequestUtil.getPageParam();
         //lossType   01 毕马威；02 普华永道
-        List<SuggestDto> suggestDtoList = new ArrayList<>();
-        params.put("lossType",CacheUtil.getSysParam(ValComponentConstant.LOSSTYPE));
+        List<SelectOptionDto> suggestDtoList = new ArrayList<>();
+        String lossType = (String)params.get("lossType");//不为空，表示已指定类型，为空则使用减值方案系统参数
+        if(StringUtil.isEmpty(lossType)){
+            params.put("lossType",CacheUtil.getSysParam(ValComponentConstant.LOSSTYPE));
+        }
         suggestDtoList = lgdSpecialConfigService.getFinprodIdByLossType(params);
         return  suggestDtoList;
     }
+
+
+
 
 
 }

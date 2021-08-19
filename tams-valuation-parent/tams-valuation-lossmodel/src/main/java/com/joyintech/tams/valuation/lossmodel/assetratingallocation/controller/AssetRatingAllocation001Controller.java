@@ -55,14 +55,11 @@ public class AssetRatingAllocation001Controller extends BaseController {
 	}
 	@RequestMapping("assetcategories")
     public String showAssetCateGoriesPage(Model model) {
-	    return "/model/impairment/assetratingallocation/assetcategories/AssetCategoriesQuery001";
+	    return "/lossmodel/assetratingallocation/assetcategories/AssetCategories001";
 	}
 	@RequestMapping("Specialassets")
     public String showSpecialAssetsPage(Model model) {
-//		Map<String,Object> map = RequestUtil.getPageParam();
-//		List<SelectOptionDto> assetcodeList=specialassets001Service.queryAssetCodeInfo(map);
-//		model.addAttribute("assetcodeList", JsonUtils.objectArray2Json(assetcodeList.toArray()));
-		return "/model/impairment/assetratingallocation/specialassets/Specialassets001";
+		return "/lossmodel/assetratingallocation/specialassets/Specialassets001";
 	}
 	
 }

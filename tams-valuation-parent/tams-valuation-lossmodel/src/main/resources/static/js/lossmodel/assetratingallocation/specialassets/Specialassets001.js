@@ -31,6 +31,7 @@ $(function(){
 				{ field: 'seqno',visible:false},
 				{ title: "资产代码", field: 'finprodId',sortField:'FINPROD_ID'},
 				{ title: "资产名称", field: 'finprodName',sortField:'FINPROD_NAME'},
+                { title: "评级机构类型", field: 'gradeOrgTypeStr',sortField:'GRADE_ORG_TYPE'},
 				{ title: "评级机构", field: 'gradeOrgIdStr',sortField:'GRADE_ORG_ID'},
 				{ title: "评级类型", field: 'oTypeStr',sortField:'O_TYPE'},
 				{ field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']}

@@ -5,6 +5,7 @@
     <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
     <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
     <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+    <result column="GRADE_ORG_TYPE" property="gradeOrgType" jdbcType="VARCHAR" />
     <result column="GRADE_ORG_ID" property="gradeOrgId" jdbcType="VARCHAR" />
     <result column="O_TYPE" property="oType" jdbcType="VARCHAR" />
     <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
@@ -14,7 +15,7 @@
     <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    SEQNO, FINPROD_ID, FINPROD_NAME, GRADE_ORG_ID, O_TYPE, CREATE_USER, CREATE_DEPT, 
+    SEQNO, FINPROD_ID, FINPROD_NAME,GRADE_ORG_TYPE,GRADE_ORG_ID, O_TYPE, CREATE_USER, CREATE_DEPT,
     CREATE_TIME, UPDATE_USER, UPDATE_TIME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -28,11 +29,11 @@
     where SEQNO = #{seqno,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.service.valuation.lossmodel.assetratingallocation.specialassets.dto.ModAssetGradeSpecialConfigDto" >
-    insert into MOD_ASSET_GRADE_SPECIAL_CONFIG (SEQNO, FINPROD_ID, FINPROD_NAME, 
+    insert into MOD_ASSET_GRADE_SPECIAL_CONFIG (SEQNO, FINPROD_ID, FINPROD_NAME, GRADE_ORG_TYPE ,
       GRADE_ORG_ID, O_TYPE, CREATE_USER, 
       CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
       UPDATE_TIME)
-    values (#{seqno,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, 
+    values (#{seqno,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, #{gradeOrgType,jdbcType=VARCHAR},
       #{gradeOrgId,jdbcType=VARCHAR}, #{oType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
       #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP})
@@ -48,6 +49,9 @@
       </if>
       <if test="finprodName != null" >
         FINPROD_NAME,
+      </if>
+      <if test="gradeOrgType != null" >
+        GRADE_ORG_TYPE,
       </if>
       <if test="gradeOrgId != null" >
         GRADE_ORG_ID,
@@ -81,6 +85,9 @@
       <if test="finprodName != null" >
         #{finprodName,jdbcType=VARCHAR},
       </if>
+      <if test="gradeOrgType != null" >
+        #{gradeOrgType,jdbcType=VARCHAR},
+      </if>
       <if test="gradeOrgId != null" >
         #{gradeOrgId,jdbcType=VARCHAR},
       </if>
@@ -113,6 +120,9 @@
       <if test="finprodName != null" >
         FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
       </if>
+      <if test="gradeOrgType != null" >
+        GRADE_ORG_TYPE =#{gradeOrgType,jdbcType=VARCHAR},
+      </if>
       <if test="gradeOrgId != null" >
         GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR},
       </if>
@@ -141,6 +151,7 @@
     update MOD_ASSET_GRADE_SPECIAL_CONFIG
     set FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
       FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+      GRADE_ORG_TYPE=#{gradeOrgType,jdbcType=VARCHAR},
       GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR},
       O_TYPE = #{oType,jdbcType=VARCHAR},
       UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
@@ -171,8 +182,8 @@
   </select>
 
   <select id="getFinprodIdForImpairment" resultType="com.joyintech.framework.select.SelectOptionDto" parameterType="Map">
-    SELECT fp.FINPROD_ID id,
-    FINPROD_ABBR text,
+  SELECT fp.FINPROD_ID id,
+  FINPROD_ABBR text,
     fpt.TYPE_8 || '/' || fpt.TYPE_9 || '/' || fpt.TYPE_10 || '/' || fpt.TYPE_11 || '/' || fpt.TYPE_12 as object
     FROM FIN_PRODUCT fp
     left join fin_product_type fpt on fp.FINPROD_ID=fpt.FINPROD_ID
@@ -1293,6 +1304,13 @@
     order by FPT.TYPE_9, FPT.TYPE_10, FPT.TYPE_11,FPT.TYPE_12
   </select>
 
+  <!--根据资产代码获取证券品种-->
+  <select id="getSecTypeByFinprodId" resultType="java.lang.String">
+    SELECT
+    distinct A.type_18 as secType
+    from FIN_PRODUCT_TYPE A
+    where A.FINPROD_ID=#{finprodId,jdbcType=VARCHAR}
+  </select>
 
 
 

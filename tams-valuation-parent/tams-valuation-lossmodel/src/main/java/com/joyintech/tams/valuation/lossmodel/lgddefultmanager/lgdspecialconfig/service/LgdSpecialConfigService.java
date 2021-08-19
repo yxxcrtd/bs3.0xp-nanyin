@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -191,10 +192,10 @@ public class LgdSpecialConfigService extends  CommonExportService<LgdSpecialConf
     }
 
 
-    public List<SuggestDto> getFinprodIdByLossType(Map<String, Object> params){
+    public List<SelectOptionDto> getFinprodIdByLossType(Map<String, Object> params){
         return restTemplate.postForList(
                 ServiceApplication.LOSS_MODEL_SERVICE_NAME +"/LgdSpecialConfig/getFinprodIdByLossType",
-                params,SuggestDto.class);
+                params,SelectOptionDto.class);
     }
 
 
