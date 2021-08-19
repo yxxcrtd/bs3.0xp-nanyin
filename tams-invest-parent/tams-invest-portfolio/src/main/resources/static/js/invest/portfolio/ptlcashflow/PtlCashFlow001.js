@@ -51,7 +51,7 @@ $(function() {
             ,{field:'portfolioName', width:150 ,title: 'PtlCashFlow001.portfolioName'}//组合名称
             ,{field:'settleDate', width:150 ,title: 'PtlCashFlow001.settleDate',type:'date'}//业务发生日期
             ,{field:'psStr', width:150 ,title: 'PtlCashFlow001.ps',sortField:'ps'}//收支方向
-            ,{field:'tradeAmt', width:150 ,title: 'PtlCashFlow001.tradeAmt'}//金额
+            ,{field:'tradeAmt', width:150 ,title: 'PtlCashFlow001.tradeAmt',type:'number',digit:2}//金额
             ,{field:'ccyStr',sortField:'ccy', width:150 ,title: 'PtlCashFlow001.ccy'}//币种
             ,{field:'finprodType2Str',sortField:'finprodType2',width:150 , title: 'PtlCashFlow001.finprodType2'}//资产类型
             ,{field:'finprodMarketId', width:150, title: 'PtlCashFlow001.finprodMarketId'}//资产代码
