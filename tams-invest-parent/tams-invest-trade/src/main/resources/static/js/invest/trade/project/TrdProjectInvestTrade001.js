@@ -97,6 +97,7 @@
             , {field: 'ccy', width:100, title: '币种', sortField:"CCY"}
             , {field: 'remark', width:150, title: '备注', sortField:"REMARK"}
         ],
+        initSort: {field: 'TRADE_DATE',type: 'desc'},
         checkbox: true,
         progressBar: false
     });

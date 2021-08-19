@@ -432,7 +432,8 @@ $(function(){
 			,{field:'isOutTradeStr',sortField:'isOutTrade', title: '是否转仓',width:100}
         	,{field:'finprodType2', visible:false}
         	,{field:'finprodId', visible:false}
-        ]
+        ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
     
     
