@@ -109,7 +109,9 @@
 												formatoption=true childrenIds="type11"></select>
 									</div>
 								</div>
-								<div class="form-inline-wrap" id="selector5" style="display: none">
+								<!--ZGZGST-1265、ZGZGST-942 fuyongsheng edit 20210819 start-->
+								<div class="form-inline-wrap" id="selector5" data-th-if="${isShowType} eq '01'">
+								<!--ZGZGST-1265、ZGZGST-942 fuyongsheng edit 20210819 end-->
 									<label class="layui-form-label form-label-wrap"
 										   data-th-text="#{FinBondTargetAsset002.type11}">资产四级分类
 									</label>
@@ -125,7 +127,9 @@
 								</div>
 							</div>
 							<div class="layui-form-item">
-								<div class="form-inline-wrap" id="selector6" style="display: none">
+								<!--ZGZGST-1265、ZGZGST-942 fuyongsheng edit 20210819 start-->
+								<div class="form-inline-wrap" id="selector6" data-th-if="${isShowType} eq '01'">
+								<!--ZGZGST-1265、ZGZGST-942 fuyongsheng edit 20210819 end-->
 									<label class="layui-form-label form-label-wrap"
 										   data-th-text="#{FinBondTargetAsset002.type12}">资产五级分类
 									</label>
