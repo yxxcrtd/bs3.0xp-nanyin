@@ -216,7 +216,7 @@
                         }
                     });
                 }
-
+                tradeMarketChange();
             });
             //add by  zhangnian 20101015 end
 		}else{
