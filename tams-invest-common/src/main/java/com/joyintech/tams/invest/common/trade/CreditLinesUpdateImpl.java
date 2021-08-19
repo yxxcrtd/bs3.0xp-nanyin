@@ -95,18 +95,21 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             // 资产授信
             if(!StringUtil.isEmptyList(系列额度占用明细)) {
                 系列额度占用明细.forEach(item -> {
+                    creditLinesAst = creditLinesMapper.selectByPrimaryKey(item.getCreditLinesId());
                     inputDto.setFinprodId(item.getFinprodId());
                     occupy = item.getAmount().compareTo(BigDecimal.ZERO) > 0;
                 });
             }
             if(!StringUtil.isEmptyList(资产额度占用明细)) {
                 资产额度占用明细.forEach(item -> {
+                    creditLinesAst = creditLinesMapper.selectByPrimaryKey(item.getCreditLinesId());
                     inputDto.setFinprodId(item.getFinprodId());
                     occupy = item.getAmount().compareTo(BigDecimal.ZERO) > 0;
                 });
             }
             if(!StringUtil.isEmptyList(机构额度占用明细)) {
                 机构额度占用明细.forEach(item -> {
+                    creditLinesOrg = creditLinesMapper.selectByPrimaryKey(item.getCreditLinesId());
                     inputDto.setFinprodId(item.getFinprodId());
                     if (StringUtil.isEmpty(inputDto.getCounterId())){
                         inputDto.setCounterId(item.getCustomerId());
@@ -116,6 +119,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             }
             if(!StringUtil.isEmptyList(机构分项占用明细)) {
                 机构分项占用明细.forEach(item -> {
+                    creditLinesOrgItem = creditLinesMapper.selectByPrimaryKey(item.getCreditLinesId());
                     inputDto.setFinprodId(item.getFinprodId());
                     if (StringUtil.isEmpty(inputDto.getCounterId())){
                         inputDto.setCounterId(item.getCustomerId());
