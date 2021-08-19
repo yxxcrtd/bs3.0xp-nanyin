@@ -255,4 +255,216 @@
             </foreach>
         </if>
     </delete>
+
+    <select id="listPtlSecPositionFlow" resultType="com.joyintech.tams.common.base.entity.PtlSecPosition">
+        SELECT PORTFOLIO_ID,SEC_ACCT_ID,FINPROD_ID,INV_AIM,CDATE,BRANCH,SUM(AMOUNT) AMOUNT
+        FROM PTL_SEC_POSITION_FLOW WHERE TRADE_ID IN (
+        SELECT
+        A.TRADE_ID
+        FROM
+        TRD_PRODUCT_TEMP_DEAL A,
+        TRD_PRODUCT_TEMP_DEAL_ADD B
+        WHERE
+        A.TRADE_ID = B.TRADE_ID AND A.TRADE_DATE = #{dealDate,jdbcType=DATE}
+        <if test="finprodType2List != null and finprodType2List.size() > 0">
+            <foreach collection="finprodType2List" item="finprodType2" open="AND A.FINPROD_TYPE2 IN (" close=")" separator=",">
+                #{finprodType2,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            <foreach collection="portfolioIdList" item="portfolioId" open="AND B.PORTFOLIO_ID IN (" close=")" separator=",">
+                #{portfolioId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        )
+        GROUP BY PORTFOLIO_ID,SEC_ACCT_ID,FINPROD_ID,INV_AIM,CDATE,BRANCH
+    </select>
+
+    <select id="listPtlCashPositionFlow" resultType="com.joyintech.tams.common.base.entity.PtlCashPosition" >
+        SELECT PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,CCY,sum(AMOUNT) AMOUNT
+        FROM PTL_CASH_POSITION_FLOW WHERE ORDER_ID IN (
+        SELECT
+        C.ORDER_ID
+        FROM
+        TRD_PRODUCT_TEMP_DEAL A,
+        TRD_PRODUCT_TEMP_DEAL_ADD B,
+        STL_PAY_TEMP_ORDERS C
+        WHERE
+        A.TRADE_ID = B.TRADE_ID AND A.TRADE_DATE = #{dealDate,jdbcType=DATE} AND A.TRADE_ID = C.TRADE_ID
+        <if test="finprodType2List != null and finprodType2List.size() > 0">
+            <foreach collection="finprodType2List" item="finprodType2" open="AND A.FINPROD_TYPE2 IN (" close=")" separator=",">
+                #{finprodType2,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            <foreach collection="portfolioIdList" item="portfolioId" open="AND B.PORTFOLIO_ID IN (" close=")" separator=",">
+                #{portfolioId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        )
+        GROUP BY PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,CCY
+    </select>
+
+    <select id="listEtrSecPositionFlow" resultType="com.joyintech.tams.common.base.entity.EtrSecPosition">
+        SELECT PORTFOLIO_ID,SEC_ACCT_ID,FINPROD_ID,INV_AIM,HODING_TYPE,CDATE,BRANCH,SUM(AMOUNT) AMOUNT
+        FROM ETR_SEC_POSITION_FLOW WHERE TRADE_ID IN (
+        SELECT
+        A.TRADE_ID
+        FROM
+        TRD_PRODUCT_TEMP_DEAL A,
+        TRD_PRODUCT_TEMP_DEAL_ADD B
+        WHERE
+        A.TRADE_ID = B.TRADE_ID AND A.TRADE_DATE = #{dealDate,jdbcType=DATE}
+        <if test="finprodType2List != null and finprodType2List.size() > 0">
+            <foreach collection="finprodType2List" item="finprodType2" open="AND A.FINPROD_TYPE2 IN (" close=")" separator=",">
+                #{finprodType2,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            <foreach collection="portfolioIdList" item="portfolioId" open="AND B.PORTFOLIO_ID IN (" close=")" separator=",">
+                #{portfolioId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        )
+        GROUP BY PORTFOLIO_ID,SEC_ACCT_ID,FINPROD_ID,INV_AIM,HODING_TYPE,CDATE,BRANCH
+    </select>
+
+    <select id="listEtrCashPositionFlow" resultType="com.joyintech.tams.common.base.entity.EtrCashPosition">
+        SELECT PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,CCY,SUM(AMOUNT) AMOUNT
+        FROM ETR_CASH_POSITION_FLOW WHERE ORDER_ID IN (
+        SELECT
+        C.ORDER_ID
+        FROM
+        TRD_PRODUCT_TEMP_DEAL A,
+        TRD_PRODUCT_TEMP_DEAL_ADD B,
+        STL_PAY_TEMP_ORDERS C
+        WHERE
+        A.TRADE_ID = B.TRADE_ID AND A.TRADE_DATE = #{dealDate,jdbcType=DATE} AND A.TRADE_ID = C.TRADE_ID
+        <if test="finprodType2List != null and finprodType2List.size() > 0">
+            <foreach collection="finprodType2List" item="finprodType2" open="AND A.FINPROD_TYPE2 IN (" close=")" separator=",">
+                #{finprodType2,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            <foreach collection="portfolioIdList" item="portfolioId" open="AND B.PORTFOLIO_ID IN (" close=")" separator=",">
+                #{portfolioId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        )
+        <if test="trdIdList != null and trdIdList.size() > 0">
+            or ORDER_ID IN
+            <foreach collection="trdIdList" item="trdId" open="(" close=")" separator=",">
+                #{trdId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,CCY
+    </select>
+
+    <update id="updatePtlCashPosition" parameterType="com.joyintech.tams.common.base.entity.PtlCashPosition" >
+        update PTL_CASH_POSITION
+        <set >
+            <if test="amount != null" >
+                AMOUNT = AMOUNT + #{amount},
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and ACCT_ID = #{acctId,jdbcType=VARCHAR}
+        and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        and CDATE = #{cdate,jdbcType=DATE}
+        and CCY = #{ccy,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updatePtlSecPosition" parameterType="com.joyintech.tams.common.base.entity.PtlSecPosition" >
+        update PTL_SEC_POSITION
+        <set >
+            <if test="amount != null" >
+                AMOUNT = AMOUNT + #{amount},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="pFinprodId != null" >
+                P_FINPROD_ID = #{pFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="faceValue != null" >
+                FACE_VALUE = #{faceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+        and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and BRANCH = #{branch,jdbcType=DECIMAL}
+        and INV_AIM = #{invAim,jdbcType=VARCHAR}
+        and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+
+    <update id="updateEtrCashPosition" parameterType="com.joyintech.tams.common.base.entity.EtrCashPosition" >
+        update ETR_CASH_POSITION
+        <set >
+            <if test="amount != null" >
+                AMOUNT =  AMOUNT + #{amount},
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and ACCT_ID = #{acctId,jdbcType=VARCHAR}
+        and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        and CDATE = #{cdate,jdbcType=DATE}
+        and CCY = #{ccy,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateEtrSecPosition" parameterType="com.joyintech.tams.common.base.entity.EtrSecPosition" >
+        update ETR_SEC_POSITION
+        <set >
+            <if test="amount != null" >
+                AMOUNT =  AMOUNT + #{amount},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="pFinprodId != null" >
+                P_FINPROD_ID = #{pFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="faceValue != null" >
+                FACE_VALUE = #{faceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+        and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and BRANCH = #{branch,jdbcType=DECIMAL}
+        and INV_AIM = #{invAim,jdbcType=VARCHAR}
+        and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        and CDATE = #{cdate,jdbcType=DATE}
+    </update>
 </mapper>

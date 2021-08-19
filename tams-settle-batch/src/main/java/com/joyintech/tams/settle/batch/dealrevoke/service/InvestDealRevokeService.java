@@ -4,6 +4,10 @@ import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.EtrCashPosition;
+import com.joyintech.tams.common.base.entity.EtrSecPosition;
+import com.joyintech.tams.common.base.entity.PtlCashPosition;
+import com.joyintech.tams.common.base.entity.PtlSecPosition;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -45,6 +49,7 @@ public class InvestDealRevokeService {
 
     @Autowired
     private InvestDealRevokeMapper investDealRevokeMapper;
+
 
     private Map<String, Object> createCommonParam(Date tradeDate, List<String> portfolioIdList) {
         Map<String, Object> param = new HashMap<>();
@@ -155,7 +160,7 @@ public class InvestDealRevokeService {
     /**
      * 删除日间成交数据形成的头寸流水信息
      */
-    public void deletePositionFlow(Date tradeDate, List<String> portfolioIdList, String busiType) {
+    public void deletePositionFlow(Date tradeDate, List<String> portfolioIdList, String busiType,List<String> orderIds) {
         Map<String, Object> param = createCommonParam(tradeDate, portfolioIdList);
         List<String> finprodType2List = new ArrayList<String>();
         
@@ -175,13 +180,43 @@ public class InvestDealRevokeService {
         	finprodType2List.add(DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue());
         }
         param.put("finprodType2List", finprodType2List);
+        //删除前,查出流水，以便更新余额
+        param.put("trdIdList", orderIds);
+        List<PtlCashPosition> ptlCashPositions = investDealRevokeMapper.listPtlCashPositionFlow(param);
+        List<PtlSecPosition> ptlSecPositions = investDealRevokeMapper.listPtlSecPositionFlow(param);
+        List<EtrCashPosition> etrCashPositions = investDealRevokeMapper.listEtrCashPositionFlow(param);
+        List<EtrSecPosition> etrSecPositions = investDealRevokeMapper.listEtrSecPositionFlow(param);
         investDealRevokeMapper.deletePtlCashPositionFlow(param);
         investDealRevokeMapper.deletePtlSecPositionFlow(param);
         investDealRevokeMapper.deleteEtrCashPositionFlow(param);
         investDealRevokeMapper.deleteEtrSecPositionFlow(param);
         // 删除日间委托完成度
         investDealRevokeMapper.deleteEtrFinishStatus(param);
-        
+        //更新余额
+        ptlCashPositions.stream().forEach(item ->{
+             if(null!=item.getAmount()){
+                 item.setAmount(item.getAmount().negate());
+                 investDealRevokeMapper.updatePtlCashPosition(item);
+             }
+        });
+        ptlSecPositions.stream().forEach(item ->{
+            if(null!=item.getAmount()){
+                item.setAmount(item.getAmount().negate());
+                investDealRevokeMapper.updatePtlSecPosition(item);
+            }
+        });
+        etrCashPositions.stream().forEach(item ->{
+            if(null!=item.getAmount()){
+                item.setAmount(item.getAmount().negate());
+                investDealRevokeMapper.updateEtrCashPosition(item);
+            }
+        });
+        etrSecPositions.stream().forEach(item ->{
+            if(null!=item.getAmount()){
+                item.setAmount(item.getAmount().negate());
+                investDealRevokeMapper.updateEtrSecPosition(item);
+            }
+        });
     }
     
     /**

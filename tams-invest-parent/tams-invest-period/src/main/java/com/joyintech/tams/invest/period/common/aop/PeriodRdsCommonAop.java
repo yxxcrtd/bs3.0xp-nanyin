@@ -56,7 +56,7 @@ public class PeriodRdsCommonAop extends AopBaseService<InterfRiskRdsDto> {
     @Autowired
     private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
 
-    private List<String> 利率互换_付息_融入券_计息要素维护_已到期资产转让=Arrays.asList("TrdIRSDuration004Service","TrdBondLendTargetDuration002Service","TrdOverdueCalcuPenaltyService","TrdSecOverdueDuration003Service");
+    private List<String> 利率互换_付息_融入券_计息要素维护_已到期资产转让=Arrays.asList("TrdIRSDuration004Service","TrdBondLendTargetDuration002Service","TrdOverdueCalcuPenaltyService","TrdSecOverdueDuration003Service","TrdOptionDuration002Service");
 
     /**
      * 提交与撤销操作
@@ -109,7 +109,11 @@ public class PeriodRdsCommonAop extends AopBaseService<InterfRiskRdsDto> {
             else if(StringUtil.isNotEmpty(mapTrd.get("baseTotalTradeInfoDto"))) {
                     BaseTotalTradeInfoDto baseTotalTradeInfoDto = (BaseTotalTradeInfoDto) JsonUtils.map2entity((Map)mapTrd.get("baseTotalTradeInfoDto"),BaseTotalTradeInfoDto.class);
                     if (StringUtil.isNotEmpty(baseTotalTradeInfoDto) && StringUtil.isNotEmpty(baseTotalTradeInfoDto.getTrdFinProductDealTotal())) {
-                        setBasicTradeInfo(mapTrd,baseTotalTradeInfoDto.getTrdFinProductDealTotal().getPs(),baseTotalTradeInfoDto.getTrdFinProductDealTotal().getFinprodType2());
+                        String ps = baseTotalTradeInfoDto.getTrdFinProductDealTotal().getPs();
+                        if(joinPoint.getTarget().getClass().getSimpleName().contains("TrdFundDurationNew001Service")){
+                            ps = (String) mapTrd.get("ps");
+                        }
+                        setBasicTradeInfo(mapTrd,ps,baseTotalTradeInfoDto.getTrdFinProductDealTotal().getFinprodType2());
                     }
             }
         } catch (Exception e) {

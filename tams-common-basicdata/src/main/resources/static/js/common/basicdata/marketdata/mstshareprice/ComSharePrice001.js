@@ -70,7 +70,7 @@ $(function() {
          dealDate= dealDate.format('yyyy-MM-dd');
 //         Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstshareprice/ComSharePrice002/check', data, function(result) {
          Joyin.confirm("请确认是否修改?", function(){
-             Joyin.dialog(JoyinUtil.getLabel("ValSharePrice002.edit"),
+             Joyin.dialog(JoyinUtil.getLabel("ComSharePrice002.edit"),
                  basePath + "common/basicdata/marketdata/mstshareprice/ComSharePrice002/init",
                  "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
                      sharesId:data.sharesId,

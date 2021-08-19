@@ -118,7 +118,7 @@ public class BussRepoSecController extends BaseController {
                         dto.setPledgePrin(ArithmeticUtil.divide(dto.getPledgePrin(), new BigDecimal(10000),4));
                     }
                 }
-                //万元转换 add  by yeming 20210817 start
+                //万元转换 add  by yeming 20210817 end
                 model.addAttribute("entity", entity);
             }
         }

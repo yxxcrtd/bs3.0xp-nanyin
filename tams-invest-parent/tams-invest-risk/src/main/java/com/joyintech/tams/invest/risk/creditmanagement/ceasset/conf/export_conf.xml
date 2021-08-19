@@ -10,10 +10,11 @@
             <Cell order="6" name="到期日">mdate</Cell>
             <Cell order="7" name="授信对象">creditObjStr</Cell>
             <Cell order="8" name="授信总份额（亿份）">creditShareAmt</Cell>
-            <Cell order="9" name="是否循环额度">isLoopAmtStr</Cell>
-            <Cell order="9" name="是否持有至到期">holdMaturityStr</Cell>
-            <Cell order="10" name="附加条件">creditCondition</Cell>
-            <Cell order="11" name="备注">remark</Cell>
+            <Cell order="9" name="价格">creditPrice</Cell>
+            <Cell order="10" name="是否循环额度">isLoopAmtStr</Cell>
+            <Cell order="11" name="是否持有至到期">holdMaturityStr</Cell>
+            <Cell order="12" name="附加条件">creditCondition</Cell>
+            <Cell order="13" name="备注">remark</Cell>
   		</Row>
     </Worksheet>
 </Workbook>

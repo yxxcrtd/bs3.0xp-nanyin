@@ -206,8 +206,8 @@ var dbclickCheck = function(data){
 }
 //关闭委托
 var closeEtr = function(){
-    if(EtrExchangeTrade003){
-        var selArr = EtrExchangeTrade003.getAllCheckedRows();;
+    if(EtrExchangeTrade002){
+        var selArr = EtrExchangeTrade002.getAllCheckedRows();;
     }
     if (!selArr || selArr.length == 0) {
         Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
@@ -262,8 +262,8 @@ function doReset() {
 
 //撤销委托
 var revokeEtr = function(){
-    if(EtrExchangeTrade003){
-        var selArr = EtrExchangeTrade003.getAllCheckedRows();
+    if(EtrExchangeTrade002){
+        var selArr = EtrExchangeTrade002.getAllCheckedRows();
     }
 
     if (!selArr || selArr.length == 0) {

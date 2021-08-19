@@ -1,13 +1,15 @@
 -- ----------------------------
 -- Table structure for SYS_MENU
 -- ----------------------------
-
+DELETE FROM SYS_MENU WHERE MENU_ID='BUSINESS_PARA_MANAGEMENT_001_002_006';
 INSERT INTO SYS_MENU ("MENU_ID", "SYSTEM_CODE", "ICON", "PARENT_MENU_ID", "PAGE_ID", "ORDER_NO", "IS_SPREAD", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") 
 VALUES ('BUSINESS_PARA_MANAGEMENT_001_002_006', 'STL', NULL, 'BUSINESS_PARA_MANAGEMENT_001_002', 'FuturesDepositPercent001', '6', '02', '期货保证金比例设置', 'system', NULL, SYSDATE, 'system', SYSDATE);
 
 -- ----------------------------
 -- Table structure for SYS_PAGE
 -- ----------------------------
+DELETE FROM SYS_PAGE WHERE PAGE_ID='FuturesDepositPercent001';
+DELETE FROM SYS_PAGE WHERE PAGE_ID='FuturesDepositPercent002';
 
 INSERT INTO SYS_PAGE ("PAGE_ID", "SYSTEM_CODE", "PAGE_URL", "PAGE_FILE", "MENU_ID", "HEIGHT", "WIDTH", "IS_HP_SELECT", "IS_NEED_WORKFLOW", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('FuturesDepositPercent001', 'STL', '/invest/basicdata/futuresdepositpercent/FuturesDepositPercent001', 'invest/basicdata/futuresdepositpercent/FuturesDepositPercent001', 'BUSINESS_PARA_MANAGEMENT_001_002_006', NULL, NULL, '02', '01', '期货保证金比例设置', 'system', NULL, SYSDATE, 'system', SYSDATE);
 
@@ -16,6 +18,9 @@ INSERT INTO SYS_PAGE ("PAGE_ID", "SYSTEM_CODE", "PAGE_URL", "PAGE_FILE", "MENU_I
 -- ----------------------------
 -- Table structure for SYS_WFL_BUSINESS_MODULE
 -- ----------------------------
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='FuturesDepositPercent002' AND ELEMENT_ID='FuturesDepositPercent001_btn_delete';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='FuturesDepositPercent002' AND ELEMENT_ID='FuturesDepositPercent002_btn_save';
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='FuturesDepositPercent002' AND ELEMENT_ID='FuturesDepositPercent002_btn_submit';
 INSERT INTO SYS_WFL_BUSINESS_MODULE ("PAGE_ID", "ELEMENT_ID", "MODULE_ID", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('FuturesDepositPercent002', 'FuturesDepositPercent001_btn_delete', 'oneApproval', 'system', NULL, SYSDATE, 'system', SYSDATE);
 INSERT INTO SYS_WFL_BUSINESS_MODULE ("PAGE_ID", "ELEMENT_ID", "MODULE_ID", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('FuturesDepositPercent002', 'FuturesDepositPercent002_btn_save', 'oneApproval', 'system', NULL, SYSDATE, 'system', SYSDATE);
 INSERT INTO SYS_WFL_BUSINESS_MODULE ("PAGE_ID", "ELEMENT_ID", "MODULE_ID", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('FuturesDepositPercent002', 'FuturesDepositPercent002_btn_submit', 'oneApproval', 'system', NULL, SYSDATE, 'system', SYSDATE);
@@ -25,6 +30,7 @@ INSERT INTO SYS_WFL_BUSINESS_MODULE ("PAGE_ID", "ELEMENT_ID", "MODULE_ID", "CREA
 -- ----------------------------
 -- Table structure for FIN_FUTURE_DEPOSIT_PERCENT
 -- ----------------------------
+DROP TABLE FIN_FUTURE_DEPOSIT_PERCENT;
 CREATE TABLE "FIN_FUTURE_DEPOSIT_PERCENT" (
   "FUTURES_TYPE" VARCHAR2(50 BYTE) NOT NULL,
   "FUTURES_CONTRACT_ID" VARCHAR2(50 BYTE) NOT NULL,

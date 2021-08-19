@@ -407,12 +407,18 @@
         },etrExchange_posTable_refresh_period);
 
     });
-    
+
+    var getAllCheckedRows = function(){
+        if(dateTable){
+            return dateTable.getAllCheckedRows();
+        }
+    }
     /**
      * 对外公开的接口
      */
     parent.EtrExchangeTrade002 = {
     	zqzyPositionRefresh:zqzyPositionRefresh,
+        getAllCheckedRows:getAllCheckedRows
     }
 
 }());
