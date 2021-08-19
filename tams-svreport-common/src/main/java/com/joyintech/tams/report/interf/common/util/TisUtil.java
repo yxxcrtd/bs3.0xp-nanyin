@@ -1337,8 +1337,8 @@ public class TisUtil {
 		if(StringUtil.isNotEmpty(datas.get(valKey+"Diff"))){ //【DAT表、登记表】有数据的内容，并且不一致的内容红色标记
 			Integer keyDiff=Integer.parseInt(datas.get(valKey+"Diff").toString());
 			if(1==keyDiff) {
-				CellStyle newStyle = wb.createCellStyle();
-				newStyle.cloneStyleFrom(cell.getCellStyle());
+				CellStyle newStyle = cell.getCellStyle();
+				newStyle.cloneStyleFrom(newStyle);
 				// 修改字体颜色为红色
 				Font ztFont1 = wb.createFont();
 				ztFont1.setColor(Font.COLOR_RED); // 将字体设置为“红色”
