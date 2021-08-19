@@ -224,7 +224,7 @@ public enum DictCodeList implements BaseDictCodeList {
      * 指令状态_待分发
      */
     指令状态_待分发(
-        DictCode.指令状态, "08", "待分发"
+        DictCode.指令状态, "09", "待分发"
     ),
     /**
      * 币种_人民币
