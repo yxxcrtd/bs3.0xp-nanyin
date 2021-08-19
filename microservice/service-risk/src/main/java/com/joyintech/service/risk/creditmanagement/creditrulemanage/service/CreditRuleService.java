@@ -76,49 +76,49 @@ public class CreditRuleService extends BaseService<CreditRuleInfoDto> {
     public void insert(CreditRuleInfoDto entity) throws InvocationTargetException, IllegalAccessException {
         List<CreditRuleInfoDto> creditRuleInfoDtos = getCreditRuleInfoDtos(entity);
         for (CreditRuleInfoDto creditRuleInfoDto : creditRuleInfoDtos) {
-            if((creditRuleInfoDto.getAstType2 () == null || creditRuleInfoDto.getAstType3 () == null) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B01") && creditRuleInfoDto.getAstType3 ().equals ("B01")) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B02") && creditRuleInfoDto.getAstType3 ().equals ("B02")) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B03") && creditRuleInfoDto.getAstType3 ().equals ("B03")) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B04") && creditRuleInfoDto.getAstType3 ().equals ("B04")) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B05") && (creditRuleInfoDto.getAstType3 ().equals ("B001") || creditRuleInfoDto.getAstType3 ().equals ("B002") || creditRuleInfoDto.getAstType3 ().equals ("B003") || creditRuleInfoDto.getAstType3 ().equals ("B004")  || creditRuleInfoDto.getAstType3 ().equals ("B005") || creditRuleInfoDto.getAstType3 ().equals ("B006") || creditRuleInfoDto.getAstType3 ().equals ("B007"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B06") && (creditRuleInfoDto.getAstType3 ().equals ("B008")   || creditRuleInfoDto.getAstType3 ().equals ("B009"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B07") && (creditRuleInfoDto.getAstType3 ().equals ("B010")   || creditRuleInfoDto.getAstType3 ().equals ("B011"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B08") && (creditRuleInfoDto.getAstType3 ().equals ("B012")   || creditRuleInfoDto.getAstType3 ().equals ("B013"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B09") && (creditRuleInfoDto.getAstType3 ().equals ("B014")   || creditRuleInfoDto.getAstType3 ().equals ("B015"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B10") && creditRuleInfoDto.getAstType3 ().equals ("B10")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B11") && creditRuleInfoDto.getAstType3 ().equals ("B11")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B12") && creditRuleInfoDto.getAstType3 ().equals ("B12")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B13") && (creditRuleInfoDto.getAstType3 ().equals ("B016")   || creditRuleInfoDto.getAstType3 ().equals ("B017") || creditRuleInfoDto.getAstType3 ().equals ("B018"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B14") && creditRuleInfoDto.getAstType3 ().equals ("B14")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B15") && creditRuleInfoDto.getAstType3 ().equals ("B15")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B16") && creditRuleInfoDto.getAstType3 ().equals ("B16")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("B17") && creditRuleInfoDto.getAstType3 ().equals ("B17")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("D01") && creditRuleInfoDto.getAstType3 ().equals ("D01")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("D02") && (creditRuleInfoDto.getAstType3 ().equals ("D001")  || creditRuleInfoDto.getAstType3 ().equals ("D002"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("F01") && creditRuleInfoDto.getAstType3 ().equals ("F01") ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("F02") && (creditRuleInfoDto.getAstType3 ().equals ("F001")  || creditRuleInfoDto.getAstType3 ().equals ("F003") || creditRuleInfoDto.getAstType3 ().equals ("F004") || creditRuleInfoDto.getAstType3 ().equals ("F006")|| creditRuleInfoDto.getAstType3 ().equals ("F007"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("F29") && creditRuleInfoDto.getAstType3 ().equals ("F05")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("F30") && creditRuleInfoDto.getAstType3 ().equals ("F06")  ) ||
-                    ((creditRuleInfoDto.getAstType2 ().equals ("H01") || creditRuleInfoDto.getAstType2 ().equals ("H03")  ) && (creditRuleInfoDto.getAstType3 ().equals ("H03") || creditRuleInfoDto.getAstType3 ().equals ("H04"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("L01") && (creditRuleInfoDto.getAstType3 ().equals ("L01")   || creditRuleInfoDto.getAstType3 ().equals ("L02"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("L02") && creditRuleInfoDto.getAstType3 ().equals ("L01")  ) ||
-                    ((creditRuleInfoDto.getAstType2 ().equals ("N01")  || creditRuleInfoDto.getAstType2 ().equals ("N02")   || creditRuleInfoDto.getAstType2 ().equals ("N03") || creditRuleInfoDto.getAstType2 ().equals ("N04" )|| creditRuleInfoDto.getAstType2 ().equals ("N05") || creditRuleInfoDto.getAstType2 ().equals ("N06")) && (creditRuleInfoDto.getAstType3 ().equals ("N001") || creditRuleInfoDto.getAstType3 ().equals ("N004"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P01") && (creditRuleInfoDto.getAstType3 ().equals ("1201")   || creditRuleInfoDto.getAstType3 ().equals ("1202") || creditRuleInfoDto.getAstType3 ().equals ("1203") || creditRuleInfoDto.getAstType3 ().equals ("1204") || creditRuleInfoDto.getAstType3 ().equals ("1205" )|| creditRuleInfoDto.getAstType3 ().equals ("1206") || creditRuleInfoDto.getAstType3 ().equals ("1207") || creditRuleInfoDto.getAstType3 ().equals ("1208")  || creditRuleInfoDto.getAstType3 ().equals ("1209") || creditRuleInfoDto.getAstType3 ().equals ("1210") || creditRuleInfoDto.getAstType3 ().equals ("1299"))) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P02") && creditRuleInfoDto.getAstType3 ().equals ("P02")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P03") && creditRuleInfoDto.getAstType3 ().equals ("P03")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P04") && creditRuleInfoDto.getAstType3 ().equals ("P04")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P05") && creditRuleInfoDto.getAstType3 ().equals ("P05")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P06") && creditRuleInfoDto.getAstType3 ().equals ("P06")  ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P07") && creditRuleInfoDto.getAstType3 ().equals ("P07") ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P08") && creditRuleInfoDto.getAstType3 ().equals ("P08") ) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P09") && (creditRuleInfoDto.getAstType3 ().equals ("P09") )) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P10") && (creditRuleInfoDto.getAstType3 ().equals ("P10") )) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P11") && (creditRuleInfoDto.getAstType3 ().equals ("P11") )) ||
-                    (creditRuleInfoDto.getAstType2 ().equals ("P12") && (creditRuleInfoDto.getAstType3 ().equals ("P12")) )
-            ){
+//            if((creditRuleInfoDto.getAstType2 () == null || creditRuleInfoDto.getAstType3 () == null) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B01") && creditRuleInfoDto.getAstType3 ().equals ("B01")) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B02") && creditRuleInfoDto.getAstType3 ().equals ("B02")) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B03") && creditRuleInfoDto.getAstType3 ().equals ("B03")) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B04") && creditRuleInfoDto.getAstType3 ().equals ("B04")) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B05") && (creditRuleInfoDto.getAstType3 ().equals ("B001") || creditRuleInfoDto.getAstType3 ().equals ("B002") || creditRuleInfoDto.getAstType3 ().equals ("B003") || creditRuleInfoDto.getAstType3 ().equals ("B004")  || creditRuleInfoDto.getAstType3 ().equals ("B005") || creditRuleInfoDto.getAstType3 ().equals ("B006") || creditRuleInfoDto.getAstType3 ().equals ("B007"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B06") && (creditRuleInfoDto.getAstType3 ().equals ("B008")   || creditRuleInfoDto.getAstType3 ().equals ("B009"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B07") && (creditRuleInfoDto.getAstType3 ().equals ("B010")   || creditRuleInfoDto.getAstType3 ().equals ("B011"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B08") && (creditRuleInfoDto.getAstType3 ().equals ("B012")   || creditRuleInfoDto.getAstType3 ().equals ("B013"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B09") && (creditRuleInfoDto.getAstType3 ().equals ("B014")   || creditRuleInfoDto.getAstType3 ().equals ("B015"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B10") && creditRuleInfoDto.getAstType3 ().equals ("B10")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B11") && creditRuleInfoDto.getAstType3 ().equals ("B11")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B12") && creditRuleInfoDto.getAstType3 ().equals ("B12")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B13") && (creditRuleInfoDto.getAstType3 ().equals ("B016")   || creditRuleInfoDto.getAstType3 ().equals ("B017") || creditRuleInfoDto.getAstType3 ().equals ("B018"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B14") && creditRuleInfoDto.getAstType3 ().equals ("B14")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B15") && creditRuleInfoDto.getAstType3 ().equals ("B15")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B16") && creditRuleInfoDto.getAstType3 ().equals ("B16")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("B17") && creditRuleInfoDto.getAstType3 ().equals ("B17")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("D01") && creditRuleInfoDto.getAstType3 ().equals ("D01")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("D02") && (creditRuleInfoDto.getAstType3 ().equals ("D001")  || creditRuleInfoDto.getAstType3 ().equals ("D002"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("F01") && creditRuleInfoDto.getAstType3 ().equals ("F01") ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("F02") && (creditRuleInfoDto.getAstType3 ().equals ("F001")  || creditRuleInfoDto.getAstType3 ().equals ("F003") || creditRuleInfoDto.getAstType3 ().equals ("F004") || creditRuleInfoDto.getAstType3 ().equals ("F006")|| creditRuleInfoDto.getAstType3 ().equals ("F007"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("F29") && creditRuleInfoDto.getAstType3 ().equals ("F05")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("F30") && creditRuleInfoDto.getAstType3 ().equals ("F06")  ) ||
+//                    ((creditRuleInfoDto.getAstType2 ().equals ("H01") || creditRuleInfoDto.getAstType2 ().equals ("H03")  ) && (creditRuleInfoDto.getAstType3 ().equals ("H03") || creditRuleInfoDto.getAstType3 ().equals ("H04"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("L01") && (creditRuleInfoDto.getAstType3 ().equals ("L01")   || creditRuleInfoDto.getAstType3 ().equals ("L02"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("L02") && creditRuleInfoDto.getAstType3 ().equals ("L01")  ) ||
+//                    ((creditRuleInfoDto.getAstType2 ().equals ("N01")  || creditRuleInfoDto.getAstType2 ().equals ("N02")   || creditRuleInfoDto.getAstType2 ().equals ("N03") || creditRuleInfoDto.getAstType2 ().equals ("N04" )|| creditRuleInfoDto.getAstType2 ().equals ("N05") || creditRuleInfoDto.getAstType2 ().equals ("N06")) && (creditRuleInfoDto.getAstType3 ().equals ("N001") || creditRuleInfoDto.getAstType3 ().equals ("N004"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P01") && (creditRuleInfoDto.getAstType3 ().equals ("1201")   || creditRuleInfoDto.getAstType3 ().equals ("1202") || creditRuleInfoDto.getAstType3 ().equals ("1203") || creditRuleInfoDto.getAstType3 ().equals ("1204") || creditRuleInfoDto.getAstType3 ().equals ("1205" )|| creditRuleInfoDto.getAstType3 ().equals ("1206") || creditRuleInfoDto.getAstType3 ().equals ("1207") || creditRuleInfoDto.getAstType3 ().equals ("1208")  || creditRuleInfoDto.getAstType3 ().equals ("1209") || creditRuleInfoDto.getAstType3 ().equals ("1210") || creditRuleInfoDto.getAstType3 ().equals ("1299"))) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P02") && creditRuleInfoDto.getAstType3 ().equals ("P02")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P03") && creditRuleInfoDto.getAstType3 ().equals ("P03")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P04") && creditRuleInfoDto.getAstType3 ().equals ("P04")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P05") && creditRuleInfoDto.getAstType3 ().equals ("P05")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P06") && creditRuleInfoDto.getAstType3 ().equals ("P06")  ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P07") && creditRuleInfoDto.getAstType3 ().equals ("P07") ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P08") && creditRuleInfoDto.getAstType3 ().equals ("P08") ) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P09") && (creditRuleInfoDto.getAstType3 ().equals ("P09") )) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P10") && (creditRuleInfoDto.getAstType3 ().equals ("P10") )) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P11") && (creditRuleInfoDto.getAstType3 ().equals ("P11") )) ||
+//                    (creditRuleInfoDto.getAstType2 ().equals ("P12") && (creditRuleInfoDto.getAstType3 ().equals ("P12")) )
+//            ){
                 creditRuleInfoMapper.insert(creditRuleInfoDto);
-            }
+//            }
         }
     }
 
