@@ -90,7 +90,7 @@ public class EtrIbRepo001Controller extends BaseController{
         this.setSelectOptionToModel(model, DictCode.委托状态);
         this.setSelectOptionToModel(model, DictCode.回购期限品种);
         this.setSelectOptionToModel(model, DictCode.价格模式);
-        this.setSelectOptionToModel(model, DictCode.回购指令_有效状态);
+        this.setSelectOptionToModel(model, DictCode.有效状态);
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("repo_pledge_model",CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
 
