@@ -293,12 +293,18 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                         }
                         String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
                         pbcSendZipDatFile.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);
-                        PbcSendZipDatFile sendZipDatFile = pbcSendZipDatFileMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), "PIB");
-                        if(sendZipDatFile == null){
-                            insertList.add(pbcSendZipDatFile);
+                        PbcSendZipDatFile sendZipDatFile = pbcSendZipDatFileMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), pbcSendZipDatFile.getDatZipDatType());
+                        if("PIE".equals(pbcSendZipDatFile.getDatZipDatType())){
+                            if(sendZipDatFile == null){
+                                insertList.add(pbcSendZipDatFile);
+                            }else{
+                                pbcSendZipDatFile.setRegistSeqno(sendZipDatFile.getRegistSeqno());
+                                updateList.add(pbcSendZipDatFile);
+                            }
                         }else{
-                            pbcSendZipDatFile.setRegistSeqno(sendZipDatFile.getRegistSeqno());
-                            updateList.add(pbcSendZipDatFile);
+                            if(sendZipDatFile == null){
+                                insertList.add(pbcSendZipDatFile);
+                            }
                         }
                     }
                     for (PbcSendZipDatFile sendZipDatFile : insertList) {

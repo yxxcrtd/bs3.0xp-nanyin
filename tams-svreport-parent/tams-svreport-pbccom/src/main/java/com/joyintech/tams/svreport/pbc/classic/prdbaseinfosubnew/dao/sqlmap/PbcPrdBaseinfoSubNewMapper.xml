@@ -787,7 +787,7 @@
         decode(CREDIT_FLAG,'01','1','2') CREDIT_FLAG,
         REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(CREDIT_TYPE,'05','6'),'04','1'),'03','4'),'02','3'),'01','2')
         CREDIT_TYPE,
-        decode(CREDIT_MODE,'01','1','02','2','03','1,2')CREDIT_MODE,
+        REPLACE(CREDIT_MODE,'0','') CREDIT_MODE,
         IN_DEP_NAME,
         IN_DEP_CODE,
         DECODE(OUT_DEP_CTRY,NULL,'',substrb(OUT_DEP_CTRY,0,3)) OUT_DEP_CTRY,
@@ -1013,6 +1013,15 @@
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
+
+            <if test="submitFeedbackStatusListExp != null and submitFeedbackStatusListExp.size > 0">
+                and (SUBMIT_FEEDBACK_STATUS is null or SUBMIT_FEEDBACK_STATUS in
+                <foreach collection="submitFeedbackStatusListExp" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+                )
+            </if>
+
             <if test="operateModeList != null and operateModeList.size > 0">
                 and OPERATE_MODE in
                 <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
@@ -1411,7 +1420,8 @@
 
 
     <update id="updateZipDatStatus">
-        update PBC_SEND_ZIP_DAT_FILE F set ZIP_SEND_STATUS = #{updateStatus,jdbcType=CHAR}
+        update PBC_SEND_ZIP_DAT_FILE F set ZIP_SEND_STATUS = #{updateStatus,jdbcType=CHAR},
+        SUBMIT_TIME = SYSDATE,RETURN_ZIP_SEND_STATUS = '03'
         WHERE NOT EXISTS(
               SELECT 1 FROM PBC_PRD_BASEINFO_SUB_DAT SD WHERE F.DAT_ZIP_CODE = SD.DAT_ZIP_CODE AND SD.SEND_STATUS = #{sendStatus,jdbcType=CHAR}
               UNION ALL
@@ -1420,6 +1430,16 @@
         AND F.DAT_ZIP_TYPE = 'PI'
     </update>
 
+    <update id="updateZipDatStatusUn">
+        update PBC_SEND_ZIP_DAT_FILE F set ZIP_SEND_STATUS = #{updateStatus,jdbcType=CHAR},
+        SUBMIT_TIME = NULL,RETURN_ZIP_SEND_STATUS=NULL
+        WHERE  EXISTS(
+              SELECT 1 FROM PBC_PRD_BASEINFO_SUB_DAT SD WHERE F.DAT_ZIP_CODE = SD.DAT_ZIP_CODE AND SD.SEND_STATUS = #{sendStatus,jdbcType=CHAR}
+              UNION ALL
+              SELECT 1 FROM PBC_PRD_BASEINFO_END_SUB_DAT SD WHERE F.DAT_ZIP_CODE = SD.DAT_ZIP_CODE AND SD.SEND_STATUS = #{sendStatus,jdbcType=CHAR}
+        )
+        AND F.DAT_ZIP_TYPE = 'PI'
+    </update>
 
     <delete id="updateBaseSubDat" parameterType="map">
         UPDATE PBC_PRD_BASEINFO_SUB_DAT SET SEND_STATUS =  '03',SUBMIT_FEEDBACK_STATUS = '03'

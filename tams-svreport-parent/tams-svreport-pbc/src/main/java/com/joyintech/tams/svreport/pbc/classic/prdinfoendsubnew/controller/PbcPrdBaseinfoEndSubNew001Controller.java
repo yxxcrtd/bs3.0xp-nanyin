@@ -151,6 +151,8 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 		List<PbcPrdBaseinfoEndSubNew> dtoList;
 
 		if (null == datas) {
+			//则默认根据当前查询条件对系统中报送状态为“未报送”或反馈状态为“发送失败”“发送异常”“中债退回”的数据进行检索导出
+			paraMap.put("submitFeedbackStatusExp","02,04,06");
 			dtoList = prdBaseinfoEndSubNew001Service.searchByExcel(paraMap);
 		} else {
 			dtoList = JsonUtils.json2List(datas, PbcPrdBaseinfoEndSubNew.class);

@@ -178,6 +178,7 @@ public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
 		List<PbcPrdBaseinfoSubNew> dtoList;
 
 		if(null==datas){
+			paraMap.put("submitFeedbackStatusExp","02,04,06");
 			dtoList = pbcPrdRaiseSub001Service.searchByExcel(paraMap);
 		}else{
 			dtoList = JsonUtils.json2List(datas, PbcPrdBaseinfoSubNew.class);

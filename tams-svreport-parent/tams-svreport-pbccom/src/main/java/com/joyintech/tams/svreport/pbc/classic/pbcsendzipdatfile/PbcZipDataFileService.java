@@ -683,6 +683,8 @@ public class PbcZipDataFileService {
 		for (PbcPrdBaseinfoEndSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+			//序号
+			data.put("number","1");
 			//产品代码
 			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//产品实际终止日期
@@ -694,6 +696,8 @@ public class PbcZipDataFileService {
 		for (PbcPrdBaseinfoEndSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+			//序号
+			data.put("number","2");
 			//产品代码
 			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种代码

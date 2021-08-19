@@ -12,12 +12,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.tams.report.interf.common.util.SpringContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.tams.common.svreport.seq.service.SysSeqService;
+
+import javax.annotation.PostConstruct;
 
 /**
  *人行单产品保本基本公共类 
@@ -26,7 +30,6 @@ import com.joyintech.tams.common.svreport.seq.service.SysSeqService;
  * @see PbcClassicsUtil
  * @since 1.0
  */
-@Component
 public class PbcClassicsUtil {
 	
     public final static String PROD_PROFIT_TYPE_FIX="01";
@@ -39,9 +42,12 @@ public class PbcClassicsUtil {
     private static Logger logger = LoggerFactory.getLogger(PbcClassicsUtil.class);
     
 	private static SysSeqService sysSeqService;
-    @Autowired
-    public void setSysSeqService(SysSeqService sysSeqLogic) {
-    	PbcClassicsUtil.sysSeqService = sysSeqLogic;
+
+    private static SysSeqService getSysSeqService() {
+    	if(PbcClassicsUtil.sysSeqService == null) {
+			PbcClassicsUtil.sysSeqService = SpringContextUtil.getBean(SysSeqService.class);
+		}
+    	return PbcClassicsUtil.sysSeqService;
     }		
 	/**
 	 * 人行产品代码生成
@@ -79,7 +85,7 @@ public class PbcClassicsUtil {
 		strbuf.append(yearLast);
 		//5位顺序码
 		//PbcClassicsUtil pbcUtil = new PbcClassicsUtil();
-		long seqNo = sysSeqService.getSysSeq(seqCode,vdate,"Y");
+		long seqNo = getSysSeqService().getSysSeq(seqCode,vdate,"Y");
 		if ( seqNo>99999) {
 		    logger.error("产品顺序码长度大于5位!");
 		    return null;
@@ -139,7 +145,7 @@ public class PbcClassicsUtil {
 		 * 			采番数量		1
 		 * */
 
-		long seqNo = sysSeqService.getSysSeqNew(seqCode,vdate,"Y");
+		long seqNo = getSysSeqService().getSysSeqNew(seqCode,vdate,"Y");
 		if ( seqNo>99999) {
 			logger.error("产品顺序码长度大于5位!");
 			return null;
@@ -174,7 +180,7 @@ public class PbcClassicsUtil {
 		strbuf.append(yearLast);
 		//5位顺序码
 		//PbcClassicsUtil pbcUtil = new PbcClassicsUtil();
-		long seqNo = sysSeqService.getSysSeq(seqCode,new Date(),"Y");
+		long seqNo = getSysSeqService().getSysSeq(seqCode,new Date(),"Y");
 		if ( seqNo>99999) {
 		    logger.error("产品顺序码长度大于5位!");
 		    return null;
