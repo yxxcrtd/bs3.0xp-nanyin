@@ -198,7 +198,8 @@ public class ModGradePdConfigService extends  CommonExportService<ModGradePdConf
         List<String> list = Arrays.asList("年份","评级结果","前瞻前年度边际PD%");
 //        List<com.joyintech.tams.systemtools.dto.ExcelValidDto> excelValidDtos = com.joyintech.tams.systemtools.util.ExcelUtil.checkExcelTemp(fileName, list);
         String localPath = getclasspath();
-        List<List<String>> dataList = getDataList(fileName,localPath,0);
+        List<List<String>> dataList = ExcelUtil.getTempList(fileName);
+//        List<List<String>> dataList = getDataList(fileName,localPath,0);
         //判断模板是否正确(取第一列数据进行判断)
         Boolean isTemplate=true;
         if(dataList.size()>0 && dataList.get(0).size()==3){
@@ -311,15 +312,16 @@ public class ModGradePdConfigService extends  CommonExportService<ModGradePdConf
      * @return:
      */
     @Transactional(rollbackFor = Exception.class)
-    public List<ExcelValidDto> importFile(String flieName, String type) throws Exception {
+    public List<ExcelValidDto> importFile(String fileName, String type) throws Exception {
         //数据
-        String localPath = getclasspath();
-        List<List<String>> dataList = getDataList(flieName,localPath,1);
+        List<List<String>> dataList = ExcelUtil.getTempList(fileName);
+//        String localPath = getclasspath();
+//        List<List<String>> dataList = getDataList(fileName,localPath,1);
 //        List<List<String>> dataList1 = com.joyintech.tams.systemtools.util.ExcelUtil.getDataList(flieName);
         //数据入库
         if(dataList.size()>0){
             List<ModGradePdConfigDto> dtoList = new ArrayList<>();
-            for(int i=0; i<dataList.size(); i++){
+            for(int i=1; i<dataList.size(); i++){
                 ModGradePdConfigDto dto= new ModGradePdConfigDto();
                 dto.setVouchYear(dataList.get(i).get(0));
                 dto.setGradeResult((dataList.get(i).get(1).split(":"))[0]);//模板格式为 03:AAA-，保存只要 03，所以此处处理
