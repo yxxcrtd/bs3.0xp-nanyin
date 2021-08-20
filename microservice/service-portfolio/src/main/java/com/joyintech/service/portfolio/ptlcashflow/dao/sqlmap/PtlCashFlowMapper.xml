@@ -94,8 +94,8 @@
 	  	FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F01,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F06,jdbcType=VARCHAR},
 	  	#{FINPROD_TYPE_TG_F07,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F37,jdbcType=VARCHAR})
 		<if test="param != null and param != ''">
-		AND (FINPROD_MARKET_ID LIKE CONCAT(#{param,jdbcType=VARCHAR},'%')
-		OR FINPROD_ABBR LIKE CONCAT(#{param,jdbcType=VARCHAR},'%'))
+		AND (FINPROD_MARKET_ID LIKE CONCAT('%',CONCAT(#{param,jdbcType=VARCHAR},'%'))
+		OR FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{param,jdbcType=VARCHAR},'%')))
 		</if>
 	  </where>
 	  </select>
@@ -204,6 +204,9 @@
 	   				and T5.PROFIT_TYPE = #{PROFIT_TYPE_01,jdbcType=VARCHAR}) then #{PINAN_ASSET_TYPE_F04,jdbcType=VARCHAR}
 	   			when (T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
 	   				and T5.PROFIT_TYPE = #{PROFIT_TYPE_02,jdbcType=VARCHAR}) then #{PINAN_ASSET_TYPE_F03,jdbcType=VARCHAR}
+
+		        when (T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
+		            and T5.PROFIT_TYPE = #{PROFIT_TYPE_03,jdbcType=VARCHAR}) then #{PINAN_ASSET_TYPE_F09,jdbcType=VARCHAR}
 	   			when T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F07,jdbcType=VARCHAR} then #{PINAN_ASSET_TYPE_F05,jdbcType=VARCHAR}
 	   			when T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR} then #{PINAN_ASSET_TYPE_F06,jdbcType=VARCHAR}
 		   		<!-- add by etliu 20210421 权益类资产相关代码合并 start -->
@@ -278,6 +281,9 @@
 				</when>
 				<when test="finprodType2 == PINAN_ASSET_TYPE_F06">
 				AND T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR}
+				</when>
+				<when test="finprodType2 == PINAN_ASSET_TYPE_F09">
+					AND T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
 				</when>
 				<!-- add by etliu 20210421 权益类资产相关代码合并 start -->
 				<when test="finprodType2 == PINAN_ASSET_TYPE_F19">
@@ -474,6 +480,10 @@
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F03">
 					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
 					AND PROFIT_TYPE = #{PROFIT_TYPE_02,jdbcType=VARCHAR}
+					</when>
+					<when test="finprodType2 == PINAN_ASSET_TYPE_F09">
+					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
+					AND PROFIT_TYPE = #{PROFIT_TYPE_03,jdbcType=VARCHAR}
 					</when>
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F05">
 					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F07,jdbcType=VARCHAR}
