@@ -3061,8 +3061,8 @@ select #{R7S1} as remType,
 								 ON C.PARA_CODE = D.PARA_CODE
 					   LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET
 					   ON REMINDER_SET.REM_TYPE = 'R5S3'
-			  WHERE C.PARA_TYPE = 'FIX' and D.NOTIFY_DATE <![CDATA[<=]]> #{quaryDate} + 1
-			  and D.NOTIFY_DATE <![CDATA[>=]]> #{quaryDate} - REMINDER_SET.DAYS
+			  WHERE C.PARA_TYPE = 'FIX' and D.NOTIFY_DATE <![CDATA[<=]]> #{quaryDate} + REMINDER_SET.DAYS
+			  and D.NOTIFY_DATE <![CDATA[>=]]> #{quaryDate}
 				and 'FIX' = 'FIX'
 				AND NOT EXISTS(
 					SELECT 1 FROM SYS_ACTIVEREMINDER_INFO
@@ -3438,8 +3438,8 @@ select #{R7S1} as remType,
 		a.entrustStatus != '06'
 		and a.paymentStatus != '04'
 		and a.paymentStatus != '05'
-		and a.mdate <![CDATA[<=]]> #{quaryDate} + 1
-		and a.mdate <![CDATA[>=]]> #{quaryDate} - a.days
+		and a.mdate <![CDATA[<=]]> #{quaryDate} + a.days
+		and a.mdate <![CDATA[>=]]> #{quaryDate}
 		AND NOT EXISTS(
 		SELECT 1
 		FROM SYS_ACTIVEREMINDER_INFO
