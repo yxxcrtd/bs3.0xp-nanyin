@@ -57,7 +57,7 @@
             <![CDATA[AND  T5.DELDATE > #{listDate}]]>
         </if>
         <where>
-            T3.CONFIG_TYPE = #{NO_TARGET_TYPE_MAPPING}
+            T3.CONFIG_TYPE = 'NO_TARGET_TYPE_MAPPING'
             <if test="inputValue1 != null and inputValue1 != ''">
                 AND T3.INPUT_VALUE_1 = #{inputValue1}
             </if>
