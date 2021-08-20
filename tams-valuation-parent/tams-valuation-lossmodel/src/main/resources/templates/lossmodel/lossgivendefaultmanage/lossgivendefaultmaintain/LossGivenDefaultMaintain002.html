@@ -12,22 +12,22 @@
 		<form class="layui-form joyin-form-wrap pro-module-form"
 			id="submitForm">
 			<div class="layui-form-item">
-				<div class="layui-inline layui-col-md4">
+				<div class="layui-inline layui-col-md4"  style="display:inline">
 					<label class="layui-form-label form-lable">资产类别</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" id="assetType" name="assetType" disabled="true"
 							class="layui-input form-input input-select" placeholder="请输入内容"
 							data-th-placeholder="#{SysCommon.placeholder}"
 							data-th-value="${entity?.assetType}"
-							data-th-data-result='${MODEL_SEC_TYPE}'>
+							data-th-data-result='${SEC_TYPE}'>
 					</div>
 				</div>
-				<div id="assetDetailTypeDiv">
+				<div id="assetDetailTypeDiv" style="display:inline">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">债券类型</label>
 						<div class="layui-input-inline input-inline">
 							<select id="assetDetailType" name="assetDetailType" searchable="false" type="text" disabled="true"
-								data-th-data-result='${MODEL_SEC_DETAIL_TYPE}'
+								data-th-data-result='${BOND_TYPE}'
 								data-th-initValue="${entity?.assetDetailType}"
 								class="layui-input form-input input-select" placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}" required>
@@ -35,7 +35,20 @@
 						</div>
 					</div>
 				</div>
-				<div id="isContainPledgeDiv">
+				<div id="ckAssetDetailTypeDiv"  style="display:none;">
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">债券类型</label>
+						<div class="layui-input-inline input-inline">
+							<select id="assetDetailType" name="assetDetailType" searchable="false" type="text" disabled="true"
+									data-th-data-result='${DEPOSIT_TYPE}'
+									data-th-initValue="${entity?.assetDetailType}"
+									class="layui-input form-input input-select" placeholder="请输入内容"
+									data-th-placeholder="#{SysCommon.placeholder}" required>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div id="isContainPledgeDiv"  style="display:inline">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">是否含有抵质押物</label>
 						<div class="layui-input-inline input-inline">

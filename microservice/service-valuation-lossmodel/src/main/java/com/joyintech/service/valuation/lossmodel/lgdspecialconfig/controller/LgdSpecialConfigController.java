@@ -11,19 +11,19 @@
 package com.joyintech.service.valuation.lossmodel.lgdspecialconfig.controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto;
 import com.joyintech.service.valuation.lossmodel.lgdspecialconfig.service.LgdSpecialConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.joyintech.framework.grid.Page;
 /**
  * 特殊资产LGD维护Controller
@@ -175,6 +175,21 @@ public class LgdSpecialConfigController{
             flag =true;
         }
         return flag;
+    }
+
+
+    @RequestMapping("getFinprodIdByLossType")
+    @ResponseBody
+    public List<SelectOptionDto> getFinprodIdByLossType(@RequestBody Map<String, Object> params) {
+        //lossType   01 毕马威；02 普华永道
+        List<SelectOptionDto> suggestDtoList = new ArrayList<>();
+        String lossType = (String)params.get("lossType");
+        if(StringUtil.isNotEmpty(lossType) && "01".equals(lossType)){
+            return lgdSpecialConfigService.getFinprodIdByLossTypeOne(params);
+        }else if (StringUtil.isNotEmpty(lossType) && "02".equals(lossType)){
+            return lgdSpecialConfigService.getFinprodIdByLossTypeTwo(params);
+        }
+        return  suggestDtoList;
     }
 
 

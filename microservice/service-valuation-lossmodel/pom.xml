@@ -21,6 +21,10 @@
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
+            <artifactId>framework-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.joyintech</groupId>
             <artifactId>tams-valuation-common</artifactId>
             <version>3.0.1</version>
         </dependency>

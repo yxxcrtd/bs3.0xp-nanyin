@@ -147,18 +147,53 @@
       UPDATE_TIME = sysdate
     where SEQNO = #{seqno,jdbcType=VARCHAR}
   </update>
+
   <select id="selectForPage" resultMap="BaseResultMap" parameterType="map" >
     select 
     <include refid="Base_Column_List" />
     from MOD_LGD_CONFIG
-    where 1=1
-    <if test="assetType != null" >
-    	and ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
-    </if>
+    <where>
+      1=1
+      <if test="assetType != null and assetType=='13'" >
+        and ASSET_DETAIL_TYPE is null
+      </if>
+      <if test="assetType != null and (assetType=='01' or assetType=='09')" >
+        and ASSET_DETAIL_TYPE in (select ITEM_CODE from sys_datadict_list where dict_code= 'BOND_TYPE')
+      </if>
+      <if test="assetType != null and assetType=='07'" >
+        and ASSET_DETAIL_TYPE in (select ITEM_CODE from sys_datadict_list where dict_code= 'DEPOSIT_TYPE')
+      </if>
+
+    </where>
+
+
+
+
   </select>
   <select id="checkIfUsed" resultType="int" parameterType="string">
   	select count(1) from MOD_CONFIG_USEAGE
   	where CONFIG_SEQNO=#{seqno,jdbcType=VARCHAR}
   	and CONFIG_TYPE='05'
   </select>
+
+
+  <select id="getLinkSelectOption" resultType="com.joyintech.framework.select.SelectOptionDto">
+    select distinct
+    sdl.ITEM_CODE id, sdl.ITEM_VALUE text
+    from SYS_DATADICT_LIST sdl
+    where
+    dict_code='SEC_TYPE'
+    and sdl.ITEM_CODE in (
+    SELECT DICT_ITEM_VAL FROM SYS_PAGE_DICTLIST C WHERE C.PAGE_ID = 'LossGivenDefaultMaintain001' AND C.DICT_ID    = 'SEC_TYPE')
+    <where>
+      <if test="type != null and type != '' and type=='01'">
+        and dl.ITEM_CODE  in ('07','09')
+      </if>
+      <if test="search != null and search !=''">
+        sdl.ITEM_VALUE like '%' || #{search} || '%'
+      </if>
+    </where>
+    order by sdl.ITEM_CODE
+  </select>
+
 </mapper>

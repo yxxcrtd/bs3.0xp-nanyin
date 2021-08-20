@@ -74,7 +74,9 @@ public class RskSupervisionIndicatorParamValidator implements BeanValidator {
                     errorList.add(new ValidMessage("mrContent",getMessage("BUSS_COM_E_0038",
                             getMessage("RskSupervisionIndicatorParam002.mrContent"))));
                 }
-                if(dto.getRedisField()==null||dto.getRedisField()==""){
+                // 当计算方式是redis时才判断redis存储识别域是否为空, fuyongsheng 20210820 edit
+                if(StringUtil.equals(dto.getParamMathType(), BussinessDictCodeListRds.指标参数计算方式_REDIS.getValue())
+                        && (dto.getRedisField()==null||dto.getRedisField()=="")){
                     errorList.add(new ValidMessage("redisField",getMessage("BUSS_COM_E_0038",
                             getMessage("RskSupervisionIndicatorParam002.redisField"))));
                 }

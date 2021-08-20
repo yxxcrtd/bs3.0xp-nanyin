@@ -18,9 +18,12 @@ import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsServic
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.validator.EtrInvestBondInfoValidator;
@@ -311,7 +314,8 @@ public class EtrInvestBondInfo003Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-        for(EtrInvestBondInfoDto dto: dtoList) { 
+        List<EtrInvestBondInfoDto> dataList = new ArrayList<>();
+        for(EtrInvestBondInfoDto dto: dtoList) {
         	if(!dto.equals(dtoList.get(0))) {
         		for(SysUploadFileInfo file: dto.getFileArray()) {
             		UploadFile uploadFile = fileAttachmentProcess.fetch(file.getSeqNo());
@@ -331,25 +335,22 @@ public class EtrInvestBondInfo003Controller extends BaseController {
             }
         	dto.setEntrustOwnNum(dto.getEntrustNum());
             dto.setEntrustIntegrateNum(BigDecimal.ZERO);
+            if (StringUtil.isNotEmpty(dto.getEntrustId())) {
+                dataList.add(dto);
+            }
         	dto.setWorkflowParameter("new|||1|EtrInvestBondInfo003|EtrInvestBondInfo003_btn_submit|true"); 
         }
-        //多组合风险试算结果处理
-        for(EtrInvestBondInfoDto dto: dtoList) { 
-            //多组合交易对风险试算处理逻辑
-            if(CollectionUtils.isNotEmpty(dto.getRiskTrialRetDto())){  
-                 List<RiskTrialRetDto> riskTrialRetlist = new ArrayList<>(); 
-                 for (RiskTrialRetDto riskTrialRetDto:dto.getRiskTrialRetDto()) {
-                    if(StringUtils.equals(riskTrialRetDto.getPortfolioCode(),dto.getPortfolioId())){
-                        riskTrialRetlist.add(riskTrialRetDto); 
-                    }
-                    List<String> list= interfRiskRdsService.queryPortfolioPackageDtlByBagId(riskTrialRetDto.getPortfolioCode());
-                    if (!CollectionUtils.isEmpty(list) && list.contains(dto.getPortfolioId())) {
-                        riskTrialRetlist.add(riskTrialRetDto); 
-                    } 
-                 }    
-                 dto.setRiskTrialRetDto(riskTrialRetlist);
-            }  
-        } 
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dtoList.get(0).getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
+                    dataList, DictCodeList.平安资产类型_债券.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                    true, dtoList.get(0).getEtrInvestPersonInfo());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        EntrustRdsCommonAop.riskListToChildren(dtoList.get(0).getRiskTrialRetDto(), dtoList, (dto, list) -> dto.setRiskTrialRetDto(list));
+        // ----------add by 预占功能 end----------
         ProcessParameter<EtrInvestBondInfoDto> processParameter = new ProcessParameter<EtrInvestBondInfoDto>();
         WorkFlowParameter<EtrInvestBondInfoDto> params = new WorkFlowParameter<EtrInvestBondInfoDto>();
         params.setPageId("EtrInvestBondInfo002");
@@ -366,7 +367,6 @@ public class EtrInvestBondInfo003Controller extends BaseController {
                       + this.getMessage("EtrInvestBondInfo001.entrustAmt") + ":"
                       + entity.getEntrustNum());
         processParameter.setWorkFlowParameter(params);
-
         String msg = etrInvestBondInfoService.start(processParameter, dtoList.toArray(new EtrInvestBondInfoDto[dtoList.size()]));
         return new AjaxResult(msg);
     }

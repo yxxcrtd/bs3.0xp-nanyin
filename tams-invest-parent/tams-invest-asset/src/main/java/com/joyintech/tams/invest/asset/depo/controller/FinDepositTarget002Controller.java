@@ -82,7 +82,7 @@ public class FinDepositTarget002Controller extends BaseController{
     /**
      * 初始化数据字典下拉框
      */
-    private static final IDictCode[] DICT_CODES = new DictCode[] {DictCode.存款类资产类型,DictCode.存款类资产存款类型,
+    private static final IDictCode[] DICT_CODES = new DictCode[] {DictCode.存款类资产类型,DictCode.是否可提前支取,
         DictCode.是否,DictCode.币种,DictCode.境内外,DictCode.资产_负债二级类别,DictCode.资产来源,
         //增加数据字典行内资产二级、三级、四级、五级分类  赵东东 2019.7.23 start
         DictCode.是否,DictCode.币种,DictCode.境内外,DictCode.行内资产二级分类,DictCode.行内资产三级分类,DictCode.行内资产四级分类,DictCode.行内资产五级分类};
@@ -90,12 +90,13 @@ public class FinDepositTarget002Controller extends BaseController{
     
     @Override
     public String init(Model model){
+        setSelectOptionToModel(model, DICT_CODES);
         //标的金融产品代码
         String finprodId = this.getParam("finprodId");
         //String status = getParam("status");
         String workflowId = getParam("workflowId");
         //初始化基本信息画面数据字典
-        setSelectOptionToModel(model, DICT_CODES);
+
         model.addAttribute("workflowId", workflowId);
         model.addAttribute("YES", DictCodeList.是否_是.getValue());
         model.addAttribute("isTradeCalendar",DictCodeList.是否_是.getValue());

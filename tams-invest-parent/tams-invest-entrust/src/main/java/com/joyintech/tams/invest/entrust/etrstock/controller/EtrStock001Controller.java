@@ -9,6 +9,11 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrstock.dto.EtrStockDto;
 import com.joyintech.tams.invest.entrust.etrstock.service.EtrStockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,12 +128,16 @@ public class EtrStock001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("recall")
-    public AjaxResult recallDelegate(@RequestBody EtrStockDto dto) {
+    public AjaxResult recallDelegate(@RequestBody EtrStockDto dto) throws Exception{
         List<EtrStockDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrStockDto entity : dtolist){
                 etrStockService.recallDelegate(entity);
             }
+            // add by  批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeListExt2.平安资产类型_股票.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by  批量撤销预占 end
             return new AjaxResult("撤销成功");
         }
         return new AjaxResult("撤销失败");

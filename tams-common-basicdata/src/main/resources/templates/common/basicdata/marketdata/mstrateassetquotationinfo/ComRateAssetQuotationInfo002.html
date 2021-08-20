@@ -57,7 +57,17 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label form-lable mst-lable" >估值</label>
+                    <label class="layui-form-label form-lable mst-lable" >全价估值(每百元）</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="fullValuation" name="fullValuation" required="required"
+                               data-pattern="" data-fixtype="2" data-textrange="4" maxlength="30"
+                               class="layui-input form-input text-number"
+                               data-th-value="${entity?.fullValuation}" placeholder="请输入内容"
+                               data-th-placeholder="#{SysCommon.placeholder}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label form-lable mst-lable" >净价估值（每百元）</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="valuation" name="valuation" required="required"
                                data-pattern="" data-fixtype="2" data-textrange="4" maxlength="30"
@@ -66,6 +76,7 @@
                                data-th-placeholder="#{SysCommon.placeholder}">
                     </div>
                 </div>
+
                 <div class="layui-form-item">
                     <label class="layui-form-label form-lable mst-lable">备注</label>
                     <div class="layui-input-inline input-inline">

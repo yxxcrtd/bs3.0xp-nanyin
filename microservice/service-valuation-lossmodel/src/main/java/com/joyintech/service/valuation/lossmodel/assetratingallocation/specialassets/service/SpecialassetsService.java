@@ -719,6 +719,11 @@ public class SpecialassetsService extends BaseService<ModAssetGradeSpecialConfig
     }
 
 
+    public String getSecTypeByFinprodId(Map<String, Object> param){
+        return modAssetGradeSpecialConfigDtoMapper.getSecTypeByFinprodId(param);
+    }
+
+
 
 
 }

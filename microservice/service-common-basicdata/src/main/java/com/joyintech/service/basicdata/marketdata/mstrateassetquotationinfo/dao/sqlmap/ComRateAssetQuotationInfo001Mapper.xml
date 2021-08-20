@@ -10,7 +10,9 @@
         B.VAL_DATE valDate,
         B.VALUATION valuation,
         TO_CHAR(B.PUBLISH_DATE, 'yyyy-MM-dd') importDate,
-        B.REMARK remark
+        B.REMARK remark,
+        B.VALUE_SOURCE valueSource,
+        B.FULL_VALUATION fullValuation
         FROM
         FIN_PRODUCT A ,
         FIN_PRODUCT_VALUATION B

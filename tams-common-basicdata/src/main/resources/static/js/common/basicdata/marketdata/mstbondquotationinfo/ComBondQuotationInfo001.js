@@ -36,9 +36,7 @@
                     JoyinUtil.getRealPath("common/basicdata/marketdata/mstbondquotationinfo/ComBondQuotationInfo002/init"),
                     "98%", "95%",data,function(){table.reload();});
         },
-        
         cols:[
-             
             {field:'secId', title: 'ComBondQuotationInfo001.secId', width:150}
             ,{field:'finprodAbbr', title: 'ComBondQuotationInfo001.finprodAbbr',width:150},
             {field:'valueSourceStr', title: 'ComBondQuotationInfo002.valueSource', sortField:'valueSource', width:150}

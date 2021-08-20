@@ -74,6 +74,7 @@
         y.TYPE_5 type5,
         y.TYPE_8 type6,
         y.TYPE_6 type7,
+        y.TYPE_7 typeSeven,
         y.TYPE_9 type9,
         y.TYPE_10 type10,
         s.REP_ASSET_TYPE repAssetDept,
@@ -96,7 +97,7 @@
         <!-- add by zhangrui1 增加资产属性:是否流动性受限 end -->
         <!-- add by zhangrui1 增加资产属性:机构主体类型 start -->
         , MCIA.CUSTOMER_OBJ_TYPE customerObjType
-
+        , rsatt.IS_UNLISTEDEQUITY  isUnEquity
         ,decode(n.IS_INADVANCE,null,'N',n.IS_INADVANCE) isInAdvance<!-- add by zhangrui1 增加资产属性:机构主体类型 end -->
         from (select FIN_PRODUCT.* ,case  FINPROD_TYPE2 WHEN  'F01' THEN ISSUER
                 WHEN 'F06' THEN manager
@@ -132,6 +133,7 @@
         FROM MST_BOND_CREDIT_RATING A41 WHERE  O_TYPE='02' AND GRADE_DATE &lt;=to_date('${valDate}','yyyy-MM-dd')) tempData WHERE tempData.rowNo=1
         ) ZxPingji ON ZxPingji.O_CODE=m.FINPROD_MARKET_ID
         left join DYGLF on m.FINPROD_ID=DYGLF.FINPROD_ID
+        left join RSK_SPECIFIC_ASSET_TYPE rsatt on m.FINPROD_ID=rsatt.FINPROD_ID
         <!-- add by zhangrui1 增加资产属性 start -->
         left join CASH_INFO cash on cash.FINPROD_ID = m.FINPROD_ID
         <!-- add by zhangrui1 增加资产属性 end -->
@@ -162,6 +164,7 @@
         y.TYPE_5 type5,
         y.TYPE_8 type6,
         y.TYPE_7 type7,
+        y.TYPE_7 typeSeven,
         y.TYPE_9 type9,
         y.TYPE_10 type10,
         s.REP_ASSET_TYPE repAssetDept,
@@ -184,7 +187,7 @@
         <!-- add by zhangrui1 增加资产属性:是否流动性受限 end -->
         <!-- add by zhangrui1 增加资产属性:机构主体类型 start -->
         , null customerObjType
-
+        , null  isUnEquity
         ,'N' as isInAdvance<!-- add by zhangrui1 增加资产属性:机构主体类型 end -->
         from FIN_TRADE_PRODUCT m
         <![CDATA[ inner join FIN_PRODUCT_TYPE y on m.FINPROD_ID=y.FINPROD_ID and m.BRANCH='0' and y.BRANCH='0' and m.FINPROD_TYPE <> 'F21' ]]>
@@ -192,7 +195,7 @@
         <where>
           mdate &gt;= to_date('${valDate}','yyyy-MM-dd')
             <if test="paramIdList != null and paramIdList.size() > 0">
-               m.FINPROD_ID in
+               and m.FINPROD_ID in
                 <foreach collection="paramIdList" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>

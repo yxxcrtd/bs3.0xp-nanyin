@@ -97,7 +97,18 @@ public class ComBondQuotationInfoController {
         throws Exception {
         return comBondQuotationInfoService.selectForPage(page, length, param);
     }
-
+    /**
+     * 画面查询方法
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @PostMapping("findPageformod/{page}/{length}")
+    public Page<ComBondQuotationInfoDto> selectformod(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
+                                                   @PathVariable("length") int length)
+            throws Exception {
+        return comBondQuotationInfoService.selectForMod(page, length, param);
+    }
     /**
      * 获取金融产品简称
      * 

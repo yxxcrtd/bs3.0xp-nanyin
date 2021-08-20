@@ -1,11 +1,17 @@
 package com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.service;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.dto.ModAssetGradeSpecialConfigDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -65,6 +71,21 @@ public class Specialassets002Service extends CommonExportService<ModAssetGradeSp
                 Integer.class);
 		
 	}
+
+	/**
+	 * @Description:根据产品获取产品的证券品种
+	 * @auther: yuzj
+	 * @date: 2021/8/19
+	 * @param:
+	 * @return:
+	 */
+    public String getSecTypeByFinprodId(@RequestBody Map<String, Object> param){
+        return restTemplate.postForObject(
+                ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/Specialassets/getSecTypeByFinprodId", param,
+                String.class);
+    }
+
+
     
     
 }

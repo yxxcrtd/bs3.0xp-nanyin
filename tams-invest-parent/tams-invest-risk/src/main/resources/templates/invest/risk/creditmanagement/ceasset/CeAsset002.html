@@ -42,14 +42,23 @@ var entity=/*[[${entity}]]*/'';
 													th:value="${entity?.pflshName}"	class="layui-input form-input input-text" />
 							                    </div>
 							                </div>
+											<div class="form-inline-wrap" id="creditObj_div">
+												<label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.creditObj}">授信对象</label>
+												<div class="layui-input-inline input-inline">
+													<select required type="text" name="creditObj"class="layui-input form-input input-select"
+															data-th-data-result='${CREDIT_OBJ}'
+															data-th-initValue='${entity?.creditObj}'
+															allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" id="creditObj"
+													></select>
+												</div>
+											</div>
                                             <!--资产授信新建增加字段 add by yufei 20200630 start-->
 							                <div class="form-inline-wrap" id="creditAmtDiv">
-							                    <label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.creditTotalAmt}">授信总额度</label>
+							                    <label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.creditTotalAmt}">授信总额度（亿元）</label>
 							                    <div class="layui-input-inline input-inline">
 							                       <input required type="text" id="creditAmt" name="creditAmt" data-textrange="4"
 							                                           class="layui-input form-input text-number" placeholder="请输入内容"
 							                                           th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.creditAmt}" >
-													<span class="input-right-show">亿元</span>
 							                    </div>
 							                </div>
                                             <div class="form-inline-wrap" id="creditShareAmtDiv" style="display:none;">
@@ -61,20 +70,30 @@ var entity=/*[[${entity}]]*/'';
                                                     class="layui-input form-input input-text text-number" />    
                                                 </div>
                                             </div>
-                                            <!--资产授信新建增加字段 add by yufei 20200630 end-->
-							                <div class="form-inline-wrap">
-							                    <label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.ifHavingOrgAmt}">是否占用机构授信</label>
-							                    <div class="layui-input-inline input-inline">
-												   <select th:id="|${pageId}_creditFlag|" name="creditFlag" formatoption="false"
-														class="layui-input form-input input-select"
-														data-th-placeholder="#{SysCommon.placeholder}"
-														data-th-initValue='${NO}' required disabled
-														data-th-data-result="${YES_OR_NO}">
-													</select>	
-							                    </div>
-							                </div>
+
 						            	</div>
 						            	<div class="layui-form-item">
+											<!--资产授信新建增加字段 add by yufei 20200630 end-->
+											<div class="form-inline-wrap">
+												<label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.creditPrice}">价格</label>
+												<div class="layui-input-inline input-inline">
+													<input type="text" id="creditPrice" name="creditPrice" data-textrange="4" disabled
+														   class="layui-input form-input text-number" placeholder="请输入内容"
+														   th:placeholder="#{SysCommon.placeholder}"
+														   th:value='${entity?.creditPrice}'>
+												</div>
+											</div>
+											<div class="form-inline-wrap">
+												<label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.ifHavingOrgAmt}">是否占用机构授信</label>
+												<div class="layui-input-inline input-inline">
+													<select th:id="|${pageId}_creditFlag|" name="creditFlag" formatoption="false"
+															class="layui-input form-input input-select"
+															data-th-placeholder="#{SysCommon.placeholder}"
+															data-th-initValue='${entity?.creditFlag}' required
+															data-th-data-result="${YES_OR_NO}">
+													</select>
+												</div>
+											</div>
 						            	     <div class="form-inline-wrap">
 							                    <label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.pflsh}">批复号</label>
 							                    <div class="layui-input-inline input-inline">
@@ -82,37 +101,27 @@ var entity=/*[[${entity}]]*/'';
 													th:value="${entity?.pflsh}"	class="layui-input form-input input-text" />	
 							                    </div>
 							                </div>
-							                <div class="form-inline-wrap">
-							                    <label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.vdate}">生效日</label>
-							                    <div class="layui-input-inline input-inline">
-							                        <input required  type="text" id="vdate" name="vdate"
-						                                   class="layui-input form-input input-dateSelect" placeholder="请输入内容"
-						                                   th:placeholder="#{SysCommon.placeholder}"
-						                                   th:value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'>
-							                    </div>
-							                </div>
-							                <div class="form-inline-wrap">
-							                    <label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.mdate}">到期日</label>
-							                    <div class="layui-input-inline input-inline">
-							                       <input required  type="text" id="mdate" name="mdate"
-						                                   class="layui-input form-input input-dateSelect" placeholder="请输入内容"
-						                                   th:placeholder="#{SysCommon.placeholder}"
-						                                   th:value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'>
-							                    </div>
-							                </div>
 						            	</div>
                                         <!--资产授信新建增加字段 add by yufei 20200630 start-->
                                         <div class="layui-form-item">
-                                             <div class="form-inline-wrap" id="creditObj_div">
-                                                <label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.creditObj}">授信对象</label>
-                                                <div class="layui-input-inline input-inline">
-                                                    <select required type="text" name="creditObj"class="layui-input form-input input-select" 
-                                                    data-th-data-result='${CREDIT_OBJ}' 
-                                                    data-th-initValue='${entity?.creditObj}'
-                                                    allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" id="creditObj"
-                                                    ></select>
-                                                </div>
-                                            </div>
+											<div class="form-inline-wrap">
+												<label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.vdate}">生效日</label>
+												<div class="layui-input-inline input-inline">
+													<input required  type="text" id="vdate" name="vdate"
+														   class="layui-input form-input input-dateSelect" placeholder="请输入内容"
+														   th:placeholder="#{SysCommon.placeholder}"
+														   th:value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'>
+												</div>
+											</div>
+											<div class="form-inline-wrap">
+												<label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.mdate}">到期日</label>
+												<div class="layui-input-inline input-inline">
+													<input required  type="text" id="mdate" name="mdate"
+														   class="layui-input form-input input-dateSelect" placeholder="请输入内容"
+														   th:placeholder="#{SysCommon.placeholder}"
+														   th:value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'>
+												</div>
+											</div>
                                             <div class="form-inline-wrap">
                                                 <label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.isLoopAmt}">是否循环额度</label>
                                                 <div class="layui-input-inline input-inline">
@@ -124,28 +133,17 @@ var entity=/*[[${entity}]]*/'';
                                                     </select>
                                                 </div>
                                             </div>
-											<div class="form-inline-wrap">
-												<label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.holdMaturity}">是否持有至到期</label>
-												<div class="layui-input-inline input-inline">
-													<select th:id="|${pageId}_holdMaturity|" name="holdMaturity" formatoption="false"
-															class="layui-input form-input input-select"
-															data-th-placeholder="#{SysCommon.placeholder}"
-															data-th-initValue='${entity?.holdMaturity}'
-															data-th-data-result="${YES_OR_NO}">
-													</select>
-												</div>
-											</div>
-                                             <div class="form-inline-wrap" id="firstLendingIntervalDiv" style="display:none;">
-                                                <label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.firstLendingInterval}">首次开贷区间</label>
-                                                <div class="layui-input-inline input-inline">
-                                                   <input required id="firstLendingInterval" name="firstLendingInterval"
-                                                        class="layui-input form-input input-dateRangeSelect" 
-                                                        th:value='${entity?.firstLendingInterval}'
-                                                        placeholder="请选择时间区间">
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="layui-form-item">
+											<div class="form-inline-wrap" id="firstLendingIntervalDiv" style="display:none;">
+												<label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.firstLendingInterval}">首次开贷区间</label>
+												<div class="layui-input-inline input-inline">
+													<input required id="firstLendingInterval" name="firstLendingInterval"
+														   class="layui-input form-input input-dateRangeSelect"
+														   th:value='${entity?.firstLendingInterval}'
+														   placeholder="请选择时间区间">
+												</div>
+											</div>
                                             <div class="form-inline-wrap" id="approveVdateDiv" style="display:none;">
                                                 <label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.approveVdate}">审批开始日</label>
                                                 <div class="layui-input-inline input-inline">
@@ -164,18 +162,18 @@ var entity=/*[[${entity}]]*/'';
                                                            th:value='${#dates.format(entity?.apprMdate,"yyyy-MM-dd")}'>
                                                 </div>
                                             </div>
-                                        </div>
-										<div class="layui-form-item">
 											<div class="form-inline-wrap">
-												<label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.creditPrice}">价格</label>
+												<label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.holdMaturity}">是否持有至到期</label>
 												<div class="layui-input-inline input-inline">
-													<input type="text" id="creditPrice" name="creditPrice" data-textrange="4"
-														   class="layui-input form-input text-number" placeholder="请输入内容"
-														   th:placeholder="#{SysCommon.placeholder}"
-														   th:value='${entity?.creditPrice}'>
+													<select th:id="|${pageId}_holdMaturity|" name="holdMaturity" formatoption="false"
+															class="layui-input form-input input-select"
+															data-th-placeholder="#{SysCommon.placeholder}"
+															data-th-initValue='${entity?.holdMaturity}'
+															data-th-data-result="${YES_OR_NO}">
+													</select>
 												</div>
 											</div>
-										</div>
+                                        </div>
                                         <!--资产授信新建增加字段 add by yufei 20200630 end-->
 						            	 <div class="layui-form-item">
 		                                    <div class="form-inline-wrap" style="width: 100%;">

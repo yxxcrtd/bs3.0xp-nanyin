@@ -605,7 +605,11 @@ public class FinPlanProfitAssetService extends CommonExportService<FinPlanProfit
           /* 中债其他的要素存值 zyk 20191015*/
             RepAssetOther repAssetOther =new RepAssetOther();
             repAssetOther.setRepFinprodId(finProduct.getFinprodId());
-            repAssetOther.setRepPrivateprdFlag(dto.getBussRepAssetMngProdInfo().getRepPrivateprdFlag());
+            // ZGZGST-1278 增加非null判断 fuyongsheng 20210819 add start
+            if(StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo())){
+                repAssetOther.setRepPrivateprdFlag(dto.getBussRepAssetMngProdInfo().getRepPrivateprdFlag());
+            }
+            // ZGZGST-1278 增加非null判断 fuyongsheng 20210819 add end
             dto.setRepAssetOther(repAssetOther);
             /* 中债其他的要素存值 zyk 20191015*/
         }

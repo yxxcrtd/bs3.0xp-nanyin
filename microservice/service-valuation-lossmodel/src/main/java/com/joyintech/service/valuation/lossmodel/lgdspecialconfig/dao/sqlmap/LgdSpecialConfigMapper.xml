@@ -178,6 +178,56 @@
 	</update>
 
 
+	<!-- 详细设计-资产代码-下拉框查询01 -->
+	<select id="getFinprodIdByLossTypeOne" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+		distinct A.FINPROD_ID as id,
+		NVL(NVL(B.FINPROD_ABBR, B.FINPROD_NAME), A.FINPROD_ID) as text,
+		A.type_18 as object
+		from FIN_PRODUCT_TYPE A
+		LEFT JOIN FIN_PRODUCT B ON A.FINPROD_ID = B.FINPROD_ID
+		<where>
+			(A.type_18 in ('01', '13')
+			  or(A.type_18 = '07' and A.type_1 in ('01', '03'))
+			  or (A.type_18 = '09' and A.type_1 in ('02', '04'))
+			)
+			<if test="finprodId != null and !''.equals(finprodId)">
+				AND A.FINPROD_ID LIKE CONCAT('%',CONCAT(#{finprodId},'%'))
+			</if>
+			<if test="finprodName != null and !''.equals(finprodName)">
+				AND (B.FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{finprodName},'%'))
+				       OR B.FINPROD_NAME LIKE CONCAT('%',CONCAT(#{finprodName},'%'))
+				    )
+			</if>
+			<if test="secType != null and !''.equals(secType)">
+                AND A.type_18 = #{secType,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<!-- 详细设计-资产代码-下拉框 普华使用查询02 -->
+	<select id="getFinprodIdByLossTypeTwo" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+		distinct A.FINPROD_ID as id,
+		NVL(NVL(B.FINPROD_ABBR, B.FINPROD_NAME), A.FINPROD_ID) as text,
+		A.type_18 as object
+		from FIN_PRODUCT_TYPE A
+		LEFT JOIN FIN_PRODUCT B  ON A.FINPROD_ID = B.FINPROD_ID
+		<where>
+			A.type_18 in ('01', '13')
+			<if test="finprodId != null and !''.equals(finprodId)">
+				AND A.FINPROD_ID LIKE CONCAT('%',CONCAT(#{finprodId},'%'))
+			</if>
+			<if test="finprodName != null and !''.equals(finprodName)">
+				AND (B.FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{finprodName},'%'))
+				OR B.FINPROD_NAME LIKE CONCAT('%',CONCAT(#{finprodName},'%'))
+				)
+			</if>
+		</where>
+	</select>
+
+
+
 
     
 </mapper>

@@ -38,7 +38,8 @@ $(function() {
         cols:[
              {field:'curveDate',width:200, title: 'ComYieldCurveInfo001.curveDate',type:'date'}
              //修改数据字典值为查询值 modified by lishuping 20191008 start
-            ,{field:'curveCode',width:200, title: 'ComYieldCurveInfo001.curveName'}
+            ,{field:'curveCode',width:200, title: 'ComYieldCurveInfo001.curveCode'}
+            ,{field:'curveCodeFmt',width:200, title: 'ComYieldCurveInfo001.curveName',sortField:'CURVE_CODE'}
             //修改数据字典值为查询值 modified by lishuping 20191008 end
             ,{field:'keyPoint',width:200, title: 'ComYieldCurveInfo001.keyPoint',type:'number',digit:3}
             ,{field:'yield',width:200, title: 'ComYieldCurveInfo001.yield',type:'number',digit:4}

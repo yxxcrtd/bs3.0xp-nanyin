@@ -19,6 +19,14 @@ import com.joyintech.framework.util.StringUtil;
  * @since 1.0
  */
 public enum DictCodeListExt3 implements BaseDictCodeList {
+    //add by fanyunhan 20210816
+    项目类计划类估值来源_手工(DictCode.项目类计划类估值来源,"01","手工"),
+    项目类计划类估值来源_模型(DictCode.项目类计划类估值来源,"02","模型"),
+    // add by shulifu 20210811
+    是否可提前支取_不可提前支取(DictCode.是否可提前支取,"01","不可提前支取"),
+    是否可提前支取_有条件可提前支取(DictCode.是否可提前支取,"02","有条件可提前支取"),
+    是否可提前支取_无条件可提前支取(DictCode.是否可提前支取,"03","无条件可提前支取"),
+
     // add by wanshiwei 20200731
     共通业务类型_场内交易下单(DictCode.共通业务类型,"EXC01","场内交易下单"),
     共通业务类型_场内交易撤销(DictCode.共通业务类型,"EXC02","场内交易撤销"),
@@ -1349,7 +1357,13 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_回购类资产(DictCode.共通业务类型,"V34","回购类资产"),
     共通业务类型_债券借贷标的信息(DictCode.共通业务类型,"V35","债券借贷标的信息"),
     /** add by tanxuan on 20210315 多级法人权限控制改造 end**/
-	
+	/** add by fanyunhan on 20210811 风险五级分类 start**/
+    风险五级分类_关注(DictCode.风险五级分类,"01","关注"),
+    风险五级分类_次级(DictCode.风险五级分类,"02","次级"),
+    风险五级分类_可疑(DictCode.风险五级分类,"03","可疑"),
+    风险五级分类_损失(DictCode.风险五级分类,"04","损失"),
+    风险五级分类_正常(DictCode.风险五级分类,"05","正常"),
+	/** add by fanyunhan on 20210811 风险五级分类 end**/
      /** add by tanxuan on 20210318 新增功能费用预提配置 start**/
     共通业务类型_预提费用配置(DictCode.共通业务类型,"V36","预提费用配置"),
     /** add by tanxuan on 20210318 新增功能费用预提配置 end**/
@@ -1408,6 +1422,11 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     减值要素_公司评级信息低于(DictCode.减值要素,"03","公司评级信息低于（含）"),
     减值要素_风险五级分类(DictCode.减值要素,"04","风险五级分类"),
     减值要素_公司评级信息下调级数(DictCode.减值要素,"05","公司评级信息下调级数"),
+
+    评级PD类型_债券_其他债权(DictCode.评级PD类型,"01","债券、其他债权"),
+    评级PD类型_回购(DictCode.评级PD类型,"02","回购"),
+    评级PD类型_存款(DictCode.评级PD类型,"03","存款"),
+
     //20210803 by yuzj end
     ;
     /**

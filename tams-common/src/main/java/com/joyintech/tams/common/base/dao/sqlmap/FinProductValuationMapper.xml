@@ -20,13 +20,16 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="REST_NET_VALUE" property="restNetValue" jdbcType="DECIMAL" />
         <result column="C_SHARES" property="cShares" jdbcType="DECIMAL" />
+        <result column="FULL_VALUATION" property="fullValuation" jdbcType="DECIMAL" />
+        <result column="VALUE_SOURCE" property="valueSource" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         FINPROD_ID FINPROD_ID, VAL_DATE VAL_DATE, FINPROD_TYPE FINPROD_TYPE, FINPROD_TYPE2 FINPROD_TYPE2, 
         PUBLISH_DATE PUBLISH_DATE, VALUATION VALUATION, DAY7_YEAR_YIELD DAY7_YEAR_YIELD, 
         YEAR_YIELD YEAR_YIELD, TOTAL_VALUE TOTAL_VALUE, INPUT_TYPE INPUT_TYPE, REMARK REMARK, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
-        UPDATE_TIME UPDATE_TIME, REST_NET_VALUE REST_NET_VALUE, C_SHARES C_SHARES
+        UPDATE_TIME UPDATE_TIME, REST_NET_VALUE REST_NET_VALUE, C_SHARES C_SHARES, FULL_VALUATION FULL_VALUATION, 
+        VALUE_SOURCE VALUE_SOURCE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -56,15 +59,15 @@
             DAY7_YEAR_YIELD, YEAR_YIELD, TOTAL_VALUE, 
             INPUT_TYPE, REMARK, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, REST_NET_VALUE, C_SHARES
-            )
+            UPDATE_TIME, REST_NET_VALUE, C_SHARES, 
+            FULL_VALUATION, VALUE_SOURCE)
         values (#{finprodId,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{finprodType,jdbcType=VARCHAR}, 
             #{finprodType2,jdbcType=VARCHAR}, #{publishDate,jdbcType=DATE}, #{valuation,jdbcType=DECIMAL}, 
             #{day7YearYield,jdbcType=DECIMAL}, #{yearYield,jdbcType=DECIMAL}, #{totalValue,jdbcType=DECIMAL}, 
             #{inputType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{restNetValue,jdbcType=DECIMAL}, #{cShares,jdbcType=DECIMAL}
-            )
+            #{updateTime,jdbcType=TIMESTAMP}, #{restNetValue,jdbcType=DECIMAL}, #{cShares,jdbcType=DECIMAL}, 
+            #{fullValuation,jdbcType=DECIMAL}, #{valueSource,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductValuation" >
         insert into FIN_PRODUCT_VALUATION
@@ -123,6 +126,12 @@
             <if test="cShares != null" >
                 C_SHARES,
             </if>
+            <if test="fullValuation != null" >
+                FULL_VALUATION,
+            </if>
+            <if test="valueSource != null" >
+                VALUE_SOURCE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="finprodId != null" >
@@ -179,17 +188,23 @@
             <if test="cShares != null" >
                 #{cShares,jdbcType=DECIMAL},
             </if>
+            <if test="fullValuation != null" >
+                #{fullValuation,jdbcType=DECIMAL},
+            </if>
+            <if test="valueSource != null" >
+                #{valueSource,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProductValuation" >
         insert into FIN_PRODUCT_VALUATION(FINPROD_ID, VAL_DATE, FINPROD_TYPE, FINPROD_TYPE2, 
         PUBLISH_DATE, VALUATION, DAY7_YEAR_YIELD, YEAR_YIELD, TOTAL_VALUE, INPUT_TYPE, REMARK, 
         CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REST_NET_VALUE, 
-        C_SHARES)
+        C_SHARES, FULL_VALUATION, VALUE_SOURCE)
         select FINPROD_ID, VAL_DATE, FINPROD_TYPE, FINPROD_TYPE2, 
             PUBLISH_DATE, VALUATION, DAY7_YEAR_YIELD, YEAR_YIELD, TOTAL_VALUE, INPUT_TYPE, REMARK, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REST_NET_VALUE, 
-            C_SHARES
+            C_SHARES, FULL_VALUATION, VALUE_SOURCE
              from FIN_PRODUCT_VALUATION
              where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and VAL_DATE = #{valDate,jdbcType=DATE}
     </insert>
@@ -235,6 +250,12 @@
             <if test="cShares != null" >
                 C_SHARES = #{cShares,jdbcType=DECIMAL},
             </if>
+            <if test="fullValuation != null" >
+                FULL_VALUATION = #{fullValuation,jdbcType=DECIMAL},
+            </if>
+            <if test="valueSource != null" >
+                VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR},
+            </if>
         </set>
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and VAL_DATE = #{valDate,jdbcType=DATE}
@@ -253,7 +274,9 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             REST_NET_VALUE = #{restNetValue,jdbcType=DECIMAL},
-            C_SHARES = #{cShares,jdbcType=DECIMAL}
+            C_SHARES = #{cShares,jdbcType=DECIMAL},
+            FULL_VALUATION = #{fullValuation,jdbcType=DECIMAL},
+            VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and VAL_DATE = #{valDate,jdbcType=DATE}
     </update>

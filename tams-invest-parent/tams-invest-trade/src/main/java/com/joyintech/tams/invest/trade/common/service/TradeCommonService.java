@@ -22,6 +22,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
@@ -100,6 +101,9 @@ public class TradeCommonService extends BaseService {
 
     @Autowired
     private FinCashPlanMapper finCashPlanMapper;
+
+    @Autowired
+    private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
     
     /**
      * 查询生效的委托
@@ -1067,13 +1071,19 @@ public class TradeCommonService extends BaseService {
                     // 质押券面总额
                     BigDecimal totalAmt = pledgeBondInfoDtoList.stream().map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);
                     // 需要扣减额度的券面总额
-                    BigDecimal supAmt = pledgeBondInfoDtoList.stream().filter(item ->{
+                    BigDecimal supAmt = BigDecimal.ZERO;
+                    for (PledgeBondInfoDto pledgeBondInfoDto : pledgeBondInfoDtoList) {
+                        if(riskCreditListCommonValidatorService.checkCallCredit(pledgeBondInfoDto.getFinprodId())){
+                            supAmt = ArithmeticUtil.doAdd(supAmt,pledgeBondInfoDto.getPledgePrin());
+                        }
+                    }
+                    /*BigDecimal supAmt = pledgeBondInfoDtoList.stream().filter(item ->{
                         // 查询资产类型
                         FinProductTypeKey key = new FinProductTypeKey();
                         key.setFinprodId(item.getFinprodId());
                         key.setBranch(0L);
                         FinProductType finProductType = creditLinesDealsMapper.selectByPrimaryKey(key);
-                        FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(item.getFinprodId());
+                        //FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(item.getFinprodId());
                         String astType = finProductType.getType10();
                         if (StringUtil.equals(finProductAdd.getIsSecBond(),DictCodeList.是否_是.getValue())){
                             astType = astType.concat("_") + DictCodeList.是否_是.getValue();
@@ -1083,7 +1093,7 @@ public class TradeCommonService extends BaseService {
                             return false;
                         }
                         return true;
-                    }).map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);
+                    }).map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);*/
 
                     BigDecimal tradeAmt = supAmt.divide(totalAmt, RoundingMode.HALF_UP).multiply(inputDto.getPrinAmt()).setScale(2,RoundingMode.HALF_UP);
                     creditLinesInputDto.setTradeAmt(tradeAmt);

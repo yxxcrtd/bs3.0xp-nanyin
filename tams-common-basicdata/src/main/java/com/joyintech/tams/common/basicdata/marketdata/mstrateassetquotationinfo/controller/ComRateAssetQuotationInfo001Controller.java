@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -81,6 +82,8 @@ public class ComRateAssetQuotationInfo001Controller extends BaseController{
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
+        setSelectOptionToModel(model, DictCode.项目类计划类估值来源);
+
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("valDate",DateUtil.format(sysDate));
         // 画面元素是否显示
@@ -268,6 +271,7 @@ public class ComRateAssetQuotationInfo001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("checkImportData")
     public AjaxResult checkImportData(String fileName) {
+
         return mstRateAssetQuotationInfo001Service.checkImportData(fileName);
     }
 

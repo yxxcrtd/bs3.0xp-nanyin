@@ -14,6 +14,8 @@
                 param.portfolioId = $("#portfolioId").val();
                 param.tradePlace = $("#tradePlace").val();
                 param.secAcctId = $("#secAcctId").val();
+                param.secType = $("#secType").val();
+                param.mainGrade = $("#mainGrade").val();
                 // 获取请求参数
                 return param;
             }

@@ -122,6 +122,7 @@
 				,{field:'creditAmt', sortable:false,width:140 , title: 'CeMonitorReport001.creditTotalAmt',rowspan: 2,fixType:"2",pattern:"2", digit:4}
 				,{title: 'CeMonitorReport001.useAmtStatus', colspan: 4}//系统资产对象
 				,{field:'remainAmt', width:140 ,sortable:false,title: 'CeMonitorReport001.remainAmt',type: 'number',rowspan: 2,digit:4}
+                ,{field:'creditPrice', width:100 ,  title: 'CeAsset002.creditPrice',type:'number',digit:'4',rowspan: 2}
 				,{field:'vdate', width:80 ,sortable:false,title: 'CeMonitorReport001.vdate',type:'date',rowspan: 2}           
 				,{field:'mdate', width:80, sortable:false,title: 'CeMonitorReport001.mdate',type:'date',rowspan: 2}
 				],

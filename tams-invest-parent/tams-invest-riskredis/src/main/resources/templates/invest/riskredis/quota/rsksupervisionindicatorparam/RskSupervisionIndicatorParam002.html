@@ -124,7 +124,7 @@
 			<div class="layui-form-item">
 				<div class="layui-inline" style="width:100%;">
 					<label class="layui-form-label form-lable-wrap"
-						style="padding-left: 70px; padding-top: 0px;"
+						style="padding-left: 50px; padding-top: 0px;box-sizing: content-box;"
 						data-th-text="#{RskSupervisionIndicatorParam002.sysVariable}">系统变量:</label>
 					<div class="layui-input-inline input-inline"
 						style="float: left; width: 80% !important">
@@ -142,32 +142,23 @@
 				style="width: 1020px; height: 20px; padding-top: 0px;">
 				<div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4">
 					<label class="layui-form-label form-lable-wrap"
-						style="padding-left: 70px; padding-bottom: 0px; padding-top: 0px;"
+						style="padding-left: 50px; padding-bottom: 0px; padding-top: 0px;box-sizing: content-box;"
 						data-th-text="#{RskSupervisionIndicatorParam002.reminder}">温馨提示:</label>
 				</div>
 			</div>
 			<div class="layui-form-item" style="padding-top: 0px;">
-				<div class=" layui-col-md10 layui-col-sm10 layui-col-lg10">
+				<div class=" layui-col-md10 layui-col-sm10 layui-col-lg10" style="width: 99% !important">
 					<div>
-						<span style="margin-left: 156px">1、当类型为SQL时，里面运用系统变量必须带上$符号；</span>
-						<span style="margin-left: 184px">2、当类型为类名时，请输入相应的插件类名；</span>
+						<span style="margin-left: 146px">1、当类型为SQL时，里面运用系统变量必须带上$符号；</span>
+						<span style="margin-left: 144px">2、当类型为类名时，请输入相应的插件类名；</span>
 					</div>
 				</div>
 			</div>
 			<div class="layui-form-item">
-				<div class=" layui-col-md10 layui-col-sm10 layui-col-lg10">
+				<div class=" layui-col-md10 layui-col-sm10 layui-col-lg10" style="width: 99% !important">
 					<div>
-						<span style="margin-left: 156px">3、若查询SQL语句中出现常用函数时，必须赋予别名；</span>
-						<span style="margin-left: 190px">4、同一指标参数取SQL时，事中监控和事后监控SQL取值不一样；</span>
-					</div>
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<div class=" layui-col-md10 layui-col-sm10 layui-col-lg10"
-					style="width: 99% !important">
-					<div>
-						<span style="margin-left: 156px">5、当指标参数为枚举类参数时，通过编写SQL方式取对应选项的全部枚举值；</span>
-						<span style="margin-left: 70px">6、枚举类参数SQL的RVALUE列格式是A1,A2||B1,B2这种，比如F01,F02||债券,基金；</span>
+						<span style="margin-left: 146px">3、若查询SQL语句中出现常用函数时，必须赋予别名；</span>
+						<span style="margin-left: 150px">4、同一指标参数取SQL时，事中监控和事后监控SQL取值不一样；</span>
 					</div>
 				</div>
 			</div>
@@ -175,8 +166,17 @@
 				<div class=" layui-col-md10 layui-col-sm10 layui-col-lg10"
 					style="width: 99% !important">
 					<div>
-						<span style="margin-left: 156px">7、当类型为SQL且列数为一列值时，第一列为实际值且起别名为RVALUE；</span>
-						<span style="margin-left: 83px">8、当SQL且两列时，第一列(必写)为实际值且别名为RVALUE，第二列(必写)为资产代码且别名为RKEY。</span>
+						<span style="margin-left: 146px">5、当指标参数为枚举类参数时，通过编写SQL方式取对应选项的全部枚举值；</span>
+						<span style="margin-left: 30px">6、枚举类参数SQL的RVALUE列格式是A1,A2||B1,B2这种，比如F01,F02||债券,基金；</span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class=" layui-col-md10 layui-col-sm10 layui-col-lg10"
+					style="width: 100% !important">
+					<div>
+						<span style="margin-left: 146px">7、当类型为SQL且列数为一列值时，第一列为实际值且起别名为RVALUE；</span>
+						<span style="margin-left: 43px">8、当SQL且两列时，第一列(必写)为实际值且别名为RVALUE，第二列(必写)为资产代码且别名为RKEY。</span>
 					</div>
 				</div>
 			</div>

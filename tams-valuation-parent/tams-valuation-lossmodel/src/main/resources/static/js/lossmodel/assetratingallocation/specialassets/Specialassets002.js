@@ -9,10 +9,17 @@
      };
     var editFlag = true;
     var init=function() {
+    	debugger;
         if(pageModel!=PAGE_MODEL_NEW){
             $("#finprodName").attr('disabled',true);
             editFlag=false;
         }
+
+		if($("#gradeOrgType").val() === '02'){
+			$("#grade_org_id").show();
+		}else{
+			$("#grade_org_id").hide();
+		}
         
     };
     var getSearchParams=function(){
@@ -91,7 +98,21 @@
         $("#gradeOrgId").on('change',function(){
             countCnyAmt();
        });
-        debugger;
+
+		// 评级机构类型onchange事件
+		$("#grade_party_type").on('change',function(){
+			gradePartyTypeChange();
+		});
+
+		// 评级机构联动指定评级机构是否显示
+		var gradePartyTypeChange = function() {
+			if($("#gradeOrgType").val() === '02'){
+				$("#grade_org_id").show();
+			}else{
+				$("#grade_org_id").hide();
+			}
+		};
+
         // zhujiabin add 20181018 end
         $('#Specialassets002_btn_save').click(function() {
         	var object = $.serializeToObject('#submitForm');

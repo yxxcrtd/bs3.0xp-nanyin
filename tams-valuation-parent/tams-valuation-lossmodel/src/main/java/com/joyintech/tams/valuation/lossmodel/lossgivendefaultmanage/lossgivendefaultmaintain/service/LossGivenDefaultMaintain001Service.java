@@ -3,6 +3,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.dto.ModLgdConfigDto;
 import org.apache.poi.ss.usermodel.Cell;
@@ -14,6 +16,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 资产端品种与期限分布明细表
@@ -86,5 +90,20 @@ public class LossGivenDefaultMaintain001Service extends CommonExportService<ModL
            }
        }
    }
+
+
+
+    /**
+     * 通用联动查询
+     * @param param : dict_code_parent,dict_code_child,item_code_parent
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @DataSource(DataSourceType.OTHER)
+    public List<SelectOptionDto> getLinkSelectOption(Map<String, Object> param) {
+        return restTemplate.postForList(ServiceApplication.LOSS_MODEL_SERVICE_NAME
+                        + "/LossGivenDefaultMaintain/getLinkSelectOption",
+                param, SelectOptionDto.class);
+    }
     
 }

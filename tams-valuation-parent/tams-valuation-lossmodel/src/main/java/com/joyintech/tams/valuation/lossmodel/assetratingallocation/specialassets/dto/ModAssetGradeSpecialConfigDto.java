@@ -46,6 +46,11 @@ public class ModAssetGradeSpecialConfigDto extends BaseEntity implements ITableR
     private String finprodName;
 
     /**
+     * 评级机构类型
+     */
+    private String gradeOrgType;
+
+    /**
      * 评级机构（数据字典 评级机构）
      */
     private String gradeOrgId;
@@ -145,7 +150,7 @@ public class ModAssetGradeSpecialConfigDto extends BaseEntity implements ITableR
      * 评级机构（数据字典 评级机构）
      * @return GRADE_ORG_ID 评级机构（数据字典 评级机构）
      */
-    @NotEmpty(fieldName = "Specialassets.MESG003", groups = {ValidateGroupEdit.class})
+   /* @NotEmpty(fieldName = "Specialassets.MESG003", groups = {ValidateGroupEdit.class})*/
     public String getGradeOrgId() {
         return gradeOrgId;
     }
@@ -261,5 +266,17 @@ public class ModAssetGradeSpecialConfigDto extends BaseEntity implements ITableR
     }
 	public String getoTypeStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.评级类型_减值, this.getoType());
+    }
+
+    public String getGradeOrgType() {
+        return gradeOrgType;
+    }
+
+    public void setGradeOrgType(String gradeOrgType) {
+        this.gradeOrgType = gradeOrgType;
+    }
+
+    public String getGradeOrgTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.评级机构类型, this.getGradeOrgType());
     }
 }

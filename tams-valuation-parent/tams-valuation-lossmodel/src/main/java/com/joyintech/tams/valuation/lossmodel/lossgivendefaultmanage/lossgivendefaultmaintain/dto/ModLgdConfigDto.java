@@ -297,13 +297,18 @@ public class ModLgdConfigDto extends BaseEntity implements ITableRow, ProcessEnt
 		this.selectedItem = selectedItem;
 	}
 	public String getAssetTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.资产类型, this.getAssetType());
+        return SysDataUtil.getNameFromDataDict(DictCode.证券品种, this.getAssetType());
     }
 	public String getAssetDetailTypeStr() {
 		if("-".equals(this.getAssetDetailType())){
 			return this.getAssetDetailType();
 		}
-        return SysDataUtil.getNameFromDataDict(DictCode.资产分类, this.getAssetDetailType());
+		if(this.getAssetType().equals("01") || this.getAssetType().equals("13") || this.getAssetType().equals("09")){
+            return SysDataUtil.getNameFromDataDict(DictCode.债券类型, this.getAssetDetailType());
+        }else if(this.getAssetType().equals("07")){
+            return SysDataUtil.getNameFromDataDict(DictCode.存款类资产存款类型, this.getAssetDetailType());
+        }
+        return null;
     }
 	public String getIsContainPledgeStr() {
 		if("-".equals(this.getIsContainPledge())){

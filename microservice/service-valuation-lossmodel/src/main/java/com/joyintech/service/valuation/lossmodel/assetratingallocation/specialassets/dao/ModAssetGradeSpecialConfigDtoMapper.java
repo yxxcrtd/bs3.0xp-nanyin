@@ -55,4 +55,6 @@ public interface ModAssetGradeSpecialConfigDtoMapper {
     List<AssetSideDetialRepoDto> queryYieldList(Map<String, Object> map);
     List<AssetSideDetialRepoDto> queryGyieldList(Map<String, Object> map);
 
+    String getSecTypeByFinprodId(Map<String, Object> map);
+
 }

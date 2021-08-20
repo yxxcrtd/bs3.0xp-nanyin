@@ -1,5 +1,5 @@
 /*
- * 文件名：ModGradePdConfigController.java
+ * 文件名：ModCkGradePdConfigController.java
  * 版权：Copyright 2021-2022 JoyinTech. Co. Ltd. All Rights Reserved.
  * 描述：中邮理财资产管理系统V1.0
  * 修改人：yuzj

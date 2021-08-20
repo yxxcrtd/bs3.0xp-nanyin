@@ -24,25 +24,43 @@
 					class="layui-btn layui-btn-sm btn-export btn-default">导出</a>
 					<!-- <a id="LossGivenDefaultMaintain_btn_search"
 					class="layui-btn layui-btn-sm btn-default">查询</a> -->
-					
+
 			</div>
-			<div class="joyin-form-wrap joyin-filter-form condition-area" id="searchForm">
+			<!--<div class="joyin-form-wrap joyin-filter-form condition-area" id="searchForm">
 				<form class="layui-form" id="searchForm">
 					<div class="layui-form-item">
 	                    <div class="layui-inline layui-col-md4">
 	                        <label class="layui-form-label form-lable">资产类别</label>
 	                        <div class="layui-input-inline input-inline">
-	                           <select id="assetcode" name="assetcode"  data-th-data-result='${MODEL_SEC_TYPE}'
-		                           data-th-data-formatoption=true class="input-select" placeholder="请选择" 
-		                           data-th-placeholder="#{SysCommon.selectplaceholder}" 
-		                           initValue="F01" allowClear="false">
+	                           <select id="assetcode" name="assetcode"  data-th-data-result='${SEC_TYPE}'
+		                           data-th-data-formatoption=true class="input-select" placeholder="请选择"
+		                           data-th-placeholder="#{SysCommon.selectplaceholder}"
+		                           allowClear="false">
 	                            </select>
 	                        </div>
 	                    </div>
 					</div>
 				</form>
+			</div>-->
+			<div class="joyin-form-wrap joyin-filter-form condition-area" >
+				<form class="layui-form" id="searchForm">
+					<div class="layui-form-item " >
+						<div class="layui-inline layui-col-md4">
+							<label class="layui-form-label form-lable-wrap">资产类别</label>
+							<div class="layui-input-inline input-inline">
+								<select id="assetcode" name="assetcode" class="layui-input form-input input-select" placeholder="请输入"
+										allowClear="true" data-th-data-result="${SEC_TYPE}" data-th-initvalue="${entity?.assetcode}"
+										parentIds="" formatoption = "true"
+										data-th-data-url="@{/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain001/getSecTypeOption}">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</form>
 			</div>
-	
+
+
 			<div>
 				<table class="layui-table" id="dataTable">
 				</table>

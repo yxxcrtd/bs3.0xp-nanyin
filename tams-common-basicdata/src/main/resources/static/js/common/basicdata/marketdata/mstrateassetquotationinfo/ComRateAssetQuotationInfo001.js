@@ -39,8 +39,10 @@ $(function () {
             {field: 'finprodId', visible: false}
             , {field: 'finProdMarketId', width: 200, title: '资产代码'}
             , {field: 'finProdName', title: '资产简称'}
+            , {field: 'valueSource', title: '估值来源',sortField:'valuationSource'}
             , {field: 'valDate', width: 200, title: '估值日期', type: 'date'}
-            , {field: 'valuation', title: '估值',type:'number',digit:4}
+            , {field: 'fullValuation', title: '全价估值（每百元）',type:'number',digit:2}
+            , {field: 'valuation', title: '净价估值（每百元）',type:'number',digit:2}
             , {field: 'importDate', width: 200, title: '导入日'}
             , {field: 'remark', width: 200, title: '备注'}
             , {field: 'operation', width: 200, title: 'SysCommon.operation', type: 'action', buttons: ['edit', 'delt']}

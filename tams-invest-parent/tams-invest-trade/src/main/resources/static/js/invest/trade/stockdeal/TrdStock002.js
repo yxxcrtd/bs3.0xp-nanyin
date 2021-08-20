@@ -4,7 +4,9 @@ var table;
         //---add by jjpei 20190718----start---获取风险试算画面要素与Label提示文本
     var getRiskData = function () {
         var obj = {timePoint:MY_SUP_TIME_TYPE_02,valDate:$('#tradeDate').val(),portfolioCode:$('#portfolioId').val(),assetType:FINPROD_TYPE_F10,tradeAmount:$('#tradeAmt').val(),isEnabled:USE_STATUS_01,assetCode:$('#finprodId').val(),tradeDirection:$('#ps').val()}
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
         var object = {valDate:['tradeDate','TrdStock002.tradeDate'],portfolioCode:['portfolioId','TrdStock002.portfolioId'],tradeAmount:['tradeAmt','TrdStock002.tradeAmt'],tradeDirection:['ps','TrdStock002.ps'],data:obj}
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
         return object;
     }
     //---add by jjpei 20190718----end---获取风险试算画面要素与Label提示文本
