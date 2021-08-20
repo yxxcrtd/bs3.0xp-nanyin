@@ -175,7 +175,9 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 	            sub.setUpdateUser(CommonUtil.getUserName());
 	            sub.setCreateDept(CommonUtil.getDeptCode());
 //	            sub.setStatusDate(batchTime);
-//	            sub.setOrgCode(CommonUtil.getOrgCode());
+				if(StringUtil.isEmpty(sub.getOrgCode())){
+					sub.setOrgCode(CommonUtil.getOrgCode());
+				}
 	            sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 	            if(sub.getHighYieldIssue()!=null){
 		            sub.setHighYieldIssue(sub.getHighYieldIssue().setScale(5,BigDecimal.ROUND_HALF_UP));
