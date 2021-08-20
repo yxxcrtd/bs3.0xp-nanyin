@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.pbc.prod.dto.PInterfProCustomDealDto;
 import com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PbcMonthPrdPostionMapper {
 
     void insert(PbcMonthPrdPostionDto dto);

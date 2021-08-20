@@ -51,13 +51,12 @@ public class ValSztInterfDetail001Controller  extends BaseController{
      * 深圳通对账结果明细页面查询方法
      * <功能详细描述>
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
 	@RequestMapping("findPage")
     @ResponseBody
-    public Page<ValSztInterfDetail001Dto> findPage() throws Exception {
+    public Page<ValSztInterfDetail001Dto> findPage() {
 		Page<ValSztInterfDetail001Dto> page = valSztInterfDetail001Service.findPage(RequestUtil.getPageParam());
 		return page;
 	}

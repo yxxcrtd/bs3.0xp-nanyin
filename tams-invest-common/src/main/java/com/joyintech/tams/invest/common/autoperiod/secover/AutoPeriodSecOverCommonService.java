@@ -17,6 +17,8 @@ import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +70,10 @@ import com.joyintech.tools.collectors.JoyinCollectors;
  */
 @Service
 public class AutoPeriodSecOverCommonService {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(AutoPeriodSecOverCommonService.class);
 
     /**
      * AutoPeriodCommonService
@@ -303,7 +309,7 @@ public class AutoPeriodSecOverCommonService {
 	                }
 	            }
 	            catch (Exception e){
-	                e.printStackTrace();
+					logger.error(e.getMessage(),e);
 	            }
 	        }
 		}

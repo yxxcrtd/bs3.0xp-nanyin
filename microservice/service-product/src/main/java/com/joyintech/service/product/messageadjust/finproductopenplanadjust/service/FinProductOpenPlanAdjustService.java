@@ -77,7 +77,7 @@ public class FinProductOpenPlanAdjustService extends BaseService<FinProductOpenP
      * @since 1.0
      */
     public Page<FinProductOpenPlanAdjustDto> selectForPage(int page, int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
             pageParam.put("openDateStrStart", DateUtil.parse((String)pageParam.get("openDateStrStart")));
             pageParam.put("openDateStrEnd", DateUtil.parse((String)pageParam.get("openDateStrEnd")));
             return super.queryForPage(page, length, () -> finProductOpenPlanMapper.selectForPage(pageParam));

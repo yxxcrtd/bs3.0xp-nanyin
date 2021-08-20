@@ -230,7 +230,7 @@ public class TrdSecOverdueDurationService extends BaseService<TrdSecOverdueDurat
     public Page<SelectOptionDto> getFinprodMarketId(int page, int length, Map<String, Object> param) {
         return queryForPageForSelectReturn(page, length, () -> trdSecOverdueDurationMapper.getFinprodMarketId(param));
     }
-    public Map<String, Object> genAssetTfInfo(Map<String, Object> param) {
+    public Map<String, Object> genAssetTfInfo(Map<String, Object> param) throws InstantiationException, IllegalAccessException {
 //        未支付本金
         BigDecimal theoryPrin = null;
 //        未支付利息

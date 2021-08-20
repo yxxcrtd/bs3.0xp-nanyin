@@ -21,21 +21,16 @@ import com.joyintech.tams.invest.product.nolimit.nonstProUplimitMain.dto.NonstPr
 public class NonstProUplimitMain001Service extends CommonExportService<NonstProUplimitMain001Dto>{
 	/**
 	 * 产品系列下拉框查询
-	 * @param page
-	 * @param length
-	 * @param pageParam
+	 * @param param
 	 * @return
 	 */
-    public Page<SelectOptionDto> selectPrdFamily(Map<String, Object> param)
-        throws Exception {
+    public Page<SelectOptionDto> selectPrdFamily(Map<String, Object> param){
         return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/NonstProUplimitMain/selectPrdFamily", param,
             SelectOptionDto.class);
     }
 	/**
 	 * 	画面查询方法
-	 * @param page
-	 * @param length
 	 * @param param
 	 * @return
 	 * @throws Exception

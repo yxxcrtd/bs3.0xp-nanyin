@@ -27,6 +27,8 @@ import com.joyintech.service.report.common.dto.BussRepFinProductInfoDto;
 import com.joyintech.service.report.common.service.RepFinProductInfoService;
 import com.joyintech.tams.constant.DictCodeList;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * 产品中债报送业务组件微服务入口
  * 
@@ -55,7 +57,7 @@ public class RepFinProductInfoController {
      * @since 1.0
      */
     @GetMapping("/select")
-    public BussRepFinProductInfoDto select(String finprodId) throws Exception{
+    public BussRepFinProductInfoDto select(String finprodId) throws InvocationTargetException, IllegalAccessException {
         return repFinProductInfoService.select(finprodId);
     }
 
@@ -86,7 +88,7 @@ public class RepFinProductInfoController {
     @Transactional
     @DTXTransaction
     @PostMapping("/insert")
-    public void insert(@RequestBody BussRepFinProductInfoDto bussRepFinProductInfoDto) throws Exception{
+    public void insert(@RequestBody BussRepFinProductInfoDto bussRepFinProductInfoDto) throws InvocationTargetException, IllegalAccessException {
     	if(StringUtil.equals(bussRepFinProductInfoDto.getIsMerger(), DictCodeList.是否_否.getValue())){
     		repFinProductInfoService.insertMergerNo(bussRepFinProductInfoDto);
     	}
@@ -108,7 +110,7 @@ public class RepFinProductInfoController {
     @Transactional
     @DTXTransaction
     @PostMapping("/update")
-    public void update(@RequestBody BussRepFinProductInfoDto bussRepFinProductInfoDto) throws Exception{
+    public void update(@RequestBody BussRepFinProductInfoDto bussRepFinProductInfoDto) throws InvocationTargetException, IllegalAccessException {
         repFinProductInfoService.update(bussRepFinProductInfoDto);
     }
     /**
@@ -121,7 +123,7 @@ public class RepFinProductInfoController {
      * @since 1.0
      */
     @GetMapping("/selectRepFinprodId")
-    public BussRepFinProductInfoDto selectRepFinprodId(String repFinprodInsId) throws Exception{
+    public BussRepFinProductInfoDto selectRepFinprodId(String repFinprodInsId) throws InvocationTargetException, IllegalAccessException {
         return repFinProductInfoService.selectRepFinprodId(repFinprodInsId);
     }
 

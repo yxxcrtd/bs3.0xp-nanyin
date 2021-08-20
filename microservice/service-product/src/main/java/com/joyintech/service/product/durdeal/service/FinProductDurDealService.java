@@ -101,7 +101,7 @@ public class FinProductDurDealService extends BaseService {
      */
     public Page<FinProductDurDealDto> selectForPage(int page, int length,
                                                      Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("JYFX_CPRG", DictCodeList.交易方向_产品认购.getValue());
         pageParam.put("JYFX_CPSG", DictCodeList.交易方向_产品申购.getValue());
         pageParam.put("JYFX_CPSH", DictCodeList.交易方向_产品赎回.getValue());
@@ -254,7 +254,7 @@ public class FinProductDurDealService extends BaseService {
     @SuppressWarnings("unchecked")
 	public Page<FinProductDurDealDto> findDetailPage(int page, int length,
     		 									Map<String, Object> pageParam)
-    	throws Exception {
+    {
     	pageParam.put("JYFX_CPRG", DictCodeList.交易方向_产品认购.getValue());
         pageParam.put("JYFX_CPSG", DictCodeList.交易方向_产品申购.getValue());
         pageParam.put("JYFX_CPSH", DictCodeList.交易方向_产品赎回.getValue());
@@ -296,7 +296,7 @@ public class FinProductDurDealService extends BaseService {
     @SuppressWarnings("unchecked")
     public Page<FinProductDurDealDetailDto> findDetailData(int page, int length,
                                                      Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("JYFX_CPRG", DictCodeList.交易方向_产品认购.getValue());
         pageParam.put("JYFX_CPSG", DictCodeList.交易方向_产品申购.getValue());
         pageParam.put("JYFX_CPSH", DictCodeList.交易方向_产品赎回.getValue());

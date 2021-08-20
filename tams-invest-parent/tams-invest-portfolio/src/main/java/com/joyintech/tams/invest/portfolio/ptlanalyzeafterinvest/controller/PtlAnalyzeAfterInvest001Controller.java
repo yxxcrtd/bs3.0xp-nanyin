@@ -52,23 +52,19 @@ public class PtlAnalyzeAfterInvest001Controller extends BaseController{
     /**
      * 分页查询
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlAnalyzeAfterInvest001Dto> findPage()
-            throws Exception {
+    public Page<PtlAnalyzeAfterInvest001Dto> findPage(){
         return ptlAnalyzeAfterInvest001Service.selectForPage(RequestUtil.getParameters(getRequest()));
     }
 
     /**
      * 导出
      * @return
-     * @throws Exception
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlAnalyzeAfterInvest001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

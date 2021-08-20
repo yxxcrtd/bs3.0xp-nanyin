@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public class RskValtblSumAssetSub extends RskValtblSumAssetSubKey {
     /**
-     * 证券数量
+     * 数量
 
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -20,47 +20,59 @@ public class RskValtblSumAssetSub extends RskValtblSumAssetSubKey {
     private BigDecimal unitCost;
 
     /**
-     * 证券成本
+     *  成本(本币)
 
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal securityCost;
-
     /**
-     * 成本占净值比
+     * 成本(原币)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal securityCostOri;
+    /**
+     * 成本占比
 
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal ctnwr;
 
     /**
-     * 行情收市价
+     * 行情价格
 
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal mcp;
 
     /**
-     * 证券市值
+     * 市值(本币)
 
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal smv;
-
     /**
-     * 市值占净值比
+     * 市值(原币)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal smvOri;
+    /**
+     * 市值占比
 
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal mcr;
 
     /**
-     * 估值增值
+     * 估值增值(本币)
 
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal valueAdded;
-
+    /**
+     * 估值增值(原币)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal valueAddedOri;
     /**
      * 停牌信息
 
@@ -72,6 +84,17 @@ public class RskValtblSumAssetSub extends RskValtblSumAssetSubKey {
 
      */
     private String equityInfo;
+
+    /**
+     * 币种
+     */
+    private String ccy;
+
+    /**
+     * 汇率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal exchangeRate;
 
     /**
      * 导入方式(MANUAL:手工,AUTO:自动)
@@ -292,5 +315,45 @@ public class RskValtblSumAssetSub extends RskValtblSumAssetSubKey {
      */
     public void setImpMode(String impMode) {
         this.impMode = impMode == null ? null : impMode.trim();
+    }
+
+    public BigDecimal getSecurityCostOri() {
+        return securityCostOri;
+    }
+
+    public void setSecurityCostOri(BigDecimal securityCostOri) {
+        this.securityCostOri = securityCostOri;
+    }
+
+    public BigDecimal getSmvOri() {
+        return smvOri;
+    }
+
+    public void setSmvOri(BigDecimal smvOri) {
+        this.smvOri = smvOri;
+    }
+
+    public BigDecimal getValueAddedOri() {
+        return valueAddedOri;
+    }
+
+    public void setValueAddedOri(BigDecimal valueAddedOri) {
+        this.valueAddedOri = valueAddedOri;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
+
+    public BigDecimal getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setExchangeRate(BigDecimal exchangeRate) {
+        this.exchangeRate = exchangeRate;
     }
 }

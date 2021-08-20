@@ -65,7 +65,7 @@ public class MstCoinFundQuotationInfoController  {
      * @since 1.0
      */
     @PostMapping("/selectForPage/{page}/{length}")
-    public Page<MstCoinFundQuotationInfo001Dto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<MstCoinFundQuotationInfo001Dto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length){
         Page<MstCoinFundQuotationInfo001Dto> pages = mstCoinFundQuotationInfoService.selectForPage(page,length,pageParam);
         return pages;
     }

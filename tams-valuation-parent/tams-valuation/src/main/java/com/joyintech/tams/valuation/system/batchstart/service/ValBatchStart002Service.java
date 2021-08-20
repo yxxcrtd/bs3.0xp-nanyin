@@ -20,7 +20,7 @@ public class ValBatchStart002Service extends BaseService<Product> {
 
 
     public Page<Product> findAllProd(Map<String,Object> map)
-        throws Exception {
+         {
         return super.queryForPage(()-> valBatchStart001Mapper.findAllProd(map));
    }
     

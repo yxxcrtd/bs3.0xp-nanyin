@@ -61,7 +61,7 @@ public class GroupBasic extends AdditionFunc{
 	@Override
 	public List<HashMap<String, Object>> genGroupNewSourceData(
 			List<HashMap<String, Object>> sourceHMList, String funcParams,
-			List<InterfaceColConfig> groupFuncClassList) throws Exception{
+			List<InterfaceColConfig> groupFuncClassList) {
 		HashMap<String, List<HashMap<String, Object>>> groupSource=new HashMap<String, List<HashMap<String,Object>>>();
 		funcParams=funcParams.split("\\|")[1];
 		String[] groupby=funcParams.split(",");
@@ -123,7 +123,7 @@ public class GroupBasic extends AdditionFunc{
 	
 	@Override
 	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap)
-			throws Exception {
+			{
 		// TODO Auto-generated method stub
 		return null;
 	}

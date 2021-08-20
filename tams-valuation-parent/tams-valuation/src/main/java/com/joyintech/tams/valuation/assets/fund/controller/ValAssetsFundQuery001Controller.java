@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.assets.fund.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +92,7 @@ public class ValAssetsFundQuery001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValAssetsFundQuery001Dto> findPage()
-        throws Exception {
+         {
         return valAssetsFundQuery001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -106,7 +107,7 @@ public class ValAssetsFundQuery001Controller extends BaseController {
     @RequestMapping("getAssets")
     @ResponseBody
     public List<SelectOptionDto> getAssets()
-        throws Exception {
+         {
         return valAssetsFundQuery001Service.getAssets(RequestUtil.getPageParam());
     }
 
@@ -121,8 +122,7 @@ public class ValAssetsFundQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         Map<String, Object> paraMap = RequestUtil.getPageParam();
         List<ValAssetsFundQuery001Dto> listdto;
@@ -156,7 +156,7 @@ public class ValAssetsFundQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("deleteCheck")
     public AjaxResult check(@RequestBody ValAssetsFundQuery001Dto dto, BindingResult result)
-        throws Exception {
+         {
         Map<String, Object> params = new HashMap<String, Object>();
         String finprodId = dto.getFinprodId();
         params.put("finprodId", finprodId);
@@ -181,7 +181,7 @@ public class ValAssetsFundQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody ValAssetsFundQuery002Dto dto, BindingResult br)
-        throws Exception {
+         {
 
         if (br.hasErrors()) {
             return new AjaxResult(br);
@@ -231,7 +231,7 @@ public class ValAssetsFundQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("updateCheck")
     public AjaxResult updateCheck(@RequestBody ValAssetsFundQuery001Dto dto, BindingResult result)
-        throws Exception {
+         {
         Map<String, Object> params = new HashMap<String, Object>();
         String finprodId = dto.getFinprodId();
         params.put("finprodId", finprodId);

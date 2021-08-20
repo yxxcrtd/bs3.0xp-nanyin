@@ -29,6 +29,8 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -54,11 +56,15 @@ import com.joyintech.tools.util.ExcelTools;
 /**
  * @author zhangzhao
  * @version 1.0 2018年9月18日
- * @see OwnerEquityChange001Service
+ * @see DisOwnerEquityChange001Service
  * @since 1.0
  */
 @Service
 public class DisOwnerEquityChange001Service extends CommonExportService<DisOwnerEquityChange001Dto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(DisOwnerEquityChange001Service.class);
 
     @Autowired
     private DisOwnerEquityChange001Mapper ownerEquityChange001Mapper;
@@ -83,12 +89,10 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
      * 
      * @param pageParam
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
-    public List<DisOwnerEquityChange001Dto> selectList(Map<String, Object> pageParam)
-        throws Exception {
+    public List<DisOwnerEquityChange001Dto> selectList(Map<String, Object> pageParam){
         //changeMapData(pageParam);
         Map<String, DisOwnerEquityChange001Dto> dtoMap = new HashMap<String, DisOwnerEquityChange001Dto>();
         initData(dtoMap);
@@ -193,8 +197,7 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
      * @return
      * @throws Exception
      */
-    public   List<DisValProfitQuery001Dto> selectListPz(Map<String, Object> pageParam)
-            throws Exception {
+    public   List<DisValProfitQuery001Dto> selectListPz(Map<String, Object> pageParam) {
     	  String thisTermVdate1 = (String)pageParam.get("thisTermVdate"); // 实收资本
           String thisTermVdate2 = (String)pageParam.get("thisTermVdate"); // 非实收资本
           String thisTermMdate = (String)pageParam.get("thisTermMdate");
@@ -316,7 +319,8 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
 		// 计算明细项目
 		for (String key : profitCalculationMap.keySet()) {
 			if(key.equals("6.1")){
-				System.out.println(key);
+//				System.out.println(key);
+				logger.info(key);
 			}
 			DisProfitCalculationDto dto = profitCalculationMap.get(key);
 			if (1== dto.getProjLevel()) {
@@ -576,8 +580,8 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
 	        		try {
 						thisTermAmt = thisTermAmt.add(profitCalculationMap.get(childKeyArr[i + 1]).getThisTermAmt());
 					} catch (Exception e) {
-						System.out.println(i);
-						e.printStackTrace();
+                        logger.info(String.valueOf(i));
+						logger.error(e.getMessage(),e);
 					}
 	        		lastTermAmt = lastTermAmt.add(profitCalculationMap.get(childKeyArr[i + 1]).getLastTermAmt());
 	        	}
@@ -1071,8 +1075,7 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
      * @see
      * @since 1.0
      */
-    public void changeMapData(Map<String, Object> pageParam)
-        throws Exception {
+    public void changeMapData(Map<String, Object> pageParam) throws ParseException {
         String reportTermType = (String)pageParam.get("reportTermType");
         String valDate = DateUtil.format(analyseDate(pageParam), DateUtil.DEFAULT_DATE_FORMAT_EN);
         int thisYear = DateUtil.getYear(valDate);
@@ -1397,8 +1400,7 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
      * @see
      * @since 1.0
      */
-    public ResponseEntity<byte[]> exportExcel(Map<String, Object> params)
-        throws Exception {
+    public ResponseEntity<byte[]> exportExcel(Map<String, Object> params) throws ParseException {
         ExportFileDto exportFileDto = createExcel(params);
         File file = new File(exportFileDto.getFilePath());
         return ExportUtil.export(exportFileDto.getFileName(), file, true);
@@ -1413,8 +1415,7 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
      * @see
      * @since 1.0
      */
-    private ExportFileDto createExcel(Map<String, Object> params)
-        throws Exception {
+    private ExportFileDto createExcel(Map<String, Object> params) throws ParseException {
         // 报表日期
         String reportDate = DateUtil.format(analyseDate(params), DateUtil.DEFAULT_DATE_FORMAT_EN);
         // 导出数据集
@@ -1514,7 +1515,8 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
 				continue;
 			}
 			if(key.equals("6.7.1")){
-				System.out.println(key);
+//				System.out.println(key);
+				logger.info(key);
 			}
 			DisProfitCalculationDto dto = profitCalculationMap.get(key);
 			if (1== dto.getProjLevel()) {
@@ -1586,8 +1588,7 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
 	/*** 计算利润表各项目值   add  by dongxiangyang  20200212 start*/
     
 	 /*** 所有者权益配置  add  by  dongxiangyang  20200212  start*/
-    public   List<DisValProfitQuery001Dto> selectListPzYth(Map<String, Object> pageParam)
-            throws Exception {
+    public   List<DisValProfitQuery001Dto> selectListPzYth(Map<String, Object> pageParam){
     	  String thisTermVdate1 = (String)pageParam.get("thisTermVdate"); // 实收资本
           String thisTermVdate2 = (String)pageParam.get("thisTermVdate"); // 非实收资本
           String thisTermMdate = (String)pageParam.get("thisTermMdate");

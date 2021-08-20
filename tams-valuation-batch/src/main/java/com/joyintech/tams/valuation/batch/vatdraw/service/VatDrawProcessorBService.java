@@ -374,8 +374,8 @@ public class VatDrawProcessorBService {
 
         Set<String> bokDetailIds1 = new HashSet<>();
         for (TaxBokBalance info : listTaxBokBalance) {
-            if (!bokDetailIds1.contains(info.getBokDetailId())
-                && info.getBokDetailId() != null) {
+            if (info.getBokDetailId() != null
+                && !bokDetailIds1.contains(info.getBokDetailId())) {
                 bokDetailIds1.add(info.getBokDetailId());
             }
         }
@@ -527,8 +527,8 @@ public class VatDrawProcessorBService {
             // 4'.2 根据上述查询结果,账务明细代码排重后取税则
             List<String> listBokDetailId = new ArrayList<String>();
             for (BookLatestInfoDto info : listBookLatestInfoDto) {
-                if (!listBokDetailId.contains(info.getBokDetailId())
-                    && info.getBokDetailId() != null) {
+                if (info.getBokDetailId() != null
+                    && !listBokDetailId.contains(info.getBokDetailId())) {
                     listBokDetailId.add(info.getBokDetailId());
                 }
             }
@@ -778,7 +778,7 @@ public class VatDrawProcessorBService {
         List<String> listBokDetailId = new ArrayList<String>();
         for (
             BookLatestInfoDto info : listBookLatestInfo) {
-            if (!listBokDetailId.contains(info.getBokDetailId()) && info.getBokDetailId() != null) {
+            if (info.getBokDetailId() != null && !listBokDetailId.contains(info.getBokDetailId())) {
                 listBokDetailId.add(info.getBokDetailId());
             }
         }
@@ -1841,7 +1841,7 @@ public class VatDrawProcessorBService {
 //                                    BeanUtil.copyProperties(balance, entity);
 //                                }
 //                                catch (Exception e) {
-//                                    e.printStackTrace();
+//                                    logger.error(e.getMessage(),e);
 //                                }
 //                            }
 //                            else {

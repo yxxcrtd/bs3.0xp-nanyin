@@ -62,7 +62,7 @@ public class AssetNameManagementDetailController extends BaseController {
     @ResponseBody
     @RequestMapping("selectAssetListDetail")
     public List<RskAccessListDetailDto> selectAssetListDetail()
-        throws Exception {
+    {
         List<RskAccessListDetailDto> resultList = assetNameManagementService.selectAssetListDetail(
             RequestUtil.getParameters(getRequest()));
         return resultList;
@@ -78,7 +78,7 @@ public class AssetNameManagementDetailController extends BaseController {
     @ResponseBody
     @RequestMapping("selectAssetListDetailLog")
     public List<RskAccessListLogDto> selectAssetListDetailLog()
-        throws Exception {
+    {
         List<RskAccessListLogDto> resultList = assetNameManagementService.selectAssetListDetailLog(
             RequestUtil.getParameters(getRequest()));
         return resultList;
@@ -94,7 +94,7 @@ public class AssetNameManagementDetailController extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         Map<String, Object>  params=RequestUtil.getParameters(getRequest());
         //分别下载明细列表与履历列表
         if(StringUtil.isNotEmpty(params.get("type")) && params.get("type").equals("record")){

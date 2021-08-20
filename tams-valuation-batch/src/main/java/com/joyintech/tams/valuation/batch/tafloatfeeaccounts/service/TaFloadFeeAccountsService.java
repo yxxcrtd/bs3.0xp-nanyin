@@ -107,8 +107,7 @@ public class TaFloadFeeAccountsService {
      * @since 1.0
      */
     @SuppressWarnings("unchecked")
-    public BookGenerateResultWithBokStatFeePosition execute(Map<String, Object> params)
-        throws Exception {
+    public BookGenerateResultWithBokStatFeePosition execute(Map<String, Object> params) throws BatchException {
         // 获取reader返回值
         StayDrawSubprdEntity acctEntity = (StayDrawSubprdEntity)params.get(
             GlobalConstant.READER_RESULT);

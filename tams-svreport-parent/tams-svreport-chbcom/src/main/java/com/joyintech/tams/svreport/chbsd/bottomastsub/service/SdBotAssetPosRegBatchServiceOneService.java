@@ -13,6 +13,7 @@ package com.joyintech.tams.svreport.chbsd.bottomastsub.service;
 import java.util.List;
 
 import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
+import com.joyintech.framework.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class SdBotAssetPosRegBatchServiceOneService extends AutoSendCBBaseServic
     */
     public boolean handleDataPerTime(int handleIndex, 
     		                         int dataCountPerTime,List<ChbBotAstPosSubDto> msgRstList,
-    		                         List<ChbBotAstPosSubDto> sendResult, SendDataCheckType sendDataCheckType)  throws Exception{
+    		                         List<ChbBotAstPosSubDto> sendResult, SendDataCheckType sendDataCheckType)  {
         logger.info("【底层资产持仓信息登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         boolean hasData = true;
         try {
@@ -60,7 +61,7 @@ public class SdBotAssetPosRegBatchServiceOneService extends AutoSendCBBaseServic
        	    sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【底层资产持仓信息登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());
-	        throw e;
+	        throw new BusinessException(e);
 		}
         logger.info("【底层资产持仓信息登记】直连报送处理结束，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         return hasData;

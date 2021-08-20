@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -644,7 +645,7 @@ public abstract class FileImpService extends InterfService{
      * @param checkTableInfo 接口类型
      * @return 返回待处理数据
      */
-    public List<Map<String, String>> checkDataCodeCheck(List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo){
+    public List<Map<String, String>> checkDataCodeCheck(List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo) {
         // 配置脚本校验
         checkData(false, infoList, fireName, checkTableInfo.getTableName(), checkTableInfo.getTableName(), checkTableInfo.getBussinessKey(), checkTableInfo.getCheckEuplicatedKeys());
         // 代码校验
@@ -916,7 +917,7 @@ public abstract class FileImpService extends InterfService{
         else {
             monitorInfoDto.setFileHandleStatus(DictCodeListExt2.上游接口文件读取处理状态_异常结束.getValue());
             //add by liubin start 当异常在解析时未捕获时，即handLeResultMsg为空，则处理给个默认值
-            if("".equals(monitorInfoDto.getFileHandleResultMsg()) || monitorInfoDto.getFileHandleResultMsg() == null){
+            if(monitorInfoDto.getFileHandleResultMsg() == null || "".equals(monitorInfoDto.getFileHandleResultMsg())){
                  monitorInfoDto.setFileHandleResultMsg("数据文件有问题，已移动到fail文件夹下");
             }
             //add by liubin end
@@ -993,7 +994,6 @@ public abstract class FileImpService extends InterfService{
             }
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
             return null;
         }

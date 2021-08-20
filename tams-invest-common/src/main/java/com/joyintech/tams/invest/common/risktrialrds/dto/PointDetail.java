@@ -22,11 +22,11 @@ public class PointDetail {
 	private ForbidPointThreshold forbidPointThreshold;
     private boolean isAbs;
 
-	public PointDetail(String vdetailJson,String adetailJson,String wdetailJson,String indType) throws Exception {
+	public PointDetail(String vdetailJson,String adetailJson,String wdetailJson,String indType)  {
 		try {
 			this.type = indType;
 		} catch(Exception e) {
-			throw new Exception("invalid indicator type: " + type);
+			throw new IllegalArgumentException("invalid indicator type: " + type);
 		}
 
 		if(this.type.indexOf(RiskUtil.FORBID)!=-1) {
@@ -54,7 +54,7 @@ public class PointDetail {
 		}
 	}
 
-	private void initLimitPointThresh(String detailJson,String condType,String indType)throws Exception{
+	private void initLimitPointThresh(String detailJson,String condType,String indType){
 		if(condType.equals("FOUL")&&indType.indexOf(RiskUtil.FORBID)!=-1){
 			Map<?, ?> warningMap =JsonUtils.json2Object(detailJson,Map.class);
 			if(warningMap != null) {
@@ -144,7 +144,7 @@ public class PointDetail {
 				for(String fobEntry:fobArray){
 					String[] fobSubArray=fobEntry.trim().split("\\|\\|");
 					if(fobSubArray.length>=1){
-						fobStr+=fobSubArray[0].toString()+",";
+						fobStr+=fobSubArray[0]+",";
 					}
 				}
 			}

@@ -260,7 +260,7 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
      * @since 1.0
      */
     public Page<TrdFundInvestTradeDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.交易流程状态_流程中.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.交易流程状态_有效.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());

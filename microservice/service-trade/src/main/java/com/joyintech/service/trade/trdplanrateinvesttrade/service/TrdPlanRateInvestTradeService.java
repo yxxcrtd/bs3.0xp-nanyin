@@ -79,7 +79,7 @@ public class TrdPlanRateInvestTradeService extends BaseService<TrdPlanRateInvest
      * @see
      * @since 1.0
      */
-    public Page<TrdPlanRateInvestTradeDto> findPage(int page,int length,Map<String,Object> map) throws Exception{
+    public Page<TrdPlanRateInvestTradeDto> findPage(int page,int length,Map<String,Object> map) {
         map.put("ps_shengou",DictCodeList.交易方向_买入.getValue());
         map.put("ps_shuhui",DictCodeList.交易方向_卖出.getValue());
         map.put("PROFIT_TYPE", DictCodeList.收益类型_收益型.getValue());

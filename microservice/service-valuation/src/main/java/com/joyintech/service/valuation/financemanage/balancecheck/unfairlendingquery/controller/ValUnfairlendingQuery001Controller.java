@@ -69,7 +69,7 @@ public class ValUnfairlendingQuery001Controller extends BaseController {
 	 */
 	@PostMapping("findPage/{page}/{length}")
 	public Page<ValUnfairlendingQuery001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) throws ParseException {
 		return valUnfairlendingQuery001Service.findPage(page, length, param);
 	}
 
@@ -106,7 +106,7 @@ public class ValUnfairlendingQuery001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@PostMapping("/queryUnfairlendingList")
-    public List<ValUnfairlendingQuery001Dto> getSubjectWater(ValUnfairlendingQuery001Dto dto) throws Exception {
+    public List<ValUnfairlendingQuery001Dto> getSubjectWater(ValUnfairlendingQuery001Dto dto) {
 		return valUnfairlendingQuery001Service.queryUnfairlendingList(dto);
     }
 

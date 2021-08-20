@@ -49,12 +49,10 @@ public class PtlSingleAssetPositionAnalysis001Controller extends BaseController 
      * 画面查询方法
      *
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlSingleAssetPositionAnalysis001Dto> selectAll()
-            throws Exception {
+    public Page<PtlSingleAssetPositionAnalysis001Dto> selectAll(){
         Map<String, Object> map = RequestUtil.getPageParam();
         Page<PtlSingleAssetPositionAnalysis001Dto> page = ptlSingleAssetPositionAnalysis001Service.selectForPage(map);
         return page;
@@ -64,12 +62,10 @@ public class PtlSingleAssetPositionAnalysis001Controller extends BaseController 
      * 画面查询方法
      *
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findList")
-    public List<PtlSingleAssetPositionAnalysis001Dto> selectAllList()
-            throws Exception {
+    public List<PtlSingleAssetPositionAnalysis001Dto> selectAllList() {
         Map<String, Object> map = RequestUtil.getPageParam();
         List<PtlSingleAssetPositionAnalysis001Dto> list = ptlSingleAssetPositionAnalysis001Service.selectForList(map);
         return list;
@@ -92,7 +88,6 @@ public class PtlSingleAssetPositionAnalysis001Controller extends BaseController 
 //    /**
 //     * 导出信息excel
 //     * @return excel
-//     * @throws Exception 异常
 //     * @see
 //     * @since 1.0
 //     */
@@ -116,14 +111,12 @@ public class PtlSingleAssetPositionAnalysis001Controller extends BaseController 
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlSingleAssetPositionAnalysis001Service.export(this.getPageId(),
                 //TISHKBS-2036 【单一资产持仓分析】：当前导出excel的日期是以平台日为准，请优化为已查询日为准 wyn 2021/4/25
                 RequestUtil.getParameters(getRequest()),"searchDate");

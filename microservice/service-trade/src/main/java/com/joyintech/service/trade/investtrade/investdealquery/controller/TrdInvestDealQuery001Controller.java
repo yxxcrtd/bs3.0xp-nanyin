@@ -50,7 +50,7 @@ public class TrdInvestDealQuery001Controller {
     @PostMapping("findPage/{page}/{length}")
     public Page<TrdInvestDealQuery001Dto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                         @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<TrdInvestDealQuery001Dto> pageList = trdInvestDealQuery001Service.selectForPage(page, length, param);
         /*List<TrdInvestDealQuery001Dto> list = pageList.getRoot();
         if (!list.isEmpty()) {
@@ -80,7 +80,7 @@ public class TrdInvestDealQuery001Controller {
     @PostMapping("validFindPage/{page}/{length}")
     public Page<TrdInvestDealQuery001Dto> validSelectForPage(@RequestBody Map<String, Object> param,
                                                              @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<TrdInvestDealQuery001Dto> pageList = trdInvestDealQuery001Service.validSelectForPage(page, length, param);
         /*List<TrdInvestDealQuery001Dto> list = pageList.getRoot();
         if (!list.isEmpty()) {
@@ -110,7 +110,7 @@ public class TrdInvestDealQuery001Controller {
     @PostMapping("cancelFindPage/{page}/{length}")
     public Page<TrdInvestDealQuery001Dto> cancelSelectForPage(@RequestBody Map<String, Object> param,
                                                               @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<TrdInvestDealQuery001Dto> pageList = trdInvestDealQuery001Service.cancelSelectForPage(page, length, param);
         /*List<TrdInvestDealQuery001Dto> list = pageList.getRoot();
         if (!list.isEmpty()) {
@@ -140,7 +140,7 @@ public class TrdInvestDealQuery001Controller {
     @PostMapping("allFindPage/{page}/{length}")
     public Page<TrdInvestDealQuery001Dto> allSelectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                            @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<TrdInvestDealQuery001Dto> pageList = trdInvestDealQuery001Service.alllSelectForPage(page, length, param);
         /*List<TrdInvestDealQuery001Dto> list = pageList.getRoot();
         if (!list.isEmpty()) {
@@ -168,7 +168,7 @@ public class TrdInvestDealQuery001Controller {
      */
     @GetMapping("/getEntrustIds")
     public List<SuggestDto> getEntrustId(String entrustId)
-        throws Exception {
+    {
         return trdInvestDealQuery001Service.getEntrustId(entrustId);
     }
 
@@ -181,7 +181,7 @@ public class TrdInvestDealQuery001Controller {
      */
     @GetMapping("/getPortfolioIds")
     public List<SuggestDto> getPortfolioIds(String portfolioId)
-        throws Exception {
+    {
         return trdInvestDealQuery001Service.getPortfolioIds(portfolioId);
     }
 
@@ -194,7 +194,7 @@ public class TrdInvestDealQuery001Controller {
      */
     @GetMapping("/getFinprodMarketIds")
     public List<SuggestDto> getFinprodMarketIds(String finprodMarketId)
-        throws Exception {
+    {
         return trdInvestDealQuery001Service.getFinprodMarketIds(finprodMarketId);
     }
      

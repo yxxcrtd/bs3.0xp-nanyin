@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.disclosure.information.manage.workmonitor.dto.ReportWorkMonitor002Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
@@ -23,6 +24,7 @@ import com.joyintech.tams.disclosure.information.manage.workmonitor.dto.ReportWo
  * @see ValNetValueConfirm002Mapper
  * @since 1.0
  */
+@Repository
 public interface ReportWorkMonitor002Mapper {
 
 	List<ReportWorkMonitor002Dto> findPage(Map<String, Object> params);

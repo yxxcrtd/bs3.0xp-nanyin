@@ -17,6 +17,9 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +59,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("MstCoinFundQuotationInfo002")
 @RequestMapping("/invest/basicdata/mstcoinfundquotationinfo/MstCoinFundQuotationInfo002")
 public class MstCoinFundQuotationInfo002Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MstCoinFundQuotationInfo002Controller.class);
 
     /**
      * 向service注值
@@ -99,7 +106,7 @@ public class MstCoinFundQuotationInfo002Controller extends BaseController {
                 model.addAttribute("entity", dto1);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
         // 初始化
@@ -135,8 +142,7 @@ public class MstCoinFundQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping(OPERATE_TYPE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstCoinFundQuotationInfo001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstCoinFundQuotationInfo001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -189,8 +195,7 @@ public class MstCoinFundQuotationInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryFinprod")
-    public List<SuggestDto> queryFinprod()
-        throws Exception {
+    public List<SuggestDto> queryFinprod(){
         // 画面的输入值param前台的输入值，为了进行模糊查询
         Map<String, Object> param = RequestUtil.getPageParam();
         // 获取根据输入值检索到的结果

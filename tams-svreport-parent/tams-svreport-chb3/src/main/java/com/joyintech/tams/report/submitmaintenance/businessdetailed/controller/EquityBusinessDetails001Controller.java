@@ -11,6 +11,7 @@
 package com.joyintech.tams.report.submitmaintenance.businessdetailed.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -218,7 +219,7 @@ public class EquityBusinessDetails001Controller extends BaseController{
      * @return 导出
      */
     @RequestMapping(value = ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() throws IOException {
 //    	if(RequestUtil.getPageParam().containsKey("keyList")){
 //        	List<EquiteBusiDetails001Dto> dtoList = this.equityBusinessDetailsMService.queryReportList(RequestUtil.getParameters(getRequest()));
 //        	File outFile = null;

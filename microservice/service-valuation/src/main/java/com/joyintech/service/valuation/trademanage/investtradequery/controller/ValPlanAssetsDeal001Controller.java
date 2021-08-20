@@ -62,7 +62,7 @@ public class ValPlanAssetsDeal001Controller extends BaseController {
 //    }
 
     @PostMapping("/queryFinProductDealBytradeId")
-    public InvestTradeDto queryFinProductDealBytradeId(@RequestBody Map<String, Object> param) throws Exception {
+    public InvestTradeDto queryFinProductDealBytradeId(@RequestBody Map<String, Object> param) {
         return investTradeQuery001Service.queryFinProductDealBytradeId(param);
     }
     
@@ -76,7 +76,7 @@ public class ValPlanAssetsDeal001Controller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<InvestTradeDto> findPage(@RequestBody Map<String, Object> param,
-                                         @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                         @PathVariable("page") int page, @PathVariable("length") int length) {
         return investTradeQuery001Service.findPage(page, length, param);
     }
 

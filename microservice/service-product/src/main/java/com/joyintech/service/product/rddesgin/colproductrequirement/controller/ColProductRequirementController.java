@@ -47,7 +47,7 @@ public class ColProductRequirementController  {
 	@DTXTransaction
 	@Transactional
 	@PostMapping("/insertColProductRequirement")
-	public void insertColProductRequirement(@RequestBody ColProductRequirement001Dto colProductRequirement001Dto) throws Exception{
+	public void insertColProductRequirement(@RequestBody ColProductRequirement001Dto colProductRequirement001Dto) {
 	    colProductRequirement001Service.insertColProductRequirement(colProductRequirement001Dto);
 	    return;
 	}

@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dao;
 
 import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dto.ValuationMethodScheme003Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
@@ -20,6 +21,7 @@ import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodsche
  * @see ValuationMethodScheme003Mapper
  * @since 1.0
  */
+@Repository
 public interface ValuationMethodScheme003Mapper {
 
 	ValuationMethodScheme003Dto selectByPrimaryKey(String schemeDetailId);

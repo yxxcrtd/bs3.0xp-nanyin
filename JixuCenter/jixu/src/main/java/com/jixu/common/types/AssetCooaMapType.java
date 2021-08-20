@@ -1,5 +1,7 @@
 package com.jixu.common.types;
 
+import java.util.Objects;
+
 /**
  * 该类的输入，可以转换成json存入数据库，根据输入条件决定了采用哪个总账组
  * @author 桃汰猪
@@ -77,19 +79,25 @@ public class AssetCooaMapType {
 		AssetCooaMapType type=(AssetCooaMapType)obj;
 		if(!type.getAssetType().equals(this.assetType))
 			return false;
-		
+
 		if(type.getRpSecType()!=this.getRpSecType())
 			return false;
-		
+
 		if(!type.getPurpose().equals(this.getPurpose()))
 			return false;
-		
+
 		if(type.getLongCur().equals(this.getLongCur()))
 			return false;
-		
+
 		if(type.getShortCur().equals(this.getShortCur()))
 			return false;
-		
+
 		return true;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(assetType, rpSecType, purpose, longCur, shortCur);
+	}
+
 }

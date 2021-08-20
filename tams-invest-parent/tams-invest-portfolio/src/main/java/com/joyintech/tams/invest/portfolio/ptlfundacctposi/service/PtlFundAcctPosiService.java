@@ -69,7 +69,6 @@ public class PtlFundAcctPosiService extends CommonExportService<PtlFundAcctPosiD
      * 页面查询
      * @param pageParam 查询方法
      * @return Page类
-     * @throws Exception 异常信息
      */
     public Page<PtlFundAcctPosiDto> selectForPage(Map<String, Object> pageParam){
         String portfolioId = (String)pageParam.get("portfolioId");
@@ -96,7 +95,6 @@ public class PtlFundAcctPosiService extends CommonExportService<PtlFundAcctPosiD
      * 页面查询
      * @param pageParam 查询方法
      * @return Page类
-     * @throws Exception 异常信息
      */
     public Page<PtlFundAcctPosiDto> selectForPage1(Map<String, Object> pageParam){
         return restTemplate.postForPage(
@@ -108,7 +106,6 @@ public class PtlFundAcctPosiService extends CommonExportService<PtlFundAcctPosiD
      * 页面查询
      * @param pageParam 查询方法
      * @return Page类
-     * @throws Exception 异常信息
      */
     public Page<PtlFundAcctPosiDto> selectForPage2(Map<String, Object> pageParam){
         return restTemplate.postForPage(

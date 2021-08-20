@@ -192,7 +192,6 @@ public class ReportRule002Contoller extends BaseController {
 				result = new AjaxResult(erroMes, MessageType.错误消息);
 			}
 		} catch (Exception e) {
-//			e.printStackTrace();
 			logger.error("error:",e);
 			result = new AjaxResult("删除失败", MessageType.错误消息);
 		}

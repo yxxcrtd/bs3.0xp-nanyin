@@ -23,7 +23,7 @@ public class CstpTrdMatchInfoController {
 
     @ResponseBody
     @PostMapping("findPage/{page}/{length}")
-    public Page<CstpTrdMatchInfoDto> findPage(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<CstpTrdMatchInfoDto> findPage(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length) {
 
         return cstpTrdMatchInfoService.findPage(page, length, map);
     }

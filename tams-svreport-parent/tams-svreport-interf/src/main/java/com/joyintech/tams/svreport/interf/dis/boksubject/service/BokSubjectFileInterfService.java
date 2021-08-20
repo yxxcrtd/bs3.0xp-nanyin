@@ -18,6 +18,8 @@ import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.interf.dis.common.DisFileInterfCommonService;
 
+import java.text.ParseException;
+
 /**
  * 科目数据接口入口定义类
  * 
@@ -38,7 +40,7 @@ public class BokSubjectFileInterfService extends AbstractFileImpService {
     /**
      * {@inheritDoc}
      */
-    public String getInfoByInterf(String currentDate) {
+    public String getInfoByInterf(String currentDate) throws ParseException {
         String successFlag = disFileInterfCommonService.readFileAndImportDb(currentDate,
         		bokSubjectInterfService, InterfDefine.科目数据, DictCodeListExt2.上游接口文件类型_科目数据信息);
         return successFlag;

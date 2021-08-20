@@ -30,3 +30,5 @@ target/
 AppLog*
 tams-integration/*
 .txlcn*
+*rebel.xml
+*rebel.xml.bak

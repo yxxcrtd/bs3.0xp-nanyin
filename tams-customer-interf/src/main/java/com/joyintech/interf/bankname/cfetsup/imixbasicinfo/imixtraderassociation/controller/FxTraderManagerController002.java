@@ -102,8 +102,7 @@ public class FxTraderManagerController002 extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FxTraderManagerDto dto)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FxTraderManagerDto dto){
         dto.setCreatorid(dto.getCreateUser());
         int result = fxTraderManagerService.insert(dto);
         String msg = "success";
@@ -123,7 +122,7 @@ public class FxTraderManagerController002 extends BaseController {
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete() throws Exception{
+    public AjaxResult delete() {
         Map param = RequestUtil.getPageParam();
         String seqno = (String) param.get("seqno");
         int result = fxTraderManagerService.deleteByPrimaryKey(seqno);
@@ -145,7 +144,7 @@ public class FxTraderManagerController002 extends BaseController {
      */
     @ResponseBody
     @RequestMapping("update")
-    public AjaxResult update(@RequestBody @Validated({ValidateGroupDelete.class}) FxTraderManagerDto dto) throws Exception{
+    public AjaxResult update(@RequestBody @Validated({ValidateGroupDelete.class}) FxTraderManagerDto dto) {
         int result = fxTraderManagerService.updateByPrimaryKey(dto);
         String msg = "success";
         if(result == 0){

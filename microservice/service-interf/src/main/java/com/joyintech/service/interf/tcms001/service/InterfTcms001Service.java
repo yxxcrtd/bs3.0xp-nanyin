@@ -49,7 +49,7 @@ public class InterfTcms001Service extends ReceivedEsbService<InterfTcms001InEnti
      */
     @Override
     public InterfTcms001InEntity selectResponseData(InterfTcms001InEntity entity)
-        throws Exception {
+    {
         return null;
     }
 
@@ -58,7 +58,7 @@ public class InterfTcms001Service extends ReceivedEsbService<InterfTcms001InEnti
      */
     @Override
     public int saveInterfData(InterfTcms001InEntity entity)
-        throws Exception {
+    {
         // 设置平台日，接口号
         entity.setCdate(getSysDate());
         entity.setInterfId(getInterfId());
@@ -72,7 +72,7 @@ public class InterfTcms001Service extends ReceivedEsbService<InterfTcms001InEnti
      */
     @Override
     public int saveBusinessData(InterfTcms001InEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 

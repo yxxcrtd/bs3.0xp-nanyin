@@ -593,7 +593,7 @@ public class MarketRiskStressTestView002Dto extends BaseEntity implements ITable
 	 */
 	public String getAssetType2Str() {
 		if(StringUtil.isNotEmpty(getAssetId()) && 3 == getAssetId().length()){
-			if(StringUtil.equals(DictCodeList.币种_人民币_CNY.getValue(), getAssetId().toString())){
+			if(StringUtil.equals(DictCodeList.币种_人民币_CNY.getValue(), getAssetId())){
 				return "本币";
 			}
 			else{

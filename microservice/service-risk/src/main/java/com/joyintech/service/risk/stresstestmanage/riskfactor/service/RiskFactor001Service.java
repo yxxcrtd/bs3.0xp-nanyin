@@ -45,7 +45,7 @@ public class RiskFactor001Service extends BaseService<RiskFactor001Dto> {
 
 
     public Page<RiskFactor001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         Page<RiskFactor001Dto> PAGE = super.queryForPage(page, length, () -> RiskFactor001Mapper.queryForPage(pageParam));
         DynamicDataSourceHolder.clearDataSource();

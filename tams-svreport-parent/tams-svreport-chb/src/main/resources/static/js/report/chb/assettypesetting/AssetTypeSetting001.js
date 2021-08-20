@@ -97,10 +97,10 @@
         cols : [
             {field: 'typeuuid', title: "主键",width:120 ,visible:false},
             {field: 'mappinguuid', title: "主键",width:120 ,visible:false},
-            {field: 'chbAssetTypeStr', title: "资产负债类别",width:150 ,sortField:'chbAssetType'},//资产负债类别
-            {field: 'chbAssetType', title: "资产负债类别",width:150 ,visible:false},
-            {field: 'chbAssetType2Str', title: "资产负债二级类别",width:150 ,sortField:'chbAssetType2'},//资产负债二级类别
-            {field: 'chbAssetType2', title: "资产负债二级类别",width:150 ,visible:false},
+            {field: 'chbAssetTypeStr', title: "资产/负债类别",width:150 ,sortField:'chbAssetType'},//资产负债类别
+            {field: 'chbAssetType', title: "资产/负债类别",width:150 ,visible:false},
+            {field: 'chbAssetType2Str', title: "资产/负债二级类别",width:150 ,sortField:'chbAssetType2'},//资产负债二级类别
+            {field: 'chbAssetType2', title: "资产/负债二级类别",width:150 ,visible:false},
             {field: 'operation', title: "操作",type: 'action',buttons: ['delt']}//操作
         ]
     });

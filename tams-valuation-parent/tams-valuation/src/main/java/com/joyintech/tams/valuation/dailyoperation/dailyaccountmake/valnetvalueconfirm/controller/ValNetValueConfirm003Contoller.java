@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jcraft.jsch.JSchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -88,7 +89,7 @@ public class ValNetValueConfirm003Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<BokFileTransfer003Dto> findPage() throws Exception{
+    public Page<BokFileTransfer003Dto> findPage() {
         return valNetValueConfirm003Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -110,7 +111,7 @@ public class ValNetValueConfirm003Contoller extends BaseController {
 	@RequestMapping(value = "/uploadFile")
 	@ResponseBody
 	public AjaxResult uploadFile()
-			throws Exception {
+			 {
 	    AjaxResult res = new AjaxResult();
 		try {
 		    valNetValueConfirm003Service.readFile(RequestUtil.getPageParam());
@@ -145,7 +146,7 @@ public class ValNetValueConfirm003Contoller extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
 	public ExcelImpResultDto save(HttpServletRequest request, @RequestBody ExcelImpFileInfoDto impFileInfo)
-			throws Exception {
+			 {
 		return null;
 	}
 	
@@ -163,8 +164,7 @@ public class ValNetValueConfirm003Contoller extends BaseController {
      */
     @RequestMapping(value = "/downloadFile")
     @ResponseBody
-    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request)
-            throws Exception { 
+    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws JSchException {
            return valNetValueConfirm003Service.downloadFile(request);
     }
     
@@ -182,7 +182,7 @@ public class ValNetValueConfirm003Contoller extends BaseController {
     @RequestMapping(value = "/deleteFile")
     @ResponseBody
     public void deleteFile(HttpServletRequest request)
-            throws Exception { 
+             {
            valNetValueConfirm003Service.deleteFile(request);
     }
 }

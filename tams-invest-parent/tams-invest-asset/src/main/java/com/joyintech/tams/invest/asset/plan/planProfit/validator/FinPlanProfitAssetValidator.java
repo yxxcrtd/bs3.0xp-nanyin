@@ -17,11 +17,20 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.plan.planProfit.dto.FinPlanProfitAssetDto;
 import com.joyintech.tams.invest.asset.plan.planProfit.service.FinPlanProfitAssetService;
-import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class FinPlanProfitAssetValidator implements BeanValidator {
@@ -41,7 +50,7 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 	private FinProductMapper finProductMapper;
 
 	@Autowired
-	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+	private ChbDataCheckService chbDataCheckService;
 	@Autowired
 	private IPlatformDate iPlatformDate;
 
@@ -127,7 +136,7 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 			}
         }
 		if (StringUtil.equals(dto.getOperateType(), "delete")) {
-			if (dto.getSelectedItem() != null || dto.getSelectedItem().size() > 0) {
+			if (dto.getSelectedItem() != null && dto.getSelectedItem().size() > 0) {
 				for(FinPlanProfitAssetDto dto1:dto.getSelectedItem()) {
 					if (commonBusinessService.isTransInAsset(dto1.getFinprodId())>0){
 						errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0043")));
@@ -169,7 +178,7 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 		}
 
 		if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-			errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, dto.getRepAssetType(), ValidMessage.class);
+			errorList = chbDataCheckService.chbCheckCommon(errorList, value, null, dto.getRepAssetType());
 		}
 
 		return errorList;

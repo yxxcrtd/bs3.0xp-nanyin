@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -189,12 +190,11 @@ public class FinProductBuild001Controller extends BaseController {
      * @param dto 费用品种
      * @param result result
      * @return 删除结果
-     * @throws Exception Exception
+     * @throws WorkFlowException
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody FinProductBuild001Dto dto, BindingResult result)
-        throws Exception {
+    public AjaxResult delete(@RequestBody FinProductBuild001Dto dto, BindingResult result) throws WorkFlowException {
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -233,7 +233,6 @@ public class FinProductBuild001Controller extends BaseController {
      * 画面查詢方法
      * 
      * @return 所有數據
-     * @throws Exception 異常
      */
     @ResponseBody
     @RequestMapping("selectForPage")
@@ -245,14 +244,12 @@ public class FinProductBuild001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finProductBuild001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

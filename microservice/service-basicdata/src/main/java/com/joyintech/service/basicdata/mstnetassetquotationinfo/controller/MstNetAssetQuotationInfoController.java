@@ -66,7 +66,8 @@ public class MstNetAssetQuotationInfoController{
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<MstNetAssetQuotationInfo001Dto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+    public Page<MstNetAssetQuotationInfo001Dto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return mstNetAssetQuotationInfo001Service.selectForPage(page,length,pageParam);
     }
     /**
@@ -131,7 +132,8 @@ public class MstNetAssetQuotationInfoController{
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody MstNetAssetQuotationInfo001Dto dto) throws Exception {
+    public int delete(@RequestBody MstNetAssetQuotationInfo001Dto dto)
+    {
         return mstNetAssetQuotationInfo001Service.delete(dto);
     }
 
@@ -149,7 +151,8 @@ public class MstNetAssetQuotationInfoController{
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody MstNetAssetQuotationInfo001Dto dto) throws Exception {
+    public int insert(@RequestBody MstNetAssetQuotationInfo001Dto dto)
+    {
         return mstNetAssetQuotationInfo001Service.insert(dto);
     }
 
@@ -167,7 +170,8 @@ public class MstNetAssetQuotationInfoController{
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody MstNetAssetQuotationInfo001Dto dto) throws Exception {
+    public int update(@RequestBody MstNetAssetQuotationInfo001Dto dto)
+    {
         return mstNetAssetQuotationInfo001Service.update(dto);
     }
     /**

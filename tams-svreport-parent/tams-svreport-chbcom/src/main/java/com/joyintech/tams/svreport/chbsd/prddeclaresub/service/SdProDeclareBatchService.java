@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chbsd.prddeclaresub.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,7 +60,7 @@ public class SdProDeclareBatchService {
 	@Autowired
 	private PerProDeclareReg001Service perProDeclareReg001Service;
 	
-	public void sendDeclareInfoMsg(Date batchDate, List<String> prodIdList) throws Exception {
+	public void sendDeclareInfoMsg(Date batchDate, List<String> prodIdList) throws InvocationTargetException, IllegalAccessException {
 	
 			logger.debug("产品申报信息登记未报送数据检索开始------" + df.format(new Date()));
 			// 1、报送数据检索,取得 List
@@ -293,7 +294,7 @@ public class SdProDeclareBatchService {
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbPrdDeclareSubDto> dataList, SendDataCheckType sendDataCheckType) throws Exception{
+	public void sendBatchCommon(List<ChbPrdDeclareSubDto> dataList, SendDataCheckType sendDataCheckType) {
 		//获取单批次发送条目数
 		int dataCountPerTime = Integer.valueOf(
 				CacheUtil.getSysParam(ReportGlobalConstant.SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST));

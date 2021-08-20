@@ -80,8 +80,7 @@ public class CashFlowsStatement001Controller  extends BaseController {
     private BooksetCommonService booksetCommonService;
 
     @PostMapping("/findPage")
-    public List<CashFlowsStatement001Dto> selectCashFlowsStatement(@RequestBody Map<String, Object> pageParam)
-        throws Exception {
+    public List<CashFlowsStatement001Dto> selectCashFlowsStatement(@RequestBody Map<String, Object> pageParam) throws ParseException {
         return cashFlowsStatement001Service.selectList(pageParam);
     }
     
@@ -96,7 +95,7 @@ public class CashFlowsStatement001Controller  extends BaseController {
     @ResponseBody
     @PostMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2()
-        throws Exception {
+    {
         String param = super.getRequest().getParameter("param");
         return valAssetBook001Service.getBooksetId2(param);
     }
@@ -155,7 +154,7 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * @throws Exception
      */
     @PostMapping("/getTradeMarket")
-    public List<SelectOptionDto> getTradeMarket(Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> getTradeMarket(Map<String, Object> param) {
         String reportTermType = (String) param.get("reportTermType");
 
         param.put("dict_code_parent", DictCode.报表期限类型.getValue());

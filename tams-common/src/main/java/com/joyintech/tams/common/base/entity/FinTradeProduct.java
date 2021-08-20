@@ -232,7 +232,10 @@ public class FinTradeProduct extends FinTradeProductKey {
      * 持有目的 HOLD_PURPOSE 中债新增 20200409
      */
     private String holdPurpose;
-
+    /**
+     * 数据来源
+     */
+     private  String dataSource;
     /**
      * 取得 ????????????????????????
      * @return ????????????????????????
@@ -922,4 +925,12 @@ public class FinTradeProduct extends FinTradeProductKey {
 	public void setHoldPurpose(String holdPurpose) {
 		this.holdPurpose = holdPurpose;
 	}
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
 }

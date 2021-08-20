@@ -10,6 +10,7 @@
 
 package com.joyintech.service.valuation.financemanage.balancecheck.unfairlendingquery.service;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -76,9 +77,9 @@ public class ValUnfairlendingQuery001Service extends CommonExportService<ValUnfa
 	 * @param params
 	 *            筛选条件
 	 * @return 表格信息
-	 * @throws Exception
+	 * @throws ParseException
 	 */
-	public Page<ValUnfairlendingQuery001Dto> findPage(int page, int length, Map<String, Object> params) throws Exception {
+	public Page<ValUnfairlendingQuery001Dto> findPage(int page, int length, Map<String, Object> params) throws ParseException {
 		ValUnfairlendingQuery001Dto dto = new ValUnfairlendingQuery001Dto();
 		// 账套代码
 		String booksetId = (String) params.get("booksetId");

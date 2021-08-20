@@ -47,6 +47,8 @@ import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +59,10 @@ import java.util.stream.Collectors;
 @Service
 public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoTrade002Dto>
 		implements BaseProcessService<TrdOutRightRepoTrade002Dto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(TrdOutRightRepoTrade002Service.class);
 
 	/**
 	 * {@linkplain}
@@ -1833,7 +1839,7 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 			trdOutRightRepoTrade002Dto = (TrdOutRightRepoTrade002Dto) JsonUtils.map2entity(param,
 					TrdOutRightRepoTrade002Dto.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		List<FinCashPlan> list = getFinCashPlanForRepoRate(param);
 		if (trdOutRightRepoTrade002Dto.getmSettleAmt() != null && trdOutRightRepoTrade002Dto.getfSettleAmt() != null) {

@@ -15,6 +15,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -111,6 +113,25 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 		dealResult(page);
 		return page;
 		
+	}
+
+
+	/**
+	 * 人行产品代码下拉框初始值
+	 * @param param
+	 *
+	 * @return 人行产品代码下拉框初始值
+	 */
+	public List<SelectOptionDto> getPbcProdId(Map<String, Object> param) {
+		List<PbcPrdBaseinfoSub> bcPrdBaseinfoSubList = pbcPrdBaseinfoSubMapper.queryAllPbcPrdBaseInfo(param);
+		List<SelectOptionDto> resultList = new ArrayList<>();
+		for (PbcPrdBaseinfoSub pbcPrdBaseinfoSub : bcPrdBaseinfoSubList) {
+			SelectOptionDto resultDto = new SelectOptionDto();
+			resultDto.setId(pbcPrdBaseinfoSub.getPbcProdId());
+			resultDto.setText(pbcPrdBaseinfoSub.getProdName());
+			resultList.add(resultDto);
+		}
+		return resultList;
 	}
 	/**
 	 * 查询结果处理
@@ -433,7 +454,6 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 			try {
 				infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcPrdBaseinfoSub.class);
 			} catch (IOException e) {
-				e.printStackTrace();
 				logger.debug("数据转换异常",e.getMessage(),e);
 				return ;
 			}

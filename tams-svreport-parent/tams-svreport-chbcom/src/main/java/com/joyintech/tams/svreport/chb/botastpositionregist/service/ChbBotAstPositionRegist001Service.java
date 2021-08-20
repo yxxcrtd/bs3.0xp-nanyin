@@ -174,7 +174,6 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 						ChbBotAstPositionRegist001Dto.class);
 				pageParam.put("botAstPosList", botAstPosList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {

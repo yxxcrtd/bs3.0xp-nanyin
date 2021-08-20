@@ -181,7 +181,6 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 						ProdPersonIssue001Dto.class);
 				param.put("prodpersonissueList", prodpersonissueList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else{
@@ -622,7 +621,6 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 						ProdPersonIssue001Dto.class);
 				pageParam.put("investList", investList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {

@@ -5,6 +5,7 @@ package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.c
 
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -102,8 +103,7 @@ public class CeAssetGroupManagement001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody  CeAssetGroupManagement001Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult delete(@RequestBody  CeAssetGroupManagement001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -139,7 +139,7 @@ public class CeAssetGroupManagement001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return ceAssetGroupManagement001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

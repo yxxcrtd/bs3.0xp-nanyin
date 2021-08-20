@@ -121,7 +121,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getLoanCounties")
-    public Page<SelectOptionDto> getLoanCounties() throws Exception {
+    public Page<SelectOptionDto> getLoanCounties() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_市.getValue());
         param.put("item_code_child", param.get("loanContractOrgCity"));
@@ -136,7 +136,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getBorrowerCounties")
-    public Page<SelectOptionDto> getBorrowerCounties() throws Exception {
+    public Page<SelectOptionDto> getBorrowerCounties() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_市.getValue());
         param.put("item_code_child", param.get("borrowerCity"));
@@ -151,7 +151,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getBorrowerCities")
-    public Page<SelectOptionDto> getBorrowerCities() throws Exception {
+    public Page<SelectOptionDto> getBorrowerCities() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_省.getValue());
         param.put("item_code_child", param.get("borrowerProvince"));
@@ -166,7 +166,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getLoanCities")
-    public Page<SelectOptionDto> getLoanCities() throws Exception {
+    public Page<SelectOptionDto> getLoanCities() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_省.getValue());
         param.put("item_code_child", param.get("loanContractOrgProvince"));

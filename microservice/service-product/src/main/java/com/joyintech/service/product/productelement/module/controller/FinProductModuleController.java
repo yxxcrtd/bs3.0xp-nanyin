@@ -129,7 +129,7 @@ public class FinProductModuleController {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<FinProductModuleInfoDto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return finProductModuleService.selectForPage(page, length, param);
     }
     
@@ -160,7 +160,7 @@ public class FinProductModuleController {
 	@Transactional
 	@DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody FinProductBmQuotationDto dto) throws Exception {
+    public int delete(@RequestBody FinProductBmQuotationDto dto) {
         return finProductModuleService.delete(dto);
     }
 	

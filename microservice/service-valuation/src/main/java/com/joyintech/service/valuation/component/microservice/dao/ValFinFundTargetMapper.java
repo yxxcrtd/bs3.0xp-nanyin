@@ -3,7 +3,9 @@ package com.joyintech.service.valuation.component.microservice.dao;
 import java.util.Map;
 
 import com.joyintech.service.valuation.component.microservice.dto.ValBussFinIntPayDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ValFinFundTargetMapper {
 	
 	/**

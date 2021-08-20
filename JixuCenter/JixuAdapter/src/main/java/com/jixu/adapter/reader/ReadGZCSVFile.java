@@ -1,9 +1,6 @@
 package com.jixu.adapter.reader;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -40,7 +37,7 @@ public class ReadGZCSVFile extends ReadFileBasic {
 		return InterfaceConfig.gzcsv;
 	}
 
-	public DataReadResult readFileDataResult(InterfaceSource source, DataCounter dataCounter) throws Exception {
+	public DataReadResult readFileDataResult(InterfaceSource source, DataCounter dataCounter) throws IOException {
 		List<String> filePaths = getReadFiles(source);
 		DataReadResult result = new DataReadResult();
 		if(result.getFilePathList().size()==0){
@@ -50,8 +47,9 @@ public class ReadGZCSVFile extends ReadFileBasic {
 		BufferedReader buf = null;
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		for (String filepath : filePaths) {
+			FileInputStream fis = null;
 			try {
-				FileInputStream fis=new FileInputStream(new SafelyFile(filepath));
+				fis = new FileInputStream(new SafelyFile(filepath));
 //				if(fis.available()>52428800){
 //					throw(new InterfaceException("暂时不支持大于50M的文件读取: " + fis.available()));
 //				}
@@ -125,6 +123,10 @@ public class ReadGZCSVFile extends ReadFileBasic {
 						logger.error("Error", e);
 					}
 				}
+				if(fis != null){
+					fis.close();
+				}
+
 			}
 		}
 

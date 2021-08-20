@@ -8,16 +8,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.prebatchcheck.assetmarketdata.dao.AssetMarketDataMapper;
 import com.joyintech.tams.invest.batch.prebatchcheck.assetmarketdata.dto.AssetMarketDataResultDto;
@@ -37,7 +37,7 @@ import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
  * 创建日期：2021-05-13
  */
 @Service
-public class AssetMarketDataService extends BaseService{
+public class AssetMarketDataService extends BaseService {
     @Autowired
     private PrebatchCheckCommonService prebatchCheckCommonService;
     
@@ -70,7 +70,7 @@ public class AssetMarketDataService extends BaseService{
         Iterator<AssetMarketDataResultDto> detailIterator = details.iterator();
         String happenDateStr = DateUtil.format(dto.getCheckDate());
         while(detailIterator.hasNext()) {
-        	String urlHead = "http://127.0.0.1:"+serverPort;
+//        	String urlHead = "http://127.0.0.1:"+serverPort;
         	AssetMarketDataResultDto resultDto = detailIterator.next();
         	//2.1 股票和计划类净值型资产可以直接访问finProductCommonBatchService
         	if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_股票.getValue())) {

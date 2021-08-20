@@ -59,7 +59,7 @@ public class CurrentDeposit002Controller extends BaseController{
      * @since 1.0
      */
     @PostMapping("/findPage")
-    public List<CurrentDepositDto> findPage(@RequestBody Map<String, Object> param)  throws Exception {
+    public List<CurrentDepositDto> findPage(@RequestBody Map<String, Object> param) {
         String tradeId= (String) param.get("tradeId");
         return currentDeposit001Service.selectByTradeId4(tradeId);
     }
@@ -73,7 +73,7 @@ public class CurrentDeposit002Controller extends BaseController{
      */
     @RequestMapping("/findPage2")
     @ResponseBody
-    public List<CurrentDepositDto> findPage2(@RequestBody Map<String, Object> param)  throws Exception {
+    public List<CurrentDepositDto> findPage2(@RequestBody Map<String, Object> param) {
         String tradeId= (String) param.get("tradeId");
         return currentDeposit001Service.selectByTradeId2(tradeId);
     }

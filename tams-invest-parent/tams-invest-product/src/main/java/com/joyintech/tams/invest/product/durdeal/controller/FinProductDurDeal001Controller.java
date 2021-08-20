@@ -103,8 +103,7 @@ public class FinProductDurDeal001Controller extends BaseController {
      */
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
-    public Page<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param)
-            throws Exception {
+    public Page<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param){
         return finProductDurDeal001Service.queryProdIdInfo(param);
     }
 
@@ -118,7 +117,7 @@ public class FinProductDurDeal001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<FinProductDurDeal001Dto> findPage() throws Exception {
+    public Page<FinProductDurDeal001Dto> findPage() {
         return finProductDurDeal001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -131,8 +130,7 @@ public class FinProductDurDeal001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         String tableId = this.getParam("tableId");
         String fileName = "";
         if(StringUtil.equals(tableId,"dataTable")){
@@ -161,11 +159,10 @@ public class FinProductDurDeal001Controller extends BaseController {
     /**
      * 查询交易明细数据
      * @return
-     * @throws Exception
      */
     @RequestMapping("findDetailPage")
     @ResponseBody
-    public Page<FinProductDurDeal001Dto> findDetailPage() throws Exception {
+    public Page<FinProductDurDeal001Dto> findDetailPage() {
     	return finProductDurDeal001Service.findDetailPage(RequestUtil.getPageParam());
     }
 

@@ -66,7 +66,7 @@ public class ExchangeImpMainService extends AutoSendCBBaseService{
 			}
 		} catch (Exception e) {
 			logger.error("汇率信息接口Error",e);
-			throw e;
+			throw new BusinessException(e);
 		}
 		logInfoBatchEnd();
 		return mapPara;

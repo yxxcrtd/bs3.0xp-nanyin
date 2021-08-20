@@ -10,6 +10,8 @@
 
 package com.joyintech.service.interf.i291002.dao;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.tams.common.base.entity.InterfNetProdBuyDraw;
 
 /**
@@ -20,6 +22,7 @@ import com.joyintech.tams.common.base.entity.InterfNetProdBuyDraw;
  * @see Interf291002Mapper
  * @since 1.0
  */
+@Repository
 public interface Interf291002Mapper {
 
     /**

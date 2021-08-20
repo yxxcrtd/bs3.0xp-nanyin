@@ -26,7 +26,9 @@ import com.joyintech.framework.util.*;
 import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessCounterDetailsDto;
 import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import net.sf.jxls.exception.ParsePropertyException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -81,7 +83,7 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 	 * @return ResponseEntity<byte[]> 返回类型   
 	 * @throws  
 	 */  
-	public ResponseEntity<byte[]> export(Map<String, Object> pageParam) throws Exception {
+	public ResponseEntity<byte[]> export(Map<String, Object> pageParam) throws IOException {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> data = restTemplate.postForObject(ServiceApplication.REPORT_SERVICE_NAME + "/InvestmentsInfo/createData",
 				pageParam, Map.class);
@@ -123,9 +125,11 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 
 
 		//表３附表单元格合并
-		InputStream inputStream = new FileInputStream(table3AddFile);
-		POIFSFileSystem fs = new POIFSFileSystem(inputStream);
-		Workbook wb = new HSSFWorkbook(fs);
+		InputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(table3AddFile);
+			POIFSFileSystem fs = new POIFSFileSystem(inputStream);
+			Workbook wb = new HSSFWorkbook(fs);
 			Sheet sheet = wb.getSheetAt(0);
 			int index1 = 3;
 			int index2 = index1+listLocal.size()-1;
@@ -143,37 +147,43 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 				sheet.getRow(index4).getCell(j).
 						setCellStyle(sheet.getRow(0).getCell(0).getCellStyle());
 			}
-		wb.write(new FileOutputStream(table3AddFile));
+			wb.write(new FileOutputStream(table3AddFile));
 
-		sourceFiles.add(table3AddFile);
+			sourceFiles.add(table3AddFile);
 
-		// 如果生成excel文件个数大于1，生成压缩文件
-		File outFile = null;
-		String exportFilePath = SvrDataUtil.getSysParam(com.joyintech.framework.constant.GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+			// 如果生成excel文件个数大于1，生成压缩文件
+			File outFile = null;
+			String exportFilePath = SvrDataUtil.getSysParam(com.joyintech.framework.constant.GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 
-		String zipFileName = "表内外投资业务情况统计表"+"_"+exportYear+"年" +exportQuarter+ "月"+".zip";
-		outFile = new File(exportFilePath + File.separator + zipFileName);
-		// 导出路径不存在则重新生成
-		if (!outFile.getParentFile().exists()) {
-			outFile.getParentFile().mkdirs();
-		}
-		try {
-			ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
-		}
-		catch (Exception e) {
-			// 压缩文件失败后，删除所有临时文件
-			for (File file : sourceFiles) {
-				if (file.exists()) {
-					file.delete();
-				}
+			String zipFileName = "表内外投资业务情况统计表"+"_"+exportYear+"年" +exportQuarter+ "月"+".zip";
+			outFile = new File(exportFilePath + File.separator + zipFileName);
+			// 导出路径不存在则重新生成
+			if (!outFile.getParentFile().exists()) {
+				outFile.getParentFile().mkdirs();
 			}
-			logger.error(e.getMessage(),e);
+			try {
+				ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+			}
+			catch (Exception e) {
+				// 压缩文件失败后，删除所有临时文件
+				for (File file : sourceFiles) {
+					if (file.exists()) {
+						file.delete();
+					}
+				}
+				logger.error(e.getMessage(),e);
+			}
+			//删掉xls文件
+			for(File single : sourceFiles){
+				single.delete();
+			}
+			return ExportUtil.export(zipFileName, outFile, true);
+		}finally {
+			if (inputStream != null){
+				inputStream.close();
+			}
 		}
-		//删掉xls文件
-		for(File single : sourceFiles){
-			single.delete();
-		}
-		return ExportUtil.export(zipFileName, outFile, true);
+
 
 	}
 	/**  
@@ -244,11 +254,12 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 //	
 //	}
 	
-	public File createFile(Map<String,Object> data,String exceltemplate){
+	public File createFile(Map<String,Object> data,String exceltemplate) throws IOException, InvalidFormatException {
 //		String termname = data.get("termname").toString();
 	    String flieName = exceltemplate+".xls";
 	    File depositfile = null;
 	    FileOutputStream fos=null;
+		InputStream fis = null;
 		try{		
 			
 		// 关联模板
@@ -271,7 +282,7 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 		File srcFile = new File(template);
 		// 目标文件
 		File destFile = new File(temp);
-		InputStream fis = null;
+
 		if (srcFile.exists()) {
 			fis = new FileInputStream(srcFile);
 		} else {
@@ -288,17 +299,30 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 			fos.flush();
 		}
 		transformer.transformXLS(temp, data, depositfilePath + File.separator +flieName);
-	    }catch(Exception e){
+	    }catch(ParsePropertyException e){
 	    	logger.info(exceltemplate+"生成失败！");
-	    	throw new RuntimeException(e);
-	    }finally{
+	    	throw new ParsePropertyException(e.getMessage());
+	    }catch (IOException e){
+			logger.info(exceltemplate+"生成失败！");
+			throw new IOException(e.getMessage());
+		}catch (InvalidFormatException e){
+			logger.info(exceltemplate+"生成失败！");
+			throw new InvalidFormatException(e.getMessage());
+		}finally{
 	    	if(fos !=null){
 	    		try {
 					fos.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 	    	}
+	    	if(fis !=null){
+				try {
+					fis.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
 	    }
 		 return depositfile;
 	}

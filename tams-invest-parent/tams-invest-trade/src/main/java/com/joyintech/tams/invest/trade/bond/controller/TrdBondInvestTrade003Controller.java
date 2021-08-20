@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.trade.bond.controller;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeCSTPDto;
 import com.joyintech.tams.invest.trade.bond.validator.TrdBondInvestTradeDtoValidator;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -508,8 +511,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto) throws InvocationTargetException, IllegalAccessException, WorkFlowException, IOException, InstantiationException {
     	List<TrdBondInvestTradeDto> dtoList = new ArrayList<>();
     	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();//组合分配
     	List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();//划款指令

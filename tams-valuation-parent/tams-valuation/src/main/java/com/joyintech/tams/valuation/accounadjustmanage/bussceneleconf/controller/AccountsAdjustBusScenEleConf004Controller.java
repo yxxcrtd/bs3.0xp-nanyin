@@ -105,7 +105,7 @@ public class AccountsAdjustBusScenEleConf004Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public boolean save() throws Exception {
+    public boolean save()  {
     	String datas = this.getParam("datas");
     	AccountsAdjustBusScenEleConf002Dto dto = JsonUtils.json2Object(datas, AccountsAdjustBusScenEleConf002Dto.class);
     	dto.setStatus("E");

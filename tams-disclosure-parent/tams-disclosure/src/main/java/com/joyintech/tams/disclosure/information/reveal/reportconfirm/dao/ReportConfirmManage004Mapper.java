@@ -1,7 +1,10 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.Map;
 
+@Repository
 public interface ReportConfirmManage004Mapper {
 	/**
      * 

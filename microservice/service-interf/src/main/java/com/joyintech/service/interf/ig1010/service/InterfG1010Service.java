@@ -35,7 +35,7 @@ public class InterfG1010Service extends SendEsbService<InterfG1010InEntity, Inte
      */
     @Override
     public InterfG1010InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         TradeClearDto dto = (TradeClearDto)param;
         // 取得参数
         String oldtranseqno = dto.getOrderOrTradeNo();
@@ -52,7 +52,7 @@ public class InterfG1010Service extends SendEsbService<InterfG1010InEntity, Inte
      */
     @Override
     public int saveInterfData(InterfG1010InEntity entity)
-        throws Exception {
+    {
         // 无需登录接口表
         return 0;
     }
@@ -62,7 +62,7 @@ public class InterfG1010Service extends SendEsbService<InterfG1010InEntity, Inte
      */
     @Override
     public int saveBusinessData(InterfG1010InEntity entity)
-        throws Exception {
+    {
         // 无需登录业务表
         return 0;
     }

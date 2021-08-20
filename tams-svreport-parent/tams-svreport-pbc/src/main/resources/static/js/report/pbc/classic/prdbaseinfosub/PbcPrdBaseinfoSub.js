@@ -41,10 +41,11 @@ $(function(){
 				{ title: "报送截止日", field: 'pbcSubmitDeadline',width:150, type:'datetime',sortField:'pbcSubmitDeadline'},
 				{ title: "反馈状态", field: 'submitFeedbackStatusStr',width:150,sortField:'submitFeedbackStatus'},
 				{ field: 'pbcProdId',visible:false},
+				{field: 'pbcPoolCode', visible: false},
 //				{ title: "产品代码(内部)", field: 'pbcProdIdShow',width:150,sortField:''},
 //				{ title: "产品代码(外部)", field: 'pbcCode',width:150,sortField:''},
 				{ title: "产品代码", field: 'pbcProdIdShow',width:150,sortField:'pbcProdIdShow'},
-				{ title: "反馈产品代码", field: 'pbcCode',width:150,sortField:'pbcCode'},
+				{ title: "反馈产品代码", field: 'pbcCode',width:150,sortField:'pbcCode' ,visible: false},
 				{ title: "发起机构代码", field: 'issuePartyId',width:150,sortField:'issuePartyId'},
 				{ title: "发起机构名称", field: 'issuePartyName',width:150,sortField:'issuePartyName'},
 				{ title: "产品种类", field: 'pbcProdType',width:150,sortField:'pbcProdType'},
@@ -184,7 +185,7 @@ $(function(){
     $('#PbcPrdBaseinfoSub_btn_manual').click(function(){
         var rows = table.getAllCheckedRows();
         if(rows.length === 0) {
-//            return Joyin.error("请至少选择一条记录");
+           return Joyin.error("请至少选择一条记录");
         	//add by liubin
         	var sendStatus = $("#sendStatus").val();
         	var submitFeedbackStatus = $("#submitFeedbackStatus").val();
@@ -209,6 +210,11 @@ $(function(){
                   Joyin.error("只能选择报送状态为未报送的数据，或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理，请重新选择！");
                   return;
               }
+
+				if(rows[i].pbcPoolCode==null||rows[i].pbcPoolCode==''){
+					Joyin.error("请先维护人行产品代码后，再进行手工处理。");
+					return;
+				}
           }
         	var paramObj= {};
         	paramObj.flag = '01';
@@ -277,7 +283,6 @@ $(function(){
     
     // 导出人行Excel按钮
     $('#PbcPrdBaseinfoSub_btn_chbexportxls').click(function(){
-    	debugger;
     	var expArr=table.getAllCheckedRows();
     	if(expArr != null && expArr.length >0){
     		Joyin.confirm('确认导出选中信息？',function(){
@@ -296,7 +301,6 @@ $(function(){
      * flag:0 全部导出
      */
      var downloadExcel = function(flag) {
-		debugger;
 		var expArr = table.getAllCheckedRows();
 		var expArr1 = table.getAllCheckedRows();
 		var param = {};
@@ -365,8 +369,6 @@ $(function(){
 							
 						}
 					}
-				
-				debugger;
 				if (count == 0){
 					var infoList = [];
 					param.infoList = JSON.stringify(expArr1);

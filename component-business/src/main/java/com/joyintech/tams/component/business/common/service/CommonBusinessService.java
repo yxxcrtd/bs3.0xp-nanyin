@@ -486,7 +486,7 @@ public class CommonBusinessService extends BaseService {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         boolean 是否需要上级审批 = !DictCodeList.授权类型_无限授权.getValue().equals(authorizeLimitAmt.get("AUTHORIZE_TYPE"));
         //
@@ -504,7 +504,7 @@ public class CommonBusinessService extends BaseService {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return variables;
     }
@@ -1119,7 +1119,7 @@ public class CommonBusinessService extends BaseService {
     * @since 1.0
     */
    public List<FinCashResetPlan> calFinCashResetPlanList(FinCashResetRuleDto finCashResetRuleDto,
-		   List<FinCashPlanDto> scheList,List<String> holidayList) throws Exception{
+		   List<FinCashPlanDto> scheList,List<String> holidayList) {
 	   // 重置计划列表
 	   List<FinCashResetPlan> finCashResetPlanList = new ArrayList<FinCashResetPlan>();
 	   // 频率值
@@ -1315,7 +1315,7 @@ public class CommonBusinessService extends BaseService {
      * @since 1.0
      */
     public String getNextLastWorkDay(Map<String, Object> parameters)
-        throws Exception {
+    {
         if (dateCalService != null) {
             String lastDay = (String)parameters.get("lastDay");
             Date lastday = DateUtil.parse(lastDay);

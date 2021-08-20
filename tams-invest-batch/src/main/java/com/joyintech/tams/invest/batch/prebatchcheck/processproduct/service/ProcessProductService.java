@@ -8,7 +8,6 @@
 package com.joyintech.tams.invest.batch.prebatchcheck.processproduct.service;
 
 
-import com.jixu.framework.msg.UUIDGenerator;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.IDGenerator;

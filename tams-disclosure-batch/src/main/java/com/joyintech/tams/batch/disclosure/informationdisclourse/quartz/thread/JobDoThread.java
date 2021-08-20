@@ -89,7 +89,7 @@ public class JobDoThread implements Runnable{
     }
     
     //作业执行job任务
-    public synchronized void doJob() throws Exception{
+    public synchronized void doJob() {
         
         if(jobList.isEmpty()){
             return;

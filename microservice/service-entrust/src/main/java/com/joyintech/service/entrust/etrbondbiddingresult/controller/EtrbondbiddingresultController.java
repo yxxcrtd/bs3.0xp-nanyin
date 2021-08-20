@@ -33,7 +33,7 @@ public class EtrbondbiddingresultController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<EtrbondbiddingresultDto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page,
                                                        @PathVariable("length") int length)
-        throws Exception {
+    {
         return etrbondbiddingresultService.selectForPage(page, length, pageParam);
     }
 

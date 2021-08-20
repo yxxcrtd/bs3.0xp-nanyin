@@ -39,7 +39,7 @@ public class ValProductAssetsQuery001Service extends CommonExportService<ValProd
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValProductAssetsQuery001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ValProductAssetsQuery001Dto> findPage(Map<String, Object> params) {
 //        return super.queryForPage(()-> this.queryPageList(params));
     	return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValProductAssetsQuery001/findPage",

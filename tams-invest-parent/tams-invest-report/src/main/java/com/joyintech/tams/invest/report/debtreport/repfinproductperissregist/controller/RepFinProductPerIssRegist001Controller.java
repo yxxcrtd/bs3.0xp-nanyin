@@ -66,7 +66,7 @@ public class RepFinProductPerIssRegist001Controller extends BaseController{
      @ResponseBody
      @RequestMapping("findPage")
      public Page<RepFinProductPerIssRegistDto> selectAll()
-         throws Exception {
+     {
          return repFinProductPerIssRegistService.selectForPage(
              RequestUtil.getParameters(getRequest()));
      }
@@ -81,7 +81,7 @@ public class RepFinProductPerIssRegist001Controller extends BaseController{
      @ResponseBody
      @RequestMapping("export")
      public ResponseEntity<byte[]> export()
-         throws Exception {
+     {
          return repFinProductPerIssRegistService.export(this.getPageId(),
              RequestUtil.getParameters(getRequest()));
      }

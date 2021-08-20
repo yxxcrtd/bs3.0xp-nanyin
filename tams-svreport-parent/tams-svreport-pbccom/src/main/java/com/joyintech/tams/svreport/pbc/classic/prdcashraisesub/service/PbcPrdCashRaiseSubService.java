@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -562,7 +563,7 @@ public class PbcPrdCashRaiseSubService extends PbcClassicsSubService<PbcProdRais
 	    	} catch(Exception e) {
 	    		logger.error(e.getMessage(),e);
 	    		session.rollback();
-	    		throw e;
+	    		throw new BusinessException(e);
 	    	} finally {
 	    		session.close();
 	    	}

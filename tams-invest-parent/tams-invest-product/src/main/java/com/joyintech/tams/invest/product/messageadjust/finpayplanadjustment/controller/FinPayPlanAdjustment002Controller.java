@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -172,11 +173,11 @@ public class FinPayPlanAdjustment002Controller extends BaseController{
      * @param dto
      * @param br
      * @return
-     * @throws Exception
+     * @throws WorkFlowException
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinPayPlanAdjustment002Dto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody FinPayPlanAdjustment002Dto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

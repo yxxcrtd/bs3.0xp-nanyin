@@ -29,6 +29,7 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -73,7 +74,7 @@ public class ProductPublishCounting001Controller extends BaseController {
      */
     @RequestMapping("findPrdPage")
     @ResponseBody
-    public Page<ProductPublishCounting001Dto> findPrdPage() throws Exception {
+    public Page<ProductPublishCounting001Dto> findPrdPage() {
     	return productPublishCounting001Service.findPrdPage(RequestUtil.getPageParam());
     }
     /**
@@ -83,7 +84,7 @@ public class ProductPublishCounting001Controller extends BaseController {
      */
     @RequestMapping("findAssetPage")
     @ResponseBody
-    public Page<ProductPublishCounting001Dto> findAssetPage() throws Exception {
+    public Page<ProductPublishCounting001Dto> findAssetPage() {
     	
     	return productPublishCounting001Service.findAssetPage(RequestUtil.getPageParam());
     }
@@ -116,7 +117,7 @@ public class ProductPublishCounting001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) ProductPublishCounting001Dto dto
-    		, BindingResult br) throws Exception{
+    		, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -140,7 +141,7 @@ public class ProductPublishCounting001Controller extends BaseController {
     
     @ResponseBody
     @RequestMapping("/getPrdIssueplanCode")
-    public Page<SelectOptionDto> getPrdIssueplanCode() throws Exception{
+    public Page<SelectOptionDto> getPrdIssueplanCode() {
     	return productPublishCounting001Service.getPrdIssueplanCode(RequestUtil.getPageParam());
     }
     /**
@@ -151,7 +152,7 @@ public class ProductPublishCounting001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
     	return productPublishCounting001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

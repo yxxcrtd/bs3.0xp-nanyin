@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import com.joyintech.tams.valuation.basedata.marketdata.netplanquotation.dto.ValNetPlanQuotation003Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 计划类资产净值信息
@@ -24,6 +25,7 @@ import com.joyintech.tams.valuation.basedata.marketdata.netplanquotation.dto.Val
  * @see ValNetPlanQuotation003Mapper
  * @since 1.0
  */
+@Repository
 public interface ValNetPlanQuotation003Mapper {
 	/**
 	 * 通过资产代码获取资产名称

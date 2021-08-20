@@ -63,7 +63,7 @@ public class ValYieldCurveInfoService extends BaseService<ValYieldCurveInfoDto>{
      * @see
      * @since 1.0
      */
-    public Page<ValYieldCurveInfoDto> selectForPage(int page,int length,Map<String, Object> pageParam) throws Exception {
+    public Page<ValYieldCurveInfoDto> selectForPage(int page,int length,Map<String, Object> pageParam) {
     	pageParam.put("curveIntType", DictCode.曲线利率类型.getValue());
     	return super.queryForPage(page,length,()-> valYieldCurveInfo001Mapper.select(pageParam));
     }

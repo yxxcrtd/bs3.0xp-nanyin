@@ -52,7 +52,7 @@ public class MstExchangeQuotationInfoController {
     @RequestMapping("/selectForPage/{page}/{length}")
     public Page<MstExchangeQuotationInfoDto> selectForPage(@RequestBody Map<String, Object> pageParam,
                                                            @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstExchangeQuotationInfoService.selectForPage(page, length, pageParam);
     }
 

@@ -104,7 +104,7 @@ public class ValVoucherQuery001Service extends CommonExportService<ValVoucherQue
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValVoucherQuery001Dto> findPage(int age,int lenght,ValVoucherQuery001SearchDto dto) throws Exception {
+    public Page<ValVoucherQuery001Dto> findPage(int age,int lenght,ValVoucherQuery001SearchDto dto) {
         dto.setBooksetType(DictCodeList.账套类别_理财账套.getValue());
         dto.setBooksetType2(DictCodeList.账套类别_银行账套.getValue());
         dto.setUserId(LoginUserUtil.getUserName());

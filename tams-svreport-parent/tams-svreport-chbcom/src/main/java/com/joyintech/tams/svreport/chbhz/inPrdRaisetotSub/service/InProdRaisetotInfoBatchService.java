@@ -301,7 +301,7 @@ public class InProdRaisetotInfoBatchService extends FileImpService {
 
 			if (sub.getRaiseEnddate() != null) {
 				List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),
-						DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, sub.getRaiseEnddate());
+						sub.getStatus(), dateMap, sub.getRaiseEnddate());
 				if (!StringUtil.isEmptyList(dateList)) {
 					sub.setChbSubmitDeadline(dateList.get(0));
 					sub.setSubmitDeadline(dateList.get(1));

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -103,23 +104,19 @@ public class FinProductBmQuotationController001 extends BaseController {
     /**
      * 产品代码联想框 
      * @return List List
-     * @throws Exception Exception
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketIdList")
-    public Page<SelectOptionDto> getFinprodMarketIdList()
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodMarketIdList(){
         return finProductBmQuotationService.getFinprodMarketIdList(getParam("search"));
     }
     /**
      * 画面查询方法
      * @return 所有数据
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinProductBmQuotationDto> selectAll()
-        throws Exception {
+    public Page<FinProductBmQuotationDto> selectAll(){
         return finProductBmQuotationService.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -149,8 +146,7 @@ public class FinProductBmQuotationController001 extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) FinProductBmQuotationDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) FinProductBmQuotationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -195,14 +191,12 @@ public class FinProductBmQuotationController001 extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
 
         List<FinProductBmQuotationDto> dtoList = this.finProductBmQuotationService.selectForList(
             RequestUtil.getPageParam());
@@ -227,7 +221,6 @@ public class FinProductBmQuotationController001 extends BaseController {
     }
     /**
      * 获取分层产品产品款型
-	* @param finprodId
 	* @return
 	*/
 	@ResponseBody

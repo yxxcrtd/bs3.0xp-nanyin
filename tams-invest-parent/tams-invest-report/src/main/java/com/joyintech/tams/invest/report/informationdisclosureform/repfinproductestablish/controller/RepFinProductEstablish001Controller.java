@@ -99,7 +99,7 @@ public class RepFinProductEstablish001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepFinProductEstablishDto> selectAll()
-        throws Exception {
+    {
         Page<RepFinProductEstablishDto> page = repFinProductEstablishService.select(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -116,7 +116,7 @@ public class RepFinProductEstablish001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getPortfolioId")
     public List<SelectOptionDto> getPortfolioId()
-        throws Exception {
+    {
         
         return repFinProductEstablishService.getSelectOption(RequestUtil.getParameters(getRequest()));
     }
@@ -164,7 +164,7 @@ public class RepFinProductEstablish001Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return repFinProductEstablishService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

@@ -3826,7 +3826,6 @@ public class ValInterfCommonServiceApi {
      * @param apiTrdCommDto
      * @return
      */
-    @Transactional(value = "jixuTXManager", rollbackFor = Exception.class)
 	public ResultContainer runValInvest2Jixu(ApiTrdCommDto apiTrdCommDto) throws BusinessException{
 
 	    String 子组合前缀 = "ZZH_";

@@ -73,7 +73,7 @@ public class SvrMstCalendarTypeController  {
      *             异常
      */
     @PostMapping("delete")
-    public int delete(@RequestBody SvrMstCalendarType001Dto dto) throws Exception {
+    public int delete(@RequestBody SvrMstCalendarType001Dto dto) {
         return mstCalendarType001Service.delete(dto);
     }
 
@@ -87,7 +87,7 @@ public class SvrMstCalendarTypeController  {
      *             异常
      */
     @PostMapping("insert")
-    public int insert(@RequestBody SvrMstCalendarType001Dto dto) throws Exception {
+    public int insert(@RequestBody SvrMstCalendarType001Dto dto) {
         return mstCalendarType001Service.insert(dto);
     }
 
@@ -101,7 +101,7 @@ public class SvrMstCalendarTypeController  {
      *             异常
      */
     @PostMapping("update")
-    public int update(@RequestBody SvrMstCalendarType001Dto dto) throws Exception {
+    public int update(@RequestBody SvrMstCalendarType001Dto dto) {
         return mstCalendarType001Service.update(dto);
     }
     /**
@@ -115,7 +115,7 @@ public class SvrMstCalendarTypeController  {
      */
     @PostMapping("/getCalendarNameList")
     public List<SuggestDto> getCalendarNameList(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         List<SuggestDto> temp = mstCalendarType001Service.getCalendarNameList(map);
         return temp;
     }
@@ -131,7 +131,7 @@ public class SvrMstCalendarTypeController  {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<SvrMstCalendarType001Dto> selectForPage(@RequestBody Map<String, Object> map,@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstCalendarType001Service.selectForPage(map);
     }
     
@@ -183,7 +183,7 @@ public class SvrMstCalendarTypeController  {
      */
     @PostMapping("/selectCanlendarDetail/{page}/{length}")
     public Page<SvrMstCalendarType001Dto> selectCanlendarDetail(@RequestBody Map<String, Object> map,@PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception{
+    {
         return mstCalendarType001Service.selectCanlendarDetail(map);
     }
     /**

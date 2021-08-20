@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.fileupload.dto.DataFileUpload001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 〈一句话功能简述〉
@@ -23,6 +24,7 @@ import com.joyintech.tams.valuation.fileupload.dto.DataFileUpload001Dto;
  * @see DataFileUpload001Mapper
  * @since 1.0
  */
+@Repository
 public interface DataFileUpload001Mapper {
 
     /**

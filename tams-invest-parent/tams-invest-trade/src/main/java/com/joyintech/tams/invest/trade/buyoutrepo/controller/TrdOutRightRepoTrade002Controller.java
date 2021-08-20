@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.trade.buyoutrepo.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.service.TrdRepoTrade002Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -644,7 +646,7 @@ public class TrdOutRightRepoTrade002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("save")
-	public AjaxResult save(@RequestBody TrdOutRightRepoTrade002Dto dto) throws Exception {
+	public AjaxResult save(@RequestBody TrdOutRightRepoTrade002Dto dto) throws WorkFlowException, IOException, InstantiationException {
 		
 	    
         

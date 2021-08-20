@@ -90,7 +90,7 @@ public class ReportMenuPowerConfig002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save() throws Exception {
+    public AjaxResult save() throws IOException {
         String flag= RequestUtil.getParam("flag");
         String msg = StringUtils.EMPTY;
         if("Y".equals(flag)){

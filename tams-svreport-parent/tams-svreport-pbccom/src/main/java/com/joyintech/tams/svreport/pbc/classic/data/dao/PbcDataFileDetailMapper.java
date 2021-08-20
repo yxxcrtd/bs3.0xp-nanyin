@@ -1,7 +1,9 @@
 package com.joyintech.tams.svreport.pbc.classic.data.dao;
 
 import com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFileDetail;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PbcDataFileDetailMapper {
     int deleteByPrimaryKey(String detailid);
 

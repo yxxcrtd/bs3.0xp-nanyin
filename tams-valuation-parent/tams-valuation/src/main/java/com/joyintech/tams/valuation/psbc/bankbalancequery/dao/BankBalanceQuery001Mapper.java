@@ -16,6 +16,7 @@ import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectwaterque
 import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectwaterquery.dto.ValSubjectWaterQuery001SearchDto;
 import com.joyintech.tams.valuation.psbc.bankbalancequery.dto.BankBalanceQuery001Dto;
 import com.joyintech.tams.valuation.trademanage.finprodtradequery.dao.ValFinprodTradeQuery001Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import java.util.Map;
  * @see ValFinprodTradeQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface BankBalanceQuery001Mapper {
     
     /**

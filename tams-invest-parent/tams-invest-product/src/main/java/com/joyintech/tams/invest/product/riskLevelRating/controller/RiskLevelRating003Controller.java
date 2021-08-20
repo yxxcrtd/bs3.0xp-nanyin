@@ -41,7 +41,7 @@ public class RiskLevelRating003Controller extends BaseController {
                 , DictCode.资产四级分类, DictCode.资产五级分类,DictCode.平安资产类型);
         String finProductCode = this.getParam("finProductCode");
         String generateTime = this.getParam("generateTime");
-        if(generateTime==""||generateTime=="null" ||generateTime==null){
+        if(generateTime==null||generateTime=="null" ||generateTime==""){
             generateTime= DateUtil.getSysDate();
         }
         model.addAttribute("finProductCode",finProductCode);

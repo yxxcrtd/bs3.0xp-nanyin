@@ -16,10 +16,11 @@ import java.util.Map;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.period.trdqueryduration.dto.TrdQueryDurationDto;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SuggestDto;
 
-
+@Repository
 public interface TrdQueryDuration001Mapper {
 	/**
 	 * 流程中的搜索

@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.report.common.calculation.DataSource.MProd.TbThree;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,7 +29,7 @@ public class TbThreeCurrencyDataRepository {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static List<Map<String,Object>> getCurrencyTypeTbThreeDate(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public static List<Map<String,Object>> getCurrencyTypeTbThreeDate(Date startDate, Date endDate, String prodId,Connection conn) throws SQLException {
 		//定义返回值
 		List<Map<String,Object>> list=new ArrayList<>();
 		TargetIndexService service=new TargetIndexService();

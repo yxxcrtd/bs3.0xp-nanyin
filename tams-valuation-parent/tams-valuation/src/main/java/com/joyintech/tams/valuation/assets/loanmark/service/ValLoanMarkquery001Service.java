@@ -47,7 +47,7 @@ public class ValLoanMarkquery001Service extends CommonExportService<ValLoanMarkq
      * @throws Exception
      */
     public Page<ValLoanMarkquery001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+         {
 //        return super.queryForPage(() -> mapper.queryPageList(params));
     	   return restTemplate.postForPage(
                    ServiceApplication.VALUATION_SERVICE_NAME + "/ValLoanMarkquery001/findPage",

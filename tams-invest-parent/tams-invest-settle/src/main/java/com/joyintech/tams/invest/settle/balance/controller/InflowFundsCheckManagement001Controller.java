@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.settle.balance.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,8 +143,7 @@ public class InflowFundsCheckManagement001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         Map<String, Object> searchParams = RequestUtil.getPageParam();
         String fileName = "流入资金核对-托管流水" + "(" + iPlatformDate.getSysDateStr() + ").xls";
         if (searchParams.get("isSys") != null && Boolean.parseBoolean((String)searchParams.get("isSys"))) {

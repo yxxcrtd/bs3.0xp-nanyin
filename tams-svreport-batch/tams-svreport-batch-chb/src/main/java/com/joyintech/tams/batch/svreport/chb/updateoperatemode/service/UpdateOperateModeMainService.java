@@ -1,5 +1,6 @@
 package com.joyintech.tams.batch.svreport.chb.updateoperatemode.service;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class UpdateOperateModeMainService extends AutoSendCBBaseService{
 		} catch (Exception e) {
             logInfo(e.getMessage());
             insertResultLogException(DateUtil.now());
-            throw e;
+            throw new BusinessException(e);
 		}
     }
     

@@ -33,7 +33,7 @@ public class FinProductFeaAnaController {
      */
     @RequestMapping("/selectForPage/{page}/{length}")
     public Page<FinProductFeaAnaDto> selectForPage(@RequestBody Map<String,Object> params,
-        @PathVariable("page") int page, @PathVariable("length") int length)throws Exception{
+        @PathVariable("page") int page, @PathVariable("length") int length) {
         return finProductFeaAnaService.selectForPage(page,length,params);
     }
 

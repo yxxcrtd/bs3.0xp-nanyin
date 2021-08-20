@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.interf.chb.assetinfo.dao;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.tams.common.base.entity.ChbSecRepayInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -153,5 +154,9 @@ public interface ChbAssetInfoInterfMapper {
             @Param("prodList")List<String> prodList);
     void selectChlAssetByInterfdateBatchPsbc(@Param("interfDate")Date interfDate ,
                                          @Param("prodList")List<String> prodList);
-    
+
+    //	删除债券还本付息a表里的数据
+	void deleteAllChbSecRepayInfoData();
+	//插入查询债券的还本付息计划a
+	int insertChbSecRepayInfoData(ChbSecRepayInfo record);
 }

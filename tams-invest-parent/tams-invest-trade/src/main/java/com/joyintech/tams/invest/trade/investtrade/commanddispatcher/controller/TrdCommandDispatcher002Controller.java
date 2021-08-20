@@ -87,7 +87,7 @@ public class TrdCommandDispatcher002Controller extends BaseController{
      */
 	@ResponseBody
 	@RequestMapping("getUsers")
-	public List<SelectOptionDto> getUsers() throws Exception{
+	public List<SelectOptionDto> getUsers() {
 		Map<String,Object> param = RequestUtil.getParameters(getRequest());
 //		String entrustId = super.getRequest().getParameter("entrustId");
 //		String finprodType2s = super.getRequest().getParameter("finprodType2s");

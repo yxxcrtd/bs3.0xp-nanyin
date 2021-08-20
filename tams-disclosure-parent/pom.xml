@@ -6,7 +6,7 @@
 		<artifactId>tams-parent</artifactId>
 		<version>0.0.3</version>
 	</parent>
-	<artifactId>tams-parent-disclosure</artifactId>
+	<artifactId>tams-disclosure-parent</artifactId>
 	<version>3.0.0</version>
 	<packaging>pom</packaging>
 	<modules>
@@ -59,6 +59,12 @@
             <groupId>net.sf.jxls</groupId>
             <artifactId>jxls-core</artifactId>
             <version>1.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.poi</groupId>
+					<artifactId>poi</artifactId>
+				</exclusion>
+			</exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

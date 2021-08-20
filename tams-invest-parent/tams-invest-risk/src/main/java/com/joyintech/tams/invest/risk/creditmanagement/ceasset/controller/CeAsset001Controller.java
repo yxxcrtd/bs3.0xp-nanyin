@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -69,7 +70,7 @@ public class CeAsset001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getFinprodMarketIds")
     public List<SelectOptionDto> getFinprodMarketIds()
-        throws Exception {
+    {
         Map<String, Object> map = new HashMap<String, Object>();
         String param = super.getRequest().getParameter("search");
         map.put("finprodMarketId", param);
@@ -86,7 +87,7 @@ public class CeAsset001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<CreditLinesAstDto> selectAll()
-        throws Exception {
+    {
         return ceAsset001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -114,8 +115,7 @@ public class CeAsset001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) CreditLinesAstDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) CreditLinesAstDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -156,7 +156,7 @@ public class CeAsset001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return ceAsset001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

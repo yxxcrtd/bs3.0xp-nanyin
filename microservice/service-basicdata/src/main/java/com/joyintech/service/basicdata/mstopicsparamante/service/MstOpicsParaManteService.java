@@ -58,7 +58,7 @@ public class MstOpicsParaManteService extends BaseService<MstOpicsParaManteDto> 
      * @since 1.0
      */
     public Page<MstOpicsParaManteDto> selectOpicsParaManteInfo(int page,int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page,length,() -> mstOpicsParaManteMapper.selectOpicsParaManteInfo(pageParam));
     }
 

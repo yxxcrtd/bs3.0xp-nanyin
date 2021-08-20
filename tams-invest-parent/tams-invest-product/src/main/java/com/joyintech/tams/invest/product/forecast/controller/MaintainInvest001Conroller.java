@@ -1,4 +1,5 @@
 package com.joyintech.tams.invest.product.forecast.controller;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class MaintainInvest001Conroller extends BaseController {
 	       
 	    @ResponseBody
 	    @RequestMapping("getTargetName")
-	    public FinFlowForecastConfig getTargetName() throws Exception{
+	    public FinFlowForecastConfig getTargetName() throws ParseException {
 	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
 	        String queryDate = this.getRequest().getParameter("queryDate"); 
 	        FinFlowForecastConfig flowForecastConfig = new FinFlowForecastConfig();
@@ -58,7 +59,7 @@ public class MaintainInvest001Conroller extends BaseController {
 	    }
 	    @ResponseBody
 	    @RequestMapping("findForecast")
-	    public Page<FinFlowForecastConfig> findForecast() throws Exception {
+	    public Page<FinFlowForecastConfig> findForecast() throws ParseException {
 	        Map<String,Object> map = new HashMap<String, Object>();
 	        map.put("queryDate", this.getRequest().getParameter("queryDate"));
 	        map.put("depType", this.getRequest().getParameter("depType"));
@@ -67,8 +68,7 @@ public class MaintainInvest001Conroller extends BaseController {
 	    }
 	    @ResponseBody
 	    @RequestMapping("save")
-	    public AjaxResult save(@RequestBody @Validated FinFlowForecastConfig dto, BindingResult br)
-	        throws Exception {
+	    public AjaxResult save(@RequestBody @Validated FinFlowForecastConfig dto, BindingResult br){
 	        if (br.hasErrors()) {
 	            return new AjaxResult(br);
 	        }

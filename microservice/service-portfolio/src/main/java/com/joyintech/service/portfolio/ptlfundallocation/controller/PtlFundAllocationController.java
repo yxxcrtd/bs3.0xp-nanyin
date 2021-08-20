@@ -137,7 +137,8 @@ public class PtlFundAllocationController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<PtlFundAllocationDto> selectAll(@RequestBody Map<String, Object> param, 
-                                                @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return ptlFundAllocationService.findPage(page,length,param);
     }
     /**

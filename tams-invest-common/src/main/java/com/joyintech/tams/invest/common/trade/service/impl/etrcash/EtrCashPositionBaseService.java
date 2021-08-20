@@ -1,6 +1,8 @@
 package com.joyintech.tams.invest.common.trade.service.impl.etrcash;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 /**
  * @program: 2.1.0
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author: 强成西
  * @create: 2019-10-12 15:34
  **/
+@Service
+@Lazy(false)
 public class EtrCashPositionBaseService {
     /**
      * 共通Service

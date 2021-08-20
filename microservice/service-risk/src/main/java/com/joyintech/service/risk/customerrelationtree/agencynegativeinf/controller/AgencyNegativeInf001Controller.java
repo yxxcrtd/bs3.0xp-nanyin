@@ -44,7 +44,7 @@ public class AgencyNegativeInf001Controller {
     public Page<AgencyNegativeInf001Dto> selectForPage(@RequestBody Map<String, Object> param,
                                                        @PathVariable("page") int page,
                                                        @PathVariable("length") int length)
-            throws Exception {
+    {
         return agencyNegativeInf001Service.queryForPage(page, length, param);
     }
 

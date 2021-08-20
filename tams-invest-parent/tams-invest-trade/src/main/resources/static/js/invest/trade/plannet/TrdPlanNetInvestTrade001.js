@@ -85,6 +85,7 @@
             ,{field:'ps',visible:false}
             ,{field:'psStr', width:100, title: 'TrdPlanNetInvestTrade001.ps',sortField:"PS"}
             ,{field:'tradeDate', width:100, title: 'TrdPlanNetInvestTrade001.tradeDate',type:'date',sortField:"TRADE_DATE"}
+            ,{field:'confirmDate', width:100, title: 'TrdPlanNetInvestTrade002.purCfmDate',type:'date',sortable:false}
             ,{field:'tradeAmt', width:100, title: 'TrdPlanNetInvestTrade001.tradeAmt',sortField:"PRIN_AMT", type: 'money'}
             ,{field:'shareAmt', width:100, title: 'TrdPlanNetInvestTrade001.shareAmt',sortField:"SHARE_AMT"}
             ,{field:'ccy',visible:false}

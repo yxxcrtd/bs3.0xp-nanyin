@@ -1,6 +1,5 @@
 package com.joyintech.tams.invest.period.common.controller;
 
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.CacheUtil;
@@ -13,7 +12,8 @@ import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonServic
 import com.joyintech.tams.invest.common.autoperiod.secover.AutoPeriodSecOverCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
-import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +30,11 @@ import java.util.Map;
 @RequestMapping("/invest/period/common/ChildPortfolioInfo")
 @Controller
 public class ChildPortfolioInfoController extends BaseController{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ChildPortfolioInfoController.class);
+
     /**
      * 存续期共通service
      */
@@ -55,7 +60,7 @@ public class ChildPortfolioInfoController extends BaseController{
         		try {
 					childPortfolioInfo =JsonUtils.json2List((String)map.get("childPortfolioInfo"),FinAssetIntInfo.class);
 				} catch (IOException e) {
-					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
 				}
         	}else{
         		Map<String,Object>orgMap = JsonUtils.json2Object((String)map.get("preMap"),Map.class);
@@ -77,7 +82,7 @@ public class ChildPortfolioInfoController extends BaseController{
         }else{
         	childPortfolioInfo =  commonService.distributeDataByPercent(map);
         }
-        model.addAttribute("childPortfolioInfo", JsonUtil.objToString(childPortfolioInfo));
+        model.addAttribute("childPortfolioInfo", JsonUtils.object2Json(childPortfolioInfo));
         model.addAttribute("portfolioId",map.get("portfolioId"));
         return "invest/period/trdplancurrduration/ChildPortfolioInfo";
     }

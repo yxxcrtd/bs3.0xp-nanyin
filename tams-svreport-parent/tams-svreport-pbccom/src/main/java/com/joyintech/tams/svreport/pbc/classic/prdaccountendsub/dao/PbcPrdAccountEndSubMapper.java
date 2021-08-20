@@ -8,7 +8,9 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.pbc.classic.prdaccountendsub.dto.PbcPrdAccountEndSub;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PbcPrdAccountEndSubMapper {
     int deleteByPrimaryKey(String registSeqno);
 

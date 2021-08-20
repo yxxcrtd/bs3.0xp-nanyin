@@ -53,7 +53,7 @@ public class TrdCommandsCollectionController {
      */
     @RequestMapping("getFinprodMarketIds")
     public List<SuggestDto> selectFinprodMarketIds(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return trdCommandsCollectionService.getFinprodMarketIds(param);
     }
 
@@ -70,7 +70,7 @@ public class TrdCommandsCollectionController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<TrdCommandsCollection001Dto> findPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
     	return trdCommandsCollectionService.selectForPage(page, length, param);
     }
 
@@ -84,7 +84,7 @@ public class TrdCommandsCollectionController {
      */
     @RequestMapping("selectEntrustList")
     public List<TrdCommandsCollection002Dto> selectEntrustList(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return trdCommandsCollectionService.selectEntrustList(param);
     }
 
@@ -97,7 +97,7 @@ public class TrdCommandsCollectionController {
      */
     @RequestMapping("selectPledgeList")
     public List<TrdCommandsCollection003Dto> selectPledgeList(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return trdCommandsCollectionService.selectPledgeList(param);
     }
     

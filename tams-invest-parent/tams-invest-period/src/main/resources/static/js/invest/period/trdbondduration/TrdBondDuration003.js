@@ -379,6 +379,10 @@ var TrdBondDuration003 = function () {
                 Joyin.error("请输入资金到账日。")
                 return;
             }
+            if(!$("#netPrice").val()){
+                Joyin.error("请输入行权净价。")
+                return;
+            }
             if ($('#settleDate').val() < $('#payDate').val()) {
                 Joyin.error("资金到账日不能早于支付日。")
                 return;
@@ -473,6 +477,11 @@ var TrdBondDuration003 = function () {
                 Joyin.error("请输入资金到账日。")
                 return;
             }
+            if(!$("#netPrice").val()){
+                Joyin.error("请输入行权净价。")
+                return;
+            }
+
             if (stlCommandInput != null) {
                 var index = layer.open({
                     type: 1,

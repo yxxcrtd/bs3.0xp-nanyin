@@ -37,7 +37,8 @@ public class ZipFileUtil {
                 LineNumberReader input = new LineNumberReader(ir); 
                 String line = ""; 
                 while((line = input.readLine()) != null){ 
-                    System.out.println(line); 
+//                    System.out.println(line);
+                    logger.info(line);
                 } 
                 return line; 
             } catch (IOException e) { 

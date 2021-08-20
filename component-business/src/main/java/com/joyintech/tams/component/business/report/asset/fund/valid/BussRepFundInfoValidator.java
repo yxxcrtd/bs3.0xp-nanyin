@@ -125,7 +125,7 @@ public class BussRepFundInfoValidator implements BeanValidator{
 //                            getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repTradeMarket"))));
 //                }
                 if(dto.isGovInvest()){
-                    if( "".equals(dto.getRepGovInvestFor()) || null == dto.getRepGovInvestFor()){
+                    if(null == dto.getRepGovInvestFor() ||  "".equals(dto.getRepGovInvestFor())){
                         resultList.add(new ValidMessage("repGovInvestFor",
                                 getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repGovInvestFor"))));
                     }

@@ -43,7 +43,7 @@ public class ValuationMethodScheme00301Service extends BaseService<SelectPageOpt
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.OTHER)
-    public Page<SelectPageOptionDto> getLinkSelectOption(Map<String, Object> param) throws Exception {
+    public Page<SelectPageOptionDto> getLinkSelectOption(Map<String, Object> param) {
 //        return super.queryForPage(()->valuationMethodScheme001Mapper.getLinkSelectPageOption(param));
     	return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValuationMethodScheme003/getLinkSelectOption",

@@ -156,7 +156,14 @@ public class PbcPrdBaseinfoSubService extends PbcClassicsSubService<PbcPrdBasein
 	        	if(pbcProdIdMap.containsKey(sub.getProdId())){
 	        		pbcProdId=pbcProdIdMap.get(sub.getProdId());
 	        	}else{
-	        		pbcProdId=PbcClassicsUtil.getPbcProdId(sub.getIssuePartyId(), sub.getProfitType(), PBC_PROD_BASEINFO_SEQCODE,sub.getRaiseVdate());
+//	        		pbcProdId=PbcClassicsUtil.getPbcProdId(sub.getIssuePartyId(), sub.getProfitType(), PBC_PROD_BASEINFO_SEQCODE,sub.getRaiseVdate());
+					/*** 20210727 leipeng 新人行改造
+					 * 2.2、 调用新的人行内部采番共通											※参考【附件】sheet
+					 * 		getPbcProdIdIns
+					 * 			参数与老逻辑一致的基础上，加一个参数：
+					 * 			采番数量			=	1
+					 * */
+					pbcProdId=PbcClassicsUtil.getPbcProdIdIns(sub.getIssuePartyId(), sub.getProfitType(), PBC_PROD_BASEINFO_SEQCODE,sub.getRaiseVdate(),1);
 	        	}
 	        	sub.setPbcProdId(pbcProdId);
 	        	if(pbcAccountIdMap.containsKey(sub.getProdId())){

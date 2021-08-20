@@ -194,8 +194,7 @@ public class PoiReportModelManage002Service extends CommonExportService<RepInfo>
 		        }
 			}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		//必填項校驗
@@ -243,7 +242,7 @@ public class PoiReportModelManage002Service extends CommonExportService<RepInfo>
 	 * @param request
 	 * @return
 	 */
-	public void removePercent(HttpServletRequest request) throws Exception {
+	public void removePercent(HttpServletRequest request) {
 		progressBarService.removePercent("PoiReportModelManage002", ProgressBarService.FILE_UPLOAD_ID);
 	}
 	/**
@@ -251,7 +250,7 @@ public class PoiReportModelManage002Service extends CommonExportService<RepInfo>
 	 * @param request
 	 * @return
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
 		progressBarService.updatePercent("PoiReportModelManage002", ProgressBarService.FILE_UPLOAD_ID, 1D, false);
 	}
 	/**

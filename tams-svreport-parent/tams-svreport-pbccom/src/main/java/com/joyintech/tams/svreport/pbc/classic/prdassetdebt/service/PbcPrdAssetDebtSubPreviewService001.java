@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,10 @@ import com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class PbcPrdAssetDebtSubPreviewService001 extends BaseService<PbcLoanDetailInfoSub>{
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(PbcPrdAssetDebtSubPreviewService001.class);
 
 	@Autowired
 	private PbcPrdAssetDebtSubPreviewMapper pbcPrdAssetDebtSubPreviewMapper;
@@ -127,7 +133,7 @@ public class PbcPrdAssetDebtSubPreviewService001 extends BaseService<PbcLoanDeta
     		try {
 				listsDK = JsonUtils.json2List(keyList, PbcLoanDetailInfoSub.class);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 				return null;
 			}
     	}else{
@@ -150,7 +156,7 @@ public class PbcPrdAssetDebtSubPreviewService001 extends BaseService<PbcLoanDeta
     		try {
     			listsXT = JsonUtils.json2List(keyList, PbcLoanDetailInfoSub.class);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 				return null;
 			}
     	}else{

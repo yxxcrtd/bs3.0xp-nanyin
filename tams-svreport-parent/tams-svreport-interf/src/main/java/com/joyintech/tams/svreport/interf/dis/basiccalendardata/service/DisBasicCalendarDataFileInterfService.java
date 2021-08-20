@@ -8,6 +8,8 @@ import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.interf.dis.common.DisFileInterfCommonService;
 
+import java.text.ParseException;
+
 
 /**
  * 日历管理信息数据，外部数据文件接口入口定义类
@@ -29,7 +31,7 @@ public class DisBasicCalendarDataFileInterfService extends AbstractFileImpServic
      * {@inheritDoc}
      */
     @Override
-    public String getInfoByInterf(String currentDate) {
+    public String getInfoByInterf(String currentDate) throws ParseException {
         String successFlag = disFileInterfCommonService.readFileAndImportDb(currentDate, disBasicCalendarDataService, InterfDefine.基础日历信息数据, DictCodeListExt2.上游接口文件类型_基础日历信息);
         return successFlag;
     }

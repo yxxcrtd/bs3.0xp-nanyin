@@ -88,7 +88,7 @@ public class TaxSchBokCfgManage001Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupDelete.class}) TaxSchBokCfgManage002Dto dto, BindingResult bindingResult)
-        throws Exception {
+         {
         String operateType = dto.getOperateType();
         if (!bindingResult.hasErrors()) {
             int records = taxSchBokCfgManage001Service.countUsed(dto.getConfigId());
@@ -146,7 +146,7 @@ public class TaxSchBokCfgManage001Controller extends BaseController {
      */
     @RequestMapping("exportTaxSchaBokConfig")
     public ResponseEntity<byte[]> exportTaxSchaBokConfig()
-        throws Exception {
+         {
 
         List<TaxSchBokCfgManage001Dto> dtoList = taxSchBokCfgManage001Service.findTaxSchaBokConfig(
             RequestUtil.getPageParam());

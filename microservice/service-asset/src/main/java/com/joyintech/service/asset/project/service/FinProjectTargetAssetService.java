@@ -222,7 +222,7 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
      * @since 1.0
      */
     public Page<FinProjectTargetAssetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> finProjectTargetAssetMapper.queryForPage(pageParam));
     }
     

@@ -25,7 +25,7 @@ public class SdAssetDealCBMainService extends AutoSendCBBaseService{
     @Autowired
     private SdAssetDealRegBatchService sdAssetDealRegBatchService;
     
-	public void sdAssetDealRegData(Date currentTime,List<String> prodList)  throws Exception {
+	public void sdAssetDealRegData(Date currentTime,List<String> prodList) {
 		sdAssetDealRegBatchService.sdAssetDealRegData(currentTime,prodList);
 	}
 	

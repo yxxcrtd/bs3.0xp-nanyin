@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -201,7 +202,7 @@ public class FinNetValueProductBuild001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(ACTION_DELETE)
-	public AjaxResult delete(@RequestBody FinNetValueProductBuild001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult delete(@RequestBody FinNetValueProductBuild001Dto dto, BindingResult result) throws WorkFlowException {
 		if (result.hasErrors()) {
 			return new AjaxResult(result);
 		}
@@ -256,7 +257,7 @@ public class FinNetValueProductBuild001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export(){
 		return finNetValueProductBuild001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
 	}
 

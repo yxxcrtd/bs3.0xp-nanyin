@@ -11,6 +11,7 @@
 package com.joyintech.service.disclosure.submitmaintenance.holidaymarket.service;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -64,6 +66,9 @@ import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.common.common.util.DateCalcUtil;
 import com.joyintech.tams.disclosure.common.common.util.ExcelUtil;
 import com.joyintech.tams.disclosure.common.framework.thread.JoyinThreadPoolExecutor;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 
 /**
@@ -115,7 +120,7 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
      * @throws Exception 异常
      */
     public Page<DisclosureHolidaymarket001Dto> searchForPage(int page, int length, Map<String, Object> params)
-        throws Exception {
+    {
         
 //    	 return restTemplate.postForPage(
 //                 ServiceApplication.VALUATION_SERVICE_NAME + "/DisclosureHolidaymarket001/findPage",
@@ -147,10 +152,10 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
         return holidaymarket001Mapper.initHolid(param);
     }
 
-    public static void main(String[] args) {
-
-
-    }
+//    public static void main(String[] args) {
+//
+//
+//    }
 
     /**
      * 导入文件
@@ -162,8 +167,7 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
      * @return 导入结果
      * @throws Exception 异常
      */
-    public List<ExcelValidDto> importData(String fileName)
-        throws Exception {
+    public List<ExcelValidDto> importData(String fileName) throws IOException {
         if (StringUtil.isNotEmpty(fileName)) {
             List<List<String>> dataList = ExcelUtil.readToList(
                 FileNameUtil.getUploadFilePath(fileName), null, null, 0, 1, 0);
@@ -466,7 +470,7 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
      * @since 1.0
      */
     public String getHolidaymarketByInterf(InputStream in, String type, String tmpPath, String suffix, ChbFileReadMonitorInfo monitorInfoDto)
-        throws Exception {
+            throws IOException, SAXException, ParserConfigurationException, InterruptedException, ExecutionException {
         // 判断是xml文件 还是txt文件
         List<Map<String, String>> dealList = null;
         if ("xml".equals(suffix)) {
@@ -537,7 +541,7 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
      * @since 1.0
      */
     public boolean excuteValueInfoByStep(List<Map<String, String>> dealList, String type,
-                                        String[] result, String tmpPath) throws Exception {
+                                        String[] result, String tmpPath) {
 
         // 新增数据list
         List<DisclosureHolidaymarket001Dto> listA = new ArrayList<DisclosureHolidaymarket001Dto>();
@@ -567,7 +571,7 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
     private List<ExcelValidDto> checkBaseInfo(List<Map<String, String>> infoList,
                                               List<DisclosureHolidaymarket001Dto> listE,
                                               List<DisclosureHolidaymarket001Dto> listA
-                                              ) throws Exception {
+                                              )  {
       //存储了根据产品id作区分的分类数据
         //用来判断数据的容器
         for(Map<String, String> map : infoList){

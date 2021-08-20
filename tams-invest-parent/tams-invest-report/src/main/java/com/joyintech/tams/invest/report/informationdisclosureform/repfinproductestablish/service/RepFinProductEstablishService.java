@@ -141,9 +141,16 @@ public class RepFinProductEstablishService extends CommonExportService<RepFinPro
                 String exportPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
                 
                 File file = new SafelyFile(sysUploadFileInfoList.get(0).getPath());
-                FileInputStream inputStream = new FileInputStream(file);
-                excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
-                arrFile.add(new SafelyFile(exportPath+"/"+fileName));
+                FileInputStream inputStream = null;
+                try {
+                    inputStream = new FileInputStream(file);
+                    excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
+                    arrFile.add(new SafelyFile(exportPath+"/"+fileName));
+                }finally {
+                    if (inputStream != null){
+                        inputStream.close();
+                    }
+                }
                 i++;
             }
             //循环List<金融产品成立公告生成信息DTO>，取出文件模板类型为【02：产品成立公告（竖表）】的数据，放入竖版List<金融产品成立公告生成信息DTO> 
@@ -172,10 +179,17 @@ public class RepFinProductEstablishService extends CommonExportService<RepFinPro
                 ExcelTools excelTools = new ExcelTools();
                 String exportPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
                 File file = new SafelyFile(sysUploadFileInfoList.get(0).getPath());
-                FileInputStream inputStream = new FileInputStream(file);
-                excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
-                arrFile.add(new SafelyFile(exportPath+"/"+fileName));
-                i++;
+                FileInputStream inputStream = null;
+                try {
+                    inputStream = new FileInputStream(file);
+                    excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
+                    arrFile.add(new SafelyFile(exportPath+"/"+fileName));
+                    i++;
+                }finally {
+                    if (inputStream != null){
+                        inputStream.close();
+                    }
+                }
             }
         }
         ZipFileUtil.compressZip(new SafelyFile(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip"), 

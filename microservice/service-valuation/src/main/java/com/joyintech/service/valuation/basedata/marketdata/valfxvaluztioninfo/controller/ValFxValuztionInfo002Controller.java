@@ -49,7 +49,7 @@ public class ValFxValuztionInfo002Controller extends BaseController {
      * @return 返回的数据
      */
     @PostMapping("/getFinprodId2")
-	public List<SuggestDto> getFinprodId2(@RequestBody Map<String, Object> param) throws Exception {
+	public List<SuggestDto> getFinprodId2(@RequestBody Map<String, Object> param){
     	
 		return valFxValuztionInfo002Service.getFinprodId2(param);
 	}

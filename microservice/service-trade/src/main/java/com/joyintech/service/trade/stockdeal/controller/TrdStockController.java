@@ -52,7 +52,7 @@ public class TrdStockController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<TrdStockDto> queryForPage(@RequestBody Map<String, Object> pageParam,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdStockService.selectForPage(page, length, pageParam);
     }
 
@@ -67,7 +67,7 @@ public class TrdStockController {
      */
     @RequestMapping("getTrdProductDealDto/{tradeId}")
     public TrdStockDto getTrdProductDealDto(@PathVariable("tradeId") String tradeId)
-            throws Exception {
+    {
         return trdStockService.getTrdProductDealDto(tradeId);
     }
    
@@ -128,7 +128,7 @@ public class TrdStockController {
      */
     @RequestMapping("getFinprodId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length) {
         return trdStockService.getFinprodId(page, length, param);
     }
     

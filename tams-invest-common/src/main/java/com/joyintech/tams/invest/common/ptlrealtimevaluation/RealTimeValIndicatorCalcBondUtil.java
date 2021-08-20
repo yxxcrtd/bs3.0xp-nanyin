@@ -17,6 +17,8 @@ import java.util.List;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.invest.common.dto.mock.asset.MockFinCashPlanDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 组合实时估值-计算指标工具类-债券相关
@@ -27,6 +29,10 @@ import com.joyintech.tams.invest.common.dto.mock.asset.MockFinCashPlanDto;
  * @since 1.0
  */
 public class RealTimeValIndicatorCalcBondUtil {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(RealTimeValIndicatorCalcBondUtil.class);
     
     /**
      * 说明：计算计算日以后付息日的剩余期限和现金流的值，不包含计算日当天<br>
@@ -132,7 +138,7 @@ public class RealTimeValIndicatorCalcBondUtil {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         // 拼接返回值
         double[][] douRes = new double[2][];

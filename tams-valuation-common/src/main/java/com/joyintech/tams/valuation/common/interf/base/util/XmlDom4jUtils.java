@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.slf4j.Logger;
@@ -97,7 +98,7 @@ public class XmlDom4jUtils {
                 		valInterflogList.addAll(handler.getLogResult());
                 	}
                 }else{
-                	throw new Exception("没有为模版配置对应的校验规则.");
+                	throw new BusinessException("没有为模版配置对应的校验规则.");
                 }
             }
             catch (Exception e) {

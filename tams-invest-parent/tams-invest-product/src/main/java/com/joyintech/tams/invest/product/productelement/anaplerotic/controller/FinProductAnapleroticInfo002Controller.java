@@ -20,6 +20,7 @@ import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.invest.product.common.service.ProductCommonService;
 import com.joyintech.tams.invest.product.messageadjust.maintenance.service.FinOpenPlanMaintenanceService;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -317,8 +318,7 @@ public class FinProductAnapleroticInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinProductAnapleroticInfoDto dto)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinProductAnapleroticInfoDto dto) throws WorkFlowException {
             ProcessParameter<FinProductAnapleroticInfoDto> processParameter = new ProcessParameter<FinProductAnapleroticInfoDto>();
             WorkFlowParameter<FinProductAnapleroticInfoDto> params = new WorkFlowParameter<FinProductAnapleroticInfoDto>();
             params.setElementId(dto.getElementId());

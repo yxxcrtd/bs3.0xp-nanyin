@@ -72,7 +72,7 @@ public class FinOpenPlanMaintenanceController {
      * @since 1.0
      */
     @PostMapping("/findPage")
-    public List<FinOpenPlanMaintenanceDto> selectForPage(@RequestBody Map<String,Object> param) throws Exception  {
+    public List<FinOpenPlanMaintenanceDto> selectForPage(@RequestBody Map<String,Object> param) {
         return finOpenPlanMaintenanceService.selectForPage(param);
     }
     /**
@@ -138,7 +138,7 @@ public class FinOpenPlanMaintenanceController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody FinOpenPlanMaintenanceDto dto) throws Exception {
+    public int update(@RequestBody FinOpenPlanMaintenanceDto dto) {
         return finOpenPlanMaintenanceService.update(dto);
     }
     
@@ -148,7 +148,7 @@ public class FinOpenPlanMaintenanceController {
 	@Transactional
 	@DTXTransaction
 	@PostMapping("doUpdate")
-	public int doUpdate(@RequestBody FinOpenPlanMaintenance002Dto dto) throws Exception {
+	public int doUpdate(@RequestBody FinOpenPlanMaintenance002Dto dto) {
 
 		BussFinProductOpenPlanDto2 bfpopd = dto.getBussFinProductOpenPlanDto();
 		BussFinProductOpenPlanDto2 bfpopdRed = dto.getBussFinProductOpenPlanRedDto();

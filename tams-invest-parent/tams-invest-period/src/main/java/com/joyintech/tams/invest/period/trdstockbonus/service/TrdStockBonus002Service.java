@@ -205,7 +205,7 @@ public class TrdStockBonus002Service extends BaseService<TrdStockBonus002Dto>
 //			// 操作留痕表
 //			WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
 //		} catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(),e);
 //		}
 		saveDataWhenStartWorkflow(entity, OperationType.NEW);
 	}

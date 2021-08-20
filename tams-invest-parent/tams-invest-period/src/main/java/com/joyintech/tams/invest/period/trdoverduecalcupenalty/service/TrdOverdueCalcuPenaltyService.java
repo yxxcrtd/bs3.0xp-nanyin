@@ -21,6 +21,8 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,11 @@ import java.util.Map;
 @Service
 public class TrdOverdueCalcuPenaltyService extends CommonExportService<TrdOverdueCalcuPenaltyDto>
         implements BaseProcessService<TrdOverdueCalcuPenaltyDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdOverdueCalcuPenaltyService.class);
+
     @Autowired
     private BaseTradeProductDealCommService baseTradeProductDealCommServiceImpl;
     @Autowired
@@ -72,7 +79,7 @@ public class TrdOverdueCalcuPenaltyService extends CommonExportService<TrdOverdu
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
     }
     @Override
@@ -361,7 +368,7 @@ public class TrdOverdueCalcuPenaltyService extends CommonExportService<TrdOverdu
                     // add by jiangpeng on 20210428 end
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
         return dto;

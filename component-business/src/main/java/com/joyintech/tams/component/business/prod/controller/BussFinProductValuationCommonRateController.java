@@ -66,6 +66,8 @@ public class BussFinProductValuationCommonRateController extends BaseController 
         // 画面参数设置
         model.addAttribute(GlobalConstant.PAGE_ID, this.getParam(GlobalConstant.PAGE_ID));
         model.addAttribute("profitTypeElement", this.getParam("profitTypeElement"));
+        model.addAttribute("payTypeElement", this.getParam("payTypeElement"));
+
         model.addAttribute("entityName", StringUtil.defaultString(this.getParam("entityName"),
             BussFinProductValuationService.DEFAULT_ENTITY_NAME));
         model.addAttribute(GlobalConstant.DETAIL_PAGE_MODEL_KEY, this.getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY));

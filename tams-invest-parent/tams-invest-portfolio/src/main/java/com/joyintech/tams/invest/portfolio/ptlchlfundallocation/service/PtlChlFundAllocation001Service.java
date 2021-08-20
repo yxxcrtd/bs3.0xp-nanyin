@@ -55,7 +55,6 @@ public class PtlChlFundAllocation001Service extends CommonExportService<PtlChlFu
      * 分页查询
      * 
      * @return Page<>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

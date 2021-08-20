@@ -39,7 +39,7 @@ public class NonLggalFinancialDataSubReport001Service  extends CommonExportServi
 	private NonLggalFinancialDataSubReport001Mapper NonLggalFinancialDataSubReport001Mapper;
 
 	public Page<NonLggalFinancialDataSubReport001Dto> selectForPage(Map<String, Object> params)
-			 throws Exception {
+			   {
 	     return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/NonLggalFinancialDataSubReport001/findPage", params, NonLggalFinancialDataSubReport001Dto.class);
 //		 return super.queryForPage(() -> NonLggalFinancialDataSubReport001Mapper.queryList(dto));
 	}
@@ -82,9 +82,8 @@ public class NonLggalFinancialDataSubReport001Service  extends CommonExportServi
 	 * <功能详细描述>
 	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	 public List<NonLggalFinancialDataSubReport001Dto> findPageout(NonLggalFinancialDataSubReport001Dto dto) throws Exception {
+	 public List<NonLggalFinancialDataSubReport001Dto> findPageout(NonLggalFinancialDataSubReport001Dto dto)  {
 	     return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/NonLggalFinancialDataSubReport001/findPageout", dto, NonLggalFinancialDataSubReport001Dto.class);
 //	        return  NonLggalFinancialDataSubReport001Mapper.queryList(dto);
 	    }

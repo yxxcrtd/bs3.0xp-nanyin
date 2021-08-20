@@ -12,6 +12,7 @@ package com.joyintech.tams.disclosure.information.config.thresholdCheck.controll
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -99,8 +100,7 @@ public class ThresholdCheck001Controller  extends BaseController{
    	 */
    	@RequestMapping("getPrdInfoSelect")
    	@ResponseBody
-       public Page<SelectOptionDto> getPrdInfoSelect()
-           throws Exception {
+       public Page<SelectOptionDto> getPrdInfoSelect() {
    		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
            return prdInfoSelect;
        }
@@ -114,7 +114,7 @@ public class ThresholdCheck001Controller  extends BaseController{
      */
     @ResponseBody
 	@RequestMapping("findIndexId")
-	public Page<ThresholdCheck001Dto> findIndexId() throws Exception {
+	public Page<ThresholdCheck001Dto> findIndexId() {
 		Page<ThresholdCheck001Dto> page = thresholdCheck001Service
 				.findIndexByPage(RequestUtil.getPageParam());
 		return page;
@@ -129,7 +129,7 @@ public class ThresholdCheck001Controller  extends BaseController{
      */
     @ResponseBody
 	@RequestMapping("findIndexIdDetail")
-	public Page<ThresholdCheck001Dto> findIndexIdDetail() throws Exception {
+	public Page<ThresholdCheck001Dto> findIndexIdDetail(){
 		Page<ThresholdCheck001Dto> page = thresholdCheck001Service
 				.findIndexDetailByPage(RequestUtil.getPageParam());
 		return page;
@@ -189,7 +189,7 @@ public class ThresholdCheck001Controller  extends BaseController{
 	 * @throws Exception
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		Map<String, Object> paraMap = RequestUtil.getPageParam();
 		String datas = this.getParam("datas");		
 		List<ThresholdCheck001Dto> listdto = null;
@@ -218,7 +218,7 @@ public class ThresholdCheck001Controller  extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody ReportContentEnum001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody ReportContentEnum001Dto dto, BindingResult result) {
 	    //检查是否被引用
 		List<ReportContentEnum002Dto> checkResult = reportContentEnum002Service.checkIsQuote(dto);
 		if(StringUtil.isEmptyList(checkResult)){

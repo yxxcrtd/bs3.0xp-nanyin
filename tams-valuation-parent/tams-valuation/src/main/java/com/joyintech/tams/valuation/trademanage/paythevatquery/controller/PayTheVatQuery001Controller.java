@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trademanage.paythevatquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class PayTheVatQuery001Controller extends BaseController {
 
 	@RequestMapping("findPage")
 	@ResponseBody
-	public Page<PayTheVatQuery001Dto> findPage() throws Exception {
+	public Page<PayTheVatQuery001Dto> findPage() {
 		return payTheVatQuery001Service.findByPage(RequestUtil.getPageParam());
 	}
 
@@ -82,7 +83,7 @@ public class PayTheVatQuery001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getBooksetId")
-	public List<SelectOptionDto> getBooksetId() throws Exception {
+	public List<SelectOptionDto> getBooksetId() {
 		String param = super.getRequest().getParameter("search");
 		return payTheVatQuery001Service.getBooksetId(param);
 	}
@@ -114,7 +115,7 @@ public class PayTheVatQuery001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		String datas = this.getParam("datas");
 		List<PayTheVatQuery001Dto> listdto;
 		if (datas == null) {

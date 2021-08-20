@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.BaseService;
@@ -34,6 +35,19 @@ public class PbcPrdBaseinfoSubMService extends BaseService<PbcPrdBaseinfoSub> {
                PbcPrdBaseinfoSub.class);
    }
 
+
+    /**
+     * 人行产品代码下拉框初始值
+     * @param param
+     *
+     * @return 人行产品代码下拉框初始值
+     */
+    @SuppressWarnings("unchecked")
+    public List<SelectOptionDto> getPbcProdId(Map<String, Object> param) {
+        return restTemplate.postForObject(
+                SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseinfoSub/getPbcProdId", param,
+                List.class);
+    }
    /**
     * 手工处理功能
     *

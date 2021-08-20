@@ -57,7 +57,7 @@ public class AgencyDetailsInf001Controller {
 	 */
 	@PostMapping("findPage/{page}/{length}")
     public Page<AgencyDetailsInf001Dto> getPositionInf(@RequestBody Map<String, Object> param,
-                                                       @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                       @PathVariable("page") int page, @PathVariable("length") int length) {
         return agencyDetailsInf001Service.getPositionInf(page, length, param);
     }
     

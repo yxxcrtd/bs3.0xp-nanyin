@@ -93,7 +93,12 @@ public class PbcMonthReport001Controller extends BaseController{
 			model.addAttribute("pbc_report_type", map.get("PBC_REPORT_TYPE"));
 			model.addAttribute("isMain", "01");
 		}else{
+
+
+			Date sysDate = new Date();//DateUtil.platDateFromCache();
 			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(sysDate);
+
 	        // 获取上月的第一天
 	        calendar.add(Calendar.MONTH, -1);
 	        calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -177,6 +182,7 @@ public class PbcMonthReport001Controller extends BaseController{
 		pbcMonthReportMService.updateSumStaus(map);
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
 	}
+
 	@ResponseBody
 	@RequestMapping("doBatch")
 	public AjaxResult doAssetbatch(@RequestBody Map<String, Object> map){

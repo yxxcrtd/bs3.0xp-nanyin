@@ -17,6 +17,11 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>com.jixu</groupId>
+			<artifactId>JixuCommon</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
 			<version>2.3.0</version>

@@ -32,7 +32,7 @@ public class InterfRecvTask {
     @Autowired
     private InterfRecRunner service;
 
-    public void execute() throws Exception{
+    public void execute() {
         service.execute();
     }
 }

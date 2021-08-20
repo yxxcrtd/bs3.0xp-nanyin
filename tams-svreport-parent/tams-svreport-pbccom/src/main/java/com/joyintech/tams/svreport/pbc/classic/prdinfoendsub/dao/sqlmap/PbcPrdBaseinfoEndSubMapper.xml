@@ -48,7 +48,7 @@
   	PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE
   </sql>
   <sql id="PBC_PRD_BASEINFO_SUB">
-  (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
+  (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,ISSUE_PARTY_ID,
 	row_number() OVER (partition BY PBC_PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME)
 	DESC) AS myrank
 	FROM pbc_prd_baseinfo_sub) a
@@ -327,49 +327,53 @@
   </update>
   <!-- 根据条件查询 -->
   <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub" flushCache="true" useCache="false">
-  	select     
-  		a.REGIST_SEQNO registSeqno,
-	    a.PBC_PROD_ID PBC_PROD_ID,
-	    a.MDATE mdate,
-	    a.CCY ccy,
-	    a.PROFIT profit,
-	    a.PROFIT_CNY profitCny,
-	    a.CUSTOM_PROFIT customProfit,
-	    a.CUSTOM_PROFIT_CNY customProfitCny,
-	    <if test="nyield  == null">a.CUS_YEAR_YIELD cusYearYield,</if>
-	    a.SEND_STATUS sendStatus,
-	    a.SUBMIT_TIME submitTime,
-	    a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-	    a.SUMIT_SEQ sumitSeq,
-	    a.STATUS_DATE statusDate,
-	    a.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
-	    a.SUBMIT_DEADLINE submitDeadline,
-	    a.STATUS status,
-	    a.CREATE_USER createUser,
-	    a.ORG_CODE orgCode,
-	    a.CREATE_DEPT createDept,
-	    a.CREATE_TIME createTime,
-	    a.UPDATE_USER updateUser,
-	    a.UPDATE_TIME updateTime,
-	    b.PROD_ID prodId,
-	    b.OPERATE_MODE operateMode,
-	    b.IVSTORIENTATION ivstorientation,
-	    b.VDATE vdate,
-	    t2.PBC_CODE pbcCode,
-	    a.PBC_PROD_ID pbcProdIdShow
-  	from PBC_PRD_BASEINFO_END_SUB a 
-  	left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID 
-  	<!-- and a.ORG_CODE = b.ORG_CODE -->
-  	LEFT JOIN(
-        SELECT
-            inside_prod_id,
-            pbc_code
-        FROM
-            pbc_prod_assetpool_code
-        WHERE
-            status='E'
-            AND code_type='01'
-    )t2 ON t2.inside_prod_id=b.PROD_ID
+      select
+      a.REGIST_SEQNO registSeqno,
+      a.PBC_PROD_ID PBC_PROD_ID,
+      a.MDATE mdate,
+      a.CCY ccy,
+      a.PROFIT profit,
+      a.PROFIT_CNY profitCny,
+      a.CUSTOM_PROFIT customProfit,
+      a.CUSTOM_PROFIT_CNY customProfitCny,
+      <if test="nyield  == null">a.CUS_YEAR_YIELD cusYearYield,</if>
+      a.SEND_STATUS sendStatus,
+      a.SUBMIT_TIME submitTime,
+      a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+      a.SUMIT_SEQ sumitSeq,
+      a.STATUS_DATE statusDate,
+      a.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
+      a.SUBMIT_DEADLINE submitDeadline,
+      a.STATUS status,
+      a.CREATE_USER createUser,
+      SI.INSTITUTION_CODE orgCode,
+      a.CREATE_DEPT createDept,
+      a.CREATE_TIME createTime,
+      a.UPDATE_USER updateUser,
+      a.UPDATE_TIME updateTime,
+      b.PROD_ID prodId,
+      b.OPERATE_MODE operateMode,
+      b.IVSTORIENTATION ivstorientation,
+      b.VDATE vdate,
+      t2.PBC_CODE pbcCode,
+      nvl(t2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
+      from PBC_PRD_BASEINFO_END_SUB a
+      left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID
+      <!-- and a.ORG_CODE = b.ORG_CODE -->
+      LEFT JOIN(
+      SELECT
+      inside_prod_id,
+      pbc_code
+      FROM
+      pbc_prod_assetpool_code
+      WHERE
+      status='E'
+      AND code_type='01'
+      )t2 ON t2.inside_prod_id=b.PROD_ID
+      LEFT JOIN CHB_ORG_REGIST_BANK_CODE CORBC
+      ON CORBC.PBC_BANK_CODE = b.ISSUE_PARTY_ID
+      LEFT JOIN SYS_INSTITUTION SI
+      ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
   	<where>
         <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
             <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
@@ -870,4 +874,16 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
 			and SUBJECT_LEVEL='1'
 			and subject_no = '1002'
       </select>
+
+    <update id="updateByProdIds" parameterType="java.util.List">
+        update PBC_PRD_BASEINFO_END_SUB
+        set SEND_STATUS = '03',
+        SUBMIT_TIME = sysdate,
+        SUBMIT_FEEDBACK_STATUS = '03'
+        where  SEND_STATUS = '01'
+        and PROD_ID in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </update>
 </mapper>

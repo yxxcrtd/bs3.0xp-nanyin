@@ -107,7 +107,7 @@ public class ValBussFinRepaymentImplService extends BaseService<ValBussFinRepaym
      * 生成还本计划
      * {@inheritDoc}
      */
-    public List<FinCashPlanDto> createAssetRePaymentPlan(ValBussFinRepaymentDto dto) throws ParseException {
+    public List<FinCashPlanDto> createAssetRePaymentPlan(ValBussFinRepaymentDto dto) throws ParseException, InstantiationException, IllegalAccessException {
         //还本计划(return)
         List<FinCashPlanDto> finCashPlanList = new ArrayList<FinCashPlanDto>();
         //付息计划
@@ -222,7 +222,7 @@ public class ValBussFinRepaymentImplService extends BaseService<ValBussFinRepaym
      * @since 1.0
      */
     
-    private List<FinCashPlanDto> createInvRepayList(ValBussFinRepaymentDto dto,AssetCommonInfoDto scai,FinCashPayRule is,List<String> holidayList,List<FinCashPlanDto> scheList){
+    private List<FinCashPlanDto> createInvRepayList(ValBussFinRepaymentDto dto,AssetCommonInfoDto scai,FinCashPayRule is,List<String> holidayList,List<FinCashPlanDto> scheList) throws InstantiationException, IllegalAccessException {
         List<FinCashPlanDto> invRepayList = new ArrayList<FinCashPlanDto>();
         //计息营业日规则
         String endTdayRule = dto.getFinPayInterestStdInfoDto().getEndTdayRule();

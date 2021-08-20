@@ -70,7 +70,7 @@ public class BokBalanceStatementQuery001Service extends CommonExportService<BokB
     private FinProductMapper finProductMapper;
 
     public Page<BokBalanceStatementQuery001Dto> selectForPage(int page,int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page,length,() -> bokBalanceStatementQuery001Mapper.selectAll(pageParam));
     }
 

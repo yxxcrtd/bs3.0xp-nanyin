@@ -65,8 +65,7 @@ public class SystemBatchLog001Service extends CommonExportService<SystemBatchLog
      * @return 批处理日志列表
      * @throws Exception 异常
      */
-    public Page<SystemBatchLog001Dto> searchForPage(Map<String, Object> param)
-        throws Exception {
+    public Page<SystemBatchLog001Dto> searchForPage(Map<String, Object> param){
         Page<SystemBatchLog001Dto> page = super.queryForPage(SystemBatchLog001Mapper.class,
             "searchForPage", param);
         format(page.getRoot());

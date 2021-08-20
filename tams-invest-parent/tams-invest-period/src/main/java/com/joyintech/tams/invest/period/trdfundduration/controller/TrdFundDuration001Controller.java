@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.period.trdfundduration.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -141,8 +143,7 @@ public class TrdFundDuration001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         if(datas==null) {
             return trdFundDuration001Service.export(this.getPageId(),
@@ -170,8 +171,7 @@ public class TrdFundDuration001Controller extends BaseController {
     }
 
     @RequestMapping("exportConversion")
-    public ResponseEntity<byte[]> exportConversion()
-            throws Exception {
+    public ResponseEntity<byte[]> exportConversion() throws IOException {
         String datas = this.getParam("datas");
         if(datas==null) {
             return trdFundObversion001Service.export("TrdFundObversion001",
@@ -205,8 +205,7 @@ public class TrdFundDuration001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult revoke(@RequestBody @Validated({
-            ValidateGroupDelete.class}) TrdFundDuration001Dto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupDelete.class}) TrdFundDuration001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

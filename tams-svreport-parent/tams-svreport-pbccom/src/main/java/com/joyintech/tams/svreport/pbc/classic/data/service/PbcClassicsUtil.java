@@ -89,6 +89,67 @@ public class PbcClassicsUtil {
 		strbuf.append(theLuhnMod10(strbuf.toString()));
 		return strbuf.toString();
 	}
+
+
+	/**
+	 * 1、新增内部采番方法
+	 * ※方法参数参考老的方法【getPbcProdId】一样
+	 * 新增参数：采番数量
+	 * @param issueOrgCode 产品发行机构代码
+	 * @param prodProfitType 产品收益类型：PROFIT_TYPE产品收益类型
+	 *     PROD_PROFIT_TYPE_FIX:保证收益
+	 *     PROD_PROFIT_TYPE_COVERCOSTF:保本浮动收益时;
+	 *     PROD_PROFIT_TYPE_NOCOVERCOSTF:非保本浮动收益时
+	 * @param seqCode 序列编码
+	 * @return
+	 */
+	public static String getPbcProdIdIns(String issueOrgCode,String prodProfitType,String seqCode,Date vdate,int num){
+		StringBuffer strbuf = new StringBuffer();
+		/***1、在老处理前增加，先拼接内部产品代码的开始字母【INS】*/
+		//取6位产品发行机构代码，不足补0
+		if(issueOrgCode == null || issueOrgCode.length()!=6){
+			logger.error("产品发行机构代码错误");
+			return null;
+		}
+
+		strbuf.append("INS"+issueOrgCode);
+
+		//类型码：PROFIT_TYPE产品收益类型 为 01 保证收益、02 保本浮动收益时，为Z;03 非保本浮动收益时，为1
+		String typeCode="Z";
+		if ( PROD_PROFIT_TYPE_FIX.equals(prodProfitType) ) {
+			typeCode="Z";
+		} else if ( PROD_PROFIT_TYPE_COVERCOSTF.equals(prodProfitType) ) {
+			typeCode="Z";
+		} else if ( PROD_PROFIT_TYPE_NOCOVERCOSTF.equals(prodProfitType) ) {
+			typeCode="1";
+		}
+		strbuf.append(typeCode);
+
+		//2位年份
+		String yearLast = new SimpleDateFormat("yy",Locale.CHINESE).format(vdate==null?new Date():vdate);
+		strbuf.append(yearLast);
+		//5位顺序码
+		//PbcClassicsUtil pbcUtil = new PbcClassicsUtil();
+
+		/*****2、从系统的seq中，进行采番。改为从seq表中进行采番。
+		 *老代码：	long seqNo = sysSeqService.getSysSeq(seqCode,vdate,"Y");
+		 *新代码：	long seqNo = 【2】定义的新方法
+		 * 		参数：
+		 * 			序列代码		PBC_PRD_ID_INS_SEQ
+		 * 			采番数量		1
+		 * */
+
+		long seqNo = sysSeqService.getSysSeqNew(seqCode,vdate,"Y");
+		if ( seqNo>99999) {
+			logger.error("产品顺序码长度大于5位!");
+			return null;
+		}
+		strbuf.append(String.format("%05d",seqNo));
+		//校验位,用前面规则生成的码获取
+		strbuf.append(theLuhnMod10(strbuf.toString()));
+		return strbuf.toString();
+	}
+
 	
 	/**
 	 * 人行资产池代码生成
@@ -174,12 +235,12 @@ public class PbcClassicsUtil {
 	    }
 	    return (char) (number+'0');
 	}
-	public static void  main(String args[] ) {
-        System.out.println(PbcClassicsUtil.theLuhnMod10("C10307Z1900003"));
-//        System.out.println(Character.highSurrogate(26));
-//        System.out.println((char) (1+'0'));
-//        System.out.println(letterToNum(String.valueOf((char) 'i')));
-//		  System.out.println(letterToNumber("B"));
-//        System.out.println(String.format("%05d",99L));
-	}
+//	public static void  main(String args[] ) {
+//        System.out.println(PbcClassicsUtil.theLuhnMod10("C10307Z1900003"));
+////        System.out.println(Character.highSurrogate(26));
+////        System.out.println((char) (1+'0'));
+////        System.out.println(letterToNum(String.valueOf((char) 'i')));
+////		  System.out.println(letterToNumber("B"));
+////        System.out.println(String.format("%05d",99L));
+//	}
 }
