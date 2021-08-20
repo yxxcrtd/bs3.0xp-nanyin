@@ -6,6 +6,7 @@ import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -91,7 +92,7 @@ public class PbcZExcelDefineUtil {
                         Cell cell=row.getCell(c);
                         String strValue=getStringCellValue(row.getCell(c));
                         if(c==0){
-                            if(isNumeric(strValue)){
+                            if(isNumeric(strValue)|| CommonUtil.isEnglish(strValue)){
                                 rowNum=strValue;
                             }else {
                                 break;
