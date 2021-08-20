@@ -6,15 +6,13 @@
 package com.joyintech.tams.component.business.asset.controller;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-
+import java.util.*;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.BasePtlRecePositionService;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -199,7 +197,19 @@ public class FinPayInterestStdInfoController extends BaseController {
     public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) FinPayInterestStdInfoDto previewParam,
                             BindingResult result) {
         if (result != null && result.hasErrors()) {
-            return new AjaxResult(result);
+            AjaxResult resultList=new AjaxResult(result);
+            List<ValidMessage> errorList = resultList.getErrorList();
+            if (StringUtil.isNotEmpty(previewParam.getFinprodType2()) && StringUtil.equals(previewParam.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_存款.getValue())
+                    && StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE),"01") && result.getFieldErrors() != null){
+                ListIterator<ValidMessage> fieldErrorIterator = errorList.listIterator();
+                while (fieldErrorIterator.hasNext()){
+                    ValidMessage fieldError = fieldErrorIterator.next();
+                    if(StringUtil.equals(fieldError.getField(),"finInterestFactorDto.investRate")){
+                        fieldErrorIterator.remove();
+                    }
+                }
+            }
+            return resultList;
         }
         return new AjaxResult();
     }
