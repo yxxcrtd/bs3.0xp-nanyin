@@ -33,7 +33,7 @@ $(function () {
     //鼠标放置显示操作列效果
     $("body").on('mouseover', ".mixtree-node", null, function () {
         $(".operate_div").hide();
-        // $(this).find(".operate_div").css({display: 'inline-block'});
+        $(this).find(".operate_div").css({display: 'inline-block'});
     })
     //移开鼠标隐藏操作列效果
     $("body").on('mouseout', ".mixtree-node", null, function () {
