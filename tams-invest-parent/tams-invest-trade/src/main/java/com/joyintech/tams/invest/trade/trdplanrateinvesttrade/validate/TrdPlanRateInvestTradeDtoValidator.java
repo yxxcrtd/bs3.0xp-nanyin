@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,26 +184,29 @@ public class TrdPlanRateInvestTradeDtoValidator implements TradeCommonValidator 
                     errorList.add(new ValidMessage("组合分配不能重复分配给同一组合。"));
                 }
             }
-          //投资目的
-            if(StringUtil.isNotEmpty(dto.getInvAim())) {
-            	if(StringUtil.equals(dto.getInvAim(), DictCodeListExt1.投资目的_摊余成本类.getValue())
-            			|| StringUtil.equals(dto.getInvAim(), DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue())) {
-            		FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
-            		if(StringUtil.isNotEmpty(finProduct)) {
-            			if(StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试不通过.getValue())) {
-            				errorList.add(new ValidMessage("invAim",
-                                    getMessage("ETR_ERROR_0059")));
-            			}
-            			else if(StringUtil.isEmpty(finProduct.getSppiTestStatus())
-            			        || StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_未测试.getValue())
-            					|| StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试中.getValue())
-            					//|| StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_已退回.getValue())
-                        ) {
-            				errorList.add(new ValidMessage("invAim",
-                                    getMessage("选择此投资目的时，对应的资产必须先进行SPPI测试！")));
-            			}
-            		}
-            	}
+            // ZGZGST-1232 fuyongsheng 20210820:增加SPPI测试 系统参数开关
+            if(DictCodeListExt1.是否_是.getValue().equals(CacheUtil.getSysParam("IS_NEED_SPPI_CHECK"))){
+                //投资目的
+                if(StringUtil.isNotEmpty(dto.getInvAim())) {
+                    if(StringUtil.equals(dto.getInvAim(), DictCodeListExt1.投资目的_摊余成本类.getValue())
+                            || StringUtil.equals(dto.getInvAim(), DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue())) {
+                        FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
+                        if(StringUtil.isNotEmpty(finProduct)) {
+                            if(StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试不通过.getValue())) {
+                                errorList.add(new ValidMessage("invAim",
+                                        getMessage("ETR_ERROR_0059")));
+                            }
+                            else if(StringUtil.isEmpty(finProduct.getSppiTestStatus())
+                                    || StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_未测试.getValue())
+                                    || StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试中.getValue())
+                                    //|| StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_已退回.getValue())
+                            ) {
+                                errorList.add(new ValidMessage("invAim",
+                                        getMessage("选择此投资目的时，对应的资产必须先进行SPPI测试！")));
+                            }
+                        }
+                    }
+                }
             }
         }
         return errorList;
