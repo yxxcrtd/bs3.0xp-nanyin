@@ -339,45 +339,26 @@ public class JasparConnectUtilService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String  connectJasparAndGenHtml(String strUrl) throws Exception{
-		
-		URL connUrl = new URL(strUrl);
-//		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
-		
-		URLConnection conn = connUrl.openConnection();
-		// 防止屏蔽程序抓取而返回403错误
-        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-
-        InputStream inputStream = null;
-        try	{
-			inputStream = conn.getInputStream();
-			// 获取自己数组
-			String getData = readInputStreamToString(inputStream);
-//        String s = getData.toString();
-//        String path = FileNameUtil.createUploadFilePath("");
-
-//        File localFile = new File(path+ File.separator+fileName);
-//        File dir = localFile.getParentFile();
-//        if (!dir.exists()) {
-//            dir.mkdirs();
-//        }
-//        FileOutputStream fos = new FileOutputStream(localFile);
-//        fos.write(getData);
-//        if (fos != null) {
-//            fos.close();
-//        }
-//        UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
-//                localFile);
-//        //存入SYS_UPLOAD_FILE_INFO表
-//        if(null != fileAttachmentProcess) {
-//            fileAttachmentProcess.upload(uploadFile);
-//        }
-			return getData;
-		}finally {
-			if (inputStream != null) {
-				inputStream.close();
-			}
-		}
+	public String  connectJasparAndGenHtml(String strUrl){
+		return "";
+//		URL connUrl = new URL(strUrl);
+////		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
+//
+//		URLConnection conn = connUrl.openConnection();
+//		// 防止屏蔽程序抓取而返回403错误
+//        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+//
+//        InputStream inputStream = null;
+//        try	{
+//			inputStream = conn.getInputStream();
+//			// 获取自己数组
+//			String getData = readInputStreamToString(inputStream);
+//			return getData;
+//		}finally {
+//			if (inputStream != null) {
+//				inputStream.close();
+//			}
+//		}
 	}
 	/**
 	 * 连接Jaspar并将url上的xml解析成list格式
