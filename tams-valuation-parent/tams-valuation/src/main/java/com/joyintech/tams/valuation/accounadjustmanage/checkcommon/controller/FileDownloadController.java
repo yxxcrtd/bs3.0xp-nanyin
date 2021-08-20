@@ -68,8 +68,10 @@ public class FileDownloadController extends BaseController {
         String filename = file.getName();
         InputStream fis = null;
         OutputStream toClient = null;
+        FileInputStream fisx = null;
         try {
-            fis = new BufferedInputStream(new FileInputStream(path));
+            fisx = new FileInputStream(path);
+            fis = new BufferedInputStream(fisx);
             byte[] buffer = new byte[fis.available()];
             fis.read(buffer);
             fis.close();
@@ -101,6 +103,9 @@ public class FileDownloadController extends BaseController {
             }
             if (fis != null) {
                 fis.close();
+            }
+            if (fisx != null){
+                fisx.close();
             }
         }
 

@@ -2,6 +2,7 @@ package com.joyintech.invest.interf.common.core.utility;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -16,6 +17,7 @@ public class HttpClientWebservice {
 		BufferedReader in = null;
 		String result="";
 		HttpURLConnection connection=null;
+		InputStream is = null;
 		try{
 			
 		
@@ -63,7 +65,8 @@ public class HttpClientWebservice {
 		out.flush();
         
         // 定义BufferedReader输入流来读取URL的响应
-        in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		is= connection.getInputStream();
+        in = new BufferedReader(new InputStreamReader(is));
         String line;
         while ((line = in.readLine()) != null) {
             result += line;
@@ -83,6 +86,9 @@ public class HttpClientWebservice {
                 if (connection != null) {
                 	connection.disconnect();
                 }
+                if (is != null){
+					is.close();
+				}
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

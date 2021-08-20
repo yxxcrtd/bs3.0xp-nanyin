@@ -1,6 +1,7 @@
 package com.joyintech.interf.bankname.cfetsup.outbound;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -73,6 +74,7 @@ public class HttpRequest {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
+        InputStream is = null;
         try {
             URL realUrl = new URL(url);
             // 打开和URL之间的连接
@@ -94,8 +96,9 @@ public class HttpRequest {
             // flush输出流的缓冲
             out.flush();
             // 定义BufferedReader输入流来读取URL的响应
+            is =  conn.getInputStream();
             in = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream(), "utf-8"));
+                    new InputStreamReader(is, "utf-8"));
             String line;
             while ((line = in.readLine()) != null) {
                 result += line;
@@ -111,6 +114,9 @@ public class HttpRequest {
                 }
                 if (in != null) {
                     in.close();
+                }
+                if (is != null){
+                    is.close();
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();

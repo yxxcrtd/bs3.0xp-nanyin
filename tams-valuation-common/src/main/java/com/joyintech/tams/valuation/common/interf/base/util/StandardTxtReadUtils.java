@@ -90,8 +90,10 @@ public class StandardTxtReadUtils {
 				if (file.isFile() && file.exists()) {
 					InputStreamReader isr = null;
 					BufferedReader br = null;
+					FileInputStream fis = null;
 					try {
-						isr = new InputStreamReader(new FileInputStream(file), "utf-8");
+						fis = new FileInputStream(file);
+						isr = new InputStreamReader(fis, "utf-8");
 						br = new BufferedReader(isr);
 						String lineTxt = null; // 读取文件的方法
 						while (!StringUtil.isEmpty(lineTxt = br.readLine())) {
@@ -110,6 +112,9 @@ public class StandardTxtReadUtils {
 						try {
 							if (isr != null) {
 								isr.close();
+							}
+							if (fis != null){
+							   fis.close();
 							}
 						} catch (Exception e) {
 							logger.error("", e);

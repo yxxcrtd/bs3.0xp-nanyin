@@ -7,8 +7,8 @@ package com.joyintech.tams.valuation.report.common.util;
 import java.io.*;
 import java.util.List;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -41,67 +41,64 @@ public class OfficeMergeUtil {
         CTBody srcBody = null;
         XWPFDocument srcDocumentTmp = null;
         CTBody srcBodyTmp = null;
-        for (int i = 0; i < srcFile.size(); i++ ) {
-            if(i==0){
-                try {
+        try{
+            for (int i = 0; i < srcFile.size(); i++ ) {
+                if(i==0){
                     srcDocumentTmp = new XWPFDocument(OPCPackage.open(new FileInputStream(srcFile.get(i))));
                     srcBodyTmp= srcDocumentTmp.getDocument().getBody();
+                    continue;
+                }
+                FileInputStream fileInputStream = null;
+                try {
+                    fileInputStream = new FileInputStream(srcFile.get(i));
+                    srcPackage = OPCPackage.open(fileInputStream);
+                    srcDocument = new XWPFDocument(srcPackage);
+                    srcBody = srcDocument.getDocument().getBody();
+                    appendBody(srcBodyTmp, srcBody);
                 }
                 catch (IOException | InvalidFormatException e) {
                     throw e;
                 }
                 finally {
-                    if (srcDocumentTmp != null) {
-                        srcDocumentTmp.close();
+                    if (srcDocument != null) {
+                        try {
+                            srcDocument.close();
+                        } catch (Exception e) {
+                            logger.error("", e);
+                        }
+                        try {
+                            fileInputStream.close();
+                        } catch (Exception e) {
+                            logger.error("", e);
+                        }
+                        try {
+                            srcPackage.close();
+                        } catch (Exception e) {
+                            logger.error("", e);
+                        }
                     }
                 }
-                continue;
             }
-            FileInputStream fileInputStream = null;
+            OutputStream dest = null;
             try {
-                fileInputStream = new FileInputStream(srcFile.get(i));
-                srcPackage = OPCPackage.open(fileInputStream);
-                srcDocument = new XWPFDocument(srcPackage);
-                srcBody = srcDocument.getDocument().getBody();
-                appendBody(srcBodyTmp, srcBody);
+                dest = new FileOutputStream(new SafelyFile(destFile));
+                if (dest != null){
+                    srcDocumentTmp.write(dest);
+                }
             }
-            catch (IOException | InvalidFormatException e) {
+            catch (IOException e) {
                 throw e;
             }
             finally {
-                if (srcDocument != null) {
-                    try {
-                        srcDocument.close();
-                    } catch (Exception e) {
-                        logger.error("", e);
-                    }
-                    try {
-                        fileInputStream.close();
-                    } catch (Exception e) {
-                        logger.error("", e);
-                    }
-                    try {
-                        srcPackage.close();
-                    } catch (Exception e) {
-                        logger.error("", e);
-                    }
-
+                if (dest != null) {
+                    dest.close();
                 }
             }
-        }
-        OutputStream dest = null;
-        try {
-            dest = new FileOutputStream(new SafelyFile(destFile));
-            if (dest != null){
-                srcDocumentTmp.write(dest);
-            }
-        }
-        catch (IOException e) {
-            throw e;
-        }
-        finally {
-            if (dest != null) {
-                dest.close();
+        } catch (Exception e) {
+            throw new BusinessException(e);
+        }finally {
+            if (srcDocumentTmp != null){
+                srcDocumentTmp.close();
             }
         }
     }

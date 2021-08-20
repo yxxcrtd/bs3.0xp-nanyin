@@ -90,26 +90,27 @@ public class OfficeMergeUtil {
                 }
             }
         }
-
-             OutputStream dest = null;
-             try {
-                 dest = new FileOutputStream(new SafelyFile(destFile));
-                 if(srcDocumentTmp != null){
-                     srcDocumentTmp.write(dest);
-                 }
-             } catch (Exception e) {
-                 e.printStackTrace();
-             }finally {
-                 try {
-                     if(dest!=null)
-                     {
-                         dest.close();
-                     }
-
-                 } catch (IOException e) {
-                     e.printStackTrace();
-                 }
+         OutputStream dest = null;
+         try {
+             dest = new FileOutputStream(new SafelyFile(destFile));
+             if(srcDocumentTmp != null){
+                 srcDocumentTmp.write(dest);
              }
+         } catch (Exception e) {
+             e.printStackTrace();
+         }finally {
+             try {
+                 if(dest!=null)
+                 {
+                     dest.close();
+                 }
+                 if (srcDocument != null){
+                     srcDocument.close();
+                 }
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+         }
 
     }
 
@@ -151,6 +152,7 @@ public class OfficeMergeUtil {
         XSSFWorkbook outputExcel = null;
         Workbook inputExcel = null;
         FileOutputStream fos = null;
+        FileInputStream fis = null;
         try {
             // 生成的excel
              outputExcel = new XSSFWorkbook();
@@ -166,7 +168,8 @@ public class OfficeMergeUtil {
             for (String fileName : inputFileNameArray) {
                 // 创建excel文件的工作簿对象book
                 //@SuppressWarnings("resource")
-                 inputExcel = new XSSFWorkbook(new FileInputStream(new SafelyFile(fileName)));
+                fis =  new FileInputStream(new SafelyFile(fileName));
+                inputExcel = new XSSFWorkbook(fis);
                 // 获取excel文件工作簿的工作表数量sheets
                 Sheet sheet = null;
                 for (int i = 0; i < inputExcel.getNumberOfSheets(); i++ ) {// 获取每个Sheet表
@@ -188,11 +191,6 @@ public class OfficeMergeUtil {
             }
             fos = new FileOutputStream(outputFile);
             outputExcel.write(fos);
-            /** *********关闭文件************* */
-            if (fos != null) {
-                fos.close();
-            }
-            outputExcel.close();
         }
         catch (Exception e) {
             StringWriter sw = new StringWriter();
@@ -208,12 +206,11 @@ public class OfficeMergeUtil {
                 if(outputExcel != null){
                     outputExcel.close();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
                 if(fos != null){
                     fos.close();
+                }
+                if (fis != null){
+                    fis.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

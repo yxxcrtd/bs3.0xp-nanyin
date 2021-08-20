@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -207,6 +208,9 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
         File depositfile = null;
         Workbook workbook = null;
 		OutputStream os = null;
+		FileOutputStream fos = null;
+		// 模板输入流
+		InputStream stream  = null;
         try {
 
             // 传放地址
@@ -217,8 +221,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
                 depositfile.getParentFile().mkdirs();
             }
             String templateFile = template + ".xls";
-            // 模板输入流
-            InputStream stream  = null;
+
             
             String tplFile = FileNameUtil.getTplFile(templateFile);
             File templeteFile = new File(tplFile);
@@ -247,8 +250,8 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
             		
             	}
             }
-
-            os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+			fos = new FileOutputStream(depositfilePath + File.separator + flieName);
+            os = new BufferedOutputStream(fos);
             workbook.write(os); 
 
         }
@@ -260,6 +263,9 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
                 if (null != workbook) {
                 	workbook.close();
                 }
+                if (fos != null){
+					fos.close();
+				}
             }
             catch (Exception e) {
             	logger.error("workbook关闭失败！");
@@ -268,6 +274,9 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 				if (null != os) {
 					os.flush();
 					os.close();
+				}
+				if (stream!= null){
+					stream.close();
 				}
 			}
 			catch (Exception e) {
@@ -319,7 +328,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 	/**
 	 *  创建批量文件。单个
 	 * @param batchLists
-	 * @param termname
+	 * @param flieName
 	 * @param template
 	 * @return
 	 */
@@ -333,6 +342,9 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
         File depositfile = null;
         Workbook workbook = null;
 		OutputStream os =null;
+		// 模板输入流
+		InputStream stream  = null;
+		FileOutputStream fos = null;
         try {
             // 传放地址
             String depositfilePath = CacheUtil.getSysParam(
@@ -342,9 +354,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
                 depositfile.getParentFile().mkdirs();
             }
             String templateFile = template + ".xls";
-            // 模板输入流
-            InputStream stream  = null;
-            
+
             String tplFile = FileNameUtil.getTplFile(templateFile);
             File templeteFile = new File(tplFile);
             if (templeteFile.exists()) {
@@ -379,8 +389,8 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 	            	}
             	}
             }
-
-			os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+			fos = new FileOutputStream(depositfilePath + File.separator + flieName);
+			os = new BufferedOutputStream(fos);
             workbook.write(os); 
 
         }
@@ -392,18 +402,20 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
                 if (null != workbook) {
                 	workbook.close();
                 }
-            }
-            catch (Exception e) {
-            	logger.error("workbook关闭失败！");
-            }
-			try {
 				if (null != os) {
 					os.flush();
 					os.close();
 				}
-			}catch (Exception e){
-				e.printStackTrace();
-			}
+				if (stream != null){
+					stream.close();
+				}
+				if (fos != null){
+					fos.close();
+				}
+            }
+            catch (Exception e) {
+            	logger.error("workbook关闭失败！");
+            }
         }
         return depositfile;
 	}

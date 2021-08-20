@@ -166,6 +166,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                 SysUploadFileInfo.class);
             //
             Writer w = null;
+            FileOutputStream fos = null;
             try {
                 // 创建配置
                 Configuration configuration = new Configuration(Configuration.getVersion());
@@ -257,7 +258,8 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                     if (ftlName != null) {
                         Template template = configuration.getTemplate(ftlName, "UTF-8");
                         File f = new SafelyFile(exportPath+"/"+ftlName);
-                        w = new OutputStreamWriter(new FileOutputStream(f), "utf-8");
+                        fos = new FileOutputStream(f);
+                        w = new OutputStreamWriter(fos, "utf-8");
                         template.process(dataMap, w);
                         arrFileTemp.add(new SafelyFile(exportPath+"/"+ftlName));
                     }
@@ -265,8 +267,10 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                 else{
                 	BufferedInputStream bis =null;
                 	OutputStream os=null;
+                    FileInputStream fis = null;
                     try {
-						bis = new BufferedInputStream(new FileInputStream(new SafelyFile(templetFileFullPath)));
+                        fis = new FileInputStream(new SafelyFile(templetFileFullPath));
+						bis = new BufferedInputStream(fis);
 						byte[] bytes = new byte[bis.available()];
 						os = new FileOutputStream(new SafelyFile(exportPath+"/"+ftlName));
 						bis.read(bytes);
@@ -281,6 +285,9 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
 	                    if (os != null) {
 	                    	os.close();
 	                    }
+	                    if (fis != null){
+                            fis.close();
+                        }
 					}
                 }
                 
@@ -294,9 +301,11 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                     if (w != null) {
                         w.close();
                     }
+                    if (fos != null){
+                       fos.close();
+                    }
                 }
                 catch (IOException ex) {
-                    // Logger.getLogger(Java2Word.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

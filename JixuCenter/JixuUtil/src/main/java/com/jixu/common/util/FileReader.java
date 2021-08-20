@@ -10,14 +10,16 @@ public class FileReader {
 	public static String ReadFile(String Path){
 		BufferedReader reader = null;
 		String laststr = "";
+		FileInputStream fileInputStream = null;
+		InputStreamReader inputStreamReader = null;
 		try{
 			File file=new File(Path);
 			//判断是否为目录,在junit测试时,所有的web文件不会被引入到项目中
 			if(file.isDirectory()){
 				return null;
 			}
-			FileInputStream fileInputStream = new FileInputStream(file);
-			InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+			fileInputStream = new FileInputStream(file);
+			inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
 			reader = new BufferedReader(inputStreamReader);
 			String tempString = null;
 			while((tempString = reader.readLine()) != null){
@@ -27,12 +29,18 @@ public class FileReader {
 		}catch(IOException e){
 			e.printStackTrace();
 		}finally{
-			if(reader != null){
-				try {
+			try {
+				if(reader != null){
 					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+				if (fileInputStream != null){
+					fileInputStream.close();
+				}
+				if (inputStreamReader != null){
+					inputStreamReader.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		return laststr;

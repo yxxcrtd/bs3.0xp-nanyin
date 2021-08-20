@@ -79,62 +79,67 @@ public class JasparConnectUtilService {
 	public UploadFile connectJasparAndDownload_old(String strUrl, String fileName,// 修改为old方法，不使用 zhangyf 20190219
 			String fileType, String repId, String prodId) throws Exception{
 		logger.info("连接报表服务器开始=====");
-		URL connUrl = new URL(strUrl);
-		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
-		URLConnection conn = connUrl.openConnection();
-		logger.info("连接报表服务器结束=====");
-		// 防止屏蔽程序抓取而返回403错误
-        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+		InputStream inputStream = null;
+		try{
+			URL connUrl = new URL(strUrl);
+			fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
+			URLConnection conn = connUrl.openConnection();
+			logger.info("连接报表服务器结束=====");
+			// 防止屏蔽程序抓取而返回403错误
+			conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        InputStream inputStream = conn.getInputStream();
+			inputStream = conn.getInputStream();
 
-        String filePathName = prodId + GlobalConstant.UNDER_LINE + repId + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
-        // 获取自己数组
-        byte[] getData = readInputStream(inputStream);
-        
-        String path = FileNameUtil.createUploadFilePath("");
-        logger.info("判断是否有指定文件夹开始=====");
-        File localFile = new SafelyFile(path+ File.separator+filePathName);
-        File dir = localFile.getParentFile();
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        logger.info("判断是否有指定文件夹结束=====");    
-        logger.info("写文件开始=====");
+			String filePathName = prodId + GlobalConstant.UNDER_LINE + repId + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
+			// 获取自己数组
+			byte[] getData = readInputStream(inputStream);
 
-		FileOutputStream fos =null;
-        try {
-			fos = new FileOutputStream(localFile);
-			fos.write(getData);
-			logger.info("写文件结束=====");
-		}catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		finally {
-			if (fos != null) {
-				fos.close();
+			String path = FileNameUtil.createUploadFilePath("");
+			logger.info("判断是否有指定文件夹开始=====");
+			File localFile = new SafelyFile(path+ File.separator+filePathName);
+			File dir = localFile.getParentFile();
+			if (!dir.exists()) {
+				dir.mkdirs();
 			}
+			logger.info("判断是否有指定文件夹结束=====");
+			logger.info("写文件开始=====");
+
+			FileOutputStream fos =null;
+			try {
+				fos = new FileOutputStream(localFile);
+				fos.write(getData);
+				logger.info("写文件结束=====");
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			finally {
+				if (fos != null) {
+					fos.close();
+				}
+			}
+
+			UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
+					localFile);
+			//存入SYS_UPLOAD_FILE_INFO表
+			if(null != fileAttachmentProcess) {
+				fileAttachmentProcess.upload(uploadFile);
+			}
+
+			//add by leipeng 上传文件处理
+			SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
+			sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
+			sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
+			sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
+			joyinDFSTemplate.upload(sysUploadFileInfo);
+
+			return uploadFile;
+		}finally {
 			if (inputStream != null) {
 				inputStream.close();
 			}
 		}
 
-        UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
-                localFile);
-        //存入SYS_UPLOAD_FILE_INFO表
-        if(null != fileAttachmentProcess) {
-            fileAttachmentProcess.upload(uploadFile);
-        }
-        
-      //add by leipeng 上传文件处理
-        SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
-        sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
-        sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
-        sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
-        joyinDFSTemplate.upload(sysUploadFileInfo);
-        
-		return uploadFile;
 	}
 	
 	public UploadFile connectJasparAndDownload(String strUrl, String fileName,
@@ -199,10 +204,7 @@ public class JasparConnectUtilService {
 		// 防止屏蔽程序抓取而返回403错误
         conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        InputStream inputStream = conn.getInputStream();
 
-        // 获取自己数组
-        byte[] getData = readInputStream(inputStream);
         
         String path = FileNameUtil.createUploadFilePath("");
         
@@ -213,8 +215,11 @@ public class JasparConnectUtilService {
         }
 
 		FileOutputStream fos = null;
-
+		InputStream inputStream = null;
         try {
+			inputStream = conn.getInputStream();
+			// 获取自己数组
+			byte[] getData = readInputStream(inputStream);
 			fos = new FileOutputStream(localFile);
 			fos.write(getData);
 		}catch (Exception e)

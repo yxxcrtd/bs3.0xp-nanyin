@@ -66,7 +66,7 @@ public class CheckNumService {
 		List<Map<String, String>> equityList = null;
 		try {
 			fileInputStream = new FileInputStream(new File(tmpPath + fileName));
-			equityList = XmlParseUtil.parse(new FileInputStream(new File(tmpPath + fileName)));
+			equityList = XmlParseUtil.parse(fileInputStream);
 		}finally {
 			if(fileInputStream != null){
 				fileInputStream.close();

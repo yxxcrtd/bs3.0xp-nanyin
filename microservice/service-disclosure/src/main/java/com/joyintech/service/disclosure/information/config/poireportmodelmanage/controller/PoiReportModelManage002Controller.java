@@ -187,7 +187,6 @@ public class PoiReportModelManage002Controller extends BaseController {
 				 File uploadfile = new SafelyFile(this.getParam("fileName"));///home/tamsuser/upload/.txt
 				 FileInputStream fis = new FileInputStream(uploadfile);
 				 //要存放的文件名称，并且用输出流降读取的文件流内容输出
-
 				 FileOutputStream fos = null;
 				 BufferedInputStream bis = null;
 				 BufferedOutputStream bos = null;
@@ -214,15 +213,12 @@ public class PoiReportModelManage002Controller extends BaseController {
 			    if (bos != null){
 					bos.close();
 			    }
+			    if (fis != null){
+			    	fis.close();
+				}
 			  }
-
-				 
 		 }
-//			 
-			
-			
-			 
-				return res;
+			return res;
 		}
 		
 		/**
@@ -231,8 +227,7 @@ public class PoiReportModelManage002Controller extends BaseController {
 		 */
 		 @GetMapping("/getInfoSelect")
 		public List<SelectOptionDto> getInfoSelect() {
-				
-			 List<SelectOptionDto> page1	=	poireportModelManage002Service.getInfoSelect();
+			 List<SelectOptionDto> page1 = poireportModelManage002Service.getInfoSelect();
 			 return page1;
 		 }
 		 

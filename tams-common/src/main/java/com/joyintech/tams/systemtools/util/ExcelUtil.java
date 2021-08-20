@@ -229,7 +229,7 @@ public class ExcelUtil {
      * @return wb
      * @throws FileNotFoundException,BusinessException 
      */
-    public static Workbook loadWorkbook(String fileName, File file, InputStream inputStream) 
+    public static Workbook loadWorkbook(String fileName, File file, InputStream inputStream)
             throws FileNotFoundException{
         if (null == file && StringUtil.isEmpty(fileName)) {
             return null;
@@ -245,30 +245,27 @@ public class ExcelUtil {
         }
 
         Workbook wb = null;
-        if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
-            try {
+        try {
+            if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
                 POIFSFileSystem fs = new POIFSFileSystem(inputStream);
                 wb = new HSSFWorkbook(fs);
-                inputStream.close();
             }
-            catch (Exception e) {
-//                e.printStackTrace();
-                logger.error(e.getMessage(),e);
+            else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
+                    wb = new XSSFWorkbook(inputStream);
             }
-
-        }
-        else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
-            try {
-                wb = new XSSFWorkbook(inputStream);
-                inputStream.close();
+            else {
+                throw new BusinessException("不是一个有效的Excel文件");
             }
-            catch (Exception e) {
-//                e.printStackTrace();
-                logger.error(e.getMessage(),e);
+        } catch (IOException e) {
+            logger.error(e.getMessage(),e);
+        }finally {
+            if (inputStream != null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(),e);
+                }
             }
-        }
-        else {
-            throw new BusinessException("不是一个有效的Excel文件");
         }
         return wb;
     }
@@ -344,7 +341,7 @@ public class ExcelUtil {
     /**
      * 检查Excel模板是否正确
      *
-     * @param flieName 上传文件名
+     * @param tempDataList 上传文件名
      * @return headList 模板头list
      * @see
      * @since 1.0

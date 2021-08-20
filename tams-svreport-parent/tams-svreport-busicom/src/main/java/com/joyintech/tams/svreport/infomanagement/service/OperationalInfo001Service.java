@@ -16,6 +16,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
@@ -1743,15 +1744,19 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             // 处理中文不能自动调整列宽的问题
             this.setSizeColumn(sheet, columnNum);
 			if (workbook != null) {
+				FileOutputStream out = null;
 				try {
 					File exportFile = new SafelyFile(fileName);
-					FileOutputStream out = new FileOutputStream(exportFile);
+					out = new FileOutputStream(exportFile);
 					workbook.write(out);
-					out.close();
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
 					e.printStackTrace();
+				}finally {
+					if (out != null){
+						out.close();
+					}
 				}
 			}
 
@@ -3564,11 +3569,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     public  String clobToString(Clob clob){
     	if(clob == null) {   
             return null;   
-        }   
-        try{   
-            Reader inStreamDoc = clob.getCharacterStream();   
-               
-            char[] tempDoc = new char[(int) clob.length()];   
+        }
+		Reader inStreamDoc = null;
+        try{
+			inStreamDoc = clob.getCharacterStream();
+            char[] tempDoc = new char[(int) clob.length()];
             inStreamDoc.read(tempDoc);   
             inStreamDoc.close();   
             return new String(tempDoc);   
@@ -3580,9 +3585,16 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
         catch (SQLException es)   
         {   
             es.printStackTrace();
-          }   
-             
-          return null;   
+	  	}finally {
+        	if (inStreamDoc != null){
+				try {
+					inStreamDoc.close();
+				} catch (IOException e) {
+					throw new BusinessException(e);
+				}
+			}
+		}
+          return null;
       }
     
     

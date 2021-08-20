@@ -514,7 +514,7 @@ public class AgencyExportService<T extends ITableRow> extends BaseService<T> imp
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(file);
-            wb.write(new FileOutputStream(file));
+            wb.write(fileOutputStream);
         }finally {
             if(fileOutputStream != null){
                 fileOutputStream.close();

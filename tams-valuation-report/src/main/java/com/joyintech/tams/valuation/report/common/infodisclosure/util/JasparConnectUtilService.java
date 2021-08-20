@@ -109,8 +109,6 @@ public class JasparConnectUtilService {
      * @param serverUrl 服务器url
      * @param serverUser 用户
      * @param serverPwd  密码
-     * @param infoDisclosureGenAndSendEntity 批处理配置
-     * @param check 与报表服务器通信时是否发送完整文件校验字段
      * @return
      */
     public String getAllHtmlUrl(String serverUrl, String serverUser, String serverPwd, String  path, String uri, RepReveal repReveal,String fileType){
@@ -131,25 +129,26 @@ public class JasparConnectUtilService {
     /**
 	 * 连接Jaspar并将url上的连接下载到本地固定位置
 	 * @param strUrl 连接url
-	 * @param fileName 需要下载的文件名
-	 * @param fileType 下载文件类型
 	 * @return
 	 * @throws Exception
 	 */
 	public String  connectJasparAndGenHtml(String strUrl) throws Exception{
-		
-		URL connUrl = new URL(strUrl);
-		
-		URLConnection conn = connUrl.openConnection();
-		// 防止屏蔽程序抓取而返回403错误
-        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+        String getData = null;
+        InputStream inputStream = null;
+		try {
+            URL connUrl = new URL(strUrl);
 
-        InputStream inputStream = conn.getInputStream();
-        
-        // 获取自己数组
-        String getData = readInputStreamToString(inputStream);
-        if (inputStream != null) {
-            inputStream.close();
+            URLConnection conn = connUrl.openConnection();
+            // 防止屏蔽程序抓取而返回403错误
+            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+
+            inputStream = conn.getInputStream();
+            // 获取自己数组
+            getData = readInputStreamToString(inputStream);
+        }finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
         }
 		return getData;
 	}

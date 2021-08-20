@@ -31,10 +31,17 @@ public class ApplicationConfig {
 	
 	public static SztMessage msgInit() throws Exception{
 		SztMessage  msg= new SztMessage();
-		
+		InputStream is = null;
 		Properties prop = new Properties();
-		prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("sztInterfClientMsg.properties"));
-		
+		try{
+			is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sztInterfClientMsg.properties");
+			prop.load(is);
+		}finally {
+			if (is != null){
+				is.close();
+			}
+		}
+
 		msg.setFromAppId(prop.getProperty("fromAppId"));
 		msg.setFromUserId(prop.getProperty("fromUserId"));
 		msg.setToAppId(prop.getProperty("toAppId"));

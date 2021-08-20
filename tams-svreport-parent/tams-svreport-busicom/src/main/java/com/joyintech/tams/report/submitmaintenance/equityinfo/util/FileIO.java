@@ -175,6 +175,7 @@ public class FileIO {
 		}
 
 		XMLWriter xmlWriter = null;
+		FileOutputStream fos = null;
 		try {
 			if (!f.exists()) {
 				f.createNewFile();
@@ -191,8 +192,10 @@ public class FileIO {
 			outputFormat.setNewlines(true);
 			/** stringWriter字符串是用来保存XML文档的 */
 			StringWriter stringWriter = new StringWriter();
+
+			fos = new FileOutputStream(f);
 			/** xmlWriter是用来把XML文档写入字符串的(工具) */
-			xmlWriter = new XMLWriter(new FileOutputStream(f),outputFormat);
+			xmlWriter = new XMLWriter(fos,outputFormat);
 			/** 创建xml文档 */
 			Document document = DocumentHelper.createDocument();
 			Element list = document.addElement(ReportGlobalConstant.XML_LIST);
@@ -213,12 +216,15 @@ public class FileIO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			if(xmlWriter != null){
-				try {
+			try {
+				if(xmlWriter != null){
 					xmlWriter.close();
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+				if (fos != null){
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}

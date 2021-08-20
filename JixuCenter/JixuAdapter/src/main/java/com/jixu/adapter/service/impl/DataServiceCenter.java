@@ -1,6 +1,7 @@
 package com.jixu.adapter.service.impl;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -494,12 +495,13 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 		
 		ResultContainer container=new ResultContainer();
 		List<MsgContainer> msgcontainerList=new ArrayList<MsgContainer>();
-		
+		FileOutputStream fos = null;
 		try{
 			for(MultipartFile mpf:mpfList){
 				//上传的文件先复制到配置的文件夹下,然后上传
 				String filePath = source.getFilepath() + "/" + mpf.getOriginalFilename();
-				FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(new SafelyFile(filePath)));
+				fos = new FileOutputStream(new SafelyFile(filePath));
+				FileCopyUtils.copy(mpf.getBytes(), fos);
 			
 				if(fileBean==null){
 					container.setCorrectFlag(false);
@@ -530,8 +532,15 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 			container.setErrorMsg("上传并读取接口文件异常");//e.toString());
 			logger.error("Error", e);
 			return container;
+		}finally {
+			if (fos != null){
+				try {
+					fos.close();
+				} catch (IOException ioe) {
+					logger.error("Error", ioe);
+				}
+			}
 		}
-		
 		return container;
 	}
 	

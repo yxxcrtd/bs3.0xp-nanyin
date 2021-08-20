@@ -183,6 +183,13 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 					return false;
 				}
 			}
+			if (is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
+					return false;
+				}
+			}
 		}
 	}
     
@@ -226,8 +233,6 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 	
 	/**
      * 查询当前版本类型
-     * 
-     * @param map
      * @return
      */
 	public String selectVersionType() {

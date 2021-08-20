@@ -400,52 +400,35 @@ public class FileUtil {
 		InputStreamReader isr=null;
 		BufferedReader reader=null;
 		try{
-		// 以行为单位读取文件内容，一次读一整行
-		fis=new FileInputStream(file);
-		isr=new InputStreamReader(fis, encode);
-		reader = new BufferedReader(isr);
-		String tempString = null;
-		// 一次读入一行，直到读入null为文件结束
-		while ((tempString = reader.readLine()) != null) {
-			// 显示行号
-			result.add(tempString);
-		}
-		fis.close();
-		isr.close();
-		reader.close();
+			// 以行为单位读取文件内容，一次读一整行
+			fis=new FileInputStream(file);
+			isr=new InputStreamReader(fis, encode);
+			reader = new BufferedReader(isr);
+			String tempString = null;
+			// 一次读入一行，直到读入null为文件结束
+			while ((tempString = reader.readLine()) != null) {
+				// 显示行号
+				result.add(tempString);
+			}
 		}
 		catch(IOException e){
 			logger.error(e.getMessage(),e);
 		    throw new IOException(); 
 		}
 		finally {
-          if(fis!=null){
-              try {
-                fis.close();
-            }
-            catch (IOException e) {
-//                e.printStackTrace();
-                logger.error(e.getMessage(),e);
-            }
-          }  
-          if(isr!=null){
-              try {
-                  isr.close();
-              }
-              catch (IOException e) {
-//                  e.printStackTrace();
-                  logger.error(e.getMessage(),e);
-              }
-          }  
-          if(reader!=null){ 
-              try {
-                  reader.close();
-              }
-              catch (IOException e) {
-//                  e.printStackTrace();
-                  logger.error(e.getMessage(),e);
-              }
-          }  
+			try {
+				if(fis!=null){
+					fis.close();
+				}
+				if(isr!=null) {
+					isr.close();
+				}
+				if(reader!=null) {
+					reader.close();
+				}
+			} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+			}
         }
 		return result;
 	}
@@ -603,10 +586,6 @@ public class FileUtil {
 				br.write("\n");
 			}
 			br.flush();
-			fos.close();
-			osw.close();
-			br.close();
-
 		} catch (UnsupportedEncodingException e) {
 			result.setMessage(InterfConstant.UNSUPPORTEDENCODINGE_MSG);
 			result.setStatus(false);

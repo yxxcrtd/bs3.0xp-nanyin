@@ -80,10 +80,12 @@ public class TxtReadUtils {
             List list = new ArrayList();
             InputStreamReader isr;
             BufferedReader br =null;
+            FileInputStream fis = null;
             try {          	
                 File file = new File(path);
+                fis = new FileInputStream(file);
                 if (file.isFile() && file.exists()) {
-					isr = new InputStreamReader( new FileInputStream(file), "utf-8");
+					isr = new InputStreamReader( fis, "utf-8");
                     br = new BufferedReader(isr);
                     String lineTxt = null; // 读取文件的方法
 //                    int num=0;
@@ -167,6 +169,13 @@ public class TxtReadUtils {
 						logger.error("",e);
 					} 
             	}
+            	if (fis != null){
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        logger.error("",e);
+                    }
+                }
             }
             listAll.addAll(list);
         }

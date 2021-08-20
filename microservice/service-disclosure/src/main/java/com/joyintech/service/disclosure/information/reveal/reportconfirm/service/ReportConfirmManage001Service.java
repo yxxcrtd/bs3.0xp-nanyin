@@ -488,10 +488,11 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 				}
 				//不需要层级
 				else{
+					FileOutputStream fos = null;
 					try {
-						zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+						fos = new FileOutputStream(zipFile);
+						zipOut = new ZipOutputStream(fos);
 						for(RepReveal report : reportList){
-						    // TODO
                             String reportName=report.getReportName();
                             if(StringUtil.isNotEmpty(report.getEndDate())&&report.getEndDate()!=null){
                                 reportName=DateUtil.format(report.getEndDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)+GlobalConstant.UNDER_LINE+reportName;
@@ -627,11 +628,18 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 								downloadFile.delete();
 							}
 						}
-						zipOut.close();
+
 					} 
 					catch(Exception e) {
 			        	log.error("",e);
-			        }
+			        }finally {
+						if (zipOut != null){
+							zipOut.close();
+						}
+						if (fos != null){
+							fos.close();
+						}
+					}
 					
 				}
 			}

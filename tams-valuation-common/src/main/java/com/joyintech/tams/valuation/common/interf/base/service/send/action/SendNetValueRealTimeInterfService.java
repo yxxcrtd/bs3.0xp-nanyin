@@ -155,8 +155,10 @@ public class SendNetValueRealTimeInterfService extends BaseController {
 
 			// 重新创建文件，写入数据
 			BufferedWriter bw = null;
+			FileOutputStream fos = null;
 			try {
-				bw= new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "GBK"));
+				fos = new FileOutputStream(file);
+				bw= new BufferedWriter(new OutputStreamWriter(fos, "GBK"));
 				bw.write(sendNetValueData.toString());
 				log.info("净值下发接口写入:" + sendNetValueData.toString());
 			} catch (IOException e) {
@@ -165,6 +167,9 @@ public class SendNetValueRealTimeInterfService extends BaseController {
 			}finally {
 				if(bw != null){
 					bw.close();
+				}
+				if (fos != null){
+					fos.close();
 				}
 			}
 
