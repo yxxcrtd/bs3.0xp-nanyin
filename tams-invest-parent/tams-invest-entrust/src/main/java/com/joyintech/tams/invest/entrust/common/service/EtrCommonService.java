@@ -687,7 +687,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
         List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
         if (object != null){
             // 构建接口参数
-            generateInputDtoList(object,status,method,inputDtoList);
+            generateInputDtoList(object,status,method,inputDtoList,null);
             if (inputDtoList.size() > 0){
                 if ("check".equals(method)){
                     ar = AllTradeCommonUtil.checkBeforeTradeComplete(inputDtoList);
@@ -706,11 +706,13 @@ public class EtrCommonService extends BaseService<ITableRow> {
      * @param method
      * @param inputDtoList
      */
-    private void generateInputDtoList(Object object, String status, String method, List<CreditLinesInputDto> inputDtoList) {
+    private void generateInputDtoList(Object object, String status, String method, List<CreditLinesInputDto> inputDtoList,Integer rownum) {
         // 多对多指令 或者 多组合指令check
         if (object instanceof  List<?>){
+            int num = 0;
             for (Object obj : (List<?>)object){
-                generateInputDtoList(obj,status,method,inputDtoList);
+                num++;
+                generateInputDtoList(obj,status,method,inputDtoList,num);
             }
         }else if (object instanceof String && method.equals("close")){
             // 指令关闭
@@ -727,10 +729,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
         }else {
             CreditLinesInputDto creditLinesInputDto = generateInputDto(object,status,method);
             if (creditLinesInputDto != null){
-                Map paramMap=BeanUtil.objectToMap(object);
-                if(StringUtil.isNotEmpty(paramMap.get("indexId"))){
-                    creditLinesInputDto.setIndexId((String) paramMap.get("indexId"));
-                }
+                creditLinesInputDto.setRownum(rownum);
                 inputDtoList.add(creditLinesInputDto);
             }
         }

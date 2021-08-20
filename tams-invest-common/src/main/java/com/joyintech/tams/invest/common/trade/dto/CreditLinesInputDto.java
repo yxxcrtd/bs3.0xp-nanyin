@@ -142,14 +142,14 @@ public class CreditLinesInputDto extends BaseEntity {
     /**
      * 序号
      */
-    private String indexId;
+    private Integer rownum;
 
-    public String getIndexId() {
-        return indexId;
+    public Integer getRownum() {
+        return rownum;
     }
 
-    public void setIndexId(String indexId) {
-        this.indexId = indexId;
+    public void setRownum(Integer rownum) {
+        this.rownum = rownum;
     }
 
     /**
