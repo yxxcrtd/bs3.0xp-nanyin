@@ -255,7 +255,7 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
             deleteByCounterId(entity);
             restTemplate.postForObject(
                     ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/" + action, entity,
-                    Integer.class);
+                    boolean.class);
 
 
 

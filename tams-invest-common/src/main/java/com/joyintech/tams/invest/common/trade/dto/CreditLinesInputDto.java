@@ -139,6 +139,18 @@ public class CreditLinesInputDto extends BaseEntity {
      * 单位净价
      */
     private BigDecimal netPrice;
+    /**
+     * 序号
+     */
+    private String indexId;
+
+    public String getIndexId() {
+        return indexId;
+    }
+
+    public void setIndexId(String indexId) {
+        this.indexId = indexId;
+    }
 
     /**
      * 是否是 净值型产品、货币型产品、基金

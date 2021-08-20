@@ -727,6 +727,10 @@ public class EtrCommonService extends BaseService<ITableRow> {
         }else {
             CreditLinesInputDto creditLinesInputDto = generateInputDto(object,status,method);
             if (creditLinesInputDto != null){
+                Map paramMap=BeanUtil.objectToMap(object);
+                if(StringUtil.isNotEmpty(paramMap.get("indexId"))){
+                    creditLinesInputDto.setIndexId((String) paramMap.get("indexId"));
+                }
                 inputDtoList.add(creditLinesInputDto);
             }
         }

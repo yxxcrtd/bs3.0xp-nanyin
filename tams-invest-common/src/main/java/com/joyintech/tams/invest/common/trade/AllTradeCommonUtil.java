@@ -2239,7 +2239,11 @@ public class AllTradeCommonUtil {
                     }else {
                         if(resultList.size()>1){
                             for(String confirmMessages :item.getConfirmMessages()){
-                                confirmMessages ="第"+index+"行:"+confirmMessages;
+                                if(StringUtil.isNotEmpty(inputDtoList.get(index-1).getIndexId())){
+                                    confirmMessages ="序号"+inputDtoList.get(index-1).getIndexId()+":"+confirmMessages;
+                                }else {
+                                    confirmMessages ="第"+index+"行:"+confirmMessages;
+                                }
                                 if(stringList.contains(confirmMessages)){
                                     continue;
                                 }
