@@ -1517,6 +1517,15 @@ public class BussSettleOrderCommService {
                         DictCodeListExt1.资金账户类型_交易对手账户.getValue(), deal.getCcy()));
             }
         }
+
+        // add by etliu 20210820 start
+        // 自定义现金流 收取 付款账户默认空
+        if (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_自定义现金流.getValue())
+                && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_收取.getValue())) {
+            dto.setMyCapacctInfoList(new ArrayList<>());
+        }
+        // add by etliu 20210820 end
+
         dto.setCounterCapacctInfoList(bussSettleOrderCommMapper.selectProdCapacctInfoList(inputDto.getPortfolioId(), deal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue()));
         return dto;
     }
