@@ -248,6 +248,9 @@ public class ComRateAssetQuotationInfo002Controller extends BaseController {
         if (StringUtil.isEmpty(dto.getFinprodId())) {
             dto.setFinprodId(IDGenerator.generate());
         }
+        if (StringUtil.isEmpty(dto.getValueSource())) {
+            dto.setValueSource(DictCodeListExt3.估值数据来源_手工.getCodeName());
+        }
         params.setBusinessCode(dto.getFinprodId());
 
         params.setBusinessType(DictCodeListExt3.共通业务类型_项目类_计划类利率型行情信息.getValue());

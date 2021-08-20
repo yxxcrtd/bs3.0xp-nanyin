@@ -300,4 +300,5 @@ public class ComRateAssetQuotationInfo001Dto extends FinProductValuation impleme
     public void setFundManager(String fundManager) {
         this.fundManager = fundManager;
     }
+
 }

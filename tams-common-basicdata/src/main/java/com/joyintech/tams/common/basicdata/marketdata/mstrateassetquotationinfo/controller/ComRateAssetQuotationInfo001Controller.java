@@ -271,6 +271,7 @@ public class ComRateAssetQuotationInfo001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("checkImportData")
     public AjaxResult checkImportData(String fileName) {
+
         return mstRateAssetQuotationInfo001Service.checkImportData(fileName);
     }
 

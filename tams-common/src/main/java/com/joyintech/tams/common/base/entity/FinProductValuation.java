@@ -69,12 +69,16 @@ public class FinProductValuation extends FinProductValuationKey {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal cShares;
 
+    /**
+     * 每日全价估值，净值、万份收益等
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal fullValuation;
 
     /**
-     * 估值来源，专家法，模型法
+     * 估值来源
      */
     private String valueSource;
-
 
     /**
      * 取得 金融产品类型（估值核算），债券、理财产品、基金、理财产品模板、理财产品分层
@@ -253,11 +257,35 @@ public class FinProductValuation extends FinProductValuationKey {
         this.cShares = cShares;
     }
 
+    /**
+     * 取得 每日全价估值，净值、万份收益等
+     * @return 每日全价估值，净值、万份收益等
+     */
+    public BigDecimal getFullValuation() {
+        return fullValuation;
+    }
+
+    /**
+     * 设置 每日全价估值，净值、万份收益等
+     * @param fullValuation 每日全价估值，净值、万份收益等
+     */
+    public void setFullValuation(BigDecimal fullValuation) {
+        this.fullValuation = fullValuation;
+    }
+
+    /**
+     * 取得 估值来源
+     * @return 估值来源
+     */
     public String getValueSource() {
         return valueSource;
     }
 
+    /**
+     * 设置 估值来源
+     * @param valueSource 估值来源
+     */
     public void setValueSource(String valueSource) {
-        this.valueSource = valueSource;
+        this.valueSource = valueSource == null ? null : valueSource.trim();
     }
 }
