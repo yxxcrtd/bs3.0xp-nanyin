@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='WSSQYGQSYZCDQR';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('WSSQYGQSYZCDQR','未上市企业股权及其受益权资产到期日','N','','wp','C001',sysdate,'wp',sysdate,'','','N','Date', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('WSSQYGQSYZCDQR','未上市企业股权及其受益权资产到期日','N','','wp','C001',sysdate,'wp',sysdate,'','','N','Date', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='WSSQYGQSYZCDQR';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('WSSQYGQSYZCDQR','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);

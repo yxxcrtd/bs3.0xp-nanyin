@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='CPGZPLD';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('CPGZPLD','产品估值偏离度','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','N','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('CPGZPLD','产品估值偏离度','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','N','String', '','DATABASE', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='CPGZPLD';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPGZPLD','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);

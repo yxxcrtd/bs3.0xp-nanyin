@@ -4,7 +4,7 @@
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='BDZJHJITZYBLZCSYQ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('BDZJHJITZYBLZCSYQ','不得直接或间接投资于不良资产受（收）益权','Y','SELECT ''Y'' ID ,''不良资产'' TEXT FROM DUAL
   UNION ALL
-  SELECT ''N'' ID ,''非不良资产'' TEXT FROM DUAL','ysfusp','C001',sysdate,'ysfusp',sysdate,'','','N','String', '','', '');
+  SELECT ''N'' ID ,''非不良资产'' TEXT FROM DUAL','ysfusp','C001',sysdate,'ysfusp',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='BDZJHJITZYBLZCSYQ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDZJHJITZYBLZCSYQ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','ysfusp','C001',sysdate,'ysfusp',sysdate);

@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='CKHGYPTYSYQX';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('CKHGYPTYSYQX','银行存款、债券回购、中央银行票据、同业存单资产剩余期限','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','N','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('CKHGYPTYSYQX','银行存款、债券回购、中央银行票据、同业存单资产剩余期限','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='CKHGYPTYSYQX';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CKHGYPTYSYQX','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);

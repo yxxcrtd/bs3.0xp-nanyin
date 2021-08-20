@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='QXPZQYRJQSYL';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('QXPZQYRJQSYL','期限品种前一日加权利率','N','','wp','C001',sysdate,'wp',sysdate,'','','N','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('QXPZQYRJQSYL','期限品种前一日加权利率','N','','wp','C001',sysdate,'wp',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='QXPZQYRJQSYL';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('QXPZQYRJQSYL','01', 'SQL','SELECT 1 FROM DUAL', 'varietyCode','N','wp','C001',sysdate,'wp',sysdate);

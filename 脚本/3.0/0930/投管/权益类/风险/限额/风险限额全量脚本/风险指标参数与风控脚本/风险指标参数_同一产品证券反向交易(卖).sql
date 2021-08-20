@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='TYCPZQFXJYSELL';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('TYCPZQFXJYSELL','同一产品证券反向交易(卖)','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('TYCPZQFXJYSELL','同一产品证券反向交易(卖)','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='TYCPZQFXJYSELL';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPZQFXJYSELL','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','wp','C001',sysdate,'wp',sysdate);
