@@ -686,6 +686,12 @@
         <result column="VALID_STATUS" property="validStatus" jdbcType="VARCHAR" />
 		<result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
 		<result column="IS_DZH" property="isDzh" jdbcType="VARCHAR" />
+		<!--add by chenjiaxing 质押券回购改造 20210819 start-->
+		<result column="EXT_PLEDGE_RATIO" property="pledgeRate" jdbcType="DECIMAL" />
+		<result column="EXT_PLEDGE_AMT" property="prin" jdbcType="DECIMAL" />
+		<result column="EXT_FINPROD_MARKET_ID" property="bondCode" jdbcType="VARCHAR" />
+		<result column="EXT_FINPROD_ABBR" property="bondAbbrName" jdbcType="VARCHAR" />
+		<!--add by chenjiaxing 质押券回购改造 20210819 end-->
 	</resultMap>
 	
 	<select id="selectRepoQuoteList" parameterType="com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteSearchDto" 
@@ -1049,6 +1055,20 @@ SELECT T.QUOTE_ID,
                     )
                     <!-- modify by etliu 20210324 银行间上下行多组合 end -->
 	            </if>
+			<!-- add by chenjiaxing 20210816 委托查询 start -->
+			<if test="termStart !=null and termStart !=''">
+			and a.TERM <![CDATA[<=]]> #{termStart,jdbcType=VARCHAR}
+			</if>
+			<if test="termEnd !=null and termEnd !=''">
+				and a.TERM >= #{termEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="ouPartyIdList != null and ouPartyIdList.size() > 0">
+				and a.OU_PARTY_ID in
+				<foreach item="item" index="index" collection="ouPartyIdList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<!-- add by chenjiaxing 20210816  委托查询 end -->
 	            <if test="isSearchHis == true">
 	            	<if test="hisVersion !=null and hisVersion !=''">
 	                	and a.VERSION = #{hisVersion,jdbcType=VARCHAR}
@@ -1078,6 +1098,426 @@ SELECT T.QUOTE_ID,
 	    order by decode(a.TRADE_STATUS, '06', 2, '08', 3, '13', 4, '07', 5, 1) asc, a.UPDATE_TIME desc
         <!-- order by decode(a.TRADE_STATUS, '06', 96, '08', 97, '13', 98,  '07', 99, to_number(a.TRADE_STATUS)) asc, a.UPDATE_TIME desc -->
     </select>
+
+	<!--add by chenjiaxing 质押式回购改造 start-->
+	<select id="selectRepoQuoteList2" parameterType="com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteSearchDto"
+			resultMap="RepoQuoteExtResultMap">
+		select
+		a.QUOTE_ID           I_Q_C_QUOTE_ID,
+		a.QUOTE_TYPE         I_Q_C_QUOTE_TYPE,
+		a.P_QUOTE_ID         I_Q_C_P_QUOTE_ID,
+		a.VERSION            I_Q_C_VERSION,
+		a.EXE_TYPE           I_Q_C_EXE_TYPE,
+		a.CFETS_QUOTE_ID     I_Q_C_CFETS_QUOTE_ID,
+		a.QUOTE_ROLE_TYPE    I_Q_C_QUOTE_ROLE_TYPE,
+		a.PORTFOLIO_ID       I_Q_C_PORTFOLIO_ID,
+		a.ENTRUST_ID         I_Q_C_ENTRUST_ID,
+		a.QUOTE_DATE         I_Q_C_QUOTE_DATE,
+		a.V_SETTLE_DATE      I_Q_C_V_SETTLE_DATE,
+		a.M_SETTLE_DATE      I_Q_C_M_SETTLE_DATE,
+		a.SETTLE_SPEED       I_Q_C_SETTLE_SPEED,
+		a.V_DELIVERY_TYPE    I_Q_C_V_DELIVERY_TYPE,
+		a.M_DELIVERY_TYPE    I_Q_C_M_DELIVERY_TYPE,
+		a.SETT_TYPE          I_Q_C_SETT_TYPE,
+		a.SETT_CCY           I_Q_C_SETT_CCY,
+		a.CCY                I_Q_C_CCY,
+		a.REPO_PS            I_Q_C_REPO_PS,
+		a.RATE               I_Q_C_RATE,
+		a.TERM               I_Q_C_TERM,
+		a.SHARE_AMT          I_Q_C_SHARE_AMT,
+		a.SHARE_CT_AMT       I_Q_C_SHARE_CT_AMT,
+		a.CB_SHARE_CT_AMT    I_Q_C_CB_SHARE_CT_AMT,
+		a.SC_SHARE_CT_AMT    I_Q_C_SC_SHARE_CT_AMT,
+		a.FPRICE_AMT         I_Q_C_FPRICE_AMT,
+		a.CB_FPRICE_AMT      I_Q_C_CB_FPRICE_AMT,
+		a.SC_FPRICE_AMT      I_Q_C_SC_FPRICE_AMT,
+		a.M_INT_AMT          I_Q_C_M_INT_AMT,
+		a.M_TRADE_AMT        I_Q_C_M_TRADE_AMT,
+		a.BASIS              I_Q_C_BASIS,
+		a.TRADE_STATUS       I_Q_C_TRADE_STATUS,
+		a.SEND_STATUS        I_Q_C_SEND_STATUS,
+		a.EFF_TIME           I_Q_C_EFF_TIME,
+		a.OU_PARTY_ID        I_Q_C_OU_PARTY_ID,
+		NVL(fa.IBU_TRADER, a.OU_TRADER_ID)       I_Q_C_OU_TRADER_ID,
+		a.CP_PARTY_ID        I_Q_C_CP_PARTY_ID,
+		a.CP_TRADER_ID       I_Q_C_CP_TRADER_ID,
+		a.MY_ACCT_NO         I_Q_C_MY_ACCT_NO,
+		a.SEC_MANAGE_ACCT_ID I_Q_C_SEC_MANAGE_ACCT_ID,
+		a.TERM_TYPE          I_Q_C_TERM_TYPE,
+		a.EXECID             I_Q_C_EXECID,
+		a.B_VERSION          I_Q_C_B_VERSION,
+		a.BRANCH_ID          I_Q_C_BRANCH_ID,
+		a.REMARK             I_Q_C_REMARK,
+		a.CREATE_USER        I_Q_C_CREATE_USER,
+		a.CREATE_TIME        I_Q_C_CREATE_TIME,
+		a.CREATE_DEPT        I_Q_C_CREATE_DEPT,
+		a.UPDATE_USER        I_Q_C_UPDATE_USER,
+		a.UPDATE_TIME        I_Q_C_UPDATE_TIME,
+		e.PORTFOLIO_NAME     I_Q_C_PORTFOLIO_NAME,
+		M1.TRADER_NAME AS EXT_OUTRADER_NAME,
+		M2.TRADER_NAME AS EXT_CPTRADER_NAME,
+		N1.PARTY_ABBR AS EXT_OUPARTY_NAME,
+		N2.PARTY_ABBR AS EXT_CPPARTY_NAME,
+		a.WORKFLOW_STATUS AS VALID_STATUS,
+		a.WORKFLOW_ID WORKFLOW_ID,
+		a.IS_DZH IS_DZH,
+		iqcp.FINPROD_ABBR  EXT_FINPROD_ABBR,
+		iqcp.FINPROD_MARKET_ID EXT_FINPROD_MARKET_ID,
+		iqcp.PLEDGE_AMT EXT_PLEDGE_AMT,
+		iqcp.PLEDGE_RATIO EXT_PLEDGE_RATIO
+		from (SELECT T.QUOTE_ID,
+		T.QUOTE_TYPE,
+		T.P_QUOTE_ID,
+		T.VERSION,
+		T.EXE_TYPE,
+		T.CFETS_QUOTE_ID,
+		T.QUOTE_ROLE_TYPE,
+		CASE WHEN T2.QUOTE_ID is not null THEN T2.PORTFOLIO_ID
+		ELSE T.PORTFOLIO_ID
+		END PORTFOLIO_ID,
+		CASE WHEN T2.QUOTE_ID is not null THEN T2.ENTRUST_ID
+		ELSE T.ENTRUST_ID
+		END ENTRUST_ID,
+		T.QUOTE_DATE,
+		T.V_SETTLE_DATE,
+		T.M_SETTLE_DATE,
+		T.SETTLE_SPEED,
+		T.V_DELIVERY_TYPE,
+		T. M_DELIVERY_TYPE,
+		T.SETT_TYPE,
+		T.SETT_CCY,
+		T.CCY,
+		T.REPO_PS,
+		T.RATE,
+		T.TERM,
+		T.SHARE_AMT,
+		T.SHARE_CT_AMT,
+		T.CB_SHARE_CT_AMT,
+		T.SC_SHARE_CT_AMT,
+		T.FPRICE_AMT,
+		T.CB_FPRICE_AMT,
+		T.SC_FPRICE_AMT,
+		T.M_INT_AMT,
+		T.M_TRADE_AMT,
+		T.BASIS,
+		T.TRADE_STATUS,
+		T.SEND_STATUS,
+		T.EFF_TIME,
+		T.OU_PARTY_ID,
+		T.OU_TRADER_ID,
+		T.CP_PARTY_ID,
+		T.CP_TRADER_ID,
+		T.MY_ACCT_NO,
+		T.SEC_MANAGE_ACCT_ID,
+		T.EXECID,
+		T.B_VERSION,
+		T.REMARK,
+		T.CREATE_USER,
+		T.CREATE_TIME,
+		T.CREATE_DEPT,
+		T.UPDATE_USER,
+		T.UPDATE_TIME,
+		T.BRANCH_ID,
+		T.TERM_TYPE,
+		'01' AS WORKFLOW_STATUS,
+		'' AS WORKFLOW_ID,
+		CASE WHEN T2.QUOTE_ID is not null then 'Y'
+		ELSE '' END  IS_DZH
+		FROM IBU_QUOTE_CREP T LEFT JOIN (
+		SELECT
+		QUOTE_ID,
+		LISTAGG(PORTFOLIO_ID, ',') WITHIN GROUP(
+		ORDER BY
+		QUOTE_ID) PORTFOLIO_ID ,
+		LISTAGG(ENTRUST_ID, ',') WITHIN GROUP(
+		ORDER BY
+		QUOTE_ID) ENTRUST_ID
+		FROM
+		IBU_QUOTE_ETR_RE
+		GROUP BY
+		QUOTE_ID
+		) T2 ON T2.QUOTE_ID = T.QUOTE_ID
+		<!--去掉流程中的有效数据-->
+		WHERE NOT EXISTS (SELECT 1 FROM WFL_IBU_QUOTE_CREP WIQC WHERE  WIQC.QUOTE_ID  = T.QUOTE_ID)
+		UNION
+		SELECT T.QUOTE_ID,
+		T.QUOTE_TYPE,
+		T.P_QUOTE_ID,
+		T.VERSION,
+		T.EXE_TYPE,
+		T.CFETS_QUOTE_ID,
+		T.QUOTE_ROLE_TYPE,
+		CASE WHEN T2.QUOTE_ID is not null THEN T2.PORTFOLIO_ID
+		ELSE T.PORTFOLIO_ID
+		END PORTFOLIO_ID,
+		CASE WHEN T2.QUOTE_ID is not null  THEN T2.ENTRUST_ID
+		ELSE T.ENTRUST_ID
+		END ENTRUST_ID,
+		T.QUOTE_DATE,
+		T.V_SETTLE_DATE,
+		T.M_SETTLE_DATE,
+		T.SETTLE_SPEED,
+		T.V_DELIVERY_TYPE,
+		T.M_DELIVERY_TYPE,
+		T.SETT_TYPE,
+		T.SETT_CCY,
+		T.CCY,
+		T.REPO_PS,
+		T.RATE,
+		T.TERM,
+		T.SHARE_AMT,
+		T.SHARE_CT_AMT,
+		T.CB_SHARE_CT_AMT,
+		T.SC_SHARE_CT_AMT,
+		T.FPRICE_AMT,
+		T.CB_FPRICE_AMT,
+		T.SC_FPRICE_AMT,
+		T.M_INT_AMT,
+		T.M_TRADE_AMT,
+		T.BASIS,
+		T.TRADE_STATUS,
+		T.SEND_STATUS,
+		T.EFF_TIME,
+		T.OU_PARTY_ID,
+		T.OU_TRADER_ID,
+		T.CP_PARTY_ID,
+		T.CP_TRADER_ID,
+		T.MY_ACCT_NO,
+		T.SEC_MANAGE_ACCT_ID,
+		T.EXECID,
+		T.B_VERSION,
+		T.REMARK,
+		T.CREATE_USER,
+		T.CREATE_TIME,
+		T.CREATE_DEPT,
+		T.UPDATE_USER,
+		T.UPDATE_TIME,
+		T.BRANCH_ID,
+		T.TERM_TYPE,
+		T.WORKFLOW_STATUS,
+		T.WORKFLOW_ID,
+		CASE WHEN T2.QUOTE_ID is not null then 'Y'
+		ELSE '' END IS_DZH
+		FROM WFL_IBU_QUOTE_CREP T LEFT JOIN  (
+		SELECT
+		QUOTE_ID,
+		LISTAGG(PORTFOLIO_ID, ',') WITHIN GROUP(
+		ORDER BY
+		QUOTE_ID) PORTFOLIO_ID ,
+		LISTAGG(ENTRUST_ID, ',') WITHIN GROUP(
+		ORDER BY
+		QUOTE_ID) ENTRUST_ID
+		FROM
+		WFL_IBU_QUOTE_ETR_RE
+		GROUP BY
+		QUOTE_ID
+		) T2 ON T2.QUOTE_ID = T.QUOTE_ID) a
+		left join PTL_PORTFOLIO e on e.portfolio_id = a.portfolio_id
+		left join SYS_USER f on a.OU_TRADER_ID = f.USER_NAME
+		left join SYS_USER_ADD fa on fa.USER_ID = f.USER_ID
+		LEFT JOIN  MST_CFETS_CUSTOMER_TRADER M1 ON M1.TRADER_ID = NVL(fa.IBU_TRADER, A.OU_TRADER_ID)
+		LEFT JOIN  MST_CFETS_CUSTOMER_TRADER M2 ON M2.TRADER_ID = A.CP_TRADER_ID
+		LEFT JOIN MST_CFETS_CUSTOMER_INFO N1 ON N1.PARTY_ID = A.OU_PARTY_ID
+		LEFT JOIN MST_CFETS_CUSTOMER_INFO N2 ON N2.PARTY_ID = A.CP_PARTY_ID
+		LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'STATUS_VALID')A ON A.WORKFLOW_STATUS = A.ITEM_CODE
+		LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_ROLE_TYPE')B ON A.QUOTE_ROLE_TYPE = B.ITEM_CODE
+		LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'PS')C ON A.REPO_PS = C.ITEM_CODE
+		LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_TYPE')D ON A.QUOTE_TYPE = D.ITEM_CODE
+		LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_STUTAS_IBU')E ON A.TRADE_STATUS = E.ITEM_CODE
+		LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'SEND_TYPE_IBU')F ON A.SEND_STATUS = F.ITEM_CODE
+		LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'ACCOUNT_SPEED')G ON A.SETTLE_SPEED = G.ITEM_CODE
+		LEFT JOIN (select   a.QUOTE_ID,
+							a.PLEDGE_RATIO,
+							a.PLEDGE_AMT,
+							b.FINPROD_MARKET_ID,
+							b.FINPROD_ABBR
+							from IBU_QUOTE_CREP_PLEDGE a
+							left join FIN_PRODUCT b
+							on b.FINPROD_ID = a.PLEDGE_FINPROD_ID)iqcp ON iqcp.QUOTE_ID = a.QUOTE_ID
+		<where>
+			<if test="quoteId != null and quoteId != ''">
+				and a.QUOTE_ID LIKE concat('%',concat(#{quoteId,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="quoteDate !=null">
+				and a.QUOTE_DATE = #{quoteDate,jdbcType=TIMESTAMP}
+			</if>
+			<if test="startQuoteDate !=null and startQuoteDate !=''">
+				and TO_CHAR(a.QUOTE_DATE,'yyyy-MM-dd') &gt; = #{startQuoteDate}
+			</if>
+			<if test="endQuoteDate !=null and endQuoteDate !=''">
+				and TO_CHAR(a.QUOTE_DATE,'yyyy-MM-dd') &lt; = #{endQuoteDate}
+			</if>
+			<if test="ps !=null and ps !=''">and a.REPO_PS = #{ps,jdbcType=VARCHAR}</if>
+			<if test="cpPartyId !=null and cpPartyId !=''">and a.CP_PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}</if>
+			<if test="pQuoteIdList != null and pQuoteIdList.size() > 0">
+				and a.P_QUOTE_ID in
+				<foreach item="item" index="index" collection="pQuoteIdList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="ouTraderIdList != null and ouTraderIdList.size() > 0">
+				and NVL(fa.IBU_TRADER, a.OU_TRADER_ID) in
+				<foreach item="item" index="index" collection="ouTraderIdList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+
+			<if test="counterIdList != null and counterIdList.size() > 0">
+				and a.CP_PARTY_ID in
+				<foreach item="item" index="index" collection="counterIdList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="counterTraderList != null and counterTraderList.size() > 0">
+				and a.CP_TRADER_ID in
+				<foreach item="item" index="index" collection="counterTraderList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="term !=null and term !=''">and a.TERM = #{term,jdbcType=VARCHAR}</if>
+
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				and (
+				a.PORTFOLIO_ID in<foreach item="item" index="index" collection="portfolioIdList" open="(" separator="," close=")">
+				#{item, jdbcType=VARCHAR}
+			</foreach>
+				or a.QUOTE_ID IN (SELECT iqer.QUOTE_ID FROM IBU_QUOTE_ETR_RE iqer WHERE iqer.PORTFOLIO_ID in
+				<foreach item="item" index="index" collection="portfolioIdList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+				)
+				or a.QUOTE_ID IN (SELECT wiqer.QUOTE_ID FROM WFL_IBU_QUOTE_ETR_RE wiqer WHERE wiqer.PORTFOLIO_ID in
+				<foreach item="item" index="index" collection="portfolioIdList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+				)
+				)
+			</if>
+			<if test="cfetsQuoteIdList != null and cfetsQuoteIdList.size() > 0">
+				and a.CFETS_QUOTE_ID in
+				<foreach item="item" index="index" collection="cfetsQuoteIdList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="cfetsQuoteIdFuzzy !=null and cfetsQuoteIdFuzzy !=''">
+				and a.CFETS_QUOTE_ID like concat('%', concat(#{cfetsQuoteIdFuzzy,jdbcType=VARCHAR}, '%'))
+			</if>
+			<if test="tradeStatusList != null and tradeStatusList.size() > 0">
+				and nvl(a.TRADE_STATUS,'NA') in
+				<foreach item="item" index="index" collection="tradeStatusList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="quoteRoleTypeList != null and quoteRoleTypeList.size() > 0">
+				and a.QUOTE_ROLE_TYPE in
+				<foreach item="item" index="index" collection="quoteRoleTypeList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="isAutoDataRole == false">
+				and (
+				<!-- 待回复 -->
+				case
+				<!-- when a.TRADE_STATUS='09' then -->
+				<!-- modify by zhangliang 20200717 非做市方发起的请求报价如果有交易对手回复不应该广播 -->
+				when a.exe_type in ('19','20','46') then
+				<choose>
+					<!-- 待回复数据查询方式：指定交易员可见 -->
+					<when test="replyQueryTypeIbu !=null and replyQueryTypeIbu =='02'">
+						case
+						when a.OU_TRADER_ID is null then 1
+						when
+						<choose>
+							<when test="ouTraderIdList == null or ouTraderIdList.size() == 0">
+								1
+							</when>
+							<otherwise>
+								nvl(instr(#{ouTraderIds,jdbcType=VARCHAR}, concat(NVL(fa.IBU_TRADER, a.OU_TRADER_ID), ',')), 0)
+							</otherwise>
+						</choose> &gt; 0
+						<if test="loginTraderId !=null and loginTraderId !=''">
+							<!-- add by zhangliang 待回复的对话报价推送过来的本方交易员是um号并且存CREATE_USER字段 -->
+							and NVL(fa.IBU_TRADER, a.OU_TRADER_ID) = #{loginTraderId,jdbcType=VARCHAR}
+						</if>
+						then 1
+						else 0
+						end
+					</when>
+					<!-- 全部交易员可见 -->
+					<otherwise>1</otherwise>
+				</choose>
+				else
+				<if test="loginUserId !=null and loginUserId !=''">
+					(decode(a.UPDATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0) + decode(a.CREATE_USER, #{loginUserId,jdbcType=VARCHAR}, 1, 0)) *
+				</if>
+				<choose>
+					<when test="ouTraderIdList == null or ouTraderIdList.size() == 0">
+						1
+					</when>
+					<otherwise>
+						case
+						when a.OU_TRADER_ID is null then 1
+						when nvl(instr(#{ouTraderIds,jdbcType=VARCHAR}, concat(NVL(fa.IBU_TRADER, a.OU_TRADER_ID),',')), 0) &gt; 0 then 1
+						else 0
+						end
+					</otherwise>
+				</choose>
+				end
+				) &gt;= 1
+			</if>
+			<if test="entrustId !=null and entrustId !=''">
+				<!-- modify by etliu 20210324 银行间上下行多组合 start -->
+				and (a.ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+				or a.QUOTE_ID IN (SELECT iqer.QUOTE_ID FROM IBU_QUOTE_ETR_RE iqer WHERE iqer.ENTRUST_ID = #{entrustId,jdbcType=VARCHAR})
+				or a.QUOTE_ID IN (SELECT wiqer.QUOTE_ID FROM WFL_IBU_QUOTE_ETR_RE wiqer WHERE wiqer.ENTRUST_ID = #{entrustId,jdbcType=VARCHAR})
+				)
+				<!-- modify by etliu 20210324 银行间上下行多组合 end -->
+			</if>
+			<!-- add by chenjiaxing 20210816 委托查询 start -->
+			<if test="termStart !=null and termStart !=''">
+				and a.TERM <![CDATA[<=]]> #{termStart,jdbcType=VARCHAR}
+			</if>
+			<if test="termEnd !=null and termEnd !=''">
+				and a.TERM >= #{termEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="ouPartyIdList != null and ouPartyIdList.size() > 0">
+				and a.OU_PARTY_ID in
+				<foreach item="item" index="index" collection="ouPartyIdList" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<!-- add by chenjiaxing 20210816  委托查询 end -->
+			<if test="isSearchHis == true">
+				<if test="hisVersion !=null and hisVersion !=''">
+					and a.VERSION = #{hisVersion,jdbcType=VARCHAR}
+				</if>
+			</if>
+			<if test="keywords != null and keywords != ''">
+				AND (A.WORKFLOW_STATUS LIKE '%' || #{keywords} || '%' OR A.ITEM_VALUE LIKE '%' || #{keywords} || '%'
+				OR A.QUOTE_ROLE_TYPE = '%' || #{keywords} || '%' OR B.ITEM_VALUE LIKE '%' || #{keywords} || '%'
+				OR A.REPO_PS ='%' || #{keywords} || '%' OR C.ITEM_VALUE LIKE '%' || #{keywords} || '%'
+				OR A.QUOTE_TYPE ='%' || #{keywords} || '%' OR D.ITEM_VALUE LIKE '%' || #{keywords} || '%'
+				OR A.TRADE_STATUS ='%' || #{keywords} || '%'  OR E.ITEM_VALUE LIKE '%' || #{keywords} || '%'
+				OR A.SEND_STATUS='%' || #{keywords} || '%'  OR F.ITEM_VALUE LIKE '%' || #{keywords} || '%'
+				OR NVL(Fa.IBU_TRADER, A.OU_TRADER_ID) LIKE '%' || #{keywords} || '%' OR M1.TRADER_NAME LIKE '%' || #{keywords} || '%'
+				OR A.CP_TRADER_ID LIKE '%' || #{keywords} || '%' OR M2.TRADER_NAME LIKE '%' || #{keywords} || '%'
+				OR A.OU_PARTY_ID LIKE '%' || #{keywords} || '%' OR N1.PARTY_ABBR LIKE '%' || #{keywords} || '%'
+				OR A.CP_PARTY_ID LIKE '%' || #{keywords} || '%' OR N2.PARTY_ABBR LIKE '%' || #{keywords} || '%'
+				OR A.RATE LIKE '%' || #{keywords} || '%'
+				OR A.FPRICE_AMT LIKE '%' || #{keywords} || '%'
+				OR A.M_SETTLE_DATE LIKE '%' || #{keywords} || '%'
+				OR A.V_SETTLE_DATE LIKE '%' || #{keywords} || '%'
+				OR A.TERM LIKE '%' || #{keywords} || '%'
+				OR A.SETTLE_SPEED LIKE '%' || #{keywords} || '%' OR G.ITEM_VALUE LIKE '%' || #{keywords} || '%'
+				OR A.QUOTE_ID LIKE '%' || #{keywords} || '%'
+				OR A.EXECID LIKE '%' || #{keywords} || '%')
+			</if>
+		</where>
+		order by decode(a.TRADE_STATUS, '06', 2, '08', 3, '13', 4, '07', 5, 1) asc, a.UPDATE_TIME desc
+		<!-- order by decode(a.TRADE_STATUS, '06', 96, '08', 97, '13', 98,  '07', 99, to_number(a.TRADE_STATUS)) asc, a.UPDATE_TIME desc -->
+	</select>
+	<!--add by chenjiaxing 质押式回购改造 end-->
+
     <!-- 根据ID列表质押品信息 -->
     <delete id="deleteQuoteCrepPledgeByIds" parameterType="java.util.List" >
         delete from IBU_QUOTE_CREP_PLEDGE

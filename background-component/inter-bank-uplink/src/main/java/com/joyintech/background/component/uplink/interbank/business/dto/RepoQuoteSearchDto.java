@@ -646,4 +646,53 @@ public class RepoQuoteSearchDto {
 	public void setTerm(String term) {
 		this.term = term;
 	}
+
+	/*add by chenjiaxing 20210819 质押式回购改造查询 start*/
+	//回购期限天数开始
+    private String termStart;
+    //回购期限天数结束
+    private String termEnd;
+    //本方方向：ps 已有
+    //交易状态：dayOfferStatus 已有参数控制
+    //本方ID
+    private String ouPartyId;
+    //对手方机构  未查到相关字段
+    /**
+     * 对手方列表
+     */
+    private List<String> ouPartyIdList;
+
+    public String getTermStart() {
+        return termStart;
+    }
+
+    public void setTermStart(String termStart) {
+        this.termStart = termStart;
+    }
+
+    public String getTermEnd() {
+        return termEnd;
+    }
+
+    public void setTermEnd(String termEnd) {
+        this.termEnd = termEnd;
+    }
+
+    public String getOuPartyId() {
+        return ouPartyId;
+    }
+
+    public void setOuPartyId(String ouPartyId) {
+        this.ouPartyId = ouPartyId;
+    }
+
+    public List<String> getOuPartyIdList() {
+        return ouPartyIdList;
+    }
+
+    public void setOuPartyIdList(List<String> ouPartyIdList) {
+        this.ouPartyIdList = ouPartyIdList;
+    }
+
+    /*add by chenjiaxing 20210819 质押式回购改造查询 end*/
 }

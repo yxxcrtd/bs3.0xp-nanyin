@@ -39,6 +39,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.trade.bondlend.dto.TrdBondLendInvestTradeDto;
 import com.joyintech.tams.invest.trade.bondlend.service.TrdBondLendInvestTrade002Service;
 import com.joyintech.tams.invest.trade.common.controller.TrdCommonController;
@@ -446,8 +447,25 @@ public class TrdBondLendInvestTrade002Controller extends BaseController {
     @ResponseBody
     AjaxResult save(@RequestBody TrdBondLendInvestTradeDto dto)
         throws Exception {
-        
-        
+
+        //万元转换 add  by yeming 20210817 start
+        if(dto.getBussRepoSec() != null){
+            if( dto.getBussRepoSec().getTotalPrinAmt()  != null){
+                dto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply( dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
+            }
+            for (PledgeBondInfoDto pledgeBond :  dto.getBussRepoSec().getPledgeBondList()) {
+                if (pledgeBond.getAvaPledgePrin() != null) {
+                    pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPledgePrin() != null) {
+                    pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPrin() != null) {
+                    pledgeBond.setPrin(ArithmeticUtil.multiply(pledgeBond.getPrin(), new BigDecimal(10000)));
+                }
+            }
+        }
+        //万元转换 add  by yeming 20210817 end
         
         if(StringUtil.isBlank(dto.getTradeId())) {
             if (baseGetBusinessId != null) {

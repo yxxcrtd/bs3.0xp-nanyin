@@ -1241,4 +1241,42 @@ public class CfetsRepoDealQuotedPrice002Dto extends EtrEntrust implements Proces
     public void setPtlAllocationList(List<PtlAllocationDto> ptlAllocationList) {
         this.ptlAllocationList = ptlAllocationList;
     }
+    /**
+     * 组合系列
+     */
+    private String portfolioSeries;
+
+    public String getPortfolioSeries() {
+        return portfolioSeries;
+    }
+
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries;
+    }
+
+    /**
+     * 中债登券面总额合计（万元）
+     */
+    private BigDecimal zzTotalAmt;
+
+    /**
+     * 上清所券面总额合计（万元）
+     */
+    private BigDecimal sqTotalAmt;
+
+    public BigDecimal getZzTotalAmt() {
+        return zzTotalAmt;
+    }
+
+    public void setZzTotalAmt(BigDecimal zzTotalAmt) {
+        this.zzTotalAmt = zzTotalAmt;
+    }
+
+    public BigDecimal getSqTotalAmt() {
+        return sqTotalAmt;
+    }
+
+    public void setSqTotalAmt(BigDecimal sqTotalAmt) {
+        this.sqTotalAmt = sqTotalAmt;
+    }
 }

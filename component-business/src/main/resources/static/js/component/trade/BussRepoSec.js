@@ -373,14 +373,18 @@
     var refreshParentFace = function (result) {
         //单组合
     	if(getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice002'){
-    		window.CfetsRepoDealQuotedPrice002.calculateAmt(pledgeBondTotalTbl);
+    		window.CfetsRepoDealQuotedPr002.calculateAmt(pledgeBondTotalTbl);
+/*
             $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(result.totalPrinAmt).trigger('blur');
+*/
             $("#CfetsRepoDealQuotedPrice002_shareCtAmt").val(result.shareCtAmt).trigger('blur');
         }
     	//多组合
     	if(getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice003'){
-            window.CfetsRepoDealQuotedPrice003.calculateAmt(pledgeBondTotalTbl);
+            window.CfetsRepoDealQuotedPr003.calculateAmt(pledgeBondTotalTbl);
+/*
             $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(result.totalPrinAmt).trigger('blur');
+*/
             $("#CfetsRepoDealQuotedPrice002_shareCtAmt").val(result.shareCtAmt).trigger('blur');
         }
     }

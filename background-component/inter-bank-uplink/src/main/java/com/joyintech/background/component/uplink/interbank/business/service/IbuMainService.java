@@ -106,6 +106,17 @@ public interface IbuMainService {
      */
     List<RepoQuoteExtDto> getRepoDialogueQuoteList(RepoQuoteSearchDto inputBean,
                                                         User userInfo);
+    /**
+     * 质押式回购报价查询-指定条件<br />
+     * 根据传入的不为空的属性进行查询，需支持数据权限
+     * add by chenjiaxing 质押式回购报价改造
+     *
+     * @param inputBean RepoQuoteSearchDto 质押式回购报价查询条件
+     * @param userInfo User 登录用户信息
+     * @return List<RepoDialogueQuoteDto>
+     */
+    List<RepoQuoteExtDto> getRepoDialogueQuoteList2(RepoQuoteSearchDto inputBean,
+                                                   User userInfo);
 
     /**
      * 质押式回购报价查询-按指定条件分页查询<br />

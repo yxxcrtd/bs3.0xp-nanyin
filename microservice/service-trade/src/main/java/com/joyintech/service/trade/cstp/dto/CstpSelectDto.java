@@ -10,8 +10,11 @@
  
 package com.joyintech.service.trade.cstp.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.tams.common.base.entity.InterfCstpTrade;
 
+import javax.xml.bind.annotation.XmlElement;
 import java.math.BigDecimal;
 
 /**
@@ -197,4 +200,237 @@ public class CstpSelectDto extends InterfCstpTrade{
 	public void setEntrustId(String entrustId) {
 		this.entrustId = entrustId;
 	}
+
+	//add by chenjiaxing 质押式回购改造 start
+    /**
+     * 对手方交易员名称
+     */
+    private String counterTraderName;
+    /**
+     * 首次结算方式
+     */
+    private Integer deliveryType;
+
+    /**
+     * 到期结算方式
+     */
+    private Integer deliveryType2;
+
+    /**
+     * 交易方式
+     */
+    private String tradeMethod;
+
+    /**
+     *交易品种  债券代码
+     */
+    private String securityId;
+
+    /**
+     * 成交状态
+     */
+    private String execType;
+
+    /**
+     * 债券币种
+     */
+    private String ccy;
+
+    /**
+     * 清算类型
+     */
+    private String settType;
+
+    /**
+     * 净额清算状态
+     */
+    private String settleStatus;
+
+    /**
+     * 回购方式
+     */
+    private String repoMethod;
+
+    /**
+     * 结算状态
+     */
+    private String settleStatus2;
+
+    /**
+     * 汇率
+     */
+    private BigDecimal exchangerate;
+
+    /**
+     * 回复编号
+     */
+    private BigDecimal shareId;
+    /**
+     * 对手方机构名
+     */
+    private String cpPartyName;
+    /**
+     * 折算比例%
+     */
+    private BigDecimal pledgeRate;
+
+    /**
+     * 代理方交易员名称
+     */
+    private String otherTraderName;
+
+    public String getOtherTraderName() {
+        return otherTraderName;
+    }
+
+    public void setOtherTraderName(String otherTraderName) {
+        this.otherTraderName = otherTraderName;
+    }
+
+    public BigDecimal getPledgeRate() {
+        return pledgeRate;
+    }
+
+    public void setPledgeRate(BigDecimal pledgeRate) {
+        this.pledgeRate = pledgeRate;
+    }
+
+    public String getCpPartyName() {
+        return cpPartyName;
+    }
+
+    public void setCpPartyName(String cpPartyName) {
+        this.cpPartyName = cpPartyName;
+    }
+
+    public String getCounterTraderName() {
+        return counterTraderName;
+    }
+
+    public void setCounterTraderName(String counterTraderName) {
+        this.counterTraderName = counterTraderName;
+    }
+
+    public Integer getDeliveryType() {
+        return deliveryType;
+    }
+
+    public void setDeliveryType(Integer deliveryType) {
+        this.deliveryType = deliveryType;
+    }
+
+    public Integer getDeliveryType2() {
+        return deliveryType2;
+    }
+
+    public void setDeliveryType2(Integer deliveryType2) {
+        this.deliveryType2 = deliveryType2;
+    }
+
+    public String getTradeMethod() {
+        return tradeMethod;
+    }
+
+    public void setTradeMethod(String tradeMethod) {
+        this.tradeMethod = tradeMethod;
+    }
+
+    public String getSecurityId() {
+        return securityId;
+    }
+
+    public void setSecurityId(String securityId) {
+        this.securityId = securityId;
+    }
+
+    public String getExecType() {
+        return execType;
+    }
+
+    public void setExecType(String execType) {
+        this.execType = execType;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
+
+    public String getSettType() {
+        return settType;
+    }
+
+    public void setSettType(String settType) {
+        this.settType = settType;
+    }
+
+    public String getSettleStatus() {
+        return settleStatus;
+    }
+
+    public void setSettleStatus(String settleStatus) {
+        this.settleStatus = settleStatus;
+    }
+
+    public String getRepoMethod() {
+        return repoMethod;
+    }
+
+    public void setRepoMethod(String repoMethod) {
+        this.repoMethod = repoMethod;
+    }
+
+    public String getSettleStatus2() {
+        return settleStatus2;
+    }
+
+    public void setSettleStatus2(String settleStatus2) {
+        this.settleStatus2 = settleStatus2;
+    }
+
+    public BigDecimal getExchangerate() {
+        return exchangerate;
+    }
+
+    public void setExchangerate(BigDecimal exchangerate) {
+        this.exchangerate = exchangerate;
+    }
+
+    public BigDecimal getShareId() {
+        return shareId;
+    }
+
+    public void setShareId(BigDecimal shareId) {
+        this.shareId = shareId;
+    }
+
+    /**
+     * 成交编号
+     */
+    private String fTradeId;
+    /**
+     * 反向交易编号
+     */
+    private String rTradeId;
+
+    public String getfTradeId() {
+        return fTradeId;
+    }
+
+    public void setfTradeId(String fTradeId) {
+        this.fTradeId = fTradeId;
+    }
+
+    public String getrTradeId() {
+        return rTradeId;
+    }
+
+    public void setrTradeId(String rTradeId) {
+        this.rTradeId = rTradeId;
+    }
+
+    //add by chenjiaxing 质押式回购改造 end
 }

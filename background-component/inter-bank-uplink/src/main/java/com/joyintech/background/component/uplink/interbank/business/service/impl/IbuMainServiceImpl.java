@@ -1877,6 +1877,15 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
         return ibuMainMapper.selectRepoQuoteList(inputBean);
     }
 
+    //add by chenjiaxing 质押式回购改造 20210819
+    @Override
+    public List<RepoQuoteExtDto> getRepoDialogueQuoteList2(RepoQuoteSearchDto inputBean,
+                                                          User userInfo) {
+        CommonUtils.sortList(inputBean.getOrderField(), inputBean.getOrderDirection());
+        return ibuMainMapper.selectRepoQuoteList2(inputBean);
+    }
+    //add by chenjiaixng 质押式回购改造 20210819
+
     /**
      * 
      * 删除质押式回购报价的主表，主表历史，明细，明细历史数据
