@@ -10,6 +10,8 @@
 
 package com.joyintech.background.component.uplink.interbank.business.dto;
 
+import java.math.BigDecimal;
+
 /**
  * 质押式回购报价扩展DTO 供前台查询使用
  * 
@@ -238,4 +240,58 @@ public class RepoQuoteExtDto extends IbuQuoteCrepDto {
 	public void setIsDzh(String isDzh) {
 		this.isDzh = isDzh;
 	}
+
+	//add by chenjiaxing 质押式回购报价改造 start
+	/**
+	 * 债券代码
+	 */
+	private String bondCode;
+
+	/**
+	 * 债券简称
+	 */
+	private String bondAbbrName;
+
+	/**
+	 * 折算比例%
+	 */
+	private BigDecimal pledgeRate;
+
+	/**
+	 * 券面总额
+	 */
+	private BigDecimal prin;
+
+	public String getBondCode() {
+		return bondCode;
+	}
+
+	public void setBondCode(String bondCode) {
+		this.bondCode = bondCode;
+	}
+
+	public String getBondAbbrName() {
+		return bondAbbrName;
+	}
+
+	public void setBondAbbrName(String bondAbbrName) {
+		this.bondAbbrName = bondAbbrName;
+	}
+
+	public BigDecimal getPledgeRate() {
+		return pledgeRate;
+	}
+
+	public void setPledgeRate(BigDecimal pledgeRate) {
+		this.pledgeRate = pledgeRate;
+	}
+
+	public BigDecimal getPrin() {
+		return prin;
+	}
+
+	public void setPrin(BigDecimal prin) {
+		this.prin = prin;
+	}
+	//add by chenjiaxing 质押式回购改造 20210819
 }

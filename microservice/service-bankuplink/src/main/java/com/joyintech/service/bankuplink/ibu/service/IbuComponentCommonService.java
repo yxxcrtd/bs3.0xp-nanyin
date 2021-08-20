@@ -1974,7 +1974,25 @@ public class IbuComponentCommonService extends BaseService {
         if (StringUtil.isNotEmpty(param.get("term"))) {
             inputBean.setTerm(param.get("term").toString());
         }
-        
+        //add by chenjiaxing 20210816 start
+        if (StringUtil.isNotEmpty(param.get("termStart"))) {
+            inputBean.setTermStart(param.get("termStart").toString());
+        }
+        if (StringUtil.isNotEmpty(param.get("termEnd"))) {
+            inputBean.setTermEnd(param.get("termEnd").toString());
+        }
+        if (StringUtil.isNotEmpty(param.get("ouPartyId"))) {
+            inputBean.setOuPartyIdList(StringUtil.splitToList(GlobalConstant.COMMA,
+                    param.get("ouPartyId").toString()));
+        }
+        if(StringUtil.isNotEmpty(param.get("benfangSide"))){
+            String benfangSide = param.get("benfangSide").toString();
+            if(!StringUtil.equals(benfangSide,"whole")){
+                inputBean.setPs(benfangSide);
+            }
+        }
+        //add by chenjiaxing 20210816 end
+
         // 登录用户ID Modified by JIAOXUJIN on 2020-06-03
         inputBean.setLoginUserId(MapUtils.getString(param, "loginUserId"));
         // 待回复数据查询方式
@@ -2020,6 +2038,15 @@ public class IbuComponentCommonService extends BaseService {
      // 交易方向
         inputBean.setKeywords(param.get("keywords") != null ? param.get("keywords").toString() : null);
 
+        //add by chenjiaixing 质押式回购下单管理改造
+        String isGetBondCode = "";
+        if (StringUtil.isNotEmpty(param.get("isGetBondCode"))) {
+            isGetBondCode = param.get("isGetBondCode").toString();
+        }
+        if(StringUtil.equals(isGetBondCode,"Y")){
+            return ibuMainService.getRepoDialogueQuoteList2(inputBean, null);
+        }
+        //add by chenjiaxing 质押式回购下单管理改造
         return ibuMainService.getRepoDialogueQuoteList(inputBean, null);
     }
 

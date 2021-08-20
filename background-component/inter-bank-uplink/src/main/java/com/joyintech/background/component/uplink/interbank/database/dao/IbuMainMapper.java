@@ -43,6 +43,15 @@ public interface IbuMainMapper {
      * @return List<RepoQuoteExtDto>
      */
     List<RepoQuoteExtDto> selectRepoQuoteList(RepoQuoteSearchDto inputBean);
+
+    //add by chenjiaxing 质押式回购改造 20210819
+    /**
+     * 质押式回购报价查询-指定条件
+     * @param inputBean RepoQuoteSearchDto
+     * @return List<RepoQuoteExtDto>
+     */
+    List<RepoQuoteExtDto> selectRepoQuoteList2(RepoQuoteSearchDto inputBean);
+    //add by chenjiaixng 质押式回购改造 20210819
     
     /**
      * 现券报价根据成交编号获取委托编号
