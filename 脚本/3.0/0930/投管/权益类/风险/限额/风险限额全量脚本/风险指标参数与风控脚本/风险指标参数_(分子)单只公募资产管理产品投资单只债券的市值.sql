@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='SONDZGMZCGLZTZQ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('SONDZGMZCGLZTZQ','(分子)单只公募资产管理产品投资单只债券的市值','N','','jjpei','2222222',sysdate,'jjpei',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('SONDZGMZCGLZTZQ','(分子)单只公募资产管理产品投资单只债券的市值','N','','jjpei','2222222',sysdate,'jjpei',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='SONDZGMZCGLZTZQ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('SONDZGMZCGLZTZQ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);

@@ -2,25 +2,25 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='NHGZJYE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('NHGZJYE','逆回购资金余额','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('NHGZJYE','逆回购资金余额','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='NHGZJYE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('NHGZJYE','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('NHGZJYE','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('NHGZJYE','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('NHGZJYE','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('NHGZJYE','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('NHGZJYE','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('NHGZJYE','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('NHGZJYE','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('NHGZJYE','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('NHGZJYE','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
 V_CONTENT_01_02_03 CLOB := 'select
-  NVL(SUM(NVL(m.MARKET_VALUE,0)+nvl(m.TDY_INTINCEXP, 0)),0) as  TRADE_AMT from PTL_SEC_PIERCE_VALUTION m
+   m.PORTFOLIO_ID AS RKEY,NVL(SUM(NVL(m.MARKET_VALUE,0)+nvl(m.TDY_INTINCEXP, 0)),0) as  RVALUE from PTL_SEC_PIERCE_VALUTION m
   INNER JOIN FIN_TRADE_PRODUCT n on m.FINPROD_ID = n.FINPROD_ID and n.FINPROD_TYPE2 in (''F03'',''F05'') 
-  where m.PORTFOLIO_ID in ${portfolioCode}  and  m.CDATE =date''${valDate}''-1
+  where  m.CDATE =date''${valDate}''-1 group by m.PORTFOLIO_ID
  union all
    select t.PTL_BAG_ID as RKEY,
    ( select NVL(SUM(NVL(m.MARKET_VALUE,0)+nvl(m.TDY_INTINCEXP, 0)),0) as  RVALUE from PTL_SEC_PIERCE_VALUTION m

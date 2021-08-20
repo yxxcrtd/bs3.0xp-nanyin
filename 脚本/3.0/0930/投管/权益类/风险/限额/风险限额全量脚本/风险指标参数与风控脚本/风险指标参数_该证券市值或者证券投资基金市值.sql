@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='GZQSZHZZQTZJJSZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GZQSZHZZQTZJJSZ','该证券市值或者证券投资基金市值','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GZQSZHZZQTZJJSZ','该证券市值或者证券投资基金市值','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='GZQSZHZZQTZJJSZ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GZQSZHZZQTZJJSZ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
