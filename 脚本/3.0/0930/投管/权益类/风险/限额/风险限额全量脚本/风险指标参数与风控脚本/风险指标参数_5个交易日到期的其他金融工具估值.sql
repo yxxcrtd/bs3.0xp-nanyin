@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='DQR5RNQTJRGJGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DQR5RNQTJRGJGZ','5个交易日到期的其他金融工具估值','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DQR5RNQTJRGJGZ','5个交易日到期的其他金融工具估值','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='DQR5RNQTJRGJGZ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);

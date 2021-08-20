@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='JGZQGZHJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('JGZQGZHJ','同一机构发行的债券及其作为原始权益人的资产支持证券估值合计','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('JGZQGZHJ','同一机构发行的债券及其作为原始权益人的资产支持证券估值合计','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='JGZQGZHJ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JGZQGZHJ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','ysfu','C001',sysdate,'ysfu',sysdate);

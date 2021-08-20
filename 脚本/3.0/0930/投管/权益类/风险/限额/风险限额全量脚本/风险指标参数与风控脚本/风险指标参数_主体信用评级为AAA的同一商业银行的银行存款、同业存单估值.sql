@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='ZTPJAAAYHCKGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZTPJAAAYHCKGZ','主体信用评级为AAA的同一商业银行的银行存款、同业存单估值','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZTPJAAAYHCKGZ','主体信用评级为AAA的同一商业银行的银行存款、同业存单估值','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='ZTPJAAAYHCKGZ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJAAAYHCKGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','ysfu','C001',sysdate,'ysfu',sysdate);

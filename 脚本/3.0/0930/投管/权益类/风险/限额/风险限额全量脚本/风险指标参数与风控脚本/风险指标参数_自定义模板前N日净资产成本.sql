@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='JZCCB';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('JZCCB','自定义模板前N日净资产成本','N','','admin','jsadjflsajfsdkl',sysdate,'admin',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('JZCCB','自定义模板前N日净资产成本','N','','admin','jsadjflsajfsdkl',sysdate,'admin',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='JZCCB';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JZCCB','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','paopi1','jsadjflsajfsdkl',sysdate,'paopi1',sysdate);

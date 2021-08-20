@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='XJGZZYYHPJZCXJRZQGM';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('XJGZZYYHPJZCXJRZQGM','到期日在一年以内的国债、中央银行票据和政策性金融债券规模','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('XJGZZYYHPJZCXJRZQGM','到期日在一年以内的国债、中央银行票据和政策性金融债券规模','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='XJGZZYYHPJZCXJRZQGM';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);

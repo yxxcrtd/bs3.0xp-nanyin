@@ -8,7 +8,7 @@ INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('BDTZCJZDZXDJQSYQ','不得投资于�
   UNION all
   SELECT ''03'' ID ,''信贷资产及其收受益权'' TEXT FROM DUAL
   UNION all
-  SELECT ''04'' ID ,''非信贷资产及其收受益权'' TEXT FROM DUAL','ysfusp','C001',sysdate,'ysfusp',sysdate,'','','N','String', '','', '');
+  SELECT ''04'' ID ,''非信贷资产及其收受益权'' TEXT FROM DUAL','ysfusp','C001',sysdate,'ysfusp',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='BDTZCJZDZXDJQSYQ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','ysfusp','C001',sysdate,'ysfusp',sysdate);

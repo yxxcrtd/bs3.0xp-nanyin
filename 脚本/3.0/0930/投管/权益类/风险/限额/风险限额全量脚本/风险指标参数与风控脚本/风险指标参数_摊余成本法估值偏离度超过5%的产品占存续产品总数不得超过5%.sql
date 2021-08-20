@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='TYCBFGZPLDZCXQCPS';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('TYCBFGZPLDZCXQCPS','摊余成本法估值偏离度超过5%的产品占存续产品总数不得超过5%','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('TYCBFGZPLDZCXQCPS','摊余成本法估值偏离度超过5%的产品占存续产品总数不得超过5%','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','DATABASE', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='TYCBFGZPLDZCXQCPS';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCBFGZPLDZCXQCPS','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
