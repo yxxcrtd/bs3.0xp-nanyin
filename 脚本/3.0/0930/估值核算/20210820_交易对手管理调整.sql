@@ -1,6 +1,6 @@
 --交易对手管理功能
 
-DELETE FROM SYS_PAGE where PAGE_ID = 'ComTradeOpponent001';
+DELETE FROM SYS_MENU where PAGE_ID = 'ComTradeOpponent001';
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ASSET_MANAGEMENT_001_004_008', 'COM', null, 'ASSET_MANAGEMENT_001_004', 'ComTradeOpponent001', 8, '2', '交易对手管理', 'system', null, '01-2月 -18 12.00.00.000000 上午', 'system', '01-2月 -18 12.00.00.000000 上午');
 
