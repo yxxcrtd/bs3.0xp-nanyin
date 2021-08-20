@@ -330,12 +330,12 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
 		}
 
 		Map<String, Object> header = createHead(requestList.get(0));
-		String requstjson = JsonUtils.object2Json(requestList);
+		//String requstjson = JsonUtils.object2Json(requestList);
 		ClientData data = new ClientData();
 		data.setHead(header);
         Map<String, Object> body = new HashMap<String, Object>();
-        body.put(rskType,requstjson);
-        
+        body.put(rskType,requestList);
+
         // add by etliu 20210123 start
         if (!isNeedRiskCheck) {
             body.put("isIgnoreFoul", DictCodeListExt2.是否_是.getValue());
