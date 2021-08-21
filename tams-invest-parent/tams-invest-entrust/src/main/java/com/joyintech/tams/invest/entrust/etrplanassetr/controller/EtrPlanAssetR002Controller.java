@@ -336,7 +336,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
             entity -> SpringContextUtil.getTextValue("EtrPlanAssetR001")+ "(" + entity.getPortfolioId()+ ")" 
                 +  "-" + SpringContextUtil.getTextValue("EtrPlanAssetR001.ps")+ "(" + SysDataUtil.getNameFromDataDict(DictCode.交易方向, entity.getPs())+ ")"  +  "-" + "("
                 + SpringContextUtil.getTextValue("EtrPlanAssetR001.vdate")+"：" + DateUtil.format(entity.getVdate())+ ")"
-                +  "-" + "("+SpringContextUtil.getTextValue("EtrPlanAssetR001.mdate")+"：" + DateUtil.format(entity.getMdate())+ ")-"+SpringContextUtil.getTextValue("EtrPlanAssetR001.entrustAmt1")+"："+entity.getEntrustAmt());
+                +  "-" + "("+SpringContextUtil.getTextValue("EtrPlanAssetR001.mdate")+"：" + DateUtil.format(entity.getMdate())+ ")-"+SpringContextUtil.getTextValue("EtrPlanAssetR001.entrustAmt1")+"："+ (entity.getEntrustAmt() != null ? entity.getEntrustAmt() : entity.getEntrustNum()));
         processParameter.setWorkFlowParameter(params);
         String msg = etrPlanAssetService.start(processParameter, dto);
         return new AjaxResult(msg);
