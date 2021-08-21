@@ -118,6 +118,19 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      */
     private String chlFinprodId;
 
+    /**
+     * 估价净价
+     */
+    private BigDecimal gjunitCprice;
+
+    public BigDecimal getGjunitCprice() {
+        return gjunitCprice;
+    }
+
+    public void setGjunitCprice(BigDecimal gjunitCprice) {
+        this.gjunitCprice = gjunitCprice;
+    }
+
     public String getChlFinprodId() {
         return chlFinprodId;
     }

@@ -554,4 +554,18 @@ public class TrdBondInvestTradeController {
     public String getType7(@RequestBody TrdBondInvestTradeDto dto) {
         return trdBondInvestTradeService.getType7(dto);
     }
+
+    /**
+     * 根据交易编号查询转仓方交易编号
+     *
+     * @param tradeId 被转仓方交易编号
+     * @return 转仓方交易编号
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getTotalByReverseTradeId/{tradeId}")
+    public String getTotalByReverseTradeId(@PathVariable("tradeId") String tradeId)
+            throws Exception {
+        return trdBondInvestTradeService.getTotalByReverseTradeId(tradeId);
+    }
 }

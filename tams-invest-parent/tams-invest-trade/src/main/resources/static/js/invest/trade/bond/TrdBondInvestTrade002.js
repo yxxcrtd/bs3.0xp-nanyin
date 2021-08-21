@@ -1013,9 +1013,9 @@ var table;
         // 1.6计算偏离度
         calcDeviationDegree();
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 start //
-        if (IS_SHOW_CPRICE == 'Y') {
-        	//changeUnitCprice();
-        }
+//        if (IS_SHOW_CPRICE == 'Y') {
+//        	//changeUnitCprice();
+//        }
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 end //
         TradeCommon.getSecPositionForSaleAll(setParam(), function (result) {
             if(result){
@@ -1094,9 +1094,9 @@ var table;
             $("#secManageAcctId").val('').trigger("change");
         }
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 start //
-        if (IS_SHOW_CPRICE == 'Y') {
+//        if (IS_SHOW_CPRICE == 'Y') {
         	changeUnitCprice();
-        }
+//        }
         updateSecAcctBalance();
         updateCash();
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 end //
@@ -1179,9 +1179,9 @@ var table;
         updateCash();
         changeTradeAmtAndFee();
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 start //
-        if (IS_SHOW_CPRICE == 'Y') {
+//        if (IS_SHOW_CPRICE == 'Y') {
         	changeUnitCprice();
-        }
+//        }
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 end //
         TradeCommon.getSecPositionForSaleAll(setParam(), function (result) {
             if(result){
@@ -1297,11 +1297,11 @@ var table;
      */
     $("#invAim").on("change", function () {
         updateCash();
-        priceInitByInCpy();
+//        priceInitByInCpy();
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 start //
-        if (IS_SHOW_CPRICE == 'Y') {
+//        if (IS_SHOW_CPRICE == 'Y') {
         	changeUnitCprice();
-        }
+//        }
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 end //
         TradeCommon.getSecPositionForSaleAll(setParam(), function (result) {
             if(result){
@@ -1787,6 +1787,14 @@ var table;
         }
     });
 
+    $("#gjunitCprice").on("change", function () {
+        if($("#gjunitCprice").val()){
+            $('#gjUnitPriceDiv').show();
+        }else{
+            $('#gjUnitPriceDiv').hide();
+        }
+    });
+
     /**
      * 1.6计算偏离度
      */
@@ -1965,6 +1973,11 @@ var table;
         exerYieldDivContrl();
         // <!-- 通道交易 新增 强成西 2019/03/26 start -->
         $('#bussTrdTransfenpei_div').hide();
+        if($("#gjunitCprice").val()){
+            $('#gjUnitPriceDiv').show();
+        }else{
+            $('#gjUnitPriceDiv').hide();
+        }
         // if($('#tradeMarket').val()=='01'){
         //     $('#tradeAmtAndFeeForm').val('').hide();
         // }
@@ -2128,9 +2141,9 @@ var table;
                     }
                 }
             	// 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 start //
-                if (IS_SHOW_CPRICE == 'Y') {
+//                if (IS_SHOW_CPRICE == 'Y') {
                 	changeUnitCprice();
-                }
+//                }
                 // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 end //
 	       if (BANKCODE == '004') {
                 	changeTurnInvAim();
@@ -2269,37 +2282,37 @@ var table;
      * 若委托开始日和指令结束日均等于平台日期时：
      * a．若投资目的选择摊余成本类，净价默认带出该债券平台日期前一估值日的摊销净价，可修改；
      */
-    var priceInitByInCpy = function () {
-        // // 委托开始日
-        // var vdate = $("#vdate").val();
-        // // 委托终止日
-        // var mdate = $("#mdate").val();
-        // // 投资目的
-        var invAim = $("#invAim").val();
-        // // 委托开始日或指令结束日不等于平台日期时
-        // if (new Date(platDate).DateDiff('d', vdate) !== 0
-        //     || new Date(platDate).DateDiff('d', mdate) !== 0) {
-        //     return;
-        // }
-        var portfolioId = $('#portfolioId').val();
-        var finprodId = $('#finprodId').val();
-        if (portfolioId && finprodId) {
-            var data = {
-                sysdate: platDate,
-                portfolioId: portfolioId,
-                finprodId:finprodId
-            }
-            //投资目的选择摊余成本
-            if (invAim == 'AC') {
-                Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getLastNetAmortizationPrice', data,
-                    function (result) {
-                        if(result.data){
-                            $('#unitCprice').val(result.data).trigger('blur').trigger('change');
-                        }
-                    });
-            }
-        }
-    }
+//    var priceInitByInCpy = function () {
+//        // // 委托开始日
+//        // var vdate = $("#vdate").val();
+//        // // 委托终止日
+//        // var mdate = $("#mdate").val();
+//        // // 投资目的
+//        var invAim = $("#invAim").val();
+//        // // 委托开始日或指令结束日不等于平台日期时
+//        // if (new Date(platDate).DateDiff('d', vdate) !== 0
+//        //     || new Date(platDate).DateDiff('d', mdate) !== 0) {
+//        //     return;
+//        // }
+//        var portfolioId = $('#portfolioId').val();
+//        var finprodId = $('#finprodId').val();
+//        if (portfolioId && finprodId) {
+//            var data = {
+//                sysdate: platDate,
+//                portfolioId: portfolioId,
+//                finprodId:finprodId
+//            }
+//            //投资目的选择摊余成本
+//            if (invAim == 'AC') {
+//                Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getLastNetAmortizationPrice', data,
+//                    function (result) {
+//                        if(result.data){
+//                            $('#unitCprice').val(result.data).trigger('blur').trigger('change');
+//                        }
+//                    });
+//            }
+//        }
+//    }
     /**
      * 币种change事件
      */
@@ -3228,14 +3241,22 @@ var table;
     				paramObj.tradeDate = $("#tradeDate").val();
     				Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getCprice'), paramObj, function (result) {
     					if (result && result.data) {
-    		                var data = result.data; 
-    		                if (data.profitType == '02') {// 预期收益型
+    		                var data = result.data;
+    		                if(paramObj.invAim == 'AC'){
     		                	// 净价显示摊销净价
         		                $("#unitCprice").val(data.dscprice).trigger("change");
-    		                } else {
-    		                	// 净价显示市值净价
-        		                $("#unitCprice").val(data.netprice).trigger("change");
+    		                }else{
+                                // 净价显示市值净价
+                                $("#unitCprice").val(data.netprice).trigger("change");
     		                }
+        		            $("#gjunitCprice").val($("#unitCprice").val()).trigger("change");
+//    		                if (data.profitType == '02') {// 预期收益型
+//    		                	// 净价显示摊销净价
+//        		                $("#unitCprice").val(data.dscprice).trigger("change");
+//    		                } else {
+//    		                	// 净价显示市值净价
+//        		                $("#unitCprice").val(data.netprice).trigger("change");
+//    		                }
     					}
     				});
     			} 

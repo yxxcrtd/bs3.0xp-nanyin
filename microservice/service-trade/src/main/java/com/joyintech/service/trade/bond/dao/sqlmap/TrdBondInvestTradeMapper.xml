@@ -1363,7 +1363,9 @@
             from (select t.*,							
                         row_number() over(partition by t.SEC_ID order by t.VALUE_DATE desc) as rnum							
                    from MST_BOND_VALUATION_INFO t							
-                  where VALUE_DATE &lt;= to_date(#{tradeDate}, 'yyyy-MM-dd')-1) t							
+                  where VALUE_DATE &lt;= to_date(#{tradeDate}, 'yyyy-MM-dd')-1
+                    AND VALUE_SOURCE = #{VALUATION_SOURCE}
+                 ) t
         	where rnum = 1
         ) VALUATION_INFO on fp.FINPROD_MARKET_ID = VALUATION_INFO.SEC_ID
         left join (
@@ -1525,5 +1527,14 @@
 
     <select id="getType7" parameterType="com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto" resultType="java.lang.String">
         select type_7 from FIN_PRODUCT_TYPE where FINPROD_ID=#{finprodId}
+    </select>
+
+    <select id="getTotalByReverseTradeId" resultType="java.lang.String">
+        select tpdt.totle_trade_id
+        from TRD_PRODUCT_DEAL tpd
+        left join TRD_PRODUCT_DEAL tpdt
+        on tpd.r_trade_id = tpdt.trade_id
+        where tpd.totle_trade_id = #{tradeId}
+        AND ROWNUM = 1
     </select>
 </mapper>

@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
@@ -164,6 +165,25 @@ public class TrdBondInvestTrade002Controller extends BaseController {
                 String turnInvAim = trdBondInvestTrade002Service.getReverseTradeDtoInvAim(tradeId);
                 if(StringUtil.isNotEmpty(turnInvAim)) {
                     dto.setTurnInvAim(turnInvAim);
+                }
+            }
+            //表中没有字段存估价净价,故此处从留痕表取值
+            ProcessMark pk = new ProcessMark();
+            pk.setPageId("TrdBondInvestTrade002");
+            pk.setBusinessDataPk1(dto.getTotleTradeId());
+            pk.setBusinessDataPk2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            TrdBondInvestTradeDto temp = trdBondInvestTrade002Service.getBussinessEntityByPk(pk);
+            if (null != temp) {
+                dto.setGjunitCprice(temp.getGjunitCprice());
+            }else{
+                //转仓方根据total查询不到，故根据r_trade_id重新查询原始交易编号
+                String rtotleTradeId = trdBondInvestTrade002Service.getTotalByReverseTradeId(tradeId);
+                if(StringUtil.isNotEmpty(rtotleTradeId)) {
+                    pk.setBusinessDataPk1(rtotleTradeId);
+                    temp = trdBondInvestTrade002Service.getBussinessEntityByPk(pk);
+                    if (null != temp) {
+                        dto.setGjunitCprice(temp.getGjunitCprice());
+                    }
                 }
             }
         }
@@ -706,7 +726,16 @@ public class TrdBondInvestTrade002Controller extends BaseController {
 //                    confirmMsg += getMessage("TRD_C_0005");
 //                }
 //            }
-
+            if ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+                    ||StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))&&
+                    StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), "N")){
+                //净价与估价净价不一致
+                if(StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit")){
+                    if(dto.getGjunitCprice() != null && dto.getGjunitCprice().compareTo(dto.getUnitCprice()) !=0){
+                        confirmMsg += getMessage("净价与估价净价不一致，是否确认提交？");
+                    }
+                }
+            }
             if (StringUtil.isNotBlank(confirmMsg)) {
                 ajaxResult = new AjaxResult();
                 ajaxResult.setData(confirmMsg);
