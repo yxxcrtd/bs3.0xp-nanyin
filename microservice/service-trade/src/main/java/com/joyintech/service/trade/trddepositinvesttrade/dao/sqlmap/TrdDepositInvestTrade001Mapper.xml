@@ -237,7 +237,7 @@
 				<if test="pingTypeBuy != null and pingTypeBuy != ''">
 					AND (WFLPA.PA_BUSS_TYPE = #{pingTypeBuy} OR WFLPA.PA_BUSS_TYPE = #{pingTypeSale})
 				</if>
-				<if test="portfolioId != null ">
+				<if test="portfolioId != null and !portfolioId.isEmpty()">
 					AND (
 					pp.PORTFOLIO_ID IN
 					<foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
@@ -297,6 +297,24 @@
 					<foreach collection="ps" item="item" separator="," open="(" close =")">
 						#{item}
 					</foreach>
+				</if>
+				<if test="status != null and status.equals(validStatus_02)">
+					AND WFL.TRADE_STATUS =#{validStatus_01} AND WFL.IS_CANCEL != 'Y'
+					<!-- <foreach collection="status" item="item" separator="," open="(" close =")">
+                        #{item}
+                    </foreach> -->
+				</if>
+				<if test="status != null and status.equals(validStatus_03)">
+					AND WFL.TRADE_STATUS =#{validStatus_03} AND WFL.IS_CANCEL != 'Y'
+					<!-- <foreach collection="status" item="item" separator="," open="(" close =")">
+                        #{item}
+                    </foreach> -->
+				</if>
+				<if test="status == null or status == ''">
+					AND WFL.IS_CANCEL != 'Y'
+				</if>
+				<if test = "status != null and status.equals(validStatus_01) ">
+					AND WFL.WORKFLOW_STATUS =#{status}
 				</if>
 				<if test="tradeDateBegin != null and tradeDateBegin != ''">
 					AND WFL.TRADE_DATE &gt;= TO_DATE(#{tradeDateBegin},'YYYY-MM-DD')
