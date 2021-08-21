@@ -212,15 +212,16 @@ public class PbcZipDataFileService {
 					}
 				}
 				//添加生成更新表状态的list
-				if(!DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType) ||
-				  !DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
-					PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,datType,reportuuid,DictCodeListExt2.人行报送类型_产品信息.getValue());
-					zipDatFileList.add(zipDatFile);
-				}else{
-					PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,pbcSendZipDatFile.getDatZipType(),reportuuid,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
-					baseZipDatFileList.add(zipDatFile);
+				if(CollectionUtil.isEmpty(errorList)){
+					if(!DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType) ||
+							!DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
+						PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,datType,reportuuid,DictCodeListExt2.人行报送类型_产品信息.getValue());
+						zipDatFileList.add(zipDatFile);
+					}else{
+						PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,pbcSendZipDatFile.getDatZipType(),reportuuid,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+						baseZipDatFileList.add(zipDatFile);
+					}
 				}
-
 			}
 			if(CollectionUtil.isNotEmpty(errorList)){
 				ajaxResult.setErrorList(errorList);
@@ -903,26 +904,25 @@ public class PbcZipDataFileService {
 
 	//初始化配置表数据
 	private String  initChbExData(){
-		String[] reportTypeList={"1_1","1_2","1_3","1_4","1_5","1_6",
+	/*	String[] reportTypeList={"1_1","1_2","1_3","1_4","1_5","1_6",
 				"2_1","2_2","2_3","2_4","2_5","3_1","3_2","3_3"};
 		List<String> deleteSqlList=new ArrayList<>();
-		for(String reportType:reportTypeList ) {
-			File file = new File("D:\\pj\\yth\\tams\\tams-svreport-parent\\tams-svreport\\src\\main\\resources\\tpl\\pbc\\PbcDatReport_"+reportType+".xls");
+		for(String reportType:reportTypeList ) {*/
+//			File file = new File("D:\\pj\\yth\\tams\\tams-svreport-parent\\tams-svreport\\src\\main\\resources\\tpl\\pbc\\PbcDatReport_"+reportType+".xls");
+			File file = new File("D:\\2_1.xlsx");
 			try {
-				List<ChbTypeMappingEx> list = PbcZExcelDefineUtil.readToList(reportType, file, 0);
+				List<ChbTypeMappingEx> list = PbcZExcelDefineUtil.readToList("2_1", file, 0);
 				for (ChbTypeMappingEx chbTypeMappingEx : list) {
 					ChbTypeMappingEx typeMappingEx = chbTypeMappingExMapper.selectBySrcfieldSrcfield1(chbTypeMappingEx.getSrcfield(), chbTypeMappingEx.getSrcfield1());
 					if (typeMappingEx == null) {
 						chbTypeMappingExMapper.insertSelective(chbTypeMappingEx);
 					}
-					String sql="delete from CHB_TYPE_MAPPING_EX where Srcfield='"+chbTypeMappingEx.getSrcfield()+"' and Srcfield1='"+chbTypeMappingEx.getSrcfield1()+"'";
-					deleteSqlList.add(sql);
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-		}
-		return JsonUtils.object2Json(deleteSqlList);
+//		}
+		return null;
 	}
 
 	//数据报送文件管理表PBC_SEND_ZIP_DAT_FILE

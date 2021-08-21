@@ -83,6 +83,8 @@ public class PbcZExcelDefineUtil {
                 boolean dataFlag = true;
                 String rowNum="";
                 for (int c = 0; c < cells; c++ ) {
+                    Cell cell1 = row.getCell(c);
+
                     if (row.getCell(c) == null
                         || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
                         //r.add("");

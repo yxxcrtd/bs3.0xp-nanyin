@@ -227,8 +227,8 @@ public class NewPbcMonthReportService {
             String orgCode = SecurityUtil.getLoginUser().getOrgCode();
             paramDto.setOrgCode(orgCode);
             paramDto.setStatusVdate(statusVdate);
-            String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
-            paramDto.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);
+            /*String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
+            paramDto.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);*/
             Set<String> noUpdateReport = new HashSet<>();
             if(CollectionUtil.isNotEmpty(pbcSendZipDatFiles)){
                 for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
