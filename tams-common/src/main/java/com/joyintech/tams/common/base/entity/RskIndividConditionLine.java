@@ -1,10 +1,9 @@
 package com.joyintech.tams.common.base.entity;
 
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import java.math.BigDecimal;
 
 public class RskIndividConditionLine extends BaseEntity {
     /**

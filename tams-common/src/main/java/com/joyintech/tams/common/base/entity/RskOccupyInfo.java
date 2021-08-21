@@ -1,13 +1,12 @@
 package com.joyintech.tams.common.base.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import java.math.BigDecimal;
+import java.util.Date;
 
 public class RskOccupyInfo extends BaseEntity {
     /**

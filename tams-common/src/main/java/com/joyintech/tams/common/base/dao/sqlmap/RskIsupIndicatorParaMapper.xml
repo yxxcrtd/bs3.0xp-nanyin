@@ -16,12 +16,15 @@
         <result column="IS_UP_REDIS" property="isUpRedis" jdbcType="VARCHAR" />
         <result column="PARAM_DATA_TYPE" property="paramDataType" jdbcType="VARCHAR" />
         <result column="PARA_TYPE" property="paraType" jdbcType="VARCHAR" />
+        <result column="PARAM_MATH_TYPE" property="paramMathType" jdbcType="VARCHAR" />
+        <result column="PARAM_VALUE_NONE" property="paramValueNone" jdbcType="VARCHAR" />
     </resultMap>
-   <sql id="Base_Column_List" >
+    <sql id="Base_Column_List" >
         PARA_CODE PARA_CODE, PARA_NAME PARA_NAME, IS_FORBID IS_FORBID, FORBID_ENUM FORBID_ENUM, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
         UPDATE_TIME UPDATE_TIME, MODEL_CODE MODEL_CODE, MODEL_VALUE MODEL_VALUE, IS_UP_REDIS IS_UP_REDIS, 
-        PARAM_DATA_TYPE PARAM_DATA_TYPE,PARA_TYPE
+        PARAM_DATA_TYPE PARAM_DATA_TYPE, PARA_TYPE PARA_TYPE, PARAM_MATH_TYPE PARAM_MATH_TYPE, 
+        PARAM_VALUE_NONE PARAM_VALUE_NONE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -44,16 +47,18 @@
         where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
-       insert into RSK_ISUP_INDICATOR_PARA (PARA_CODE, PARA_NAME, IS_FORBID, 
+        insert into RSK_ISUP_INDICATOR_PARA (PARA_CODE, PARA_NAME, IS_FORBID, 
             FORBID_ENUM, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
             MODEL_CODE, MODEL_VALUE, IS_UP_REDIS, 
-            PARAM_DATA_TYPE,PARA_TYPE)
+            PARAM_DATA_TYPE, PARA_TYPE, PARAM_MATH_TYPE, 
+            PARAM_VALUE_NONE)
         values (#{paraCode,jdbcType=VARCHAR}, #{paraName,jdbcType=VARCHAR}, #{isForbid,jdbcType=VARCHAR}, 
             #{forbidEnum,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
             #{modelCode,jdbcType=VARCHAR}, #{modelValue,jdbcType=VARCHAR}, #{isUpRedis,jdbcType=VARCHAR}, 
-            #{paramDataType,jdbcType=VARCHAR},#{paraType,jdbcType=VARCHAR})
+            #{paramDataType,jdbcType=VARCHAR}, #{paraType,jdbcType=VARCHAR}, #{paramMathType,jdbcType=VARCHAR}, 
+            #{paramValueNone,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
         insert into RSK_ISUP_INDICATOR_PARA
@@ -91,7 +96,7 @@
             <if test="modelValue != null" >
                 MODEL_VALUE,
             </if>
-             <if test="isUpRedis != null" >
+            <if test="isUpRedis != null" >
                 IS_UP_REDIS,
             </if>
             <if test="paramDataType != null" >
@@ -99,7 +104,13 @@
             </if>
             <if test="paraType != null" >
                 PARA_TYPE,
-            </if> 
+            </if>
+            <if test="paramMathType != null" >
+                PARAM_MATH_TYPE,
+            </if>
+            <if test="paramValueNone != null" >
+                PARAM_VALUE_NONE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="paraCode != null" >
@@ -135,26 +146,32 @@
             <if test="modelValue != null" >
                 #{modelValue,jdbcType=VARCHAR},
             </if>
-             <if test="isUpRedis != null" >
+            <if test="isUpRedis != null" >
                 #{isUpRedis,jdbcType=VARCHAR},
             </if>
-             <if test="paramDataType != null" >
+            <if test="paramDataType != null" >
                 #{paramDataType,jdbcType=VARCHAR},
             </if>
-             <if test="paraType != null" >
+            <if test="paraType != null" >
                 #{paraType,jdbcType=VARCHAR},
-            </if> 
+            </if>
+            <if test="paramMathType != null" >
+                #{paramMathType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValueNone != null" >
+                #{paramValueNone,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
-         insert into RSK_ISUP_INDICATOR_PARA(PARA_CODE, PARA_NAME, IS_FORBID, FORBID_ENUM, 
+        insert into RSK_ISUP_INDICATOR_PARA(PARA_CODE, PARA_NAME, IS_FORBID, FORBID_ENUM, 
         CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, MODEL_CODE, MODEL_VALUE, 
-        IS_UP_REDIS, PARAM_DATA_TYPE,PARA_TYPE)
+        IS_UP_REDIS, PARAM_DATA_TYPE, PARA_TYPE, PARAM_MATH_TYPE, PARAM_VALUE_NONE)
         select PARA_CODE, PARA_NAME, IS_FORBID, FORBID_ENUM, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, MODEL_CODE, MODEL_VALUE, 
-            IS_UP_REDIS, PARAM_DATA_TYPE,PARA_TYPE
+            IS_UP_REDIS, PARAM_DATA_TYPE, PARA_TYPE, PARAM_MATH_TYPE, PARAM_VALUE_NONE
              from RSK_ISUP_INDICATOR_PARA
-             where 1 = 1 and PARA_CODE = #{paraCode,jdbcType=VARCHAR}     
+             where 1 = 1 and PARA_CODE = #{paraCode,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
         update RSK_ISUP_INDICATOR_PARA
@@ -180,7 +197,7 @@
             <if test="modelValue != null" >
                 MODEL_VALUE = #{modelValue,jdbcType=VARCHAR},
             </if>
-             <if test="isUpRedis != null" >
+            <if test="isUpRedis != null" >
                 IS_UP_REDIS = #{isUpRedis,jdbcType=VARCHAR},
             </if>
             <if test="paramDataType != null" >
@@ -188,12 +205,18 @@
             </if>
             <if test="paraType != null" >
                 PARA_TYPE = #{paraType,jdbcType=VARCHAR},
-            </if> 
+            </if>
+            <if test="paramMathType != null" >
+                PARAM_MATH_TYPE = #{paramMathType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValueNone != null" >
+                PARAM_VALUE_NONE = #{paramValueNone,jdbcType=VARCHAR},
+            </if>
         </set>
         where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
-         update RSK_ISUP_INDICATOR_PARA
+        update RSK_ISUP_INDICATOR_PARA
         set PARA_NAME = #{paraName,jdbcType=VARCHAR},
             IS_FORBID = #{isForbid,jdbcType=VARCHAR},
             FORBID_ENUM = #{forbidEnum,jdbcType=VARCHAR},
@@ -203,7 +226,9 @@
             MODEL_VALUE = #{modelValue,jdbcType=VARCHAR},
             IS_UP_REDIS = #{isUpRedis,jdbcType=VARCHAR},
             PARAM_DATA_TYPE = #{paramDataType,jdbcType=VARCHAR},
-            PARA_TYPE = #{paraType,jdbcType=VARCHAR}
+            PARA_TYPE = #{paraType,jdbcType=VARCHAR},
+            PARAM_MATH_TYPE = #{paramMathType,jdbcType=VARCHAR},
+            PARAM_VALUE_NONE = #{paramValueNone,jdbcType=VARCHAR}
         where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
     </update>
 </mapper>

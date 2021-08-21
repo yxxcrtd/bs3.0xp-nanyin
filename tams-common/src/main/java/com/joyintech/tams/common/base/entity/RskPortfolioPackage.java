@@ -13,11 +13,11 @@ public class RskPortfolioPackage extends BaseEntity {
      */
     private String ptlBagName;
 
-    
     /**
-     * 机构名称
+     * null
      */
     private String institutionCode;
+
     /**
      * 取得 组合包代码
      * @return 组合包代码
@@ -50,23 +50,19 @@ public class RskPortfolioPackage extends BaseEntity {
         this.ptlBagName = ptlBagName == null ? null : ptlBagName.trim();
     }
 
-    
     /**
-     * 获取 institutionCode
-     * @return institutionCode.
+     * 取得 null
+     * @return null
      */
     public String getInstitutionCode() {
         return institutionCode;
     }
 
-    
     /**
-     * 设置 institutionCode
-     * @param institutionCode institutionCode
+     * 设置 null
+     * @param institutionCode null
      */
     public void setInstitutionCode(String institutionCode) {
-        this.institutionCode = institutionCode;
+        this.institutionCode = institutionCode == null ? null : institutionCode.trim();
     }
-    
-    
 }

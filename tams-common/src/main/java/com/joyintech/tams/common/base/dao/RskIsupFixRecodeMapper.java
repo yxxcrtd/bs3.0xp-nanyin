@@ -1,13 +1,11 @@
 package com.joyintech.tams.common.base.dao;
 
-import org.springframework.stereotype.Repository;
-
 import com.joyintech.tams.common.base.entity.RskIsupFixRecode;
 import com.joyintech.tams.common.base.entity.RskIsupFixRecodeKey;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RskIsupFixRecodeMapper {
-
     int deleteByPrimaryKey(RskIsupFixRecodeKey key);
 
     int insert(RskIsupFixRecode record);

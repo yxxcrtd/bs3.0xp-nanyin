@@ -32,6 +32,7 @@ public class RskIsupIndicatorPara extends BaseEntity {
      * 设置的模板变量
      */
     private String modelValue;
+
     /**
      * 是否更新Redis
      */
@@ -41,11 +42,22 @@ public class RskIsupIndicatorPara extends BaseEntity {
      * 参数数据类型
      */
     private String paramDataType;
-    
+
     /**
-     * 参数类型
+     * null
      */
     private String paraType;
+
+    /**
+     * 参数计算(实时)方式
+     */
+    private String paramMathType;
+
+    /**
+     * 参数为空显示值
+     */
+    private String paramValueNone;
+
     /**
      * 取得 参数代码
      * @return 参数代码
@@ -141,6 +153,7 @@ public class RskIsupIndicatorPara extends BaseEntity {
     public void setModelValue(String modelValue) {
         this.modelValue = modelValue == null ? null : modelValue.trim();
     }
+
     /**
      * 取得 是否更新Redis
      * @return 是否更新Redis
@@ -156,6 +169,7 @@ public class RskIsupIndicatorPara extends BaseEntity {
     public void setIsUpRedis(String isUpRedis) {
         this.isUpRedis = isUpRedis == null ? null : isUpRedis.trim();
     }
+
     /**
      * 取得 参数数据类型
      * @return 参数数据类型
@@ -172,23 +186,51 @@ public class RskIsupIndicatorPara extends BaseEntity {
         this.paramDataType = paramDataType == null ? null : paramDataType.trim();
     }
 
-    
     /**
-     * 获取 paraType
-     * @return paraType.
+     * 取得 null
+     * @return null
      */
     public String getParaType() {
         return paraType;
     }
 
-    
     /**
-     * 设置 paraType
-     * @param paraType paraType
+     * 设置 null
+     * @param paraType null
      */
     public void setParaType(String paraType) {
-        this.paraType = paraType;
+        this.paraType = paraType == null ? null : paraType.trim();
     }
-    
-    
+
+    /**
+     * 取得 参数计算(实时)方式
+     * @return 参数计算(实时)方式
+     */
+    public String getParamMathType() {
+        return paramMathType;
+    }
+
+    /**
+     * 设置 参数计算(实时)方式
+     * @param paramMathType 参数计算(实时)方式
+     */
+    public void setParamMathType(String paramMathType) {
+        this.paramMathType = paramMathType == null ? null : paramMathType.trim();
+    }
+
+    /**
+     * 取得 参数为空显示值
+     * @return 参数为空显示值
+     */
+    public String getParamValueNone() {
+        return paramValueNone;
+    }
+
+    /**
+     * 设置 参数为空显示值
+     * @param paramValueNone 参数为空显示值
+     */
+    public void setParamValueNone(String paramValueNone) {
+        this.paramValueNone = paramValueNone == null ? null : paramValueNone.trim();
+    }
 }

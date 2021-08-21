@@ -92,6 +92,26 @@ public class RskIsupIndicator extends BaseEntity {
     private Long compareDays;
 
     /**
+     * null
+     */
+    private String institutionCode;
+
+    /**
+     * 指标分类维度
+     */
+    private String supDisplayClassify;
+
+    /**
+     * 资产三级类型
+     */
+    private String assetThrType;
+
+    /**
+     * 投资性质
+     */
+    private String investProporty;
+
+    /**
      * 是否显示原值
      */
     private String isDisplayOriginal;
@@ -379,28 +399,69 @@ public class RskIsupIndicator extends BaseEntity {
     public void setCompareDays(Long compareDays) {
         this.compareDays = compareDays;
     }
-    
-    /**
-     * 机构号
-     */
-    private String institutionCode;
 
-    
     /**
-     * 获取 institutionCode
-     * @return institutionCode.
+     * 取得 null
+     * @return null
      */
     public String getInstitutionCode() {
         return institutionCode;
     }
 
-    
     /**
-     * 设置 institutionCode
-     * @param institutionCode institutionCode
+     * 设置 null
+     * @param institutionCode null
      */
     public void setInstitutionCode(String institutionCode) {
-        this.institutionCode = institutionCode;
+        this.institutionCode = institutionCode == null ? null : institutionCode.trim();
+    }
+
+    /**
+     * 取得 指标分类维度
+     * @return 指标分类维度
+     */
+    public String getSupDisplayClassify() {
+        return supDisplayClassify;
+    }
+
+    /**
+     * 设置 指标分类维度
+     * @param supDisplayClassify 指标分类维度
+     */
+    public void setSupDisplayClassify(String supDisplayClassify) {
+        this.supDisplayClassify = supDisplayClassify == null ? null : supDisplayClassify.trim();
+    }
+
+    /**
+     * 取得 资产三级类型
+     * @return 资产三级类型
+     */
+    public String getAssetThrType() {
+        return assetThrType;
+    }
+
+    /**
+     * 设置 资产三级类型
+     * @param assetThrType 资产三级类型
+     */
+    public void setAssetThrType(String assetThrType) {
+        this.assetThrType = assetThrType == null ? null : assetThrType.trim();
+    }
+
+    /**
+     * 取得 投资性质
+     * @return 投资性质
+     */
+    public String getInvestProporty() {
+        return investProporty;
+    }
+
+    /**
+     * 设置 投资性质
+     * @param investProporty 投资性质
+     */
+    public void setInvestProporty(String investProporty) {
+        this.investProporty = investProporty == null ? null : investProporty.trim();
     }
 
     /**

@@ -15,10 +15,10 @@ public class RskIsupFixRecodeKey extends BaseEntity {
     private Date validDate;
 
     /**
-     * 机构号
+     * null
      */
     private String institutionCode;
-    
+
     /**
      * 取得 参数代码
      * @return 参数代码
@@ -50,21 +50,20 @@ public class RskIsupFixRecodeKey extends BaseEntity {
     public void setValidDate(Date validDate) {
         this.validDate = validDate;
     }
-    
+
     /**
-     * 获取 institutionCode
-     * @return institutionCode.
+     * 取得 null
+     * @return null
      */
     public String getInstitutionCode() {
         return institutionCode;
     }
- 
+
     /**
-     * 设置 institutionCode
-     * @param institutionCode institutionCode
+     * 设置 null
+     * @param institutionCode null
      */
     public void setInstitutionCode(String institutionCode) {
-        this.institutionCode = institutionCode;
+        this.institutionCode = institutionCode == null ? null : institutionCode.trim();
     }
-    
 }
