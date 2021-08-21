@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 
-@Controller
+@Controller("basicFileCommonController")
 @RequestMapping("/common/filecommonutil/FileCommon")
 public class FileCommonController extends BaseController {
 
