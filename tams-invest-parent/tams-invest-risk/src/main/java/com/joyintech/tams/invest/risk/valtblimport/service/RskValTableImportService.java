@@ -983,7 +983,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                                .replaceAll("\\^", "\\\\^")
 
                            +"]";
-                   subjCode = subjCode.replaceAll(regex, "");
+                   subjCode = subjCode.replaceAll(Pattern.quote(regex), "");
                }
                }
                if(vtsumaccountMap.containsKey(subjCode)){
