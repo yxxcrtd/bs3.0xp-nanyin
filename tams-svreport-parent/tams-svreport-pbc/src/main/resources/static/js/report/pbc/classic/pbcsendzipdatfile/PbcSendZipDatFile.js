@@ -123,7 +123,7 @@ $(function() {
         Joyin.confirm("是否确认生成报送文件？", function() {
             var arr=new Array();
             for(var i in selArr){
-                arr.push(selArr[i].registSeqno);
+                arr.push(selArr[i].datZipCode);
             }
             var data = JSON.stringify(arr);
             var param = {result:data};

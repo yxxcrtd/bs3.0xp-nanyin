@@ -496,7 +496,7 @@
             and  ZIP_SEND_STATUS = '01'
         </if>
         <if test="seqnoList != null and seqnoList.size() &gt; 0">
-            <foreach close=")" collection="seqnoList" item="item" open=" AND REGIST_SEQNO IN (" separator=",">
+            <foreach close=")" collection="seqnoList" item="item" open=" AND DAT_ZIP_CODE IN (" separator=",">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
@@ -513,8 +513,7 @@
             DAT_ZIP_STATUS=#{item.datZipStatus,jdbcType=VARCHAR},
             SUBMIT_TIME=#{item.submitTime,jdbcType=TIMESTAMP}
             where
-            DAT_ZIP_DAT_TYPE= #{item.datZipDatType,jdbcType=VARCHAR}
-            and DAT_ZIP_CODE= #{item.datZipCode,jdbcType=VARCHAR}
+            DAT_ZIP_CODE= #{item.datZipCode,jdbcType=VARCHAR}
             and ZIP_SEND_STATUS='01'
         </foreach>
     </update>

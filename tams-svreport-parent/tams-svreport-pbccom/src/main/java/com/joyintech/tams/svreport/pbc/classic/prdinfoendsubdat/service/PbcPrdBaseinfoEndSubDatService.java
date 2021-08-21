@@ -291,8 +291,8 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                         if(StrUtil.isEmpty(pbcSendZipDatFile.getRegistSeqno())){
                             pbcSendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
                         }
-                        String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
-                        pbcSendZipDatFile.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);
+                       /* String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
+                        pbcSendZipDatFile.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);*/
                         PbcSendZipDatFile sendZipDatFile = pbcSendZipDatFileMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), pbcSendZipDatFile.getDatZipDatType());
                         if("PIE".equals(pbcSendZipDatFile.getDatZipDatType())){
                             if(sendZipDatFile == null){

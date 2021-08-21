@@ -1,8 +1,16 @@
 package com.joyintech.tams.svreport.pbc.classic.pbcsendzipdatfile;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper;
+import com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsUtil;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDatDiff;
@@ -15,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -37,6 +43,9 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
     @Autowired
     private PbcPrdBaseinfoEndSubDatMapper pbcPrdBaseinfoEndSubDatMapper;
 
+    @Autowired
+    private PbcProdAssetpoolCodeMapper pbcProdAssetpoolCodeMapper;
+
     @Override
     public Map<Object, Object> createData(Map<String,Object> param){
         Map<Object, Object> data = new HashMap<Object, Object>();
@@ -45,6 +54,7 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
             return data;
         }
         List<PbcPrdBaseinfoEndSubDatDiff> listDetail=pbcPrdBaseinfoEndSubDatMapper.queryPbcPrdBaseInfoEndByDatZipCode(datZipCode);
+        dealIsspartList(listDetail);
         if (!CollectionUtils.isEmpty(listDetail)){
             for(PbcPrdBaseinfoEndSubDatDiff detail : listDetail){
                 //登记表和DAT表数据差异比较
@@ -56,6 +66,32 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
         }
         data.put("report", listDetail);
         return data;
+    }
+
+    /**
+     * 功能:获取人行代码(外部)
+     * @since 1.6.0
+     * @version 1.6.0
+     * @param listDetail
+     */
+    private void dealIsspartList(List<PbcPrdBaseinfoEndSubDatDiff> listDetail){
+        List<String> innerProdIds = new ArrayList<>();
+        for (PbcPrdBaseinfoEndSubDatDiff pbcPrdBaseinfoSubDat : listDetail) {
+            String prodId = pbcPrdBaseinfoSubDat.getProdId();
+            if(StrUtil.isNotEmpty(prodId) && !innerProdIds.contains(prodId)){
+                innerProdIds.add(prodId);
+            }
+        }
+        List<PbcProdAssetpoolCode> pbcProdAssetpoolCodes = new ArrayList<>();
+        if(CollectionUtil.isNotEmpty(innerProdIds)){
+            pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds);
+        }
+        for (PbcPrdBaseinfoEndSubDatDiff pbcPrdBaseinfoSubDat : listDetail) {
+            String prodId = pbcPrdBaseinfoSubDat.getProdId();
+            pbcProdAssetpoolCodes.stream().filter(pbcProdAssetpoolCode ->
+                    prodId.equals(pbcProdAssetpoolCode.getInsideProdId())).findFirst()
+                    .ifPresent(pbcProdAssetpoolCode -> pbcPrdBaseinfoSubDat.setPbcProdId(pbcProdAssetpoolCode.getPbcCode()));
+        }
     }
 
 
