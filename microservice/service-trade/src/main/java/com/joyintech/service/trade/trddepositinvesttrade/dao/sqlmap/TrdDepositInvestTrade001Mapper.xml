@@ -204,126 +204,111 @@
 			    WFL.CCY ccy,
 			    WFL.TRADE_DATE tradeDate,
 			    WFL.REMARK remark
-		    FROM
+		    FROM 
 			    WFL_TRD_PRODUCT_DEAL  WFL
-			LEFT JOIN
+			LEFT JOIN 
 			    WFL_TRD_PRODUCT_DEAL_ADD WFLDEAL
 			ON
 			    WFL.TRADE_ID = WFLDEAL.TRADE_ID
-			LEFT JOIN
+			LEFT JOIN 
 				WFL_PA_TRD_PRODUCT_DEAL WFLPA
-			ON
+			ON 
 				WFL.TRADE_ID = WFLPA.TRADE_ID
-			LEFT JOIN PTL_PORTFOLIO PP ON WFLDEAL.PORTFOLIO_ID = PP.PORTFOLIO_ID
 			LEFT JOIN
 			    FIN_PRODUCT FIN
 			ON
 			    WFL.FINPROD_ID = FIN.FINPROD_ID
 			LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = WFL.CHL_ID
-			LEFT JOIN
+			LEFT JOIN 
 			    FIN_PRODUCT_TYPE FINTYPE
 			ON
 			    FIN.FINPROD_ID = FINTYPE.FINPROD_ID
-			<where>
-				PP.INVEST_YESORNO = 'Y'
-				and (wfl.IS_CANCEL = 'Y' or wfl.is_swap_transaction is null or wfl.is_swap_transaction='N')
-				<if test="userId != null and userId != ''">
-					AND (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
-					OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
-				</if>
-				<if test="finprodType2 != null and finprodType2 != ''">
-					AND WFL.FINPROD_TYPE2 = #{finprodType2}
-				</if>
-				<if test="pingTypeBuy != null and pingTypeBuy != ''">
-					AND (WFLPA.PA_BUSS_TYPE = #{pingTypeBuy} OR WFLPA.PA_BUSS_TYPE = #{pingTypeSale})
-				</if>
-				<if test="portfolioId != null and !portfolioId.isEmpty()">
-					AND (
-					pp.PORTFOLIO_ID IN
-					<foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
-						#{item}
-					</foreach>
-					OR pp.PARENT_PORTFOLIO_ID IN
-					<foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
-						#{item}
-					</foreach>
-					)
-				</if>
-				<if test="entrustId != null and entrustId !='' ">
-					AND WFLDEAL.ENTRUST_ID  = #{entrustId}
-				</if>
-				<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
-					AND (WFL.CHL_ID IN
-					<foreach collection="chlFinprodIdList" item="item" index="index" open="("
-							 close=")" separator=",">
-						<if test="(index % 998) == 0">
-							null) OR WFL.CHL_ID in (
-						</if>
-						#{item}
-					</foreach>
-					)
-				</if>
-				<if test="finprodId != null and finprodId !='' ">
-					AND (FIN.FINPROD_MARKET_ID
-					LIKE concat(concat('%',#{finprodId,jdbcType=VARCHAR}),'%')
-					OR FIN.FINPROD_ID
-					LIKE concat(concat('%',#{finprodId,jdbcType=VARCHAR}),'%'))
-				</if>
-				<if test="finprodType != null and finprodType !='' ">
-					AND FINTYPE.TYPE_6 = #{finprodType}
-				</if>
-				<!-- added by wangguiqi on 2019/8/1 -start-->
-				<if test="type9 != null and type9.size() > 0">
-					AND FINTYPE.TYPE_9 in
-					<foreach collection="type9" item="item" open="(" close=")" separator=",">
-						#{item}
-					</foreach>
-				</if>
-				<if test="type10 != null and type10.size() > 0">
-					AND FINTYPE.TYPE_10 in
-					<foreach collection="type10" item="item" open="(" close=")" separator=",">
-						#{item}
-					</foreach>
-				</if>
-				<if test="type11 != null and type11.size() > 0">
-					AND FINTYPE.TYPE_11 in
-					<foreach collection="type11" item="item" open="(" close=")" separator=",">
-						#{item}
-					</foreach>
-				</if>
-				<!-- added by wangguiqi on 2019/8/1 -end-->
-				<if test="ps != null and ps.size() != 0">
-					AND WFL.PS IN
-					<foreach collection="ps" item="item" separator="," open="(" close =")">
-						#{item}
-					</foreach>
-				</if>
-				<if test="status != null and status.equals(validStatus_02)">
-					AND WFL.TRADE_STATUS =#{validStatus_01} AND WFL.IS_CANCEL != 'Y'
-					<!-- <foreach collection="status" item="item" separator="," open="(" close =")">
-                        #{item}
-                    </foreach> -->
-				</if>
-				<if test="status != null and status.equals(validStatus_03)">
-					AND WFL.TRADE_STATUS =#{validStatus_03} AND WFL.IS_CANCEL != 'Y'
-					<!-- <foreach collection="status" item="item" separator="," open="(" close =")">
-                        #{item}
-                    </foreach> -->
-				</if>
-				<if test="status == null or status == ''">
-					AND WFL.IS_CANCEL != 'Y'
-				</if>
-				<if test = "status != null and status.equals(validStatus_01) ">
-					AND WFL.WORKFLOW_STATUS =#{status}
-				</if>
-				<if test="tradeDateBegin != null and tradeDateBegin != ''">
-					AND WFL.TRADE_DATE &gt;= TO_DATE(#{tradeDateBegin},'YYYY-MM-DD')
-				</if>
-				<if test="tradeDateEnd != null and tradeDateEnd != ''">
-					AND WFL.TRADE_DATE &lt;= TO_DATE(#{tradeDateEnd},'YYYY-MM-DD')
-				</if>
-			</where>
-		</if>
+			LEFT JOIN PTL_PORTFOLIO PP ON WFLDEAL.PORTFOLIO_ID = PP.PORTFOLIO_ID
+		<where>
+			PP.INVEST_YESORNO = 'Y'
+			and (not (wfl.is_cancel = 'N' and wfl.is_swap_transaction='Y'))
+			<if test="userId != null and userId != ''">
+				AND (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+				OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+			</if>
+			<if test="finprodType2 != null and finprodType2 != ''">
+				AND WFL.FINPROD_TYPE2 = #{finprodType2}
+			</if>
+			<if test="pingTypeBuy != null and pingTypeBuy != ''">
+				AND (WFLPA.PA_BUSS_TYPE = #{pingTypeBuy} OR WFLPA.PA_BUSS_TYPE = #{pingTypeSale})
+			</if>
+			<if test="portfolioId != null ">
+				AND (
+				pp.PORTFOLIO_ID IN
+				<foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+				OR pp.PARENT_PORTFOLIO_ID IN
+				<foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+				)
+			</if>
+			<if test="entrustId != null and entrustId !='' ">
+				AND WFLDEAL.ENTRUST_ID  = #{entrustId}
+			</if>
+			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
+				AND (WFL.CHL_ID IN
+				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
+						 close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR WFL.CHL_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
+			</if>
+			<if test="finprodId != null and finprodId !='' ">
+				AND (FIN.FINPROD_MARKET_ID
+				LIKE concat(concat('%',#{finprodId,jdbcType=VARCHAR}),'%')
+				OR FIN.FINPROD_ID
+				LIKE concat(concat('%',#{finprodId,jdbcType=VARCHAR}),'%'))
+			</if>
+			<if test="finprodType != null and finprodType !='' ">
+				AND FINTYPE.TYPE_6 = #{finprodType}
+			</if>
+	    	<!-- added by wangguiqi on 2019/8/1 -start-->
+			<if test="type9 != null and type9.size() > 0">
+				AND FINTYPE.TYPE_9 in 
+				<foreach collection="type9" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="type10 != null and type10.size() > 0">
+				AND FINTYPE.TYPE_10 in 
+				<foreach collection="type10" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="type11 != null and type11.size() > 0">
+				AND FINTYPE.TYPE_11 in 
+				<foreach collection="type11" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+	    	<!-- added by wangguiqi on 2019/8/1 -end-->
+			<if test="ps != null and ps.size() != 0">
+				AND WFL.PS IN
+				<foreach collection="ps" item="item" separator="," open="(" close =")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="tradeDateBegin != null and tradeDateBegin != ''">
+				AND WFL.TRADE_DATE &gt;= TO_DATE(#{tradeDateBegin},'YYYY-MM-DD')
+			</if>
+			<if test="tradeDateEnd != null and tradeDateEnd != ''">
+				AND WFL.TRADE_DATE &lt;= TO_DATE(#{tradeDateEnd},'YYYY-MM-DD')
+			</if>
+			<if test="tradeFlowStatus != null and tradeFlowStatus != ''">
+				AND WFL.WORKFLOW_STATUS = #{tradeFlowStatus}
+			</if>
+		</where>
+	</if>
 	</select>
 	<!-- 获取交易编号  -->
 	<select id="getEntrustId" resultType="com.joyintech.framework.select.SuggestDto">
