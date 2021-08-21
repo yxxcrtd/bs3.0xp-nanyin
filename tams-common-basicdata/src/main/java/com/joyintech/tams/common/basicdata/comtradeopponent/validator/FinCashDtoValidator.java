@@ -20,7 +20,7 @@ import java.util.List;
  * @since 1.0
  */
 @Transactional
-@Component
+@Component("CommonBasicFinCashDtoValidator")
 public class FinCashDtoValidator implements BeanValidator {
 
     /**
