@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
@@ -277,6 +278,11 @@ public class TrdBondDurationDto extends BaseEntity {
      */
     private String institutionName;
     //多级法人改造 add by caiqun 20200615
+
+    /**
+     * 附件上传
+     */
+    private List<UploadFile> uploadFileList;
 
     /**
      * finprodAbbr
@@ -1189,4 +1195,12 @@ public class TrdBondDurationDto extends BaseEntity {
         this.institutionName = institutionName;
     }
     //多级法人改造 add by caiqun 20200615
+
+    public List<UploadFile> getUploadFileList() {
+        return uploadFileList;
+    }
+
+    public void setUploadFileList(List<UploadFile> uploadFileList) {
+        this.uploadFileList = uploadFileList;
+    }
 }

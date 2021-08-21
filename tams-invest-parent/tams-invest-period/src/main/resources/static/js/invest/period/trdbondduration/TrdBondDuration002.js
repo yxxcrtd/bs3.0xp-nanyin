@@ -360,6 +360,9 @@
          */
         var object = $.serializeToObject('#informationForm', true);
         object.operateType = operateType;
+        if(FileCommon) {
+            object.uploadFileList = FileCommon.getUploadFileInfo();
+        }
         Joyin.ajaxJson(basePath + 'invest/period/trdbondduration/TrdBondDuration002/check', object, function (result) {
             Joyin.confirm(result.data, function () {
                 if (operateType === 'save') {
