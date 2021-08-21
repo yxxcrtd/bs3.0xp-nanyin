@@ -1504,9 +1504,11 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(ptlPortfolio != null && StringUtil.isNotEmpty(ptlPortfolio.getCcy())){
             paramMap.put("ccy", ptlPortfolio.getCcy());
         }
+        //add by chenjiaxing 币种为空时默认为人民币 start
         if(StringUtil.isEmpty(ptlPortfolio.getCcy())){
             paramMap.put("ccy", "CNY");
         }
+        //add by chenjiaxing 币种为空时默认为人民币 start
         // 可用现金
         Map<String, Object> cash = this.getProAvailableCash(paramMap);
         //组合T日可用现金
