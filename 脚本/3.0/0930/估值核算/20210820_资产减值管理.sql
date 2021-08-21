@@ -1,3 +1,12 @@
+--资产减值流水增删字段，删除[市场代码] 新增[金融产品代码、代偿期类型、期限描述]
+alter table TRD_ASSET_LOSS drop (SEC_ID);
+alter table TRD_ASSET_LOSS add FINPROD_ID VARCHAR2(50);
+comment on column TRD_ASSET_LOSS.FINPROD_ID is  '金融产品代码';
+alter table TRD_ASSET_LOSS add PEROID_TYPE VARCHAR2(50);
+comment on column TRD_ASSET_LOSS.PEROID_TYPE is  '代偿期类型';
+alter table TRD_ASSET_LOSS add TERM_DESCRIBE VARCHAR2(50);
+comment on column TRD_ASSET_LOSS.TERM_DESCRIBE is  '期限描述';
+
 --数据字典—代偿期类型
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('PERIOD_TYPE','01','行权','1','0','system','',to_date('2021/6/15', 'yyyy/mm/dd'), 'system',to_date('2021/6/15', 'yyyy/mm/dd'), 'ALL');
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('PERIOD_TYPE','02','到期','2','0','system','',to_date('2021/6/15', 'yyyy/mm/dd'), 'system',to_date('2021/6/15', 'yyyy/mm/dd'), 'ALL');
