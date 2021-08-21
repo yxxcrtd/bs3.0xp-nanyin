@@ -182,6 +182,15 @@
 			<if test="updateTime != null" >
 				UPDATE_TIME,
 			</if>
+			<if test="finprodId != null" >
+				FINPROD_ID,
+			</if>
+			<if test="periodType != null" >
+				PEROID_TYPE,
+			</if>
+			<if test="termDescribe != null" >
+				TERM_DESCRIBE,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides="," >
 			<if test="tradeId != null" >
@@ -240,6 +249,15 @@
 			</if>
 			<if test="updateTime != null" >
 				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="finprodId != null" >
+				#{finprodId,jdbcType=VARCHAR},
+			</if>
+			<if test="periodType != null" >
+				#{periodType,jdbcType=VARCHAR},
+			</if>
+			<if test="termDescribe != null" >
+				#{termDescribe,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -490,4 +508,58 @@
 			AND (Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_TOUGUAN_F07},#{TYPE_TOUGUAN_F18})
 			OR (Fin_Product.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02})))
 	</select>
+
+	<select id="selectTrdAssetLossByFinprodId" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
+		SELECT A.FINPROD_MARKET_ID finprodId,
+		A.Finprod_Abbr finprodAbbr,
+		A.TRADE_MARKET tradeMarket,
+		A.ISSUER as issuer,
+		NVL(B.CUSTOMER_ABBR, B.CUSTOMER_NAME) AS issuerName,
+		C.INSITITUTE_CODE AS insitituteCode,
+		A.Vdate vDate,
+		A.Mdate mDate,
+		A.FINPROD_TYPE assetType1,
+		A.IS_RIGHT as isRight
+
+		FROM Fin_Product A
+		LEFT JOIN MST_CUSTOMER_INFO B  ON A.ISSUER = B.CUSTOMER_ID  AND B.IS_ISSUER = 'Y'
+		LEFT JOIN MST_CUSTOMER_INFO_ADD C  ON C.CUSTOMER_ID = B.CUSTOMER_ID
+		WHERE A.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
+		UNION
+		SELECT A.FINPROD_ID   finprodId,
+		A.FINPROD_ID   finprodAbbr,
+		A.TRADE_MARKET tradeMarket,
+		NULL           as issuer,
+		NULL           AS issuerName,
+		NULL           AS insitituteCode,
+		A.Vdate        vDate,
+		A.Mdate        mDate,
+		A.FINPROD_TYPE as assetType1,
+		NULL           as isRight
+		FROM FIN_TRADE_PRODUCT A
+		WHERE A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="getExerciseDateCount" resultType="java.lang.Integer">
+			SELECT count(1) FROM
+			FIN_EXERCISE_PLAN
+			where
+			FINPROD_ID= #{finprodId,jdbcType=VARCHAR}
+			and EXERCISE_DATE > sysdate
+			AND ROWNUM=1
+			order by EXERCISE_DATE ASC
+	</select>
+
+    <!--根据交易编码删除交易信息-->
+	<delete id="deleteByTradeId" parameterType="java.lang.String" >
+        delete from TRD_ASSET_LOSS
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </delete>
+
+
+
+
+
+
 </mapper>

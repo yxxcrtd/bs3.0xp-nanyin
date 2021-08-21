@@ -172,6 +172,109 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
      * 撤销原因
      */
     private String revokeReason;
+
+
+    /**
+     * 交易场所
+     */
+    private String tradeMarket;
+    /**
+     * 发行人
+     */
+    private String issuer;
+
+    /**
+     * 发行人名称/机构名称
+     */
+    private String issuerName;
+
+    /**
+     * 组织机构代码/统一社会信用代码
+     */
+    private String insitituteCode;
+
+    /**
+     * 期限描述
+     */
+    private String termDescribe;
+
+    /**
+     * 是否含权
+     */
+    private String isRight;
+
+    /**
+     * 代偿期类型
+     */
+    private  String periodType;
+
+    private String pageModel;
+
+
+    public String getPageModel() {
+        return pageModel;
+    }
+
+    public void setPageModel(String pageModel) {
+        this.pageModel = pageModel;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    public String getIssuer() {
+        return issuer;
+    }
+
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
+    }
+
+    public String getIssuerName() {
+        return issuerName;
+    }
+
+    public void setIssuerName(String issuerName) {
+        this.issuerName = issuerName;
+    }
+
+    public String getInsitituteCode() {
+        return insitituteCode;
+    }
+
+    public void setInsitituteCode(String insitituteCode) {
+        this.insitituteCode = insitituteCode;
+    }
+
+    public String getTermDescribe() {
+        return termDescribe;
+    }
+
+    public void setTermDescribe(String termDescribe) {
+        this.termDescribe = termDescribe;
+    }
+
+    public String getIsRight() {
+        return isRight;
+    }
+
+    public void setIsRight(String isRight) {
+        this.isRight = isRight;
+    }
+
+    public String getPeriodType() {
+        return periodType;
+    }
+
+    public void setPeriodType(String periodType) {
+        this.periodType = periodType;
+    }
+
     public Date getValDate() {
         return valDate;
     }

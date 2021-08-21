@@ -67,18 +67,44 @@
 
     var init = function () {
 
-        initFlag = false;
+        /*initFlag = false;
         // 画星星
         star();
         if (typeof shortSellingSupported != 'undefined' && shortSellingSupported == '02') {
             $(".shortSellingSupported").hide();
+        }*/
+
+        $("#period_type").hide();
+        var operateTypeTh = $('#operateType').val();
+        if (pageModel == PAGE_MODEL_EDIT ) {
+
+            $('#finprodId').attr("disabled", "disabled");
+            $('#tradeMarket').attr("disabled", "disabled");
+            $('#strDate').attr("disabled", "disabled");
+            $('#endDate').attr("disabled", "disabled");
+            $('#peroid').attr("disabled", "disabled");
+            $('#stage').attr("disabled", "disabled");
+            $('#termDescribe').attr("disabled", "disabled");
+            $('#lossTestType').attr("disabled", "disabled");
+
+
+            $('#pdValue').show();
+            $('#lgdValue').show();
+            $('#pdValue').attr("disabled", false);
+            $('#lgdValue').attr("disabled", false);
         }
+
+
+
     }
 
     /**
      * 绑定事件
      */
     $(function () {
+
+        init();
+
         /**
          * 保存
          */
@@ -157,7 +183,7 @@
                         }
                     });
             }
-            if($('#finprodId').val()){
+           /* if($('#finprodId').val()){
                 Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/getAssetInfo', data,
                     function (resultObj) {
                         if (resultObj) {
@@ -170,6 +196,7 @@
                             if (resultObj.mDate) {
                                 $("#mDate").val(resultObj.mDateStr).trigger('change');
                             }
+
                             if (resultObj.exeDate) {
                                 if (resultObj.exeDate === '04') {
                                     var days1 = (Date.ofDate($("#mDate").val()) - Date.ofDate($("#valDate").val())) / (24 * 60 * 60 * 1000);
@@ -181,11 +208,82 @@
                             }
                         }
                     });
+            }*/
+            if ($('#finprodId').val() ) {
+                Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/selectTrdAssetLossByFinprodId', data,
+                    function (resultObj) {
+                        if (resultObj) {
+                            if (resultObj.assetType1) {
+                                $("#assetType1").val(resultObj.assetType1).trigger('change');
+                            }
+                            if (resultObj.vDate) {
+                                $("#vDate").val(resultObj.vDateStr);
+                            }
+                            if (resultObj.mDate) {
+                                $("#mDate").val(resultObj.mDateStr).trigger('change');
+                            }
+                            if (resultObj.issuerName) {
+                                $("#issuerName").val(resultObj.issuerName);
+                            }
+                            if (resultObj.insitituteCode) {
+                                $("#insitituteCode").val(resultObj.insitituteCode);
+                            }
+                            //当资产类型为债券，且资产属于含权债可选择  代偿期类型
+                            if(resultObj.isRight && resultObj.isRight==='Y'){
+                                var exerciseData = {
+                                    finprodId: $('#finprodId').val()
+                                }
+                                Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/queryFinExercisePlan', exerciseData,
+                                    function (resultObj) {
+                                      if(resultObj){
+                                          if(resultObj.exerciseDate){
+                                              $("#assetExerciseDate").val(resultObj.exerciseDate);
+                                          }
+                                      }
+                                    });
+                                $("#period_type").show();
+                            }else{
+                                $("#assetExerciseDate").val("");
+                                var days1 = (Date.ofDate($("#mDate").val()) - new Date()) / (24 * 60 * 60 * 1000);
+                                $("#peroid").val(JoyinMath.doDiv(days1, 365, 4, JoyinMath.ROUND_HALF_UP));
+                            }
+
+                            /*if(resultObj.assetType1 && resultObj.isRight && resultObj.assetType1==='01' && resultObj.isRight==='Y'){
+                                $("#period_type").show();
+                            }*/
+
+                            /*if (resultObj.exeDate) {
+                                if (resultObj.exeDate === '04') {
+                                    var days1 = (Date.ofDate($("#mDate").val()) - Date.ofDate($("#valDate").val())) / (24 * 60 * 60 * 1000);
+                                    $("#peroid").val(JoyinMath.doDiv(days1, 365, 4, JoyinMath.ROUND_HALF_UP));
+                                } else {
+                                    var days2 = (Date.ofDate($("#assetExerciseDate").val()) - Date.ofDate($("#valDate").val())) / (24 * 60 * 60 * 1000);
+                                    $("#peroid").val(JoyinMath.doDiv(days2, 365, 4, JoyinMath.ROUND_HALF_UP));
+                                }
+                            }*/
+
+
+                        }
+                    });
             }
+
             // 画星星
             star();
         });
-        
+
+        //代偿期类型改变事件
+        $("#periodType").change(function () {
+            var periodTypeValue  = $("#periodType").val();
+            if(periodTypeValue){
+                if(periodTypeValue === '01'){
+                    var days1 = (Date.ofDate($("#assetExerciseDate").val()) - new Date() ) / (24 * 60 * 60 * 1000);
+                    $("#peroid").val(JoyinMath.doDiv(days1, 365, 4, JoyinMath.ROUND_HALF_UP));
+                }else if(periodTypeValue === '02'){
+                    var days1 = (Date.ofDate($("#mDate").val()) -  new Date() ) / (24 * 60 * 60 * 1000);
+                    $("#peroid").val(JoyinMath.doDiv(days1, 365, 4, JoyinMath.ROUND_HALF_UP));
+                }
+            }
+        });
         
         $("#lossTestType").change(function () {
             //外部评估

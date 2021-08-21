@@ -15,16 +15,20 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto;
 import com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.service.TrdAssetLossService;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
+import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +49,12 @@ public class TrdAssetLoss001Controller {
      */
     @Autowired
     private TrdAssetLossService trdAssetLossService;
+
+    /**
+     * 标的类共通方法Service
+     */
+    @Autowired
+    private FinProductCommonBatchService finProductCommonBatchService;
     
     /**
      * 
@@ -218,5 +228,33 @@ public class TrdAssetLoss001Controller {
     public List<TrdAssetLoss001Dto>  selectRepeatByFinprodIdAndValDate(@RequestBody Map<String, Object> param) {
         return trdAssetLossService.selectRepeatByFinprodIdAndValDate(param);
     }
+
+
+    /**
+     * @Description:根据资产id查询资产信息
+     * @auther: yuzj
+     * @date: 2021/8/20
+     * @param: 
+     * @return: 
+     */
+    @PostMapping("/selectTrdAssetLossByFinprodId")
+    public List<TrdAssetLoss001Dto>  selectTrdAssetLossByFinprodId(@RequestBody Map<String, Object> param) {
+        return trdAssetLossService.selectTrdAssetLossByFinprodId(param);
+    }
+
+    /**
+     * @Description:根据资产id获取资产行权日
+     * @auther: yuzj
+     * @date: 2021/8/20
+     * @param:
+     * @return:
+     */
+    @PostMapping("/queryFinExercisePlan")
+    public FinExercisePlan queryFinExercisePlan(@RequestBody Map<String, Object> param) {
+        String finprodId = (String)param.get("finprodId");
+        Date exerciseDate = DateUtil.parse((String)param.get("exerciseDate"));
+        return finProductCommonBatchService.queryFinExercisePlan(finprodId, null, exerciseDate, null);
+    }
+
 
 }

@@ -126,10 +126,10 @@ public class TrdAssetLoss004Controller extends BaseController {
             //真实行数
             rownum = i + 1;
             TrdAssetLoss001Dto dto = dtoList.get(i);
-            if (StringUtil.equals(CHECK_STATUS_STR_BTG, dto.getCheckStatusStr())) {
+           /* if (StringUtil.equals(CHECK_STATUS_STR_BTG, dto.getCheckStatusStr())) {
                 message.append("检查结果：不通过 " + "行数：" + rownum);
                 messages.add(new ValidMessage(message.toString()));
-            }
+            }*/
             wflValidInputParameter.setBusinessDataPk1(dto.getFinprodId());
             if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
                 message.append(this.getMessage("BUSS_COM_E_0041") + "资产：" + dto.getFinprodId());
@@ -166,6 +166,8 @@ public class TrdAssetLoss004Controller extends BaseController {
                 String tradeId = interfCommonService != null ? interfCommonService.getTradeid("TEDLOSS", dto.getValDate(), "A") : IDGenerator.generate();
                 dto.setTradeId(tradeId);
             }
+            //新建、修改录入，存“01 手工”;导入：存“02 中债/wind接入”
+            dto.setLossInputPattern(DictCodeListExt3.减值数据来源_中债_wind接入.getValue());
         }
 
         ProcessParameter<TrdAssetLoss001Dto> processParameter = new ProcessParameter<TrdAssetLoss001Dto>();

@@ -18,6 +18,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -44,6 +45,8 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
 
     private static final String CHECK_STATUS_STR_TG = "通过";
     private static final String CHECK_STATUS_STR_BTG = "不通过";
+
+
     /**
      * 资产减值管理查询 <功能详细描述>
      *
@@ -838,4 +841,56 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                 TrdAssetLoss001Dto.class);
         return list;
     }
+    
+    /**
+     * @Description:根据资产id查询资产信息
+     * @auther: yuzj
+     * @date: 2021/8/20
+     * @param: 
+     * @return: 
+     */
+    public TrdAssetLoss001Dto selectTrdAssetLossByFinprodId(Map<String, Object> param) {
+        List<TrdAssetLoss001Dto>  result =  restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/TrdAssetLoss/selectTrdAssetLossByFinprodId",
+                param, TrdAssetLoss001Dto.class);
+        if(StringUtil.isEmptyList(result)){
+            return null;
+        }
+        String tempVdate = DateUtil.format(result.get(0).getvDate());
+        String tempMdate = DateUtil.format(result.get(0).getmDate());
+        result.get(0).setvDateStr(tempVdate);
+        result.get(0).setmDateStr(tempMdate);
+        return result.get(0);
+    }
+
+    /**
+     * @Description:获取期限描述下拉框
+     * @auther: yuzj
+     * @date: 2021/8/20
+     * @param:
+     * @return:
+     */
+    public List<SelectOptionDto> getTermDescribe() {
+        List<SelectOptionDto> linkSelectOptionList = new ArrayList<>();
+        //1D、1M、2M、3M、4M、5M、6M、7M、8M、9M、10M、11M、1Y
+        String[] termDescribeArr = {"1D","1M","2M","3M","4M","5M","6M","7M","8M","9M","10M","11M","1Y"};
+        String[] termDescribeNameArr = {"一天","一个月","两个月","三个月","四个月","五个月","六个月","七个月","八个月","九个月","十个月","十一个月","一年"};
+        for(int i=0;i<termDescribeArr.length;i++){
+            SelectOptionDto selectOptionDto = new SelectOptionDto();
+            selectOptionDto.setId(termDescribeArr[i]);
+            selectOptionDto.setText(termDescribeNameArr[i]);
+            linkSelectOptionList.add(selectOptionDto);
+        }
+        return linkSelectOptionList;
+    }
+
+
+    public  FinExercisePlan queryFinExercisePlan(Map<String, Object> param){
+        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/TrdAssetLoss/queryFinExercisePlan",
+                param, FinExercisePlan.class);
+    }
+
+
+
+
+
 }

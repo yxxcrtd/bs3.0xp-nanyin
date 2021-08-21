@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trdassetlossmanage.trdassetloss.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -20,6 +21,8 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.ModelDictCodeList;
+import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.gradepdconfig.dto.ModGradePdConfigDto;
 import com.joyintech.tams.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto;
 import com.joyintech.tams.valuation.trdassetlossmanage.trdassetloss.service.TrdAssetLossService;
 import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
@@ -211,6 +214,26 @@ public class TrdAssetLoss001Controller extends BaseController {
     public Map<String, Object> getRequestMap() throws ParseException {
         Map<String, Object> paraMap = RequestUtil.getPageParam();
         return paraMap;
+    }
+
+
+
+    /**
+     * @Description:删除检查校验
+     * @auther: yuzj
+     * @date: 2021-8-21
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("deleteCheck")
+    public AjaxResult deleteCheck(@RequestBody @Valid TrdAssetLoss001Dto dto, BindingResult result) {
+        AjaxResult ajaxResult = new AjaxResult();
+        if(!DateUtil.format(dto.getValDate()).equals(DateUtil.format(new Date())) ){
+            String message = "不可删除减值行情日非系统当前日期的数据!";
+            return new AjaxResult(message, MessageType.错误消息);
+        }
+        return ajaxResult;
     }
 
 }

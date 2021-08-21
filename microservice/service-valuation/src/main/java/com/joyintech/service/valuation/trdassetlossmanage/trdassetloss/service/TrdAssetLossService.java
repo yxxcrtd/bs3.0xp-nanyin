@@ -22,6 +22,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.common.batch.finproduct.dao.FinProductCommonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +45,8 @@ public class TrdAssetLossService extends BaseService<TrdAssetLoss001Dto> {
 
     @Autowired
     private TrdAssetLoss001Mapper trdAssetLoss001Mapper;
+
+
     /**
      * 资产减值管理分页查询 <功能详细描述>
      * 
@@ -143,6 +146,9 @@ public class TrdAssetLossService extends BaseService<TrdAssetLoss001Dto> {
             BeanUtil.copyProperties(entity, dto);
             trdAssetLoss001Mapper.updateByTradeIdSelective(entity);
         }
+        if(StringUtil.equals(operationType, "DELETE")){
+            trdAssetLoss001Mapper.deleteByTradeId(dto.getTradeId());
+        }
     }
 
     public List<TrdAssetLoss001Dto> selectByKey(Map<String, Object> param) {
@@ -202,4 +208,14 @@ public class TrdAssetLossService extends BaseService<TrdAssetLoss001Dto> {
         param.put("status_init_01",DictCodeListExt1.交易状态_初始.getValue());
         return trdAssetLoss001Mapper.selectRepeatByFinprodIdAndValDate(param);
     }
+
+    public List<TrdAssetLoss001Dto> selectTrdAssetLossByFinprodId(Map<String, Object> param){
+        return trdAssetLoss001Mapper.selectTrdAssetLossByFinprodId(param);
+    }
+
+    public int getExerciseDateCount(Map<String, Object> param){
+        return trdAssetLoss001Mapper.getExerciseDateCount(param);
+    }
+
+
 }
