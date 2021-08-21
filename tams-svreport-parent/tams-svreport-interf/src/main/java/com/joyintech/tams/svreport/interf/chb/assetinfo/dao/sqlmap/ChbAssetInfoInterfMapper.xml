@@ -3709,7 +3709,12 @@
         null CHB_SECTYPE,
         null ISSUE_MODE,
         null PARTY_GRADE,
-        null INSTIT_SIZE,
+      　case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
+     　　　　 when detail.rep_party_type1='01' and assetother.rep_instit_size='02' then '03'
+     　　　　 when detail.rep_party_type1='01' and assetother.rep_instit_size='03' then '04'
+    　　　　  when detail.rep_party_type1='02' then '02'
+     　　　　 when detail.rep_party_type1='99' then '99'
+     　 end as INSTIT_SIZE,
         null PARTY_TYPE1,
         null PARTY_TYPE3,
         null PARTY_TYPE2,
@@ -3923,6 +3928,8 @@
         on info.FINANCIER=customerinfo.CUSTOMER_ID
         left join FIN_PRODUCT_ADD fpd
         on detail.rep_shares_id = fpd.appear_market_id
+     　 left join REP_ASSET_OTHER ASSETOTHER
+     　 on ASSETOTHER.REP_FINPROD_ID=info.FINPROD_ID
         WHERE 1 =1
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
@@ -9548,7 +9555,12 @@
         null CHB_SECTYPE,
         null ISSUE_MODE,
         null PARTY_GRADE,
-        null INSTIT_SIZE,
+        case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
+        when detail.rep_party_type1='01' and assetother.rep_instit_size='02' then '03'
+        when detail.rep_party_type1='01' and assetother.rep_instit_size='03' then '04'
+        when detail.rep_party_type1='02' then '02'
+        when detail.rep_party_type1='99' then '99'
+        end as INSTIT_SIZE,
         null PARTY_TYPE1,
         null PARTY_TYPE3,
         null PARTY_TYPE2,
