@@ -346,6 +346,8 @@
 	 * 画面加载完成
 	 */
     $(function() {
+        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_filter').hide();
+        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_export').hide();
     	// 切换到质押持仓，查询页面
         layui.use(['element', 'form'], function() {
             // 绑定交易平台TAB切换事件
@@ -362,7 +364,7 @@
         });
         
         // 绑定查询按钮
-        $('#EtrExchangeTrade002_search_btn').click(function() {
+        $('#EtrExchangeTrade002_btn_search').click(function() {
         	refreshPositionsTable();//加载表格
         });
         // 绑定债券质押查询按钮
