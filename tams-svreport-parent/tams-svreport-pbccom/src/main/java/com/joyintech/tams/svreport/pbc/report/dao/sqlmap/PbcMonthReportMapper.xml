@@ -987,7 +987,6 @@
                 report_date
         from PBC_REPORT
         where reporttype != 'ONEPRD_ASSET_DEBT'
-        and ORG_CODE is not null
         <foreach collection="list" item="item" open="and SEND_STATUS in (" separator="," close=")">
               #{item,jdbcType=VARCHAR}
         </foreach>
@@ -997,7 +996,7 @@
         group by
         TERMID,
         REPORTTYPE,
-        ORG_CODE ORG_CODE,
+        ORG_CODE,
         REPORTUUID,
         ISSUE_PARTY_ID,
         issue_party_name    ,
