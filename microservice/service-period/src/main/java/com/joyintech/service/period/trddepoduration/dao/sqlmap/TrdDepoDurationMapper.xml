@@ -788,7 +788,8 @@
                 T1.TRADE_DATE tradeDate/*资金到账日*/,
                 fccrt_2.YIELD*100 loadRate,
                 tdta.INT_SETT_TYPE,
-                T1.IS_CLEAN
+                T1.IS_CLEAN,
+                T1.REMARK
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
             LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
