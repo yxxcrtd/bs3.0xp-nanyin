@@ -1504,6 +1504,9 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(ptlPortfolio != null && StringUtil.isNotEmpty(ptlPortfolio.getCcy())){
             paramMap.put("ccy", ptlPortfolio.getCcy());
         }
+        if(StringUtil.isEmpty(ptlPortfolio.getCcy())){
+            paramMap.put("ccy", "CNY");
+        }
         // 可用现金
         Map<String, Object> cash = this.getProAvailableCash(paramMap);
         //组合T日可用现金
