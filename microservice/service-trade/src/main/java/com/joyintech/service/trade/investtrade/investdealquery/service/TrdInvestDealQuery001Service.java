@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQueryPdfDto;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -351,4 +352,20 @@ public class TrdInvestDealQuery001Service extends BaseService<TrdInvestDealQuery
     public BigDecimal selectInvestRateByProject(AssetTransferExport001Dto dto) {
         return trdInvestDealQuery001Mapper.selectInvestRateByProject(dto);
     }
+
+	/**
+	 * 查询导出pdf数据 add by zengchengfa
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public List<TrdInvestDealQueryPdfDto> selectExportPdfList(Map<String, Object> param) throws Exception{
+		if (StringUtil.isNotEmpty(param.get("selectedItem"))){
+			List<String> selectedItem = StringUtil.splitToList(",",(String)param.get("selectedItem"));
+			if(selectedItem.size() > 0){
+				param.put("tradeIdList",selectedItem);
+			}
+		}
+		return trdInvestDealQuery001Mapper.selectExportPdfList(param);
+	}
 }

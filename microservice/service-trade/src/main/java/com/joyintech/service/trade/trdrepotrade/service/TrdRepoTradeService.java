@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.trade.trdrepotrade.dto.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
 import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
@@ -37,11 +38,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.bond.dao.TrdBondInvestTradeMapper;
 import com.joyintech.service.trade.cstp.dao.CstpSelectMapper;
 import com.joyintech.service.trade.trdrepotrade.dao.TrdRepoTradeMapper;
-import com.joyintech.service.trade.trdrepotrade.dto.InterfOpicsTradRepoDto;
-import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
-import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeDto;
-import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeExportMailDto;
-import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeReferenceDto;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.dao.InterfOpicsTradRepoMapper;
@@ -716,5 +712,22 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
 
     public List<InterfTradRepoasstDto> getMatchpledgeBondInfo(Map<String,Object> map){
         return trdRepoTradeMapper.getMatchpledgeBondInfo(map);
+    }
+
+    /**
+     * 查询导出pdf数据 add by zengchengfa
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public List<TrdRepoTradeExportPdfDto> selectExportPdf(Map<String, Object> param) throws Exception{
+        if (StringUtil.isNotEmpty(param.get("selectedItem"))){
+            List<String> selectedItem = StringUtil.splitToList(",",(String)param.get("selectedItem"));
+            if(selectedItem.size() > 0){
+                param.put("tradeIdList",selectedItem);
+            }
+        }
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+        return trdRepoTradeMapper.selectExportPdf(param);
     }
 }

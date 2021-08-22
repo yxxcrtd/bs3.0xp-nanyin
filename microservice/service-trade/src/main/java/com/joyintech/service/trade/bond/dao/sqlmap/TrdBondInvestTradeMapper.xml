@@ -1697,4 +1697,121 @@
     <select id="queryRepoEntrustInfo" resultType="com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt">
     	SELECT PORTFOLIO_ID, ENTRUST_ID, OU_PARTY_ID,QUOTE_ID,CB_FPRICE_AMT,SC_FPRICE_AMT,CP_PARTY_ID ,CP_TRADER_ID cpTrader,REPO_PS ps,OU_TRADER_ID ouTrader FROM IBU_QUOTE_CREP WHERE EXECID = #{oritradeId,jdbcType=VARCHAR}
     </select>
+
+    <!-- add by zengchengfa 20210803 债券交易导出pdf查询 -->
+    <select id="selectExportPdf" resultType="com.joyintech.service.trade.bond.dto.TrdBondInvestTradePdfDto">
+        <choose>
+            <when test="pageId != null and pageId == 'TrdBondInvestTradeEx001'">
+                <!-- 场内二级债券交易 -->
+                SELECT PP.PORTFOLIO_NAME AS portfolioId, /*产品名称*/
+                SCI1.BUSI_ACCT_NO AS busiAcctNo,/*资金账号*/
+                TO_CHAR(TPD.TRADE_DATE,'yyyy-MM-dd') AS tradeDate, /*业务日期*/
+                FP.FINPROD_MARKET_ID AS finprodMarketId, /*证券代码*/
+                FP.FINPROD_ABBR AS finprodAbbr, /*证券名称*/
+                SDL1.ITEM_VALUE AS secType,/*证券类别*/
+                SDL.ITEM_VALUE AS psStr, /*本方方向*/
+                SDL2.ITEM_VALUE AS entrustStatus,/*委托状态*/
+                SDL3.ITEM_VALUE AS tradePlat,/*业务分类*/
+                SDL4.ITEM_VALUE AS entrustType, /*投资类型*/
+                SDL5.ITEM_VALUE AS priceModel,/*价格类型*/
+                EE.PRICE AS price,/*委托价格*/
+                EE.ENTRUST_NUM AS entrustNum,/*委托数量*/
+                EE.ENTRUST_AMT AS entrustAmt,/*委托金额*/
+                ROUND(NVL(T5.FINISH_AMT,0)*100/(EE.ENTRUST_NUM*100),4)*100 AS transactioncom,/*成交度*/
+                TPD.UNIT_CPRICE AS unitCprice,/*成交均价*/
+                TPD.UNIT_FPRICE AS unitFprice,/*成交全价*/
+                TPD.SHARE_AMT AS shareAmt,/*成交数量*/
+                TPD.TRADE_AMT AS tradeAmt, /*成交金额*/
+                SU1.REAL_NAME AS traderName,/*下达人姓名*/
+                SU2.REAL_NAME AS invManagerName,/*指令下达人姓名*/
+                EEA.COUNTER_SEAT AS counterSeat,/*对手席号*/
+                EEA.COUNTER_CON_NO AS counterConNo,/*约定号*/
+                EE.COUNTER_TRADER AS counterTrader /*对手交易员*/
+                FROM TRD_PRODUCT_DEAL TPD
+                LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL ON TPD.TOTLE_TRADE_ID = TOTAL.TOTLE_TRADE_ID
+                LEFT JOIN FIN_PRODUCT FP ON TPD.FINPROD_ID = FP.FINPROD_ID
+                LEFT JOIN PTL_PORTFOLIO PP ON TOTAL.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                LEFT JOIN STL_PAY_ORDERS SPO ON TPD.TRADE_ID = SPO.TRADE_ID
+                LEFT JOIN STL_SEC_ACCT_INFO SAI ON TOTAL.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+                LEFT JOIN STL_CAPACCT_INFO SCI1 ON NVL(SPO.MY_ACCT_NO,SAI.TRD_ACCT_ID) = SCI1.ACCT_NO
+                LEFT JOIN SYS_DATADICT_LIST SDL ON SDL.ITEM_CODE = TPD.PS AND SDL.DICT_CODE = 'PS'
+                LEFT JOIN FIN_PRODUCT_TYPE FPT ON FP.FINPROD_ID = FPT.FINPROD_ID
+                LEFT JOIN SYS_DATADICT_LIST SDL1 ON FPT.TYPE_10 = SDL1.ITEM_CODE AND SDL1.DICT_CODE = 'CUSTOM_ASSET_TYPE_THREE'
+                LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA ON TPD.TRADE_ID = TPDA.TRADE_ID
+                LEFT JOIN ETR_ENTRUST EE ON TPDA.ENTRUST_ID = EE.ENTRUST_ID
+                LEFT JOIN SYS_DATADICT_LIST SDL2 ON EE.ENTRUST_STATUS = SDL2.ITEM_CODE AND SDL2.DICT_CODE = 'ENTRUST_STATUS'
+                LEFT JOIN SYS_DATADICT_LIST SDL3 ON TPD.TRADE_PLAT = SDL3.ITEM_CODE AND SDL3.DICT_CODE = 'SHARES_TRADE_PLATFORM'
+                LEFT JOIN SYS_DATADICT_LIST SDL4 ON EE.ENTRUST_TYPE = SDL4.ITEM_CODE AND SDL4.DICT_CODE = 'ENTRUST_OPERATE_TYPE'
+                LEFT JOIN SYS_DATADICT_LIST SDL5 ON EE.PRICE_MODEL = SDL5.ITEM_CODE AND SDL5.DICT_CODE = 'PRICE_MODEL'
+                LEFT JOIN ( SELECT ENTRUST_ID, SUM( FINISH_AMT ) AS FINISH_AMT FROM ETR_FINISH_STATUS WHERE ENTRUST_ID != TRADE_ID GROUP BY ENTRUST_ID ) T5 ON EE.ENTRUST_ID = T5.ENTRUST_ID
+                LEFT JOIN ETR_ENTRUST_ADD EEA ON EE.ENTRUST_ID = EEA.ENTRUST_ID
+                LEFT JOIN SYS_USER SU1 ON EEA.TRADER = SU1.USER_NAME
+                LEFT JOIN SYS_USER SU2 ON EE.INV_MANAGER_ID = SU2.USER_NAME
+                WHERE TPD.FINPROD_TYPE = 'F01'
+                <if test="tradeMarketList != null and tradeMarketList.size() >0 ">
+                    AND TPD.TRADE_MARKET IN
+                    <foreach collection="tradeMarketList" index="index"  item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="tradeIdList != null and tradeIdList.size() >0">
+                    AND (TPD.TOTLE_TRADE_ID IN
+                    <foreach collection="tradeIdList" index="index" item="item" open="(" close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) OR TPD.TOTLE_TRADE_ID IN (
+                        </if>
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                    )
+                </if>
+            </when>
+            <otherwise>
+                <!-- 银行间债券二级交易 -->
+                SELECT TOTAL.PORTFOLIO_ID, /*组合代码*/
+                    TPD.TOTLE_TRADE_ID, /*成交编号*/
+                    FP.FINPROD_MARKET_ID, /*资产代码*/
+                    FP.FINPROD_ABBR, /*资产简称*/
+                    SDL.ITEM_VALUE AS psStr, /*本方方向*/
+                    PP.PORTFOLIO_NAME AS BF, /*本方*/
+                    MST_COUNTER_PARTY.COUNTER_NAME, /*对手方*/
+                    TPD.COUNTER_TRADER, /*对手方交易员*/
+                    TO_CHAR(TPD.SETTLE_DATE,'yyyy-MM-dd') settleDate, /*结算日，交割日*/
+                    SDL1.ITEM_VALUE AS deliveryType, /*结算方式*/
+                    NVL(TPD.SHARE_AMT,0)/10000 shareAmt, /* 券面*/
+                    TPD.YIELD , /*到期收益率*/
+                    TPD.EXER_YIELD, /*行权收益率*/
+                    TPD.INT_AMT, /*利息总额，应计利息*/
+                    TPD.UNIT_CPRICE, /*单位净价*/
+                    TPD.FPRICE_AMT, /*全价总额*/
+                    TPD.TRADE_AMT, /*结算金额*/
+                    DECODE(TOTAL.SETTLE_SPEED,NULL,'',CONCAT('T+',TOTAL.SETTLE_SPEED)) sttleSpeed, /*清算速度*/
+                    SDL1.ITEM_VALUE AS CLEAR_TYPE /*清算类型*/
+                FROM TRD_PRODUCT_DEAL TPD
+                LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL ON TPD.TOTLE_TRADE_ID = TOTAL.TOTLE_TRADE_ID
+                LEFT JOIN FIN_PRODUCT FP ON TPD.FINPROD_ID = FP.FINPROD_ID
+                LEFT JOIN PTL_PORTFOLIO PP ON TOTAL.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                LEFT JOIN SYS_DATADICT_LIST SDL ON TPD.PS = SDL.ITEM_CODE AND SDL.DICT_CODE = 'PS'
+                LEFT JOIN MST_COUNTER_PARTY ON TPD.COUNTER_ID = MST_COUNTER_PARTY.COUNTER_ID
+                LEFT JOIN SYS_DATADICT_LIST SDL1 ON TOTAL.DELIVERY_TYPE = SDL1.ITEM_CODE AND SDL1.DICT_CODE = 'SETT_MODE'
+                LEFT JOIN SYS_DATADICT_LIST SDL2 ON TOTAL.CLEAR_TYPE = SDL2.ITEM_CODE AND SDL2.DICT_CODE = 'CLEAR_TYPE'
+                WHERE TPD.FINPROD_TYPE = 'F01'
+                <if test="tradeMarketList != null and tradeMarketList.size() >0 ">
+                    AND TPD.TRADE_MARKET IN
+                    <foreach collection="tradeMarketList" index="index"  item="item" open="(" close=")" separator=",">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="tradeIdList != null and tradeIdList.size() >0">
+                    AND (TPD.TOTLE_TRADE_ID IN
+                    <foreach collection="tradeIdList" index="index" item="item" open="(" close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) OR TPD.TOTLE_TRADE_ID IN (
+                        </if>
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                    )
+                </if>
+            </otherwise>
+        </choose>
+    </select>
 </mapper>

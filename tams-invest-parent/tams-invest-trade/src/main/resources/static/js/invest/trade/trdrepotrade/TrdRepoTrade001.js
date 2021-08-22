@@ -130,6 +130,30 @@
     };
 
     /**
+     * 导出pdf add by zengchengfa 20210803
+     */
+    var exportPdf = function() {
+        if(listTbl!=null && listTbl!=''){
+            var selArr = listTbl.getAllCheckedRows();
+            // 列表中未勾选
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            var paramObj = getSearchParams();
+            //勾选导出
+            var selectedItem = [];
+            $.each(listTbl.getAllCheckedRows() ,function (i, item) {
+                selectedItem.push(item.tradeId);
+            });
+            paramObj.selectedItem = selectedItem.join(',');
+            Joyin.exportExcel('exportPdf', paramObj);
+        }else{
+            Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+        }
+    };
+
+    /**
      * 点击组合代码链接跳转到该组合信息查看页面
      */
     listTbl.bind('click', '.portfolioId-link', function (row) {
@@ -162,6 +186,10 @@
         });
         $('#'+pageId+'_btn_export_mail_model').click(function () {
             exportMailModelExcel();
+        });
+        //add by zengchengfa 20210803 pdf导出
+        $('#'+ pageId +'_btn_export_pdf').click(function() {
+            exportPdf();
         });
         // 绑定新建按钮事件
         $('#'+pageId+'_btn_add').click(function () {

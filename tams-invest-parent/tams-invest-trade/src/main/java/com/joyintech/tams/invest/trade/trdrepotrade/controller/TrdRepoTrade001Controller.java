@@ -221,4 +221,13 @@ public class TrdRepoTrade001Controller extends BaseController {
         return trdRepoTrade001Service.getEntrustIdByType(map);
     }
 
+    /**
+     * 导出pdf add by zengchengfa 20210803
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("exportPdf")
+    public ResponseEntity<byte[]> exportPdf(){
+        return trdRepoTrade001Service.exportPdf(this.getPageId(),RequestUtil.getPageParam());
+    }
 }
