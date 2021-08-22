@@ -1496,6 +1496,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
     public EtrFinProductCommonDto findCashAmountInfo(Map<String, Object> paramMap) {
         EtrFinProductCommonDto dto = new EtrFinProductCommonDto();
 
+        //银行间日历
+        paramMap.put("calId", "03");
         Map<String, Object> result = new HashMap<>();
         /**
          * 当单选组合时，使用组合的币种
