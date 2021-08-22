@@ -199,7 +199,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				int i=0;
 				for(String single:creditModes){
 					i++;
-					creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.借款人类型,single);
+					creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.新人行增信机构类型,single);
 					if(i<creditModes.length){
 						creditMode=creditMode+GlobalConstant.COMMA;
 					}
@@ -321,7 +321,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				int i=0;
 				for(String single:creditModes){
 					i++;
-					creditMode=creditMode+ single + "-" +SysDataUtil.getNameFromDataDict(DictCode.借款人类型,single);
+					creditMode=creditMode+ single + "-" +SysDataUtil.getNameFromDataDict(DictCode.新人行增信机构类型,single);
 					if(i<creditModes.length){
 						creditMode= creditMode+GlobalConstant.COMMA;
 					}

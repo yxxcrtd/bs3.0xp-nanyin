@@ -435,10 +435,9 @@ $(function () {
      * 确认导出之后的操作
      */
     var confirmExport = function (param, expArr1) {
+
         var datas = JSON.stringify(expArr1);
         Joyin.exportExcel("download", {datas: datas});
-
-
         var obj = {};
         obj.flag = '01';
         obj.infoList = expArr1;
@@ -447,6 +446,14 @@ $(function () {
             // 含有删除状态数据
             if (expArr1[i].sendStatus == "01") {
                 Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function () {
+                    for(var i = 0; i < expArr1.length; i++){
+                        if(expArr1[i].pbcPoolCode==null||expArr1[i].pbcPoolCode==''){
+                            Joyin.error("请先维护人行产品代码后，再进行手工处理。");
+                            return;
+                        }
+                    }
+
+
                     layui.layer.open({type: 3});
                     Joyin.ajaxJson('doManul', obj, function () {
                         table.load();

@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Repository
 public interface PbcNewPrdDatFileMapper {
-    String getMaxZipCode(Map<String,Object> param);
+    List<PbcSendZipDatFile> getMaxZipCode(Map<String,Object> param);
 
     void insertBatchZipData(@Param("dataList") List<PbcSendZipDatFile> dataList);
 
@@ -37,7 +37,9 @@ public interface PbcNewPrdDatFileMapper {
 
     int deleteZipData(@Param("OrgCode") String OrgCode);
 
-    int deleteZipDataMI(@Param("OrgCode") String OrgCode);
+    int deleteZipDataList(@Param("List") List<String> list);
+
+    int deleteZipDataMI(@Param("OrgCode") String OrgCode,@Param("List") List<String> list);
 
 
 

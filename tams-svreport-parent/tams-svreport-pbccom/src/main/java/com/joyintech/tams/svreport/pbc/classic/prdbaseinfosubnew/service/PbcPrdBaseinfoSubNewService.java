@@ -103,25 +103,27 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 		 }
 		//查询已生成人行产品代码的数据
 		Map<String,String > pbcAccountIdMap = new HashMap<String,String>();
-		List<PbcPrdAccountSub> allPbcAccountIdlist= new ArrayList<PbcPrdAccountSub>();
-		int batchLastIndex1 = batchCount;//每批最后一个的下标
-        for(int index = 0; index < needRegistSubList.size();){
-            if(batchLastIndex1 > needRegistSubList.size()-1){
-            	batchLastIndex1 = needRegistSubList.size();
-            	allPbcAccountIdlist.addAll(pbcPrdBaseinfoSubNewMapper.selectAllRegisteAccountData(needRegistSubList.subList(index, batchLastIndex1)));
-                break;//数据插入完毕,退出循环
-            }else{
-            	allPbcAccountIdlist.addAll(pbcPrdBaseinfoSubNewMapper.selectAllRegisteAccountData(needRegistSubList.subList(index, batchLastIndex1)));
-                index = batchLastIndex1;//设置下一批下标
-                batchLastIndex1 = index + batchCount;                     
-            }
-        }
-//				pbcPrdBaseinfoSubNewMapper.selectAllRegisteAccountData(needRegistSubList);
-		 if(!CollectionUtils.isEmpty(allPbcAccountIdlist)){
-			 for(PbcPrdAccountSub regdto : allPbcAccountIdlist){
-				 pbcAccountIdMap.put(regdto.getAccountId(), regdto.getPbcAccountId());
-			 }
-		 }
+
+		 //新人行未做相关表数据增补,且与老人行分开进行人行代码生成.此部分代码全部无用
+//		List<PbcPrdAccountSub> allPbcAccountIdlist= new ArrayList<PbcPrdAccountSub>();
+//		int batchLastIndex1 = batchCount;//每批最后一个的下标
+//        for(int index = 0; index < needRegistSubList.size();){
+//            if(batchLastIndex1 > needRegistSubList.size()-1){
+//            	batchLastIndex1 = needRegistSubList.size();
+//            	allPbcAccountIdlist.addAll(pbcPrdBaseinfoSubNewMapper.selectAllRegisteAccountData(needRegistSubList.subList(index, batchLastIndex1)));
+//                break;//数据插入完毕,退出循环
+//            }else{
+//            	allPbcAccountIdlist.addAll(pbcPrdBaseinfoSubNewMapper.selectAllRegisteAccountData(needRegistSubList.subList(index, batchLastIndex1)));
+//                index = batchLastIndex1;//设置下一批下标
+//                batchLastIndex1 = index + batchCount;
+//            }
+//        }
+////				pbcPrdBaseinfoSubNewMapper.selectAllRegisteAccountData(needRegistSubList);
+//		 if(!CollectionUtils.isEmpty(allPbcAccountIdlist)){
+//			 for(PbcPrdAccountSub regdto : allPbcAccountIdlist){
+//				 pbcAccountIdMap.put(regdto.getAccountId(), regdto.getPbcAccountId());
+//			 }
+//		 }
 		//查询已报送的数据
 		List<PbcPrdBaseinfoSubNew> reglist= new ArrayList<PbcPrdBaseinfoSubNew>();
 		int batchLastIndex2 = batchCount;//每批最后一个的下标
