@@ -405,6 +405,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
                     CfetsBondDealEntrustOrderDto entrustInfo = list.get(0);
                     cfetsBondDealDialogueQuoteDto.setEntrustNum(entrustInfo.getEntrustNum());
                     cfetsBondDealDialogueQuoteDto.setSecManageAcctId(entrustInfo.getSecManageAcctId());
+                    cfetsBondDealDialogueQuoteDto.setPortfolioSeries(entrustInfo.getPortfolioSeries());
                 }
             }
             FinProduct finProduct = finProductMapper.selectByPrimaryKey(cfetsBondDealDialogueQuoteDto.getFinprodId());
@@ -454,6 +455,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
                     CfetsBondDealEntrustOrderDto entrustInfo = list.get(0);
                     cfetsBondDealRequestQuoteDto.setEntrustNum(entrustInfo.getEntrustNum());
                     cfetsBondDealRequestQuoteDto.setSecManageAcctId(entrustInfo.getSecManageAcctId());
+                    cfetsBondDealRequestQuoteDto.setPortfolioSeries(entrustInfo.getPortfolioSeries());
                 }
             }
             FinProduct finProduct = finProductMapper.selectByPrimaryKey(cfetsBondDealRequestQuoteDto.getFinprodId());
