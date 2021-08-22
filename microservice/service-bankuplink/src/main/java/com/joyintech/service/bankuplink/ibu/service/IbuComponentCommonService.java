@@ -491,6 +491,12 @@ public class IbuComponentCommonService extends BaseService {
     @Transactional
     public boolean resCommonHandle(QuoteResultDto quoteResultDto, User user,
                                    boolean isSendGateWay) {
+        // 是否调用上行接口
+        String isUpLinkSend =  CacheUtil.getSysParam("IS_NEED_UPLINK");
+        if(StringUtil.equals(DictCodeList.是否_否.getValue(),isUpLinkSend)){
+            return false;
+        }
+
         // 1、判断组件返回结果
         // 需要平安现场判断是否支持微服务MSG：异常抛出，如果不支持此处要改成返回值给前台 判断 TODO
         this.checkHandleResult(quoteResultDto);
@@ -1826,8 +1832,12 @@ public class IbuComponentCommonService extends BaseService {
             // 资产代码
             inputBean.setFinprodFuzzy(
                 param.get("finprodId") != null ? param.get("finprodId").toString() : null);
-            
-            
+
+            // 报价编号
+            if (StringUtil.isNotEmpty(param.get("quoteType"))) {
+                inputBean.setQuoteType(param.get("quoteType").toString());
+            }
+
             if (StringUtil.isNotEmpty(param.get("finprodIdList"))) {
             	inputBean.setFinprodIdList(Arrays.asList(param.get("finprodIdList").toString().split(",")));
             	inputBean.setFinprodId(null);

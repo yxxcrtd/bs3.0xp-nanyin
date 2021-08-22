@@ -111,5 +111,7 @@ public interface CfetsBondDealQuotedPriceMapper {
 	List<CfetsBondDealDialogueQuoteDto> getCfetsBondDealDialogueQuoteDtoList(Map<String, Object> param);
 	
 	List<CfetsBondDealRequestQuoteDto> getCfetsBondDealRequestQuoteDtoList(Map<String, Object> param);
+
+    List<SelectOptionDto> getfinprodIdForAdd(Map<String, Object> param);
     
 }

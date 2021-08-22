@@ -1,0 +1,312 @@
+(function(){
+
+    var setQQDiv = function(selArr){
+        $("#CfetsBondDealQuotedPriceSingle002_hidden_quotaPageModel").val('new');
+        if(selArr&&selArr[0]){
+            $("#CfetsBondDealQuotedPriceSingle002_entrustId").val(selArr[0].entrustId).trigger('change');
+            // $("#CfetsBondDealQuotedPriceSingle002_portfolioId").textSelect('setValue',selArr[0].portfolioId);
+            // $("#CfetsBondDealQuotedPriceSingle002_finprodId").textSelect('setValue',selArr[0].finprodMarketId);
+            // $("#CfetsBondDealQuotedPriceSingle002_ps").val(selArr[0].ps).trigger('change');
+            // $("#CfetsBondDealQuotedPriceSingle002_avaNum").val(selArr[0].entrustNum).trigger('change');
+        }
+    }
+
+    // 委托代码change
+    $("#CfetsBondDealQuotedPriceSingle002_entrustId").change(function () {
+        var entrustId = $("#CfetsBondDealQuotedPriceSingle002_entrustId").val();
+        if (entrustId && entrustId != ''){
+            Joyin.ajax(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle002/queryEntrustInfoByEntrustId', {entrustId : entrustId}, function(result) {
+                if (result){
+                    $('#CfetsBondDealQuotedPriceSingle002_hidden_entrustAmt').val(result.entrustNum);
+                    $('#CfetsBondDealQuotedPriceSingle002_hidden_finprodId').val(result.finprodId);
+                    $('#CfetsBondDealQuotedPriceSingle002_portfolioId').textSelect('setValue',result.portfolioId);
+                    $('#CfetsBondDealQuotedPriceSingle002_mySide').textSelect('setValue',result.mySide);
+                    $('#CfetsBondDealQuotedPriceSingle002_mySideTrader').textSelect('setValue',result.mySideTrader);
+                    $('#CfetsBondDealQuotedPriceSingle002_ps').val(result.ps).trigger('change');
+                    $('#CfetsBondDealQuotedPriceSingle002_finprodId').textSelect('setValue',result.finprodMarketId);
+                    $('#CfetsBondDealQuotedPriceSingle002_settleCcy').val(result.settleCcy == null ? CNY : result.settleCcy);
+                    $('#CfetsBondDealQuotedPriceSingle002_settleDate').val(result.settleDateStr);
+                    $('#CfetsBondDealQuotedPriceSingle002_avaNum').val(result.avaNumStr).trigger('change');
+                    $('#CfetsBondDealQuotedPriceSingle002_effDate').val(result.effDate);
+                    $('#CfetsBondDealQuotedPriceSingle002_remark').val(result.remark);
+                    $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').val(result.data.settleSpreed).trigger('change');
+                    $('#CfetsBondDealQuotedPriceSingle002_secManageAcctId').textSelect('setValue',result.data.secManageAcctId);
+
+                }
+            });
+        }
+    });
+
+
+    $("#CfetsBondDealQuotedPriceSingle002_portfolioId").change(function () {
+        var portfolioId = $("#CfetsBondDealQuotedPriceSingle002_portfolioId").val();
+        var vdate = $('#CfetsBondDealQuotedPriceSingle002_tradeDate').val();
+        var ccy= $("#CfetsBondDealQuotedPriceSingle002_settleCcy").val();
+        if(window.EtrInitCash){
+            window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
+        }
+    });
+
+    $("#CfetsBondDealQuotedPriceSingle002_finprodId").change(function () {
+        var chlFinprodId = '';
+        var finprodIdhid = '';
+        var ccy =  '';
+        var data = $('#CfetsBondDealQuotedPriceSingle002_finprodId').select2('data')[0].object;
+        if(data){
+            finprodIdhid = data.finprodId;
+            ccy = data.ccy;
+            $('#CfetsBondDealQuotedPriceSingle002_hidden_finprodId').val(data.finprodId);
+            $("#CfetsBondDealQuotedPriceSingle002_settleCcy").val(data.ccy);
+        }else{
+            $('#CfetsBondDealQuotedPriceSingle002_hidden_finprodId').val("");
+            $("#CfetsBondDealQuotedPriceSingle002_settleCcy").val(CNY);
+        }
+        var portfolioId = $("#CfetsBondDealQuotedPriceSingle002_portfolioId").val();
+        var sysDateT1 = $('#CfetsBondDealQuotedPriceSingle002_tradeDate').val();
+        var calId = '';
+        if (todoList == false&&parent.parent.EtrIbBondinfoHq) {
+            parent.parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
+        }
+    });
+
+
+    /**
+     * 清算速度
+     */
+    $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').on('change',function(){
+        var settleSpreed = $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').val();
+        if (settleSpreed == ACCOUNT_SPEED_1){
+            Joyin.ajax(basePath + 'invest/bankuplink/common/CfetsQuotedCommon/getNextWorkDay', {
+                'tradeDate': platDate,
+                'settleSpreed': settleSpreed
+            }, function (date) {
+                $("#CfetsBondDealQuotedPriceSingle002_settleDate").val(date).trigger("change");
+            });
+        }else{
+            $('#CfetsBondDealQuotedPriceSingle002_settleDate').val(platDate);
+        }
+    });
+    /**
+     * 保存
+     */
+    var saveAction = function(){
+        var object = $.serializeToObject('#submitForm', true);
+        if(!object.finprodId){
+            object.finprodId = $("#CfetsBondDealQuotedPriceSingle002_hidden_finprodId").val();
+        }
+        var orgList = table.getAllRows();
+        if(orgList != null && orgList.length>0){
+            var orgIdList = [];
+            for(var i = 0 ;i<orgList.length; i++){
+                var org = orgList[i];
+                orgIdList.push(org.counterId);
+            }
+            object.counterIdList = orgIdList;
+        }
+        object.operatorType = 'save';
+        Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle002/check', object, function(result) {
+            if (result.data){
+                var param = result.data;
+                Joyin.confirm(param, function() {
+                    WorkFlow.doSaveList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle002/save', object, "CfetsBondDealQuotedPriceSingle002_btn_save", "CfetsBondDealQuotedPriceSingle002",
+                        function() {
+                            var index = window.parent.layer.getFrameIndex(window.name);
+                            window.parent.layer.close(index);
+                        })
+                })
+            }
+        });
+    };
+    /**
+     * 提交
+     */
+    var submitAction = function(){
+        var object = $.serializeToObject('#submitForm', true);
+        if(!object.finprodId){
+            object.finprodId = $("#CfetsBondDealQuotedPriceSingle002_hidden_finprodId").val();
+        }
+        var orgList = table.getAllRows();
+        if(orgList != null && orgList.length>0){
+            var orgIdList = [];
+            for(var i = 0 ;i<orgList.length; i++){
+                var org = orgList[i];
+                orgIdList.push(org.counterId);
+            }
+            object.counterIdList = orgIdList;
+        }
+        object.operatorType = 'submit';
+        Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle002/check', object, function(result) {
+            if (result.data){
+                var param = result.data;
+                Joyin.confirm(param, function() {
+                    WorkFlow.doSubmitList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle002/save', object, "CfetsBondDealQuotedPriceSingle002_btn_submit", "CfetsBondDealQuotedPriceSingle002",
+                        function() {
+                            var index = window.parent.layer.getFrameIndex(window.name);
+                            window.parent.layer.close(index);
+                        })
+                })
+            }
+        });
+    };
+    /**
+     * 撤回
+     */
+    var revokeAction = function(){
+        var object = $.serializeToObject('#submitForm', true);
+        if(!object.finprodId){
+            object.finprodId = $("#CfetsBondDealQuotedPriceSingle002_hidden_finprodId").val();
+        }
+        object.operationType = 'recall';
+        Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice001/checkOperationAllow', object, function(result) {
+            if (result.data){
+                var param = result.data;
+                Joyin.confirm(param, function() {
+                    Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice001/doReCall', object, function(result){
+                        var index = window.parent.layer.getFrameIndex(window.name);
+                        window.parent.layer.close(index);
+                    })
+                })
+            }
+        });
+    };
+    /**
+     * 成交
+     */
+    var clinchDealAction = function(){
+        var object = $.serializeToObject('#submitForm', true);
+        if(!object.finprodId){
+            object.finprodId = $("#CfetsBondDealQuotedPriceSingle002_hidden_finprodId").val();
+        }
+        var orgList = table.getAllCheckedRows();
+        if(orgList != null && orgList.length > 0){
+            var orgInfoList = [];
+            var orgIdList = [];
+            var detIdList = [];
+            for(var i = 0 ;i<orgList.length; i++){
+                var org = orgList[i];
+                // 勾选对象的交易状态不是已回复时
+                if (org.tradeStatusStr != tradeStatus12) {
+                    Joyin.error(JoyinUtil.getMessage("CFETS_COMMON_R_028"));
+                    return;
+                }
+                orgInfoList.push(org);
+                orgIdList.push(org.counterId);
+                detIdList.push(org.detId);
+            }
+            object.counterInfoList = orgInfoList;
+            object.counterIdList = orgIdList;
+            object.detIdList = detIdList;
+        }
+        // 列表中勾选对象1条以上时
+        if (orgList && orgList.length > 1) {
+            Joyin.error(JoyinUtil.getMessage("COMMON_E_0058"));
+            return;
+        }
+        //请求报价回复页面成交按钮
+        object.checkType = "answerClinchDeal";
+        object.operatorType = "done";
+        Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle002/clinchDealCheck', object, function(result) {
+            if (result.data){
+                var param = result.data;
+                WorkFlow.doSubmitList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle002/save', object, "CfetsBondDealQuotedPriceSingle002_btn_done", "CfetsBondDealQuotedPriceSingle002",
+                    function() {
+                        var index = window.parent.layer.getFrameIndex(window.name);
+                        window.parent.layer.close(index);
+                    })
+            }
+        });
+    };
+
+    /**
+     * 定义数据表格
+     */
+    var table=$("#CfetsBondDealQuotedPriceSingle002_orgTable").joyintable({
+        checkbox:true,
+        data:(entity && entity.counterInfoList) ? entity.counterInfoList : [],
+        searchOnInit:true,
+        page:false,
+        height:300,
+        cols:[
+            {field:'counterValue', title: 'CfetsBondDealQuotedPrice003.counterId'},
+            {field:'cpTrader', title: 'CfetsBondDealQuotedPrice003.cpTrader', visible: YES_OR_NO_Y == isRevert},
+            {field:'tradeStatusStr', title: 'CfetsBondDealQuotedPrice003.tradeStatus', visible: YES_OR_NO_Y == isRevert,sortField:"tradeStatus"},
+            {field:'shareAmt', title: 'CfetsRepoDealQuotedPrice003.shareAmt', type:'number',digit:2, visible: YES_OR_NO_Y == isRevert},
+            {field:'unitCprice', title: 'CfetsRepoDealQuotedPrice003.unitCprice', type:'number',digit:4, visible: YES_OR_NO_Y == isRevert},
+            {field:'unitFprice', title: 'CfetsRepoDealQuotedPrice003.unitFprice', type:'number',digit:4, visible: YES_OR_NO_Y == isRevert},
+            {field:'yield', title: 'CfetsRepoDealQuotedPrice003.yield', type:'number',digit:4, visible: YES_OR_NO_Y == isRevert},
+            {field:'exerYield', title: 'CfetsRepoDealQuotedPrice003.exerYield',type:'number',digit:4, visible: (YES_OR_NO_Y == isRevert && YES_OR_NO_Y == assetIsRight)},
+            {field:'counterId', visible: false},
+            {field:'detId', visible: false},
+            {field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt'], visible: YES_OR_NO_Y != isRevert}
+        ]
+    });
+    /**
+     * 绑定删除事件
+     */
+    table.bind('click', '.delt', function(data, index) {
+        table.removeRow(data);
+    });
+
+    /**
+     * 添加可选机构事件
+     */
+    var addRow = function(){
+        var orgId = $('#CfetsBondDealQuotedPriceSingle002_orgType').val();
+        if(orgId && orgId != ''){
+            var orgList = table.getAllRows();
+            if(orgList != null && orgList.length>0){
+                for(var i = 0 ;i<orgList.length; i++){
+                    var org = orgList[i];
+                    if(org.counterId == orgId){
+                        Joyin.error("可选机构中不允许存在多条相同对手方信息!");
+                        return;
+                    }
+                }
+            }
+            var orgValue = $('#CfetsBondDealQuotedPriceSingle002_orgType :selected').text();
+            var temp = {};
+            temp.counterId=orgId;
+            temp.counterValue=orgValue;
+            table.addRow(temp);
+        }
+    };
+
+    var reset = function () {
+    };
+    /**
+     * 添加按钮按下处理
+     */
+    $('#CfetsBondDealQuotedPriceSingle002_btn_add').click(function(){
+        addRow();
+    });
+
+    var getriskdata = function () {
+        return null;
+    };
+
+    function getSaveOrSubmitParams(operateType) {
+        var object = $.serializeToObject("#submitForm");
+        if(!object.finprodId){
+            object.finprodId = $('#CfetsBondDealQuotedPriceSingle002_hidden_finprodId').val();
+        }
+        object.operatorType = operateType;
+        var orgList = table.getAllRows();
+        if(orgList != null && orgList.length>0){
+            var orgIdList = [];
+            for(var i = 0 ;i<orgList.length; i++){
+                var org = orgList[i];
+                orgIdList.push(org.counterId);
+            }
+            object.counterIdList = orgIdList;
+        }
+        return object;
+    }
+
+    parent.CfetsBondDealQuotedPriceSingle002 = {
+        setQQDiv: setQQDiv,
+        getriskdata: getriskdata,
+        getSaveOrSubmitParams: getSaveOrSubmitParams,
+        reset: reset
+    }
+
+}());

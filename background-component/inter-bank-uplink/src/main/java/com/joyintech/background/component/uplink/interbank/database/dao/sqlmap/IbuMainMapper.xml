@@ -407,7 +407,8 @@
 			    <if test="endQuoteDate !=null and endQuoteDate !=''">
 			        and TO_CHAR(a.QUOTE_DATE,'yyyy-MM-dd') &lt; = #{endQuoteDate}
 			    </if>
-	            <if test="finprodId !=null and finprodId !=''">and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}</if>
+				<if test="quoteType !=null and quoteType !=''">and a.QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR}</if>
+				<if test="finprodId !=null and finprodId !=''">and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}</if>
 	            <if test="finprodFuzzy !=null and finprodFuzzy !=''">and a.FINPROD_ID like concat('%', concat(#{finprodFuzzy,jdbcType=VARCHAR}, '%'))</if>
 	            <if test="ps !=null and ps !=''">and a.PS = #{ps,jdbcType=VARCHAR}</if>
 	            <if test="cpPartyId !=null and cpPartyId !=''">and b.CP_PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}</if>

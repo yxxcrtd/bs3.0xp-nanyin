@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -174,6 +175,32 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
      * 账户来源
      */
     private String secAcctSource;
+
+    /**
+     * 证券账户
+     */
+    private String secManageAcctId;
+
+    /**
+     * 组合系列
+     */
+    private String portfolioSeries;
+
+    public String getPortfolioSeries() {
+        return portfolioSeries;
+    }
+
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries;
+    }
+
+    public String getSecManageAcctId() {
+        return secManageAcctId;
+    }
+
+    public void setSecManageAcctId(String secManageAcctId) {
+        this.secManageAcctId = secManageAcctId;
+    }
 
     /**
      * 获取 invManagerName
@@ -900,6 +927,19 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
 	public void setEntrustAvaNum(BigDecimal entrustAvaNum) {
 		this.entrustAvaNum = entrustAvaNum;
 	}
-	
-	
+
+	public String getVdateStr(){
+        if(this.getVdate() != null) {
+            return DateUtil.format(this.getVdate());
+        }
+        return "";
+    }
+
+
+    public String getMdateStr(){
+        if(this.getMdate() != null) {
+            return DateUtil.format(this.getMdate());
+        }
+        return "";
+    }
 }

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -403,6 +404,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
                 if (!StringUtil.isEmptyList(list)){
                     CfetsBondDealEntrustOrderDto entrustInfo = list.get(0);
                     cfetsBondDealDialogueQuoteDto.setEntrustNum(entrustInfo.getEntrustNum());
+                    cfetsBondDealDialogueQuoteDto.setSecManageAcctId(entrustInfo.getSecManageAcctId());
                 }
             }
             FinProduct finProduct = finProductMapper.selectByPrimaryKey(cfetsBondDealDialogueQuoteDto.getFinprodId());
@@ -451,6 +453,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
                 if (!StringUtil.isEmptyList(list)){
                     CfetsBondDealEntrustOrderDto entrustInfo = list.get(0);
                     cfetsBondDealRequestQuoteDto.setEntrustNum(entrustInfo.getEntrustNum());
+                    cfetsBondDealRequestQuoteDto.setSecManageAcctId(entrustInfo.getSecManageAcctId());
                 }
             }
             FinProduct finProduct = finProductMapper.selectByPrimaryKey(cfetsBondDealRequestQuoteDto.getFinprodId());
@@ -559,7 +562,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         });
         return bondQuoteInfoDtoList;
     }
-    
+
     /**
      * 多机构处理
      * @param bondQuoteExtDtoList
@@ -1678,5 +1681,24 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         }
 		return null;
 	}
+
+
+    /**
+     * 获取新建界面的资产代码联想下拉框框 <功能详细描述>
+     *
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> getfinprodIdForAdd(int page, int length,Map<String, Object> param) {
+        param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
+        param.put("TRADE_PLACE_05",DictCodeListExt1.交易场所_机构间私募系统.getValue());
+        param.put("TRADE_PLACE_09",DictCodeListExt1.交易场所_OTC场外.getValue());
+        param.put("TRADE_PLACE_10",DictCodeListExt1.交易场所_境外交易场所.getValue());
+//        param.put("TRADE_PLACE_11", DictCodeListExt3.交易场所_北京金融资产交易所.getValue());
+        return this.queryForPageForSelectReturn(page, length,()->cfetsBondDealQuotedPriceMapper.getfinprodIdForAdd(param));
+    }
     
 }
