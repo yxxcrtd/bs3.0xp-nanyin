@@ -1451,7 +1451,7 @@
 		from PBC_PRD_BASEINFO_SUB_DAT dat
 		left join PBC_PRD_BASEINFO_SUB_NEW  prd on dat.prod_id=prd.prod_id
 		where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
-       order  by dat.PROD_NAME asc
+       order  by dat.PROD_ID asc
 	</select>
 
 	<select id="selectByDatZipCode" resultMap="BaseResultMap">
