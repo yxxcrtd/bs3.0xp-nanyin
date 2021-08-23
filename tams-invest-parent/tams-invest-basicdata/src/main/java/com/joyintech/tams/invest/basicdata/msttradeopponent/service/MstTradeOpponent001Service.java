@@ -295,6 +295,16 @@ public class MstTradeOpponent001Service extends CommonExportService<MstTradeOppo
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstTradeOpponent/checkcounterName?counterId="+counterId+"&counterName="+counterName,
             Integer.class);
     }
+
+    /**
+     * 验证交易对手关联代码是否唯一
+     * @param linkId 账号名称
+     * @return 数量
+     */
+    public int checkLinkId(String linkId){
+        return restTemplate.getForObject(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstTradeOpponent/checkCounterName?linkId="+linkId, Integer.class);
+    }
     
     /**
      * 验证交易对手关联代码是否唯一
