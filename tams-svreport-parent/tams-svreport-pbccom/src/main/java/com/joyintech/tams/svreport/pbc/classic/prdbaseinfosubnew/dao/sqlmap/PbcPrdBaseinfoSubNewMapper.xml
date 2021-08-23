@@ -1420,8 +1420,11 @@
 
 
     <update id="updateZipDatStatus">
-        update PBC_SEND_ZIP_DAT_FILE F set ZIP_SEND_STATUS = #{updateStatus,jdbcType=CHAR},
-        SUBMIT_TIME = SYSDATE,RETURN_ZIP_SEND_STATUS = '03'
+        update PBC_SEND_ZIP_DAT_FILE F set
+        ZIP_SEND_STATUS = #{updateStatus,jdbcType=CHAR},
+        SUBMIT_TIME = SYSDATE,
+        RETURN_ZIP_SEND_STATUS = #{returnStatus,jdbcType=CHAR},
+        DAT_ZIP_STATUS = #{zipStatus,jdbcType=CHAR}
         WHERE NOT EXISTS(
               SELECT 1 FROM PBC_PRD_BASEINFO_SUB_DAT SD WHERE F.DAT_ZIP_CODE = SD.DAT_ZIP_CODE AND SD.SEND_STATUS = #{sendStatus,jdbcType=CHAR}
               UNION ALL
@@ -1431,8 +1434,13 @@
     </update>
 
     <update id="updateZipDatStatusUn">
-        update PBC_SEND_ZIP_DAT_FILE F set ZIP_SEND_STATUS = #{updateStatus,jdbcType=CHAR},
-        SUBMIT_TIME = NULL,RETURN_ZIP_SEND_STATUS=NULL
+        update PBC_SEND_ZIP_DAT_FILE F
+        set ZIP_SEND_STATUS = #{updateStatus,jdbcType=CHAR},
+        SUBMIT_TIME = NULL,
+        RETURN_ZIP_SEND_STATUS=NULL,
+        DAT_ZIP_STATUS = #{zipStatus,jdbcType=CHAR},
+        ZIP_DOWNLOAD_TIME = null,
+        DAT_ZIP_PATH = null
         WHERE  EXISTS(
               SELECT 1 FROM PBC_PRD_BASEINFO_SUB_DAT SD WHERE F.DAT_ZIP_CODE = SD.DAT_ZIP_CODE AND SD.SEND_STATUS = #{sendStatus,jdbcType=CHAR}
               UNION ALL

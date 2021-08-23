@@ -36,9 +36,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static com.joyintech.tams.constant.DictCodeListExt2.人行报送反馈状态_人行通过;
-
 /**
  *人行单产品保本基本公共类 
  * @author chenxc
@@ -165,7 +162,7 @@ public class PbcDatUtil {
 					/****2、2 取得在DAT表中，已经分配了zip号的记录**/
 					dataSearch.put("zipCode",oldZip);
 					dataSearch.put("sendStatus",DictCodeListExt2.报送状态_手工处理.getValue());
-					dataSearch.put("submitFeedbackStatus", 人行报送反馈状态_人行通过.getValue());
+					dataSearch.put("submitFeedbackStatus", DictCodeListExt2.人行报送反馈状态_人行通过.getValue());
 					dataSearch.put("orgCode",OrgCode);
 
 					//删除当前包中的未报送的数据
