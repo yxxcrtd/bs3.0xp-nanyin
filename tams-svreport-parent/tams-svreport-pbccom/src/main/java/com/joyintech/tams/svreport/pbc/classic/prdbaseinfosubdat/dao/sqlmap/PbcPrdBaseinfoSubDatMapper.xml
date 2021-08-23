@@ -1087,6 +1087,7 @@
 		set ZIP_SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
 			RETURN_ZIP_SEND_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
 			SUBMIT_TIME = sysdate,
+			DAT_ZIP_STATUS = '01',
 			PIB_DETAIL_CNT = PIB_DETAIL_CNT - #{delNum,jdbcType=DECIMAL}
 		where DAT_ZIP_CODE = #{zipCode,jdbcType=VARCHAR}
 		and  DAT_ZIP_DAT_TYPE = #{zipType,jdbcType=VARCHAR}

@@ -185,7 +185,8 @@ public class PbcDatUtil {
 						dataSearch.put("zipType",DictCodeListExt2.人行报送明细类型_产品终止信息.getValue());
 						//当包内有数据则会执行修改操作,将包的状态,时间,剩余条数进行修改,
 						pbcPrdBaseinfoSubDatMapper.updatebyZipCode(dataSearch);
-
+						num++;
+						zipCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 					}
 				}
 			}
