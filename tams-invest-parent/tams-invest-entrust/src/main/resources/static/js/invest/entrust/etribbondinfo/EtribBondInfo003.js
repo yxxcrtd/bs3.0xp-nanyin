@@ -773,7 +773,9 @@
             var temp = JSON.parse(JSON.stringify(object));
             temp.portfolioId = item.portfolioId;
             tradeAmt += parseFloat(item.entrustNum);
-            temp.entrustNum = item.entrustNum * 10000;
+            if(item.entrustNum&&item.entrustNum!=''){
+                temp.entrustNum = item.entrustNum * 10000;
+            }
             finprodId = temp.finprodId;
             counterId = temp.counterId;
             tradeMarket = temp.tradeMarket;
