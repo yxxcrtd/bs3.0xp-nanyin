@@ -8,10 +8,13 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto;
 import com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.service.CashFlowDiscount001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -26,6 +29,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import java.io.File;
 import java.text.ParseException;
 import java.util.*;
@@ -49,6 +53,12 @@ public class CashFlowDiscount001Controller extends BaseController {
      */
     @Autowired
     private CashFlowDiscount001Service cashFlowDiscount001Service;
+
+    /**
+     * 流程组件
+     */
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
 
     /**
      * {@inheritDoc}
@@ -87,22 +97,64 @@ public class CashFlowDiscount001Controller extends BaseController {
         WorkFlowParameter<CashFlowDiscount001Dto> params = new WorkFlowParameter<CashFlowDiscount001Dto>();
         params.setPageId("CashFlowDiscount002");
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(item -> item.getSecTypeModel()+"_"+item.getSecDetailTypeModel()+"_"+item.getFinprodId());
+        //modify by yanya on 20210823 去除资产代码
+        params.setBusinessCode(item -> item.getSecTypeModel()+"_"+item.getSecDetailTypeModel());
         params.setBusinessType(DictCodeListExt3.共通业务类型_现金流折现模型曲线配置.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> {
             return WorkFlowUtil.concatComment("资产类型"+
                     GlobalConstant.OPEN_PARENTHESIS+entity.getSecTypeModel()+GlobalConstant.CLOSE_PARENTHESIS+
                     "资产细分类"+GlobalConstant.OPEN_PARENTHESIS+
-                    entity.getSecDetailTypeModel()+GlobalConstant.CLOSE_PARENTHESIS+
-                    "资产代码"+GlobalConstant.OPEN_PARENTHESIS+
-                    entity.getFinprodId()+GlobalConstant.CLOSE_PARENTHESIS);
+                    entity.getSecDetailTypeModel()+GlobalConstant.CLOSE_PARENTHESIS
+                    //modify by yanya on 20210823 去除资产代码的描述
+                    //+"资产代码"+GlobalConstant.OPEN_PARENTHESIS+
+                    //entity.getFinprodId()+GlobalConstant.CLOSE_PARENTHESIS
+            );
         });
         processParameter.setWorkFlowParameter(params);
         String msg = cashFlowDiscount001Service.start(processParameter,
                 dto.getSelectedItem().toArray(
                         new CashFlowDiscount001Dto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
+    }
+
+    /**
+     * 新建时校验
+     * @param dto
+     * @param result
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody CashFlowDiscount001Dto dto, BindingResult result) {
+
+        if (result != null && result.hasErrors()) {
+            return new AjaxResult(result);
+        }
+        if(!StringUtil.isEmptyList(dto.getSelectedItem())) {
+            ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+            for(CashFlowDiscount001Dto tmp : dto.getSelectedItem()) {
+                WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+                wflValidInputParameter.setPageId("CashFlowDiscount002");
+                wflValidInputParameter.setBusinessDataPk1(tmp.getSecTypeModel());
+                wflValidInputParameter.setBusinessDataPk2(tmp.getSecDetailTypeModel());
+                if (StringUtil.isNotEmpty(tmp.getFinprodId())) {
+                    wflValidInputParameter.setBusinessDataPk3(tmp.getFinprodId());
+                }
+                if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
+                    errorList.add(new ValidMessage("所选对象存在有效或流程中的数据：" + "资产类型"+
+                            GlobalConstant.OPEN_PARENTHESIS+tmp.getSecTypeModel()+GlobalConstant.CLOSE_PARENTHESIS+
+                            "资产细分类"+GlobalConstant.OPEN_PARENTHESIS+
+                            tmp.getSecDetailTypeModel()+GlobalConstant.CLOSE_PARENTHESIS));
+                }
+            }
+            if(!StringUtil.isEmptyList(errorList)) {
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
+        return commonCheck(result, dto.getOperateType());
     }
 
     /**

@@ -2,7 +2,8 @@ package com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cas
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dao.CashFlowDiscount001Mapper;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 现金流折现模型曲线微服务的服务类
@@ -45,7 +48,32 @@ public class CashFlowDiscount001Service extends BaseService<CashFlowDiscount001D
      * @param dto
      */
     public void update(CashFlowDiscount001Dto dto){
-        mapper.update(dto);
+        //查询是否有之前的数据
+        Map<String, Object> params = new HashMap<>();
+        params.put("seqNo", dto.getSeqNo());
+        List<CashFlowDiscount001Dto> rstList = getCashFlowDiscountList(params);
+        if(!rstList.isEmpty()){
+            CashFlowDiscount001Dto oldDto = rstList.get(0);
+            //修改
+            if(DateUtil.isSameDate(oldDto.getEffDate(), dto.getEffDate())) {
+                mapper.update(dto);
+            }
+            //老的数据设置失效时间，新的增加
+            else {
+                if(DateUtil.compareDate(dto.getEffDate(), oldDto.getEffDate()) > 0) {
+                    oldDto.setUpdateUser(dto.getUpdateUser());
+                    oldDto.setUpdateTime(dto.getUpdateTime());
+                    oldDto.setInvalidDate(dto.getEffDate());
+                    mapper.update(oldDto);
+                }
+                else {
+                    dto.setInvalidDate(oldDto.getEffDate());
+                }
+                dto.setSeqNo(IDGenerator.generate());
+                mapper.insert(dto);
+            }
+        }
+
     }
 
     /**

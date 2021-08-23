@@ -44,7 +44,8 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md5">
+                <!-- modify by yanya on 20210821 去除资产名称start-->
+                <!--<div class="layui-inline layui-col-md5">
                     <label class="layui-form-label form-lable">资产名称</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="finprodName" name="finprodName"
@@ -65,7 +66,8 @@
                                data-th-placeholder="#{SysCommon.placeholder}"
                                data-th-value="${entity?.finprodId}">
                     </div>
-                </div>
+                </div>-->
+                <!-- modify by yanya on 20210821 去除资产名称start-->
                 <div class="layui-inline layui-col-md5"id="asset_Name">
                     <label class="layui-form-label form-lable">曲线族</label>
                     <div class="layui-input-inline input-inline">
@@ -88,6 +90,26 @@
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md5">
+                    <label class="layui-form-label form-label-wrap">是否使用兜底评级</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="checkbox" id="isBottomGrade" name="isBottomGrade" lay-filter="isBottomGrade"
+                               lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+                               data-th-checked="${YES_OR_NO_Y} ==${entity?.isBottomGrade}" required>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md5" id="isBottomGradeDiv">
+                    <label class="layui-form-label form-lable">兜底评级</label>
+                    <div class="layui-input-inline input-inline">
+                        <select name="bottomGrade" id="bottomGrade"
+                                class="layui-input form-input input-select"
+                                placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-data-result="${MAIN_GRADE_RESULT}"
+                                data-th-initValue="*{entity?.bottomGrade}">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md5">
                     <label class="layui-form-label form-label-wrap">是否平滑曲线</label>
                     <div class="layui-input-inline input-inline">
                         <input type="checkbox" id="isSmooth" name="isSmooth" lay-filter="isSmooth"
@@ -105,6 +127,15 @@
                                 data-th-data-result="${SMOOTHSECTION}"
                                 data-th-initValue="*{entity?.smoothSection}">
                         </select>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md5">
+                    <label class="layui-form-label form-lable">生效日期</label>
+                    <div class="layui-input-inline input-inline">
+                        <input class="layui-input form-input input-dateSelect"
+                               id="effDate" name="effDate"
+                               th:value="${#dates.format(entity?.effDate,'yyyy-MM-dd')}"
+                               placeholder="请选择时间" required>
                     </div>
                 </div>
             </div>

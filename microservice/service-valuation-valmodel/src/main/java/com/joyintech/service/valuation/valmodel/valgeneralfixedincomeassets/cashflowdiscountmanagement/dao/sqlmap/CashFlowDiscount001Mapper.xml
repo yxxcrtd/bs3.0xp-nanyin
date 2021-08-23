@@ -2,11 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dao.CashFlowDiscount001Mapper">
     <insert id="insert" parameterType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto" >
-        insert into MOD_CURVE_CONFIG (SEQNO,SEC_TYPE_MODEL,SEC_DETAIL_TYPE_MODEL,FINPROD_ID,FINPROD_NAME,CURVE_GROUP_CODE,CURVE_TYPE,ISSMOOTH,SMOOTHSECTION,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        insert into MOD_CURVE_CONFIG (SEQNO,SEC_TYPE_MODEL,SEC_DETAIL_TYPE_MODEL,FINPROD_ID,FINPROD_NAME,CURVE_GROUP_CODE,CURVE_TYPE,ISSMOOTH,SMOOTHSECTION,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+            <!-- modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 start-->
+            ,IS_BOTTOM_GRADE, BOTTOM_GRADE, EFF_DATE, INVALID_DATE
+            <!-- modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 end-->
+        )
         values (#{seqNo,jdbcType=VARCHAR}, #{secTypeModel,jdbcType=VARCHAR}, #{secDetailTypeModel,jdbcType=VARCHAR},
         #{finprodId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, #{curveGroupCode,jdbcType=VARCHAR},#{curveType,jdbcType=VARCHAR},#{isSmooth,jdbcType=VARCHAR},#{smoothSection,jdbcType=VARCHAR},
         #{createUser,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-        #{updateTime,jdbcType=TIMESTAMP})
+        #{updateTime,jdbcType=TIMESTAMP}
+        <!-- modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 start-->
+        ,#{isBottomGrade,jdbcType=VARCHAR}, #{bottomGrade,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{invalidDate,jdbcType=DATE}
+        <!-- modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 end-->
+        )
     </insert>
 
 
@@ -42,6 +50,14 @@
         SMOOTHSECTION = #{smoothSection,jdbcType=VARCHAR},
         UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
         UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        <!-- modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 start-->
+        ,IS_BOTTOM_GRADE = #{isBottomGrade,jdbcType=VARCHAR},
+        BOTTOM_GRADE = #{bottomGrade,jdbcType=VARCHAR},
+        EFF_DATE = #{effDate,jdbcType=DATE}
+        <if test="invalidDate != null">
+         ,INVALID_DATE = #{invalidDate,jdbcType=DATE}
+        </if>
+        <!-- modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 end-->
         where
         SEC_TYPE_MODEL = #{secTypeModel,jdbcType=VARCHAR}
         AND  SEC_DETAIL_TYPE_MODEL = #{secDetailTypeModel,jdbcType=VARCHAR}
@@ -72,68 +88,98 @@
     </select>
 
     <select id="getCashFlowDiscountList"  resultType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto">
-        SELECT
-        A.SEQNO AS seqNo,
-        A.SEC_TYPE_MODEL AS secTypeModel,
-        A.SEC_DETAIL_TYPE_MODEL AS secDetailTypeModel,
-        A.FINPROD_ID AS finprodId,
-        A.FINPROD_NAME AS finprodName,
-        A.CURVE_GROUP_CODE AS curveGroupCode,
-        A.CURVE_TYPE AS curveType,
-        A.ISSMOOTH AS isSmooth,
-        A.SMOOTHSECTION AS smoothSection,
-        A.CREATE_USER AS createUser,
-        A.CREATE_DEPT AS createDept,
-        A.CREATE_TIME AS createTime,
-        A.UPDATE_USER AS updateUser,
-        A.UPDATE_TIME AS updateTime
-        FROM
-        MOD_CURVE_CONFIG A
-        WHERE
-        1=1
-        <if test="secTypeModel!=null and secTypeModel != ''">
-            AND  SEC_TYPE_MODEL = #{secTypeModel,jdbcType=VARCHAR}
-        </if>
-        <if test="secDetailTypeModel!=null and secDetailTypeModel != ''">
-            AND  SEC_DETAIL_TYPE_MODEL = #{secDetailTypeModel,jdbcType=VARCHAR}
-        </if>
-        <if test="finprodId!=null and finprodId != ''">
-            AND  FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-        </if>
-        <if test="seqNo!=null and seqNo != ''">
-            AND  SEQNO = #{seqNo,jdbcType=VARCHAR}
-        </if>
+        select * from (
+            SELECT
+                A.SEQNO AS seqNo,
+                A.SEC_TYPE_MODEL AS secTypeModel,
+                A.SEC_DETAIL_TYPE_MODEL AS secDetailTypeModel,
+                A.FINPROD_ID AS finprodId,
+                A.FINPROD_NAME AS finprodName,
+                A.CURVE_GROUP_CODE AS curveGroupCode,
+                A.CURVE_TYPE AS curveType,
+                A.ISSMOOTH AS isSmooth,
+                A.SMOOTHSECTION AS smoothSection,
+                A.CREATE_USER AS createUser,
+                A.CREATE_DEPT AS createDept,
+                A.CREATE_TIME AS createTime,
+                A.UPDATE_USER AS updateUser,
+                A.UPDATE_TIME AS updateTime
+                <!-- modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 start-->
+                ,IS_BOTTOM_GRADE as isBottomGrade,
+                BOTTOM_GRADE as bottomGrade,
+                EFF_DATE as effDate,
+                INVALID_DATE as invalidDate
+            <!-- modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 end-->
+            FROM
+            MOD_CURVE_CONFIG A
+            WHERE
+            1=1
+            <if test="secTypeModel!=null and secTypeModel != ''">
+                AND  SEC_TYPE_MODEL = #{secTypeModel,jdbcType=VARCHAR}
+            </if>
+            <if test="secDetailTypeModel!=null and secDetailTypeModel != ''">
+                AND  SEC_DETAIL_TYPE_MODEL = #{secDetailTypeModel,jdbcType=VARCHAR}
+            </if>
+            <if test="finprodId!=null and finprodId != ''">
+                AND  FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            </if>
+            <if test="seqNo!=null and seqNo != ''">
+                AND  SEQNO = #{seqNo,jdbcType=VARCHAR}
+            </if>
+            <if test="qryDateBegin!=null and qryDateBegin != ''">
+                AND  EFF_DATE  <![CDATA[>=]]> to_date(#{qryDateBegin,jdbcType=VARCHAR},'yyyy-MM-dd')
+            </if>
+            <if test="qryDateEnd!=null and qryDateEnd != ''">
+                AND  EFF_DATE  <![CDATA[<=]]> to_date(#{qryDateEnd,jdbcType=VARCHAR},'yyyy-MM-dd')
+            </if>
+            order by EFF_DATE desc, INVALID_DATE desc
+        ) t
     </select>
 
     <select id="getForExcel" resultType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto">
-        SELECT
-        A.SEQNO AS seqNo,
-        A.SEC_TYPE_MODEL AS secTypeModel,
-        A.SEC_DETAIL_TYPE_MODEL AS secDetailTypeModel,
-        A.FINPROD_ID AS finprodId,
-        A.FINPROD_NAME AS finprodName,
-        A.CURVE_GROUP_CODE AS curveGroupCode,
-        A.CURVE_TYPE AS curveType,
-        A.ISSMOOTH AS isSmooth,
-        A.SMOOTHSECTION AS smoothSection,
-        A.CREATE_USER AS createUser,
-        A.CREATE_DEPT AS createDept,
-        A.CREATE_TIME AS createTime,
-        A.UPDATE_USER AS updateUser,
-        A.UPDATE_TIME AS updateTime
-        FROM
-        MOD_CURVE_CONFIG A
-        WHERE
-        1=1
-        <if test="secTypeModel!=null and secTypeModel != ''">
-            AND  SEC_TYPE_MODEL = #{secTypeModel,jdbcType=VARCHAR}
-        </if>
-        <if test="secDetailTypeModel!=null and secDetailTypeModel != ''">
-            AND  SEC_DETAIL_TYPE_MODEL = #{secDetailTypeModel,jdbcType=VARCHAR}
-        </if>
-        <if test="finprodId!=null and finprodId != ''">
-            AND  FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-        </if>
+        select * from (
+            SELECT
+                A.SEQNO AS seqNo,
+                A.SEC_TYPE_MODEL AS secTypeModel,
+                A.SEC_DETAIL_TYPE_MODEL AS secDetailTypeModel,
+                A.FINPROD_ID AS finprodId,
+                A.FINPROD_NAME AS finprodName,
+                A.CURVE_GROUP_CODE AS curveGroupCode,
+                A.CURVE_TYPE AS curveType,
+                A.ISSMOOTH AS isSmooth,
+                A.SMOOTHSECTION AS smoothSection,
+                A.CREATE_USER AS createUser,
+                A.CREATE_DEPT AS createDept,
+                A.CREATE_TIME AS createTime,
+                A.UPDATE_USER AS updateUser,
+                A.UPDATE_TIME AS updateTime
+                <!-- modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 start-->
+                ,IS_BOTTOM_GRADE as isBottomGrade,
+                BOTTOM_GRADE as bottomGrade,
+                EFF_DATE as effDate,
+                INVALID_DATE as invalidDate
+            <!-- modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 end-->
+            FROM
+            MOD_CURVE_CONFIG A
+            WHERE
+            1=1
+            <if test="secTypeModel!=null and secTypeModel != ''">
+                AND  SEC_TYPE_MODEL = #{secTypeModel,jdbcType=VARCHAR}
+            </if>
+            <if test="secDetailTypeModel!=null and secDetailTypeModel != ''">
+                AND  SEC_DETAIL_TYPE_MODEL = #{secDetailTypeModel,jdbcType=VARCHAR}
+            </if>
+            <if test="finprodId!=null and finprodId != ''">
+                AND  FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            </if>
+             <if test="qryDateBegin!=null and qryDateBegin != ''">
+                AND  EFF_DATE  <![CDATA[>=]]> to_date(#{qryDateBegin,jdbcType=VARCHAR},'yyyy-MM-dd')
+            </if>
+            <if test="qryDateEnd!=null and qryDateEnd != ''">
+                AND  EFF_DATE  <![CDATA[<=]]> to_date(#{qryDateEnd,jdbcType=VARCHAR},'yyyy-MM-dd')
+            </if>
+            order by EFF_DATE desc, INVALID_DATE desc
+         ) t
     </select>
 
 

@@ -2,6 +2,8 @@ package com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashfl
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -11,6 +13,7 @@ import com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashflo
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.util.Date;
 import java.util.List;
 
 @PageId("CashFlowDiscount002")
@@ -83,6 +86,49 @@ public class CashFlowDiscount001Dto extends BaseEntity implements ProcessEntity{
      * 平滑区间
      */
     private String smoothSection;
+
+    /** modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 start**/
+    /**
+     * 是否使用兜底评级
+     */
+    private String isBottomGrade;
+
+    /**
+     * 是否使用兜底评级名称
+     */
+    private String isBottomGradeStr;
+
+    /**
+     * 兜底评级
+     */
+    private String bottomGrade;
+
+    /**
+     * 兜底评级名称
+     */
+    private String bottomGradeStr;
+
+    /**
+     * 生效日期
+     */
+    private Date effDate;
+
+    /**
+     * 生效日期字符
+     */
+    private String effDateStr;
+
+    /**
+     * 失效日期
+     */
+    private Date invalidDate;
+
+    /**
+     * 失效日期字符
+     */
+    private String invalidDateStr;
+    /** modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 end**/
+
 
     /**
      * 选中的数据
@@ -230,5 +276,82 @@ public class CashFlowDiscount001Dto extends BaseEntity implements ProcessEntity{
 
     public String getIsSmoothStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsSmooth());
+    }
+
+    public String getIsBottomGrade() {
+        return isBottomGrade;
+    }
+
+    public void setIsBottomGrade(String isBottomGrade) {
+        this.isBottomGrade = isBottomGrade;
+    }
+
+    public String getIsBottomGradeStr() {
+        if(StringUtil.isNotEmpty(this.getIsBottomGrade())) {
+            return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsBottomGrade());
+        }
+        return isBottomGradeStr;
+
+    }
+
+    public void setIsBottomGradeStr(String isBottomGradeStr) {
+        this.isBottomGradeStr = isBottomGradeStr;
+    }
+
+    public String getBottomGrade() {
+        return bottomGrade;
+    }
+
+    public void setBottomGrade(String bottomGrade) {
+        this.bottomGrade = bottomGrade;
+    }
+
+    public String getBottomGradeStr() {
+        if(StringUtil.isNotEmpty(this.getBottomGrade())) {
+            return SysDataUtil.getNameFromDataDict(DictCode.评级结果, this.getBottomGrade());
+        }
+        return bottomGradeStr;
+    }
+
+    public void setBottomGradeStr(String bottomGradeStr) {
+        this.bottomGradeStr = bottomGradeStr;
+    }
+
+    public Date getEffDate() {
+        return effDate;
+    }
+
+    public void setEffDate(Date effDate) {
+        this.effDate = effDate;
+    }
+
+    public String getEffDateStr() {
+        if(StringUtil.isNotEmpty(this.getEffDate())) {
+            return DateUtil.format(this.getEffDate(), DateUtil.DEFAULT_DATE_FORMAT_EN);
+        }
+        return effDateStr;
+    }
+
+    public void setEffDateStr(String effDateStr) {
+        this.effDateStr = effDateStr;
+    }
+
+    public Date getInvalidDate() {
+        return invalidDate;
+    }
+
+    public void setInvalidDate(Date invalidDate) {
+        this.invalidDate = invalidDate;
+    }
+
+    public String getInvalidDateStr() {
+        if(StringUtil.isNotEmpty(this.getInvalidDate())) {
+            return DateUtil.format(this.getInvalidDate(), DateUtil.DEFAULT_DATE_FORMAT_EN);
+        }
+        return invalidDateStr;
+    }
+
+    public void setInvalidDateStr(String invalidDateStr) {
+        this.invalidDateStr = invalidDateStr;
     }
 }
