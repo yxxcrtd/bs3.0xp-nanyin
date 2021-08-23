@@ -246,28 +246,27 @@ public class ExcelUtil {
                 inputStream = new FileInputStream(file);
             }
 
+        try {
             if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
-                try {
                     POIFSFileSystem fs = new POIFSFileSystem(inputStream);
                     wb = new HSSFWorkbook(fs);
-                    inputStream.close();
                 }
-                catch (Exception e) {
-                    logger.error(e.getMessage(),e);
-                }
-
-            }
             else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
-                try {
                     wb = new XSSFWorkbook(inputStream);
-                    inputStream.close();
                 }
-                catch (Exception e) {
-                    logger.error(e.getMessage(),e);
-                }
-            }
             else {
                 throw new BusinessException("不是一个有效的Excel文件");
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage(),e);
+        }finally {
+            if (inputStream != null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(),e);
+                }
+            }
             }
         }finally {
             if (inputStream != null){
@@ -353,7 +352,7 @@ public class ExcelUtil {
     /**
      * 检查Excel模板是否正确
      *
-     * @param flieName 上传文件名
+     * @param tempDataList 上传文件名
      * @return headList 模板头list
      * @see
      * @since 1.0

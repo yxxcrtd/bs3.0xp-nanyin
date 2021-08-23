@@ -19,6 +19,8 @@ import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FileUtils;
@@ -118,27 +120,36 @@ public class Sqlldr implements ImpExcutor {
 			    LOGGER.warn("不支持的参数类型:" + args.getClass().getName());
 			}
 			String command = ((SqlldrImpArgument)args).toString();
-			LOGGER.info("执行命令：" + sh + command);
-			Process process = Runtime.getRuntime().exec(sh + command);
-			reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				//add by liubin start 将日志输出到文件
-				osw.append(line+"\n");
-				osw.flush();
-				//add by liubin end
-			    LOGGER.info(line);
-			}
-			//add by liubin start 关闭流
-			osw.close();
-			fout.close();
-			//add by liubin end
-			
-			// 输出日志
-			printLog(((SqlldrImpArgument)args).getLog());
-			// 删除导入用的临时文件
-			deleteTmpFile((SqlldrImpArgument)args);
-			exitValue = process.waitFor();
+//			LOGGER.info("执行命令：" + sh + command);
+
+            //根据ImpArgument实体类设计的白名单校验
+            String pattern = "[0-9a-zA-Z_]{1,}[/][0-9a-zA-Z_]{1,}[@][0-9a-zA-Z_ =./|]{1,}";
+            Pattern pa = Pattern.compile(pattern);
+            Matcher matcher = pa.matcher(command);
+            if (matcher.matches()){
+                Process process = Runtime.getRuntime().exec(sh + command);
+                reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    //add by liubin start 将日志输出到文件
+                    osw.append(line+"\n");
+                    osw.flush();
+                    //add by liubin end
+                    LOGGER.info(line);
+                }
+                //add by liubin start 关闭流
+                osw.close();
+                fout.close();
+                //add by liubin end
+
+                // 输出日志
+                printLog(((SqlldrImpArgument)args).getLog());
+                // 删除导入用的临时文件
+                deleteTmpFile((SqlldrImpArgument)args);
+                exitValue = process.waitFor();
+            }else{
+                LOGGER.info("command命令未通过白名单校验");
+            }
 		} finally {
 			if (osw != null)
 				try {

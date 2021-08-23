@@ -142,7 +142,7 @@ public class RepFinProductEstablishService extends CommonExportService<RepFinPro
                 
                 File file = new SafelyFile(sysUploadFileInfoList.get(0).getPath());
                 FileInputStream inputStream = null;
-                try {
+                try{
                     inputStream = new FileInputStream(file);
                     excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
                     arrFile.add(new SafelyFile(exportPath+"/"+fileName));
@@ -180,10 +180,15 @@ public class RepFinProductEstablishService extends CommonExportService<RepFinPro
                 String exportPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
                 File file = new SafelyFile(sysUploadFileInfoList.get(0).getPath());
                 FileInputStream inputStream = null;
-                try {
+                try{
                     inputStream = new FileInputStream(file);
                     excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
                     arrFile.add(new SafelyFile(exportPath+"/"+fileName));
+                }finally {
+                    if (inputStream != null){
+                        inputStream.close();
+                    }
+                }
                     i++;
                 }finally {
                     if (inputStream != null){

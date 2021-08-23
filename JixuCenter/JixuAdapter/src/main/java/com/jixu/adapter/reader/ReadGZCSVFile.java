@@ -45,14 +45,12 @@ public class ReadGZCSVFile extends ReadFileBasic {
 		}
 
 		BufferedReader buf = null;
+		FileInputStream fis = null;
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		for (String filepath : filePaths) {
 			FileInputStream fis = null;
 			try {
-				fis = new FileInputStream(new SafelyFile(filepath));
-//				if(fis.available()>52428800){
-//					throw(new InterfaceException("暂时不支持大于50M的文件读取: " + fis.available()));
-//				}
+				fis=new FileInputStream(new SafelyFile(filepath));
 				
 				buf = new BufferedReader(new InputStreamReader(new GZIPInputStream(fis),FileEncodeType.optionHM.get(source.getEnCodeType())));
 				CSVParser parser = null;
@@ -123,7 +121,7 @@ public class ReadGZCSVFile extends ReadFileBasic {
 						logger.error("Error", e);
 					}
 				}
-				if(fis != null){
+				if (fis != null){
 					fis.close();
 				}
 

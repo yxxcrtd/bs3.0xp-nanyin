@@ -39,10 +39,12 @@ public class ReadGZFile extends ReadFileBasic {
 		int readLineNum = 0;
 		boolean checkFlag = true;
 		BufferedReader buf = null;
+		FileInputStream fis = null;
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		try {
 			for (String filepath : filePaths) {
-				buf = new BufferedReader(new InputStreamReader(new GZIPInputStream(new  FileInputStream(new SafelyFile(filepath))), FileEncodeType.optionHM.get(source.getEnCodeType())));
+				fis = new  FileInputStream(new SafelyFile(filepath));
+				buf = new BufferedReader(new InputStreamReader(new GZIPInputStream(fis), FileEncodeType.optionHM.get(source.getEnCodeType())));
 				String line = null;
 				while ((line = buf.readLine()) != null) {
 					readLineNum++;
@@ -59,6 +61,9 @@ public class ReadGZFile extends ReadFileBasic {
 				} catch (IOException e) {
 					logger.error("Error", e);
 				}
+			}
+			if (fis != null){
+				fis.close();
 			}
 		}
 		result.setDataResult(fileContainer);

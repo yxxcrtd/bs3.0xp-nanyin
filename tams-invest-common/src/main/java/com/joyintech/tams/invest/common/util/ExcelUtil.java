@@ -232,7 +232,6 @@ public class ExcelUtil {
 			if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
 			    try (POIFSFileSystem fs = new POIFSFileSystem(inputStream)){
 			        wb = new HSSFWorkbook(fs);
-			        inputStream.close();
 			    }
 			    catch (Exception e) {
 			        logger.error(e.getMessage(),e);
@@ -242,7 +241,6 @@ public class ExcelUtil {
 			else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
 			    try {
 			        wb = new XSSFWorkbook(inputStream);
-			        inputStream.close();
 			    }
 			    catch (Exception e) {
 			        logger.error(e.getMessage(),e);

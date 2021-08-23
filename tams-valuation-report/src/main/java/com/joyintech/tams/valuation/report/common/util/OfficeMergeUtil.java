@@ -9,7 +9,6 @@ import java.util.List;
 
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -42,9 +41,9 @@ public class OfficeMergeUtil {
         CTBody srcBody = null;
         XWPFDocument srcDocumentTmp = null;
         CTBody srcBodyTmp = null;
+        try{
         for (int i = 0; i < srcFile.size(); i++ ) {
             if(i==0){
-                try {
                     srcDocumentTmp = new XWPFDocument(OPCPackage.open(new FileInputStream(srcFile.get(i))));
                     srcBodyTmp= srcDocumentTmp.getDocument().getBody();
                 }
@@ -86,7 +85,6 @@ public class OfficeMergeUtil {
                     } catch (Exception e) {
                         logger.error("", e);
                     }
-
                 }
             }
         }
@@ -104,6 +102,13 @@ public class OfficeMergeUtil {
             if (dest != null) {
                 dest.close();
             }
+        }
+        } catch (Exception e) {
+            throw new BusinessException(e);
+        }finally {
+            if (srcDocumentTmp != null){
+                srcDocumentTmp.close();
+    }
         }
     }
 

@@ -34,9 +34,16 @@ public class FileReader {
 		}catch(IOException e){
 			logger.error(e.getMessage(),e);
 		}finally{
+			try {
 			if(reader != null){
-				try {
 					reader.close();
+				}
+				if (fileInputStream != null){
+					fileInputStream.close();
+				}
+				if (inputStreamReader != null){
+					inputStreamReader.close();
+				}
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
 				}

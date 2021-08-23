@@ -208,6 +208,8 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
         File depositfile = null;
         Workbook workbook = null;
 		OutputStream os = null;
+		FileOutputStream fos = null;
+		// 模板输入流
 		InputStream stream  = null;
         try {
 
@@ -220,6 +222,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
             }
             String templateFile = template + ".xls";
             // 模板输入流
+            
             String tplFile = FileNameUtil.getTplFile(templateFile);
             File templeteFile = new File(tplFile);
             if (templeteFile.exists()) {
@@ -247,8 +250,8 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
             		
             	}
             }
-
-            os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+			fos = new FileOutputStream(depositfilePath + File.separator + flieName);
+            os = new BufferedOutputStream(fos);
             workbook.write(os); 
 
         }
@@ -267,6 +270,9 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
                 if (null != workbook) {
                 	workbook.close();
                 }
+                if (fos != null){
+					fos.close();
+            }
             }
             catch (Exception e) {
             	logger.error("workbook关闭失败！");
@@ -276,6 +282,9 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 					os.flush();
 					os.close();
 				}
+				if (stream!= null){
+					stream.close();
+			}
 			}
 			catch (Exception e) {
 				logger.error(e.getMessage(),e);
@@ -342,6 +351,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 		OutputStream os =null;
 		// 模板输入流
 		InputStream stream  = null;
+		FileOutputStream fos = null;
         try {
             // 传放地址
             String depositfilePath = CacheUtil.getSysParam(
@@ -351,6 +361,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
                 depositfile.getParentFile().mkdirs();
             }
             String templateFile = template + ".xls";
+
             String tplFile = FileNameUtil.getTplFile(templateFile);
             File templeteFile = new File(tplFile);
             if (templeteFile.exists()) {
@@ -385,8 +396,8 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 	            	}
             	}
             }
-
-			os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+			fos = new FileOutputStream(depositfilePath + File.separator + flieName);
+			os = new BufferedOutputStream(fos);
             workbook.write(os); 
 
         }
@@ -405,18 +416,20 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
                 if (null != workbook) {
                 	workbook.close();
                 }
-            }
-            catch (Exception e) {
-            	logger.error("workbook关闭失败！");
-            }
-			try {
 				if (null != os) {
 					os.flush();
 					os.close();
 				}
-			}catch (Exception e){
-				logger.error(e.getMessage(),e);
+				if (stream != null){
+					stream.close();
 			}
+				if (fos != null){
+					fos.close();
+        }
+            }
+            catch (Exception e) {
+            	logger.error("workbook关闭失败！");
+            }
         }
         return depositfile;
 	}

@@ -82,6 +82,8 @@ public class JasparConnectUtilService {
 	public UploadFile connectJasparAndDownload_old(String strUrl, String fileName,// 修改为old方法，不使用 zhangyf 20190219
 			String fileType, String repId, String prodId) throws IOException {
 		logger.info("连接报表服务器开始=====");
+		InputStream inputStream = null;
+		try{
 		URL connUrl = new URL(strUrl);
 		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
 		URLConnection conn = connUrl.openConnection();
@@ -89,7 +91,7 @@ public class JasparConnectUtilService {
 		// 防止屏蔽程序抓取而返回403错误
         conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        InputStream inputStream = conn.getInputStream();
+			inputStream = conn.getInputStream();
 
         String filePathName = prodId + GlobalConstant.UNDER_LINE + repId + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
         // 获取自己数组
@@ -118,10 +120,7 @@ public class JasparConnectUtilService {
 			if (fos != null) {
 				fos.close();
 			}
-			if (inputStream != null) {
-				inputStream.close();
 			}
-		}
 
         UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
                 localFile);
@@ -138,6 +137,12 @@ public class JasparConnectUtilService {
         joyinDFSTemplate.upload(sysUploadFileInfo);
         
 		return uploadFile;
+		}finally {
+			if (inputStream != null) {
+				inputStream.close();
+	}
+		}
+	
 	}
 	
 	public UploadFile connectJasparAndDownload(String strUrl, String fileName,
@@ -202,10 +207,7 @@ public class JasparConnectUtilService {
 		// 防止屏蔽程序抓取而返回403错误
         conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        InputStream inputStream = conn.getInputStream();
 
-        // 获取自己数组
-        byte[] getData = readInputStream(inputStream);
         
         String path = FileNameUtil.createUploadFilePath("");
         
@@ -216,8 +218,11 @@ public class JasparConnectUtilService {
         }
 
 		FileOutputStream fos = null;
-
+		InputStream inputStream = null;
         try {
+			inputStream = conn.getInputStream();
+			// 获取自己数组
+			byte[] getData = readInputStream(inputStream);
 			fos = new FileOutputStream(localFile);
 			fos.write(getData);
 		}catch (Exception e)
@@ -364,24 +369,8 @@ public class JasparConnectUtilService {
 //        if (!dir.exists()) {
 //            dir.mkdirs();
 //        }
-//        FileOutputStream fos = new FileOutputStream(localFile);
-//        fos.write(getData);
-//        if (fos != null) {
-//            fos.close();
 //        }
-//        UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
-//                localFile);
-//        //存入SYS_UPLOAD_FILE_INFO表
-//        if(null != fileAttachmentProcess) {
-//            fileAttachmentProcess.upload(uploadFile);
-//        }
-			return getData;
-		}finally {
-			if (inputStream != null) {
-				inputStream.close();
 			}
-		}
-	}
 	/**
 	 * 连接Jaspar并将url上的xml解析成list格式
 	 * @param strUrl 连接url

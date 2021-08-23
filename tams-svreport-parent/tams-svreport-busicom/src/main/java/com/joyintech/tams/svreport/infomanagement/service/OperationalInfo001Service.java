@@ -16,6 +16,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
@@ -1871,6 +1872,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
 				} finally {
+					if (out != null){
+						out.close();
+				}finally {
 					if (out != null){
 						out.close();
 					}
@@ -3793,9 +3797,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     	if(clob == null) {   
             return null;   
         }   
+		Reader inStreamDoc = null;
         try{   
-            Reader inStreamDoc = clob.getCharacterStream();   
-               
+			inStreamDoc = clob.getCharacterStream();
             char[] tempDoc = new char[(int) clob.length()];
             if(inStreamDoc!=null) {
 				inStreamDoc.read(tempDoc);
@@ -3810,8 +3814,15 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
         catch (SQLException es)   
         {   
         	logger.error(es.getMessage(),es);
+	  	}finally {
+        	if (inStreamDoc != null){
+				try {
+					inStreamDoc.close();
+				} catch (IOException e) {
+					throw new BusinessException(e);
           }   
-             
+			}
+		}
           return null;   
       }
     

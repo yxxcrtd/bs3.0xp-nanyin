@@ -157,15 +157,16 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         if (StringUtil.isNotEmpty(reportList)) {
             String basePath = CacheUtil.getSysParam(KEY_REPORT_DOWNLOAD_PATH);
             // 需要层级。01：是，02：否
+            FileOutputStream fos = null;
             if (StringUtil.equals(CacheUtil.getSysParam(ReportGlobalConstant.IS_NEED_SECOND), "01")) {
                 File firstFile = null;
                 File secondFile = null;
                 try {
-                    zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+                    fos = new FileOutputStream(zipFile);
+                    zipOut = new ZipOutputStream(fos);
                     // 设置UTF8编码
                     zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
                     for (RepReveal report : reportList) {
-                        // TODO
                         String fileType = StringUtil.substring(report.getSysFilename(),
                             report.getSysFilename().lastIndexOf("."));
                         String reportName = report.getReportName() + fileType;
@@ -328,12 +329,17 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 }
                 catch (Exception e) {
                     log.error("", e);
+                }finally {
+                    if (fos != null){
+                        fos.close();
+                    }
                 }
             }
             // 不需要层级
             else {
                 try {
-                    zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+                    fos = new FileOutputStream(zipFile);
+                    zipOut = new ZipOutputStream(fos);
                     // 设置UTF8编码
                     zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
                     for (RepReveal report : reportList) {
@@ -504,6 +510,9 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 }finally {
                     if(zipOut != null){
                         zipOut.close();
+                    }
+                    if (fos != null){
+                        fos.close();
                     }
                 }
             }
