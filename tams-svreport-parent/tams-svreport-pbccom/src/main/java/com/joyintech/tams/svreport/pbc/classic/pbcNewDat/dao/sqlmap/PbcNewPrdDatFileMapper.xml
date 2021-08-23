@@ -10,6 +10,7 @@
                 <if test="null!=statusDate">
                     AND A.STATUS_VDATE = #{statusDate,jdbcType=VARCHAR}
                 </if>
+                and ORG_CODE = #{OrgCode,jdbcType=VARCHAR}
                 order by DAT_ZIP_CODE desc
         </select>
 

@@ -78,7 +78,7 @@ public class PbcDatUtil {
 
 		Map<String,Object> dataSearch = new HashMap<>();
 		dataSearch.put("zipType", DictCodeListExt2.人行报送类型_产品信息.getValue());
-
+		dataSearch.put("OrgCode",OrgCode);
 
 		/*****1.1、入参.zipModel= 		1:按照业务日期进行压缩
 		 按日期分配后的.list<产品基本信息DTO>	同业务日期  产品基本信息  --->  产品起始日期
@@ -166,7 +166,7 @@ public class PbcDatUtil {
 					dataSearch.put("zipCode",oldZip);
 					dataSearch.put("sendStatus",DictCodeListExt2.报送状态_手工处理.getValue());
 					dataSearch.put("submitFeedbackStatus", 人行报送反馈状态_人行通过.getValue());
-
+					dataSearch.put("orgCode",OrgCode);
 
 					//删除当前包中的未报送的数据
 					int prdDel = pbcPrdBaseinfoSubDatMapper.deletebySearch(dataSearch);
@@ -174,8 +174,8 @@ public class PbcDatUtil {
 
 					//处理zip包代码.如果包内无已报送数据,则直接删除该zip包
 					int count = pbcPrdBaseinfoSubDatMapper.deletebyZipCode(dataSearch);
-					//如果未删除到数据,则进行修改操作
-					if(count==0){
+					//如果未删除到数据,则进行修改操作,且基本信息已经删除到数据,则认为是修改
+					if(count==0&&(prdDel+enddel)>0){
 						//如果删除
 						dataSearch.put("delNum",prdDel);
 						dataSearch.put("zipType",DictCodeListExt2.人行报送明细类型_产品基本信息.getValue());

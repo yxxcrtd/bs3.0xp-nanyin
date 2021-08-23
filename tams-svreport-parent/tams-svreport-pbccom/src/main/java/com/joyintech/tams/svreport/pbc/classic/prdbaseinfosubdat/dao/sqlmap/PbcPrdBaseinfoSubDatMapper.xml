@@ -1078,6 +1078,7 @@
 		DELETE FROM PBC_PRD_BASEINFO_SUB_DAT
 		where SEND_STATUS = '01'
 			and DAT_ZIP_CODE = #{zipCode,jdbcType=VARCHAR}
+			and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
 			/***删除未报送的当前压缩包的数据**/
 	</delete>
 
@@ -1096,6 +1097,7 @@
 		where F.ZIP_SEND_STATUS = '01'
 		  AND F.DAT_ZIP_TYPE = 'PI'
 		  and F.DAT_ZIP_CODE = #{zipCode,jdbcType=VARCHAR}
+		  and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
 		AND NOT EXISTS(
 			SELECT 1 FROM PBC_PRD_BASEINFO_END_SUB_DAT D WHERE D.DAT_ZIP_CODE=F.DAT_ZIP_CODE AND D.SEND_STATUS IN ('02','03')
 			UNION ALL
