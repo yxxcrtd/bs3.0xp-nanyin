@@ -153,12 +153,6 @@
 	}	
 </update>
 
-<update id="callChbInvesthold"  statementType="CALLABLE">
-{
- call chb_backup_interf_data()
-}
-</update>
-
 
 	<insert id="nologgingParrel">
 		ALTER TABLE ${newTableName} NOLOGGING PARALLEL 8
@@ -207,11 +201,6 @@
 		SELECT /*+ parallel(INFO,8) */ INFO.* from CHB_INVESTHOLD_INFO INFO
 		WHERE info.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 	</insert>
-
-	<!-- 创建表备份ChbInvestHoldInfoSub -->
-	<update id="createChbInvestHoldInfoSub">
-		CREATE TABLE ${newTableName} AS SELECT * from  CHB_INVESTHOLD_INFO_SUB SUB WHERE 1=0
-	</update>
 
 	<!-- 插入 ChbInvestHoldInfoSub数据-->
 	<insert id="insertChbInvestHoldInfoSubDataEx">
