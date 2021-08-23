@@ -1268,7 +1268,7 @@ public class CommonAutoCouponService extends BaseService{
                 repfund.setRepIsGovInvest(infChinamutualfunddescription.getRepisgovinvest());//基金基本资料是否属于政府投资基金
                 repfund.setRepGovInvestFor(infChinamutualfunddescription.getRepgovinvestfor());//基金基本资料政府投资基本投向
                 repfund.setRepTrustPartyName(infChinamutualfunddescription.getReptrustpartyname());//基金基本资料托管机构名称
-                repfund.setRepInvestStage(infChinamutualfunddescription.getfInfoFrontCode());//基金基本资料前端代码
+                repfund.setRepInvestStage(infChinamutualfunddescription.getInvestmentPhase());//基金基本资料投资阶段
                 repfund.setRepFundInvestAsset(infChinamutualfunddescription.getRepfundinvestasset());//基金基本资料投资资产
                 repAssetDept.setRepFinprodId(finprodId);//金融产品代码
                 repAssetDept.setFinprodMarketId(infChinamutualfunddescription.getfInfoCode());//基金代码
@@ -1313,11 +1313,13 @@ public class CommonAutoCouponService extends BaseService{
                     repfund.setRepMngPartyName(getCounterName(infChinamutualfunddescription.getfInfoCorpFundmanagementid()));
                 }
                 //[交易流通场所][登记备案机构][投资企业类型（按规模划分）][投资企业类型（按技术领域划分）][投资企业类型（按经济类型划分）]选择99的场合，备注必须填
+                //[投资阶段]选择99,备注必须填
                 if (StringUtil.equals("99",infChinamutualfunddescription.getMarket2())||
                         StringUtil.equals("99",infChinamutualfunddescription.getRepregistorg())||
                         StringUtil.equals("99",infChinamutualfunddescription.getIssuerScaleType())||
                         StringUtil.equals("99",infChinamutualfunddescription.getIssuerTechnologyType())||
-                        StringUtil.equals("99",infChinamutualfunddescription.getIssuerEconomicType())){
+                        StringUtil.equals("99",infChinamutualfunddescription.getIssuerEconomicType())||
+                        StringUtil.equals("99",infChinamutualfunddescription.getInvestmentPhase())){
                     repfund.setRepRemark("无");
                 }
                 repfund.setRepFundCompName(infChinamutualfunddescription.getFundCompanyName()); // 基金公司名称
@@ -2262,8 +2264,9 @@ public class CommonAutoCouponService extends BaseService{
     					||StringUtil.equals(DictCodeListExt2.发行机构类型_按技术领域划分_其他.getValue(), baseInfoDto1.getRepfund().getRepRegistOrg())
     					||StringUtil.equals(DictCodeListExt2.发行机构类型_按经济类型划分_其他.getValue(), baseInfoDto1.getRepfund().getRepRegistOrg())
     					||StringUtil.equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue(), baseInfoDto1.getRepfund().getRepRegistOrg())
-    					||StringUtil.equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue(), baseInfoDto1.getRepAssetDept().getRepTradeMarket())){
-    				bussRepFundInfoDto.setRepRemark("无备注信息");
+    					||StringUtil.equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue(), baseInfoDto1.getRepAssetDept().getRepTradeMarket())
+                        ||StringUtil.equals(DictCodeListExt2.投资阶段_其他.getValue(), baseInfoDto1.getRepfund().getRepInvestStage())){
+    			    bussRepFundInfoDto.setRepRemark("无备注信息");
     			}else{
     				bussRepFundInfoDto.setRepRemark(baseInfoDto1.getRepfund().getRepRemark());//备注[万德未提供该字段]
     			}

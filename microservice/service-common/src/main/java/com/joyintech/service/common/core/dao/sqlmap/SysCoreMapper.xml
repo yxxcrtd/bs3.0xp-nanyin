@@ -456,7 +456,8 @@
 		FUND_COMPANY_NAME fundCompanyName,
 		ISSUER_SCALE_TYPE issuerScaleType,
 		ISSUER_TECHNOLOGY_TYPE issuerTechnologyType,
-		ISSUER_ECONOMIC_TYPE issuerEconomicType
+		ISSUER_ECONOMIC_TYPE issuerEconomicType,
+		INVESTMENT_PHASE investmentPhase
 
 	FROM INTERF_CMFUNDDESCRIP
 	where F_INFO_CODE = #{fInfoWindcode}
