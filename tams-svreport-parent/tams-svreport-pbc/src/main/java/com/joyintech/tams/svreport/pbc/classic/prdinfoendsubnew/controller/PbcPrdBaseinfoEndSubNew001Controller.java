@@ -92,7 +92,7 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("export")
 	public ResponseEntity<byte[]> export() {
-		return prdBaseinfoEndSubNew001Service.export("PIB产品终止信息(资产管理)_" +DateUtil.formatDate(DateUtil.getCurrentDate())+ GlobalConstant.POINT +"xls", RequestUtil.getPageParam());
+		return prdBaseinfoEndSubNew001Service.export("PIE产品终止信息(资产管理)_" +DateUtil.formatDate(DateUtil.getCurrentDate())+ GlobalConstant.POINT +"xls", RequestUtil.getPageParam());
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 		File outFile = prdBaseinfoEndSubNew001Service.makeFile(
 				"/com/joyintech/tams/svreport/pbc/classic/prdinfoendsubnew/conf/export_confNew.xml",
 				dtoList);
-		return ExportUtil.export(" PIB产品终止信息(资产管理)报送内容_"
+		return ExportUtil.export(" PIE产品终止信息(资产管理)报送内容_"
 						+ DateUtil.formatDate(DateUtil.getCurrentDate())
 						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 				outFile, true);
