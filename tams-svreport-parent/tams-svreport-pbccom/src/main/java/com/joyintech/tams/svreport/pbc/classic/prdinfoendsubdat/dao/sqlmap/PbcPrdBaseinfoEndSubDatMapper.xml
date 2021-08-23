@@ -1018,6 +1018,7 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
         from PBC_PRD_BASEINFO_END_SUB_DAT dat
             left join PBC_PRD_BASEINFO_END_SUB_NEW  prd on dat.prod_id=prd.prod_id
         where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
+        order  by dat.PROD_ID asc
     </select>
 
     <select id="selectByDatZipCode" resultMap="BaseResultMap">
