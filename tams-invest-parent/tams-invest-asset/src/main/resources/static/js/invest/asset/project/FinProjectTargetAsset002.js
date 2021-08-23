@@ -559,7 +559,7 @@ $(function() {
 //        if(type6==""||type6==ASSET_TYPE_PROJECT_11){
 //            $('#bussParticipantInfoDto_div').hide();
 //        }else{
-            $('#bussParticipantInfoDto_div').show();
+            $('#bussParticipantInfoDto_div').hide();
 //        }
         // modify by renping 通道什么时候都显示 2019-08-19 end
     }
