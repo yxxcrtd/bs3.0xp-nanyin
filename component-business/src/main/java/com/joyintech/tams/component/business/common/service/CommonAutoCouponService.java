@@ -358,7 +358,9 @@ public class CommonAutoCouponService extends BaseService{
                 /*---发行截止日 addby shenchen 2019-05-05----*/
                 finProduct.setIdate(interfPayhsrcsecinfo.getPubenddate());
                 /*---发行截止日 addby shenchen 2019-05-05----*/
-                finProduct.setTermDays(DateUtil.getBetweenDayNumber(DateUtil.format(interfPayhsrcsecinfo.getVdate()),DateUtil.format(interfPayhsrcsecinfo.getMdate())));
+                if(StringUtil.isNotEmpty(interfPayhsrcsecinfo.getVdate()) && StringUtil.isNotEmpty(interfPayhsrcsecinfo.getMdate())){
+                    finProduct.setTermDays(DateUtil.getBetweenDayNumber(DateUtil.format(interfPayhsrcsecinfo.getVdate()),DateUtil.format(interfPayhsrcsecinfo.getMdate())));
+                }
                 finProduct.setIsChl(DictCodeList.是否_否.getValue());
                 /**--add by shenchen 2019-04-10--*/
                 // finProduct.setIsSus(interfPayhsrcsecinfo.getIssus());//是否永续
@@ -605,7 +607,10 @@ public class CommonAutoCouponService extends BaseService{
                 if (StringUtil.equals(interfPayhsrcsecinfo.getSchecalrule(), DictCodeList.推算方式_首次支付日.getValue())
                         && StringUtil.isNotEmpty(interfPayhsrcsecscheduleList) && interfPayhsrcsecscheduleList.size() > 0){
                     //计算付息计划 如果首次付息日=第一条计划的支付日，推算方式为起息日向后
-                    Date mdate  = getFirstMdate(interfPayhsrcsecinfo, finCashPayRule);
+                    Date mdate  = null;
+                    if(StringUtil.isNotEmpty(interfPayhsrcsecinfo.getMdate())){
+                        mdate  = getFirstMdate(interfPayhsrcsecinfo, finCashPayRule);
+                    }
                     if (StringUtil.equals("01", interfPayhsrcsecscheduleList.get(0).getSchedutype()) &&
                             DateUtil.compareDate(interfPayhsrcsecinfo.getFirstrateday(), mdate) == 0){
                         finCashPayRule.setCalcRule(DictCodeList.推算方式_起息日向后.getValue());
