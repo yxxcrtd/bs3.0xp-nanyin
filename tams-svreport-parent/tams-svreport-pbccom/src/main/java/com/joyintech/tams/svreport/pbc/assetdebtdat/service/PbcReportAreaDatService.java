@@ -12,6 +12,7 @@ import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAreaDatDetailMa
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAreaDatDetailDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
+import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
 import com.joyintech.tams.svreport.pbc.common.service.PbcDatPriviewService;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
@@ -61,6 +62,9 @@ public class PbcReportAreaDatService extends PbcDatPriviewService {
         if (pbcReport == null){
             return data;
         }
+		if(StringUtil.isNotEmpty(pbcReport.getProdVariety())){
+			pbcReport.setProdVariety(PbcDictCodeEnums.银行非保本理财_01.getName());
+		}
     	data.put("report", JsonUtils.object2Map(pbcReport));
     	// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);

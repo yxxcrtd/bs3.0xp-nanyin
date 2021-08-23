@@ -13,6 +13,7 @@ import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportProdDatMapper;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dao.PbcPrdBaseinfoEndSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
+import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
 import com.joyintech.tams.svreport.pbc.common.service.PbcDatPriviewService;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
@@ -53,6 +54,9 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 		// 如果报表为空则返回data
 		if (pbcReport == null){
 			return data;
+		}
+		if(StringUtil.isNotEmpty(pbcReport.getProdVariety())){
+			pbcReport.setProdVariety(PbcDictCodeEnums.银行非保本理财_01.getName());
 		}
 		//pbcReport.setProdVariety(pbcReport.getProdVariety() + "-" + SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
 		data.put("report",JsonUtils.object2Map(pbcReport));
@@ -181,6 +185,12 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 		if(detail.getTotal() != null){
 			detail.setTotal(detail.getTotal().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
 		}
+		//只数
+		if(detail.getProdcounts() != null){
+			BigDecimal divide = new BigDecimal(detail.getProdcounts()).divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP);
+			detail.setProdcounts(divide.longValue());
+		}
+
 	}
 
 	/**
@@ -219,6 +229,10 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 		//合计
 		if(!StringUtil.equals(detail.getTotal(),detail.getTotalPrd())){
 			detail.setTotalDiff(1);
+		}
+		//只数
+		if(!StringUtil.equals(detail.getProdcounts(),detail.getProdcountsPrd())){
+			detail.setProdcountsDiff(1);
 		}
 	}
 

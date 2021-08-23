@@ -360,6 +360,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
         pbcPrdBaseinfoSubDat.setOutDepName(pbcPrdBaseinfoSubDatDto.getInDepName());
         pbcPrdBaseinfoSubDat.setOutDepCtry(pbcPrdBaseinfoSubDatDto.getOutDepCtry());
         pbcPrdBaseinfoSubDat.setIsMarketFund(pbcPrdBaseinfoSubDatDto.getTransferType1());
+        pbcPrdBaseinfoSubDat.setPbcProdType(pbcPrdBaseinfoSubDatDto.getProdType());
         pbcPrdBaseinfoSubDat.setRegistSeqno(cn.hutool.core.lang.UUID.randomUUID().toString());
         return pbcPrdBaseinfoSubDat;
     }
@@ -393,7 +394,7 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 //产品品种
                 String prodType = rowsData.get(row++);
                 if(checkIsNotEmpty(prodType,rowNumber,"产品品种",errorMessage)){
-                    dto.setProdType(prodType);
+                    dto.setProdType(PbcDictCodeEnums.getCodeByName(prodType));
                 }
                 //产品类型
                 String ivstorientation = rowsData.get(row++);

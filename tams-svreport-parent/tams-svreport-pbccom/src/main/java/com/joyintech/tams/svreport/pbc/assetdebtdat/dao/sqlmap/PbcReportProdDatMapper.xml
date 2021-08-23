@@ -103,6 +103,7 @@
         prp.GBP_TO_CNY as gbpToCnyPrd,
         prp.JPY_TO_CNY as jpyToCnyPrd,
         prp.OTH_TO_CNY as othToCnyPrd,
+        prp.PRODCOUNTS as prodcountsPrd,
         prp.TOTAL as totalPrd
         from PBC_REPORT_PROD_DAT ppd
         left join PBC_REPORT_PROD  prp on ppd.REPORTUUID=prp.REPORTUUID

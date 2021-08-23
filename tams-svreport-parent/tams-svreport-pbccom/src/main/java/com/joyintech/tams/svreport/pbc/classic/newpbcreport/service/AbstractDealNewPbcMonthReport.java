@@ -91,6 +91,10 @@ public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthR
      * 制表日期
      */
     public final static String REPORT_DATE = "reportDate";
+    /**
+     * 制表日期
+     */
+    public final static String DATA_DATE = "dataDate";
 
     public PbcSendZipDatFile newPbcSendZipDatFile(ReportDealParamDto paramDto, int size) throws Exception{
         PbcSendZipDatFile sendZipDatFile = new PbcSendZipDatFile();
@@ -128,6 +132,16 @@ public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthR
             }
         }catch (Exception e){
             throw new Exception(sheetName()+"制表日期格式不正确!正确格式为:yyyy-MM-dd");
+        }
+        //数据日期
+        try {
+            String dataDate = getCellValue(paramDto.getHssfSheet(), baseMap.get(DATA_DATE),true);
+            if(StrUtil.isNotEmpty(dataDate)){
+                DateTime dateTime = DateUtil.parse(dataDate, "yyyy-MM-dd");
+                sendZipDatFile.setEnddate(dateTime);
+            }
+        }catch (Exception e){
+            throw new Exception(sheetName()+"数据日期格式不正确!正确格式为:yyyy-MM-dd");
         }
         sendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
         sendZipDatFile.setDatZipCode(paramDto.getDatZipCode());

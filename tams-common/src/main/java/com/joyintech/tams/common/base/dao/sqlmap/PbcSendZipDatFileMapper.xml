@@ -8,15 +8,15 @@
         <result column="DAT_ZIP_TYPE" property="datZipType" jdbcType="VARCHAR" />
         <result column="DAT_ZIP_DAT_TYPE" property="datZipDatType" jdbcType="VARCHAR" />
         <result column="DAT_ZIP_STATUS" property="datZipStatus" jdbcType="VARCHAR" />
-        <result column="ZIP_DOWNLOAD_TIME" property="zipDownloadTime" jdbcType="DATE" />
+        <result column="ZIP_DOWNLOAD_TIME" property="zipDownloadTime" jdbcType="TIMESTAMP" />
         <result column="STATUS_VDATE" property="statusVdate" jdbcType="VARCHAR" />
         <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
         <result column="PIB_DETAIL_CNT" property="pibDetailCnt" jdbcType="DECIMAL" />
-        <result column="SUBMIT_TIME" property="submitTime" jdbcType="DATE" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
         <result column="ZIP_SEND_STATUS" property="zipSendStatus" jdbcType="VARCHAR" />
         <result column="RETURN_ZIP_SEND_STATUS" property="returnZipSendStatus" jdbcType="VARCHAR" />
         <result column="RETURN_ZIP_CODE" property="returnZipCode" jdbcType="VARCHAR" />
-        <result column="RETURN_TIME" property="returnTime" jdbcType="DATE" />
+        <result column="RETURN_TIME" property="returnTime" jdbcType="TIMESTAMP" />
         <result column="RETURN_MSG" property="returnMsg" jdbcType="VARCHAR" />
         <result column="RETURN_ERROR_CNT" property="returnErrorCnt" jdbcType="DECIMAL" />
         <result column="RETURN_PASS_CNT" property="returnPassCnt" jdbcType="DECIMAL" />
@@ -34,8 +34,8 @@
         <result column="PROD_VARIETY" property="prodVariety" jdbcType="VARCHAR" />
         <result column="PERSON_LIABLE" property="personLiable" jdbcType="VARCHAR" />
         <result column="CONTACT" property="contact" jdbcType="VARCHAR" />
-        <result column="REPORT_DATE" property="reportDate" jdbcType="DATE" />
-        <result column="ENDDATE" property="enddate" jdbcType="DATE" />
+        <result column="REPORT_DATE" property="reportDate" jdbcType="TIMESTAMP" />
+        <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
     </resultMap>
     <sql id="Base_Column_List" >
         REGIST_SEQNO REGIST_SEQNO, DAT_ZIP_CODE DAT_ZIP_CODE, DAT_ZIP_PATH DAT_ZIP_PATH, 
@@ -82,7 +82,7 @@
             ISSUE_PARTY_ID, ISSUE_PARTY_NAME, REPORT_ORG_NAME, 
             SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, 
             PROD_VARIETY, PERSON_LIABLE, CONTACT, 
-            REPORT_DATE)
+            REPORT_DATE,ENDDATE)
         values (#{registSeqno,jdbcType=VARCHAR}, #{datZipCode,jdbcType=VARCHAR}, #{datZipPath,jdbcType=VARCHAR}, 
             #{datZipType,jdbcType=VARCHAR}, #{datZipDatType,jdbcType=VARCHAR}, #{datZipStatus,jdbcType=VARCHAR}, 
             #{zipDownloadTime,jdbcType=DATE}, #{statusVdate,jdbcType=VARCHAR}, #{reportuuid,jdbcType=CHAR}, 
@@ -94,7 +94,7 @@
             #{issuePartyId,jdbcType=VARCHAR}, #{issuePartyName,jdbcType=VARCHAR}, #{reportOrgName,jdbcType=VARCHAR}, 
             #{socialCreditCode,jdbcType=VARCHAR}, #{finInstitutionCode,jdbcType=VARCHAR}, 
             #{prodVariety,jdbcType=VARCHAR}, #{personLiable,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
-            #{reportDate,jdbcType=DATE})
+            #{reportDate,jdbcType=DATE},#{enddate,jdbcType=DATE})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
         insert into PBC_SEND_ZIP_DAT_FILE
