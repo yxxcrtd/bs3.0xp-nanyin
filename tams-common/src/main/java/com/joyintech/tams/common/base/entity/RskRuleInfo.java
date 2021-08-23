@@ -13,12 +13,11 @@ public class RskRuleInfo extends BaseEntity {
      */
     private String ruleName;
 
-    
     /**
-     * 机构号
+     * null
      */
     private String institutionCode;
-    
+
     /**
      * 取得 组合包代码
      * @return 组合包代码
@@ -51,23 +50,19 @@ public class RskRuleInfo extends BaseEntity {
         this.ruleName = ruleName == null ? null : ruleName.trim();
     }
 
-    
     /**
-     * 获取 institutionCode
-     * @return institutionCode.
+     * 取得 null
+     * @return null
      */
     public String getInstitutionCode() {
         return institutionCode;
     }
 
-    
     /**
-     * 设置 institutionCode
-     * @param institutionCode institutionCode
+     * 设置 null
+     * @param institutionCode null
      */
     public void setInstitutionCode(String institutionCode) {
-        this.institutionCode = institutionCode;
+        this.institutionCode = institutionCode == null ? null : institutionCode.trim();
     }
-    
-    
 }

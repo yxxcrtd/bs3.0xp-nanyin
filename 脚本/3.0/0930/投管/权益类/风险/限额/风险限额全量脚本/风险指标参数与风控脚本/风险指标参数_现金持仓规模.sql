@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='XJGM';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('XJGM','现金持仓规模','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('XJGM','现金持仓规模','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='XJGM';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);

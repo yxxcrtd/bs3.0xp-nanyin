@@ -13,7 +13,7 @@
     </resultMap>
     <sql id="Base_Column_List" >
         RULE_ID RULE_ID, RULE_NAME RULE_NAME, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,INSTITUTION_CODE
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, INSTITUTION_CODE INSTITUTION_CODE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -38,10 +38,10 @@
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskRuleInfo" >
         insert into RSK_RULE_INFO (RULE_ID, RULE_NAME, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME,INSTITUTION_CODE)
+            UPDATE_TIME, INSTITUTION_CODE)
         values (#{ruleId,jdbcType=VARCHAR}, #{ruleName,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP},#{institutionCode,jdbcType=VARCHAR})
+            #{updateTime,jdbcType=TIMESTAMP}, #{institutionCode,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskRuleInfo" >
         insert into RSK_RULE_INFO
@@ -100,9 +100,9 @@
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskRuleInfo" >
         insert into RSK_RULE_INFO(RULE_ID, RULE_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-        UPDATE_USER, UPDATE_TIME,INSTITUTION_CODE)
+        UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
         select RULE_ID, RULE_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,INSTITUTION_CODE
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, INSTITUTION_CODE
              from RSK_RULE_INFO
              where 1 = 1 and RULE_ID = #{ruleId,jdbcType=VARCHAR}
     </insert>

@@ -162,8 +162,8 @@ public class RskSupervisionIndicatorParam001Service extends CommonExportService<
         if (entity != null) {
             List<RskIsupIndicatorParaDtl> list = new ArrayList<RskIsupIndicatorParaDtl>();
 
-/*            if (StringUtil.equals(entity.getParaDisplayType(),
-                BussinessDictCodeListRds.指标参数实现类型_SQL.getValue())) {*/
+           if (StringUtil.equals(entity.getParaDisplayType(),
+                BussinessDictCodeListRds.指标参数实现类型_SQL.getValue())) {
                 RskSupervisionIndicatorParamDto dto1 = new RskSupervisionIndicatorParamDto();
                 BeanUtil.copyPropertiesIgnoreNull(dto1, entity);
                 // 设置买入参数
@@ -176,7 +176,7 @@ public class RskSupervisionIndicatorParam001Service extends CommonExportService<
                 dto2.setParaGranularity(BussinessDictCodeListRds.参数粒度_卖出.getValue());
                 dto2.setContent(entity.getMcContent());
                 list.add(dto2);
-           /* }*/
+            }
             RskSupervisionIndicatorParamDto dto3 = new RskSupervisionIndicatorParamDto();
             BeanUtil.copyPropertiesIgnoreNull(dto3, entity);
             // 设置实时参数

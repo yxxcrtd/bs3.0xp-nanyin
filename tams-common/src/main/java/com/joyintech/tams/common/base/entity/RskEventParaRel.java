@@ -1,8 +1,7 @@
 package com.joyintech.tams.common.base.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.NumberSerializers;
-import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.tams.common.util.BigDecimalSerializer;
 
 import java.math.BigDecimal;
 
@@ -23,7 +22,7 @@ public class RskEventParaRel extends RskEventParaRelKey {
     private String remark;
 
     /**
-     * null
+     * 自定义值
      */
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal customVal;
@@ -81,18 +80,10 @@ public class RskEventParaRel extends RskEventParaRelKey {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    /**
-     * 取得 null
-     * @return null
-     */
     public BigDecimal getCustomVal() {
         return customVal;
     }
 
-    /**
-     * 设置 null
-     * @param customVal null
-     */
     public void setCustomVal(BigDecimal customVal) {
         this.customVal = customVal;
     }

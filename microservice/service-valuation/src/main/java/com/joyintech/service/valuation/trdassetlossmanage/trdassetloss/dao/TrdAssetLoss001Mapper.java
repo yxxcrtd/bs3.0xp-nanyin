@@ -77,4 +77,10 @@ public interface TrdAssetLoss001Mapper {
     List<TrdAssetLoss001Dto> getBondAssetInfo(Map<String, Object> param);
 
     List<TrdAssetLoss001Dto> selectRepeatByFinprodIdAndValDate(Map<String, Object> param);
+
+    List<TrdAssetLoss001Dto> selectTrdAssetLossByFinprodId(Map<String, Object> param);
+
+    int getExerciseDateCount(Map<String, Object> param);
+
+    void deleteByTradeId(String tradeId);
 }

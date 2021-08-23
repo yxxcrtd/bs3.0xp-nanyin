@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='GMZDDDZZQHJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GMZDDDZZQHJJ','产品所投资资产单只证券或单只公募证券投资基金规模','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GMZDDDZZQHJJ','产品所投资资产单只证券或单只公募证券投资基金规模','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='GMZDDDZZQHJJ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);

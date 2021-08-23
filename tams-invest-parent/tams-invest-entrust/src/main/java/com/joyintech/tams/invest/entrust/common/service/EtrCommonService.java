@@ -687,7 +687,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
         List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
         if (object != null){
             // 构建接口参数
-            generateInputDtoList(object,status,method,inputDtoList);
+            generateInputDtoList(object,status,method,inputDtoList,null);
             if (inputDtoList.size() > 0){
                 if ("check".equals(method)){
                     ar = AllTradeCommonUtil.checkBeforeTradeComplete(inputDtoList);
@@ -706,11 +706,13 @@ public class EtrCommonService extends BaseService<ITableRow> {
      * @param method
      * @param inputDtoList
      */
-    private void generateInputDtoList(Object object, String status, String method, List<CreditLinesInputDto> inputDtoList) {
+    private void generateInputDtoList(Object object, String status, String method, List<CreditLinesInputDto> inputDtoList,Integer rownum) {
         // 多对多指令 或者 多组合指令check
         if (object instanceof  List<?>){
+            int num = 0;
             for (Object obj : (List<?>)object){
-                generateInputDtoList(obj,status,method,inputDtoList);
+                num++;
+                generateInputDtoList(obj,status,method,inputDtoList,num);
             }
         }else if (object instanceof String && method.equals("close")){
             // 指令关闭
@@ -727,10 +729,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
         }else {
             CreditLinesInputDto creditLinesInputDto = generateInputDto(object,status,method);
             if (creditLinesInputDto != null){
-                Map paramMap=BeanUtil.objectToMap(object);
-                if(StringUtil.isNotEmpty(paramMap.get("indexId"))){
-                    creditLinesInputDto.setIndexId((String) paramMap.get("indexId"));
-                }
+                creditLinesInputDto.setRownum(rownum);
                 inputDtoList.add(creditLinesInputDto);
             }
         }
@@ -1415,7 +1414,9 @@ public class EtrCommonService extends BaseService<ITableRow> {
     public EtrFinProductCommonDto findSecAmountInfo(Map<String, Object> paramMap) {
         EtrFinProductCommonDto dto = new EtrFinProductCommonDto();
         //银行间日历
-        paramMap.put("calId", "03");
+        if(!StringUtil.isNotEmpty(paramMap.get("calId"))){
+            paramMap.put("calId", "03");
+        }
 
         // 获取平台日
         Date tradeDate = DateUtil.platDateFromCache();
@@ -1497,6 +1498,10 @@ public class EtrCommonService extends BaseService<ITableRow> {
     public EtrFinProductCommonDto findCashAmountInfo(Map<String, Object> paramMap) {
         EtrFinProductCommonDto dto = new EtrFinProductCommonDto();
 
+        //银行间日历
+        if(!StringUtil.isNotEmpty(paramMap.get("calId"))){
+            paramMap.put("calId", "03");
+        }
         Map<String, Object> result = new HashMap<>();
         /**
          * 当单选组合时，使用组合的币种
@@ -1505,6 +1510,11 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(ptlPortfolio != null && StringUtil.isNotEmpty(ptlPortfolio.getCcy())){
             paramMap.put("ccy", ptlPortfolio.getCcy());
         }
+        //add by chenjiaxing 币种为空时默认为人民币 start
+        if(StringUtil.isEmpty(ptlPortfolio.getCcy())){
+            paramMap.put("ccy", "CNY");
+        }
+        //add by chenjiaxing 币种为空时默认为人民币 start
         // 可用现金
         Map<String, Object> cash = this.getProAvailableCash(paramMap);
         //组合T日可用现金
@@ -1551,7 +1561,9 @@ public class EtrCommonService extends BaseService<ITableRow> {
     public EtrFinProductCommonDto calCanBuyAmount(Map<String, Object> paramMap) {
         EtrFinProductCommonDto dto = new EtrFinProductCommonDto();
         //银行间日历
-        paramMap.put("calId", "03");
+        if(!StringUtil.isNotEmpty(paramMap.get("calId"))){
+            paramMap.put("calId", "03");
+        }
 
         // 获取平台日
         Date tradeDate = DateUtil.platDateFromCache();

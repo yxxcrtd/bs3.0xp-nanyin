@@ -1,12 +1,10 @@
 package com.joyintech.tams.common.base.dao;
 
-import org.springframework.stereotype.Repository;
-
 import com.joyintech.tams.common.base.entity.RskPortfolioPackage;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RskPortfolioPackageMapper {
-
     int deleteByPrimaryKey(String ptlBagId);
 
     int insert(RskPortfolioPackage record);

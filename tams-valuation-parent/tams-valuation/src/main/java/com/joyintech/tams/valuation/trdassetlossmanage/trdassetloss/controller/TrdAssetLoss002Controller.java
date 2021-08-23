@@ -11,12 +11,15 @@
 package com.joyintech.tams.valuation.trdassetlossmanage.trdassetloss.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto;
@@ -61,6 +64,8 @@ public class TrdAssetLoss002Controller extends BaseController {
 
     @Autowired
     private TrdAssetLossService trdAssetLossService;
+
+
     /**
      * 流程组件
      */
@@ -76,6 +81,11 @@ public class TrdAssetLoss002Controller extends BaseController {
         this.setSelectOptionToModel(model,DictCode.金融产品类型);
         this.setSelectOptionToModel(model, DictCode.减值测算方式);
         this.setSelectOptionToModel(model, DictCode.减值录入方式);
+        this.setSelectOptionToModel(model, DictCode.交易流通场所);
+        this.setSelectOptionToModel(model, DictCode.交易流通场所);
+        this.setSelectOptionToModel(model, DictCode.代偿期类型);
+
+
         model.addAttribute("outValue", DictCodeListExt3.减值测算方式_外部评估.getValue());
         model.addAttribute("expectedCreditLossModel", DictCodeListExt3.减值测算方式_预期信用损失模型.getValue());
         model.addAttribute("rateLossValue", DictCodeListExt3.减值录入方式_按比例减值.getValue());
@@ -124,6 +134,15 @@ public class TrdAssetLoss002Controller extends BaseController {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
+
+        //如果是编辑
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
+            if (!DateUtil.format(dto.getValDate()).equals(DateUtil.format(new Date()))) {
+                String message = "不可修改减值行情日非系统当前日期的数据!";
+                return new AjaxResult(message, MessageType.错误消息);
+            }
+        }
+
         if (StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getFinprodId())){
             WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
             wflValidInputParameter.setPageId("TrdAssetLoss002");
@@ -285,11 +304,17 @@ public class TrdAssetLoss002Controller extends BaseController {
             return new AjaxResult(br);
         }
 
+
+
+
         if(!StringUtil.isNotEmpty(dto.getTradeId())){
             String tradeId = interfCommonService !=null ? interfCommonService.getTradeid("TEDLOSS", dto.getValDate(), "A"): IDGenerator.generate();
             dto.setTradeId(tradeId);
             //dto.setStatus();
         }
+
+        //新建、修改录入，存“01 手工”;导入：存“02 中债/wind接入”
+        dto.setLossInputPattern(DictCodeListExt3.减值数据来源_手工.getValue());
 
         ProcessParameter<TrdAssetLoss001Dto> processParameter = new ProcessParameter<TrdAssetLoss001Dto>();
         WorkFlowParameter<TrdAssetLoss001Dto> params = new WorkFlowParameter<TrdAssetLoss001Dto>();
@@ -347,4 +372,48 @@ public class TrdAssetLoss002Controller extends BaseController {
         Matcher match2 = Pattern.compile("^(([1-9\\-]{1}\\d*)|([0]{1}))(\\.(\\d){0,12})?$").matcher(str);
         return match2.matches();
     }
+
+    /**
+     * @Description:根据资产id查询资产信息
+     * @auther: yuzj
+     * @date: 2021/8/20
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("/selectTrdAssetLossByFinprodId")
+    public TrdAssetLoss001Dto selectTrdAssetLossByFinprodId(@RequestBody Map<String, Object> param){
+        return trdAssetLossService.selectTrdAssetLossByFinprodId(param);
+    }
+
+
+    /**
+     * @Description:根据资产id查询资产信息
+     * @auther: yuzj
+     * @date: 2021/8/20
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("/getTermDescribe")
+    public List<SelectOptionDto>  getTermDescribe(){
+        return trdAssetLossService.getTermDescribe();
+    }
+
+    /**
+     * @Description:根据资产id查询资产行权日数目
+     * @auther: yuzj
+     * @date: 2021/8/20
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("/queryFinExercisePlan")
+    public FinExercisePlan queryFinExercisePlan(@RequestBody Map<String, Object> param){
+        param.put("exerciseDate",DateUtil.format(new Date(),"yyyy-MM-dd"));
+        return trdAssetLossService.queryFinExercisePlan(param);
+    }
+
+
+
 }

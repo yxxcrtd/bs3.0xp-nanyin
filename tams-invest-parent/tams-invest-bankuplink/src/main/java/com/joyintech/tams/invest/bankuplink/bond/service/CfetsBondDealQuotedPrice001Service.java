@@ -230,7 +230,7 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
 
     @Override
 	protected void buildExportParam(ExportParam exportParam) {
-		exportParam.config("/com/joyintech/tams/invest/bankuplink/bond/conf/export_conf.xml")
+		exportParam.config("/com/joyintech/tams/invest/bankuplink/bond/conf/export_conf_entrustOrder.xml")
 				.dataSource(DataSourceType.MASERT);
 	}
 
@@ -1466,4 +1466,52 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
             }
         }
     }
+
+
+    /**
+     * 成交查询
+     *
+     * @param param 入参
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    public List<CstpSelectDto> gencjcxTable(Map<String, Object> param) {
+        if(param.get("portfolioId") != null && StringUtil.isNotEmpty(param.get("portfolioId").toString())){
+            String[] portfolioId = param.get("portfolioId").toString().split(",");
+            param.replace("portfolioId", portfolioId);
+        }else{
+            param.replace("portfolioId", null);
+        }
+        if(param.get("matchStatus") != null && StringUtil.isNotEmpty(param.get("matchStatus").toString())){
+            String[] matchStatus = param.get("matchStatus").toString().split(",");
+            param.replace("matchStatus", matchStatus);
+        }else{
+            param.replace("matchStatus", null);
+        }
+        if(param.get("tradeDateBegin") != null && !param.get("tradeDateBegin").toString().isEmpty()){
+            param.replace("tradeDateBegin",param.get("tradeDateBegin").toString().replace("-", ""));
+            param.replace("tradeDateEnd",param.get("tradeDateEnd").toString().replace("-", ""));
+        }else{
+            param.replace("tradeDateBegin",null);
+            param.replace("tradeDateEnd",null);
+        }
+        param.put("IS_CANCEL", BussinessDictCodeList.是否_否.getValue());
+        param.put("MATCH", BussinessDictCodeList.匹配状态_已匹配.getValue());
+        param.put("UNMATCH", BussinessDictCodeList.匹配状态_未匹配.getValue());
+        String keywords = "";
+        if(param.containsKey("keywords")){
+            keywords =(String) param.get("keywords");
+            param.remove("keywords");
+        }
+        param.put("loginUserId", LoginUserUtil.getUserName());
+        List<CstpSelectDto>list = restTemplate.postForList(ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPr001/getCstpQryTableList",
+                param, CstpSelectDto.class);
+        if(StringUtil.isNotEmpty(keywords)&&!StringUtil.isEmptyList(list)){
+            list = (List<CstpSelectDto>) getKeyWordsList(list,keywords,(String) param.get("keycols"));
+        }
+        return list;
+    }
+
+
 }

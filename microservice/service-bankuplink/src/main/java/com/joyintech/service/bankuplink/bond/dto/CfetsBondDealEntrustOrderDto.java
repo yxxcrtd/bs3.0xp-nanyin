@@ -157,6 +157,31 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
     private String counterTraderName;
 
     /**
+     * 证券账户
+     */
+    private String secManageAcctId;
+
+    /**
+     * 组合系列
+     */
+    private String portfolioSeries;
+
+    public String getPortfolioSeries() {
+        return portfolioSeries;
+    }
+
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries;
+    }
+    public String getSecManageAcctId() {
+        return secManageAcctId;
+    }
+
+    public void setSecManageAcctId(String secManageAcctId) {
+        this.secManageAcctId = secManageAcctId;
+    }
+
+    /**
      * 获取 invManagerName
      * 
      * @return invManagerName.

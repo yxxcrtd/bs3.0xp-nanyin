@@ -4,6 +4,7 @@ package com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashfl
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
@@ -84,14 +85,22 @@ public class CashFlowDiscount002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.曲线族);
         this.setSelectOptionToModel(model, DictCode.收益率曲线类型);
         this.setSelectOptionToModel(model, DictCode.平滑区间);
+        /** modify by yanya on 20210821 增加评级结果**/
+        this.setSelectOptionToModel(model, DictCode.评级结果);
         model.addAttribute("YES",DictCodeList.是否_是.getValue());
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         if(!StringUtil.isNotEmpty(dto.getIsSmooth())){
-            dto.setIsSmooth(DictCodeList.是否_是.getValue());
-            dto.setSmoothSection(DictCodeListExt3.平滑区间_3个月.getValue());
+            /** modify by yanya on 20210821 调整是否平滑区间默认值为否**/
+            //dto.setIsSmooth(DictCodeList.是否_是.getValue());
+            dto.setIsSmooth(DictCodeList.是否_否.getValue());
+           // dto.setSmoothSection(DictCodeListExt3.平滑区间_3个月.getValue());
         }
         if(!StringUtil.isNotEmpty(dto.getCurveType())){
             dto.setCurveType(DictCodeListExt3.收益率曲线类型_SP即期.getValue());
+        }
+        /** modify by yanya on 20210821 增加是否兜底评级默认值**/
+        if(!StringUtil.isNotEmpty(dto.getIsBottomGrade())){
+            dto.setIsBottomGrade(DictCodeList.是否_否.getValue());
         }
 
         model.addAttribute(GlobalConstant.ENTITY, dto);
@@ -113,14 +122,16 @@ public class CashFlowDiscount002Controller extends BaseController {
         ProcessParameter<CashFlowDiscount001Dto> proParam = new ProcessParameter<>();
         WorkFlowParameter<CashFlowDiscount001Dto> params = new WorkFlowParameter<>();
         // 业务代码
-        params.setBusinessCode(dto.getSecTypeModel()+"_"+dto.getSecDetailTypeModel()+"_"+dto.getFinprodId());
+        //modify by yanya on 20210823 去除资产代码
+        params.setBusinessCode(dto.getSecTypeModel()+"_"+dto.getSecDetailTypeModel());
         // 业务类型
         params.setBusinessType(DictCodeListExt3.共通业务类型_现金流折现模型曲线配置.getValue());
         params.setPageId(this.getPageId());
         params.setElementId(this.getParam(GlobalConstant.ELEMENT_ID));
         // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> WorkFlowUtil.concatComment("现金流折现模型曲线配置修改：", entity.getSecTypeModel()+"_"+entity.getSecDetailTypeModel()+"_"+entity.getFinprodId()));
-
+        //modify by yanya on 20210823 修正提交流程中的描述，去除资产代码
+        //params.setComment(entity -> WorkFlowUtil.concatComment("现金流折现模型曲线配置修改：", entity.getSecTypeModel()+"_"+entity.getSecDetailTypeModel()+"_"+entity.getFinprodId()));
+        params.setComment(entity -> WorkFlowUtil.concatComment("现金流折现模型曲线配置修改：", entity.getSecTypeModel()+"_"+entity.getSecDetailTypeModel()));
         if(dto.getSeqNo().isEmpty()){
             dto.setSeqNo(IDGenerator.generate());
         }
@@ -128,6 +139,10 @@ public class CashFlowDiscount002Controller extends BaseController {
         // 如果界面上是否平滑曲线选择否，需要将平滑区间置空操作
         if(dto.getIsSmooth().equals(DictCodeList.是否_否.getValue())){
             dto.setSmoothSection(null);
+        }
+        //modify by yanya on 20210823 如果是否使用兜底评级为空，则兜底评级置空
+        if(dto.getIsBottomGrade().equals(DictCodeList.是否_否.getValue())){
+            dto.setBottomGrade(null);
         }
 
         proParam.setWorkFlowParameter(params);
@@ -193,6 +208,15 @@ public class CashFlowDiscount002Controller extends BaseController {
                 if (flag) {
                     errorList.add(new ValidMessage("该资产已配置曲线，不可重复配置！"));
                 }
+            }
+        }
+        //modify by yanya on 20210823 增加生效失效日期的判定
+        if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
+            dto.setSeqNoCon(dto.getSeqNo());
+            dto.setEffDateCon(DateUtil.format(dto.getEffDate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+            boolean flag = cashFlowDiscount001Service.haveDataCheck(dto);
+            if (flag) {
+                errorList.add(new ValidMessage("该资产细分类已配置该生效日期的曲线，不可重复配置！"));
             }
         }
         if (errorList.size() > 0) {

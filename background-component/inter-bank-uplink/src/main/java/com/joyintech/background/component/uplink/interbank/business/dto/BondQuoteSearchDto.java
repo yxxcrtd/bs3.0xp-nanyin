@@ -144,7 +144,19 @@ public class BondQuoteSearchDto {
      * 关键字
      */
     private String keywords;
-    
+    /**
+     * 报价类型
+     */
+    private String quoteType;
+
+    public String getQuoteType() {
+        return quoteType;
+    }
+
+    public void setQuoteType(String quoteType) {
+        this.quoteType = quoteType;
+    }
+
     public String getQuoteId() {
         return quoteId;
     }

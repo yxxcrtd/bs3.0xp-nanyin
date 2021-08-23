@@ -112,7 +112,12 @@
 				</div>
 				<!-- 持仓 -->
 				<div class="layui-tab-item">
-					<div class="joyin-form-wrap layui-fluid">
+					<!--add by chenjiaxing 添加重置按钮 20210821 start-->
+					<div class="layui-col-md12 form-button-area zlgl-transfer-form">
+
+					</div>
+					<!--add by chenjiaxing 添加重置按钮 20210821 end-->
+					<div class="joyin-form-wrap joyin-filter-form condition-area curr-form layui-fluid zlgl-transfer-form">
 						<form class="layui-form" id="searchForm_cc">
 							<div class="layui-form-item">
 								<div
@@ -151,13 +156,13 @@
                                          parentIds="tradeMarket_cc" data-th-placeholder="#{SysCommon.placeholder}" data-th-data-url="@{'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/getFinprodMarketInfoPosition'}" formatoption=false></select>
 									</div>
 								</div>
-								<div
+<!--								<div
 									class="layui-inline layui-col-md1 layui-col-xs1 layui-col-sm1 layui-col-lg1">
 									<a class="layui-btn layui-btn-sm btn-search"
 										style="margin-left: 25px;" id="EtrExchangeTrade002_search_btn">
 										<i class="iconfont icon-search"></i><span>查询</span>
 									</a>
-								</div>
+								</div>-->
 							</div>
 							<div class="layui-form-item">
 								<div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3">

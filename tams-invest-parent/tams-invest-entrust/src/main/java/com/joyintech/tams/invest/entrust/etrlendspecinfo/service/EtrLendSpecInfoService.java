@@ -728,9 +728,9 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
                         etrCommonService.checkIsPlateDate(rowData.get(1).toString(),
                         rowData.get(2).toString(),lineNo));
 
-                /**** 交易场所和期限品种的check****/
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkMarketQx(rowData.get(11).toString(),rowData.get(9).toString(),lineNo));
+//                /**** 交易场所和期限品种的check****/
+//                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                        etrCommonService.checkMarketQx(rowData.get(11).toString(),rowData.get(9).toString(),lineNo));
 
 
 

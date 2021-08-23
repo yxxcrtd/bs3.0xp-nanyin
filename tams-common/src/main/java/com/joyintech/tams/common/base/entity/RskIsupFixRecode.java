@@ -14,7 +14,7 @@ public class RskIsupFixRecode extends RskIsupFixRecodeKey {
      * 固定值
      */
     private String content;
- 
+
     /**
      * 取得 主动提醒日期
      * @return 主动提醒日期
@@ -47,5 +47,4 @@ public class RskIsupFixRecode extends RskIsupFixRecodeKey {
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
     }
-  
 }

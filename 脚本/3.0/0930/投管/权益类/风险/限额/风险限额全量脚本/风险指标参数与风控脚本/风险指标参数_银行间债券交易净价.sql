@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='YHJZQJYJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('YHJZQJYJJ','银行间债券交易净价','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','N','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('YHJZQJYJJ','银行间债券交易净价','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='YHJZQJYJJ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('YHJZQJYJJ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);

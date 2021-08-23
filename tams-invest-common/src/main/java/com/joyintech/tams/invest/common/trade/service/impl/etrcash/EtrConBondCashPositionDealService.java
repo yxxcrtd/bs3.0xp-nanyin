@@ -53,7 +53,7 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
 //            etrCashPositionFlowDto.setOffsetId(entrustCommonDto.getEtrEntrust().getEntrustId());
 //            etrCashPositionFlowDto.setCdate(etrEntrust.getEntrustDate());
 //            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
-           if (DictCodeListExt1.交易方向_债转股.getValue().equals(ps)) {
+           if (DictCodeListExt1.交易方向_债转股.getValue().equals(ps)||DictCodeList.交易方向_申购.getValue().equals(ps)) {
                 // 减少委托券面总额/100
                 EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(
                     entrustCommonDto);

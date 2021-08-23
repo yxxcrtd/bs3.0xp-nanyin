@@ -23,6 +23,7 @@ import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
@@ -327,6 +328,24 @@ public class EtrRepo002Controller extends BaseController {
     @RequestMapping("save")
     public AjaxResult save(@RequestBody EtrRepoDto dto, BindingResult br)
         throws Exception {
+        //万元转换 add  by yeming 20210817 start
+        if(dto.getBussRepoSec() != null){
+            if( dto.getBussRepoSec().getTotalPrinAmt()  != null){
+                dto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply( dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
+            }
+            for (PledgeBondInfoDto pledgeBond :  dto.getBussRepoSec().getPledgeBondList()) {
+                if (pledgeBond.getAvaPledgePrin() != null) {
+                    pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPledgePrin() != null) {
+                    pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPrin() != null) {
+                    pledgeBond.setPrin(ArithmeticUtil.multiply(pledgeBond.getPrin(), new BigDecimal(10000)));
+                }
+            }
+        }
+        //万元转换 add  by yeming 20210817 end
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

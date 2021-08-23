@@ -14,11 +14,13 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="CUSTOM_VAL" property="customVal" jdbcType="DECIMAL" />
+        <result column="FORMULA_VAL" property="formulaVal" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         PARA_CODE PARA_CODE, EVENT_CODE EVENT_CODE, PARA_GRANULARITY PARA_GRANULARITY, REL_TYPE REL_TYPE, 
         REL_ITEM REL_ITEM, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CUSTOM_VAL CUSTOM_VAL
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CUSTOM_VAL CUSTOM_VAL, 
+        FORMULA_VAL FORMULA_VAL
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -48,13 +50,13 @@
         insert into RSK_EVENT_PARA_REL (PARA_CODE, EVENT_CODE, PARA_GRANULARITY, 
             REL_TYPE, REL_ITEM, REMARK, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME, CUSTOM_VAL
-            )
+            UPDATE_USER, UPDATE_TIME, CUSTOM_VAL, 
+            FORMULA_VAL)
         values (#{paraCode,jdbcType=VARCHAR}, #{eventCode,jdbcType=VARCHAR}, #{paraGranularity,jdbcType=VARCHAR}, 
             #{relType,jdbcType=VARCHAR}, #{relItem,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{customVal,jdbcType=DECIMAL}
-            )
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{customVal,jdbcType=DECIMAL}, 
+            #{formulaVal,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskEventParaRel" >
         insert into RSK_EVENT_PARA_REL
@@ -95,6 +97,9 @@
             <if test="customVal != null" >
                 CUSTOM_VAL,
             </if>
+            <if test="formulaVal != null" >
+                FORMULA_VAL,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="paraCode != null" >
@@ -133,15 +138,18 @@
             <if test="customVal != null" >
                 #{customVal,jdbcType=DECIMAL},
             </if>
+            <if test="formulaVal != null" >
+                #{formulaVal,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskEventParaRel" >
         insert into RSK_EVENT_PARA_REL(PARA_CODE, EVENT_CODE, PARA_GRANULARITY, REL_TYPE, 
         REL_ITEM, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-        CUSTOM_VAL)
+        CUSTOM_VAL, FORMULA_VAL)
         select PARA_CODE, EVENT_CODE, PARA_GRANULARITY, REL_TYPE, 
             REL_ITEM, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
-            CUSTOM_VAL
+            CUSTOM_VAL, FORMULA_VAL
              from RSK_EVENT_PARA_REL
              where 1 = 1 and PARA_CODE = #{paraCode,jdbcType=VARCHAR} and EVENT_CODE = #{eventCode,jdbcType=VARCHAR} and PARA_GRANULARITY = #{paraGranularity,jdbcType=VARCHAR}
     </insert>
@@ -166,6 +174,9 @@
             <if test="customVal != null" >
                 CUSTOM_VAL = #{customVal,jdbcType=DECIMAL},
             </if>
+            <if test="formulaVal != null" >
+                FORMULA_VAL = #{formulaVal,jdbcType=VARCHAR},
+            </if>
         </set>
         where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
           and EVENT_CODE = #{eventCode,jdbcType=VARCHAR}
@@ -178,7 +189,8 @@
             REMARK = #{remark,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            CUSTOM_VAL = #{customVal,jdbcType=DECIMAL}
+            CUSTOM_VAL = #{customVal,jdbcType=DECIMAL},
+            FORMULA_VAL = #{formulaVal,jdbcType=VARCHAR}
         where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
           and EVENT_CODE = #{eventCode,jdbcType=VARCHAR}
           and PARA_GRANULARITY = #{paraGranularity,jdbcType=VARCHAR}

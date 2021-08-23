@@ -76,7 +76,8 @@
                         </div>
                     </div>
                     <div class="layui-inline layui-col-md6">
-                        <label class="layui-form-label form-lable">基准日</label>
+                        <!-- modify by yanya on 20210823 调整基准日为定价日-->
+                        <label class="layui-form-label form-lable">定价日</label>
                         <div class="layui-input-inline input-inline">
                             <input class="layui-input form-input input-dateSelect" id="basedate"
                                    name="basedate" placeholder="请选择时间" disabled="disabled"
@@ -85,6 +86,32 @@
                         </div>
                     </div>
                 </div>
+            <!-- modify by yanya on 20210823 增加曲线名称、曲线日期 start-->
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md6">
+                    <label class="layui-form-label form-lable">曲线名称</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="curveName" name="curveName" disabled="disabled"
+                               class="layui-input form-input" placeholder="请输入内容"
+                               data-th-placeholder="#{SysCommon.placeholder}" required="required"
+                               data-th-value="${entity?.curveName}">
+                        <input type="text" id="curveCode" name="curveCode" disabled="disabled" style="display: none;"
+                               class="layui-input form-input" placeholder="请输入内容"
+                               data-th-placeholder="#{SysCommon.placeholder}" required="required"
+                               data-th-value="${entity?.curveCode}">
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md6">
+                    <label class="layui-form-label form-lable">曲线日期</label>
+                    <div class="layui-input-inline input-inline">
+                        <input class="layui-input form-input input-dateSelect" id="curveDate"
+                               name="curveDate" placeholder="请选择时间" disabled="disabled"
+                               data-th-value='${#dates.format(entity?.curveDate,"yyyy-MM-dd")}'
+                               required="required">
+                    </div>
+                </div>
+            </div>
+            <!-- modify by yanya on 20210823 增加曲线名称、曲线日期 end-->
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md6">
                     <label class="layui-form-label form-lable">风险溢价%</label>

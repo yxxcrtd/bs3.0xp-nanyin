@@ -126,6 +126,7 @@ public class BaseRiskMathCommController extends BaseController {
         model.addAttribute("SUP_TIME_TYPE_03", DictCodeListExt1.监督时分_事后监控);
         //model.addAttribute("risk_math_switch", CacheUtil.getSysParam("risk_math_switch"));
         model.addAttribute("risk_math_switch", CacheUtil.getSysParam("pageRedisFlag"));
+        model.addAttribute("etr_save_riskcheck", CacheUtil.getSysParam("etr_save_riskcheck"));
         Map<String, Object> map = RequestUtil.getPageParam();
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         // add by caojin 吉林银行风险试算-流程控制显示 2019/09/23 start

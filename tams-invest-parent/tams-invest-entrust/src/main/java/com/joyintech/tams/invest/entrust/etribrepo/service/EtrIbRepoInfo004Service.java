@@ -487,7 +487,7 @@ public class EtrIbRepoInfo004Service extends CommonExportService<EtrIbRepoinfo00
         BeanUtil.copyPropertiesIgnoreNull(trdProductDeal,entity);
         trdProductDeal.setTradeId(entity.getEntrustId());
         trdProductDeal.setpTradeId(entity.getEntrustId());
-        trdProductDeal.setCounterId(entity.getEtrInvestPersonInfo().getCounterId());
+//        trdProductDeal.setCounterId(entity.getEtrInvestPersonInfo().getCounterId());
         trdProductDeal.setTradeAmt(entity.getPrinAmt());
         trdProductDeal.setPrinAmt(entity.getPrinAmt());
         return trdProductDeal;

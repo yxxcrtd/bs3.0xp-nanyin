@@ -693,4 +693,17 @@ public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
+
+    /**
+     * 组合系列
+     */
+    private String portfolioSeries;
+
+    public String getPortfolioSeries() {
+        return portfolioSeries;
+    }
+
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries;
+    }
 }

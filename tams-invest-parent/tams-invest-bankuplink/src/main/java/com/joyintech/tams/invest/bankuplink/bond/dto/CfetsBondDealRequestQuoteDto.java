@@ -18,6 +18,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.invest.bankuplink.bond.validator.CfetsBondDealRequestQuoteDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -109,7 +110,59 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
      * 是否多组合
      */
     private String isDzh;
-    
+
+
+    /**
+     * 文件上传dto
+     */
+    private List<SysUploadFileInfo> fileArray;
+
+    /**
+     * 业务编号
+     */
+    private String businessId;
+    /**
+     * 证券账户
+     */
+    private String secManageAcctId;
+
+    /**
+     * 组合系列
+     */
+    private String portfolioSeries;
+
+    public String getPortfolioSeries() {
+        return portfolioSeries;
+    }
+
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries;
+    }
+
+    public String getSecManageAcctId() {
+        return secManageAcctId;
+    }
+
+    public void setSecManageAcctId(String secManageAcctId) {
+        this.secManageAcctId = secManageAcctId;
+    }
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
+    }
+
+    public List<SysUploadFileInfo> getFileArray() {
+        return fileArray;
+    }
+
+    public void setFileArray(List<SysUploadFileInfo> fileArray) {
+        this.fileArray = fileArray;
+    }
+
     /**
      * 获取 quoteId
      * 

@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.trade.bondlend.validator;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.trade.bondlend.dto.TrdBondLendInvestTradeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,6 +72,24 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
     @Override
     public List<ValidMessage> bussValid(Object value) {
         TrdBondLendInvestTradeDto inputDto = (TrdBondLendInvestTradeDto)value;
+        //万元转换 add  by yeming 20210817 start
+        if(inputDto.getBussRepoSec() != null){
+            if( inputDto.getBussRepoSec().getTotalPrinAmt()  != null){
+                inputDto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply(2, RoundingMode.HALF_UP, inputDto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
+            }
+            for (PledgeBondInfoDto pledgeBond :  inputDto.getBussRepoSec().getPledgeBondList()) {
+                if (pledgeBond.getAvaPledgePrin() != null) {
+                    pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(2, RoundingMode.HALF_UP,pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPledgePrin() != null) {
+                    pledgeBond.setPledgePrin(ArithmeticUtil.multiply(2, RoundingMode.HALF_UP,pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPrin() != null) {
+                    pledgeBond.setPrin(ArithmeticUtil.multiply(2, RoundingMode.HALF_UP,pledgeBond.getPrin(), new BigDecimal(10000)));
+                }
+            }
+        }
+        //万元转换 add  by yeming 20210817 end
         List<ValidMessage> errorList = new ArrayList<>();
 
         //中债新增 20200407 start

@@ -7,7 +7,11 @@ $(function() {
         return {
             secTypeModel : $('#secTypeModel').val(),
             secDetailTypeModel : $('#secDetailTypeModel').val(),
-            finprodId : $('#finprodId').val(),
+            /** modify by yanya on 20210821 按照需求调整，增加查询日期，去除资产查询条件 start**/
+            //finprodId : $('#finprodId').val(),
+            qryDateBegin: $('#qryDate').startDate(),
+            qryDateEnd: $('#qryDate').endDate()
+            /** modify by yanya on 20210821 按照需求调整，增加查询日期，去除资产查询条件 end**/
         }
     };
 /**
@@ -28,12 +32,22 @@ $(function() {
                 {field : 'seqNo',title : 'seqNo',visible : false},
                 { title: "资产类型", field: 'secTypeModelStr',sortField:'secTypeModel',sort : true},
                 { title: "资产细分类", field: 'secDetailTypeModelStr',sortField:'secDetailTypeModel',sort : true},
-                { title: "资产代码", field: 'finprodId',sort : true},
-                { title: "资产名称", field: 'finprodName',sort : true},
+                /** modify by yanya on 20210821 按照需求调整，去除资产查询结果里 start**/
+                //{ title: "资产代码", field: 'finprodId',sort : true},
+                //{ title: "资产名称", field: 'finprodName',sort : true},
+                /** modify by yanya on 20210821 按照需求调整，去除资产查询结果里 end**/
                 { title: "曲线族", field: 'curveGroupCodeStr',sortField:'curveGroupCode',sort : true},
                 { title: "曲线类型", field: 'curveTypeStr',sortField:'curveType',sort : true},
+                /** modify by yanya on 20210821 按照需求调整，增加是否使用兜底评级、兜底评级 start**/
+                { title: "是否使用兜底评级", field: 'isBottomGradeStr', width: 160,sortField:'isBottomGrade',sort : true},
+                { title: "兜底评级", field: 'bottomGradeStr',sortField:'bottomGrade',sort : true},
+                /** modify by yanya on 20210821 按照需求调整，增加是否使用兜底评级、兜底评级 end**/
                 { title: "是否平滑曲线", field: 'isSmoothStr',sortField:'isSmooth',sort : true},
                 { title: "平滑区间", field: 'smoothSectionStr',sortField:'smoothSection',sort : true},
+                /** modify by yanya on 20210821 按照需求调整，增加生效日期 start**/
+                { title: "生效日期", field: 'effDateStr',sortField:'effDate',sort : true},
+                { title: "失效日期", field: 'invalidDateStr',sortfield:'invalidDate',sort : true},
+                /** modify by yanya on 20210821 按照需求调整，增加失效日期 end**/
                 { field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']}
                ],
         dblclick: function(table, data){
@@ -51,7 +65,7 @@ $(function() {
                  row.pageModel = PAGE_MODEL_EDIT;
                     Joyin.dialog("现金流折现模型曲线配置修改",
                            "/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002/init",
-                           "45%", "75%", row,function(){
+                           "70%", "75%", row,function(){
                        table.reload();
                    });
              });
@@ -86,12 +100,14 @@ $(function() {
                 return;
             }
             var object = {selectedItem: selArr, operateType:"delete"};
-
-            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                                    WorkFlow.doDeleteList('/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001/delete', object, "ValCashFlowDiscount001_btn_delete", "CashFlowDiscount002", function(){
-                                        table.reload();//删除事件请求及回调函数
-                                    });
-                                });
+            //modify by yany on 20210823 删除检查
+           Joyin.ajaxJson(basePath + 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001/check', object, function(result) {
+               Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
+                   WorkFlow.doDeleteList('/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001/delete', object, "ValCashFlowDiscount001_btn_delete", "CashFlowDiscount002", function () {
+                       table.reload();//删除事件请求及回调函数
+                   });
+               });
+           });
        };
 
     var exportExcel = function(){

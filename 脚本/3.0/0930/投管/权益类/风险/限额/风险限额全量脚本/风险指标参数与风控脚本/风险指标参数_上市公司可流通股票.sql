@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='SSGSKLTGB';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('SSGSKLTGB','上市公司可流通股票','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('SSGSKLTGB','上市公司可流通股票','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='SSGSKLTGB';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('SSGSKLTGB','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);

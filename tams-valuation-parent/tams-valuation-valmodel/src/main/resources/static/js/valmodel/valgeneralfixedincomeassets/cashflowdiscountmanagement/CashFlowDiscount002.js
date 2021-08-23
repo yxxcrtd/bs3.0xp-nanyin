@@ -3,8 +3,9 @@ $(function () {
             if(pageModel == PAGE_MODEL_EDIT){
                 $("#secTypeModel").attr("disabled", true);
                 $("#secDetailTypeModel").attr("disabled", true);
-                $("#finprodName").attr("disabled", true);
-                $("#finprodId").attr("disabled", true);
+                /** modify by yanaya on 20210821 去除资产相关**/
+                //$("#finprodName").attr("disabled", true);
+                //$("#finprodId").attr("disabled", true);
             }
         };
 
@@ -95,11 +96,27 @@ $(function () {
             isCityBondChange();
         });
 
+    /** modify by yanaya on 20210821 增加是否兜底评级联动**/
+    var isBottomGradeChange = function(){
+        var isBottomGradeChangeVal = $('#isBottomGrade')[0].checked;
+        if (isBottomGradeChangeVal) {
+            $("#bottomGrade").attr("disabled", false);
+        }else {
+            $("#bottomGrade").val('').trigger("change");
+            $("#bottomGrade").attr("disabled", true);
+        }
+    };
+
+    layui.form.on('switch(isBottomGrade)',function(){
+        isBottomGradeChange();
+    });
 
     $(function() {
         initShow();// 根据操作类型显示
         init();
         isCityBondChange();
+        /** modify by yanaya on 20210821 增加是否兜底评级联动**/
+        isBottomGradeChange();
         /**
          * 绑定按钮事件
          */
@@ -107,9 +124,10 @@ $(function () {
             saveOrSubmit('submit');
         });
 
-        $("#finprodName").on('change',function(){
-                     countCnyAmt();
-                });
+        /** modify by yanaya on 20210821 去除资产相关**/
+        // $("#finprodName").on('change',function(){
+        //              countCnyAmt();
+        //         });
 
 //        $('#ValAssetCategories002_btn_save').click(function() {
 //            saveOrSubmit('save');

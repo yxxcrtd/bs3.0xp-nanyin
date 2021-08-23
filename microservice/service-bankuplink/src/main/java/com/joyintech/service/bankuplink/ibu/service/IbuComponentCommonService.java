@@ -491,6 +491,12 @@ public class IbuComponentCommonService extends BaseService {
     @Transactional
     public boolean resCommonHandle(QuoteResultDto quoteResultDto, User user,
                                    boolean isSendGateWay) {
+        // 是否调用上行接口
+        String isUpLinkSend =  CacheUtil.getSysParam("IS_NEED_UPLINK");
+        if(StringUtil.equals(DictCodeList.是否_否.getValue(),isUpLinkSend)){
+            return false;
+        }
+
         // 1、判断组件返回结果
         // 需要平安现场判断是否支持微服务MSG：异常抛出，如果不支持此处要改成返回值给前台 判断 TODO
         this.checkHandleResult(quoteResultDto);
@@ -1826,8 +1832,12 @@ public class IbuComponentCommonService extends BaseService {
             // 资产代码
             inputBean.setFinprodFuzzy(
                 param.get("finprodId") != null ? param.get("finprodId").toString() : null);
-            
-            
+
+            // 报价编号
+            if (StringUtil.isNotEmpty(param.get("quoteType"))) {
+                inputBean.setQuoteType(param.get("quoteType").toString());
+            }
+
             if (StringUtil.isNotEmpty(param.get("finprodIdList"))) {
             	inputBean.setFinprodIdList(Arrays.asList(param.get("finprodIdList").toString().split(",")));
             	inputBean.setFinprodId(null);
@@ -1974,7 +1984,25 @@ public class IbuComponentCommonService extends BaseService {
         if (StringUtil.isNotEmpty(param.get("term"))) {
             inputBean.setTerm(param.get("term").toString());
         }
-        
+        //add by chenjiaxing 20210816 start
+        if (StringUtil.isNotEmpty(param.get("termStart"))) {
+            inputBean.setTermStart(param.get("termStart").toString());
+        }
+        if (StringUtil.isNotEmpty(param.get("termEnd"))) {
+            inputBean.setTermEnd(param.get("termEnd").toString());
+        }
+        if (StringUtil.isNotEmpty(param.get("ouPartyId"))) {
+            inputBean.setOuPartyIdList(StringUtil.splitToList(GlobalConstant.COMMA,
+                    param.get("ouPartyId").toString()));
+        }
+        if(StringUtil.isNotEmpty(param.get("benfangSide"))){
+            String benfangSide = param.get("benfangSide").toString();
+            if(!StringUtil.equals(benfangSide,"whole")){
+                inputBean.setPs(benfangSide);
+            }
+        }
+        //add by chenjiaxing 20210816 end
+
         // 登录用户ID Modified by JIAOXUJIN on 2020-06-03
         inputBean.setLoginUserId(MapUtils.getString(param, "loginUserId"));
         // 待回复数据查询方式
@@ -2020,6 +2048,15 @@ public class IbuComponentCommonService extends BaseService {
      // 交易方向
         inputBean.setKeywords(param.get("keywords") != null ? param.get("keywords").toString() : null);
 
+        //add by chenjiaixing 质押式回购下单管理改造
+        String isGetBondCode = "";
+        if (StringUtil.isNotEmpty(param.get("isGetBondCode"))) {
+            isGetBondCode = param.get("isGetBondCode").toString();
+        }
+        if(StringUtil.equals(isGetBondCode,"Y")){
+            return ibuMainService.getRepoDialogueQuoteList2(inputBean, null);
+        }
+        //add by chenjiaxing 质押式回购下单管理改造
         return ibuMainService.getRepoDialogueQuoteList(inputBean, null);
     }
 

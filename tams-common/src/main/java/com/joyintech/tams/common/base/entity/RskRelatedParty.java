@@ -1,19 +1,11 @@
 package com.joyintech.tams.common.base.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.framework.json.CustomDateDeserialize;
+import java.math.BigDecimal;
 
 public class RskRelatedParty extends BaseEntity {
-	/**
-	 * 关联方编号
-	 */
-	private String seqno;
     /**
      * 社会统一信用代码
      */
@@ -29,16 +21,6 @@ public class RskRelatedParty extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal limitAmt;
-
-    /**
-     * 生效日
-     */
-    private Date vdate;
-
-    /**
-     * 截止日
-     */
-    private Date mdate;
 
     /**
      * 取得 社会统一信用代码
@@ -87,52 +69,4 @@ public class RskRelatedParty extends BaseEntity {
     public void setLimitAmt(BigDecimal limitAmt) {
         this.limitAmt = limitAmt;
     }
-
-    /**
-     * 取得 生效日
-     * @return 生效日
-     */
-    public Date getVdate() {
-        return vdate;
-    }
-
-    /**
-     * 设置 生效日
-     * @param vdate 生效日
-     */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setVdate(Date vdate) {
-        this.vdate = vdate;
-    }
-
-    /**
-     * 取得 截止日
-     * @return 截止日
-     */
-    public Date getMdate() {
-        return mdate;
-    }
-
-    /**
-     * 设置 截止日
-     * @param mdate 截止日
-     */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setMdate(Date mdate) {
-        this.mdate = mdate;
-    }
-    /**
-     * 取得 关联方编号
-     * @return 关联方编号
-     */
-	public String getSeqno() {
-		return seqno;
-	}
-	/**
-     * 设置 关联方编号
-     * @param seqno 关联方编号
-     */
-	public void setSeqno(String seqno) {
-		this.seqno = seqno;
-	}
 }

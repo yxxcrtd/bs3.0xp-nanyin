@@ -1033,4 +1033,148 @@ public class RepoQuoteInfoDto extends BaseEntity {
     public void setIsDzh(String isDzh) {
         this.isDzh = isDzh;
     }
+
+    //add by chenjiaxing 20210819 质押券回购改造 start
+    /**
+     * 清算类型
+     */
+    private String settType;
+    /**
+     * 结算币种
+     */
+    private String settCcy;
+
+    /**
+     * 债券币种
+     */
+    private String ccy;
+
+    /**
+     * 回购利息
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal mIntAmt;
+
+    /**
+     * 到期结算金额
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal mTradeAmt;
+
+    public String getSettType() {
+        return settType;
+    }
+
+    public void setSettType(String settType) {
+        this.settType = settType;
+    }
+
+    public String getSettCcy() {
+        return settCcy;
+    }
+
+    public void setSettCcy(String settCcy) {
+        this.settCcy = settCcy;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
+
+    public BigDecimal getmIntAmt() {
+        return mIntAmt;
+    }
+
+    public void setmIntAmt(BigDecimal mIntAmt) {
+        this.mIntAmt = mIntAmt;
+    }
+
+    public BigDecimal getmTradeAmt() {
+        return mTradeAmt;
+    }
+
+    public void setmTradeAmt(BigDecimal mTradeAmt) {
+        this.mTradeAmt = mTradeAmt;
+    }
+    /**
+     * 债券代码
+     */
+    private String bondCode;
+
+    /**
+     * 债券简称
+     */
+    private String bondAbbrName;
+
+    /**
+     * 折算比例%
+     */
+    private BigDecimal pledgeRate;
+
+    /**
+     * 券面总额
+     */
+    private BigDecimal prin;
+
+    public String getBondCode() {
+        return bondCode;
+    }
+
+    public void setBondCode(String bondCode) {
+        this.bondCode = bondCode;
+    }
+
+    public String getBondAbbrName() {
+        return bondAbbrName;
+    }
+
+    public void setBondAbbrName(String bondAbbrName) {
+        this.bondAbbrName = bondAbbrName;
+    }
+
+    public BigDecimal getPledgeRate() {
+        return pledgeRate;
+    }
+
+    public void setPledgeRate(BigDecimal pledgeRate) {
+        this.pledgeRate = pledgeRate;
+    }
+
+    public BigDecimal getPrin() {
+        return prin;
+    }
+
+    public void setPrin(BigDecimal prin) {
+        this.prin = prin;
+    }
+    /**
+     * 汇率
+     */
+    private BigDecimal exchangerate;
+
+    public BigDecimal getExchangerate() {
+        return exchangerate;
+    }
+
+    public void setExchangerate(BigDecimal exchangerate) {
+        this.exchangerate = exchangerate;
+    }
+    /**
+     * 最后更新时间
+     */
+    private Date lstmntdate;
+
+    public Date getLstmntdate() {
+        return lstmntdate;
+    }
+
+    public void setLstmntdate(Date lstmntdate) {
+        this.lstmntdate = lstmntdate;
+    }
+
+    //add by chenjiaxing 20210819 质押券回购改造 end
 }

@@ -1,12 +1,10 @@
 package com.joyintech.tams.common.base.dao;
 
-import org.springframework.stereotype.Repository;
-
 import com.joyintech.tams.common.base.entity.RskRuleInfo;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RskRuleInfoMapper {
-
     int deleteByPrimaryKey(String ruleId);
 
     int insert(RskRuleInfo record);

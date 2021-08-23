@@ -493,7 +493,7 @@
 						th:data-path="@{/component/asset/FinInterestFactor/init}"
 						th:data-params="|{entityName:'finInterestFactorDto',entityNamePayInterest:'finPayInterestStdInfoDto',vdate:'${#dates.format(entity?.vdate,'yyyy-MM-dd')}',finprodId:'${entity?.finprodId?:''}',workflowId:'${workflowId?:''}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}'}|"></div>
 					<!-- 参与方信息 -->
-					<div class="page-component"
+					<div id = "bussParticipantInfo" class="page-component"
 						th:data-path="@{/component/project/BussParticipantInfo/init}"
 						th:data-params="|{entityName:'bussParticipantInfoDto',finprodId:'${entity?.finprodId?:''}',workflowId:'${workflowId ?: ''}', pageId:'${pageId}'}|"></div>
 					<!-- 付息信息业务 -->

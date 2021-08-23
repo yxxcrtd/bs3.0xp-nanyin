@@ -118,6 +118,7 @@
             , {field: 'lgdValue', title: 'LGD违约损失率%', width: '10%', sortField: "lgdValue"}
             , {field: 'eclVaule', title: 'ECL预期信用损失比例%', width: '10%', sortField: "eclVaule"}
             , {field: 'tradeId', title: '交易编号', width: '10%', sortField: "tradeId", visible: false}
+            ,{field:'operation', width:200,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ],
     });
     /**
@@ -144,11 +145,26 @@
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
         //走check会校验dto，所以抽出一个新的editCheck方法
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/checkEdit', data, function(result) {
-            Joyin.dialog(JoyinUtil.getLabel("EtrInvestBondInfo002.edit"),
-                JoyinUtil.getRealPath("invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init"),
+        Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/check', data, function(result) {
+            Joyin.dialog(JoyinUtil.getLabel("TrdAssetLoss002.edit"),
+                JoyinUtil.getRealPath("valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/init"),
                 "98%", "95%", data,
                 function(){table.reload();});
+        });
+    });
+
+
+    /**
+     * 绑定删除事件
+     */
+    table.bind('click', '.delt', function(data, index) {
+        var object = {selectedItem: [data], operateType:"delete",tradeId: data.tradeId,valDate:data.valDate};
+        Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss001/deleteCheck', object, function(result) {
+            Joyin.confirm("是否确认删除？", function () {
+                WorkFlow.doDeleteList(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/save', object, "TrdAssetLoss001_btn_delete", "TrdAssetLoss002", function () {
+                    table.reload();
+                });
+            });
         });
     });
 

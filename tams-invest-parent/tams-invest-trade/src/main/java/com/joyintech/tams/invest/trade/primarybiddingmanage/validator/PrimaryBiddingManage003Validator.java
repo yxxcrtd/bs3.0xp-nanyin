@@ -70,6 +70,10 @@ public class PrimaryBiddingManage003Validator implements BeanValidator {
                     errorList.add(new ValidMessage("winPrinAmt",
                             getMessage("BUSS_COM_E_0038", "中标券面总额")));
                 }
+                else if (dto.getWinPrinAmt().compareTo(StringUtil.isNotEmpty(dto.getAllBidPrinAmt())?dto.getAllBidPrinAmt():BigDecimal.ZERO)>0) {
+                    errorList.add(new ValidMessage("winPrinAmt",
+                            getMessage("BUSS_COM_E_0003", "中标券面总额","汇总投标券面总额")));
+                }
                 if (!StringUtil.isNotEmpty(dto.getWinType())) {
                     errorList.add(new ValidMessage("winType",
                             getMessage("BUSS_COM_E_0038", "中标方式")));

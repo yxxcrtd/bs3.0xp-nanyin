@@ -1,8 +1,7 @@
 package com.joyintech.tams.common.base.dao;
 
-import org.springframework.stereotype.Repository;
-
 import com.joyintech.tams.common.base.entity.RskIndividConditionCustom;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RskIndividConditionCustomMapper {

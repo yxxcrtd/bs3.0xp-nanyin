@@ -407,9 +407,16 @@ application:
       chb3Service: http://127.0.0.1:8080/tams
       svrcomService: http://127.0.0.1:8080/tams
       pbcService: http://127.0.0.1:8080/tams
-      investInterfService: http://127.0.0.1:8080/tams
+      channelService: http://127.0.0.1:8080/tams
+      customerInterfService: http://127.0.0.1:8080/tams
       tamsServer: http://127.0.0.1:8080/tams
+      investInterfService: http://127.0.0.1:8080/tams
+      adapterService: http://127.0.0.1:8080/tams
+      bankuplinkService: http://127.0.0.1:8080/tams
+      exchangeService: http://127.0.0.1:8080/tams/service
+      quoteService: http://127.0.0.1:8080/tams/service
       commonBasicDataService: http://127.0.0.1:8080/tams
+
 
 #base数据库配置
 base:

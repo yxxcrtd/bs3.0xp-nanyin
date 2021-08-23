@@ -12,7 +12,7 @@ SELECT ''04'' ID, ''浮动利率债券'' TEXT FROM DUAL
 UNION ALL
 SELECT ''05'' ID, ''信用等级在AA+以下的债券和资产支持证券'' TEXT FROM DUAL
 UNION all
-SELECT ''06'' ID ,''其它资产'' TEXT FROM DUAL','ysfusp','C001',sysdate,'ysfusp',sysdate,'','','N','String', '','', '');
+SELECT ''06'' ID ,''其它资产'' TEXT FROM DUAL','ysfusp','C001',sysdate,'ysfusp',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='BKTZZQ';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BKTZZQ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','ysfusp','C001',sysdate,'ysfusp',sysdate);

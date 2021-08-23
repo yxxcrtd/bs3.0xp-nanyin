@@ -16,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.joyintech.background.component.uplink.interbank.business.dto.*;
+import com.joyintech.framework.util.CacheUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.pagehelper.PageHelper;
@@ -37,6 +38,12 @@ public class CommonUtils {
     public static Map<String, String> getBondDialogueQuoteStatus(String operationType) {
         Map<String, String> result = new HashMap<>();
 
+        String isUpLinkSend =  CacheUtil.getSysParam("IS_NEED_UPLINK");
+        if(StringUtil.equals(DictCodeList.是否_否.getValue(),isUpLinkSend)){
+            result.put(IbuDictCode.银行间上行报价状态.getValue(), StringUtils.EMPTY);
+            result.put(IbuDictCode.银行间上行发送状态.getValue(), DictCodeList.银行间上行发送状态_待发送.getValue());
+            return result;
+        }
        if (DictCodeList.银行间上行操作类型_本方报价新增.getValue().equals(operationType)) {
            result.put(IbuDictCode.银行间上行报价状态.getValue(), StringUtils.EMPTY);
            result.put(IbuDictCode.银行间上行发送状态.getValue(), DictCodeList.银行间上行发送状态_待发送.getValue());
@@ -169,6 +176,12 @@ public class CommonUtils {
      */
     public static Map<String, String> getBondRequestQuoteStatus(String operationType) {
         Map<String, String> result = new HashMap<>();
+        String isUpLinkSend =  CacheUtil.getSysParam("IS_NEED_UPLINK");
+        if(StringUtil.equals(DictCodeList.是否_否.getValue(),isUpLinkSend)){
+            result.put(IbuDictCode.银行间上行报价状态.getValue(), StringUtils.EMPTY);
+            result.put(IbuDictCode.银行间上行发送状态.getValue(), DictCodeList.银行间上行发送状态_待发送.getValue());
+            return result;
+        }
         if (DictCodeList.银行间上行操作类型_本方请求报价新增.getValue().equals(operationType)) {
         	result.put(IbuDictCode.银行间上行报价状态.getValue(), StringUtils.EMPTY);
             result.put(IbuDictCode.银行间上行发送状态.getValue(), DictCodeList.银行间上行发送状态_待发送.getValue());
@@ -313,6 +326,12 @@ public class CommonUtils {
      */
     public static Map<String, String> getRepoDialogueQuoteStatus(String operationType) {
         Map<String, String> result = new HashMap<>();
+        String isUpLinkSend =  CacheUtil.getSysParam("IS_NEED_UPLINK");
+        if(StringUtil.equals(DictCodeList.是否_否.getValue(),isUpLinkSend)){
+            result.put(IbuDictCode.银行间上行报价状态.getValue(), StringUtils.EMPTY);
+            result.put(IbuDictCode.银行间上行发送状态.getValue(), DictCodeList.银行间上行发送状态_待发送.getValue());
+            return result;
+        }
         if(DictCodeList.银行间上行操作类型_本方报价新增.getValue().equals(operationType)){
         	result.put(IbuDictCode.银行间上行报价状态.getValue(), StringUtils.EMPTY);
             result.put(IbuDictCode.银行间上行发送状态.getValue(), DictCodeList.银行间上行发送状态_待发送.getValue());

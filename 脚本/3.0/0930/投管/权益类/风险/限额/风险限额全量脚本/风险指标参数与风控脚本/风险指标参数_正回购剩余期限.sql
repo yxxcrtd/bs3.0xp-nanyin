@@ -2,7 +2,7 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='ZHGSYQX';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZHGSYQX','正回购剩余期限','N','','jjpei','2222222',sysdate,'whmcp',sysdate,'','','Y','String', '','', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZHGSYQX','正回购剩余期限','N','','jjpei','2222222',sysdate,'whmcp',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='ZHGSYQX';
 INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHGSYQX','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','2222222',sysdate,'admin',sysdate);

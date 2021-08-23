@@ -773,7 +773,9 @@
             var temp = JSON.parse(JSON.stringify(object));
             temp.portfolioId = item.portfolioId;
             tradeAmt += parseFloat(item.entrustNum);
-            temp.entrustNum = item.entrustNum * 10000;
+            if(item.entrustNum&&item.entrustNum!=''){
+                temp.entrustNum = item.entrustNum * 10000;
+            }
             finprodId = temp.finprodId;
             counterId = temp.counterId;
             tradeMarket = temp.tradeMarket;
@@ -845,6 +847,17 @@
         document.getElementById('deviationDegree').innerHTML = '';
         table.clear();
     }
+
+
+
+    /**
+     * 委托终止日
+     */
+    query("#portfolioSeries").change(function () {
+        table.reload({ajax:null, url: null, data:[]});
+        doOther.leftHqReload();
+    });
+
 
     /**
      * 委托终止日

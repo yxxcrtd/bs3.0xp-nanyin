@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.entrust.etrrepo.validator;
 
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -52,6 +53,24 @@ public class EtrRepoValidator implements EtrCommonValidator {
     public List<ValidMessage> bussValid(Object value) {
         List<ValidMessage> errorList = new ArrayList<>();
         EtrRepoDto dto = (EtrRepoDto)value;
+        //万元转换 add  by yeming 20210817 start
+        if(dto.getBussRepoSec() != null){
+            if( dto.getBussRepoSec().getTotalPrinAmt()  != null){
+                dto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply( dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
+            }
+            for (PledgeBondInfoDto pledgeBond :  dto.getBussRepoSec().getPledgeBondList()) {
+                if (pledgeBond.getAvaPledgePrin() != null) {
+                    pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPledgePrin() != null) {
+                    pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPrin() != null) {
+                    pledgeBond.setPrin(ArithmeticUtil.multiply(pledgeBond.getPrin(), new BigDecimal(10000)));
+                }
+            }
+        }
+        //万元转换 add  by yeming 20210817 end
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             List<EtrRepoDto> listDto = dto.getSelectedItem();
             for (EtrRepoDto entity : listDto) {
@@ -130,15 +149,9 @@ public class EtrRepoValidator implements EtrCommonValidator {
 //                投资组合系统-投资端-回购投资委托-新建-提交，正回购委托金额大于质押券总额，系统没有报错
                 if(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue()) && !StringUtil.equals(dto.getAssetType1(), DictCodeList.回购类型_质押式竞价回购.getValue())) {
                     // 银行间正回购委托，当没有添加押券时做提交，请去掉“委托金额不能大于质押券面额。”，但是添加了押券，就要有此判断。
-                    //汇总券面总额转换 edit by yeming 20210806 start
-                    BigDecimal totalPrinAmt = dto.getBussRepoSec().getTotalPrinAmt();
-                    if(StringUtil.equals(CacheUtil.getSysParam("entrustAmtUnit"),"02")){
-                        totalPrinAmt = totalPrinAmt.multiply(new BigDecimal(10000));//万元转成元
-                    }
-                    //汇总券面总额转换 edit by yeming 20210806 end
                     if (DictCodeListExt1.交易场所_银行间.getValue().equals(dto.getTradeMarket()) && dto.getBussRepoSec() != null && dto.getBussRepoSec().getPledgeBondList() != null &&
                             !dto.getBussRepoSec().getPledgeBondList().isEmpty() && dto.getBussRepoSec().getTotalPrinAmt() != null
-                        && dto.getEntrustAmt().compareTo(totalPrinAmt) > 0) {
+                        && dto.getEntrustAmt().compareTo(dto.getBussRepoSec().getTotalPrinAmt()) > 0) {
                         errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0003", getMessage("EtrRepo001.entrustAmt"),
                             getMessage("EtrRepo002.pledgeAmt"))));
                     }

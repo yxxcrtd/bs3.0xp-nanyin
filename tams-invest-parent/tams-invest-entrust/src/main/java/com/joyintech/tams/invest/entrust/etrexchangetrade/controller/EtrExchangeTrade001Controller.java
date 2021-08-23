@@ -132,7 +132,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
         
         String isFromToDoList = getParam("isFromToDoList");
         EtrExchangeTrade001Dto entity = new EtrExchangeTrade001Dto();
-        if ("true".equals(isFromToDoList) && StringUtil.isNotEmpty(workflowId)) {
+        if (StringUtil.isNotEmpty(workflowId)) {
         	 //流程代办checkImportData
             entity = etrExchangeTrade001Service.getBussinessEntityByWorkflowId(
                 workflowId);
@@ -808,7 +808,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
 	    dto.setCreateTime(new Date());// 创建时间
 		ProcessParameter<EtrExchangeTrade001Dto> processParameter = new ProcessParameter<EtrExchangeTrade001Dto>();
 		WorkFlowParameter<EtrExchangeTrade001Dto> params = etrExchangeTrade001Service.getWorkFlowParameter(dto);
-		params.setPageId("EtrExchangeTradeMain");
+		params.setPageId("EtrExchangeTrade001");
 		params.setElementId(dto.getElementId());
 		params.setBusinessType(businessType);
 		params.setBusinessCode(dto.getEntrustId());

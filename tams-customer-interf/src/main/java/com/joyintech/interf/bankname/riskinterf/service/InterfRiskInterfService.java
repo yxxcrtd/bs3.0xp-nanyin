@@ -10,10 +10,9 @@
 
 package com.joyintech.interf.bankname.riskinterf.service;
 
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
@@ -21,31 +20,12 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
 import com.joyintech.tams.common.base.entity.FinTradeProductKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.core.BaseRiskRdsService;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.util.CommonBusinessUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListRsk;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.client.ClientUtil;
@@ -55,12 +35,23 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.constantrds.RedisKeyEnum;
 import com.joyintech.tams.invest.common.redisinit.dto.IRiskRds;
+import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IAssetInfo;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.AssetInfoRedisService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 接口组件Service
@@ -125,6 +116,9 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      */
     @Autowired
     private FinTradeProductMapper finTradeProductMapper;
+
+    @Autowired
+    private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
 
     public ClientData sendRiskRdsDataCommon(Map<String, Object> dataMap,V v) throws Exception {
         logger.info("==========调用微服务端风险接口 start==========");
@@ -330,12 +324,12 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
 		}
 
 		Map<String, Object> header = createHead(requestList.get(0));
-		String requstjson = JsonUtils.object2Json(requestList);
+		//String requstjson = JsonUtils.object2Json(requestList);
 		ClientData data = new ClientData();
 		data.setHead(header);
         Map<String, Object> body = new HashMap<String, Object>();
-        body.put(rskType,requstjson);
-        
+        body.put(rskType,requestList);
+
         // add by etliu 20210123 start
         if (!isNeedRiskCheck) {
             body.put("isIgnoreFoul", DictCodeListExt2.是否_是.getValue());
@@ -783,6 +777,12 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                         && StringUtil.equals(firstFinTradeProduct.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
                         continue;
                     }
+                    //add by zhangnian  平安资产类型_质押式回购  start
+                    //质押券为利率债(国债、政策型银行债)不占额度
+                    if(DictCodeList.平安资产类型_质押式回购.getValue().equals(assetType)&&!riskCreditListCommonValidatorService.checkCallCredit(assetType + "_" + finDto.getAssetCode())) {
+                       continue;
+                    }
+                    //add by zhangnian  20210823 end
                     CreditLinesInputDto creditLinesInputDto =new CreditLinesInputDto();
                     creditLinesInputDto.setTradeStatus(tradeStatu);
                     creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());

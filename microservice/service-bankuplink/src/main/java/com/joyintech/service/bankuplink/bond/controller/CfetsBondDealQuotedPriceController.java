@@ -1073,4 +1073,22 @@ public class CfetsBondDealQuotedPriceController {
 		}
 		return true;
 	}
+
+    /**
+     *
+     * 获取新建界面的资产代码联想下拉框框
+     * <功能详细描述>
+     * @param finprodId
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("getfinprodIdForAdd/{page}/{length}")
+    public Page<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
+                                                    @PathVariable("length") int length)
+            throws Exception {
+        Page<SelectOptionDto> temp = cfetsBondDealQuotedPriceService.getfinprodIdForAdd(page,length,param);
+        return temp;
+    }
 }
