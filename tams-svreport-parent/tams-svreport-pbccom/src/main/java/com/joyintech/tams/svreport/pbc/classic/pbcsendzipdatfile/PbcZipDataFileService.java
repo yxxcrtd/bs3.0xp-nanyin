@@ -137,7 +137,7 @@ public class PbcZipDataFileService {
 		List<PbcSendZipDatFile> baseZipDatFileList=new ArrayList<>();
 		//pbcReport更新数据
 		List<DatDownloadDto> datDownloadDtos = new ArrayList<>();
-		Date date= DateUtil.parse(DateUtil.getCurrentDate());
+		Date date= DateUtil.parse(DateUtil.formatDateTime(new Date()));
 
 		for (Map.Entry<String, Set<String>> entry : paramMap.entrySet()) {  //循环datZipCode
 			String datZipCode=entry.getKey();
@@ -904,14 +904,15 @@ public class PbcZipDataFileService {
 
 	//初始化配置表数据
 	private String  initChbExData(){
-	/*	String[] reportTypeList={"1_1","1_2","1_3","1_4","1_5","1_6",
+		String[] reportTypeList={"1_1","1_2","1_3","1_4","1_5","1_6",
 				"2_1","2_2","2_3","2_4","2_5","3_1","3_2","3_3"};
+//		String[] reportTypeList={"1_1"};
 		List<String> deleteSqlList=new ArrayList<>();
-		for(String reportType:reportTypeList ) {*/
-//			File file = new File("D:\\pj\\yth\\tams\\tams-svreport-parent\\tams-svreport\\src\\main\\resources\\tpl\\pbc\\PbcDatReport_"+reportType+".xls");
-			File file = new File("D:\\2_1.xlsx");
+		for(String reportType:reportTypeList ) {
+			File file = new File("D:\\workCode\\ZGBS-CPtams\\tams-svreport-parent\\tams-svreport\\src\\main\\resources\\tpl\\pbc\\PbcDatReport_"+reportType+".xls");
+//			File file = new File("D:\\2_1.xlsx");
 			try {
-				List<ChbTypeMappingEx> list = PbcZExcelDefineUtil.readToList("2_1", file, 0);
+				List<ChbTypeMappingEx> list = PbcZExcelDefineUtil.readToList(reportType, file, 0);
 				for (ChbTypeMappingEx chbTypeMappingEx : list) {
 					ChbTypeMappingEx typeMappingEx = chbTypeMappingExMapper.selectBySrcfieldSrcfield1(chbTypeMappingEx.getSrcfield(), chbTypeMappingEx.getSrcfield1());
 					if (typeMappingEx == null) {
@@ -921,7 +922,7 @@ public class PbcZipDataFileService {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-//		}
+		}
 		return null;
 	}
 
