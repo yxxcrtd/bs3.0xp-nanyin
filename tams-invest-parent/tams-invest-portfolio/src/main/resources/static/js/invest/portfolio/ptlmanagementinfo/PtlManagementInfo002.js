@@ -179,16 +179,17 @@
         	$(".step1").attr("style", "display: block;"); 
         	$(".step2").attr("style", "display: none;"); 
         	$('#' + loginUser).prop("checked",false);
-        }else if(portfolioType == profitType02){
-        	$(".pro-module-step").attr("style", "display: none;"); 
-        	$(".step1").attr("style", "display: block;"); 
-        	$(".step2").attr("style", "display: block;"); 
-        	$(".stepbar").attr("style", "display: none;");  
-        	$(".expandAllWrap_div").hide();
-        	$(".stepbar_div").show();
-        	$(".prevStep").attr("style", "display: none;");
-            $('#' + loginUser).prop("checked",true);
-        } 
+        }
+        // else if(portfolioType == profitType02){
+        // 	$(".pro-module-step").attr("style", "display: none;");
+        // 	$(".step1").attr("style", "display: block;");
+        // 	$(".step2").attr("style", "display: block;");
+        // 	$(".stepbar").attr("style", "display: none;");
+        // 	$(".expandAllWrap_div").hide();
+        // 	$(".stepbar_div").show();
+        // 	$(".prevStep").attr("style", "display: none;");
+        //     $('#' + loginUser).prop("checked",true);
+        // }
     }
     
     $(function() {
