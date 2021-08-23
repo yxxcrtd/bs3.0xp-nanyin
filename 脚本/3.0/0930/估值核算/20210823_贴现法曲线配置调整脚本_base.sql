@@ -1,4 +1,7 @@
 
+delete from sys_datadict_list where DICT_CODE = 'MODEL_SEC_TYPE' and  ITEM_CODE= 'F18';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('MODEL_SEC_TYPE', 'F18', '其他债权类资产', 2, '0', 'system', null, sysDate, 'system', sysDate, null);
 
 delete from sys_datadict_list where DICT_CODE = 'CURVE_GROUP' and  ITEM_CODE= '02';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)

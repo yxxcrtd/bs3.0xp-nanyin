@@ -4,6 +4,7 @@ package com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashfl
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
@@ -207,6 +208,15 @@ public class CashFlowDiscount002Controller extends BaseController {
                 if (flag) {
                     errorList.add(new ValidMessage("该资产已配置曲线，不可重复配置！"));
                 }
+            }
+        }
+        //modify by yanya on 20210823 增加生效失效日期的判定
+        if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
+            dto.setSeqNoCon(dto.getSeqNo());
+            dto.setEffDateCon(DateUtil.format(dto.getEffDate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+            boolean flag = cashFlowDiscount001Service.haveDataCheck(dto);
+            if (flag) {
+                errorList.add(new ValidMessage("该资产细分类已配置该生效日期的曲线，不可重复配置！"));
             }
         }
         if (errorList.size() > 0) {
