@@ -265,7 +265,8 @@ public class CashFlowDiscount001Dto extends BaseEntity implements ProcessEntity{
     }
 
     public String getSecTypeModelStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.资产类型, this.getSecTypeModel());
+        //return SysDataUtil.getNameFromDataDict(DictCode.资产类型, this.getSecTypeModel());
+        return SysDataUtil.getNameFromDataDict(DictCode.证券品种, this.getSecTypeModel());
     }
 
     public String getSecDetailTypeModelStr() {

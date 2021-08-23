@@ -52,10 +52,10 @@
         		$('#finProdName').val($('#finprodId').select2('data')[0].text).trigger('change');
 				var fiveClass = $('#finprodId').select2('data')[0].object;
 				Joyin.ajaxSync(basePath + 'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/findModAseetMapping',{
-					output5:fiveClass},function(result){
+					finprodId:finprodId},function(result){
 					if(result){
-						$('#secTypeModel').val(result.input1).select2();
-						$('#secDetailTypeModel').val(result.input2).select2();
+						$('#secTypeModel').val(result.output2).trigger('change');
+						$('#secDetailTypeModel').val(result.output3).trigger('change');
 					}
 				});
         	}

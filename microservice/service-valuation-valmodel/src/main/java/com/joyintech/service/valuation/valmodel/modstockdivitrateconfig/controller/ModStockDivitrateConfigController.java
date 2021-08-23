@@ -1,21 +1,17 @@
 package com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.controller;
 
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModAseetMappingDto;
 import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto;
 import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.service.ModStockDivitrateConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.joyintech.framework.annotation.DTXTransaction;
-import com.joyintech.framework.grid.Page;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -136,6 +132,10 @@ public class ModStockDivitrateConfigController {
 		return pageList;
 	}
 
+	@PostMapping("selectAssetNoClassify")
+	ModAseetMappingDto selectAssetNoClassify(@RequestBody Map<String, Object> map) {
+		return modStockDivitrateConfigService.selectAssetNoClassify(map);
+	}
 
 
 }

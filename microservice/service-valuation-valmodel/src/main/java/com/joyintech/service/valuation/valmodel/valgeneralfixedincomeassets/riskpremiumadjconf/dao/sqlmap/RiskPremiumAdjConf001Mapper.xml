@@ -69,8 +69,9 @@
 		FROM FIN_PRODUCT A
 		INNER JOIN FIN_PRODUCT_TYPE B
 		ON A.FINPROD_ID = B.FINPROD_ID
-		WHERE A.FINPROD_TYPE2 IN ('F01','F18')
-		/** modify by yanya on 20210823 增加为空的判定**/
+		WHERE B.TYPE_18 in ('01','13')
+		/** modify by yanya on 20210823 增加类型的判定修改，按照估值侧类型调整**/
+		<!--
 		AND (B.TYPE_11 is null or B.TYPE_11 NOT IN ('011','013','023'))
 		AND NOT EXISTS (
 		SELECT 1 FROM FIN_PRODUCT C
@@ -82,10 +83,21 @@
 		)
 		AND C.FINPROD_ID = A.FINPROD_ID
 		)
+		-->
+		AND (
+            B.TYPE_1 is null or B.TYPE_1 not in ('028', '029', '033') /** 剔除优先股、可转债、可交债**/
+        )
+        /** 剔除剔除不含权的永续债**/
+        AND (
+            A.IS_SUS = 'N' OR A.IS_RIGHT = 'Y'
+        )
 		<if test="search != null and search != ''">
 			and (A.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
 			or A.FINPROD_ABBR like concat(concat('%',#{search}),'%'))
 		</if>
+        <if test="initValue != null and initValue != ''">
+            AND A.FINPROD_ID = #{initValue,jdbcType=VARCHAR}
+        </if>
 	</select>
 
 	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf002Dto" >

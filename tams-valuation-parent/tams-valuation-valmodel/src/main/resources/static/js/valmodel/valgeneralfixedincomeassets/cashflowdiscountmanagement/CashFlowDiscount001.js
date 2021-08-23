@@ -142,7 +142,7 @@ $(function() {
 
      // 资产类别事件
          var assetTypeChange = function() {
-         		if ($("#secTypeModel").val().startsWith("F01")) {
+         		if ($("#secTypeModel").val().startsWith("01")) {
          			var itemFwd = [];
          			var TEMP_MODEL_SEC_DETAIL_TYPE = JSON.parse(MODEL_SEC_DETAIL_TYPE);
          			for ( var i in TEMP_MODEL_SEC_DETAIL_TYPE) {
@@ -153,6 +153,7 @@ $(function() {
          						&& TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "011"
          						&& TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "013"
          						&& TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "023"
+                                && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "033"
          						&& TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "024") {
          					itemFwd.push(TEMP_MODEL_SEC_DETAIL_TYPE[i].id);
          				}
@@ -162,7 +163,7 @@ $(function() {
          				disabled : false
          			});
 
-         		} else if ($("#secTypeModel").val().startsWith("F18")) {
+         		} else if ($("#secTypeModel").val().startsWith("13")) {
          			var itemFwd = [];
          			var TEMP_MODEL_SEC_DETAIL_TYPE = JSON.parse(MODEL_SEC_DETAIL_TYPE);
                      for ( var i in TEMP_MODEL_SEC_DETAIL_TYPE) {
