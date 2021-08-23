@@ -848,6 +848,17 @@
         table.clear();
     }
 
+
+
+    /**
+     * 委托终止日
+     */
+    query("#portfolioSeries").change(function () {
+        table.reload({ajax:null, url: null, data:[]});
+        doOther.leftHqReload();
+    });
+
+
     /**
      * 委托终止日
      */
