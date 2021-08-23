@@ -144,13 +144,13 @@
 	    <select id="queryLayerFinprodIdAndCashId" resultType="com.joyintech.tams.common.base.entity.FinOpenPlan">
 	    	SELECT FP.FINPROD_ID finprodId,
 			       FCI.CASH_ID cashId
-			 FROM FIN_PRODUCT FP, FIN_CASH_INFO FCI, FIN_OPEN_RULE FOR
+			 FROM FIN_PRODUCT FP, FIN_CASH_INFO FCI, FIN_OPEN_RULE FORR
 			WHERE FP.FINPROD_ID = FCI.FINPROD_ID
-			  AND FCI.CASH_ID = FOR.CASH_ID
+			  AND FCI.CASH_ID = FORR.CASH_ID
 			  AND FCI.CASH_TYPE_1 = #{CASH_TYPE1_01}
 			  AND FCI.CASH_TYPE_2 = #{CASH_TYPE2_C01}
 			  AND FP.P_FINPROD_ID = #{pfinprodId}
-			  AND FOR.OPEN_TYPE = #{openType}
+			  AND FORR.OPEN_TYPE = #{openType}
 	    </select>  
 	    
 	       <!-- 删除开放规则 -->
