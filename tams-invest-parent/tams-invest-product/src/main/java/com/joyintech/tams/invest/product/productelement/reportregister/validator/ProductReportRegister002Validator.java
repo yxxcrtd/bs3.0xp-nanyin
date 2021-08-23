@@ -25,6 +25,18 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.calculator.RepCheckUtil;
 import com.joyintech.tams.invest.product.productelement.reportregister.dto.ProductReportRegister002Dto;
 import com.joyintech.tams.invest.product.productelement.reportregister.service.ProductReportRegister002Service;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 产品收集删除修改验证
@@ -45,8 +57,8 @@ public class ProductReportRegister002Validator implements BeanValidator {
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
 
-//	@Autowired
-//	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+	@Autowired
+	private ChbDataCheckService chbDataCheckService;
 
 	@Override
 	public List<ValidMessage> valid(Object value) {
@@ -140,9 +152,10 @@ public class ProductReportRegister002Validator implements BeanValidator {
         		&& !StringUtil.equals("01", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"))) {
             validList.add(new ValidMessage("isFhxgcp", getMessage("请输入新老产品标记")));
         }
-        if (!StringUtil.isNotEmpty(entity.getIsYllccp())) {
-            validList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
-        }
+		/****缺少“是否养老理财”字段，与新建输入页面字段不一致   修改方案为将此字段注释 挪到产品新建界面   leipeng 20210430***/
+//        if (!StringUtil.isNotEmpty(entity.getIsYllccp())) {
+//            validList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
+//        }
 
 		// 产品期次
 		if (StringUtil.isNotEmpty(entity.getRepFinprodStage())) {
@@ -270,12 +283,12 @@ public class ProductReportRegister002Validator implements BeanValidator {
 			}
 		}
 		// 业务联络人座机
-		if (StringUtil.isNotEmpty(entity.getRepLiaisonTel())) {
-			if (RepCheckUtil.checkByteLength(entity.getRepLiaisonTel(), 30)) {
-				validList.add(new ValidMessage("repLiaisonTel",
-						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepLiaisonTel())) {
+//			if (RepCheckUtil.checkByteLength(entity.getRepLiaisonTel(), 30)) {
+//				validList.add(new ValidMessage("repLiaisonTel",
+//						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
+//			}
+//		}
 		// 业务联络人手机
         if (StringUtil.isNotEmpty(entity.getRepLiaisonMobile())) {
             if(!RepCheckUtil.checkNum11(entity.getRepLiaisonMobile())){
@@ -301,25 +314,25 @@ public class ProductReportRegister002Validator implements BeanValidator {
 						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repOutDepName"))));
 			}
 		}
-		// 实际管理人名称
-		if (StringUtil.isNotEmpty(entity.getRepMname())) {
-			if (RepCheckUtil.checkByteLength(entity.getRepMname(), 120)) {
-				validList.add(new ValidMessage("repMname",
-						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repMname"))));
-			}
-		}
+//		// 实际管理人名称
+//		if (StringUtil.isNotEmpty(entity.getRepMname())) {
+//			if (RepCheckUtil.checkByteLength(entity.getRepMname(), 120)) {
+//				validList.add(new ValidMessage("repMname",
+//						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repMname"))));
+//			}
+//		}
 		// 境内托管机构名称
 		if (StringUtil.isNotEmpty(entity.getRepInDepName())
 				&& RepCheckUtil.checkByteLength(entity.getRepInDepName(), 120)) {
 			validList.add(new ValidMessage("repInDepName",
 					this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repInDepName"))));
 		}
-		if (StringUtil.isNotEmpty(entity.getRepCoopName())) {
-			if (RepCheckUtil.checkByteLength(entity.getRepCoopName(), 120)) {
-				validList.add(new ValidMessage("repCoopName",
-						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repCoopName"))));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepCoopName())) {
+//			if (RepCheckUtil.checkByteLength(entity.getRepCoopName(), 120)) {
+//				validList.add(new ValidMessage("repCoopName",
+//						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repCoopName"))));
+//			}
+//		}
 		// 投资资产种类及比例
 		if (StringUtil.isNotEmpty(entity.getRepInvTypeRat())) {
 			if (RepCheckUtil.checkByteLength(entity.getRepInvTypeRat(), 300)) {
@@ -358,8 +371,9 @@ public class ProductReportRegister002Validator implements BeanValidator {
 					validList.add(new ValidMessage("repInvestCountry",
 							getMessage("BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repInvestCountry"))));
 				} else {
-					if (StringUtil.indexOf(entity.getRepInvestCountry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
-						validList.add(new ValidMessage("repInvestCountry", getMessage("REP_E_0006")));
+					if (StringUtil.equals(entity.getRepInvestArea(),
+							DictCodeListExt2.资金投向地区_境外.getValue()) && StringUtil.indexOf(entity.getRepInvestCountry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
+						validList.add(new ValidMessage("repInvestCountry", getMessage("REP_E_00011")));
 					}
 				}
 				// 境外托管机构国别
@@ -367,8 +381,8 @@ public class ProductReportRegister002Validator implements BeanValidator {
 					validList.add(new ValidMessage("repOutDepCtry",
 							getMessage("BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repOutDepCtry"))));
 				} else {
-					if (StringUtil.indexOf(entity.getRepOutDepCtry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
-						validList.add(new ValidMessage("repOutDepCtry", getMessage("REP_E_0007")));
+					if (StringUtil.equals(entity.getRepInvestArea(), DictCodeListExt2.资金投向地区_境外.getValue()) && StringUtil.indexOf(entity.getRepOutDepCtry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
+						validList.add(new ValidMessage("repOutDepCtry", getMessage("REP_E_0008")));
 					}
 				}
 				// 境外托管机构名称
@@ -403,12 +417,12 @@ public class ProductReportRegister002Validator implements BeanValidator {
 		}
 
 		// 起点销售金额
-		if (StringUtil.isNotEmpty(entity.getRepSaleAmtStr())) {
-			if (entity.getRepSaleAmtStr().compareTo(BigDecimal.ZERO) < 0) {
-				validList.add(new ValidMessage("repSaleAmtStr",
-						getMessage("BUSS_COM_E_0004", getMessage("BussRepFinProductInfo.repSaleAmtStr"), "0")));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepSaleAmtStr())) {
+//			if (entity.getRepSaleAmtStr().compareTo(BigDecimal.ZERO) < 0) {
+//				validList.add(new ValidMessage("repSaleAmtStr",
+//						getMessage("BUSS_COM_E_0004", getMessage("BussRepFinProductInfo.repSaleAmtStr"), "0")));
+//			}
+//		}
 		// 合作模式
 		if (StringUtil.isNotEmpty(entity.getRepContMode())) {
 			// 合作机构名称
@@ -431,7 +445,13 @@ public class ProductReportRegister002Validator implements BeanValidator {
             validList.add(new ValidMessage("请输入是否现金管理类"));
         }
 
-		// validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
+		//发行机构代码必须与银行代码相同
+		if (!StringUtil.isNotEmpty(entity.getRepIssuePartyId())
+				&& StringUtil.equals(entity.getRepIssuePartyId(), CommonUtil.selectBankCode())) {
+			validList.add(new ValidMessage("发行机构代码必须与银行代码相同。"));
+		}
+
+		 validList = chbDataCheckService.chbCheckCommon(validList, entity, null, null);
 
 		return validList;
 	}

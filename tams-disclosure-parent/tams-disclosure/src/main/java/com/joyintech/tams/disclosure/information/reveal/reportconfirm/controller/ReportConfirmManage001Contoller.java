@@ -77,7 +77,7 @@ import com.joyintech.framework.util.CacheUtil;
  * 金融产品交易查询
  * @author weipengconfirmCancle
  * @version 1.0 2018年5月16日
- * @see ValNetValueConfirm001Contoller
+ * @see ReportConfirmManage001Contoller
  * @since 1.0
  */
 @Controller
@@ -148,8 +148,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+    public Page<SelectOptionDto> getPrdInfoSelect(){
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
         return prdInfoSelect;
     }
@@ -164,7 +163,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ReportConfirmManage001Dto> findPage() throws Exception{
+    public Page<ReportConfirmManage001Dto> findPage() throws IOException {
     	String workflowId =this.getParam("workflowId");
     	
     	Page<ReportConfirmManage001Dto> page;
@@ -300,7 +299,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	 String datas = this.getParam("datas");
          Map<String, Object> paraMap = RequestUtil.getPageParam();
          List<ReportConfirmManage001Dto> dtoList;
@@ -342,7 +341,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("deleteCheck")
-	public AjaxResult deletecheck(@RequestBody ReportWorkManage001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult deletecheck(@RequestBody ReportWorkManage001Dto dto, BindingResult result) {
 		
 		return new AjaxResult();
 	}
@@ -372,13 +371,12 @@ public class ReportConfirmManage001Contoller extends BaseController {
 	 * 下载报表
 	 * <一句话功能简述>
 	 * <功能详细描述>
-	 * @param dto
 	 * @return
 	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("downloadReport")
-	public ResponseEntity<byte[]> downloadReport() throws Exception {
+	public ResponseEntity<byte[]> downloadReport() throws IOException {
 		String id = RequestUtil.getParam("id");
 		List<String> idList = new ArrayList<String>();
 		if(StringUtil.isNotEmpty(id)){
@@ -455,15 +453,14 @@ public class ReportConfirmManage001Contoller extends BaseController {
      */
 	@ResponseBody
     @RequestMapping("downLoad")
-    public ResponseEntity<byte[]> download()
-        throws Exception {
+    public ResponseEntity<byte[]> download() throws IOException {
     	String sysFilepath = RequestUtil.getParam("sysFilepath");
         if(null == fileAttachmentProcess) {
             throw new BusinessException("FileAttachmentProcess接口未实现，系统无法获取附件 " + sysFilepath);
         }
         // 获取附件
         UploadFile attachment = fileAttachmentProcess.fetch(sysFilepath);
-        String targetFileName=new String();
+        String targetFileName="";
         String formate=reportConfirmManage001Service.getFormate(sysFilepath);
         formate=formate.substring(formate.lastIndexOf(".") );
         // 文件名
@@ -491,14 +488,22 @@ public class ReportConfirmManage001Contoller extends BaseController {
 //        String targetFileName = attachment.getFileName();
         // 目标文件
         File targetFile = attachment.getTargetFile();
-        
-        InputStream in = null;
-        if (!targetFile.exists()) {
-            throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
-        }
-        else {
-            in = new FileInputStream(targetFile);
-        }
-        return ExportUtil.export(targetFileName, in);
+		InputStream in = null;
+        try {
+			if (!targetFile.exists()) {
+				throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
+			}
+			else {
+				in = new FileInputStream(targetFile);
+			}
+			return ExportUtil.export(targetFileName, in);
+		}finally {
+			if (in != null){
+				in.close();
+			}
+		}
+
+
+
     }
 }

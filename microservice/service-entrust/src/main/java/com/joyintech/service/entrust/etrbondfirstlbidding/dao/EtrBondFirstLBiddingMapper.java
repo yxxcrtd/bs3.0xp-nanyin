@@ -28,7 +28,7 @@ import java.util.Map;
  * @see EtrBondFirstLBiddingMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrBondFirstLBiddingMapper {
 
     /**

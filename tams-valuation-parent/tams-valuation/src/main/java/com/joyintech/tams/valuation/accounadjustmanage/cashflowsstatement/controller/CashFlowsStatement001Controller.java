@@ -10,6 +10,28 @@
  
 package com.joyintech.tams.valuation.accounadjustmanage.cashflowsstatement.controller;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -119,7 +141,7 @@ public class CashFlowsStatement001Controller  extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public List<CashFlowsStatement001Dto> selectCashFlowsStatement()
-        throws Exception {
+         {
         //modify by yanya on 20201218 增加样式处理类型
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         param.put("STYLE_TYPE", "HTML");
@@ -130,14 +152,13 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2()
-        throws Exception {
+         {
         return valAssetBook001Service.getBooksetId2(RequestUtil.getPageParam());
     }
 
@@ -218,11 +239,10 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * 联动：报表期限类型 - 季度 半年
      * 
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("getTermLink")
-    public List<SelectOptionDto> getTradeMarket() throws Exception {
+    public List<SelectOptionDto> getTradeMarket() {
         Map<String, Object> param = RequestUtil.getPageParam();
         
         //update by leipeng 【估值管理】-【现金流量表】：点击筛选条件为季度或者年时，期限字段无法展示 
@@ -246,13 +266,11 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * 导出信息
      * 
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> exportExcel()
-        throws Exception {
+    public ResponseEntity<byte[]> exportExcel() throws IOException, ParseException {
         Map<String, Object> params = RequestUtil.getParameters(getRequest());
         //modify by yanya on 20201218 增加样式处理类型
         params.put("STYLE_TYPE", "EXCEL");
@@ -263,12 +281,11 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * 获取默认日期信息
      * 
      * @return CashFlowsStatement001Dto
-     * @throws Exception exception
      */
     @ResponseBody
     @RequestMapping("getDateInfo")
     public CashFlowsStatement001Dto getDateInfo()
-        throws Exception {
+         {
         return cashFlowsStatement001Service.getDateInfo(RequestUtil.getPageParam());
     }
     

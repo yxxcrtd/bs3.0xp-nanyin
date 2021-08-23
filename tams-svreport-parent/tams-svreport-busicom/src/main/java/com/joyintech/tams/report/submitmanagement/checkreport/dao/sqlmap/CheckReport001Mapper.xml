@@ -55,7 +55,6 @@
 		,ORG_CODE orgCode /* add by songyawei 机构编码 20200702 */
 		from CHB_REPORT_CHECK
 		<where>
-				CHECK_RESULT !='01'
 			<if test="updateTimeStart!=null and updateTimeStart!=''">
 				and to_char(DATA_TIME,'yyyy-MM-dd') &gt;=
 				#{updateTimeStart,jdbcType=VARCHAR}
@@ -64,8 +63,11 @@
 				and to_char(DATA_TIME,'yyyy-MM-dd') &lt;=
 				#{updateTimeEnd,jdbcType=VARCHAR}
 			</if>
-			<if test="checkResult!=null and checkResult!=''">
-				and CHECK_RESULT = #{checkResult,jdbcType=VARCHAR}
+			<if test="checkResultList!=null and checkResultList.size()!=0">
+				<foreach collection="checkResultList" item="checkResult" open="and CHECK_RESULT in("
+						 separator="," close=")">
+					#{checkResult,jdbcType=VARCHAR}
+				</foreach>
 			</if>
 			<if test="repCodeList!=null and repCodeList.size()!=0">
 				<foreach collection="repCodeList" item="repCode" open="and REP_CODE in("

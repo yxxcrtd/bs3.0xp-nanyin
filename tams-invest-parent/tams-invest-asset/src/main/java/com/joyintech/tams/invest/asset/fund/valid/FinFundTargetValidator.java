@@ -10,27 +10,27 @@
 
 package com.joyintech.tams.invest.asset.fund.valid;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.BeanValidator;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
+import com.joyintech.tams.invest.asset.fund.service.FinFundTargetService;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.BeanValidator;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
-import com.joyintech.tams.invest.asset.fund.service.FinFundTargetService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 
 /**
  * 〈一句话功能简述〉
@@ -50,8 +50,8 @@ public class FinFundTargetValidator implements BeanValidator {
     @Autowired
     private FinFundTargetService finFundTargetService;
 
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    @Autowired
+    private ChbDataCheckService chbDataCheckService;
 
     /**
      * 校验
@@ -214,9 +214,9 @@ public class FinFundTargetValidator implements BeanValidator {
                 }
             }
             //add by zhangnian 20191105 end
-//            if (StringUtil.isNotEmpty(dto.getBussRepFundInfoDto())){
-//                resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, value, null, dto.getBussRepFundInfoDto().getRepAssetType(), ValidMessage.class);
-//            }
+            if (StringUtil.isNotEmpty(dto.getBussRepFundInfoDto())){
+                resultList = chbDataCheckService.chbCheckCommon(resultList, value, null, dto.getBussRepFundInfoDto().getRepAssetType());
+            }
         }
         // 是否展示资产四五级分类
         if (StringUtil.equals(CacheUtil.getSysParam("IS_SHOW_TYPE"), "01") &&  (StringUtil.equals(dto.getOperateType(), "save") ||  StringUtil.equals(dto.getOperateType(), "submit"))) {
@@ -229,6 +229,24 @@ public class FinFundTargetValidator implements BeanValidator {
                         getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.type12"))));
             }
         }
+        //add by yjp 20210507 TISHKBS-2101 到期日<发行日/起息日，可正常提交，没有校验 start
+        if (dto != null && dto.getVdate() != null && dto.getMdate() != null) {
+        	 if (DateUtil.compareDate(dto.getVdate(),
+        			 dto.getMdate()) > 0) {
+                 ValidMessage validMessage = new ValidMessage("mdate",
+                         getMessage("到期日不可小于发行日期/成立日期"));
+                 resultList.add(validMessage);
+             }
+        }
+        if (dto != null && dto.getIdate() != null && dto.getMdate() != null) {
+       	 if (DateUtil.compareDate(dto.getIdate(),
+       			 dto.getMdate()) > 0) {
+                ValidMessage validMessage = new ValidMessage("mdate",
+                        getMessage("到期日不可小于发行日期/成立日期"));
+                resultList.add(validMessage);
+            }
+       }
+        //add by yjp 20210507 TISHKBS-2101 到期日<发行日/起息日，可正常提交，没有校验 end
         return resultList;
     }
 

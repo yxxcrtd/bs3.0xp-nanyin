@@ -11,13 +11,13 @@
 
 package com.joyintech.tams.invest.common.constant;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
 
 /**
  * 微服务访问路径定义
@@ -118,7 +118,11 @@ public class ServiceApplication {
     public static String INVEST_INTERF_SERVICE_NAME = "http://investInterfService";
 
     /**
-     * 交易系统接口
+     * 中债服务
+     */
+    public static String CHB_SERVICE_NAME = "http://chbService";
+
+    /**     * 交易系统接口
      */
     public static String EXCHANGE_SERVICE_NAME = "http://exchangeService";
 
@@ -177,7 +181,8 @@ public class ServiceApplication {
                 CUSTOMER_INTERF_NAME = CUSTOMER_INTERF_NAME + config.getCustomerInterfService();
                 PINGAN_SERVICE_NAME = PINGAN_SERVICE_NAME + config.getTamsServer();
                 INVEST_INTERF_SERVICE_NAME = INVEST_INTERF_SERVICE_NAME + config.getInvestInterfService();
-                EXCHANGE_SERVICE_NAME = EXCHANGE_SERVICE_NAME + config.getExchangeService();
+
+                CHB_SERVICE_NAME = CHB_SERVICE_NAME + config.getChbService();                EXCHANGE_SERVICE_NAME = EXCHANGE_SERVICE_NAME + config.getExchangeService();
                 QUOTE_SERVICE_NAME = EXCHANGE_SERVICE_NAME + config.getQuoteService();
                 BANKUPLINK_SERVICE_NAME = BANKUPLINK_SERVICE_NAME + config.getBankuplinkService();
                 INTERF_PLACE_SERVICE_NAME = INTERF_PLACE_SERVICE_NAME +config.getInterfPlaceService();
@@ -201,6 +206,8 @@ public class ServiceApplication {
                 CUSTOMER_INTERF_NAME = config.getCustomerInterfService();
                 PINGAN_SERVICE_NAME = config.getTamsServer();
                 INVEST_INTERF_SERVICE_NAME = config.getInvestInterfService();
+
+                CHB_SERVICE_NAME = config.getChbService();
                 EXCHANGE_SERVICE_NAME = config.getExchangeService();
                 QUOTE_SERVICE_NAME = config.getQuoteService();
                 BANKUPLINK_SERVICE_NAME = config.getBankuplinkService();
@@ -256,6 +263,7 @@ public class ServiceApplication {
          */
         private String investInterfService;
 
+        private String chbService;
         private String exchangeService;
 
         private String quoteService;
@@ -480,6 +488,13 @@ public class ServiceApplication {
             this.riskInfService = riskInfService;
         }
 
+        public String getChbService() {
+            return chbService;
+        }
+
+        public void setChbService(String chbService) {
+            this.chbService = chbService;
+        }
         public String getExchangeService() {
             return exchangeService;
         }

@@ -121,7 +121,7 @@ public class ChbInterfSynchronizeTaskService extends InterfService {
 		//产品收益率净值接口数据接入
 		prodIncomeImpMainService.generatePrdPeriodyieldData(new Date(), null);
     	//资产要素信息接口数据接入
-    	Map<String,List<String>> paraAssetInfo = assetInfoImpMainService.generateAssetInfoData(new Date(),null,true);
+    	Map<String,List<String>> paraAssetInfo = assetInfoImpMainService.generateAssetInfoData(new Date(),null,true,null);
     	//投资交易信息接口数据接入
     	Map<String,List<String>> paraInvestTrade = investImpMainService.generateInvestTradeData(new Date(),null,true);
     	//底层资产持仓信息接入

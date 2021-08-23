@@ -16,6 +16,7 @@ import com.joyintech.tams.invest.period.trdoptionduration.dto.OptionDurationDeta
 import com.joyintech.tams.invest.period.trdoptionduration.service.TrdOptionDuration002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,8 +126,7 @@ public class TrdOptionDuration002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) OptionDurationDetailDto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) OptionDurationDetailDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -169,8 +169,7 @@ public class TrdOptionDuration002Controller extends BaseController {
 
     @RequestMapping("/getoption")
     @ResponseBody
-    public Page<SelectOptionDto> getoption()
-        throws Exception {
+    public Page<SelectOptionDto> getoption() {
         return trdOptionDuration002Service.getoption(RequestUtil.getPageParam());
     }
 }

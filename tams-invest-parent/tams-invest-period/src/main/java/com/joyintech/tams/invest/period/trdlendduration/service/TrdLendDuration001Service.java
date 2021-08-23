@@ -366,7 +366,7 @@ implements BaseProcessService<TrdLendDuration001Dto>{
         }
         if ("submit".equals(entity.getOperateType())) {
             deleteWflDataAndPosition(entity.getWorkflowId());
-            entity.setMode(type.toString());
+//            entity.setMode(type.toString());
             // 金融产品交易信息DTO.金融产品交易汇总Entity -> 金融产品交易汇总业务流程表
             WflTrdFinProductDealTotal trdFinProductDealTotal = dealEntityService.gen汇总流程表(entity);
             trdFinProductDealTotal.setPortfolioId(entity.getActPortfolioId());

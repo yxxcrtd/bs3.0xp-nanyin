@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.LqdPipelineMatchMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.LqdPipelineMatch" >
+        <id column="MATCH_SEQNO" property="matchSeqno" jdbcType="VARCHAR" />
+        <result column="GROUP_ID" property="groupId" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="TRU_SEQ_NO" property="truSeqNo" jdbcType="VARCHAR" />
+        <result column="TRU_ACCOUNT" property="truAccount" jdbcType="VARCHAR" />
+        <result column="TRU_PS" property="truPs" jdbcType="VARCHAR" />
+        <result column="TRU_PRINAMT" property="truPrinamt" jdbcType="DECIMAL" />
+        <result column="TRU_SELLER" property="truSeller" jdbcType="VARCHAR" />
+        <result column="TRU_SELLERNAME" property="truSellername" jdbcType="VARCHAR" />
+        <result column="TRU_USAGE" property="truUsage" jdbcType="VARCHAR" />
+        <result column="SYS_TRADE_ID" property="sysTradeId" jdbcType="VARCHAR" />
+        <result column="SYS_IS_TOTAL_TRADE" property="sysIsTotalTrade" jdbcType="VARCHAR" />
+        <result column="SYS_CDATE" property="sysCdate" jdbcType="DATE" />
+        <result column="SYS_BUSS_TYPE" property="sysBussType" jdbcType="VARCHAR" />
+        <result column="SYS_PORTFOLIO_ID" property="sysPortfolioId" jdbcType="VARCHAR" />
+        <result column="SYS_PORTFOLIO_NAME" property="sysPortfolioName" jdbcType="VARCHAR" />
+        <result column="SYS_FINPROD_ID" property="sysFinprodId" jdbcType="VARCHAR" />
+        <result column="SYS_FINPROD_NAME" property="sysFinprodName" jdbcType="VARCHAR" />
+        <result column="SYS_PRINAMT" property="sysPrinamt" jdbcType="DECIMAL" />
+        <result column="SYS_CCY" property="sysCcy" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        MATCH_SEQNO MATCH_SEQNO, GROUP_ID GROUP_ID, REMARK REMARK, TRU_SEQ_NO TRU_SEQ_NO, 
+        TRU_ACCOUNT TRU_ACCOUNT, TRU_PS TRU_PS, TRU_PRINAMT TRU_PRINAMT, TRU_SELLER TRU_SELLER, 
+        TRU_SELLERNAME TRU_SELLERNAME, TRU_USAGE TRU_USAGE, SYS_TRADE_ID SYS_TRADE_ID, SYS_IS_TOTAL_TRADE SYS_IS_TOTAL_TRADE, 
+        SYS_CDATE SYS_CDATE, SYS_BUSS_TYPE SYS_BUSS_TYPE, SYS_PORTFOLIO_ID SYS_PORTFOLIO_ID, 
+        SYS_PORTFOLIO_NAME SYS_PORTFOLIO_NAME, SYS_FINPROD_ID SYS_FINPROD_ID, SYS_FINPROD_NAME SYS_FINPROD_NAME, 
+        SYS_PRINAMT SYS_PRINAMT, SYS_CCY SYS_CCY, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.LqdPipelineMatchMapper.Base_Column_List" />
+        from LQD_PIPELINE_MATCH
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.LqdPipelineMatchMapper.Base_Column_List" />
+        from LQD_PIPELINE_MATCH
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.LqdPipelineMatchMapper.Base_Column_List" />
+        from LQD_PIPELINE_MATCH
+        where MATCH_SEQNO = #{matchSeqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from LQD_PIPELINE_MATCH
+        where MATCH_SEQNO = #{matchSeqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.LqdPipelineMatch" >
+        insert into LQD_PIPELINE_MATCH (MATCH_SEQNO, GROUP_ID, REMARK, 
+            TRU_SEQ_NO, TRU_ACCOUNT, TRU_PS, 
+            TRU_PRINAMT, TRU_SELLER, TRU_SELLERNAME, 
+            TRU_USAGE, SYS_TRADE_ID, SYS_IS_TOTAL_TRADE, 
+            SYS_CDATE, SYS_BUSS_TYPE, SYS_PORTFOLIO_ID, 
+            SYS_PORTFOLIO_NAME, SYS_FINPROD_ID, SYS_FINPROD_NAME, 
+            SYS_PRINAMT, SYS_CCY, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{matchSeqno,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{truSeqNo,jdbcType=VARCHAR}, #{truAccount,jdbcType=VARCHAR}, #{truPs,jdbcType=VARCHAR}, 
+            #{truPrinamt,jdbcType=DECIMAL}, #{truSeller,jdbcType=VARCHAR}, #{truSellername,jdbcType=VARCHAR}, 
+            #{truUsage,jdbcType=VARCHAR}, #{sysTradeId,jdbcType=VARCHAR}, #{sysIsTotalTrade,jdbcType=VARCHAR}, 
+            #{sysCdate,jdbcType=DATE}, #{sysBussType,jdbcType=VARCHAR}, #{sysPortfolioId,jdbcType=VARCHAR}, 
+            #{sysPortfolioName,jdbcType=VARCHAR}, #{sysFinprodId,jdbcType=VARCHAR}, #{sysFinprodName,jdbcType=VARCHAR}, 
+            #{sysPrinamt,jdbcType=DECIMAL}, #{sysCcy,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.LqdPipelineMatch" >
+        insert into LQD_PIPELINE_MATCH
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="matchSeqno != null" >
+                MATCH_SEQNO,
+            </if>
+            <if test="groupId != null" >
+                GROUP_ID,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="truSeqNo != null" >
+                TRU_SEQ_NO,
+            </if>
+            <if test="truAccount != null" >
+                TRU_ACCOUNT,
+            </if>
+            <if test="truPs != null" >
+                TRU_PS,
+            </if>
+            <if test="truPrinamt != null" >
+                TRU_PRINAMT,
+            </if>
+            <if test="truSeller != null" >
+                TRU_SELLER,
+            </if>
+            <if test="truSellername != null" >
+                TRU_SELLERNAME,
+            </if>
+            <if test="truUsage != null" >
+                TRU_USAGE,
+            </if>
+            <if test="sysTradeId != null" >
+                SYS_TRADE_ID,
+            </if>
+            <if test="sysIsTotalTrade != null" >
+                SYS_IS_TOTAL_TRADE,
+            </if>
+            <if test="sysCdate != null" >
+                SYS_CDATE,
+            </if>
+            <if test="sysBussType != null" >
+                SYS_BUSS_TYPE,
+            </if>
+            <if test="sysPortfolioId != null" >
+                SYS_PORTFOLIO_ID,
+            </if>
+            <if test="sysPortfolioName != null" >
+                SYS_PORTFOLIO_NAME,
+            </if>
+            <if test="sysFinprodId != null" >
+                SYS_FINPROD_ID,
+            </if>
+            <if test="sysFinprodName != null" >
+                SYS_FINPROD_NAME,
+            </if>
+            <if test="sysPrinamt != null" >
+                SYS_PRINAMT,
+            </if>
+            <if test="sysCcy != null" >
+                SYS_CCY,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="matchSeqno != null" >
+                #{matchSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="groupId != null" >
+                #{groupId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="truSeqNo != null" >
+                #{truSeqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="truAccount != null" >
+                #{truAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="truPs != null" >
+                #{truPs,jdbcType=VARCHAR},
+            </if>
+            <if test="truPrinamt != null" >
+                #{truPrinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="truSeller != null" >
+                #{truSeller,jdbcType=VARCHAR},
+            </if>
+            <if test="truSellername != null" >
+                #{truSellername,jdbcType=VARCHAR},
+            </if>
+            <if test="truUsage != null" >
+                #{truUsage,jdbcType=VARCHAR},
+            </if>
+            <if test="sysTradeId != null" >
+                #{sysTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="sysIsTotalTrade != null" >
+                #{sysIsTotalTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="sysCdate != null" >
+                #{sysCdate,jdbcType=DATE},
+            </if>
+            <if test="sysBussType != null" >
+                #{sysBussType,jdbcType=VARCHAR},
+            </if>
+            <if test="sysPortfolioId != null" >
+                #{sysPortfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="sysPortfolioName != null" >
+                #{sysPortfolioName,jdbcType=VARCHAR},
+            </if>
+            <if test="sysFinprodId != null" >
+                #{sysFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="sysFinprodName != null" >
+                #{sysFinprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="sysPrinamt != null" >
+                #{sysPrinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="sysCcy != null" >
+                #{sysCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.LqdPipelineMatch" >
+        insert into LQD_PIPELINE_MATCH(MATCH_SEQNO, GROUP_ID, REMARK, TRU_SEQ_NO, TRU_ACCOUNT, 
+        TRU_PS, TRU_PRINAMT, TRU_SELLER, TRU_SELLERNAME, TRU_USAGE, SYS_TRADE_ID, SYS_IS_TOTAL_TRADE, 
+        SYS_CDATE, SYS_BUSS_TYPE, SYS_PORTFOLIO_ID, SYS_PORTFOLIO_NAME, SYS_FINPROD_ID, SYS_FINPROD_NAME, 
+        SYS_PRINAMT, SYS_CCY, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select MATCH_SEQNO, GROUP_ID, REMARK, TRU_SEQ_NO, TRU_ACCOUNT, 
+            TRU_PS, TRU_PRINAMT, TRU_SELLER, TRU_SELLERNAME, TRU_USAGE, SYS_TRADE_ID, SYS_IS_TOTAL_TRADE, 
+            SYS_CDATE, SYS_BUSS_TYPE, SYS_PORTFOLIO_ID, SYS_PORTFOLIO_NAME, SYS_FINPROD_ID, SYS_FINPROD_NAME, 
+            SYS_PRINAMT, SYS_CCY, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from LQD_PIPELINE_MATCH
+             where 1 = 1 and MATCH_SEQNO = #{matchSeqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.LqdPipelineMatch" >
+        update LQD_PIPELINE_MATCH
+        <set >
+            <if test="groupId != null" >
+                GROUP_ID = #{groupId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="truSeqNo != null" >
+                TRU_SEQ_NO = #{truSeqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="truAccount != null" >
+                TRU_ACCOUNT = #{truAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="truPs != null" >
+                TRU_PS = #{truPs,jdbcType=VARCHAR},
+            </if>
+            <if test="truPrinamt != null" >
+                TRU_PRINAMT = #{truPrinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="truSeller != null" >
+                TRU_SELLER = #{truSeller,jdbcType=VARCHAR},
+            </if>
+            <if test="truSellername != null" >
+                TRU_SELLERNAME = #{truSellername,jdbcType=VARCHAR},
+            </if>
+            <if test="truUsage != null" >
+                TRU_USAGE = #{truUsage,jdbcType=VARCHAR},
+            </if>
+            <if test="sysTradeId != null" >
+                SYS_TRADE_ID = #{sysTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="sysIsTotalTrade != null" >
+                SYS_IS_TOTAL_TRADE = #{sysIsTotalTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="sysCdate != null" >
+                SYS_CDATE = #{sysCdate,jdbcType=DATE},
+            </if>
+            <if test="sysBussType != null" >
+                SYS_BUSS_TYPE = #{sysBussType,jdbcType=VARCHAR},
+            </if>
+            <if test="sysPortfolioId != null" >
+                SYS_PORTFOLIO_ID = #{sysPortfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="sysPortfolioName != null" >
+                SYS_PORTFOLIO_NAME = #{sysPortfolioName,jdbcType=VARCHAR},
+            </if>
+            <if test="sysFinprodId != null" >
+                SYS_FINPROD_ID = #{sysFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="sysFinprodName != null" >
+                SYS_FINPROD_NAME = #{sysFinprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="sysPrinamt != null" >
+                SYS_PRINAMT = #{sysPrinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="sysCcy != null" >
+                SYS_CCY = #{sysCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where MATCH_SEQNO = #{matchSeqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.LqdPipelineMatch" >
+        update LQD_PIPELINE_MATCH
+        set GROUP_ID = #{groupId,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            TRU_SEQ_NO = #{truSeqNo,jdbcType=VARCHAR},
+            TRU_ACCOUNT = #{truAccount,jdbcType=VARCHAR},
+            TRU_PS = #{truPs,jdbcType=VARCHAR},
+            TRU_PRINAMT = #{truPrinamt,jdbcType=DECIMAL},
+            TRU_SELLER = #{truSeller,jdbcType=VARCHAR},
+            TRU_SELLERNAME = #{truSellername,jdbcType=VARCHAR},
+            TRU_USAGE = #{truUsage,jdbcType=VARCHAR},
+            SYS_TRADE_ID = #{sysTradeId,jdbcType=VARCHAR},
+            SYS_IS_TOTAL_TRADE = #{sysIsTotalTrade,jdbcType=VARCHAR},
+            SYS_CDATE = #{sysCdate,jdbcType=DATE},
+            SYS_BUSS_TYPE = #{sysBussType,jdbcType=VARCHAR},
+            SYS_PORTFOLIO_ID = #{sysPortfolioId,jdbcType=VARCHAR},
+            SYS_PORTFOLIO_NAME = #{sysPortfolioName,jdbcType=VARCHAR},
+            SYS_FINPROD_ID = #{sysFinprodId,jdbcType=VARCHAR},
+            SYS_FINPROD_NAME = #{sysFinprodName,jdbcType=VARCHAR},
+            SYS_PRINAMT = #{sysPrinamt,jdbcType=DECIMAL},
+            SYS_CCY = #{sysCcy,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where MATCH_SEQNO = #{matchSeqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

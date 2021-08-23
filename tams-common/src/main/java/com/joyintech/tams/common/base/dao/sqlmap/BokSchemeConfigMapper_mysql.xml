@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokSchemeConfigMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokSchemeConfig" >
+        <id column="CONFIG_ID" property="configId" jdbcType="VARCHAR" />
+        <result column="SCHEME_TYPE" property="schemeType" jdbcType="VARCHAR" />
+        <result column="SCHEME_TYPE_2" property="schemeType2" jdbcType="VARCHAR" />
+        <result column="CONFIG_NAME" property="configName" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="DICT_CODE" property="dictCode" jdbcType="VARCHAR" />
+        <result column="CONFIG_TYPE" property="configType" jdbcType="VARCHAR" />
+        <result column="SORT_NO" property="sortNo" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CONFIG_ID CONFIG_ID, SCHEME_TYPE SCHEME_TYPE, SCHEME_TYPE_2 SCHEME_TYPE_2, CONFIG_NAME CONFIG_NAME,
+        REMARK REMARK, DICT_CODE DICT_CODE, CONFIG_TYPE CONFIG_TYPE, SORT_NO SORT_NO, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokSchemeConfigMapper.Base_Column_List" />
+        from BOK_SCHEME_CONFIG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokSchemeConfigMapper.Base_Column_List" />
+        from BOK_SCHEME_CONFIG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokSchemeConfigMapper.Base_Column_List" />
+        from BOK_SCHEME_CONFIG
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from BOK_SCHEME_CONFIG
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokSchemeConfig" >
+        insert into BOK_SCHEME_CONFIG (CONFIG_ID, SCHEME_TYPE, SCHEME_TYPE_2,
+            CONFIG_NAME, REMARK, DICT_CODE,
+            CONFIG_TYPE, SORT_NO, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME)
+        values (#{configId,jdbcType=VARCHAR}, #{schemeType,jdbcType=VARCHAR}, #{schemeType2,jdbcType=VARCHAR},
+            #{configName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{dictCode,jdbcType=VARCHAR},
+            #{configType,jdbcType=VARCHAR}, #{sortNo,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokSchemeConfig" >
+        insert into BOK_SCHEME_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="configId != null" >
+                CONFIG_ID,
+            </if>
+            <if test="schemeType != null" >
+                SCHEME_TYPE,
+            </if>
+            <if test="schemeType2 != null" >
+                SCHEME_TYPE_2,
+            </if>
+            <if test="configName != null" >
+                CONFIG_NAME,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="dictCode != null" >
+                DICT_CODE,
+            </if>
+            <if test="configType != null" >
+                CONFIG_TYPE,
+            </if>
+            <if test="sortNo != null" >
+                SORT_NO,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="configId != null" >
+                #{configId,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeType != null" >
+                #{schemeType,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeType2 != null" >
+                #{schemeType2,jdbcType=VARCHAR},
+            </if>
+            <if test="configName != null" >
+                #{configName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="dictCode != null" >
+                #{dictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="configType != null" >
+                #{configType,jdbcType=VARCHAR},
+            </if>
+            <if test="sortNo != null" >
+                #{sortNo,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokSchemeConfig" >
+        insert into BOK_SCHEME_CONFIG(CONFIG_ID, SCHEME_TYPE, SCHEME_TYPE_2, CONFIG_NAME,
+        REMARK, DICT_CODE, CONFIG_TYPE, SORT_NO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME)
+        select CONFIG_ID, SCHEME_TYPE, SCHEME_TYPE_2, CONFIG_NAME,
+            REMARK, DICT_CODE, CONFIG_TYPE, SORT_NO, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_SCHEME_CONFIG
+             where 1 = 1 and CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokSchemeConfig" >
+        update BOK_SCHEME_CONFIG
+        <set >
+            <if test="schemeType != null" >
+                SCHEME_TYPE = #{schemeType,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeType2 != null" >
+                SCHEME_TYPE_2 = #{schemeType2,jdbcType=VARCHAR},
+            </if>
+            <if test="configName != null" >
+                CONFIG_NAME = #{configName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="dictCode != null" >
+                DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="configType != null" >
+                CONFIG_TYPE = #{configType,jdbcType=VARCHAR},
+            </if>
+            <if test="sortNo != null" >
+                SORT_NO = #{sortNo,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokSchemeConfig" >
+        update BOK_SCHEME_CONFIG
+        set SCHEME_TYPE = #{schemeType,jdbcType=VARCHAR},
+            SCHEME_TYPE_2 = #{schemeType2,jdbcType=VARCHAR},
+            CONFIG_NAME = #{configName,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            CONFIG_TYPE = #{configType,jdbcType=VARCHAR},
+            SORT_NO = #{sortNo,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CONFIG_ID = #{configId,jdbcType=VARCHAR}
+    </update>
+</mapper>

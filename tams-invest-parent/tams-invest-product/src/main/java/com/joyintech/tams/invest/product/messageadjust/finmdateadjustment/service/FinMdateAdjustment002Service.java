@@ -16,6 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.api.constant.BussinessJixuConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,21 +34,6 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.dao.PrdMdateAdjustMapper;
-import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
-import com.joyintech.tams.common.base.dao.RepProdDeclareMapper;
-import com.joyintech.tams.common.base.dao.RepProdIssueMapper;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinOpenPlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.PrdMdateAdjust;
-import com.joyintech.tams.common.base.entity.PrdMdateAdjustKey;
-import com.joyintech.tams.common.base.entity.PtlPortfolio;
-import com.joyintech.tams.common.base.entity.RepProdDeclare;
-import com.joyintech.tams.common.base.entity.RepProdIssue;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.prod.BussFinProductFeeInfoService;
 import com.joyintech.tams.component.business.prod.BussFinProductOpenPlanService;
@@ -78,9 +69,15 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment001Dto> implements BaseProcessService<FinMdateAdjustment001Dto> {
-
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinMdateAdjustment002Service.class);
+    
     @Autowired
     private FinProductMapper finProductMapper;
+    @Autowired
+    private FinTradeProductMapper finTradeProductMapper;
     /*guyunfei 20191111 金融产品扩展表字段迁移 start*/
 //    @Autowired
 //    private PaFinProductMapper paFinProductMapper;
@@ -147,8 +144,8 @@ public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryAdjustProdIdList(Map<String, Object> param) {
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinMdateAdjustment/queryAdjustProdIdList",
+    public Page<SelectOptionDto> queryAdjustProdIdList(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinMdateAdjustment/queryAdjustProdIdList",
             param, SelectOptionDto.class);
     }
 
@@ -203,7 +200,7 @@ public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment
             try {
                 BeanUtil.copyProperties(finMdateAdjustment001Dto, prdMdateAdjust);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
 //            finMdateAdjustment001Dto.setFinprodAbbr(
 //                    finProduct != null ? finProduct.getFinprodAbbr() : null);
@@ -361,6 +358,16 @@ public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment
             layeredFinProductlist.forEach(layeredFinProduct -> {
                 record.setFinprodId(layeredFinProduct.getFinprodId());
                 finProductMapper.updateByPrimaryKeySelective(record);
+
+                //add by jianxx 调整产品到期日，同步调整批次信息中到期日 start
+                List<FinTradeProduct> finTradeProducts = finTradeProductMapper.selectByFinprodId(layeredFinProduct.getFinprodId());
+                for (FinTradeProduct finTradeProduct : finTradeProducts) {
+                    finTradeProduct.setMdate(record.getMdate());
+                    if(finTradeProduct!=null){
+                        finTradeProductMapper.updateByPrimaryKeySelective(finTradeProduct);
+                    }
+                }
+                //add by jianxx 调整产品到期日，同步调整批次信息中到期日 end
             });
         }
         // add by zlp 20190318 start 到期日调整同步修改组合到期日

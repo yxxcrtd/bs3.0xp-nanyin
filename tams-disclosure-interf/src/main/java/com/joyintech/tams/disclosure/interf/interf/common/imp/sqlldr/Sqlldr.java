@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public class Sqlldr implements ImpExcutor {
         // 控制文件路径
         String control = args.getControl();
         // 创建控制文件
-        File file = new File(control);
+        File file = new SafelyFile(control);
         if (!file.exists()) {
             // 如果控制文件不存在，则创建
             file.createNewFile();
@@ -78,8 +79,7 @@ public class Sqlldr implements ImpExcutor {
      * {@inheritDoc}
      */
     @Override
-    public boolean excute(ImpArgument args)
-        throws Exception {
+    public boolean excute(ImpArgument args) throws IOException, InterruptedException {
         String sh = "sqlldr ";
         if (!(args instanceof SqlldrImpArgument)) {
             LOGGER.warn("不支持的参数类型:" + args.getClass().getName());
@@ -107,7 +107,7 @@ public class Sqlldr implements ImpExcutor {
      * @param logFile 日志文件
      */
     private void printLog(String logFile) {
-        File log = new File(logFile);
+        File log = new SafelyFile(logFile);
         if (log.exists()) {
             try {
                 LOGGER.info(FileUtils.readFileToString(log));
@@ -147,7 +147,7 @@ public class Sqlldr implements ImpExcutor {
      */
     private void delete(String filePath) {
         if (filePath != null && filePath.length() > 0) {
-            File file = new File(filePath);
+            File file = new SafelyFile(filePath);
             if (file.exists()) {
                 file.delete();
             }

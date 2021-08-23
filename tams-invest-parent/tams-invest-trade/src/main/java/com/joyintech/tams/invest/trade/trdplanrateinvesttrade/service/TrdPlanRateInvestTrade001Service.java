@@ -16,9 +16,12 @@ import java.util.Map;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.Date;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -77,6 +80,16 @@ public class TrdPlanRateInvestTrade001Service extends CommonExportService<TrdPla
     	 
          
      }
+    /**
+     * 设置日期格式
+     * {@inheritDoc}
+     */
+    @Override
+    public void setCellValue(String beanName, Cell cell, String propName, Object value) {
+        if(("tradeDate".equals(propName)) && value != null){
+            cell.setCellValue(DateUtil.format((Date)value));
+        }
+    }
     
      /**
       * {@inheritDoc}

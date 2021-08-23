@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +68,7 @@ public class JasperHelper {
 	 */
 	public static void exportExcel(JasperPrint jasperPrint, String exportReportFile) throws IOException, JRException {
 		String url=exportReportFile+".xlsx";
-		File file=new File(url);
+		File file=new SafelyFile(url);
 		file.createNewFile();
 
 		JRXlsxExporter xlsxExporter=new JRXlsxExporter();
@@ -92,7 +93,7 @@ public class JasperHelper {
 	 */
 	private static void exportWord(JasperPrint jasperPrint, String exportReportFile) throws JRException, IOException {
 		String url=exportReportFile+".doc";
-		File file=new File(url);
+		File file=new SafelyFile(url);
 		file.createNewFile();
 
         JRDocxExporter worldExporter = new JRDocxExporter();
@@ -115,7 +116,7 @@ public class JasperHelper {
 //			HttpServletRequest request, HttpServletResponse response,
 //			Map<String, Object> parameters, Connection conn) {
 //		try {
-//			File reportFile =new File(sourceReportFile);
+//			File reportFile =new SafelyFile(sourceReportFile);
 //			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportFile);
 //			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
 //			exportHtml(jasperPrint, exportReportFile);

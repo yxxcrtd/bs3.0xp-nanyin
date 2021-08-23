@@ -13,9 +13,12 @@ package com.joyintech.service.entrust.etrinvestbondinfo.controller;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +62,8 @@ public class EtrInvestBondInfoController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<EtrInvestBondInfoDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrInvestBondInfoDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         String bondType = (String)param.get("bondType");
         if(StringUtil.isNotEmpty(bondType)){
             param.put("bondTypeList", StringUtil.split(bondType, GlobalConstant.COMMA));
@@ -77,7 +81,7 @@ public class EtrInvestBondInfoController {
      */
     @PostMapping("getentrustId")
     public List<SuggestDto> getentrustId(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         List<SuggestDto> temp = etrInvestBondInfoService.getentrustId(map);
         return temp;
     }
@@ -92,7 +96,7 @@ public class EtrInvestBondInfoController {
      */
     @GetMapping("getfinprodId")
     public List<SuggestDto> getfinprodId(String finprodId, String pageId)
-        throws Exception {
+    {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("finprodId", finprodId);
         map.put("pageId", pageId);
@@ -113,7 +117,7 @@ public class EtrInvestBondInfoController {
     @PostMapping("getfinprodIdForAdd/{page}/{length}")
     public Page<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<SelectOptionDto> temp = etrInvestBondInfoService.getfinprodIdForAdd(page,length,param);
         return temp;
     }
@@ -276,6 +280,16 @@ public class EtrInvestBondInfoController {
     }
 
     /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    @PostMapping("getLastPriceByPara")
+    public BigDecimal getLastPriceByPara(@RequestBody Map<String, Object> param) {
+        return etrInvestBondInfoService.getLastPriceByPara(param);
+    }
+
+    /**
      * 查询证券托管户：联想框文本框
      *
      * @param param 画面参数
@@ -287,4 +301,15 @@ public class EtrInvestBondInfoController {
     public List<SuggestDto> getSecManageAcctId(@RequestBody Map<String, Object> param) {
         return etrInvestBondInfoService.getSecManageAcctId(param);
     }
+
+    /**
+     * 查询平台日前公摊净值
+     *
+     * @author jiangpeng
+     */
+    @PostMapping("getLastNetAmortizationPrice")
+    public BigDecimal getLastNetAmortizationPrice(@RequestBody Map<String, Object> param) {
+        return etrInvestBondInfoService.getLastNetAmortizationPrice(param);
+    }
+
 }

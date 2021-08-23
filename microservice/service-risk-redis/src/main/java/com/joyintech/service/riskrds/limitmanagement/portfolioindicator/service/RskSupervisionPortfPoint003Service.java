@@ -56,7 +56,7 @@ public class RskSupervisionPortfPoint003Service extends BaseService {
     @SuppressWarnings("unchecked")
     public Page<RskPortfolioPoolConfigDto> selectForPage(int page, int length,
                                                          Map<String, Object> param)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> rskSupervisionPortfPoint003Mapper.selectForPage(param));
     }
@@ -188,7 +188,7 @@ public class RskSupervisionPortfPoint003Service extends BaseService {
     @SuppressWarnings("unchecked")
     public Page<RskPtlPortfolioDto> selectPortElementForPage(int page, int length,
                                                              Map<String, Object> param)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> rskSupervisionPortfPoint003Mapper.selectPortElementForPage(param));
     }

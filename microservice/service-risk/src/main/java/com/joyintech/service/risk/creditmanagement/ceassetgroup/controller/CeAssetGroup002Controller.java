@@ -63,7 +63,7 @@ public class CeAssetGroup002Controller {
 	 @Transactional
 	 @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody CreditLinesAstGrpDto dto) throws Exception {
+    public void insert(@RequestBody CreditLinesAstGrpDto dto) {
     	ceAssetGroup002Service.insert(dto);
     }
     
@@ -74,7 +74,7 @@ public class CeAssetGroup002Controller {
      * @since 1.0
      */
     @PostMapping("update")
-    public void update(@RequestBody CreditLinesAstGrpDto dto) throws Exception {
+    public void update(@RequestBody CreditLinesAstGrpDto dto) {
     	ceAssetGroup002Service.update(dto);
     }
 	    
@@ -85,7 +85,7 @@ public class CeAssetGroup002Controller {
      * @throws Exception
      */
     @PostMapping("delete")
-    public int delete(@RequestBody CreditLinesAstGrpDto dto) throws Exception {
+    public int delete(@RequestBody CreditLinesAstGrpDto dto) {
         return ceAssetGroup002Service.delete(dto);
     }
     

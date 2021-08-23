@@ -10,14 +10,22 @@
 
 package com.joyintech.tams.invest.period.trdfunddurationnew.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.invest.period.trdfundduration.dto.TrdFundDuration001Dto;
 import com.joyintech.tams.invest.period.trdfunddurationnew.dto.TrdFundDurationNew001Dto;
 import com.joyintech.tams.invest.period.trdfunddurationnew.service.TrdFundDurationNew001Service;
 import com.joyintech.tams.invest.period.trdfundobversion.service.TrdFundObversion001Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,11 +42,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -136,21 +139,59 @@ public class TrdFundDurationNew001Controller extends BaseController {
      * 导出
      *
      * @return 导出的文件流
-     * @throws Exception 文件到处异常
+     * @throws IOException 文件到处异常
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
-        return TrdFundDurationNew001Service.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
+    public ResponseEntity<byte[]> export() throws IOException {
+        String datas = this.getParam("datas");
+        if(datas==null) {
+            return TrdFundDurationNew001Service.export(this.getPageId(),
+                    RequestUtil.getParameters(getRequest()));
+        }
+        List<TrdFundDurationNew001Dto> param1 = JsonUtils.json2List(datas, TrdFundDurationNew001Dto.class);
+
+        String configxml = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            configxml = "/com/joyintech/tams/invest/period/trdfunddurationnew/conf/export_conf_ls.xml";
+        }else{
+            configxml = "/com/joyintech/tams/invest/period/trdfunddurationnew/conf/export_conf.xml";
+        }
+
+        File outFile =  TrdFundDurationNew001Service.makeFile( configxml,param1);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
 
     @RequestMapping("exportConversion")
-    public ResponseEntity<byte[]> exportConversion()
-            throws Exception {
-        return trdFundObversion001Service.export("TrdFundObversion001",
-                RequestUtil.getParameters(getRequest()));
+    public ResponseEntity<byte[]> exportConversion() throws IOException {
+        String datas = this.getParam("datas");
+        if(datas==null) {
+            return trdFundObversion001Service.export("TrdFundObversion001",
+                    RequestUtil.getParameters(getRequest()));
+        }
+        List<TrdFundObversionDto> param1 = JsonUtils.json2List(datas, TrdFundObversionDto.class);
+
+        String configxml = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            configxml = "/com/joyintech/tams/invest/period/trdfundobversion/conf/export_conf_ls.xml";
+        }else{
+            configxml = "/com/joyintech/tams/invest/period/trdfundobversion/conf/export_conf.xml";
+        }
+
+        File outFile =  trdFundObversion001Service.makeFile( configxml,param1);
+        return ExportUtil.export(
+                this.getMessage("TrdFundObversion001") + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
     /**
      * 撤销
@@ -160,8 +201,7 @@ public class TrdFundDurationNew001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult revoke(@RequestBody @Validated({
-            ValidateGroupDelete.class}) TrdFundDurationNew001Dto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupDelete.class}) TrdFundDurationNew001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

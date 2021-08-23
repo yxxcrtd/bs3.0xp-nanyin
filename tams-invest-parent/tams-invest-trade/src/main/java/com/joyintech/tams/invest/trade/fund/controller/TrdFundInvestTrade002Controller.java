@@ -5,6 +5,7 @@
 
 package com.joyintech.tams.invest.trade.fund.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -24,6 +25,7 @@ import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -484,8 +486,7 @@ public class TrdFundInvestTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    public AjaxResult save(@RequestBody TrdFundInvestTradeDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody TrdFundInvestTradeDto dto, BindingResult br) throws WorkFlowException, IOException, InstantiationException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

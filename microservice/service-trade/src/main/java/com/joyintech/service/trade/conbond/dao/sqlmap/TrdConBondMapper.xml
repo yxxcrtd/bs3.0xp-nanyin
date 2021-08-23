@@ -551,13 +551,17 @@
     <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
     	<if test="zhilingtype == null or zhilingtype == '01'">
 	        SELECT
-	            A.ACCT_NO hidCode,
+                distinct A.ACCT_NO hidCode,
 	            A.ACCT_NO code,
 	            B.SEC_ACCT_NAME name,
 	            B.SEC_ACCT_NAME shortName
 	        FROM PTL_SEC_ACCT A
 	        INNER JOIN STL_SEC_ACCT_INFO B
 	            ON A.ACCT_NO = B.SEC_ACCT_ID
+            <if test="finprodId !=null and finprodId !='' ">
+                LEFT JOIN FIN_PRODUCT FP
+                ON FP.FINPROD_ID =#{finprodId,jdbcType=VARCHAR}
+            </if>
 	        <where>
 	            <if test="portfolioId !=null and portfolioId !='' ">
                     PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
@@ -581,6 +585,9 @@
                     AND TRADE_PLACE = #{tradeMarket, jdbcType=VARCHAR}
                 </if>
                 <!--根据交易场所筛选 add by lishuping  20190924 end-->
+                <if test="finprodId !=null and finprodId !='' ">
+                    AND FP.REGIST_ORG = B.REGIST_ORG
+                </if>
 	        </where>
         </if>
          <if test="zhilingtype != null and zhilingtype == '02'">
@@ -750,7 +757,7 @@
         from PTL_CASH_POSITION
         where
          (HODING_TYPE=#{POSITION_TYPE_01} or HODING_TYPE=#{POSITION_TYPE_03}) and PORTFOLIO_ID=#{portfolioId}
-         and CDATE=(select cur_date from sys_date) and CHL_FINPROD_ID=#{chlId}
+         and CDATE= #{platDate,jdbcType=DATE} and CHL_FINPROD_ID=#{chlId}
     </select>
 
     <select id="getTrdProductDealByFTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">

@@ -162,7 +162,7 @@ public class TrdInvestDealQuery001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<TrdInvestDealQuery001Dto> selectForPage() throws Exception{
+	public Page<TrdInvestDealQuery001Dto> selectForPage() {
 		Map<String,Object> param = RequestUtil.getParameters(getRequest());
 		return trdInvestDealQuery001Service.selectForPage(param);
 	}
@@ -174,7 +174,7 @@ public class TrdInvestDealQuery001Controller extends BaseController{
 	 */
 	 @ResponseBody
 	 @RequestMapping("/getEntrustIds")
-	 public List<SuggestDto> getEntrustIds() throws Exception {
+	 public List<SuggestDto> getEntrustIds() {
 	 	String entrustId=super.getRequest().getParameter("param");
 	 	return trdInvestDealQuery001Service.getEntIds(entrustId);
 	 }
@@ -185,7 +185,7 @@ public class TrdInvestDealQuery001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getPortfolioIds")
-    public List<SuggestDto> getPortfolioIds() throws Exception {
+    public List<SuggestDto> getPortfolioIds() {
     	String portfolioId=super.getRequest().getParameter("param");
     	return trdInvestDealQuery001Service.getPortfolioIds(portfolioId);
     }
@@ -196,7 +196,7 @@ public class TrdInvestDealQuery001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketIds")
-    public List<SuggestDto> getFinprodMarketIds() throws Exception {
+    public List<SuggestDto> getFinprodMarketIds() {
     	String finprodMarketId=super.getRequest().getParameter("param");
     	return trdInvestDealQuery001Service.getFinprodMarketIds(finprodMarketId);
     }
@@ -206,7 +206,7 @@ public class TrdInvestDealQuery001Controller extends BaseController{
 	 * @throws Exception
 	 */
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() {
 	 	return trdInvestDealQuery001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
 	}
 	
@@ -217,7 +217,7 @@ public class TrdInvestDealQuery001Controller extends BaseController{
 	 * @throws Exception
 	 */
 	@RequestMapping("newSingleExportExcel")
-	public ResponseEntity<byte[]> newSingleExportExcel() throws Exception {
+	public ResponseEntity<byte[]> newSingleExportExcel() {
 		
 		Map<String,Object> param = RequestUtil.getPageParam();
         TrdDealQueryDto dto = JsonUtils.json2Object((String)param.get("dtoStr"),TrdDealQueryDto.class);
@@ -232,7 +232,7 @@ public class TrdInvestDealQuery001Controller extends BaseController{
 	 * @throws Exception
 	 */
 	@RequestMapping("newBatchExportExcel")
-	public ResponseEntity<byte[]> newBatchExportExcel() throws Exception {
+	public ResponseEntity<byte[]> newBatchExportExcel() {
 	 	//return assetTransferExport001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
 //		Map<String, Object> pageParam = RequestUtil.getParameters(getRequest());
 		
@@ -264,7 +264,7 @@ public class TrdInvestDealQuery001Controller extends BaseController{
      */
     @RequestMapping("/singleExport")
     public ResponseEntity<byte[]> singleExport()
-        throws Exception {
+         {
         Map<String,Object> param = RequestUtil.getPageParam();
         TrdDealQueryDto dto = JsonUtils.json2Object((String)param.get("dtoStr"),TrdDealQueryDto.class);
         return trdInvestDealQuery001Service.singleExport(dto);
@@ -280,7 +280,7 @@ public class TrdInvestDealQuery001Controller extends BaseController{
      */
     @RequestMapping("/batchExportExcel")
     public ResponseEntity<byte[]> batchExportExcel()
-        throws Exception {
+         {
         Map<String,Object> param = RequestUtil.getPageParam();
         TrdDealQueryDto dto = JsonUtils.json2Object((String)param.get("dtoStr"),TrdDealQueryDto.class);
         return trdInvestDealQuery001Service.batchExportExcel(dto);

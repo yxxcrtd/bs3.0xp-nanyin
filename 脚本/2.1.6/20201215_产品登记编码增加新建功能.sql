@@ -1,20 +1,20 @@
---2020-12-15 ≤˙∆∑µ«º«±‡¬Î‘ˆº”–¬Ω®π¶ƒ‹
---ª≠√Ê±Ì
+--2020-12-15 ‰∫ßÂìÅÁôªËÆ∞ÁºñÁ†ÅÂ¢ûÂä†Êñ∞Âª∫ÂäüËÉΩ
+--ÁîªÈù¢Ë°®
 DELETE FROM SYS_PAGE WHERE PAGE_ID='ProRegistCodeManage003';
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('ProRegistCodeManage003', 'REP', '/svreport/system/proregistcodemanage/ProRegistCodeManage003', 'report/system/proregistcodemanage/ProRegistCodeManage003', null, null, null, '02', '01', '≤˙∆∑µ«º«±‡¬Î–¬Ω®', 'system', null,sysdate, 'system',sysdate);
---ª≠√Ê‘™Àÿ±Ì
+VALUES ('ProRegistCodeManage003', 'REP', '/svreport/system/proregistcodemanage/ProRegistCodeManage003', 'report/system/proregistcodemanage/ProRegistCodeManage003', null, null, null, '02', '01', '‰∫ßÂìÅÁôªËÆ∞ÁºñÁ†ÅÊñ∞Âª∫', 'system', null,sysdate, 'system',sysdate);
+--ÁîªÈù¢ÂÖÉÁ¥†Ë°®
 DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID='ProRegistCodeManage001' AND ELEMENT_ID='ProRegistCodeManage001_btn_add';
 INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG)
-VALUES ('ProRegistCodeManage001', 'ProRegistCodeManage001_btn_add', '01', '01', null, '–¬Ω®', 'system', null,sysdate, 'system',sysdate, 'C');
---π§◊˜¡˜
+VALUES ('ProRegistCodeManage001', 'ProRegistCodeManage001_btn_add', '01', '01', null, 'Êñ∞Âª∫', 'system', null,sysdate, 'system',sysdate, 'C');
+--Â∑•‰ΩúÊµÅ
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='ProRegistCodeManage003' AND ELEMENT_ID='ProRegistCodeManage003_btn_save';
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 VALUES ('ProRegistCodeManage003', 'ProRegistCodeManage003_btn_save', 'noneApproval', 'system', null,sysdate, 'system', sysdate, 'ALL', '02');
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID='ProRegistCodeManage003' AND ELEMENT_ID='ProRegistCodeManage003_btn_submit';
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 VALUES ('ProRegistCodeManage003', 'ProRegistCodeManage003_btn_submit', 'noneApproval', 'system', null,sysdate, 'system', sysdate, 'ALL', '02');
---≤›∏Âœ‰ƒ£ Ω∑«∂‘œÛª≠√Ê±Ì
+--ËçâÁ®øÁÆ±Ê®°ÂºèÈùûÂØπË±°ÁîªÈù¢Ë°®
 DELETE FROM SYS_TRASH_NOT_TARGET_PAGE WHERE SEQ_NO = 'A6986B98373534A7E0538C5AA8C081D0'AND PAGE_ID = 'ProRegistCodeManage003';
 INSERT INTO SYS_TRASH_NOT_TARGET_PAGE (SEQ_NO,PAGE_ID)
 VALUES ('A6986B98373534A7E0538C5AA8C081D0','ProRegistCodeManage003');

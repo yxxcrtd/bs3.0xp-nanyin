@@ -10,14 +10,18 @@
 
 package com.joyintech.tams.invest.trade.bond.controller;
 
-import javax.validation.Valid;
-
-import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
@@ -25,7 +29,6 @@ import com.joyintech.tams.component.business.core.service.MstWorkflowCommonServi
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
@@ -35,9 +38,11 @@ import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeRevokeDto;
 import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade001Service;
 import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
-import com.joyintech.workflow.engine.WorkflowContext;
-import com.joyintech.workflow.engine.exception.WflCode;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,16 +53,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
-
+import javax.validation.Valid;
 import java.util.*;
 
 /**
@@ -138,7 +134,7 @@ public class TrdBondInvestTrade001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TrdBondInvestTradeDto> findPage()
-        throws Exception {
+         {
         return trdBondInvestTrade001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -173,7 +169,7 @@ public class TrdBondInvestTrade001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return trdBondInvestTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 
@@ -210,6 +206,17 @@ public class TrdBondInvestTrade001Controller extends BaseController {
             ar.setErrorList(errorList);
             return ar;
         }
+
+        TrdBondInvestTradeDto tradeDto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(inputDto.getTradeId());
+        int count = trdBondInvestTrade002Service.selectIssueAsset(tradeDto.getFinprodId());
+        if (count > 0){
+            ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+            errorList.add(new ValidMessage(this.getMessage("发行标的存在对应的上市流通交易,不允许撤销")));
+            AjaxResult ar = new AjaxResult();
+            ar.setErrorList(errorList);
+            return ar;
+        }
+        
         // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 start
         if (result.getErrorCount() == 0) {
             AjaxResult ajaxResult = new AjaxResult();
@@ -264,8 +271,7 @@ public class TrdBondInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdBondInvestTradeDto inputDto)
-        throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdBondInvestTradeDto inputDto) throws WorkFlowException {
         String operateType = inputDto.getOperateType();
         String totleTradeId = inputDto.getTotleTradeId();
         inputDto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(inputDto.getTotleTradeId());

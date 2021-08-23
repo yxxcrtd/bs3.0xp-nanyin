@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -63,18 +64,19 @@ public class CommonCodeCheckBatchService {
      * @param  list 被检查的数据
      * @param  tableInfo  检查的表名
      */
-    public void codeCheckCommonOnly(List<Map<String, String>> list, ChbCheckTableInfo tableInfo){
+    public void codeCheckCommonOnly(List<Map<String, String>> list, ChbCheckTableInfo tableInfo) {
 
         Set<String> prodRegistCodeList = new HashSet<>();
 
         Map<String, List<String>> prodRegistCodeMap = new HashMap<>();
-
-        List<Map<String, String>> newDataList = new ArrayList<>(list);
+        
+        Map<String,String> detailMap = new HashMap();
         //循环处理待check数据
         for (int i = list.size() - 1; i >= 0; i--){
             Map<String, String> map=list.get(i);
             switch (tableInfo) {
                 case 从业人员登记表SUB:
+                case 从业人员登记表INFO:
                     checkEmployeeSubInfo(map);
                     break;
                 case 资产要素登记表SUB:
@@ -94,7 +96,7 @@ public class CommonCodeCheckBatchService {
                 case 底层资产持仓信息登记表SUB:
                 case 底层资产持仓信息登记INFO:
                 case 底层资产持仓信息登记TMP:
-                    checkBotAstPos(map, newDataList);
+                    checkBotAstPos(map, detailMap);
                     break;
                 case 投资交易表登记SUB:
                 case 投资交易表登记TMP:
@@ -111,7 +113,7 @@ public class CommonCodeCheckBatchService {
                 case 个人产品申报登记SUB:
                 case 个人产品申报登记INFO:
                 case 个人产品申报登记TMP:
-                    checkPrdoDeclare(map,list);
+                    checkPrdoDeclare(map,detailMap, tableInfo);
                     break;
                 case 终止登记SUB:
                 case 终止登记TMP:
@@ -129,7 +131,7 @@ public class CommonCodeCheckBatchService {
 	 * @param  tableInfo  检查的表名
      * @param  fileName 导入的文件名
 	 */
-	public void codeCheckCommon(List<Map<String, String>> list, ChbCheckTableInfo tableInfo, String fileName){
+	public void codeCheckCommon(List<Map<String, String>> list, ChbCheckTableInfo tableInfo, String fileName) {
 		//错误信息集合
 		List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
         // 资产要素错误信息集合
@@ -231,7 +233,7 @@ public class CommonCodeCheckBatchService {
      * 底层资产持仓登记
      * @param dataMap
      */
-    private void checkBotAstPos(Map<String, String> dataMap, List<Map<String, String>> list){
+    private void checkBotAstPos(Map<String, String> dataMap, Map<String,String> ListMap) {
         String  errMsg = dataMap.getOrDefault("ERRMSG", "");
         // 发行机构代码
         String issuePartyId=dataMap.get("ISSUE_PARTY_ID");
@@ -263,51 +265,40 @@ public class CommonCodeCheckBatchService {
 
         if (StringUtil.isNotEmpty(planAssetId) && StringUtil.isNotEmpty(posDate) && StringUtil.isNotEmpty(assetCode)){
             // 报文内相当资产代码个数
-            int assetCodeEquCount = 0;
-            int totalNumSameCount = 0;
-            int issueAmtSameCount = 0;
-            int uninvestCashSameCount= 0;
-            for (Map<String, String> otherDataMap : list){
-                // 资管计划代码相同、持仓日期相同、底层资产代码不同
-                if (StringUtil.equals(otherDataMap.get("PLAN_ASSET_ID"), planAssetId) && StringUtil.equals(otherDataMap.get("POS_DATE"), posDate)){
-                    if (!StringUtil.equals(assetCode, otherDataMap.get("ASSET_CODE"))){
-                        if (checkValIsNum(totalNum) && checkValIsNum(otherDataMap.get("TOTAL_NUM"))){
-                            if (new BigDecimal(totalNum).compareTo(new BigDecimal(otherDataMap.get("TOTAL_NUM"))) != 0){
-                                totalNumSameCount ++;
-                            }
-                        }
-                        if (checkValIsNum(issueAmt) && checkValIsNum(otherDataMap.get("ISSUE_AMT"))){
-                            if (new BigDecimal(issueAmt).compareTo(new BigDecimal(otherDataMap.get("ISSUE_AMT"))) != 0){
-                                issueAmtSameCount ++;
-                            }
-                        }
-                        if (checkValIsNum(uninvestCash) && checkValIsNum(otherDataMap.get("UNINVEST_CASH"))){
-                            if (new BigDecimal(uninvestCash).compareTo(new BigDecimal(otherDataMap.get("UNINVEST_CASH"))) != 0){
-                                uninvestCashSameCount ++;
-                            }
-                        }
-                    }
-                    else{
-                        assetCodeEquCount ++;
-                    }
-                }
-
-            }
+        	String key = planAssetId+"_"+posDate;
+        	String  dataTotalNum = ListMap.get(key+"_"+"TOTAL_NUM");
+        	String  dataIssueAmt = ListMap.get(key+"_"+"ISSUE_AMT");
+        	String  dataUninvestCash = ListMap.get(key+"_"+"UNINVEST_CASH");
+        	String  valKey = ListMap.get(key+"_"+assetCode);
             // 同一对应资管及委外资产行内资产/负债编码、同一持仓日期时，所有的资管及委外资产当前总数量必须相同。
-            if (totalNumSameCount > 0){
+            if (null!=dataTotalNum&&
+            		checkValIsNum(totalNum)&&checkValIsNum(dataTotalNum)&& 
+            		new BigDecimal(totalNum).compareTo(new BigDecimal(dataTotalNum)) != 0){
                 errMsg +="同一对应资管及委外资产行内资产/负债编码、同一持仓日期时，所有的资管及委外资产当前总数量必须相同[PLAN_ASSET_ID="+planAssetId+"];";
+            }else{
+            	ListMap.put(key+"_"+"TOTAL_NUM", totalNum);
             }
             // 同一对应资管及委外资产行内资产/负债编码、同一持仓日期时，所有的资管及委外资产当前总折算人民币金额（元）必须相同。
-            if (issueAmtSameCount > 0){
+            if (null!=dataIssueAmt&&
+            		checkValIsNum(issueAmt)&&checkValIsNum(dataIssueAmt)&& 
+            		new BigDecimal(issueAmt).compareTo(new BigDecimal(dataIssueAmt)) != 0){
                 errMsg +="同一对应资管及委外资产行内资产/负债编码、同一持仓日期时，所有的资管及委外资产当前总折算人民币金额（元）必须相同[PLAN_ASSET_ID="+planAssetId+"];";
+            }else{
+            	ListMap.put(key+"_"+"ISSUE_AMT", issueAmt);
             }
             // 同一对应资管及委外资产行内资产/负债编码、同一持仓日期时，所有的资管及委外资产未投资头寸（元）必须相同。
-            if (uninvestCashSameCount > 0){
+            if (null!=dataUninvestCash&&
+            		checkValIsNum(uninvestCash)&&checkValIsNum(dataUninvestCash)&& 
+            		new BigDecimal(uninvestCash).compareTo(new BigDecimal(dataUninvestCash)) != 0){
                 errMsg +="同一对应资管及委外资产行内资产/负债编码、同一持仓日期时，所有的资管及委外资产未投资头寸（元）必须相同[PLAN_ASSET_ID="+planAssetId+"];";
+            }else{
+            	ListMap.put(key+"_"+"UNINVEST_CASH", uninvestCash);
             }
             // 对应资管及委外资产行内资产/负债编码、底层资产行内资产/负债编码和持仓日期在报文内不能同时重复。
-            if (assetCodeEquCount > 1){
+            if (null!=valKey){
                 errMsg +="对应资管及委外资产行内资产/负债编码、底层资产行内资产/负债编码和持仓日期在报文内不能同时重复[PLAN_ASSET_ID="+planAssetId+"];";
+            }else{
+            	ListMap.put(key+"_"+assetCode, "1");
             }
         }
 
@@ -783,7 +774,7 @@ public class CommonCodeCheckBatchService {
      * 代码检查产品申报登记
      * @param dataMap
      */
-    private  void  checkPrdoIssue(Map<String, String> dataMap,Set<String> prodRegistCodeList){
+    private  void  checkPrdoIssue(Map<String, String> dataMap,Set<String> prodRegistCodeList) {
         String  errMsg=dataMap.getOrDefault("ERRMSG", "");
         // 发行机构代码
         String issuePartyId=dataMap.get("ISSUE_PARTY_ID");
@@ -823,9 +814,9 @@ public class CommonCodeCheckBatchService {
             chbPrdDeclareSubList = commonCodeCheckMapper.queryChbPrdDeclareSubByRegCode(map);
             if (!StringUtil.isEmptyList(chbPrdDeclareSubList)){
                 if ((StringUtil.isNotEmpty(chbPrdDeclareSubList.get(0).getRaisePstrdate()) &&
-                        DateUtil.parse(raiseVdate).compareTo(chbPrdDeclareSubList.get(0).getRaisePstrdate()) < 0)
+                		DateUtil.isDateStr(raiseVdate,"yyyy-MM-dd")&&DateUtil.parse(raiseVdate).compareTo(chbPrdDeclareSubList.get(0).getRaisePstrdate()) < 0)
                         || (StringUtil.isNotEmpty(chbPrdDeclareSubList.get(0).getRaisePenddate()) &&
-                        DateUtil.parse(raiseVdate).compareTo(chbPrdDeclareSubList.get(0).getRaisePenddate()) > 0)){
+                        		DateUtil.isDateStr(raiseVdate,"yyyy-MM-dd")&&DateUtil.parse(raiseVdate).compareTo(chbPrdDeclareSubList.get(0).getRaisePenddate()) > 0)){
                     errMsg +="募集起始日期应落在申报登记要素中募集起始日期（从）/（到）的区间内[RAISE_VDATE="+raiseVdate+"];";
                 }
             }
@@ -918,10 +909,14 @@ public class CommonCodeCheckBatchService {
      * 代码检查产品申报登记
      * @param dataMap
      */
-    public  void  checkPrdoDeclare(Map<String, String> dataMap,List<Map<String, String>> list){
+    public void checkPrdoDeclare(Map<String, String> dataMap,Map<String, String> listMap, ChbCheckTableInfo tableInfo){
         String  errMsg=dataMap.getOrDefault("ERRMSG", "");
         //行内标识码
         String   prodInsId=dataMap.get("PROD_INS_ID");
+        // 产品名称
+        String prodName = dataMap.get("PROD_NAME");
+        // 产品期次
+        String prodStage = dataMap.get("PROD_STAGE");
         //发行机构代码
         String   issuePartyId=dataMap.get("ISSUE_PARTY_ID");
         //投资资产种类及比例要素
@@ -934,12 +929,29 @@ public class CommonCodeCheckBatchService {
             errMsg +="发行机构代码必须与银行代码相同[ISSUE_PARTY_ID="+issuePartyId+"];";
         }
         }
-        //不同产品之间，产品名称与产品期次不得同时重复
-        List<String>  listCheck1= commonCodeCheckMapper.genChbPrdDeclareSub1ByProdInsId(prodInsId);
-        //产品名称和产品期次不能同时重复！
-        List<String>  listCheck2= commonCodeCheckMapper.genChbPrdDeclareSub2ByProdInsId(prodInsId);
-        if(listCheck2.size()>0||listCheck1.size()>0){
-            errMsg +="产品名称和产品期次不能同时重复[PROD_NAME="+dataMap.get("PROD_NAME")+",PROD_STAGE="+dataMap.get("PROD_STAGE")+"];";
+
+        // modify by zhangliang 20210419 start
+        if (StringUtil.isNotEmpty(prodInsId) && StringUtil.isNotEmpty(prodName) && StringUtil.isNotEmpty(prodStage)){
+            List<String> countList = new ArrayList<>();
+            if (tableInfo == ChbCheckTableInfo.个人产品申报登记TMP || tableInfo == ChbCheckTableInfo.个人产品申报登记INFO){
+                countList.addAll(commonCodeCheckMapper.genChbPrdDeclareSub1ByProdInsId(tableInfo.getTableName(), prodInsId, prodName, prodStage));
+            }
+            if (tableInfo == ChbCheckTableInfo.个人产品申报登记INFO || tableInfo == ChbCheckTableInfo.个人产品申报登记SUB){
+                countList.addAll(commonCodeCheckMapper.genChbPrdDeclareSub1ByProdInsId("CHB_PRD_BASEINFO", prodInsId, prodName, prodStage));
+            }
+            countList.addAll(commonCodeCheckMapper.genChbPrdDeclareSub2ByProdInsId(prodInsId, prodName, prodStage));
+
+            // list  可能是tmp->sub也可能是业务数据维护
+            
+            
+            
+            String  code = listMap.get(prodName+"_"+prodStage);
+            if(null!=code||countList.size() > 0){
+                errMsg +="产品名称和产品期次不能同时重复[PROD_NAME="+dataMap.get("PROD_NAME")+",PROD_STAGE="+dataMap.get("PROD_STAGE")+"];";
+            }else{
+            	listMap.put(prodName+"_"+prodStage, "1");
+            }
+            
         }
         //投资资产种类及比例要素的判断
         boolean  flag=true;
@@ -1134,7 +1146,7 @@ public class CommonCodeCheckBatchService {
         if(StringUtil.isNotEmpty(incomeRatio)&&isBigDecimal(incomeRatio)&&
                 StringUtil.isNotEmpty(derInstrRatio)&&isBigDecimal(derInstrRatio)){
             if(new BigDecimal(incomeRatio).add(new BigDecimal(derInstrRatio)).compareTo(new BigDecimal(100))>0){
-                errMsgBuilder.append("以百分数形式表示的固定收益部分   所占比例与衍生金融工具所占比例之和需小于等于100[").append("INCOME_RATIO=").append(incomeRatio).append(",DER_INSTR_RATIO").append(derInstrRatio).append("];");
+                errMsgBuilder.append("以百分数形式表示的固定收益部分所占比例与衍生金融工具所占比例之和需小于等于100[").append("INCOME_RATIO=").append(incomeRatio).append(",DER_INSTR_RATIO=").append(derInstrRatio).append("];");
             }
         }
         }
@@ -1181,7 +1193,7 @@ public class CommonCodeCheckBatchService {
             }
         }
         if(!flag){
-            errMsgBuilder.append("投资资产种类及比例要素格式不对。正确的格式：数字%：文字；数字%-数字%：文字（其中，百分号、冒号、分号、连字号均应为英文标点，文字和数字部分均不得含有英文百分号、冒号、分号、连字号）。其中，数字格式为n..（5，2），且需大于等于0、小于等于100。[FUND_INVEST_ASSET="+dataMap.get("FUND_INVEST_ASSET")+"];");
+            errMsgBuilder.append("基金投资资产要素格式不对。正确的格式：数字%：文字；数字%-数字%：文字（其中，百分号、冒号、分号、连字号均应为英文标点，文字和数字部分均不得含有英文百分号、冒号、分号、连字号）。其中，数字格式为n..（5，2），且需大于等于0、小于等于100。[FUND_INVEST_ASSET="+dataMap.get("FUND_INVEST_ASSET")+"];");
         }
 
         dataMap.put("ERRMSG", errMsgBuilder.toString());
@@ -1208,9 +1220,10 @@ public class CommonCodeCheckBatchService {
 
         //获取申报登记相关
         List<ChbPrdDeclareSub> chbPrdDeclareSubList = new ArrayList<>();
-        if (StringUtil.isNotEmpty(prodId)){
+        if (StringUtil.isNotEmpty(prodId) || StringUtil.isNotEmpty(prodRegistCode)){
             Map<String, Object> map = new HashMap<>();
             map.put("prodId", prodId);
+            map.put("regCode", prodRegistCode);
             chbPrdDeclareSubList = commonCodeCheckMapper.queryChbPrdDeclareSubByRegCode(map);
         }
         // 银行模式才判断发行机构代码，联社模式不判断
@@ -1344,8 +1357,8 @@ public class CommonCodeCheckBatchService {
                            //break;
                     }
                     //该币种累计兑付金额（元）必须大于等于0。
-                    if(StringUtil.isNotEmpty(ccyCash)&&isBigDecimal(ccyPurchase)){
-                        if(BigDecimal.ZERO.compareTo(new  BigDecimal(ccyCash))>0){
+                    if(StringUtil.isNotEmpty(ccyCash)&&isBigDecimal(ccyCash)){
+                    	if(BigDecimal.ZERO.compareTo(new  BigDecimal(ccyCash))>0){
                             errMsg +="币种累计兑付金额（元）必须大于等于0[CCY_PURCHASE="+ccyCash+"];";
                               // break;
                         }
@@ -1400,7 +1413,7 @@ public class CommonCodeCheckBatchService {
      * @param dataMap
      * @param list
      */
-    public  void  checkProdEndSubTmp(Map<String, String> dataMap,Set<String> prodRegistCodeList){
+    public  void  checkProdEndSubTmp(Map<String, String> dataMap,Set<String> prodRegistCodeList) {
         String  errMsg=dataMap.getOrDefault("ERRMSG", "");
         //发行机构代码
         String   issuePartyId=dataMap.get("ISSUE_PARTY_ID");

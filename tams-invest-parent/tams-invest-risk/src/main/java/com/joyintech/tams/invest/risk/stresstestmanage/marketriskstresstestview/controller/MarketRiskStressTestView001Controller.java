@@ -59,7 +59,7 @@ public class MarketRiskStressTestView001Controller extends BaseController{
     }
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return marketRiskStressTestView001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 
@@ -70,7 +70,7 @@ public class MarketRiskStressTestView001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findOnePage")
     public Page<MarketRiskStressTestView001Dto> selectForPage()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         return marketRiskStressTestView001Service.selectAll(map);
     }
@@ -81,7 +81,7 @@ public class MarketRiskStressTestView001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("selectTestListMap")
     public List<SelectOptionDto> selectRiskFactorMap(@RequestParam Map<String, Object> param)
-        throws Exception {
+         {
 
         return marketRiskStressTestView001Service.selectTestListMap(param);
     }

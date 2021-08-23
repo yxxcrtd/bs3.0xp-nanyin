@@ -83,7 +83,7 @@ public class EtrStock001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getentrustId")
-    public List<SuggestDto> getentrustId(String param) throws Exception {
+    public List<SuggestDto> getentrustId(String param) {
         List<SuggestDto> temp = etrStockService.getentrustId(param);
         return temp;
     }
@@ -98,7 +98,7 @@ public class EtrStock001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodId")
-    public List<SuggestDto> getfinprodId(String param) throws Exception {
+    public List<SuggestDto> getfinprodId(String param) {
         List<SuggestDto> temp = etrStockService.getfinprodId(param);
         return temp;
     }
@@ -174,7 +174,7 @@ public class EtrStock001Controller extends BaseController {
      *@throws:
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return etrStockService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

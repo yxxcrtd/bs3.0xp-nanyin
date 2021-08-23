@@ -9,17 +9,6 @@
  */
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.cprd;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
@@ -31,6 +20,16 @@ import com.joyintech.tams.valuation.common.interf.base.dto.*;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdInfoC;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 货币型型产品基础信息模板处理 (VAL_PRD_BASEINFO_INFO_C) 〈一句话功能简述〉 〈功能详细描述〉
@@ -500,7 +499,13 @@ public class CPrdBaseinfoTemplateRecService {
         // 市场代码= A.产品代码
         valFinProduct.setFinprodMarketId(dto.getProdId());
         // 发行方式 = A.发行方式
-        valFinProduct.setIssueType(dto.getIssueType());
+//        valFinProduct.setIssueType(dto.getIssueType());
+        // tis传的是开放类型，接收的数据字典为发行方式，增加数据字典
+        if(DictCodeList.开放类型_开放式.getValue().equals(dto.getIssueType())){
+            valFinProduct.setIssueType(DictCodeList.发行方式_公开发行.getValue());
+        }else{
+            valFinProduct.setIssueType(DictCodeList.发行方式_非公开发行.getValue());
+        }
         // 起息日= A.起息日
         valFinProduct.setVdate(dto.getVdate());
         // 到期日= A.到期日

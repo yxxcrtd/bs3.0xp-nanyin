@@ -484,26 +484,34 @@ $(function() {
 		var feeId = $('#FinProductFeePay002_feeId').val();
 		var ptlId = $('#FinProductFeePay002_ptlId').val();
 		// 查询上一次计提开始日
-        Joyin.ajax(JoyinUtil.getRealPath('/invest/product/feepay/FinProductFeePay002/queryLastPayDate'), 
-                {ptlId : ptlId, feeId : feeId,operateType:$('#FinProductFeePay002_hidden_operateType').val(),org:org}, function(result){
-                $('#FinProductFeePay002_positionStartDate').val(result).trigger('change');
-                var endDate = $('#FinProductFeePay002_positionEndDateHide').val();
-                if($('#FinProductFeePay002_positionEndDate').val()){
-					endDate = $('#FinProductFeePay002_positionEndDate').val();
-				}
-                var vDate =$('#FinProductFeePay002_hidden_vDate').val();
-                //上一次计提日如果是组合起息日返回false add by cxq 20200120  
-                if(vDate==result && chargeType === feeChargetype_norule){
-                	return false;
-                }
-                //增加计提日已支付校验 add by cxq 20200120  
-                if(result==endDate && chargeType === feeChargetype_norule){
-                	Joyin.error("该计提日已支付费用");
-                }
-                else{
-                	$('#FinProductFeePay002_positionEndDate').val(endDate);
-                }
-        })
+		if(feeId&&ptlId) {
+			Joyin.ajax(JoyinUtil.getRealPath('/invest/product/feepay/FinProductFeePay002/queryLastPayDate'),
+				{
+					ptlId: ptlId,
+					feeId: feeId,
+					operateType: $('#FinProductFeePay002_hidden_operateType').val(),
+					org: org
+				}, function (result) {
+					$('#FinProductFeePay002_positionStartDate').val(result).trigger('change');
+					var endDate = $('#FinProductFeePay002_positionEndDateHide').val();
+					if ($('#FinProductFeePay002_positionEndDate').val()) {
+						endDate = $('#FinProductFeePay002_positionEndDate').val();
+					}
+					var vDate = $('#FinProductFeePay002_hidden_vDate').val();
+					//上一次计提日如果是组合起息日返回false add by cxq 20200120
+					if (vDate == result && chargeType === feeChargetype_norule) {
+						return false;
+					}
+					//增加计提日已支付校验 add by cxq 20200120
+					if (result == endDate && chargeType === feeChargetype_norule) {
+						Joyin.error("该计提日已支付费用");
+					} else {
+						if(endDate>result) {
+							$('#FinProductFeePay002_positionEndDate').val(endDate);
+						}
+					}
+				})
+		}
 	}
 	/**
 	 * 组合代码和费用代码下拉框联动处理

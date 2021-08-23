@@ -10,6 +10,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -81,7 +83,9 @@ public class InfoController extends ExceptionControl{
 	public String info() {
 		return "info";
 	}
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(InfoController.class);
+
 	@RequestMapping(value="/info/voucherCreate.do", method = RequestMethod.POST, name="凭证-手工分录创建")  
     public void voucheCreate(@RequestParam(value = "portID", required = true) String portID,
     						@RequestParam(value = "date", required = true) String date,
@@ -199,7 +203,6 @@ public class InfoController extends ExceptionControl{
 //		try {
 //			downLoadFile(response, dataSet);
 //		}catch(Exception e) {
-//			e.printStackTrace();
 //		}
 //		System.out.println(1111);
 		
@@ -737,7 +740,8 @@ public class InfoController extends ExceptionControl{
 	public void updateRCPY(@RequestParam(value = "json", required = true) String json,
 							HttpServletRequest request,
 			 			    HttpServletResponse response){
-		System.out.println(json);
+//		System.out.println(json);
+		logger.info(json);
 		JsonUtil.writeObjToResponse(response, true);
 	}
 	

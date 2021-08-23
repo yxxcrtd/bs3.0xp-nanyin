@@ -134,7 +134,7 @@ public class CstpSelect001Controller extends BaseController{
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return cstpSelect001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -144,7 +144,7 @@ public class CstpSelect001Controller extends BaseController{
      * @throws Exception
      */
     @RequestMapping("exportEntrust")
-    public ResponseEntity<byte[]> exportEntrust() throws Exception {
+    public ResponseEntity<byte[]> exportEntrust() {
         Map<String, Object> parameters = RequestUtil.getParameters(getRequest());
         parameters.put("cstpType","cstp");
         return trdCommandReceive001Service.export(this.getPageId(),parameters);
@@ -160,7 +160,7 @@ public class CstpSelect001Controller extends BaseController{
      */
     @RequestMapping("exportExcelQueDing")
     public ResponseEntity<byte[]> exportExcelQueDing()
-        throws Exception {
+         {
         return cstpTrdMatchInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

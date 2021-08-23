@@ -65,10 +65,9 @@ public class CstpTrdMatchInfoController  extends BaseController {
     /**
      * 导出
      * @return
-     * @throws Exception
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return cstpTrdMatchInfoService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
     

@@ -27,6 +27,7 @@ import com.joyintech.tams.invest.portfolio.feeprovisionsetting.service.FeeProvis
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.validation.Valid;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -104,8 +106,7 @@ public class FeeProvisionSetting001Controller extends BaseController{
 		return feeProvisionSetting001Service.export(this.getPageId(),
 				RequestUtil.getParameters(getRequest()));
 	}*/
-	public ResponseEntity<byte[]> export()
-			throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		 String datas = this.getParam("datas");
 		 List<FeeProvisionSetting001Dto> param1; 
 		 if (datas == null) {
@@ -200,7 +201,7 @@ public class FeeProvisionSetting001Controller extends BaseController{
 	 */
 	@RequestMapping("doRevoke")
 	@ResponseBody
-	AjaxResult doRevoke(@RequestBody FeeProvisionSetting001Dto dto) throws Exception {
+	AjaxResult doRevoke(@RequestBody FeeProvisionSetting001Dto dto) throws WorkFlowException {
 
 		dto.setDealStatus(DictCodeListExt1.有效状态_流程中.getValue());
 		feeProvisionSetting002Service.doUpdate(dto);	//设置状态为流程中

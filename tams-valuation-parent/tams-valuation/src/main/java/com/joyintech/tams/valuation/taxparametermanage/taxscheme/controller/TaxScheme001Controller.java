@@ -122,7 +122,7 @@ public class TaxScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findScheme")
-	public Page<TaxScheme001Dto> findScheme() throws Exception {
+	public Page<TaxScheme001Dto> findScheme()  {
 		return taxScheme001Service.findSchemeByPage(RequestUtil.getPageParam());
 	}
 
@@ -134,7 +134,7 @@ public class TaxScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findVatTax")
-	public Page<TaxScheme001Dto> findVatTax() throws Exception {
+	public Page<TaxScheme001Dto> findVatTax() {
 		return taxScheme001Service.findVatTaxByPage(RequestUtil.getPageParam());
 	}
 
@@ -146,7 +146,7 @@ public class TaxScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findAdtTax")
-	public Page<TaxScheme001Dto> findAdtTax() throws Exception {
+	public Page<TaxScheme001Dto> findAdtTax()  {
         Map<String, Object> param = RequestUtil.getPageParam();
         if(MultilevelDataAuthorityUtil.isEnabled()){
             List<String> treeInstCode = LoginUserUtil.getTreeInstCode();
@@ -164,7 +164,7 @@ public class TaxScheme001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findTaxable")
-    public Page<TaxScheme001Dto> findTaxable() throws Exception {
+    public Page<TaxScheme001Dto> findTaxable()  {
         return taxScheme001Service.findTaxableByPage(RequestUtil.getPageParam());
     }
 	
@@ -176,7 +176,7 @@ public class TaxScheme001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findConfig")
-    public Page<TaxScheme001Dto> findConfig() throws Exception {
+    public Page<TaxScheme001Dto> findConfig()  {
         return taxScheme001Service.findConfigByPage(RequestUtil.getPageParam());
     }
 
@@ -188,7 +188,7 @@ public class TaxScheme001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findTaxSchaBokConfig")
-    public Page<TaxScheme001Dto> findTaxSchaBokConfig() throws Exception {
+    public Page<TaxScheme001Dto> findTaxSchaBokConfig()  {
         return taxScheme001Service.findTaxSchaBokConfigByPage(RequestUtil.getPageParam());
     }
     
@@ -200,7 +200,7 @@ public class TaxScheme001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findAsset")
-    public List<SelectOptionDto> findAsset() throws Exception {
+    public List<SelectOptionDto> findAsset()   {
         return taxScheme001Service.findAsset(RequestUtil.getPageParam());
     }
     
@@ -212,7 +212,7 @@ public class TaxScheme001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findProject")
-    public List<SelectOptionDto> findProject() throws Exception {
+    public List<SelectOptionDto> findProject() {
         return taxScheme006Service.findProject(RequestUtil.getPageParam());
     }
     
@@ -227,7 +227,7 @@ public class TaxScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody TaxScheme001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody TaxScheme001Dto dto, BindingResult result) {
 	    String msg = StringUtils.EMPTY;
         if("deleteScheme".equals(dto.getOperateType())) { // 删除税务方案验证：若已有账套使用了该税务方案或者默认方案，则该方案不允许删除
             TaxScheme002Dto entity = taxScheme002Service.findBySchId(dto.getSchId());
@@ -249,7 +249,8 @@ public class TaxScheme001Controller extends BaseController {
 
 
         }else
-        if(StringUtil.isNotEmpty(dto.getIsDefault())&&dto.getIsDefault().equals(DictCodeList.是否_是.getValue())){
+        if(StringUtil.isNotEmpty(dto.getIsDefault())&&dto.getIsDefault().equals(DictCodeList.是否_是.getValue())
+             && !(dto.getOperateType().equals("deletetaxable"))){
              msg = "默认税务方案里面的内容，均不可删除";
              return new AjaxResult(msg, MessageType.错误消息);
         }
@@ -506,7 +507,7 @@ public class TaxScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping("exportVatTax")
-	public ResponseEntity<byte[]> exportVatTax() throws Exception {
+	public ResponseEntity<byte[]> exportVatTax() {
 
 		List<TaxScheme001Dto> dtoList = taxScheme001Service.findVatTax(RequestUtil.getPageParam());
 		File outFile = taxScheme001Service.makeFile(
@@ -525,7 +526,7 @@ public class TaxScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping("exportAdtTax")
-	public ResponseEntity<byte[]> exportAdtTax() throws Exception {
+	public ResponseEntity<byte[]> exportAdtTax() {
 
 		List<TaxScheme001Dto> dtoList = taxScheme001Service.findAdtTax(RequestUtil.getPageParam());
 		File outFile = taxScheme001Service.makeFile(
@@ -544,7 +545,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @RequestMapping("exportTaxable")
-    public ResponseEntity<byte[]> exportTaxable() throws Exception {
+    public ResponseEntity<byte[]> exportTaxable()  {
 
         List<TaxScheme001Dto> dtoList = taxScheme001Service.findTaxable(RequestUtil.getPageParam());
         File outFile = taxScheme001Service.makeFile(
@@ -563,7 +564,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @RequestMapping("exportConfig")
-    public ResponseEntity<byte[]> exportConfig() throws Exception {
+    public ResponseEntity<byte[]> exportConfig() {
 
         List<TaxScheme001Dto> dtoList = taxScheme001Service.findConfig(RequestUtil.getPageParam());
         File outFile = taxScheme001Service.makeFile(
@@ -582,7 +583,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @RequestMapping("exportTaxSchaBokConfig")
-    public ResponseEntity<byte[]> exportTaxSchaBokConfig() throws Exception {
+    public ResponseEntity<byte[]> exportTaxSchaBokConfig()   {
 
         List<TaxScheme001Dto> dtoList = taxScheme001Service.findTaxSchaBokConfig(RequestUtil.getPageParam());
         File outFile = taxScheme001Service.makeFile(

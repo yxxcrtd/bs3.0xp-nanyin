@@ -326,6 +326,9 @@ public class SVReportGlobalConstant {
      * 人行汇率取值来源(01:开盘价，02:收盘价，03:最高价，04:最低价，05:中间价)
      */
     public static final String SVR_EXCHANGE_SOURCE_PBC = "SVR_EXCHANGE_SOURCE_PBC";
+
+    /**统一数据维护删除逻辑***/
+    public static final String SVR_OPER_DELETE_FLAG = "SVR_OPER_DELETE_FLAG";
     /**
      * 人行报表-报送时点配置时分秒
      */
@@ -369,6 +372,11 @@ public class SVReportGlobalConstant {
      * 系统参数:是否中债子系统
      */
     public static final String SVR_IS_SUB_SYSTEM = "SVR_IS_SUB_SYSTEM";
+
+    /**
+     * 系统参数  监管报送 模块的 menu_id 类似于 REPORT_001 各项目配置不一样 按实际配置
+     */
+    public static final String SVR_FIRST_MENU_ID = "SVR_FIRST_MENU_ID";
     /**
      * 系统参数:是否子公司
      */

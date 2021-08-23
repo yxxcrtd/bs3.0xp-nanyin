@@ -4,9 +4,9 @@
     <parent>
         <groupId>com.joyintech</groupId>
         <artifactId>batch-base</artifactId>
-        <version>2.1.6.3</version>
+        <version>2.1.6.1</version>
     </parent>
-    <artifactId>tams-svreport-batch-parent</artifactId>
+    <artifactId>tams-svreport-batch</artifactId>
     <version>3.0.0</version>
     <packaging>pom</packaging>
     <modules>
@@ -17,15 +17,17 @@
     </modules>
 
     <properties>
-        <!--<framework.version>0.0.1</framework.version>
-         <joyintech-tools.version>2.0.7.6.8</joyintech-tools.version>
+        <framework.version>0.0.3</framework.version>
+        <!-- <joyintech-tools.version>2.0.7.6.8</joyintech-tools.version>
         <batch-framework.version>2.0.7.6.8</batch-framework.version> -->
+    </properties>   
     </properties>
 
     <dependencies>
          <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>batch-framework</artifactId>
+            <version>2.1.6.1</version>
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
@@ -35,7 +37,7 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>framework-log</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.3</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

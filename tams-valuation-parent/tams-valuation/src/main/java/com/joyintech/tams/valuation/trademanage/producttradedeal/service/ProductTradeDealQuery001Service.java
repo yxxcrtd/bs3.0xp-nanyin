@@ -46,7 +46,7 @@ public class ProductTradeDealQuery001Service extends CommonExportService<Product
      * @throws Exception
      */
     public Page<ProductTradeDealQuery001Dto> findByPage(Map<String, Object> params)
-        throws Exception {
+         {
         return restTemplate.postForPage(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ProductTradeDealQuery001/findPage", params,
             ProductTradeDealQuery001Dto.class);
@@ -60,7 +60,7 @@ public class ProductTradeDealQuery001Service extends CommonExportService<Product
      * @throws Exception
      */
     public List<ProductTradeDealQuery001Dto> findAll(Map<String, Object> params)
-        throws Exception {
+         {
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/ProductTradeDealQuery001/findAll",
             params, ProductTradeDealQuery001Dto.class);
     }

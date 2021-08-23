@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.valuation.financialstatement.assetliailitystatement.controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -124,7 +125,6 @@ public class AssetLiabilityStatementQuery001Controller extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -143,7 +143,7 @@ public class AssetLiabilityStatementQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getTermLink")
     public List<SelectOptionDto> getTradeMarket()
-        throws Exception {
+          {
         Map<String, Object> param = RequestUtil.getPageParam();
         String reportTermType = (String)param.get("reportTermType");
 
@@ -294,8 +294,7 @@ public class AssetLiabilityStatementQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export(AssetLiabilityStatementQuery001SearchDto dto)
-        throws Exception {
+    public ResponseEntity<byte[]> export(AssetLiabilityStatementQuery001SearchDto dto) throws IOException, ParseException {
     	Map<String, Object> paraMap = RequestUtil.getPageParam();
     	if (DictCodeListExt2.批处理账套类型_账套组.getValue().equals(paraMap.get("reportDimen"))) {
     		List<SuggestDto> accountList = valAssetBook001Service.getBooksetId2(paraMap);
@@ -314,7 +313,7 @@ public class AssetLiabilityStatementQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getDateInfo")
     public AssetLiabilityStatementQuery001SearchDto getDateInfo()
-        throws Exception {
+          {
     	Map<String, Object> params = RequestUtil.getPageParam();
     	params.put("booksetGroup", this.getParam("booksetGroup"));
     	params.put("reportTermType", this.getParam("reportTermType"));

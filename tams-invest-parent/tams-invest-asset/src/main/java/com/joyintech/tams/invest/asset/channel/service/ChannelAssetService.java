@@ -16,6 +16,8 @@ import java.util.*;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,14 +60,18 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  * 〈功能详细描述〉
  * @author yangjm
  * @version 1.0 2019年3月13日
- * @see ChannelAssetQuery001Service
+ * @see ChannelAssetService
  * @since 1.0
  */
 @Service("ChannelAssetService")
 @Transactional(rollbackFor = Exception.class)
 public class ChannelAssetService extends CommonExportService<ChannelAssetDto>
 implements BaseProcessService<ChannelAssetDto>{
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ChannelAssetService.class);
+
     @Autowired
     private CommonBusinessService commonBusinessService;
     
@@ -90,8 +96,7 @@ implements BaseProcessService<ChannelAssetDto>{
      * @see
      * @since 1.0
      */
-    public Page<ChannelAssetDto> selectForPage(Map<String,Object> pageParam) 
-        throws Exception{
+    public Page<ChannelAssetDto> selectForPage(Map<String,Object> pageParam) {
         return restTemplate.postForPage(
             ServiceApplication.ASSET_SERVICE_NAME + "/FinChannelAsset/findPage", 
             pageParam, ChannelAssetDto.class);
@@ -346,7 +351,7 @@ implements BaseProcessService<ChannelAssetDto>{
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.trade.conbond.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -268,8 +270,7 @@ public class TrdConBond003Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdConBond003Dto dto)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdConBond003Dto dto) throws InvocationTargetException, IllegalAccessException, WorkFlowException {
     	List<TrdConBond003Dto> dtoList = new ArrayList<>();
 		TrdConBond003Dto tempDto = new TrdConBond003Dto();
 		BeanUtil.copyProperties(tempDto, dto);

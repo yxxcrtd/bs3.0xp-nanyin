@@ -89,8 +89,7 @@ public class ValDespositAssetQuery001Controller extends BaseController {
     @PostMapping("findPage/{page}/{length}")
     @ResponseBody
     public Page<ValDespositAssetQuery001Dto> findPage(@RequestBody Map<String,Object> map,
-			@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length){
         return valDespositAssetQuery001Service.findPage(page,length,map);
     }
 
@@ -108,8 +107,7 @@ public class ValDespositAssetQuery001Controller extends BaseController {
      * @since 1.0
      */
      @PostMapping("/getFinprodId")
-      public List<SelectOptionDto> getFinprodId(@RequestBody Map<String,Object> param)
-        throws Exception {
+      public List<SelectOptionDto> getFinprodId(@RequestBody Map<String,Object> param){
     	 return valDespositAssetQuery001Service.queryValFinproId(param);
     }
    

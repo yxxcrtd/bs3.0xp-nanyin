@@ -116,7 +116,7 @@ public class TrdBondInvestTradeService extends BaseService {
      */
     public Page<TrdBondInvestTradeDto> selectForPage(int page, int length,
                                                      Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.有效状态_有效.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.有效状态_待处理.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.有效状态_撤销.getValue());
@@ -215,8 +215,10 @@ public class TrdBondInvestTradeService extends BaseService {
                 || resultDto.getEtrEntrustAdd().getSettleSpreed() == 0L) {
                 resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_0.getValue());
             }
-            else {
+            else if(resultDto.getEtrEntrustAdd().getSettleSpreed() == 1L){
                 resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_1.getValue());
+            }else if(resultDto.getEtrEntrustAdd().getSettleSpreed() == 2L){
+                resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_2.getValue());
             }
 
             // 到期收益率
@@ -262,6 +264,25 @@ public class TrdBondInvestTradeService extends BaseService {
      * @since 1.0
      */
     public List<SuggestDto> getSecManageAcctId(Map<String, Object> param) {
+        Object finprodIdTemp = param.get("finprodId");
+        String finProdType = DictCodeListExt1.金融产品类型_投管用_债券.getValue();
+        //部分页面没有finprodId特殊处理
+        if(finprodIdTemp == null){
+            //债券二级指令页面
+            if(param.get("finprodName") != null){
+                String finprodName = param.get("finprodName").toString();
+                finprodName = finProdType.concat(GlobalConstant.UNDER_LINE).concat(finprodName);
+                param.put("finprodId",finprodName);
+            }
+            // 可转债申购指令
+            if(param.get("finprodMarketId") != null){
+                String finprodMarketId = param.get("finprodMarketId").toString();
+                finprodMarketId = finProdType.concat(GlobalConstant.UNDER_LINE).concat(finprodMarketId);
+                param.put("finprodId",finprodMarketId);
+            }
+        }else if(StringUtil.isNotEmpty(finprodIdTemp) && !StringUtil.equals(finprodIdTemp.toString().substring(0, 3), "F01")){
+            param.put("finprodId",finProdType.concat(GlobalConstant.UNDER_LINE).concat(finprodIdTemp.toString()));
+        }
         return this.queryForSuggest(() -> trdBondInvestTradeMapper.getSecManageAcctId(param),
             null);
     }
@@ -376,7 +397,7 @@ public class TrdBondInvestTradeService extends BaseService {
      * @since 1.0
      */
     @SuppressWarnings("unchecked")
-    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 //        List<SelectOptionDto> resultList = trdBondInvestTradeMapper.getFinprodId(param);
         param.put("isautobond", CacheUtil.getSysParam("IS_AUTOBOND"));
@@ -538,6 +559,14 @@ public class TrdBondInvestTradeService extends BaseService {
                 resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
             }
             // etliu 20200716 modify 画面上的清算速度已经是输入框，显示数值，不是下拉框显示数据字典了 end
+            else if(resultDto.getSettleSpeed() == 1L){
+//                resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_1.getValue());
+               resultDto.setSettleSpeedStr("1");
+            }else if(resultDto.getSettleSpeed() == 2L){
+               resultDto.setSettleSpeedStr("2");
+           }else{
+               resultDto.setSettleSpeedStr(resultDto.getSettleSpeed().toString());
+           }
             // 到期收益率
             if (resultDto.getYield() != null) {
                 resultDto.setYield(ArithmeticUtil.multiply(resultDto.getYield(), BigDecimal.valueOf(100)));

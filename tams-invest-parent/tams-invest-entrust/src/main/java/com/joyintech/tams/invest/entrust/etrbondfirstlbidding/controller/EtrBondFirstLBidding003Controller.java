@@ -28,6 +28,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -173,8 +174,7 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto allDto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto allDto, BindingResult br){
         AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;

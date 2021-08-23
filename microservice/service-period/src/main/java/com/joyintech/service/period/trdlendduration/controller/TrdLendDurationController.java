@@ -71,7 +71,8 @@ public class TrdLendDurationController {
      * @since 1.0
      */
     @RequestMapping("/selectForPage/{page}/{length}")
-    public Page<TrdLendDurationDto> selectForPage(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+    public Page<TrdLendDurationDto> selectForPage(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return trdLendDurationService.selectForPage(page, length, map);
     }
 
@@ -85,7 +86,7 @@ public class TrdLendDurationController {
      * @since 1.0
      */
     @RequestMapping("/selectAllDataList")
-    public List<TrdLendDurationDto> selectAllDataList(@RequestBody Map<String, Object> map) throws Exception {
+    public List<TrdLendDurationDto> selectAllDataList(@RequestBody Map<String, Object> map) {
         return trdLendDurationService.selectAllDataList(map);
     }
 

@@ -59,18 +59,18 @@
 			       and not exists
 			     (select 1 from BOK_SUBJECT N where A.subject_no = N.FSUBJECT_ID)
 			    union all
-			    select T.SUBJECT_NO,
-			           T.SUBJECT_NAME,
-			           T.BOOKSET_ID,
-			           T.FSUBJECT_ID,
-			           T.BASE_SUBJECT_NATURE,
-			           T.GEN_DETSUB_FLAG,
-			           T.ACC_QUA_FLAG
-			      from BOK_SUBJECT A, T
-			     WHERE A.BOOKSET_ID = T.BOOKSET_ID
-			       and A.FSUBJECT_ID = T.SUBJECT_NO
+			    select B.SUBJECT_NO,
+			           B.SUBJECT_NAME,
+			           B.BOOKSET_ID,
+			           B.FSUBJECT_ID,
+			           B.BASE_SUBJECT_NATURE,
+			           B.GEN_DETSUB_FLAG,
+			           B.ACC_QUA_FLAG
+			      from BOK_SUBJECT A, T B
+			     WHERE A.BOOKSET_ID = B.BOOKSET_ID
+			       and A.FSUBJECT_ID = B.SUBJECT_NO
 			       and not exists
-			     (select 1 from BOK_SUBJECT N where t.subject_no = N.FSUBJECT_ID))
+			     (select 1 from BOK_SUBJECT N where B.subject_no = N.FSUBJECT_ID))
 			  SELECT DISTINCT SUBJECT_NO          as subjectNo,
 			                  SUBJECT_NAME        as subjectName,
 			                  ACC_QUA_FLAG        AS accQuaFlag,
@@ -89,12 +89,12 @@
 	      and not exists
 	    (select 1 from BOK_SUBJECT N where A.subject_no = N.FSUBJECT_ID)
 	   union all
-	   select T.SUBJECT_NO, T.SUBJECT_NAME, T.BOOKSET_ID
-	     from BOK_SUBJECT A, T
-	    WHERE A.BOOKSET_ID = T.BOOKSET_ID
-	      and A.FSUBJECT_ID = T.SUBJECT_NO
+	   select B.SUBJECT_NO, B.SUBJECT_NAME, B.BOOKSET_ID
+	     from BOK_SUBJECT A, T B
+	    WHERE A.BOOKSET_ID = B.BOOKSET_ID
+	      and A.FSUBJECT_ID = B.SUBJECT_NO
 	      and not exists
-	    (select 1 from BOK_SUBJECT N where t.subject_no = N.FSUBJECT_ID))
+	    (select 1 from BOK_SUBJECT N where B.subject_no = N.FSUBJECT_ID))
 	 SELECT DISTINCT SUBJECT_NO as id, SUBJECT_NAME as text FROM T
     </select>
 <select id="searchList" resultType="com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto" >

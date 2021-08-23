@@ -37,7 +37,7 @@ public class CeAssetGroup001Service extends BaseService<CreditLinesAstGrpDto> {
      * @since 1.0
      */
     public Page<CreditLinesAstGrpDto> selectForPage(int page, int length,Map<String, Object> param) 
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> ceAssetGroupMapper.selectForPage(param));
     }
 

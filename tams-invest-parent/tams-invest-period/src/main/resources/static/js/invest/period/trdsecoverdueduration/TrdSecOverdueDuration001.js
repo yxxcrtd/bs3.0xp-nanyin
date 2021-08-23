@@ -326,15 +326,45 @@ $(function () {
      * 导出选中的表格数据
      */
     var exportExcel = function() {
-        var paramObj = getSearchParams();//请求参数
-        paramObj.exportType='N';
-        Joyin.exportExcel('export', paramObj);//导出（共通）
+//        var paramObj = getSearchParams();//请求参数
+//        paramObj.exportType='N';
+//        Joyin.exportExcel('export', paramObj);//导出（共通）
+
+        if (table != null && table != '') {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas,
+                exportType : 'N'
+            });
+        }
+
     };
 
     var exportExcelTwo = function() {
-        var paramObj = getSearchParamsTwo();//请求参数
-        paramObj.exportType='Y';
-        Joyin.exportExcel('export', paramObj);//导出（共通）
+//        var paramObj = getSearchParamsTwo();//请求参数
+//        paramObj.exportType='Y';
+//        Joyin.exportExcel('export', paramObj);//导出（共通）
+
+        if (tableTwo != null && tableTwo != '') {
+            var selArr = tableTwo.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParamsTwo();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas,
+                exportType : 'Y'
+            });
+        }
+
     };
 
     /**

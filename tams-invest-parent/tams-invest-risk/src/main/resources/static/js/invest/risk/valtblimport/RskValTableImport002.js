@@ -14,27 +14,36 @@ $(function() {
             subjectCodeCol:$('#subjectCodeCol').val(),
             startRow:$('#startRow').val(),
             trimChars:$('#trimChars').val(),
-            filterId:$('#filterId').val()
+            filterId:$('#filterId').val(),
+            assetName:$('#ptlName').val()
             };
         };
     /**
      * 定义表头
      */
     var cols = [
-                {field:'subCode',  title: 'RskValTableImport001.subCode',width:200,sortable: false}
-               ,{field:'subName',  title: 'RskValTableImport001.subName',width:200,sortable: false}
-               ,{field:'securityQuantity',  title: 'RskValTableImport001.securityQuantity',width:150,type:'number',sortable: false}
-               ,{field:'unitCost',  title: 'RskValTableImport001.unitCost',type:'number',width:150,sortable: false}
-               ,{field:'securityCost',  title: 'RskValTableImport001.securityCost',width:150,type:'number',sortable: false}
-               ,{field:'ctnwr',  title: 'RskValTableImport001.ctnwr',width:150,type:'number',digit:6,sortable: false}
-               ,{field:'mcp',  title: 'RskValTableImport001.mcp',width:150,type:'number',sortable: false}
-               ,{field:'smv',  title: 'RskValTableImport001.smv',width:150,type:'number',sortable: false}
-               ,{field:'mcr',  title: 'RskValTableImport001.mcr',width:150,type:'number',digit:6,sortable: false}
-               ,{field:'valueAdded',  title: 'RskValTableImport001.valueAdded',width:150,sortable: false}
-               ,{field:'suspensionInfo',  title: 'RskValTableImport001.suspensionInfo',width:150,sortable: false}
-               ,{field:'equityInfo',  title: 'RskValTableImport001.equityInfo',width:150,sortable: false}
-               ,{field:'valType',  title: 'RskValTableImport001.valType', visible : false}
-            ];
+                   {field:'isMatchStr', title: 'RskValTableImport001.isMatch', width:200,sortable: false}//是否匹配
+                   ,{field:'subCode',  title: 'RskValTableImport001.subCode',width:200,sortable: false}
+                  ,{field:'subName',  title: 'RskValTableImport001.subName',width:200,sortable: false}
+                  ,{field:'securityQuantity',  title: 'RskValTableImport001.securityQuantity',width:150,type:'number',digit:8,sortable: false}
+                  ,{field:'unitCost',  title: 'RskValTableImport001.unitCost',type:'number',digit:8,width:150,sortable: false}
+                  ,{field:'securityCost',  title: 'RskValTableImport001.securityCost',width:150,type:'number',digit:8,sortable: false}
+                  ,{field:'ctnwr',  title: 'RskValTableImport001.ctnwr',width:150,type:'number',digit:8,sortable: false}
+                  ,{field:'mcp',  title: 'RskValTableImport001.mcp',width:150,type:'number',digit:8,sortable: false}
+                  ,{field:'smv',  title: 'RskValTableImport001.smv',width:150,type:'number',digit:8,sortable: false}
+                  ,{field:'mcr',  title: 'RskValTableImport001.mcr',width:150,type:'number',digit:8,digit:8,sortable: false}
+                  ,{field:'valueAdded',  title: 'RskValTableImport001.valueAdded',width:150,sortable: false}
+                  ,{field:'suspensionInfo',  title: 'RskValTableImport001.suspensionInfo',width:150,sortable: false}
+                  ,{field:'equityInfo',  title: 'RskValTableImport001.equityInfo',width:150,sortable: false}
+                   ,{field:'securityCostOri', title: 'RskValTableImport001.securityCostOri',width:150,type:'number',digit:8,sortable: false}
+                   ,{field:'smvOri', title: 'RskValTableImport001.smvOri',width:150,type:'number',digit:8,sortable: false}
+                   ,{field:'valueAddedOri', title: 'RskValTableImport001.valueAddedOri',width:150,sortable: false}
+                   ,{field:'ccy', title: 'RskValTableImport001.ccy',width:150,sortable: false}
+                   ,{field:'exchangeRate', title: 'RskValTableImport001.exchangeRate',width:150,type:'number',digit:8,sortable: false}
+                   ,{field:'valType',  title: 'RskValTableImport001.valType', visible : false}
+                   ,{field:'isMatch',  visible : false}
+
+       ];
     /**
      * 定义数据表格
      */
@@ -53,6 +62,12 @@ $(function() {
         checkbox:false,
         done: function(table, allData){
             $('#RskValTableImport002_btn').show();
+             //add by lpf 未匹配的科目红字展示 2021-03-23
+            for(var i in table){
+                 if(table[i].isMatch && table[i].isMatch=="N"){
+                    $("tr[data-index='" + i + "']").attr({"style":"color:red"});
+                 }
+            }
         }
     });
     
@@ -65,17 +80,45 @@ $(function() {
             Joyin.error(JoyinUtil.getMessage("COMMON_E_0057"),JoyinUtil.getLabel("RskValTableImport002"));
             return;
         }
-        var object = {selectedItem: selArr,ptlId:$('#ptlId').val(),valDate:$('#valDate').val(),operateType:operateType};
-        Joyin.ajaxJson(basePath + 'invest/risk/valtblimport/RskValTableImport002/check',object, function(result) {
-            if(result.valCount>0){
-                var msg = "估值表数据已存在,是否覆盖!";
-                Joyin.confirm(msg,function(){
-                    finalSubmit(object);
-                });
-            }else{
-                finalSubmit(object);
-            }
-        })
+        // 1/3开头的科目未匹配给出提示：“请先维护资产科目的映射后再完成估值表导入”
+        var goTo=false;
+        for(var i in selArr){
+             if(selArr[i].isMatch && selArr[i].isMatch=="N"){
+                  if(selArr[i].subCode.substring(0,1)=="1" || selArr[i].subCode.substring(0,1)=="3"
+                            ||(selArr[i].subCode.substring(0,1)=="2" && (selArr[i].subName.indexOf("回购")==0||selArr[i].subName.indexOf("融入")==0))){
+                            goTo=true;
+                            break;
+                  }
+             }
+        }
+        if(goTo){
+           Joyin.confirm("请先维护资产科目的映射后再完成估值表导入,确认本次是否保存?",function() {
+                var object = {selectedItem: selArr,ptlId:$('#ptlId').val(),valDate:$('#valDate').val(),operateType:operateType};
+                 Joyin.ajaxJson(basePath + 'invest/risk/valtblimport/RskValTableImport002/check',object, function(result) {
+                      if(result.valCount>0){
+                           var msg = "估值表数据已存在,是否覆盖!";
+                           Joyin.confirm(msg,function(){
+                           　　　finalSubmit(object);
+                       　　　});
+                      }else{
+                         finalSubmit(object);
+                      }
+                  })
+             })
+
+        }else{
+            var object = {selectedItem: selArr,ptlId:$('#ptlId').val(),valDate:$('#valDate').val(),operateType:operateType};
+                    Joyin.ajaxJson(basePath + 'invest/risk/valtblimport/RskValTableImport002/check',object, function(result) {
+                        if(result.valCount>0){
+                            var msg = "估值表数据已存在,是否覆盖!";
+                            Joyin.confirm(msg,function(){
+                                finalSubmit(object);
+                            });
+                        }else{
+                            finalSubmit(object);
+                        }
+             })
+        }
     };
     
     /**

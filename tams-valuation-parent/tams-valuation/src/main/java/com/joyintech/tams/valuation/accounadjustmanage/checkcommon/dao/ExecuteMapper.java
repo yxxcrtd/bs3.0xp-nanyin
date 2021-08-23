@@ -15,6 +15,7 @@ import com.joyintech.tams.valuation.accounadjustmanage.checkcommon.dto.Reconcile
 import com.joyintech.tams.valuation.accounadjustmanage.checkcommon.dto.ReconcileSchemeStructConfigDto;
 import com.joyintech.tams.valuation.accounadjustmanage.checkcommon.dto.ReconcileSchemeSubjectConfigDto;
 import com.joyintech.tams.common.base.entity.BokValbalTableStatus;
+import org.springframework.stereotype.Repository;
 
 /**
  * 对账数据获取
@@ -24,6 +25,7 @@ import com.joyintech.tams.common.base.entity.BokValbalTableStatus;
  * @see ExecuteMapper
  * @since 1.0
  */
+@Repository
 public interface ExecuteMapper {
 
     /**

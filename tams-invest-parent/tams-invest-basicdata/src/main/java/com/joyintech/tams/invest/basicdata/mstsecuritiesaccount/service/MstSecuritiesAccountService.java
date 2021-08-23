@@ -68,7 +68,6 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
      * 查询
      * @param pageParam Map
      * @return Page类
-     * @throws Exception 异常信息
      */
     public Page<MstSecuritiesAccountDto> selectForPage(Map<String, Object> pageParam){
         return restTemplate.postForPage(
@@ -96,7 +95,6 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
      * 双击修改界面
      * @param secAcctId String
      * @return Page类
-     * @throws Exception 异常信息
      */
     public MstSecuritiesAccountDto selectBySecAcctId(String secAcctId) {
         return restTemplate.getForObject(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -161,12 +159,10 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
      *
      * @param request request
      * @return 导入文件信息
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
-    public MstSecuritiesAccountDto fileUpload(HttpServletRequest request) 
-        throws Exception{
+    public MstSecuritiesAccountDto fileUpload(HttpServletRequest request) {
         return restTemplate.postForObject(
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/uploadFile",
             request,MstSecuritiesAccountDto.class);
@@ -219,7 +215,6 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
      * 检查证券账户账号是否用过
      * @param dto MstSecuritiesAccountDto
      * @return Page类
-     * @throws Exception 异常信息
      */
     public int checkBySecAcctId(MstSecuritiesAccountDto dto) {
         int count=0;
@@ -232,7 +227,6 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
      * 检查证券账户名称是否用过
      * @param dto MstSecuritiesAccountDto
      * @return Page类
-     * @throws Exception 异常信息
      */
     public int checkBySecAcctName(MstSecuritiesAccountDto dto) {
         return restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -244,7 +238,6 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
      * 检查资金结算账户是否存在
      * @param dto MstSecuritiesAccountDto
      * @return Page类
-     * @throws Exception 异常信息
      */
     public int checkByTrdAcctId(MstSecuritiesAccountDto dto) {
         return restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -256,7 +249,6 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
      * 删除时检查数据是否被使用过
      * @param dto MstSecuritiesAccountDto
      * @return Page类
-     * @throws Exception 异常信息
      */
     public int checkCodeIsUse(MstSecuritiesAccountDto dto) {
         return restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -268,7 +260,6 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
      * 批量删除时检查数据是否被使用过
      * @param item List<MstSecuritiesAccountDto>
      * @return Page类
-     * @throws Exception 异常信息
      */
     public List<MstSecuritiesAccountDto> checkAllCodeIsUse(List<MstSecuritiesAccountDto> item) {
         return restTemplate.postForList(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -280,7 +271,6 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
 //     * 查询上传的文件
 //     * @param businessId String
 //     * @return Page类
-//     * @throws Exception 异常信息
 //     */
 //    public List<FileDto> selectFileByBusinessId(String businessId) {
 //        return restTemplate.getForList(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -292,7 +282,6 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
 //     * 插入附件文件
 //     * @param dto FileDto
 //     * @return Page类
-//     * @throws Exception 异常信息
 //     */
 //    public int insertIntoFile(FileDto dto) {
 //        return restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -304,7 +293,6 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
 //     * 删除附件文件
 //     * @param businessId String
 //     * @return Page类
-//     * @throws Exception 异常信息
 //     */
 //    public int deleteFileByBusinessId(String businessId) {
 //        return restTemplate.getForObject(ServiceApplication.BASICDATA_SERVICE_NAME

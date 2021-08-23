@@ -50,7 +50,7 @@ public class CstpSelectController {
      */
     @ResponseBody
     @PostMapping("findPage/{page}/{length}")
-    public Page<CstpSelectDto> findPage(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<CstpSelectDto> findPage(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length) {
         return cstpSelectService.findPage(page, length, map);
     }
     

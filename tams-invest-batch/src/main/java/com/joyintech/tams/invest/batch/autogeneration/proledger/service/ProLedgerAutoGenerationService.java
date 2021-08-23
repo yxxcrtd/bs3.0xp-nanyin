@@ -75,7 +75,7 @@ public class ProLedgerAutoGenerationService {
      * @see
      * @since 1.0
      */
-    public void autoGeneration(Date batchDate, List<String> productIdList)  throws Exception {
+    public void autoGeneration(Date batchDate, List<String> productIdList) {
 
     	// 删除当天的的产品台账
         Map<String, Object> paramMap = new HashMap<String, Object>();

@@ -63,8 +63,7 @@ public class Interf3005Service extends SendEsbService<Interf3005InEntity, Interf
      * {@inheritDoc}
      */
     @Override
-    public Interf3005InEntity preparedLocalData(Object param)
-        throws Exception {
+    public Interf3005InEntity preparedLocalData(Object param) throws InterfException {
         CusdepOrderDto dto = (CusdepOrderDto)param;
         // 参数为空时
         if (dto == null || StringUtil.isEmpty(dto.getOrderNo())) {
@@ -82,7 +81,7 @@ public class Interf3005Service extends SendEsbService<Interf3005InEntity, Interf
      */
     @Override
     public int saveInterfData(Interf3005OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -91,7 +90,7 @@ public class Interf3005Service extends SendEsbService<Interf3005InEntity, Interf
      */
     @Override
     public int saveBusinessData(Interf3005OutEntity entity)
-        throws Exception {
+    {
         List<Interf3005OutArrEntity> itemList = entity.getTranItemList();
         if (StringUtil.isEmptyList(itemList)) {
             return 0;

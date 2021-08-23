@@ -43,12 +43,10 @@ public class PtlSingleIssuerPositionAnalysis001Service extends CommonExportServi
 	/**
 	 * 获取发行人信息
 	 * 
-	 * @param paraMap
+	 * @param map
 	 * @return
-	 * @throws Exception
 	 */
-	public Page<SelectOptionDto> getPublisher(Map<String,Object> map)
-			throws Exception {
+	public Page<SelectOptionDto> getPublisher(Map<String,Object> map){
 		Page<SelectOptionDto> publisherSelect = restTemplate.postForPage(
 				ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlSingleIssuerPositionAnalysis/getPublisher",map,
 				SelectOptionDto.class);
@@ -60,7 +58,6 @@ public class PtlSingleIssuerPositionAnalysis001Service extends CommonExportServi
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -76,7 +73,6 @@ public class PtlSingleIssuerPositionAnalysis001Service extends CommonExportServi
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

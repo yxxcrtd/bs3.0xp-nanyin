@@ -92,7 +92,7 @@ public class ChannelAssetService extends BaseService<ChannelAssetDto> {
      * @since 1.0
      */
     public Page<ChannelAssetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         String finprodId = (String)pageParam.get("finprodId");
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodId", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));

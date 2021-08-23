@@ -19,6 +19,7 @@ import com.joyintech.tams.component.base.core.dto.BaseFinProductExerciseRuleDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
@@ -168,8 +169,7 @@ public class TrdBondMarketTradeService extends BaseService {
      * @see
      * @since 1.0
      */
-    public Page<TrdBondMarketTradeDto> findPage(int page, int length,Map<String, Object> pageParam)
-            throws Exception {
+    public Page<TrdBondMarketTradeDto> findPage(int page, int length,Map<String, Object> pageParam){
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.有效状态_有效.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.有效状态_待处理.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.有效状态_撤销.getValue());
@@ -199,7 +199,7 @@ public class TrdBondMarketTradeService extends BaseService {
      * @see
      * @since 1.0
      */
-    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param){
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         return this.queryForPage(page, length,
                 () -> trdBondMarkettTradeMapper.getFinprodId(param));
@@ -213,7 +213,7 @@ public class TrdBondMarketTradeService extends BaseService {
      * @see
      * @since 1.0
      */
-    public Page<SelectOptionDto> getAppearMarketId(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<SelectOptionDto> getAppearMarketId(int page, int length, Map<String, Object> param){
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         return this.queryForPage(page, length,
                 () -> trdBondMarkettTradeMapper.getAppearMarketId(param));
@@ -395,6 +395,8 @@ public class TrdBondMarketTradeService extends BaseService {
             if (finProduct != null){
                 finProduct.setFinprodId(newFinprodId);
                 finProduct.setFinprodMarketId(dto.getAppearMarketId());
+                finProduct.setFinprodAbbr(dto.getAppearMarketAbbr());
+                finProduct.setFinprodName(trdBondMarkettTradeMapper.getInfBondName(dto.getAppearMarketId()));
             }
             
             if (finProductAdd != null){

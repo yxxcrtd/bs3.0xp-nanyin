@@ -84,8 +84,7 @@ public class DAOUtil<T> extends HibernateDaoSupport {
 		try {
 			return SessionFactoryUtils.getDataSource(getSessionFactory()).getConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}
@@ -322,10 +321,12 @@ public class DAOUtil<T> extends HibernateDaoSupport {
 	
 	public List<String> getColumnNames(String tablename){
 		List<String> heads=new ArrayList<String>();
+		Statement stmt= null;
+		ResultSet rs = null;
 		try{
-			Statement stmt=getConnection().createStatement();
+			stmt=getConnection().createStatement();
 			String sql="select * from "+tablename;
-			ResultSet rs=stmt.executeQuery(sql);
+			rs =stmt.executeQuery(sql);
 			
 			ResultSetMetaData rsmd = rs.getMetaData(); //获得结果集结构信息,元数据
 			for( int i=1; i<=rsmd.getColumnCount(); i++ ){
@@ -333,7 +334,18 @@ public class DAOUtil<T> extends HibernateDaoSupport {
 				heads.add(field );
 			}
 		}catch(SQLException se){
-			se.printStackTrace();
+			logger.error(se.getMessage(),se);
+		}finally {
+			try {
+				if (stmt != null){
+					stmt.close();
+				}
+				if (rs != null){
+					rs.close();
+				}
+			} catch (SQLException e) {
+				logger.error(e.getMessage(),e);
+			}
 		}
 		return heads;
 	}

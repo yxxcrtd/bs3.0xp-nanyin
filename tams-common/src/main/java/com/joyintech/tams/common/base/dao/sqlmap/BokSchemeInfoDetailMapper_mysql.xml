@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokSchemeInfoDetailMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokSchemeInfoDetail" >
+        <id column="SCH_ID" property="schId" jdbcType="VARCHAR" />
+        <result column="ERROR_NUMBER" property="errorNumber" jdbcType="DECIMAL" />
+        <result column="MY_START_ROW_NO" property="myStartRowNo" jdbcType="DECIMAL" />
+        <result column="OTHERSIDE_START_ROW_NO" property="othersideStartRowNo" jdbcType="DECIMAL" />
+        <result column="MY_END_ROW_NO" property="myEndRowNo" jdbcType="DECIMAL" />
+        <result column="OTHERSIDE_END_ROW_NO" property="othersideEndRowNo" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SCH_ID SCH_ID, ERROR_NUMBER ERROR_NUMBER, MY_START_ROW_NO MY_START_ROW_NO, OTHERSIDE_START_ROW_NO OTHERSIDE_START_ROW_NO,
+        MY_END_ROW_NO MY_END_ROW_NO, OTHERSIDE_END_ROW_NO OTHERSIDE_END_ROW_NO, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokSchemeInfoDetailMapper.Base_Column_List" />
+        from BOK_SCHEME_INFO_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokSchemeInfoDetailMapper.Base_Column_List" />
+        from BOK_SCHEME_INFO_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokSchemeInfoDetailMapper.Base_Column_List" />
+        from BOK_SCHEME_INFO_DETAIL
+        where SCH_ID = #{schId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from BOK_SCHEME_INFO_DETAIL
+        where SCH_ID = #{schId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokSchemeInfoDetail" >
+        insert into BOK_SCHEME_INFO_DETAIL (SCH_ID, ERROR_NUMBER, MY_START_ROW_NO,
+            OTHERSIDE_START_ROW_NO, MY_END_ROW_NO, OTHERSIDE_END_ROW_NO,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{schId,jdbcType=VARCHAR}, #{errorNumber,jdbcType=DECIMAL}, #{myStartRowNo,jdbcType=DECIMAL},
+            #{othersideStartRowNo,jdbcType=DECIMAL}, #{myEndRowNo,jdbcType=DECIMAL}, #{othersideEndRowNo,jdbcType=DECIMAL},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokSchemeInfoDetail" >
+        insert into BOK_SCHEME_INFO_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="schId != null" >
+                SCH_ID,
+            </if>
+            <if test="errorNumber != null" >
+                ERROR_NUMBER,
+            </if>
+            <if test="myStartRowNo != null" >
+                MY_START_ROW_NO,
+            </if>
+            <if test="othersideStartRowNo != null" >
+                OTHERSIDE_START_ROW_NO,
+            </if>
+            <if test="myEndRowNo != null" >
+                MY_END_ROW_NO,
+            </if>
+            <if test="othersideEndRowNo != null" >
+                OTHERSIDE_END_ROW_NO,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="schId != null" >
+                #{schId,jdbcType=VARCHAR},
+            </if>
+            <if test="errorNumber != null" >
+                #{errorNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="myStartRowNo != null" >
+                #{myStartRowNo,jdbcType=DECIMAL},
+            </if>
+            <if test="othersideStartRowNo != null" >
+                #{othersideStartRowNo,jdbcType=DECIMAL},
+            </if>
+            <if test="myEndRowNo != null" >
+                #{myEndRowNo,jdbcType=DECIMAL},
+            </if>
+            <if test="othersideEndRowNo != null" >
+                #{othersideEndRowNo,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokSchemeInfoDetail" >
+        insert into BOK_SCHEME_INFO_DETAIL(SCH_ID, ERROR_NUMBER, MY_START_ROW_NO, OTHERSIDE_START_ROW_NO,
+        MY_END_ROW_NO, OTHERSIDE_END_ROW_NO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME)
+        select SCH_ID, ERROR_NUMBER, MY_START_ROW_NO, OTHERSIDE_START_ROW_NO,
+            MY_END_ROW_NO, OTHERSIDE_END_ROW_NO, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_SCHEME_INFO_DETAIL
+             where 1 = 1 and SCH_ID = #{schId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokSchemeInfoDetail" >
+        update BOK_SCHEME_INFO_DETAIL
+        <set >
+            <if test="errorNumber != null" >
+                ERROR_NUMBER = #{errorNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="myStartRowNo != null" >
+                MY_START_ROW_NO = #{myStartRowNo,jdbcType=DECIMAL},
+            </if>
+            <if test="othersideStartRowNo != null" >
+                OTHERSIDE_START_ROW_NO = #{othersideStartRowNo,jdbcType=DECIMAL},
+            </if>
+            <if test="myEndRowNo != null" >
+                MY_END_ROW_NO = #{myEndRowNo,jdbcType=DECIMAL},
+            </if>
+            <if test="othersideEndRowNo != null" >
+                OTHERSIDE_END_ROW_NO = #{othersideEndRowNo,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SCH_ID = #{schId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokSchemeInfoDetail" >
+        update BOK_SCHEME_INFO_DETAIL
+        set ERROR_NUMBER = #{errorNumber,jdbcType=DECIMAL},
+            MY_START_ROW_NO = #{myStartRowNo,jdbcType=DECIMAL},
+            OTHERSIDE_START_ROW_NO = #{othersideStartRowNo,jdbcType=DECIMAL},
+            MY_END_ROW_NO = #{myEndRowNo,jdbcType=DECIMAL},
+            OTHERSIDE_END_ROW_NO = #{othersideEndRowNo,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SCH_ID = #{schId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -482,6 +482,7 @@ public class PeriodCommonService extends BaseService {
 //            }
         }
         List<BaseTradeProductDealDto> result = new ArrayList<>();
+        if (tol != null){
         for(BaseTradeProductDealDto baseTradeProductDealDto:tol){
 //            更新汇总交易代码
             if(isTotal){
@@ -516,6 +517,7 @@ public class PeriodCommonService extends BaseService {
                 gen子组合划款指令_撤销用(temp,baseTradeProductDealDto);
             }
             result.addAll(temp);
+            }
         }
         return result;
     }

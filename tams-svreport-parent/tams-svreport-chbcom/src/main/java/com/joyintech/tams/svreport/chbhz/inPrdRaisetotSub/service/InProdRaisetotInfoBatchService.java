@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chbhz.inPrdRaisetotSub.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.FileImpService;
@@ -300,7 +301,7 @@ public class InProdRaisetotInfoBatchService extends FileImpService {
 
 			if (sub.getRaiseEnddate() != null) {
 				List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),
-						DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, sub.getRaiseEnddate());
+						sub.getStatus(), dateMap, sub.getRaiseEnddate());
 				if (!StringUtil.isEmptyList(dateList)) {
 					sub.setChbSubmitDeadline(dateList.get(0));
 					sub.setSubmitDeadline(dateList.get(1));
@@ -339,7 +340,7 @@ public class InProdRaisetotInfoBatchService extends FileImpService {
 	public boolean compareRaisetotRegData(RaiseTotalRegist001Dto dto, RaiseTotalRegist001Dto regdto) {
 		RaiseTotalRegist001Dto compare1 = genRaisetotDto(dto);
 		RaiseTotalRegist001Dto compare2 = genRaisetotDto(regdto);
-		if (JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))) {
+		if (JSON.toJSONString(compare1,SerializerFeature.WriteNullStringAsEmpty).equals(JSON.toJSONString(compare2,SerializerFeature.WriteNullStringAsEmpty))) {
 			return true;
 		} else {
 			return false;

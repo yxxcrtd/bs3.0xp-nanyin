@@ -21,7 +21,7 @@
             pbcAssetPoolCode : $('#ProPeoplebankcodeManagement001_pbcAssetPoolCode').val()
         };
     };
-    var table = $('#ProPeoplebankcodeManagement001_proPeoplebankcodeManagement001').joyintable({
+    var table = $('#ProPeoplebankcodeManagement001Table').joyintable({
         ajax: {
             url: 'searchPage',
             type: 'POST',

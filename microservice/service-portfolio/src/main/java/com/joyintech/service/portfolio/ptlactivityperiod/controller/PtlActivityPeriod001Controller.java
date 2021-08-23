@@ -65,7 +65,7 @@ public class PtlActivityPeriod001Controller {
     @PostMapping("findPage/{page}/{length}")
     public Page<PtlActivityPeriod001Dto> selectAll(@RequestBody Map<String, Object> param,
                                                    @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         if(param.get("portfolioId") != null && !param.get("portfolioId").equals("")){
             List<String> portfolioId = new ArrayList<String>();
             String[] port = param.get("portfolioId").toString().split(",");

@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -558,16 +559,14 @@ public class FinProductExpire002Controller extends BaseController {
      * 保存操作
      *
      * @param dto dto
-     * @param  验证信息
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinProductExpire002Dto dto,BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinProductExpire002Dto dto,BindingResult br) throws WorkFlowException {
         ProcessParameter<FinProductExpire002Dto> processParameter = new ProcessParameter<FinProductExpire002Dto>();
         WorkFlowParameter<FinProductExpire002Dto> params = new WorkFlowParameter<FinProductExpire002Dto>();
         params.setElementId(dto.getElementId());

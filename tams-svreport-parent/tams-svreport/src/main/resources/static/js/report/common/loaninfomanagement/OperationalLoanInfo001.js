@@ -508,6 +508,15 @@
 			if(selectedData.length == 0 || !selectedData){
 				Joyin.error("请勾选一条数据删除！");
 			}else{
+			    if(tableId === 'CHB_LOAN_DETAIL_INFO'){
+                    for(var i = 0;i<selectedData.length;i++){
+                        if(selectedData[i].STATUS && selectedData[i].STATUS.startsWith("D") ){
+                            Joyin.error("包含删除状态的数据，不可删除！");
+                            return;
+                        }
+                    }
+			    }
+
 				/*Joyin.confirm("请确认是否要删除选中记录？",function(){
 					Joyin.ajax(basePath + "common/infomanagement/SvrOperationalInfo001/deleteData", param, function() {
 						table.reload();

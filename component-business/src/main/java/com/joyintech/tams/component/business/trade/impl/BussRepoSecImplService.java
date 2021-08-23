@@ -139,8 +139,7 @@ public class BussRepoSecImplService implements BussRepoSecService {
                 }
             }
             catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error(e.getMessage(),e);
             }
         }
         return list ;

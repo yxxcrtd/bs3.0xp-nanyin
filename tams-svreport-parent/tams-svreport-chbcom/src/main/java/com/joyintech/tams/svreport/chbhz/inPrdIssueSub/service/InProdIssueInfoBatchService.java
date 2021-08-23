@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.chbreport.codecheck.service.CommonCodeCheckTmpBatchService;
@@ -261,7 +262,7 @@ public class InProdIssueInfoBatchService extends FileImpService {
 			// 产品发行登记报送时点:募集起始日期
 			if (sub.getRaiseVdate() != null) {
 				List<Date> issueDateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(),
-						DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, sub.getRaiseVdate());
+						sub.getStatus(), dateMap, sub.getRaiseVdate());
 				if (CollectionUtils.isNotEmpty(issueDateList)) {
 					sub.setChbSubmitDeadline(issueDateList.get(0));
 					sub.setSubmitDeadline(issueDateList.get(1));
@@ -303,7 +304,7 @@ public class InProdIssueInfoBatchService extends FileImpService {
 	public boolean compareIssueRegData(ProdPersonIssue001Dto dto, ProdPersonIssue001Dto regdto) {
 		ProdPersonIssue001Dto compare1 = genIssueDto(dto);
 		ProdPersonIssue001Dto compare2 = genIssueDto(regdto);
-		if (JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))) {
+		if (JSON.toJSONString(compare1,SerializerFeature.WriteNullStringAsEmpty).equals(JSON.toJSONString(compare2,SerializerFeature.WriteNullStringAsEmpty))) {
 			return true;
 		} else {
 			return false;

@@ -68,7 +68,7 @@ public class FinPayPlanAdjustmentService extends BaseService<FinPayPlanAdjustmen
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodId(Map<String, Object> param){
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param){
         //数据字典.金融产品类型（投管用）.理财产品
         param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         //数据字典缓存.现金流业务类型.金融产品
@@ -87,7 +87,7 @@ public class FinPayPlanAdjustmentService extends BaseService<FinPayPlanAdjustmen
         param.put("yeOrNO_N", DictCodeList.是否_否.getValue());
         //add by wm 周期型产品添加参数 2019-10-16 end
         param.put("PROFIT_TYPE_02", DictCodeList.收益类型_收益型.getValue());
-        return finPayPlanAdjustmentMapper.getFinprodId(param);
+        return this.queryForPageForSelectReturn(page, length, () -> finPayPlanAdjustmentMapper.getFinprodId(param));
     }
     
     /**
@@ -135,7 +135,7 @@ public class FinPayPlanAdjustmentService extends BaseService<FinPayPlanAdjustmen
      * @since 1.0
      */
     public List<FinPayPlanAdjustmentDto> selectForPage(Map<String, Object> pageParam)
-        throws Exception {
+    {
             /*pageParam.put("openDateStrStart", DateUtil.parse((String)pageParam.get("openDateStrStart")));
             pageParam.put("openDateStrEnd", DateUtil.parse((String)pageParam.get("openDateStrEnd")));*/
             //数据字典.交易方向.付费  

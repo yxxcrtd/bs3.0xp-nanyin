@@ -67,7 +67,7 @@ public class SecRatingImpMainService extends AutoSendCBBaseService{
 			}
 		} catch (Exception e) {
 			logger.error("债券评级数据接入接口Error",e);
-			throw e;
+			throw new BusinessException(e);
 		}
 		logInfoBatchEnd();
 		return mapPara;

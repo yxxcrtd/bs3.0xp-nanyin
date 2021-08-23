@@ -546,7 +546,7 @@
   
     <select id="selectPlanDeal" resultMap="PlanResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
 		select PLAN_ASSET_ID
-		,TOTAL_NUM
+        ,TOTAL_NUM
 		,ISSUE_AMT
 		,asset_code
 		,POS_NUM
@@ -642,10 +642,9 @@
     from CHB_MONTH_ASSET_POSITION POSITION
     LEFT JOIN CHB_ASSET_INFO ASSETINFO
     ON ASSETINFO.ASSET_CODE = POSITION.ASSET_CODE  and     ASSETINFO.status in('E','M')
-    left join (      select f.finprod_market_id,di.institution_code 
-      from fin_product f
-      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
-      WHERE f.p_finprod_id is null) di on di.finprod_market_id = POSITION.PROD_ID
+    left join (select distinct di.business_id　finprod_market_id,di.institution_code
+      from  DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+     ) di on di.finprod_market_id = POSITION.PROD_ID
     where 
      to_char(POSITION.ENDDATE, 'yyyy-MM-dd') >= #{startDate,jdbcType=VARCHAR}
     <![CDATA[and to_char(POSITION.ENDDATE, 'yyyy-MM-dd') <= #{endDate,jdbcType=VARCHAR}]]>
@@ -834,22 +833,22 @@
   <select id="selectBotCashListEx" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"  
   		parameterType="date">
   		WITH ap AS (
-				SELECT DISTINCT UNINVEST_CASH, PLAN_ASSET_ID,TOTAL_NUM
-				FROM chb_bot_ast_pos
-				WHERE (PLAN_ASSET_ID IN (
-						SELECT DISTINCT ASSET_CODE
-						FROM chb_asset_position deal
-							LEFT JOIN CHB_PRD_BASEINFO prd
-							ON prd.PROD_ID = deal.PROD_ID
-								AND prd.status != 'D'
-						WHERE (deal.trade_type = '05'
-							AND prd.PROFIT_TYPE = '03'
-							AND deal.CDATE = #{cdate,jdbcType=DATE})
-					)
-					AND pos_date = #{cdate,jdbcType=DATE}
-					AND status != 'D'
-					AND UNINVEST_CASH != 0)
-			)
+            SELECT DISTINCT decode(cbap.ASSET_CODE,'REMAININGCASH',cbap.POS_AMT,cbap.UNINVEST_CASH) as UNINVEST_CASH, cbap.PLAN_ASSET_ID,cbap.TOTAL_NUM
+            FROM chb_bot_ast_pos cbap
+            inner join chb_asset_position deal
+            on cbap.PLAN_ASSET_ID=deal.ASSET_CODE
+               and deal.trade_type = '05'
+               and deal.CDATE = #{cdate,jdbcType=DATE}
+            inner join CHB_PRD_BASEINFO prd
+            ON prd.PROD_ID = deal.PROD_ID
+               AND prd.status != 'D'
+               AND prd.PROFIT_TYPE = '03'
+            where cbap.pos_date = #{cdate,jdbcType=DATE}
+               AND cbap.status != 'D'
+               AND (cbap.ASSET_CODE = 'REMAININGCASH'
+                   or (cbap.UNINVEST_CASH !=0 and not exists(select TT.PLAN_ASSET_ID from chb_bot_ast_pos TT  where  TT.ASSET_CODE = 'REMAININGCASH' and cbap.PLAN_ASSET_ID =TT.PLAN_ASSET_ID))
+                   )
+		)
 		SELECT cp.PROD_ID AS prodId
 			, Round(cp.accuqty / ap.TOTAL_NUM * ap.UNINVEST_CASH, 2) AS cashamt
 			, AP.PLAN_ASSET_ID AS oldAssetCode, ci.ccy,prd.IS_FHXGCP  isFhxgcp
@@ -886,7 +885,9 @@
         ,pos.chl_id chlid
         ,pos.CCY
         ,decode(pos.ASSET_CODE,'REMAININGCASH','01',info.asset_type) assettype
-        ,decode(pos.ASSET_CODE,'REMAININGCASH','1001',info.ASSET_TYPE2) assettype2
+        <!--,decode(pos.ASSET_CODE,'REMAININGCASH','1001',info.ASSET_TYPE2) assettype2-->
+        ,case when info.asset_type2 = '1107' and info.org_asset_type2='D01' then 'DRC1107'/*同业借款*/
+        else decode(pos.ASSET_CODE,'REMAININGCASH','1001',info.ASSET_TYPE2)  end assettype2
         ,nvl(nvl(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
         ,info.IN_ASSET_TYPE IN_ASSET_TYPE /*行业一级分类*/
         ,sum(pos.accuamt)  ASSETVALUE_A  /*穿透前资产价值*/
@@ -964,7 +965,8 @@
         group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},
         pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
         decode(pos.ASSET_CODE,'REMAININGCASH','01',info.asset_type),
-        decode(pos.ASSET_CODE,'REMAININGCASH','1001',info.ASSET_TYPE2),
+        <!-- decode(pos.ASSET_CODE,'REMAININGCASH','1001',info.ASSET_TYPE2),-->
+        case when info.asset_type2 = '1107' and info.org_asset_type2='D01' then 'DRC1107'　else decode(pos.ASSET_CODE,'REMAININGCASH','1001',info.ASSET_TYPE2)  end,
         nvl(nvl(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,nvl(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT),
         decode(info.PRIVATE_FLAG,'01','01',null),
         decode(info.PPPFLAG,'01','01',null), decode(info.IS_GOVERN_FUND,'01','01',null),

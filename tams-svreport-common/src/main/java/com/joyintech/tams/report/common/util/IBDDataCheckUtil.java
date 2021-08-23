@@ -34,6 +34,8 @@ import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
 import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 接口获取数据验证
@@ -44,6 +46,10 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
  * @since 1.0
  */
 public class IBDDataCheckUtil {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(IBDDataCheckUtil.class);
 	/**
 	 * 必填方法
 	 * --单一项目检查checkMethod参数常量
@@ -156,7 +162,6 @@ public class IBDDataCheckUtil {
      * @param errorList 
      * @param value 传入字符
      * @param field 页面field 
-     * @param messageId msg参数
      * @param message msg参数
      * @return 结果 
      * @see
@@ -305,8 +310,7 @@ public class IBDDataCheckUtil {
      * @param errorList 
      * @param value 传入字符
      * @param field 页面field 
-     * @param msgId msg参数
-     * @param labelResource msg参数
+     * @param message msg参数
      * @return 结果
      * @see
      * @since 1.0
@@ -354,7 +358,7 @@ public class IBDDataCheckUtil {
      * @param errorList 
      * @param value 传入字符
      * @param field 页面field 
-     * @param labelResource msg参数
+     * @param message msg参数
      * @return 结果 
      * @see
      * @since 1.0
@@ -513,7 +517,7 @@ public class IBDDataCheckUtil {
     /**
      * 按照配置规则check某一个值是否合法
      * @param targetItemValue 待检查数据值
-     * @param dataType 检查的对象类型
+     * @param datatype 检查的对象类型
      * @param srcproperty 被检查的字段的name
      * @param checkMethod 检查方法
      * @return 检查结果（错误MSG）
@@ -562,10 +566,10 @@ public class IBDDataCheckUtil {
                 }
             }
             catch (SecurityException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             mapClassMethod.put(r.getCheckclass(),mapMethod);
         }

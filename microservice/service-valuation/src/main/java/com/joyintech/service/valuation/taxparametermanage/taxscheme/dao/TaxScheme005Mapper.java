@@ -13,6 +13,7 @@ package com.joyintech.service.valuation.taxparametermanage.taxscheme.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.service.valuation.taxparametermanage.taxscheme.dto.TaxScheme005Dto;
@@ -40,7 +41,7 @@ public interface TaxScheme005Mapper {
      * @see
      * @since 1.0
      */
-    List<TaxScheme005Dto> selectAsset(Map<String, Object> pageParam);
+    List<SelectOptionDto> selectAsset(Map<String, Object> pageParam);
 
     /**
      * 通过资产代码，获取资产信息

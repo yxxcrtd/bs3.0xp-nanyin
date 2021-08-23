@@ -297,7 +297,6 @@ public class BatchProcessing001Service extends BaseService<BatchProcessing001Dto
                 }
             }
             catch (Exception e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
             }
             finally {
@@ -306,7 +305,6 @@ public class BatchProcessing001Service extends BaseService<BatchProcessing001Dto
                         reader.close();
                     }
                     catch (IOException e) {
-//                        e.printStackTrace();
                         logger.error(e.getMessage(),e);
                     }
                 }

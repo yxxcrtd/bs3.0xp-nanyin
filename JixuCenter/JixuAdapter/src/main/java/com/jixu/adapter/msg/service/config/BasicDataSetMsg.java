@@ -77,9 +77,11 @@ public class BasicDataSetMsg extends MsgExecuteService{
 		}else{
 			BeanUtils.copyProperties(bds, oldBds, "id");
 			adapterDao.updateEntityBean(oldBds);
-			msgcontainer.setObjID(oldBds.getId());
 			msgcontainer.setEntityObj(oldBds);
-			msgcontainer.setErrorMsg("id:"+oldBds.getId()+" 修改成功");
+			if(oldBds != null){
+				msgcontainer.setObjID(oldBds.getId());
+				msgcontainer.setErrorMsg("id:"+oldBds.getId()+" 修改成功");
+			}
 		}
 	}
 

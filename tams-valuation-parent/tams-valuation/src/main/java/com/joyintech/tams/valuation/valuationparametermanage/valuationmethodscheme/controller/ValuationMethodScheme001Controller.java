@@ -98,7 +98,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findScheme")
-	public Page<ValuationMethodScheme001Dto> findScheme() throws Exception {
+	public Page<ValuationMethodScheme001Dto> findScheme() {
 		Page<ValuationMethodScheme001Dto> page = valuationMethodScheme001Service
 				.findSchemeByPage(RequestUtil.getPageParam());
 		return page;
@@ -112,7 +112,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findSchemeDetail")
-	public Page<ValuationMethodScheme001Dto> findSchemeDetail() throws Exception {
+	public Page<ValuationMethodScheme001Dto> findSchemeDetail() {
 		Page<ValuationMethodScheme001Dto> page = valuationMethodScheme001Service
 				.findSchemeDetailByPage(RequestUtil.getPageParam());
 		return page;
@@ -126,7 +126,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findSpecialScheme")
-	public Page<ValuationMethodScheme001Dto> findSpecialScheme() throws Exception {
+	public Page<ValuationMethodScheme001Dto> findSpecialScheme() {
 		Page<ValuationMethodScheme001Dto> page = valuationMethodScheme001Service
 				.findSpecialAssetsByPage(RequestUtil.getPageParam());
 		return page;
@@ -143,7 +143,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody ValuationMethodScheme001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody ValuationMethodScheme001Dto dto, BindingResult result) {
 		String msg = StringUtils.EMPTY;
 		Map<String, Object> params = Maps.newHashMap();
 		params.put("schemeId", dto.getSchemeId());
@@ -312,7 +312,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping("exportTypeAssets")
-	public ResponseEntity<byte[]> exportTypeAssets() throws Exception {
+	public ResponseEntity<byte[]> exportTypeAssets() {
 
 		List<ValuationMethodScheme001Dto> dtoList = valuationMethodScheme001Service
 				.findSchemeDetail(RequestUtil.getPageParam());
@@ -335,7 +335,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping("exportSpecialAssets")
-	public ResponseEntity<byte[]> exportSpecialAssets() throws Exception {
+	public ResponseEntity<byte[]> exportSpecialAssets(){
 
 		List<ValuationMethodScheme001Dto> dtoList = valuationMethodScheme001Service
 				.findSpecialAssets(RequestUtil.getPageParam());
@@ -358,7 +358,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findFinprod")
-	public List<SelectOptionDto> findFinprod() throws Exception {
+	public List<SelectOptionDto> findFinprod() {
 		return valuationMethodScheme001Service.findFinprod(RequestUtil.getPageParam());
 	}
 

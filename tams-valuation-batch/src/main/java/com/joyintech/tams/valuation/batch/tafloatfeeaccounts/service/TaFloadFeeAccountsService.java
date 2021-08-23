@@ -108,8 +108,7 @@ public class TaFloadFeeAccountsService {
      * @since 1.0
      */
     @SuppressWarnings("unchecked")
-    public BookGenerateResultWithBokStatFeePosition execute(Map<String, Object> params)
-        throws Exception {
+    public BookGenerateResultWithBokStatFeePosition execute(Map<String, Object> params) throws BatchException {
         // 获取reader返回值
         StayDrawSubprdEntity acctEntity = (StayDrawSubprdEntity)params.get(
             GlobalConstant.READER_RESULT);
@@ -413,6 +412,7 @@ public class TaFloadFeeAccountsService {
             param.put("cdFlag", DictCodeList.余额方向_贷方.getValue());//贷方
             param.put("taskId", taskPri);//本次批处理优先级
             param.put("baseSubjectNatureList", Arrays.asList(DictCodeBaseSubjectNatrue.应付超额管理费.getValue()));//应付超额管理费
+            param.put("bokDetailId",acctEntity.getBokDetailId());//账务明细代码
             List<TaFloadFeeAccountsDto> taFloadFeeAccountsList = taFloadFeeAccountsMapper.selectBokBookdetailCurrent(param);
             //LOOP 查询结果List<账务明细当前表>，调用账务类共通.余额方向处理_余额加发生额
             if(!StringUtil.isEmptyList(taFloadFeeAccountsList)){

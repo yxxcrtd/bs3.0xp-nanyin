@@ -52,7 +52,7 @@ public class MstCommissionSetService extends BaseService<MstCommissionSetDto>{
      * @throws Exception 异常信息
      */
     public Page<MstCommissionSetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+	{
 //    	pageParam.put("feeType", BussinessDictCodeList.费用类型_佣金.getValue());
     	pageParam.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
     	pageParam.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());

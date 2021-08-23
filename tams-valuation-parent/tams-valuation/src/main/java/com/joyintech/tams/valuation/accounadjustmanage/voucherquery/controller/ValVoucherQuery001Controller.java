@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.accounadjustmanage.voucherquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -223,7 +224,7 @@ public class ValVoucherQuery001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValVoucherQuery001Dto> findPage(ValVoucherQuery001SearchDto dto) throws Exception {
+    public Page<ValVoucherQuery001Dto> findPage(ValVoucherQuery001SearchDto dto) {
         return valVoucherQuery001Service.findPage(dto);
 
     }
@@ -238,10 +239,17 @@ public class ValVoucherQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws ParseException, IOException {
         String datas = this.getParam("datas");
         Map<String, Object> params= this.getRequestMap();
-        ValVoucherQuery001SearchDto dto = (ValVoucherQuery001SearchDto)JsonUtils.map2entity(params, ValVoucherQuery001SearchDto.class);
+        ValVoucherQuery001SearchDto dto = null;
+        try {
+            dto = (ValVoucherQuery001SearchDto) JsonUtils.map2entity(params, ValVoucherQuery001SearchDto.class);
+        } catch (Exception e) {
+//            e.printStackTrace();
+            getLogger().error(e.getMessage());
+            throw new ParseException(e.getMessage(),0);
+        }
         List<ValVoucherQuery001Dto> listdto;
         if (datas == null) {
             listdto = valVoucherQuery001Service.selectAll(dto);

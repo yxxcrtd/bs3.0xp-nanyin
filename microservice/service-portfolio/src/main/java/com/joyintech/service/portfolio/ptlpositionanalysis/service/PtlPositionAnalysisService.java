@@ -64,7 +64,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
      * @since 1.0
      */
     public Page<PtlPositionAnalysis001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         if (StringUtil.isNotEmpty(pageParam.get("portfolioId"))) {
             pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA, (String) pageParam.get("portfolioId")));
         }
@@ -172,7 +172,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
      * @since 1.0
      */
     public List<PtlPositionAnalysis001Dto> selectAllData(Map<String, Object> pageParam)
-            throws Exception {
+    {
         if (StringUtil.isNotEmpty(pageParam.get("portfolioId"))) {
             pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA, (String) pageParam.get("portfolioId")));
         }
@@ -247,7 +247,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
      * @since 1.0
      */
     public List<PtlPositionAnalysis002Dto> selectAssetForList(Map<String, Object> pageParam)
-            throws Exception {
+    {
         if (StringUtil.isNotEmpty(pageParam.get("portfolioId"))) {
             pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA, (String) pageParam.get("portfolioId")));
         }
@@ -329,7 +329,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
      * @throws Exception 异常信息
      */
     public Page<PtlPositionAnalysis001Dto> selectForExport(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
     	setParaForExport(pageParam);
     	List<PtlPositionAnalysis001Dto> resultList = new ArrayList<>();
         Page<PtlPositionAnalysis001Dto> pageRoot = super.queryForPage(page, length, () -> ptlPositionAnalysisMapper.selectForExport(pageParam));
@@ -387,7 +387,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
     
     //导出改造
     public Page<PtlPositionAnalysis001Dto> selectForExportNew(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
     	//1.初始化查询信息
     	setParaForExport(pageParam);
     	List<PtlPositionAnalysis001Dto> resultList = new ArrayList<>();
@@ -572,5 +572,49 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
     public List<TargetDetail> getTableColumn() {
         return ptlPositionAnalysisMapper.getTableColumn();
 
+    }
+
+    /**
+     * 查询组合对应的剩余现金
+     * @return 查询结果
+     * @see
+     * @since 1.0
+     */
+    public List<PtlPositionAnalysis003Dto> selectRemain(Map<String, Object> pageParam) {
+        if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){
+            pageParam.put("portfolioIdList",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("portfolioId")));
+        }
+
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            //当前用户所属机构代码
+            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+            //右上角选择框为空时 存放本级机构及有权限的下级机构 选择时 存放所选机构
+            List<String> resourcesTreeInstCodeList =  LoginUserUtil.getTreeInstCode();
+            pageParam.put("institutionCode",createInst);
+            pageParam.put("resourcesTreeInstCodeList",resourcesTreeInstCodeList);
+        }
+        return ptlPositionAnalysisMapper.selectRemain(pageParam);
+    }
+
+    /**
+     * 查询组合对应的剩余现金
+     * @return 查询结果
+     * @see
+     * @since 1.0
+     */
+    public List<PtlPositionAnalysis002Dto> selectPeiZhiRemain(Map<String, Object> pageParam) {
+        if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){
+            pageParam.put("portfolioIdList",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("portfolioId")));
+        }
+
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            //当前用户所属机构代码
+            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+            //右上角选择框为空时 存放本级机构及有权限的下级机构 选择时 存放所选机构
+            List<String> resourcesTreeInstCodeList =  LoginUserUtil.getTreeInstCode();
+            pageParam.put("institutionCode",createInst);
+            pageParam.put("resourcesTreeInstCodeList",resourcesTreeInstCodeList);
+        }
+        return ptlPositionAnalysisMapper.selectPeiZhiRemain(pageParam);
     }
 }

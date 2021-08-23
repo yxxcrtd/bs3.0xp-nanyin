@@ -118,6 +118,11 @@ public class TrdPlanCcyInvestTradeDto extends TrdProductDeal implements ProcessE
     }
 
     /**
+     * 交易编号
+     */
+    private String tradeId;
+
+    /**
      * 取得 交易编号
      *
      * @return 交易编号
@@ -125,7 +130,11 @@ public class TrdPlanCcyInvestTradeDto extends TrdProductDeal implements ProcessE
     @Override
     @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getTradeId() {
-        return StringUtil.isNotEmpty(super.getTradeId())?super.getTradeId():IDGenerator.generate();
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;;
     }
     /**
      * 

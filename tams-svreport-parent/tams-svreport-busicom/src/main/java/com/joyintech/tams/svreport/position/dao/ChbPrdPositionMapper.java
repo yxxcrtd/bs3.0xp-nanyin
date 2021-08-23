@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.ChbPrdDeal;
 import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbPrdPositionMapper {
 	
     int insertBatch(@Param("insertDataList")List<ChbPrdPosition> insertDataList);
@@ -51,4 +53,9 @@ public interface ChbPrdPositionMapper {
 	void insertPos(ChbPrdPosition pos);
 	
 	List<ChbPrdDeal> selectPrdDeal(@Param("batchDate")Date batchDate,@Param("prodIdList")List<String> prodIdList);
+
+
+
+	Date  getVdate(String prodId);
+
 }

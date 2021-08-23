@@ -29,20 +29,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis001Dto;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis002Dto;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.service.PtlPositionAnalysis001Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -78,12 +85,10 @@ public class PtlPositionAnalysis001Controller extends BaseController {
     /**
      * 组合持仓明细查询
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlPositionAnalysis001Dto> selectAll()
-            throws Exception {
+    public Page<PtlPositionAnalysis001Dto> selectAll() {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<PtlPositionAnalysis001Dto> page = ptlPositionAnalysis001Service.selectForPage(map);
         return page;
@@ -91,7 +96,6 @@ public class PtlPositionAnalysis001Controller extends BaseController {
     /**
      * 组合持仓汇总查询
      * @return 查询结果集
-     * @throws Exception 异常
      */
    /* @ResponseBody
     @RequestMapping("findPageForAsset")
@@ -104,18 +108,44 @@ public class PtlPositionAnalysis001Controller extends BaseController {
     /**
      * 组合持仓汇总查询
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPageForAssetList")
-    public List<PtlPositionAnalysis002Dto> selectAllAssetList()
-            throws Exception {
+    public List<PtlPositionAnalysis002Dto> selectAllAssetList(){
         Map<String,Object> map = RequestUtil.getPageParam();
         List<PtlPositionAnalysis002Dto> list = ptlPositionAnalysis001Service.selectAllAssetList(map);
-        
+
+        if (StringUtil.equals(map.get("sex"),"02")){
+            List<PtlPositionAnalysis002Dto> cashList =  ptlPositionAnalysis001Service.selectRemain(map);
+            if(cashList != null && cashList.size() > 0){
+                for (PtlPositionAnalysis002Dto ptlPositionAnalysis002Dto : list) {
+                    if (StringUtil.equals(ptlPositionAnalysis002Dto.getFinprodType2(),"现金")){
+                        ptlPositionAnalysis002Dto.setTdyIntincexp(BigDecimal.ZERO);
+                        ptlPositionAnalysis002Dto.setDscCostAmt(BigDecimal.ZERO);
+                        ptlPositionAnalysis002Dto.setMarketValue(BigDecimal.ZERO);
+                        cashList.forEach(item->{
+                            ptlPositionAnalysis002Dto.setMarketValue(ptlPositionAnalysis002Dto.getMarketValue().add(item.getMarketValue()));
+                            ptlPositionAnalysis002Dto.setTdyIntincexp(ptlPositionAnalysis002Dto.getTdyIntincexp().add(item.getTdyIntincexp()));
+                            ptlPositionAnalysis002Dto.setDscCostAmt(ptlPositionAnalysis002Dto.getMarketValue());
+                        });
+                    }
+                }
+            }else{
+                //穿透后剩余现金无数据则去除
+                int cashIndex = -1;
+                for (PtlPositionAnalysis002Dto ptlPositionAnalysis002Dto : list) {
+                    if (StringUtil.equals(ptlPositionAnalysis002Dto.getFinprodType2(),"现金")){
+                        cashIndex = list.indexOf(ptlPositionAnalysis002Dto);
+                    }
+                }
+                if (cashIndex >= 0){
+                    list.remove(cashIndex);
+                }
+            }
+        }
         // start  modify by wj 2020-04-16 饼图展示数据 无现金数据。重新计算并赋值。
         countSumAndCalPercent(list);
-        
+
         return list==null?new ArrayList<PtlPositionAnalysis002Dto>():list;
     }
     
@@ -157,26 +187,23 @@ public class PtlPositionAnalysis001Controller extends BaseController {
 	/**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
    /* @RequestMapping("/export")*/
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlPositionAnalysis001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> exportNew() throws Exception{
+    public ResponseEntity<byte[]> exportNew() {
 //        List<PtlPositionAnalysis001Dto> dtoList = new ArrayList<PtlPositionAnalysis001Dto>();
 //        dtoList= ptlPositionAnalysis001Service.selectAllList(RequestUtil.getParameters(getRequest()));
 //        File outFile = ptlPositionAnalysis001Service.makeFile(

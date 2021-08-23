@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.product.paythevatquery.controller;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -80,7 +81,7 @@ public class PayTheVatQuery001Controller extends BaseController {
 
 	@RequestMapping("selectForPage")
 	@ResponseBody
-	public Page<PayTheVatQuery001Dto> selectForPage() throws Exception {
+	public Page<PayTheVatQuery001Dto> selectForPage() throws IOException {
 	    Map<String , Object> params = RequestUtil.getPageParam();
 		String queryDateBegin = (String)params.get("vatDateBegin");
 		String queryDateEnd = (String)params.get("vatDateEnd");
@@ -114,8 +115,7 @@ public class PayTheVatQuery001Controller extends BaseController {
      */
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
-    public List<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param)
-            throws Exception {
+    public Page<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param){
         return payTheVatQuery001Service.queryProdIdInfo(param);
     }
     
@@ -123,12 +123,10 @@ public class PayTheVatQuery001Controller extends BaseController {
     * 产品代码下拉框
     * @param param 过滤参数
     * @return 下拉框列表
-    * @throws Exception Exception
     */
    @RequestMapping("queryChannelIdInfo")
    @ResponseBody
-   public Page<SelectOptionDto> queryChannelIdInfo(@RequestParam Map<String, Object> param)
-           throws Exception {
+   public Page<SelectOptionDto> queryChannelIdInfo(@RequestParam Map<String, Object> param){
        return payTheVatQuery001Service.queryChannelIdInfo(param);
    }
     
@@ -136,13 +134,12 @@ public class PayTheVatQuery001Controller extends BaseController {
 	 * 检索账套代码
 	 * 
 	 * @return 账套代码联想框内容
-	 * @throws Exception
 	 * @see
 	 * @since 1.0
 	 */
 	@ResponseBody
 	@RequestMapping("/getBooksetId")
-	public Page<SelectOptionDto> getBooksetId() throws Exception {
+	public Page<SelectOptionDto> getBooksetId() {
 		String param = super.getRequest().getParameter("param");
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("param",param);
@@ -153,26 +150,12 @@ public class PayTheVatQuery001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
+     * @throws IOException 异常
      * @see
      * @since 1.0
      */
-    /*@ResponseBody
-    @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
-        return payTheVatQuery001Service.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
-    }*/
-	/*
-	 * 导出信息excel
-	 * 
-	 * @return
-	 * 
-	 * @throws Exception
-	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		String datas = this.getParam("datas");
 		List<PayTheVatQuery001Dto> listdto;
 		if (datas == null) {

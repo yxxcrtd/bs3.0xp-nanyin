@@ -10,6 +10,17 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.valbalancestatementquery.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+
+import com.joyintech.framework.file.SafelyFile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.ExportUtil;
@@ -85,7 +96,7 @@ public class ValBalanceStatementQuery001Service extends CommonExportService<ValB
     }
 
     
-    public Page<ValBalanceStatementQuery001Dto> selectForPage(Map<String, Object> pageParam) throws Exception {
+    public Page<ValBalanceStatementQuery001Dto> selectForPage(Map<String, Object> pageParam) {
         
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ValBalanceStatementQuery001/findPage", pageParam, ValBalanceStatementQuery001Dto.class);
         
@@ -150,7 +161,7 @@ public class ValBalanceStatementQuery001Service extends CommonExportService<ValB
         // 获取导出文件
         ExportFileDto exportFileDto = valTableGenerate001Service.createExcel(
             booksetId, valDate, bokBookset.getBooksetFullname());
-        File file = new File(exportFileDto.getFilePath());
+        File file = new SafelyFile(exportFileDto.getFilePath());
         return ExportUtil.export(exportFileDto.getFileName(), file, true);
     }
     

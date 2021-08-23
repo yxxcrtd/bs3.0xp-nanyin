@@ -1,5 +1,6 @@
 package com.joyintech.tams.batch.svreport.chb.sdemployeeinfosub.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class SdEmployeeInfoMainService {
      * @see
      * @since 1.0
      */
-    public void SendEmployeeInfoRegMsg(Date batchDate) throws Exception {
+    public void SendEmployeeInfoRegMsg(Date batchDate) throws InvocationTargetException, IllegalAccessException {
     	sdEmployInfoBatchService.sendEmployeeInfoMsg(batchDate);
     }
 

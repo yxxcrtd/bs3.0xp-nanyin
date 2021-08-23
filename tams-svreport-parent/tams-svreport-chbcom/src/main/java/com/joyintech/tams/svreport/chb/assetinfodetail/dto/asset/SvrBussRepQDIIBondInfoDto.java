@@ -82,6 +82,10 @@ public class SvrBussRepQDIIBondInfoDto extends RepAssetBond {
      */
     private String guaranteeCmt;
     /**
+     * 担保情况说明
+     */
+    private String  guaTypeRemark;
+    /**
      * 是否含权等特条款情况说明
      */
     private String specialCmt;
@@ -89,6 +93,21 @@ public class SvrBussRepQDIIBondInfoDto extends RepAssetBond {
      * 备注
      */
     private String remark;
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -190,5 +209,38 @@ public class SvrBussRepQDIIBondInfoDto extends RepAssetBond {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getGuaTypeRemark() {
+        return guaTypeRemark;
+    }
+
+    public void setGuaTypeRemark(String guaTypeRemark) {
+        this.guaTypeRemark = guaTypeRemark;
+    }
+
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
     }
 }

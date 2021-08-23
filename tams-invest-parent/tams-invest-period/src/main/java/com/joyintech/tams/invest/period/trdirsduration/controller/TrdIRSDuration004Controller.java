@@ -22,6 +22,7 @@ import com.joyintech.tams.invest.period.trdirsduration.service.TrdIRSDuration004
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -243,7 +247,7 @@ public class TrdIRSDuration004Controller extends BaseController {
     @RequestMapping("save")
     public AjaxResult save(
             @RequestBody @Validated({ ValidateGroupEdit.class }) TrdIRSDuration004ProcessDto dto,
-            BindingResult br) throws Exception {
+            BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -281,7 +285,7 @@ public class TrdIRSDuration004Controller extends BaseController {
 //            // 操作留痕表
 //            WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
 //        }
         processParameter.setWorkFlowParameter(params);
         if (BussinessConstant.SUBMIT.equals(dto.getOperateType())) {

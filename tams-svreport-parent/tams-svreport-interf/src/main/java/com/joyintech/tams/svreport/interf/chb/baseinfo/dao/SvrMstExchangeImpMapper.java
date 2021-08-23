@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.MstExchargeQuote;
 import com.joyintech.tams.common.base.entity.MstExchargeQuoteKey;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface SvrMstExchangeImpMapper {
     int deleteByPrimaryKey(MstExchargeQuoteKey key);
 

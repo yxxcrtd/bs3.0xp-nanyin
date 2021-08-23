@@ -58,7 +58,7 @@ public class MstMarketCalendarInfoService
      * @since 1.0
      */
     public Page<MstMarketCalendarInfo001Dto> selectInfo(int page,int length,Map<String, Object> param)
-        throws Exception {
+    {
         return super.queryForPage(page,length,()->mstMarketCalendarInfo001Mapper.selectInfo(param));
     }
 

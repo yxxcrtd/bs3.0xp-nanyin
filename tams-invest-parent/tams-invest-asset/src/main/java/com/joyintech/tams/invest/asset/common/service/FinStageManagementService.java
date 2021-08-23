@@ -41,10 +41,13 @@ import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -57,6 +60,10 @@ import java.util.*;
  */
 @Service
 public class FinStageManagementService extends CommonExportService<FinStageManagementDto> implements BaseProcessService<FinStageManagementDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinStageManagementService.class);
 
     @Autowired
     private IPlatformDate iPlatformDate;
@@ -403,7 +410,7 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
                     //add by zhangnian  20191017 end
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 finPlanProfitAssetList.add(finPlanProfitAssetDto);
             });
@@ -423,8 +430,7 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
      * @since 1.0
      */
     private List<FinCashPlan> getFinCashPlan(FinStageManagementDto dto, FinPayInterestStdInfoDto finPayInterestStdInfoDto,
-                                             FinCashInfo finCashInfoPrincipal, FinProduct finProduct, Long branch)
-        throws Exception {
+                                             FinCashInfo finCashInfoPrincipal, FinProduct finProduct, Long branch) throws ParseException {
         // 还本计划(return)
         List<FinCashPlan> finCashPlanList = new ArrayList<FinCashPlan>();
         // 还本计划(cal)

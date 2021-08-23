@@ -148,7 +148,7 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
      * @since 1.0
      */
     public Page<FinBondTargetAssetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+        {
         pageParam.put("MAIN_GRADE_TYPE_01", DictCodeList.评级类型_主体评级.getValue());
         pageParam.put("MAIN_GRADE_TYPE_02", DictCodeList.评级类型_债项评级.getValue());
         Page<FinBondTargetAssetDto> pageDto = super.queryForPage(page, length, () -> finBondTargetAssetMapper.queryForPage(pageParam));

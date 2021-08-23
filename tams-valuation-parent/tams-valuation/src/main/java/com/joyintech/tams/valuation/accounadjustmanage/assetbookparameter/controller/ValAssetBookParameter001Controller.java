@@ -10,6 +10,7 @@
 package com.joyintech.tams.valuation.accounadjustmanage.assetbookparameter.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -64,13 +65,12 @@ public class ValAssetBookParameter001Controller extends BaseController {
      * 获取查询结果
      * 
      * @return List<ValAssetBookParameter002Dto>
-     * @throws Exception 
      * @see
      * @since 1.0
      */
     @RequestMapping("ValAssetBookParameter001search")
     @ResponseBody
-    public Page<ValAssetBookParameter002Dto> search() throws Exception {
+    public Page<ValAssetBookParameter002Dto> search() {
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("booksetId",this.getParam("booksetId"));
         params.put("paramCode",this.getParam("paramCode"));
@@ -82,13 +82,12 @@ public class ValAssetBookParameter001Controller extends BaseController {
      * 检索账套代码(只取理财账套)
      *
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getBooksetId")
-    public Page<SelectOptionDto> getBooksetId() throws Exception {
+    public Page<SelectOptionDto> getBooksetId() {
         return valAssetBookParameter001Service.getBooksetIdNew(RequestUtil.getPageParam());
     }
     
@@ -96,14 +95,13 @@ public class ValAssetBookParameter001Controller extends BaseController {
      * 新建参数check
      *
      * @return 
-     * @throws Exception
      * @see
      * @since 1.0
      */
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody ValAssetBookParameter002Dto paramdto, BindingResult bindingResult)
-			throws Exception {
+			 {
 //		String msg = StringUtil.EMPTY;
 //		String booksetId = paramdto.getBooksetId();
 //		List<ValAssetBookParameter002Dto> paramlist = new ArrayList<>();
@@ -119,13 +117,11 @@ public class ValAssetBookParameter001Controller extends BaseController {
      * 导出数据
      *
      * @return ResponseEntity<byte[]>
-     * @throws Exception ExportUtil.export
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<ValAssetBookParameter002Dto> listdto;
         

@@ -1,13 +1,11 @@
 package com.joyintech.tams.systemtools.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -68,33 +66,43 @@ public class ExcelUtil {
     public static List<List<String>> readToList(File file, int sheetIndex) throws FileNotFoundException{
         List<List<String>> ls = new ArrayList<List<String>>();
         Workbook wb = loadWorkbook(null, file, null);
-        if (null != wb) {
-            Sheet sh = wb.getSheetAt(sheetIndex);
-            int rows = sh.getPhysicalNumberOfRows();
-            int cells = sh.getRow(0).getPhysicalNumberOfCells();
-            for (int i = 0; i < rows; i++ ) {
-                Row row = sh.getRow(i);
-                if (row == null) {
-                    break;
-                }
-                List<String> r = new ArrayList<String>(cells);
-                boolean dataFlag = true;
-                for (int c = 0; c < cells; c++ ) {
-                    if (row.getCell(c) == null
-                        || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
-                        r.add("");
+        try {
+            if (null != wb) {
+                Sheet sh = wb.getSheetAt(sheetIndex);
+                int rows = sh.getPhysicalNumberOfRows();
+                int cells = sh.getRow(0).getPhysicalNumberOfCells();
+                for (int i = 0; i < rows; i++ ) {
+                    Row row = sh.getRow(i);
+                    if (row == null) {
+                        break;
                     }
-                    else {
-                        dataFlag = false;
-                        r.add(getStringCellValue(row.getCell(c)));
+                    List<String> r = new ArrayList<String>(cells);
+                    boolean dataFlag = true;
+                    for (int c = 0; c < cells; c++ ) {
+                        if (row.getCell(c) == null
+                                || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
+                            r.add("");
+                        }
+                        else {
+                            dataFlag = false;
+                            r.add(getStringCellValue(row.getCell(c)));
+                        }
                     }
+                    // 遇到一行全为空结束
+                    if (dataFlag) {
+                        break;
+                    }
+                    ls.add(r);
                 }
-                // 遇到一行全为空结束
-                if (dataFlag) {
-                    break;
-                }
-                ls.add(r);
             }
+        }finally {
+           if(wb != null){
+               try {
+                   wb.close();
+               } catch (IOException e) {
+                   logger.error(e.getMessage(),e);
+               }
+           }
         }
         return ls;
     }
@@ -116,43 +124,54 @@ public class ExcelUtil {
                                                 InputStream inputStream, int sheetIndex,
                                                 int skipRows, int titleRow) throws FileNotFoundException{
         List<List<String>> ls = new ArrayList<List<String>>();
-        Workbook wb = loadWorkbook(fileName, file, inputStream);
-        if (null != wb) {
-            Sheet sh = wb.getSheetAt(sheetIndex);
-            int rows = sh.getPhysicalNumberOfRows();
-            int cells = sh.getRow(titleRow).getPhysicalNumberOfCells();
-            Row tRow = sh.getRow(titleRow);
-            // 列标题为空的话结束
-            for (int c = 0; c < cells; c++ ) {
-                if (tRow.getCell(c) == null
-                    || StringUtil.isEmpty(getStringCellValue(tRow.getCell(c)))) {
-                    cells = c;
-                    break;
+        Workbook wb = null;
+        try {
+            wb= loadWorkbook(fileName, file, inputStream);
+            if (null != wb) {
+                Sheet sh = wb.getSheetAt(sheetIndex);
+                int rows = sh.getPhysicalNumberOfRows();
+                int cells = sh.getRow(titleRow).getPhysicalNumberOfCells();
+                Row tRow = sh.getRow(titleRow);
+                // 列标题为空的话结束
+                for (int c = 0; c < cells; c++ ) {
+                    if (tRow.getCell(c) == null
+                            || StringUtil.isEmpty(getStringCellValue(tRow.getCell(c)))) {
+                        cells = c;
+                        break;
+                    }
+                }
+
+                for (int i = skipRows; i < rows; i++ ) {
+                    Row row = sh.getRow(i);
+                    if (row == null) {
+                        break;
+                    }
+                    List<String> r = new ArrayList<String>(cells);
+                    boolean dataFlag = true;
+                    for (int c = 0; c < cells; c++ ) {
+                        if (row.getCell(c) == null
+                                || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
+                            r.add("");
+                        }
+                        else {
+                            dataFlag = false;
+                            r.add(getStringCellValue(row.getCell(c)));
+                        }
+                    }
+                    // 遇到一行全为空结束
+                    if (dataFlag) {
+                        break;
+                    }
+                    ls.add(r);
                 }
             }
-
-            for (int i = skipRows; i < rows; i++ ) {
-                Row row = sh.getRow(i);
-                if (row == null) {
-                    break;
+        }finally {
+            if(wb != null){
+                try {
+                    wb.close();
+                }catch (IOException e) {
+                    logger.error(e.getMessage(),e);
                 }
-                List<String> r = new ArrayList<String>(cells);
-                boolean dataFlag = true;
-                for (int c = 0; c < cells; c++ ) {
-                    if (row.getCell(c) == null
-                        || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
-                        r.add("");
-                    }
-                    else {
-                        dataFlag = false;
-                        r.add(getStringCellValue(row.getCell(c)));
-                    }
-                }
-                // 遇到一行全为空结束
-                if (dataFlag) {
-                    break;
-                }
-                ls.add(r);
             }
         }
         return ls;
@@ -212,45 +231,54 @@ public class ExcelUtil {
      */
     public static Workbook loadWorkbook(String fileName, File file, InputStream inputStream) 
             throws FileNotFoundException{
-        if (null == file && StringUtil.isEmpty(fileName)) {
-            return null;
-        }
-        if (inputStream == null) {
-            if (null == file) {
-                file = new File(fileName);
-            }
-            if (StringUtil.isEmpty(fileName)) {
-                fileName = file.getName();
-            }
-            inputStream = new FileInputStream(file);
-        }
-
         Workbook wb = null;
-        if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
-            try {
-                POIFSFileSystem fs = new POIFSFileSystem(inputStream);
-                wb = new HSSFWorkbook(fs);
-                inputStream.close();
+        try {
+            if (null == file && StringUtil.isEmpty(fileName)) {
+                return null;
             }
-            catch (Exception e) {
-//                e.printStackTrace();
-                logger.error(e.getMessage(),e);
+            if (inputStream == null) {
+                if (null == file) {
+                    file = new SafelyFile(fileName);
+                }
+                if (StringUtil.isEmpty(fileName)) {
+                    fileName = file.getName();
+                }
+                inputStream = new FileInputStream(file);
             }
 
-        }
-        else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
-            try {
-                wb = new XSSFWorkbook(inputStream);
-                inputStream.close();
+            if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
+                try {
+                    POIFSFileSystem fs = new POIFSFileSystem(inputStream);
+                    wb = new HSSFWorkbook(fs);
+                    inputStream.close();
+                }
+                catch (Exception e) {
+                    logger.error(e.getMessage(),e);
+                }
+
             }
-            catch (Exception e) {
-//                e.printStackTrace();
-                logger.error(e.getMessage(),e);
+            else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
+                try {
+                    wb = new XSSFWorkbook(inputStream);
+                    inputStream.close();
+                }
+                catch (Exception e) {
+                    logger.error(e.getMessage(),e);
+                }
+            }
+            else {
+                throw new BusinessException("不是一个有效的Excel文件");
+            }
+        }finally {
+            if (inputStream != null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(),e);
+                }
             }
         }
-        else {
-            throw new BusinessException("不是一个有效的Excel文件");
-        }
+
         return wb;
     }
 

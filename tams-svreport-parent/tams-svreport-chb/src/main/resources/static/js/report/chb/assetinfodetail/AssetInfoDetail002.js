@@ -128,6 +128,8 @@ var QueryFunc=function(){
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",false);
                 $("#issueAmt").attr("disabled",false);
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
+                $("#svrBussRepPlacementInfoDto_targetType1").prop('required', true);
+                $("#targetAmt").prop('required', true);
                 // var parms={assetuuid:$("#assetUuid").val()}
                 // Joyin.ajaxJson(
                 //     basePath + "chb/assetinfodetail/AssetInfoDetail002/getValue",parms,
@@ -140,6 +142,8 @@ var QueryFunc=function(){
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",true);
                 $("#issueAmt").attr("disabled",true);
                 $("#issueAmt").val('');
+                $("#svrBussRepPlacementInfoDto_targetType1").prop('required', false);
+                $("#targetAmt").prop('required', false);
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
@@ -166,8 +170,38 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").val('').trigger("change");
                 $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").attr("disabled",true);
                 //还本付息情况
-                $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").val('').trigger("change");
-                $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",true);
+                //$("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").val('').trigger("change");
+                //$("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",true);
+
+                //浮动因子
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactor").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactor").attr("disabled",true);
+                //担保方式
+                $("#svrBussRepAssetCreditNonstdInfoDto_repGuaType").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repGuaType").attr("disabled",true);
+                //抵质押物类型
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeType").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeType").attr("disabled",true);
+                //抵质押物价值
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeValue").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeValue").attr("disabled",true);
+                //担保性质
+                $("#svrBussRepAssetCreditNonstdInfoDto_repNatureGuarantee").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repNatureGuarantee").attr("disabled",true);
+                //担保人与融资人关系
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRelationFinan").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRelationFinan").attr("disabled",true);
+                //行权价格
+                $("#svrBussRepAssetCreditNonstdInfoDto_repExercisePrice").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repExercisePrice").attr("disabled",true);
+                //递延利息是否计息
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestInt").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestInt").attr("disabled",true);
+                //部分赎回比例%
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemRate").val('').trigger("change");
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemRate").attr("disabled",true);
+
+
                 //是否有浮动因子
                 $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").val('').trigger("change");
                 $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").attr("disabled",true);
@@ -220,7 +254,27 @@ var QueryFunc=function(){
                 //利息发布方式
                 $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").attr("disabled",false);
                 //还本付息情况
-                $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",false);
+              //  $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",false);
+
+               //浮动因子
+                $("#svrBussRepAssetCreditNonstdInfoDto_floatFactor").attr("disabled",false);
+                //担保方式
+                $("#svrBussRepAssetCreditNonstdInfoDto_repGuaType").attr("disabled",false);
+                //抵质押物类型
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeType").attr("disabled",false);
+                //抵质押物价值
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPledgeValue").attr("disabled",false);
+                //担保性质
+                $("#svrBussRepAssetCreditNonstdInfoDto_repNatureGuarantee").attr("disabled",false);
+                //担保人与融资人关系
+                $("#svrBussRepAssetCreditNonstdInfoDto_repRelationFinan").attr("disabled",false);
+                //行权价格
+                $("#svrBussRepAssetCreditNonstdInfoDto_repExercisePrice").attr("disabled",false);
+                //递延利息是否计息
+                $("#svrBussRepAssetCreditNonstdInfoDto_repDeferredInterestInt").attr("disabled",false);
+                //部分赎回比例%
+                $("#svrBussRepAssetCreditNonstdInfoDto_repPartRedemRate").attr("disabled",false);
+
                 //是否有浮动因子
                 $("#svrBussRepAssetCreditNonstdInfoDto_floatFactorFlag").attr("disabled",false);
                 //结构档次
@@ -342,10 +396,12 @@ var QueryFunc=function(){
 
         Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/check',object,function(result){
             if(result){
-                Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/save',object,function(result){
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
-                });
+                if(operateType === 'save') {
+                    WorkFlow.doSaveList(basePath + 'chb/assetinfodetail/AssetInfoDetail002/save', object, "AssetInfoDetail002_btn_save");
+                }
+                else {
+                    WorkFlow.doSubmitList(basePath + 'chb/assetinfodetail/AssetInfoDetail002/save', object, "AssetInfoDetail002_btn_submit");
+                }
             }
         })
     }
@@ -415,10 +471,14 @@ var QueryFunc=function(){
         }
 
 
-
         //隐藏所有中债报送信息
         $(".businessDeptClass").hide();
         init();
+
+        $('#AssetInfoDetail002_btn_save').click(function() {
+            saveOrSubmit('save');
+        });
+
         $('#AssetInfoDetail002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
@@ -437,8 +497,6 @@ var QueryFunc=function(){
         $('#assetName').change(function(){
             assetVal();
         });
-
-
     });
 }());
 

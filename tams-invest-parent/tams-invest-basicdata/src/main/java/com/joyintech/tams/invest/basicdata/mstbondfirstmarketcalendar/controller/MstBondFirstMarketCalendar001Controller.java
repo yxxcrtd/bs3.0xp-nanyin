@@ -70,8 +70,7 @@ public class MstBondFirstMarketCalendar001Controller extends BaseController {
      */
 	@ResponseBody
     @RequestMapping("findPage")
-    public Page<MstBondFirstMarketCalendar001Dto> selectAll()
-        throws Exception {
+    public Page<MstBondFirstMarketCalendar001Dto> selectAll() {
         Map<String,Object> map = RequestUtil.getPageParam();
         Page<MstBondFirstMarketCalendar001Dto> page = mstBondFirstMarketCalendar001Service.selectForPage(map);
         return page;
@@ -86,8 +85,7 @@ public class MstBondFirstMarketCalendar001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstBondFirstMarketCalendar001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

@@ -68,11 +68,15 @@
             $(".userId").attr("disabled",true);
             $('#tree').reloadTree({portfolioId:$('#portfolioId').val()});
         }
-        if(pageModel==PAGE_MODEL_NEW || pageModel==PAGE_MODEL_EDIT){
-            $("#portfolioType").val('01').change();
+        //if(pageModel==PAGE_MODEL_NEW || pageModel==PAGE_MODEL_EDIT){
+        if(pageModel==PAGE_MODEL_NEW){
+            $("#portfolioType").val('04').attr("disabled",true).change();
+        }else{
+            $("#portfolioType").attr("disabled",true).change();
         }
     }
     function saveOrSubmit(operateType) {
+
         var fundAccountTables = FundAccountInfo.table;
         var securitiesAccountInfoTables = SecuritiesAccountInfo.table;
         /**
@@ -106,11 +110,11 @@
         var fundAccountTable = fundAccountTables.getAllRows();
         var securitiesAccountInfoTable = securitiesAccountInfoTables.getAllRows();
         object.fundAccountInfoDto = fundAccountTable;
-        for(var i in object.fundAccountInfoDto){
-            if(object.fundAccountInfoDto[i] && object.fundAccountInfoDto[i].acctNo && object.fundAccountInfoDto[i].ccy){
-                object.fundAccountInfoDto[i].acctNo = object.fundAccountInfoDto[i].acctNo.concat('_',object.fundAccountInfoDto[i].ccy);
-            }
-        }
+//        for(var i in object.fundAccountInfoDto){
+//            if(object.fundAccountInfoDto[i] && object.fundAccountInfoDto[i].acctNo && object.fundAccountInfoDto[i].ccy){
+//                object.fundAccountInfoDto[i].acctNo = object.fundAccountInfoDto[i].acctNo.concat('_',object.fundAccountInfoDto[i].ccy);
+//            }
+//        }
         object.securitiesAccountInfoDto = securitiesAccountInfoTable;
         object.operateType = operateType;
         object.pageModel = pageModel;

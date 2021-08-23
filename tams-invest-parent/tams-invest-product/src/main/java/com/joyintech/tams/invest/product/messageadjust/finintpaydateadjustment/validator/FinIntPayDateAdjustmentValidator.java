@@ -70,16 +70,16 @@ public class FinIntPayDateAdjustmentValidator implements BeanValidator{
             }
             //当前遍历节点.计息区间开始日 ！= 上一个遍历节点.计息区间结束日时
             for(int i=0; i<selectedItem.size()-1; i++){
-                if("已付息".equals(selectedItem.get(i).getPayStatus())){
-                    
-                }
-                else{
+//                if("已付息".equals(selectedItem.get(i).getPayStatus())){
+//
+//                }
+//                else{
                     if(selectedItem.get(i+1).getVdate().compareTo(selectedItem.get(i).getMdate()) != 0 ){
                         //erroList.add(new ValidMessage("",getMessage("FIN_PROD_E_0054")));
                         erroList.add(new ValidMessage("",getMessage("BUSS_COM_E_0012","计息区间开始日："+DateUtil.format(selectedItem.get(i+1).getVdate()),
                             "上一周期","计息区间结束日："+DateUtil.format(selectedItem.get(i).getMdate()))));
                     }
-                }
+//                }
             }
             //最后一个区间的计息区间开始日 ≠ 产品起息日 时，提交报错
             //最后一个区间的计息区间结束日 ≠ 产品到期日 时，提交报错

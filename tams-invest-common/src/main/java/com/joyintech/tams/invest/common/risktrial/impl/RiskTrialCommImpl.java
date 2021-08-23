@@ -179,8 +179,6 @@ public class RiskTrialCommImpl extends BaseService implements RiskTrialComm {
 		/*try {
 			 riskTrialRetList=riskTrialCommCallable.getRiskTrialValue(taskList, inputDto);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}*/
         final ExecutorService executor = Executors.newCachedThreadPool();
         final List<Callable<List<RiskTrialRetDto>>> taskCallableList = new ArrayList<>();
@@ -321,7 +319,7 @@ public class RiskTrialCommImpl extends BaseService implements RiskTrialComm {
 				}
 	    		
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 				insertLogTrial(point,LogLvl.ERROR,"自动监督失败："+e.getMessage(),sysParam);
 			}
 			task = taskQueue.pop();

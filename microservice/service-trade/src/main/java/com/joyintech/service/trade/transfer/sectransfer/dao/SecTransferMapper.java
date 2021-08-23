@@ -2,6 +2,7 @@ package com.joyintech.service.trade.transfer.sectransfer.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.transfer.sectransfer.dto.SecTransfer001Dto;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -91,4 +92,12 @@ public interface SecTransferMapper {
     BigDecimal getLastNetPrice(Map<String, Object> param);
 
     int selectData(Map<String, Object> map);
+
+    /**
+     * 查询上市标的发行标的信息
+     * @param param 资产代码
+     * @see
+     * @since 2.1.7
+     */
+    FinProduct selectApperInfo(Map<String, Object> param);
 }

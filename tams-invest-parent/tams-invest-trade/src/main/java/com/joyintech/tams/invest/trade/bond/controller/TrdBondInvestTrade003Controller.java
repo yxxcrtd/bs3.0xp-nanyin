@@ -10,12 +10,22 @@
 
 package com.joyintech.tams.invest.trade.bond.controller;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.base.BaseDictCodeList;
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.base.intf.DataDict;
+import com.joyintech.framework.base.intf.DataDictItem;
+import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.base.service.DealDictCodeDataService;
+import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.listener.FileUploadListener;
+import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -29,6 +39,7 @@ import com.joyintech.tams.invest.trade.bond.validator.TrdBondInvestTradeDtoValid
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +108,10 @@ public class TrdBondInvestTrade003Controller extends BaseController {
 
     @Autowired(required = false)
     private DealDictCodeDataService dealDictCodeDataService;
+
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
+
     @Override
     public String init(Model model) {
         setSelectOptions(model);
@@ -369,7 +384,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
     @RequestMapping("isExerYieldDivShow")
     @ResponseBody
     public String isExerYieldDivShow(@RequestParam Map<String, Object> paramMap) {
-        return trdBondInvestTrade002Service.isExerYieldDivShow(paramMap);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.isExerYieldDivShow(paramMap));
     }
 
     /**
@@ -397,7 +412,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
     @RequestMapping("calcDeviationDegree")
     @ResponseBody
     public String calcDeviationDegree(@RequestParam Map<String, Object> params) {
-        return trdBondInvestTrade002Service.calcDeviationDegree(params);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.calcDeviationDegree(params));
     }
 
     /**
@@ -519,8 +534,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto) throws InvocationTargetException, IllegalAccessException, WorkFlowException, IOException, InstantiationException {
     	List<TrdBondInvestTradeDto> dtoList = new ArrayList<>();
     	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();//组合分配
     	List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();//划款指令
@@ -627,11 +641,35 @@ public class TrdBondInvestTrade003Controller extends BaseController {
             }
         }
         // ----------add by zhangrui1 20200704 批量实占功能 end----------
+        for(int i=0;i<dtoList.size();i++){
+            if(i==0){
+                // 将附件和当前业务对象绑定（更新附件的业务代码）
+                fileAttachmentProcess.updateBussinessNo(
+                        dto.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                                Collectors.toList()),
+                        dtoList.get(0).getTotleTradeId());
+            }else{
+                List<UploadFile> uploadFileList =new ArrayList<UploadFile>();
+                for(UploadFile uploadFile : dto.getUploadFileList()){
+                    UploadFile file = fileAttachmentProcess.fetch(uploadFile.getFileNo());
+                    if (file != null) {
+                        file.setFileNo(IDGenerator.generate());
+                        fileAttachmentProcess.upload(file);
+                        uploadFileList.add(file);
+                    }
+                }
+                // 将附件和当前业务对象绑定（更新附件的业务代码）
+                fileAttachmentProcess.updateBussinessNo(
+                        uploadFileList.stream().map(UploadFile::getFileNo).collect(
+                                Collectors.toList()),
+                        dtoList.get(i).getTotleTradeId());
+            }
+        }
 
         ProcessParameter<TrdBondInvestTradeDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdBondInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();
         processParameter.setWorkFlowParameter(workFlowParameter);
-        processParameter.setPageId("TrdBondInvestTrade003");
+        processParameter.setPageId("TrdBondInvestTrade002");
 //        processParameter.setPageId(this.getPageId());
         if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
             processParameter.setOperationType(OperationType.NEW);
@@ -639,10 +677,10 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         else {
             processParameter.setOperationType(OperationType.MODIFY);
         }
-        workFlowParameter.setPageId("TrdBondInvestTrade003");
+        workFlowParameter.setPageId("TrdBondInvestTrade002");
 
 //        workFlowParameter.setPageId(this.getPageId());
-        workFlowParameter.setElementId(dto.getElementId());
+        workFlowParameter.setElementId(this.getParam("elementId"));
         workFlowParameter.setBusinessCode((entity) -> entity.getTotleTradeId());
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_债券类资产交易.getValue());
         workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
@@ -702,7 +740,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
         String index=baseGetBusinessId.buildBussinessCode(codeParameter);
-        return index;
+        return StringUtil.trimHtmlTag(index);
     }
     // add by zhanggenglin 质押式回购多组合 20190813 end
 

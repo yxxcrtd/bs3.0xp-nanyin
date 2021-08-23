@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SttSceneMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SttScene" >
+        <id column="S_S_SCENE_ID" property="sceneId" jdbcType="VARCHAR" />
+        <result column="S_S_SCENE_NAME" property="sceneName" jdbcType="VARCHAR" />
+        <result column="S_S_START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+        <result column="S_S_END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+        <result column="S_S_IS_EVENT" property="isEvent" jdbcType="VARCHAR" />
+        <result column="S_S_EVENT_ID" property="eventId" jdbcType="VARCHAR" />
+        <result column="S_S_SCENE_TPML_ID" property="sceneTpmlId" jdbcType="VARCHAR" />
+        <result column="S_S_IS_TMPL" property="isTmpl" jdbcType="VARCHAR" />
+        <result column="S_S_EFF_STATUS" property="effStatus" jdbcType="VARCHAR" />
+        <result column="S_S_IS_ALL_USEABLE" property="isAllUseable" jdbcType="VARCHAR" />
+        <result column="S_S_REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="S_S_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="S_S_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="S_S_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="S_S_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="S_S_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SCENE_ID as S_S_SCENE_ID, SCENE_NAME as S_S_SCENE_NAME, START_DATE as S_S_START_DATE, 
+        END_DATE as S_S_END_DATE, IS_EVENT as S_S_IS_EVENT, EVENT_ID as S_S_EVENT_ID, SCENE_TPML_ID as S_S_SCENE_TPML_ID, 
+        IS_TMPL as S_S_IS_TMPL, EFF_STATUS as S_S_EFF_STATUS, IS_ALL_USEABLE as S_S_IS_ALL_USEABLE, 
+        CREATE_USER as S_S_CREATE_USER, CREATE_DEPT as S_S_CREATE_DEPT, CREATE_TIME as S_S_CREATE_TIME, 
+        UPDATE_USER as S_S_UPDATE_USER, UPDATE_TIME as S_S_UPDATE_TIME,INSTITUTION_CODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttSceneMapper.Base_Column_List" />
+        from STT_SCENE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttSceneMapper.Base_Column_List" />
+        from STT_SCENE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttSceneMapper.Base_Column_List" />
+        from STT_SCENE
+        where SCENE_ID = #{sceneId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STT_SCENE
+        where SCENE_ID = #{sceneId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from STT_SCENE
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SttScene" >
+        insert into STT_SCENE (SCENE_ID, SCENE_NAME, START_DATE, 
+            END_DATE, IS_EVENT, EVENT_ID, 
+            SCENE_TPML_ID, IS_TMPL, EFF_STATUS, 
+            IS_ALL_USEABLE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE
+            )
+        values (#{sceneId,jdbcType=VARCHAR}, #{sceneName,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, 
+            #{endDate,jdbcType=TIMESTAMP}, #{isEvent,jdbcType=VARCHAR}, #{eventId,jdbcType=VARCHAR}, 
+            #{sceneTpmlId,jdbcType=VARCHAR}, #{isTmpl,jdbcType=VARCHAR}, #{effStatus,jdbcType=VARCHAR}, 
+            #{isAllUseable,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            ,#{institutionCode,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SttScene" >
+        insert into STT_SCENE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sceneId != null" >
+                SCENE_ID,
+            </if>
+            <if test="sceneName != null" >
+                SCENE_NAME,
+            </if>
+            <if test="startDate != null" >
+                START_DATE,
+            </if>
+            <if test="endDate != null" >
+                END_DATE,
+            </if>
+            <if test="isEvent != null" >
+                IS_EVENT,
+            </if>
+            <if test="eventId != null" >
+                EVENT_ID,
+            </if>
+            <if test="sceneTpmlId != null" >
+                SCENE_TPML_ID,
+            </if>
+            <if test="isTmpl != null" >
+                IS_TMPL,
+            </if>
+            <if test="effStatus != null" >
+                EFF_STATUS,
+            </if>
+            <if test="isAllUseable != null" >
+                IS_ALL_USEABLE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE,
+            </if> 
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="sceneId != null" >
+                #{sceneId,jdbcType=VARCHAR},
+            </if>
+            <if test="sceneName != null" >
+                #{sceneName,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null" >
+                #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isEvent != null" >
+                #{isEvent,jdbcType=VARCHAR},
+            </if>
+            <if test="eventId != null" >
+                #{eventId,jdbcType=VARCHAR},
+            </if>
+            <if test="sceneTpmlId != null" >
+                #{sceneTpmlId,jdbcType=VARCHAR},
+            </if>
+            <if test="isTmpl != null" >
+                #{isTmpl,jdbcType=VARCHAR},
+            </if>
+            <if test="effStatus != null" >
+                #{effStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isAllUseable != null" >
+                #{isAllUseable,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="institutionCode != null" >
+                 #{institutionCode,jdbcType=VARCHAR},
+            </if> 
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SttScene" >
+        insert into STT_SCENE(SCENE_ID, SCENE_NAME, START_DATE, END_DATE, IS_EVENT, EVENT_ID, 
+        SCENE_TPML_ID, IS_TMPL, EFF_STATUS, IS_ALL_USEABLE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME,INSTITUTION_CODE)
+        select SCENE_ID, SCENE_NAME, START_DATE, END_DATE, IS_EVENT, EVENT_ID, 
+            SCENE_TPML_ID, IS_TMPL, EFF_STATUS, IS_ALL_USEABLE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME,INSTITUTION_CODE
+             from STT_SCENE
+             where STATUS = 'E' and SCENE_ID = #{sceneId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SttScene" >
+        update STT_SCENE
+        <set >
+            <if test="sceneName != null" >
+                SCENE_NAME = #{sceneName,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                START_DATE = #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null" >
+                END_DATE = #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isEvent != null" >
+                IS_EVENT = #{isEvent,jdbcType=VARCHAR},
+            </if>
+            <if test="eventId != null" >
+                EVENT_ID = #{eventId,jdbcType=VARCHAR},
+            </if>
+            <if test="sceneTpmlId != null" >
+                SCENE_TPML_ID = #{sceneTpmlId,jdbcType=VARCHAR},
+            </if>
+            <if test="isTmpl != null" >
+                IS_TMPL = #{isTmpl,jdbcType=VARCHAR},
+            </if>
+            <if test="effStatus != null" >
+                EFF_STATUS = #{effStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isAllUseable != null" >
+                IS_ALL_USEABLE = #{isAllUseable,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="institutionCode != null" >
+                 INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            </if> 
+        </set>
+        where SCENE_ID = #{sceneId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.SttScene" >
+        update STT_SCENE
+        <set >
+            <if test="sceneId != null" >
+                SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+            </if>
+            <if test="sceneName != null" >
+                SCENE_NAME = #{sceneName,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                START_DATE = #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null" >
+                END_DATE = #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isEvent != null" >
+                IS_EVENT = #{isEvent,jdbcType=VARCHAR},
+            </if>
+            <if test="eventId != null" >
+                EVENT_ID = #{eventId,jdbcType=VARCHAR},
+            </if>
+            <if test="sceneTpmlId != null" >
+                SCENE_TPML_ID = #{sceneTpmlId,jdbcType=VARCHAR},
+            </if>
+            <if test="isTmpl != null" >
+                IS_TMPL = #{isTmpl,jdbcType=VARCHAR},
+            </if>
+            <if test="effStatus != null" >
+                EFF_STATUS = #{effStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isAllUseable != null" >
+                IS_ALL_USEABLE = #{isAllUseable,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            </if> 
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.SttScene" >
+        update STT_SCENE
+        set 
+        SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+        SCENE_NAME = #{sceneName,jdbcType=VARCHAR},
+        START_DATE = #{startDate,jdbcType=TIMESTAMP},
+        END_DATE = #{endDate,jdbcType=TIMESTAMP},
+        IS_EVENT = #{isEvent,jdbcType=VARCHAR},
+        EVENT_ID = #{eventId,jdbcType=VARCHAR},
+        SCENE_TPML_ID = #{sceneTpmlId,jdbcType=VARCHAR},
+        IS_TMPL = #{isTmpl,jdbcType=VARCHAR},
+        EFF_STATUS = #{effStatus,jdbcType=VARCHAR},
+        IS_ALL_USEABLE = #{isAllUseable,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR} 
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttScene" >
+        update STT_SCENE
+        set SCENE_NAME = #{sceneName,jdbcType=VARCHAR},
+            START_DATE = #{startDate,jdbcType=TIMESTAMP},
+            END_DATE = #{endDate,jdbcType=TIMESTAMP},
+            IS_EVENT = #{isEvent,jdbcType=VARCHAR},
+            EVENT_ID = #{eventId,jdbcType=VARCHAR},
+            SCENE_TPML_ID = #{sceneTpmlId,jdbcType=VARCHAR},
+            IS_TMPL = #{isTmpl,jdbcType=VARCHAR},
+            EFF_STATUS = #{effStatus,jdbcType=VARCHAR},
+            IS_ALL_USEABLE = #{isAllUseable,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+        where SCENE_ID = #{sceneId,jdbcType=VARCHAR}
+    </update>
+</mapper>

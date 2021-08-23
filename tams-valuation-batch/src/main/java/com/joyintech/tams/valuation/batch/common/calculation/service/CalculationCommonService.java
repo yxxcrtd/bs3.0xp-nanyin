@@ -19,6 +19,7 @@ import com.joyintech.calculation.bonds.SecIntSchedule;
 import com.joyintech.calculation.bonds.constant.*;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.shell.AccurIntCalculator;
+import com.joyintech.calculation.shell.AccurIntForAbsBookCalculator;
 import com.joyintech.calculation.shell.AccurIntForBookCalculator;
 import com.joyintech.calculation.shell.param.AccurIntCalInParameter;
 import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
@@ -92,6 +93,7 @@ public class CalculationCommonService {
     @Autowired
     private BokBooksetMapper bokBooksetMapper;
 
+    public final static int SCALE_18 = 18;
     /**
      * 计算计息基础天数
      * 
@@ -1368,20 +1370,20 @@ public class CalculationCommonService {
                     if (bokVo.getHappenDate().compareTo(redVo.getHappenDate()) <= 0) {
                         // 费前情况
                         if (ValDictCodeList.费前费后区分_费前.getValue().equals(feeBefOrAft)) {
-                            // update by caiqun 20201205 TISHKBS-1658
-                            // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费前)
+                            // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费前/10000)
                             // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 +
-                            // 资产负债信息.万份收益_费前）
-                            bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(
-                                bonusRstCycTenThdProfitNow, bokVo.getpYieldBef());
+                            // 资产负债信息.万份收益_费前/10000）
+                            bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(SCALE_18, RoundingMode.HALF_UP,
+                                    bonusRstCycTenThdProfitNow, ArithmeticUtil.divide(
+                                            bokVo.getpYieldBef(), new BigDecimal(10000)));
                         } // 其他情况
                         else {
-                            // update by caiqun 20201205 TISHKBS-1658
-                            // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费后)
+                            // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费后/10000)
                             // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 +
-                            // 资产负债信息.万份收益_费后）
-                            bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(
-                                bonusRstCycTenThdProfitNow,bokVo.getpYield());
+                            // 资产负债信息.万份收益_费后/10000）
+                            bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(SCALE_18, RoundingMode.HALF_UP,
+                                    bonusRstCycTenThdProfitNow,
+                                    ArithmeticUtil.divide(bokVo.getpYield(), new BigDecimal(10000)));
                         }
                     }
                 }
@@ -1394,20 +1396,16 @@ public class CalculationCommonService {
             for (BokStatBokPosition bokVo : bokStatBokPositionList) {
                 // 费前情况
                 if (ValDictCodeList.费前费后区分_费前.getValue().equals(feeBefOrAft)) {
-                    // update by caiqun 20201205 TISHKBS-1658
-                    // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费前)
-                    // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 + 资产负债信息.万份收益_费前）
-                    bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(bonusRstCycTenThdProfitNow,
-                            bokVo.getpYieldBef());
-
-
+                    // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费前/10000)
+                    // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 + 资产负债信息.万份收益_费前/10000）
+                    bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(SCALE_18, RoundingMode.HALF_UP, bonusRstCycTenThdProfitNow,
+                            ArithmeticUtil.divide(bokVo.getpYieldBef(), new BigDecimal(10000)));
                 } // 其他情况
                 else {
-                    // update by caiqun 20201205 TISHKBS-1658
-                    // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费后)
-                    // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 + 资产负债信息.万份收益_费后）
-                    bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(bonusRstCycTenThdProfitNow,
-                            bokVo.getpYield());
+                    // 变量.红利再投周期万份收益列表[i] = 变量.红利再投周期万份收益列表[i]+资产负债信息[j].万份收益_费后/10000)
+                    // 即（累加红利再投周期万份收益列表当前塞入值:红利再投周期万份收益 = 红利再投周期万份收益 + 资产负债信息.万份收益_费后/10000）
+                    bonusRstCycTenThdProfitNow = ArithmeticUtil.doAdd(SCALE_18, RoundingMode.HALF_UP, bonusRstCycTenThdProfitNow,
+                            ArithmeticUtil.divide(bokVo.getpYield(), new BigDecimal(10000)));
                 }
             }
             // 变量.红利再投周期万份收益列表 塞入该值
@@ -1444,12 +1442,13 @@ public class CalculationCommonService {
                 BigDecimal dayNum = ArithmeticUtil.doAdd(new BigDecimal(betweenDay),
                     BigDecimal.ONE);
 
-                // update by caiqun 20201205  TISHKBS-1658
-                // 变量.周期年化收益率 = （变量.周期万份收益-1） /(参数.周期结束日 - 参数.周期开始日+1)* 参数.计算基础 /10000
+                // 变量.周期年化收益率 = （变量.周期万份收益-1）*10000 /(参数.周期结束日 - 参数.周期开始日+1)* 参数.计算基础 /10000
                 cycYearRate = ArithmeticUtil.multiply(
-                        // [（变量.周期万份收益-1）(参数.周期结束日 - 参数.周期开始日+1)]
-                        ArithmeticUtil.divide(ArithmeticUtil.doSub(cycTenThousandProfit, BigDecimal.ONE), dayNum),
-                        ArithmeticUtil.divide(new BigDecimal(BasisDays), new BigDecimal(10000))// [参数.计算基础/10000]
+                        ArithmeticUtil.doSub(cycTenThousandProfit, BigDecimal.ONE), // [（变量.周期万份收益-1）]
+                        ArithmeticUtil.divide(new BigDecimal(10000), dayNum), // [10000 /(参数.周期结束日 -
+                        // 参数.周期开始日+1)]
+                        ArithmeticUtil.divide(new BigDecimal(BasisDays), new BigDecimal(10000))// [参数.计算基础
+                        // /10000]
                 );
             }
 
@@ -1765,6 +1764,35 @@ public class CalculationCommonService {
             listCashinfo, listPayinfo, varFaceValue, acctEntity);
         // 计算百元面值的债券的利息
         AccurIntCalculator calculator2 = CalculatorFactory.createAccurIntCalculator();
+        AccurIntCalOutParameter output2 = calculator2.calculate(parameter);
+        return output2;
+    }
+
+    /**
+     * 利息计提-计算百元面值的债券的利息-ABS债用
+     *
+     * @param acctEntityEx 计提基础信息DTO
+     * @param rstBaseinfo 标的信息
+     * @param listIntinfo 付息计划列表
+     * @param listCashinfo 报价信息列表
+     * @param listPayinfo 支付规则
+     * @param varFaceValue 百元面值
+     * @return AccurIntCalOutParameter
+     * @see
+     * @since 1.0
+     */
+    public AccurIntCalOutParameter getCalculateForAbs(DrawBaseInfoSelectComDTO acctEntityEx,
+                                                TargetFinProduct rstBaseinfo,
+                                                List<TargetCashPlan> listIntinfo,
+                                                List<TargetCashCalcRule> listCashinfo,
+                                                List<TargetCashPayRule> listPayinfo,
+                                                BigDecimal varFaceValue,
+                                                DrawBaseInfoSelectComResult acctEntity) {
+        // 组装参数
+        AccurIntCalInParameter parameter = getCalInParam(acctEntityEx, rstBaseinfo, listIntinfo,
+                listCashinfo, listPayinfo, varFaceValue, acctEntity);
+        // 计算百元面值的债券的利息
+        AccurIntForAbsBookCalculator calculator2 = CalculatorFactory.createAccurIntForAbsBookCalculator();
         AccurIntCalOutParameter output2 = calculator2.calculate(parameter);
         return output2;
     }

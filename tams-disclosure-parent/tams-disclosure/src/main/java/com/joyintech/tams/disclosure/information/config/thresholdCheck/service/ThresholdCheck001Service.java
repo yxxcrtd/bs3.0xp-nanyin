@@ -58,7 +58,7 @@ public class ThresholdCheck001Service extends CommonExportService<ThresholdCheck
 	 * @param pageParam
 	 * @return
 	 */
-	public Page<ThresholdCheck001Dto> findIndexByPage(Map<String, Object> pageParam) throws Exception {
+	public Page<ThresholdCheck001Dto> findIndexByPage(Map<String, Object> pageParam) {
 		 String finprodId = (String)pageParam.get("finprodId");
 		  pageParam.put("finprodId", finprodId);
 		 String[] finprodIdArr = null;
@@ -186,7 +186,7 @@ public class ThresholdCheck001Service extends CommonExportService<ThresholdCheck
      * @return
      * @throws Exception
      */
-	public Page<ThresholdCheck001Dto> findIndexDetailByPage(Map<String, Object> pageParam) throws Exception {
+	public Page<ThresholdCheck001Dto> findIndexDetailByPage(Map<String, Object> pageParam) {
 		 String prodArray = (String)pageParam.get("prodArray");
 		 String[] finprodIdArr = null;
 	        if(StringUtil.isNotEmpty(prodArray)){
@@ -216,7 +216,7 @@ public class ThresholdCheck001Service extends CommonExportService<ThresholdCheck
      * @return
      * @throws Exception
      */
-	public List<ThresholdCheck001Dto> findIndexDetail(Map<String, Object> pageParam) throws Exception {
+	public List<ThresholdCheck001Dto> findIndexDetail(Map<String, Object> pageParam) {
 		return  thresholdCheck001001Mapper.selectIndexDetail(pageParam);
 	}
 

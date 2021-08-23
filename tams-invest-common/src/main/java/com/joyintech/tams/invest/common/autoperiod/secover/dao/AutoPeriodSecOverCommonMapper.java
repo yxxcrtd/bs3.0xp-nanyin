@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.common.autoperiod.secover.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -50,4 +51,5 @@ public interface AutoPeriodSecOverCommonMapper {
      */
     List<FinAssetIntInfo> selectNewInterestDetails(Map<String, Object> paramMap);
 
+    BigDecimal selectPosition(Map<String, Object> tempMap);
 }

@@ -98,6 +98,8 @@
 		  <!-- 待处理数据过滤 期限类型.无固定期限 add by wangcheng 20191031 start -->
 		  and fpa.term_type != #{termType03}
 		  <!-- 待处理数据过滤 期限类型.无固定期限 add by wangcheng 20191031 end -->
+		  and days.dates >= fp.VDATE
+		  and days.dates + fpa.investment_cycle <![CDATA[<=]]> fp.MDATE
 		)t
 		where  t.dates &lt;= t.mdate
 		and not exists (select t1.finprod_id
@@ -200,6 +202,7 @@
 		  )
 		  and fop.open_vdate >= to_date(#{platDate},'yyyy-MM-dd')
 		  and fop.open_vdate &lt;= to_date(#{platDate},'yyyy-MM-dd') + 7
+		  and fop.open_vdate + fpa.investment_cycle <![CDATA[<=]]> fp.MDATE
 		  <!-- 待处理数据过滤 期限类型.无固定期限 add by wangcheng 20191031 start -->
 		  and fpa.term_type != #{termType03}
 		  <!-- 待处理数据过滤 期限类型.无固定期限 add by wangcheng 20191031 end -->

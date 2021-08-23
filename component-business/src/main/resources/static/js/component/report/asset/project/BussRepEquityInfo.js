@@ -50,7 +50,11 @@
             }
         }
     })*/
-    getElementById('repPartyType1').change(function(){
+    
+    /**【股票标的】是否为质押融资check错误 设置界面不可选且默认为02***/
+    $("#"+initentity+"_repIsPledge").attr("disabled",true);
+    // add by jiangpeng on 20210629 人行机构规模 字段 废弃了，页面隐藏,人行月报改成用贷款明细信息进行统计了
+    /*getElementById('repPartyType1').change(function(){
         if(getElementById('finprodType2').val() == FINPROD_TYPE_TG_F18
         ||getElementById('finprodType2').val() == FINPROD_TYPE_TG_F01){
             if(getElementById('repPartyType1').val()==SVR_PARTY_TYPE1_01){
@@ -60,5 +64,5 @@
                 getElementById('repInstitSize_div').hide();
             }
         }
-    });
+    });*/
 }());

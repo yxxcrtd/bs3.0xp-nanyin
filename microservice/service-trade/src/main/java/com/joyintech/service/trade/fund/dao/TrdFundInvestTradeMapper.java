@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.fund.dto.TrdFundInvestTradeDto;
@@ -32,7 +33,7 @@ import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
  * @see TrdFundInvestTradeMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface TrdFundInvestTradeMapper {
     //    资产推荐方 新增 zhuyongkang 20191023 end
     /**
@@ -389,6 +390,13 @@ public interface TrdFundInvestTradeMapper {
 	BigDecimal getPriceByTradeId(String tradeId);
 	
 	BigDecimal getPriceByWorkflowId(String workflowId);
+
+    /**
+     * 查询待结转份额
+     * @param map
+     * @return
+     */
+    BigDecimal getcarryAmtNew(Map<String,Object> map);
 
     Map<String, Object> getSpeedByFinprodId(Map<String, Object> param);
 }

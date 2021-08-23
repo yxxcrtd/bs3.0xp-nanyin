@@ -64,6 +64,12 @@
             <groupId>net.sf.jxls</groupId>
             <artifactId>jxls-core</artifactId>
             <version>1.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.poi</groupId>
+					<artifactId>poi</artifactId>
+				</exclusion>
+			</exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

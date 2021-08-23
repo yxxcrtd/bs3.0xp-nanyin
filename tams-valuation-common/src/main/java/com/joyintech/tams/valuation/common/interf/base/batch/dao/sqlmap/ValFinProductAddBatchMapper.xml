@@ -32,7 +32,7 @@
         <result column="CLOSE_DAYS" property="closeDays" jdbcType="DECIMAL" />
         <result column="FACE_VALUE" property="faceValue" jdbcType="DECIMAL" />
         <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
-        <!-- add by yanya on 20210318 澧炲姞鏁版嵁鏉ユ簮-->
+        <!-- add by yanya on 20210318 增加数据来源-->
         <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
     </resultMap>
       <sql id="Base_Column_List" >
@@ -68,11 +68,11 @@
             #{item.saleMode,jdbcType=VARCHAR}, #{item.chbId,jdbcType=VARCHAR}, #{item.tmplId,jdbcType=VARCHAR}, 
             #{item.issueStatus,jdbcType=VARCHAR}, #{item.isCompoundInt,jdbcType=VARCHAR}, #{item.termType,jdbcType=VARCHAR}, 
             #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
-            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.issueStatusRemark,jdbcType=VARCHAR}, 
+            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.issueStatusRemark,jdbcType=VARCHAR},
             #{item.closeDays,jdbcType=DECIMAL}, #{item.faceValue,jdbcType=DECIMAL}, #{item.portfolioId,jdbcType=VARCHAR},
-            /** add by yanya on 20201222 澧炲姞鏄惁鍏朵粬鍊哄埜瀛楁**/
+            /** add by yanya on 20201222 增加是否其他债券字段**/
             #{item.isQtzq,jdbcType=VARCHAR},
-            /** add by yanya on 20210318 澧炲姞鏁版嵁鏉ユ簮**/
+            /** add by yanya on 20210318 增加数据来源**/
             #{item.dataSource,jdbcType=VARCHAR},
             #{item.trmFundType,jdbcType=VARCHAR}
         </foreach>

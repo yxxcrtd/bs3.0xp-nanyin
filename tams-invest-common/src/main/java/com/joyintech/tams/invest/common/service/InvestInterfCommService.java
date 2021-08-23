@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
@@ -33,6 +34,13 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 投管接口用共通Service
@@ -46,11 +54,6 @@ import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 public class InvestInterfCommService extends BaseService<InvestInterfCommDto> {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    /**
-     * IPlatformDate
-     */
-    @Autowired(required = false)
-    private IPlatformDate iPlatformDate;
 
 
     /**
@@ -173,7 +176,7 @@ public class InvestInterfCommService extends BaseService<InvestInterfCommDto> {
                 }
             }
             // 平台日期
-            map.put("platDate", iPlatformDate.getSysDate());
+            map.put("platDate", DateUtil.platDateFromCache());
             // 调用接口
             return restTemplate.postForObject(
                 ServiceApplication.INVEST_INTERF_SERVICE_NAME + "/invest/interf/send", map,
@@ -182,7 +185,6 @@ public class InvestInterfCommService extends BaseService<InvestInterfCommDto> {
         catch (Exception e) {
             // 目前接口报错先不处理
             logger.error("调投管接口异常，不影响交易", e);
-            e.printStackTrace();
             return null;
         }
     }
@@ -195,7 +197,7 @@ public class InvestInterfCommService extends BaseService<InvestInterfCommDto> {
         }
         try {
             // 调用接口
-            mapParm.put("platDate",iPlatformDate.getSysDate());
+            mapParm.put("platDate", DateUtil.platDateFromCache());
             return restTemplate.postForObject(
                 ServiceApplication.INVEST_INTERF_SERVICE_NAME + "/invest/interf/send", mapParm,
                 Map.class);

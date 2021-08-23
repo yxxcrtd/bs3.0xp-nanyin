@@ -115,7 +115,7 @@ public class RiskUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Map<String,Object> dealParamTotal(ExprTreeMath exprTree, String exp, String threshVal) throws Exception {
+	public static Map<String,Object> dealParamTotal(ExprTreeMath exprTree, String exp, String threshVal){
 		Map<String,Object> expMap=new HashMap<>();
 		Object fenMuValue=null;
 		if(exp.indexOf("/")>-1){
@@ -138,7 +138,7 @@ public class RiskUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Map<String,Object> dealParamHas(ExprTreeMath exprTree, String exp, String threshVal) throws Exception {
+	public static Map<String,Object> dealParamHas(ExprTreeMath exprTree, String exp, String threshVal){
 		Map<String,Object> expMap=new HashMap<>();
 		Object fenZiValue=null;
 		if(exp.indexOf("/")>-1){
@@ -158,7 +158,7 @@ public class RiskUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getVdetailVal(String vdetailJson) throws Exception {
+	public static String getVdetailVal(String vdetailJson) {
 		Map<?, ?> violationMap = JsonUtils.json2Object(vdetailJson, Map.class);
 		Map<?, ?> vThreshold2Map = (Map<?, ?>)violationMap.get("threshold_2");
 		if(vThreshold2Map != null) {

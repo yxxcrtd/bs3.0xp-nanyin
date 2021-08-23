@@ -82,9 +82,14 @@ public class TaxFlowQuery001Controller extends BaseController {
 
 	@PostMapping("/findPage/{page}/{length}")
 	public Page<TaxFlowQuery001Dto> findPage(@RequestBody Map<String, Object> params,
-	                                         @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+	                                         @PathVariable("page") int page, @PathVariable("length") int length) {
 //		  Map<String, Object> params= this.getRequestMap();
-		  TaxFlowQuery001Dto dto = (TaxFlowQuery001Dto)JsonUtils.map2entity(params, TaxFlowQuery001Dto.class);	     
+		TaxFlowQuery001Dto dto = null;
+		try {
+			dto = (TaxFlowQuery001Dto) JsonUtils.map2entity(params, TaxFlowQuery001Dto.class);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("数据转换异常");
+		}
 		return  taxFlowQuery001Service.selectForPage(page,length,dto);
 		
 	}
@@ -112,7 +117,7 @@ public class TaxFlowQuery001Controller extends BaseController {
      * @throws Exception
      */
      @PostMapping("/findPageout")
-     public List<TaxFlowQuery001Dto> findPageout(TaxFlowQuery001Dto dto) throws Exception {
+     public List<TaxFlowQuery001Dto> findPageout(@RequestBody TaxFlowQuery001Dto dto){
         return taxFlowQuery001Service.findPageout(dto);
     }
 

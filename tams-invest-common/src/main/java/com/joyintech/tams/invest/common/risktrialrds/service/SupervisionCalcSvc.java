@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.common.risktrialrds.service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class SupervisionCalcSvc {
 	private SupervisionCalcDao supervisionCalcDao;
 	
 	//----modify by 裴家俊 2019-03-22---------start----------
-	public Object getIndicatorParamValue(String sql, SystemParam sysParam,String indType,String detailJson,String timePoint) throws Exception{
+	public Object getIndicatorParamValue(String sql, SystemParam sysParam,String indType,String detailJson,String timePoint) {
 		String portfolioCodeStr=sysParam.getPortfolioCode();
 		portfolioCodeStr=handlePortfolioCode(sql,portfolioCodeStr);
 		int portLength=portfolioCodeStr.split(",").length;
@@ -186,7 +187,7 @@ public class SupervisionCalcSvc {
 	 * 获取list中最大或最小的值
 	 * @throws Exception 
 	 */
-   public Object getMaxMinValueByListRisk(String indType,String detailJson,List<Double> sortList) throws Exception{
+   public Object getMaxMinValueByListRisk(String indType,String detailJson,List<Double> sortList) throws IOException {
 	   ObjectMapper mapper = new ObjectMapper();
 		Map<?, ?> violationMap = mapper.readValue(detailJson, Map.class);
 		Map<?, ?> vThreshold1Map = (Map<?, ?>)violationMap.get("threshold_1");

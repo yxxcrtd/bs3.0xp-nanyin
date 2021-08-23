@@ -12,11 +12,14 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.project.impl;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondRepInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepAssetCreditNonstdInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,30 +39,36 @@ public class SvrBussRepAssetCreditNonstdInfoImplService extends BaseService<SvrB
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-
     @Autowired
     private RechbAassetInfoUtilService rechbAassetInfoUtilService;
 
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
     /**
      *Service 主类方法
      * @param assetUUid
      * @param dataStatus
      * @param model
      */
-    public void  setModle(String  assetUUid,String dataStatus,Model model){
-        //2、入参【UUID】不为空的情况下，进入以下处理：   //调用共通处理【画面展示数据处理共通】
-        ChbAssetInfo  chbAssetInfo=rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus,assetUUid);
+    public void  setModle(String  assetUUid,String dataStatus,Model model,String workFlowId,String entityName) {
+        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workFlowId)) {// 判断是否存在于工作流中
+            SvrBussRepAssetCreditNonstdInfoDto dto = mstWorkflowCommonService.getBusinessEntityByWorkFlowId(
+                    workFlowId, entityName, SvrBussRepAssetCreditNonstdInfoDto.class);
+            model.addAttribute(GlobalConstant.ENTITY, dto);
+        } else {
+            //2、入参【UUID】不为空的情况下，进入以下处理：   //调用共通处理【画面展示数据处理共通】
+            ChbAssetInfo chbAssetInfo = rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus, assetUUid);
 
-       //3、以【2】取得的实体类为基础，进行子组件页面DTO组装
-        SvrBussRepAssetCreditNonstdInfoDto dto=new    SvrBussRepAssetCreditNonstdInfoDto();
-        if(chbAssetInfo!=null){
-            //实体类转换方法
-            DtoChangeUtil.SetChbToRep(chbAssetInfo,dto,DtoChangeUtil.target,false);
+            //3、以【2】取得的实体类为基础，进行子组件页面DTO组装
+            SvrBussRepAssetCreditNonstdInfoDto dto = new SvrBussRepAssetCreditNonstdInfoDto();
+            if (chbAssetInfo != null) {
+                //实体类转换方法
+                DtoChangeUtil.SetChbToRep(chbAssetInfo, dto, DtoChangeUtil.target, false);
+            }
+            //4、model.addAttribute(GlobalConstant.ENTITY, 子组件DTO（非标准化债权类资产/新增可投资资产）);
+            model.addAttribute(GlobalConstant.ENTITY, dto);
+
         }
-       //4、model.addAttribute(GlobalConstant.ENTITY, 子组件DTO（非标准化债权类资产/新增可投资资产）);
-        model.addAttribute(GlobalConstant.ENTITY, dto);
-
     }
-
 
 }

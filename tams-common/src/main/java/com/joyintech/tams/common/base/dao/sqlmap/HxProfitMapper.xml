@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.HxProfitMapper">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.HxProfit">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="crt_mon" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="pbc_assetscode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="acc_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="lixi_inc" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="lixi_pay" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="invest_lixi_inc" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="invest_lixi_pay" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="fina_lixi_inc" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="fina_lixi_pay" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="fee_lixi_inc" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="invest_inc" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="change_inc" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="year_profit" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="exch_inc" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="prod_pay" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="busi_fee" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="asset_imp" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="oper_profit" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="busi_date" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, crt_mon, pbc_assetscode, acc_code, lixi_inc, lixi_pay, invest_lixi_inc, invest_lixi_pay,
+    fina_lixi_inc, fina_lixi_pay, fee_lixi_inc, invest_inc, change_inc, year_profit,
+    exch_inc, prod_pay, busi_fee, asset_imp, oper_profit, remark, busi_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from hx_profit
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from hx_profit
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.HxProfit">
+    insert into hx_profit (id, crt_mon, pbc_assetscode,
+                           acc_code, lixi_inc, lixi_pay,
+                           invest_lixi_inc, invest_lixi_pay, fina_lixi_inc,
+                           fina_lixi_pay, fee_lixi_inc, invest_inc,
+                           change_inc, year_profit, exch_inc,
+                           prod_pay, busi_fee, asset_imp,
+                           oper_profit, remark, busi_date
+    )
+    values (#{id,jdbcType=INTEGER}, #{crtMon,jdbcType=VARCHAR}, #{pbcAssetscode,jdbcType=VARCHAR},
+            #{accCode,jdbcType=VARCHAR}, #{lixiInc,jdbcType=DECIMAL}, #{lixiPay,jdbcType=DECIMAL},
+            #{investLixiInc,jdbcType=DECIMAL}, #{investLixiPay,jdbcType=DECIMAL}, #{finaLixiInc,jdbcType=DECIMAL},
+            #{finaLixiPay,jdbcType=DECIMAL}, #{feeLixiInc,jdbcType=DECIMAL}, #{investInc,jdbcType=DECIMAL},
+            #{changeInc,jdbcType=DECIMAL}, #{yearProfit,jdbcType=DECIMAL}, #{exchInc,jdbcType=DECIMAL},
+            #{prodPay,jdbcType=DECIMAL}, #{busiFee,jdbcType=DECIMAL}, #{assetImp,jdbcType=DECIMAL},
+            #{operProfit,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{busiDate,jdbcType=VARCHAR}
+           )
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.HxProfit">
+    insert into hx_profit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="crtMon != null">
+        crt_mon,
+      </if>
+      <if test="pbcAssetscode != null">
+        pbc_assetscode,
+      </if>
+      <if test="accCode != null">
+        acc_code,
+      </if>
+      <if test="lixiInc != null">
+        lixi_inc,
+      </if>
+      <if test="lixiPay != null">
+        lixi_pay,
+      </if>
+      <if test="investLixiInc != null">
+        invest_lixi_inc,
+      </if>
+      <if test="investLixiPay != null">
+        invest_lixi_pay,
+      </if>
+      <if test="finaLixiInc != null">
+        fina_lixi_inc,
+      </if>
+      <if test="finaLixiPay != null">
+        fina_lixi_pay,
+      </if>
+      <if test="feeLixiInc != null">
+        fee_lixi_inc,
+      </if>
+      <if test="investInc != null">
+        invest_inc,
+      </if>
+      <if test="changeInc != null">
+        change_inc,
+      </if>
+      <if test="yearProfit != null">
+        year_profit,
+      </if>
+      <if test="exchInc != null">
+        exch_inc,
+      </if>
+      <if test="prodPay != null">
+        prod_pay,
+      </if>
+      <if test="busiFee != null">
+        busi_fee,
+      </if>
+      <if test="assetImp != null">
+        asset_imp,
+      </if>
+      <if test="operProfit != null">
+        oper_profit,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="busiDate != null">
+        busi_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="crtMon != null">
+        #{crtMon,jdbcType=VARCHAR},
+      </if>
+      <if test="pbcAssetscode != null">
+        #{pbcAssetscode,jdbcType=VARCHAR},
+      </if>
+      <if test="accCode != null">
+        #{accCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lixiInc != null">
+        #{lixiInc,jdbcType=DECIMAL},
+      </if>
+      <if test="lixiPay != null">
+        #{lixiPay,jdbcType=DECIMAL},
+      </if>
+      <if test="investLixiInc != null">
+        #{investLixiInc,jdbcType=DECIMAL},
+      </if>
+      <if test="investLixiPay != null">
+        #{investLixiPay,jdbcType=DECIMAL},
+      </if>
+      <if test="finaLixiInc != null">
+        #{finaLixiInc,jdbcType=DECIMAL},
+      </if>
+      <if test="finaLixiPay != null">
+        #{finaLixiPay,jdbcType=DECIMAL},
+      </if>
+      <if test="feeLixiInc != null">
+        #{feeLixiInc,jdbcType=DECIMAL},
+      </if>
+      <if test="investInc != null">
+        #{investInc,jdbcType=DECIMAL},
+      </if>
+      <if test="changeInc != null">
+        #{changeInc,jdbcType=DECIMAL},
+      </if>
+      <if test="yearProfit != null">
+        #{yearProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="exchInc != null">
+        #{exchInc,jdbcType=DECIMAL},
+      </if>
+      <if test="prodPay != null">
+        #{prodPay,jdbcType=DECIMAL},
+      </if>
+      <if test="busiFee != null">
+        #{busiFee,jdbcType=DECIMAL},
+      </if>
+      <if test="assetImp != null">
+        #{assetImp,jdbcType=DECIMAL},
+      </if>
+      <if test="operProfit != null">
+        #{operProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="busiDate != null">
+        #{busiDate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.HxProfit">
+    update hx_profit
+    <set>
+      <if test="crtMon != null">
+        crt_mon = #{crtMon,jdbcType=VARCHAR},
+      </if>
+      <if test="pbcAssetscode != null">
+        pbc_assetscode = #{pbcAssetscode,jdbcType=VARCHAR},
+      </if>
+      <if test="accCode != null">
+        acc_code = #{accCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lixiInc != null">
+        lixi_inc = #{lixiInc,jdbcType=DECIMAL},
+      </if>
+      <if test="lixiPay != null">
+        lixi_pay = #{lixiPay,jdbcType=DECIMAL},
+      </if>
+      <if test="investLixiInc != null">
+        invest_lixi_inc = #{investLixiInc,jdbcType=DECIMAL},
+      </if>
+      <if test="investLixiPay != null">
+        invest_lixi_pay = #{investLixiPay,jdbcType=DECIMAL},
+      </if>
+      <if test="finaLixiInc != null">
+        fina_lixi_inc = #{finaLixiInc,jdbcType=DECIMAL},
+      </if>
+      <if test="finaLixiPay != null">
+        fina_lixi_pay = #{finaLixiPay,jdbcType=DECIMAL},
+      </if>
+      <if test="feeLixiInc != null">
+        fee_lixi_inc = #{feeLixiInc,jdbcType=DECIMAL},
+      </if>
+      <if test="investInc != null">
+        invest_inc = #{investInc,jdbcType=DECIMAL},
+      </if>
+      <if test="changeInc != null">
+        change_inc = #{changeInc,jdbcType=DECIMAL},
+      </if>
+      <if test="yearProfit != null">
+        year_profit = #{yearProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="exchInc != null">
+        exch_inc = #{exchInc,jdbcType=DECIMAL},
+      </if>
+      <if test="prodPay != null">
+        prod_pay = #{prodPay,jdbcType=DECIMAL},
+      </if>
+      <if test="busiFee != null">
+        busi_fee = #{busiFee,jdbcType=DECIMAL},
+      </if>
+      <if test="assetImp != null">
+        asset_imp = #{assetImp,jdbcType=DECIMAL},
+      </if>
+      <if test="operProfit != null">
+        oper_profit = #{operProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="busiDate != null">
+        busi_date = #{busiDate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.HxProfit">
+    update hx_profit
+    set crt_mon = #{crtMon,jdbcType=VARCHAR},
+        pbc_assetscode = #{pbcAssetscode,jdbcType=VARCHAR},
+        acc_code = #{accCode,jdbcType=VARCHAR},
+        lixi_inc = #{lixiInc,jdbcType=DECIMAL},
+        lixi_pay = #{lixiPay,jdbcType=DECIMAL},
+        invest_lixi_inc = #{investLixiInc,jdbcType=DECIMAL},
+        invest_lixi_pay = #{investLixiPay,jdbcType=DECIMAL},
+        fina_lixi_inc = #{finaLixiInc,jdbcType=DECIMAL},
+        fina_lixi_pay = #{finaLixiPay,jdbcType=DECIMAL},
+        fee_lixi_inc = #{feeLixiInc,jdbcType=DECIMAL},
+        invest_inc = #{investInc,jdbcType=DECIMAL},
+        change_inc = #{changeInc,jdbcType=DECIMAL},
+        year_profit = #{yearProfit,jdbcType=DECIMAL},
+        exch_inc = #{exchInc,jdbcType=DECIMAL},
+        prod_pay = #{prodPay,jdbcType=DECIMAL},
+        busi_fee = #{busiFee,jdbcType=DECIMAL},
+        asset_imp = #{assetImp,jdbcType=DECIMAL},
+        oper_profit = #{operProfit,jdbcType=DECIMAL},
+        remark = #{remark,jdbcType=VARCHAR},
+        busi_date = #{busiDate,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

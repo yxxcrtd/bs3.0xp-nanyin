@@ -182,13 +182,11 @@ public class BalTableGenerate001Controller extends BaseController {
      * 记账凭证数据取得
      *
      * @return 记账凭证数据
-     * @throws Exception
-     *             异常
      * @see
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<BalTableGenerate001Dto> findPage() throws Exception {
+    public Page<BalTableGenerate001Dto> findPage() throws ParseException {
 //        Map<String, Object> params= this.getRequestMap();
 //        BalTableGenerate001SearchDto dto = (BalTableGenerate001SearchDto)JsonUtils.map2entity(params, BalTableGenerate001SearchDto.class);
 //        dto.setFileType(DictCodeList.文件类型_余额表.getValue());
@@ -200,13 +198,11 @@ public class BalTableGenerate001Controller extends BaseController {
      * 记账凭证数据取得
      *
      * @return 记账凭证数据
-     * @throws Exception
-     *             异常
      * @see
      */
     @RequestMapping("/handle")
     @ResponseBody
-    public int handle() throws Exception {
+    public int handle() throws IOException {
         
         List<BalTableGenerate001SearchDto> listdto = JsonUtils.json2List(this.getParam("data"), BalTableGenerate001SearchDto.class);
         int flag =balTableGenerate001Service.handle(listdto);
@@ -240,13 +236,11 @@ public class BalTableGenerate001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception
-     *             异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<BokBalanceStatementQuery001Dto> val001dto = JsonUtils.json2List(datas,
             BokBalanceStatementQuery001Dto.class);
@@ -286,7 +280,6 @@ public class BalTableGenerate001Controller extends BaseController {
 //            sftpTools.login(userName, password, host, port);
 //        }
 //        catch (Exception e) {
-//            e.printStackTrace();
 //        }
 //        for (int i = 0; i < val002dto.size(); i++ ) {
 //            filepath1 = val002dto.get(i).getFilePath();
@@ -300,7 +293,6 @@ public class BalTableGenerate001Controller extends BaseController {
 //                sftpTools.getFile(remotePath, remoteFile, localdir);
 //            }
 //            catch (Exception e) {
-//                e.printStackTrace();
 //            }
 //            input = new FileInputStream(file);
 //            zipOut.putNextEntry(new ZipEntry(file.getName()));
@@ -314,7 +306,6 @@ public class BalTableGenerate001Controller extends BaseController {
 //            sftpTools.close();
 //        }
 //        catch (Exception e) {
-//            e.printStackTrace();
 //        }
 //        zipOut.flush();
 //        zipOut.close();

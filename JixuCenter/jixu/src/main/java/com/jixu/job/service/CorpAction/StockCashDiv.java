@@ -80,10 +80,11 @@ public class StockCashDiv implements SmfDivService {
 			dto.setAlRate(String.valueOf(div.getRate()));  //分红比例
 			dto.setBaseAmount(clo.getAmount());
 			dto.setSecAcct(clo.getSecacct());
-			dto.setBankAcct(cashacct.getExternalacctnumber());
+			if (cashacct != null){
+				dto.setBankAcct(cashacct.getExternalacctnumber());
+			}
 			tranDtoList.add(dto);
 		}
-		
 		return tranDtoList;
 	}
 	

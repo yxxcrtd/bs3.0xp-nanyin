@@ -7,6 +7,7 @@ import com.joyintech.tams.invest.period.trdseclendduration.dto.TrdSecLendDuratio
 import com.joyintech.tams.invest.period.trdseclendduration.dto.TrdSecLendDuration002Dto;
 import com.joyintech.tams.invest.period.trdseclendduration.service.TrdSecLendDuration001Service;
 import com.joyintech.tams.invest.period.trdseclendduration.service.TrdSecLendDuration002Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -120,8 +121,7 @@ public class TrdSecLendDuration001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return trdSecLendDuration001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -133,8 +133,7 @@ public class TrdSecLendDuration001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(@Valid TrdSecLendDuration002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult revoke(@Valid TrdSecLendDuration002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -37,22 +37,18 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.product.paythevatquery.dto.PayTheVatQuery002Dto;
 import com.joyintech.tams.invest.product.paythevatquery.dto.PayTheVatQuery002TableDto;
 import com.joyintech.tams.invest.product.paythevatquery.service.PayTheVatQuery001Service;
@@ -60,6 +56,21 @@ import com.joyintech.tams.invest.product.paythevatquery.service.PayTheVatQuery00
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * 纳税增值税新建
@@ -84,6 +95,9 @@ public class PayTheVatQuery002Controller extends BaseController{
 
     @Autowired
 	private ProductCommonService productCommonService;
+
+	@Autowired
+	private MstWorkflowCommonService mstWorkflowCommonService;
     /**
      * {@inheritDoc}
      */
@@ -119,7 +133,7 @@ public class PayTheVatQuery002Controller extends BaseController{
      */
     @RequestMapping("search")
     @ResponseBody
-    public Page<PayTheVatQuery002Dto> search(Map<String, Object> params) throws Exception {
+    public Page<PayTheVatQuery002Dto> search(Map<String, Object> params){
         return payTheVatQuery002Service.search(RequestUtil.getPageParam());
     }
     
@@ -156,6 +170,27 @@ public class PayTheVatQuery002Controller extends BaseController{
 	        if(DateUtil.compareDate(dto.getPayTaxVDate(), lastSettleDateStr)<0) {
 	            return new AjaxResult("纳税日期必须大于等于"+lastSettleDateStr+"日期",MessageType.错误消息); 
 	        }
+	        // add by jiangpeng on 20210602 start
+			// ZGBSSE-383 查询通道下的产品已跑批日期小于纳税结束日
+			param.put("payment1", dto.getPayment1());
+			if (StringUtil.isNotEmpty(dto.getPortfolioId())) {
+				param.put("portfolioId", dto.getPortfolioId());
+			}
+			String msg2 = "";
+			List<String> finprodStrList = payTheVatQuery002Service.searchChlPtlBookSet(param);
+			if (!CollectionUtils.isEmpty(finprodStrList)) {
+				for (int i = 0; i < finprodStrList.size(); i++) {
+					if (i == 0) {
+						msg2 = finprodStrList.get(i);
+					} else {
+						msg2 += finprodStrList.get(i);
+					}
+				}
+			}
+			if (StringUtils.isNotEmpty(msg2)) {
+				return new AjaxResult("存在账套日-1小于纳税结束日的账套:" + msg2, MessageType.错误消息);
+			}
+			// add by jiangpeng on 20210602 end
 	    }
 
         return new AjaxResult(); 
@@ -225,23 +260,40 @@ public class PayTheVatQuery002Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@Valid @RequestBody  PayTheVatQuery002Dto dto, BindingResult br) throws Exception {
+    public AjaxResult check(@Valid @RequestBody  PayTheVatQuery002Dto dto, BindingResult br) throws IOException {
         if (br != null && br.hasErrors()) {
             return new AjaxResult(br);
         }
 		if (WorkFlowUtil.isNotFromToDoList()) {
 			String ms = "";
+			// modify by jiangpeng on 20210514 start ZGBSSE-388
 			for (PayTheVatQuery002TableDto mo : dto.getListpayTheVatQuery002TableDto()) {
-				PayTheVatQuery002Dto dto1 = new PayTheVatQuery002Dto();
-				dto1.setFinprodId(mo.getFinprodId());
-				if (payTheVatQuery002Service.checkBusinessDataInFlow(dto1)) {
-					ms += "," + mo.getFinprodId();
+				WflValidInputParameter param = new WflValidInputParameter();
+				param.setBusinessDataPk2(mo.getFinprodId());
+				param.setPageId("FinproductPayTheVatQuery002");
+				// 查询该产品流程中的增值税信息 查询出的结果产品id已经与校验数据产品id相同
+				List<ProcessMark> processMarkList = mstWorkflowCommonService.getDataStatusFromProcessMarkList(param);
+				if (processMarkList == null) {
+					continue;
+				}
+				for (ProcessMark processMark : processMarkList) {
+					PayTheVatQuery002Dto payTheVatQuery002Dto = JsonUtils.OBJECT_MAPPER.readValue(processMark.getBusinessData(), PayTheVatQuery002Dto.class);
+					if (!StringUtil.isNotEmpty(payTheVatQuery002Dto)
+							|| !StringUtil.equals(payTheVatQuery002Dto.getTaxClass(), mo.getTaxClass())) {
+						continue;
+					}
+					// 增值税品种为产品增值税时,则判定为存在流程中数据
+					if (StringUtil.equals(mo.getTaxClass(), DictCodeListExt3.增值税品种_产品增值税.getValue())) {
+						ms = this.getMessage("COMMON_E_0021", payTheVatQuery002Dto.getTotleTradeId(), mo.getFinprodId());
+						return new AjaxResult(ms, MessageType.错误消息);
+					}// 增值税品种为通道增值税时,判断通道户是否一致
+					else if (StringUtil.equals(payTheVatQuery002Dto.getChannelId(), mo.getChannelId())) {
+						ms = this.getMessage("COMMON_E_0021", payTheVatQuery002Dto.getTotleTradeId(), mo.getFinprodId());
+						return new AjaxResult(ms + ",通道:" + mo.getChannelId(), MessageType.错误消息);
+					}
 				}
 			}
-
-			if (StringUtil.isNotEmpty(ms)) {
-				return new AjaxResult("存在流程中" + ms, MessageType.错误消息);
-			}
+			// modify by jiangpeng on 20210514 end ZGBSSE-388
 		}
    	 	AjaxResult ajaxResult= this.commonCheck(br, dto.getOperateType());
         if(ajaxResult.getErrorList() != null && ajaxResult.getErrorList().size()>0 ){
@@ -283,6 +335,11 @@ public class PayTheVatQuery002Controller extends BaseController{
         String channelId = (String)pageParam.get("channelId");
         String payTaxMDate = (String)pageParam.get("payTaxMDate");
         if(StringUtil.equals(taxClass, DictCodeListExt3.增值税品种_产品增值税.getValue())){
+			//在参数中添加平台日期，方便查询中与平台日期进行对比,并添加了发行状态参数
+			String pltDate = DateUtil.format(DateUtil.platDateFromCache());
+			pageParam.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());
+			pageParam.put("FINPROD_TYPE_TG_F16",DictCodeListExt1.金融产品类型_投管用_理财产品.getValue().concat("_"));
+			pageParam.put("pltDate",pltDate);
             return payTheVatQuery001Service.selectPortfolioId(pageParam);  
         } else if(StringUtil.equals(taxClass, DictCodeListExt3.增值税品种_通道增值税.getValue())
             && StringUtil.isNotEmpty(channelId) && StringUtil.isNotEmpty(payTaxMDate)){
@@ -297,7 +354,7 @@ public class PayTheVatQuery002Controller extends BaseController{
     @RequestMapping(value = "docommit", method = RequestMethod.POST)
     @ResponseBody
     public AjaxResult docommit(@RequestBody PayTheVatQuery002Dto dto,
-                               BindingResult result) throws Exception {
+                               BindingResult result) throws InvocationTargetException, IllegalAccessException {
     	String msg = getMessage("COMMON_I_0001");
     	for(PayTheVatQuery002TableDto tabledto : dto.getListpayTheVatQuery002TableDto()){
     		PayTheVatQuery002Dto payTheVatQuery002Dto = new PayTheVatQuery002Dto();
@@ -345,10 +402,11 @@ public class PayTheVatQuery002Controller extends BaseController{
     		payTheVatQuery002Dto.setListpayTheVatQuery002TableDto(new ArrayList<PayTheVatQuery002TableDto>());
     		payTheVatQuery002Dto.getListpayTheVatQuery002TableDto().add(tabledto);
     		Date payment1 =  DateUtil.parse(payTheVatQuery002Dto.getPayment1());
-    		String year = DateUtil.getYearStr(payTheVatQuery002Dto.getPayment1());
-    		String season = DateUtil.getSeason(payment1)+"";
-    		String remark = year+"年"+season+"季度销项税金结转金额:"+tabledto.getTaxTotal();
-    		payTheVatQuery002Dto.setRemark(remark);
+			//重复添加remark备注信息，导致修改后的备注信息被覆盖。
+//    		String year = DateUtil.getYearStr(payTheVatQuery002Dto.getPayment1());
+//    		String season = DateUtil.getSeason(payment1)+"";
+//    		String remark = year+"年"+season+"季度销项税金结转金额:"+tabledto.getTaxTotal();
+//    		payTheVatQuery002Dto.setRemark(remark);
     		try {
     			msg = payTheVatQuery002Service.start(proParam, payTheVatQuery002Dto);
     		}
@@ -389,7 +447,7 @@ public class PayTheVatQuery002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("searchCurrency")
-    public List<String> searchCurrency(Map<String, Object> params) throws Exception {
+    public List<String> searchCurrency(Map<String, Object> params) {
     	
     	params.put("finprodMarketId", getParam("finprodMarketId"));
     	

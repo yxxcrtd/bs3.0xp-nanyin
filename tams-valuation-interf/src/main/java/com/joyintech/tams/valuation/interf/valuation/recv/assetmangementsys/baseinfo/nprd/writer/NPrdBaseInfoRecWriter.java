@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.nprd.writer;
 
+import com.joyintech.framework.base.BaseEntity;
 import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
@@ -138,12 +139,18 @@ public class NPrdBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> {
     
     @Autowired
     private ValAcctLayeringInfoBatchMapper valAcctLayeringInfoBatchMapper;
-    
+
 //    @Autowired
 //    private ValFinBenchmarkDetailBatchMapper valFinBenchmarkDetailBatchMapper;
 
     @Value("${interf.properties.maxSqlNum}")
     private int maxSqlNum;
+
+    // add by tanxuan on 20210330 接口入表错误，service生成的实体和write入的表不一致
+    // 从vas3.0.1合并
+    @Autowired
+    private ValFinBaseRuleInfoBatchMapper valFinBaseRuleInfoBatchMapper;
+
 
     /**
      * 账套信息初始化
@@ -820,7 +827,7 @@ public class NPrdBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                 }
                 
             }
-            
+
             // 日志
             List<ValInterflog> valInterflog = result.getValInterflog();
             // 入库

@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -112,8 +114,8 @@ public class FinIntPayDateAdjustment001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getCashId")
-    public List<SelectOptionDto> getCashId(){
-        return finIntPayDateAdjustmentService.getCashId(RequestUtil.getPageParam());
+    public Page<SelectOptionDto> getCashId(){
+        return finIntPayDateAdjustmentService.getCashIdForPage(RequestUtil.getPageParam());
     }
     
     /**
@@ -127,7 +129,7 @@ public class FinIntPayDateAdjustment001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public List<FinIntPayDateAdjustmentDto> selectForPage() throws Exception{
+    public List<FinIntPayDateAdjustmentDto> selectForPage() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return finIntPayDateAdjustmentService.selectForPage(param);
     }
@@ -141,8 +143,7 @@ public class FinIntPayDateAdjustment001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finIntPayDateAdjustmentService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -175,7 +176,7 @@ public class FinIntPayDateAdjustment001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinIntPayDateAdjustmentDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinIntPayDateAdjustmentDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

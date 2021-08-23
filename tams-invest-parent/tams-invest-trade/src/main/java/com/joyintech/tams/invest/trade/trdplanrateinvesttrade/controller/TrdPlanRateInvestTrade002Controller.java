@@ -9,6 +9,7 @@
  */
  
 package com.joyintech.tams.invest.trade.trdplanrateinvesttrade.controller;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -96,7 +98,7 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
     /**
      * 主键生成类
      */
-    @Autowired(required = false)
+    @Autowired
     private BaseGetBusinessId baseGetBusinessId;
     /**
      * 附件上传类
@@ -417,13 +419,12 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) TrdPlanRateInvestTradeDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) TrdPlanRateInvestTradeDto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -63,7 +63,7 @@ public class MstExchangeQuotationInfoService extends BaseService<MstExchangeQuot
      * @since 1.0
      */
     public Page<MstExchangeQuotationInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page,length,() -> mstExchangeQuotationInfoMapper.select(pageParam));
     }
 

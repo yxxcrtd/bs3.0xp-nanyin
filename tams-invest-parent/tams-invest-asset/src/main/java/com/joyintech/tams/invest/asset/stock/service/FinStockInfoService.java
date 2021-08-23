@@ -5,21 +5,35 @@
 
 package com.joyintech.tams.invest.asset.stock.service;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.jixu.common.type.ResultContainer;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.PaFinProduct;
 import com.joyintech.tams.component.business.common.dto.InfChinamutualfunddescriptionDto;
+import com.joyintech.tams.component.business.common.dto.InterfStockInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonAutoCouponService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.dto.FileCommonDto;
-import com.joyintech.tams.component.business.report.asset.project.BussRepAssetCreditNonstdInfoService;
 import com.joyintech.tams.component.business.report.asset.project.BussRepEquityInfoService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -28,7 +42,6 @@ import com.joyintech.tams.invest.asset.common.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.invest.asset.common.dto.BaseRepAssetDeptInfoDto;
 import com.joyintech.tams.invest.asset.common.dto.BaseRepAssetEquityInfoDto;
 import com.joyintech.tams.invest.asset.common.service.AssetCommonService;
-import com.joyintech.tams.invest.asset.interfaceDto.S031Dto;
 import com.joyintech.tams.invest.asset.stock.dto.FinStockInfoDto;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -37,19 +50,10 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.common.TrdCommDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
-import com.joyintech.tams.invest.common.util.MapParseUtil;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 /**
  * 股票标的Service
  *
@@ -344,18 +348,22 @@ public class FinStockInfoService extends CommonExportService<FinStockInfoDto> im
         BeanUtil.copyPropertiesIgnoreNull(finProductType, dto);
         finProductType.setBranch(branch);
 //        DictCode
-        if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())){
-            finProductType.setType6(DictCodeListExt2.股票核算分类_股票_上海股票.getValue());
-        }
-        else if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-            finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深圳股票.getValue());
-        }
-        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_沪港通.getValue())){
-            finProductType.setType6(DictCodeListExt2.股票核算分类_股票_沪港通.getValue());
-        }
-        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_深港通.getValue())){
-            finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深港通.getValue());
-        }
+//        if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_否.getValue())
+//        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())){
+//        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_上海股票.getValue());
+//        }
+//        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_否.getValue())
+//        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深圳股票.getValue());
+//        }
+//        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_沪港通.getValue())
+//        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())){
+//        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_沪港通.getValue());
+//        }
+//        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_深港通.getValue())
+//        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+//        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深港通.getValue());
+//        }
        finProductType.setType8(DictCodeListExt2.平安资产类型_股票.getValue());
         // 金融产品附属表entity
         FinProductAdd finProductAdd = new FinProductAdd();
@@ -476,4 +484,58 @@ public class FinStockInfoService extends CommonExportService<FinStockInfoDto> im
                 ServiceApplication.ASSET_SERVICE_NAME + "/FinStockInfo/getIsInWorkFlowReturnUser"
                 ,param,String.class);
     }
+    
+    /**
+     * 查询接口表资产信息
+     * @param finprodMarketId 市场代码
+     * @return
+     * @throws ParseException
+     * @see
+     * @since 1.0
+     */
+    public FinStockInfoDto getInterfStockDto (String finprodMarketId) throws ParseException{
+    	InterfStockInfoDto dto = new InterfStockInfoDto();
+        List<String> list = new ArrayList<>();
+        list.add(finprodMarketId);
+        dto.setStockCodeList(list);
+        dto = commonAutoService.autoStockCoupon(dto, finprodMarketId);
+        com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto baseInfoDto  = new com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto();
+        if (StringUtil.isNotEmpty(dto)) {
+            baseInfoDto =  dto.getBaseFinProductBaseInfoList().get(0);
+        }
+        //股票基本信息
+        FinStockInfoDto finStockInfoDto = new FinStockInfoDto();
+        if (!StringUtil.isNotEmpty(baseInfoDto.getFinProduct())) {
+            return null;
+        }
+        BeanUtil.copyPropertiesIgnoreNull(finStockInfoDto, baseInfoDto.getFinProduct());
+        //基本信息附属表信息
+        if(StringUtil.isNotEmpty(baseInfoDto.getFinProductAdd())){
+        	finStockInfoDto.setBoard(baseInfoDto.getFinProductAdd().getBoard());//上市板
+        	finStockInfoDto.setShOrZh(baseInfoDto.getFinProductAdd().getShOrZh());//是否沪港通或深港通
+        	finStockInfoDto.setIsMarginFinprod(baseInfoDto.getFinProductAdd().getIsMarginFinprod());//是否融资融券标的
+        }
+        BaseFinProductBaseInfoDto baseInfoDto2=new BaseFinProductBaseInfoDto();
+        BeanUtil.copyPropertiesIgnoreNull(baseInfoDto2, baseInfoDto);
+        List<BaseFinProductBaseInfoDto> baseList = new ArrayList<>();
+        baseList.add(baseInfoDto2);
+        finStockInfoDto.setBaseFinProductBaseInfoList(baseList);
+        finStockInfoDto.setRepAssetDept(baseInfoDto.getRepAssetDept());
+        finStockInfoDto.setRepAssetEquity(baseInfoDto.getRepAssetEquity()); 
+        return finStockInfoDto;
+    }
+
+    /**
+     * 沪港通&深港通交易日历
+     *
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getShOrZhCalendarId() {
+        return restTemplate.getForList(ServiceApplication.ASSET_SERVICE_NAME + "/FinStockInfo/getShOrZhCalendarId",
+                SuggestDto.class);
+    }
+    
 }

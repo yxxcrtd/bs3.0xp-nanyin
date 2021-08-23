@@ -61,6 +61,8 @@ public interface PbcPrdBaseinfoEndSubMapper {
 	BigDecimal queryBookBalanceLevel1(@Param("cdate")Date cdate, @Param("prodid")String prodid);
            
 	BigDecimal queryBookBalanceLevel1SubSystem(@Param("cdate")Date cdate, @Param("prodid")String prodid);
+
+	int updateByProdIds(@Param("list")List<String> list);
            
 
 }

@@ -225,6 +225,12 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
             this.handleBussFlowData(entity,false);
             // 写入质押品的组合持仓流水
             this.ptlPredgeSecPositionFlowLogic(entity, false);
+            // add by jiangpeng on 20210428 start
+            // ZGBSSE-122 实时头寸查询，2019-5-30，债券借贷融出，交易可用持仓
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), entity.getFinprodType2())) {
+                ptlOutSecPositionFlowLogic(entity, false, false, false);
+            }
+            // add by jiangpeng on 20210428 end
         }
         // 撤销交易
         else {
@@ -246,6 +252,12 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
             this.handleBussFlowData(entity,true);
             // 写入质押品的组合持仓流水,债券借贷质押品的组合持仓流水在提交时就改变
             this.ptlPredgeSecPositionFlowLogic(entity, false);
+            // add by jiangpeng on 20210428 start
+            // ZGBSSE-122 实时头寸查询，2019-5-30，债券借贷融出，交易可用持仓
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), entity.getFinprodType2())) {
+                ptlOutSecPositionFlowLogic(entity, false, false, false);
+            }
+            // add by jiangpeng on 20210428 end
         }
     }
 
@@ -428,12 +440,21 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
             investInterfCommDto.setPledgeBondListDetailed(entity.getBussRepoSec().getPledgeBondListDetailed());
             investInterfCommService.doInvestInterf(investInterfCommDto);
             // 调用投管接口 add by cxq 20190219 end
-
+            // add by jiangpeng on 20210428 start
+            // ZGBSSE-122 实时头寸查询，2019-5-30，债券借贷融出，交易可用持仓
+            if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), entity.getFinprodType2())){
+                ptlOutSecPositionFlowLogic(entity, false, false, true);
+            }
+            //ZGBSSE-260
+            //【债券借贷交易】新建债券借贷融入交易，审核岗审批后，融入债券的实时资产头寸中，实际、指令、交易持仓不一致
+            /*else{
+                ptlOutSecPositionFlowLogic(entity, false, false, true);
+            }*/
+            // add by jiangpeng on 20210428 end
         }
         // 撤销
         else {
             this.doCompleteRevoke(entity);
-
         }
 //        调用接口  add by zhuyongkang 20191127 start
         List<String> tradeIds = new ArrayList<>();
@@ -1819,6 +1840,89 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         }
     }
 
+    /**
+     * 写入融出券的组合持仓流水
+     * ZGBSSE-122 实时头寸查询，2019-5-30，债券借贷融出，交易可用持仓
+     * @param input    画面参数Dto
+     * @param isNegate 是否冲销
+     */
+    private boolean ptlOutSecPositionFlowLogic(TrdBondLendInvestTradeDto input, boolean isNegate, boolean isDoBack,boolean isDoComplete) {
+        List<PtlSecPositionFlowDto> lstPtlSecPositionFlowDto = new ArrayList<>();
+        PtlSecPositionFlowDto resultDto = new PtlSecPositionFlowDto();
+        // 组合代码
+        resultDto.setPortfolioId(input.getPortfolioId());
+        // 证券管理账户/通道代码
+        String secAcctId = input.getSecManageAcctId();
+        if ((StringUtil.isEmpty(secAcctId) || "999999".equals(secAcctId)) && StringUtil.isNotEmpty(input.getChlId())) {
+            secAcctId = input.getChlId();
+        }
+        resultDto.setSecAcctId(StringUtil.isEmpty(secAcctId) ? "999999" : secAcctId);
+        // 金融产品代码
+        resultDto.setFinprodId(input.getFinprodId());
+        // 分支序号
+        resultDto.setBranch(0L);
+        // 持仓类型
+        if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), input.getFinprodType2())) {
+            resultDto.setHodingType(DictCodeListExt1.持仓类型_融入.getValue());
+        } else if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), input.getFinprodType2())) {
+            if (isNegate) {
+                resultDto.setHodingType(DictCodeListExt1.持仓类型_融出.getValue());
+            } else {
+                resultDto.setHodingType(DictCodeListExt1.持仓类型_借贷融出.getValue());
+            }
+        }
+        // 日期
+        resultDto.setCdate(input.getTradeDate());
+        // 数量
+        BigDecimal shareAmt = input.getShareAmt().multiply(new BigDecimal(10000)).divide(new BigDecimal(100));
+        if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), input.getFinprodType2())) {
+            resultDto.setAmount(isNegate ? shareAmt.negate() : shareAmt);// 撤销及退回 取反
+        } else {
+            resultDto.setAmount(isNegate ? shareAmt.negate() : shareAmt);
+        }
+        // 币种
+        resultDto.setCcy(input.getCcy());
+        // 交易编号
+        resultDto.setTradeId(input.getTradeId());
+        // 投资目的
+        resultDto.setInvAim(StringUtil.isEmpty(input.getInvAim()) ? "999999" : input.getInvAim());
+        // 融出交易流程最后一步
+        if (!isNegate && isDoComplete && StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), input.getFinprodType2())) {
+            // modify by jiangpeng on 20210506 start
+            // ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融入到期交易产生的错误
+            // 融出交易生效时已入库持仓流水,此处不用在重复入库,只需冲销掉提交流程时入的流程中流水
+//            PtlSecPositionFlowDto ptlSecPositionFlowDtoTemp = new PtlSecPositionFlowDto();
+//            BeanUtil.copyPropertiesIgnoreNull(ptlSecPositionFlowDtoTemp, resultDto);
+            resultDto.setAmount(resultDto.getAmount().negate());// 冲销掉流程提交时的持仓数据数据
+//            ptlSecPositionFlowDtoTemp.setHodingType(DictCodeListExt1.持仓类型_融出.getValue());
+//            lstPtlSecPositionFlowDto.add(ptlSecPositionFlowDtoTemp);
+            // modify by jiangpeng on 20210506 start
+        }
+        lstPtlSecPositionFlowDto.add(resultDto);
+        if (StringUtil.isEmptyList(lstPtlSecPositionFlowDto)) {
+            return true;
+        } else {
+            PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
+            ptlPositionHoldDto.setPtlSecPositionFlows(lstPtlSecPositionFlowDto);
+            return restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/common/ptlposition/insertPosition",
+                    ptlPositionHoldDto, Boolean.class);
+        }
+    }
+
+    /**
+     * 写入融出券的组合持仓流水(持仓类型为借贷融入/借贷融出)
+     * @author jiangpeng
+     * ZGBSSE-122 实时头寸查询，2019-5-30，债券借贷融出，交易可用持仓
+     * @param bizCode 交易编号
+     * @return List<PtlSecPositionFlowDto>
+     * @see
+     * @since 1.0
+     */
+    public List<PtlSecPositionFlow> selectPtlSecPositionFlowForSL(String bizCode) {
+        return restTemplate.postForList(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdOutRightRepoTrade/selectPtlSecPositionFlowForSL/" + bizCode,
+                null, PtlSecPositionFlow.class);
+    }
 
     /**
      * 组合可用持仓和实际持仓查询更新组件接口
@@ -1940,6 +2044,12 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         if (null != entity.getTradeId() && !"".equals(entity.getTradeId()) && !StringUtil.isNotEmpty(entity.getRevokeReason())){
             riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
         }
+        // add by jiangpeng on 20210428 start
+        // ZGBSSE-122 实时头寸查询，2019-5-30，债券借贷融出，交易可用持仓
+        if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), entity.getFinprodType2())) {
+            ptlOutSecPositionFlowLogic(entity, true, true,false);
+        }
+        // add by jiangpeng on 20210428 end
     }
     
     /**

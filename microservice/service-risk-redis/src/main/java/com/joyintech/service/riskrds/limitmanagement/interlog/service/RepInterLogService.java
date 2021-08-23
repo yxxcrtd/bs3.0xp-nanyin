@@ -36,7 +36,7 @@ public class RepInterLogService extends BaseService<RepInterLogDto> {
      * @throws Exception 异常信息
      */
     public Page<RepInterLogDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         return super.queryForPage(page, length, () -> repInterLogMapper.select(pageParam));
     }
     

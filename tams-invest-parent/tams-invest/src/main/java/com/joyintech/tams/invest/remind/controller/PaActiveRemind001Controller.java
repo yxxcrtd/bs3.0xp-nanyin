@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.security.User;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -137,7 +139,19 @@ public class PaActiveRemind001Controller extends BaseController implements Activ
         //add by chenjiaxing 分销缴款提醒 20210727 start
         model.addAttribute("R10S1", BussinessDictCodeList.提醒类型_小分类_分销缴款提醒.getValue());
         //add by chenjiaxing 分销缴款提醒 20210727 end
-       return super.init(model);
+
+        model.addAttribute("R10S1", BussinessDictCodeList.提醒类型_小分类_债券上市流通操作.getValue());
+        model.addAttribute("R10S2", BussinessDictCodeList.提醒类型_小分类_资产要素登记修改.getValue());
+
+        if (MultilevelDataAuthorityUtil.isEnabled()) {
+            User user = SecurityUtil.getLoginUser();
+            model.addAttribute("isEJFRflag", true);
+            model.addAttribute("indexInstitutionCode",user==null?"":user.getOrgCode());
+        }else{
+            model.addAttribute("isEJFRflag", false);
+        }
+
+        return super.init(model);
     }
     /**
      * 

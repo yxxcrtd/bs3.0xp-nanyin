@@ -42,7 +42,7 @@ public class RepAssetDeptRegistController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<RepAssetDeptRegistDto> findPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repAssetDeptRegistService.selectForPage(page, length, param);
     }
     /**

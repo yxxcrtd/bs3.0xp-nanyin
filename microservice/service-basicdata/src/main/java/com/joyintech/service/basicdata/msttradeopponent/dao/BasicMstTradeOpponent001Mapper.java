@@ -195,4 +195,13 @@ public interface    BasicMstTradeOpponent001Mapper {
     List<MstTradeOpponentDto> selectCounterIdByCustomer(Map<String, Object> map);
     
     int deleteFinProductAcct(MstTradeOpponentDto dto);
+
+    /**
+     * 当交易对手类别是分行时，是否被债券投后责任机构使用
+     * @param counter 交易对手
+     * @return 是否存在
+     * @see
+     * @since 1.0
+     */
+    int selectFHCounter(@Param("counterId")String counter);
 }

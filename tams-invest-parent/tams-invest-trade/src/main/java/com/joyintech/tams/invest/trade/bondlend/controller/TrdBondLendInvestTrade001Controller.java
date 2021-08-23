@@ -33,6 +33,7 @@ import com.joyintech.tams.invest.trade.bondlend.service.TrdBondLendInvestTrade00
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -85,7 +86,7 @@ public class TrdBondLendInvestTrade001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TrdBondLendInvestTradeDto> findPage()
-        throws Exception {
+         {
         Page<TrdBondLendInvestTradeDto> pageRet = trdBondLendInvestTrade001Service.findPage(RequestUtil.getPageParam());
         return  pageRet;
     }
@@ -101,7 +102,7 @@ public class TrdBondLendInvestTrade001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+          {
         return trdBondLendInvestTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 
@@ -143,8 +144,7 @@ public class TrdBondLendInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdBondLendInvestTradeDto inputDto)
-        throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdBondLendInvestTradeDto inputDto) throws WorkFlowException {
 
         ProcessParameter<TrdBondLendInvestTradeDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdBondLendInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();

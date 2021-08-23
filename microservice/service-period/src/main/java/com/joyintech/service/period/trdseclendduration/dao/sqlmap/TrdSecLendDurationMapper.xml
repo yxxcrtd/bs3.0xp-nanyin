@@ -87,7 +87,8 @@
             T4.TERM, /*借贷期限*/
             T1.SEC_MANAGE_ACCT_ID,
             T1.TRADE_MARKET TRADE_MARKET,
-            T1.WORKFLOW_ID
+            T1.WORKFLOW_ID,
+            T1.SETTLE_DATE
             FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN PA_TRD_PRODUCT_DEAL T3 ON T1.FINPROD_ID = T3.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
@@ -145,7 +146,8 @@
                 T4.TERM,   /*借贷期限*/
                 T1.SEC_MANAGE_ACCT_ID,
                 T1.TRADE_MARKET TRADE_MARKET,
-                NULL WORKFLOW_ID
+                NULL WORKFLOW_ID,
+                NULL AS SETTLE_DATE
             FROM TRD_PRODUCT_DEAL T1
             LEFT JOIN PA_TRD_PRODUCT_DEAL T3 ON T1.TRADE_ID = T3.TRADE_ID
             LEFT JOIN TRD_PRODUCT_DEAL_ADD T7 ON T1.TRADE_ID=T7.TRADE_ID
@@ -214,7 +216,8 @@
                 T4.TERM,   /*借贷期限*/
                 T1.SEC_MANAGE_ACCT_ID,
                 T1.TRADE_MARKET TRADE_MARKET,
-                NULL WORKFLOW_ID
+                NULL WORKFLOW_ID,
+                T1.SETTLE_DATE
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN PA_TRD_PRODUCT_DEAL T3 ON T1.FINPROD_ID = T3.TRADE_ID
             LEFT JOIN FIN_TRADE_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -265,7 +268,8 @@
                 T4.TERM,   /*借贷期限*/
                 T1.SEC_MANAGE_ACCT_ID,
                 T1.TRADE_MARKET TRADE_MARKET,
-                NULL WORKFLOW_ID
+                NULL WORKFLOW_ID,
+                T1.SETTLE_DATE
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN PA_TRD_PRODUCT_DEAL T3 ON T1.FINPROD_ID = T3.TRADE_ID
             LEFT JOIN FIN_TRADE_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -325,7 +329,8 @@
             totalAdd.IS_CASHSET isCashPay,
             T1.PRIN_AMT,
             T1.INV_AIM,
-            T1.TRADE_MARKET TRADE_MARKET
+            T1.TRADE_MARKET TRADE_MARKET,
+            T1.SETTLE_DATE
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN TRD_DEAL_TOTAL_ADD totalAdd on t1.totle_trade_id = totalAdd.totle_trade_id
             LEFT JOIN TRD_PRODUCT_DEAL T9 ON T1.FINPROD_ID = T9.TRADE_ID
@@ -378,7 +383,8 @@
             T4.CALENDAR_ID, /*交易日历*/
             T1.F_TRADE_ID,/*银行间成交编号*/
             T1.SEC_MANAGE_ACCT_ID,
-            T1.TRADE_MARKET TRADE_MARKET
+            T1.TRADE_MARKET TRADE_MARKET,
+            T1.SETTLE_DATE
             FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN WFL_TRD_PRODUCT_DEAL T9 ON T1.FINPROD_ID = T9.TRADE_ID
             LEFT JOIN WFL_PA_TRD_PRODUCT_DEAL T3 ON T1.FINPROD_ID = T3.TRADE_ID
@@ -422,7 +428,8 @@
             T4.CALENDAR_ID, /*交易日历*/
             T1.F_TRADE_ID,/*银行间成交编号*/
             T1.SEC_MANAGE_ACCT_ID,
-            T1.TRADE_MARKET TRADE_MARKET
+            T1.TRADE_MARKET TRADE_MARKET,
+            NULL AS SETTLE_DATE
             FROM TRD_PRODUCT_DEAL T1
             LEFT JOIN PA_TRD_PRODUCT_DEAL T3 ON T1.TRADE_ID = T3.TRADE_ID
             LEFT JOIN TRD_PRODUCT_DEAL_ADD T7 ON T1.TRADE_ID=T7.TRADE_ID

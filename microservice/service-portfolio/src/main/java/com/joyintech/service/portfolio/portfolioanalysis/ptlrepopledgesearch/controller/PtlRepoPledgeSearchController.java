@@ -95,7 +95,7 @@ public class PtlRepoPledgeSearchController {
     @PostMapping("findPage/{page}/{length}")
     public Page<PtlRepoPledgeSearchDto> selectAll(@RequestBody Map<String, Object> param,
                                                   @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ptlRepoPledgeSearchService.selectForPage(page, length, param);
     }
 
@@ -111,7 +111,7 @@ public class PtlRepoPledgeSearchController {
     @PostMapping("substitutionFindPage/{page}/{length}")
     public Page<PtlSubstitutionRepoPledgeDto> substitutionFindPage(@RequestBody Map<String, Object> param,
                                                                    @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ptlSubstitutionRepoPledgeService.substitutionFindPage(page, length, param);
     }
     /**
@@ -126,7 +126,7 @@ public class PtlRepoPledgeSearchController {
     @PostMapping("getPledgeDetail/{page}/{length}")
     public Page<FinPledgeDisplaceDetail> getPledgeDetail(@RequestBody Map<String, Object> param,
                                                          @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ptlRepoPledgeDetailService.getPledgeDetail(page, length, param);
     }
 
@@ -142,7 +142,7 @@ public class PtlRepoPledgeSearchController {
     @PostMapping("ptlPledgeSummaryFindPage/{page}/{length}")
     public Page<PtlPldgeSummaryDto> ptlPledgeSummaryFindPage(@RequestBody Map<String, Object> param,
                                                              @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ptlPldgeSummarySerchService.pledgeSummaryFindPage(page, length, param);
     }
 

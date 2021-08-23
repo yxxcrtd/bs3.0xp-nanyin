@@ -793,11 +793,20 @@ public class SecAbsCalBookService {
                     intAmt = varInterestAccBal.negate();
                 }
                 else {
-                    AccurIntCalOutParameter accurIntCalOutParameter = calculationCommonService.getCalculate(
-                        acctEntityEx, rstBaseinfo, listIntinfo, listCashinfo, listPayinfo,
-                        varFaceValue, acctEntity);
+                    // update by caiqun 2021-02-05 修复ABS债付息计划调整时取因年度付息天数取值错误，导致计提应收利息不对问题  start
+                    AccurIntCalOutParameter accurIntCalOutParameter = null;
+                    if(DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue().equals(rstBaseinfo.getType4())){
+                        accurIntCalOutParameter = calculationCommonService.getCalculateForAbs(
+                                acctEntityEx, rstBaseinfo, listIntinfo, listCashinfo, listPayinfo,
+                                varFaceValue, acctEntity);
+                    }else{
+                        accurIntCalOutParameter = calculationCommonService.getCalculate(
+                                acctEntityEx, rstBaseinfo, listIntinfo, listCashinfo, listPayinfo,
+                                varFaceValue, acctEntity);
+                    }
+                    // update by caiqun 2021-02-05 修复ABS债付息计划调整时取因年度付息天数取值错误，导致计提应收利息不对问题  start
                     // 返回值.应计利息做小数位处理
-                    BigDecimal interest = accurIntCalOutParameter.getInterest();
+                    BigDecimal interest = accurIntCalOutParameter == null ? BigDecimal.ZERO : accurIntCalOutParameter.getInterest();
                     //MODIFY JINMAODONG 20190517 START
                     //增加了一个开关SEC_INT_SCALE用于控制应计利息的舍位方式，是先做舍位还是先做计算再做舍位；参数为空或者为"Y"的时候则先做舍位再做计算
                     // 返回值.应计利息做小数位处理

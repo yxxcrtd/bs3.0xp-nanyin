@@ -59,7 +59,7 @@ public class MstSharePriceController {
     @RequestMapping("/selectForPage/{page}/{length}")
     public Page<MstSharePriceDto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page,
                                                 @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<MstSharePriceDto> page1 = mstSharePriceService.selectForPage(page, length, pageParam);
         return page1;
     }
@@ -73,7 +73,7 @@ public class MstSharePriceController {
      */
     @RequestMapping("/getLatelyShareById")
     public MstSharePriceDto getLatelyShareById(@RequestBody Map<String, Object> pageParam)
-        throws Exception {
+    {
         MstSharePriceDto page = mstSharePriceService.getLatelyShareById(pageParam);
         return page;
     }
@@ -119,7 +119,7 @@ public class MstSharePriceController {
     @ResponseBody
     public Page<SelectOptionDto> getFinprodIdForAdd(@RequestBody Map<String, String> map, @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<SelectOptionDto> temp = mstSharePriceService.getFinprodIdForAdd(page, length, map);
         return temp;
     }

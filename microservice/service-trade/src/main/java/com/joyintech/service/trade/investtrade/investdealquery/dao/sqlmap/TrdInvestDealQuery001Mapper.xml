@@ -61,6 +61,9 @@
 		LEFT JOIN 
 			WFL_TRD_PRODUCT_DEAL_ADD
 		ON	WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_TRD_PRODUCT_DEAL_ADD.TRADE_ID
+		<if test="finprodMarketId != null and finprodMarketId != ''">
+			LEFT JOIN TEMP tp ON WFL_TRD_PRODUCT_DEAL.FINPROD_ID = tp.FINPROD_ID
+		</if>
 		LEFT JOIN 
 			PTL_PORTFOLIO
 		ON		 
@@ -114,6 +117,9 @@
 		WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.EXER_YIELD*100 exerYield
 		  FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL 
 		  LEFT JOIN     WFL_TRD_DEAL_TOTAL_ADD 	ON	 	WFL_TRD_DEAL_TOTAL_ADD.TOTLE_TRADE_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID
+		  <if test="finprodMarketId != null and finprodMarketId != ''">
+			  LEFT JOIN TEMP tp ON WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID = tp.FINPROD_ID
+		  </if>
 		  LEFT JOIN 	PTL_PORTFOLIO			ON		PTL_PORTFOLIO.PORTFOLIO_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID	
 	  	  LEFT JOIN		FIN_PRODUCT				ON		FIN_PRODUCT.FINPROD_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID
 		  LEFT JOIN     FIN_PRODUCT fp1         ON      fp1.FINPROD_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID
@@ -171,6 +177,10 @@
 			TRD_PRODUCT_DEAL
 		LEFT JOIN	TRD_PRODUCT_DEAL_ADD
 			ON	TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
+		<if test="finprodMarketId != null and finprodMarketId != ''">
+			LEFT JOIN TEMP tp 
+				ON TRD_PRODUCT_DEAL.FINPROD_ID = tp.FINPROD_ID
+		</if>
 		LEFT JOIN PTL_TRADE
 			ON TRD_PRODUCT_DEAL.TRADE_ID = PTL_TRADE.BUSI_NO
 		LEFT JOIN	PTL_PORTFOLIO
@@ -229,6 +239,10 @@
 		FROM	
 		TRD_FIN_PRODUCT_DEAL_TOTAL
 		LEFT JOIN	TRD_DEAL_TOTAL_ADD	ON	TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_DEAL_TOTAL_ADD.TOTLE_TRADE_ID
+		<if test="finprodMarketId != null and finprodMarketId != ''">
+			LEFT JOIN TEMP tp
+			ON TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID = tp.FINPROD_ID
+		</if>
 		LEFT JOIN	PTL_PORTFOLIO		ON	PTL_PORTFOLIO.PORTFOLIO_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID
 		LEFT JOIN	FIN_PRODUCT			ON	FIN_PRODUCT.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID
 		LEFT JOIN   FIN_PRODUCT fp1     ON  fp1.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID
@@ -290,6 +304,10 @@
 			TRD_PRODUCT_DEAL
 		LEFT JOIN	TRD_PRODUCT_DEAL_ADD
 			ON	TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
+		<if test="finprodMarketId != null and finprodMarketId != ''">
+			LEFT JOIN TEMP tp
+			ON TRD_PRODUCT_DEAL.FINPROD_ID = tp.FINPROD_ID
+		</if>
 		LEFT JOIN PTL_TRADE
 			ON TRD_PRODUCT_DEAL.P_TRADE_ID = PTL_TRADE.BUSI_NO
 		LEFT JOIN	PTL_PORTFOLIO
@@ -347,6 +365,10 @@
 		FROM	
 			TRD_FIN_PRODUCT_DEAL_TOTAL
 		LEFT JOIN		TRD_DEAL_TOTAL_ADD		ON	TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_DEAL_TOTAL_ADD.TOTLE_TRADE_ID
+		<if test="finprodMarketId != null and finprodMarketId != ''">
+			LEFT JOIN TEMP tp
+			ON TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID = tp.FINPROD_ID
+		</if>
 		LEFT JOIN	PTL_PORTFOLIO			ON	PTL_PORTFOLIO.PORTFOLIO_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID
 		LEFT JOIN	FIN_PRODUCT			ON	FIN_PRODUCT.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID
 		LEFT JOIN   FIN_PRODUCT fp1     ON  fp1.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID
@@ -361,7 +383,20 @@
 	<!-- 到期日查询错误修改 modify by gaopeng 20191019 end -->
 	<select id="selectForPage"
 		resultType="com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQuery001Dto">
-			SELECT * FROM ((<include refid="BASE_COLUMNS"></include>
+		<if test="finprodMarketId != null and finprodMarketId != ''">
+			WITH TEMP AS (
+			SELECT DISTINCT
+				FP2.FINPROD_ID,
+				FP.FINPROD_MARKET_ID
+			FROM FIN_PRODUCT FP
+			LEFT JOIN FIN_PRODUCT_ADD FPA
+				ON FPA.APPEAR_MARKET_ID = FP.FINPROD_MARKET_ID
+			LEFT JOIN FIN_PRODUCT FP2 ON FPA.FINPROD_ID = FP2.FINPROD_ID
+			WHERE FP.FINPROD_ID LIKE CONCAT('%', CONCAT(#{finprodMarketId}, '%'))
+				AND FP.FINPROD_TYPE2 = #{finType_F01}
+			)
+		</if>
+		SELECT * FROM ((<include refid="BASE_COLUMNS"></include>
 		<where>
 			WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null
 			<if test="portfolioId != null and !portfolioId.isEmpty() ">
@@ -404,7 +439,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<!-- <if test="finprodType2List != null and finprodType2List.size()>0 ">
 				AND (WFL_TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN(
@@ -584,7 +620,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<if test="finprodType2List != null and finprodType2List.size()>0">
 				AND (WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 IN(
@@ -675,11 +712,31 @@
 			<!--add by qmh 角色岗位控制权限  end-->
 		</where>)
 		ORDER BY tradeDate DESC
+		)T
+		WHERE 1=1
+		AND NOT EXISTS (
+			SELECT WTPDP.TRADE_ID
+			FROM WFL_TRD_PRODUCT_DEAL_PRE WTPDP
+			WHERE
+			(WTPDP.TRADE_ID = T.TRADEID OR WTPDP.TOTLE_TRADE_ID = T.TRADEID)
 		)
 	</select>
 	<!-- 有效查询 -->
 	<select id="validSelectForPage" resultType="com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQuery001Dto">
-			SELECT * FROM ((<include refid="VALID_COLUMNS"></include>
+		<if test="finprodMarketId != null and finprodMarketId != ''">
+			WITH TEMP AS (
+			SELECT DISTINCT
+				FP2.FINPROD_ID,
+				FP.FINPROD_MARKET_ID
+			FROM FIN_PRODUCT FP
+			LEFT JOIN FIN_PRODUCT_ADD FPA
+				ON FPA.APPEAR_MARKET_ID = FP.FINPROD_MARKET_ID
+			LEFT JOIN FIN_PRODUCT FP2 ON FPA.FINPROD_ID = FP2.FINPROD_ID
+			WHERE FP.FINPROD_ID LIKE CONCAT('%', CONCAT(#{finprodMarketId}, '%'))
+				AND FP.FINPROD_TYPE2 = #{finType_F01}
+			)
+		</if>
+		SELECT * FROM ((<include refid="VALID_COLUMNS"></include>
 		<where>
 			PTL_PORTFOLIO.INVEST_YESORNO = 'Y' AND TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null
 			<if test="etridList != null and !etridList.isEmpty() ">
@@ -708,7 +765,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<!-- <if test="finprodType2List != null and finprodType2List.size()>0 ">
 				AND (TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN(
@@ -886,7 +944,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<if test="finprodType2List != null and finprodType2List.size()>0">
 				AND (TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 IN(
@@ -985,11 +1044,31 @@
 			<!--add by qmh 角色岗位控制权限  end-->
 		</where>)
 		ORDER BY tradeDate DESC
-		)		
+		)T
+		WHERE 1=1
+		AND NOT EXISTS (
+			SELECT TPDP.TRADE_ID
+			FROM TRD_PRODUCT_DEAL_PRE TPDP
+			WHERE
+			(TPDP.TRADE_ID = T.TRADEID OR TPDP.TOTLE_TRADE_ID = T.TRADEID)
+		)
 	</select>
 	<!-- 撤销的查询 -->
 	<select id="cancelSelectForPage" resultType="com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQuery001Dto">
-			SELECT * FROM ((<include refid="CANCEL_COLUMNS"></include>
+		<if test="finprodMarketId != null and finprodMarketId != ''">
+			WITH TEMP AS (
+			SELECT DISTINCT
+				FP2.FINPROD_ID,
+				FP.FINPROD_MARKET_ID
+			FROM FIN_PRODUCT FP
+			LEFT JOIN FIN_PRODUCT_ADD FPA
+				ON FPA.APPEAR_MARKET_ID = FP.FINPROD_MARKET_ID
+			LEFT JOIN FIN_PRODUCT FP2 ON FPA.FINPROD_ID = FP2.FINPROD_ID
+			WHERE FP.FINPROD_ID LIKE CONCAT('%', CONCAT(#{finprodMarketId}, '%'))
+				AND FP.FINPROD_TYPE2 = #{finType_F01}
+			)
+		</if>
+		SELECT * FROM ((<include refid="CANCEL_COLUMNS"></include>
 		<where>
 			PTL_PORTFOLIO.INVEST_YESORNO = 'Y' AND TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null
 			<if test="portfolioId != null and !portfolioId.isEmpty()">
@@ -1006,7 +1085,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<!-- <if test="finprodType2List != null and finprodType2List.size()>0 ">
 				AND (TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN(
@@ -1185,7 +1265,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<if test="finprodType2List != null and finprodType2List.size()>0">
 				AND (TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 IN(
@@ -1290,11 +1371,37 @@
 			<!--add by qmh 角色岗位控制权限  end-->
 		</where>
 		)
-		ORDER BY tradeDate DESC)		
+		ORDER BY tradeDate DESC)T
+		WHERE 1=1
+		AND NOT EXISTS (
+		SELECT WTPDP.TRADE_ID
+		FROM WFL_TRD_PRODUCT_DEAL_PRE WTPDP
+		WHERE
+		(WTPDP.TRADE_ID = T.TRADEID OR WTPDP.TOTLE_TRADE_ID = T.TRADEID)
+		)
+		AND NOT EXISTS (
+		SELECT TPDP.TRADE_ID
+		FROM TRD_PRODUCT_DEAL_PRE TPDP
+		WHERE
+		(TPDP.TRADE_ID = T.TRADEID OR TPDP.TOTLE_TRADE_ID = T.TRADEID)
+		)
 	</select>
 	<!-- 无有效状态时的查询 -->
 	<select id="allSelectForPage" resultType="com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQuery001Dto">
-			SELECT * FROM( ( <include refid="BASE_COLUMNS"></include>
+		<if test="finprodMarketId != null and finprodMarketId != ''">
+			WITH TEMP AS (
+			SELECT DISTINCT
+				FP2.FINPROD_ID,
+				FP.FINPROD_MARKET_ID
+			FROM FIN_PRODUCT FP
+			LEFT JOIN FIN_PRODUCT_ADD FPA
+				ON FPA.APPEAR_MARKET_ID = FP.FINPROD_MARKET_ID
+			LEFT JOIN FIN_PRODUCT FP2 ON FPA.FINPROD_ID = FP2.FINPROD_ID
+			WHERE FP.FINPROD_ID LIKE CONCAT('%', CONCAT(#{finprodMarketId}, '%'))
+				AND FP.FINPROD_TYPE2 = #{finType_F01}
+			)
+		</if>
+		SELECT * FROM( ( <include refid="BASE_COLUMNS"></include>
 		<where>
 		 	WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null
 			<if test="portfolioId != null and !portfolioId.isEmpty()">
@@ -1314,7 +1421,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<!-- <if test="finprodType2List != null and finprodType2List.size()>0 ">
 				AND (WFL_TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN(
@@ -1488,7 +1596,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<!-- <if test="finprodType2List != null and finprodType2List.size()>0 ">
 				AND (TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN(
@@ -1679,7 +1788,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<!-- <if test="finprodType2List != null and finprodType2List.size()>0 ">
 				AND (TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN(
@@ -1864,7 +1974,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<if test="finprodType2List != null and finprodType2List.size()>0">
 				AND (WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 IN(
@@ -1981,7 +2092,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<if test="finprodType2List != null and finprodType2List.size()>0">
 				AND (TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 IN(
@@ -2115,7 +2227,8 @@
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
+				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
+				OR tp.FINPROD_MARKET_ID = #{finprodMarketId})
 			</if>
 			<if test="finprodType2List != null and finprodType2List.size()>0">
 				AND (TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 IN(
@@ -2225,8 +2338,20 @@
 			<!--add by qmh 角色岗位控制权限  end-->
 		</where>
 		)
-		
-		ORDER BY tradeDate DESC)
+		ORDER BY tradeDate DESC)T
+		WHERE 1=1
+		AND NOT EXISTS (
+			SELECT WTPDP.TRADE_ID
+			FROM WFL_TRD_PRODUCT_DEAL_PRE WTPDP
+			WHERE
+			(WTPDP.TRADE_ID = T.TRADEID OR WTPDP.TOTLE_TRADE_ID = T.TRADEID)
+		)
+		AND NOT EXISTS (
+			SELECT TPDP.TRADE_ID
+			FROM TRD_PRODUCT_DEAL_PRE TPDP
+			WHERE
+			(TPDP.TRADE_ID = T.TRADEID OR TPDP.TOTLE_TRADE_ID = T.TRADEID)
+		)
 	</select>
 	<!-- 委托代码模糊查询 -->
 	<select id="getEntrustId" resultType="com.joyintech.framework.select.SuggestDto">

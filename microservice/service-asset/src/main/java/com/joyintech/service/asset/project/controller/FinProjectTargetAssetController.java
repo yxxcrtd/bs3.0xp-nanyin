@@ -54,7 +54,7 @@ public class FinProjectTargetAssetController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<FinProjectTargetAssetDto> selectAll(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length){
         return finProjectTargetAssetService.selectForPage(page, length, param);
     }
     
@@ -69,7 +69,7 @@ public class FinProjectTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody FinProjectTargetAssetDto dto) throws Exception {
+    public void insert(@RequestBody FinProjectTargetAssetDto dto) {
         // add zhouwenqiang 2020-12-09 start
         // 估值核算系统核算体系变更，项目类资产需要和计划类资产区分核算，对标的扩展属性增加：是否其他债权，其他资产都为空，只有项目类资产为：Y；
         for (BaseFinProductBaseInfoDto bfbd:dto.getBaseFinProductBaseInfoList()){
@@ -89,7 +89,7 @@ public class FinProjectTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody FinProjectTargetAssetDto dto) throws Exception{
+    public void update(@RequestBody FinProjectTargetAssetDto dto) {
     	/**add by wujie on 20210130 start remark:项目类资产修改时：扩展表.是否其他债权  = Y**/
     	for (BaseFinProductBaseInfoDto bfbd:dto.getBaseFinProductBaseInfoList()){
             bfbd.getFinProductAdd().setIsQtzq(DictCodeList.是否_是.getValue());
@@ -108,7 +108,7 @@ public class FinProjectTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public void delete(@RequestBody FinProjectTargetAssetDto dto) throws Exception{
+    public void delete(@RequestBody FinProjectTargetAssetDto dto) {
         finProjectTargetAssetService.delete(dto);
     }
     
@@ -121,7 +121,7 @@ public class FinProjectTargetAssetController {
      * @since 1.0
      */
     @PostMapping("getBasicInfo")
-    public FinProjectTargetAssetDto getBasicInfo(@RequestBody Map<String,Object> paramMap) throws Exception {
+    public FinProjectTargetAssetDto getBasicInfo(@RequestBody Map<String,Object> paramMap) {
         return finProjectTargetAssetService.getBasicInfo(paramMap);
     }
     

@@ -464,7 +464,7 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
      * @see
      * @since 1.0
      */
-    public Page<PtlManagementInfoDto> selectForPage(int page, int length, Map<String, Object> map) throws Exception {
+    public Page<PtlManagementInfoDto> selectForPage(int page, int length, Map<String, Object> map) {
         String vDate = (String) map.get("vdate");
         if (StringUtil.isNotEmpty(vDate)) {
             String[] split = vDate.split(" - ");
@@ -496,7 +496,7 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
      * @since 1.0
      */
     public List<PtlManagementInfoDto> getPortPage(Map<String, Object> map)
-            throws Exception {
+    {
         return ptlManagementInfo001Mapper.getPortPage(map);
     }
 
@@ -1365,7 +1365,7 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
      * @since 1.0
      */
     public MockPtlPortfolioDto selectPortfolioDetailInfo(Map<String, Object> map)
-            throws Exception {
+    {
         String portfolioId = (String)map.get("portfolioId");
         String paramDate = (String)map.get("paramDate");
         if (StringUtil.isNotBlank(paramDate)) {
@@ -1438,7 +1438,7 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
      * @since 1.0
      */
     private BigDecimal findBenchmark(Map<String, Object> map)
-            throws Exception {
+    {
         // 查询业绩基准
         FinBaseRuleInfo dto = ptlManagementInfo001Mapper.selectBenchmark(map);
         BigDecimal a = null;

@@ -36,7 +36,7 @@ public class PreTrdRepoTrade001Service extends BaseService<PreTrdRepoTrade001Dto
      * @since 1.0
      */
     public Page<PreTrdRepoTrade001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         setParams(pageParam);
         if (StringUtil.isNotEmpty(pageParam.get("parentId")) && !StringUtil.equals(pageParam.get("parentId"), "root")) {
             String tradeId = String.valueOf(pageParam.get("parentId")).split("_")[0];

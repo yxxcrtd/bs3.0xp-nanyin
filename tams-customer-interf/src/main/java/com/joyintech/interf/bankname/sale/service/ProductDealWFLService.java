@@ -40,7 +40,7 @@ public class ProductDealWFLService {
 	 * @param dto
 	 * @throws Exception
 	 */
-	public Map<String, String> save(FinProductPayInt003Dto dto) throws Exception {
+	public Map<String, String> save(FinProductPayInt003Dto dto) {
 		
 		Map<String, String> res = new HashMap<>();
         if (StringUtil.isBlank(dto.getBussId())) {
@@ -69,7 +69,7 @@ public class ProductDealWFLService {
 			res.put("massage", "插入流程成功"+params.getComment());
 		}catch(Exception d){
 			logger.error("插入流程失败:{}",params.getComment());
-			d.printStackTrace();
+			logger.error(d.getMessage(),d);
 			res.put("status", "0");
 			res.put("massage", "插入流程失败"+params.getComment());
 	   	}
@@ -81,7 +81,7 @@ public class ProductDealWFLService {
 	 * @param dto
 	 * @throws Exception
 	 */
-	public Map<String, String> saveExpireInfo(FinProductExpire002Dto dto) throws Exception {
+	public Map<String, String> saveExpireInfo(FinProductExpire002Dto dto) {
 		
 		Map<String, String> res = new HashMap<>();
 		WorkFlowParameter<FinProductExpire002Dto> params = new WorkFlowParameter<FinProductExpire002Dto>();
@@ -107,7 +107,7 @@ public class ProductDealWFLService {
 			res.put("massage", "插入流程成功"+params.getComment());
 		}catch(Exception d){
 			logger.error("插入流程失败:{}",params.getComment());
-			d.printStackTrace();	
+			logger.error(d.getMessage(),d);	
 			res.put("status", "0");
 			res.put("massage", "插入流程失败"+params.getComment());
 	   	}
@@ -119,7 +119,7 @@ public class ProductDealWFLService {
 	 * @param dto
 	 * @return
 	 */
-	public Map<String, String> saveProEstablishInfo(FinProductEstablish002Dto dto)  throws Exception {
+	public Map<String, String> saveProEstablishInfo(FinProductEstablish002Dto dto) {
 		
 		Map<String, String> res = new HashMap<>();
 		WorkFlowParameter<FinProductEstablish002Dto> params = new WorkFlowParameter<FinProductEstablish002Dto>();
@@ -138,7 +138,7 @@ public class ProductDealWFLService {
 			res.put("massage", "插入流程成功"+params.getComment());
 		}catch(Exception d){
 			logger.error("插入流程失败:{}",params.getComment());
-			d.printStackTrace();	
+			logger.error(d.getMessage(),d);	
 			res.put("status", "0");
 			res.put("massage", "插入流程失败"+params.getComment());
 	   	}

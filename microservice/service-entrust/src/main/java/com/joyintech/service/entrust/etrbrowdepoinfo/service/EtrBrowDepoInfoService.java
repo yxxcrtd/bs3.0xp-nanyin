@@ -116,7 +116,7 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
      */
     public Page<EtrBrowDepoInfoDto> selectForPage(int page, int length,
                                                   Map<String, Object> pageParam)
-        throws Exception {
+    {
         String finprodType2 = (String)pageParam.get("finprodType2");
         if(StringUtil.isNotEmpty(finprodType2)){
             pageParam.put("finprodType2List", StringUtil.splitToList(GlobalConstant.COMMA,finprodType2));
@@ -213,6 +213,7 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
      * @since 1.0
      */
     public BigDecimal getChannelAvailableCash(int page,int length,Map<String, Object> map) {
+        map.put("platDate",platformDateImpl.getSysDate());
         return etrBrowDepoInfoMapper.getChannelAvailableCash(map);
     }
 

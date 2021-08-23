@@ -18,6 +18,7 @@ var table;
     	  data: (entity && entity.trdTransfenpeiDtoList) ? entity.trdTransfenpeiDtoList : [],
           searchOnInit:true,
           height:'225px',
+          page:false,
           cols:[
               {field:'entrustId',  width:100,title: 'TrdInvestFenPeiInfo.entrustId',edit:true, sortable:false,type:'text'}
               ,{field:'portfolioId', width:200,  title: 'TrdInvestFenPeiInfo.busiId',edit:true,sortable: false,

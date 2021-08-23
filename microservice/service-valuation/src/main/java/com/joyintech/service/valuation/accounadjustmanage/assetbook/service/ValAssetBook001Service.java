@@ -275,7 +275,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      * @see
      * @since 1.0
      */
-    public Page<ValAssetbook001Dto> getAllAssetbookPage(int page,int length,String type, String name) throws Exception {
+    public Page<ValAssetbook001Dto> getAllAssetbookPage(int page,int length,String type, String name) {
     	//add by hxy start 多级法人改造 20200616
     	//return super.queryForPage(page,length,()-> mapper.getBookSet02(type, name));
         Map<String, Object> param = new HashMap<String, Object>();
@@ -368,7 +368,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      * @since 1.0
      */
 	@DataSource(DataSourceType.OTHER)
-    public int workflowCheck(ValAssetbook001Dto dto) throws Exception {
+    public int workflowCheck(ValAssetbook001Dto dto) {
         //判断当前流程是否存在
         ProcessMark processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto);
         return valAssetBook002Mapper.getDataInWorklow(processMark);
@@ -433,7 +433,6 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      */
     @DataSource(DataSourceType.OTHER)
     public Page<SelectOptionDto> findBooksetGroup(int page,int length,Map<String, Object> param) {
-    	//多极法人改造  start  add by hxy 20200618
   	  if(MultilevelDataAuthorityUtil.isEnabled()) {
        	 //联社模式
        	  //根据选择的账套组，查询出它们的所属机构

@@ -11,17 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.portfolio.actualtimeasset.dao.ActualTimeAssetMapper;
 import com.joyintech.service.portfolio.actualtimeasset.dto.ActualTimeAssetDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @program: tams-invest-parent
@@ -85,10 +89,11 @@ public class ActualTimeAssetService extends BaseService<ActualTimeAssetDto> {
      * @throws Exception 异常信息
      */
     public Page<ActualTimeAssetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         //组合持仓类型
-        List<String> hodingTypeList = Arrays.asList(DictCodeList.持仓类型_实际.getValue(), 
-            DictCodeList.持仓类型_融入.getValue(), DictCodeList.持仓类型_融出.getValue(), 
+        // modify by jiangpeng on 20210526 ZGBSSE-418 计划类净值型提交时没有可用持仓
+        List<String> hodingTypeList = Arrays.asList(DictCodeList.持仓类型_实际.getValue(), DictCodeList.持仓类型_在途.getValue(),
+                DictCodeList.持仓类型_融入.getValue(), DictCodeList.持仓类型_融出.getValue(),
             DictCodeList.持仓类型_质押.getValue(), DictCodeListExt1.持仓类型_预占用.getValue());
         pageParam.put("hodingTypeList", hodingTypeList);
         //组合持仓流水类型

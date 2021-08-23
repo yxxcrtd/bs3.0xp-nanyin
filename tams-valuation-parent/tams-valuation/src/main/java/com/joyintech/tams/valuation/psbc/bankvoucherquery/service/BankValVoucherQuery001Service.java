@@ -108,7 +108,7 @@ public class BankValVoucherQuery001Service extends CommonExportService<BankValVo
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<BankValVoucherQuery001Dto> findPage(BankValVoucherQuery001SearchDto dto) throws Exception {
+    public Page<BankValVoucherQuery001Dto> findPage(BankValVoucherQuery001SearchDto dto){
         Map<String , BankValVoucherQuery001SearchDto> param = new HashMap<String, BankValVoucherQuery001SearchDto>();
         param.put("dto", dto); 
         dto.setBooksetType(DictCodeList.账套类别_理财账套.getValue());

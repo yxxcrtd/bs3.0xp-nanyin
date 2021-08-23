@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.trade.trdrepotrade.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -24,6 +25,7 @@ import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -623,6 +625,21 @@ public class TrdRepoTrade002Controller extends BaseController {
                 }
             }
         }
+        // add by jiangpeng on 20210519 start TISHKBS-807
+        if (StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue(), dto.getPs())
+                && (StringUtil.equals(dto.getTradeMarket(), DictCodeList.交易流通场所_银行间债券市场.getValue())
+                    || ((StringUtil.equals(dto.getTradeMarket(), DictCodeList.交易流通场所_上海证券交易所.getValue())
+                            ||StringUtil.equals(dto.getTradeMarket(), DictCodeList.交易流通场所_深圳证券交易所.getValue()))
+                        && StringUtil.equals(dto.getRepoType(), DictCodeList.回购类型_质押式协议回购.getValue())))) {
+            if (dto.getBussRepoSec() != null && dto.getBussRepoSec().getTotalPrinAmt() != null && !StringUtil.isEmptyList(dto.getBussRepoSec().getPledgeBondList())) {
+                BigDecimal prinAmt = dto.getPrinAmt() == null ? BigDecimal.ZERO : dto.getPrinAmt();//本金金额
+                BigDecimal totalPrinAmt = dto.getBussRepoSec() == null ? BigDecimal.ZERO : dto.getBussRepoSec().getTotalPrinAmt();//券面总额
+                if (totalPrinAmt.compareTo(prinAmt) < 0) {//券面总额小于本金金额
+                    confirmMsg += this.getMessage("TRD_E_00124") + changeLineMark;
+                }
+            }
+        }
+        // add by jiangpeng on 20210519 end TISHKBS-807
     	if (!StringUtil.equals("null", confirmMsg) && confirmMsg.length() > 0) {
 			AjaxResult wr = new AjaxResult();
 			wr.setData(confirmMsg);
@@ -642,8 +659,7 @@ public class TrdRepoTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdRepoTrade002Dto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdRepoTrade002Dto dto) throws IOException, InstantiationException, WorkFlowException {
         
         
         

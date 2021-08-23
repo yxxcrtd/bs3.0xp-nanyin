@@ -9,12 +9,6 @@
  */
  
 package com.joyintech.tams.invest.trade.trddepositinvesttrade.controller;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
@@ -42,27 +36,10 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
-import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.InterfSendOpics;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
@@ -70,8 +47,10 @@ import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsServic
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -89,7 +68,29 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 存款交易新建
@@ -102,6 +103,9 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("TrdDepositInvestTrade002")
 @RequestMapping("/invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002")
 public class TrdDepositInvestTrade002Controller extends BaseController {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private TradeCommonService tradeCommonService;
     /**
@@ -459,7 +463,7 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
     @RequestMapping("getIsGuarantee")
     public String getIsGuarantee(){
         String portfolioId = getParam("portfolioId");
-        return trdDepositInvestTrade002Service.getIsGuarantee(portfolioId);
+        return StringUtil.trimHtmlTag(trdDepositInvestTrade002Service.getIsGuarantee(portfolioId));
     }
     /**
      * 获取持仓、可用现金等
@@ -652,8 +656,7 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) TrdDepositInvestTrade001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) TrdDepositInvestTrade001Dto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException {
     	if(flag) {
             BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter(); 
             bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_存款录入);
@@ -711,7 +714,17 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
         if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
             AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
                     BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_存款.getValue(),
-                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
+                    (en)-> {
+                        try {
+                            return interfRiskRdsService.sendRiskRdsData(dto,en);
+                        } catch (IOException e) {
+                            logger.error(e.getMessage(), e);
+                            throw new IOException();
+                        } catch (InstantiationException e) {
+                            logger.error(e.getMessage(), e);
+                            throw new InstantiationException();
+                        }
+                    });
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }

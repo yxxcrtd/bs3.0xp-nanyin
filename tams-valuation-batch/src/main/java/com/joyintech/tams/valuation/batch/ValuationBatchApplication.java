@@ -19,6 +19,8 @@ import com.joyintech.batch.config.BatchApplication;
 import com.joyintech.batch.config.BatchConfiguration;
 import com.joyintech.framework.JoyinApplication;
 
+import java.util.Locale;
+
 /**
  * 批处理启动类
  *
@@ -36,6 +38,8 @@ public class ValuationBatchApplication extends BatchApplication {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Locale local = new Locale("zh", "CN");
+		Locale.setDefault(local);
 	    JoyinApplication.run(ValuationBatchApplication.class, args);
 	}
 

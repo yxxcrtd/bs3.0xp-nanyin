@@ -37,8 +37,8 @@ public interface PerProDeclareReg001Mapper {
 	public List<PerProDeclareRegDto> selectPerProdList(@Param("generateDate")String generateDate,
 	        @Param("prodInfos")List<String> prodIds);
 	
-	public List<PerProDeclareRegDto> selectPerProdListEx(@Param("generateDate")String generateDate,@Param("model_type")String model_type,@Param("prodInfos")List<String> prodIds);
-	public List<PerProDeclareRegDto> selectPerProdListEx(@Param("generateDate")String generateDate, @Param("model_type")String model_type);
+	public List<PerProDeclareRegDto> selectPerProdListEx(@Param("generateDate")String generateDate,@Param("model_type")String model_type,@Param("InstitutionCode")String InstitutionCode,@Param("prodInfos")List<String> prodInfos);
+	public List<PerProDeclareRegDto> selectPerProdListEx(@Param("generateDate")String generateDate, @Param("model_type")String model_type,@Param("prodInfos")List<String> prodInfos);
 
 	public void insertList(List<PerProDeclareRegDto> list);
 	
@@ -84,4 +84,6 @@ public interface PerProDeclareReg001Mapper {
 	 * @return 行内标识码列表
 	 */
 	List<SelectOptionDto> queryProdInsIdList(Map<String,Object> map);
+
+	String selectFileInfo(PerProDeclareRegDto perProDeclareRegDto);
 }

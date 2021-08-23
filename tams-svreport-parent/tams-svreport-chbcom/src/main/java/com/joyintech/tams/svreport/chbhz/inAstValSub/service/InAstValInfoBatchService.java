@@ -52,7 +52,8 @@ public class InAstValInfoBatchService extends FileImpService {
     /**
      * 重复性检查字段
      */
-    private static final String[] DUPLICATIED_LIST = {"ASSET_CODE"};
+    private static final String[] DUPLICATIED_LIST = {"ASSET_CODE", "VAL_DATE"};
+    
     
     /**
      * 业务主键
@@ -261,8 +262,8 @@ public class InAstValInfoBatchService extends FileImpService {
         	}
         	// 产品交易登记报送时点:交易登记日期
             if(sub.getValDate()!=null){ 
-                List<Date> issueDateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产估值信息登记.getValue(), 
-                        DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
+                List<Date> issueDateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产估值信息登记.getValue(),
+						sub.getStatus(), dateMap,
                         sub.getValDate());
 			        
                 if (CollectionUtils.isNotEmpty(issueDateList)) {
@@ -315,7 +316,7 @@ public class InAstValInfoBatchService extends FileImpService {
     			.setScale(8, BigDecimal.ROUND_HALF_UP));
     	gendto.setUnitValTotal((dto.getUnitValTotal()==null?BigDecimal.ZERO:dto.getUnitValTotal())
     			.setScale(8, BigDecimal.ROUND_HALF_UP));
-    	gendto.setRemark(dto.getRemark());
+    	gendto.setRemark(null==dto.getRemark()?"":dto.getRemark());
         return gendto;
     }
  

@@ -3,6 +3,7 @@ package com.joyintech.tams.valuation.common.interf.tempTables.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
+
 import java.util.Date;
 
 public class ValFloatCalcRuleC extends BaseEntity {
@@ -259,5 +260,28 @@ public class ValFloatCalcRuleC extends BaseEntity {
      */
     public void setCalRule(String calRule) {
         this.calRule = calRule == null ? null : calRule.trim();
+    }
+
+    /**
+     * 计费基数
+     */
+    private String chargeBasis;
+
+    /**
+     * 取得 计费基数
+     *
+     * @return 计费基数
+     */
+    public String getChargeBasis() {
+        return chargeBasis;
+    }
+
+    /**
+     * 设置 计费基数
+     *
+     * @param chargeBasis 计费基数
+     */
+    public void setChargeBasis(String chargeBasis) {
+        this.chargeBasis = chargeBasis == null ? null : chargeBasis.trim();
     }
 }

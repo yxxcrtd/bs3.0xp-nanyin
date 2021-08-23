@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -146,7 +147,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 	/**
 	 * 根据前台传入的条件动态查询结果
 	 * 
-	 * @param map 前台条件组成的map
+	 * @param param 前台条件组成的map
 	 * @return 动态结果
 	 */
 	@SuppressWarnings("unchecked")
@@ -303,7 +304,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 		 Map<String,Object> param = new HashMap<>();
 		 param.put("fileName", fileName);
 		 List<List<String>> dataList = null;
-		 File file = new File(fileName);
+		 File file = new SafelyFile(fileName);
 		 XSSFWorkbook xssfWorkBook = null;
 		 // 获取导入表名
 		 String tableName = null;
@@ -315,6 +316,14 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 			 logger.error(e1.getMessage(),e1);
 		 } catch (IOException e1) {
 			 logger.error(e1.getMessage(),e1);
+		 }finally {
+		 	if (xssfWorkBook != null){
+				try {
+					xssfWorkBook.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
 		 }
 
 		 try {
@@ -330,7 +339,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 //			 }
 
 		 } catch (FileNotFoundException e) {
-			 e.printStackTrace();
+			 logger.error(e.getMessage(),e);
 		 }
 		 param.put("tableName", tableName);
 		 param.put("dataList", dataList);
@@ -355,20 +364,27 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 					FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
-		File file = new File(fileName);
+//		File file = new SafelyFile(fileName);
 		XSSFWorkbook xssfWorkBook = null;
 		// 获取导入表名
 		String tableName = null;
 		try {
-			xssfWorkBook = new XSSFWorkbook(new FileInputStream(file));
+			xssfWorkBook = new XSSFWorkbook(new FileInputStream(new SafelyFile(fileName)));
 			XSSFSheet xssfSheet = xssfWorkBook.getSheetAt(0);
 			tableName = xssfSheet.getSheetName();
 		} catch (FileNotFoundException e1) {
 			logger.error(e1.getMessage(),e1);
 		} catch (IOException e1) {
 			logger.error(e1.getMessage(),e1);
+		}finally {
+			if(xssfWorkBook != null){
+				try {
+					xssfWorkBook.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
 		}
 		try {
 		    int headerNum = operationalInfo001Service.selectHeaderNumByChiName(tableName);
@@ -382,7 +398,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 //						FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
 //			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		param.put("userName", CommonUtil.getUserName());
 		param.put("tableName", tableName);
@@ -407,14 +423,19 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
                 FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
         } catch (FileNotFoundException e) {
         	logger.error(e.getMessage(),e);
-        	e.printStackTrace();
         }
-        File file = new File(fileName);
+        File file = new SafelyFile(fileName);
 		// 获取导入表名
 		String tableId = null;
 		try(XSSFWorkbook xssfWorkBook = new XSSFWorkbook(new FileInputStream(file))) {
-			XSSFSheet xssfSheet = xssfWorkBook.getSheetAt(0);
-			tableId = xssfSheet.getSheetName();
+			try {
+				XSSFSheet xssfSheet = xssfWorkBook.getSheetAt(0);
+				tableId = xssfSheet.getSheetName();
+			}finally {
+				if (xssfWorkBook != null){
+					xssfWorkBook.close();
+				}
+			}
 		} catch (FileNotFoundException e1) {
 			logger.error(e1.getMessage(),e1);
 		} catch (IOException e1) {

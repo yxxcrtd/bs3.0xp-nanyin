@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
 import com.joyintech.tams.invest.common.util.MD5Util;
@@ -141,7 +142,7 @@ public class MProdDivReinDealGenProcessorService extends BaseService{
        	    bokDealAccounting.setIsAccounted(DictCodeList.是否_是.getValue());
        	    resultDto.getBokDealAccountings().add(bokDealAccounting);
        	    String md5BokDetailId = "1" + dealDto.getFinprodId()+"2"+DictCodeListExt1.金融产品类型_理财产品.getValue();
-       	    String bokDetailId = MD5Util.string2MD5(md5BokDetailId);
+       	    String bokDetailId = EncryptUtil.getInstance().md5(md5BokDetailId);
        	    BokDealAccountingDetail bokDealAccountingDetail = new BokDealAccountingDetail();
        	    bokDealAccountingDetail.setBooksetId(readerResult.getBooksetId());
        	    bokDealAccountingDetail.setBusiNo(tradeId);

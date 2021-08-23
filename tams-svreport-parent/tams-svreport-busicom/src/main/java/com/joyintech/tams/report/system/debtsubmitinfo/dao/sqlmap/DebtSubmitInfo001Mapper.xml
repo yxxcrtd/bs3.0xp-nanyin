@@ -121,5 +121,32 @@
 		<if test="uniqueIdenti != null and uniqueIdenti !='' ">
 			and cess.UNIQUE_IDENTI like '%' || #{uniqueIdenti} || '%'
 		</if>
+		
+	UNION ALL
+
+	SELECT
+		CSST.SEQNO AS seqNo,
+		CSST.SUBMIT_NUM AS submitNum,
+		CSST.SUBMIT_TYPE AS repName,
+		CSST.SUBMIT_FEEDBACK_STATUS repResult,
+		CSST.UPDATE_TIME repDate,
+		cir.UPLOAD_FILE_ID AS repFileId,
+		CSST.REPORT_NO reportNo,
+		CSST.SUBMIT_FEEDBACK_MSG repFailedInfo,
+		CSST.UNIQUE_IDENTI uniqueIdenti
+	FROM
+		CHB_SUBMIT_STATUS_TWO CSST
+	LEFT JOIN CHB_INFO_REPORT cir ON
+		cir.REPORT_NO = CSST.REPORT_NO
+	WHERE
+		CSST.REPORT_NO = #{reportNo}
+		<if test="repResultList != null and repResultList.size() > 0">
+			<foreach collection="repResultList" item="repResult" open=" and CSST.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+				#{repResult}
+			</foreach>
+		</if>
+		<if test="uniqueIdenti != null and uniqueIdenti !='' ">
+			and CSST.UNIQUE_IDENTI like '%' || #{uniqueIdenti} || '%'
+		</if>
 	</select>
 </mapper>

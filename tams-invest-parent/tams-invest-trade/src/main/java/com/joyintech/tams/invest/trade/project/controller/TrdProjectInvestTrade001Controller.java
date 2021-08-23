@@ -51,6 +51,7 @@ import com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade001S
 import com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
@@ -143,7 +144,7 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return TrdProjectInvestTrade001Service.export(this.getPageId(), param);
@@ -156,8 +157,7 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(@Validated({ValidateGroupDelete.class}) TrdProjectInvestTrade002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult revoke(@Validated({ValidateGroupDelete.class}) TrdProjectInvestTrade002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

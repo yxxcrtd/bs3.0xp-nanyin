@@ -47,7 +47,7 @@ FROM
             T1.OPERATE_TYPE,
             T1.CREATE_TIME,
             T1.CREATE_USER UPDATE_USER,
-            T2.UPDATE_USER spr,
+            T1.UPDATE_USER spr,
             T1.INSTITUTION_CODE  <!--  wangyang1 20200707 -->
         FROM
 	RSK_ACCESS_LIST_DETAIL T1
@@ -118,7 +118,7 @@ FROM
         SELECT
             T1.LIST_ID,
             T1.LIST_DATE,
-            T5.UPDATE_USER,
+            T1.CREATE_USER UPDATE_USER,
             T4.CRT_USER,
             T4.NEXT_USER spr,
             NULL WORKFLOW_ID
@@ -130,13 +130,15 @@ FROM
             LIST_ID,
             LIST_DATE,
             UPDATE_TIME
+            ,CREATE_USER
             ,INSTITUTION_CODE /* add by songyawei 添加机构编码 */
         FROM
-            ( SELECT LIST_ID, LIST_DATE, TO_CHAR ( UPDATE_TIME, 'yyyy-MM-dd' ) UPDATE_TIME ,INSTITUTION_CODE /* add by songyawei 添加机构编码 */ FROM RSK_ACCESS_LIST_LOG )
+            ( SELECT LIST_ID, LIST_DATE, TO_CHAR ( UPDATE_TIME, 'yyyy-MM-dd' ) UPDATE_TIME,CREATE_USER ,INSTITUTION_CODE /* add by songyawei 添加机构编码 */ FROM RSK_ACCESS_LIST_LOG )
         GROUP BY
             LIST_ID,
             LIST_DATE,
             UPDATE_TIME
+            ,CREATE_USER
             ,INSTITUTION_CODE /* add by songyawei 添加机构编码 */
             ) T1
              LEFT JOIN RSK_ACCESS_LIST T5 ON T5.LIST_ID = T1.LIST_ID
@@ -218,7 +220,7 @@ FROM
         OPERATE_PS，
         null WORKFLOW_ID,
        <!-- #{updateUser} updateUser -->
-        UPDATE_USER updateUser,
+        #{updateUser} updateUser,
         #{spr}  spr
     FROM
         RSK_ACCESS_LIST_LOG

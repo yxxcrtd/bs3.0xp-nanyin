@@ -51,12 +51,10 @@ public class PtlSingleIssuerPositionAnalysis001Controller extends BaseController
 	 * 分页查询发行人下拉框
 	 *
 	 * @return
-	 * @throws Exception
 	 */
 	@RequestMapping("/getPublisher")
 	@ResponseBody
-	public Page<SelectOptionDto> getPublisher()
-        throws Exception {
+	public Page<SelectOptionDto> getPublisher(){
 		Page<SelectOptionDto> publisherSelect = ptlSingleIssuerPositionAnalysis001Service.getPublisher(RequestUtil.getPageParam());
         return publisherSelect;
     }
@@ -65,12 +63,10 @@ public class PtlSingleIssuerPositionAnalysis001Controller extends BaseController
 	/**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlSingleIssuerPositionAnalysis001Dto> selectAll()
-            throws Exception {
+    public Page<PtlSingleIssuerPositionAnalysis001Dto> selectAll(){
         Map<String,Object> map = RequestUtil.getPageParam();
         Page<PtlSingleIssuerPositionAnalysis001Dto> page = ptlSingleIssuerPositionAnalysis001Service.selectForPage(map);
         return page;
@@ -80,14 +76,12 @@ public class PtlSingleIssuerPositionAnalysis001Controller extends BaseController
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlSingleIssuerPositionAnalysis001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }

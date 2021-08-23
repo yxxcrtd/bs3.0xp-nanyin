@@ -77,7 +77,7 @@ public class ValUnfairlendingQuery001Service extends CommonExportService<ValUnfa
 	 * @return 表格信息
 	 * @throws Exception
 	 */
-	public Page<ValUnfairlendingQuery001Dto> findPage(Map<String, Object> params) throws Exception {
+	public Page<ValUnfairlendingQuery001Dto> findPage(Map<String, Object> params) {
 		
 		 return restTemplate.postForPage(
 	                ServiceApplication.VALUATION_SERVICE_NAME + "/ValUnfairlendingQuery001/findPage",

@@ -189,4 +189,18 @@ public class FinProductScheduling002Service extends BaseService<PrdIssueSchedule
                                          + StringUtil.defaultString(finprodId),
             Integer.class);
     }
+
+    /**
+     * 查询是否是否存在组合代码与产品代码相同的组合
+     *
+     * @param finprodMarketId 产品代码
+     * @return 是否存在
+     * @since 1.0
+     */
+    public int chekPortfolExist(String finprodMarketId) {
+        return restTemplate.getForObject(ServiceApplication.PRODUCT_SERVICE_NAME
+                        + "/FinProductScheduling/chekPortfolExist?finprodMarketId="
+                        + StringUtil.defaultString(finprodMarketId) + "&pageId=" + StringUtil.defaultString("PtlManagementInfo002"),
+                Integer.class);
+    }
 }

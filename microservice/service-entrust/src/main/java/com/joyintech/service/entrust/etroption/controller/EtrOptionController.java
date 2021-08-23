@@ -57,7 +57,8 @@ public class EtrOptionController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<EtrOptionDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrOptionDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
          Page<EtrOptionDto> page1 =etrOptionService.selectForPage(page, length, param);
         return page1;
     }

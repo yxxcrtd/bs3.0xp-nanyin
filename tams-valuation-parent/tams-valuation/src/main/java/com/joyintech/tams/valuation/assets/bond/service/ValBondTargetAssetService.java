@@ -25,6 +25,8 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 //import com.joyintech.tams.invest.asset.common.dto.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +84,11 @@ public class ValBondTargetAssetService extends CommonExportService<ValBondTarget
 implements BaseProcessService<ValBondTargetAssetDto>{
 //    @Autowired
 //    private CommonAutoCouponService commonAutoService;
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValBondTargetAssetService.class);
+
     @Autowired
     private ValDateCalService dateCalService;
 
@@ -172,7 +178,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValBondTargetAssetDto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ValBondTargetAssetDto> findPage(Map<String, Object> params) {
         return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValBondTargetAsset/findPage",
                 params, ValBondTargetAssetDto.class);
@@ -819,8 +825,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
         try {
 			return findPage(selectParam);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		return null;
     }
@@ -946,7 +951,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
      * @param finCashPayRule
      * @return
      */
-    public Date getFirstMdate(InterfPayhsrcsecinfoDto interfPayhsrcsecinfo, FinCashPayRule finCashPayRule){
+    public Date getFirstMdate(InterfPayhsrcsecinfoDto interfPayhsrcsecinfo, FinCashPayRule finCashPayRule) throws InstantiationException, IllegalAccessException {
         ValFinPayInterestStdInfoDto finPayInterestStdInfoDto = new ValFinPayInterestStdInfoDto();
         //资产公共DTO
         AssetCommonInfoDto scai = new AssetCommonInfoDto();
@@ -1012,7 +1017,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
      * @see
      * @since 1.0
      */
-    public InterfPayhsrcsecinfoDto autoBondCoupon(InterfPayhsrcsecinfoDto dto,String finprodMarketId){
+    public InterfPayhsrcsecinfoDto autoBondCoupon(InterfPayhsrcsecinfoDto dto,String finprodMarketId) throws IllegalAccessException, InstantiationException {
 
         List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoList = new ArrayList<BaseFinProductBaseInfoDto>();
         Long branch =StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE))?0:Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
@@ -1098,7 +1103,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
                     finProduct.setCapiIncomeFeature(DictCodeList.产品收益标识_保证收益.getValue());
                 }*/
 //                if(null!=interfPayhsrcsecinfo && null!=interfPayhsrcsecinfo.getIssuetype()){
-//                    if(interfPayhsrcsecinfo.getIssuetype().toString().startsWith("43901")){
+//                    if(interfPayhsrcsecinfo.getIssuetype().startsWith("43901")){
 //                        finProduct.setIssueType(BussinessDictCodeList.发行方式_公开发行.getValue()); 
 //                    }else{
 //                        finProduct.setIssueType(BussinessDictCodeList.发行方式_非公开发行.getValue());
@@ -1484,7 +1489,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
         		try {
         			repAssetDept.setRepStatusDate(sdf.parse(DateUtil.getSysDate()));//数据日期
         		} catch (ParseException e) {
-					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
 				}
         		repAssetDept.setRepTradeMarket(interfPayhsrcsecinfo.getMarket2());//交易流通场所
         		repAssetDept.setIsRepTarget(BussinessDictCodeList.是否_否.getValue());//默认否
@@ -1521,7 +1526,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
      * @see
      * @since 1.0
      */
-    public ValBondTargetAssetDto getInterfBondDto(String finprodMarketId) {
+    public ValBondTargetAssetDto getInterfBondDto(String finprodMarketId) throws InstantiationException, IllegalAccessException {
         InterfPayhsrcsecinfoDto dto = new InterfPayhsrcsecinfoDto();
         List<String> list = new ArrayList<>();
         list.add(finprodMarketId);

@@ -358,6 +358,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      */
     组合类型_委外组合(BussinessDictCode.组合类型,"02","委外组合"),
     /**
+     * 自主组合
+     */
+    组合类型_自主组合(BussinessDictCode.组合类型, "06", "自主组合"),
+    /**
      * 基准类型
      */
     基准类型_SAA(BussinessDictCode.基准类型,"01","SAA"),
@@ -4734,6 +4738,11 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 池类型_机构池
      */
     池类型_机构池(BussinessDictCode.池类型,"02" , "机构池"),
+
+    /**
+     * 机构类型_总行
+     */
+    机构类型_省联社(BussinessDictCode.机构类型, "01", "省联社"),
     /**
      * 出入项类型_资产
      */
@@ -5139,6 +5148,8 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     行内资产三级分类_私募股权投资基金(BussinessDictCode.行内资产三级分类, "66", "私募股权投资基金"),
     行内资产三级分类_即期(BussinessDictCode.行内资产三级分类, "67", "即期"),
     行内资产三级分类_掉期(BussinessDictCode.行内资产三级分类, "68", "掉期"),
+    指令业务类型_银证转账(BussinessDictCode.指令业务类型, "49", "银证转账"),
+    指令业务类型_证银转账(BussinessDictCode.指令业务类型, "50", "证银转账"),
 
     /**
      * 行权方式_回售

@@ -10,11 +10,13 @@
  
 package com.joyintech.tams.invest.risk.valtblimport.controller;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -63,6 +66,7 @@ public class RskValTableImport002Controller extends BaseController{
         model.addAttribute("startRow", this.getParam("startRow"));
         model.addAttribute("trimChars", this.getParam("trimChars"));
         model.addAttribute("filterId", this.getParam("filterId"));
+        model.addAttribute("ptlName", this.getParam("ptlName"));
         return super.init(model);
     }
     
@@ -79,7 +83,7 @@ public class RskValTableImport002Controller extends BaseController{
     
     @RequestMapping(value = "/initValTableInfo")
     @ResponseBody
-    public List<RskValtblAssetSubDto> initValTableInfo(@RequestBody RskValTableImportParamDto dto) throws Exception {
+    public List<RskValtblAssetSubDto> initValTableInfo(@RequestBody RskValTableImportParamDto dto) throws ClassNotFoundException, FileNotFoundException, InstantiationException, IllegalAccessException {
         List<RskValtblAssetSubDto> RskValtblAssetSubList = rskValTableImportService.viewValTable(dto);
         return RskValtblAssetSubList;
     }
@@ -117,7 +121,34 @@ public class RskValTableImport002Controller extends BaseController{
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody RskValtblAssetSubDto dto) throws ParseException {
         dto.setImpMode(DictCodeListExt1.导入方式_手工.getValue());
-        rskValTableImportService.insert(dto);
+        List<String> errorList=rskValTableImportService.insert(dto);
+        String eMsg="";
+        if(!StringUtil.isEmptyList(errorList)){
+        	for(String errorInfo:errorList){
+            	eMsg+=StringUtil.isNotEmpty(errorInfo)?("["+errorInfo+"]"):"";
+            }
+        	return new AjaxResult(getMessage("BUSS_COM_E_0033")+GlobalConstant.HTML_NEWLINE+"以下资产未通过中债要素校验，自动加券失败，需在对应页面新建资产信息："+eMsg);
+        }  
         return new AjaxResult(getMessage("BUSS_COM_E_0033"));
+    }
+    /**
+     * 获取警告信息
+     *
+     * @param dto
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping(value = "/getTableInfo")
+    @ResponseBody
+    public AjaxResult getTableInfo(@RequestBody RskValTableImportParamDto dto) throws Exception {
+        List<RskValtblAssetSubDto> RskValtblAssetSubList = rskValTableImportService.viewValTable(dto);
+        if(dto.getWarnMap().get(dto.getAssetName()) > 0) {
+            return new AjaxResult(dto.getAssetName() + "存在" + dto.getWarnMap().get(dto.getAssetName()) + "条科目未配置映射" , MessageType.警告消息);
+        }
+        else {
+            return new AjaxResult();
+        }
     }
 }

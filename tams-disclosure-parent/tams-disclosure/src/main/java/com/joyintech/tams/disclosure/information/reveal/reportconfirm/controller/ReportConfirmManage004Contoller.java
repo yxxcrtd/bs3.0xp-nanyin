@@ -78,8 +78,7 @@ public class ReportConfirmManage004Contoller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+    public Page<SelectOptionDto> getPrdInfoSelect(){
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
         return prdInfoSelect;
     }
@@ -153,8 +152,7 @@ public class ReportConfirmManage004Contoller extends BaseController {
 	 */
 	@RequestMapping(value = "/uploadFile")
 	@ResponseBody
-	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws Exception {
+	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model){
 		 AjaxResult res = new AjaxResult();
 //		 if(request.getParameter("size")>1048576){}
 		 String size = this.getParam("size");
@@ -187,7 +185,7 @@ public class ReportConfirmManage004Contoller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/querySameCount")
-    public AjaxResult querySameCount() throws Exception{
+    public AjaxResult querySameCount() {
     	@SuppressWarnings("unused")
 		String msg = StringUtil.EMPTY;
     	Map<String, Object>params = RequestUtil.getPageParam();

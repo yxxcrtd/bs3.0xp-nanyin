@@ -221,7 +221,11 @@ public class SecPosAutoGenerationService {
                             ArithmeticUtil.multiply(crn,StringUtil.isNotEmpty(assetRiskType)?new BigDecimal(assetRiskType): BigDecimal.ZERO));
                         underlyingBshareScaleSumDto.setAssetRiskType(assetRiskTypevalue.toString()); 
                     }
-                    
+                    //如果不是债券，rate(票面利率%)和BShareFaceValue(持仓券面总额)设置成空
+                    if(!StringUtil.equals(dto.getPinanAssetType(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+                        dto.setRate(null);
+                        dto.setBshareFaceValue(null);
+                    }
                     assetTargetDbMapper.insert(dto);  
                 }
                 
@@ -238,6 +242,10 @@ public class SecPosAutoGenerationService {
             }
             
             for(AssetTargetDbDto item:secPosDataList) {
+                //剩余期限计算
+                if(item.getMdate()!=null){
+                    item.setLastPeriod(calculationSurplusDays(item.getFinprodId(), DateUtil.format(item.getVdate()), DateUtil.format(item.getMdate()), DateUtil.format(batchDate), item.getBranch()));
+                }
                 //获取剩余期限、成本收益率、含权信息、下一行权日、剩余行权期限信息、债券评级
                 if (StringUtil.isNotEmpty(item.getPinanAssetType()) && item.getPinanAssetType().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
                     //****债券评级**** begin
@@ -281,10 +289,8 @@ public class SecPosAutoGenerationService {
                     // ****债券评级**** end
                     //成本收益率计算
                     item.setCostRate(calculationCostRate(item.getFinprodId(), DateUtil.format(batchDate), item.getPortfolioId(), item.getIsPerne()));
-                    //剩余期限计算
-                    item.setLastPeriod(calculationSurplusDays(item.getFinprodId(), DateUtil.format(item.getVdate()), DateUtil.format(item.getMdate()), DateUtil.format(batchDate), item.getBranch()));
 
-                    if (item.getIsRight().equals(DictCodeList.是否_是.getValue())) {
+                    if (StringUtil.equals(item.getIsRight(),DictCodeList.是否_是.getValue())) {
                         List<FinExercisePlan> finExercisePlanList =new ArrayList<FinExercisePlan>();
                         if(item.getExDate() !=null && item.getExDate() !=""){
                             finExercisePlanList = calculationSurplusExercise(item.getFinprodId(), DateUtil.format(batchDate), DictCodeListExt1.金融产品类型_投管用_债券.getValue(), "", item.getExDate());
@@ -350,6 +356,11 @@ public class SecPosAutoGenerationService {
                         && StringUtil.equals(item.getIsPerne(), DictCodeListExt3.穿透维度_不穿透.getValue())) {
                         item.setAssetRiskType(underlyingAssetsSumDto.getAssetRiskType());
                     }
+                }
+                //如果不是债券，rate(票面利率%)和BShareFaceValue(持仓券面总额)设置成空
+                if(!StringUtil.equals(item.getPinanAssetType(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+                    item.setRate(null);
+                    item.setBshareFaceValue(null);
                 }
                 assetTargetDbMapper.insert(item);  
             }
@@ -426,6 +437,7 @@ public class SecPosAutoGenerationService {
         map.put("finprodId",finprodId);
         map.put("effDate",vdate);
         map.put("branch",branch);
+        map.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
         FinCashCalcRule finCashCaluRule = secPosAutoGenerationMapper.getBasisByFinprodId
                 (map);
         if(finCashCaluRule!=null )
@@ -474,6 +486,7 @@ public class SecPosAutoGenerationService {
         map.put("finprodId",finprodId);
         map.put("effDate",date);
         map.put("branch",branch);
+        map.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
         FinCashCalcRule finCashCalcRule = secPosAutoGenerationMapper.getBasisByFinprodId(
                 map);
         if(finCashCalcRule!=null )

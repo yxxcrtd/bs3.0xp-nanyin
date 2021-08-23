@@ -60,7 +60,7 @@ public class EtrIRSController {
     public Page<EtrIRSDto> selectForPage(@RequestBody Map<String, Object> param,
                                               @PathVariable("page") int page,
                                               @PathVariable("length") int length)
-        throws Exception {
+    {
         return etrIRSService.selectForPage(page, length, param);
     }
 

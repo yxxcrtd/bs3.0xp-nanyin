@@ -26,10 +26,6 @@ public class EmployeeImpMainService extends AutoSendCBBaseService{
      * void
      */
     public void generateEmployeeSubInfo(Date batchDate){
-    	try{
-    		SvrChbEmployeeDBInterf.generateData(batchDate);
-    	}catch(Exception e){
-    		throw e;
-    	}
+        SvrChbEmployeeDBInterf.generateData(batchDate);
     }
 }

@@ -98,7 +98,7 @@ public class SusPrdFutureOpenPlanGenWriter extends BaseWriter<NeedToWriteEntity>
 //						try {
 //							finOpenPlanMapper.insert(finOpenPlan); // 如果为空再插入操作
 //						} catch (Exception e) {
-//							e.printStackTrace();
+//							logger.error(e.getMessage(),e);
 //						} finally {
 //							String sql = "select * from FIN_OPEN_PLAN where CASH_ID = '" + finOpenPlan.getCashId() + "' and OPEN_TYPE = '" + finOpenPlan.getOpenType() + "' and OPEN_DATE_END = to_date('" + new SimpleDateFormat("yyyy-MM-dd").format(finOpenPlan.getOpenDateEnd()) + "','yyyy-MM-dd');";
 //							sqls.add(sql);

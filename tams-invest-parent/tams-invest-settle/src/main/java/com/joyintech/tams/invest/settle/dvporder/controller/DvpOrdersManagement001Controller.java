@@ -4,11 +4,12 @@ import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -37,6 +37,8 @@ import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -134,14 +136,44 @@ public class DvpOrdersManagement001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         Map<String, Object> searchParams = RequestUtil.getPageParam();
+        String datas = this.getParam("datas");
+
         String fileName = "划款信息查询" + "(" + DateUtil.getCurrentDate() + ").xls";
         if (searchParams.get("isDvp") != null && Boolean.parseBoolean((String)searchParams.get("isDvp"))) {
             fileName = "DVP清算划款" + "(" + DateUtil.getCurrentDate() + ").xls";
         }
-        return dvpOrdersManagement001Service.export(fileName, RequestUtil.getParameters(getRequest()));
+        if(datas==null) {
+            return dvpOrdersManagement001Service.export(fileName, RequestUtil.getParameters(getRequest()));
+        }
+
+        if (searchParams.get("isDvp") != null && Boolean.parseBoolean((String)searchParams.get("isDvp"))) {
+            List<DvpOrdersManagement001Dto> param1 = JsonUtils.json2List(datas, DvpOrdersManagement001Dto.class);
+            File outFile = dvpOrdersManagement001Service.makeFile(
+                    "/com/joyintech/tams/invest/settle/dvporder/config/export_confDvp.xml",
+                    param1);
+            return ExportUtil.export(
+                    "DVP清算划款" + SystemGlobalConstant.OPEN_PARENTHESIS
+                            + DateUtil.format(DateUtil.platDateFromCache())
+                            + SystemGlobalConstant.CLOSE_PARENTHESIS
+                            + SystemGlobalConstant.POINT
+                            + FileNameUtil.getFileExtName(outFile),
+                    outFile, true);
+        }else{
+            List<DvpOrdersManagement001Dto> param1 = JsonUtils.json2List(datas, DvpOrdersManagement001Dto.class);
+            File outFile = dvpOrdersManagement001Service.makeFile(
+                    "/com/joyintech/tams/invest/settle/dvporder/config/export_conf.xml",
+                    param1);
+            return ExportUtil.export(
+                    "划款信息查询" + SystemGlobalConstant.OPEN_PARENTHESIS
+                            + DateUtil.format(DateUtil.platDateFromCache())
+                            + SystemGlobalConstant.CLOSE_PARENTHESIS
+                            + SystemGlobalConstant.POINT
+                            + FileNameUtil.getFileExtName(outFile),
+                    outFile, true);
+
+        }
     }
     
     /**
@@ -170,8 +202,7 @@ public class DvpOrdersManagement001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    public AjaxResult doRevoke(@RequestBody DvpOrdersProcessDto inputDto)
-        throws Exception {
+    public AjaxResult doRevoke(@RequestBody DvpOrdersProcessDto inputDto) throws WorkFlowException {
 
         ProcessParameter<DvpOrdersProcessDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<DvpOrdersProcessDto> workFlowParameter = new WorkFlowParameter<>();

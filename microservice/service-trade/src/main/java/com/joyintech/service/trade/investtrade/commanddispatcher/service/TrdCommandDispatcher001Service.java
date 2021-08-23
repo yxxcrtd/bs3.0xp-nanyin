@@ -110,7 +110,7 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
      * @since 1.0
      */
     public Page<TrdCommandDispatcher001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
 //    	setParams(pageParam);
         pageParam.put("finType_zq", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         //add by gaopeng 20191126 增加交易方向 start
@@ -297,7 +297,7 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
      * 自动分发的保存
      */
     public int addAutoTime(PaEtrAutoDispenseTime record)
-        throws Exception {
+    {
         return paEtrAutoDispenseTimeMapper.insert(record);
     }
 

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.net.ftp.FTP;
@@ -47,7 +48,7 @@ public class FtpUtil {
     /**
      * 编码
      */
-    private static String encoding = System.getProperty("file.encoding");
+    private static String encoding = System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding");
 
     /**
      * 路径分隔符
@@ -124,7 +125,7 @@ public class FtpUtil {
             FTPFile[] fs = ftpClient.listFiles();
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(fileName)) {
-                    File localFile = new File(localPath + separator + ff.getName());
+                    File localFile = new SafelyFile(localPath + separator + ff.getName());
                     is = new FileOutputStream(localFile);
                     ftpClient.retrieveFile(ff.getName(), is);
                     is.close();
@@ -143,7 +144,7 @@ public class FtpUtil {
             	if(is !=null)
             	is.close();
             } catch (Exception e) {
-            	e.printStackTrace();
+                LOGGER.error(e.getMessage(),e);
              }
             ftpClose();
         }
@@ -290,7 +291,6 @@ public class FtpUtil {
             result = "true";
         }
         catch (IOException e) {
-//            e.printStackTrace();
             LOGGER.error(e.getMessage(),e);
             result = "false";
         }
@@ -369,7 +369,7 @@ public class FtpUtil {
                         FTPFile[] fs = ftpClient.listFiles();
                         for (FTPFile ff : fs) {
                             if (ff.getName().equals(dataFileName)) {
-                                File localFile = new File(localPath + separator + ff.getName());
+                                File localFile = new SafelyFile(localPath + separator + ff.getName());
                                 is = new FileOutputStream(localFile);
                                 ftpClient.retrieveFile(ff.getName(), is);
                                 is.close();
@@ -406,7 +406,7 @@ public class FtpUtil {
 				try {
 					is.close();
 				} catch (Exception e) {
-					e.printStackTrace();
+                    LOGGER.error(e.getMessage(),e);
 				}
         }
         return rslt;
@@ -443,7 +443,7 @@ public class FtpUtil {
                 if (!ff.isDirectory() && CollectionUtils.exists(containsFile, name -> {
                     return ff.getName().contains((String)name);
                 })) {
-                    File localFile = new File(localPath + separator + ff.getName());
+                    File localFile = new SafelyFile(localPath + separator + ff.getName());
                     if (!localFile.exists()) {
                         localFile.createNewFile();
                         try {
@@ -619,8 +619,9 @@ public class FtpUtil {
             LOGGER.error(e.getMessage(),e);
         }
         finally {
-            return bool;
+//            return bool;
         }
+        return bool;
     }
 
     /**

@@ -22,6 +22,11 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.trade.trdstandardbond.dto.TrdStandardBond003Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +36,10 @@ import java.util.Map;
 
 @Service
 public class TrdStandardBond003Service extends BaseService<TrdStandardBond003Dto> implements BaseProcessService<TrdStandardBond003Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdStandardBond003Service.class);
 
     @Autowired
     private IPlatformDate platformDateImpl;
@@ -64,6 +73,31 @@ public class TrdStandardBond003Service extends BaseService<TrdStandardBond003Dto
     @Override
     public void doDelete(String workflowId) {
         // do nothing
+    }
+    
+    @Override
+    public void doBack(TrdStandardBond003Dto entity) {
+    	//1. 生成反向流水
+    	processOldFlow(entity);
+    	//2. 交易编号清空
+    	entity.setTradeIdList(null);
+    	//3. 更新留痕表
+        ProcessMark newEntity;
+        try {
+            // 获取新的PK
+        	newEntity = WorkflowContext.getProcessMarkService().getParameterByAnnotation(
+            		entity);
+            // 工作流ID
+            newEntity.setWorkflowId(entity.getWorkflowId());
+            newEntity.setStatus(entity.getStatus());
+            newEntity.setBusinessData(JsonUtils.object2Json(entity));
+            // 更新业务表数据
+            // 操作留痕表
+            WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
     }
 
     /**

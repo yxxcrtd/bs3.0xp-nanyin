@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.jcraft.jsch.SftpException;
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,7 +158,7 @@ public class SendNetValueInterfServices {
 			String fileDate = format.format(DateUtil.addDay(valdate, +1));
 
 			// 判断文件夹是否存在
-			File fileMkdirs = new File(localPath + File.separator + serverInfo.getSystemID() + File.separator + curDate);
+			File fileMkdirs = new SafelyFile(localPath + File.separator + serverInfo.getSystemID() + File.separator + curDate);
 			if (!fileMkdirs.exists()) {
 				fileMkdirs.mkdirs();
 			}
@@ -171,7 +172,7 @@ public class SendNetValueInterfServices {
 			log.info("净值下发接口文件全路径:" + filePath);
 
 			// 文件夹下是否有此文件，没有则创建
-			File file = new File(filePath);
+			File file = new SafelyFile(filePath);
 			if (file.exists()) {
 				boolean deleteFlag = file.delete();
 				if (deleteFlag) {
@@ -180,12 +181,18 @@ public class SendNetValueInterfServices {
 			}
 
 			// 重新创建文件，写入数据
-			try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "GBK"))) {
+			BufferedWriter bw = null;
+			try {
+				bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "GBK"));
 				bw.write(sendNetValueData.toString());
 				log.info("净值下发接口写入:" + sendNetValueData.toString());
 			} catch (IOException e) {
 				log.info("净值下发接口:" + file + " 文件创建写入失败！" + e.getMessage());
 				return 0;
+			}finally {
+				if(bw != null){
+					bw.close();
+				}
 			}
 
 			// 测试时需要（可直接上传至FTP服务器）

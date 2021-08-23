@@ -59,14 +59,12 @@ public class DocumentManagement003Controller extends BaseController{
     /**
      * 附件详情查询
      * @return Page<DocumentManagementDto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/findPage")
-    public Page<DocumentManagementDto> findPage()
-        throws Exception {
+    public Page<DocumentManagementDto> findPage(){
         return documentManagementService.selectForDetails(RequestUtil.getParameters(getRequest()));
     }
     /**
@@ -75,7 +73,6 @@ public class DocumentManagement003Controller extends BaseController{
      * @param dto dto
      * @param br BindingResult
      * @return 结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

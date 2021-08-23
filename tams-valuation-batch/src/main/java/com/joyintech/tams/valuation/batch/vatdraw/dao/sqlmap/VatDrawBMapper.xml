@@ -129,7 +129,7 @@
             INT_REPAY_HANDLE
         FROM TAX_BOK_CONFIG
         where CONFIG_ID IN (
-            select BOK_CONFIG_ID
+            select c.BOK_CONFIG_ID
             from TAX_SCHA_BOK_CONFIG c, BOK_BOOKSET_PLAN p
             where p.scheme_id = c.scheme_id
             and p.bookset_id = #{booksetId}
@@ -432,5 +432,27 @@
     		STANDARD_CCY
     	FROM BOK_BOOKSET
     	WHERE BOOKSET_ID = #{booksetId}
+    </select>
+
+    <select id="getTaxBokDetailsByOrgin" parameterType="map" resultType="java.lang.String">
+        select bdi.bok_detail_id from bok_detail_id bdi
+        left join fin_product_add fpa
+        on bdi.busi_id = concat('F01_',fpa.appear_market_id)
+        inner join trd_fin_product_barter tfpd
+        on fpa.finprod_id = tfpd.finprod_id
+        and bdi.inv_aim = tfpd.inv_aim
+        inner join trd_product_deal_add tpda
+        on tfpd.trade_id = tpda.trade_id
+        and bdi.bookset_id = concat('F16_',tpda.portfolio_id)
+        where bdi.bookset_id = #{booksetId}
+        and fpa.finprod_id =#{busiId}
+        and fpa.is_issue_asset ='Y'
+        and rownum =1
+    </select>
+
+    <select id="getIsShbdByBusiId" resultType="boolean">
+        select count(1) from fin_product_add fpa
+        where fpa.finprod_id =#{busiId}
+        and fpa.appear_market_id is not null
     </select>
 </mapper>

@@ -71,7 +71,6 @@ public class InfoDisclosureReadAndGenMainService extends AutoSendCBBaseService{
 					//infoDisclosureReadAndGenDetailService.readAndGenDetail(repJob, dateMap, DateUtil.parse(executeDateStr));
 					infoDisclosureReadAndGenDetailService.readAndGenMain(repJob, DictCodeListExt2.执行标志_首次执行.getValue(), null, DateUtil.parse(executeDateStr));
 				} catch (Exception e) {
-//					e.printStackTrace();
 					logger.error("error:", e);
 					logger.info("作业id为:"+repJob.getJobId()+",作业name为:"+repJob.getJobName()+"的作业生成失败");
 				}

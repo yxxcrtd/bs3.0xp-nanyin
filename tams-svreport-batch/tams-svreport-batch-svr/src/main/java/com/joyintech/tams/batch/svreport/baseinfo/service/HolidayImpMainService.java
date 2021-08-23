@@ -66,7 +66,7 @@ public class HolidayImpMainService extends AutoSendCBBaseService{
 			}
 		} catch (Exception e) {
 			logger.error("节假日信息接口批处理Error",e);
-			throw e;
+			throw new BusinessException(e);
 		}
 		logInfoBatchEnd();
 		return mapPara;

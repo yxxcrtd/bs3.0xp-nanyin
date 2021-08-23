@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -173,8 +174,7 @@ public class ProductSimulationTrial002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody ProductSimulationTrial002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody ProductSimulationTrial002Dto dto, BindingResult br) throws WorkFlowException {
         ProcessParameter<ProductSimulationTrial002Dto> processParameter = new ProcessParameter<ProductSimulationTrial002Dto>();
         WorkFlowParameter<ProductSimulationTrial002Dto> workFlowParameter = new WorkFlowParameter<ProductSimulationTrial002Dto>();
 

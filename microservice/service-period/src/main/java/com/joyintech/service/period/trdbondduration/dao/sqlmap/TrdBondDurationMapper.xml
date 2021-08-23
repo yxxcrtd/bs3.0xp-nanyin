@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.period.trdbondduration.dao.TrdBondDurationMapper">
+    <resultMap id="finprodIdMap" type="com.joyintech.framework.select.SelectOptionDto">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="text" property="text" jdbcType="VARCHAR"/>
+        <association property="object" javaType="java.util.Map">
+            <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+            <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+            <result column="FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
+            <result column="VDATE" property="vdate" jdbcType="VARCHAR" />
+            <result column="MDATE" property="mdate" jdbcType="VARCHAR" />
+            <result column="IDATE" property="idate" jdbcType="VARCHAR" />
+            <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+            <result column="EXERCISE_VDATE" property="exerciseVdate" jdbcType="VARCHAR" />
+            <result column="EXERCISE_MDATE" property="exerciseMdate" jdbcType="VARCHAR" />
+            <result column="EXERCISE_DATE" property="exerciseDate" jdbcType="VARCHAR" />
+            <result column="EXERCISE_PRICE" property="exercisePrice" jdbcType="DECIMAL" />
+            <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+            <result column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+            <result column="windtypeone" property="windtypeone" jdbcType="VARCHAR" />
+            <result column="TYPE_6" property="type6" jdbcType="VARCHAR"/>
+            <result column="TYPE_9" property="type9" jdbcType="VARCHAR"/>
+            <result column="TYPE_10" property="type10" jdbcType="VARCHAR"/>
+            <result column="TYPE_11" property="type11" jdbcType="VARCHAR"/>
+            <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
 
     <select id="getBusiCode" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
@@ -225,8 +250,8 @@
             t2.int_amt,
             t2.cash_id,
             t2.cash_type,
-            t2.pay_date,
-            rank() over(partition BY t1.finprod_id ORDER BY t2.mdate) rank
+            t2.pay_date
+<!--            ,rank() over(partition BY t1.finprod_id ORDER BY t2.mdate) rank-->
             FROM PTL_SEC_POSITION T1 INNER JOIN FIN_CASH_PLAN T2 ON T1.FINPROD_ID = T2.FINPROD_ID
             AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01} AND t1.CDATE &lt; t2.MDATE
             LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = T1.PORTFOLIO_ID
@@ -235,6 +260,7 @@
                 INNER JOIN DATA_AUTH_NOTIFY_INST dani
                 on dani.BUSINESS_ID = T1.PORTFOLIO_ID
                 AND dani.DATA_TYPE ='PTL01'
+                AND dani.model_type ='02'
                 AND dani.INSTITUTION_CODE=#{institutionCode}
             </if>
             <!-- 多级法人改造 add by caiqun 20200615 -->
@@ -252,6 +278,13 @@
                     (#{CASH_CLASS_TYPE01},#{CASH_CLASS_TYPE02},#{CASH_CLASS_TYPE03},#{CASH_CLASS_TYPE04})
                 </if>
                 and (t2.INT_AMT > 0 or t2.PRIN_AMT > 0)
+                and t2.mdate = (select min(tt.mdate) from FIN_CASH_PLAN tt where tt.finprod_id =t1.finprod_id
+                    and Tt.FINPROD_TYPE2 = 'F01'
+                    AND tt.MDATE > t1.CDATE
+                    AND Tt.PAY_DATE >= to_date('2021-03-26','yyyy-MM-dd')
+                    and Tt.CASH_TYPE IN ('01', '02', '03', '04')
+                    and (tt.INT_AMT > 0 or t2.PRIN_AMT > 0)
+                )
                 <!-- and t2.MDATE &lt;=#{PLATEFORM_DATE} -->
                 /*不存在生效的交易*/
                 and NOT EXISTS (SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL TPDA
@@ -318,7 +351,8 @@
                     AND T1.SEC_ACCT_ID = #{secManageAcctId}
                 </if>
             </where>
-            ) where rank = 1
+            )
+<!--            where rank = 1-->
             ) T6
             <where>
                 <if test="mdateStart != null and !mdateStart.isEmpty()">
@@ -1311,24 +1345,158 @@
     </select>
 
     <select id="findWorkflowProcessDtos" resultType="java.lang.String">
-        select *
-        from (
-        select SYS_DATA_PROCESS_MARK.*,
-        row_number() over(PARTITION by SYS_DATA_PROCESS_MARK.WORKFLOW_ID order by SYS_DATA_PROCESS_MARK.HIS_NO desc) ro
-        from SYS_DATA_PROCESS_MARK
-        <where>
-            BUSINESS_DATA_PK1 = #{finprodId}
-            and SYS_DATA_PROCESS_MARK.PAGE_ID = #{pageId}
-            <if test="chlId != null and !chlId.isEmpty()">
-                AND BUSINESS_DATA_PK4 = #{chlId}
-            </if>
-            <if test="chlId == null or chlId.isEmpty()">
-                and BUSINESS_DATA_PK4 is null
-            </if>
-        </where>
-        )
-        where ro = 1
-        and STATUS in ('A', 'U')
+        select wtpd.totle_trade_id
+        from wfl_trd_fin_product_deal_total wtpd
+        where wtpd.finprod_id = #{finprodId}
+        and wtpd.ps =#{ps}
+        <if test="chlId != null and !chlId.isEmpty()">
+            AND wtpd.chl_id = #{chlId}
+        </if>
+        <if test="chlId == null or chlId.isEmpty()">
+            and wtpd.chl_id is null
+        </if>
     </select>
+
+    <select id="getFinprodId" resultMap="finprodIdMap">
+        SELECT DISTINCT
+        A.FINPROD_MARKET_ID id,
+        A.FINPROD_ABBR text,
+        A.FINPROD_ID,
+        A.FINPROD_NAME,
+        A.FINPROD_ABBR,
+        TO_CHAR(A.VDATE, 'yyyy-MM-dd') VDATE,
+        TO_CHAR(A.MDATE, 'yyyy-MM-dd') MDATE,
+        TO_CHAR(A.IDATE, 'yyyy-MM-dd') IDATE,
+        A.TRADE_MARKET,
+        A.CCY,
+        A.CALENDAR_ID,
+        B.TYPE_4 windtypeone,
+        B.TYPE_6,
+        <!-- 新增资产二、三、四级分类  王贵奇  2019/7/30 开始-->
+        B.TYPE_9,
+        B.TYPE_10,
+        B.TYPE_11,
+        <!-- 新增资产二、三、四级分类  王贵奇  2019/7/30 结束-->
+        <if test="exercise != null and exercise != ''">
+            to_char(T1.VDATE, 'yyyy-MM-dd') EXERCISE_VDATE,
+            to_char(T1.MDATE, 'yyyy-MM-dd') EXERCISE_MDATE,
+            to_char(T1.ACT_EXERCISE_DATE, 'yyyy-MM-dd') EXERCISE_DATE,
+            T1.EXERCISE_PRICE,
+        </if>
+        A.IS_RIGHT
+        FROM FIN_PRODUCT A LEFT JOIN FIN_PRODUCT_TYPE B ON B.FINPROD_ID = A.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_ADD FPA
+        ON FPA.FINPROD_ID = A.FINPROD_ID
+        <if test="exercise != null and exercise != ''">
+            INNER JOIN FIN_EXERCISE_PLAN T1 ON T1.FINPROD_ID = A.FINPROD_ID AND T1.EXERCISE_TYPE = '01' and T1.EXERCISE_DATE IS NOT NULL
+            AND T1.ACT_EXERCISE_DATE >= to_date(#{sysDate}, 'yyyy-MM-dd')
+            AND T1.ACT_EXERCISE_DATE = (
+            SELECT min(TT1.ACT_EXERCISE_DATE) FROM FIN_EXERCISE_PLAN TT1
+            WHERE TT1.FINPROD_ID = T1.FINPROD_ID
+            AND TT1.ACT_EXERCISE_DATE >= to_date(#{sysDate}, 'yyyy-MM-dd')
+            AND TT1.EXERCISE_TYPE = '01'
+            )
+            <if test="initValue == null or initValue == ''">
+                <if test="finprodType != 'F01'">
+                    AND NOT EXISTS (
+                    SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL TT WHERE TT.FINPROD_ID = A.FINPROD_ID
+                    AND TT.VDATE = T1.VDATE AND TT.MDATE = T1.MDATE AND TT.PS='T39'
+                    AND TT.IS_CANCEL='N' AND TT.TRADE_STATUS ='01'
+                    <if test="chlId != null and chlId != ''">
+                        and TT.CHL_ID=#{chlId}
+                    </if>
+                    )
+                    AND NOT EXISTS (
+                    SELECT 1 FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TT WHERE TT.FINPROD_ID = A.FINPROD_ID
+                    AND TT.VDATE = T1.VDATE AND TT.MDATE = T1.MDATE AND TT.PS='T39'
+                    <if test="workflowId != null and workflowId != ''">
+                        AND TT.WORKFLOW_ID != #{workflowId}
+                    </if>
+                    )
+                </if>
+                <if test="finprodType == 'F01'">
+                    AND EXISTS ( SELECT 1 FROM (
+                    SELECT
+                    T1.PORTFOLIO_ID,
+                    T1.SEC_ACCT_ID,
+                    T1.FINPROD_ID,
+                    T1.CDATE,
+                    DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1, '04', T1.AMOUNT*-1, T1.AMOUNT) AMOUNT
+                    FROM PTL_SEC_POSITION T1
+                    INNER JOIN FIN_EXERCISE_PLAN E1 ON E1.FINPROD_ID = T1.FINPROD_ID AND E1.EXERCISE_TYPE = '01' and E1.EXERCISE_DATE IS NOT NULL
+                    AND E1.EXERCISE_DATE &lt;= to_date(#{sysDate}, 'yyyy-MM-dd')
+                    AND NOT EXISTS (
+                    SELECT 1 FROM FIN_EXERCISE_PLAN TT1
+                    WHERE TT1.FINPROD_ID = E1.FINPROD_ID
+                    AND E1.EXERCISE_DATE &lt;= to_date(#{sysDate}, 'yyyy-MM-dd')
+                    AND TT1.EXERCISE_TYPE = '01'
+                    AND TT1.EXERCISE_DATE > E1.EXERCISE_DATE
+                    )
+                    <where>
+                        T1.HODING_TYPE IN ('03', '04', '06', '08')
+                        <if test="chlId != null and !chlId.isEmpty()">
+                            and T1.SEC_ACCT_ID = #{chlId}
+                        </if>
+                        <if test="chlId == null or chlId.isEmpty()">
+                            AND NOT EXISTS (SELECT 1 FROM FIN_PRODUCT FP WHERE FP.FINPROD_ID = T1.SEC_ACCT_ID)
+                        </if>
+                        AND T1.PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+                        AND NOT EXISTS (SELECT 1 FROM PTL_SEC_POSITION TT1 WHERE
+                        T1.PORTFOLIO_ID =  TT1.PORTFOLIO_ID
+                        AND T1.SEC_ACCT_ID =  TT1.SEC_ACCT_ID
+                        AND T1.FINPROD_ID =  TT1.FINPROD_ID
+                        AND T1.BRANCH =  TT1.BRANCH
+                        AND T1.INV_AIM =  TT1.INV_AIM
+                        AND T1.HODING_TYPE =  TT1.HODING_TYPE
+                        AND T1.CDATE &lt; TT1.CDATE
+                        and tt1.cdate &lt;= E1.EXERCISE_DATE )
+                    </where>
+                    UNION ALL
+                    SELECT
+                    T1.PORTFOLIO_ID,
+                    T1.SEC_ACCT_ID,
+                    T1.FINPROD_ID,
+                    T1.CDATE,
+                    T1.AMOUNT
+                    FROM PTL_SEC_POSITION_FLOW T1
+                    <where>
+                        AND T1.HODING_TYPE IN ('01')
+                        <if test="chlId != null and !chlId.isEmpty()">
+                            and T1.SEC_ACCT_ID = #{chlId}
+                        </if>
+                        <if test="chlId == null or chlId.isEmpty()">
+                            AND NOT EXISTS (SELECT 1 FROM FIN_PRODUCT FP WHERE FP.FINPROD_ID = T1.SEC_ACCT_ID)
+                        </if>
+                        AND T1.PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+                    </where>
+                    ) PSP
+                    INNER JOIN PTL_PORTFOLIO PP ON PSP.PORTFOLIO_ID = PP.PORTFOLIO_ID AND PP.INVEST_YESORNO = 'Y'
+                    WHERE PSP.FINPROD_ID = A.FINPROD_ID AND T1.EXERCISE_DATE >= PSP.CDATE
+                    GROUP BY PSP.PORTFOLIO_ID, PSP.SEC_ACCT_ID, PSP.FINPROD_ID
+                    <!--HAVING SUM(PSP.AMOUNT) > 0-->)
+                </if>
+            </if>
+        </if>
+        <where>
+            <if test="search != null and search != ''">
+                (
+                A.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                or
+                A.FINPROD_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                )
+            </if>
+            <if test="initValue != null and initValue != ''">
+                AND A.FINPROD_MARKET_ID = #{initValue}
+            </if>
+            <if test="exercise != null and exercise != ''">
+                AND A.IS_RIGHT = 'Y'
+            </if>
+            <if test="finprodType != null and finprodType != ''">
+                AND A.FINPROD_TYPE2 = #{finprodType}
+            </if>
+            AND FPA.APPEAR_MARKET_ID IS null
+        </where>
+    </select>
+
 </mapper>
                         

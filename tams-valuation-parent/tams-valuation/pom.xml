@@ -43,9 +43,15 @@
         </dependency>
         <dependency>
             <groupId>com.jixu</groupId>
-            <artifactId>jixu</artifactId>
+            <artifactId>JixuApi</artifactId>
             <version>0.0.1</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.joyintech</groupId>-->
+<!--            <artifactId>batch-framework</artifactId>-->
+<!--            <version>2.1.6.1</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <!-- <build>

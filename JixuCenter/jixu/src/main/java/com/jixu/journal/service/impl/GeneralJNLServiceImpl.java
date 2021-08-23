@@ -497,7 +497,9 @@ public class GeneralJNLServiceImpl implements GeneralJNLService {
 					seccashList.add(cashobj);
 					tempCashPre = tempCashNow;
 				} else {//同一银行和币种
-					seccashList.add(cashobj);
+					if (seccashList != null){
+						seccashList.add(cashobj);
+					}
 				}
 			}
 			

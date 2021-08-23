@@ -70,6 +70,7 @@ public class BussRepAssetCreditNonstdInfoController extends BaseController{
         setSelectOptionToModel(model, DictCode.永续条款类型);
         setSelectOptionToModel(model, DictCode.利息递延条款类型);
         setSelectOptionToModel(model, DictCode.是或否);
+        setSelectOptionToModel(model, DictCode.基准利率);
 
         model.addAttribute("SVR_PERPETUAL_CLAUSE_TYPE_03", DictCodeListExt1.永续条款类型_无.getValue());
         model.addAttribute("SVR_PERPETUAL_CLAUSE_TYPE_01", DictCodeListExt1.永续条款类型_可续期条款.getValue());

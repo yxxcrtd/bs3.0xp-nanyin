@@ -74,7 +74,7 @@ public class EtrStandardBond001Controller extends BaseController {
      */
     @RequestMapping("selectPageData")
     @ResponseBody
-    public Page<EtrStandardBond001Dto> selectPageData() throws Exception {
+    public Page<EtrStandardBond001Dto> selectPageData() {
         return etrStandardBond001Service.selectPageData(RequestUtil.getPageParam());
     }
     
@@ -87,8 +87,7 @@ public class EtrStandardBond001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() {
         return etrStandardBond001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 

@@ -88,11 +88,10 @@ public class OwnerEquityChange001Controller  extends BaseController {
      * 查询条件检查
      * 
      * @return
-     * @throws Exception 
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Valid OwnerEquityChange001Dto dto, BindingResult result) throws Exception {
+    public AjaxResult check(@RequestBody @Valid OwnerEquityChange001Dto dto, BindingResult result) {
         AjaxResult ajaxResult = new AjaxResult();
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
@@ -189,7 +188,6 @@ public class OwnerEquityChange001Controller  extends BaseController {
      * 分頁查詢
      * <功能详细描述>
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -204,7 +202,6 @@ public class OwnerEquityChange001Controller  extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -218,13 +215,12 @@ public class OwnerEquityChange001Controller  extends BaseController {
      * 导出信息
      * 
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> exportExcel()
-        throws Exception {
+         {
     	Map<String, Object> params = RequestUtil.getParameters(getRequest());
     	return ownerEquityChange001Service.exportExcel(params);
     }
@@ -233,11 +229,10 @@ public class OwnerEquityChange001Controller  extends BaseController {
      * 联动：报表期限类型 - 季度 半年
      * 
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("getTermLink")
-    public List<SelectOptionDto> getTradeMarket() throws Exception {
+    public List<SelectOptionDto> getTradeMarket() {
         Map<String, Object> param = RequestUtil.getPageParam();
         String reportTermType = (String) param.get("reportTermType");
 
@@ -258,12 +253,11 @@ public class OwnerEquityChange001Controller  extends BaseController {
      * 获取默认日期信息
      * 
      * @return OwnerEquityChange001Dto
-     * @throws Exception exception
      */
     @ResponseBody
     @RequestMapping("getDateInfo")
     public OwnerEquityChange001Dto getDateInfo()
-        throws Exception {
+         {
     	Map<String, Object> params = RequestUtil.getPageParam();
     	params.put("booksetGroup", this.getParam("booksetGroup"));
     	params.put("reportTermType", this.getParam("reportTermType"));

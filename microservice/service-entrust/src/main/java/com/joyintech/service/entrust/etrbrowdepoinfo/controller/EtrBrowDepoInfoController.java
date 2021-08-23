@@ -62,7 +62,7 @@ public class EtrBrowDepoInfoController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<EtrBrowDepoInfoDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page,
-                                                  @PathVariable("length") int length)throws Exception {
+                                                  @PathVariable("length") int length) {
         return etrBrowDepoInfoService.selectForPage(page,length,pageParam);
     }
 

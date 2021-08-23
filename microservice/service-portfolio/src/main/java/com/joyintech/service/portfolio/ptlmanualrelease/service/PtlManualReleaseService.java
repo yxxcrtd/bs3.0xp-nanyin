@@ -137,7 +137,7 @@ public class PtlManualReleaseService extends BaseService<PtlManualRelease001Dto>
 	 *             异常信息
 	 */
 	public Page<PtlManualRelease001Dto> selectForPageRs(int page, int length, Map<String, Object> param)
-			throws Exception {
+	{
 	     param.put("ptDate", platformDateImpl.getSysDate());
 
 	      /*登记托管机构传参处理 start*/
@@ -189,7 +189,7 @@ public class PtlManualReleaseService extends BaseService<PtlManualRelease001Dto>
 	 *             异常信息
 	 */
 	public Page<PtlManualRelease001Dto> findPageRepInfo(int page, int length, Map<String, Object> param)
-			throws Exception {
+	{
 	    
 		Page<PtlManualRelease001Dto> pageData = super.queryForPage(page, length,
 				() -> ptlManualReleaseMapper.findPageRepInfo(param));
@@ -197,7 +197,7 @@ public class PtlManualReleaseService extends BaseService<PtlManualRelease001Dto>
 	}
 	
 	public List<PtlManualRelease001Dto> findPageRepInfoList(Map<String, Object> param)
-			throws Exception {	    
+	{
 		List<PtlManualRelease001Dto> listData =  ptlManualReleaseMapper.findPageRepInfo(param);
 		return listData;
 	}
@@ -211,7 +211,7 @@ public class PtlManualReleaseService extends BaseService<PtlManualRelease001Dto>
 	 *             异常信息
 	 */
 	public Page<PtlManualRelease001Dto> selectForPageRb(int page, int length, Map<String, Object> param)
-			throws Exception {
+	{
 	     param.put("ptDate", platformDateImpl.getSysDate());
 	     
 	     // 交易日期

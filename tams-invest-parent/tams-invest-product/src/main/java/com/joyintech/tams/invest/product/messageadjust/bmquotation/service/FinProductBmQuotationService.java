@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +50,11 @@ import com.joyintech.workflow.engine.constant.OperationType;
 public class FinProductBmQuotationService extends CommonExportService<FinProductBmQuotationDto> 
     implements BaseProcessService<FinProductBmQuotationDto> {
     /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinProductBmQuotationService.class);
+
+    /**
      * 
      */
     @Autowired(required = false)
@@ -61,16 +68,14 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
      * 产品代码联想框 
      * @param finprodMarketId finprodMarketId
      * @return List List
-     * @throws Exception Exception
      */
-    public List<SelectOptionDto> getFinprodMarketIdList(String finprodMarketId)
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodMarketIdList(String finprodMarketId){
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("finprodMarketId", finprodMarketId);
         User user = SecurityUtil.getLoginUser();
         map.put("userName", user.getUserName());
       //获取平台日
-        return restTemplate.postForList(
+        return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME +
             "/FinProductBmQuotation/getFinprodMarketIdList",map,
             SelectOptionDto.class);
@@ -81,11 +86,10 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
      * <功能详细描述>
      * @param pageParam pageParam
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
-    public Page<FinProductBmQuotationDto> selectForPage(Map<String, Object> pageParam) throws Exception {
+    public Page<FinProductBmQuotationDto> selectForPage(Map<String, Object> pageParam){
         //获取平台日
         pageParam.put("SESSION_SYS_DATE", platformDate != null ? platformDate.getSysDateStr():DateUtil.format(DateUtil.now()));
         User user = SecurityUtil.getLoginUser();
@@ -100,11 +104,10 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
      * <功能详细描述>
      * @param pageParam pageParam
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
-    public List<FinProductBmQuotationDto> selectForList(Map<String, Object> pageParam) throws Exception {
+    public List<FinProductBmQuotationDto> selectForList(Map<String, Object> pageParam) {
         //获取平台日
         pageParam.put("SESSION_SYS_DATE", platformDate != null ? platformDate.getSysDateStr():DateUtil.format(DateUtil.now()));
         User user = SecurityUtil.getLoginUser();
@@ -179,7 +182,7 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }
@@ -189,19 +192,17 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
      * <功能详细描述>
      * @param map finprodMarketId
      * @return Object
-     * @exception Exception Exception
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodMarketIdToNew(Map<String,Object> map) 
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodMarketIdToNew(Map<String,Object> map){
         if(!StringUtil.isNotEmpty(map.get("initValue"))){
             User user = SecurityUtil.getLoginUser();
             map.put("userName", user.getUserName());
         }
       //获取平台日
         map.put("SESSION_SYS_DATE", platformDate != null ? platformDate.getSysDateStr():DateUtil.format(DateUtil.now()));
-        return restTemplate.postForList(
+        return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME +
             "/FinProductBmQuotation/getFinprodMarketIdToNew",map,
             SelectOptionDto.class);
@@ -212,7 +213,6 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
      * <功能详细描述>
      * @param map map
      * @return FinProductBmQuotationDto
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */

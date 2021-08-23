@@ -46,7 +46,7 @@ public class BankBalanceQuery001Service extends CommonExportService<BankBalanceQ
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<BankBalanceQuery001Dto> findPage(Map<String, Object> params) throws Exception {  
+    public Page<BankBalanceQuery001Dto> findPage(Map<String, Object> params) {  
         Integer page = Integer.valueOf((String) params.get("page"));
         Integer length = Integer.valueOf((String) params.get("length"));
         String booksetId = (String) params.get("booksetId");

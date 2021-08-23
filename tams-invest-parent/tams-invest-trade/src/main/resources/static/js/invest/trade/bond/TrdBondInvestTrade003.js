@@ -129,7 +129,7 @@ var table;
 		if($('#chlId').val()){
 			for(var i=0;i<table.getAllRows().length;i++){
 				if(table.getAllRows()[i].secManageAcctIdDuo){
-					Joyin.warn("通道和多组合证券账户不能同时选择！");
+					Joyin.warn("合作资产和多组合证券账户不能同时选择！");
 					return;
 				}
 			}
@@ -137,7 +137,7 @@ var table;
 		if(!$('#chlId').val()){
 			for(var i=0;i<table.getAllRows().length;i++){
 				if(!table.getAllRows()[i].secManageAcctIdDuo){
-					Joyin.warn("通道和多组合证券账户不能同时为空值！");
+					Joyin.warn("合作资产和多组合证券账户不能同时为空值！");
 					return;
 				}
 			}
@@ -1752,6 +1752,7 @@ var table;
                             params.ccy=$("#ccy").val();
                             params.multiParam=100;
                             params.secAcctId=element.etrEntrustAdd.secAcctId;
+                            params.invAim = $("#invAim").val();
                             Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (cashdata) {
                                 if( cashdata.position){
                                     rowData.assetsavailablepositions =  cashdata.position;
@@ -1937,7 +1938,7 @@ var table;
                             },false);
                         }
                         //交易方向为卖出时显示资产可用持仓
-                        if(element.etrEntrustAdd.secAcctId&&element.etrEntrust.portfolioId
+                        if((element.etrEntrustAdd.secAcctId||element.etrEntrust.chlId)&&element.etrEntrust.portfolioId
                             && $("#calendarId").val() && $("#ccy").val() && $("#tradeDate").val()&&!($('#ps').val()=='T01')){
 
                             params.portfolioId=element.etrEntrust.portfolioId;
@@ -1947,7 +1948,12 @@ var table;
                             params.acctTypeList = 'A01,A07';
                             params.ccy=$("#ccy").val();
                             params.multiParam=100;
-                            params.secAcctId=element.etrEntrustAdd.secAcctId;
+                            if(element.etrEntrustAdd.secAcctId){
+                                params.secAcctId=element.etrEntrustAdd.secAcctId;
+                            }else if(element.etrEntrust.chlId){
+                                params.secAcctId=element.etrEntrust.chlId;
+                            }
+                            params.invAim = $("#invAim").val();
                             Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (cashdata) {
                                 if( cashdata.position){
                                     rowData.assetsavailablepositions =  cashdata.position;
@@ -2020,7 +2026,7 @@ var table;
             		return null;
             	}
             	if (isTrue && (!$("#chlId").val() || typeof $("#chlId").val() == 'undefined')){
-               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['组合分配证券账户或者通道']));
+               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['组合分配证券账户或者合作资产']));
                		return null;
                	}
                 var list;
@@ -2596,6 +2602,7 @@ var table;
                 params.ccy=$("#ccy").val();
                 params.multiParam=100;
                 params.secAcctId=table.getAllRows()[i].secAcctId;
+                params.invAim = $("#invAim").val();
                 Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (cashdata) {
                     if( cashdata.position){
                         table.renderRow(i, {"assetsavailablepositions": cashdata.position});
@@ -3410,6 +3417,7 @@ var table;
 				table = $("#bussTrdTransfenpeiTable").joyintable({
 			          data:[],
 			          searchOnInit:true,
+			          page:false,
 			          height:'225px',
 			          cols:[
 			                // {field:'busiId', title: 'TrdInvestFenPeiInfo.busiId',sortable:false, edit:true, editOption:{type:'select',formatoption:true,parentIds:'secManageAcctId',url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true')}}
@@ -3423,14 +3431,14 @@ var table;
 			               ,{field:'investaim', width:100, title: 'TrdInvestFenPeiInfo.investaim',edit:true, sortable:false,editOption:{type:'select',formatoption:true,result: INV_AIM}}
 			               ,{field:'tradeAmt',  width:100,title: 'TrdInvestFenPeiInfo.tradeAmt',edit:true, sortable:false,type:'number', digit:2}
                           ,{field:'secManageAcctIdDuo', width:100,  title: 'EtrInvestBondInfo003.secManageAcctId',edit:true,sortable: false,
-                              editOption:{type:'select',showField:'text',id:'secManageAcctIdDuo', parentIds:'portfolioId,tradeMarket', multiple: false,searchable: true,
+                              editOption:{type:'select',showField:'text',id:'secManageAcctIdDuo', parentIds:'portfolioId,tradeMarket,finprodId', multiple: false,searchable: true,
                                   url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAccId')
                               }
                           }
                           // 本金金额
-			               ,{field:'cpriceAmt',width:100,  title: 'TrdInvestFenPeiInfo.cpriceAmt',sortable:false,type:'number', digit:2}
-			               ,{field:'intAmt',width:100, title: 'TrdInvestFenPeiInfo.intAmt',sortable:false,type:'number', digit:2}
-			               ,{field:'fpriceAmt',width:100, title: 'TrdInvestFenPeiInfo.fpriceAmt',sortable:false,type:'number', digit:2}
+			               ,{field:'cpriceAmt',width:100,  title: 'TrdInvestFenPeiInfo.cpriceAmt',sortable:false,type:'number',edit:true, digit:2}
+			               ,{field:'intAmt',width:100, title: 'TrdInvestFenPeiInfo.intAmt',sortable:false,type:'number',edit:true, digit:2}
+			               ,{field:'fpriceAmt',width:100, title: 'TrdInvestFenPeiInfo.fpriceAmt',sortable:false,type:'number',edit:true, digit:2}
                            ,{field:'procedureAmt',width:100, title: 'TrdInvestFenPeiInfo.procedureAmt',sortable:false,type:'number', edit:true,digit:2}
                            ,{field:'settleServiceAmt',width:100, title: 'TrdInvestFenPeiInfo.settleServiceAmt',sortable:false,type:'number', edit:true,digit:2}
                            ,{field:'commissionAmt',width:100, title: 'TrdInvestFenPeiInfo.commissionAmt',sortable:false,type:'number',edit:true, digit:2}
@@ -3454,6 +3462,9 @@ var table;
 			               });
 			           },
                         beforeEditCell:function(value, field, data){
+                            if (field == 'fpriceAmt' || field == 'intAmt' || field == 'cpriceAmt') {
+                                return false;
+                            }
                             var entrustId = $("#entrustId").val();
 			              if(field=='portfolioId'&&entrustId){
                                 return false;
@@ -3465,6 +3476,7 @@ var table;
                                 return true;
                             }
                             if(field=='secManageAcctIdDuo'&&entrustId){
+                                if($('#chlId').val())return false;
                                 if(data.secManageAcctIdDuo){
                                     return false;
                                 }else{
@@ -3485,6 +3497,11 @@ var table;
 			           editCell: function(value, data, field, cell, column){
 
 			              var returnVal = {};
+                           returnVal.isPayWithTrade = $("#isPayWithTrade").val();//佣金是否随交易支付
+                           returnVal.stampDutyIsPayWithTrade = $("#stampDutyIsPayWithTrade").val();//印花是否随交易支付
+                           returnVal.settleIsPayWithTrade = $("#settleIsPayWithTrade").val();//结算费是否随交易支付
+                           returnVal.exchangeIsPayWithTrade = $("#exchangeIsPayWithTrade").val();//经手费是否随交易支付
+
 			        	   var params={};
 //        				   table.renderRow(data.LAY_TABLE_INDEX,  {"investaim": $("#invAim").val()});
         				   //买入
@@ -3597,6 +3614,7 @@ var table;
                                    params.ccy=$("#ccy").val();
                                    params.multiParam=100;
                                    params.secAcctId=value;
+                                   params.invAim = $("#invAim").val();
                                    Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (cashdata) {
                                        table.renderRow(data.LAY_TABLE_INDEX, {"assetsavailablepositions": cashdata.position});
                                    });

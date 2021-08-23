@@ -6,7 +6,7 @@ spring:
   jmx:
     enabled: false
   profiles:
-    active: dev #非微服务使用 yitihua-jicheng
+    active: yitihua-jicheng #非微服务使用 yitihua-jicheng
   application:
     name: customerInterfService #服务名称
   datasource:
@@ -157,18 +157,32 @@ spring:
   thymeleaf:
     cache: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.142.130:1521/orclpdb
-    username: tams_mast
-    password: tams_mast
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810_123
+  activemq:
+    active: false
+    systemId: tams
+    brokerUrl: tcp://localhost:61616
+    user: system
+    password: manager
+    maximumRedeliveries: 10
+    initialRedeliveryDelay: 1
+    backOffMultiplier: 2
+    useExponentialBackOff: true
+    maximumRedeliveryDelay: -1
 shiro:
   casEnable: false
   allowUrl: /interf/**
   jwtEnable: false #非微服务配置为false
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.142.130:1521/orclpdb
-    username: tams_base
-    password: tams_base
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810_123
+jixu:
+  user:
+    type: 2
 log:
   path: /home/tams/logs/service/tams-interf
   level: INFO

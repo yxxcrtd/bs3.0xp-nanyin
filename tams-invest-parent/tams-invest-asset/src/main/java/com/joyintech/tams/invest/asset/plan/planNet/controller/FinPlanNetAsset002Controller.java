@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -120,7 +121,7 @@ public class FinPlanNetAsset002Controller extends BaseController{
             dto.setTransMode(DictCodeList.清算速度_T_0.getValue());
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
             dto.setFjId("fj" + System.currentTimeMillis());
-            dto.setInvestmentAttributes(DictCodeList.投资性质_权益类.getValue());
+//            dto.setInvestmentAttributes(DictCodeList.投资性质_权益类.getValue());//modify by jiangpeng on 20210522 TISHKBS-1373
             model.addAttribute("entity", dto);
         }
         else if(StringUtil.isNotEmpty(finprodId) && WorkFlowUtil.isNotFromToDoList()){
@@ -298,8 +299,7 @@ public class FinPlanNetAsset002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) FinPlanNetAssetDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) FinPlanNetAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

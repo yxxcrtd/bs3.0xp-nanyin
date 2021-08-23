@@ -43,7 +43,7 @@ public class RepFinProductAssetBalanceService extends BaseService<RepFinProductA
     private RepFinProductAssetBalanceMapper repFinProductAssetBalanceMapper;
     
     public Page<RepFinProductAssetBalanceDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
           if(StringUtil.equals(pageParam.get("showLevel"), DictCodeListExt1.层级信息_一级.getValue())){
               return super.queryForPage(page, length, () -> repFinProductAssetBalanceMapper.queryForPage1(pageParam)); 
           }else if(StringUtil.equals(pageParam.get("showLevel"), DictCodeListExt1.层级信息_二级.getValue())){

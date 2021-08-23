@@ -28,7 +28,7 @@ public class ProductTransactionController {
 	private ProductTransactionService productTransactionService;
 
 	@PostMapping("/insertproductTransaction")
-	public void insertproductTransaction(@RequestBody ProductTransactionDto productTransactionDto) throws Exception{
+	public void insertproductTransaction(@RequestBody ProductTransactionDto productTransactionDto) {
 		productTransactionService.insertproductTransaction(productTransactionDto);
 		return;
 	}

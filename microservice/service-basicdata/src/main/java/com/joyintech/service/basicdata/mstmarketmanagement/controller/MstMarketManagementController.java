@@ -35,7 +35,7 @@ public class MstMarketManagementController {
           */
          @PostMapping("/selectForPage/{page}/{length}")
          public Page<MstMarketManageDto> selectPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
-             throws Exception {
+         {
              Page<MstMarketManageDto> info=new Page<MstMarketManageDto>(); 
              Page<MstMarketManageDto> pageinfo=new Page<MstMarketManageDto>();
              info = mstMarketManagementService.selectForPage(page,length,pageParam);

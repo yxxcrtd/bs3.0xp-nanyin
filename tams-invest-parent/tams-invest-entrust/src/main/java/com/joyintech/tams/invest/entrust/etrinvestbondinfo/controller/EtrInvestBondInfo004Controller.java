@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,8 +204,7 @@ public class EtrInvestBondInfo004Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody List<EtrInvestBondInfoDto> dtoList, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody List<EtrInvestBondInfoDto> dtoList, BindingResult br) throws WorkFlowException {
     	for(EtrInvestBondInfoDto dto : dtoList) {
         	if(dto.getEntrustNum()!=null) {
         		dto.setEntrustNum(dto.getEntrustNum().multiply(new BigDecimal(10000)));//万元转成元

@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,6 +59,11 @@ import com.joyintech.tools.collectors.JoyinCollectors;
 @PageId("FlowRiskStressTest001")
 @RequestMapping("/invest/risk/stresstestmanage/flowriskstresstest/FlowRiskStressTest001")
 public class FlowRiskStressTest001Controller extends BaseController{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FlowRiskStressTest001Controller.class);
+
     @Autowired(required = false)
     private FlowRiskStressTest001Service flowRiskStressTest001Service;
     
@@ -80,7 +87,7 @@ public class FlowRiskStressTest001Controller extends BaseController{
         setSelectOptionToModel(model, DICT_CODES);
         SelectDto selectZhccDto = this.getSelectDataFromDataDic(DictCode.组合层次, null);
         List<SelectOptionDto> optionZhcc = selectZhccDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         model.addAttribute("mapZhcc",mapZhcc);
         SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
         Date sysDate = iPlatformDate.getSysDate();
@@ -93,7 +100,7 @@ public class FlowRiskStressTest001Controller extends BaseController{
         }
         catch (ParseException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         model.addAttribute("analysisDate",analysisDate);
         return super.init(model);
@@ -110,7 +117,7 @@ public class FlowRiskStressTest001Controller extends BaseController{
     @RequestMapping("/getAllPortfolioBySort")
     public List<TreeNode> getAllPortfolioBySort(@RequestParam(name="type", required=false) String type,@RequestParam(name="indId", required=false) String indId,@RequestParam(name="portfName", required=false) String portfName,@RequestParam(name="profitType", required=false) String profitType
             ,@RequestParam(name="issueMode", required=false) String issueMode,@RequestParam(name="raiseType", required=false) String raiseType,@RequestParam(name="investType", required=false) String investType)
-        throws Exception {
+        {
         return flowRiskStressTest001Service.getAllPortfolioBySort(type,indId,portfName,profitType,issueMode,raiseType,investType);
         
     }
@@ -136,7 +143,7 @@ public class FlowRiskStressTest001Controller extends BaseController{
      * */
     @ResponseBody
     @RequestMapping("querySceneOption")
-    public List<SelectOptionDto> querySceneOption(@RequestParam Map<String, Object> param)throws Exception {
+    public List<SelectOptionDto> querySceneOption(@RequestParam Map<String, Object> param) {
         return flowRiskStressTest001Service.querySceneOption(getParam("search"));
     }
     
@@ -158,7 +165,7 @@ public class FlowRiskStressTest001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("selectProdSelectOpt")
     public List<SelectOptionDto> selectProdSelectOpt(@RequestParam Map<String, Object> param)
-        throws Exception {
+         {
 
         return flowRiskStressTest001Service.selectProdSelectOpt(param);
     }

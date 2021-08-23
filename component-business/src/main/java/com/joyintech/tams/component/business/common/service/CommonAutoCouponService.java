@@ -12,17 +12,20 @@ package com.joyintech.tams.component.business.common.service;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.MstCustomerInfoAddMapper;
 import com.joyintech.tams.common.base.dao.MstCustomerInfoMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.report.dto.BaseRepAssetEquityInfoDto;
 import com.joyintech.tams.component.business.asset.dto.FinPayInterestStdInfoDto;
 import com.joyintech.tams.component.business.common.constant.FundDateType;
-import com.joyintech.tams.component.business.common.dto.AutoCouponDto;
-import com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto;
-import com.joyintech.tams.component.business.common.dto.InfChinamutualfunddescriptionDto;
-import com.joyintech.tams.component.business.common.dto.InterfPayhsrcsecinfoDto;
+import com.joyintech.tams.component.business.common.dto.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRepInfoDto;
+import com.joyintech.tams.component.business.report.asset.fund.dto.BussRepFundInfoDto;
+import com.joyintech.tams.component.business.report.asset.project.dto.BussRepEquityInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -38,6 +41,8 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationInputParaDto;
 import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationOutputDto;
 import com.joyintech.tams.invest.common.util.xmlrelation.XmlRelationUtil;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +79,9 @@ public class CommonAutoCouponService extends BaseService{
      */
     @Autowired
     private DateCalService dateCalService;
+
+    @Autowired
+    private ChbDataCheckService chbDataCheckService;
 
     /**
      * 获取wind资产信息(债券)
@@ -337,7 +345,7 @@ public class CommonAutoCouponService extends BaseService{
                     finProduct.setCapiIncomeFeature(DictCodeList.产品收益标识_保证收益.getValue());
                 }*/
 //                if(null!=interfPayhsrcsecinfo && null!=interfPayhsrcsecinfo.getIssuetype()){
-//                    if(interfPayhsrcsecinfo.getIssuetype().toString().startsWith("43901")){
+//                    if(interfPayhsrcsecinfo.getIssuetype().startsWith("43901")){
 //                        finProduct.setIssueType(BussinessDictCodeList.发行方式_公开发行.getValue()); 
 //                    }else{
 //                        finProduct.setIssueType(BussinessDictCodeList.发行方式_非公开发行.getValue());
@@ -778,7 +786,14 @@ public class CommonAutoCouponService extends BaseService{
                 repAssetBond.setRepMainGrade(rating);//主体评级
                 repAssetBond.setRepRegistOrg(interfPayhsrcsecinfo.getInstitution());//登记托管机构
                 repAssetBond.setRepRegistorgComment(interfPayhsrcsecinfo.getInstitutiontext());//登记托管机构说明
-
+                //[交易流通场所][具体类别]发行机构类型（按规模划分）,发行机构类型（按技术领域划分）发行机构类型（按经济类型划分）选择“99”时,备注不可为空，默认为无
+                if (StringUtil.equals("99",interfPayhsrcsecinfo.getMarket2())||
+                        StringUtil.equals("99",interfPayhsrcsecinfo.getConcreteClass())||
+                        StringUtil.equals("99",interfPayhsrcsecinfo.getIssuerScaleType())||
+                        StringUtil.equals("99",interfPayhsrcsecinfo.getIssuerTechnologyType())||
+                        StringUtil.equals("99",interfPayhsrcsecinfo.getIssuerEconomicType())){
+                    repAssetBond.setRepRemark("无");
+                }
                 repAssetDept.setRepFinprodId(finprodId);//金融产品代码
                 repAssetDept.setFinprodMarketId(secid);//债券代码
                 repAssetDept.setRepFinprodName(interfPayhsrcsecinfo.getSecname());//债券名称
@@ -940,14 +955,21 @@ public class CommonAutoCouponService extends BaseService{
      */
     public InfChinamutualfunddescriptionDto autoFundCoupon(InfChinamutualfunddescriptionDto dto) throws ParseException{
         autoFundCoupon(dto,dto.getfInfoWindcode());
-        autoFundCouponSave(dto);
-        //基金自动加券
-        busiAutoAddFundPrice(dto,dto.getfInfoWindcode());
-        //场外金融产品保存
-        finProductValuationSave(dto);
-        //基金市场行情保存
-        mstFundMarketInfoSave(dto);
-        return dto;
+        InfChinamutualfunddescriptionDto newInfChinamutualfunddescriptionDto=checkFundRepData(dto);
+        //中债校验通过
+        String isPermitAddcoupon = CacheUtil.getSysParam(BussinessConstant.IS_PERMIT_ADDCOUPON);
+        if(!(StringUtil.isEmptyList(newInfChinamutualfunddescriptionDto.getBaseFinProductBaseInfoList())
+                && StringUtil.equals(isPermitAddcoupon,DictCodeList.是否_否.getValue()))){
+            autoFundCouponSave(dto);
+            //基金自动加券
+            busiAutoAddFundPrice(dto,dto.getfInfoWindcode());
+            //场外金融产品保存
+            finProductValuationSave(dto);
+            //基金市场行情保存
+            mstFundMarketInfoSave(dto);
+            newInfChinamutualfunddescriptionDto.setBaseFinProductBaseInfoList(dto.getBaseFinProductBaseInfoList());
+        }
+        return newInfChinamutualfunddescriptionDto;
     }
 
     /**
@@ -1262,7 +1284,42 @@ public class CommonAutoCouponService extends BaseService{
                 }
                 repAssetDept.setRepTradeMarket(infChinamutualfunddescription.getMarket2());//交易流通场所
                 repAssetDept.setIsRepTarget(DictCodeList.是否_否.getValue());//默认否
-
+                //[资产/负债类别]为[1106] [1303] [2401] [2402] [2403] [2499] [2601] [2602] [2604] [2605] [2606]
+                // [2607] [2610] [2611] [2612] [2613] [2614] [2616] [2617] [2618] [2619] [2620] [2699] 时,必填
+                if(StringUtil.isNotEmpty(repAssetDept.getRepAssetType()) &&
+                        (StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_债券基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股票基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_货币市场基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_混合基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_基金中基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他公募基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_权益类基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_固收类基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_混合类基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_期货类及其他衍生品类基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他私募证券投资基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_上市公司定增基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_并购基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_房地产基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_基础设施基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_创业投资基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_红酒艺术品等商品基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_私募证券类FOF基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他私募股权投资基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_私募股权投资类FOF基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_创业投资类FOF基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他私募投资类FOF基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他私募基金.getValue()))){
+                    repfund.setRepMngPartyName(getCounterName(infChinamutualfunddescription.getfInfoCorpFundmanagementid()));
+                }
+                //[交易流通场所][登记备案机构][投资企业类型（按规模划分）][投资企业类型（按技术领域划分）][投资企业类型（按经济类型划分）]选择99的场合，备注必须填
+                if (StringUtil.equals("99",infChinamutualfunddescription.getMarket2())||
+                        StringUtil.equals("99",infChinamutualfunddescription.getRepregistorg())||
+                        StringUtil.equals("99",infChinamutualfunddescription.getIssuerScaleType())||
+                        StringUtil.equals("99",infChinamutualfunddescription.getIssuerTechnologyType())||
+                        StringUtil.equals("99",infChinamutualfunddescription.getIssuerEconomicType())){
+                    repfund.setRepRemark("无");
+                }
                 repfund.setRepFundCompName(infChinamutualfunddescription.getFundCompanyName()); // 基金公司名称
                 repfund.setRepPartyType1(infChinamutualfunddescription.getIssuerScaleType());//机构类型按规模分
                 repfund.setRepPartyType2(infChinamutualfunddescription.getIssuerEconomicType());//机构类型按经济类型分
@@ -1331,8 +1388,7 @@ public class CommonAutoCouponService extends BaseService{
     /**
      * 根据外部代码1获取客户代码
      * <功能详细描述>
-     * @param linkId1
-     * @param type 类型
+     * @param interfPayhsrcsecinfo
      * @return
      * @see
      * @since 1.0
@@ -1462,9 +1518,9 @@ public class CommonAutoCouponService extends BaseService{
         List<String> secList = new ArrayList<>();
         secList.add(finprodMarketId);
         dto.setSecidList(secList);
-        autoBondCoupon(dto);
-        List<BaseFinProductBaseInfoDto>  baseInfoDtos = dto.getBaseFinProductBaseInfoList();
-        if (StringUtil.isNotEmpty(baseInfoDtos)) {
+        InterfPayhsrcsecinfoDto newDto =  autoBondCoupon(dto);
+        List<BaseFinProductBaseInfoDto>  baseInfoDtos = newDto.getBaseFinProductBaseInfoList();
+        if (StringUtil.isNotEmpty(baseInfoDtos) && !baseInfoDtos.isEmpty()) {
             finProduct = new AutoCouponDto();
             BeanUtil.copyPropertiesIgnoreNull(finProduct, baseInfoDtos.get(0).getFinProduct());
             FinProductType productType = baseInfoDtos.get(0).getFinProductType();
@@ -1549,7 +1605,7 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询是否存在债券估值行情count
-     * @param sInfoWindcode(新增)
+     * @param finprodMarketId
      * @return
      */
     public int selectMstBondValuationInfoCount(String finprodMarketId){
@@ -1559,7 +1615,9 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_债券市价估值list
-     * @param sInfoWindcode(新增)
+     * @param finprodMarketId
+     * @param sysDate
+     * @param newDate 
      * @return
      */
     public List<InterfPayhsrccbvlt> selectInterfPayhsrccbvlt(String finprodMarketId,String sysDate,String newDate){
@@ -1609,7 +1667,9 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_基金净值list-基金加券
-     * @param sInfoWindcode
+     * @param finprodMarketId
+     * @param sysDate 
+     * @param newDate
      * @return
      */
     public List<InterfCmfundnav> selectInterfCmfundnav(String finprodMarketId,String sysDate,String newDate){
@@ -1628,7 +1688,9 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_基金市场行情list-基金加券
-     * @param sInfoWindcode
+     * @param  finprodMarketId
+     * @param newDate
+     * @param sysDate
      * @return
      */
     public List<InterfFMarketInfo> selectInterfFMarketInfo(String finprodMarketId,String sysDate,String newDate){
@@ -1692,7 +1754,7 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询客户信息附属表list-债券中债
-     * @param sInfoWindcode
+     * @param customerid
      * @return
      */
     public List<MstCustomerInfoAdd> selectMstCustomerInfoAdd(String customerid){
@@ -1701,7 +1763,7 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_债券评级信息表
-     * @param sInfoWindcode
+     * @param secid
      * @return
      */
     public List<InterfPayhsrcsecrating> selectInterfPayhsrcsecrating(String secid){
@@ -1710,7 +1772,8 @@ public class CommonAutoCouponService extends BaseService{
     }
     /**
      * 查询资讯_债券评级中主体评级结果
-     * @param sInfoWindcode
+     * @param secid
+     * @param date
      * @return
      */
     public String selectRating(String secid,String date){
@@ -1721,7 +1784,7 @@ public class CommonAutoCouponService extends BaseService{
     /**
      *  自动加券(债券)
      * <功能详细描述>
-     * @param objIdList
+     * @param dto
      * @see
      * @since 1.0
      */
@@ -1738,16 +1801,24 @@ public class CommonAutoCouponService extends BaseService{
             }
         }
         // 20201210 债券自动加券bug修正 wangwei end
-        autoBondCouponSave(dto);
-        //债券自动加券
-        busiAutoAddSecPrice(dto,dto.getFinprodId());
-        //债券估值行情保存
-        mstBondValuationInfoSave(dto);
-        //债券市场行情保存
-        mstBondMarketInfoSave(dto);
-        //回购标准折算率保存
-        finStdsecConverseRadioSave(dto);
-        return dto;
+        
+        //校验债券中债报送数据，不符合的债券，不进行加券
+      		InterfPayhsrcsecinfoDto newInterfPayhsrcsecinfoDto=checkBondRepData(dto);
+            String isPermitAddcoupon = CacheUtil.getSysParam(BussinessConstant.IS_PERMIT_ADDCOUPON);
+            if(!(StringUtil.isEmptyList(newInterfPayhsrcsecinfoDto.getBaseFinProductBaseInfoList())
+                    && StringUtil.equals(isPermitAddcoupon,DictCodeList.是否_否.getValue()))){
+                autoBondCouponSave(dto);
+                //债券自动加券
+                busiAutoAddSecPrice(dto,dto.getFinprodId());
+                //债券估值行情保存
+                mstBondValuationInfoSave(dto);
+                //债券市场行情保存
+                mstBondMarketInfoSave(dto);
+                //回购标准折算率保存
+                finStdsecConverseRadioSave(dto);
+                newInterfPayhsrcsecinfoDto.setBaseFinProductBaseInfoList(dto.getBaseFinProductBaseInfoList());
+            }
+        return newInterfPayhsrcsecinfoDto;
     }
 
 
@@ -1885,5 +1956,460 @@ public class CommonAutoCouponService extends BaseService{
             return invList.get(0).getMdate();
         }
         return null;
+    }
+    
+    /**
+     *批量自动加券功能
+     *add by zhouqiang
+     * @return 
+     */
+	public AutoCouponDto autoBondCouponBatch(String secid) {
+		InterfPayhsrcsecinfoDto interfPayhsrcsecinfoDto = new InterfPayhsrcsecinfoDto();
+	    List<String> secList = new ArrayList<>();
+	    //判断金融产品表中是否已存在，若存在不自动加券，返回产品信息
+	    AutoCouponDto finProduct  = simpleRestTemplate.getForObject(
+	            ServiceApplication.COMMON_SERVICE_NAME
+	            + "/core/selectAutoFinProd?finprodMarketId=" + secid,
+	            AutoCouponDto.class);
+	    	if (StringUtil.isNotEmpty(finProduct)) {
+	    		return finProduct;
+	        }
+	    secList.add(secid);	    	
+		interfPayhsrcsecinfoDto.setSecidList(secList);
+		//自动加券
+    	autoBondCoupon(interfPayhsrcsecinfoDto);
+    	List<BaseFinProductBaseInfoDto>  baseInfoDtos = interfPayhsrcsecinfoDto.getBaseFinProductBaseInfoList();
+    	if(StringUtil.isNotEmpty(baseInfoDtos)){
+    		finProduct = new AutoCouponDto();
+    		BeanUtil.copyPropertiesIgnoreNull(finProduct, baseInfoDtos.get(0).getFinProduct());
+    		if(StringUtil.isNotEmpty(baseInfoDtos.get(0).getFinProductType())){
+            	finProduct.setType4(baseInfoDtos.get(0).getFinProductType().getType4());//设置债券一级分类
+            }
+    	}
+		return finProduct;
+    	
+	}
+	
+	/**
+     * 查询万德接口表中债券所有的利率信息
+     * 徽商个性化：add by zhouqiang
+     * @param finCashCalcRule
+     * @return
+     */
+    public List<FinCashCalcRule> getFinCashCalcRule(FinCashCalcRule finCashCalcRule) {
+    	return simpleRestTemplate.postForList(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/getFinCashCalcRule" ,finCashCalcRule,
+                FinCashCalcRule.class);
+	}
+    
+    /**
+     * 自动加券(股票)
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @throws ParseException 
+     * @see
+     * @since 1.0
+     */
+    public InterfStockInfoDto autoStockCoupon(InterfStockInfoDto dto,String finprodMarketId){
+    	List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoList = new ArrayList<BaseFinProductBaseInfoDto>();
+    	Long branch =StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE))?0:Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
+    	String defaultNumber="0";
+    	BigDecimal defaultBigNumber=BigDecimal.ZERO;
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	if(null!=dto.getStockCodeList() && StringUtil.isNotEmpty(dto.getStockCodeList())){
+    		for(String stockCode:dto.getStockCodeList()){
+    			BaseFinProductBaseInfoDto baseFinProductBaseInfoDto = new BaseFinProductBaseInfoDto();
+    			//从万德接口表中查询股票基本信息数据
+    			InterfStockInfoDto interfStockInfoDto=selectWindStockAssetByStockCode(stockCode);
+    			if(null==interfStockInfoDto || !StringUtil.isNotEmpty(interfStockInfoDto)){
+    				return null;
+    			}
+    			FinProduct finProduct = new FinProduct();
+    			String finprodId = commonBusinessService.getFinProdId(interfStockInfoDto.getAssetcode(), BussinessDictCodeList.金融产品类型_股票.getValue(),StringUtil.EMPTY);
+    			finProduct.setFinprodId(finprodId);
+    			finProduct.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+    			finProduct.setFinprodAbbr(interfStockInfoDto.getAssetname());
+    			finProduct.setFinprodName(interfStockInfoDto.getAssetname());
+    			finProduct.setFinprodType(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+    			//交易场所
+    			finProduct.setTradeMarket(interfStockInfoDto.getTradeplace());
+    			finProduct.setVdate(interfStockInfoDto.getListingdate());//上市日期
+    			finProduct.setMdate(interfStockInfoDto.getDelistingdate());//退市日期
+    			finProduct.setCcy(interfStockInfoDto.getCcy());//币种
+    			finProduct.setCalendarId(interfStockInfoDto.getTradecalender());//交易日历
+    			finProduct.setActmdate(interfStockInfoDto.getDelistingdate());//实际到期日
+    			finProduct.setBlnArea(DictCodeList.境内外_境内.getValue());
+    			finProduct.setCreateUser("interf");
+    			finProduct.setFinprodMarketId(interfStockInfoDto.getAssetcode());
+    			finProduct.setIssuer(interfStockInfoDto.getCompanycode());//发行人
+    			finProduct.setIsChl(DictCodeList.是否_否.getValue());//是否通道
+    			finProduct.setProfitType(DictCodeList.收益类型_净值型.getValue());//收益类型
+    			baseFinProductBaseInfoDto.setFinProduct(finProduct);
+    			//new标的类金融产品附属
+                FinProductAdd finProductAdd = new FinProductAdd();
+                finProductAdd.setFinprodId(finprodId);
+                finProductAdd.setBoard(interfStockInfoDto.getListingboard());//上市板
+                finProductAdd.setShOrZh(interfStockInfoDto.getIshorsexpress());//是否沪港通或深港通
+                finProductAdd.setIsMarginFinprod(interfStockInfoDto.getIsmargintrading());//是否融资融券标的
+                finProductAdd.setCreateUser("interf");
+                finProductAdd.setUpdateUser("interf");
+                baseFinProductBaseInfoDto.setFinProductAdd(finProductAdd);
+                FinProductType finProductType = new FinProductType();
+                finProductType.setFinprodId(finprodId);
+                finProductType.setBranch(branch);
+                finProductType.setType1(interfStockInfoDto.getType1());
+                finProductType.setType2(interfStockInfoDto.getType2());
+                finProductType.setType3(interfStockInfoDto.getType3());
+                finProductType.setType6(interfStockInfoDto.getType2());
+                finProductType.setType8(interfStockInfoDto.getType8());
+                finProductType.setCreateUser("interf");
+                finProductType.setUpdateUser("interf");
+                baseFinProductBaseInfoDto.setFinProductType(finProductType);
+                RepAssetDept repAssetDept = new RepAssetDept();
+                repAssetDept.setRepFinprodId(finprodId);
+                repAssetDept.setFinprodMarketId(stockCode);
+                repAssetDept.setRepFinprodName(interfStockInfoDto.getAssetname());
+                repAssetDept.setRepIssuePartyId("C10403");//发行机构代码
+                repAssetDept.setRepAssetType("1302");//资产负债类别
+                repAssetDept.setRepCcy(interfStockInfoDto.getCcy());
+                repAssetDept.setRepTradeMarket(interfStockInfoDto.getTradeplace());
+                repAssetDept.setCreateUser("interf");
+                repAssetDept.setUpdateUser("interf");
+                baseFinProductBaseInfoDto.setRepAssetDept(repAssetDept);
+                BaseRepAssetEquityInfoDto baseRepAssetEquityInfoDto=new BaseRepAssetEquityInfoDto();
+                List<RepAssetEquity> repAssetEquityList=new ArrayList<RepAssetEquity>();
+                RepAssetEquity repAssetEquity=new RepAssetEquity();
+                //[资产/负债类别]为[1301] [1302] [1305] 时,必填
+                if(StringUtil.isNotEmpty(repAssetDept.getRepAssetType()) &&
+                        (StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股权.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue()))){
+                    repAssetEquity.setRepDeptEquity("01");
+                }
+                //[交易流通场所][股票类型]企业类型（按规模划分）,企业类型（按技术领域划分）,企业类型（按经济类型划分）选择“99”时，备注必填
+                //投资阶段默认为06,不额外做校验
+                if (StringUtil.equals("99",interfStockInfoDto.getTradeplace())||
+                        StringUtil.equals("99",interfStockInfoDto.getStocktype())||
+                        StringUtil.equals("99",interfStockInfoDto.getEnterprisetype1())||
+                        StringUtil.equals("99",interfStockInfoDto.getEnterprisetype2())||
+                        StringUtil.equals("99",interfStockInfoDto.getEnterprisetype3())){
+                    repAssetEquity.setRepRemark("无");
+                }
+                repAssetEquity.setRepFinprodId(finprodId);
+                repAssetEquity.setRepSharesId(stockCode);
+                repAssetEquity.setRepSharesType(interfStockInfoDto.getStocktype());//股票类型
+                repAssetEquity.setRepIndustry(interfStockInfoDto.getIndustryn());//行业一级分类
+                repAssetEquity.setRepIndustryLevel2(interfStockInfoDto.getIndustrynSecond());//行业二级分类
+                repAssetEquity.setRepInvestStage("06");//投资阶段[默认为“已上市”]
+                repAssetEquity.setRepPartyType1(interfStockInfoDto.getEnterprisetype1());//企业类型（按规模划分）
+                repAssetEquity.setRepPartyType2(interfStockInfoDto.getEnterprisetype2());//企业类型（按经济类型划分）
+                repAssetEquity.setRepPartyType3(interfStockInfoDto.getEnterprisetype3());//企业类型（按技术领域划分）
+                repAssetEquity.setRepIsPledge("02");//是否为质押融资
+                repAssetEquity.setCreateUser("interf");
+                repAssetEquity.setUpdateUser("interf");
+                repAssetEquityList.add(repAssetEquity);
+                baseRepAssetEquityInfoDto.setRepAssetEquityList(repAssetEquityList);
+                baseFinProductBaseInfoDto.setRepAssetEquity(repAssetEquity);
+                baseFinProductBaseInfoDto.setBaseRepAssetEquityInfoDto(baseRepAssetEquityInfoDto);
+                //构建JXS_ISSUE_INFO
+                JxsIssueInfo jxsIssueInfo=new JxsIssueInfo();
+                jxsIssueInfo.setActivedate(interfStockInfoDto.getListingdate());//激活日期
+                jxsIssueInfo.setCashflowcfg(defaultNumber);//现金流配置
+                jxsIssueInfo.setCashflowcfg2(defaultNumber);//空方现金流配置
+                jxsIssueInfo.setContractsize(defaultBigNumber);
+                jxsIssueInfo.setCountrycode("CN");
+                jxsIssueInfo.setCreateuser("interf");
+                jxsIssueInfo.setUpdateUser("interf");
+                jxsIssueInfo.setEndprice(defaultBigNumber);
+                jxsIssueInfo.setExchangecode(interfStockInfoDto.getTradeplace());
+                jxsIssueInfo.setFixincometype(defaultBigNumber);
+                jxsIssueInfo.setGlgroup(interfStockInfoDto.getGlgroup());
+                jxsIssueInfo.setIncomecur(DictCodeListExt1.币种_中债_人民币.getValue());
+                jxsIssueInfo.setIncomecur2(DictCodeListExt1.币种_中债_人民币.getValue());
+                jxsIssueInfo.setIssuer("5002");
+                jxsIssueInfo.setOptiontype(defaultBigNumber);
+                jxsIssueInfo.setPricur(DictCodeListExt1.币种_中债_人民币.getValue());
+                jxsIssueInfo.setSecurityid(finprodId);
+                jxsIssueInfo.setSecurityname(interfStockInfoDto.getAssetname());
+                jxsIssueInfo.setSourceid(defaultBigNumber);
+                jxsIssueInfo.setStartprice(defaultBigNumber);
+                jxsIssueInfo.setSwapexchangeind(defaultBigNumber);
+                jxsIssueInfo.setRpsectype(interfStockInfoDto.getRpsectype());
+                baseFinProductBaseInfoDto.setJxsIssueInfo(jxsIssueInfo);
+                baseFinProductBaseInfoList.add(baseFinProductBaseInfoDto);
+    		}
+    		
+    		dto.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
+    	}
+        return dto;
+    }
+    
+    /**
+     * 获取wind资产信息(股票)
+     * <功能详细描述>
+     * @param stockCode
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public InterfStockInfoDto selectWindStockAssetByStockCode(String stockCode){
+        return simpleRestTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectWindStockAssetByStockCode?stockCode="+stockCode,
+        		InterfStockInfoDto.class);
+    }
+    
+    /**
+     * 徽商功能移植
+     * new 自动加券(债券) 中债要素check
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public InterfPayhsrcsecinfoDto checkBondRepData(InterfPayhsrcsecinfoDto dto){
+    	InterfPayhsrcsecinfoDto interfPayhsrcsecinfoDtoNew=new InterfPayhsrcsecinfoDto();
+    	List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoList=new ArrayList<BaseFinProductBaseInfoDto>();
+    	List<String> errorAssetInfo=new ArrayList<>();
+    	if(null!=dto.getBaseFinProductBaseInfoList() && !StringUtil.isEmptyList(dto.getBaseFinProductBaseInfoList())){
+    		for(BaseFinProductBaseInfoDto baseInfoDto1:dto.getBaseFinProductBaseInfoList()){
+    			FinBondTargetAssetDto bondTargetDto = new FinBondTargetAssetDto();
+    			List<BaseFinProductBaseInfoDto> baseList = new ArrayList<>();
+    			BaseFinProductBaseInfoDto baseInfoDto2 = new BaseFinProductBaseInfoDto();
+    			BeanUtil.copyPropertiesIgnoreNull(baseInfoDto2, baseInfoDto1);
+    			baseList.add(baseInfoDto2);
+    			bondTargetDto.setRepAssetType(baseInfoDto1.getRepAssetType());
+    			bondTargetDto.setBaseFinProductBaseInfoList(baseList);
+    			//中债要素
+    			BussFinBondRepInfoDto bussFinBondRepInfoDto=new BussFinBondRepInfoDto();
+    			bussFinBondRepInfoDto.setRepPartyType1(baseInfoDto1.getRepAssetBond().getRepPartyType1());
+    			bussFinBondRepInfoDto.setRepPartyType2(baseInfoDto1.getRepAssetBond().getRepPartyType2());
+    			bussFinBondRepInfoDto.setRepPartyType3(baseInfoDto1.getRepAssetBond().getRepPartyType3());
+    			bussFinBondRepInfoDto.setRepRegistOrg(baseInfoDto1.getRepAssetBond().getRepRegistOrg());
+    			bussFinBondRepInfoDto.setRepSectype(baseInfoDto1.getRepAssetBond().getRepSectype());//具体类别
+    			bussFinBondRepInfoDto.setRepTradeMarket(baseInfoDto1.getRepAssetDept().getRepTradeMarket());
+    			bussFinBondRepInfoDto.setRepRegistOrg(baseInfoDto1.getRepAssetBond().getRepRegistOrg());
+    			bussFinBondRepInfoDto.setRepAssetType(baseInfoDto1.getRepAssetDept().getRepAssetType());
+    			bussFinBondRepInfoDto.setRepIndustry(baseInfoDto1.getRepAssetBond().getRepIndustry());
+    			bussFinBondRepInfoDto.setRepIndustryLevel2(baseInfoDto1.getRepAssetBond().getRepIndustryLevel2());
+    			bussFinBondRepInfoDto.setRepRegistorgComment(baseInfoDto1.getRepAssetBond().getRepRegistorgComment());//登记托管机构说明
+    			bussFinBondRepInfoDto.setRepRemark(baseInfoDto1.getRepAssetBond().getRepRemark());
+    			bondTargetDto.setBussFinBondRepInfoDto(bussFinBondRepInfoDto);
+    			bondTargetDto.setFinprodMarketId(baseInfoDto1.getFinProduct().getFinprodMarketId());
+    			bondTargetDto.setFinprodName(baseInfoDto1.getFinProduct().getFinprodName());
+    			bondTargetDto.setIssueType(baseInfoDto1.getFinProduct().getIssueType());
+    			bondTargetDto.setMdate(baseInfoDto1.getFinProduct().getMdate());
+    			bondTargetDto.setRegistOrg(baseInfoDto1.getRepAssetBond().getRepRegistOrg());
+    			List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+    			resultList = chbDataCheckService.chbCheckCommon(resultList, bondTargetDto, "FinBondTargetAsset002Interf", bondTargetDto.getRepAssetType());
+    			//中债校验通过
+    			if(StringUtil.isEmptyList(resultList)){
+    				baseFinProductBaseInfoList.add(baseInfoDto1);
+    			}else{
+    				//中债校验不通过的数据
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+                    sb.append(GlobalConstant.HTML_NEWLINE + "债券代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("债券名称："+baseInfoDto1.getFinProduct().getFinprodAbbr()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+    				errorAssetInfo.add(sb.toString());
+    			}
+    		}
+    		interfPayhsrcsecinfoDtoNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
+    		interfPayhsrcsecinfoDtoNew.setErrorBondList(errorAssetInfo);
+    	}    	
+		return interfPayhsrcsecinfoDtoNew;
+    }
+    
+    /**
+     * 徽商功能移植
+     * new 自动加券(基金) 中债要素check
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public InfChinamutualfunddescriptionDto checkFundRepData(InfChinamutualfunddescriptionDto dto) {
+    	InfChinamutualfunddescriptionDto infChinamutualfunddescriptionNew=new InfChinamutualfunddescriptionDto();
+    	List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoList=new ArrayList<BaseFinProductBaseInfoDto>();
+    	List<String> errorAssetInfo=new ArrayList<>();
+    	if(null!=dto.getBaseFinProductBaseInfoList() && !StringUtil.isEmptyList(dto.getBaseFinProductBaseInfoList())){
+    		for(BaseFinProductBaseInfoDto baseInfoDto1:dto.getBaseFinProductBaseInfoList()){
+    			FinFundTargetDto finFundTargetDto=new FinFundTargetDto();
+    			List<BaseFinProductBaseInfoDto> baseInfoList = new ArrayList<>();
+    			BaseFinProductBaseInfoDto baseInfoDto2 = new BaseFinProductBaseInfoDto();
+    			BeanUtil.copyPropertiesIgnoreNull(baseInfoDto2, baseInfoDto1);
+    			baseInfoList.add(baseInfoDto2);
+    			BussRepFundInfoDto bussRepFundInfoDto=new BussRepFundInfoDto();
+    			bussRepFundInfoDto.setRepFund(baseInfoDto1.getRepfund());
+//    			bussRepFundInfoDto.setFinancialComissue(baseInfoDto1.getRepfund().getFinancialComissue());//是否由金融资产投资公司发行[万德未提供该字段] 不支持私募基金，不用加此字段
+    			bussRepFundInfoDto.setRepAssetType(baseInfoDto1.getRepAssetDept().getRepAssetType());
+    			//是否投向“市场化债转股相关产品的部分”不在值域范围内,万德未提供该字段，无法校验
+    			bussRepFundInfoDto.setRepFundCompName(baseInfoDto1.getRepfund().getRepFundCompName());
+    			bussRepFundInfoDto.setRepFundInvestAsset(baseInfoDto1.getRepfund().getRepFundInvestAsset());//基金投资资产
+    			bussRepFundInfoDto.setRepGovInvestFor(baseInfoDto1.getRepfund().getRepGovInvestFor());
+    			bussRepFundInfoDto.setRepIndustry(baseInfoDto1.getRepfund().getRepIndustry());
+    			bussRepFundInfoDto.setRepIndustryLevel2(baseInfoDto1.getRepfund().getRepIndustryLevel2());
+    			//人行机构规模,万德未提供该字段，无法校验
+    			bussRepFundInfoDto.setRepInvestStage(baseInfoDto1.getRepfund().getRepInvestStage());
+    			//公共PPP不在值域范围内、投向地方政府融资平台要素不在值域范围内。万德未提供该字段，无法校验
+    			bussRepFundInfoDto.setRepRegistOrg(baseInfoDto1.getRepfund().getRepRegistOrg());
+    			//登记备案机构为“99 其他”;投资企业类型（规模）为“99 其他”;当投资企业类型（经济类型）为“99 其他”;当投资企业类型（技术领域）为“99 其他”;交易流通场所为“99”;备注信息默认“无”
+    			if(StringUtil.equals(BussinessDictCodeList.中债_登记托管机构_其他.getValue(), baseInfoDto1.getRepfund().getRepRegistOrg())
+    					||StringUtil.equals(DictCodeListExt2.发行机构类型_按技术领域划分_其他.getValue(), baseInfoDto1.getRepfund().getRepRegistOrg())
+    					||StringUtil.equals(DictCodeListExt2.发行机构类型_按经济类型划分_其他.getValue(), baseInfoDto1.getRepfund().getRepRegistOrg())
+    					||StringUtil.equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue(), baseInfoDto1.getRepfund().getRepRegistOrg())
+    					||StringUtil.equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue(), baseInfoDto1.getRepAssetDept().getRepTradeMarket())){
+    				bussRepFundInfoDto.setRepRemark("无备注信息");
+    			}else{
+    				bussRepFundInfoDto.setRepRemark(baseInfoDto1.getRepfund().getRepRemark());//备注[万德未提供该字段]
+    			}
+    			bussRepFundInfoDto.setRepTradeMarket(baseInfoDto1.getRepAssetDept().getRepTradeMarket());
+    			bussRepFundInfoDto.setRepTrustPartyName(baseInfoDto1.getRepfund().getRepTrustPartyName());
+    			bussRepFundInfoDto.setRepIsGovInvest(baseInfoDto1.getRepfund().getRepIsGovInvest());//当是否属于政府投资基金
+    			bussRepFundInfoDto.setRepPartyType1(baseInfoDto1.getRepfund().getRepPartyType1());
+    			bussRepFundInfoDto.setRepPartyType2(baseInfoDto1.getRepfund().getRepPartyType2());
+    			bussRepFundInfoDto.setRepPartyType3(baseInfoDto1.getRepfund().getRepPartyType3());
+    			bussRepFundInfoDto.setRepFund(null);//调用chbCheckCommon方法时，该子对象需要置空，否则会影响取值
+    			finFundTargetDto.setFinprodMarketId(baseInfoDto1.getFinProduct().getFinprodMarketId());
+    			finFundTargetDto.setFinprodName(baseInfoDto1.getFinProduct().getFinprodName());
+    			finFundTargetDto.setBussRepFundInfoDto(bussRepFundInfoDto);
+    			List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+    			resultList = chbDataCheckService.chbCheckCommon(resultList, finFundTargetDto, "FinFundTarget002Interf", null);
+    			//中债校验通过
+    			if(StringUtil.isEmptyList(resultList)){
+    				baseFinProductBaseInfoList.add(baseInfoDto1);
+    			}else{
+    				//中债校验不通过的数据
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+                    sb.append(GlobalConstant.HTML_NEWLINE + "基金代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("基金名称："+baseInfoDto1.getFinProduct().getFinprodAbbr() + GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+                    errorAssetInfo.add(sb.toString());
+    			}
+    		}
+    		infChinamutualfunddescriptionNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
+    		infChinamutualfunddescriptionNew.setErrorFundList(errorAssetInfo);
+    	}
+		return infChinamutualfunddescriptionNew;
+		
+	}
+    
+    
+    public InterfStockInfoDto checkStockRepData(InterfStockInfoDto dto) {
+    	InterfStockInfoDto interfStockInfoDtoNew=new InterfStockInfoDto();
+    	List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoList=new ArrayList<BaseFinProductBaseInfoDto>();
+    	List<String> errorAssetInfo=new ArrayList<>();
+    	if(null!=dto.getBaseFinProductBaseInfoList() && !StringUtil.isEmptyList(dto.getBaseFinProductBaseInfoList())){
+    		for(BaseFinProductBaseInfoDto baseInfoDto1:dto.getBaseFinProductBaseInfoList()){
+    			FinStockInfoDto finStockInfoDto=new FinStockInfoDto();
+    			List<BaseFinProductBaseInfoDto> baseInfoList = new ArrayList<>();
+    			BaseFinProductBaseInfoDto baseInfoDto2 = new BaseFinProductBaseInfoDto();
+    			BeanUtil.copyPropertiesIgnoreNull(baseInfoDto2, baseInfoDto1);
+    			baseInfoList.add(baseInfoDto2);
+    			BussRepEquityInfoDto bussRepEquityInfoDto=new BussRepEquityInfoDto();
+    			//是否投向“市场化债转股相关产品的部分”、是否为债转股不在值域范围内,万德未提供该字段，无法校验
+    			bussRepEquityInfoDto.setRepIndustry(baseInfoDto1.getRepAssetEquity().getRepIndustry());//行业一级分类
+    			bussRepEquityInfoDto.setRepIndustryLevel2(baseInfoDto1.getRepAssetEquity().getRepIndustryLevel2());//行业二级分类
+    			bussRepEquityInfoDto.setRepPartyType1(baseInfoDto1.getRepAssetEquity().getRepPartyType1());
+    			bussRepEquityInfoDto.setRepPartyType2(baseInfoDto1.getRepAssetEquity().getRepPartyType2());
+    			bussRepEquityInfoDto.setRepPartyType3(baseInfoDto1.getRepAssetEquity().getRepPartyType3());
+    			//人行机构规模要素不在值域范围内。万德未提供该字段，无法校验
+    			bussRepEquityInfoDto.setRepInvestStage(baseInfoDto1.getRepAssetEquity().getRepInvestStage());//投资阶段
+    			bussRepEquityInfoDto.setRepIsPledge(baseInfoDto1.getRepAssetEquity().getRepIsPledge());//是否为质押融资
+    			//公共PPP不在值域范围内、是否由金融资产投资公司发行要素必须为空、投向地方政府融资平台要素不在值域范围内。万德未提供该字段，无法校验
+    			bussRepEquityInfoDto.setRepRemark(baseInfoDto1.getRepAssetEquity().getRepRemark());//备注[万德未提供该字段]
+    			bussRepEquityInfoDto.setRepSharesType(baseInfoDto1.getRepAssetEquity().getRepSharesType());//股票类型
+    			finStockInfoDto.setBussRepEquityInfoDto(bussRepEquityInfoDto);
+    			finStockInfoDto.setFinprodMarketId(baseInfoDto1.getFinProduct().getFinprodMarketId());
+    			finStockInfoDto.setFinprodName(baseInfoDto1.getFinProduct().getFinprodName());
+    			List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+    			resultList = chbDataCheckService.chbCheckCommon(resultList, finStockInfoDto, "FinStockInfo002Interf", null);
+    			//中债校验通过
+    			if(StringUtil.isEmptyList(resultList)){
+    				baseFinProductBaseInfoList.add(baseInfoDto1);
+    			}else{
+    				//中债校验不通过的数据
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+
+                    sb.append(GlobalConstant.HTML_NEWLINE + "股票代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("股票名称："+baseInfoDto1.getFinProduct().getFinprodAbbr() + GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+                    errorAssetInfo.add(sb.toString());
+    			}
+    		}
+    		interfStockInfoDtoNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
+    		//错误信息
+    		interfStockInfoDtoNew.setErrorStockList(errorAssetInfo);
+    	}
+		return interfStockInfoDtoNew;
+		
+	}
+    
+    
+
+	public List<InterfStockInfoDto> selectWindStockAsset(Map<String, Object> paramMap) {
+		return simpleRestTemplate.postForList(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectWindStockAsset",paramMap,
+				InterfStockInfoDto.class);
+	}
+	
+	/**
+     * 自动加券(股票)
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @throws ParseException 
+     * @see
+     * @since 1.0
+     */
+    public InterfStockInfoDto autoStockCoupon(InterfStockInfoDto dto) throws ParseException{
+        autoStockCoupon(dto,dto.getAssetcode());
+        //中债要素check
+        InterfStockInfoDto newInterfStockInfoDto=checkStockRepData(dto);
+        String isPermitAddcoupon = CacheUtil.getSysParam(BussinessConstant.IS_PERMIT_ADDCOUPON);
+        if(!(StringUtil.isEmptyList(newInterfStockInfoDto.getBaseFinProductBaseInfoList())
+                && StringUtil.equals(isPermitAddcoupon,DictCodeList.是否_否.getValue()))){
+        	autoStockCouponSave(newInterfStockInfoDto);
+            newInterfStockInfoDto.setBaseFinProductBaseInfoList(dto.getBaseFinProductBaseInfoList());
+        }
+        return newInterfStockInfoDto;
+    }
+
+/**
+    * 自动加券保存(股票)
+    * <功能详细描述>
+    * @param dto
+    * @return
+    * @throws ParseException 
+    * @see
+    * @since 1.0
+    */
+	private void autoStockCouponSave(InterfStockInfoDto dto) {
+		simpleRestTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/autoStockCouponSave",dto,
+	            Integer.class);
+		
+	}
+
+    /**
+     * 查询交易对手名称
+     * @return
+     */
+    public String getCounterName(String counterId){
+        return restTemplate.getForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/getCounterName?counterId="+counterId,
+                String.class);
     }
 }

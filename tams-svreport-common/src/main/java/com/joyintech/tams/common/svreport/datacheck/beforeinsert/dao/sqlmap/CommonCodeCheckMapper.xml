@@ -77,59 +77,45 @@
  
  	<select id="genChbPrdDeclareSub1ByProdInsId" resultType="java.lang.String">
 		SELECT
-		     st.PROD_INS_ID
-		FROM
-		    CHB_PRD_BASEINFO st
-		WHERE
-		    PROD_INS_ID =#{prodInsId, jdbcType=VARCHAR}
-		AND EXISTS
-		    (
-		        SELECT
-		            1
-		        FROM
-		            CHB_PRD_BASEINFO stp
-		        WHERE
-		            st.PROD_NAME=stp.PROD_NAME
-		        AND st.PROD_STAGE=stp.PROD_STAGE
-		        AND PROD_INS_ID !=#{prodInsId, jdbcType=VARCHAR} )
+            PROD_INS_ID
+        FROM
+            ${tableName}
+        WHERE
+            PROD_NAME = #{prodName}
+        AND to_char(PROD_STAGE) = #{prodStage}
+        AND PROD_INS_ID != #{prodInsId}
  	</select>
  
   	<select id="genChbPrdDeclareSub2ByProdInsId" resultType="java.lang.String">
 		 SELECT
-		    st.PROD_INS_ID
-		FROM
-		    CHB_PRD_DECLARE_SUB st
-		WHERE
-		    PROD_INS_ID =#{prodInsId, jdbcType=VARCHAR}
-		AND EXISTS
-		    (
-		        SELECT
-		            1
-		        FROM
-		            CHB_PRD_DECLARE_SUB stp
-		        WHERE
-		            st.PROD_NAME=stp.PROD_NAME
-		        AND st.PROD_STAGE=stp.PROD_STAGE
-		        AND PROD_INS_ID !=#{prodInsId, jdbcType=VARCHAR}
-		        AND stp.SEND_STATUS IN ('02', '03') )
+            1
+        FROM
+            CHB_PRD_DECLARE_SUB
+        WHERE
+            PROD_NAME = #{prodName}
+        AND to_char(PROD_STAGE) = #{prodStage}
+        AND PROD_INS_ID != #{prodInsId, jdbcType=VARCHAR}
+        AND SEND_STATUS IN ('02', '03')
  	</select>
 
    <!--add by zhangliang 20201010 start-->
    <select id="queryChbPrdDeclareSubByRegCode" resultType="com.joyintech.tams.common.base.entity.ChbPrdDeclareSub">
       select
-             REGIST_SEQNO registSeqno,
-             RAISE_PSTRDATE raisePstrdate,
-             RAISE_PENDDATE raisePenddate,
-             OPERATE_MODE operateMode,
-             SALE_AREA saleArea
+             A.REGIST_SEQNO registSeqno,
+             A.RAISE_PSTRDATE raisePstrdate,
+             A.RAISE_PENDDATE raisePenddate,
+             A.OPERATE_MODE operateMode,
+             A.SALE_AREA saleArea
       from
-            CHB_PRD_DECLARE_SUB
+            CHB_PRD_DECLARE_SUB A
+         LEFT JOIN CHB_PRDRESIST_CODE B
+         	ON  A.PROD_ID = B.PRODID
       <where>
           <if test="prodId != null and prodId != ''">
-              and PROD_INS_ID = #{prodId}
+              and A.PROD_INS_ID = #{prodId}
           </if>
           <if test="regCode != null and regCode != ''">
-              and REG_CODE = #{regCode}
+              and B.REG_CODE = #{regCode}
           </if>
       </where>
    </select>
@@ -161,10 +147,9 @@
               ISSUE_AMT issueAmt,
               UNINVEST_CASH uninvestCash
         from
-            CHB_BOT_AST_POS
+            CHB_BOT_AST_POS_SUB
         where PLAN_ASSET_ID = #{planAssetId}
           and POS_DATE = #{posDate}
-          and ASSET_CODE != #{assetCode}
     </select>
     
     <select id="queryChbAssetInfoSubByAssetCode" resultType="java.lang.Integer">

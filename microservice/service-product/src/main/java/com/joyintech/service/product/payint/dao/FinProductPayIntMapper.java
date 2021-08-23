@@ -13,6 +13,8 @@ package com.joyintech.service.product.payint.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.product.payint.dto.FinProductPayIntDto;
 import com.joyintech.service.product.payint.dto.FinProductPayIntIntDetailDto;
@@ -27,6 +29,7 @@ import com.joyintech.service.product.payint.dto.FinProductPayIntShowDto;
  * @see FinProductPayIntMapper
  * @since 1.0
  */
+@Repository
 public interface FinProductPayIntMapper {
 
     /**

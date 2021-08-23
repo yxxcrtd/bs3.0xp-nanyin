@@ -82,7 +82,8 @@
 			</if>
 			<!--评级来源类型    内外部-->
 			<if test="gradeSourceType != null and gradeSourceType != ''">	
-				AND INNEROUTER = #{gradeSourceType,jdbcType=VARCHAR}
+				<!--AND INNEROUTER = #{gradeSourceType,jdbcType=VARCHAR}-->
+				AND decode(GRADEORGID,'98','02','99','02','01')= #{gradeSourceType,jdbcType=VARCHAR}
 			</if>
 			<!--评级类型    长短期-->
 			<if test="shortLongTerm != null and shortLongTerm != ''">	

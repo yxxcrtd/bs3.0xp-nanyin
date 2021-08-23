@@ -10,19 +10,6 @@
 
 package com.joyintech.tams.invest.trade.trdrepotrade.validator;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-import com.joyintech.tools.collectors.JoyinCollectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -33,10 +20,21 @@ import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.trade.common.validator.TradeCommonValidator;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade003Dto;
 import com.joyintech.tams.invest.trade.trdrepotrade.service.TrdRepoTrade002Service;
+import com.joyintech.tools.collectors.JoyinCollectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 回购资产交易新建画面：TrdRepoTrade003DtoValidator
@@ -94,6 +92,15 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
                 errorList.add(validMessage);
             }
         }*/
+        if (inputDto != null && StringUtil.equals(inputDto.getPs(),
+                DictCodeList.回购拆借方向_正回购.getValue())) {
+            for (PledgeBondInfoDto dto : inputDto.getBussRepoSecPtl().getPledgeBondList()) {
+                if (dto.getTotalPrinAmt() == null || BigDecimal.ZERO.compareTo(dto.getTotalPrinAmt()) == 0) {
+                    ValidMessage validMessage  = new ValidMessage("组合分配中,组合:"+dto.getPortfolioId()+"的质押券汇总券面总额不能为0!");
+                    errorList.add(validMessage);
+                }
+            }
+        }
 
         // 起息日不能大于到期日
         if (inputDto != null
@@ -232,7 +239,7 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
             Map<String, Object> params = CommonBusinessService.setParams(counterId, prinAmt, LoginUserUtil.getUserName(),
                     平安资产类型, null, tradeMarket, ps,finprodId, null);
             if (commonBusinessService != null && commonBusinessService.是否超过副总额额度(params)) {
-                ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0016", "副总裁/总裁助理"));
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0016", "领导"));
                 errorList.add(validMessage);
             }
         }
@@ -277,7 +284,7 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
         }
         if(StringUtil.isEmpty(inputDto.getChlId())){
         	if(StringUtil.isEmptyList(inputDto.getBussRepoSecPtl().getPledgeBondList())){
-        		errorList.add(new ValidMessage("chlId","通道代码和证券账户不能同时为空！"));
+        		errorList.add(new ValidMessage("chlId","合作资产和证券账户不能同时为空！"));
         	}
         }
         //if (StringUtil.isEmpty(inputDto.getChlId()) && StringUtil.isEmpty(inputDto.getBussRepoSecPtl().getPledgeBondList().get(0).getSecAcctId())) {
@@ -311,7 +318,7 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
         // add by 裴家俊 2019-05-23--end----
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
-        if(!"".equals(inputDto.getChlId())&&inputDto.getChlId()!=null){
+        if(inputDto.getChlId()!=null&&!"".equals(inputDto.getChlId())){
             Map<String,Object> sMap= new HashMap<String ,Object>();
             sMap.put("chlId",inputDto.getChlId());
             sMap.put("finprodId",inputDto.getPortfolioId());
@@ -327,6 +334,17 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
             Map<String, List<BussTrdTransferOrderDto>> map = inputDto.getBussTrdTransferOrder().stream().collect(JoyinCollectors.groupingBy(item -> item.getPortfolioId()));
             if (map!=null && map.keySet().size()<inputDto.getBussTrdTransferOrder().size()){
                 errorList.add(new ValidMessage("组合分配不能重复分配给同一组合。"));
+            }
+        }
+
+        if(StringUtil.equals(inputDto.getOperateType(), "save") || StringUtil.equals(inputDto.getOperateType(), "submit")){
+            if(inputDto.getBussRepoSecPtl().getPledgeBondListDetailed().size()>0){
+                for(PledgeBondInfoDto dto:inputDto.getBussRepoSecPtl().getPledgeBondListDetailed()){
+                    if(dto.getPledgePrin()==null){
+                        errorList.add(new ValidMessage("质押券汇总信息中“质押券汇总券面总额”字段不能为空。"));
+                        break;
+                    }
+                }
             }
         }
 

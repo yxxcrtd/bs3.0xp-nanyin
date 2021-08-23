@@ -1,11 +1,13 @@
 package com.joyintech.tams.invest.riskredis.quota.superviseindicator.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.google.json.JsonSanitizer;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -181,24 +183,22 @@ public class RskSupervisionIndicator001Service extends CommonExportService<RskSu
         	 try {
 				cell.setCellValue(transferWarnFoul(value,cell));
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
         }
         if(("foulCond".equals(propName)) && null!=value ){
             try {
 				cell.setCellValue(transferWarnFoul(value,cell));
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
         }*/
     }
     
-    private String transferWarnFoul(String value,String indCellType) throws Exception{
+    private String transferWarnFoul(String value,String indCellType) throws IOException {
 		String wg=StringUtil.EMPTY;
 		ObjectMapper mapper = new ObjectMapper();
-		Map<?, ?>  detailJson= mapper.readValue(value, Map.class);
+		Map<?, ?>  detailJson= mapper.readValue(JsonSanitizer.sanitize(value), Map.class);
 
 		Map<?, ?> vThreshold1Map = (Map<?, ?>)detailJson.get("threshold_1");
 		if (StringUtil.isNotEmpty(value)) {
@@ -252,7 +252,7 @@ public class RskSupervisionIndicator001Service extends CommonExportService<RskSu
 			}
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}

@@ -234,7 +234,6 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
      * 联动：报表期限类型 - 季度 半年
      * 
      * @return
-     * @throws Exception
      */
     public List<SelectOptionDto> getTradeMarket(Map<String, Object> param) {
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/CashFlowsStatement001/getTradeMarket", param, SelectOptionDto.class);

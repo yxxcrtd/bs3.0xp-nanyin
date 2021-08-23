@@ -4,7 +4,7 @@
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
   layout:decorator="~{layout/default}">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="gb18030" />
     <title data-th-text="#{SvrTransformRule002}">变形转换规则新建</title>
     <link
       rel="stylesheet"
@@ -39,8 +39,7 @@
               <input
                 required
                 type="text"
-                οnkeyup="value=this.value.replace(/[^\u4e00-\u9ff5]/g,'')"
-                maxlength="1"
+                maxlength="2"
                 id="orgField"
                 name="orgField"
                 class="layui-input form-input"

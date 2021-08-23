@@ -10,7 +10,6 @@
 
 package com.joyintech.tams.invest.asset.depo.validator;
 
-//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -23,10 +22,9 @@ import com.joyintech.tams.component.business.common.service.BussCommonMapperDele
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.asset.depo.dto.FinDepositTargetDto;
 import com.joyintech.tams.invest.asset.depo.service.FinDepositTargetService;
-
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,8 +53,8 @@ public class FinDepositTargetValidator implements BeanValidator{
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    @Autowired
+    private ChbDataCheckService chbDataCheckService;
 
     /**
      * {@inheritDoc}
@@ -167,6 +165,7 @@ public class FinDepositTargetValidator implements BeanValidator{
                         getMessage("COMMON_E_0057", getMessage("FinDepositTarget002.issueAmt"))));
             }
         }
+				
 		//add by caiqun 20200727 start  BS-1118【银行模式】【投资交易-存款类标的】新建标的时，选择挂一次性划款通道，提交成功。控制只能选择逐笔划款通道
 		if(StringUtil.isNotEmpty(dto.getBussParticipantInfoDto())
             && StringUtil.isNotEmpty(dto.getBussParticipantInfoDto().getBussParticipantInfoDtoList())
@@ -176,9 +175,9 @@ public class FinDepositTargetValidator implements BeanValidator{
         }
         // add by caiqun 20200727 end  BS-1118【银行模式】【投资交易-存款类标的】新建标的时，选择挂一次性划款通道，提交成功。控制只能选择逐笔划款通道
 
-//        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-//            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getType6(), ValidMessage.class);
-//        }
+        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+            resultList = chbDataCheckService.chbCheckCommon(resultList, dto, null, dto.getType6());
+        }
 
         return resultList;
     }

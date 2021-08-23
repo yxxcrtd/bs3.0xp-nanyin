@@ -398,7 +398,7 @@
           tpd.COUNTER_TRADER,
           tpd.COUNTER_CONTACT,
           tpd.IS_OUT_TRADE,
-          TO_CHAR(TPD.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/
+          TO_CHAR(deal.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/
           TPD.REMARK,/*金融产品交易业务流程.备注*/
             deal.PAY_UNPAIDINT_AMT,
             deal.ISPAY_UNPAIDINT,
@@ -542,7 +542,7 @@
     <select id="getIsPayInt" resultType="java.lang.String">
 		select IS_PAY_INT from FIN_CASH_PLAN
 			where FINPROD_ID= #{finprodId}
-				and CASH_TYPE= #{CASH_TYPE_1_02}
+				and CASH_TYPE　in ('02','03')
 				and rownum=1
 	</select>
 
@@ -574,7 +574,7 @@
             TPD.UNIT_CPRICE,/*金融产品交易业务流程.单位净价*/
             TPD.UNIT_FPRICE,/*金融产品交易业务流程.单位全价*/
             TPD.CCY,/*金融产品交易业务流程.交易币种*/
-            TO_CHAR(TPD.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/
+            TO_CHAR(deal.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/
             TPD.REMARK,/*金融产品交易业务流程.备注*/
             TPD.WORKFLOW_ID,/*金融产品交易业务流程.工作流代码*/
             TPD.WORKFLOW_STATUS status,/*金融产品交易业务流程.数据状态*/
@@ -624,7 +624,7 @@
             TPD.UNIT_CPRICE,/*金融产品交易业务流程.单位净价*/
             TPD.UNIT_FPRICE,/*金融产品交易业务流程.单位全价*/
             TPD.CCY,/*金融产品交易业务流程.交易币种*/
-            TO_CHAR(TPD.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/
+            TO_CHAR(deal.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/
             TPD.REMARK,/*金融产品交易业务流程.备注*/
             null WORKFLOW_ID,/*金融产品交易业务流程.工作流代码*/
             null status,/*金融产品交易业务流程.数据状态*/
@@ -665,7 +665,7 @@
             TPD.UNIT_CPRICE,/*金融产品交易业务流程.单位净价*/
             TPD.UNIT_FPRICE,/*金融产品交易业务流程.单位全价*/
             TPD.CCY,/*金融产品交易业务流程.交易币种*/
-            TO_CHAR(TPD.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/
+            TO_CHAR(deal.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/
             TPD.REMARK,/*金融产品交易业务流程.备注*/
             null WORKFLOW_ID,/*金融产品交易业务流程.工作流代码*/
             null status,/*金融产品交易业务流程.数据状态*/
@@ -713,7 +713,7 @@
             TPD.UNIT_CPRICE,/*金融产品交易业务流程.单位净价*/
             TPD.UNIT_FPRICE,/*金融产品交易业务流程.单位全价*/
             TPD.CCY,/*金融产品交易业务流程.交易币种*/
-            TO_CHAR(TPD.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/
+            TO_CHAR(deal.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/
             TPD.REMARK,/*金融产品交易业务流程.备注*/            
             <if test="statusValid == TRADE_FLOW_STATUS01">
                 TPD.WORKFLOW_ID,/*金融产品交易业务流程.工作流代码*/

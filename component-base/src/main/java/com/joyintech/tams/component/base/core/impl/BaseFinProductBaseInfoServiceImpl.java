@@ -395,7 +395,8 @@ public class BaseFinProductBaseInfoServiceImpl implements BaseFinProductBaseInfo
                         baseFinProductCashCalcRuleDto.setFinprodId(finprodId);
                         for (String cashId : cashIdList) {
                             baseFinProductCashCalcRuleDto.setCashId(cashId);
-                            baseFinProductCashCalcRuleDto.setIsInitial(DictCodeList.是否_是.getValue());
+                            // modify by jiangpeng on 20210610 工单 joyinzgcpsj20210608005
+//                            baseFinProductCashCalcRuleDto.setIsInitial(DictCodeList.是否_是.getValue());
                             baseFinProductCashCalcRuleService.deleteByBaseFinProductCashCalcRuleDto(
                                 baseFinProductCashCalcRuleDto);
                         }

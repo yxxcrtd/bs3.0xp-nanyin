@@ -76,8 +76,7 @@ public class DisValProfitQuery002Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("findPage")
-    public List<DisValProfitQuery001Dto> selectBalanceStatement()
-        throws Exception {
+    public List<DisValProfitQuery001Dto> selectBalanceStatement() throws ParseException, CloneNotSupportedException {
     	Map<String, Object> paraMap = RequestUtil.getParameters(getRequest());
     	// 全账套
     	List<SuggestDto> accountList = valAssetBook001Service.getBooksetId2(super.getRequest().getParameter("param"));

@@ -49,7 +49,7 @@ public class ValOtcOpt001Service extends CommonExportService<ValOtcOpt001Dto>{
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValOtcOpt001Dto> findPage(int page,int length,Map<String, Object> params) throws Exception {
+    public Page<ValOtcOpt001Dto> findPage(int page,int length,Map<String, Object> params) {
     	params.put("TRADE_FLOW_STATUS_01", DictCodeListExt1.交易流程状态_流程中.getValue());
     	params.put("TRADE_FLOW_STATUS_02", DictCodeListExt1.交易流程状态_有效.getValue());
     	params.put("TRADE_FLOW_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());
@@ -66,7 +66,7 @@ public class ValOtcOpt001Service extends CommonExportService<ValOtcOpt001Dto>{
      * @return 表格信息
      * @throws Exception 
      */
-    public List<ValOtcOpt001Dto> findAll(Map<String, Object> params) throws Exception {
+    public List<ValOtcOpt001Dto> findAll(Map<String, Object> params) {
     	params.put("TRADE_FLOW_STATUS_01", DictCodeListExt1.交易流程状态_流程中.getValue());
     	params.put("TRADE_FLOW_STATUS_02", DictCodeListExt1.交易流程状态_有效.getValue());
     	params.put("TRADE_FLOW_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());

@@ -25,6 +25,9 @@ import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectbalanceq
 import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectwaterquery.dto.ValSubjectWaterQuery001Dto;
 import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectwaterquery.dto.ValSubjectWaterQuery001SearchDto;
 
+import java.text.ParseException;
+import java.util.List;
+
 /**
  * 模板示例<br>
  * 凭证详情查看
@@ -79,7 +82,7 @@ public class BankBalanceQuery002Contoller extends BaseController {
      */
     @RequestMapping("searchList")
     @ResponseBody
-    public List<ValSubjectWaterQuery001Dto> searchList() throws Exception {
+    public List<ValSubjectWaterQuery001Dto> searchList() throws ParseException {
         //账套代码
         String booksetId = this.getParam("booksetId");
         //记账日期

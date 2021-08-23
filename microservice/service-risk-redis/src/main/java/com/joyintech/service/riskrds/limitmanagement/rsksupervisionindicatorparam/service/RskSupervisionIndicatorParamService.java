@@ -102,7 +102,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
      */
     public Page<RskSupervisionIndicatorParamDto> selectForPage(int page, int length,
                                                                Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("FIX", BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());
         pageParam.put("PLUGIN", BussinessDictCodeListRds.指标参数实现类型_类名.getValue());
         pageParam.put("SQL", BussinessDictCodeListRds.指标参数实现类型_SQL.getValue());

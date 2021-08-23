@@ -12,6 +12,8 @@ package com.joyintech.tams.invest.batch.resetbaseruleinfo.writer;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,10 @@ import com.joyintech.tams.invest.batch.resetbaseruleinfo.dto.ResetBaseRuleInfoRe
 @Service
 @Scope("prototype")
 public class ResetBaseRuleInfoWriter extends BaseWriter<NeedToWriteEntity>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ResetBaseRuleInfoWriter.class);
 
     @Autowired
     private MstIntRateInfoMapper mstIntRateInfoMapper;
@@ -54,7 +60,7 @@ public class ResetBaseRuleInfoWriter extends BaseWriter<NeedToWriteEntity>{
                 try{
                     mstIntRateInfoMapper.insert(mstIntRateInfoDto);
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

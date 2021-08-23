@@ -41,6 +41,21 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
 import com.joyintech.tams.valuation.common.service.BaseCommonService;
+import com.joyintech.tams.valuation.psbc.bankbalancequery.dto.BankBalanceQuery001Dto;
+import com.joyintech.tams.valuation.psbc.bankbalancequery.service.BankBalanceQuery001Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 /**
  * 
  * 银行账科目余额查询
@@ -99,7 +114,7 @@ public class BankBalanceQuery001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<BankBalanceQuery001Dto> findPage() throws Exception{
+    public Page<BankBalanceQuery001Dto> findPage(){
         return bankBalanceQuery001Service.findPage(RequestUtil.getPageParam());
     }
     /**
@@ -169,7 +184,7 @@ public class BankBalanceQuery001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
             String datas = this.getParam("datas");
             Map<String, Object> paraMap = RequestUtil.getPageParam();
             List<BankBalanceQuery001Dto> listdto;

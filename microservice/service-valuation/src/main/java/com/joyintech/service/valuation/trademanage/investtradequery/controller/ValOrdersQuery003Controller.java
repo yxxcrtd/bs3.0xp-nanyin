@@ -58,7 +58,7 @@ public class ValOrdersQuery003Controller extends BaseController{
 //    }
     
     @PostMapping("/findByOrderId")
-    public ValOrdersDto findByTradeId(@RequestBody Map<String, Object> param) throws Exception {
+    public ValOrdersDto findByTradeId(@RequestBody Map<String, Object> param) {
         String orderId = (String) param.get("orderId");
         String dealType = (String) param.get("dealType");
         return valOrdersQuery003Service.findByOrderId(orderId, dealType);

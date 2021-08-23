@@ -47,8 +47,7 @@ public class ValYieldCurveInfoController {
      */
     @RequestMapping("/selectForPage/{page}/{length}")
     public Page<ValYieldCurveInfoDto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page,
-                                                    @PathVariable("length") int length)
-        throws Exception {
+                                                    @PathVariable("length") int length){
         return valYieldCurveInfoService.selectForPage(page, length, pageParam);
     }
 

@@ -44,10 +44,12 @@
 		SELECT Max(TRADE_DATE) TRADE_DATE
 		FROM TRD_PRODUCT_DEAL
 		WHERE FINPROD_ID = #{finprodId} AND TRADE_STATUS = '01' AND (IS_CANCEL='N' or IS_CANCEL IS NULL)
+		and BUSI_TYPE not in ('24')/*过滤债券预交易数据*/
 		UNION ALL
 		SELECT Max(TRADE_DATE) TRADE_DATE
 		FROM WFL_TRD_PRODUCT_DEAL
 		WHERE FINPROD_ID = #{finprodId}
+		and BUSI_TYPE not in ('24')/*过滤债券预交易数据*/
 		)
 	</select>
 	
@@ -922,6 +924,193 @@ SELECT F.FINPROD_NAME,
 		<!--判断债券资产是否存在行权交易 zxp end 20201125-->
 	</select>
 
+	<select id="selectWindStockAssetByStockCode" resultType="com.joyintech.service.common.core.dto.InterfStockInfoDto">
+		SELECT t.ASSET_COOD assetcode,
+		  t.ASSET_NAME assetname,
+		  t.COMPANY_NAME companyname,
+		  t.COMPANY_CODE companycode,
+		  CASE
+		    WHEN t.TRADE_PLACE = '深圳证券交易所'
+		    THEN '04'
+		    WHEN t.TRADE_PLACE = '上海证券交易所'
+		    THEN '03'
+		  END tradeplace,
+		  CASE
+		    WHEN t.LISTING_BOARD = '主板'
+		    THEN 'BD01'
+		    WHEN t.LISTING_BOARD = '中小企业板'
+		    THEN 'BD02'
+		    WHEN t.LISTING_BOARD = '科创板'
+		    THEN 'BD03'
+		    WHEN t.LISTING_BOARD = '创业板'
+		    THEN 'BD04'
+		  END listingboard,
+		  t.LISTING_DATE listingdate,
+		  t.DELISTING_DATE delistingdate,
+		  CASE
+		    WHEN t.IS_HORS_EXPRESS = '沪股通'
+		    THEN '01'
+		    WHEN t.IS_HORS_EXPRESS = '深股通'
+		    THEN '02'
+		    WHEN t.IS_HORS_EXPRESS = '否'
+		    THEN '03'
+		  END ishorsexpress,
+		  CASE
+		    WHEN t.IS_MARGIN_TRADING = '是'
+		    THEN 'Y'
+		    WHEN t.IS_MARGIN_TRADING = '否'
+		    THEN 'N'
+		  END ismargintrading,
+		  CCY ccy,
+		  t.TRADE_CALENDER tradecalender,
+		  CASE
+		    WHEN t.STOCK_TYPE = '普通股'
+		    THEN '01'
+		    WHEN t.STOCK_TYPE = '优先股'
+		    THEN '02'
+		    WHEN t.STOCK_TYPE = '其他'
+		    THEN '99'
+		  END stocktype,
+		  sd.item_code industrynSecond,
+		  sl.linked_item_code industryn,
+		  t.INDUSTRY_S industrys,
+		  t.ENTERPRISE_TYPE3 enterprisetype3,
+		  t.ENTERPRISE_TYPE1 enterprisetype1,
+		  t.ENTERPRISE_TYPE2 enterprisetype2,
+		  t.CREATE_USER createuser,
+		  t.CREATE_DEPT createdept,
+		  t.UPDATE_USER updateuser,
+		  t.COMPANY_CODE companycode,
+		  '01' type1,
+		  CASE
+		    WHEN t.IS_HORS_EXPRESS = '沪股通'
+		    THEN '103'
+		    WHEN t.IS_HORS_EXPRESS = '深股通'
+		    THEN '104'
+		    WHEN t.IS_HORS_EXPRESS = '否'
+		    AND t.TRADE_PLACE      = '上海证券交易所'
+		    THEN '101'
+		    WHEN t.IS_HORS_EXPRESS = '否'
+		    AND t.TRADE_PLACE      = '深圳证券交易所'
+		    THEN '102'
+		  END type2,
+		  CASE
+		    WHEN t.IS_HORS_EXPRESS = '沪股通'
+		    THEN 'L03'
+		    WHEN t.IS_HORS_EXPRESS = '深股通'
+		    THEN 'L04'
+		    WHEN t.IS_HORS_EXPRESS = '否'
+		    AND t.TRADE_PLACE      = '上海证券交易所'
+		    THEN 'L01'
+		    WHEN t.IS_HORS_EXPRESS = '否'
+		    AND t.TRADE_PLACE      = '深圳证券交易所'
+		    THEN 'L02'
+		  END type3,
+		  'F11' type8
+		FROM INTERF_STOCK_INFO t
+			LEFT JOIN sys_datadict_list sd
+			ON sd.dict_code  = 'INSTITUTION_INDUSTRY_SECOND_LEVEL'
+			AND sd.item_code = t.INDUSTRY_N
+			LEFT JOIN sys_datadict_list_link sl
+			ON sl.dict_code         = 'INSTITUTION_INDUSTRY_SECOND_LEVEL'
+			AND sl.linked_dict_code = 'INSTITUTION_INDUSTRY_FIRST_LEVEL'
+			AND sl.item_code        = sd.item_code
+		WHERE ASSET_COOD        = #{stockCode}
+	</select>
+	
+	<select id="selectWindStockAsset" resultType="com.joyintech.service.common.core.dto.InterfStockInfoDto">
+		SELECT
+			t.ASSET_COOD assetcode,
+			t.ASSET_NAME assetname,
+			t.COMPANY_NAME companyname,
+			t.COMPANY_CODE companycode,
+			case 
+	         when t.TRADE_PLACE = '深圳证券交易所' then '04' 
+	         when t.TRADE_PLACE = '上海证券交易所' then '03' 
+	       end tradeplace,
+	       case 
+	         when t.LISTING_BOARD = '主板' then 'BD01'
+	         when t.LISTING_BOARD = '中小企业板' then 'BD02' 
+	         when t.LISTING_BOARD = '科创板' then 'BD03' 
+	         when t.LISTING_BOARD = '创业板' then 'BD04' 
+	       end  listingboard,
+			t.LISTING_DATE listingdate,
+			t.DELISTING_DATE delistingdate,
+		   case 
+	         when t.IS_HORS_EXPRESS = '沪股通' then '01' 
+	         when t.IS_HORS_EXPRESS = '深股通' then '02' 
+	         when t.IS_HORS_EXPRESS = '否' then '03' 
+	       end ishorsexpress,
+	       case 
+	         when t.IS_MARGIN_TRADING = '是' then 'Y' 
+	         when t.IS_MARGIN_TRADING = '否' then 'N' 
+	       end ismargintrading,
+			CCY ccy,
+			t.TRADE_CALENDER tradecalender,
+		   case 
+	         when t.STOCK_TYPE = '普通股' then '01' 
+	         when t.STOCK_TYPE = '优先股' then '02' 
+	         when t.STOCK_TYPE = '其他' then '99' 
+	       end stocktype,
+			t.INDUSTRY_S industrys,
+			t.ENTERPRISE_TYPE3 enterprisetype3,
+			t.ENTERPRISE_TYPE1 enterprisetype1,
+			t.ENTERPRISE_TYPE2 enterprisetype2,
+			t.CREATE_USER createuser,
+			t.CREATE_DEPT createdept,
+			t.UPDATE_USER updateuser
+		FROM
+			INTERF_STOCK_INFO t
+		<where>
+			<if test="windNameList != null and !windNameList.isEmpty()">
+				and (t.ASSET_NAME in
+				<foreach collection="windNameList" item="obj" index="index" separator="," open="(" close=")">
+					<if test="(index % 500) == 499">
+						null) OR F_INFO_NAME IN (
+					</if>
+					#{obj}
+				</foreach>
+				)
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertJxInfo" parameterType="com.joyintech.tams.common.base.entity.JxsIssueInfo" useGeneratedKeys="true" keyProperty="id">
+		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			    select ISSUEINFO_ID_SEQUENCE.NEXTVAL from dual
+		</selectKey>
+        insert into JXS_ISSUE_INFO (CUSIP,ACTIVEDATE,GLGROUP,CONTRACTSIZE,ENDPRICE,EXPIREDATE,
+				FIXINCOMETYPE,ISSUETYPE,OPTIONTYPE,SECURITYID,SECURITYNAME,STARTPRICE,SWAPEXCHANGEIND,
+				UNDERCUSIP,EXCHANGECODE,ISSUER,RPSECTYPE,SOURCEID,PRICUR,INCOMECUR,PRICUR2,INCOMECUR2,
+				COUNTRYCODE,CREATE_TIME,CREATE_DEPT,UPDATE_TIME,UPDATE_USER,CREATE_USER,CASHFLOWCFG,CASHFLOWCFG2)
+        values ('SEC' || lpad(#{id},15,0), #{activedate,jdbcType=DATE}, #{glgroup,jdbcType=DECIMAL}, 
+            #{contractsize,jdbcType=DECIMAL}, #{endprice,jdbcType=DECIMAL}, #{expiredate,jdbcType=DATE}, 
+            #{fixincometype,jdbcType=DECIMAL}, #{issuetype,jdbcType=VARCHAR}, #{optiontype,jdbcType=DECIMAL}, 
+            #{securityid,jdbcType=VARCHAR}, #{securityname,jdbcType=VARCHAR}, #{startprice,jdbcType=DECIMAL}, 
+            #{swapexchangeind,jdbcType=DECIMAL}, #{undercusip,jdbcType=TIMESTAMP}, #{exchangecode,jdbcType=VARCHAR},
+            #{issuer,jdbcType=DATE},#{rpsectype,jdbcType=DECIMAL},#{sourceid,jdbcType=DECIMAL},
+            #{pricur,jdbcType=VARCHAR},#{incomecur,jdbcType=VARCHAR},#{pricur2,jdbcType=VARCHAR},#{incomecur2,jdbcType=VARCHAR},
+            #{countrycode,jdbcType=VARCHAR},sysdate,#{createdept,jdbcType=VARCHAR},sysdate,#{updateuser,jdbcType=VARCHAR},#{createuser,jdbcType=VARCHAR},#{cashflowcfg,jdbcType=VARCHAR}
+            ,#{cashflowcfg2,jdbcType=VARCHAR})
+    </insert>
+
+	<select id = "isTransInAssetTwo" resultType="java.lang.Integer">
+		SELECT
+		SUM (num)
+		FROM(
+		SELECT COUNT(TRADE_ID) num
+		FROM TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId}
+		AND PS NOT IN ('T09','T08','T07','T27','T30','T33')
+		UNION ALL
+		SELECT COUNT(TRADE_ID) num
+		FROM WFL_TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId}
+		AND PS NOT IN ('T09','T08','T07','T27','T30','T33')
+		)
+
+	</select>
+
 	<select id = "isExistTransInAsset" resultType="java.lang.Integer">
 		SELECT
 			SUM (num)
@@ -934,5 +1123,4 @@ SELECT F.FINPROD_NAME,
 				FROM TRD_PRODUCT_TEMP_DEAL
 				WHERE FINPROD_ID = #{finprodId})
 	</select>
-
 </mapper>

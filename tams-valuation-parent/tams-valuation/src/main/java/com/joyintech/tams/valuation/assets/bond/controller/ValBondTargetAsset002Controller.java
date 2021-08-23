@@ -36,6 +36,7 @@ import com.joyintech.tams.valuation.component.common.service.ValCommonBusinessSe
 import com.joyintech.tams.valuation.component.common.service.ValDateCalService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -206,8 +207,7 @@ public class ValBondTargetAsset002Controller extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) ValBondTargetAssetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) ValBondTargetAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -259,7 +259,7 @@ public class ValBondTargetAsset002Controller extends BaseController{
     @RequestMapping("/getInterfBondDto")
     public AjaxResult getInterfBondDto(@RequestParam("finprodMarketId") String finprodMarketId,
     		@RequestParam("tradeMarketId") String tradeMarketId)
-        throws ParseException {
+            throws ParseException, IllegalAccessException, InstantiationException {
         AjaxResult ar = new AjaxResult();
         ValBondTargetAssetDto dto = finBondTargetAssetService.getInterfBondDto(
         		finprodMarketId + tradeMarketId);
@@ -290,7 +290,7 @@ public class ValBondTargetAsset002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getBasicInfo")
     public ValBondTargetAssetDto getBasicInfo(@RequestBody ValBondTargetAssetDto finBondTargetAssetDto)
-            throws Exception {
+             {
         ValBondTargetAssetDto resultDto = finBondTargetAssetService.getBasicInfo(
                 finBondTargetAssetDto.getFinprodId());
         return resultDto;
@@ -308,7 +308,7 @@ public class ValBondTargetAsset002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
     public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+         {
         return finBondTargetAssetService.getfinprodIdForAdd(RequestUtil.getPageParam());
     }
     

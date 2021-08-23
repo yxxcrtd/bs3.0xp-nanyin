@@ -27,33 +27,33 @@
 		and INTERF_BRANCH.INTERF_ID IN ('449181','449191','449194','449188')
 	</select>
 	<select id="queryProdIdInfoIssueSuc" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select FIN_PRODUCT.FINPROD_ID id, CONCAT_WS('',FINPROD_MARKET_ID , ':' , FINPROD_ABBR) text
-		from FIN_PRODUCT, FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY
-		where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodTypeProd}
-		and FIN_PRODUCT.P_FINPROD_ID IS NULL
-		and FIN_PRODUCT.PROFIT_TYPE = '02'
+		select FP.FINPROD_ID id, CONCAT_WS('',FP.FINPROD_MARKET_ID , ':' , FP.FINPROD_ABBR) text
+		from FIN_PRODUCT FP, FIN_PRODUCT_ADD FPA, PTL_PORTFOLIO_AUTHORITY PPA
+		where FP.FINPROD_ID = FPA.FINPROD_ID
+		and FP.FINPROD_TYPE2 = #{finprodTypeProd}
+		and FP.P_FINPROD_ID IS NULL
+		and FP.PROFIT_TYPE = '02'
 		<if test="issueStatus != null and issueStatus != ''">
-			and FIN_PRODUCT_ADD.ISSUE_STATUS = #{issueStatus}
+			and FPA.ISSUE_STATUS = #{issueStatus}
 		</if>
 
 
-		and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+		and FPA.PORTFOLIO_ID = PPA.PORTFOLIO_ID
 
 		<if test="search != null and search != ''">
-			and (FIN_PRODUCT.FINPROD_MARKET_ID like concat('%',#{search},'%')
-			or FIN_PRODUCT.FINPROD_ABBR like concat('%',#{search},'%'))
+			and (FP.FINPROD_MARKET_ID like concat('%',#{search},'%')
+			or FP.FINPROD_ABBR like concat('%',#{search},'%'))
 		</if>
 		<if test="(ISSUE_STATUS_01 != null and ISSUE_STATUS_01 != '') and (ISSUE_STATUS_03 != null and ISSUE_STATUS_03 !='') ">
-			AND FIN_PRODUCT_ADD.ISSUE_STATUS IN (#{ISSUE_STATUS_01, jdbcType = VARCHAR}, #{ISSUE_STATUS_03, jdbcType = VARCHAR})
+			AND FPA.ISSUE_STATUS IN (#{ISSUE_STATUS_01, jdbcType = VARCHAR}, #{ISSUE_STATUS_03, jdbcType = VARCHAR})
 		</if>
 		<choose>
 			<when test="initValue != null and initValue != ''">
-				and FIN_PRODUCT.FINPROD_ID = #{initValue}
+				and FP.FINPROD_ID = #{initValue}
 			</when>
 			<otherwise>
 				<if test="userId != null and userId != ''">
-					and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+					and PPA.USER_ID = #{userId}
 				</if>
 			</otherwise>
 		</choose>

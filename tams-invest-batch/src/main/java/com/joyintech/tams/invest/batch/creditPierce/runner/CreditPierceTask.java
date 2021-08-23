@@ -63,7 +63,7 @@ public class CreditPierceTask extends BatchBaseService{
                     try {
                         Thread.sleep(30000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                 }
                 isRunning = true;
@@ -83,8 +83,7 @@ public class CreditPierceTask extends BatchBaseService{
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
         }
         isRunning=false;
         return result;

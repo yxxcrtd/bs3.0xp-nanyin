@@ -24,7 +24,10 @@ import com.joyintech.tams.invest.settle.netting.service.TransferMessageService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -45,7 +48,7 @@ import java.util.Map;
 @PageId("NettingManagement001")
 @RequestMapping("/invest/settle/netting/NettingManagement001")
 public class NettingManagement001Controller extends BaseController {
-
+    private static final Logger logger = LoggerFactory.getLogger(NettingManagement001Controller.class);
     @Autowired
     public NettingManagement001Service nettingManagement001Service;
 
@@ -114,7 +117,7 @@ public class NettingManagement001Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         Map<String, Object> searchParams = RequestUtil.getPageParam();
         String fileName = "划款信息查询" + "(" + iPlatformDate.getSysDateStr() + ").xls";
 
@@ -140,7 +143,8 @@ public class NettingManagement001Controller extends BaseController {
     @ResponseBody
     public AjaxResult check(@Valid @RequestBody NettingProcessDto inputDto,
                             BindingResult result) {
-        System.out.println(inputDto.getActOrderId());
+//        System.out.println(inputDto.getActOrderId());
+        logger.info(inputDto.getActOrderId());
         return commonCheck(result, inputDto.getOperateType());
     }
 
@@ -155,8 +159,7 @@ public class NettingManagement001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    public AjaxResult doRevoke(@RequestBody NettingProcessDto inputDto)
-            throws Exception {
+    public AjaxResult doRevoke(@RequestBody NettingProcessDto inputDto) throws WorkFlowException {
       //  System.out.println(inputDto.getOrderId());
         ProcessParameter<NettingProcessDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<NettingProcessDto> workFlowParameter = new WorkFlowParameter<>();

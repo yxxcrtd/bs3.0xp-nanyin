@@ -1,5 +1,6 @@
 package com.joyintech.service.product.messageadjust.finproductquotation.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -163,10 +164,10 @@ public class FinProductQuotation001Service extends BaseService<FinProductQuotati
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryProdIdInfoIssueSuc(Map<String, Object> param) {
+    public Page<SelectOptionDto> queryProdIdInfoIssueSuc(int page, int length,Map<String, Object> param) {
         param.put("finprodTypeProd", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         param.put("profitType", DictCodeList.收益类型_收益型.getValue());
-        return finProductQuotation001Mapper.queryProdIdInfoIssueSuc(param);
+        return this.queryForPageForSelectReturn(page, length, () -> finProductQuotation001Mapper.queryProdIdInfoIssueSuc(param));
     }
 
     /**
@@ -178,7 +179,7 @@ public class FinProductQuotation001Service extends BaseService<FinProductQuotati
     @Transactional(readOnly = true)
     public Page<FinProductQuotation001Dto> selectForPage(int page, int length,
                                                          Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("YESORNOY", DictCodeList.是否_是.getValue());
         pageParam.put("YESORNON", DictCodeList.是否_否.getValue());
         return super.queryForPage(page, length,
@@ -335,8 +336,7 @@ public class FinProductQuotation001Service extends BaseService<FinProductQuotati
      * @param entity db对象
      * @throws Exception 异常信息
      */
-    public void doInsert(FinProductQuotation002Dto entity)
-        throws Exception {
+    public void doInsert(FinProductQuotation002Dto entity) throws InvocationTargetException, IllegalAccessException {
         if (StringUtil.equals(entity.getIsLay(), DictCodeList.是否_是.getValue())) {
         	for (PrdLayerParam prdLayerParam : entity.getLayTypeInfoList()) {
         		/*
@@ -609,7 +609,7 @@ public class FinProductQuotation001Service extends BaseService<FinProductQuotati
      * @param entity db对象
      * @throws Exception 异常信息
      */
-    public void doUpdate(FinProductQuotation002Dto entity) throws Exception{
+    public void doUpdate(FinProductQuotation002Dto entity) throws InvocationTargetException, IllegalAccessException {
         Date date = new Date();
         date = entity.getEffDate();
         //删除旧的生效日

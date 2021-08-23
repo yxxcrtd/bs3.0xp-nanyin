@@ -48,11 +48,12 @@ public class BussRepEquityInfoValidator implements BeanValidator{
                     resultList.add(new ValidMessage("repTradeMarket",
                             getMessage("COMMON_E_0057", getMessage("BussRepEquityInfo.repTradeMarket"))));
                 }
-                if(StringUtil.isEmpty(dto.getRepSharesType())){
+                //ZGBSSE-577 【中债直连check】新建项目类资产，资产负债类型为股权，股票类型不输入，点击提交，系统提示：股票类型不能为空
+                if(StringUtil.isEmpty(dto.getRepSharesType())&&!StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股权.getValue())){
                     resultList.add(new ValidMessage("repSharesType",
                             getMessage("COMMON_E_0057", getMessage("BussRepEquityInfo.repSharesType"))));
                 }
-                if(StringUtil.isEmpty(dto.getRepInvestStage())){
+                if(StringUtil.isEmpty(dto.getRepInvestStage()) && StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股权.getValue())){
                     resultList.add(new ValidMessage("repInvestStage",
                             getMessage("COMMON_E_0057", getMessage("BussRepEquityInfo.repInvestStage"))));
                 }

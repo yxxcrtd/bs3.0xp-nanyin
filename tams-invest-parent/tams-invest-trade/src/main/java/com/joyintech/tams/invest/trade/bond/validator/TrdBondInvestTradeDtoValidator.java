@@ -302,10 +302,9 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
                     List<BussTrdTransfenpeiDto> bussTrdTransfenpeiDto = inputDto.getBussTrdTransfenpeiDto();
                     for (BussTrdTransfenpeiDto fenpeiDto:bussTrdTransfenpeiDto) {
                         for (BaseEtrInvestInfoDto entrustInfo:entrustInfos) {
-                            if (StringUtils.equals(fenpeiDto.getPortfolioId(),entrustInfo.getEtrEntrust().getPortfolioId())
-                            		&& StringUtils.equals(fenpeiDto.getEntrustId(),entrustInfo.getEtrEntrust().getEntrustId())
-                                    &&entrustInfo != null && entrustInfo.getEtrEntrust() != null
-                                    && entrustInfo.getEtrEntrust().getEntrustNum() != null) {
+                            if (entrustInfo != null && entrustInfo.getEtrEntrust() != null
+                                    && entrustInfo.getEtrEntrust().getEntrustNum() != null && StringUtils.equals(fenpeiDto.getPortfolioId(),entrustInfo.getEtrEntrust().getPortfolioId())
+                            		&& StringUtils.equals(fenpeiDto.getEntrustId(),entrustInfo.getEtrEntrust().getEntrustId())) {
                                 if(fenpeiDto.getTradeAmt().compareTo(entrustInfo.getEtrEntrust().getEntrustNum())>0){
                                     ValidMessage validMessage = new ValidMessage(
                                             getMessage("TRD_W_0009", getMessage("TrdBondInvestTrade002.tradeAmt")));
@@ -465,14 +464,14 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
         	}
         }
         //证券托管户 与通道二选一
-        if(("".equals(inputDto.getChlId())||inputDto.getChlId()==null)&&("".equals(inputDto.getSecManageAcctId())||inputDto.getSecManageAcctId()==null)){
+        if((inputDto.getChlId()==null||"".equals(inputDto.getChlId()))&&(inputDto.getSecManageAcctId()==null||"".equals(inputDto.getSecManageAcctId()))){
         	 ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0014",getMessage("invest.channelId")));
         	
         	errorList.add(validMessage);
         }
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
-        if(!"".equals(inputDto.getChlId())&&inputDto.getChlId()!=null){
+        if(inputDto.getChlId()!=null&&!"".equals(inputDto.getChlId())){
             Integer count;
             Map<String,Object> sMap= new HashMap<String ,Object>();
 

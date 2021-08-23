@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,12 +55,12 @@ public class PtlCashFlowValidator implements BeanValidator{
 //        校验重复数据
         if(StringUtil.equals(dto.getOperateType(), "revoke")) {
          // 删除check
-            Map<String, Object> map = new HashMap<String,Object>();
-            map.put("busiNo", dto.getBusiNo()+"R");
-            map.put("FINPROD_TYPE_TG_F23", DictCodeListExt1.金融产品类型_投管用_自定义现金流.getValue());
-         // 删除check
-            if(ptlCashFlowService.getEntity(map) != null){
-                resultList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0053")));
+            PtlCashFlowDto ptlCashFlowDtoTemp =new PtlCashFlowDto();
+            BeanUtils.copyProperties(dto,ptlCashFlowDtoTemp);
+            ptlCashFlowDtoTemp.setBusiNo(dto.getBusiNo()+"R");
+            if(ptlCashFlowService.checkBusinessDataInFlow(ptlCashFlowDtoTemp)){
+                //流程存在情况
+                resultList.add(new ValidMessage(getMessage("COMMON_E_0021","标识",dto.getBusiNo())));
             }
          // 业务发生日是否小于平台日
             if (dto.getSettleDate().compareTo(DateUtil.platDateFromCache()) < 0) {
@@ -82,6 +83,9 @@ public class PtlCashFlowValidator implements BeanValidator{
             }
             if(!StringUtil.equals(dto.getType(),"getBussTrdTransferOrder") && (dto.getBussTrdTransferOrder() == null || dto.getBussTrdTransferOrder().size() ==0)){
                 resultList.add(new ValidMessage(this.getMessage("PTL_COM_E_0007")));
+            }if(StringUtil.isEmpty(dto.getCounterId())){
+                resultList.add(new ValidMessage("",
+                        getMessage("COMMON_E_0009", getMessage("PtlCashFlow001.counterId"))));
             }
         }
         

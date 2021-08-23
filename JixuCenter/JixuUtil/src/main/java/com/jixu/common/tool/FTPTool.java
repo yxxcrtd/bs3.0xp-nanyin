@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ import com.joyintech.framework.util.StringUtil;
  * 
  * @author 王波
  * @version 1.0 2018年7月25日
- * @see SftpTools
+ * @see FTPTool
  * @since 1.0
  */
 public class FTPTool {
@@ -37,14 +38,14 @@ public class FTPTool {
     /**
      * 日志
      */
-    private Logger logger = LoggerFactory.getLogger(FTPTool.class);
+    private static Logger logger = LoggerFactory.getLogger(FTPTool.class);
     
     private int downLoadNums=0;
 	private boolean isLogin = false;
 	private final String ENCODE_UTF8 = "UTF-8";
 	private final String ENCODE_ISO = "iso-8859-1";
     
-    public FTPTool(String userName, String password, String host, int port) throws Exception{
+    public FTPTool(String userName, String password, String host, int port) throws IOException, FTPNotLoginException {
     	loginByPassword(userName, password, host, port);
 	}
 
@@ -56,10 +57,9 @@ public class FTPTool {
      * @param host 主机名
      * @param port 端口
      * @param sftpLoginType 【SFTP登录方式：01:密码登录，02:私钥登录；】【系统参数【SFTP_LOGIN_TYPE】维护】
-     * @throws Exception 
-     * @throws JSchException
+	 * @throws  IOException,FTPNotLoginException
      */
-    public void login(String userName, String password, String host, int port,String sftpLoginType) throws Exception{
+    public void login(String userName, String password, String host, int port,String sftpLoginType) throws IOException, FTPNotLoginException {
         
         // 私钥登录ssh服务
         if("02".equals(sftpLoginType)){
@@ -80,10 +80,10 @@ public class FTPTool {
      * @param password 密码
      * @param host 主机名
      * @param port 端口
-     * @throws JSchException
+     * @throws IOException,FTPNotLoginException
      */
     public void loginByPassword(String userName, String password, String host, int port)
-        throws Exception {
+			throws IOException, FTPNotLoginException {
     	
 		ftp = new FTPClient();
 		ftp.connect(host, port);
@@ -103,9 +103,8 @@ public class FTPTool {
      * @param identity 私钥
      * @param host 主机名
      * @param port 端口
-     * @throws JSchException
      */
-    public void loginById(String userName, String identity, String host, int port) throws Exception {
+    public void loginById(String userName, String identity, String host, int port) {
 //        try {
 //            // 接口 SFTP 服务配置
 //            JSch jsch = new JSch();
@@ -147,9 +146,9 @@ public class FTPTool {
      * @param remote 远程文件路径
      * @throws SftpException 
      */
-    public void putFile(String local, String remote) throws Exception {
+    public void putFile(String local, String remote) throws IOException {
 		
-		File dir = new File(local);
+		File dir = new SafelyFile(local);
 //		// 上传扫FTP的目录
 //		String ftpFileDir = new String(
 //				(ftpConfig.getFileDir() + nowStr + "/").getBytes(ENCODE_UTF8),
@@ -161,17 +160,23 @@ public class FTPTool {
 		// 单个文件流上传
 		for (File file : files) {
 			if (file.isFile()) {
-				FileInputStream fis = new FileInputStream(file);
-				String fileName = new String(file.getName().getBytes(
-						ENCODE_UTF8), ENCODE_ISO);
-				String remoteFile = remote + file.getName();
-				boolean flag4 = ftp.storeFile(fileName, fis);
-				if (flag4) {
-					logger.info("上传文件成功：" + remoteFile);
-				} else {
-					logger.error("上传文件失败：" + remoteFile);
+				FileInputStream fis = null;
+				try{
+					new FileInputStream(file);
+					String fileName = new String(file.getName().getBytes(
+							ENCODE_UTF8), ENCODE_ISO);
+					String remoteFile = remote + file.getName();
+					boolean flag4 = ftp.storeFile(fileName, fis);
+					if (flag4) {
+						logger.info("上传文件成功：" + remoteFile);
+					} else {
+						logger.error("上传文件失败：" + remoteFile);
+					}
+				}finally {
+					if(fis != null){
+						fis.close();
+					}
 				}
-				fis.close();
 			}
 		}
         logger.info("文件上传成功");
@@ -185,11 +190,11 @@ public class FTPTool {
      * @see
      * @since 1.0
      */
-    public void mkdir(String remote) throws Exception {
+    public void mkdir(String remote) throws IOException {
     	String directory = remote.substring(0, remote.lastIndexOf("/") + 1);
 		// 如果远程目录不存在，则递归创建远程服务器目录
 		if (!directory.equalsIgnoreCase("/")
-				&& !ftp.changeWorkingDirectory(new String(directory))) {
+				&& !ftp.changeWorkingDirectory(directory)) {
 			int start = 0;
 			int end = 0;
 			if (directory.startsWith("/")) {
@@ -225,7 +230,7 @@ public class FTPTool {
      * @param remote 远程文件路径
      * @throws SftpException 
      */
-    public void putFileDate(String local, String remote, String date) throws Exception {
+    public void putFileDate(String local, String remote, String date)  {
 //    	String remote = 
 //    			ApplicationConfig.get("toSaleFileDir") + filename;
 //    		StringBuffer bfFile = new StringBuffer();
@@ -264,7 +269,7 @@ public class FTPTool {
     			return new byte[0];
     		}
     	} catch (UnsupportedEncodingException e) {
-    		e.printStackTrace();
+			logger.error(e.getMessage(),e);
     	}
     	return null;
     }
@@ -276,14 +281,13 @@ public class FTPTool {
 	 * @param ftpFileName 服务器上的文件夹名或者文件名
 	 * @param localDir 下载到设备上的路径
  * @param backupPath 
-	 * @param return 下载的文件数目
 	 */
-    public void downFileOrDir(String ftpFileName, String localDir, String backupPath) throws Exception {
+    public void downFileOrDir(String ftpFileName, String localDir, String backupPath) throws IOException {
 		 //本地输出流记得手动关闭，系统调用不会关闭本地流  
         FileOutputStream fos = null;
 		try {
-			File file = new File(ftpFileName);
-			File temp = new File(localDir);
+			File file = new SafelyFile(ftpFileName);
+			File temp = new SafelyFile(localDir);
 			if (!temp.exists()) {
 				temp.mkdirs();
 			}
@@ -297,7 +301,7 @@ public class FTPTool {
 						downLoadNums++;
 						ftp.changeToParentDirectory();
 					} else {
-						File localfile = new File(localDir + File.separator
+						File localfile = new SafelyFile(localDir + File.separator
 								+ names[i]);
 						if (localfile.exists()) 
 							localfile.delete();
@@ -314,7 +318,7 @@ public class FTPTool {
 				}
 			} else {
 				
-				File localfile = new File(localDir + File.separator
+				File localfile = new SafelyFile(localDir + File.separator
 						+ file.getName());
 				if (localfile.exists()) 
 					file.delete();
@@ -327,14 +331,15 @@ public class FTPTool {
 				ftp.changeToParentDirectory();
 				
 			}
-			fos.close();
 		} catch (SocketException e) {
-			e.printStackTrace();
-			
+			logger.error(e.getMessage(),e);
 		} catch (IOException e) {
-			e.printStackTrace();
-			
-		} 
+			logger.error(e.getMessage(),e);
+		} finally {
+			if(fos != null) {
+				fos.close();
+			}
+		}
 	}
  
 // 判断是否是目录
@@ -344,7 +349,7 @@ public class FTPTool {
 			boolean falg = ftp.changeWorkingDirectory(fileName);
 			return falg;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return false;
 	}
@@ -358,7 +363,7 @@ public class FTPTool {
 	 * @description: 未登录FTP服务器异常
 	 * 
 	 */
-	private class FTPNotLoginException extends Exception {
+	public class FTPNotLoginException extends Exception {
 
 		private static final long serialVersionUID = 1L;
 
@@ -370,9 +375,8 @@ public class FTPTool {
 	
 	/**
      * 远程备份移动文件
-     * @param string 
      */
-    private void rsBackup(String backupPath,String oldFileName, String backupPathName) throws Exception  {
+    private void rsBackup(String backupPath,String oldFileName, String backupPathName) throws IOException {
         //当前路径
     	String currPath = ftp.printWorkingDirectory();
     	ftp.setFileType(FTP.BINARY_FILE_TYPE);
@@ -392,10 +396,10 @@ public class FTPTool {
 		}
     }
 
-	private void createDir(String directory) throws Exception {
+	private void createDir(String directory) throws IOException {
 		// 如果远程目录不存在，则递归创建远程服务器目录
 		if (!directory.equalsIgnoreCase("/")
-				&& !ftp.changeWorkingDirectory(new String(directory))) {
+				&& !ftp.changeWorkingDirectory(directory)) {
 			int start = 0;
 			int end = 0;
 			if (directory.startsWith("/")) {
@@ -411,7 +415,7 @@ public class FTPTool {
 			while (true) {
 				String subDirectory = new String(directory.substring(start, end)
 						.getBytes(ENCODE_UTF8), ENCODE_ISO);
-				String currPath = new String(directory.substring(0, end));
+				String currPath = directory.substring(0, end);
 				if (!ftp.changeWorkingDirectory(currPath)) {
 					if (ftp.makeDirectory(subDirectory)) {
 						ftp.changeWorkingDirectory(currPath);

@@ -69,7 +69,7 @@ public class ActualTimeAssetController {
     @PostMapping("findPage/{page}/{length}")
     public Page<ActualTimeAssetDto> selectAll(@RequestBody Map<String, Object> param,
                                                   @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return actualTimeAssetService.selectForPage(page, length, param);
     }
 }

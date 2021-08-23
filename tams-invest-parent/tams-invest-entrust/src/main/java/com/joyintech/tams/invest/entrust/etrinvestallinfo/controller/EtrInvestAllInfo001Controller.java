@@ -15,10 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.joyintech.framework.base.BaseDictCodeList;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.invest.common.constant.BussinessDictCode;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -146,8 +144,7 @@ public class EtrInvestAllInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getentrustId")
-    public List<SuggestDto> getentrustId(String param)
-        throws Exception {
+    public List<SuggestDto> getentrustId(String param){
         List<SuggestDto> temp = etrInvestAllInfoService.getentrustId(param);
         return temp;
     }
@@ -162,8 +159,7 @@ public class EtrInvestAllInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodId")
-    public List<SuggestDto> getfinprodId(String param)
-        throws Exception {
+    public List<SuggestDto> getfinprodId(String param){
         List<SuggestDto> temp = etrInvestAllInfoService.getfinprodId(param);
         return temp;
     }
@@ -178,8 +174,7 @@ public class EtrInvestAllInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<EtrInvestAllInfoDto> selectAllMstCaptialAccount()
-        throws Exception {
+    public Page<EtrInvestAllInfoDto> selectAllMstCaptialAccount(){
         Page<EtrInvestAllInfoDto> page = etrInvestAllInfoService.selectForPage(
             RequestUtil.getPageParam());
         return page;
@@ -193,8 +188,7 @@ public class EtrInvestAllInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return etrInvestAllInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -208,8 +202,7 @@ public class EtrInvestAllInfo001Controller extends BaseController {
      */
     @RequestMapping("checkPBRepoType")
     @ResponseBody
-    public EtrRepoDto checkPBRepoType()
-    		throws Exception {
+    public EtrRepoDto checkPBRepoType(){
     	return etrInvestAllInfoService.checkPBRepoType(RequestUtil.getParameters(getRequest()));
     }
     /**
@@ -222,8 +215,7 @@ public class EtrInvestAllInfo001Controller extends BaseController {
      */
     @RequestMapping("checkPBExportType")
     @ResponseBody
-    public String checkPBExportType()
-    		throws Exception {
+    public String checkPBExportType(){
 		Page<EtrInvestAllInfoDto> page = etrInvestAllInfoService.selectForPage(RequestUtil.getPageParam());
 		List<EtrInvestAllInfoDto> listData = page.getRoot();
 		String exportMsg="";
@@ -233,7 +225,7 @@ public class EtrInvestAllInfo001Controller extends BaseController {
 				exportMsg+=listData.get(i).getEntrustId()+"，";
 			}
 		}
-    	return exportMsg;
+    	return StringUtil.trimHtmlTag(exportMsg);
     }
     /**
      * PB文件导出 add by caoxue 2019-12-31
@@ -244,8 +236,7 @@ public class EtrInvestAllInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("exportPB")
-    public ResponseEntity<byte[]> exportPB()
-    		throws Exception {
+    public ResponseEntity<byte[]> exportPB(){
     	List<EtrInvestAllInfoDto> listData = etrInvestAllInfoService.selectExportPB(
     	            RequestUtil.getPageParam());
     	 

@@ -242,7 +242,7 @@ public class FinProjectTargetAssetService extends CommonExportService<FinProject
              * String oldFinprodId = entity.getFinprodId(); String oldfinprodMarketId = entity.getFinprodMarketId(); if(null!=entity){ entity =
              * getFinprodId(entity); String jsonStr = JsonUtils.object2Json(entity); jsonStr = StringUtil.replaceAll(jsonStr, oldFinprodId,
              * entity.getFinprodId()); jsonStr = StringUtil.replaceAll(jsonStr, oldfinprodMarketId, entity.getFinprodMarketId()); try { entity =
-             * (FinProjectTargetAssetDto)JsonUtils.OBJECT_MAPPER.readValue(jsonStr, FinProjectTargetAssetDto.class); } catch (Exception e) { e.printStackTrace();
+             * (FinProjectTargetAssetDto)JsonUtils.OBJECT_MAPPER.readValue(jsonStr, FinProjectTargetAssetDto.class); } catch (Exception e) { logger.error(e.getMessage(),e);
              * } } //文件信息 if (CollectionUtils.isNotEmpty(entity.getFileArray()) && StringUtil.isNotEmpty(entity.getFinprodId())) { // 将附件和当前业务对象绑定（更新附件的业务代码）
              * fileAttachmentProcess.updateBussinessNo( entity.getFileArray().stream().map(UploadFile::getFileNo).collect( Collectors.toList()),
              * entity.getFinprodId()); }
@@ -485,6 +485,8 @@ public class FinProjectTargetAssetService extends CommonExportService<FinProject
                             creditNonstdInfoDto.setRepBasis(BussinessDictCodeList.中债_计息基础_ACT360.getValue());
                         }else if (StringUtil.equals(factorDto.getBasis(), DictCodeList.计息基础_A_365.getValue())){
                             creditNonstdInfoDto.setRepBasis(BussinessDictCodeList.中债_计息基础_ACT365.getValue());
+                        }else if(StringUtil.equals(factorDto.getBasis(), DictCodeList.计息基础_A_A_按实际天数分配.getValue())){
+                            creditNonstdInfoDto.setRepBasis(BussinessDictCodeList.中债_计息基础_ACTACT.getValue());
                         }
                             
                         

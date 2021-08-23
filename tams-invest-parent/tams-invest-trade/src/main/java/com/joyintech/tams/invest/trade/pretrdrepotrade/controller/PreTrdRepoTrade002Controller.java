@@ -2,9 +2,7 @@
 
 package com.joyintech.tams.invest.trade.pretrdrepotrade.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.DataDictItem;
@@ -13,7 +11,6 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.EtrFinishStatus;
@@ -27,17 +24,12 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
-import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
-import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
-import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
 import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
-import com.joyintech.tams.invest.trade.investtrade.commandreceive.dto.TrdCommandReceive001Dto;
 import com.joyintech.tams.invest.trade.pretrdrepotrade.dto.PreTrdRepoTrade002Dto;
 import com.joyintech.tams.invest.trade.pretrdrepotrade.dto.TrdInvestPersonInfoDto;
 import com.joyintech.tams.invest.trade.pretrdrepotrade.service.PreTrdRepoTrade002Service;
@@ -49,6 +41,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -63,9 +56,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 回购投资交易新建
@@ -547,7 +538,7 @@ public class PreTrdRepoTrade002Controller extends BaseController {
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
         String index=baseGetBusinessId.buildBussinessCode(codeParameter);
-        return index;
+        return StringUtil.trimHtmlTag(index);
     }
     // add by zhanggenglin 质押式回购多组合 20190813 end
 
@@ -583,7 +574,7 @@ public class PreTrdRepoTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody PreTrdRepoTrade002Dto dto)   throws Exception {
+    AjaxResult save(@RequestBody PreTrdRepoTrade002Dto dto) throws WorkFlowException {
 
         String msg = "";
         dto.setPledgeBondList(dto.getBussRepoSecPtl().getPledgeBondList());

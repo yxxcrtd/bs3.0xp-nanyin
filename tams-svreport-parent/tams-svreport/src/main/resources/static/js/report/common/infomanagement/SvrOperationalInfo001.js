@@ -64,6 +64,9 @@ var assetColList1 = [ //标题栏
                   	{field: 'BASIS02', align: 'center', title: '*计息基础', width: 150},
                   	{field: 'TARGET_TYPE102', align: 'center', title: '回购标的类别', width: 150},
                   	{field: 'TARGET_AMT02', align: 'center', title: '回购标的金额', width: 150},
+					 //add by yjp 估值穿透开发--监管报送统一数据维护增加对应资管计划代码 start
+                  	{field: 'CHECK_CODE', align: 'center', title: '对应资管计划代码', width: 150},
+					//add by yjp 估值穿透开发--监管报送统一数据维护增加对应资管计划代码 end
                   	// 非标准化债权类资产/信贷资产流转项目
                   	{field: 'PROFIT_TYPE04', align: 'center', title: '收/受益权类型', width: 150},
                   	{field: 'IS_RESALE04', align: 'center', title: '*是否属于买入返售', width: 150},
@@ -242,7 +245,7 @@ var assetColList1 = [ //标题栏
                   	{field: 'ASSET_NAME14', align: 'center', title: '*名称', width: 150},
                   	{field: 'IN_ASSET_TYPE14', align: 'center', title: '*行内资产类别', width: 150},
                   	{field: 'IN_ASSET_TYPE_CMM14', align: 'center', title: '行内资产类别说明', width: 150},
-                  	{field: 'ASSET_VALUE14', align: 'center', title: '*资产价值', width: 150},
+                  	{field: 'AMT14', align: 'center', title: '*金额', width: 150},
                   	{field: 'VDATE14', align: 'center', title: '*起息日', width: 150},
                   	{field: 'MDATE14', align: 'center', title: '*到期日', width: 150},
                   	{field: 'COUNTRY_AREA14', align: 'center', title: '*所属国家或地区', width: 150},
@@ -704,7 +707,7 @@ $(function() {
 
 function showTables() {
 	var h = $("#selectedColumns").outerHeight(true);
-	var divheight = 110 + h;
+	var divheight = 150 + h;
 	var tableId = $('#baseTableName').val();
 	if (typeof (tableId) == "undefined" || tableId == null || tableId == "") {
 		layer.alert('请选择数据源表', {

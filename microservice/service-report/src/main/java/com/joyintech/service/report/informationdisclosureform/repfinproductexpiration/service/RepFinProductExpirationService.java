@@ -82,7 +82,7 @@ public class RepFinProductExpirationService extends BaseService<RepFinProductExp
      * @since 1.0
      */
     public Page<RepFinProductExpirationDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         if(StringUtil.isNotEmpty(pageParam.get("finprodIdList"))){
             pageParam.put("finprodIdList",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("finprodIdList")));
         }

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
 import org.apache.commons.collections4.CollectionUtils;
@@ -192,7 +193,6 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
 			 try {
 				infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcPrdBaseinfoEndSub.class);
 			} catch (IOException e) {
-				e.printStackTrace();
 				logger.debug("数据转换异常",e.getMessage(),e);
 				logger.error(e.getMessage(),e);
 				return ;
@@ -467,13 +467,13 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
                     GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 //                String zipFileName = FileNameUtil.createFileName("zip");
                 String zipFileName = "PbocPrdEnd("+DateUtil.format(new Date())+").zip";
-                outFile = new File(exportFilePath + File.separator + zipFileName);
+                outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
                 // 导出路径不存在则重新生成
                 if (!outFile.getParentFile().exists()) {
                     outFile.getParentFile().mkdirs();
                 }
                 try {
-                    ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+                    ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new SafelyFile[] {}));
                 }
                 catch (Exception e) {
                     // 压缩文件失败后，删除所有临时文件
@@ -551,7 +551,6 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
             fileList.add(pbcPrdAccountSubService001.makeSingleFile(wb, reportConfig, null, fileType, contents, new LongAdder(), 0L, count,isHasName));
         }
         catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         finally {
@@ -572,9 +571,9 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
             String exportFilePath = CacheUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String zipFileName = FileNameUtil.createFileName("zip");
-            targetFile = new File(exportFilePath + File.separator + zipFileName);
+            targetFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             try {
-                ZipFileUtil.compressZip(targetFile, true, fileList.toArray(new File[] {}));
+                ZipFileUtil.compressZip(targetFile, true, fileList.toArray(new SafelyFile[] {}));
             }
             catch (Exception e) {
                 // 压缩文件失败后，删除所有临时文件

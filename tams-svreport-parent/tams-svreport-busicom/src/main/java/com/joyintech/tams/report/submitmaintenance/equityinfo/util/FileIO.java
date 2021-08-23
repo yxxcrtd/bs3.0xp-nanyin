@@ -23,7 +23,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -33,7 +34,10 @@ import com.joyintech.tams.report.common.util.ReportGlobalConstant;
  * 
  */
 public class FileIO {
-
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(FileIO.class);
 	private static final String GBK = "gbk";
 
 	private FileIO() {
@@ -92,28 +96,29 @@ public class FileIO {
 			writer = new BufferedWriter(write);
 			writer.write(content);
 		} catch (Exception ex) {
-			System.out.println(ex);
+//			System.out.println(ex);
+			logger.info(ex.toString());
 		}
 		finally {
     		if(writer !=null ){
     			try {
     				writer.close();
     			} catch (Exception e) {
-    				e.printStackTrace();
+					logger.error(e.getMessage(),e);
     			}
     		}
     		if(write !=null ){
     			try {
     				write.close();
     			} catch (Exception e) {
-    				e.printStackTrace();
+					logger.error(e.getMessage(),e);
     			}
     		}
     		if(fos !=null ){
     			try {
     				fos.close();
     			} catch (Exception e) {
-    				e.printStackTrace();
+					logger.error(e.getMessage(),e);
     			}
     		}
 		}
@@ -145,21 +150,22 @@ public class FileIO {
 				inStream.close();
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+//			System.out.println(e);
+			logger.info(e.toString());
 		}
 		finally {
     		if(inStream !=null ){
     			try {
     				inStream.close();
     			} catch (Exception e) {
-    				e.printStackTrace();
+					logger.error(e.getMessage(),e);
     			}
     		}
     		if(fs !=null ){
     			try {
     				fs.close();
     			} catch (Exception e) {
-    				e.printStackTrace();
+					logger.error(e.getMessage(),e);
     			}
     		}
 		}
@@ -173,6 +179,8 @@ public class FileIO {
 		if (!file.exists()) {
 			file.mkdirs();
 		}
+
+		XMLWriter xmlWriter = null;
 		try {
 			if (!f.exists()) {
 				f.createNewFile();
@@ -190,7 +198,7 @@ public class FileIO {
 			/** stringWriter字符串是用来保存XML文档的 */
 			StringWriter stringWriter = new StringWriter();
 			/** xmlWriter是用来把XML文档写入字符串的(工具) */
-			XMLWriter xmlWriter = new XMLWriter(new FileOutputStream(f),outputFormat);
+			xmlWriter = new XMLWriter(new FileOutputStream(f),outputFormat);
 			/** 创建xml文档 */
 			Document document = DocumentHelper.createDocument();
 			Element list = document.addElement(ReportGlobalConstant.XML_LIST);
@@ -206,10 +214,17 @@ public class FileIO {
 				xmlWriter.write(row);
 			}
 			xmlWriter.writeClose(list);
-			xmlWriter.close();
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
+		}finally {
+			if(xmlWriter != null){
+				try {
+					xmlWriter.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
 		}
 	}
 	/* 生成反馈文件
@@ -225,7 +240,8 @@ public class FileIO {
 		if(StringUtil.isEmptyList(list)){
 			return;
 		}
-		System.out.println("结果list大小："+list.size());
+//		System.out.println("结果list大小："+list.size());
+		logger.info("结果list大小："+list.size());
 		/** 反馈文件写入文件中 */
 		FileIO.writeList(outputPath, list,
 				CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE));
@@ -250,7 +266,8 @@ public class FileIO {
 		if(StringUtil.isEmptyList(list)){
 			return;
 		}
-		System.out.println("结果list大小："+list.size());
+//		System.out.println("结果list大小："+list.size());
+		logger.info("结果list大小："+list.size());
 		/** 反馈文件写入文件中 */
 		FileIO.writeList(outputPath, list,
 				 CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE));
@@ -280,14 +297,21 @@ public class FileIO {
         //byte[] buff = sftp.download("/opt", "start.sh");  
         //System.out.println(Arrays.toString(buff));  
         File file = new File(allPath+fileName1);  
-        InputStream is;
+        InputStream is = null;
 		try {
 			is = new FileInputStream(file);
 			sftp.upload(localPath, fileName1, is);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  
+			logger.error(e.getMessage(),e);
+		}finally {
+			if(is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+		}
         sftp.logout();  
     } 
 }

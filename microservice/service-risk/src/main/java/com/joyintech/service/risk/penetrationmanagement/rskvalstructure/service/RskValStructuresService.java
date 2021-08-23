@@ -59,7 +59,7 @@ public class RskValStructuresService extends BaseService<RskValStructureDto>{
      * @since 1.0
      */
     public Page<RskValStructureDto> selectForPage(int page, int length,
-                                                  Map<String, Object> pageParam) throws Exception {
+                                                  Map<String, Object> pageParam) {
         return super.queryForPage(page, length, () -> {
             rskValStructureMapper.selectForPage(pageParam);
         });

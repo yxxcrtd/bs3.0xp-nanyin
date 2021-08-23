@@ -65,7 +65,17 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade002Service.genBizCode;
 
 /**
  * @author : 强成西
@@ -388,8 +398,7 @@ public class TrdProjectInvestTrade002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdProjectInvestTrade002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdProjectInvestTrade002Dto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

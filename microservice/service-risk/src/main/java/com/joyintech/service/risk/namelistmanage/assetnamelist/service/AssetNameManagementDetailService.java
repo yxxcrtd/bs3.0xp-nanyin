@@ -46,7 +46,7 @@ public class AssetNameManagementDetailService extends BaseService<RskAccessListD
      * @since 1.0
      */
     public Page<RskAccessListDetailDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("sysDate",iPlatformDate.getSysDate());
         Page<RskAccessListDetailDto> pageDto = super.queryForPage(page, length, () -> assetNameManagementMapper.queryDetailForPage(pageParam));
         return pageDto;

@@ -38,6 +38,8 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -58,6 +60,10 @@ import java.util.*;
 @Transactional(rollbackFor = Exception.class)
 public class LendTransfer001Service extends CommonExportService<LendTransfer001Dto>
         implements BaseProcessService<LendTransfer001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(LendTransfer001Service.class);
 
     /**
      * BaseGetBusinessId
@@ -476,7 +482,7 @@ public class LendTransfer001Service extends CommonExportService<LendTransfer001D
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             beforeComplete(entity);
         }

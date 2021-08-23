@@ -11,7 +11,10 @@
 package com.joyintech.service.report.poc.riskmonitorindicators.dao;
 
 import java.util.List;
-import java.util.Map; 
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.report.poc.riskmonitorindicators.dto.RiskMonitorIndicatorsDto;
 import com.joyintech.service.report.poc.riskmonitorindicators.dto.RiskTemporaryDataDto;
@@ -24,7 +27,7 @@ import com.joyintech.service.report.poc.riskmonitorindicators.dto.RiskTemporaryD
  * @see RiskMonitorIndicatorsMapper
  * @since 1.0
  */
-
+@Repository
 public interface RiskMonitorIndicatorsMapper {
     
     /**

@@ -201,7 +201,7 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
      */
     public Page<TrdPlanNetInvestTradeDto> selectForPage(int page, int length,
                                                         Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.交易流程状态_流程中.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.交易流程状态_有效.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());
@@ -238,7 +238,14 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
                 param.put("bTradeId", tfitDto.getTradeId());
                 param.put("tradeStatus", DictCodeListExt1.交易状态_初始.getValue());
                 param.put("yes", DictCodeList.是否_是.getValue());
-                int flg1 = trdPlanNetInvestTradeMapper.selectConfirmInfo(param);
+                //int flg1 = trdPlanNetInvestTradeMapper.selectConfirmInfo(param);
+                List<TrdPlanNetInvestTradeDto> tempList = trdPlanNetInvestTradeMapper.selectConfirmTradeList(param);
+                int flg1 = 0;
+                if(CollectionUtils.isNotEmpty(tempList)){
+                    flg1 = tempList.size();
+                    tfitDto.setConfirmDate(tempList.get(0).getTradeDate());
+                }
+
                 int flg2 = trdPlanNetInvestTradeMapper.selectWflConfirmInfo(tfitDto.getTradeId());
                 if (flg1 == 0 && flg2 == 0) {
                     tfitDto.setFlg("01");
@@ -965,7 +972,7 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
     public BaseEtrInvestInfoDto getEtrustDto(String entrustId) {
         if (baseEtrInvestInfoService == null) {
             return new BaseEtrInvestInfoDto();
-    }
+        }
         BaseEtrInvestInfoDto resultDto = baseEtrInvestInfoService.queryActiveMandate(entrustId);
         if (resultDto != null && resultDto.getEtrEntrust() != null) {
             // 委托数量中扣除已完成额度
@@ -974,9 +981,13 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
                 for (EtrFinishStatus etrFinishStatus : resultDto.getEtrFinishStatusList()) {
                     已完成额度 = ArithmeticUtil.doAdd(已完成额度,etrFinishStatus.getFinishAmt());
                 }
-
-                resultDto.getEtrEntrust().setEntrustAmt(
-                        ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustAmt(), 已完成额度));
+                if(StringUtil.isNotEmpty(resultDto.getEtrEntrust().getEntrustAmt())) {
+                    resultDto.getEtrEntrust().setEntrustAmt(
+                            ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustAmt(), 已完成额度));
+                }else if(StringUtil.isNotEmpty(resultDto.getEtrEntrust().getEntrustNum())) {
+                    resultDto.getEtrEntrust().setEntrustNum(
+                            ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustNum(), 已完成额度));
+                }
             }
         }
         return resultDto;
@@ -1235,5 +1246,18 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
 		Map<String, Object> map = new HashMap<>();
         map.put("finprodId", finprodId);
         return trdPlanNetInvestTradeMapper.queryIssueAmt(map);
+    }
+
+    /**
+     *
+     * 获取最原始留痕表創建人
+     * <功能详细描述>
+     * @param workflowId
+     * @return 最原始留痕表創建人
+     * @see
+     * @since 1.0
+     */
+    public String getSysDateMark(String workflowId) {
+        return trdPlanNetInvestTradeMapper.getSysDateMark(workflowId);
     }
 }

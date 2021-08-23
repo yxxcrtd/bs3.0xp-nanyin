@@ -27,6 +27,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -200,8 +201,7 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getentrustIdAdd")
-    public Page<SelectOptionDto> getentrustIdAdd()
-        throws Exception {
+    public Page<SelectOptionDto> getentrustIdAdd(){
         return firstService.getentrustIdAdd(RequestUtil.getPageParam());
     }
 
@@ -215,8 +215,7 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         return firstService.getfinprodIdForAdd(RequestUtil.getPageParam());
     }
     /**
@@ -276,8 +275,7 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

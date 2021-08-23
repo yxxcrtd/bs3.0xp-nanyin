@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepBottomAssetMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepBottomAsset" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <id column="REP_ASSET_CODE" property="repAssetCode" jdbcType="VARCHAR" />
+        <id column="REP_POSITION_DATE" property="repPositionDate" jdbcType="DATE" />
+        <result column="REP_ISSUE_PARTY_ID" property="repIssuePartyId" jdbcType="VARCHAR" />
+        <result column="REP_SUM_MONEY" property="repSumMoney" jdbcType="DECIMAL" />
+        <result column="REP_SUM_AMOUNT" property="repSumAmount" jdbcType="DECIMAL" />
+        <result column="REP_UNINVEST_CASH" property="repUninvestCash" jdbcType="DECIMAL" />
+        <result column="REP_BOTTOM_CODE2" property="repBottomCode2" jdbcType="VARCHAR" />
+        <result column="REP_BOTTOM_ASSET_AMOUNT" property="repBottomAssetAmount" jdbcType="DECIMAL" />
+        <result column="REP_BOTTOM_ASSET_SMV" property="repBottomAssetSmv" jdbcType="DECIMAL" />
+        <result column="REP_REGIS_DATE" property="repRegisDate" jdbcType="DATE" />
+        <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" />
+        <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_ASSET_CODE REP_ASSET_CODE, REP_POSITION_DATE REP_POSITION_DATE, 
+        REP_ISSUE_PARTY_ID REP_ISSUE_PARTY_ID, REP_SUM_MONEY REP_SUM_MONEY, REP_SUM_AMOUNT REP_SUM_AMOUNT, 
+        REP_UNINVEST_CASH REP_UNINVEST_CASH, REP_BOTTOM_CODE2 REP_BOTTOM_CODE2, REP_BOTTOM_ASSET_AMOUNT REP_BOTTOM_ASSET_AMOUNT, 
+        REP_BOTTOM_ASSET_SMV REP_BOTTOM_ASSET_SMV, REP_REGIS_DATE REP_REGIS_DATE, REP_SEND_STATUS REP_SEND_STATUS, 
+        REP_STATUS_DATE REP_STATUS_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepBottomAssetMapper.Base_Column_List" />
+        from REP_BOTTOM_ASSET
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepBottomAssetMapper.Base_Column_List" />
+        from REP_BOTTOM_ASSET
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RepBottomAssetKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepBottomAssetMapper.Base_Column_List" />
+        from REP_BOTTOM_ASSET
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_ASSET_CODE = #{repAssetCode,jdbcType=VARCHAR}
+          and REP_POSITION_DATE = #{repPositionDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepBottomAssetKey" >
+        delete from REP_BOTTOM_ASSET
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_ASSET_CODE = #{repAssetCode,jdbcType=VARCHAR}
+          and REP_POSITION_DATE = #{repPositionDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepBottomAsset" >
+        insert into REP_BOTTOM_ASSET (REP_FINPROD_ID, REP_ASSET_CODE, REP_POSITION_DATE, 
+            REP_ISSUE_PARTY_ID, REP_SUM_MONEY, REP_SUM_AMOUNT, 
+            REP_UNINVEST_CASH, REP_BOTTOM_CODE2, REP_BOTTOM_ASSET_AMOUNT, 
+            REP_BOTTOM_ASSET_SMV, REP_REGIS_DATE, REP_SEND_STATUS, 
+            REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repAssetCode,jdbcType=VARCHAR}, #{repPositionDate,jdbcType=DATE}, 
+            #{repIssuePartyId,jdbcType=VARCHAR}, #{repSumMoney,jdbcType=DECIMAL}, #{repSumAmount,jdbcType=DECIMAL}, 
+            #{repUninvestCash,jdbcType=DECIMAL}, #{repBottomCode2,jdbcType=VARCHAR}, #{repBottomAssetAmount,jdbcType=DECIMAL}, 
+            #{repBottomAssetSmv,jdbcType=DECIMAL}, #{repRegisDate,jdbcType=DATE}, #{repSendStatus,jdbcType=VARCHAR}, 
+            #{repStatusDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepBottomAsset" >
+        insert into REP_BOTTOM_ASSET
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repAssetCode != null" >
+                REP_ASSET_CODE,
+            </if>
+            <if test="repPositionDate != null" >
+                REP_POSITION_DATE,
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID,
+            </if>
+            <if test="repSumMoney != null" >
+                REP_SUM_MONEY,
+            </if>
+            <if test="repSumAmount != null" >
+                REP_SUM_AMOUNT,
+            </if>
+            <if test="repUninvestCash != null" >
+                REP_UNINVEST_CASH,
+            </if>
+            <if test="repBottomCode2 != null" >
+                REP_BOTTOM_CODE2,
+            </if>
+            <if test="repBottomAssetAmount != null" >
+                REP_BOTTOM_ASSET_AMOUNT,
+            </if>
+            <if test="repBottomAssetSmv != null" >
+                REP_BOTTOM_ASSET_SMV,
+            </if>
+            <if test="repRegisDate != null" >
+                REP_REGIS_DATE,
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS,
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repAssetCode != null" >
+                #{repAssetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repPositionDate != null" >
+                #{repPositionDate,jdbcType=DATE},
+            </if>
+            <if test="repIssuePartyId != null" >
+                #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repSumMoney != null" >
+                #{repSumMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="repSumAmount != null" >
+                #{repSumAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="repUninvestCash != null" >
+                #{repUninvestCash,jdbcType=DECIMAL},
+            </if>
+            <if test="repBottomCode2 != null" >
+                #{repBottomCode2,jdbcType=VARCHAR},
+            </if>
+            <if test="repBottomAssetAmount != null" >
+                #{repBottomAssetAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="repBottomAssetSmv != null" >
+                #{repBottomAssetSmv,jdbcType=DECIMAL},
+            </if>
+            <if test="repRegisDate != null" >
+                #{repRegisDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepBottomAsset" >
+        insert into REP_BOTTOM_ASSET(REP_FINPROD_ID, REP_ASSET_CODE, REP_POSITION_DATE, REP_ISSUE_PARTY_ID, 
+        REP_SUM_MONEY, REP_SUM_AMOUNT, REP_UNINVEST_CASH, REP_BOTTOM_CODE2, REP_BOTTOM_ASSET_AMOUNT, 
+        REP_BOTTOM_ASSET_SMV, REP_REGIS_DATE, REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select REP_FINPROD_ID, REP_ASSET_CODE, REP_POSITION_DATE, REP_ISSUE_PARTY_ID, 
+            REP_SUM_MONEY, REP_SUM_AMOUNT, REP_UNINVEST_CASH, REP_BOTTOM_CODE2, REP_BOTTOM_ASSET_AMOUNT, 
+            REP_BOTTOM_ASSET_SMV, REP_REGIS_DATE, REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_BOTTOM_ASSET
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR} and REP_ASSET_CODE = #{repAssetCode,jdbcType=VARCHAR} and REP_POSITION_DATE = #{repPositionDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepBottomAsset" >
+        update REP_BOTTOM_ASSET
+        <set >
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repSumMoney != null" >
+                REP_SUM_MONEY = #{repSumMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="repSumAmount != null" >
+                REP_SUM_AMOUNT = #{repSumAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="repUninvestCash != null" >
+                REP_UNINVEST_CASH = #{repUninvestCash,jdbcType=DECIMAL},
+            </if>
+            <if test="repBottomCode2 != null" >
+                REP_BOTTOM_CODE2 = #{repBottomCode2,jdbcType=VARCHAR},
+            </if>
+            <if test="repBottomAssetAmount != null" >
+                REP_BOTTOM_ASSET_AMOUNT = #{repBottomAssetAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="repBottomAssetSmv != null" >
+                REP_BOTTOM_ASSET_SMV = #{repBottomAssetSmv,jdbcType=DECIMAL},
+            </if>
+            <if test="repRegisDate != null" >
+                REP_REGIS_DATE = #{repRegisDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_ASSET_CODE = #{repAssetCode,jdbcType=VARCHAR}
+          and REP_POSITION_DATE = #{repPositionDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepBottomAsset" >
+        update REP_BOTTOM_ASSET
+        set REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            REP_SUM_MONEY = #{repSumMoney,jdbcType=DECIMAL},
+            REP_SUM_AMOUNT = #{repSumAmount,jdbcType=DECIMAL},
+            REP_UNINVEST_CASH = #{repUninvestCash,jdbcType=DECIMAL},
+            REP_BOTTOM_CODE2 = #{repBottomCode2,jdbcType=VARCHAR},
+            REP_BOTTOM_ASSET_AMOUNT = #{repBottomAssetAmount,jdbcType=DECIMAL},
+            REP_BOTTOM_ASSET_SMV = #{repBottomAssetSmv,jdbcType=DECIMAL},
+            REP_REGIS_DATE = #{repRegisDate,jdbcType=DATE},
+            REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_ASSET_CODE = #{repAssetCode,jdbcType=VARCHAR}
+          and REP_POSITION_DATE = #{repPositionDate,jdbcType=DATE}
+    </update>
+</mapper>

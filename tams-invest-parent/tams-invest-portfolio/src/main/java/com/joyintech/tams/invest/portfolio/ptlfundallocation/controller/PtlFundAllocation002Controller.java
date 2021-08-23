@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,6 +90,12 @@ public class PtlFundAllocation002Controller extends BaseController {
         String portfolioId = getParam("portfolioId");
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             PtlFundAllocationDto dto = ptlFundAllocation002Service.getBussinessEntityByWorkflowId(workflowId);
+            //多组合银证转账特殊处理
+            if (StringUtil.equals(dto.getPayType(), DictCodeList.交易方向_银证转账.getValue())) {
+                dto.setPayType(DictCodeListExt1.指令类型_银证转账_银转证.getValue());
+            } else if(StringUtil.equals(dto.getPayType(), DictCodeList.交易方向_证银转账.getValue())){
+                dto.setPayType(DictCodeListExt1.指令类型_银证转账_证转银.getValue());
+            }
             if (dto.getBussTrdTransferOrder() != null) {
                 model.addAttribute("stlPayOrdersList", JsonUtils.object2Json(dto.getBussTrdTransferOrder().get(0)));
             } else {
@@ -265,8 +272,7 @@ public class PtlFundAllocation002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) PtlFundAllocationDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) PtlFundAllocationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

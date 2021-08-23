@@ -103,7 +103,7 @@ public class ReportWorkManage001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ReportWorkManage001Dto> findPage() throws Exception{
+    public Page<ReportWorkManage001Dto> findPage(){
         Page<ReportWorkManage001Dto>  pageList = reportWorkManage001Service.findPage(RequestUtil.getPageParam());
         return pageList;
     }
@@ -183,7 +183,7 @@ public class ReportWorkManage001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	 String datas = this.getParam("datas");
          Map<String, Object> paraMap = RequestUtil.getPageParam();
          List<ReportWorkManage001Dto> dtoList;
@@ -239,7 +239,7 @@ public class ReportWorkManage001Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/check")
-	public AjaxResult check(@RequestBody ReportWorkManage001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody ReportWorkManage001Dto dto, BindingResult result) {
 		return new AjaxResult();
 	}
     /**
@@ -297,7 +297,7 @@ public class ReportWorkManage001Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/refreshCheck")
-	public AjaxResult refreshCheck() throws Exception {
+	public AjaxResult refreshCheck() {
 		AjaxResult aj = new AjaxResult();
 		String times = CacheUtil.getSysParam(ReportGlobalConstant.REP_REFRESH_JOBRULE);
 		aj.setData(times);

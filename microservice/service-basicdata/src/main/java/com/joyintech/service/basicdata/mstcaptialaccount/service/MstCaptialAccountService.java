@@ -104,8 +104,7 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
      * @return Page类
      * @throws Exception 异常信息
      */
-    public Page<MstCaptialAccountDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    public Page<MstCaptialAccountDto> selectForPage(int page, int length, Map<String, Object> pageParam){
         return super.queryForPage(page,length,() -> basicMstCaptialAccountMapper.select(pageParam));
     }
 

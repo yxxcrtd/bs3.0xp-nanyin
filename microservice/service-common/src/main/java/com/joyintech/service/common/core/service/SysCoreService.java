@@ -5,26 +5,52 @@
 
 package com.joyintech.service.common.core.service;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
-import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.common.core.dao.SysCoreMapper;
-import com.joyintech.service.common.core.dto.AutoCouponDto;
-import com.joyintech.service.common.core.dto.InfChinamutualfunddescriptionDto;
-import com.joyintech.service.common.core.dto.InterfPayhsrcsecinfoDto;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.component.base.core.BaseFinProductBaseInfoService;
-import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.common.core.dao.SysCoreMapper;
+import com.joyintech.service.common.core.dto.AutoCouponDto;
+import com.joyintech.service.common.core.dto.InfChinamutualfunddescriptionDto;
+import com.joyintech.service.common.core.dto.InterfPayhsrcsecinfoDto;
+import com.joyintech.service.common.core.dto.InterfStockInfoDto;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductTypeConfig;
+import com.joyintech.tams.common.base.entity.InfCmoneymarketfscarryoverm;
+import com.joyintech.tams.common.base.entity.InterfBondMarketInfo;
+import com.joyintech.tams.common.base.entity.InterfCbonddescription;
+import com.joyintech.tams.common.base.entity.InterfCbondindustrywind;
+import com.joyintech.tams.common.base.entity.InterfCbondspecialconditions;
+import com.joyintech.tams.common.base.entity.InterfCmfunddescrip;
+import com.joyintech.tams.common.base.entity.InterfCmfundnav;
+import com.joyintech.tams.common.base.entity.InterfFMarketInfo;
+import com.joyintech.tams.common.base.entity.InterfFloatcouprate;
+import com.joyintech.tams.common.base.entity.InterfPayhsrccbvlt;
+import com.joyintech.tams.common.base.entity.InterfPayhsrcsecoption;
+import com.joyintech.tams.common.base.entity.InterfPayhsrcsecrating;
+import com.joyintech.tams.common.base.entity.InterfPayhsrcsecschedule;
+import com.joyintech.tams.common.base.entity.InterfStdsecConRadio;
+import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
+import com.joyintech.tams.component.base.core.BaseFinProductBaseInfoService;
+import com.joyintech.tams.component.base.core.dto.BaseFinProductBaseInfoDto;
+import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.base.report.asset.BaseRepAssetEquityInfoService;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;
+import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 
 /**
  * @author 刘二通
@@ -45,6 +71,18 @@ public class SysCoreService extends BaseService {
     @Autowired
     private BaseFinProductBaseInfoService baseFinProductBaseInfoService;
 
+    @Autowired
+    private IPlatformDate iPlatformDate;
+    
+    @Autowired
+    private RiskRedisInitService<ImplCond> redisRriter;
+    
+    /**
+     * 权益类资产中债报送(基础组件)
+     */
+    @Autowired(required = false)
+    private BaseRepAssetEquityInfoService baseRepAssetEquityInfoService;
+    
     /**
      * 利用币种与交易日查询汇率行情表中最新的收盘价
      *
@@ -210,6 +248,20 @@ public class SysCoreService extends BaseService {
     public void autoBondCoupon(InterfPayhsrcsecinfoDto dto) {
         if (null != dto.getBaseFinProductBaseInfoList() && !dto.getBaseFinProductBaseInfoList().isEmpty()) {
             baseFinProductBaseInfoService.insert(dto.getBaseFinProductBaseInfoList());
+            //自动加券添加刷新风险redis-资产基本信息
+            if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+                ImplCond cond = new ImplCond();
+                cond.setDel(false);
+                if(iPlatformDate!=null&&redisRriter!=null) {
+                    for (BaseFinProductBaseInfoDto infoDto : dto.getBaseFinProductBaseInfoList()) {
+                    	if(infoDto.getFinProduct() != null&&StringUtil.isNotEmpty(infoDto.getFinProduct().getFinprodId())) {
+                        	cond.setAssetIdArray(infoDto.getFinProduct().getFinprodId());
+                        	cond.setPlateDate(iPlatformDate.getSysDate());
+                        	redisRriter.dealAssetData(cond);	
+                    	}
+                    }	
+                }
+            }
         }
     }
 
@@ -223,6 +275,20 @@ public class SysCoreService extends BaseService {
     public void autoFundCoupon(InfChinamutualfunddescriptionDto dto) {
         if (null != dto.getBaseFinProductBaseInfoList() && !dto.getBaseFinProductBaseInfoList().isEmpty()) {
             baseFinProductBaseInfoService.insert(dto.getBaseFinProductBaseInfoList());
+            //自动加券添加刷新风险redis-资产基本信息
+            if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+                ImplCond cond = new ImplCond();
+                cond.setDel(false);
+                if(iPlatformDate!=null&&redisRriter!=null) {
+                    for (BaseFinProductBaseInfoDto infoDto : dto.getBaseFinProductBaseInfoList()) {
+                    	if(infoDto.getFinProduct() != null&&StringUtil.isNotEmpty(infoDto.getFinProduct().getFinprodId())) {
+                        	cond.setAssetIdArray(infoDto.getFinProduct().getFinprodId());
+                        	cond.setPlateDate(iPlatformDate.getSysDate());
+                        	redisRriter.dealAssetData(cond);	
+                    	}
+                    }	
+                }
+            }
         }
     }
 
@@ -552,5 +618,50 @@ public class SysCoreService extends BaseService {
      */
     public int isBondExerciseAsset(String finprodId) {
         return sysCoreMapper.isBondExerciseAsset(finprodId);
+    }
+    
+	public InterfStockInfoDto selectWindStockAssetByStockCode(String stockCode) {
+		return sysCoreMapper.selectWindStockAssetByStockCode(stockCode);
+	}
+
+	public List<InterfStockInfoDto> selectWindStockAsset(Map<String, Object> map) {
+		return sysCoreMapper.selectWindStockAsset(map);
+	}
+
+	/**
+     * 自动加券(股票) <功能详细描述>
+     * 
+     * @param dto
+     * @see
+     * @since 1.0
+     */
+	public void autoStockCouponSave(InterfStockInfoDto dto) {
+		if (null != dto.getBaseFinProductBaseInfoList() && !dto.getBaseFinProductBaseInfoList().isEmpty()) {
+            baseFinProductBaseInfoService.insert(dto.getBaseFinProductBaseInfoList());
+            for(BaseFinProductBaseInfoDto baseFinProductBaseInfoDto:dto.getBaseFinProductBaseInfoList()){
+            	//权益类资产中债报送
+            	if(null!=baseRepAssetEquityInfoService){
+            		if(null!=baseFinProductBaseInfoDto.getBaseRepAssetEquityInfoDto().getRepAssetEquityList()){
+            			baseRepAssetEquityInfoService.insert(baseFinProductBaseInfoDto.getBaseRepAssetEquityInfoDto().getRepAssetEquityList());
+            		}
+            	}
+            	//JXS_ISSUE_INFO
+            	if(null!=baseFinProductBaseInfoDto.getJxsIssueInfo()){
+            		sysCoreMapper.insertJxInfo(baseFinProductBaseInfoDto.getJxsIssueInfo());
+            	}
+            }
+        }		
+	}
+
+    /**
+     * 资产是否存在交易(存在撤销交易也算交易)
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    public int isTransInAssetTwo(String finprodId) {
+        return sysCoreMapper.isTransInAssetTwo(finprodId);
     }
 }

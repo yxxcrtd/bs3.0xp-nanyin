@@ -150,10 +150,10 @@ public class Holidaymarket001Service extends CommonExportService<Holidaymarket00
         return holidaymarket001Mapper.initHolid(param);
     }
 
-    public static void main(String[] args) {
-
-
-    }
+//    public static void main(String[] args) {
+//
+//
+//    }
 
     /**
      * 导入文件
@@ -213,7 +213,6 @@ public class Holidaymarket001Service extends CommonExportService<Holidaymarket00
                 checkDateList.add(temp);
             }
         } catch (ParseException e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         return checkDateList;

@@ -56,6 +56,19 @@ public class RegistDetailDto {
     private String oldValue;
 
     /**
+     *是否隐藏字段，隐藏字段在展示明细时不显示
+     */
+    private String visibleFlag;
+
+    public String getVisibleFlag() {
+        return visibleFlag;
+    }
+
+    public void setVisibleFlag(String visibleFlag) {
+        this.visibleFlag = visibleFlag;
+    }
+
+    /**
      * 获取 data
      * 
      * @return data.

@@ -51,7 +51,7 @@ public class ValSubjectBalanceQuery003Service extends CommonExportService<ValVou
      * @see
      * @since 1.0
      */
-    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto) throws Exception {
+    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto) {
         return mapper.getSubjectWater(dto);
     }
 }

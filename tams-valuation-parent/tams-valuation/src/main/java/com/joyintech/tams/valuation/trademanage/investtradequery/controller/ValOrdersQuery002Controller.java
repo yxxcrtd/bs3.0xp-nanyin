@@ -80,7 +80,7 @@ public class ValOrdersQuery002Controller extends BaseController{
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValOrdersDto> findPage()  throws Exception {
+    public Page<ValOrdersDto> findPage() {
         return valOrdersQuery002Service.findBycondition(RequestUtil.getPageParam());
     }
     
@@ -94,7 +94,7 @@ public class ValOrdersQuery002Controller extends BaseController{
      */
     @RequestMapping("findFeePage")
     @ResponseBody
-    public Page<ValOrdersDto> findFeePage()  throws Exception {
+    public Page<ValOrdersDto> findFeePage()  {
         return valOrdersQuery002Service.selectFeeBycondition(RequestUtil.getPageParam());
     }
     
@@ -108,7 +108,7 @@ public class ValOrdersQuery002Controller extends BaseController{
      */
     @RequestMapping("findDepPage")
     @ResponseBody
-    public Page<ValOrdersDto> findDepPage()  throws Exception {
+    public Page<ValOrdersDto> findDepPage() {
         return valOrdersQuery002Service.findDepBycondition(RequestUtil.getPageParam());
     }
     

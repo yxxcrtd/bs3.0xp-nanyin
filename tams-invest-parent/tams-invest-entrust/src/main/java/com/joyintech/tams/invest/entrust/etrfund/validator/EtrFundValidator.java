@@ -111,7 +111,7 @@ public class EtrFundValidator implements EtrCommonValidator {
         	//证券托管户交易场所为交易所时必填 需求变更为： 通道和证券账户二选一必填
         	if((StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), etrFundDto.getTradeMarket())||StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(), etrFundDto.getTradeMarket()))
         			&&StringUtil.isEmpty(etrFundDto.getSecAcctId())&&StringUtil.isEmpty(etrFundDto.getChlId())){
-        		errorList.add(new ValidMessage("secAcctId","交易场所为交易所时，通道和证券托管户二选一必填"));
+        		errorList.add(new ValidMessage("secAcctId","交易场所为交易所时，合作资产和证券托管户二选一必填"));
         	}
         	
             // delete by renping 改为共通处理 2019-08-22 end
@@ -264,7 +264,7 @@ public class EtrFundValidator implements EtrCommonValidator {
           //证券托管户交易场所为交易所时必填 需求变更为： 通道和证券账户二选一必填
         	if((StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), etrFundDto.getTradeMarket())||StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(), etrFundDto.getTradeMarket()))
         			&&StringUtil.isEmpty(etrFundDto.getSecAcctId())&&StringUtil.isEmpty(etrFundDto.getChlId())){
-        		errorList.add(new ValidMessage("secAcctId","交易场所为交易所时，通道和证券托管户二选一必填"));
+        		errorList.add(new ValidMessage("secAcctId","交易场所为交易所时，合作资产和证券托管户二选一必填"));
         	}
             
           //3)	提交时校验，委托日期区间如在标的的认购起始日和认购终止日之间，交易方向必须为认购，如不在，交易方向不可为认购；
@@ -352,11 +352,11 @@ public class EtrFundValidator implements EtrCommonValidator {
             	if(StringUtil.isEmpty(etrFundDto.getFinprodMarketId())){
             		errorList.add(new ValidMessage("finprodMarketId", getMessage("ETR_X_012", getMessage("EtrFund001.finprodId"))));
             	}
-                if(!StringUtil.isNotEmpty(etrFundDto.getEntrustNum())){
+                if(!StringUtil.isNotEmpty(etrFundDto.getEntrustNum()) && !etrFundDto.getPs().equals(DictCodeList.交易方向_认购.getValue())){
                     errorList.add(new ValidMessage("entrustNum", getMessage("ETR_X_012", getMessage("EtrFund001.entrustNum"))));
                 }
               //委托价格，当交易方向为买入/卖出，且交易场所和交易对手都是交易所时显示，且必填
-                if(!StringUtil.isNotEmpty(etrFundDto.getPrice())){
+                if(!StringUtil.isNotEmpty(etrFundDto.getPrice()) && etrFundDto.getPs().equals(DictCodeList.交易方向_卖出.getValue())){
                 	if(!StringUtil.equals(etrFundDto.getCounterType(), DictCodeList.是否_否.getValue())){
                 		errorList.add(new ValidMessage("price", getMessage("ETR_X_012", getMessage("EtrFund002.price"))));
                 	}

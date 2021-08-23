@@ -17,9 +17,11 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -38,6 +40,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -77,6 +80,10 @@ public class EtrStock002Controller extends BaseController {
      */
     @Autowired
     private EtrStockService etrStockService;
+
+    @Autowired
+    private PlatformDate platformDate;
+
     /**
      * {@inheritDoc}
      */
@@ -92,7 +99,8 @@ public class EtrStock002Controller extends BaseController {
         model.addAttribute("PRICEMODEL_01", DictCodeListExt2.价格模式_指定价格.getValue());
         model.addAttribute("PRICEMODEL_02", DictCodeListExt2.价格模式_限价指令.getValue());
         model.addAttribute("PRICEMODEL_03", DictCodeListExt2.价格模式_市价指令.getValue());
-        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+//        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+        Date sysDate = platformDate.getSysDate(LoginUserUtil.getUserName());
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         //-----add by jjpei 20190718 委托风险试算----start---------
@@ -171,7 +179,7 @@ public class EtrStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getentrustIdAdd")
-    public Page<SelectOptionDto> getentrustIdAdd() throws Exception {
+    public Page<SelectOptionDto> getentrustIdAdd() {
         Page<SelectOptionDto> temp = etrStockService.getentrustIdAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -214,7 +222,7 @@ public class EtrStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         Page<SelectOptionDto> temp = etrStockService.getfinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -242,7 +250,7 @@ public class EtrStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getTongDaoCash")
-    public BigDecimal getTongDaoCash(@RequestBody Map<String,Object> map) throws Exception{
+    public BigDecimal getTongDaoCash(@RequestBody Map<String,Object> map){
         return etrStockService.getTongDaoCash(map);
     }
 
@@ -323,7 +331,7 @@ public class EtrStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrStockDto dto, BindingResult br) throws Exception {
+    public AjaxResult save(@RequestBody EtrStockDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

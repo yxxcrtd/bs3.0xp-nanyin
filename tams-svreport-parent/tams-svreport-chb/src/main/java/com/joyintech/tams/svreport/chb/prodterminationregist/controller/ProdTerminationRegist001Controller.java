@@ -7,8 +7,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdEndSubDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chbsd.prdendsub.service.SdProdTerminationBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,6 +87,8 @@ public class ProdTerminationRegist001Controller extends BaseController {
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
 		}
+        model.addAttribute("SVR_REPORT_CODE", DictCodeListExt2.报表名称_产品终止登记.getValue());
+        model.addAttribute("FILE_HANDLE_STATUS", DictCodeListExt3.中债一二三期文件处理状态_未处理.getValue());
     	super.setSelectOptionToModel(model, DictCode.报送数据状态,
                 DictCode.报送状态,DictCode.报送反馈状态);
             model.addAttribute("indentifyMark",RequestUtil.getParam("indentifyMark"));
@@ -184,7 +189,7 @@ public class ProdTerminationRegist001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/submitChb", method = RequestMethod.POST)
-    public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception {
+    public AjaxResult doSubmit(@RequestBody Map<String, Object> param) {
 
         List<ProdTerminationRegist001Dto> list=new ArrayList<>();
         // 选择行数据时
@@ -195,7 +200,6 @@ public class ProdTerminationRegist001Controller extends BaseController {
                         ProdTerminationRegist001Dto.class);
             }
             catch (IOException e) {
-                // e.printStackTrace();
                 logger.error(e.getMessage(), e);
             }
         }else{
@@ -214,7 +218,11 @@ public class ProdTerminationRegist001Controller extends BaseController {
             dataList.add(target);
         }
 
-        sdProdTerminationBatchService.sendBatchCommon(dataList);
+        SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
+        if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
+            sendDataCheckType = SendDataCheckType.重新报送;
+        }
+        sdProdTerminationBatchService.sendBatchCommon(dataList, sendDataCheckType);
 
         return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
     }

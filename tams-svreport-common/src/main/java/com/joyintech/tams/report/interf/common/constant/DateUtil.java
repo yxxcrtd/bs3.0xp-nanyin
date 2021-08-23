@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -121,7 +122,7 @@ public class DateUtil extends DateUtils {
                             "yyyy-MM","yyyy/MM/dd HH:mm","yyyy-MM-dd HH:mm","yyyyMMdd HH:mm","yyyy-MM-dd HH:mm:ss","yyyyMMdd HH:mm:ss","yyyyMMddHHmm"});
         }
         catch (ParseException e) {
-            throw new RuntimeException("Date ParseException");
+            throw new BusinessException("Date ParseException");
         }
     }
 
@@ -836,6 +837,31 @@ public class DateUtil extends DateUtils {
         // 获取上月的最后一天
         calendar.add(Calendar.MONTH, 0);
         calendar.set(Calendar.DAY_OF_MONTH, 0);
+        Date endDate = calendar.getTime();
+        return DateUtil.format(endDate);
+    }
+
+    /**
+     * 功能：获取本月的最后一天
+     * @since 1.7.0
+     * @version 1.7.0
+     * @author：weiyuqiang 2021年4月22日
+     * @param date
+     * @return
+     * Date
+     */
+    public static String getLastDayOfThisMonth(String  dateStr){
+        if(StringUtil.isNotEmpty(dateStr)){
+            if(6==dateStr.length()){  //202111
+                dateStr=dateStr.substring(0,4)+"-"+dateStr.substring(5,6);
+            }
+        }else{
+            dateStr=DateUtil.getCurrentDate();
+        }
+        Calendar calendar = Calendar.getInstance();
+        Date date=DateUtil.parse(dateStr);
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date endDate = calendar.getTime();
         return DateUtil.format(endDate);
     }

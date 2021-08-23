@@ -464,6 +464,21 @@
         	}
         	$(this).val(value);
         });
+        //*利差 添加输入过滤
+        getElementById('spreadRate').on('keyup',function(){
+　　　　　　　　var value = $(this).val().replace(/\s*/g,"");
+             var negative = value.startsWith("-");
+             value= value.replace(/[^\d.]/g,'');
+             var index = value.indexOf('.');
+             if(index!=-1){
+                　//多个·保留第一个小数点
+                　value = value.slice(0,index+1)+value.slice(index+1).replace(".","");
+             }
+             if(negative){
+                　value  = "-"+value;
+             }
+             $(this).val(value);
+        });
        
     });
 }());

@@ -125,7 +125,7 @@ public class TrdCommonController extends BaseController {
         //授信管理  isCreditSoftControl true:软控  false:硬控 
         boolean isCreditSoftControl = Boolean.parseBoolean(CacheUtil.getSysParam("IS_CREDIT_SOFTCONTROL")); 
 //        String status = "01"; 
-        if (!StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))) {
+        if (!StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT)) && isCreditSoftControl) {
         	CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
         	AllTradeCommonInputDto inputDto =new AllTradeCommonInputDto();
         	inputDto.setTrdProductDeal(trdProductDeal);
@@ -152,9 +152,7 @@ public class TrdCommonController extends BaseController {
 //                }  
 //            }
 //            riskCreditListCommonDto.setStatus(status);
-            if (isCreditSoftControl){    
                 wr.setJoyinMessages(joyinMessages);
-            }
         } 
         //授权管理  isAuthorizationSoftcontrol true:软控  false:硬控
         boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
@@ -163,7 +161,7 @@ public class TrdCommonController extends BaseController {
             trdProductDeal.setCounterId(counterId);
             boolean isRiskAuthorize = riskAuthorizeListCommonValidatorService.授权是否匹配(trdProductDeal);
             if (StringUtil.isNotEmpty(isRiskAuthorize) && isRiskAuthorize) {
-                JoyinMessage ms = new JoyinMessage("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!", MessageType.确认消息);
+                JoyinMessage ms = new JoyinMessage("交易本金金额超过领导授权额度，是否确认提交!", MessageType.确认消息);
                 joyinMessages.add(ms);
                 wr.setJoyinMessages(joyinMessages);  
             } 

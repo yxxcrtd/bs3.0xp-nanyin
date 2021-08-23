@@ -212,7 +212,7 @@ public class ValFinPayInterestStdInfoController extends BaseController {
     @RequestMapping(value = "/generationPlan")
     @ResponseBody
     public List<FinCashPlanDto> generationPlan(@RequestBody ValFinPayInterestStdInfoDto dto)
-        throws ParseException {
+            throws ParseException, IllegalAccessException, InstantiationException {
         // 修改查看初始化
         Boolean flag = Boolean.parseBoolean(dto.getInitFlag());
         String finprodId = dto.getFinprodId();
@@ -306,7 +306,7 @@ public class ValFinPayInterestStdInfoController extends BaseController {
     @RequestMapping(value = "/generationSubPlan")
     @ResponseBody
     public List<FinCashPlanDto> generationSubPlan(@RequestBody ValFinPayInterestStdInfoDto dto)
-        throws ParseException {
+            throws ParseException, IllegalAccessException, InstantiationException {
             return  finPayInterestStdInfoService.createAssetPayInteresPlan(dto);
     }
 

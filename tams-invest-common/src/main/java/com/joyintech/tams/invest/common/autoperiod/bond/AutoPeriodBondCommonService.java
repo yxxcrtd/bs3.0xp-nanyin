@@ -414,10 +414,12 @@ public class AutoPeriodBondCommonService {
         }
         deal.setCcy(entity.getCcy());
         deal.setStatus(交易方向);
-        deal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        //deal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        deal.setTradeDate(DateUtil.parse(DateUtil.getSysDate()));
         deal.setVdate(DateUtil.parse(entity.getvDate()));
         deal.setMdate(DateUtil.parse(entity.getmDate()));
-        deal.setSettleDate(deal.getTradeDate());
+        //deal.setSettleDate(deal.getTradeDate());
+        deal.setSettleDate(DateUtil.parse(entity.getTradeDate()));
         deal.setShareAmt(ArithmeticUtil.divide(finAssetIntInfo.getQty(), new BigDecimal(100), 2, RoundingMode.HALF_UP));
         if (DictCodeList.交易方向_收息.getValue().equals(交易方向)) {
             deal.setIntAmt(finAssetIntInfo.getIntAmt());
@@ -484,7 +486,8 @@ public class AutoPeriodBondCommonService {
         trdFinProductDealTotal.setPs(AutoPeriodCommonService.change现金流类型To交易方向(entity.getCashType()));
         trdFinProductDealTotal.setBranch(
             AutoPeriodCommonService.changePsToBranch(entity.getmDate(), trdFinProductDealTotal.getPs()));
-        trdFinProductDealTotal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        //trdFinProductDealTotal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        trdFinProductDealTotal.setTradeDate(DateUtil.parse(DateUtil.getSysDate()));
         trdFinProductDealTotal.setVdate(DateUtil.parse(entity.getvDate()));
         trdFinProductDealTotal.setMdate(DateUtil.parse(entity.getmDate()));
         trdFinProductDealTotal.setSettleDate(DateUtil.parse(entity.getTradeDate()));
@@ -579,7 +582,8 @@ public class AutoPeriodBondCommonService {
         trdFinProductDealTotal.setPs(AutoPeriodCommonService.change现金流类型To交易方向(entity.getCashType()));
         trdFinProductDealTotal.setBranch(
             AutoPeriodCommonService.changePsToBranch(entity.getmDate(), trdFinProductDealTotal.getPs()));
-        trdFinProductDealTotal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        //trdFinProductDealTotal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        trdFinProductDealTotal.setTradeDate(DateUtil.parse(DateUtil.getSysDate()));
         trdFinProductDealTotal.setVdate(DateUtil.parse(entity.getvDate()));
         trdFinProductDealTotal.setMdate(DateUtil.parse(entity.getmDate()));
         trdFinProductDealTotal.setSettleDate(DateUtil.parse(entity.getTradeDate()));

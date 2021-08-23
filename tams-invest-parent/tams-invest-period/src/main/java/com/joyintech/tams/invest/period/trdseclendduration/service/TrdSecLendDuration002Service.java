@@ -234,6 +234,15 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                 // 调用业务组件.【金融产品交易共通.交易产品接口】
                 FinProductTradeDto tradeDto = genFinProductTradeDto(entity, OperationType.NEW);
                 tradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                // add by jiangpeng on 20210429 start
+                tradeDto.getBaseTradeProductDealDtos().forEach(item->{
+                    // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                    if (StringUtil.isNotEmpty(entity.getIsCashPay())){
+                        item.setIsCashPay(entity.getIsCashPay());
+                    }
+                    item.setIsSLDeal(DictCodeList.是否_是.getValue());
+                });
+                //add by jiangpeng on 20210429 end
                 baseTradeProductDealCommServiceImpl.execute(tradeDto);
                 if (StringUtil.isNotEmpty(entity.getActPortfolioId()) && !StringUtil.equals(entity.getPortfolioId(), entity.getActPortfolioId())) {
                     tradeDto.getBaseTradeProductDealDtos().forEach(
@@ -242,6 +251,19 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                     tradeDto.getBaseTradeProductDealDtos().forEach(
                             baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getPortfolioId()));
                 }
+                // add by jiangpeng on 20210416 start
+                // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                // modify by jiangpeng on 20210419 start
+                //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融入到期交易产生的错误
+                if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())
+                        && StringUtil.equals(DictCodeList.是否_否.getValue(), entity.getIsCashPay())) {
+                    // modify by jiangpeng on 20210419 end
+                    // 写入融入券组合持仓流水
+                    this.ptlBlendSecPositionFlowLogic(entity, false);
+                    // 写入融入券指令持仓流水
+                    this.etrBlendSecPositionFlowLogic(entity, false);
+                }
+                // add by jiangpeng on 20210416 end
             }
         }
     }

@@ -113,7 +113,7 @@ public class FinMdateAdjustmentService extends BaseService<FinMdateAdjustmentDto
      */
     public Page<FinMdateAdjustmentDto> queryAdjustMdateList(int page, int length,
                                                             Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         pageParam.put("ISSUE_STATUS01", DictCodeListExt1.发行状态_发行成功.getValue());
         pageParam.put("platDate", platformDate.getSysDate());
@@ -127,10 +127,10 @@ public class FinMdateAdjustmentService extends BaseService<FinMdateAdjustmentDto
      * @param map 入参
      * @return 产品代码下拉框
      */
-    public List<SelectOptionDto> queryAdjustProdIdList(Map<String, Object> map) {
+    public Page<SelectOptionDto> queryAdjustProdIdList(int page, int length, Map<String, Object> map) {
         map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         map.put("ISSUE_STATUS01", DictCodeListExt1.发行状态_发行成功.getValue());
-        return finMdateAdjustmentMapper.queryAdjustProdIdList(map);
+        return this.queryForPageForSelectReturn(page, length, () -> finMdateAdjustmentMapper.queryAdjustProdIdList(map));
     }
 
     /**
@@ -178,7 +178,7 @@ public class FinMdateAdjustmentService extends BaseService<FinMdateAdjustmentDto
      * @throws InvocationTargetException 
      * @throws Exception 
      */
-    public void updateProdPlanList(FinProductCommonInfoDto finProductCommonInfoDto) throws Exception{
+    public void updateProdPlanList(FinProductCommonInfoDto finProductCommonInfoDto) throws InvocationTargetException, IllegalAccessException {
         // 开放计划调整
         BussFinProductOpenPlanDto bussFinProductOpenPlanDto = finProductCommonInfoDto.getBussFinProductOpenPlanDto();
         //update by leipeng 开放式产品有首次开放日，提前终止日小于首次开放日，结果开放计划不变。预期只会生成到终止日的开放计划。

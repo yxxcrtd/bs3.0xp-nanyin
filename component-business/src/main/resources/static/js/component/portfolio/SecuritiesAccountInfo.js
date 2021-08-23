@@ -6,6 +6,7 @@
     var table = $("#securitiesAccountInfoTable").joyintable({
         data:secDto==null?[]:secDto,
         searchOnInit:true,
+        page: false,
         height:'225px',
         cols:[
               {field:'secAcctId', title: 'SecuritiesAccountInfo.secAcctId',sortable:false, edit:true, editOption:{type:'select',showField:'id',id:'secAcctId',formatoption:true,url: JoyinUtil.getRealPath('/component/portfolio/SecuritiesAccountInfo/getSecAcctId')}}

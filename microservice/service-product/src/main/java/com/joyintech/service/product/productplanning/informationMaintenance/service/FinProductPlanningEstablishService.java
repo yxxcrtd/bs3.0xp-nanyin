@@ -38,7 +38,7 @@ public class FinProductPlanningEstablishService extends BaseService {
      */
     public Page<FinProductPlanning2DetailDto> findPage(int page, int length,
                                                        Map<String, Object> pageParam)
-            throws Exception {
+    {
         pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue()); // 数据字典.金融产品类型（投管）.理财产品
         pageParam.put("PS_QZ", DictCodeList.交易方向_份额强增.getValue()); //数据字典.交易方向_份额强增
         pageParam.put("PS_CPRG", DictCodeList.交易方向_产品认购.getValue());//数据字典.交易方向_产品认购
@@ -77,7 +77,7 @@ public class FinProductPlanningEstablishService extends BaseService {
      * @return
      * @throws Exception
      */
-    public List<FinProductPlanning3Dto> getTargetSize(Map<String,Object> map) throws Exception {
+    public List<FinProductPlanning3Dto> getTargetSize(Map<String,Object> map) {
        return  finProductPlanningEstablishMapper.getTargetSize(map);
     }
     /**
@@ -102,7 +102,7 @@ public class FinProductPlanningEstablishService extends BaseService {
      */
     public Page<FinProductPlanningDto> queryPageAll(int page, int length,
                                                     Map<String, Object> pageParam)
-            throws Exception {
+    {
         /**
          * 用于查询条件中的名字查询的多字段查询
          */

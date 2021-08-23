@@ -9,6 +9,9 @@
         <if test="databaseType == 'Oracle'"> 
           select ${sequenceName}.nextVal from dual
         </if>
+        <if test="databaseType == 'Mysql'">
+            select _NEXTINDEX(${sequenceName}) from dual
+        </if>
     </select>
     <!-- 查询所有有权限的机构代码 -->
 <!--     <select id="selectOrgCode" parameterType="java.lang.String" resultType="java.lang.String">
@@ -26,6 +29,17 @@
     	where 
     	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </select>
+
+    <!-- 根据机构代码和用户id查询用户的登记银行编码 -->
+    <select id="selectPbcBankCode" parameterType="java.lang.String" resultType="java.lang.String">
+    	select
+    	corb.PBC_BANK_CODE
+    	from CHB_ORG_REGIST_BANK_CODE corb
+    	where
+    	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
+
     <select id="selectBankCodeName" parameterType="java.lang.String" resultType="java.lang.String">
         select
         SI.INSTITUTION_NAME
@@ -156,5 +170,16 @@
         and data_type = #{dataType}
     </select>
 
+    <select id="getSequenceIndexByParam" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
+		SELECT (begin_num + incr) FROM SYS_SEQUENCE WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+	</select>
+
+    <select id="getSequenceIncrByParam" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
+		SELECT incr FROM SYS_SEQUENCE WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+	</select>
+
+    <update id="updateSequenceIndexData" >
+		 UPDATE SYS_SEQUENCE SET begin_num = ((#{incrNum,jdbcType=INTEGER} * incr) + begin_num) WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+	</update>
 
 </mapper>

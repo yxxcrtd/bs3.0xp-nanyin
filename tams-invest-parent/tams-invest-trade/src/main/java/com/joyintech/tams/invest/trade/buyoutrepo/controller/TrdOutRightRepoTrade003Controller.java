@@ -51,39 +51,58 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-
+import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
+import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
-import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTrade002Dto;
 import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTrade004Dto;
 import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTradePtl;
 import com.joyintech.tams.invest.trade.buyoutrepo.service.TrdOutRightRepoTrade002Service;
+import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
+import com.joyintech.tams.invest.trade.trdrepotrade.service.TrdRepoTrade002Service;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.util.*;
 /**
  * 买断式回购多组合新建
  * @author zhanggenglin
@@ -95,6 +114,8 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("TrdOutRightRepoTrade003")
 @RequestMapping("/invest/trade/buyoutrepo/TrdOutRightRepoTrade003")
 public class TrdOutRightRepoTrade003Controller extends BaseController {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * {@linkplain}
@@ -624,7 +645,7 @@ public class TrdOutRightRepoTrade003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("save")
-	public AjaxResult save(@RequestBody TrdOutRightRepoTrade002Dto dto) throws Exception {
+	public AjaxResult save(@RequestBody TrdOutRightRepoTrade002Dto dto) throws InvocationTargetException, IllegalAccessException, WorkFlowException, IOException, InstantiationException {
 	    
 	    List<TrdOutRightRepoTrade002Dto> dtoList = new ArrayList<>();
         List<TrdOutRightRepoTradePtl> fenpeiList = dto.getTrdOutRightRepoTradePtl();//组合分配
@@ -709,7 +730,17 @@ public class TrdOutRightRepoTrade003Controller extends BaseController {
         if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
             AjaxResult ar =interfRiskRdsService.checkBatchRiskRds(dtoList,new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
                     BussinessDictCodeListRds.接口系统ID_实占接口.getValue(), BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),DictCodeList.平安资产类型_买断式回购.getValue(),
-                    (sm,en)->interfRiskRdsService.sendRiskRdsData(sm,en));
+                    (sm,en)-> {
+						try {
+							return interfRiskRdsService.sendRiskRdsData(sm,en);
+						} catch (IOException e) {
+							logger.error(e.getMessage(), e);
+							throw new IOException();
+						} catch (InstantiationException e) {
+							logger.error(e.getMessage(), e);
+							throw new InstantiationException();
+						}
+					});
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }
@@ -817,7 +848,7 @@ public class TrdOutRightRepoTrade003Controller extends BaseController {
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.业务类型_买断式回购预处理);
         String index=baseGetBusinessId.buildBussinessCode(codeParameter);
-        return index;
+        return StringUtil.trimHtmlTag(index);
     }
     // add by zhanggenglin 质押式回购多组合 20190813 end
     

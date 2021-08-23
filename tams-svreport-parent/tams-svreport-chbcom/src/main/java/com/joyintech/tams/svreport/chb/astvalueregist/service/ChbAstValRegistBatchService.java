@@ -91,8 +91,7 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 			// 得到底层资产持仓信息
 			List<Date> dateList = null;
 			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
-			dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产估值信息登记.getValue(),
-					DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, posDate);
+
 			// 删除数据状态为“新建”，报送状态为“未报送”的登记
 			Map<String, Object> para = new HashMap<String, Object>();
 			para.put("valDate", DateUtil.format(posDate));
@@ -101,10 +100,7 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 			chbAstValCBMapper.deleteRegist(para);
 			Date chbSubmitDeadline = null;
 			Date submitDeadline = null;
-			if (CollectionUtils.isNotEmpty(dateList)) {
-				chbSubmitDeadline = dateList.get(0);
-				submitDeadline = dateList.get(1);
-			}
+
 			// 数据状态为“修改、删除”，报送状态为“未报送”的登记
 			 List<ChbAstValueSub> updateOrDelList =
 			 chbAstValCBMapper.queryUpdateOrDelList(DateUtil.format(posDate),InstitutionCode);
@@ -122,8 +118,13 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 				 sub.setUpdateUser(CommonUtil.getUserName());
 				 //数据日期
 				 sub.setStatusDate(batchTime);
-				 sub.setChbSubmitDeadline(chbSubmitDeadline);
-				 sub.setSubmitDeadline(submitDeadline);
+
+				 dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产估值信息登记.getValue(),
+						 sub.getStatus(), dateMap, posDate);
+				 if (CollectionUtils.isNotEmpty(dateList)) {
+					 sub.setChbSubmitDeadline(dateList.get(0));
+					 sub.setSubmitDeadline(dateList.get(1));
+				 }
 				 sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 				 chbAstValCBMapper.insertSub(sub);
 			 }

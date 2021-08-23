@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.selectbokdetailcurrent.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class SelectBokdetailCurrent001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-            throws Exception {
+            throws IOException {
         String datas = this.getParam("datas");
         List<SelectBokdetailCurrent001Dto> listdto ;
 

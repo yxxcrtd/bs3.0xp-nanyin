@@ -108,8 +108,7 @@ public class BussFinProductSaleParamCommonRateController extends BaseController 
 //				dto.setFirstSaleVdate(sdf.parse(this.getParam("firstSaleVdate")));
 //				dto.setFirstSaleMdate(sdf.parse(this.getParam("firstSaleMdate")));
 //			} catch (ParseException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();				
+//				logger.error(e.getMessage(),e);
 //			}            
         	model.addAttribute(GlobalConstant.ENTITY, dto);
             BussRepFinProductInfoDto repdto = mstWorkflowCommonService.getBusinessEntityByWorkFlowId(
@@ -131,8 +130,7 @@ public class BussFinProductSaleParamCommonRateController extends BaseController 
 //				dto.setFirstSaleVdate(sdf.parse(this.getParam("firstSaleVdate")));
 //				dto.setFirstSaleMdate(sdf.parse(this.getParam("firstSaleMdate")));
 //			} catch (ParseException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();				
+//				logger.error(e.getMessage(),e);
 //			}            
         	model.addAttribute(GlobalConstant.ENTITY, dto);
             BussRepFinProductInfoDto repdto= bussRepFinProductInfoService.select(this.getParam("finprodId"));

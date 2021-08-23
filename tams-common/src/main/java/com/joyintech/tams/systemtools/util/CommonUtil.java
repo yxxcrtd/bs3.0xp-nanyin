@@ -25,6 +25,7 @@ import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -51,6 +52,7 @@ import com.joyintech.tams.systemtools.listener.TamsAuthorizationListener;
 import com.joyintech.tams.systemtools.service.SystemToolService;
 import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 
+@Lazy(false)
 @Component
 public class CommonUtil {
 	
@@ -216,17 +218,19 @@ public class CommonUtil {
 	 * @see
 	 * @since 1.0
 	 */
-	public static String getUserBankCode() {
-		User userInfo = SecurityUtil.getLoginUser();
-		// if(userInfo.isAdmin()){
-		// return null;
-		// }
-		if (StringUtil.isEmpty(userInfo.getOrgCode())) {
-			return null;
+	public static String getUserBankCode(String orgCode) {
+		if(StringUtil.isBlank(orgCode)){
+			User userInfo = SecurityUtil.getLoginUser();
+			if (StringUtil.isEmpty(userInfo.getOrgCode())) {
+				return null;
+			}
+			orgCode = userInfo.getOrgCode();
 		}
-		String bankCode = baseMapper.selectBankCode(userInfo.getOrgCode());
+		String bankCode = baseMapper.selectBankCode(orgCode);
 		return bankCode;
 	}
+
+
 
 
 
@@ -559,7 +563,7 @@ public class CommonUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		return false;
@@ -831,6 +835,24 @@ public class CommonUtil {
 		}
 		return null!=codeName?codeName:"";
 	}
+
+	/**
+	 * 根据登录用户获取当前机构的登记编码
+	 * “机构登记银行代码管理”模块没有维护当前机构机构代码时，也为空，提交时提醒，现在这种情况还是展示默认值只C1111； update by leipeng 20200727
+	 * @return
+	 */
+	public static String selectPbcBankCode(String orgCode){
+		if(StringUtil.isEmpty(orgCode)){
+			if(MultilevelDataAuthorityUtil.isEnabled()){
+				orgCode = getInstitutionCodeByLoginUser_ms();
+			}else{
+				// 银行模式下 只有一个总行  直接查总行对应的 code
+				orgCode = baseCommonService.getYHGeneralBankCode();
+			}
+		}
+		String code = baseCommonService.selectPbcBankCode(orgCode);
+		return null!=code?code:"";
+	}
 	
 	
 	// 微服务版本获取登录用户的机构类型
@@ -898,6 +920,24 @@ public class CommonUtil {
 	 */
 	public static String getYHGeneralBankCode(){
 		return baseCommonService.getYHGeneralBankCode();
+	}
+	
+	/**
+	 * 主要功能:判断字符串是否为日期 注意事项:无
+	 *
+	 * @param str
+	 *            日期字符串 yyyy-MM-dd
+	 * @return 是否
+	 */
+	public static boolean isEnDateStr(String str) {
+		SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_DATE_FORMAT_EN);
+		try {
+			format.setLenient(false);
+			format.parse(str);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 
 

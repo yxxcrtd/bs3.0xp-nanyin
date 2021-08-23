@@ -137,7 +137,7 @@ public class ValFinPayInterestStdInfoImplService extends BaseService<ValFinPayIn
      * @throws ParseException 
      */
     @Override
-    public List<FinCashPlanDto> createAssetPayInteresPlan(ValFinPayInterestStdInfoDto dto) throws ParseException {
+    public List<FinCashPlanDto> createAssetPayInteresPlan(ValFinPayInterestStdInfoDto dto) throws ParseException, InstantiationException, IllegalAccessException {
         //还本计划
         List<FinCashPlanDto> invRepayList = new ArrayList<FinCashPlanDto>();
         //资产公共DTO

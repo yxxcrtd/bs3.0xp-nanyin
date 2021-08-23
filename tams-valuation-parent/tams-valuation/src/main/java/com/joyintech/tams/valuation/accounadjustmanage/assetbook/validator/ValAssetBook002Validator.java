@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -83,12 +84,13 @@ public class ValAssetBook002Validator implements BeanValidator {
                 validMessageList.add(new ValidMessage("startDate", msg));
             }
         }
-
-        // 是否有流程中数据
-        List<String> list = checkIsProcessing(dto);
-        if (list.size() > 0) {
-            validMessageList.add(new ValidMessage(getMessage("COMMON_E_0021",
-                getMessage("ValAssetbook.booksetId"), StringUtil.join(list, ","))));
+        if(WorkFlowUtil.isNotFromToDoList()) {
+            // 是否有流程中数据
+            List<String> list = checkIsProcessing(dto);
+            if (list.size() > 0) {
+                validMessageList.add(new ValidMessage(getMessage("COMMON_E_0021",
+                        getMessage("ValAssetbook.booksetId"), StringUtil.join(list, ","))));
+            }
         }
         return validMessageList;
     }

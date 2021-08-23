@@ -26,34 +26,34 @@
 	
 	<!-- 查询：未调整查询 -->
 	<sql id="queryUnAdjustMdateInfo">
-		select  FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,
-				FIN_PRODUCT.FINPROD_ABBR finprodAbbr,
+		select  FP.FINPROD_MARKET_ID finprodMarketId,
+				FP.FINPROD_ABBR finprodAbbr,
 				NULL AS adjusttype,
-				FIN_PRODUCT.MDATE mdateUnadjust,
-				FIN_PRODUCT.LIQUIDATION_DATE ldateUnadjust,
+				FP.MDATE mdateUnadjust,
+				FP.LIQUIDATION_DATE ldateUnadjust,
 				NULL AS ldate,
 				NULL AS bdate,
 				NULL AS rdate,
 				NULL AS mdate, 
 				NULL AS remark,
-				FIN_PRODUCT.FINPROD_ID finprodId,
+				FP.FINPROD_ID finprodId,
 				NULL AS adjustNum,
 				NULL AS status,
 		       	PMSI.SEND_STATUS sendStatus,
 		       	PMSI.SEND_REMARK sendRemark
-		 from FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY, FIN_PRODUCT 
+		 from FIN_PRODUCT_ADD FPA, PTL_PORTFOLIO_AUTHORITY PPA, FIN_PRODUCT FP
 		 LEFT JOIN 
-				INF_PRD_MDATE_ADJUST PMSI ON FIN_PRODUCT.FINPROD_ID = PMSI.FINPROD_ID
-		where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		  and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
-		  and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
-		  and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2}
-		  and FIN_PRODUCT.P_FINPROD_ID IS NULL
-          and FIN_PRODUCT.MDATE &gt; #{platDate}
-          and FIN_PRODUCT_ADD.ISSUE_STATUS = #{ISSUE_STATUS01}
+				INF_PRD_MDATE_ADJUST PMSI ON FP.FINPROD_ID = PMSI.FINPROD_ID
+		where FP.FINPROD_ID = FPA.FINPROD_ID
+		  and FPA.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+		  and PPA.USER_ID = #{userId}
+		  and FP.FINPROD_TYPE2 = #{finprodType2}
+		  and FP.P_FINPROD_ID IS NULL
+          and FP.MDATE &gt; #{platDate}
+          and FPA.ISSUE_STATUS = #{ISSUE_STATUS01}
 		  
 		<if test="finprodId != null and finprodId.size() > 0">
-			and FIN_PRODUCT.FINPROD_ID IN
+			and FP.FINPROD_ID IN
 			<foreach collection="finprodId" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
@@ -61,51 +61,51 @@
 		<if test="sendStatus !=null and sendStatus !=''">
 		 	AND NVL(PMSI.SEND_STATUS, '03') = #{sendStatus,jdbcType=VARCHAR}
 		</if>
-		and not exists (select 1 from PRD_MDATE_ADJUST where FIN_PRODUCT.FINPROD_ID = PRD_MDATE_ADJUST.FINPROD_ID)
+		and not exists (select 1 from PRD_MDATE_ADJUST where FP.FINPROD_ID = PRD_MDATE_ADJUST.FINPROD_ID)
 	</sql>
 	
 	<!-- 查询：调整查询 -->
 	<sql id="queryAdjustMdateInfo">
-		select  FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,
-				FIN_PRODUCT.FINPROD_ABBR finprodAbbr,
-				PRD_MDATE_ADJUST.ADJUST_TYPE adjusttype,
-				PRD_MDATE_ADJUST.MDATE_UNADJUST mdateUnadjust,
-				PRD_MDATE_ADJUST.LDATE_UNADJUST ldateUnadjust,
+		select  FP.FINPROD_MARKET_ID finprodMarketId,
+				FP.FINPROD_ABBR finprodAbbr,
+				PMAD.ADJUST_TYPE adjusttype,
+				PMAD.MDATE_UNADJUST mdateUnadjust,
+				PMAD.LDATE_UNADJUST ldateUnadjust,
 				<!--  PRD_MDATE_ADJUST.MDATE mdate,-->
-				PRD_MDATE_ADJUST.LDATE ldate,
-			    decode(PRD_MDATE_ADJUST.ADJUST_TYPE,#{TZLX_TQZZ},PRD_MDATE_ADJUST.MDATE,NULL) bdate,
-                decode(PRD_MDATE_ADJUST.ADJUST_TYPE,#{TZLX_CPZQ},PRD_MDATE_ADJUST.MDATE,NULL) rdate,
-                decode(PRD_MDATE_ADJUST.ADJUST_TYPE,#{TZLX_DQRTZ},PRD_MDATE_ADJUST.MDATE,NULL) mdate,
-				PRD_MDATE_ADJUST.REMARK remark,
-				FIN_PRODUCT.FINPROD_ID finprodId,
-				PRD_MDATE_ADJUST.ADJUST_NUM adjustNum,
-				decode(PRD_MDATE_ADJUST.ADJUST_NUM ,(select max(ADJUST_NUM) from PRD_MDATE_ADJUST pma where pma.FINPROD_ID=PRD_MDATE_ADJUST.FINPROD_ID),'E','D') status,
+				PMAD.LDATE ldate,
+			    decode(PMAD.ADJUST_TYPE,#{TZLX_TQZZ},PMAD.MDATE,NULL) bdate,
+                decode(PMAD.ADJUST_TYPE,#{TZLX_CPZQ},PMAD.MDATE,NULL) rdate,
+                decode(PMAD.ADJUST_TYPE,#{TZLX_DQRTZ},PMAD.MDATE,NULL) mdate,
+				PMAD.REMARK remark,
+				FP.FINPROD_ID finprodId,
+				PMAD.ADJUST_NUM adjustNum,
+				decode(PMAD.ADJUST_NUM ,(select max(ADJUST_NUM) from PRD_MDATE_ADJUST pma where pma.FINPROD_ID=PMAD.FINPROD_ID),'E','D') status,
 		       	PMSI.SEND_STATUS sendStatus,
 		       	PMSI.SEND_REMARK sendRemark
-		 from PRD_MDATE_ADJUST, FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY, FIN_PRODUCT
+		 from PRD_MDATE_ADJUST PMAD, FIN_PRODUCT_ADD FPA, PTL_PORTFOLIO_AUTHORITY PPA, FIN_PRODUCT FP
 		 LEFT JOIN 
-				INF_PRD_MDATE_ADJUST PMSI ON FIN_PRODUCT.FINPROD_ID = PMSI.FINPROD_ID
-		where FIN_PRODUCT.FINPROD_ID = PRD_MDATE_ADJUST.FINPROD_ID 
-		  and FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+				INF_PRD_MDATE_ADJUST PMSI ON FP.FINPROD_ID = PMSI.FINPROD_ID
+		where FP.FINPROD_ID = PMAD.FINPROD_ID 
+		  and FP.FINPROD_ID = FPA.FINPROD_ID
 		  <!-- 一体化对应etliu -->
-		  and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
-		  and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+		  and FPA.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+		  and PPA.USER_ID = #{userId}
 		  and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2}
-		  and FIN_PRODUCT_ADD.ISSUE_STATUS = #{ISSUE_STATUS01}
+		  and FPA.ISSUE_STATUS = #{ISSUE_STATUS01}
 		<if test="finprodId != null and finprodId.size() > 0">
-			and FIN_PRODUCT.FINPROD_ID IN
+			and FP.FINPROD_ID IN
 			<foreach collection="finprodId" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
 		</if>
 		<if test="adjustAfterMdateStart != null and adjustAfterMdateStart != ''">
-			and PRD_MDATE_ADJUST.MDATE &gt;= to_date(#{adjustAfterMdateStart}, 'yyyy-MM-dd')
+			and PMAD.MDATE &gt;= to_date(#{adjustAfterMdateStart}, 'yyyy-MM-dd')
 		</if>
 		<if test="adjustAfterMdateEnd != null and adjustAfterMdateEnd != ''">
-			and PRD_MDATE_ADJUST.MDATE &lt;= to_date(#{adjustAfterMdateEnd}, 'yyyy-MM-dd')
+			and PMAD.MDATE &lt;= to_date(#{adjustAfterMdateEnd}, 'yyyy-MM-dd')
 		</if>
 		<if test="adjustType != null and adjustType != ''">
-			and PRD_MDATE_ADJUST.ADJUST_TYPE = #{adjustType}
+			and PMAD.ADJUST_TYPE = #{adjustType}
 		</if>
 		<if test="sendStatus !=null and sendStatus !=''">
 		 	AND NVL(PMSI.SEND_STATUS, '03') = #{sendStatus,jdbcType=VARCHAR}

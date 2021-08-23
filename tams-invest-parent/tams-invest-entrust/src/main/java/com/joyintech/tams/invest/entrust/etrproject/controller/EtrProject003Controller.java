@@ -21,6 +21,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -185,12 +186,11 @@ public class EtrProject003Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrProjectDto allDto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrProjectDto allDto, BindingResult br) throws WorkFlowException {
         AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;

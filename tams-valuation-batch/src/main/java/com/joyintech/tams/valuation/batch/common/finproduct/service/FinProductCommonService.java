@@ -463,6 +463,10 @@ public class FinProductCommonService {
                                 // 直接取中债全价
                                 marketPriceDto.setPrice(marketPriceDto.getAllPrice());
                             }
+                            if(marketPriceDto.getPrice() ==null || marketPriceDto.getPrice().compareTo(BigDecimal.ZERO)==0){
+                                marketPriceDto.setPrice(targetFinProduct.getIssuePrice());
+                            }
+
                         }
                         //modify by mashukai 合并修改 TISHKBS-1631 20201123	start
                 	    if(queryDate != null){
@@ -601,6 +605,9 @@ public class FinProductCommonService {
                     BigDecimal day = ArithmeticUtil.divide(new BigDecimal(day1), new BigDecimal(day2));
                     BigDecimal priceAdd = ArithmeticUtil.multiply(day,
                         ArithmeticUtil.subtract(new BigDecimal(100), targetFinProduct.getIssuePrice()));
+                    if(marketPrice ==null || marketPrice.compareTo(BigDecimal.ZERO)==0){
+                        marketPrice =targetFinProduct.getIssuePrice();
+                    }
                     marketPrice = ArithmeticUtil.doAdd(marketPrice, priceAdd);
                     // 市价Dto.市价净价 = 变量.市价净价
                 }
@@ -634,11 +641,24 @@ public class FinProductCommonService {
 
         /** add by yanya on 20200116 市价查询-债券 价格等于"全价"处理 stat**/
         //if(变量.价格类型 = “全价“)
-        if(DictCodeListExt3.价格类别_全价.getValue().equals(schemeDetailDto.getPriceClass())
-                && marketPriceDto.getPrice() != null && marketPriceDto.getPrice().compareTo(BigDecimal.ZERO) != 0) {
-            BigDecimal 本日应计利息余额 = this.getBondFullPriceInterestBalance(finProdId, happenDate);
-            //出参.市价净价 - 变量.本日应计利息余额
-            marketPriceDto.setPrice(ArithmeticUtil.subtract(marketPriceDto.getPrice(), 本日应计利息余额));
+        if(DictCodeListExt3.价格类别_全价.getValue().equals(schemeDetailDto.getPriceClass())) {
+            if (marketPriceDto.getPrice() != null && marketPriceDto.getPrice().compareTo(BigDecimal.ZERO) != 0) {
+                BigDecimal 本日应计利息余额 = this.getBondFullPriceInterestBalance(finProdId, happenDate);
+                //出参.市价净价 - 变量.本日应计利息余额
+                marketPriceDto.setPrice(ArithmeticUtil.subtract(marketPriceDto.getPrice(), 本日应计利息余额));
+            }
+            else{
+                if(DictCodeList.息票品种_零息.getValue().equals(targetFinProduct.getCouponSpecies())
+                        || DictCodeList.息票品种_贴现.getValue().equals(targetFinProduct.getCouponSpecies())){
+                    marketPriceDto.setPrice(targetFinProduct.getIssuePrice());
+                }
+            }
+        }else{
+            if ((DictCodeList.息票品种_零息.getValue().equals(targetFinProduct.getCouponSpecies())
+                    || DictCodeList.息票品种_贴现.getValue().equals(targetFinProduct.getCouponSpecies()))
+                    && marketPriceDto.getPrice() == null && marketPriceDto.getPrice().compareTo(BigDecimal.ZERO) == 0) {
+                marketPriceDto.setPrice(targetFinProduct.getIssuePrice());
+            }
         }
         /** add by yanya on 20200116 市价查询-债券 价格等于"全价"处理 end**/
 
@@ -1561,14 +1581,16 @@ public class FinProductCommonService {
     	//double amount = 0;
     	//变量.剩余券面
     	double surplusSec = 0;
-    	for(TargetCashPlan listRedinfo : listRedinfoList) {
-    		for(Date queryDate : queryDateList) {
-    			if(listRedinfo.getMdate().compareTo(queryDate)==-1 || listRedinfo.getMdate().compareTo(queryDate)==0) {
-    				surplusSec = resultMap.get(queryDate)-listRedinfo.getPrinAmt().doubleValue();
-    				resultMap.put(queryDate, surplusSec);
-    			}
-    		}
-    	}
+    	if (listRedinfoList != null){
+            for(TargetCashPlan listRedinfo : listRedinfoList) {
+                for(Date queryDate : queryDateList) {
+                    if(listRedinfo.getMdate().compareTo(queryDate)==-1 || listRedinfo.getMdate().compareTo(queryDate)==0) {
+                        surplusSec = resultMap.get(queryDate)-listRedinfo.getPrinAmt().doubleValue();
+                        resultMap.put(queryDate, surplusSec);
+                    }
+                }
+            }
+        }
     	//返回 出参.百元券面结果集
 		return resultMap;
     	
@@ -1860,6 +1882,14 @@ public class FinProductCommonService {
         }
 
         return marketPriceDto;
+    }
+
+     * 实物查询交易信息
+     * @param tradeId
+     * @return
+     */
+    public TrdFinProductBarterDto selectTrdFinProductBarter(String tradeId) {
+        return finProductCommonMapper.selectTrdFinProductBarter(tradeId);
     }
 
     /**
@@ -2355,5 +2385,14 @@ public class FinProductCommonService {
         list = accountingCommonService.getBookLatestInfo(booksetId, bookDate, bokDetailId, baseSubjectNatureList, tableId,
                 null, null, null, null, null);
         return list;
+    }
+
+    /**
+     * 公共方法：标的类共通方法 - 标的信息查询，查询标的金融产品类型（投管分类）
+     * @param finprodId 标的代码【必输项】
+     * @return　返回值获取，直接查询标的金融产品类型（投管分类）
+     */
+    public String getfinprodType2(String finprodId) {
+        return  finProductCommonMapper.getfinprodType2(finprodId);
     }
 }

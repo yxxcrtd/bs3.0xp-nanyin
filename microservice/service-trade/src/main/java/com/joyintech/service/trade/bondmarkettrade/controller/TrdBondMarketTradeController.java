@@ -34,8 +34,7 @@ public class TrdBondMarketTradeController {
      */
     @RequestMapping("findPage/{page}/{length}")
     public Page<TrdBondMarketTradeDto> findPage(@RequestBody Map<String, Object> param,
-                                                @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+                                                @PathVariable("page") int page, @PathVariable("length") int length){
         return trdBondMarketTradeService.findPage(page, length, param);
     }
 
@@ -62,7 +61,7 @@ public class TrdBondMarketTradeController {
      */
     @RequestMapping("getFinprodId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length){
         return trdBondMarketTradeService.getFinprodId(page, length, param);
     }
 
@@ -77,7 +76,7 @@ public class TrdBondMarketTradeController {
      */
     @RequestMapping("getAppearMarketId/{page}/{length}")
     public Page<SelectOptionDto> getAppearMarketId(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length){
         return trdBondMarketTradeService.getAppearMarketId(page, length, param);
     }
 

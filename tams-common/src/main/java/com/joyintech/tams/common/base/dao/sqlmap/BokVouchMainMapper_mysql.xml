@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokVouchMainMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokVouchMain" >
+        <id column="VOUCH_NUM" property="vouchNum" jdbcType="VARCHAR" />
+        <result column="BUS_VOUCHNUM" property="busVouchnum" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="BOOK_DATE" property="bookDate" jdbcType="DATE" />
+        <result column="COM_TABLE_ID" property="comTableId" jdbcType="VARCHAR" />
+        <result column="VOUCH_REMARK" property="vouchRemark" jdbcType="VARCHAR" />
+        <result column="OFFSET_FLAG" property="offsetFlag" jdbcType="VARCHAR" />
+        <result column="VOUCH_YEAR" property="vouchYear" jdbcType="DECIMAL" />
+        <result column="VOUCH_MONTH" property="vouchMonth" jdbcType="DECIMAL" />
+        <result column="NUM" property="num" jdbcType="DECIMAL" />
+        <result column="BOOK_TYPE" property="bookType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        VOUCH_NUM VOUCH_NUM, BUS_VOUCHNUM BUS_VOUCHNUM, BOOKSET_ID BOOKSET_ID, TRADE_ID TRADE_ID,
+        BOOK_DATE BOOK_DATE, COM_TABLE_ID COM_TABLE_ID, VOUCH_REMARK VOUCH_REMARK, OFFSET_FLAG OFFSET_FLAG,
+        VOUCH_YEAR VOUCH_YEAR, VOUCH_MONTH VOUCH_MONTH, NUM NUM, BOOK_TYPE BOOK_TYPE, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokVouchMainMapper.Base_Column_List" />
+        from BOK_VOUCH_MAIN
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokVouchMainMapper.Base_Column_List" />
+        from BOK_VOUCH_MAIN
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokVouchMainMapper.Base_Column_List" />
+        from BOK_VOUCH_MAIN
+        where VOUCH_NUM = #{vouchNum,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from BOK_VOUCH_MAIN
+        where VOUCH_NUM = #{vouchNum,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokVouchMain" >
+        insert into BOK_VOUCH_MAIN (VOUCH_NUM, BUS_VOUCHNUM, BOOKSET_ID,
+            TRADE_ID, BOOK_DATE, COM_TABLE_ID,
+            VOUCH_REMARK, OFFSET_FLAG, VOUCH_YEAR,
+            VOUCH_MONTH, NUM, BOOK_TYPE,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{vouchNum,jdbcType=VARCHAR}, #{busVouchnum,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR},
+            #{tradeId,jdbcType=VARCHAR}, #{bookDate,jdbcType=DATE}, #{comTableId,jdbcType=VARCHAR},
+            #{vouchRemark,jdbcType=VARCHAR}, #{offsetFlag,jdbcType=VARCHAR}, #{vouchYear,jdbcType=DECIMAL},
+            #{vouchMonth,jdbcType=DECIMAL}, #{num,jdbcType=DECIMAL}, #{bookType,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokVouchMain" >
+        insert into BOK_VOUCH_MAIN
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="vouchNum != null" >
+                VOUCH_NUM,
+            </if>
+            <if test="busVouchnum != null" >
+                BUS_VOUCHNUM,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE,
+            </if>
+            <if test="comTableId != null" >
+                COM_TABLE_ID,
+            </if>
+            <if test="vouchRemark != null" >
+                VOUCH_REMARK,
+            </if>
+            <if test="offsetFlag != null" >
+                OFFSET_FLAG,
+            </if>
+            <if test="vouchYear != null" >
+                VOUCH_YEAR,
+            </if>
+            <if test="vouchMonth != null" >
+                VOUCH_MONTH,
+            </if>
+            <if test="num != null" >
+                NUM,
+            </if>
+            <if test="bookType != null" >
+                BOOK_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="vouchNum != null" >
+                #{vouchNum,jdbcType=VARCHAR},
+            </if>
+            <if test="busVouchnum != null" >
+                #{busVouchnum,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookDate != null" >
+                #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="comTableId != null" >
+                #{comTableId,jdbcType=VARCHAR},
+            </if>
+            <if test="vouchRemark != null" >
+                #{vouchRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetFlag != null" >
+                #{offsetFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="vouchYear != null" >
+                #{vouchYear,jdbcType=DECIMAL},
+            </if>
+            <if test="vouchMonth != null" >
+                #{vouchMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="num != null" >
+                #{num,jdbcType=DECIMAL},
+            </if>
+            <if test="bookType != null" >
+                #{bookType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokVouchMain" >
+        insert into BOK_VOUCH_MAIN(VOUCH_NUM, BUS_VOUCHNUM, BOOKSET_ID, TRADE_ID, BOOK_DATE,
+        COM_TABLE_ID, VOUCH_REMARK, OFFSET_FLAG, VOUCH_YEAR, VOUCH_MONTH, NUM, BOOK_TYPE,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select VOUCH_NUM, BUS_VOUCHNUM, BOOKSET_ID, TRADE_ID, BOOK_DATE,
+            COM_TABLE_ID, VOUCH_REMARK, OFFSET_FLAG, VOUCH_YEAR, VOUCH_MONTH, NUM, BOOK_TYPE,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_VOUCH_MAIN
+             where 1 = 1 and VOUCH_NUM = #{vouchNum,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokVouchMain" >
+        update BOK_VOUCH_MAIN
+        <set >
+            <if test="busVouchnum != null" >
+                BUS_VOUCHNUM = #{busVouchnum,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE = #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="comTableId != null" >
+                COM_TABLE_ID = #{comTableId,jdbcType=VARCHAR},
+            </if>
+            <if test="vouchRemark != null" >
+                VOUCH_REMARK = #{vouchRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetFlag != null" >
+                OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="vouchYear != null" >
+                VOUCH_YEAR = #{vouchYear,jdbcType=DECIMAL},
+            </if>
+            <if test="vouchMonth != null" >
+                VOUCH_MONTH = #{vouchMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="num != null" >
+                NUM = #{num,jdbcType=DECIMAL},
+            </if>
+            <if test="bookType != null" >
+                BOOK_TYPE = #{bookType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where VOUCH_NUM = #{vouchNum,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokVouchMain" >
+        update BOK_VOUCH_MAIN
+        set BUS_VOUCHNUM = #{busVouchnum,jdbcType=VARCHAR},
+            BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            BOOK_DATE = #{bookDate,jdbcType=DATE},
+            COM_TABLE_ID = #{comTableId,jdbcType=VARCHAR},
+            VOUCH_REMARK = #{vouchRemark,jdbcType=VARCHAR},
+            OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
+            VOUCH_YEAR = #{vouchYear,jdbcType=DECIMAL},
+            VOUCH_MONTH = #{vouchMonth,jdbcType=DECIMAL},
+            NUM = #{num,jdbcType=DECIMAL},
+            BOOK_TYPE = #{bookType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where VOUCH_NUM = #{vouchNum,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -9,6 +9,7 @@
  */
 package com.joyintech.tams.invest.trade.lend.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -248,8 +250,7 @@ public class TrdLendInvestTrade002Controller extends BaseController {
 
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdLendInvestTradeDto dto)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdLendInvestTradeDto dto) throws IOException, InstantiationException, WorkFlowException {
         if (StringUtil.isBlank(dto.getTradeId())) {
             if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = new BussinessCodeParameter();

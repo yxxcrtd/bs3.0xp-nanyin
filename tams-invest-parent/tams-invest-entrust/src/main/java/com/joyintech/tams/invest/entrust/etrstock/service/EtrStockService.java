@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,9 @@ public class EtrStockService extends CommonExportService<EtrStockDto> implements
 
     @Autowired
     private EtrCommonService etrCommonService;
+
+    @Autowired
+    private PlatformDateImpl platformDateImpl;
 
     /**   
      * @title: EtrStockService
@@ -249,6 +253,8 @@ public class EtrStockService extends CommonExportService<EtrStockDto> implements
      *
      */
     public BigDecimal getTongDaoCash(Map<String, Object> map) {
+
+        map.put("platDate",platformDateImpl.getSysDate());
         return  restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStock/getTongDaoCash" , map, BigDecimal.class);
     }
     /**

@@ -130,42 +130,43 @@ public class GeneralJNLServiceMLImpl implements GeneralJNLService {
 				//	return this.executeHQL(sql.toString(), params, values);
 				//}
 				
-				
-				for (TransactionObj trandata : tranList) {
-					
-					if (lotnum == 0) {
-						lotnum = trandata.getLotnum();
-					} else if (lotnum == trandata.getLotnum()) {
-						//Nothing need to do
-					} else {
-						lotnum = trandata.getLotnum();
-						//wrapLotCostObj(new TranSum(), stockCostWrap.getPriordayCost(), 
-						//		temp_amount_p, temp_g_cost_p, fxrate);
+				if (tranList != null){
+					for (TransactionObj trandata : tranList) {
 
-						//wrapLotCostObj(new TranSum(), stockCostWrap.getAsofdayCost(), 
-						//		temp_amount, temp_g_cost, fxrate);
-						
-						temp_g_cost = 0.0;
-						temp_amount= 0.0;
-						temp_g_cost_p = 0.0;
-						temp_amount_p = 0.0;
-					}
-					
-					if (trandata.getTrantype() == TransTypes.PURCHASE) {
-						if (trandata.getLedgerdate().compareTo(date) < 0) {
-							temp_g_cost_p += trandata.getGcost();
-							temp_amount_p += trandata.getAmount();
+						if (lotnum == 0) {
+							lotnum = trandata.getLotnum();
+						} else if (lotnum == trandata.getLotnum()) {
+							//Nothing need to do
+						} else {
+							lotnum = trandata.getLotnum();
+							//wrapLotCostObj(new TranSum(), stockCostWrap.getPriordayCost(),
+							//		temp_amount_p, temp_g_cost_p, fxrate);
+
+							//wrapLotCostObj(new TranSum(), stockCostWrap.getAsofdayCost(),
+							//		temp_amount, temp_g_cost, fxrate);
+
+							temp_g_cost = 0.0;
+							temp_amount= 0.0;
+							temp_g_cost_p = 0.0;
+							temp_amount_p = 0.0;
 						}
-						temp_g_cost += trandata.getGcost();
-						temp_amount += trandata.getAmount();
-						fxrate = trandata.getFxrate();
-					} else if (trandata.getTrantype() == TransTypes.SALE) {
-						if (trandata.getLedgerdate().compareTo(date) < 0) {
-							temp_g_cost_p -= trandata.getGcost();
-							temp_amount_p -= trandata.getAmount();
+
+						if (trandata.getTrantype() == TransTypes.PURCHASE) {
+							if (trandata.getLedgerdate().compareTo(date) < 0) {
+								temp_g_cost_p += trandata.getGcost();
+								temp_amount_p += trandata.getAmount();
+							}
+							temp_g_cost += trandata.getGcost();
+							temp_amount += trandata.getAmount();
+							fxrate = trandata.getFxrate();
+						} else if (trandata.getTrantype() == TransTypes.SALE) {
+							if (trandata.getLedgerdate().compareTo(date) < 0) {
+								temp_g_cost_p -= trandata.getGcost();
+								temp_amount_p -= trandata.getAmount();
+							}
+							temp_g_cost -= trandata.getGcost();
+							temp_amount -= trandata.getAmount();
 						}
-						temp_g_cost -= trandata.getGcost();
-						temp_amount -= trandata.getAmount();
 					}
 				}
 				//加载最后一个lot的信息

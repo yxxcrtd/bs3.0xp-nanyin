@@ -99,7 +99,80 @@ public class ExcelUtil {
         }
         return ls;
     }
+    /**
+     * Excel文件到List从业人员特殊处理
+     *
+     * @param fileName 文件名
+     * @param file 文件
+     * @param inputStream 文件流
+     * @param sheetIndex 工作表索引(下标从0开始)
+     * @return 读取结果列表
+     * @throws FileNotFoundException
+     */
+    @SuppressWarnings("deprecation")
+    public static List<List<String>> readToListEMPLOYEE(String fileName, File file,
+                                                        InputStream inputStream, int sheetIndex) throws FileNotFoundException{
+        List<List<String>> ls = new ArrayList<List<String>>();
+        Workbook wb = loadWorkbook(fileName, file, inputStream);
+        if (null != wb) {
+            Sheet sh = wb.getSheetAt(sheetIndex);
+            int rows = sh.getPhysicalNumberOfRows();
+            int cells = sh.getRow(1).getPhysicalNumberOfCells();
+            Row tRow = sh.getRow(1);
+            // 列标题为空的话结束
+            for (int c = 0; c < cells; c++ ) {
+                if (tRow.getCell(c) == null
+                        || StringUtil.isEmpty(getStringCellValue(tRow.getCell(c)))) {
+                    cells = c;
+                    break;
+                }
+            }
+            //获取从业人员表头数据
+            Row rowtitle = sh.getRow(0);
+            if (rowtitle != null) {
+                String issuePartyId = getStringCellValue(rowtitle.getCell(3));
+                String employeeType = getStringCellValue(rowtitle.getCell(5));
+                String issuePartyIdTitle = getStringCellValue(rowtitle.getCell(2));
+                String employeeTypeTitle = getStringCellValue(rowtitle.getCell(4));
 
+                //获取从业人员详情
+                for (int i = 1; i < rows; i++ ) {
+                    Row row = sh.getRow(i);
+                    if (row == null) {
+                        break;
+                    }
+                    List<String> r = new ArrayList<String>(cells);
+                    boolean dataFlag = true;
+                    for (int c = 0; c < cells; c++ ) {
+                        if (row.getCell(c) == null
+                                || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
+                            r.add("");
+                        }
+                        else {
+                            dataFlag = false;
+                            r.add(getStringCellValue(row.getCell(c)));
+                        }
+                    }
+                    // 遇到一行全为空结束
+                    if (dataFlag) {
+                        break;
+                    }
+
+                    //将数据重新按照统一数据维护的顺序组装
+                    if(i==1){
+                        r.add(0,employeeTypeTitle);
+                        r.add(3,issuePartyIdTitle);
+                    }else{
+                        r.add(0,employeeType);
+                        r.add(3,issuePartyId);
+                    }
+
+                    ls.add(r);
+                }
+            }
+        }
+        return ls;
+    }
     /**
      * Excel文件到List
      *
@@ -234,7 +307,6 @@ public class ExcelUtil {
 			        inputStream.close();
 			    }
 			    catch (Exception e) {
-//                e.printStackTrace();
 			        logger.error(e.getMessage(),e);
 			    }
 
@@ -245,7 +317,6 @@ public class ExcelUtil {
 			        inputStream.close();
 			    }
 			    catch (Exception e) {
-//                e.printStackTrace();
 			        logger.error(e.getMessage(),e);
 			    }
 			}
@@ -409,6 +480,17 @@ public class ExcelUtil {
             dataList = ExcelUtil.readToList(
                     fileName, null, null, 0, 0, 0);
             
+        } catch (FileNotFoundException e1) {
+            logger.error(e1.getMessage(),e1);
+        }
+        return dataList;
+    }
+    
+    public static List<List<String>> getDataList2(String fileName){
+        List<List<String>> dataList = null;
+        try {
+            dataList = ExcelUtil.readToList(
+                    new File(fileName), 0);
         } catch (FileNotFoundException e1) {
             logger.error(e1.getMessage(),e1);
         }

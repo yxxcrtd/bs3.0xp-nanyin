@@ -21,6 +21,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,9 +156,9 @@ public class PoiReportModelManage002Controller extends BaseController {
 				addParamList = JsonUtils.json2List(addParam, PoiReportModelManage002Dto.class);
 				//获取中间目录下的文件
 				String tempFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_TMEP_PATH); 
-				File   tempFile=new File(tempFilePath+"/"+dto.getFileName());
+				File   tempFile=new SafelyFile(tempFilePath+"/"+dto.getFileName());
 				//获取目标目录文件
-				File   finalFile=new  File(dto.getReportWarehouse()+"/"+dto.getFileName());
+				File   finalFile=new SafelyFile(dto.getReportWarehouse()+"/"+dto.getFileName());
 				if(!finalFile.exists()){
 					tempFile.renameTo(finalFile);
 					tempFile.delete();
@@ -177,8 +178,8 @@ public class PoiReportModelManage002Controller extends BaseController {
 				dto.setFileName(beFile.getName());
 				if(!tempName.equals(dto.getTempName())){
 					//模板名称变动
-					File file=new  File(dto.getReportWarehouse()+"/"+dto.getTempName());
-					File dfile=new  File(dto.getReportWarehouse()+"/"+ddto.getTempName());
+					File file=new SafelyFile(dto.getReportWarehouse()+"/"+dto.getTempName());
+					File dfile=new SafelyFile(dto.getReportWarehouse()+"/"+ddto.getTempName());
 					dfile.renameTo(file);
 				}
 			
@@ -278,15 +279,14 @@ public class PoiReportModelManage002Controller extends BaseController {
 		 */
 		@RequestMapping(value = "/uploadFile")
 		@ResponseBody
-		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-				throws Exception {
+		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 			 AjaxResult res = new AjaxResult();
 //			 if(request.getParameter("size")>1048576){}
 			 if(StringUtil.isEmpty(this.getParam("folder"))){
 				//进度条消除
 				 poireportModelManage002Service.removePercent(request);
 				 String sourcePath=this.getParam("fileName");
-				 File sourceFile=new File(sourcePath);
+				 File sourceFile=new SafelyFile(sourcePath);
 				 if(sourceFile.exists()){
 					 sourceFile.delete();
 				 }
@@ -296,7 +296,7 @@ public class PoiReportModelManage002Controller extends BaseController {
 			 }
 			 //判断目标目镜是否存在
 			 String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH); 
-			 File filepath = new File(uploadFilePath);///home/tamsuser/poi
+			 File filepath = new SafelyFile(uploadFilePath);///home/tamsuser/poi
 		     //File filepath2=new File(uploadFilePath+"/"+this.getParam("folder"));///NB/GLJY
 			 if(!filepath.exists()){
 				 filepath.mkdirs();
@@ -316,7 +316,7 @@ public class PoiReportModelManage002Controller extends BaseController {
 			   if(filepath.exists()&&filepath.isDirectory()){
 					String filenamePath=this.getParam("fileName");
 					String fileName1=this.getParam("fileName1");
-					File filenamePathFile=new File(filenamePath);
+					File filenamePathFile=new SafelyFile(filenamePath);
 					//File filepath3=new File(filepath2.getPath()+"/"+fileName1);///NB/GLJY
 					//存入第三方临时目录
 					
@@ -333,7 +333,7 @@ public class PoiReportModelManage002Controller extends BaseController {
 							f.delete();
 						}
 					}
-					File  tempPathFileName=new  File(tempPath.getPath()+"/"+fileName1);
+					File  tempPathFileName=new SafelyFile(tempPath.getPath()+"/"+fileName1);
 					if(!tempPathFileName.exists()){
 						filenamePathFile.renameTo(tempPathFileName);
 						poireportModelManage002Service.removePercent(request);
@@ -365,7 +365,7 @@ public class PoiReportModelManage002Controller extends BaseController {
 		 */
 		@ResponseBody
 		@RequestMapping("downloadReport")
-		public ResponseEntity<byte[]> downloadReport() throws Exception {
+		public ResponseEntity<byte[]> downloadReport() throws IOException {
 			
 			
 			return reportModelManage002Service.downLoadReportInfo(this.getParam("folder"));
@@ -379,8 +379,7 @@ public class PoiReportModelManage002Controller extends BaseController {
 		 */
 		@RequestMapping("getInfoSelect")
 		@ResponseBody
-	    public List<SelectOptionDto> getPrdInfoSelect()
-	        throws Exception {
+	    public List<SelectOptionDto> getPrdInfoSelect() {
 			List<SelectOptionDto> prdInfoSelect =poireportModelManage002Service.getInfoSelect();
 	        return prdInfoSelect;
 	    }

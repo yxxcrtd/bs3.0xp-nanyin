@@ -20,7 +20,6 @@ import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
-import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.BussTrdPositionDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
@@ -119,9 +118,6 @@ public class TradeProductDealCommService {
      */
     @Autowired
     private WflStlPayOrdersMapper wflStlPayOrdersMapper;
-
-    @Autowired
-    private TrdCommonBaseMapper trdCommonBaseMapper;
 
     private static final List<String> 申购确认_赎回确认_除权登记_红利再投 = Arrays.asList(DictCodeList.交易方向_申购确认.getValue(),
         DictCodeList.交易方向_赎回确认.getValue(), DictCodeList.交易方向_除权登记.getValue(), DictCodeList.交易方向_红利再投.getValue());
@@ -558,8 +554,15 @@ public class TradeProductDealCommService {
             cashInputDto.setNeedNegative(needNegative);
             ptlCashPositionFlows.addAll(assetPositionsCashCommServiceImpl.cashDeal(cashInputDto));
             if (baseEtrCashPositionCommService != null) {
-            	if( null!=positionType && positionType.equals(DictCodeList.持仓类型_实际.getValue())) {//fixed BSTOZ-857BUG add by zhouxiuping at 20191029
-                baseEtrCashPositionCommService.productEtrCashPosition(cashInputDto);
+                // modify by jiangpeng on 20210429 start
+                // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                // 判断条件移入 baseEtrCashPositionCommService.productEtrCashPosition 方法中
+            	if( null!=positionType /*&&
+            			((positionType.equals(DictCodeList.持仓类型_实际.getValue())
+    					&& DictCodeListExt1.交易流程状态_撤销.getValue().equals(bussTrdPositionDto.getWorkflowStatus()))
+    					|| DictCodeListExt1.交易流程状态_流程中.getValue().equals(bussTrdPositionDto.getWorkflowStatus()))*/) {//fixed BSTOZ-857BUG add by zhouxiuping at 20191029
+                    // modify by jiangpeng on 20210429 end
+                    baseEtrCashPositionCommService.productEtrCashPosition(cashInputDto, positionType);
             	}
             }
         }

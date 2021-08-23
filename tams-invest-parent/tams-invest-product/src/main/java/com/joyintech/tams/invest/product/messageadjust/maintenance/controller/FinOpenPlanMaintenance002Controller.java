@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.product.messageadjust.maintenance.controller;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.framework.constant.GlobalConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,13 +122,13 @@ public class FinOpenPlanMaintenance002Controller extends BaseController {
      * @param dto 保存对象
      * @param br 验证信息
      * @return 操作结果
-     * @throws Exception 异常信息
+     * @throws WorkFlowException 异常信息
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinOpenPlanMaintenance002Dto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinOpenPlanMaintenance002Dto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -151,7 +152,7 @@ public class FinOpenPlanMaintenance002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("selectOpenPlanParamDto")
-    public OpenPlanParamDto selectOpenPlanParamDto(String finprodId) throws Exception{
+    public OpenPlanParamDto selectOpenPlanParamDto(String finprodId){
     	return finOpenPlanMaintenance002Service.selectOpenPlanParamDto(finprodId);
     }
     

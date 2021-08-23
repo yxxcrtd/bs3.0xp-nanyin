@@ -15,6 +15,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,17 +54,17 @@ public class DocumentManagement002Service extends CommonExportService<DocumentMa
 	 * @param request
 	 * @throws Exception
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
 		// 文件本地路径
-		String filePath = request.getParameter("fileName1");
+		String filePath = request.getParameter("fileName1")==null?"":request.getParameter("fileName1");
 		/*
 		//上传文件名称
 		String name = request.getParameter("fileName");*/
 		// 文件名称
 		String fileName = FileNameUtil.formatFileName(filePath);
 
-		File file = new File(filePath);
-		boolean rec = file.renameTo(new File(fileName));
+		File file = new SafelyFile(filePath);
+		boolean rec = file.renameTo(new SafelyFile(fileName));
 		if (rec) {
 			logger.info("处理成功");
 		}
@@ -83,7 +84,7 @@ public class DocumentManagement002Service extends CommonExportService<DocumentMa
 	 * @return
 	 * @throws Exception
 	 */
-	public int insertFileTransferInfo(HttpServletRequest request) throws Exception {
+	public int insertFileTransferInfo(HttpServletRequest request) {
 		DocumentManagement001Dto dto = new DocumentManagement001Dto();
 		// 系统时间
 		String Sysdate = baseCommonService.getSysDateString();
@@ -94,14 +95,14 @@ public class DocumentManagement002Service extends CommonExportService<DocumentMa
 		String fileId = IDGenerator.generate();
 		dto.setFileId(fileId);
 		// 设置文件名称
-		String fileName = request.getParameter("fileNameOnly");
+		String fileName = request.getParameter("fileNameOnly")==null?"":request.getParameter("fileNameOnly");
 		dto.setFileName(fileName);
 		// 设置文件类型
-		String fileType = request.getParameter("fileType");		
+		String fileType = request.getParameter("fileType")==null?"":request.getParameter("fileType");
 		//String fileType = DictCodeList.文件类型_操作手册.getValue();
 		dto.setFileType(fileType);
 		// 文件存放目录
-		dto.setFilePath(request.getParameter("fileName1"));
+		dto.setFilePath(request.getParameter("fileName1")==null?"":request.getParameter("fileName1"));
 
 		return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/DocumentManagement002/uploadFile",

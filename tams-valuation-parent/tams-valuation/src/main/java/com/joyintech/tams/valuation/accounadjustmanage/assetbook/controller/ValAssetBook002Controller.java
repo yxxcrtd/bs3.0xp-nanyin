@@ -268,7 +268,7 @@ public class ValAssetBook002Controller extends BaseController {
 
     @RequestMapping("selectRecondSize")
     @ResponseBody
-    public Boolean findPage(ValVoucherQuery001SearchDto dto) throws Exception {
+    public Boolean findPage(ValVoucherQuery001SearchDto dto) {
           if(valVoucherQuery001Service.findPage(dto).getRoot().size()>0)
                 return true;
           else

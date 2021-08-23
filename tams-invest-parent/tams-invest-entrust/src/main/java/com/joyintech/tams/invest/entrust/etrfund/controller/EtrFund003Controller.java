@@ -19,6 +19,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -211,12 +212,11 @@ public class EtrFund003Controller extends BaseController {
      * @param allDto EtrFundDto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrFundDto allDto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody EtrFundDto allDto, BindingResult br) throws WorkFlowException {
         AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;

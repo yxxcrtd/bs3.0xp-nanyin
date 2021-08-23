@@ -14,6 +14,8 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.component.base.core.dto.WflSpecialValidInputParameter;
 import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
 
+import java.util.List;
+
 /**
  * 工作流共通Service
  * 〈功能详细描述〉
@@ -67,6 +69,17 @@ public interface MstWorkflowCommonService {
      * @since 1.0
      */
     ProcessMark getDataEntityFromProcessMark(WflValidInputParameter wflValidInputParameter);
+
+    /**
+     *
+     * 获取数据状态（以创建时间最大的数据的数据状态判断）
+     * 通过留痕表查询流程中数据,返回list
+     * add by jiangpeng on 20210514 ZGBSSE-388
+     * @param wflValidInputParameter 函数输入参数
+     * @return 数据状态
+     * @since 1.0
+     */
+    List<ProcessMark> getDataEntityFromProcessMarkList(WflValidInputParameter wflValidInputParameter);
 
     /**
      * 

@@ -60,12 +60,12 @@ public class PrimaryBiddingManage003Service extends BaseService<BidOrderBidPrice
 //        }
 
     public List<BidOrderBidPriceDto> findBidPrice(Map<String, Object> param)
-        throws Exception {
+    {
         return primaryBiddingManage003Mapper.findBidPrice(param);
     }
 
     public List<BidOrderBidPriceDto> getBidDetailByBidId(String bidId)
-        throws Exception {
+    {
         return primaryBiddingManage003Mapper.getBidDetailByBidId(bidId);
     }
 

@@ -45,7 +45,7 @@ public class ValAssetBookParameter001Controller extends BaseController {
      */
     @PostMapping("/getAllAssetbookPage/{page}/{length}")
     public Page<ValAssetBookParameter002Dto> getAllAssetbookPage(@RequestBody Map<String,Object> params,
-                                                        @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                        @PathVariable("page") int page, @PathVariable("length") int length) {
         return valAssetBookParameter001Service.getAllAssetbookPage(page,length, params);
     }
     
@@ -77,7 +77,7 @@ public class ValAssetBookParameter001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@PostMapping("checkfornew")
-	public List<ValAssetBookParameter002Dto> checkfornew(@RequestBody String booksetId) throws Exception {
+	public List<ValAssetBookParameter002Dto> checkfornew(@RequestBody String booksetId) {
 		return valAssetBookParameter001Service.checkfornew(booksetId);
 	}
 }

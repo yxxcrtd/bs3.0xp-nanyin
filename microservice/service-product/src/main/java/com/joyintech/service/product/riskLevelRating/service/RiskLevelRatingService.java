@@ -49,7 +49,7 @@ public class RiskLevelRatingService extends CommonExportService {
      */
     public Page<RiskLevelRating001Dto> findPage(int page, int length,
                                                 Map<String, Object> pageParam)
-            throws Exception {
+    {
         pageParam.put("isLast", DictCodeList.是否_是.getValue());
 
         return this.queryForPage(page, length,
@@ -66,7 +66,7 @@ public class RiskLevelRatingService extends CommonExportService {
      */
     public Page<SelectOptionDto> findId(int page, int length,
                                         Map<String, Object> pageParam)
-            throws Exception {
+    {
 
 
         return this.queryForPage(page, length,

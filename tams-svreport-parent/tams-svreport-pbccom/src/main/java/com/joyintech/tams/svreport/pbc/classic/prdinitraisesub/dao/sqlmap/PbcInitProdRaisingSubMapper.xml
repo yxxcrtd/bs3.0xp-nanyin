@@ -939,7 +939,8 @@
   <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub" flushCache="true" useCache="false">
   	select 
 	    a.REGIST_SEQNO registSeqno,
-	    nvl(t2.pbc_code,a.pbc_prod_id) PBC_PROD_ID,
+	    <!--nvl(t2.pbc_code,a.pbc_prod_id) PBC_PROD_ID,-->
+        a.pbc_prod_id PBC_PROD_ID,
 	    a.BUY_PLACE buyPlace,
 	    a.CUSTOMER_TYPE1 customerType1,
 	    a.CCY ccy,
@@ -965,7 +966,7 @@
 	    b.IVSTORIENTATION ivstorientation,
 	    b.VDATE vdate,
 	    t2.PBC_CODE pbcCode,
-	    a.PBC_PROD_ID pbcProdIdShow
+        nvl(t2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
   	from PBC_INIT_PROD_RAISING_SUB a 
   	left join (<include refid="PBC_PRD_BASEINFO_SUB" />) b on a.PBC_PROD_ID = b.PBC_PROD_ID 
   	<!-- and a.ORG_CODE = b.ORG_CODE -->

@@ -13,16 +13,15 @@
 			</if>
 			<if test="productIdList != null and !productIdList.isEmpty()">
 				AND (
-				PORTFOLIO_ID in (select PORTFOLIO_ID from FIN_PRODUCT_ADD where FIN_PRODUCT_ADD.FINPROD_ID in <foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
+				PORTFOLIO_ID in (select PORTFOLIO_ID from FIN_PRODUCT_ADD where FIN_PRODUCT_ADD.FINPROD_ID in
+									<foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
 				<if test="(index % 500) == 499">
 					null) OR PORTFOLIO_ID IN (
 				</if>
 				#{obj}
 			</foreach>
 				)
-
 				OR
-
 				PORTFOLIO_ID in
 				<foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
 					<if test="(index % 500) == 499">
@@ -127,7 +126,7 @@
 		T1.VAL_DATE VAL_DATE,
 		T1.PTL_ID PTL_ID,
 		T1.SUB_CODE SUB_CODE,
-		T1.FINPROD_ID FINPROD_ID,
+		nvl(T1.FINPROD_ID,T3.FINPROD_ID) FINPROD_ID,
 		T1.SECURITY_QUANTITY SECURITY_QUANTITY,
 		T1.UNIT_COST UNIT_COST,
 		T1.SECURITY_COST SECURITY_COST,
@@ -149,15 +148,18 @@
 		FROM
 		RSK_VALTBL_ASSET_SUB T1
 		left join FIN_PRODUCT T2 on T1.FINPROD_ID = T2.FINPROD_ID
-		where SUB_CODE like '_________%'
+		left join RSK_VALTBL_PRT_BOTASSET_MAP T3
+			ON T1.PTL_ID = T3.PTL_ID
+			AND T1.SUB_CODE = T3.SUB_CODE
+		where LENGTH(T1.SUB_CODE) &gt; 8
 		<if test="cdate != null and cdate != ''">
 			<!-- TISHKBS-621 【批处理-估值穿透逻辑问题】目前系统跑批逻辑为只能取导入底层估值日的数据，期望，跑批日无底层数据时，取跑批日前最新的底层数据 modify by lizhi 20200629 start -->
 			<!-- AND T1.VAL_DATE = TO_DATE(#{cdate},'YYYY-MM-DD') -->
-			AND T1.VAL_DATE = 
+			AND T1.VAL_DATE =
 		      ( select
 		          max(val_date) val_date
-		        from RSK_VALTBL_ASSET_SUB 
-		        where SUB_CODE like '_________%' 
+		        from RSK_VALTBL_ASSET_SUB
+		        where LENGTH(T1.SUB_CODE) &gt; 8  
 		          and PTL_ID = #{portfolioId,jdbcType=VARCHAR}
 		          <![CDATA[and VAL_DATE <=  TO_DATE(#{cdate},'YYYY-MM-DD')]]>
 		        )
@@ -166,7 +168,7 @@
 		<if test="portfolioId != null and portfolioId != ''">
 			AND T1.PTL_ID = #{portfolioId,jdbcType=VARCHAR}
 		</if>
-		order by sub_code desc
+		order by T1.sub_code desc
 	</select>
 
 	<!-- 获取组合某日实收资本 -->
@@ -199,7 +201,163 @@
         where CDATE = #{cdate,jdbcType=DATE}
           and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
     </delete>
-
+	<!--增加资管计划维度明细-->
+	<delete id="deleteDetailValRift">
+        delete from PTL_SEC_PIERCE_VALUTION_DETAIL
+        where CDATE = #{cdate,jdbcType=DATE}
+          and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+    </delete>
+	<!--查询产品对应最小跑批日期-->
+	<select id="selectImportValTableProdList" resultType="java.util.Map">
+		SELECT DISTINCT fp1.FINPROD_ID "finprodId",tt.VAL_DATE "valDate"
+		FROM PTL_SEC_VALUTION psv
+		LEFT JOIN FIN_PRODUCT fp
+		ON fp.FINPROD_ID = psv.FINPROD_ID
+		AND fp.FINPROD_TYPE2='F17'
+		LEFT JOIN FIN_PRODUCT fp1
+		ON fp1.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
+		LEFT JOIN (
+			SELECT PTL_ID,max(VAL_DATE) VAL_DATE from(
+				SELECT PORTFOLIO_ID PTL_ID,min(VIDT.VALDATE) VAL_DATE
+				FROM VALTBL_IMPORT_DATE_TRACE VIDT
+				WHERE
+					VIDT.VALDATE>=#{dateMin,jdbcType=DATE}
+					AND VIDT.VALDATE &lt; #{dateMax,jdbcType=DATE}
+					AND VIDT.IMPDATE = #{dateMax,jdbcType=DATE}
+					<if test="deptCode != null and deptCode != ''">
+                        AND	VIDT.CREATE_DEPT = #{deptCode,jdbcType=VARCHAR}
+					</if>
+				GROUP BY PORTFOLIO_ID
+			)GROUP BY PTL_ID
+		)tt
+		ON tt.PTL_ID = fp.FINPROD_MARKET_ID
+		WHERE psv.CDATE >= #{dateMin,jdbcType=DATE} AND psv.CDATE &lt;=#{dateMax,jdbcType=DATE}
+		<if test="productIdList != null and !productIdList.isEmpty()">
+		AND (
+		psv.PORTFOLIO_ID in (select PORTFOLIO_ID from FIN_PRODUCT_ADD where FIN_PRODUCT_ADD.FINPROD_ID in
+		<foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
+		<if test="(index % 500) == 499">
+			null) OR PORTFOLIO_ID IN (
+		</if>
+		#{obj}
+		</foreach>
+			)
+			OR
+			PORTFOLIO_ID in
+			<foreach collection="productIdList" item="obj" index="index" separator="," open="(" close=")">
+				<if test="(index % 500) == 499">
+					null) OR PORTFOLIO_ID IN (
+				</if>
+				#{obj}
+			</foreach>
+			)
+		</if>
+	</select>
+	<!--add by lpf 增加对剩余现金处理逻辑-->
+	<select id="selectValtblAssetSubCash" resultType="com.joyintech.tams.invest.batch.valrift.dto.ValtblAssetSubDto">
+		SELECT
+			T1.VAL_DATE VAL_DATE,
+			T1.PTL_ID PTL_ID,
+			T1.SUB_CODE SUB_CODE,
+			CONCAT('REMAININGCASH_',decode(T1.SUB_CODE,'120401','LX','120402','LX','120403','LX','BJ')) FINPROD_ID,
+			SUM(T1.SECURITY_QUANTITY) SECURITY_QUANTITY,
+			SUM(T1.UNIT_COST) UNIT_COST,
+			SUM(T1.SECURITY_COST) SECURITY_COST,
+			SUM(T1.CTNWR) CTNWR,
+			SUM(T1.MCP) MCP,
+			SUM(T1.SMV) SMV,
+			SUM(T1.MCR) MCR,
+			SUM(T1.VALUE_ADDED) VALUE_ADDED,
+			T1.SUSPENSION_INFO SUSPENSION_INFO,
+			T1.EQUITY_INFO EQUITY_INFO,
+			T1.IMP_MODE IMP_MODE,
+			T1.CREATE_USER CREATE_USER,
+			T1.CREATE_DEPT CREATE_DEPT,
+			T1.CREATE_TIME CREATE_TIME,
+			T1.UPDATE_USER UPDATE_USER,
+			T1.UPDATE_TIME UPDATE_TIME,
+			T2.FINPROD_TYPE2,
+			T2.FINPROD_MARKET_ID
+		FROM
+			RSK_VALTBL_ASSET_SUB T1
+		INNER JOIN (
+			SELECT
+			PTL_ID ,
+			MAX(VAL_DATE) VAL_DATE
+			FROM
+			RSK_VALTBL_ASSET_SUB
+			GROUP BY
+			PTL_ID
+			) TT2 ON T1.VAL_DATE = TT2.VAL_DATE
+		AND T1.PTL_ID = TT2.PTL_ID
+		LEFT JOIN FIN_PRODUCT T2
+			ON T1.FINPROD_ID = T2.FINPROD_ID
+		where T1.SUB_CODE IN ('1002','1021','1031','120401','120402','120403','3003')
+		<if test="portfolioId != null and portfolioId != ''">
+			AND T1.PTL_ID = #{portfolioId,jdbcType=VARCHAR}
+		</if>
+		GROUP BY T1.VAL_DATE,
+		T1.PTL_ID,
+		T1.SUB_CODE,
+		T1.SUSPENSION_INFO,
+		T1.EQUITY_INFO,
+		T1.IMP_MODE,
+		T1.CREATE_USER,
+		T1.CREATE_DEPT,
+		T1.CREATE_TIME,
+		T1.UPDATE_USER,
+		T1.UPDATE_TIME,
+		T2.FINPROD_TYPE2,
+		T1.SUB_CODE,
+		T2.FINPROD_MARKET_ID
+	</select>
+	<!--回购利息汇总情况下查询，科目代码<=8 优先3级科目 没有就2级 再1级科目-->
+	<select id="selectValtblAssetSubHg" resultType="com.joyintech.tams.invest.batch.valrift.dto.ValtblAssetSubDto">
+		SELECT * FROM(
+		SELECT
+			row_number() over (partition by T1.PTL_ID,substr(T1.SUB_CODE,0,4) order by LENGTH(T1.SUB_CODE) desc) as num,
+			T1.VAL_DATE VAL_DATE,
+			T1.PTL_ID PTL_ID,
+			T1.SUB_CODE SUB_CODE,
+			T1.FINPROD_ID FINPROD_ID,
+			T1.SECURITY_QUANTITY SECURITY_QUANTITY,
+			T1.UNIT_COST UNIT_COST,
+			T1.SECURITY_COST SECURITY_COST,
+			T1.CTNWR CTNWR,
+			T1.MCP MCP,
+			T1.SMV SMV,
+			T1.MCR MCR,
+			T1.VALUE_ADDED VALUE_ADDED,
+			T1.SUSPENSION_INFO SUSPENSION_INFO,
+			T1.EQUITY_INFO EQUITY_INFO,
+			T1.IMP_MODE IMP_MODE,
+			T1.CREATE_USER CREATE_USER,
+			T1.CREATE_DEPT CREATE_DEPT,
+			T1.CREATE_TIME CREATE_TIME,
+			T1.UPDATE_USER UPDATE_USER,
+			T1.UPDATE_TIME UPDATE_TIME,
+			T2.FINPROD_TYPE2,
+			T2.FINPROD_MARKET_ID
+		FROM
+			RSK_VALTBL_ASSET_SUB T1
+		INNER JOIN (
+			SELECT
+			PTL_ID ,
+			MAX(VAL_DATE) VAL_DATE
+			FROM
+			RSK_VALTBL_ASSET_SUB
+			GROUP BY
+			PTL_ID
+			) TT2 ON T1.VAL_DATE = TT2.VAL_DATE
+		AND T1.PTL_ID = TT2.PTL_ID
+		LEFT JOIN FIN_PRODUCT T2
+			ON T1.FINPROD_ID = T2.FINPROD_ID
+		where T1.SUB_CODE IN ('120410','12041001','2231','22301','22310101')
+		<if test="portfolioId != null and portfolioId != ''">
+			AND T1.PTL_ID = #{portfolioId,jdbcType=VARCHAR}
+		</if>
+		)t WHERE t.num =1
+	</select>
 	<!-- 获取自主管理待释放的预占数据  add by zhanpei -->
 	<select id="selectFreedAmPreRskOccupy"  resultType="java.lang.String">
 		SELECT rpoi.uuid

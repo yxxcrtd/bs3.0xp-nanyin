@@ -23,6 +23,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
@@ -190,7 +191,7 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 	 * @param request
 	 * @return
 	 */
-	public void removePercent(HttpServletRequest request) throws Exception {
+	public void removePercent(HttpServletRequest request) {
 		progressBarService.removePercent("ReportModelManage002", ProgressBarService.FILE_UPLOAD_ID);
 	}
 	/**
@@ -198,7 +199,7 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 	 * @param request
 	 * @return
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
 		progressBarService.updatePercent("ReportModelManage002", ProgressBarService.FILE_UPLOAD_ID, 1D, false);
 	}
 	/**
@@ -266,19 +267,23 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 	 */
 	public ResponseEntity<byte[]> downLoadReportInfo(String filenpath) throws IOException{
 		String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH); 
-		File filepath=new File(uploadFilePath+filenpath);///NB/GLJY
+		File filepath=new SafelyFile(uploadFilePath+filenpath);///NB/GLJY
 		//检查文件夹是否存在
 		String zipFileName = FileNameUtil.createFileName("zip");
-		File zipFile = new File(uploadFilePath + File.separator + zipFileName);
+		File zipFile = new SafelyFile(uploadFilePath + File.separator + zipFileName);
 		ZipOutputStream  zipOut =null;
-		if(filepath.exists()){
-			zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-			zipOut.setEncoding("gbk");
-			compressFile2(zipOut, filepath,filepath.getName());
-			zipOut.close();
-		 }
-		
-		
+		try{
+			if(filepath.exists()){
+				zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+				zipOut.setEncoding("gbk");
+				compressFile2(zipOut, filepath,filepath.getName());
+			}
+		}finally {
+			if(zipOut != null){
+				zipOut.close();
+			}
+		}
+
 		return ExportUtil.export(zipFileName, zipFile, true);
 
 	}
@@ -319,7 +324,7 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 				}
 			}catch (Exception e)
 			{
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}finally {
 	        	if(bis!=null)
 				{

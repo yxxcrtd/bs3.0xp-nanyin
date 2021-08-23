@@ -14,7 +14,13 @@
 			<artifactId>tams-svreport-chbcom</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>component-business</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 	<build>
 	   <plugins>
 		  <!-- 打包源代码插件 -->

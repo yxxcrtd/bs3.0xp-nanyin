@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.joyintech.framework.base.BaseService;
@@ -79,9 +80,12 @@ public class FinProductDurDealService extends BaseService {
      * @return 下拉框列表
      * @throws Exception
      */
-    public List<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String, Object> paramMap) {
+    public Page<SelectOptionDto> queryProdIdInfo(@PathVariable("page") int page,
+                                                 @PathVariable("length") int length,
+                                                 @RequestBody Map<String, Object> paramMap) {
         paramMap.put("FINPROD_TYPE", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
-        return finProductDurDealMapper.queryProdIdInfo(paramMap);
+        return queryForPageForSelectReturn(page, length,
+                () -> finProductDurDealMapper.queryProdIdInfo(paramMap));
     }
 
     /**
@@ -97,7 +101,7 @@ public class FinProductDurDealService extends BaseService {
      */
     public Page<FinProductDurDealDto> selectForPage(int page, int length,
                                                      Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("JYFX_CPRG", DictCodeList.交易方向_产品认购.getValue());
         pageParam.put("JYFX_CPSG", DictCodeList.交易方向_产品申购.getValue());
         pageParam.put("JYFX_CPSH", DictCodeList.交易方向_产品赎回.getValue());
@@ -250,7 +254,7 @@ public class FinProductDurDealService extends BaseService {
     @SuppressWarnings("unchecked")
 	public Page<FinProductDurDealDto> findDetailPage(int page, int length,
     		 									Map<String, Object> pageParam)
-    	throws Exception {
+    {
     	pageParam.put("JYFX_CPRG", DictCodeList.交易方向_产品认购.getValue());
         pageParam.put("JYFX_CPSG", DictCodeList.交易方向_产品申购.getValue());
         pageParam.put("JYFX_CPSH", DictCodeList.交易方向_产品赎回.getValue());
@@ -292,7 +296,7 @@ public class FinProductDurDealService extends BaseService {
     @SuppressWarnings("unchecked")
     public Page<FinProductDurDealDetailDto> findDetailData(int page, int length,
                                                      Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("JYFX_CPRG", DictCodeList.交易方向_产品认购.getValue());
         pageParam.put("JYFX_CPSG", DictCodeList.交易方向_产品申购.getValue());
         pageParam.put("JYFX_CPSH", DictCodeList.交易方向_产品赎回.getValue());

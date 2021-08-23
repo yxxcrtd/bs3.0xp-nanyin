@@ -112,7 +112,7 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
      * @param param String
      * @return List<SelectOptionDto>
      */
-    public List<SelectOptionDto> getFinprodIds(Map<String, Object> param) {
+    public Page<SelectOptionDto> getFinprodIds(Map<String, Object> param) {
         //数据字典.金融产品类型.理财产品, 数据字典.金融产品类型.理财产品分层
         /*Map<String,Object> param=new HashMap<String,Object>();
         param.put("finprodId", finprodId);*/
@@ -125,7 +125,7 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
         list.add(DictCodeList.收益类型_货币型.getValue());
         param.put("profitTypeList", list);
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME
                 + "/FinFloatMgtExpQuotation/getFinprodId",param,SelectOptionDto.class);      
     }
     /**
@@ -133,7 +133,7 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
      * @param param String
      * @return List<SelectOptionDto>
      */
-    public List<SelectOptionDto> getFinprodIdsByDate(Map<String,Object> param) {
+    public Page<SelectOptionDto> getFinprodIdsByDate(Map<String,Object> param) {
         //数据字典.金融产品类型.理财产品, 数据字典.金融产品类型.理财产品分层
         param.put("finprodId", param.get("finprodId"));
         param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
@@ -148,8 +148,9 @@ public class FinFloatMgtExpQuotation001Service extends CommonExportService<FinFl
         if(!StringUtil.isNotEmpty(param.get("initValue"))){
             param.put("userId", SecurityUtil.getLoginUser().getUserName());
         }
-        param.put("initValue", null);
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME
+        //注释下面一行代码，使得双击后明细页面能展示产品信息。
+//      param.put("initValue", null);
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME
                 + "/FinFloatMgtExpQuotation/getFinprodId",param,SelectOptionDto.class);      
     }
     /**

@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.period.trdplancurrduration.dto.TrdPlanCurrDurat
 import com.joyintech.tams.invest.period.trdplancurrduration.service.TrdPlanCurrDuration001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -82,6 +83,11 @@ public class TrdPlanCurrDuration002Controller extends BaseController{
         Map<String,Object> param = RequestUtil.getPageParam();
 //        获取业务类型
         String type = (String)param.get("type");
+
+        //用于判断是否来自来账分拣
+        String isFromCheck = (String)param.get("isFromCheck");  
+        model.addAttribute("isFromCheck",isFromCheck);
+
 //      交易人
         String trader = SecurityUtil.getLoginUser().getUserName();
         String workflowId = (String)param.get(GlobalConstant.WORKFLOW_ID);
@@ -212,8 +218,7 @@ public class TrdPlanCurrDuration002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) TrdPlanCurrDuration001Dto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) TrdPlanCurrDuration001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

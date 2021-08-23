@@ -7,13 +7,10 @@ package com.jixu.common.tool;
  * @Description		[]  
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.jixu.common.pojo.*;
+import com.jixu.framework.dao.intf.RoleTypeDao;
+import com.jixu.framework.dao.intf.RoleTypeRoleGroupMapDao;
+import com.jixu.framework.dao.intf.UsersDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import com.jixu.common.pojo.RoleType;
-import com.jixu.common.pojo.RoleTypeRoleGroupMap;
-import com.jixu.common.pojo.UserRole;
-import com.jixu.common.pojo.UserRoleGroup;
-import com.jixu.common.pojo.UserRoleGroupMap;
-import com.jixu.common.pojo.Users;
-import com.jixu.framework.dao.intf.RoleTypeDao;
-import com.jixu.framework.dao.intf.RoleTypeRoleGroupMapDao;
-import com.jixu.framework.dao.intf.UsersDao;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 
 @Component("systemInit")
@@ -133,77 +124,78 @@ public class SystemInitialization implements CommandLineRunner{
 				break;
 			}
 		}
-		Iterator<Entry<RequestMappingInfo, HandlerMethod>> handleIter=handleMap.getHandlerMethods().entrySet().iterator();
-		String roleURL="";
-		
-		if(!JixuUserUtil.jixuUserSystemFlag()) {
-			//如果非几许用户登陆，放开页面的所有访问权限
-			while(handleIter.hasNext()){
-				Entry<RequestMappingInfo, HandlerMethod> entry=handleIter.next();
-				RequestMappingInfo key=entry.getKey();
-				roleURL=key.getPatternsCondition().toString().replace("[", "");
-				roleURL=roleURL.replace("]", "");
-				if(key.getName()!=null){
-					roleTypeNameHM.put(roleURL, key.getName());
+		if (handleMap != null){
+			Iterator<Entry<RequestMappingInfo, HandlerMethod>> handleIter=handleMap.getHandlerMethods().entrySet().iterator();
+			String roleURL="";
+
+			if(!JixuUserUtil.jixuUserSystemFlag()) {
+				//如果非几许用户登陆，放开页面的所有访问权限
+				while(handleIter.hasNext()){
+					Entry<RequestMappingInfo, HandlerMethod> entry=handleIter.next();
+					RequestMappingInfo key=entry.getKey();
+					roleURL=key.getPatternsCondition().toString().replace("[", "");
+					roleURL=roleURL.replace("]", "");
+					if(key.getName()!=null){
+						roleTypeNameHM.put(roleURL, key.getName());
+					}
 				}
-			}
-		}else {
-			List<RoleType> roleList=roleTypeDao.loadRoleType();
-			boolean roleExist=false;
-			
-			List<String> roleURLList=new ArrayList<String>();
-			while(handleIter.hasNext()){
-				Entry<RequestMappingInfo, HandlerMethod> entry=handleIter.next();
-				RequestMappingInfo key=entry.getKey();
-				roleURL=key.getPatternsCondition().toString().replace("[", "");
-				roleURL=roleURL.replace("]", "");
-				if(key.getName()!=null){
-					roleExist=false;
-					//查找是否存在该权限
-					for(RoleType role:roleList){
-						if(roleURL.equals(role.getRoleURLPath())){
-							//如果配置在数据库中存在，则查看是否需要更新数据  样例:{xxx.do:显示页面}
-							roleExist=true;
-							if(!key.getName().equals(role.getRoleName())){
-								role.setRoleName(key.getName());
-								roleTypeDao.updateEntityBean(role);
+			}else {
+				List<RoleType> roleList=roleTypeDao.loadRoleType();
+				boolean roleExist=false;
+
+				List<String> roleURLList=new ArrayList<String>();
+				while(handleIter.hasNext()){
+					Entry<RequestMappingInfo, HandlerMethod> entry=handleIter.next();
+					RequestMappingInfo key=entry.getKey();
+					roleURL=key.getPatternsCondition().toString().replace("[", "");
+					roleURL=roleURL.replace("]", "");
+					if(key.getName()!=null){
+						roleExist=false;
+						//查找是否存在该权限
+						for(RoleType role:roleList){
+							if(roleURL.equals(role.getRoleURLPath())){
+								//如果配置在数据库中存在，则查看是否需要更新数据  样例:{xxx.do:显示页面}
+								roleExist=true;
+								if(!key.getName().equals(role.getRoleName())){
+									role.setRoleName(key.getName());
+									roleTypeDao.updateEntityBean(role);
+								}
+								roleTypeHM.put(role.getRoleID(), role.getRoleName());
+								break;
 							}
-							roleTypeHM.put(role.getRoleID(), role.getRoleName());
-							break;
 						}
+
+						if(!roleExist){
+							//该权限在数据库不存在
+							RoleType role=new RoleType();
+							role.setRoleName(key.getName());
+							role.setRoleURLPath(roleURL);
+//							roleTypeDao.saveEntityBean(role);
+							roleTypeHM.put(role.getRoleID(), role.getRoleName());
+						}
+						roleURLList.add(roleURL);
+						roleTypeNameHM.put(roleURL, key.getName());
+					}else{
+						ignoreRolesHM.put(roleURL, roleURL);
 					}
-					
-					if(!roleExist){
-						//该权限在数据库不存在
-						RoleType role=new RoleType();
-						role.setRoleName(key.getName());
-						role.setRoleURLPath(roleURL);
-						roleTypeDao.saveEntityBean(role);
-						roleTypeHM.put(role.getRoleID(), role.getRoleName());
+				}
+
+				//某条权限配置在数据库中存在，但controller中不存在的权限,则删除数据库中该权限
+				boolean urlExist=false;
+				for(RoleType role:roleList){
+					urlExist=false;
+					if(roleURLList.contains(role.getRoleURLPath())){
+						urlExist=true;
+						break;
 					}
-					
-					
-					roleURLList.add(roleURL);
-					roleTypeNameHM.put(roleURL, key.getName());
-				}else{
-					ignoreRolesHM.put(roleURL, roleURL);
-				}
-			}
-			
-			//某条权限配置在数据库中存在，但controller中不存在的权限,则删除数据库中该权限
-			boolean urlExist=false;
-			for(RoleType role:roleList){
-				urlExist=false;
-				if(roleURLList.contains(role.getRoleURLPath())){
-					urlExist=true;
-					break;
-				}
-				if(!urlExist){
-					roleTypeRoleGroupMapDao.deleteRoleGroupMap(role.getRoleID());
-					roleTypeDao.deleteEntity(role);
+					if(!urlExist){
+						roleTypeRoleGroupMapDao.deleteRoleGroupMap(role.getRoleID());
+						roleTypeDao.deleteEntity(role);
+					}
 				}
 			}
 		}
+
 	}
 	
 	

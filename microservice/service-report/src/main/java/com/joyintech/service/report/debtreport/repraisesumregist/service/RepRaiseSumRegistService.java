@@ -50,7 +50,7 @@ public class RepRaiseSumRegistService extends BaseService<RepRaiseSum>{
      * @since 1.0
      */
     public Page<RepRaiseSum> findPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> repRaiseSumRegistMapper.findPage(map));
     }
     /**

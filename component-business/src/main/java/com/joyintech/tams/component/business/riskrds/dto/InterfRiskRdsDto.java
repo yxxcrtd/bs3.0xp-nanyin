@@ -1180,4 +1180,16 @@ public class InterfRiskRdsDto implements IRiskRds {
     public void setNotCalcAmount(Boolean notCalcAmount) {
         this.notCalcAmount = notCalcAmount;
     }
+    /**
+     * 价格模式
+     */
+    private String priceModel;
+
+    public String getPriceModel() {
+        return priceModel;
+    }
+
+    public void setPriceModel(String priceModel) {
+        this.priceModel = priceModel;
+    }
 }

@@ -161,6 +161,17 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
      */
     private String raiseVdate01;
 
+
+    private String pbcPoolCode;
+
+    public String getPbcPoolCode() {
+        return pbcPoolCode;
+    }
+
+    public void setPbcPoolCode(String pbcPoolCode) {
+        this.pbcPoolCode = pbcPoolCode;
+    }
+
     /**
      * 募集结束日期
      */
@@ -386,9 +397,20 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
      * 
      */
     private  String subProdId;
-    
-    
-    
+
+    /**
+     * 定义人行的枚举值
+     */
+    private String  isMarketFund;
+
+    public String getIsMarketFund() {
+        return isMarketFund;
+    }
+
+    public void setIsMarketFund(String isMarketFund) {
+        this.isMarketFund = isMarketFund;
+    }
+
     public String getSubProdId() {
 		return subProdId;
 	}

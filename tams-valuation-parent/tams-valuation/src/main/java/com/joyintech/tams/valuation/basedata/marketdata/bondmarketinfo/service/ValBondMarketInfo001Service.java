@@ -44,7 +44,7 @@ public class ValBondMarketInfo001Service extends CommonExportService<ValBondMark
      * @see
      * @since 1.0
      */
-    public Page<ValBondMarketInfo001Dto> queryPageList(Map<String, Object> params) throws Exception{
+    public Page<ValBondMarketInfo001Dto> queryPageList(Map<String, Object> params)  {
 //        return super.queryForPage(()->valBondMarketInfo001Mapper.queryPageList(dto));
 //        return valBondMarketInfo001Mapper.queryPageList(dto);
     	Page<ValBondMarketInfo001Dto> page = new Page<ValBondMarketInfo001Dto>();
@@ -54,7 +54,7 @@ public class ValBondMarketInfo001Service extends CommonExportService<ValBondMark
     }
     
     
-    public List<ValBondMarketInfo001Dto> queryAllList(Map<String, Object> params) throws Exception{
+    public List<ValBondMarketInfo001Dto> queryAllList(Map<String, Object> params) {
         
 //        return valBondMarketInfo001Mapper.queryPageList(dto);
     	return restTemplate.postForList(

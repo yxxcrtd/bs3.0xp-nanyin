@@ -1,7 +1,9 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.ChbAssetsBasisDataChild;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbAssetsBasisDataChildMapper {
     int deleteByPrimaryKey(String valId);
 

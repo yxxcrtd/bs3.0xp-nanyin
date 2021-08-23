@@ -14,10 +14,10 @@ package com.joyintech.tams.invest.entrust.etrmoneycalculation.controller;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
-
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.entrust.etrmoneycalculation.dto.EtrMoneyCalculationDto;
 import com.joyintech.tams.invest.entrust.etrmoneycalculation.service.EtrMoneyCalculationService;
@@ -138,8 +138,7 @@ public class EtrMoneyCalculation001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export(EtrMoneyCalculationDto dto)
-        throws Exception {
+    public ResponseEntity<byte[]> export(EtrMoneyCalculationDto dto){
         return etrMoneyCalculationService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

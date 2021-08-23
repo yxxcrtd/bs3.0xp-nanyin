@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.WorkflowContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -171,8 +172,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getentrustIdAdd")
-    public Page<SelectOptionDto> getentrustIdAdd()
-        throws Exception {
+    public Page<SelectOptionDto> getentrustIdAdd(){
         Page<SelectOptionDto> temp = etrPlanAssetService.getentrustIdAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -186,8 +186,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         Page<SelectOptionDto> temp = etrPlanAssetService.getfinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -203,7 +202,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/searchType")
     public String searchType(String finprodId){
-        return etrPlanAssetService.searchType(finprodId);
+        return StringUtil.trimHtmlTag(etrPlanAssetService.searchType(finprodId));
     }
     /**
      * 
@@ -303,7 +302,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrPlanAssetRDto dto, BindingResult br) throws Exception{//去除指令暂存校验 add by xxg 20210802
+    public AjaxResult save(@RequestBody EtrPlanAssetRDto dto, BindingResult br) throws WorkFlowException {//去除指令暂存校验 add by xxg 20210802
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

@@ -9,6 +9,8 @@
  */
 
 package com.joyintech.tams.invest.trade.trdplanrateinvesttrade.controller;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -428,7 +431,7 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody TrdPlanRateInvestTradeDto dto, BindingResult br) throws Exception {
+    public AjaxResult save(@RequestBody TrdPlanRateInvestTradeDto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException, InvocationTargetException, IllegalAccessException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -616,7 +619,7 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_存续期);
         String index=baseGetBusinessId.buildBussinessCode(codeParameter);
-        return index;
+        return StringUtil.trimHtmlTag(index);
     }
     /**
      * 查询资产管理人 <功能详细描述>

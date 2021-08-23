@@ -181,7 +181,6 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 						ProdPersonIssue001Dto.class);
 				param.put("prodpersonissueList", prodpersonissueList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else{
@@ -285,6 +284,11 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
             data =  restTemplate.postForList(
                     SvrServiceApplication.CHB_SERVICE_NAME + "/ProdPersonIssue/queryForProdPersonIssuePage",pageParam,
                     ProdPersonIssue001Dto.class);
+			if(!CollectionUtils.isEmpty(data)){
+				for(ProdPersonIssue001Dto dto : data){
+					dto.setBelongInstitutionCode(null);
+				}
+			}
         }  else {
          String exportKeys =(String) pageParam.get("expKeys");
          // 处理画面参数
@@ -617,7 +621,6 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 						ProdPersonIssue001Dto.class);
 				pageParam.put("investList", investList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {

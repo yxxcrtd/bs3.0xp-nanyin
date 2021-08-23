@@ -10,9 +10,7 @@
  
 package com.joyintech.tams.invest.report.common.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.CellType;
@@ -22,18 +20,24 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *  文件合并
  * 〈功能详细描述〉
  * @author zhangnian
  * @version 1.0 2019年3月11日
- * @see ExcelCopyUtil
+ * @see FileMergeUtil
  * @since 1.0
  */
 public class FileMergeUtil {
-
-    public void handle(File file,XSSFWorkbook newExcelCreat) throws Exception{
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(FileMergeUtil.class);
+    
+    public void handle(File file,XSSFWorkbook newExcelCreat) throws IOException {
     	InputStream in = null;
     	XSSFWorkbook fromExcel= null;
         try {
@@ -58,7 +62,7 @@ public class FileMergeUtil {
             	if(fromExcel !=null)
             		fromExcel.close();
             } catch (Exception e) {
-            	e.printStackTrace();
+                logger.error(e.getMessage(),e);
              }
         }
     }

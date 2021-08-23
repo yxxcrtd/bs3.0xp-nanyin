@@ -50,6 +50,10 @@ public class SvrBussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
      * 资产价值
      */
     private BigDecimal assetValue;
+    /**
+     * 金额
+     */
+    private BigDecimal amt;
 
     /**
      * 所属国家或地区 参考数据字典：COUNTRY_AREA
@@ -175,6 +179,21 @@ public class SvrBussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
      * 是否为债转股
      */
     private String deptEquity;
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
 
     public String getDeptEquity() {
         return deptEquity;
@@ -420,5 +439,37 @@ public class SvrBussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
 
     public void setRelationFinan(String relationFinan) {
         this.relationFinan = relationFinan;
+    }
+
+    public BigDecimal getAmt() {
+        return amt;
+    }
+
+    public void setAmt(BigDecimal amt) {
+        this.amt = amt;
+    }
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
     }
 }

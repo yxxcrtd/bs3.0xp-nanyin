@@ -3,6 +3,7 @@ package com.joyintech.invest.interf.common.core.controller;
 import java.io.File;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -365,7 +366,7 @@ public class InterfCoreController {
             }
             return JsonUtils.object2Json(interfCommonService.executeByRecvFile(interfId, fileCreateTime, filePath));
         } catch (Exception e){
-            e.printStackTrace();
+			logger.error(e.getMessage(),e);
             return JsonUtils.object2Json(interfCommonService.errMsg("接口模块异常【" + "查找文件的时候发生异常】"));
         }
     }
@@ -376,7 +377,7 @@ public class InterfCoreController {
      * @return
      */
 	private boolean findFile(String filePath){
-        File file = new File(filePath);
+        File file = new SafelyFile(filePath);
         return file.exists();
     }
 }

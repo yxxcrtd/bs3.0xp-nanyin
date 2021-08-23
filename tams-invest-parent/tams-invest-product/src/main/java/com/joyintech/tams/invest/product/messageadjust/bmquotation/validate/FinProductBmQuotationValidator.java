@@ -62,7 +62,7 @@ public class FinProductBmQuotationValidator implements BeanValidator {
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             // 删除check
             List<FinProductBmQuotationDto> list = dto.getSelectedItem();
-            if (list.size() > 0 && list != null) {
+            if (list != null && list.size() > 0) {
                 for (FinProductBmQuotationDto mst : list) {
                     // 判断估值日期是否大于平台日期
                     if (mst.getEffDate().compareTo(DateUtil.platDateFromCache()) < 0) {
@@ -199,7 +199,7 @@ public class FinProductBmQuotationValidator implements BeanValidator {
             // 判断生效日与标的类金融产品表.到期日,到期日,平台日的关系
             FinProductBmQuotationDto entity = finProductBmQuotationService.getMdate(
                 dto.getFinprodId());
-            if (dto.getEffDate() != null) {
+            if (dto.getEffDate() != null && entity != null) {
                 if (entity.getVdate() != null) {
                     if (dto.getEffDate().compareTo(entity.getVdate()) < 0) {
                         resultList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0004",

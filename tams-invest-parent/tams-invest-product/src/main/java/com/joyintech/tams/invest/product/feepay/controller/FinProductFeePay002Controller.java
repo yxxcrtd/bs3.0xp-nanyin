@@ -18,6 +18,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -300,7 +301,7 @@ public class FinProductFeePay002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("queryLastPayDate")
     public String queryLastPayDate(String ptlId, String feeId,String operateType,String org) {
-        return finProductFeePay002Service.queryLastPayDate(ptlId, feeId,operateType,org);
+        return StringUtil.trimHtmlTag(finProductFeePay002Service.queryLastPayDate(ptlId, feeId,operateType,org));
     }
 
     /**
@@ -436,8 +437,7 @@ public class FinProductFeePay002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinProductFeePay002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinProductFeePay002Dto dto, BindingResult br) throws WorkFlowException {
         ProcessParameter<FinProductFeePay002Dto> processParameter = new ProcessParameter<FinProductFeePay002Dto>();
         WorkFlowParameter<FinProductFeePay002Dto> params = new WorkFlowParameter<FinProductFeePay002Dto>();
         params.setElementId(dto.getElementId());
@@ -505,12 +505,12 @@ public class FinProductFeePay002Controller extends BaseController {
     }
     /**
      * 	查询组合起息日
-     * @param params
+     * @param ptlId
      * @return
      */
     @ResponseBody
     @RequestMapping("queryVdate")
         public String queryVdate(String ptlId) {
-            return finProductFeePay002Service.queryVdate(ptlId);
+            return StringUtil.trimHtmlTag(finProductFeePay002Service.queryVdate(ptlId));
         }
 }

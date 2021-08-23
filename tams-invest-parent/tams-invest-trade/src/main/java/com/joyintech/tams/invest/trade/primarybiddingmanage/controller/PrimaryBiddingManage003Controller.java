@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.trade.primarybiddingmanage.service.PrimaryBiddi
 import com.joyintech.tams.invest.trade.primarybiddingmanage.validator.PrimaryBidPriceValidator;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -530,8 +531,7 @@ public class PrimaryBiddingManage003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBiddingManage003Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBiddingManage003Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

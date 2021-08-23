@@ -379,7 +379,7 @@
 ////                    valExcelRule.getImpHandleServiceName());
 ////            }
 ////            catch (Exception e) {
-////                e.printStackTrace();
+////               logger.error(e.getMessage(),e);
 ////            }
 ////        }
 ////
@@ -426,7 +426,7 @@
 ////                        rowData.get(i));
 ////                }
 ////                catch (Exception e) {
-////                    e.printStackTrace();
+////                   logger.error(e.getMessage(),e);
 ////                }
 ////            }
 ////
@@ -451,7 +451,7 @@
 ////                                itemData);
 ////                        }
 ////                        catch (Exception e) {
-////                            e.printStackTrace();
+////                            logger.error(e.getMessage(),e);
 ////                            rowErrorMsgList.add(this.getMessage("VAL_EXCELIMP_E_0014", rowIndex + 1,
 ////                                ruleDetail.getColumnNo(),
 ////                                targetColumn + GlobalConstant.OPEN_PARENTHESIS + valExcelRuleMap.get(
@@ -463,7 +463,7 @@
 ////                            targetValue = getMasterValue(ruleMasterMap, targetColumn, targetValue);
 ////                        }
 ////                        catch (Exception e) {
-////                            e.printStackTrace();
+////                            logger.error(e.getMessage(),e);
 ////                            rowErrorMsgList.add(this.getMessage("VAL_EXCELIMP_E_0015", rowIndex + 1,
 ////                                ruleDetail.getColumnNo(),
 ////                                targetColumn + GlobalConstant.OPEN_PARENTHESIS + valExcelRuleMap.get(
@@ -476,7 +476,7 @@
 ////                                targetColumn, targetValue);
 ////                        }
 ////                        catch (Exception e) {
-////                            e.printStackTrace();
+////                            logger.error(e.getMessage(),e);
 ////                            rowErrorMsgList.add(this.getMessage("VAL_EXCELIMP_E_0016", rowIndex + 1,
 ////                                ruleDetail.getColumnNo(),
 ////                                targetColumn + GlobalConstant.OPEN_PARENTHESIS + valExcelRuleMap.get(
@@ -530,7 +530,7 @@
 ////                        updateList, skipColumnMap, systemDate, impBaseService);
 ////                }
 ////                catch (Exception e) {
-////                    e.printStackTrace();
+////                   logger.error(e.getMessage(),e);
 ////                    resultDto.setImportFlag(ImportFlgEnum.导入失败.getName());
 ////                    resultDto.setImpResultMsg(
 ////                        this.getMessage("VAL_EXCELIMP_E_0004",
@@ -553,7 +553,7 @@
 ////                        impBaseService.afterHandleRowDataToDb(insertFlg, revokeFlag, dataObj);
 ////                    }
 ////                    catch (Exception e) {
-////                        e.printStackTrace();
+////                        logger.error(e.getMessage(),e);
 ////                        resultDto.setImportFlag(ImportFlgEnum.导入失败.getName());
 ////                        resultDto.setImpResultMsg(
 ////                            this.getMessage("VAL_EXCELIMP_E_0018",
@@ -627,7 +627,7 @@
 //                columnValueLength = columnValueStr.getBytes("UTF-8").length;
 //            }
 //            catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
+//               logger.error(e.getMessage(),e);
 //                columnValueLength = columnValueStr.length();
 //            }
 //
@@ -916,7 +916,6 @@
 //                }
 //            }
 //            catch (Exception e) {
-//                e.printStackTrace();
 //            }
 //
 //            // 数据录入之前特殊处理
@@ -1044,7 +1043,6 @@
 //                    return ExcelUtil.columnNoToIndex(x.getColumnNo());
 //                }
 //                catch (Exception e) {
-//                    e.printStackTrace();
 //                    return null;
 //                }
 //            }));
@@ -1076,7 +1074,6 @@
 //            }
 //        }
 //        catch (Exception e) {
-//            e.printStackTrace();
 //        }
 //        return null;
 //    }
@@ -1294,7 +1291,6 @@
 //            }
 //        }
 //        catch (SQLException e) {
-//            e.printStackTrace();
 //        }
 //        return resultValue;
 //

@@ -134,11 +134,6 @@
             <artifactId>joyintech-system</artifactId>
             <version>0.0.4</version>
         </dependency>
-        <dependency>
-            <groupId>com.jixu</groupId>
-            <artifactId>jixu</artifactId>
-            <version>0.0.1</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -113,7 +113,7 @@ public class RegTimePoints001Service extends BaseService<RegTimePoints001Dto>{
      */
     public void updateAllRegTimePoints(Map<String , Object> map) {
         map.put("updateTime", commonService.getSysDate());
-        map.put("updateUser", SecurityUtil.getLoginUser().getUserName());
+        //        map.put("updateUser", SecurityUtil.getLoginUser().getUserName());//delete by lingxq on 2021-06-23 for 微服务获取Session必须前台传参
         regTimePointsDtoMapper.updateAllRegTimePoints(map);
         
     }

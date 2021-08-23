@@ -54,7 +54,7 @@ public class MstNetAssetQuotationInfo001Validator implements BeanValidator{
         Date sysDate = DateUtil.platDateFromCache();
         if (WorkFlowUtil.isNotFromToDoList()) {
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
-                if(dto.getSelectedItem()!=null||dto.getSelectedItem().size()>0){
+                if(dto.getSelectedItem()!=null&&dto.getSelectedItem().size()>0){
                     //删除时估值日期小于平台日期，报错
                     for(MstNetAssetQuotationInfo001Dto selectDto:dto.getSelectedItem()){
 						/*
@@ -67,6 +67,16 @@ public class MstNetAssetQuotationInfo001Validator implements BeanValidator{
                         //修改/删除时，仅能修改/删除导入日为平台日的数据
                         if (StringUtil.isNotEmpty(selectDto.getImportDate()) && DateUtil.compareDate(DateUtil.formatDate(selectDto.getImportDate()), DateUtil.format(sysDate))  != 0) {
                         	errorList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
+                        }
+
+                        //判断当前流程是否存在
+                        MstNetAssetQuotationInfo001Dto mstNetAssetQuotationInfo001Dto =new MstNetAssetQuotationInfo001Dto();
+                        mstNetAssetQuotationInfo001Dto.setFinprodId(selectDto.getFinProdMarketId());
+                        mstNetAssetQuotationInfo001Dto.setValDate(selectDto.getValDate());
+                        if(mstNetAssetQuotationInfo001Service.checkBusinessDataInFlow(mstNetAssetQuotationInfo001Dto)){
+                            //流程存在情况
+                            errorList.add(new ValidMessage(getMessage("COMMON_E_0021","KEY",
+                                    selectDto.getFinProdMarketId().concat(",").concat(selectDto.getValDateStr()))));
                         }
                     }
                 }
@@ -101,7 +111,14 @@ public class MstNetAssetQuotationInfo001Validator implements BeanValidator{
 					 * ValidMessage(getMessage("BUSS_COM_E_0018",getMessage(
 					 * "MstNetAssetQuotationInfo001.valuationDate"), DateUtil.format(sysDate)))); }
 					 */
-                    
+                    MstNetAssetQuotationInfo001Dto mstNetAssetQuotationInfo001Dto =new MstNetAssetQuotationInfo001Dto();
+                    mstNetAssetQuotationInfo001Dto.setFinprodId(dto.getFinProdMarketId());
+                    mstNetAssetQuotationInfo001Dto.setValDate(dto.getValDate());
+                    if(mstNetAssetQuotationInfo001Service.checkBusinessDataInFlow(mstNetAssetQuotationInfo001Dto)){
+                        //流程存在情况
+                        errorList.add(new ValidMessage(getMessage("COMMON_E_0021","KEY",
+                                dto.getFinProdMarketId().concat(",").concat(dto.getValDateStr()))));
+                    }
                     //add wangwei 1 YUCHUBS-521债券估值行情、基金估值行情、计划类资产估值行情：功能优化
                     //修改/删除时，仅能修改/删除导入日为平台日的数据
                     if (StringUtil.isNotEmpty(dto.getImportDate()) && DateUtil.compareDate(DateUtil.formatDate(dto.getImportDate()), DateUtil.format(sysDate))  != 0) {

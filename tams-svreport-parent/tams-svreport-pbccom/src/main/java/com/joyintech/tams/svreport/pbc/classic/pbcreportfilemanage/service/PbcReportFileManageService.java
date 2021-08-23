@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -53,7 +56,11 @@ import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.service.PbcPrdIni
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class PbcReportFileManageService extends CommonExportService<PbcDataFile> {
-	
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(PbcReportFileManageService.class);
+
 	@Autowired
 	private PbcDataFileMapper pbcDataFileMapper;
 	@Autowired
@@ -159,10 +166,10 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 		try {
 			pbcDataFileList = JsonUtils.json2List(param.get("keyList").toString(), PbcDataFile.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
-			File file = new File(pbcDataFile.getFilepath());
+			File file = new SafelyFile(pbcDataFile.getFilepath());
 			if (!file.exists()) {
 				String filePath = pbcDataFile.getFilepath();
 				String[] filePathSplit = filePath.split("/");
@@ -188,11 +195,11 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 		try {
 			pbcDataFileList = JsonUtils.json2List(param.get("keyList").toString(), PbcDataFile.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		List<File> sourceFiles = new ArrayList<File>(16);
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
-			File file = new File(pbcDataFile.getFilepath());
+			File file = new SafelyFile(pbcDataFile.getFilepath());
 			sourceFiles.add(file);
 		}
 		// 只有一个文件,直接导出,且不能删除源文件
@@ -205,15 +212,15 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 			String exportFilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 			String zipFileName = "人行报送文件" + DateUtil.getCurrentDateTime() + ".zip";
 			zipFileName = zipFileName.replaceAll(":", "-");
-			outFile = new File(exportFilePath + File.separator + zipFileName);
+			outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
 			try {
-				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new File[] {}));
+				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new SafelyFile[] {}));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 //				// 压缩文件失败后，删除所有临时文件
 //				for (File file : sourceFiles) {
 //					if (file.exists()) {

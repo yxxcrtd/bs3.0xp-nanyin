@@ -42,7 +42,8 @@ width: 90px !important;
 								data-th-data-result="${OPENMODE}" searchable="false"
 								placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}"
-								data-th-required="${pageId} eq 'FinProductBuild002'">
+								data-th-required="${pageId} eq 'FinProductBuild002' or ${pageId} eq 'FinNetValueProductBuild002' "
+								>
 							</select>
 						</div>
 					</div>
@@ -276,10 +277,10 @@ width: 90px !important;
 						<label class="layui-form-label form-label-wrap"
 							data-th-text="#{FinProductOpenRule.purSpeed}">申赎确认天数</label>
 						<div class="layui-input-inline input-inline text-number">
-							<span class="input-left-show">T+</span> <input type="number"
+							<span class="input-left-show">T+</span> <input type="text"
 								th:id="|${bussFinProductOpenPlanDto}_purSpeed|" th:name="|purSpeed|" min="0"
 								class="layui-input form-input form-input-left text-number"
-								data-textrange="0" placeholder="请输入内容" maxlength=5
+								data-textrange="0" placeholder="请输入内容" maxlength="2"
 								data-th-placeholder="#{SysCommon.placeholder}" required
 								data-th-value='${purSpeed?:1}'>
 						</div>
@@ -351,7 +352,8 @@ width: 90px !important;
 								data-th-data-result="${OPENMODE}" searchable="false"
 								placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}"
-								data-th-required="${pageId} eq 'FinProductBuild002'">
+								data-th-required="${pageId} eq 'FinProductBuild002' or ${pageId} eq 'FinNetValueProductBuild002' "
+								>
 							</select>
 						</div>
 					</div>
@@ -511,7 +513,8 @@ width: 90px !important;
 								data-th-required="${pageId} eq 'FinProductBuild002'">
 							</select>-->
                         <select th:id="|${bussFinProductOpenPlanRedDto}_calcMethod|" th:name="|${bussFinProductOpenPlanRedDto}.calcMethod|"
-								th:initValue="${pageModel} eq ${pageModelNew} and ${isDraft}=='false'? ${CALC_RULE_01} : ${redentity?.calcMethod}" searchable="false"
+								 searchable="false"
+								th:initValue="${pageModel} eq ${pageModelNew} and (${workflowId}=='' or ${workflowId}== null)? ${CALC_RULE_01} : ${redentity?.calcMethod}"
 								class="layui-input form-input input-select" placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-data-result="${CALC_RULE}"
@@ -583,10 +586,10 @@ width: 90px !important;
 					  <label class="layui-form-label form-label-wrap"
 							data-th-text="#{FinProductOpenRule.purSpeed}">确认天数</label>
 						<div class="layui-input-inline input-inline text-number">
-							<span class="input-left-show">T+</span> <input type="number"
+							<span class="input-left-show">T+</span> <input type="text"
 								th:id="|${bussFinProductOpenPlanRedDto}_redSpeed|" th:name="|redSpeed|" min="0"
 								class="layui-input form-input form-input-left text-number"
-								data-textrange="0" placeholder="请输入内容" maxlength=5
+								data-textrange="0" placeholder="请输入内容" maxlength="2"
 								data-th-placeholder="#{SysCommon.placeholder}" required
 								data-th-value='${redSpeed}?:1'>
 						</div>
@@ -693,6 +696,9 @@ width: 90px !important;
 		var raiseEndDate1=$('#' + raiseEndDate).val();
 		var OPEN_DAYS_TYPE_01 = /*[[${OPEN_DAYS_TYPE_01}]]*/'';
 		var OPEN_DAYS_TYPE_02 = /*[[${OPEN_DAYS_TYPE_02}]]*/'';
+
+		var openDateRadio=/*[[${entity?.openDateRadio}]]*/'';
+		var openDateRadioRed=/*[[${redentity?.openDateRadio}]]*/'';
 		
 		var openModeRep1=/*[[${redentity?.openMode}]]*/'';
 		var openDaysRep1=/*[[${redentity?.openDays}]]*/'';

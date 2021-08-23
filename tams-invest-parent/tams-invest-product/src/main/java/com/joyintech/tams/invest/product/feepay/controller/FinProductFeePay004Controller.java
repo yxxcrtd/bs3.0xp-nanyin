@@ -33,6 +33,7 @@ import com.joyintech.tams.invest.product.feepay.service.FinProductFeePay002Servi
 import com.joyintech.tams.invest.product.feepay.service.FinProductFeePay004Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -160,8 +161,7 @@ public class FinProductFeePay004Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinProductFeePay005Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinProductFeePay005Dto dto, BindingResult br) throws WorkFlowException {
         ProcessParameter<FinProductFeePay005Dto> processParameter = new ProcessParameter<FinProductFeePay005Dto>();
         WorkFlowParameter<FinProductFeePay005Dto> params = new WorkFlowParameter<FinProductFeePay005Dto>();
         params.setElementId(dto.getElementId());

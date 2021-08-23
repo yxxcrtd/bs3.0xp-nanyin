@@ -65,7 +65,7 @@
             #{item.saleMode,jdbcType=VARCHAR}, #{item.chbId,jdbcType=VARCHAR}, #{item.tmplId,jdbcType=VARCHAR}, 
             #{item.issueStatus,jdbcType=VARCHAR}, #{item.isCompoundInt,jdbcType=VARCHAR}, #{item.termType,jdbcType=VARCHAR}, 
             #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
-            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.issueStatusRemark,jdbcType=VARCHAR}, 
+            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.issueStatusRemark,jdbcType=VARCHAR},
             #{item.closeDays,jdbcType=DECIMAL}, #{item.faceValue,jdbcType=DECIMAL}, #{item.portfolioId,jdbcType=VARCHAR}
         </foreach>
     </insert>

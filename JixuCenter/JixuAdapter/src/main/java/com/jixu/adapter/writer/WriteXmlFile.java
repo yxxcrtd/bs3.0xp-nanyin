@@ -11,6 +11,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Component;
 
 import com.jixu.adapter.types.FileEncodeType;
@@ -33,7 +34,7 @@ public class WriteXmlFile extends WriteFileBasic {
 	}
 
 	@Override
-	public boolean writeFile(InterfaceSource source, DataReadResult dataSet) throws Exception {
+	public boolean writeFile(InterfaceSource source, DataReadResult dataSet) {
 		boolean writeSuccessFlag = false;
 		OutputStream out=null;
 		XMLWriter write=null;
@@ -51,7 +52,7 @@ public class WriteXmlFile extends WriteFileBasic {
 					String levelStr=headerList.get(0);
 					String[] levelArr=levelStr.split("\\.");
 					if(levelArr.length<2) {
-						throw new Exception("XML层级配置错误");
+						throw new ServiceException("XML层级配置错误");
 					}
 					for(int i=0;i<levelArr.length;i++) {
 						if(i==0) {
@@ -69,16 +70,18 @@ public class WriteXmlFile extends WriteFileBasic {
 				
 				//写具体数据
 				for (List<Object> fieldsList : fieldsDataSet) {
-					Element info=ele.addElement(levelList);
-					for(int i=0;i<headerList.size();i++) {
-						String fieldStr="";
-						Object fieldObj=fieldsList.get(i);
-						if(fieldObj!=null)
-							fieldStr=fieldObj.toString();
-						if(i==0) {
-							info.addElement(firstheader).addText(fieldStr);
-						}else {
-							info.addElement(headerList.get(i)).addText(fieldStr);
+					if (ele != null){
+						Element info=ele.addElement(levelList);
+						for(int i=0;i<headerList.size();i++) {
+							String fieldStr="";
+							Object fieldObj=fieldsList.get(i);
+							if(fieldObj!=null)
+								fieldStr=fieldObj.toString();
+							if(i==0) {
+								info.addElement(firstheader).addText(fieldStr);
+							}else {
+								info.addElement(headerList.get(i)).addText(fieldStr);
+							}
 						}
 					}
 				}

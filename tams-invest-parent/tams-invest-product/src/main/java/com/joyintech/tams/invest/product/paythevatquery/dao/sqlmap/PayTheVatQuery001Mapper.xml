@@ -154,7 +154,7 @@
 		select #{taxClass_02} taxClass,
 	       portfolioId,
 	       portfolioName,
-	       '' finprodId,
+		   FINPROD_ID finprodId, /*modify by jiangpeng on 20210512 ZGBSSE-367 */
 	       '' finprodAbbr,
 	       '' finprodMarketId,
 	       channelId,
@@ -195,6 +195,7 @@
 		       stli.ACCT_NAME actName,
 		       deal.trade_amt tradeAmt,
 		       deal.ps taxidenType,
+			   fp.FINPROD_ID, /*add by jiangpeng on 20210512 ZGBSSE-367 */
 		       NVL((SELECT TFD.FEE_AMT
 		             FROM TRD_TRADE_FEE_DETAIL TFD
 		            WHERE TFD.TRADE_ID = deal.TRADE_ID
@@ -233,6 +234,10 @@
 		    on ad.trade_id = deal.trade_id
 		  left join ptl_portfolio ptl
 		    on ptl.portfolio_id = ad.portfolio_id
+		    /*add by jiangpeng on 20210512 ZGBSSE-367 */
+		  left join FIN_PRODUCT fp
+			on fp.FINPROD_MARKET_ID = ptl.portfolio_id
+			/*add by jiangpeng on 20210512 ZGBSSE-367 */
 		  left join stl_pay_orders stl
 		    on deal.TOTLE_TRADE_ID = stl.trade_id
 		  left join STL_CAPACCT_INFO stli
@@ -289,6 +294,12 @@
 		FROM PTL_PORTFOLIO A
 		LEFT JOIN PA_PTL_PORTFOLIO B
 		ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+		LEFT JOIN FIN_PRODUCT_ADD
+		ON A.PORTFOLIO_ID = FIN_PRODUCT_ADD.PORTFOLIO_ID
+		<if test="FINPROD_TYPE_TG_F16 != null and FINPROD_TYPE_TG_F16 != ''">
+			LEFT JOIN BOK_BOOKSET
+			ON A.PORTFOLIO_ID = regexp_replace(BOK_BOOKSET.BOOKSET_ID,#{FINPROD_TYPE_TG_F16},'',1,1,'c')
+		</if>
 		<where> 1=1
 		    AND A.PARENT_PORTFOLIO_ID IS NULL
 			<if test="search != null and search != ''">
@@ -299,6 +310,12 @@
 			</if>
 			<if test="initValue != null and initValue != ''">
 				AND A.PORTFOLIO_ID = #{initValue}
+			</if>
+			<if test="issueStatus !=null and issueStatus !=''">
+				AND FIN_PRODUCT_ADD.ISSUE_STATUS = #{issueStatus}
+			</if>
+			<if test="pltDate != null and pltDate !=''">
+				AND  BOK_BOOKSET.END_DATE  <![CDATA[>=]]>  to_date(#{pltDate},'yyyy-MM-dd')
 			</if>
 		</where>
 	</select>

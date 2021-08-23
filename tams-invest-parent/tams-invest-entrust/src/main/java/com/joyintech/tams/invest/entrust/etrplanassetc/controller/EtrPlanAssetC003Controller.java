@@ -10,6 +10,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -194,8 +195,7 @@ public class EtrPlanAssetC003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrPlanAssetCDto allDto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody EtrPlanAssetCDto allDto, BindingResult br) {
         List<EtrPlanAssetCDto> dtoList = allDto.getSelectedItem();
         AjaxResult ajaxResult = this.check(dtoList, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {

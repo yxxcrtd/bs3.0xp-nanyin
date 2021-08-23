@@ -49,7 +49,7 @@ public class FinProductExpireController {
     public Page<FinProductExpire001Dto> selectForPage(@RequestBody Map<String, Object> param,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("length") int length)
-        throws Exception {
+    {
         return finProductExpireService.selectForPage(page, length, param);
     }
 

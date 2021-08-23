@@ -99,6 +99,7 @@
                 field: 'outStrdPrinAmt', width: 200, title: 'TrdStandardBond003.colModel.outStrdPrinAmt',
                 sortable: false,
                 type: 'money',
+                edit: true,
                 digit: 2
             }
             , {field: 'portfolioId', visible: false}
@@ -135,7 +136,7 @@
                 }
             } else if (field === "outStrdPrinAmt") {
                 var datas = dataTableTBL.getAllRows();
-                var outStrdPrinAmt = data.inStdrdPrinAmt;
+                var outStrdPrinAmt = data.outStrdPrinAmt;
                 var discountRate = data.discountRate;
                 var newOutPrinAmt = 0;
                 if (outStrdPrinAmt != null && outStrdPrinAmt != "" && discountRate != null && discountRate != "") {

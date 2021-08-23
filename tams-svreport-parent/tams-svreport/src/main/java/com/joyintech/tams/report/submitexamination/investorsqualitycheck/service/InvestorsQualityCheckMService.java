@@ -172,5 +172,26 @@ public class InvestorsQualityCheckMService extends BaseService<InvestorsQualityC
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/InvestorsQualityCheck/searchTableCPFEKFX",pageParam,
 				InvestorsQualityCheck001Dto.class);
 	}
-    
+
+	/**
+	 * 获取上次汇总时间
+	 * @return
+	 */
+	public String getLastSummaryTime(){
+		return restTemplate.postForObject(
+				SvrServiceApplication.COMMON_SERVICE_NAME + "/InvestorsQualityCheck/getLastSummaryTime",null,
+				String.class);
+	}
+
+	/**
+	 * 执行持有信息汇总
+	 * @param pageParam
+	 * @return
+	 */
+	public String executeInvestorsSummary(Map<String, Object> pageParam){
+		return restTemplate.postForObject(
+				SvrServiceApplication.COMMON_SERVICE_NAME + "/InvestorsQualityCheck/investorsSummary",pageParam,
+				String.class);
+	}
+
 }

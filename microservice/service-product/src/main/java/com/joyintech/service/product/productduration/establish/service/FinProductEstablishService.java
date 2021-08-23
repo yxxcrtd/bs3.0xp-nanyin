@@ -60,7 +60,7 @@ public class FinProductEstablishService extends BaseService<FinProductEstablishD
      * @return 成立信息
      * @throws Exception 异常信息
      */
-    public Page<FinProductEstablishDto> productEstablishInfoQuery (int page, int length, Map<String, Object> map) throws Exception{
+    public Page<FinProductEstablishDto> productEstablishInfoQuery (int page, int length, Map<String, Object> map) {
         map.put("statusValidA", DictCodeListExt1.有效状态_流程中.getValue());
         map.put("statusValidE", DictCodeListExt1.有效状态_有效.getValue());
         map.put("statusValidN", DictCodeListExt1.有效状态_撤销.getValue());

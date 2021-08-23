@@ -65,7 +65,7 @@ public class RskValStructureController {
      */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<RskValStructureDto> selectForPage(@RequestBody Map<String, Object> param,
-         @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+         @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskValStructuresService.selectForPage(page, length, param);
     }
     

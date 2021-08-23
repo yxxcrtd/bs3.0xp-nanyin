@@ -36,6 +36,8 @@ import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRu
 import com.joyintech.tams.report.submitmaintenance.transformrule.service.TransformRule001Service;
 import com.joyintech.tams.report.system.regtimepoints.dto.RegTimePoints001Dto;
 import com.joyintech.tools.constant.InterfConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -47,6 +49,10 @@ import com.joyintech.tools.constant.InterfConstant;
  * @since 1.0
  */
 public class EquityInfoCheckUtil {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(EquityInfoCheckUtil.class);
 
     /**
      * 判断字符串或数字是否超出长度
@@ -207,7 +213,7 @@ public class EquityInfoCheckUtil {
     /**
      * 校验输入内容是否满足正则表达式 <功能详细描述>
      *
-     * @param partern 正则表达式
+     * @param parternid 正则表达式
      * @param value 需要校验的字符串
      * @return 满足返回false,不满足返回true
      * @see
@@ -290,13 +296,13 @@ public class EquityInfoCheckUtil {
              
          }
          catch (NoSuchMethodException e) {
-             e.printStackTrace();
+             logger.error(e.getMessage(),e);
          }
          catch (SecurityException e) {
-             e.printStackTrace();
+             logger.error(e.getMessage(),e);
          }catch (IllegalAccessException | IllegalArgumentException
              | InvocationTargetException e) {
-             e.printStackTrace();
+             logger.error(e.getMessage(),e);
          }
      }
     public static String subDictcode(String value, String sign) {

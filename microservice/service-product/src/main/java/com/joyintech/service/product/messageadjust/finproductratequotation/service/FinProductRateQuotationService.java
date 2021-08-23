@@ -70,13 +70,13 @@ public class FinProductRateQuotationService extends BaseService<FinProductRateQu
      * @param param Map<String, Object>
      * @return List<SelectOptionDto>
      */
-    public List<SelectOptionDto> getFinprodId(Map<String, Object> param) {
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) {
         //数据字典.金融产品类型.理财产品, 数据字典.金融产品类型.理财产品分层
         List<String> list = new ArrayList<String>();
         list.add(DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         list.add(DictCodeListExt1.金融产品类型_投管用_理财产品分层.getValue());
         param.put("list", list);
-        return finProductRateQuotationMapper.getFinprodId(param);
+        return this.queryForPageForSelectReturn(page, length, () -> finProductRateQuotationMapper.getFinprodId(param));
     }
     
     /**
@@ -92,7 +92,7 @@ public class FinProductRateQuotationService extends BaseService<FinProductRateQu
      * @since 1.0
      */
     public Page<FinProductRateQuotationDto> selectForPage(int page, int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
             //得到产品代码
             String finprodId = (String)pageParam.get("finprodId");
             if(StringUtil.isNotEmpty(finprodId)){
@@ -263,14 +263,14 @@ public class FinProductRateQuotationService extends BaseService<FinProductRateQu
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getSelectFinprodId(Map<String, Object> param){
+    public Page<SelectOptionDto> getSelectFinprodId(int page, int length, Map<String, Object> param){
         //数据字典.金融产品类型.理财产品, 数据字典.金融产品类型.理财产品分层
         param.put("args0", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
 //        param.put("args1", DictCodeListExt1.金融产品类型_投管用_理财产品分层.getValue());
         param.put("profitType_02", DictCodeList.收益类型_收益型.getValue());
         param.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         param.put("dealMode_10", DictCodeList.处理模式_周期型.getValue());
-        return finProductRateQuotationMapper.getSelectFinprodId(param);
+        return this.queryForPageForSelectReturn(page, length, () -> finProductRateQuotationMapper.getSelectFinprodId(param));
     }
     /**
      * 
@@ -300,7 +300,7 @@ public class FinProductRateQuotationService extends BaseService<FinProductRateQu
      * @since 1.0
      */
     public Page<FinProductRateQuotationDto> selectOther(int page, int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         pageParam.put("cashType1", DictCodeListExt1.现金流一级类型_费用.getValue());
         pageParam.put("chargeType01", DictCodeList.收费类型_计提式费用.getValue());

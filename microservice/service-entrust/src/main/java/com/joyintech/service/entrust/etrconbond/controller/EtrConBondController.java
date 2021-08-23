@@ -55,7 +55,7 @@ public class EtrConBondController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<EtrConBondDto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page,
-                                             @PathVariable("length") int length)throws Exception {
+                                             @PathVariable("length") int length) {
         return service.selectForPage(page,length,pageParam);
     }
 
@@ -69,7 +69,7 @@ public class EtrConBondController {
     @RequestMapping("getFinprodId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
                                               @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return service.getFinprodId(page, length, param);
     }
     /**
@@ -83,7 +83,7 @@ public class EtrConBondController {
     @PostMapping("getFinprodIdForAdd/{page}/{length}")
     public Page<SelectOptionDto> getFinprodIdForAdd(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return service.getFinprodIdForAdd(page,length,param);
     }
     

@@ -55,7 +55,7 @@ public class InvestTradeQuery001Service extends CommonExportService<InvestTradeD
      * @see
      * @since 1.0
      */
-    public Page<InvestTradeDto> findPage(int pageNum, int length, Map<String, Object> params) throws Exception {
+    public Page<InvestTradeDto> findPage(int pageNum, int length, Map<String, Object> params) {
 
         // 获取业务类型(筛选条件的业务类型和符合页面查询的业务类型同时过滤)
         String[] busiTypeArr = this.filterBusitype((String)params.get("selectBusiType"), (String)params.get("filterBusiType"));
@@ -144,7 +144,7 @@ public class InvestTradeQuery001Service extends CommonExportService<InvestTradeD
      * @since 1.0
      */
     @SuppressWarnings("rawtypes")
-    public List<InvestTradeDto> findList(Map<String, Object> params) throws Exception {
+    public List<InvestTradeDto> findList(Map<String, Object> params) {
         List list = new ArrayList();
         // 获取业务类型(筛选条件的业务类型和符合页面查询的业务类型同时过滤)
         String[] busiTypeArr = this.filterBusitype((String)params.get("selectBusiType"), (String)params.get("filterBusiType"));

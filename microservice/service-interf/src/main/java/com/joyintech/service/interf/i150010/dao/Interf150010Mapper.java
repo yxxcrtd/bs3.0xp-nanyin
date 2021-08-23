@@ -13,6 +13,7 @@ package com.joyintech.service.interf.i150010.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.service.interf.i150010.entity.Interf150010InArrEntity;
 
@@ -24,6 +25,7 @@ import com.joyintech.service.interf.i150010.entity.Interf150010InArrEntity;
  * @see Interf150010Mapper
  * @since 1.0
  */
+@Repository
 public interface Interf150010Mapper {
 
     /**

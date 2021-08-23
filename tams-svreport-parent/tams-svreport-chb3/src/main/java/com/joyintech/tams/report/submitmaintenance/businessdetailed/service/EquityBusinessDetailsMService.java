@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -35,6 +38,13 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 @Service
 public class EquityBusinessDetailsMService extends CommonExportService<EquiteBusiDetails001Dto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(EquityBusinessDetailsMService.class);
+
+	@Autowired
+	private EquityBusiDetails001Service equityBusiDetails001Service;
 	/**
 	 * 产品名称下拉框
 	 * 
@@ -120,7 +130,7 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("pageId", pageId);
 		param.put("dataList", dataList);
-		param.put("bankCode", CommonUtil.getUserBankCode());
+		param.put("bankCode", CommonUtil.getUserBankCode(null));
 		param.put("deptCode", CommonUtil.getDeptCode());
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("userName", LoginUserUtil.getUserName());
@@ -179,7 +189,7 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("pageId", pageId);
 		param.put("dataList", dataList);
-		param.put("bankCode", CommonUtil.getUserBankCode());
+		param.put("bankCode", CommonUtil.getUserBankCode(null));
 		param.put("deptCode", CommonUtil.getDeptCode());
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("userName", LoginUserUtil.getUserName());
@@ -223,18 +233,20 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		try {
 			dataList = ExcelUtil.readToList(FileNameUtil.getUploadFilePath(fileName), null, null, 0, 1, 0);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("dataList", dataList);
-		param.put("bankCode", CommonUtil.getUserBankCode());
+		param.put("bankCode", CommonUtil.getUserBankCode(null));
 		param.put("deptCode", CommonUtil.getDeptCode());
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("userName", LoginUserUtil.getUserName());
-		return restTemplate.postForObject(
-				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusinessDetails/checkConfirmMsgForImportData", param,
-				SvrAjaxResult.class);
+
+//		return restTemplate.postForObject(
+//				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusinessDetails/checkConfirmMsgForImportData", param,
+//				SvrAjaxResult.class);
+
+		return equityBusiDetails001Service.checkConfirmMsgForImportData(param);
 	}
 
 	/**
@@ -246,13 +258,11 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 	public AjaxResult checkConfirmMsgForChbImportData(String fileName) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("fileName", fileName);
-		param.put("bankCode", CommonUtil.getUserBankCode());
+		param.put("bankCode", CommonUtil.getUserBankCode(null));
 		param.put("deptCode", CommonUtil.getDeptCode());
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("userName", LoginUserUtil.getUserName());
-		return restTemplate.postForObject(
-				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusinessDetails/checkConfirmMsgForChbImportData", param,
-				SvrAjaxResult.class);
+		return equityBusiDetails001Service.checkConfirmMsgForChbImportData(param);
 	}
 
 	public EquiteBusiDetails001Dto getEntityByKey(Map<String, Object> map) {
@@ -271,7 +281,7 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		dto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("dto", dto);
-		param.put("bankCode", CommonUtil.getUserBankCode());
+		param.put("bankCode", CommonUtil.getUserBankCode(null));
 		return restTemplate.postForObject(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusinessDetails/doSaveOrUpdate", param,
 				SvrAjaxResult.class);

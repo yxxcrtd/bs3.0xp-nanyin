@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,6 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -72,20 +70,32 @@ public class TrdCommandDispatcher001Controller extends BaseController{
         // modify by dubaojun 2020-06-29 上海农商行增加是否进入审批流程查询条件 end
 		
 		List<SelectOptionDto> options = new ArrayList<>();
-        SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.WIND一级分类_含债券一级分类等, null);
-        SelectDto selectDto2 = this.getSelectDataFromDataDic(DictCode.存款类资产类型, null);
-        SelectDto selectDto3 = this.getSelectDataFromDataDic(DictCode.基金类资产类型, null);
-        SelectDto selectDto4 = this.getSelectDataFromDataDic(DictCode.项目类一级分类, null);
-        SelectDto selectDto5 = this.getSelectDataFromDataDic(DictCode.计划类资产一级分类, null);
-        SelectDto selectDto6 = this.getSelectDataFromDataDic(DictCode.拆借类型, null);
-        SelectDto selectDto7 = this.getSelectDataFromDataDic(DictCode.回购类型, null);
-        options.addAll(selectDto1.getOptions());
-        options.addAll(selectDto2.getOptions());
-        options.addAll(selectDto3.getOptions());
-        options.addAll(selectDto4.getOptions());
-        options.addAll(selectDto5.getOptions());
-        options.addAll(selectDto6.getOptions());
-        options.addAll(selectDto7.getOptions());
+        SelectDto selectDto1 = new SelectDto();
+        SelectDto selectDto2 = new SelectDto();
+        SelectDto selectDto3 = new SelectDto();
+        SelectDto selectDto4 = new SelectDto();
+        SelectDto selectDto5 = new SelectDto();
+        SelectDto selectDto6 = new SelectDto();
+        SelectDto selectDto7 = new SelectDto();
+		if (StringUtil.equals(CacheUtil.getSysParam("IS_SHOW_TYPE"),"01")){
+            selectDto2 = this.getSelectDataFromDataDic(DictCode.行内资产二级分类, null);
+            options.addAll(selectDto2.getOptions());
+        }else{
+             selectDto1 = this.getSelectDataFromDataDic(DictCode.WIND一级分类_含债券一级分类等, null);
+             selectDto2 = this.getSelectDataFromDataDic(DictCode.存款类资产类型, null);
+             selectDto3 = this.getSelectDataFromDataDic(DictCode.基金类资产类型, null);
+             selectDto4 = this.getSelectDataFromDataDic(DictCode.项目类一级分类, null);
+             selectDto5 = this.getSelectDataFromDataDic(DictCode.计划类资产一级分类, null);
+             selectDto6 = this.getSelectDataFromDataDic(DictCode.拆借类型, null);
+             selectDto7 = this.getSelectDataFromDataDic(DictCode.回购类型, null);
+            options.addAll(selectDto1.getOptions());
+            options.addAll(selectDto2.getOptions());
+            options.addAll(selectDto3.getOptions());
+            options.addAll(selectDto4.getOptions());
+            options.addAll(selectDto5.getOptions());
+            options.addAll(selectDto6.getOptions());
+            options.addAll(selectDto7.getOptions());
+        }
         List<SelectOptionDto> psList = makeAllFloatRate();
         model.addAttribute("psList", JsonUtils.objectArray2Json(psList.toArray()));
         model.addAttribute("ALL_RESULT", JsonUtils.objectArray2Json(options.toArray()));
@@ -155,7 +165,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
 	  */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<TrdCommandDispatcher001Dto> selectAllCommonChar() throws Exception{
+	public Page<TrdCommandDispatcher001Dto> selectAllCommonChar() {
 		Map<String,Object> param = RequestUtil.getParameters(getRequest());
 		return trdCommandDispatcher001Service.selectForPage(param);
 	}
@@ -193,7 +203,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
 	 */
     @ResponseBody
     @RequestMapping("/getEntIds")
-    public List<SuggestDto> getEntrustId() throws Exception {
+    public List<SuggestDto> getEntrustId() {
     	Map<String, Object> param = new HashMap<String,Object>();
         param.put("entId", super.getRequest().getParameter("param"));
         List<SuggestDto> list = trdCommandDispatcher001Service.getEntrustId(param);
@@ -206,7 +216,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getPortfolioIds")
-    public List<SuggestDto> getPortfolioIds() throws Exception {
+    public List<SuggestDto> getPortfolioIds() {
     	String portfolioId=super.getRequest().getParameter("param");
     	return trdCommandDispatcher001Service.getPortfolioIds(portfolioId);
     }
@@ -217,7 +227,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinprodIds")
-    public List<SuggestDto> getFinprodIds() throws Exception {
+    public List<SuggestDto> getFinprodIds() {
     	String finprodId=super.getRequest().getParameter("param");
     	List<SuggestDto> list = trdCommandDispatcher001Service.getFinprodIds(finprodId);
     	return list;
@@ -255,7 +265,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return trdCommandDispatcher001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

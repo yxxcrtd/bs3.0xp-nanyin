@@ -23,6 +23,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.product.durdeal.dto.FinProductDurDeal001Dto;
 import com.joyintech.tams.invest.product.durdeal.service.FinProductDurDeal001Service;
@@ -65,6 +66,9 @@ public class FinProductDurDeal001Controller extends BaseController {
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
 
+    @Autowired
+    private IPlatformDate iPlatformDate;
+
     /**
      * {@inheritDoc}
      */
@@ -99,8 +103,7 @@ public class FinProductDurDeal001Controller extends BaseController {
      */
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
-    public List<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param)
-            throws Exception {
+    public Page<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param){
         return finProductDurDeal001Service.queryProdIdInfo(param);
     }
 
@@ -114,7 +117,7 @@ public class FinProductDurDeal001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<FinProductDurDeal001Dto> findPage() throws Exception {
+    public Page<FinProductDurDeal001Dto> findPage() {
         return finProductDurDeal001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -127,9 +130,16 @@ public class FinProductDurDeal001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
-        return finProductDurDeal001Service.export(this.getPageId(), RequestUtil.getPageParam());
+    public ResponseEntity<byte[]> export(){
+        String tableId = this.getParam("tableId");
+        String fileName = "";
+        if(StringUtil.equals(tableId,"dataTable")){
+            fileName = "产品存续期交易查询-汇总"+ "(" + iPlatformDate.getSysDateStr() + ").xls";
+        }else{
+            fileName = "产品存续期交易查询-明细"+ "(" + iPlatformDate.getSysDateStr() + ").xls";
+        }
+
+        return finProductDurDeal001Service.export(fileName, RequestUtil.getPageParam());
     }
 
     /**
@@ -149,11 +159,10 @@ public class FinProductDurDeal001Controller extends BaseController {
     /**
      * 查询交易明细数据
      * @return
-     * @throws Exception
      */
     @RequestMapping("findDetailPage")
     @ResponseBody
-    public Page<FinProductDurDeal001Dto> findDetailPage() throws Exception {
+    public Page<FinProductDurDeal001Dto> findDetailPage() {
     	return finProductDurDeal001Service.findDetailPage(RequestUtil.getPageParam());
     }
 

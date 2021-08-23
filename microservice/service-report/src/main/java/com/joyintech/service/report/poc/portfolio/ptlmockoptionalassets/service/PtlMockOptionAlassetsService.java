@@ -9,11 +9,14 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.report.poc.portfolio.ptlmockoptionalassets.dao.PtlMockOptionAlassetsMapper;
 import com.joyintech.service.report.poc.portfolio.ptlmockoptionalassets.dto.PtlMockOptionAlassetsDto;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -50,10 +53,20 @@ public class PtlMockOptionAlassetsService extends BaseService<PtlMockOptionAlass
      */
     public Page<PtlMockOptionAlassetsDto> selectForPage(int page, int length,
                                                         Map<String, Object> map)
-        throws Exception {
+    {
         map.put("cdate", iPlatformDate.getSysDateStr());
         // 查询组合添加权限限制
         map.put("loginUserName", LoginUserUtil.getUserName());
+        map.put("F01", DictCodeList.平安资产类型_债券.getValue());
+        map.put("F06", DictCodeList.平安资产类型_项目类资产.getValue());
+        map.put("type9", BussinessDictCodeList.行内资产二级分类_非标准化债权类资产.getValue());
+
+        //排除已经选择的资产
+        if(StringUtil.isNotEmpty(map.get("selectedFinprodId"))){
+            List<String> selectedFinprodIds = Arrays.asList(map.get("selectedFinprodId").toString().split(","));
+            map.put("selectedFinprodIds", selectedFinprodIds);
+        }
+
         return super.queryForPage(page, length,
             () -> ptlmockoptionalassetsMapper.selectForPage(map));
     }
@@ -64,11 +77,27 @@ public class PtlMockOptionAlassetsService extends BaseService<PtlMockOptionAlass
      * @return 资产代码下拉框列表
      */
     public List<SelectOptionDto> getFinprodId(Map<String, Object> map) {
-        map.put("finprodType2",
-            DictCodeList.平安资产类型_债券.getValue() + "," + DictCodeList.平安资产类型_计划类资产_利率型.getValue()
-                                + "," + DictCodeList.平安资产类型_项目类资产.getValue());
-        map.put("finprodType2",
-            StringUtil.splitToList(GlobalConstant.COMMA, (String)map.get("finprodType2")));
+//        map.put("finprodType2",
+//            DictCodeList.平安资产类型_债券.getValue()/* + "," + DictCodeList.平安资产类型_计划类资产_利率型.getValue()
+//                                + "," + DictCodeList.平安资产类型_项目类资产.getValue()*/);
+//        map.put("finprodType2",
+//            StringUtil.splitToList(GlobalConstant.COMMA, (String)map.get("finprodType2")));
+//        map.put("type8", DictCodeList.平安资产类型_项目类资产.getValue());
+//        map.put("type9", BussinessDictCodeList.行内资产二级分类_非标准化债权类资产.getValue());
+        if (((String)map.get("type8")).equals(DictCodeList.平安资产类型_债券.getValue())){
+            map.put("finprodType2",
+                    DictCodeList.平安资产类型_债券.getValue()/* + "," + DictCodeList.平安资产类型_计划类资产_利率型.getValue()
+                                + "," + DictCodeList.平安资产类型_项目类资产.getValue()*/);
+            map.put("finprodType2",
+                    StringUtil.splitToList(GlobalConstant.COMMA, (String)map.get("finprodType2")));
+        }else if (((String)map.get("type8")).equals(DictCodeList.平安资产类型_项目类资产.getValue())) {
+            map.put("finprodType2",
+                    DictCodeList.平安资产类型_项目类资产.getValue()/* + "," + DictCodeList.平安资产类型_计划类资产_利率型.getValue()
+                                + "," + DictCodeList.平安资产类型_项目类资产.getValue()*/);
+            map.put("finprodType2",
+                    StringUtil.splitToList(GlobalConstant.COMMA, (String) map.get("finprodType2")));
+            map.put("type9", BussinessDictCodeList.行内资产二级分类_非标准化债权类资产.getValue());
+        }
         return ptlmockoptionalassetsMapper.getFinprodId(map);
     }
 }

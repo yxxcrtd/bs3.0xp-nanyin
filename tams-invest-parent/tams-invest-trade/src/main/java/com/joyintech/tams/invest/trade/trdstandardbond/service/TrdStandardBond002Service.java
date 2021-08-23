@@ -19,6 +19,10 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.trade.trdstandardbond.dto.TrdStandardBond002Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,10 @@ import java.util.Map;
 
 @Service
 public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto> implements BaseProcessService<TrdStandardBond002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdStandardBond002Service.class);
 
     @Autowired
     private IPlatformDate platformDateImpl;
@@ -78,6 +86,9 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
             input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
             restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSubmit",
                     input, Long.class);
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage(),e);
         }
     }
 

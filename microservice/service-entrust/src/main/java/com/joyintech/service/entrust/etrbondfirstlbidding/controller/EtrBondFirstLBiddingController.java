@@ -63,7 +63,7 @@ public class EtrBondFirstLBiddingController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<EtrBondFirstLBiddingDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page,
-                                          @PathVariable("length") int length)throws Exception {
+                                          @PathVariable("length") int length) {
         return service.selectForPage(page,length,pageParam);
     }
     
@@ -78,7 +78,7 @@ public class EtrBondFirstLBiddingController {
      */
     @PostMapping("getentrustId")
     public List<SuggestDto> getentrustId(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         return service.getentrustId(map);
     }
     /**
@@ -92,7 +92,7 @@ public class EtrBondFirstLBiddingController {
      */
     @GetMapping("getfinprodId")
     public List<SuggestDto> getfinprodId(String finprodId, String pageId)
-        throws Exception {
+    {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("finprodId", finprodId);
         map.put("pageId", pageId);
@@ -111,7 +111,7 @@ public class EtrBondFirstLBiddingController {
     @PostMapping("getfinprodIdForAdd/{page}/{length}")
     public Page<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return service.getfinprodIdForAdd(page,length,param);
     }
     /**

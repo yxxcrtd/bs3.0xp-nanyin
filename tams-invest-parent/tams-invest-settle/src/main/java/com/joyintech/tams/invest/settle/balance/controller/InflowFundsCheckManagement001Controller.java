@@ -1,13 +1,17 @@
 package com.joyintech.tams.invest.settle.balance.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.util.StringUtil;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -25,8 +29,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -141,14 +143,28 @@ public class InflowFundsCheckManagement001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         Map<String, Object> searchParams = RequestUtil.getPageParam();
         String fileName = "流入资金核对-托管流水" + "(" + iPlatformDate.getSysDateStr() + ").xls";
         if (searchParams.get("isSys") != null && Boolean.parseBoolean((String)searchParams.get("isSys"))) {
             fileName = "来账分拣" + "(" + iPlatformDate.getSysDateStr() + ").xls";
         }
-        return inflowFundsCheckManagement001Service.export(fileName, RequestUtil.getParameters(getRequest()));
+        String datas = this.getParam("datas");
+        if(datas==null) {
+            return inflowFundsCheckManagement001Service.export(fileName, RequestUtil.getParameters(getRequest()));
+        }
+
+        List<OutflowFundsSystemFlowDto> param1 = JsonUtils.json2List(datas, OutflowFundsSystemFlowDto.class);
+        File outFile =  inflowFundsCheckManagement001Service.makeFile(
+                "/com/joyintech/tams/invest/settle/balance/config/export_confSys.xml",
+                param1);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
 
 

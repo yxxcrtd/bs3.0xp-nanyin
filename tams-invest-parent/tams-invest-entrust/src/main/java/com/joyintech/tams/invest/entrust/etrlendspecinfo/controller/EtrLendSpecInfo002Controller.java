@@ -10,6 +10,23 @@
  
 package com.joyintech.tams.invest.entrust.etrlendspecinfo.controller;
 
+import java.util.Date;
+import java.util.Map;
+
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -209,8 +226,7 @@ public class EtrLendSpecInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrLendSpecInfoDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrLendSpecInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -41,10 +41,24 @@ $(function() {
           cols:[
               { title:'数据状态', field: 'statusStr',width:100, sortField:'STATUS'},
               { title:'数据日期', field: 'statusDate', type:'datetime', sortField:'STATUS_DATE'},
-              { title:'报送状态', field: 'sendStatusStr',width:100 , type: 'date', sortField:'SEND_STATUS'},
+              { title:'报送状态', field: 'sendStatusStr',width:100 , type: 'date', sortField:'SEND_STATUS',
+                  render:function (value,visible,row,options) {
+                      if(value == "接口报送"){
+                          return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+                      }else{
+                          return value;
+                      }
+                  }},
               { title:'报送日期', field: 'submitTime', type: 'datetime', sortField:'SUBMIT_TIME'},
               { title:'报送截止日', field: 'chbSubmitDeadline', type:'datetime', sortField:'CHB_SUBMIT_DEADLINE'},
-              { title:'反馈状态', field: 'submitFeedbackStatusStr',width:100, sortField:'',sortField:'SUBMIT_FEEDBACK_STATUS'},
+              { title:'反馈状态', field: 'submitFeedbackStatusStr',width:100, sortField:'',sortField:'SUBMIT_FEEDBACK_STATUS',
+                  render:function (value,visible,row,options) {
+                      if(value == "发送中" || value == "发送异常"){
+                          return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+                      }else{
+                          return value;
+                      }
+                  }},
               {title: '从业人员类型',field:'employeeType', width:100, sortField:'EMPLOYEE_TYPE'},
               {title: '姓名', field:'employeeName', width:100, sortField:'EMPLOYEE_NAME'},
               {title: '性别', field:'employeeSex', width:100, sortField:'EMPLOYEE_SEX'},
@@ -76,7 +90,29 @@ $(function() {
               { field: 'sumitSeq',visible:false}
           ]
       });
-     
+
+      //绑定点击跳转反馈文件管理页面
+      table.bind('click', '.feedbackStatusClass', function(data, index) {
+          Joyin.dialog(JoyinUtil.getLabel("中债反馈文件管理"),
+              basePath + "svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001/init",
+              "95%", "96%", {   //pageModel:PAGE_MODEL_REFERENCE,
+                  reportEtrType:SVR_REPORT_CODE,    //报表类型
+                  handleStatus:FILE_HANDLE_STATUS,       //处理状态-未处理
+                  repSeqNo:data.sumitSeq,       //报送流水号
+                  // reportSendDate:'',
+                  // reportAcceptDate:''
+              });
+      });
+      //绑定点击跳转发送状态信息查询页面
+      table.bind('click', '.sendStatusClass', function(data, index) {
+          Joyin.dialog(JoyinUtil.getLabel("发送状态信息查询"),
+              basePath + "svreport/system/reportstatusinfo/ReportStatusInfo001/init",
+              "95%", "96%", {       //pageModel:PAGE_MODEL_REFERENCE,
+                  repType:SVR_REPORT_CODE,    //报表类型
+                  registSeqNo:data.registSeqno,       //报送流水号
+              });
+      });
+
      //查询
      $(function(){
          // 绑定按钮事件
@@ -258,13 +294,25 @@ $(function() {
      */
     var confirmExport = function(param, expArr) {
         Joyin.exportExcel('export', param);
-        Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
-            layui.layer.open({type:3});
-            Joyin.ajaxJson('doManual', {keyList : JSON.stringify(expArr)}, function() {
-                table.load();
-                layui.layer.closeAll();
-            });
-        });
+		//判断所选导出的数据是否已经报送送成功，若报送成功，则无需"手工处理"，只对报送失败的数据进行处理
+        var isNotSendData = false;
+		for(var j=expArr.length-1;j>=0;j--){
+		    if(expArr[j].sendStatus=="01" || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回'))) {
+                  isNotSendData = true;//有未报送成功的数据
+            }
+            if(!(expArr[j].sendStatus == '01' || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回')))){
+                   expArr.splice(j,1);
+            }
+        }
+		if (isNotSendData){
+       　　 Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+                layui.layer.open({type:3});
+                Joyin.ajaxJson('doManual', {keyList : JSON.stringify(expArr)}, function() {
+                    table.load();
+                    layui.layer.closeAll();
+                });
+       　　 });
+		}
     };
     
     // 报送

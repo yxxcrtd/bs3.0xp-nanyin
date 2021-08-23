@@ -63,7 +63,7 @@ public class DataFileUpload001Service extends BaseService<DataFileUpload001Dto>{
      * @see
      * @since 1.0
      */
-    public Page<DataFileUpload001Dto> findPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<DataFileUpload001Dto> findPage(int page, int length, Map<String, Object> pageParam) {
         return super.queryForPage(()-> dataFileUpload001Mapper.selectList(pageParam));
     }
 

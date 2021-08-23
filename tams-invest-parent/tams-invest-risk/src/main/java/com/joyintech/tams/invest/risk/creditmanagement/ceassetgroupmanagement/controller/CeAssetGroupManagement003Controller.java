@@ -33,6 +33,7 @@ import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.se
 import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.service.CeAssetGroupManagement003Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
@@ -166,7 +167,7 @@ public class CeAssetGroupManagement003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody CeAssetGroupManagement002Dto dto,BindingResult result) throws Exception {
+    public AjaxResult save(@RequestBody CeAssetGroupManagement002Dto dto,BindingResult result) throws WorkFlowException {
         if(result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -197,8 +198,7 @@ public class CeAssetGroupManagement003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody  CeAssetGroupManagement002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult delete(@RequestBody  CeAssetGroupManagement002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

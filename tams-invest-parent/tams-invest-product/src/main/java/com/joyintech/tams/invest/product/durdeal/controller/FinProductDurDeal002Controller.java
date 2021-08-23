@@ -68,13 +68,12 @@ public class FinProductDurDeal002Controller extends BaseController {
      * 分页查询
      *
      * @return Page<FinProductDurDeal002Dto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<FinProductDurDeal002Dto> findPage() throws Exception {
+    public Page<FinProductDurDeal002Dto> findPage() {
         return finProductDurDeal002Service.findPage(RequestUtil.getPageParam());
     }
 

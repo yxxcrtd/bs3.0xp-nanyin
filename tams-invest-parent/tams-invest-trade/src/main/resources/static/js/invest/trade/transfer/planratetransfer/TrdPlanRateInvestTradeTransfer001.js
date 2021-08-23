@@ -207,7 +207,7 @@
     //绑定添加按钮
     $('#TrdPlanRateInvestTradeTransfer001_btn_add').click(function () {
         var options = $("#portfolioId option:selected").val();
-        var options1 = $("#portfolioId option:selected").text();
+        var options1 = $("#portfolioId option:selected").text().split(':')[1];
         //画面check
         if (!options || !$('#transferPrinAmt').val() || Number($("#transferPrinAmt").val()) == 0) {
             Joyin.error('组合代码和本金金额不能为空！');

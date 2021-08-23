@@ -623,7 +623,7 @@ public class TrdCommonBaseController {
      * 2020-04-14
      */
     @PostMapping("selectTradeinfodeal")
-    public MockTradeInfoDto selectTradeinfodeal(@RequestBody Map<String, Object> param) throws Exception {
+    public MockTradeInfoDto selectTradeinfodeal(@RequestBody Map<String, Object> param) {
         return trdCommonBaseService.selectTradeinfodeal(param);
     }
 
@@ -634,7 +634,7 @@ public class TrdCommonBaseController {
      * 2020-04-14
      */
     @PostMapping("selectTradedealz")
-    public List<MockTrdProductDealDto> selectTradedealz(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MockTrdProductDealDto> selectTradedealz(@RequestBody Map<String, Object> param) {
         return trdCommonBaseService.selectTradedealz(param);
     }
 
@@ -645,7 +645,7 @@ public class TrdCommonBaseController {
      * 2020-04-14
      */
     @PostMapping("selectTradedealf")
-    public List<MockTrdProductDealDto> selectTradedealf(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MockTrdProductDealDto> selectTradedealf(@RequestBody Map<String, Object> param) {
         return trdCommonBaseService.selectTradedealf(param);
     }
 
@@ -656,7 +656,7 @@ public class TrdCommonBaseController {
      * 2020-04-14
      */
     @PostMapping("selectTradedealztn")
-    public List<MockTrdProductDealDto> selectTradedealztn(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MockTrdProductDealDto> selectTradedealztn(@RequestBody Map<String, Object> param) {
         return trdCommonBaseService.selectTradedealztn(param);
     }
 
@@ -667,7 +667,7 @@ public class TrdCommonBaseController {
      * 2020-04-14
      */
     @PostMapping("selectTradedealftn")
-    public List<MockTrdProductDealDto> selectTradedealftn(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MockTrdProductDealDto> selectTradedealftn(@RequestBody Map<String, Object> param) {
         return trdCommonBaseService.selectTradedealftn(param);
     }
 
@@ -678,7 +678,7 @@ public class TrdCommonBaseController {
      * 2020-04-14
      */
     @PostMapping("selectFyTradedeal")
-    public List<MockTrdProductDealDto> selectFyTradedeal(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MockTrdProductDealDto> selectFyTradedeal(@RequestBody Map<String, Object> param) {
         return trdCommonBaseService.selectFyTradedeal(param);
     }
 

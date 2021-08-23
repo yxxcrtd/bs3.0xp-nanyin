@@ -33,6 +33,8 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +54,10 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
  */
 @Service
 public class TrdPlanCurrDuration001Service extends CommonExportService<TrdPlanCurrDuration001Dto> implements BaseProcessService<TrdPlanCurrDuration001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdPlanCurrDuration001Service.class);
 
     private final String 非货币总集复核_BTN = "TrdFundDuration002_btn_total";
 
@@ -123,7 +129,7 @@ public class TrdPlanCurrDuration001Service extends CommonExportService<TrdPlanCu
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, false);
     }

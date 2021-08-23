@@ -19,25 +19,25 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.component.business.common.controller.BaseRiskMathCommController;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.common.riskspeed.RiskSpeedService;
-import com.joyintech.tams.invest.common.riskspeed.dto.IRiskSpeed;
 import com.joyintech.tams.invest.common.riskspeed.dto.RiskSpeedDto;
 import com.joyintech.tams.invest.common.riskspeed.impl.RiskSpeedImplService;
 import com.joyintech.tams.invest.common.risktrial.dto.InvestTradeTrialInput;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etrmoneycalculation.dto.EtrMoneyCalculationDto;
-import com.joyintech.tams.invest.entrust.etrmoneycalculation.dto.IRiskSpeedDto;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 〈可投金额试算service〉

@@ -73,7 +73,7 @@ public class CProdDealInfoRecService {
      */
     @SuppressWarnings({"unchecked"})
     public CProdDealInfoProcessorResult execute(TemplateOrderInfoReaderResult acctEntity)
-        throws Exception {
+         {
         //初始化 模板解析对象
         CProdDealInfoValCommonResult result = new CProdDealInfoValCommonResult();
         

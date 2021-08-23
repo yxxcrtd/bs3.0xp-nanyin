@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.common.dto.common;
 
 import com.joyintech.framework.base.BaseDictCodeList;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class BussinessCodeParameter {
      */
     private BaseDictCodeList commonBusinessType;
     //-----------add by jjpei 20190627---------
+    private BussinessDictCodeList commonBusinessType1;
     /**
      * 共通业务类型EXT
      */
@@ -86,6 +88,15 @@ public class BussinessCodeParameter {
      */
     public void setCommonBusinessType(BaseDictCodeList commonBusinessType) {
         this.commonBusinessType = commonBusinessType;
+    }
+
+    /**
+     * 设置 commonBusinessType
+     *
+     * @param commonBusinessType commonBusinessType
+     */
+    public void setCommonBusinessType1(BussinessDictCodeList commonBusinessType) {
+        this.commonBusinessType1 = commonBusinessType;
     }
 
     /**
