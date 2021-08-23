@@ -124,7 +124,7 @@ public class EtrProjectValidator implements EtrCommonValidator {
                 if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH),
                         DictCodeListExt1.是或否_否.getValue())
                         && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()))
-                        && dto.getProAvailableCash() != null
+                        && dto.getProAvailableCash() != null && dto.getEntrustAmt() != null
                         && dto.getEntrustAmt().compareTo(dto.getProAvailableCash()) == 1) {
                     errorList.add(new ValidMessage("entrustAmt", this.getMessage("ETR_X_018",this.getMessage("EtrProject001.entrustAmt"))));
                 }
@@ -133,7 +133,7 @@ public class EtrProjectValidator implements EtrCommonValidator {
                         CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH),
                         DictCodeListExt1.是或否_否.getValue())
                         && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))
-                        && dto.getAssetAvailablePosition() != null
+                        && dto.getAssetAvailablePosition() != null && dto.getEntrustAmt() != null
                         && dto.getEntrustAmt().compareTo(dto.getAssetAvailablePosition()) > 0) {
                     errorList.add(new ValidMessage("entrustAmt", this.getMessage("ETR_X_011",this.getMessage("EtrProject001.entrustAmt"))));
                 }
