@@ -65,11 +65,11 @@
                  FROM BOK_POSITION_PRDFEE FEE
                           LEFT JOIN TRD_PRODUCT_DEAL T1
                                     ON FEE.FINPROD_ID = T1.FINPROD_ID AND T1.FINPROD_TYPE2 = #{SINGLE_FEE_TYPE_03}
-                                        AND T1.MDATE &lt; TO_DATE(#{mdate}, 'yyyy-MM-dd') and
+                                        AND T1.MDATE &lt;= TO_DATE(#{mdate}, 'yyyy-MM-dd') and
                                        t1.TRADE_STATUS = #{TRADE_STATUS_01} and t1.IS_CANCEL = #{N}
                           LEFT JOIN WFL_TRD_PRODUCT_DEAL T2
                                     ON FEE.FINPROD_ID = T2.FINPROD_ID AND T2.FINPROD_TYPE2 = #{SINGLE_FEE_TYPE_03}
-                                        AND T2.MDATE &lt; TO_DATE(#{mdate}, 'yyyy-MM-dd') and
+                                        AND T2.MDATE &lt;= TO_DATE(#{mdate}, 'yyyy-MM-dd') and
                                        t2.TRADE_STATUS = #{TRADE_STATUS_01} and t2.IS_CANCEL = #{N}
                           LEFT JOIN FIN_PRODUCT T3 ON FEE.CHL_ID = T3.FINPROD_ID
                           LEFT JOIN FIN_PRODUCT_ADD fpa ON fee.FINPROD_ID = fpa.FINPROD_ID
@@ -77,14 +77,14 @@
                    AND (FEE.FINPROD_ID = #{ptlId} OR fpa.PORTFOLIO_ID = #{ptlId})
                    AND FEE.CHL_ID = #{chlId}
                    AND FEE.TDY_UNPAID_INTINCEXP > 0
-                   AND FEE.CDATE = TO_DATE(#{mdate}, 'yyyy-MM-dd') - 1
+                   AND FEE.CDATE = TO_DATE(#{mdate}, 'yyyy-MM-dd')
                    AND NOT EXISTS(SELECT 1
                                   FROM TRD_PRODUCT_DEAL TT1
                                   WHERE FEE.FINPROD_ID = TT1.FINPROD_ID
                                     AND TT1.FINPROD_TYPE2 = #{SINGLE_FEE_TYPE_03}
                                     and TT1.TRADE_STATUS = #{TRADE_STATUS_01}
                                     and TT1.IS_CANCEL = #{N}
-                                    AND TT1.MDATE &lt; TO_DATE(#{mdate}, 'yyyy-MM-dd')
+                                    AND TT1.MDATE &lt;= TO_DATE(#{mdate}, 'yyyy-MM-dd')
                                     AND TT1.MDATE > T1.MDATE
                      )
                    AND NOT EXISTS(SELECT 1
@@ -93,7 +93,7 @@
                                     AND TT1.FINPROD_TYPE2 = #{SINGLE_FEE_TYPE_03}
                                     and TT1.TRADE_STATUS = #{TRADE_STATUS_01}
                                     and TT1.IS_CANCEL = #{N}
-                                    AND TT1.MDATE &lt; TO_DATE(#{mdate}, 'yyyy-MM-dd')
+                                    AND TT1.MDATE &lt;= TO_DATE(#{mdate}, 'yyyy-MM-dd')
                                     AND TT1.MDATE > T2.MDATE
                      )
              )
