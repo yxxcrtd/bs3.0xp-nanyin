@@ -312,10 +312,16 @@ function hideLeftTopPanel(){
     $("div.left_bottom_panel").each(function(i,v){
         $(v).css("display","none");
     });
+    $("div.top_panel").each(function(i,v){
+        $(v).css("display","none");
+    });
 }
 
 function showLeftTopPanel(){
     $("div.left_bottom_panel").each(function(i,v){
+        $(v).css("display","inline");
+    });
+    $("div.top_panel").each(function(i,v){
         $(v).css("display","inline");
     });
 }
