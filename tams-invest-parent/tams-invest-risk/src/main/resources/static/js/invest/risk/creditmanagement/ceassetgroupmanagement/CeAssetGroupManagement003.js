@@ -24,8 +24,6 @@ $(function () {
         searchOnInit: true,
         rowno: true,
         height : 200,
-        loadonce: true,
-        page:false,
         cols: [
             {field: 'finprodId', title:'CeAssetGroupManagement003.assetId'}
             , {field: 'finprodName', title: 'CeAssetGroupManagement003.assetName'}

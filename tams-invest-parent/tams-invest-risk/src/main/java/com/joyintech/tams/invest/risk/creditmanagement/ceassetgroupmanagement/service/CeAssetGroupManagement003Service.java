@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.s
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.dto.CeAssetGroupManagement001Dto;
 import org.springframework.stereotype.Service;
 
@@ -79,12 +80,12 @@ public class CeAssetGroupManagement003Service extends CommonExportService<CeAsse
      * @see
      * @since 1.0
      */
-    public List<CeAssetGroupManagement002Dto> selectAssetInfo(Map<String, Object> parameters) {
+    public Page<CeAssetGroupManagement002Dto> selectAssetInfo(Map<String, Object> parameters) {
         if (StringUtil.isNotEmpty(parameters.get("finprodId"))) {
             List<String> splitToList = StringUtil.splitToList(null, (String)parameters.get("finprodId"));
             parameters.put("finprodId", splitToList);
         }
-        return restTemplate.postForList(
+        return restTemplate.postForPage(
             ServiceApplication.RISK_SERVICE_NAME + "/CeAssetGroupManagement/selectAssetInfo",
             parameters, CeAssetGroupManagement002Dto.class);
     }

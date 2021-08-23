@@ -181,11 +181,11 @@ public class CeAssetGroupManagementController {
      * @see
      * @since 1.0
      */
-    @PostMapping("selectAssetInfo")
-    public List<CeAssetGroupManagement002Dto> selectAssetInfo(@RequestBody Map<String, Object> param) throws Exception {
-        return ceAssetGroupManagementService.selectAssetInfo(param);
+    @PostMapping("selectAssetInfo/{page}/{length}")
+    public Page<CeAssetGroupManagement002Dto> selectAssetInfo(@RequestBody Map<String, Object> param,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+        return ceAssetGroupManagementService.selectAssetInfo(param,page,length);
     }
-    
+
     /**
      * 
      * <一句话功能简述>
