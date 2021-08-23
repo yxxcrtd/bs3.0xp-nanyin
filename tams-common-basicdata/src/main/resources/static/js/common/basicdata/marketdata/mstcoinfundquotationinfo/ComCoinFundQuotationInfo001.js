@@ -50,7 +50,7 @@ $(function() {
             ,{field:'totalValue',width:'10%', title:'ComCoinFundQuotationInfo002.totalValue'}//累计净值
             ,{field:'restNetValue',width:'10%', title:'ComCoinFundQuotationInfo002.restNetValue'}//复权单位净值
             ,{field:'importDay',width:'15%', title: 'ComCoinFundQuotationInfo002.importDay',type:'date'}//导入日
-//            ,{field:'cShares',width:'10%', title:'ComCoinFundQuotationInfo002.cShares'}//基金总份额
+            ,{field:'cShares',width:'10%', title:'ComCoinFundQuotationInfo002.cShares',type:'money'}//基金总份额
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}//编辑和删除事件
         ]
     });
@@ -126,7 +126,7 @@ $(function() {
         $('#ComCoinFundQuotationInfo001_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("ComCoinFundQuotationInfo002.title"),
                         basePath + "common/basicdata/marketdata/mstcoinfundquotationinfo/ComCoinFundQuotationInfo002/init",
-                        "60%", "75%", {pageModel:PAGE_MODEL_NEW});
+                        "60%", "90%", {pageModel:PAGE_MODEL_NEW});
         });
         //删除事件
         $('#ComCoinFundQuotationInfo001_btn_delete').click(function() {
