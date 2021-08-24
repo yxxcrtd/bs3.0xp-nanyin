@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workbook filePath="commarketmanagement/ComMarketManagement.xlsx" name="行情管理">
-    <Worksheet dataStart="1" javaBean="com.joyintech.tams.common.basicdata.commarketmanagement.dto.ComMarketManagementDto">
+    <Worksheet dataStart="1" javaBean="com.joyintech.tams.valuation.basicdata.commarketmanagement.dto.ComMarketManagementDto">
         <Row>
             <Cell order="1" name="对象类型">oTypeName</Cell>
             <Cell order="2" name="对象代码">oCode</Cell>

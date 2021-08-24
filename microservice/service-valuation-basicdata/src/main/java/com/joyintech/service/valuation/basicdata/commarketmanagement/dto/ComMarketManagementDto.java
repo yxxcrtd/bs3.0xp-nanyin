@@ -1,4 +1,4 @@
-package com.joyintech.service.basicdata.commarketmanagement.dto;
+package com.joyintech.service.valuation.basicdata.commarketmanagement.dto;
 
 import com.joyintech.tams.common.base.entity.MstInnerCreditRating;
 import com.joyintech.workflow.engine.dto.ProcessEntity;

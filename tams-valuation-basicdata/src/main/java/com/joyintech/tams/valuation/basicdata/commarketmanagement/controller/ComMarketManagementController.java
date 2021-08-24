@@ -1,4 +1,4 @@
-package com.joyintech.tams.common.basicdata.commarketmanagement.controller;
+package com.joyintech.tams.valuation.basicdata.commarketmanagement.controller;
 
 
 import com.joyintech.framework.annotation.PageId;
@@ -8,9 +8,9 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.basicdata.commarketmanagement.dto.ComMarketManagementDto;
-import com.joyintech.tams.common.basicdata.commarketmanagement.service.ComMarketManagement001Service;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.valuation.basicdata.commarketmanagement.dto.ComMarketManagementDto;
+import com.joyintech.tams.valuation.basicdata.commarketmanagement.service.ComMarketManagement001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Controller
 @PageId("ComMarketManagement")
-@RequestMapping("/common/basicdata/commarketmanagement/ComMarketManagement")
+@RequestMapping("/valuation/basicdata/commarketmanagement/ComMarketManagement")
 public class ComMarketManagementController extends BaseController{
 	@Autowired
     private ComMarketManagement001Service carketManagementService;

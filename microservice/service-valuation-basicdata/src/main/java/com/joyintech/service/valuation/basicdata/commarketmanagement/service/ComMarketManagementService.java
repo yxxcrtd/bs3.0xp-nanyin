@@ -1,10 +1,10 @@
-package com.joyintech.service.basicdata.commarketmanagement.service;
+package com.joyintech.service.valuation.basicdata.commarketmanagement.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.basicdata.commarketmanagement.dao.ComMarketManagementMapper;
-import com.joyintech.service.basicdata.commarketmanagement.dto.ComMarketManageDto;
+import com.joyintech.service.valuation.basicdata.commarketmanagement.dao.ComMarketManagementMapper;
+import com.joyintech.service.valuation.basicdata.commarketmanagement.dto.ComMarketManageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
