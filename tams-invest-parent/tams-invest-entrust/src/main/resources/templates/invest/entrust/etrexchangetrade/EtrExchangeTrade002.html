@@ -125,7 +125,7 @@
 												class="layui-input form-input input-select"
 												placeholder="请输入内容"
 												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result='${PS}'>
+												data-th-data-result='${PS_ETR}'>
 										</select>
 									</div>
 								</div>
@@ -335,6 +335,7 @@
 	<div layout:fragment="script">
 		<script data-th-src="@{/js/invest/entrust/etrexchangetrade/EtrExchangeTrade002.js}" type="text/javascript"></script>
 		<script th:inline="javascript" type="text/javascript">
+			var PS_ETR = /*[[${PS_ETR}]]*/'[]';
 			var FINPROD_TYPE_TG_F01 = /*[[${FINPROD_TYPE_TG_F01}]]*/'';
 			var PS_T02 = /*[[${PS_T02}]]*/'';
 			var PS_T69 = /*[[${PS_T69}]]*/'';
