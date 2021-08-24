@@ -478,7 +478,7 @@
         where STATUS_VDATE = #{statusVdate,jdbcType=VARCHAR}
         AND DAT_ZIP_TYPE = #{datZipType,jdbcType=VARCHAR}
         <if test="reportOrgName != null" >
-            and  REPORT_ORG_NAME = #{reportOrgName,jdbcType=VARCHAR}
+            and  ORG_CODE = #{reportOrgName,jdbcType=VARCHAR}
         </if>
     </select>
 
@@ -497,6 +497,9 @@
         where  DAT_ZIP_CODE is not null
         <if test="seqnoList ==null or seqnoList.size() &lt;= 0">
             and  ZIP_SEND_STATUS = '01'
+        </if>
+        <if test="orgCode !=null">
+            and  ORG_CODE = #{orgCode,jdbcType=VARCHAR}
         </if>
         <if test="seqnoList != null and seqnoList.size() &gt; 0">
             <foreach close=")" collection="seqnoList" item="item" open=" AND DAT_ZIP_CODE IN (" separator=",">
@@ -536,6 +539,9 @@
         where
         DAT_ZIP_DAT_TYPE= #{datZipType,jdbcType=VARCHAR}
         and DAT_ZIP_CODE= #{datZipCode,jdbcType=VARCHAR}
+        <if test="reportOrgName != null" >
+            and  ORG_CODE = #{reportOrgName,jdbcType=VARCHAR}
+        </if>
     </select>
     <update id="updateByZipCode" parameterType="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
         update PBC_SEND_ZIP_DAT_FILE

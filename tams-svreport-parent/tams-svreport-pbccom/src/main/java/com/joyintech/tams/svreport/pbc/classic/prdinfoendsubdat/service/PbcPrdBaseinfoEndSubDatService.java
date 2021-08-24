@@ -166,12 +166,12 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
             if(CollectionUtil.isNotEmpty(prodIds)){
                 pbcPrdBaseinfoSubDats = pbcPrdBaseinfoEndSubDatMapper.queryPbcPrdBaseInfoByprodId(prodIds);
             }
-            //未报送、数据有修改
-            List<PbcPrdBaseinfoEndSubDat> baseinfoSubDatsNoSend = new ArrayList<>();
             //未报送、数据需要删除的id
             List<PbcPrdBaseinfoEndSubDat> baseinfoSubDatsNoSendProdIds = new ArrayList<>();
+            //未报送、数据需要更新的id
+            List<PbcPrdBaseinfoEndSubDat> baseinfoSubDatsNoSendUpdate = new ArrayList<>();
             //已报送 数据有修改
-            List<PbcPrdBaseinfoEndSubDat> baseinfoSubDatsSend = new ArrayList<>();
+//            List<PbcPrdBaseinfoEndSubDat> baseinfoSubDatsSend = new ArrayList<>();
             //新建数据
             List<PbcPrdBaseinfoEndSubDat> baseinfoSubDatsNew = new ArrayList<>();
             for (PbcPrdBaseinfoEndSubDto pbcPrdBaseinfoSubDatDto : pbcPrdBaseinfoEndSubDtos) {
@@ -179,35 +179,18 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                         .filter(baseinfoDat -> baseinfoDat.getProdId().equals(pbcPrdBaseinfoSubDatDto.getProdId())).findAny();
                 if(any.isPresent()){
                     PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoSubDat = any.get();
-                    String sendStatus = pbcPrdBaseinfoSubDat.getSendStatus();
-                    if(DictCodeListExt2.报送状态_未报送.getValue().equals(sendStatus)){
-                        PbcPrdBaseinfoEndSubDat baseinfoSubDat = updatePbcPrdBaseinfoEndSubDat(pbcPrdBaseinfoSubDatDto, pbcPrdBaseinfoSubDat);
-                        //设置人行产品代码
-                        baseinfoSubDat.setPbcProdId(pbcPrdBaseinfoSubDat.getPbcProdId());
-                        //设置报送状态为未报送
-                        baseinfoSubDat.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
-                        //设置数据状态为新建
-                        baseinfoSubDat.setStatus(DictCodeList.数据状态_新建.getValue());
-                        //设置报送流水号为查询的流水号
-                        baseinfoSubDat.setSumitSeq(pbcPrdBaseinfoSubDat.getSumitSeq());
-                        //设置压缩包编码
-                        baseinfoSubDat.setDatZipCode(pbcPrdBaseinfoSubDat.getDatZipCode());
-                        baseinfoSubDatsNoSend.add(baseinfoSubDat);
-                        baseinfoSubDatsNoSendProdIds.add(baseinfoSubDat);
-                    }else{
-                        PbcPrdBaseinfoEndSubDat baseinfoSubDat = updatePbcPrdBaseinfoEndSubDat(pbcPrdBaseinfoSubDatDto, pbcPrdBaseinfoSubDat);
-                        //设置人行产品代码
-                        baseinfoSubDat.setPbcProdId(pbcPrdBaseinfoSubDat.getPbcProdId());
-                        //设置报送状态为未报送
-                        baseinfoSubDat.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
-                        //设置数据状态为修改
-                        baseinfoSubDat.setStatus(DictCodeList.数据状态_修改.getValue());
-                        //设置报送流水号   重新生成报送流水号
-                        baseinfoSubDat.setSumitSeq(null);
-                        //设置压缩包编码为空
-                        baseinfoSubDat.setDatZipCode(null);
-                        baseinfoSubDatsSend.add(baseinfoSubDat);
-                    }
+                    PbcPrdBaseinfoEndSubDat baseinfoSubDat = updatePbcPrdBaseinfoEndSubDat(pbcPrdBaseinfoSubDatDto, pbcPrdBaseinfoSubDat);
+                    //设置人行产品代码
+                    baseinfoSubDat.setPbcProdId(pbcPrdBaseinfoSubDat.getPbcProdId());
+                    //设置报送状态为未报送
+                    baseinfoSubDat.setSendStatus(pbcPrdBaseinfoSubDat.getSendStatus());
+                    //设置数据状态为新建
+                    baseinfoSubDat.setStatus(pbcPrdBaseinfoSubDat.getStatus());
+                    //设置报送流水号为查询的流水号
+                    baseinfoSubDat.setSumitSeq(pbcPrdBaseinfoSubDat.getSumitSeq());
+                    //设置压缩包编码
+                    baseinfoSubDat.setDatZipCode(pbcPrdBaseinfoSubDat.getDatZipCode());
+                    baseinfoSubDatsNoSendUpdate.add(baseinfoSubDat);
                 }else{
                     //新建数据
                     PbcPrdBaseinfoEndSubDat baseinfoSubDat = updatePbcPrdBaseinfoEndSubDat(pbcPrdBaseinfoSubDatDto, new PbcPrdBaseinfoEndSubDat());
@@ -224,11 +207,15 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                     baseinfoSubDatsNew.add(baseinfoSubDat);
                 }
             }
+            if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendUpdate)){
+                for (PbcPrdBaseinfoEndSubDat subDat : baseinfoSubDatsNoSendUpdate) {
+                    subDat.setRegistSeqno(UUID.randomUUID().toString());
+                    pbcPrdBaseinfoEndSubDatMapper.updateByDatZipCodeAndProdId(subDat);
+                }
+            }
             List<PbcPrdBaseinfoEndSubDat> endListAll = new ArrayList<>();
             //加入新建的数据
             endListAll.addAll(baseinfoSubDatsNew);
-            //加入未报送的数据
-            endListAll.addAll(baseinfoSubDatsNoSend);
             if(CollectionUtil.isNotEmpty(endListAll)){
                 //1:分配不生成压缩文件
                 String zipType = "1";
@@ -256,11 +243,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                 List<String> reqIds = new ArrayList<>();
                 for (PbcPrdBaseinfoEndSubDat subDat : endList) {
                     if(StrUtil.isNotEmpty(subDat.getProdId())){
-                        Optional<PbcPrdBaseinfoEndSubDat> any = baseinfoSubDatsNoSendProdIds.stream()
-                                .filter(baseinfoSubDat -> subDat.getProdId().equals(baseinfoSubDat.getProdId())).findAny();
-                        if(!any.isPresent()){
-                            baseinfoSubDatsNoSendProdIds.add(subDat);
-                        }
+                        baseinfoSubDatsNoSendProdIds.add(subDat);
                     }else{
                         reqIds.add(subDat.getRegistSeqno());
                     }
@@ -293,18 +276,23 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                         }
                        /* String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
                         pbcSendZipDatFile.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);*/
-                        PbcSendZipDatFile sendZipDatFile = pbcSendZipDatFileMapper.selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), pbcSendZipDatFile.getDatZipDatType());
-                        if("PIE".equals(pbcSendZipDatFile.getDatZipDatType())){
-                            if(sendZipDatFile == null){
-                                insertList.add(pbcSendZipDatFile);
-                            }else{
-                                pbcSendZipDatFile.setRegistSeqno(sendZipDatFile.getRegistSeqno());
-                                updateList.add(pbcSendZipDatFile);
-                            }
+                        //数据权限模式（01：银行模式，02：联社模式）
+                        String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
+                        logger.info("数据权限模式:{}",authorityType);
+                        PbcSendZipDatFile sendZipDatFile = null;
+                        if("02".equals(authorityType)){
+                            //机构
+                            sendZipDatFile = pbcSendZipDatFileMapper
+                                    .selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), pbcSendZipDatFile.getDatZipDatType(),orgCode);
                         }else{
-                            if(sendZipDatFile == null){
-                                insertList.add(pbcSendZipDatFile);
-                            }
+                            sendZipDatFile = pbcSendZipDatFileMapper
+                                    .selectByDatZipCode(pbcSendZipDatFile.getDatZipCode(), pbcSendZipDatFile.getDatZipDatType(),null);
+                        }
+                        if(sendZipDatFile == null){
+                            insertList.add(pbcSendZipDatFile);
+                        }else{
+                            pbcSendZipDatFile.setRegistSeqno(sendZipDatFile.getRegistSeqno());
+                            updateList.add(pbcSendZipDatFile);
                         }
                     }
                     for (PbcSendZipDatFile sendZipDatFile : insertList) {
@@ -315,16 +303,6 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
                     }
                 }
             }
-            /*if(CollectionUtil.isNotEmpty(baseinfoSubDatsSend)){
-                List<ExcelValidDto> warnList = new ArrayList<>();
-                for (PbcPrdBaseinfoEndSubDat pbcPrdBaseinfoEndSubDat : baseinfoSubDatsSend) {
-                    ExcelValidDto excelValidDto = new ExcelValidDto();
-                    excelValidDto.setWarnInfo("已报送的数据，不支持修改。请在人行客户端直接修复！");
-                    excelValidDto.setValidKey(pbcPrdBaseinfoEndSubDat.getProdId());
-                    warnList.add(excelValidDto);
-                }
-                return warnList;
-            }*/
             return errorList;
         }else{
             ExcelValidDto excelValidDto = new ExcelValidDto();
