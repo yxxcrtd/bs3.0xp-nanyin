@@ -226,7 +226,8 @@ public class BussSettleOrderCommService {
                             && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
                             && !(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue()) ||
                             StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_机构间私募系统.getValue()))
-                            && !StringUtil.equals(dto.getTradeMarketMode(), DictCodeListExt1.交易市场_一级市场.getValue()))
+//                            && !StringUtil.equals(dto.getTradeMarketMode(), DictCodeListExt1.交易市场_一级市场.getValue())
+                    )
                     || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
                         && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
                         && !StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue()))
@@ -290,7 +291,8 @@ public class BussSettleOrderCommService {
                             && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
                             && !(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue()) ||
                             StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_机构间私募系统.getValue()))
-                            && StringUtil.equals(dto.getTradeMarketMode(), DictCodeListExt1.交易市场_一级市场.getValue()))
+//                            && StringUtil.equals(dto.getTradeMarketMode(), DictCodeListExt1.交易市场_一级市场.getValue())
+                            )
                             //----add by jjpei 20190727---债券借贷---券券对付----------
                         ||(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())
                              &&StringUtil.equals(dto.getPs(), DictCodeList.交易方向_到期.getValue())
