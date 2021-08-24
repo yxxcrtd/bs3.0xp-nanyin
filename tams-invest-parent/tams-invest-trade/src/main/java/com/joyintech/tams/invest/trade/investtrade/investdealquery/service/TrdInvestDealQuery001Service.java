@@ -586,8 +586,6 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 			if(os != null){
 					os.flush();
 					os.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(),e);
 				}
 			if(stream != null){
 					stream.close();
@@ -655,7 +653,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 			logger.error(e.getMessage(),e);
 		}finally {
 			try {
-			if (zipOut != null){
+				if (zipOut != null){
 					zipOut.flush();
 					zipOut.close();
 				}
@@ -668,7 +666,6 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
 				}
-			}
 			if (input != null){
 				try {
 					input.close();

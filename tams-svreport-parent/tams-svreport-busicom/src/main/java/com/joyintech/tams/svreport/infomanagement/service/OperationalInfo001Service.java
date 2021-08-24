@@ -1870,12 +1870,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					workbook.write(out);
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
-					logger.error(e.getMessage(),e);
+					logger.error(e.getMessage(), e);
 				} finally {
-					if (out != null){
-						out.close();
-				}finally {
-					if (out != null){
+					if (out != null) {
 						out.close();
 					}
 				}

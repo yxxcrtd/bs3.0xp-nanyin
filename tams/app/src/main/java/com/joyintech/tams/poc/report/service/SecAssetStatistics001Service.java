@@ -290,7 +290,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
      }finally{
 
          try {
-         if(fos !=null){
+             if(fos !=null){
                  fos.close();
              }
              if (fis != null){
@@ -300,14 +300,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
                  logger.error(e.getMessage(),e);
              }
          }
-         if(fis !=null){
-             try {
-                 fis.close();
-             } catch (IOException e) {
-                 logger.error("",e);
-             }
-         }
-     }
+
       return depositfile;
  }
  

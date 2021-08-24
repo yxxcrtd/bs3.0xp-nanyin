@@ -370,7 +370,13 @@ public class JasparConnectUtilService {
 //            dir.mkdirs();
 //        }
 //        }
+			return getData;
+		}finally {
+			if (inputStream != null) {
+				inputStream.close();
 			}
+		}
+        }
 	/**
 	 * 连接Jaspar并将url上的xml解析成list格式
 	 * @param strUrl 连接url

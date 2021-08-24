@@ -65,7 +65,7 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
 	/**
      * 日志
      */
-    private Logger logger = LoggerFactory.getLogger(PtlCashFlowGapAnalysis001Service.class);
+//    private Logger logger = LoggerFactory.getLogger(PtlCashFlowGapAnalysis001Service.class);
 	/**
      * 模糊查询组合代码
      * @param param 模糊查询参数

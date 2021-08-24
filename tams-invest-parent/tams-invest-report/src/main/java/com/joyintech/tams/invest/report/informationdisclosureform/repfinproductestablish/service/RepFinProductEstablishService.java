@@ -190,13 +190,9 @@ public class RepFinProductEstablishService extends CommonExportService<RepFinPro
                     }
                 }
                     i++;
-                }finally {
-                    if (inputStream != null){
-                        inputStream.close();
-                    }
                 }
             }
-        }
+
         ZipFileUtil.compressZip(new SafelyFile(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip"), 
             false, arrFile.toArray(new SafelyFile[arrFile.size()]));
         return ExportUtil.export(strFile+".zip", 
