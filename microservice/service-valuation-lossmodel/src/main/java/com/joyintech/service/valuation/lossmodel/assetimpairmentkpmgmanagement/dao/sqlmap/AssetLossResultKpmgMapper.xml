@@ -107,12 +107,6 @@
             <if test="assetType != null" >
                 ASSET_TYPE,
             </if>
-            <if test="bussNo != null" >
-                BUSS_NO,
-            </if>
-            <if test="tradeDate != null" >
-                TRADE_DATE,
-            </if>
             <if test="decDate != null" >
                 DEC_DATE,
             </if>
@@ -192,12 +186,6 @@
             </if>
             <if test="assetType != null" >
                 #{assetType,jdbcType=VARCHAR},
-            </if>
-            <if test="bussNo != null" >
-                #{bussNo,jdbcType=VARCHAR},
-            </if>
-            <if test="tradeDate != null" >
-                #{tradeDate,jdbcType=DATE},
             </if>
             <if test="decDate != null" >
                 #{decDate,jdbcType=DATE},
