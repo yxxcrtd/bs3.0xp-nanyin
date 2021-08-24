@@ -308,6 +308,12 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/doInsert",dto,
              Integer.class);
      }
+
+    @Override
+    public void doBack(EtrInvestBondInfoDto entity) {
+
+    }
+
     /**
      *
      * 删除投资委托
