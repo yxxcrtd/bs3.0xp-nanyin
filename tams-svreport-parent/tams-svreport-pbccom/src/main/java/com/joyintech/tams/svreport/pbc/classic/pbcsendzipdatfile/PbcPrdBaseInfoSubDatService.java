@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper;
@@ -300,7 +301,14 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
         }
         List<PbcProdAssetpoolCode> pbcProdAssetpoolCodes = new ArrayList<>();
         if(CollectionUtil.isNotEmpty(innerProdIds)){
-            pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds);
+            //数据权限模式（01：银行模式，02：联社模式）
+            String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
+            if("02".equals(authorityType)){
+                String orgCode = SecurityUtil.getLoginUser().getOrgCode();
+                pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds,StrUtil.isEmpty(orgCode) ? null : orgCode);
+            }else{
+                pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds,null);
+            }
         }
         for (PbcPrdBaseinfoSubDatDiffDto pbcPrdBaseinfoSubDat : listDetail) {
             String prodId = pbcPrdBaseinfoSubDat.getProdId();

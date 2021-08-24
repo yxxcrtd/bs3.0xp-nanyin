@@ -477,6 +477,9 @@
         from PBC_SEND_ZIP_DAT_FILE
         where STATUS_VDATE = #{statusVdate,jdbcType=VARCHAR}
         AND DAT_ZIP_TYPE = #{datZipType,jdbcType=VARCHAR}
+        <if test="reportOrgName != null" >
+            and  REPORT_ORG_NAME = #{reportOrgName,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <delete id="deleteByUUIDAndType" parameterType="java.util.Map">
