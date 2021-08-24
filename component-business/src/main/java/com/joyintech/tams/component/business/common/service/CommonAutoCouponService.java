@@ -792,13 +792,14 @@ public class CommonAutoCouponService extends BaseService{
                 repAssetBond.setRepRegistOrg(interfPayhsrcsecinfo.getInstitution());//登记托管机构
                 repAssetBond.setRepRegistorgComment(interfPayhsrcsecinfo.getInstitutiontext());//登记托管机构说明
                 //[交易流通场所][具体类别]发行机构类型（按规模划分）,发行机构类型（按技术领域划分）发行机构类型（按经济类型划分）选择“99”时,备注不可为空，默认为无
-                if (StringUtil.equals("99",interfPayhsrcsecinfo.getMarket2())||
+                /*if (StringUtil.equals("99",interfPayhsrcsecinfo.getMarket2())||
                         StringUtil.equals("99",interfPayhsrcsecinfo.getConcreteClass())||
                         StringUtil.equals("99",interfPayhsrcsecinfo.getIssuerScaleType())||
                         StringUtil.equals("99",interfPayhsrcsecinfo.getIssuerTechnologyType())||
                         StringUtil.equals("99",interfPayhsrcsecinfo.getIssuerEconomicType())){
                     repAssetBond.setRepRemark("无");
-                }
+                }*/
+                repAssetBond.setRepRemark(interfPayhsrcsecinfo.getRemark());
                 repAssetDept.setRepFinprodId(finprodId);//金融产品代码
                 repAssetDept.setFinprodMarketId(secid);//债券代码
                 repAssetDept.setRepFinprodName(interfPayhsrcsecinfo.getSecname());//债券名称
