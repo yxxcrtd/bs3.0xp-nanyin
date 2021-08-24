@@ -83,6 +83,12 @@ public class XmlDom4jUtils {
             	String entityClassName = entityPath + dtoName;
                 SAXParserFactory factory = SAXParserFactory.newInstance();
                 // 通过factory获取SAXParser实例
+                //------start---------2020-11-25 周敏 添加 
+                factory.setValidating(false);
+                factory.setFeature("http://xml.org/sax/features/validation",false);
+                factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);
+                factory.setFeature("http://xml.org/sax/features/use-entity-resolver2",false);
+                //------end---------
                 SAXParser parser = factory.newSAXParser();
                 SAXParserHandler handler = new SAXParserHandler(); 
                 boolean flag = handler.init(entityClassName,listTemplateOrderInfoDTO,acctEntity,
@@ -95,7 +101,7 @@ public class XmlDom4jUtils {
                 		valInterflogList.addAll(handler.getLogResult());
                 	}
                 }else{
-                	throw new Exception("没有为模版配置对应的校验规则.");
+                	throw new BusinessException("没有为模版配置对应的校验规则.");
                 }
             }
             catch (Exception e) {

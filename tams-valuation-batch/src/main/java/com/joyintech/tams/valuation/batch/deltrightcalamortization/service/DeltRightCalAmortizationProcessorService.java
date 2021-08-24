@@ -625,18 +625,20 @@ public class DeltRightCalAmortizationProcessorService {
                 // （(变量.溢折价科目余额 + 变量.当日成本科目余额) - (计提类账务处理结果.数量 * 变量.百元券面面值) != 0
                 if (varCash.compareTo(BigDecimal.ZERO) != 0) {
                     // 报价 报价temp ：变量.报价列表
-                    for (TargetCashCalcRule calRule : quotationList) {
-                        // if（报价.生效日 > 计提类账务处理结果.发生日)
-                        if (DateUtil.compareDate(calRule.getEffDate(), happenDate) > 0) {
-                            break;
-                        }
-                        // 报价.生效日 = 计提类账务处理结果.发生日
-                        if (calRule.getEffDate().compareTo(acctEntity.getHappenDate()) == 0
-                            && latestPrice.compareTo(calRule.getYield()) != 0) {
-                            isLlbg = true;
-                        }
-                        // 变量.最新报价 = 报价temp.生效利率
-                        latestPrice = calRule.getYield();
+                    if (quotationList != null){
+	                    for (TargetCashCalcRule calRule : quotationList) {
+	                        // if（报价.生效日 > 计提类账务处理结果.发生日)
+	                        if (DateUtil.compareDate(calRule.getEffDate(), happenDate) > 0) {
+	                            break;
+	                        }
+	                        // 报价.生效日 = 计提类账务处理结果.发生日
+	                        if (calRule.getEffDate().compareTo(acctEntity.getHappenDate()) == 0
+	                            && latestPrice.compareTo(calRule.getYield()) != 0) {
+	                            isLlbg = true;
+	                        }
+	                        // 变量.最新报价 = 报价temp.生效利率
+	                        latestPrice = calRule.getYield();
+	                    }
                     }
                     // 变量.买入交易列表 ！=NULL
                     if ((buyDealList != null && !buyDealList.isEmpty()) || isLlbg
@@ -1050,7 +1052,7 @@ public class DeltRightCalAmortizationProcessorService {
             basisInput.setCalDate(BasicUtil.dateToLocal(happenDate).plusDays(1));
             basisInput.setCalStartDate(BasicUtil.dateToLocal(happenDate));
             // 计算日所在付息计划
-            if (Basis._30_360.equals(basis)) {
+            if (Basis._30_360.equals(basis) && cashPlan != null) {
                 basisInput.setSecIntStartDate(BasicUtil.dateToLocal(cashPlan.getVdate()));
             }
             basisInput.setBasis(basis);
@@ -1098,6 +1100,7 @@ public class DeltRightCalAmortizationProcessorService {
         }
         // A/A的计息基础
         else {
+            if (targetCashPayRule != null){
             // 首次付息日
             Date firstPayDate = targetCashPayRule.getFirstPayDate();
             //推算方式
@@ -1139,56 +1142,62 @@ public class DeltRightCalAmortizationProcessorService {
             }
 
             //区间理论起始日
-            LocalDate theoryStartDate =
-                    cashPlan.getVdateTerm() == null ? BasicUtil.dateToLocal(
-                            cashPlan.getVdate()) : BasicUtil.dateToLocal(
-                            cashPlan.getVdateTerm());
-            //区间理论结束日
-            LocalDate theoryCutoffDate =
-                    cashPlan.getMdateTerm() == null ? BasicUtil.dateToLocal(
-                            cashPlan.getMdate()) : BasicUtil.dateToLocal(
-                            cashPlan.getMdateTerm());
-
-            // 计息年度计算
-            SecCalYearInputParameter secInput = new SecCalYearInputParameter();
-            secInput.setCalDate(BasicUtil.dateToLocal(happenDate));
-            secInput.setVariety(Variety.附息);
-            secInput.setCalMethod(secIntSchCalMethod);
-            // 标的基本资料.起息日 -> 债券起息日
-            secInput.setStartDate(BasicUtil.dateToLocal(targetFinProduct.getVdate()));
-            // 标的基本资料.到期日 -> 债券到期日
-            secInput.setEndDate(BasicUtil.dateToLocal(targetFinProduct.getMdate()));
-            // 标的基本资料.首次付息日-> 债券首次付息日
-            secInput.setFirstPayDate(BasicUtil.dateToLocal(firstPayDate));
-            // 计息年度天数计算
-            SecCalYearDayCountOutputParameter yearDayCount = CalculatorFactory.createSecCalYearDayCountCalculator().calculate(secInput);
-            // 计息基础
-            BasisIntCalculator basisCal = CalculatorFactory.createBasisIntCalculator();
-            BasisIntInputParameter basisInput = new BasisIntInputParameter();
-            // 计算日
-            basisInput.setCalDate(BasicUtil.dateToLocal(happenDate).plusDays(1));
-            // 计算起始日
-            basisInput.setCalStartDate(BasicUtil.dateToLocal(happenDate));
-            // 计息基础
-            basisInput.setBasis(basis);
-            // 付息频率
-            basisInput.setYearIntRate(yearIntRate);
-            // 利息分配方式
-            basisInput.setAllocationType(allocationType);
-            // 计息年度天数
-            basisInput.setYearTotalDays((int)yearDayCount.getDay());
-            // 理论计息周期天数
-            basisInput.setCycleDays(BasicUtil.days(theoryCutoffDate, theoryStartDate));
-
-            BasisIntOutputParameter basisOutput = basisCal.calculate(basisInput);
-
-            /** modify by yanya on 20201229 计算利息金额还是利率**/
-            if(amountFlag) {
-                calInterestBalanceNow = ArithmeticUtil.multiply(basisOutput.getInterest(), costBalance, targetCashCalcRuleDto.getYield());
+            LocalDate theoryStartDate = null;
+            if (cashPlan != null){
+                theoryStartDate = cashPlan.getVdateTerm() == null ? BasicUtil.dateToLocal(
+                        cashPlan.getVdate()) : BasicUtil.dateToLocal(
+                        cashPlan.getVdateTerm());
             }
-            else {
-                return ArithmeticUtil.multiply(basisOutput.getInterest(), targetCashCalcRuleDto.getYield());
-            }
+            if (cashPlan != null){
+	            //区间理论结束日
+	            LocalDate theoryCutoffDate =
+	                    cashPlan.getMdateTerm() == null ? BasicUtil.dateToLocal(
+	                            cashPlan.getMdate()) : BasicUtil.dateToLocal(
+	                            cashPlan.getMdateTerm());
+
+	            // 计息年度计算
+	            SecCalYearInputParameter secInput = new SecCalYearInputParameter();
+	            secInput.setCalDate(BasicUtil.dateToLocal(happenDate));
+	            secInput.setVariety(Variety.附息);
+	            secInput.setCalMethod(secIntSchCalMethod);
+	            // 标的基本资料.起息日 -> 债券起息日
+	            secInput.setStartDate(BasicUtil.dateToLocal(targetFinProduct.getVdate()));
+	            // 标的基本资料.到期日 -> 债券到期日
+	            secInput.setEndDate(BasicUtil.dateToLocal(targetFinProduct.getMdate()));
+	            // 标的基本资料.首次付息日-> 债券首次付息日
+	                    if(targetCashPayRule != null){
+	            secInput.setFirstPayDate(BasicUtil.dateToLocal(firstPayDate));
+	                    }
+	            // 计息年度天数计算
+	            SecCalYearDayCountOutputParameter yearDayCount = CalculatorFactory.createSecCalYearDayCountCalculator().calculate(secInput);
+	            // 计息基础
+	            BasisIntCalculator basisCal = CalculatorFactory.createBasisIntCalculator();
+	            BasisIntInputParameter basisInput = new BasisIntInputParameter();
+	            // 计算日
+	            basisInput.setCalDate(BasicUtil.dateToLocal(happenDate).plusDays(1));
+	            // 计算起始日
+	            basisInput.setCalStartDate(BasicUtil.dateToLocal(happenDate));
+	            // 计息基础
+	            basisInput.setBasis(basis);
+	            // 付息频率
+	            basisInput.setYearIntRate(yearIntRate);
+	            // 利息分配方式
+	            basisInput.setAllocationType(allocationType);
+	            // 计息年度天数
+	            basisInput.setYearTotalDays((int)yearDayCount.getDay());
+	            // 理论计息周期天数
+	            basisInput.setCycleDays(BasicUtil.days(theoryCutoffDate, theoryStartDate));
+
+	            BasisIntOutputParameter basisOutput = basisCal.calculate(basisInput);
+
+	            /** modify by yanya on 20201229 计算利息金额还是利率**/
+	            if(amountFlag) {
+	                calInterestBalanceNow = ArithmeticUtil.multiply(basisOutput.getInterest(), costBalance, targetCashCalcRuleDto.getYield());
+	            }
+	            else {
+	                return ArithmeticUtil.multiply(basisOutput.getInterest(), targetCashCalcRuleDto.getYield());
+	            }
+			}
         }
         // 调用金额共通方法设置有效小数位
         calInterestBalanceNow = ArithmeticUtil.round(calInterestBalanceNow,NumberEnum.MONEY);

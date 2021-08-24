@@ -199,10 +199,15 @@ public class BankValVoucherQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws ParseException, IOException {
         String datas = this.getParam("datas");
         Map<String, Object> params= this.getRequestMap();
-        BankValVoucherQuery001SearchDto dto = (BankValVoucherQuery001SearchDto)JsonUtils.map2entity(params, BankValVoucherQuery001SearchDto.class);
+        BankValVoucherQuery001SearchDto dto = null;
+        try {
+            dto = (BankValVoucherQuery001SearchDto) JsonUtils.map2entity(params, BankValVoucherQuery001SearchDto.class);
+        } catch (Exception e) {
+            throw new BusinessException(e);
+        }
         List<BankValVoucherQuery001Dto> listdto;
         if (datas == null) {
             listdto = valVoucherQuery001Service.selectAll(dto);

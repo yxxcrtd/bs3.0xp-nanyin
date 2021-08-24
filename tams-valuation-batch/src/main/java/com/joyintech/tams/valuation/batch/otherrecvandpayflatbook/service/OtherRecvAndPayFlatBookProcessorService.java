@@ -203,60 +203,38 @@ public class OtherRecvAndPayFlatBookProcessorService {
                 accountNatrueMap.put(DictCodeBaseSubjectNatrue.其他应收款_本金.getValue(), accountNatrueBranchMap);
                 accountNatrueMap.put(DictCodeBaseSubjectNatrue.其他应付款_本金.getValue(), accountNatrueBranchMap);
                 // 1） 变量.其他应收款-本金.abs()≥变量.其他应付款-融入券本金.abs()时:
-                if(otherCostAmt.compareTo(otherPayCostAmt) >= 0){
-                	if(DictCodeList.余额方向_借方.getValue().equals(otherPayBalFlag)
-                			&& otherPayCostAmt.compareTo(BigDecimal.ZERO)<0){
-                		otherPayBalFlag = DictCodeList.余额方向_贷方.getValue();
-                		otherPayCostAmt = otherPayCostAmt.abs();
-                	}
-                	if(DictCodeList.余额方向_贷方.getValue().equals(otherPayBalFlag)
-                			&& otherPayCostAmt.compareTo(BigDecimal.ZERO)<0){
-                		otherPayBalFlag = DictCodeList.余额方向_借方.getValue();
-                		otherPayCostAmt = otherPayCostAmt.abs();
-                	}
-                	
+                if(otherCostAmt.abs().compareTo(otherPayCostAmt.abs()) >= 0){
                     // a)   变量.其他应付款-融入券本金余额在借方时，
                     if(DictCodeList.余额方向_借方.getValue().equals(otherPayBalFlag)){
                         // 其他应收款-本金_借 -> 变量.其他应付款-融入券本金科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_COST_D, otherPayCostAmt);
+                        accountAmountMap.put(BookConstant.OTHER_COST_D, otherPayCostAmt.abs());
                         // 其他应付款-融入券本金_贷 -> 变量.其他应付款-融入券本金科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_COST1_C, otherPayCostAmt);
+                        accountAmountMap.put(BookConstant.OTHER_COST1_C, otherPayCostAmt.abs());
                     }
                     // a)   变量.其他应付款-融入券本金余额在贷方时，
                     if(DictCodeList.余额方向_贷方.getValue().equals(otherPayBalFlag)){
                         // 其他应付款-融入券本金_借 -> 变量.其他应付款-融入券本金科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_COST1_D, otherPayCostAmt);
+                        accountAmountMap.put(BookConstant.OTHER_COST1_D, otherPayCostAmt.abs());
                         // 其他应收款-本金_贷 -> 变量.其他应付款-融入券本金科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_COST_C, otherPayCostAmt);
+                        accountAmountMap.put(BookConstant.OTHER_COST_C, otherPayCostAmt.abs());
                     }
                 }
                 // 2） 凭证前科目变量.其他应收款-本金.abs()<变量.其他应付款-融入券本金.abs()时:
-                if(otherCostAmt.compareTo(otherPayCostAmt) < 0){
-                	if(DictCodeList.余额方向_借方.getValue().equals(otherBalFlag)
-                			&& otherCostAmt.compareTo(BigDecimal.ZERO)<0){
-                		otherBalFlag = DictCodeList.余额方向_贷方.getValue();
-                		otherCostAmt = otherCostAmt.abs();
-                	}
-                	if(DictCodeList.余额方向_贷方.getValue().equals(otherBalFlag)
-                			&& otherCostAmt.compareTo(BigDecimal.ZERO)<0){
-                		otherBalFlag = DictCodeList.余额方向_借方.getValue();
-                		otherCostAmt = otherCostAmt.abs();
-                	}
-                	
+                if(otherCostAmt.abs().compareTo(otherPayCostAmt.abs()) < 0){
                     // b)   变量.其他应收款-本金余额在借方时，
                     if(DictCodeList.余额方向_借方.getValue().equals(otherBalFlag)){
                         // 其他应付款-融入券本金_借 -> 变量.其他应收款-本金科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_COST1_D, otherCostAmt);
+                        accountAmountMap.put(BookConstant.OTHER_COST1_D, otherCostAmt.abs());
                         // 其他应收款-本金_贷 -> 变量.其他应收款-本金科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_COST_C, otherCostAmt);
+                        accountAmountMap.put(BookConstant.OTHER_COST_C, otherCostAmt.abs());
                         
                     }
                     // b)   变量.其他应收款-本金余额在贷方时，
                     if(DictCodeList.余额方向_贷方.getValue().equals(otherBalFlag)){
                         // 其他应收款-本金_借 -> 变量.其他应收款-本金科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_COST_D, otherCostAmt);
+                        accountAmountMap.put(BookConstant.OTHER_COST_D, otherCostAmt.abs());
                         // 其他应付款-融入券本金_贷 -> 变量.其他应收款-本金科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_COST1_C, otherCostAmt);
+                        accountAmountMap.put(BookConstant.OTHER_COST1_C, otherCostAmt.abs());
                     }
                 }
             }
@@ -267,64 +245,39 @@ public class OtherRecvAndPayFlatBookProcessorService {
                 accountNatrueBranchMap.put(BookConstant.BRANCH, dto.getBranch());
                 accountNatrueMap.put(DictCodeBaseSubjectNatrue.其他应收款_利息.getValue(), accountNatrueBranchMap);
                 accountNatrueMap.put(DictCodeBaseSubjectNatrue.其他应付款_利息.getValue(), accountNatrueBranchMap);
-                // 1） 变量.其他应收款-利息.abs()≥变量.其他应付款-融入券利息.abs()时:
-                if(otherIntAmt.compareTo(otherPayIntAmt) >= 0){
-                	
-                	if(DictCodeList.余额方向_借方.getValue().equals(otherPayBalFlag)
-                			&& otherPayIntAmt.compareTo(BigDecimal.ZERO)<0){
-                		otherPayBalFlag = DictCodeList.余额方向_贷方.getValue();
-                		otherPayIntAmt = otherPayIntAmt.abs();
-                	}
-                	if(DictCodeList.余额方向_贷方.getValue().equals(otherPayBalFlag)
-                			&& otherPayIntAmt.compareTo(BigDecimal.ZERO)<0){
-                		otherPayBalFlag = DictCodeList.余额方向_借方.getValue();
-                		otherPayIntAmt = otherPayIntAmt.abs();
-                	}
-                	
+                // 1） 变量.其他应收款-利息.abs()>变量.其他应付款-融入券利息.abs()时:
+                if(otherIntAmt.abs().compareTo(otherPayIntAmt.abs()) > 0){
                     // a)   变量.其他应付款-融入券利息余额在借方时，
                     if(DictCodeList.余额方向_借方.getValue().equals(otherPayBalFlag)){
                         // 其他应收款-利息_借 -> 变量.其他应付款-融入券利息科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_INT_D, otherPayIntAmt);
+                        accountAmountMap.put(BookConstant.OTHER_INT_D, otherPayIntAmt.abs());
                         // 其他应付款-融入券利息_贷 -> 变量.其他应付款-融入券利息科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_INT1_C, otherPayIntAmt);
+                        accountAmountMap.put(BookConstant.OTHER_INT1_C, otherPayIntAmt.abs());
                     }
                     // a)   变量.其他应付款-融入券利息余额在贷方时，
                     if(DictCodeList.余额方向_贷方.getValue().equals(otherPayBalFlag)){
                         // 其他应付款-融入券利息_借 -> 变量.其他应付款-融入券利息科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_INT1_D, otherPayIntAmt);
+                        accountAmountMap.put(BookConstant.OTHER_INT1_D, otherPayIntAmt.abs());
                         // 其他应收款-利息_贷 -> 变量.其他应付款-融入券利息科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_INT_C, otherPayIntAmt);
+                        accountAmountMap.put(BookConstant.OTHER_INT_C, otherPayIntAmt.abs());
                     }
                 }
-                // 2） 凭证前科目变量.其他应收款-利息.abs()<变量.其他应付款-融入券利息.abs()时:
-                if(otherIntAmt.compareTo(otherPayIntAmt) < 0){
-                	
-                	
-                	if(DictCodeList.余额方向_借方.getValue().equals(otherBalFlag)
-                			&& otherIntAmt.compareTo(BigDecimal.ZERO)<0){
-                		otherBalFlag = DictCodeList.余额方向_贷方.getValue();
-                		otherIntAmt = otherIntAmt.abs();
-                	}
-                	if(DictCodeList.余额方向_贷方.getValue().equals(otherBalFlag)
-                			&& otherIntAmt.compareTo(BigDecimal.ZERO)<0){
-                		otherBalFlag = DictCodeList.余额方向_借方.getValue();
-                		otherIntAmt = otherIntAmt.abs();
-                	}
-                	
+                // 2） 凭证前科目变量.其他应收款-利息.abs()<=变量.其他应付款-融入券利息.abs()时:
+                if(otherIntAmt.abs().compareTo(otherPayIntAmt.abs()) <= 0){
                     // b)   变量.其他应收款-利息余额在借方时，
                     if(DictCodeList.余额方向_借方.getValue().equals(otherBalFlag)){
                         // 其他应付款-融入券利息_借 -> 变量.其他应收款-利息科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_INT1_D, otherIntAmt);
+                        accountAmountMap.put(BookConstant.OTHER_INT1_D, otherIntAmt.abs());
                         // 其他应收款-利息_贷 -> 变量.其他应收款-利息科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_INT_C, otherIntAmt);
+                        accountAmountMap.put(BookConstant.OTHER_INT_C, otherIntAmt.abs());
                         
                     }
                     // b)   变量.其他应收款-利息余额在贷方时，
                     if(DictCodeList.余额方向_贷方.getValue().equals(otherBalFlag)){
                         // 其他应收款-利息_借 -> 变量.其他应收款-利息科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_INT_D, otherIntAmt);
+                        accountAmountMap.put(BookConstant.OTHER_INT_D, otherIntAmt.abs());
                         // 其他应付款-融入券利息_贷 -> 变量.其他应收款-利息科目余额.abs()
-                        accountAmountMap.put(BookConstant.OTHER_INT1_C, otherIntAmt);
+                        accountAmountMap.put(BookConstant.OTHER_INT1_C, otherIntAmt.abs());
                     }
                 }
             }
@@ -361,6 +314,7 @@ public class OtherRecvAndPayFlatBookProcessorService {
      * @param expBalanceDirect 期待余额方向
      * @param baseSubjectNature 基础科目性质
      * @param invAim 投资目的
+     * @param taskPri 任务优先级
      * @return BigDecimal 科目余额
      * @see
      * @since 1.0

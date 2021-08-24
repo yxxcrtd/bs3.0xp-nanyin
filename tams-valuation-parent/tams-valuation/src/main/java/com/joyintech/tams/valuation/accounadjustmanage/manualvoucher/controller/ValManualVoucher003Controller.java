@@ -65,6 +65,10 @@ import java.util.Map;
 @PageId("ValManualVoucher003")
 @RequestMapping("/valuation/accounadjustmanage/manualvoucher/ValManualVoucher003")
 public class ValManualVoucher003Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValManualVoucher003Controller.class);
 
     @Autowired
     private ValManualVoucher003Service valManualVoucher003Service;
