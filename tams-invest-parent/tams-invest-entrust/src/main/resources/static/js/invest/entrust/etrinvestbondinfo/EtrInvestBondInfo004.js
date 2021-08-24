@@ -174,9 +174,15 @@
             function (result) {
                 Joyin.confirm(result.data, function () {
                     if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/save', objects, "EtrInvestBondInfo002_btn_save", "EtrInvestBondInfo002");
+                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/save', objects, "EtrInvestBondInfo002_btn_save", "EtrInvestBondInfo002", function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
                     } else {
-                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/save', objects, "EtrInvestBondInfo002_btn_submit", "EtrInvestBondInfo002");
+                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/save', objects, "EtrInvestBondInfo002_btn_submit", "EtrInvestBondInfo002", function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
                     }
                 });
             });

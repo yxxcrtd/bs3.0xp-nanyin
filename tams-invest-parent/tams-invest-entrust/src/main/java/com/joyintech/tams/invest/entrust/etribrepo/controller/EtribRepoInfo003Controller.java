@@ -308,7 +308,7 @@ public class EtribRepoInfo003Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-
+        RepoInfoDto.setAssetType1(DictCodeList.回购类型_质押式回购.getValue());
         // ----------add by zhangrui1 20200715 预占功能 start----------
         List<EtribRepoInfo003Dto> dataList = new ArrayList<>();
         // ----------add by zhangrui1 20200715 预占功能 end----------
