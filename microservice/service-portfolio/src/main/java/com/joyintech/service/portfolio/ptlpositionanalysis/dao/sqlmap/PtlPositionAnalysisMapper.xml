@@ -1830,7 +1830,13 @@
     </select>
     <select   id="getAllTreeNode" resultType="com.joyintech.tams.common.base.entity.TargetDetail">
      select t.tareget_code  as taregetCode ,t.tareget_name as taregetName,t.tareget_type_code as taregetTypeCode from TARGET_DETAIL t
-     where t.tareget_code not in (select  fd.tareget_code from filter_detail fd where fd.filter_code=(select ti.filter_code from TILTER_INFO ti where ti.user_id=#{userId}  and ti.is_default=#{isDefault}))
+     where 1=1
+        <if test="isInit != null and isInit != '' and isInit=='01'">
+            and t.tareget_code not in (select  fd.tareget_code from filter_detail fd where fd.filter_code=(select ti.filter_code from TILTER_INFO ti where ti.user_id=#{userId}  and ti.is_default=#{isDefault}))
+        </if>
+        <if test="isInit != null and isInit != '' and isInit=='02'">
+            <foreach collection="list" separator="," item="item" open="and t.tareget_code not in (" close=")">#{item}</foreach>
+        </if>
     </select>
 
     <!-- 根据groupby 条件获取对象下的分类-->
