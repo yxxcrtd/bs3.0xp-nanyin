@@ -317,6 +317,11 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 			} catch (IOException e) {
 			}
 		}
+		//数据权限模式（01：银行模式，02：联社模式）
+		String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
+		if("02".equals(authorityType)){
+			param.put("orgCode",SecurityUtil.getLoginUser().getOrgCode());
+		}
 		List<PbcSendZipDatFile> list=pbcSendZipDatFileMapper.selectBySendStatusSeqnoList(param);
 		Map<String,Set<String>> map=new HashMap<>();
 		//zip包 路径
