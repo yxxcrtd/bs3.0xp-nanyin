@@ -16,6 +16,7 @@ import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
@@ -199,7 +200,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				int i=0;
 				for(String single:creditModes){
 					i++;
-					creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.借款人类型,single);
+					creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.新人行增信机构类型,single);
 					if(i<creditModes.length){
 						creditMode=creditMode+GlobalConstant.COMMA;
 					}
@@ -321,7 +322,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				int i=0;
 				for(String single:creditModes){
 					i++;
-					creditMode=creditMode+ single + "-" +SysDataUtil.getNameFromDataDict(DictCode.借款人类型,single);
+					creditMode=creditMode+ single + "-" +SysDataUtil.getNameFromDataDict(DictCode.新人行增信机构类型,single);
 					if(i<creditModes.length){
 						creditMode= creditMode+GlobalConstant.COMMA;
 					}
@@ -537,6 +538,10 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 			return ;
 		/* 手工处理数据批量进行 update by gaojian 2019-06-22 begin */
 		int grps = infoList.size()/PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
+		map.put("updateStatus",DictCodeListExt2.报送状态_手工处理.getValue());
+		map.put("sendStatus",DictCodeListExt2.报送状态_未报送.getValue());
+		map.put("zipStatus", DictCodeListExt3.zip包状态_已使用.getValue());
+		map.put("returnStatus", DictCodeListExt2.人行报送反馈状态_人行通过.getValue());
 		int idx = 0;
 		for ( int i=0;i<grps;i++ ) {
 			List<PbcPrdBaseinfoSubNew> list1 = infoList.subList(idx,idx + PbcClassicsDataFileHelper.COMMIT_CONSTANTS);
@@ -550,7 +555,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				//更新DAT 表
 				pbcPrdBaseinfoSubNewMapper.updateBaseSubDat(list1);
 
-				pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_手工处理.getValue(),DictCodeListExt2.报送状态_未报送.getValue());
+				pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(map);
 			}
 			idx += 	PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		}
@@ -565,7 +570,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 			//更新DAT 表
 			pbcPrdBaseinfoSubNewMapper.updateBaseSubDat(list2);
 			//找到不包含未报送的zip数据,修改zip状态为手工处理
-			pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_手工处理.getValue(),DictCodeListExt2.报送状态_未报送.getValue());
+			pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(map);
 
 		}
 		/* 手工处理数据批量进行 update by gaojian 2019-06-22 end */
@@ -601,6 +606,11 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 		/* 取消手工处理批量进行 update by gaojian 2019-06-22 begin */
 		int grps = infoList.size()/PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		int idx = 0;
+
+		map.put("updateStatus",DictCodeListExt2.报送状态_未报送.getValue());
+		map.put("sendStatus",DictCodeListExt2.报送状态_未报送.getValue());
+		map.put("zipStatus", DictCodeListExt3.zip包状态_可编辑.getValue());
+
 		for ( int i=0;i<grps;i++ ) {
 			List<PbcPrdBaseinfoSubNew> list1 = infoList.subList(idx,idx + PbcClassicsDataFileHelper.COMMIT_CONSTANTS);
 			if ( list1.size()>0 ) {
@@ -614,7 +624,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				pbcPrdBaseinfoSubNewMapper.deleteBatchSubFromHisByUpdateTime(list1);
 
 				//找到不包含手工处理的zip数据,修改zip状态为未报送
-				pbcPrdBaseinfoSubNewMapper.updateZipDatStatusUn(DictCodeListExt2.报送状态_未报送.getValue(),DictCodeListExt2.报送状态_未报送.getValue());
+				pbcPrdBaseinfoSubNewMapper.updateZipDatStatusUn(map);
 			}
 			idx += 	PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		}
@@ -629,7 +639,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 			pbcPrdBaseinfoSubNewMapper.deleteBatchSubFromHisByUpdateTime(list2);
 
 			//找到不包含手工处理的zip数据,修改zip状态为未报送
-			pbcPrdBaseinfoSubNewMapper.updateZipDatStatusUn(DictCodeListExt2.报送状态_未报送.getValue(),DictCodeListExt2.报送状态_未报送.getValue());
+			pbcPrdBaseinfoSubNewMapper.updateZipDatStatusUn(map);
 		}
 		/* 取消手工处理批量进行 update by gaojian 2019-06-22 end */
 		logger.debug("取消手工处理结束:------------------------------"+new Date());

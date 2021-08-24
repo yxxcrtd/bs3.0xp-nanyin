@@ -139,17 +139,19 @@ $(function(){
 			var param = {};
 			var expArr=table.getAllCheckedRows();
 			var keyList = '';
-			layui.each(expArr,function(index,data){
-				if(index == expArr.length-1){
-					keyList = keyList + data.registSeqno+'';
+			for(var i=0;i<expArr.length;i++){
+				if(i == expArr.length-1){
+					keyList = keyList + expArr[i].registSeqno+'';
 				}else{
-					keyList = keyList + data.registSeqno+',';
+					keyList = keyList + expArr[i].registSeqno+',';
 				}
-				if (data.submitFeedbackStatus == "01" || data.submitFeedbackStatus == "03"){
-					Joyin.error("所选记录中包含已报送数据，请重新选择。");
+				if (!(expArr[i].sendStatus == '01'
+					|| (expArr[i].sendStatus == '02' && (expArr[i].submitFeedbackStatus == '02' || expArr[i].submitFeedbackStatus == '04')))) {
+					Joyin.error("所选数据包含已报送数据，请重新选择！");
 					return;
 				}
-			})
+			}
+
 			param.keyList = keyList;
 			Joyin.exportExcel("pedestrianExport",param);
 			Joyin.ajaxSync('searchPage',param, function(result){
@@ -183,21 +185,25 @@ $(function(){
 		             });
 	        	}
 	        }else{
+
 	        	for(var i=0;i<rows.length;i++){
-	              if ((rows[i].sendStatus == '01'
-	                  || (rows[i].sendStatus == '02' && (rows[i].submitFeedbackStatus == '02' || rows[i].submitFeedbackStatus == '04')))) {
-	  	        	var paramObj= {};
-		        	paramObj.flag = '01';
-		        	paramObj.infoList = rows;
-		          Joyin.confirm("请确认是否要手工处理选中产品的全部未报送的记录？", function() {
-		        	  layui.layer.open({type:3});
-		              Joyin.ajaxJson('doManul', paramObj, function() {
-		                  table.load();
-		                  layui.layer.closeAll();
-		              });
-		          });
-	              }
-	          }
+					if (!(rows[i].sendStatus == '01'
+						|| (rows[i].sendStatus == '02' && (rows[i].submitFeedbackStatus == '02' || rows[i].submitFeedbackStatus == '04')))) {
+						Joyin.error("所选数据包含已报送数据，请重新选择！");
+						return;
+					}
+	          	}
+
+				var paramObj= {};
+				paramObj.flag = '01';
+				paramObj.infoList = rows;
+				Joyin.confirm("请确认是否要手工处理选中产品的全部未报送的记录？", function() {
+					layui.layer.open({type:3});
+					Joyin.ajaxJson('doManul', paramObj, function() {
+						table.load();
+						layui.layer.closeAll();
+					});
+				});
 	        }
 		}
     };

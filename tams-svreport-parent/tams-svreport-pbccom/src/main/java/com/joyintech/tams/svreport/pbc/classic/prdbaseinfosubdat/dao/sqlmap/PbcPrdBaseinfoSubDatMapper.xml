@@ -801,7 +801,7 @@
 		decode(TRANSFER_TYPE,'01','1','99','2')TRANSFER_TYPE,
 		decode(cbc.IS_FIN_SUB_COMPANY,'01','2','1') IDENTI_FLAG,
 		sysdate STATUS_DATE,
-		DECODE(info.IS_MARKET_FUND，01,1,2) IS_MARKET_FUND,
+		DECODE(info.IS_MARKET_FUND,'01',1,2) IS_MARKET_FUND,
 		info.STATUS,
 		info.CREATE_USER,
 		info.UPDATE_USER,
@@ -875,7 +875,7 @@
   <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
   	select 
 	        t1.REGIST_SEQNO registSeqno,
-			t1.pbc_prod_id pbcProdId,
+			nvl(t2.pbc_code,t1.pbc_prod_id) pbcProdId,
 			t1.ISSUE_PARTY_ID issuePartyId,
 	        SI.INSTITUTION_NAME issuePartyName,
 			t1.PBC_PROD_TYPE pbcProdType,
@@ -1073,6 +1073,38 @@
   	 ORDER BY t1.PBC_SUBMIT_DEADLINE ASC, t1.UPDATE_TIME DESC
   	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
   </select>
+
+	<delete id="deletebySearch" parameterType="map">
+		DELETE FROM PBC_PRD_BASEINFO_SUB_DAT
+		where SEND_STATUS = '01'
+			and DAT_ZIP_CODE = #{zipCode,jdbcType=VARCHAR}
+			and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+			/***删除未报送的当前压缩包的数据**/
+	</delete>
+
+	<update id="updatebyZipCode" parameterType="map">
+		update PBC_SEND_ZIP_DAT_FILE
+		set ZIP_SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+			RETURN_ZIP_SEND_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+			SUBMIT_TIME = sysdate,
+			DAT_ZIP_STATUS = '01',
+			PIB_DETAIL_CNT = PIB_DETAIL_CNT - #{delNum,jdbcType=DECIMAL}
+		where DAT_ZIP_CODE = #{zipCode,jdbcType=VARCHAR}
+		and  DAT_ZIP_DAT_TYPE = #{zipType,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deletebyZipCode" parameterType="map">
+		delete FROM PBC_SEND_ZIP_DAT_FILE F
+		where F.ZIP_SEND_STATUS = '01'
+		  AND F.DAT_ZIP_TYPE = 'PI'
+		  and F.DAT_ZIP_CODE = #{zipCode,jdbcType=VARCHAR}
+		  and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+		AND NOT EXISTS(
+			SELECT 1 FROM PBC_PRD_BASEINFO_END_SUB_DAT D WHERE D.DAT_ZIP_CODE=F.DAT_ZIP_CODE AND D.SEND_STATUS IN ('02','03')
+			UNION ALL
+			SELECT 1 FROM PBC_PRD_BASEINFO_SUB_DAT D WHERE D.DAT_ZIP_CODE=F.DAT_ZIP_CODE AND D.SEND_STATUS IN ('02','03')
+		)
+	</delete>
   
   <!-- 手工处理 -->
   <update id="doManul" parameterType="map">
@@ -1419,7 +1451,7 @@
 		from PBC_PRD_BASEINFO_SUB_DAT dat
 		left join PBC_PRD_BASEINFO_SUB_NEW  prd on dat.prod_id=prd.prod_id
 		where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
-       order  by dat.PROD_NAME asc
+       order  by dat.PROD_ID asc
 	</select>
 
 	<select id="selectByDatZipCode" resultMap="BaseResultMap">

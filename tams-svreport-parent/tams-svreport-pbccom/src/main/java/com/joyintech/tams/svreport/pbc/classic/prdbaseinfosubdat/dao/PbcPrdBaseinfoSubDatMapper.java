@@ -34,6 +34,12 @@ public interface PbcPrdBaseinfoSubDatMapper {
     void deleteByProdid(@Param("deleteList") List<PbcPrdBaseinfoSubDat> subList);
     
     List<PbcPrdBaseinfoSubDat> searchPage(Map<String, Object> searchParam);
+	/***删除未报送的当前压缩包的数据**/
+	int deletebySearch(Map<String, Object> searchParam);
+
+	int updatebyZipCode(Map<String, Object> searchParam);
+
+	int deletebyZipCode(Map<String, Object> searchParam);
 
 	int cancelManul(List<PbcPrdBaseinfoSubNew> updateList);
 	
