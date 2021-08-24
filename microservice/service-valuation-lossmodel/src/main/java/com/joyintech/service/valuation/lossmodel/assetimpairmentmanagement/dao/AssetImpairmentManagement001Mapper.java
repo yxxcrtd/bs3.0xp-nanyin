@@ -64,4 +64,12 @@ public interface AssetImpairmentManagement001Mapper {
     List<BatchAssetInfoDto> getAssetInfo(Map<String, Object> param);
 
     List<BatchAssetInfoDto> getAssetInfoImpairment(Map<String, Object> param);
+
+
+    List<SelectOptionDto> getFinprodIdByLossResult(Map<String, Object> param);
+    List<SelectOptionDto> getProdIdByLossResult(Map<String, Object> param);
+    List<SelectOptionDto> getBusiNumByLossResult(Map<String, Object> param);
+
+
+
 }

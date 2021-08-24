@@ -146,8 +146,8 @@ $(function () {
                             $('#assetType').val('').trigger('change');
                         }
                     });*/
-                var arr = objects.split('/');
-                $('#assetType').val(arr[4]).trigger('change');
+                /*var arr = objects.split('/');*/
+                $('#assetType').val(objects).trigger('change');
             } else {
                 $('#assetId').val('').trigger('change');
             }
@@ -160,7 +160,7 @@ $(function () {
                 $('#bussNo').val('').trigger('change');
                 $('#ps').val('').trigger('change');
                 $('#tradeDate').val('').trigger('change');
-                $('#portfolioId').val('').trigger('change');
+               /* $('#portfolioId').val('').trigger('change');*/
             }
             // 画星星
             star();
@@ -180,7 +180,7 @@ $(function () {
                 $('#bussNo').val('').trigger('change');
                 $('#ps').val('').trigger('change');
                 $('#tradeDate').val('').trigger('change');
-                $('#portfolioId').val('').trigger('change');
+                /*$('#portfolioId').val('').trigger('change');*/
             }
             // 画星星
             star();
@@ -193,7 +193,7 @@ $(function () {
                 var arr = objects.split('/');
                 $('#ps').val(arr[0]).trigger('change');
                 $('#tradeDate').val(new Date(arr[1]).format('yyyy-MM-dd')).trigger('change');
-                $('#portfolioId').val(arr[2]).trigger('change');
+               /* $('#portfolioId').val(arr[2]).trigger('change');*/
             } else {
                 $('#ps').val('').trigger('change');
                 $('#tradeDate').val('').trigger('change');

@@ -87,6 +87,7 @@ public class AssetImpairmentManagement002Controller extends BaseController {
         super.setSelectOptionToModel(model, DictCode.是否);
         super.setSelectOptionToModel(model, DictCode.交易方向);
         super.setSelectOptionToModel(model, DictCode.资产五级分类);
+        super.setSelectOptionToModel(model, DictCode.证券品种);
         return super.init(model);
     }
 
@@ -152,6 +153,10 @@ public class AssetImpairmentManagement002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) AssetImpairmentManagement002Dto dto, BindingResult result) {
         AjaxResult ar = commonCheck(result, dto.getOperateType());
+
+
+
+
         return ar;
     }
 

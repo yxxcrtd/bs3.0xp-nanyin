@@ -54,4 +54,38 @@ public class AssetImpairmentManagement001Service extends CommonExportService<Ass
     public List<SelectOptionDto> getProdIdForImpairment(Map<String, Object> params){
         return restTemplate.postForList(ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/AssetImpairmentManagement001/getProdIdForImpairment", params, SelectOptionDto.class);
     }
+
+    /**
+     * 资产代码查询-下拉框-减值结果管理
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public List<SelectOptionDto> getFinprodIdByLossResult(Map<String, Object> params){
+        return restTemplate.postForList(ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/AssetImpairmentManagement001/getFinprodIdByLossResult", params, SelectOptionDto.class);
+    }
+
+    /**
+     * 产品代码查询-减值结果管理
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public List<SelectOptionDto> getProdIdByLossResult(Map<String, Object> params){
+        return restTemplate.postForList(ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/AssetImpairmentManagement001/getProdIdByLossResult", params, SelectOptionDto.class);
+    }
+
+    /**
+     * 有效业务编号查询-减值结果管理
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public List<SelectOptionDto> getBusiNumByLossResult(Map<String, Object> params){
+        return restTemplate.postForList(ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/AssetImpairmentManagement001/getBusiNumByLossResult", params, SelectOptionDto.class);
+    }
+
+
+
+
 }

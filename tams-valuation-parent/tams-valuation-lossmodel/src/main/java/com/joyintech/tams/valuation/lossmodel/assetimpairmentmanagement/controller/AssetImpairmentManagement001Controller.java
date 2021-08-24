@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.lossmodel.assetimpairmentmanagement.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -127,6 +128,17 @@ public class AssetImpairmentManagement001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) AssetImpairmentManagement001Dto dto, BindingResult result) {
+        if(dto.getOperateType() !=null ){
+            String message ="";
+            if("edit".equals(dto.getOperateType())){
+                message = "修改时,仅能修改减值日大于等于系统当前日期的数据!";
+            }else if("delete".equals(dto.getOperateType())){
+                message = "删除时,仅能删除减值日大于等于系统当前日期的数据!";
+            }
+            if(DateUtil.compareDate(DateUtil.format(dto.getDecDate()),DateUtil.format(new Date()))==-1){
+                return new AjaxResult(message, MessageType.错误消息);
+            }
+        }
         AjaxResult ar = commonCheck(result, dto.getOperateType());
         return ar;
     }
@@ -195,5 +207,49 @@ public class AssetImpairmentManagement001Controller extends BaseController {
         return ExportUtil.export(DateUtil.format(new Date()) + "-资产减值管理" + SystemGlobalConstant.POINT
                 + FileNameUtil.getFileExtName(outFile), outFile, true);
     }
+
+    /**
+     * @Description:资产代码查询-下拉框-减值结果管理
+     * @auther: yuzj
+     * @date: 2021/8/23
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("getFinprodIdByLossResult")
+    public List<SelectOptionDto> getFinprodIdByLossResult(@RequestParam Map<String, Object> params) throws Exception {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        return assetImpairmentManagement001Service.getFinprodIdByLossResult(params);
+    }
+
+    /**
+     * @Description:产品代码查询-减值结果管理
+     * @auther: yuzj
+     * @date: 2021/8/23
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("getProdIdByLossResult")
+    public List<SelectOptionDto> getProdIdByLossResult(@RequestParam Map<String, Object> params) throws Exception {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        return assetImpairmentManagement001Service.getProdIdByLossResult(params);
+    }
+
+    /**
+     * @Description:有效业务编号查询-减值结果管理
+     * @auther: yuzj
+     * @date: 2021/8/23
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("getBusiNumByLossResult")
+    public List<SelectOptionDto> getBusiNumByLossResult(@RequestParam Map<String, Object> params) throws Exception {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        return assetImpairmentManagement001Service.getBusiNumByLossResult(params);
+    }
+
+
 
 }
