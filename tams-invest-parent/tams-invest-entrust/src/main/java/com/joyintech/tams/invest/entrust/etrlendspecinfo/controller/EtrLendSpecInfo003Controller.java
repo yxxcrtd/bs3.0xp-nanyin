@@ -82,6 +82,15 @@ public class EtrLendSpecInfo003Controller extends BaseController {
     //如果是导入
     String tempList = getParam("tempList");
     EtrLendSpecInfoDto dto = etrLendSpecInfoService.getEntrustListData(tempList);
+    //导入时若交易场所为 “OTC场外”，期限品种应清空 add by yeming 20210824 start
+    if(dto.getSelectedItem() != null){
+        for (EtrLendSpecInfoDto infoDto : dto.getSelectedItem()) {
+            if(StringUtil.equals(infoDto.getTradeMarket(),DictCodeListExt1.交易场所_OTC场外.getValue())){
+                infoDto.setTermType("");
+            }
+        }
+    }
+    //导入时若交易场所为 “OTC场外”，期限品种应清空 add by yeming 20210824 end
     model.addAttribute(GlobalConstant.ENTITY, dto);
     model.addAttribute("etrLendSpecInfoDtoList", StringUtil.isEmptyList(
         dto.getSelectedItem()) ? null : JsonUtils.object2Json(dto.getSelectedItem()));
