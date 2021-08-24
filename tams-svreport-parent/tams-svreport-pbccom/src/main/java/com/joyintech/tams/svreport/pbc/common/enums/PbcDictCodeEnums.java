@@ -62,6 +62,6 @@ public enum PbcDictCodeEnums {
                 return codeEnums.code;
             }
         }
-        return null;
+        return "";
     }
 }

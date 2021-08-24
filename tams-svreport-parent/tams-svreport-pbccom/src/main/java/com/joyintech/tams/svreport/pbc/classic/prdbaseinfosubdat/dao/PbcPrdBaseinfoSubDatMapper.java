@@ -95,4 +95,6 @@ public interface PbcPrdBaseinfoSubDatMapper {
 
 	int updateByDatZipCode(PbcPrdBaseinfoSubDat record);
 
+	int updateByDatZipCodeAndProdId(PbcPrdBaseinfoSubDat record);
+
 }

@@ -104,4 +104,6 @@ public interface PbcPrdBaseinfoEndSubDatMapper {
 
 	int updateByDatZipCode(PbcPrdBaseinfoEndSubDat record);
 
+	int updateByDatZipCodeAndProdId(PbcPrdBaseinfoEndSubDat record);
+
 }

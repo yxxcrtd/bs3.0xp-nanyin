@@ -1038,4 +1038,31 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
             SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP}
         where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
     </update>
+    <update id="updateByDatZipCodeAndProdId" parameterType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat" >
+        update PBC_PRD_BASEINFO_END_SUB_DAT
+        set PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
+            MDATE = #{mdate,jdbcType=TIMESTAMP},
+            CCY = #{ccy,jdbcType=CHAR},
+            PROFIT = #{profit,jdbcType=DECIMAL},
+            PROFIT_CNY = #{profitCny,jdbcType=DECIMAL},
+            CUSTOM_PROFIT = #{customProfit,jdbcType=DECIMAL},
+            CUSTOM_PROFIT_CNY = #{customProfitCny,jdbcType=DECIMAL},
+            CUS_YEAR_YIELD = #{cusYearYield,jdbcType=DECIMAL},
+            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+            STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+            PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+            SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR},
+            CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
+          and PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </update>
 </mapper>

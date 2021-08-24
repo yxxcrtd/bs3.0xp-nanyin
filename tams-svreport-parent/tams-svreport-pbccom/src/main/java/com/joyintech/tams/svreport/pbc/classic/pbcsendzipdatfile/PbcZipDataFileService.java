@@ -606,13 +606,37 @@ public class PbcZipDataFileService {
 			if(StrUtil.isNotEmpty(creditFlag) && "1".equals(creditFlag)){
 				//组装数据
 				LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-				//序号
-				data.put("number","3");
-				//产品代码
-				data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+
 				//增信机构类型
-				data.put("creditType",subDat.getCreditType());
-				dataList.add(data);
+				String creditType = subDat.getCreditType();
+				if(StrUtil.isNotEmpty(creditType)){
+					String[] split = creditType.split(",");
+					if(split.length > 0){
+						for (int i = 0;i < split.length; i++) {
+							//序号
+							data.put("number","3");
+							//产品代码
+							data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+							data.put("creditType",split[i]);
+							dataList.add(data);
+						}
+					}else{
+						//序号
+						data.put("number","3");
+						//产品代码
+						data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+						data.put("creditType",subDat.getCreditType());
+						dataList.add(data);
+					}
+				}else{
+					//序号
+					data.put("number","3");
+					//产品代码
+					data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+					data.put("creditType",subDat.getCreditType());
+					dataList.add(data);
+				}
+
 			}
 		}
 		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
@@ -1025,6 +1049,7 @@ public class PbcZipDataFileService {
 							prodAssetpoolCode.setCodeType(DictCodeListExt3.代码类型_产品.getValue());
 							prodAssetpoolCode.setStatus("E");
 							prodAssetpoolCode.setCreateUser(SecurityUtil.getLoginUser().getUserName());
+							prodAssetpoolCode.setOrgCode(SecurityUtil.getLoginUser().getOrgCode());
 							prodAssetpoolCode.setCreateTime(new Date());
 							prodAssetpoolCode.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
 							prodAssetpoolCode.setUpdateTime(new Date());
