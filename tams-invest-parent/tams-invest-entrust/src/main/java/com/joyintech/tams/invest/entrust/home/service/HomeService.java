@@ -7,6 +7,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class HomeService extends BaseService<ITableRow> {
 
     public String getCheckedConfigList(Map<String, Object> param) {
         return restTemplate.postForObject(
-                ServiceApplication.COMMON_SERVICE_NAME + "/dynamicConfig/selectByDynId", param.get("id"),
+                ServiceApplication.COMMON_SERVICE_NAME + "/dynamicConfig/selectByDynId", param,
                 String.class);
     }
 
@@ -38,8 +39,10 @@ public class HomeService extends BaseService<ITableRow> {
      * @return
      */
     public String getChecked(String dynId) {
+        Map<String, Object> param = new HashedMap();
+        param.put("dynId", dynId);
         String str = restTemplate.postForObject(
-                ServiceApplication.COMMON_SERVICE_NAME + "/dynamicConfig/selectByDynId", dynId,
+                ServiceApplication.COMMON_SERVICE_NAME + "/dynamicConfig/selectByDynId", param,
                 String.class);
         Map m = JsonUtils.json2Object(str, Map.class);
         

@@ -1394,9 +1394,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
  	}
 
     public String selectByDynId(Map<String, Object> param) {
- 	    String dynId = param.get("dynId") + "";
         String url = ServiceApplication.COMMON_SERVICE_NAME + "/dynamicConfig/selectByDynId";
-        String str = restTemplate.postForObject(url, dynId, String.class);
+        String str = restTemplate.postForObject(url, param, String.class);
         return str;
     }
 
