@@ -11,7 +11,7 @@
             ROVIH.END_TIME       endTime,
             ROVIH.VALDATE        valdate,
             ROVIH.IMPDATE        impdate,
-            TO_CHAR(ROVIH.RESULT_INFO) as resultInfo,
+            ROVIH.RESULT_INFO as resultInfo,
             ROVIH.IMPORT_TYPE    importType,
             ROVIH.ERROR_CODE     errorCode
         from RSK_OUT_VALTBL_IMPORT_HIS ROVIH
