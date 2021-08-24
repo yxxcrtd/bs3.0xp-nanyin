@@ -2,24 +2,26 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='TYCPFIVEJYRZQFXSELL';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('TYCPFIVEJYRZQFXSELL','同一产品5交易日证券反向交易控制(卖)','N','','jjpei','99999',sysdate,'jjpei',sysdate,'','','N','String', '','DATABASE', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('TYCPFIVEJYRZQFXSELL','同一产品5交易日证券反向交易控制(卖)','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','N','String', '','DATABASE', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='TYCPFIVEJYRZQFXSELL';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPFIVEJYRZQFXSELL','01', 'SQL','SELECT 1 FROM DUAL', '','N','jjpei','99999',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPFIVEJYRZQFXSELL','01', 'SQL','SELECT 1 FROM DUAL', '','N','ysfu','C001',sysdate,'ysfu',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPFIVEJYRZQFXSELL','02', 'SQL','SELECT 1 FROM DUAL', '','N','jjpei','99999',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPFIVEJYRZQFXSELL','02', 'SQL','SELECT 1 FROM DUAL', '','N','ysfu','C001',sysdate,'ysfu',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPFIVEJYRZQFXSELL','03', 'SQL','SELECT 1 FROM DUAL', '','N','jjpei','99999',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPFIVEJYRZQFXSELL','03', 'SQL','SELECT 1 FROM DUAL', '','N','ysfu','C001',sysdate,'ysfu',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPFIVEJYRZQFXSELL','04', 'SQL','SELECT 1 FROM DUAL', '','N','jjpei','99999',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPFIVEJYRZQFXSELL','04', 'SQL','SELECT 1 FROM DUAL', '','N','ysfu','C001',sysdate,'ysfu',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPFIVEJYRZQFXSELL','05', 'SQL','SELECT 1 FROM DUAL', '','N','jjpei','99999',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPFIVEJYRZQFXSELL','05', 'SQL','SELECT 1 FROM DUAL', '','N','ysfu','C001',sysdate,'ysfu',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
 V_CONTENT_01_02_03 CLOB := 'WITH TEMP AS ( SELECT s.FINPROD_ID, s.CDATE
                   FROM ( SELECT m.FINPROD_ID, n.CDATE, ROW_NUMBER() OVER(PARTITION BY m.FINPROD_ID ORDER BY n.CDATE DESC) num
-                       FROM( SELECT FINPROD_ID,CASE  WHEN CALENDAR_ID IS NULL THEN ''01'' ELSE CALENDAR_ID END CALENDAR_ID
+                       FROM( SELECT FINPROD_ID,
+                       CASE  WHEN CALENDAR_ID IS NULL THEN ''01'' 
+                       ELSE CALENDAR_ID END CALENDAR_ID
                          FROM FIN_PRODUCT where FINPROD_ID=${assetCode}) m
                          INNER JOIN  MST_HOLIDAY n
                        ON m.CALENDAR_ID=n.CALENDAR_ID
@@ -28,39 +30,61 @@ V_CONTENT_01_02_03 CLOB := 'WITH TEMP AS ( SELECT s.FINPROD_ID, s.CDATE
                        AND n.IS_HOLIDAY=0) s
                       WHERE s.num<=5)
 SELECT  DISTINCT nvl(MIN(RVALUE),0) RVALUE FROM (
+ --1.交易表
 SELECT t2.UNIT_CPRICE RVALUE
            FROM TRD_PRODUCT_DEAL_ADD t1
            INNER JOIN TRD_PRODUCT_DEAL t2
-           ON t1.TRADE_ID=t2.TRADE_ID AND t2.TRADE_STATUS != ''03'' AND NVL(t2.IS_CANCEL,''N'') =''N''
+           ON t1.TRADE_ID=t2.TRADE_ID AND t2.TRADE_STATUS =''01'' AND NVL(t2.IS_CANCEL,''N'') =''N''
            INNER JOIN FIN_PRODUCT m
            ON  m.FINPROD_ID=t2.FINPROD_ID
            INNER JOIN temp p
            ON t2.FINPROD_ID = p.FINPROD_ID
            AND t2.TRADE_DATE=p.CDATE
-           WHERE  t2.PS IN (''T02'',''T03'')
-           AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
-           AND t1.PORTFOLIO_ID IN ${portfolioCode} and t2.FINPROD_ID=${assetCode}
+           WHERE  (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
+          AND t1.PORTFOLIO_ID IN ${portfolioCode} and t2.FINPROD_ID=${assetCode}
 UNION ALL
+ --2.日间交易表
+SELECT t2.UNIT_CPRICE RVALUE
+           FROM TRD_PRODUCT_TEMP_DEAL_ADD t1
+           INNER JOIN TRD_PRODUCT_TEMP_DEAL t2
+           ON t1.TRADE_ID=t2.TRADE_ID AND t2.TRADE_STATUS =''01'' AND NVL(t2.IS_CANCEL,''N'') =''N''
+           INNER JOIN FIN_PRODUCT m
+           ON  m.FINPROD_ID=t2.FINPROD_ID
+           INNER JOIN temp p
+           ON t2.FINPROD_ID = p.FINPROD_ID
+           AND t2.TRADE_DATE=p.CDATE
+           WHERE  (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
+          AND t1.PORTFOLIO_ID IN ${portfolioCode} and t2.FINPROD_ID=${assetCode}
+UNION ALL
+--3.流程交易表
 SELECT t2.UNIT_CPRICE RVALUE
            FROM WFL_TRD_PRODUCT_DEAL_ADD t1
            INNER JOIN WFL_TRD_PRODUCT_DEAL t2
-           ON t1.TRADE_ID=t2.TRADE_ID AND t2.TRADE_STATUS != ''03'' AND NVL(t2.IS_CANCEL,''N'') =''N''
+           ON t1.TRADE_ID=t2.TRADE_ID AND t2.TRADE_STATUS =''01'' AND NVL(t2.IS_CANCEL,''N'') =''N''
            INNER JOIN SYS_WFL_BUSINESS_LIST swbl on t2.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
            INNER JOIN FIN_PRODUCT m
            ON  m.FINPROD_ID=t2.FINPROD_ID
            INNER JOIN temp p
            ON t2.FINPROD_ID = p.FINPROD_ID
            AND t2.TRADE_DATE=p.CDATE
-           WHERE  t2.PS IN (''T02'',''T03'')
-           AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
-           AND t1.PORTFOLIO_ID IN ${portfolioCode} and t2.FINPROD_ID=${assetCode}
+           WHERE  (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
+          AND t1.PORTFOLIO_ID IN ${portfolioCode} and t2.FINPROD_ID=${assetCode}
    )';
 
 ----事后(日间)
 V_CONTENT_04 CLOB := 'WITH TEMP AS (SELECT s.FINPROD_ID, s.CDATE
                            FROM ( SELECT m.FINPROD_ID, n.CDATE, ROW_NUMBER() OVER(PARTITION BY m.FINPROD_ID ORDER BY n.CDATE DESC) num
                                    FROM( SELECT FINPROD_ID,CASE  WHEN CALENDAR_ID IS NULL THEN ''01'' ELSE CALENDAR_ID END CALENDAR_ID
-                                          FROM FIN_PRODUCT WHERE FINPROD_TYPE2 IN (''F01'',''F10'')) m
+                                          FROM FIN_PRODUCT WHERE FINPROD_TYPE2 IN (''F01'',''F32'',''F10'')) m
                                           INNER JOIN  MST_HOLIDAY n
                                           ON m.CALENDAR_ID=n.CALENDAR_ID
                                           AND n.CDATE<=DATE''${valDate}''
@@ -79,10 +103,12 @@ FROM(SELECT A.PORTFOLIO_ID,B.FINPROD_ID,A.FINPROD_NAME, A.MAX_BUY, B.MIN_SELL
                          INNER JOIN TEMP p
                          ON t2.FINPROD_ID = p.FINPROD_ID
                          AND t2.TRADE_DATE=p.CDATE
-                         WHERE  t2.PS IN (''T01'',''T46'',''T47'',''T48'')
-             AND t2.TRADE_STATUS!=''03''
+                         WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
+            AND t2.TRADE_STATUS =''01''
                          AND NVL(t2.IS_CANCEL,''N'') =''N''
-                         AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
                          AND t1.PORTFOLIO_ID IN ${portfolioCode}
                          UNION ALL
              SELECT t1.PORTFOLIO_ID, t2.FINPROD_ID , m.FINPROD_NAME,t2.UNIT_CPRICE
@@ -94,26 +120,30 @@ FROM(SELECT A.PORTFOLIO_ID,B.FINPROD_ID,A.FINPROD_NAME, A.MAX_BUY, B.MIN_SELL
                          INNER JOIN TEMP p
                          ON t2.FINPROD_ID = p.FINPROD_ID
                          AND t2.TRADE_DATE=p.CDATE
-                         WHERE  t2.PS IN (''T01'',''T46'',''T47'',''T48'')
-             AND t2.TRADE_STATUS!=''03''
+                         WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
+           AND t2.TRADE_STATUS =''01''
                          AND NVL(t2.IS_CANCEL,''N'') =''N''
-                         AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
                          AND t1.PORTFOLIO_ID IN ${portfolioCode}
                          UNION ALL
                          SELECT t1.PORTFOLIO_ID, t2.FINPROD_ID , m.FINPROD_NAME, t2.UNIT_CPRICE
                          FROM WFL_TRD_PRODUCT_DEAL_ADD t1
                          INNER JOIN  WFL_TRD_PRODUCT_DEAL t2
                          ON t1.TRADE_ID=t2.TRADE_ID
-                         AND t2.TRADE_STATUS != ''03''
+                         AND t2.TRADE_STATUS =''01''
                INNER JOIN SYS_WFL_BUSINESS_LIST swbl on t2.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
                          INNER JOIN  FIN_PRODUCT m
                          ON m.FINPROD_ID=t2.FINPROD_ID
                          INNER JOIN TEMP p
                          ON t2.FINPROD_ID = p.FINPROD_ID
                          AND t2.TRADE_DATE=p.CDATE
-                         WHERE t2.PS IN (''T01'',''T46'',''T47'',''T48'')
-                         AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
-                         AND t1.PORTFOLIO_ID IN ${portfolioCode})
+                         WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
+           AND t1.PORTFOLIO_ID IN ${portfolioCode})
          GROUP BY PORTFOLIO_ID,FINPROD_ID,FINPROD_NAME) A
 
     INNER JOIN
@@ -127,10 +157,12 @@ FROM(SELECT A.PORTFOLIO_ID,B.FINPROD_ID,A.FINPROD_NAME, A.MAX_BUY, B.MIN_SELL
                          INNER JOIN TEMP p
                          ON t2.FINPROD_ID = p.FINPROD_ID
                          AND t2.TRADE_DATE=p.CDATE
-                         WHERE  t2.PS IN (''T02'',''T03'')
-             AND t2.TRADE_STATUS!=''03''
+                         WHERE  (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
+           AND t2.TRADE_STATUS =''01''
                          AND NVL(t2.IS_CANCEL,''N'') =''N''
-                         AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
                          AND t1.PORTFOLIO_ID IN ${portfolioCode}
                          UNION ALL
              SELECT t1.PORTFOLIO_ID, t2.FINPROD_ID , m.FINPROD_NAME,t2.UNIT_CPRICE
@@ -142,26 +174,30 @@ FROM(SELECT A.PORTFOLIO_ID,B.FINPROD_ID,A.FINPROD_NAME, A.MAX_BUY, B.MIN_SELL
                          INNER JOIN TEMP p
                          ON t2.FINPROD_ID = p.FINPROD_ID
                          AND t2.TRADE_DATE=p.CDATE
-                         WHERE  t2.PS IN (''T02'',''T03'')
-             AND t2.TRADE_STATUS!=''03''
+                         WHERE  (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
+          AND t2.TRADE_STATUS =''01''
                          AND NVL(t2.IS_CANCEL,''N'') =''N''
-                         AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
                          AND t1.PORTFOLIO_ID IN ${portfolioCode}
                          UNION ALL
                          SELECT t1.PORTFOLIO_ID, t2.FINPROD_ID , m.FINPROD_NAME, t2.UNIT_CPRICE
                          FROM WFL_TRD_PRODUCT_DEAL_ADD t1
                          INNER JOIN  WFL_TRD_PRODUCT_DEAL t2
                          ON t1.TRADE_ID=t2.TRADE_ID
-                         AND t2.TRADE_STATUS != ''03''
+                         AND t2.TRADE_STATUS =''01''
                INNER JOIN SYS_WFL_BUSINESS_LIST swbl on t2.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
                          INNER JOIN  FIN_PRODUCT m
                          ON m.FINPROD_ID=t2.FINPROD_ID
                          INNER JOIN  TEMP p
                          ON t2.FINPROD_ID = p.FINPROD_ID
                          AND t2.TRADE_DATE=p.CDATE
-                         WHERE t2.PS IN (''T02'',''T03'')
-                         AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
-                         AND t1.PORTFOLIO_ID IN ${portfolioCode})
+                         WHERE  (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
+          AND t1.PORTFOLIO_ID IN ${portfolioCode})
          GROUP BY PORTFOLIO_ID,FINPROD_ID,FINPROD_NAME) B
         ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
         AND A.FINPROD_ID =B.FINPROD_ID
@@ -172,7 +208,7 @@ GROUP BY  FINPROD_ID, FINPROD_NAME';
 V_CONTENT_05 CLOB := 'WITH TEMP AS (SELECT s.FINPROD_ID, s.CDATE
                            FROM ( SELECT m.FINPROD_ID, n.CDATE, ROW_NUMBER() OVER(PARTITION BY m.FINPROD_ID ORDER BY n.CDATE DESC) num
                                    FROM( SELECT FINPROD_ID,CASE  WHEN CALENDAR_ID IS NULL THEN ''01'' ELSE CALENDAR_ID END CALENDAR_ID
-                                          FROM FIN_PRODUCT WHERE FINPROD_TYPE2 IN (''F01'',''F10'')) m
+                                          FROM FIN_PRODUCT WHERE FINPROD_TYPE2 IN (''F01'',''F32'',''F10'')) m
                                           INNER JOIN  MST_HOLIDAY n
                                           ON m.CALENDAR_ID=n.CALENDAR_ID
                                           AND n.CDATE<=DATE''${valDate}''
@@ -191,10 +227,12 @@ FROM(SELECT A.PORTFOLIO_ID,B.FINPROD_ID,A.FINPROD_NAME, A.MAX_BUY, B.MIN_SELL
            INNER JOIN TEMP p
            ON t2.FINPROD_ID = p.FINPROD_ID
            AND t2.TRADE_DATE=p.CDATE
-           WHERE  t2.PS IN (''T01'',''T46'',''T47'',''T48'')
-           AND t2.TRADE_STATUS!=''03''
+           WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
+           AND t2.TRADE_STATUS =''01''
                      AND NVL(t2.IS_CANCEL,''N'') =''N''
-           AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
            AND t1.PORTFOLIO_ID IN ${portfolioCode})
        GROUP BY PORTFOLIO_ID,FINPROD_ID,FINPROD_NAME) A
         INNER JOIN
@@ -216,10 +254,12 @@ FROM(SELECT A.PORTFOLIO_ID,B.FINPROD_ID,A.FINPROD_NAME, A.MAX_BUY, B.MIN_SELL
                       WHERE s.num<=5) p
            ON t2.FINPROD_ID = p.FINPROD_ID
            AND t2.TRADE_DATE=p.CDATE
-           WHERE  t2.PS IN (''T02'',''T03'')
-           AND t2.TRADE_STATUS!=''03''
+           WHERE   (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
+          AND t2.TRADE_STATUS =''01''
                      AND NVL(t2.IS_CANCEL,''N'') =''N''
-           AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
            AND t1.PORTFOLIO_ID IN ${portfolioCode})
        GROUP BY PORTFOLIO_ID,FINPROD_ID,FINPROD_NAME) B
         ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
