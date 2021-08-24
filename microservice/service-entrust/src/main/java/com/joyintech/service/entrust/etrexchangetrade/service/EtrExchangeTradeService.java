@@ -695,6 +695,11 @@ public class EtrExchangeTradeService extends BaseService{
         param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
         param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
         param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+        String portfolioId = (String)param.get("portfolioId");
+        if (StringUtil.isNotEmpty(portfolioId)) {
+            param.put("portfolioIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
+        }
         return super.queryForPage(page, length, () -> etrExchangeTradeMapper.selectEtrExchange(param));
     }
 

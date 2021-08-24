@@ -59,6 +59,7 @@ public class EtrExchangeTrade002Controller extends BaseController{
     public String init(Model model) {
         this.setSelectOptionToModel(model,BussinessDictCode.交易场所);
         this.setSelectOptionToModel(model, DictCode.金融产品类型_投管用);
+        this.setSelectOptionToModel(model, DictCode.交易方向);
         EtrExchangeTrade002Dto exchangeTradeDto002 = new EtrExchangeTrade002Dto();
         model.addAttribute("entity",exchangeTradeDto002);
         model.addAttribute("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());

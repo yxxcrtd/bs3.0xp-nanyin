@@ -373,4 +373,32 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
 	public void setAssetType(String assetType) {
 		this.assetType = assetType;
 	}
+
+    //add by chenjiaxing 20210824 start
+    /**
+     * 证券账户代码
+     */
+    private String secAcctId;
+
+    /**
+     * 证券账户名称
+     */
+    private String secAcctName;
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+    }
+
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
+    }
+    //add by chenjiaxing 20210824 end
 }

@@ -83,31 +83,81 @@
 			<div class="layui-tab-content">
 				<!-- 指令管理 -->
 				<div class="layui-tab-item layui-show">
-					<div class="joyin-form-wrap layui-fluid">
+					<div class="layui-col-md12 form-button-area zhiling-transfer-form">
+						<a id="EtrExchangeTrade003_btn_revoke" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="撤回"></span></a>
+						<a id="EtrExchangeTrade003_btn_close" class="layui-btn layui-btn-sm ">
+							<i class="iconfont icon-close"></i><span data-th-text="#{SysCommon.close}"></span></a>
+						<a id="EtrExchangeTrade003_btn_import" class="layui-btn layui-btn-sm btn-import">
+							<i class="iconfont icon-import"></i><span data-th-text="#{EtrInvestBondInfo001.import}">导入</span></a>
+					</div>
+					<div class="joyin-form-wrap joyin-filter-form condition-area curr-form zhiling-transfer-form">
 						<form class="layui-form" id="searchForm">
-							<div class="pro-module-wrapper pro-module-block" >
-								<div class="layui-col-md12 form-button-area layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin-top: 15px;">
-									<a id="EtrExchangeTrade003_btn_revoke" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="撤回"></span></a>
-									<a id="EtrExchangeTrade003_btn_close" class="layui-btn layui-btn-sm ">
-										<i class="iconfont icon-close"></i><span data-th-text="#{SysCommon.close}"></span></a>
-									<a id="EtrExchangeTrade003_btn_import" class="layui-btn layui-btn-sm btn-import">
-										<i class="iconfont icon-import"></i><span data-th-text="#{EtrInvestBondInfo001.import}">导入</span></a>
-									<div style="float: right;">
-										<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="" title="全部" checked>
-										<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="02" title="待接收" >
-										<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="03" title="已接收" >
-										<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="04" title="已完成" >
-										<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="05" title="已退回" >
-										<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="06" title="已关闭" >
-										<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="07" title="已撤回" >
-										<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="08" title="流程中" >
+							<div class="layui-form-item">
+								<div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3" style=" width: 25%; padding:0px;">
+									<label class="layui-form-label form-lable"
+										   data-th-text="#{EtrExchangeTrade002.portfolioName}">组合名称</label>
+									<div class="layui-input-inline input-inline">
+										<select type="text" id="portfolioId_zhiling" name="portfolioId"
+												class="layui-input form-input input-select"
+												placeholder="请输入内容"
+												data-th-placeholder="#{SysCommon.placeholder}"
+												data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId}"
+												data-th-value="${entity?.portfolioId}" multiple="true">
+										</select>
 									</div>
 								</div>
-								<div>
-									<table class="layui-table" id="dateTable"></table>
+								<div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3" style=" width: 25%; padding:0px;">
+									<label class="layui-form-label form-lable"
+										   data-th-text="#{EtrExchangeTrade002.finprodType}">资产类型</label>
+									<div class="layui-input-inline input-inline">
+										<select type="text" id="finprodType2_zhiling" name="finprodType2"
+												class="layui-input form-input input-select"
+												placeholder="请输入内容"
+												data-th-placeholder="#{SysCommon.placeholder}"
+												data-th-data-result="${FINPROD_TYPE_TG}">
+										</select>
+									</div>
+								</div>
+								<div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3" style=" width: 25%; padding:0px;">
+									<label class="layui-form-label form-lable">委托方向</label>
+									<div class="layui-input-inline input-inline">
+										<select type="text" id="ps_zhiling" name="ps"
+												class="layui-input form-input input-select"
+												placeholder="请输入内容"
+												data-th-placeholder="#{SysCommon.placeholder}"
+												data-th-data-result='${PS}'>
+										</select>
+									</div>
+								</div>
+								<div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3" style=" width: 25%; padding:0px;">
+									<label class="layui-form-label form-lable"
+										   data-th-text="#{EtrExchangeTrade002.finpordName}">资产名称</label>
+									<div class="layui-input-inline input-inline">
+										<select type="text" id="secId_zhiling"
+												name="secId" class="layui-input form-input input-select"
+												placeholder="请输入内容"
+												data-th-placeholder="#{SysCommon.placeholder}"
+												data-th-data-url="@{'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/getFinprodMarketInfoPosition'}"
+												formatoption=false></select>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<div style="padding-top: 3px;margin-left:20px; padding:0px;">
+									<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="" title="全部" checked>
+									<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="02" title="待接收" >
+									<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="03" title="已接收" >
+									<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="04" title="已完成" >
+									<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="05" title="已退回" >
+									<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="06" title="已关闭" >
+									<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="07" title="已撤回" >
+									<input type="radio" name="entrustStatus" style="float: right;" lay-filter="entrustStatus" value="08" title="流程中" >
 								</div>
 							</div>
 						</form>
+					</div>
+					<div>
+						<table class="layui-table" id="dateTable"></table>
 					</div>
 				</div>
 				<!-- 持仓 -->

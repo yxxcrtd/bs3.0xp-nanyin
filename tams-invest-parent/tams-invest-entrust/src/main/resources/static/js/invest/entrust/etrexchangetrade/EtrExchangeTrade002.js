@@ -19,6 +19,10 @@
 	function getSearchParams() {
         var data = $.serializeToObject('#searchForm');
         data.entrustStatus = $('#searchForm').find('input:radio:checked').val();
+        data.portfolioId = data.portfolioId ? data.portfolioId.join(','):'';
+        data.finprodType2 = data.finprodType2;
+        data.secId = data.secId;
+        data.ps = data.ps;
         return data;
     }
 
@@ -81,13 +85,15 @@
                 },sortField:'dealPercent', width : 150}//证券账户名称
 
             ,{field:'portfolioName', title: 'EtrExchangeTrade003.portfolioName', sortField:'PORTFOLIO_NAME',width : 150}//资产代码
+            ,{field:'secAcctId', title: 'EtrExchangeTrade003.secAcctId', sortField:'SEC_ACCT_ID',width : 200}//证券账户代码
+            ,{field:'secAcctName', title: 'EtrExchangeTrade003.secAcctName', sortField:'SEC_ACCT_NAME',width : 200}//证券账户名称
             ,{field:'finprodAbbr', title: 'EtrExchangeTrade003.finpordName',sortField:'FINPROD_ABBR', width : 150}//资产名称
             ,{field:'assetTypeString', title: 'EtrExchangeTrade003.finprodType2',sortField:'ASSET_TYPE', width : 100}//投资目的
             ,{field:'tradeMarketString', title: 'EtrExchangeTrade003.tradeMarket',sortField:'TRADE_MARKET', width : 100}//资产名称
             ,{field:'tradePlat', title: 'EtrExchangeTrade003.tradePlat',sortField:'TRADE_PLAT', width : 100,visible:false}//投资目的
             ,{field:'tradePlatString', title: 'EtrExchangeTrade003.tradePlat',sortField:'TRADE_PLAT', width : 100}//投资目的
-            ,{field:'ps', title: 'EtrExchangeTrade003.ps',sortField:'PS',visible:false, width : 100}//投资目的
-            ,{field:'psStr', title: 'EtrExchangeTrade003.ps',sortField:'PS', width : 100}//投资目的
+            ,{field:'ps', title: 'EtrExchangeTrade003.ps2',sortField:'PS',visible:false, width : 100}//投资目的
+            ,{field:'psStr', title: 'EtrExchangeTrade003.ps2',sortField:'PS', width : 100}//投资目的
             ,{field:'priceModel', title: 'EtrExchangeTrade003.priceModel',visible:false,sortField:'PRICE_MODEL', width : 100}//投资目的
             ,{field:'priceModelString', title: 'EtrExchangeTrade003.priceModel',sortField:'PRICE_MODEL', width : 100}//投资目的
             ,{field:'price', title: 'EtrExchangeTrade003.price',type:'number',digit:4, width : 120,sortField:'PRICE',
@@ -165,8 +171,8 @@
         cols:[
              {field:'portfolioId', title: 'EtrExchangeTrade002.portfolioId', sortField:'portfolioId',width : 100}//组合名称
             ,{field:'portfolioName', title: 'EtrExchangeTrade002.portfolioName', sortField:'portfolioName',width : 100}//组合名称
-            //,{field:'secAcctId', title: 'EtrExchangeTrade002.secAcctId', sortField:'secAcctId',width : 130}//证券账户代码
-           // ,{field:'secAcctName', title: 'EtrExchangeTrade002.secAcctName',sortField:'secAcctName', width : 130}//证券账户名称
+            ,{field:'secAcctId', title: 'EtrExchangeTrade002.secAcctId', sortField:'secAcctId',width : 130}//证券账户代码
+            ,{field:'secAcctName', title: 'EtrExchangeTrade002.secAcctName',sortField:'secAcctName', width : 130}//证券账户名称
             ,{field:'tradeMarketStr', title: 'EtrExchangeTrade002.tradeMarket',sortField:'tradeMarket', width : 100}//交易市场
             ,{field:'finprodId', title: 'EtrExchangeTrade002.finprodId', width : 180,visible:false}//资产代码
             ,{field:'finpordName', title: 'EtrExchangeTrade002.finpordName', width : 160,visible:false}//资产名称
@@ -348,6 +354,7 @@
     $(function() {
         $('.zlgl-transfer-form #EtrExchangeTrade002_btn_filter').hide();
         $('.zlgl-transfer-form #EtrExchangeTrade002_btn_export').hide();
+        $('.zhiling-transfer-form #EtrExchangeTrade002_btn_export').hide();
     	// 切换到质押持仓，查询页面
         layui.use(['element', 'form'], function() {
             // 绑定交易平台TAB切换事件
@@ -364,7 +371,7 @@
         });
         
         // 绑定查询按钮
-        $('#EtrExchangeTrade002_btn_search').click(function() {
+        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_search').click(function() {
         	refreshPositionsTable();//加载表格
         });
         // 绑定债券质押查询按钮
@@ -396,6 +403,11 @@
          */
         $('#EtrExchangeTrade003_btn_revoke').click(function() {
             window.parent.revokeEtr();
+        });
+
+        // 绑定查询按钮
+        $('.zhiling-transfer-form #EtrExchangeTrade002_btn_search').click(function() {
+            myRefresh();
         });
 
         init();
