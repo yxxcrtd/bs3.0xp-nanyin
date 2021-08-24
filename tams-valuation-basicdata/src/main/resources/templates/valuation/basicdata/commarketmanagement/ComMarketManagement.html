@@ -23,7 +23,7 @@
 						<label class="layui-form-label form-lable">对象名称</label>
 						 <div class="layui-input-inline input-inline">
                             <input type="text" id="finprodName" name="finprodName" class="layui-input form-input input-lenovoselect" data-th-value='${finprodId}'  
-                            	placeholder="请输入内容" data-th-data-url="@{/common/basicdata/commarketmanagement/ComMarketManagement/getFinprodName}"
+                            	placeholder="请输入内容" data-th-data-url="@{/valuation/basicdata/commarketmanagement/ComMarketManagement/getFinprodName}"
                             	data-th-data-effectivefieldsalias='|{"code":"#{ComMarketManagement.secId}","shortName":"#{ComMarketManagement.finprodName}"}|'
                              		data-th-placeholder="#{SysCommon.placeholder}">                            
                         </div>
@@ -107,7 +107,7 @@
   		<script data-th-inline="javascript" type="text/javascript">
         	var REM_TYPE = [[${remType}]];
     	</script>
-         <script data-th-src="@{/js/common/basicdata/commarketmanagement/ComMarketManagement.js}" type="text/javascript"></script>
+         <script data-th-src="@{/js/valuation/basicdata/commarketmanagement/ComMarketManagement.js}" type="text/javascript"></script>
     </div>
     </body>
 </html>

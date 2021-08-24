@@ -1,4 +1,4 @@
-package com.joyintech.tams.common.basicdata.commarketmanagement.dto;
+package com.joyintech.service.valuation.basicdata.commarketmanagement.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.SysDataUtil;
@@ -13,7 +13,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @see ComMarketManagementDto
  * @since 1.0
  */
-public class ComMarketManagementDto extends BaseEntity implements ProcessEntity{
+public class ComMarketManageDto extends BaseEntity implements ProcessEntity{
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
@@ -47,20 +47,6 @@ public class ComMarketManagementDto extends BaseEntity implements ProcessEntity{
     private String noticeDate;
     
     /**
-     * 评级机构
-     */
-    private String gradeOrgId;
-    
-    /**
-     * 评级机构名称
-     */
-    private String gradeOrgName;
-    /**
-     * 评级日期
-     */
-    private String gradeDate;
-    
-    /**
      * 前次评级日期
      */
     private String previousgradeDate;
@@ -74,6 +60,20 @@ public class ComMarketManagementDto extends BaseEntity implements ProcessEntity{
      * 前次评级机构
      */
     private String previousgradeOrgName;
+    
+    /**
+     * 评级机构
+     */
+    private String gradeOrgId;
+    
+    /**
+     * 评级机构名称
+     */
+    private String gradeOrgName;
+    /**
+     * 评级日期
+     */
+    private String gradeDate;
     
     /**
      * 评级日期
@@ -167,17 +167,10 @@ public class ComMarketManagementDto extends BaseEntity implements ProcessEntity{
     private String sqlSortString;
     
     
-    /**
-     * 获取 previousgradeDate
-     * @return previousgradeDate.
-     */
-    public String getPreviousgradeDate() {
-        return previousgradeDate;
-    }
-
-
-
-
+    
+    
+    
+    
     
     
     /**
@@ -205,6 +198,18 @@ public class ComMarketManagementDto extends BaseEntity implements ProcessEntity{
 
 
 
+    /**
+     * 获取 previousgradeDate
+     * @return previousgradeDate.
+     */
+    public String getPreviousgradeDate() {
+        return previousgradeDate;
+    }
+
+
+
+
+    
     /**
      * 设置 previousgradeDate
      * @param previousgradeDate previousgradeDate
@@ -272,30 +277,8 @@ public class ComMarketManagementDto extends BaseEntity implements ProcessEntity{
         return gradeExpectation;
     }
 
-    /**
-	 * 变动方向名称
-	 * @return
-	 */
-	public String getDirectionChangeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.变动方向, getDirectionChange());
-	}
 
-	/**
-	 * 评级展望名称
-	 * @return
-	 */
-	public String getGradeExpectationStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.评级展望, getGradeExpectation());
-	}
-	
-	//START modify by wj 20200416 评级机构由字典中取值。 
-	/**
-	 * 评级展望名称
-	 * @return
-	 */
-	public String getGradeOrgStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.评级机构, getGradeOrgId());
-	}
+
     
     /**
      * 设置 gradeExpectation
@@ -591,12 +574,6 @@ public class ComMarketManagementDto extends BaseEntity implements ProcessEntity{
      * 评级结果名称
      * @return
      */
-    public String getPreviousgradeResult() {
-        return SysDataUtil.getNameFromDataDict(DictCode.评级结果, getPreviousgradeResultDis());
-    }/**
-     * 评级结果名称
-     * @return
-     */
     public String getGradeResultDis() {
         return SysDataUtil.getNameFromDataDict(DictCode.评级结果, getGradeResult());
     }
@@ -614,14 +591,6 @@ public class ComMarketManagementDto extends BaseEntity implements ProcessEntity{
      * @return String  
      */
     public String getShortLongTermName() {
-        return SysDataUtil.getNameFromDataDict(DictCode.长期短期, getShortLongTerm());
-    }
-    
-    /**
-     * 获取评级类型
-     * @return String  
-     */
-    public String getShortLongTermStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.长期短期, getShortLongTerm());
     }
 

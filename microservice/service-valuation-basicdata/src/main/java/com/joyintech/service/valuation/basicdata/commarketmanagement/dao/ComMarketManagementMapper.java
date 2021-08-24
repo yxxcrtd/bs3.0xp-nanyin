@@ -1,8 +1,8 @@
-package com.joyintech.service.basicdata.commarketmanagement.dao;
+package com.joyintech.service.valuation.basicdata.commarketmanagement.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.basicdata.commarketmanagement.dto.ComMarketManageDto;
+import com.joyintech.service.valuation.basicdata.commarketmanagement.dto.ComMarketManageDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
