@@ -1,4 +1,3 @@
-<<<<<<< tams-common/src/main/java/com/joyintech/tams/constant/DictCode.java
 /*
  * 文件名：DictCode.java 版权：Copyright 2016-2017 JoyinTech. Co. Ltd. All Rights Reserved. 描述：中信银行资管系统
  * 修改人：何阳阳 修改时间：2016年10月19日 修改内容：新建 系统名称：中信银行资管系统
@@ -1500,7 +1499,6 @@ public enum DictCode implements BaseDictCode {
 	 */
 	估值币种映射("SUBJECT_CCY_TYPE"),
 	/**
-	/**
 	 * 监督频率
 	 */
 	监督频率("SUP_FREQUENCY"),
@@ -2129,7 +2127,7 @@ public enum DictCode implements BaseDictCode {
 	 * 交易流通场所(中债)
 	 */
 	交易流通场所_中债("SVR_TRADE_MARKET"),
-	/**
+	/**	估值币种映射
 	 * 投资端交易类型
 	 */
 	投资端交易类型("SVR_TRADE_TYPE_INVEST"),
@@ -3343,4 +3341,3 @@ public enum DictCode implements BaseDictCode {
 		return model.addAttribute(dictCode.getValue(), JsonUtils.objectArray2Json(options.toArray()));
 	}
 }
-
