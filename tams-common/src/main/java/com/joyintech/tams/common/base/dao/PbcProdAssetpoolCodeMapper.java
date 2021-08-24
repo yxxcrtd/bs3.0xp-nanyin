@@ -2,6 +2,7 @@ package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.PbcProdAssetpoolCode;
 import com.joyintech.tams.common.base.entity.PbcProdAssetpoolCodeKey;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface PbcProdAssetpoolCodeMapper {
 
     int updateByPrimaryKey(PbcProdAssetpoolCode record);
 
-    List<PbcProdAssetpoolCode> selectByInsideProdList(List<String> list);
+    List<PbcProdAssetpoolCode> selectByInsideProdList(@Param("list") List<String> list,@Param("orgCode")String orgCode);
 
     int batchInsertPbcCode(List<PbcProdAssetpoolCode> list);
 }
