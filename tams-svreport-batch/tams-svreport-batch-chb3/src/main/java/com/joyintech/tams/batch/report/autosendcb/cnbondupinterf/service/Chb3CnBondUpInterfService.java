@@ -329,7 +329,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
                     continue;
             }
             String suffix = FileNameUtil.getFileExtName(realName);
-            InputStream in = null;
+//            InputStream in = null;
             try {
                 in = new FileInputStream(file);
 

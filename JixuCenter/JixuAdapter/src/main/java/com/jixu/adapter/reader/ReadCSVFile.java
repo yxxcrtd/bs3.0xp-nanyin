@@ -40,7 +40,7 @@ public class ReadCSVFile extends ReadFileBasic {
 		FileInputStream fis = null;
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		for (String filepath : filePaths) {
-			FileInputStream fis = null;
+//			FileInputStream fis = null;
 			try {
 				fis =new FileInputStream(new SafelyFile(filepath));
 //				if(fis.available()>52428800){
