@@ -120,4 +120,35 @@ public class AssetImpairmentManagement001Service extends CommonExportService<Ass
 
 	}
 
+    /**
+     * @Description:资产代码查询-下拉框-减值结果管理
+     * @auther: yuzj
+     * @date: 2021/8/23
+     * @param:
+     * @return:
+     */
+	public List<SelectOptionDto> getFinprodIdByLossResult(Map<String, Object> param){
+		return  assetImpairmentManagement001Mapper.getFinprodIdByLossResult(param);
+	}
+	/**
+	 * @Description:产品代码查询-减值结果管理
+	 * @auther: yuzj
+	 * @date: 2021/8/23
+	 * @param: 
+	 * @return: 
+	 */
+	public List<SelectOptionDto> getProdIdByLossResult(Map<String, Object> param){
+		return  assetImpairmentManagement001Mapper.getProdIdByLossResult(param);
+	}
+	/**
+	 * @Description:有效业务编号查询-减值结果管理
+	 * @auther: yuzj
+	 * @date: 2021/8/23
+	 * @param: 
+	 * @return: 
+	 */
+	public List<SelectOptionDto> getBusiNumByLossResult(Map<String, Object> param){
+		return  assetImpairmentManagement001Mapper.getBusiNumByLossResult(param);
+	}
+
 }

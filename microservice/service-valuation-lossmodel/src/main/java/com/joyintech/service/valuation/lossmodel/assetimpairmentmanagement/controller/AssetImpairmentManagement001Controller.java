@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 资产减值管理
+ * 减值结果管理
  * @author xutong
  * @createTime 2021-06-24
  * @see AssetImpairmentManagement001Controller
@@ -189,6 +189,44 @@ public class AssetImpairmentManagement001Controller extends BaseController {
 		}
 		return modValBatchAssetInfoDtoList;
 	}
+
+
+
+    /**
+     * @Description:资产代码查询-下拉框-减值结果管理
+     * @auther: yuzj
+     * @date: 2021/8/23
+     * @param:
+     * @return:
+     */
+    @PostMapping("getFinprodIdByLossResult")
+    public List<SelectOptionDto> getFinprodIdByLossResult(@RequestBody Map<String, Object> param) throws Exception {
+        return assetImpairmentManagement001Service.getFinprodIdByLossResult(param);
+    }
+
+    /**
+     * @Description:产品代码查询-减值结果管理
+     * @auther: yuzj
+     * @date: 2021/8/23
+     * @param:
+     * @return:
+     */
+    @PostMapping("getProdIdByLossResult")
+    public List<SelectOptionDto> getProdIdByLossResult(@RequestBody Map<String, Object> param) throws Exception {
+        return assetImpairmentManagement001Service.getProdIdByLossResult(param);
+    }
+
+    /**
+     * @Description:有效业务编号查询-减值结果管理
+     * @auther: yuzj
+     * @date: 2021/8/23
+     * @param:
+     * @return:
+     */
+    @PostMapping("getBusiNumByLossResult")
+    public List<SelectOptionDto> getBusiNumByLossResult(@RequestBody Map<String, Object> param) throws Exception {
+        return assetImpairmentManagement001Service.getBusiNumByLossResult(param);
+    }
 
 
 

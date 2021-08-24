@@ -169,6 +169,7 @@ $(function () {
         table.bind('click', '.delt', function(data, index) {
             var object = {};
             object.seqNo = data.seqNo;
+            object.decDate = data.decDate;
             object.operateType = "delete";
                 Joyin.ajaxJson(basePath + 'model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001/check', object, function(result) {
                     if (result.data || result.messageType === 'info') {
