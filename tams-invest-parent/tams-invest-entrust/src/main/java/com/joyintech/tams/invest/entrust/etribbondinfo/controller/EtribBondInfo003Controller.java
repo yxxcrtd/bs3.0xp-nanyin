@@ -178,6 +178,16 @@ public class EtribBondInfo003Controller extends BaseController {
         if(dtoList.size()>0) {
             messages = etribBondInfo003Validator.bussValid(dtoList.get(0));
             EtribBondInfo003Dto dto = dtoList.get(0);
+
+            if(!StringUtil.isNotEmpty(dto.getPortfolioSeries())){
+                messages.add(new ValidMessage("portfolioSeries", "请输入组合系列。"));
+            }
+            if(!StringUtil.isNotEmpty(dto.getFinprodMarketId())){
+                messages.add(new ValidMessage("finprodId", "请输入资产简称。"));
+            }
+            if(!StringUtil.isNotEmpty(dto.getPs())){
+                messages.add(new ValidMessage("ps", "请输入交易方向。"));
+            }
             if(!StringUtil.isNotEmpty(dto.getVdate()))
                 messages.add(new ValidMessage("vdate", "请输入指令开始日。"));
 			/*if(!StringUtil.isNotEmpty(dtoList.get(0).getTradePlat()))
@@ -240,6 +250,8 @@ public class EtribBondInfo003Controller extends BaseController {
                 messages.add(new ValidMessage("请输入券面总额(第"+(i+1)+"行)。"));
 			if(!StringUtil.isNotEmpty(dtoList.get(i).getInvAim()))
 				messages.add(new ValidMessage("请输入投资目的(第"+(i+1)+"行)。"));
+            if(!StringUtil.isNotEmpty(dtoList.get(i).getSecAcctId()))
+                messages.add(new ValidMessage("请输入证券账户(第"+(i+1)+"行)。"));
             if(chlId && StringUtil.isNotEmpty(dtoList.get(i).getSecAcctId()))
                 messages.add(new ValidMessage("不能同时输入通道代码和证券账户(第"+(i+1)+"行)。"));
         }

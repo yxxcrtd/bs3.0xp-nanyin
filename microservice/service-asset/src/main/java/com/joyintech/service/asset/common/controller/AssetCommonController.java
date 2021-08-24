@@ -141,7 +141,7 @@ public class AssetCommonController {
      * @see
      * @since 1.0
      */
-    @GetMapping("selectAllAsset")
+    @PostMapping("selectAllAsset")
     public List<FinProduct> selectAllAsset(){
         return assetCommonService.selectAllAsset();
     }

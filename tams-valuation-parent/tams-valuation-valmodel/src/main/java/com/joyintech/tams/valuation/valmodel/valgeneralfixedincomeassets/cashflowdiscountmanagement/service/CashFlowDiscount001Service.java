@@ -10,13 +10,14 @@
 
 package com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.service;
 
-import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
 import com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto;
 import com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.ModAseetMappingDto;
@@ -25,10 +26,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -53,8 +51,12 @@ public class CashFlowDiscount001Service extends CommonExportService<CashFlowDisc
             action = "delete";
         } else if (OperationType.NEW.equals(type)) {
             action = "insert";
+            // 判定生效日期是否比平台日大，如果小于则以平台日为主
+            judgeEffDate(entity);
         } else {
             action = "update";
+            // 判定生效日期是否比平台日大，如果小于则以平台日为主
+            judgeEffDate(entity);
             entity.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
         }
         restTemplate.postForObject(
@@ -62,6 +64,17 @@ public class CashFlowDiscount001Service extends CommonExportService<CashFlowDisc
                 Integer.class);
     }
 
+    /**
+     * 判定生效日期是否比平台日大，如果小于则以平台日为主
+     * @param entity
+     */
+    private void judgeEffDate(CashFlowDiscount001Dto entity) {
+        //平台日
+        Date platDate = DateUtil.platDateFromCache();
+        if(DateUtil.compareDate(entity.getEffDate(), platDate) < 0) {
+            entity.setEffDate(platDate);
+        }
+    }
     public List<CashFlowDiscount001Dto> selectForExport(Map<String, Object> paraMap) {
         return restTemplate.postForList(
                 ServiceApplication.VAL_MODEL_SERVICE_NAME + "/CashFlowDiscount001/selectForExport", paraMap,

@@ -33,7 +33,7 @@ public class RiskPremiumAdjConf001Controller extends BaseController {
     @Override
     public String init(Model model) {
 
-        super.setSelectOptionToModel(model, DictCode.资产类型);
+        super.setSelectOptionToModel(model, DictCode.资产类型, DictCode.证券品种);
         return super.init(model);
     }
 

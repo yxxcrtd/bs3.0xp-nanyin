@@ -97,6 +97,21 @@ public class RiskPremiumAdjConf001Dto extends BaseEntity {
      */
     private String modMethod;
 
+    /**
+     * 曲线代码
+     */
+    private String curveCode;
+
+    /**
+     * 曲线名称
+     */
+    private String curveName;
+
+    /**
+     * 曲线日期
+     */
+    private Date curveDate;
+
     public String getSeqno() {
         return seqno;
     }
@@ -206,5 +221,29 @@ public class RiskPremiumAdjConf001Dto extends BaseEntity {
 
     public void setModMethod(String modMethod) {
         this.modMethod = modMethod;
+    }
+
+    public String getCurveCode() {
+        return curveCode;
+    }
+
+    public void setCurveCode(String curveCode) {
+        this.curveCode = curveCode;
+    }
+
+    public String getCurveName() {
+        return curveName;
+    }
+
+    public void setCurveName(String curveName) {
+        this.curveName = curveName;
+    }
+
+    public Date getCurveDate() {
+        return curveDate;
+    }
+
+    public void setCurveDate(Date curveDate) {
+        this.curveDate = curveDate;
     }
 }

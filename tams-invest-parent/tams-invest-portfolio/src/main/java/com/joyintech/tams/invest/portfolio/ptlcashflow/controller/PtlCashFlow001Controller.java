@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.portfolio.ptlcashflow.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +134,7 @@ public class PtlCashFlow001Controller extends BaseController{
     @RequestMapping("/findPage")
     public Page<PtlCashFlowDto> findPage()
         throws Exception {
+        Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return ptlCashFlowService.selectForPage(RequestUtil.getParameters(getRequest()));
     }
     /**

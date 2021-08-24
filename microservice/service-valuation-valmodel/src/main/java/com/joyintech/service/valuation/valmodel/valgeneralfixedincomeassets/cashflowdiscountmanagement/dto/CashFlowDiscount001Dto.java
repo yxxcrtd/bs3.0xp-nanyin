@@ -3,6 +3,8 @@ package com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cas
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.util.Date;
+
 public class CashFlowDiscount001Dto extends BaseEntity implements ProcessEntity{
 
     /**
@@ -54,6 +56,39 @@ public class CashFlowDiscount001Dto extends BaseEntity implements ProcessEntity{
      * 平滑区间
      */
     private String smoothSection;
+
+    /** modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 start**/
+    /**
+     * 是否使用兜底评级
+     */
+    private String isBottomGrade;
+
+    /**
+     * 兜底评级
+     */
+    private String bottomGrade;
+
+    /**
+     * 生效日期
+     */
+    private Date effDate;
+
+    /**
+     * 失效日期
+     */
+    private Date invalidDate;
+
+    /**
+     * 检验生效时间条件
+     */
+    private String effDateCon;
+
+    /**
+     * 检验生效时间序列
+     */
+    private String seqNoCon;
+    /** modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 end**/
+
 
     public String getSmoothSection() {
         return smoothSection;
@@ -127,7 +162,53 @@ public class CashFlowDiscount001Dto extends BaseEntity implements ProcessEntity{
         this.isSmooth = isSmooth;
     }
 
+    public String getIsBottomGrade() {
+        return isBottomGrade;
+    }
 
+    public void setIsBottomGrade(String isBottomGrade) {
+        this.isBottomGrade = isBottomGrade;
+    }
+
+    public String getBottomGrade() {
+        return bottomGrade;
+    }
+
+    public void setBottomGrade(String bottomGrade) {
+        this.bottomGrade = bottomGrade;
+    }
+
+    public Date getEffDate() {
+        return effDate;
+    }
+
+    public void setEffDate(Date effDate) {
+        this.effDate = effDate;
+    }
+
+    public Date getInvalidDate() {
+        return invalidDate;
+    }
+
+    public void setInvalidDate(Date invalidDate) {
+        this.invalidDate = invalidDate;
+    }
+
+    public String getEffDateCon() {
+        return effDateCon;
+    }
+
+    public void setEffDateCon(String effDateCon) {
+        this.effDateCon = effDateCon;
+    }
+
+    public String getSeqNoCon() {
+        return seqNoCon;
+    }
+
+    public void setSeqNoCon(String seqNoCon) {
+        this.seqNoCon = seqNoCon;
+    }
 
     /**
      * 资产类型（证券品种_模型）

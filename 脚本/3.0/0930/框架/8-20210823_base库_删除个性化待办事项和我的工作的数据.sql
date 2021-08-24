@@ -1,0 +1,2 @@
+-- 删除个性化待办事项和我的工作的数据
+DELETE FROM SYS_MYTODOANDWORK_PSL;

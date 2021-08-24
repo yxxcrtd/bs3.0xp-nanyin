@@ -113,6 +113,13 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                         errorList.add(new ValidMessage("customerId", getMessage("BUSS_COM_E_0006",
                             getMessage("MstTradeOpponent001.customerId"), "【"+dto.getCounterName()+"】")));
                     }
+                    // ZGZGST-949:交易对手新建时,linkId做唯一性校验 fuyongsheng 20210823 add start
+                    if (dto.getCustomerId() != null
+                            && mstTradeOpponent001Service.checkLinkId(dto.getCustomerId()) > 0) {
+                        errorList.add(new ValidMessage("customerId", getMessage("BUSS_COM_E_0006",
+                                getMessage("MstTradeOpponent001.customerId"), "【"+dto.getCounterName()+"】")));
+                    }
+                    // ZGZGST-949:交易对手新建时,linkId做唯一性校验 fuyongsheng 20210823 add end
                     //add by songyawei 20200712 验证交易对手名称不能重复 start
                     if(mstTradeOpponent001Service.checkCounterName(dto.getCounterName()) > 0) {
                     	errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0006", "交易对手名称重复","【"+dto.getCounterName()+"】")));

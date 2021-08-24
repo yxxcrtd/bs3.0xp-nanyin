@@ -20,7 +20,7 @@
                     <label class="layui-form-label form-lable">资产类型</label>
                     <div class="layui-input-inline input-inline">
                         <select id="secTypeModel" name="secTypeModel" searchable="false" type="text"
-                                data-th-data-result='${MODEL_SEC_TYPE}'
+                                data-th-data-result='${SEC_TYPE}'
                                 data-th-initValue="${entity?.secTypeModel}"
                                 class="layui-input form-input input-select" placeholder="请选择">
                         </select>
@@ -39,6 +39,7 @@
                 </div>
 
                 <div class="layui-inline layui-col-md3"id="asset_Name">
+                    <!-- modify by yanya on 20210821 去除资产名称条件，增加日期查询条件
                     <label class="layui-form-label form-lable">资产名称</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="finprodId" name="finprodId"
@@ -48,6 +49,11 @@
                                 data-th-placeholder="#{SysCommon.selectplaceholder}"
                                 data-idfield="code"  data-keyfield="shortName" data-th-data-effectivefieldsalias='|{"shortName":"资产名称","code":"资产代码"}|'
                                 >
+                    </div>-->
+                    <label class="layui-form-label form-lable">查询日期</label>
+                    <div class="layui-input-inline input-inline">
+                        <input id='qryDate' name='qryDate' class="layui-input form-input input-dateRangeSelect"
+                               placeholder="请选择时间区间" data-th-placeholder="#{SysCommon.placeholder}">
                     </div>
                 </div>
             </div>

@@ -705,7 +705,7 @@
                 		AND TRD_PRODUCT_DEAL.F_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
-				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
+				AND (FIN_PRODUCT.FINPROD_MARKET_ID
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
@@ -883,7 +883,7 @@
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
-				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
+				AND (FIN_PRODUCT.FINPROD_MARKET_ID
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
 				OR FIN_PRODUCT.FINPROD_ABBR
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
@@ -1859,12 +1859,6 @@
 			</if>
 			<if test="fTradeId != null and fTradeId !='' ">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
-			</if>
-			<if test="finprodMarketId != null and finprodMarketId !='' ">
-				AND (FIN_PRODUCT.FINPROD_MARKET_ID
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
-				OR FIN_PRODUCT.FINPROD_ABBR
-				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%'))
 			</if>
 			<if test="finprodType2List != null and finprodType2List.size()>0">
 				AND (WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 IN(

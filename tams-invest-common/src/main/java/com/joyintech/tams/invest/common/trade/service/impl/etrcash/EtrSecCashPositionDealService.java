@@ -529,7 +529,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
                 // 添加现金流水到目标dto
                 etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 // TODO 委托冲销流水生成
-                etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易券份额,finProductTradeDto.getTrdProductDeal().getSettleDate(), finProductTradeDto.getTrdProductDeal().getTradeMarket()));
+                etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易券份额,finProductTradeDto.getTrdProductDeal().getSettleDate(), finProductTradeDto.getTrdProductDeal().getTradeMarket(),finProductTradeDto.getBondFirstSign()));
             }
             // 无委托
             else {
@@ -681,7 +681,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
                 // 添加现金流水到目标dto
                 etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 // TODO 委托冲销流水生成
-                etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量,finProductTradeDto.getTrdProductDeal().getSettleDate(),finProductTradeDto.getTrdProductDeal().getTradeMarket()));
+                etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量,finProductTradeDto.getTrdProductDeal().getSettleDate(),finProductTradeDto.getTrdProductDeal().getTradeMarket(),finProductTradeDto.getBondFirstSign()));
             }
             // 无委托
             else {
@@ -832,7 +832,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
 //                if(StringUtil.isNotEmpty(finProductTradeDto.getBondFirstSign())){
 //                	etrPositionHoldDto.getPtlCashPositionFlows().add(gen一级市场冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量));
 //                }else{
-                        etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量,finProductTradeDto.getTrdProductDeal().getSettleDate(), finProductTradeDto.getTrdProductDeal().getTradeMarket()));
+                        etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量,finProductTradeDto.getTrdProductDeal().getSettleDate(), finProductTradeDto.getTrdProductDeal().getTradeMarket(),finProductTradeDto.getBondFirstSign()));
 //                }
                 }
             }
@@ -1175,9 +1175,13 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
      * @return 冲销流水
      */
     public static EtrCashPositionFlowDto gen冲销现金流水生成(EtrCashPositionFlowDto etrCashPositionFlowDto, String entrustId,
-                                                     BigDecimal amount,Date settleDate, String tradePlace) {
+                                                     BigDecimal amount,Date settleDate, String tradePlace,String bondFirstSign) {
         EtrCashPositionFlowDto ret = new EtrCashPositionFlowDto();
         BeanUtil.copyPropertiesIgnoreNull(ret, etrCashPositionFlowDto);
+        if(StringUtil.isNotEmpty(bondFirstSign)){
+            ret.setAcctId(EtrCommonCashPositionDealService.select组合托管户(etrCashPositionFlowDto.getPortfolioId()
+                    , etrCashPositionFlowDto.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+        }
         ret.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
         ret.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
         ret.setOffsetId(entrustId);

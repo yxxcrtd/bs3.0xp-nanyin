@@ -273,8 +273,9 @@
                         var counterId = $('#trdInvestPersonInfo_counterId');
                         if (counterId.select2('data') && counterId.select2('data')[0]) {
                             var 交易对手 =  counterId.select2('data')[0].object;
+                            var ps = $('#ps').val();
                             // 交易对手选择内部交易对手时
-                            if (交易对手 == 'N') {
+                            if (交易对手 == 'N' && ps == T01) {
                                 changeTurnInvAim(true);
                             } else {
                                 changeTurnInvAim(false);
@@ -584,6 +585,15 @@
 	            if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
 	                return;
 	            }
+                //校验转仓投资目的 add by yeming 20210823 start
+                var counterId = $('#trdInvestPersonInfo_counterId');
+                if(counterId.select2('data')[0].object == 'N' && $('#ps').val() == T01){
+                    if (!$("#turnInvAim").val()) {
+                        Joyin.error("请选择转仓投资目的")
+                        return;
+                    }
+                }
+                //校验转仓投资目的 add by yeming 20210823 end
 	            /**
 	             * 获取列表参数
 	             */
@@ -721,12 +731,18 @@
 
 
         var changeTurnInvAim = function(isShow) {
+            //校验转仓投资目的 edit by yeming 20210823 start
             if (isShow){
-                $("#turnInvAim_div").show();
-            } else{
+                $("#turnInvAim").prop("disabled", false).trigger("change");
                 $("#turnInvAim").val('').trigger("change");
-                $("#turnInvAim_div").hide();
+                if($('#invAim').val()){
+                    $("#turnInvAim").val($('#invAim').val()).trigger("change");
+                }
+            } else{
+                $("#turnInvAim").prop("disabled", true).trigger("change");
+                $("#turnInvAim").val('').trigger("change");
             }
+            //校验转仓投资目的 edit by yeming 20210823 end
         }
 
 

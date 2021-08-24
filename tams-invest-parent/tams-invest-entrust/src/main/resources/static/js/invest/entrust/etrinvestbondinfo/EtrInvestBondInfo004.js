@@ -74,8 +74,8 @@
         , {field: 'priceModelStr', title: 'EtrInvestBondInfo004.priceModel', width: 150, sortable: false}
         , {field: 'price', title: 'EtrInvestBondInfo004.price', type: 'number', width: 150, sortable: false, digit:4}
         , {field: 'fpriceAmt', title: 'EtrInvestBondInfo004.fpriceAmt', type: 'number', width: 150, sortable: false, digit:4}
-        , {field: 'exerYield', title: 'EtrInvestBondInfo004.exerYield', type: 'number', width: 150, sortable: false, digit:12}
-        , {field: 'matureYield', title: 'EtrInvestBondInfo004.matureYield', type: 'number', width: 150, sortable: false, digit:12}
+        , {field: 'exerYield', title: 'EtrInvestBondInfo004.exerYield', type: 'number', width: 150, sortable: false, digit:2}
+        , {field: 'matureYield', title: 'EtrInvestBondInfo004.matureYield', type: 'number', width: 150, sortable: false, digit:2}
         , {field: 'minAmt', title: 'EtrInvestBondInfo004.minAmt', type: 'number', width: 150, sortable: false}
         , {field: 'settleSpreedName', title: 'EtrInvestBondInfo004.settleSpreed', width: 150, sortable: false}
         , {field: 'invAimName', title: 'EtrInvestBondInfo004.invAim', width: 150, sortable: false}

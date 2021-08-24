@@ -17,7 +17,8 @@
 			CUST.CUSTOMER_NAME fundManager,
 			V.TOTAL_VALUE totalValue,
 			V.REST_NET_VALUE restNetValue,
-			V.DAY7_YEAR_YIELD * 100 day7YearYield
+			V.DAY7_YEAR_YIELD * 100 day7YearYield,
+			V.C_SHARES cShares
     	FROM FIN_PRODUCT P
     	INNER JOIN
     		FIN_PRODUCT_VALUATION  V
@@ -198,7 +199,8 @@
 		CUST.CUSTOMER_NAME fundManager,
 		V.TOTAL_VALUE totalValue,
 		V.REST_NET_VALUE restNetValue,
-		V.DAY7_YEAR_YIELD * 100 day7YearYield
+		V.DAY7_YEAR_YIELD * 100 day7YearYield,
+		V.C_SHARES cShares
 		FROM FIN_PRODUCT P
 		INNER JOIN
 		FIN_PRODUCT_VALUATION  V
@@ -211,9 +213,15 @@
 		LEFT JOIN
 		MST_CUSTOMER_INFO CUST ON CUST.CUSTOMER_ID = P.MANAGER AND CUST.IS_ASSTE_MANAGER = #{yes,jdbcType=VARCHAR}
 		<where>
+			1 = 1
 			<!-- 改为用估值类型进行数据过滤 modify by yanya on 20210209-->
 			<!-- P.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}-->
-			P.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+			<if test="finprodType2 != null and finprodType2 != ''">
+				AND P.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+			</if>
+			<if test="finprodType != null and finprodType != ''">
+				AND P.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+			</if>
 			<if test="finprodId != null and finprodId != ''">
 				AND P.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
 			</if>
