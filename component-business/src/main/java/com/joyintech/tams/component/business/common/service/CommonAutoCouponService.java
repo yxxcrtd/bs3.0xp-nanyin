@@ -2337,6 +2337,7 @@ public class CommonAutoCouponService extends BaseService{
     			//公共PPP不在值域范围内、是否由金融资产投资公司发行要素必须为空、投向地方政府融资平台要素不在值域范围内。万德未提供该字段，无法校验
     			bussRepEquityInfoDto.setRepRemark(baseInfoDto1.getRepAssetEquity().getRepRemark());//备注[万德未提供该字段]
     			bussRepEquityInfoDto.setRepSharesType(baseInfoDto1.getRepAssetEquity().getRepSharesType());//股票类型
+                bussRepEquityInfoDto.setRepDeptEquity(baseInfoDto1.getRepAssetEquity().getRepDeptEquity());//是否为债转股
     			finStockInfoDto.setBussRepEquityInfoDto(bussRepEquityInfoDto);
     			finStockInfoDto.setFinprodMarketId(baseInfoDto1.getFinProduct().getFinprodMarketId());
     			finStockInfoDto.setFinprodName(baseInfoDto1.getFinProduct().getFinprodName());
