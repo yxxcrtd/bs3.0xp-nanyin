@@ -468,7 +468,7 @@ public class PbcZipDataFileService {
 					}else{
 						if(StrUtil.isNotEmpty(subDat.getIssuePartyId())){
 							SysInstRegBankCode001Dto sysInstRegBankCode001Dto = sysInstRegBankCode001Mapper.selectRegistBankCode(subDat.getIssuePartyId());
-							logger.info("查询的机构代码信息为:{}",sysInstRegBankCode001Dto);
+							logger.info("查询的机构代码信息为:{}",sysInstRegBankCode001Dto == null ? "" : sysInstRegBankCode001Dto.getRegistBankCode());
 							if(StrUtil.isNotEmpty(sysInstRegBankCode001Dto.getRegistBankCode())){
 								String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(sysInstRegBankCode001Dto.getRegistBankCode(), subDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, subDat.getVdate());
 								if(StrUtil.isNotEmpty(pbcProdIdExternal)){
