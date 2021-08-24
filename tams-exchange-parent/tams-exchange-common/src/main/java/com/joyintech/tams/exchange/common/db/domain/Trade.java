@@ -151,6 +151,8 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
     @Size(max = 18)
     private String portfolioId;
 
+    private String errorMsg;
+
     public Trade() {
         this.tradedBalance = new BigDecimal("0.00");
         this.tradedPrice = new BigDecimal("0.00");
@@ -461,5 +463,13 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
 
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

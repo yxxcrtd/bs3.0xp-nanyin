@@ -90,6 +90,7 @@ public class ServiceApplication {
     }
 
     @ConfigurationProperties(prefix = "application.micorservice.contextPath")
+    public static
     class ContextPathConfiguration {
 
         private boolean single;

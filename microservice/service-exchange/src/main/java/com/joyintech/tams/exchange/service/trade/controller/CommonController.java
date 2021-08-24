@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,16 +19,16 @@ public class CommonController {
     /**
      * 市场合约代码查询
      *
-     * @param userId        用户Id
-     * @param market        市场
-     * @param stockCodeList 合约代码list
+     * @param userId 用户Id
+     * @param market 市场
      * @return ResultBean
      */
-    @RequestMapping(value = "/common/instrument", method = RequestMethod.POST)
+    @RequestMapping(value = "/common/instrument", method = RequestMethod.GET)
     public ResultBean queryInstrument(@RequestParam(value = "user_id") String userId,
                                       @RequestParam(value = "market", required = false) String market,
-                                      @RequestBody(required = false) List<String> stockCodeList) {
-        return commonManagement.queryInstrument(market, stockCodeList);
+                                      @RequestParam(value = "asset_type", required = false) String assetType,
+                                      @RequestParam(value = "keyword", required = false) String keyword) {
+        return commonManagement.queryInstrument(market, assetType, keyword);
     }
 
     /**

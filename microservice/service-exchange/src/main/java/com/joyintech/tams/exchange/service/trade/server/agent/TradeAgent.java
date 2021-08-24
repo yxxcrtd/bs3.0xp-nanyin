@@ -59,6 +59,7 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
         return accountMap;
     }
 
+
     @Override
     public void connEstablished(Channel channel) {
         agentStatus = AgentStatus.CONNECTED;
@@ -347,7 +348,12 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
                 if (Objects.nonNull(id)) {
                     entrust.setId(id);
                 } else {
-                    logger.warn("entrust not has id, accontId - localEntrustId - brokerEntrustId {} - {} - {}", entrust.getAccountId(), entrust.getLocalEntrustId(), entrust.getBrokerEntrustId());
+                    // 缓存对当前委托--- 处理委托回报在主推之后回来的情况， 委托回报回来之后再次补发通知（ufx）
+                    String accountId = entrust.getAccountId();
+                    String localEntrustId = entrust.getLocalEntrustId();
+                    String brokerEntrustId = entrust.getBrokerEntrustId();
+                    tradeHelper.setEntrustNotifyMap(accountId + "_" + brokerEntrustId, entrust);
+                    logger.warn("entrust not has id, accountId - localEntrustId - brokerEntrustId {} - {} - {}", accountId, localEntrustId, brokerEntrustId);
                 }
             } else {
                 logger.warn("entrust not has id and localEntrustId, accountId - brokerEntrustId {} - {}", entrust.getAccountId(), entrust.getBrokerEntrustId());
@@ -371,7 +377,11 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
                 if (Objects.nonNull(id)) {
                     integratedEntrust.setId(id);
                 } else {
-                    logger.warn("integratedEntrust not has id, accontId - localEntrustId - brokerEntrustId {} - {} - {}", integratedEntrust.getAccountId(), integratedEntrust.getLocalEntrustId(), integratedEntrust.getBrokerEntrustId());
+                    String accountId = integratedEntrust.getAccountId();
+                    String localEntrustId = integratedEntrust.getLocalEntrustId();
+                    String brokerEntrustId = integratedEntrust.getBrokerEntrustId();
+                    tradeHelper.setEntrustNotifyMap(accountId + "_" + brokerEntrustId, integratedEntrust);
+                    logger.warn("integratedEntrust not has id, accontId - localEntrustId - brokerEntrustId {} - {} - {}", accountId, localEntrustId, brokerEntrustId);
                 }
             } else {
                 logger.warn("integratedEntrust not has id and localEntrustId, accountId - brokerEntrustId {} - {}", integratedEntrust.getAccountId(), integratedEntrust.getBrokerEntrustId());
@@ -423,6 +433,13 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
         TradeMsgReceiver msgReceiver = msgReceiverManager.getReceiverByEntrustId(terminalId.getId());
         if (Objects.nonNull(msgReceiver)) {
             msgReceiver.handleRthTerminalId(terminalId);
+            // 处理主推委托 在回报之前的情况, 通知补发
+            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(terminalId.getAccountId() + "_" + terminalId.getBrokerEntrustId());
+            if (Objects.nonNull(entrustInterface)) {
+                logger.info("普通委托主推先于回报返回， 补发主推消息 accountId {}  brokerEntrustId {}", terminalId.getAccountId(), terminalId.getBrokerEntrustId());
+                onRtnEntrust((Entrust) entrustInterface);
+            }
+
             //  处理成交回报 在委托回报之前的情况
             if (tradeHelper.getTradeMap().size() > 0)
                 tradeHelper.handleTradeRspBeforeEntrustRsp(msgReceiver, tradeHelper.getTradeMap(), terminalId);
@@ -441,6 +458,13 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
         TradeMsgReceiver msgReceiver = msgReceiverManager.getReceiverByIntegratedEntrustId(terminalId.getId());
         if (Objects.nonNull(msgReceiver)) {
             msgReceiver.addMsg(MsgType.RESP_INTEGRATED, terminalId);
+            // 处理主推委托 在回报之前的情况, 通知补发
+            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(terminalId.getAccountId() + "_" + terminalId.getBrokerEntrustId());
+            if (Objects.nonNull(entrustInterface)) {
+                logger.info("综合委托主推先于回报返回， 补发主推消息 accountId {}  brokerEntrustId {}", terminalId.getAccountId(), terminalId.getBrokerEntrustId());
+                onRtnIntegratedEntrust((IntegratedEntrust) entrustInterface);
+            }
+
             //  处理成交回报 在委托回报之前的情况
             if (tradeHelper.getTradeMap().size() > 0)
                 tradeHelper.handleTradeRspBeforeEntrustRsp(msgReceiver, tradeHelper.getTradeMap(), terminalId);
@@ -458,6 +482,13 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
         TradeMsgReceiver msgReceiver = msgReceiverManager.getReceiverByEntrustId(cancelEntrustBean.getCancelId());
         if (Objects.nonNull(msgReceiver)) {
             msgReceiver.addMsg(MsgType.RESP_CANCEL, cancelEntrustBean);
+            // 处理主推委托 在回报之前的情况, 通知补发
+            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(cancelEntrustBean.getAccountId() + "_" + cancelEntrustBean.getCancelBrokerEntrustId());
+            if (Objects.nonNull(entrustInterface)) {
+                logger.info("普通委托主推先于回报返回， 补发主推消息 accountId {}  brokerEntrustId {} CancelBrokerEntrustId {}", cancelEntrustBean.getAccountId(), cancelEntrustBean.getBrokerEntrustId(), cancelEntrustBean.getCancelBrokerEntrustId());
+                onRtnEntrust((Entrust) entrustInterface);
+            }
+
             //  处理成交回报 在委托回报之前的情况
             if (tradeHelper.getTradeMap().size() > 0) {
                 tradeHelper.handleCancelTradeRspBeforeEntrustRsp(msgReceiver, tradeHelper.getTradeMap(), cancelEntrustBean);
@@ -476,6 +507,12 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
         TradeMsgReceiver msgReceiver = msgReceiverManager.getReceiverByIntegratedEntrustId(cancelEntrustBean.getCancelId());
         if (Objects.nonNull(msgReceiver)) {
             msgReceiver.addMsg(MsgType.RESP_CANCEL, cancelEntrustBean);
+            // 处理主推委托 在回报之前的情况, 通知补发
+            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(cancelEntrustBean.getAccountId() + "_" + cancelEntrustBean.getCancelBrokerEntrustId());
+            if (Objects.nonNull(entrustInterface)) {
+                logger.info("综合委托主推先于回报返回， 补发主推消息 accountId {}  brokerEntrustId {}  CancelBrokerEntrustId {}", cancelEntrustBean.getAccountId(), cancelEntrustBean.getBrokerEntrustId(), cancelEntrustBean.getCancelBrokerEntrustId());
+                onRtnIntegratedEntrust((IntegratedEntrust) entrustInterface);
+            }
             //  处理成交回报 在委托回报之前的情况
             if (tradeHelper.getTradeMap().size() > 0) {
                 tradeHelper.handleCancelTradeRspBeforeEntrustRsp(msgReceiver, tradeHelper.getTradeMap(), cancelEntrustBean);

@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.service.trade.processor.business.common;
 
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
+import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.investment.TradeTimeBean;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
 import com.joyintech.tams.exchange.common.cache.TradeTimeService;

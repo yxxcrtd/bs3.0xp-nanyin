@@ -20,7 +20,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
@@ -40,23 +39,29 @@ public class TcpClient implements ApplicationListener<ContextRefreshedEvent> {
     @Resource(name = "serverAddresses")
     private InetSocketAddress serverAddress;
 
-    @Value("${netty.reconnect.delay}")
+    @Value("${netty.reconnect.delay:2}")
     private int delay;
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Autowired
     private DiscoveryClient discoveryClient;
 
-    @Value("${trade.serverName}")
+    @Value("${trade.serverName:exchangeService}")
     private String serverName;
 
     @Value("${agent.servers}")
     private String server;
 
-    @Value("${netty.port}")
+    @Value("${netty.port:9190}")
     private int nettyPort;
+
+    @Value("${trade.server.prefix:/tams/service}")
+    private String prefixYiTiHua;
+
+    @Value("${trade.server.single:false}")
+    private boolean isSingle;
+
+    @Value("${trade.server.nodes:127.0.0.1:8080}")
+    private String nodes;
 
     @Resource
     private ApplicationContext ctx;
@@ -98,6 +103,24 @@ public class TcpClient implements ApplicationListener<ContextRefreshedEvent> {
 
     private void findTradeMasterAddress() {
         try {
+            if (isSingle) {//一体化无注册中心
+                String url = prefixYiTiHua + TradeServiceURL.queryMaster;
+                String[] nodeList = nodes.split(",");
+                for (String node : nodeList) {
+                    ResultBean resultBean;
+                    try {
+                        String result = HttpUtils.doRequest(node + url, "GET", null);
+                        resultBean = JsonUtils.getObjectFromJson(result, ResultBean.class);
+                    } catch (Exception e) {
+                        logger.warn("获取主节点失败，正在重试 ... {}", e.getMessage());
+                        continue;
+                    }
+                    boolean masterResult = handleMasterResult(resultBean);
+                    if (masterResult) break;
+                }
+                return;
+            }
+            // 微服务获取主节点方式
             List<ServiceInstance> instances = discoveryClient.getInstances(serverName);
             if (Objects.nonNull(instances)) {
                 logger.info("eureka上注册服务信息 serverName {} -- {}", serverName, JsonUtils.getJsonFromObject(instances));
@@ -114,17 +137,8 @@ public class TcpClient implements ApplicationListener<ContextRefreshedEvent> {
                             logger.warn("获取主节点失败，正在重试 ... {}", e.getMessage());
                             continue;
                         }
-                        if (Objects.nonNull(resultBean) && resultBean.getErrorCode() == ErrorCode.SUCCESS.value) {
-                            if (Objects.nonNull(resultBean.getData())) {
-                                server = (String) resultBean.getData();
-                                freshServerAddress(server);
-                                break;
-                            } else {
-                                logger.info("masterAddress is null");
-                            }
-                        } else {
-                            logger.info("主节点信息查询失败 {} -- {}", resultBean.getErrorCode(), resultBean.getErrorMsg());
-                        }
+                        boolean masterResult = handleMasterResult(resultBean);
+                        if (masterResult) break;
                     }
                 }
             } else {
@@ -133,6 +147,21 @@ public class TcpClient implements ApplicationListener<ContextRefreshedEvent> {
         } catch (Exception e) {
             logger.error("主节点查询错误，{}", e);
         }
+    }
+
+    private boolean handleMasterResult(ResultBean resultBean) {
+        if (Objects.nonNull(resultBean) && resultBean.getErrorCode() == ErrorCode.SUCCESS.value) {
+            if (Objects.nonNull(resultBean.getData())) {
+                server = (String) resultBean.getData();
+                flushServerAddress(server);
+                return true;
+            } else {
+                logger.info("masterAddress is null");
+            }
+        } else {
+            logger.info("主节点信息查询失败 {} -- {}", resultBean.getErrorCode(), resultBean.getErrorMsg());
+        }
+        return false;
     }
 
     private void reConnect(InetSocketAddress inetSocketAddress) {
@@ -150,7 +179,7 @@ public class TcpClient implements ApplicationListener<ContextRefreshedEvent> {
         });
     }
 
-    public void freshServerAddress(String server) {
+    public void flushServerAddress(String server) {
         String[] strings = server.split(":");
         serverAddress = new InetSocketAddress(strings[0], nettyPort);
     }

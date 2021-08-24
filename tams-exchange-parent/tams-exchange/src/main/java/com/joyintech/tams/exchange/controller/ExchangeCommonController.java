@@ -1,12 +1,14 @@
 package com.joyintech.tams.exchange.controller;
 
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.service.ExchangeCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +38,16 @@ public class ExchangeCommonController {
      * @param userId 用户Id
      * @return ResultBean
      */
-    @RequestMapping(value = "/common/instrument", method = RequestMethod.POST)
+    @RequestMapping(value = "/common/instrument", method = RequestMethod.GET)
     public ResultBean queryInstrument(@RequestParam(value = "user_id") String userId,
                                       @RequestParam(value = "market", required = false) String market,
-                                      @RequestBody(required = false) List<String> stockCode) {
+                                      @RequestParam(value = "asset_type", required = false) String assetType,
+                                      @RequestParam(value = "keyword", required = false) String keyword) {
         String param = "?user_id=" + userId;
         if (Objects.nonNull(market)) param += "&market=" + market;
-        HttpEntity<List<String>> request = new HttpEntity<>(stockCode);
-        return commonService.queryInstrument(param, request);
+        if (Objects.nonNull(assetType)) param += "&asset_type=" + assetType;
+        if (Objects.nonNull(keyword)) param += "&keyword=" + keyword;
+        return commonService.queryInstrument(param);
     }
 
     /**

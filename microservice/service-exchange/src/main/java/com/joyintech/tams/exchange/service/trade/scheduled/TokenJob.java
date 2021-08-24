@@ -2,10 +2,15 @@ package com.joyintech.tams.exchange.service.trade.scheduled;
 
 
 import com.google.common.base.Strings;
+import com.joyintech.tams.exchange.common.bean.cache.QuoteServiceNode;
+import com.joyintech.tams.exchange.common.cache.QuoteServiceNodeService;
+import com.joyintech.tams.exchange.common.cache.QuoteTickService;
 import com.joyintech.tams.exchange.common.cache.config.DataServiceConfig;
+import com.joyintech.tams.exchange.common.cache.config.QuoteServiceNodeConfig;
 import com.joyintech.tams.exchange.common.cache.impl.RedisCacheServiceImpl;
 import com.joyintech.tams.exchange.common.db.domain.ServiceNode;
 import com.joyintech.tams.exchange.common.microservice.MasterNodeStatus;
+import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.ServiceNodeType;
 import com.joyintech.tams.exchange.common.utils.HttpUtils;
 import com.joyintech.tams.exchange.common.utils.SpringContextUtils;
@@ -35,9 +40,9 @@ public class TokenJob {
     //主从标志，备机只接收与处理消息，不推送任何消息
     public static boolean isMaster = false;
     public static String masterAddress = null;
-    @Value("${scheduled.token.node}")
+    @Value("${scheduled.token.node:trade1}")
     private String node;
-    @Value("${scheduled.token.enable}")
+    @Value("${scheduled.token.enable:false}")
     public boolean enableToken;
 
     @Value("${spring.application.name}")
@@ -49,8 +54,18 @@ public class TokenJob {
     @Value("${eureka.client.serviceUrl.defaultZone}")
     private String eurekaUrl;
 
-    @Value("${scheduled.token.fixedRate}")
+    @Value("${scheduled.token.fixedRate:20000}")
     private long fixedRate;
+
+    @Value("${server.context-path:/tams}")
+    private String prefixYiTiHua;
+
+    @Value("${application.micorservice.contextPath.single:false}")
+    private boolean isSingle;
+
+    @Autowired
+    private ServiceApplication.ContextPathConfiguration config;
+
     @Autowired
     private ServiceNodeService serviceNodeService;
 
@@ -59,6 +74,13 @@ public class TokenJob {
 
     @Autowired
     private DataServiceConfig dataServiceConfig;
+
+    @Autowired
+    private QuoteServiceNodeConfig quoteServiceNodeConfig;
+    @Autowired
+    private QuoteServiceNodeService quoteServiceNodeService;
+    @Autowired
+    private QuoteTickService quoteTickService;
 
     private boolean isOutOfService = true;// 是否需要掉线服务
 
@@ -72,7 +94,7 @@ public class TokenJob {
         logger.info("eureka url:{}", eurekaUrl);
     }
 
-    @Scheduled(fixedRateString = "${scheduled.token.fixedRate}")
+    @Scheduled(fixedRateString = "${scheduled.token.fixedRate:20000}")
     public void tokenCheck() {
         try {
             if (!enableToken) {
@@ -111,6 +133,12 @@ public class TokenJob {
                         serviceNode.setMasterNode(MasterNodeStatus.MASTER);
                         isMaster = true;
                         serviceNodeService.updateServiceNode(serviceNode);
+                        if (isSingle) {
+                            masterAddress = serviceNode.getNodeAddress();
+                            logger.info("current node {} is master now!!!", masterAddress);
+                            changeYitiHuaServiceAddress();
+                            return;
+                        }
                         if (changeEurekaClientStatus(InstanceInfo.InstanceStatus.UP.name())) {
                             masterAddress = serviceNode.getNodeAddress();
                             logger.info("current node {} is master now!!!", masterAddress);
@@ -128,8 +156,11 @@ public class TokenJob {
                     if (serviceNode.getMasterNode() == MasterNodeStatus.MASTER && currentTime - serviceNode.getLastLiveTime() < fixedRate * 2) {
                         masterAddress = serviceNode.getNodeAddress();
                         logger.info("current master is {} - {}", serviceNode.getNodeName(), masterAddress);
+                        if (isSingle) {
+                            changeYitiHuaServiceAddress();
+                        }
                         //如果从master切换到slaver，更改注册状态
-                        if (isOutOfService) {
+                        else if (isOutOfService) {
                             if (!changeEurekaClientStatus(InstanceInfo.InstanceStatus.OUT_OF_SERVICE.name())) {
                                 logger.info("unregister eureka failed. {} - {}", serviceName, instanceName);
                             }
@@ -146,6 +177,7 @@ public class TokenJob {
             //可能权重高的节点还没有切换为master，先刷新自己的时间，防止被权重低的节点插队
             thisNode.setLastLiveTime(currentTime);
             thisNode.setMasterNode(MasterNodeStatus.SLAVER);
+            changeYitiHuaServiceAddress();
             serviceNodeService.updateServiceNode(thisNode);
             logger.info("not found master, please check reason...");
         } catch (Exception e) {
@@ -168,6 +200,52 @@ public class TokenJob {
                 isOutOfService = true;
             }
             return false;
+        }
+    }
+
+    //对于一体化集群部署方式，路由到slaver的请求，从节点都需要转发到主节点处理
+    private void changeYitiHuaServiceAddress() {
+        String urlPrefix = "http://";
+        ServiceApplication.EXCHANGE_SERVICE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getExchangeService());
+        ServiceApplication.QUOTE_SERVICE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getQuoteService());
+        ServiceApplication.CUSTOMER_INTERFACE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getCustomerInterfService());
+        ServiceApplication.BASIC_DATA_SERVICE = urlPrefix + masterAddress + getServiceSuffix(config.getBasicDataService());
+        ServiceApplication.INSTRUCTION_SERVICE = urlPrefix + masterAddress + getServiceSuffix(config.getEntrustService());
+        ServiceApplication.TRADE_SERVICE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getTradeService());
+        ServiceApplication.PORTFOLIO_SERVICE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getPortfolioService());
+    }
+
+    private String getServiceSuffix(String contextPath) {
+        return contextPath.substring(contextPath.indexOf(prefixYiTiHua));
+    }
+
+
+    @Scheduled(fixedRateString = "${quote.node.interval:50000}")
+    public void quoteTokenCheck() {
+        if (!quoteServiceNodeConfig.isEnable()) return;
+        logger.info("check quote terminal...");
+        List<QuoteServiceNode> quoteServiceNodeList = quoteServiceNodeService.findAllFromRedis();
+        if (Objects.nonNull(quoteServiceNodeList)) {
+            // 找出当前行情终端存活节点
+            long currentTime = System.currentTimeMillis();
+            Map<String, QuoteServiceNode> serviceNodeNameMap = quoteServiceNodeList.stream()
+                    .filter(serviceNode1 -> (currentTime - serviceNode1.getLastLiveTime()) < serviceNode1.getInterval() * 2)
+                    .collect(Collectors.toMap(QuoteServiceNode::getNodeName, quoteServiceNode -> quoteServiceNode));
+            if (serviceNodeNameMap.size() > 0) {
+                QuoteServiceNode quoteServiceNode = serviceNodeNameMap.get(quoteServiceNodeConfig.getServiceNodeName());
+                //当前配置节点可用，则不作变更
+                if (Objects.nonNull(quoteServiceNode)) return;
+                //当前节点不可用，则选择权重高的节点
+                QuoteServiceNode quoteServiceNodeLive = serviceNodeNameMap.values().stream().max(Comparator.comparingInt(QuoteServiceNode::getNodeWeight)).orElse(null);
+                if (Objects.nonNull(quoteServiceNodeLive)) {
+                    quoteTickService.setClassName(quoteServiceNodeLive.getNodeName());
+                    logger.info("原行情源[{}]节点掉线，切换新行情源[{}]", quoteServiceNodeConfig.getServiceNodeName(), quoteServiceNodeLive.getNodeName());
+                    quoteServiceNodeConfig.setServiceNodeName(quoteServiceNodeLive.getNodeName());
+                    quoteServiceNodeConfig.setServiceWeight(quoteServiceNodeLive.getNodeWeight());
+                }
+            } else {
+                logger.warn("未检测到可用行情终端信息，请确认是否启动行情终端 quoteServiceName [{}]", quoteServiceNodeConfig.getServiceNodeName());
+            }
         }
     }
 }

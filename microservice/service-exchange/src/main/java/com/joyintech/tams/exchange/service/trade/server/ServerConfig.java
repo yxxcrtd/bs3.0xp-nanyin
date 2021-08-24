@@ -23,34 +23,34 @@ import java.net.InetSocketAddress;
 @Configuration
 public class ServerConfig {
 
-    @Value("${netty.thread.num.boss}")
+    @Value("${netty.thread.num.boss:1}")
     private Integer bossNum;
 
-    @Value("${netty.thread.num.worker}")
+    @Value("${netty.thread.num.worker:8}")
     private Integer workerNum;
 
-    @Value("${netty.port}")
+    @Value("${netty.port:9190}")
     private Integer tcpPort;
 
-    @Value("${netty.idle.read}")
+    @Value("${netty.idle.read:20}")
     private Integer readIdleSecond;
 
-    @Value("${netty.idle.write}")
+    @Value("${netty.idle.write:10}")
     private Integer writeIdleSecond;
 
-    @Value("${netty.idle.all}")
+    @Value("${netty.idle.all:0}")
     private Integer allIdleSecond;
 
-    @Value("${netty.buffer.recv}")
+    @Value("${netty.buffer.recv:4194304}")
     private Integer nettyRecvBufferSize;
 
-    @Value("${netty.buffer.send}")
+    @Value("${netty.buffer.send:4194304}")
     private Integer nettySendBufferSize ;
 
-    @Value("${netty.buffer.write.high}")
+    @Value("${netty.buffer.write.high:81960}")
     private Integer nettyWriteBufferHighKB ;
 
-    @Value("${netty.buffer.write.low}")
+    @Value("${netty.buffer.write.low:10240}")
     private Integer nettyWriteBufferLowKB;
 
     @Bean(name = "serverBootstrap")

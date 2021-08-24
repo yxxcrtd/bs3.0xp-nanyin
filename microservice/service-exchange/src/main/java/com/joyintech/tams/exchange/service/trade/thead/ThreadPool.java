@@ -14,11 +14,11 @@ public class ThreadPool {
 
     private static ExecutorService pool;
 
-    @Value("${trade.thread.msg.num}")
+    @Value("${trade.thread.msg.num:8}")
     private int threadSize;
-    @Value("${trade.thread.risk.alive}")
+    @Value("${trade.thread.risk.alive:5000}")
     private int aliveTime;
-    @Value("${trade.thread.risk.capacity}")
+    @Value("${trade.thread.risk.capacity:128}")
     private int capacity;
 
     @PostConstruct

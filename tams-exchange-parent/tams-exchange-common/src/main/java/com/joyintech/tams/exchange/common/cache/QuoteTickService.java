@@ -15,4 +15,6 @@ public interface QuoteTickService extends CacheService<String, TickByte> {
     QuoteProto.TickBean findFromRedisById(String stockCode);
 
     Map<String, QuoteProto.TickBean> getAll();
+
+    void setClassName(String serviceNodeName);
 }

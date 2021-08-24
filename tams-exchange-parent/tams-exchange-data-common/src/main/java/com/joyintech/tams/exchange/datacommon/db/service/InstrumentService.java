@@ -22,4 +22,6 @@ public interface InstrumentService extends AsyncService<String, Instrument> {
     MinTrdUnitLimit getMinTrdUnitLimit(String tradePlat, String market, Instrument instrument, String instructionPs);
 
     MinPriceAndMinTrdUnitLimitBean queryMinPriceAndMinTrdUnitLimit(String stockCode, String tradePlat, String instructionPs);
+
+    List<Instrument> queryByAssetType(String assetType);
 }

@@ -63,23 +63,19 @@
                 icon.addClass('icon-save');
             } else if (self.hasClass('btn-submit')) {
                 icon.addClass('icon-submit');
-            }
-            else if (self.hasClass('btn-cancel')) {
+            } else if (self.hasClass('btn-cancel')) {
                 icon.addClass('icon-delete');
-            }
-            else if (self.hasClass('btn-preview')) {
+            } else if (self.hasClass('btn-preview')) {
                 icon.addClass('icon-preview');
-            }
-            else if (self.hasClass('btn-approval')) {
+            } else if (self.hasClass('btn-approval')) {
                 icon.addClass('icon-approval');
             }
             else if (self.hasClass('btn-pwdreset')) {
                 icon.addClass('icon-password-reset');
             }
-            else if(self.hasClass('btn-filter')) {
+            else if (self.hasClass('btn-filter')) {
                 icon.addClass('icon-btn-filter');
-            }
-            else if (self.hasClass('btn-top')) {
+            } else if (self.hasClass('btn-top')) {
                 icon.addClass('icon-top-arrow');
             } else if (self.hasClass('btn-down')) {
                 icon.addClass('icon-down-arrow');

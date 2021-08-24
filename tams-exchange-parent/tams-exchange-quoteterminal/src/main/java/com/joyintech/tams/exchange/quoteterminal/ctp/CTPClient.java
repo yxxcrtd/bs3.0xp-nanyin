@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * create By MAXX on 2020/12/28
  */
-@Component
+//@Component
 public class CTPClient extends QuoteClient {
     private static final Logger logger = LoggerFactory.getLogger(CTPClient.class);
     @Value("${ctp.brokerId:9999}")

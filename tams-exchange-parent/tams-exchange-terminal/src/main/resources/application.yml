@@ -2,8 +2,8 @@ server:
   port: 8889
 agent:
   servers: 127.0.0.1:9190
-  name: default
-  type: mock #mock #ufx #KDGateway #ufx #kcbp
+  name: terminal_ufx
+  type: ufx #mock #ufx #KDGateway #ufx #kcbp
   query:
     interval: 1000
     count: 2
@@ -17,16 +17,18 @@ spring:
     active: joyin-210
   application:
     name: terminal
-  datasource:
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    validationQuery: SELECT 1 FROM DUAL
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-jixu:
-  user:
-    type: 2
+
 trade:
-  serverName: exchangeService # 交易核心的注册服务名
+  serverName: exchangeService # 交易核心的注册服务名 微服务版本时启用
+  server:
+    single: true #交易为是否一体化， 是一体化 需要配置下面交易节点项，不是则无需配置
+    nodes: 127.0.0.1:8080,192.168.70.210:8080 #一体化节点地址集，多个节点之间用逗号隔开
+    prefix: /tams/service #一体化服务访问地址前缀信息
+
+log:
+  path: /home/tams/logs/terminal
+  level: INFO
+
 netty:
   port: 9190
   buffer:
@@ -45,11 +47,10 @@ netty:
       worker: 2
   reconnect:
     delay: 2
-  timeout: 10000
 
 # kcbp config
 kcbp:
-  active: true
+  active: false
   keep:
     fixRate: 30000 #kcbp终端维持连接频率
   # 上报本机信息
@@ -70,7 +71,7 @@ kcbp:
 
 # ufx config
 ufx:
-  active: false
+  active: true
   path: tams-exchange-terminal/ufxconfig/t2sdk_hundsun-config.xml
   opStation:
     #终端名称
@@ -146,16 +147,16 @@ log:
 spring:
   profiles: joyin-210
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    url: jdbc:oracle:thin:@//192.168.70.180:1521/orcl
+    username: hgcs01
+    password: hgcs01
     maxTotal: 50
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    url: jdbc:oracle:thin:@//192.168.70.180:1521/orcl
+    username: hgcs01
+    password: hgcs01
     maxTotal: 50
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 eureka:

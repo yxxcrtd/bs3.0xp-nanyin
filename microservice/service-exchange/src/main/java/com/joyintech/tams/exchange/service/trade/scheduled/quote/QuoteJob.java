@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -69,6 +70,7 @@ public class QuoteJob {
 
     private List<IntegratedRepurchaseQuoteBean> queryRepurchaseQuote(Account account, int actionIn) {
         List<IntegratedRepurchaseQuoteBean> integratedRepurchaseQuoteBeans = terminalHelper.sendIntegratedRepurchaseQuote(actionIn, null, account.getId(), 1000);
+        if (Objects.isNull(integratedRepurchaseQuoteBeans)) return new ArrayList<>();
         integratedRepurchaseQuoteBeans.forEach(integratedRepurchaseQuoteBean -> {
             integratedRepurchaseQuoteBean.setBrokerId(account.getBrokerId());
             integratedRepurchaseQuoteBean.setBrokerName(account.getBrokerName());

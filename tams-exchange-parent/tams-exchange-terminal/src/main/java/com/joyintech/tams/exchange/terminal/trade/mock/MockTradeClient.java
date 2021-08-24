@@ -109,7 +109,7 @@ public class MockTradeClient implements ITradeRequest {
             mockTradeResponse.resEntrust(entrust);
             return;
         }
-        entrust.setBrokerEntrustId(entrust.getId());
+        entrust.setBrokerEntrustId(entrust.getId().substring(2));
         mockTradeResponse.resEntrust(entrust);
         if (EntrustUtils.isNoTrade(entrust.getEntrustProp())) {
             logger.info("回报即成交业务,不可撤单");
@@ -150,7 +150,7 @@ public class MockTradeClient implements ITradeRequest {
             mockTradeResponse.resEntrust(entrust);
             return;
         }
-        entrust.setBrokerEntrustId(entrust.getId());
+        entrust.setBrokerEntrustId(entrust.getId().substring(2));
         if (entrust.getEntrustVolume() % 7 == 0) {
             logger.info("数量是7的倍数，模拟没有成交");
             entrust.setEntrustStatus(EntrustStatus.REPORTED.value);
@@ -266,7 +266,7 @@ public class MockTradeClient implements ITradeRequest {
             if (mockIntegratedEntrustFailByEntrustVolume(integratedEntrust))
                 return;
             if (IntegratedEntrustUtils.isBulk(integratedEntrust.getEntrustProp())) {//大宗
-                integratedEntrust.setBrokerEntrustId(integratedEntrust.getId());
+                integratedEntrust.setBrokerEntrustId(integratedEntrust.getId().substring(2));
                 mockTradeResponse.resIntegratedEntrust(integratedEntrust);
                 logger.info("=========大宗==========");
                 if (EntrustProp.INTENTION.value.equals(integratedEntrust.getEntrustProp())) {
@@ -319,11 +319,11 @@ public class MockTradeClient implements ITradeRequest {
             //                mockTradeResponse.resIntegratedEntrust(integratedEntrust);
             //                return;
             //            }
-            integratedEntrust.setBrokerEntrustId(integratedEntrust.getId());
+            integratedEntrust.setBrokerEntrustId(integratedEntrust.getId().substring(2));
             if (mockIntegratedEntrustFailByEntrustVolume(integratedEntrust))
                 return;
             mockTradeResponse.resIntegratedEntrust(integratedEntrust);
-            integratedEntrust.setBrokerEntrustId(integratedEntrust.getId());
+            integratedEntrust.setBrokerEntrustId(integratedEntrust.getId().substring(2));
             if (mockNoTradeByEntrustVolume(integratedEntrust))
                 return;
             mockTradeOrPartTradeByEntrustVolume(integratedEntrust);
@@ -396,7 +396,7 @@ public class MockTradeClient implements ITradeRequest {
             //                    return;
             //                }
             //            }
-            integratedEntrust.setBrokerEntrustId(integratedEntrust.getId());
+            integratedEntrust.setBrokerEntrustId(integratedEntrust.getId().substring(2));
             if (mockIntegratedEntrustFailByEntrustVolume(integratedEntrust))
                 return;
             mockTradeResponse.resIntegratedEntrust(integratedEntrust);
@@ -554,7 +554,7 @@ public class MockTradeClient implements ITradeRequest {
         BeanUtils.copyProperties(entrust, cancelEntrust, "id", "entrustStatus", "frozenBalance", "frozenVolume", "tradedBalance", "tradedPrice", "tradedVolume", "cancelVolume", "entrustType", "localEntrustId", "brokerEntrustId", "origEntrustId");
         cancelEntrust.setEntrustVolume(entrust.getEntrustVolume() - entrust.getTradedVolume());
         cancelEntrust.setId(cancelEntrustBean.getCancelId());
-        cancelEntrust.setBrokerEntrustId(cancelEntrustBean.getCancelId());
+        cancelEntrust.setBrokerEntrustId(cancelEntrustBean.getCancelId().substring(2));
         cancelEntrust.setOrigEntrustId(cancelEntrustBean.getId());
         cancelEntrust.setEntrustType(EntrustType.CANCEL.value);
         cancelEntrust.setEntrustStatus(EntrustStatus.REPORTED.value);

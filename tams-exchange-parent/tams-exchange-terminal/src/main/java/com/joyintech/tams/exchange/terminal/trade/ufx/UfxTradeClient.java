@@ -36,7 +36,7 @@ public class UfxTradeClient implements ITradeRequest {
     private TradeResponseImpl ufxTradeResponse;
     @Autowired(required = false)
     private String op_station;
-    @Value("${agent.query.count}")
+    @Value("${agent.query.count:2}")
     private int tradeCount;//查询次数
 
     private ITerminalMsgNotify iTerminalMsgNotify;

@@ -77,8 +77,10 @@ public class UfxRebackTest implements ICallBackMethod {
         }
         LoginInfo loginInfo = UfxConverter.parseLoginMsg(ds, fundAccount);
         UfxTest.loginInfo = loginInfo;
+        TestSubscribe.loginInfo = loginInfo;
+        TestPublish.loginInfo = loginInfo;
         try {
-            List<ClientStkacct> clientStkacctList = UfxTest.ReqClientStkacct(UfxTest.getOpStation(), UfxTest.password, loginInfo.getBranchNo(), loginInfo.getClientId(), loginInfo.getUserToken());
+            List<ClientStkacct> clientStkacctList = UfxTest.ReqClientStkacct(UfxTest.getOpStation(), UfxTest.password, fundAccount, loginInfo.getBranchNo(), loginInfo.getClientId(), loginInfo.getUserToken());
             if (clientStkacctList != null) {
                 logger.info("clientStkacctList:{}", JSON.toJSONString(clientStkacctList).toString());
                 loginInfo.setClientStkacctList(clientStkacctList);

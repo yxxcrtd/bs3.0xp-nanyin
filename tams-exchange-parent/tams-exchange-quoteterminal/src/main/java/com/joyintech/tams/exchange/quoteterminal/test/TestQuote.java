@@ -10,6 +10,7 @@ import com.joyintech.tams.exchange.common.utils.TestConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,7 @@ import java.util.Objects;
  * 测试时打开component注解；关闭其他行情Client的注解即可
  */
 @Component
+@ConditionalOnProperty(value = "test.quote", havingValue = "false")
 public class TestQuote {
     private static final Logger logger = LoggerFactory.getLogger(TestQuote.class);
     private static String url = "http://182.150.112.115:8100/quote/v1/tick/snapshot?token=1&asset_type=";

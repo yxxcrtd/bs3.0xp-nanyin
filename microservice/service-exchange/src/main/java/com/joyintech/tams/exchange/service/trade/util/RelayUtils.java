@@ -26,7 +26,7 @@ public class RelayUtils {
 
     private String startDate;
 
-    @Scheduled(fixedRateString = "${scheduled.token.fixedRate}")
+    @Scheduled(fixedRateString = "${scheduled.token.fixedRate:20000}")
     public void fillPlatDate() {
         try {
             startDate = commonManagement.queryPlatDate();

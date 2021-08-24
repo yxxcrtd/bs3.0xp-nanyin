@@ -3,17 +3,16 @@ package com.joyintech.tams.exchange.service.trade.processor.business.bond;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
 import com.joyintech.tams.exchange.common.constant.*;
-import com.joyintech.tams.exchange.common.db.domain.Instruction;
-import com.joyintech.tams.exchange.common.db.domain.Instrument;
-import com.joyintech.tams.exchange.common.db.domain.OrderInterface;
-import com.joyintech.tams.exchange.common.db.domain.Trade;
+import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.proto.QuoteProto;
 import com.joyintech.tams.exchange.common.utils.CheckParamUtils;
 import com.joyintech.tams.exchange.common.utils.EntrustUtils;
+import com.joyintech.tams.exchange.common.utils.IntegratedEntrustUtils;
 import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.InstrumentService;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
 import com.joyintech.tams.exchange.service.trade.processor.business.price.PriceHelper;
+import com.joyintech.tams.exchange.service.trade.server.agent.AccountManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +38,8 @@ public class BondHelper {
     private InvestmentManagement investmentManagement;
     @Autowired
     private PriceHelper priceHelper;
+    @Autowired
+    private AccountManager accountManager;
 
     public boolean checkCommonParam(BigDecimal fullPrice, BigDecimal entrustPrice, long entrustVolume, OrderInterface orderInterface, Instrument instrument, String tradePlat, String instructionPs, BigDecimal entrustBalance, String entrustBussType, String priceMode) {
         MinTrdUnitLimit minTrdUnitLimit = instrumentService.getMinTrdUnitLimit(tradePlat, instrument.getMarket(), instrument, instructionPs);
@@ -140,6 +141,15 @@ public class BondHelper {
 
     // 债券成交全价处理 ------> 需求确认后恢复为全价
     public BigDecimal handleTradePriceByFullPrice(Trade trade, String isFullPrice, Instruction instruction) {
+        if (IntegratedEntrustUtils.isProtocolBack(trade.getEntrustProp()) || trade.getTradedPrice().doubleValue() == 0) {
+            return trade.getTradedBalance();
+        }
+        // 对于金证和金仕达柜台 -- 净价报单 净价成交。 ufx按照委托中isFullPrice区分 净价成交 全价成交
+        Account account = accountManager.getAccountById(trade.getAccountId());
+        // 净价成交不需要处理
+        if (Objects.nonNull(account) && AgentType.isNetPriceTrade(account.getAgentType())) {
+            return trade.getTradedBalance();
+        }
         if (Objects.nonNull(instruction) && EntrustUtils.isFullPrice(instruction.getAssetType(), trade.getEntrustProp(), isFullPrice)) {
             logger.info("债券全价成交回报价格和成交金额处理，brokerEntrustId {} brokerTradeId {} tradePrice {} tradeBalance {}", trade.getBrokerEntrustId(), trade.getBrokerTradeId(), trade.getTradedPrice(), trade.getTradedBalance());
             BigDecimal price = investmentManagement.queryEntrustPriceByFullPriceFromInvest(trade.getTradedPrice(), trade.getTradedVolume(), instruction, getPriceRoundByPriceStep(instrumentService.queryByInnerCode(instruction.getFinprodMarketId())));
@@ -150,11 +160,39 @@ public class BondHelper {
         return trade.getTradedBalance();
     }
 
-    public BigDecimal calculateBalanceForInstruction(OrderInterface orderInterface, BigDecimal entrustBalance) {
-        if (EntrustUtils.isFullPrice(orderInterface.getAssetType(), orderInterface.getEntrustProp(), orderInterface.getIsFullPrice())) {
-            entrustBalance = TradeUtils.multiply(orderInterface.getEntrustPrice(), orderInterface.getEntrustVolume(), 2);
+    // 债券净价成交转换为全价处理
+    public BigDecimal handleTradePriceByNetPrice(Trade trade, String isFullPrice, Instruction instruction) {
+        if (IntegratedEntrustUtils.isProtocolBack(trade.getEntrustProp()) || trade.getTradedPrice().doubleValue() == 0) {
+            return trade.getTradedBalance();
         }
-        return entrustBalance;
+        // 对于金证和金仕达柜台 -- 净价报单 净价成交。 ufx按照委托中isFullPrice区分 净价成交 全价成交
+        Account account = accountManager.getAccountById(trade.getAccountId());
+        // 净价成交 转换为 全价 并计算成交金额
+        if (Objects.nonNull(account) && AgentType.isNetPriceTrade(account.getAgentType())
+                || (Objects.nonNull(instruction) && !EntrustUtils.isFullPrice(instruction.getAssetType(), trade.getEntrustProp(), isFullPrice))) {
+            logger.info("债券净价成交回报价格和成交金额处理，brokerEntrustId {} brokerTradeId {} tradePrice {} tradeBalance {}", trade.getBrokerEntrustId(), trade.getBrokerTradeId(), trade.getTradedPrice(), trade.getTradedBalance());
+            BigDecimal price = investmentManagement.queryFullPriceByEntrustPriceFromInvest(trade.getTradedPrice(), trade.getTradedVolume(), instruction, getPriceRoundByPriceStep(instrumentService.queryByInnerCode(instruction.getFinprodMarketId())));
+            BigDecimal calculateBalance = TradeUtils.multiply(price, trade.getTradedVolume(), 2);
+            logger.info("净价转换为全价完成，brokerEntrustId {} brokerTradeId {} tradePrice {} tradeBalance {}", trade.getBrokerEntrustId(), trade.getBrokerTradeId(), price, calculateBalance);
+            return calculateBalance;
+        }
+        return trade.getTradedBalance();
+    }
+
+    public BigDecimal calculateBalanceForInstruction(String entrustProp, String assetType, BigDecimal entrustPrice, long volume, BigDecimal balance) {
+        //债券指令 全部按照净价处理
+        if (InvestmentAssetType.BOND.value.equals(assetType)) {
+            return TradeUtils.multiply(entrustPrice, volume, 2);
+        }
+        //协议回购金额计算
+        if (IntegratedEntrustUtils.isProtocolBack(entrustProp)) {
+            return balance;
+        }
+        // 质押式竞价回购，金额计算
+        if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(assetType)) {
+            return new BigDecimal(volume * 100).setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+        return balance;
     }
 
     // 返回债券精度位数

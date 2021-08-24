@@ -24,7 +24,7 @@ public class TerminalJob {
     @Value("${kcbp.active:false}")
     private boolean isActive_kcbp;
 
-    @Scheduled(fixedRateString = "${agent.query.interval}")
+    @Scheduled(fixedRateString = "${agent.query.interval:1000}")
     public void queryTrade() {
         if (Objects.isNull(SpringContextUtils.getApplicationContext())) {
             logger.info("applicationContext 为空");
