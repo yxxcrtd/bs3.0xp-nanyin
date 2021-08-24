@@ -110,12 +110,15 @@ public class BussRepoSecController extends BaseController {
                 if( entity.getTotalPrinAmt()  != null){
                     entity.setTotalPrinAmt(ArithmeticUtil.divide(entity.getTotalPrinAmt(),new BigDecimal(10000),4));
                 }
-                for (PledgeBondInfoDto dto : entity.getPledgeBondList()) {
-                    if (dto.getAvaPledgePrin() != null) {
-                        dto.setAvaPledgePrin(ArithmeticUtil.divide(dto.getAvaPledgePrin(), new BigDecimal(10000),4));
-                    }
-                    if (dto.getPledgePrin() != null) {
-                        dto.setPledgePrin(ArithmeticUtil.divide(dto.getPledgePrin(), new BigDecimal(10000),4));
+                //add by chenjiaxing 质押券回购初始化报错
+                if(entity.getPledgeBondList().size() > 0){
+                    for (PledgeBondInfoDto dto : entity.getPledgeBondList()) {
+                        if (dto.getAvaPledgePrin() != null) {
+                            dto.setAvaPledgePrin(ArithmeticUtil.divide(dto.getAvaPledgePrin(), new BigDecimal(10000),4));
+                        }
+                        if (dto.getPledgePrin() != null) {
+                            dto.setPledgePrin(ArithmeticUtil.divide(dto.getPledgePrin(), new BigDecimal(10000),4));
+                        }
                     }
                 }
                 //万元转换 add  by yeming 20210817 end
