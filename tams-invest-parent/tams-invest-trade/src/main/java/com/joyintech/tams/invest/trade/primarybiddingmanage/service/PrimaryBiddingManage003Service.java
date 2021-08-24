@@ -198,6 +198,26 @@ public class PrimaryBiddingManage003Service extends BaseService<TrdBiddingManage
 //    }
 
 
+    @Override
+    public void doInsert(TrdBiddingManage003Dto entity, OperationType type) {
+
+    }
+
+    @Override
+    public void doUpdate(TrdBiddingManage003Dto entity) {
+
+    }
+
+    @Override
+    public void doDelete(String workflowId) {
+
+    }
+
+    @Override
+    public void doBack(TrdBiddingManage003Dto entity) {
+
+    }
+
     /**
      * 计算 中标净价
      * @return

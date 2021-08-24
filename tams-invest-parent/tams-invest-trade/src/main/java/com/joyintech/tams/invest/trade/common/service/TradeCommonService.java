@@ -506,7 +506,7 @@ public class TradeCommonService extends BaseService {
             TrdBiddingManage003Dto inputDto = (TrdBiddingManage003Dto) object;
             creditLinesInputDto = new CreditLinesInputDto();
             BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
-            creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+            creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
             creditLinesInputDto.setEntrustId(inputDto.getEntrustId());
             creditLinesInputDto.setTradeAmt(inputDto.getWinPrinAmt());
             creditLinesInputDto.setTradeId(inputDto.getBidId());
@@ -519,14 +519,24 @@ public class TradeCommonService extends BaseService {
             }
             if (!StringUtil.isEmptyList(inputDto.getBidOrderBidPriceList())){
                 List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+                Set set = new HashSet();
                 for (BidOrderBidPriceDto item : inputDto.getBidOrderBidPriceList()){
+                    if(set.contains(item.getEntrustId())){
+                        continue;
+                    }
+                    set.add(item.getEntrustId());
                     CreditLinesInputDto dto = new CreditLinesInputDto();
                     BeanUtil.copyPropertiesIgnoreNull(dto,creditLinesInputDto);
+                    dto.setTradeAmt(BigDecimal.ZERO);
                     dto.setTradeId(item.getEntrustId());
-                    if (item.getBidPrinAmt() != null){
-                        dto.setTradeAmt(item.getBidPrinAmt().subtract(item.getWinPrinAmt() == null ? BigDecimal.ZERO : item.getWinPrinAmt()));
-                    }else {
-                        dto.setTradeAmt(BigDecimal.ZERO);
+                    for(BidOrderBidPriceDto item1 : inputDto.getBidOrderBidPriceList()){
+                        if(item1.getEntrustId().equals(item.getEntrustId())){
+                            if (item1.getWinPrinAmt() != null){
+                                dto.setTradeAmt(item1.getWinPrinAmt().add(dto.getTradeAmt()));
+                            }else {
+                                dto.setTradeAmt(BigDecimal.ZERO.add(dto.getTradeAmt()));
+                            }
+                        }
                     }
                     if (dto.getTradeAmt().compareTo(BigDecimal.ZERO) >= 0){
                         inputDtoList.add(dto);
@@ -536,38 +546,38 @@ public class TradeCommonService extends BaseService {
             }
         }
         // 债券一级市场汇总投标确认
-        if (object instanceof PrimaryBiddingManageDto){
-            PrimaryBiddingManageDto inputDto = (PrimaryBiddingManageDto) object;
-            creditLinesInputDto = new CreditLinesInputDto();
-            BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
-            creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
-            creditLinesInputDto.setTradeAmt(inputDto.getAdjustBallotnum());
-            creditLinesInputDto.setTradeId(inputDto.getBidId());
-            creditLinesInputDto.setTradeDate(inputDto.getBiddate());
-            creditLinesInputDto.setFinprodType2(DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue());
-            creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
-            creditLinesInputDto.setTradeStatus(status);
-            if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo002Dto())){
-                creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo002Dto().getCounterId());
-            }
-            if (!StringUtil.isEmptyList(inputDto.getPrimaryBiddingPortfolioDtolist())){
-                List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
-                for (PrimaryBiddingPortfolioDto item : inputDto.getPrimaryBiddingPortfolioDtolist()){
-                    CreditLinesInputDto dto = new CreditLinesInputDto();
-                    BeanUtil.copyPropertiesIgnoreNull(dto,creditLinesInputDto);
-                    dto.setTradeId(item.getEntrustId());
-                    if (item.getAllBidPrinAmt() != null){
-                        dto.setTradeAmt(item.getAllBidPrinAmt().subtract(item.getBidPrinAmt() == null ? BigDecimal.ZERO : item.getBidPrinAmt()));
-                    }else {
-                        dto.setTradeAmt(BigDecimal.ZERO);
-                    }
-                    if (dto.getTradeAmt().compareTo(BigDecimal.ZERO) >= 0){
-                        inputDtoList.add(dto);
-                    }
-                }
-                creditLinesInputDto.setInputDtoList(inputDtoList);
-            }
-        }
+//        if (object instanceof PrimaryBiddingManageDto){
+//            PrimaryBiddingManageDto inputDto = (PrimaryBiddingManageDto) object;
+//            creditLinesInputDto = new CreditLinesInputDto();
+//            BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
+//            creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+//            creditLinesInputDto.setTradeAmt(inputDto.getAdjustBallotnum());
+//            creditLinesInputDto.setTradeId(inputDto.getBidId());
+//            creditLinesInputDto.setTradeDate(inputDto.getBiddate());
+//            creditLinesInputDto.setFinprodType2(DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue());
+//            creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+//            creditLinesInputDto.setTradeStatus(status);
+//            if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo002Dto())){
+//                creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo002Dto().getCounterId());
+//            }
+//            if (!StringUtil.isEmptyList(inputDto.getPrimaryBiddingPortfolioDtolist())){
+//                List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+//                for (PrimaryBiddingPortfolioDto item : inputDto.getPrimaryBiddingPortfolioDtolist()){
+//                    CreditLinesInputDto dto = new CreditLinesInputDto();
+//                    BeanUtil.copyPropertiesIgnoreNull(dto,creditLinesInputDto);
+//                    dto.setTradeId(item.getEntrustId());
+//                    if (item.getAllBidPrinAmt() != null){
+//                        dto.setTradeAmt(item.getAllBidPrinAmt().subtract(item.getBidPrinAmt() == null ? BigDecimal.ZERO : item.getBidPrinAmt()));
+//                    }else {
+//                        dto.setTradeAmt(BigDecimal.ZERO);
+//                    }
+//                    if (dto.getTradeAmt().compareTo(BigDecimal.ZERO) >= 0){
+//                        inputDtoList.add(dto);
+//                    }
+//                }
+//                creditLinesInputDto.setInputDtoList(inputDtoList);
+//            }
+//        }
         //债券借贷
         if (object instanceof TrdBondLendInvestTradeDto){
             TrdBondLendInvestTradeDto inputDto = (TrdBondLendInvestTradeDto)object;
