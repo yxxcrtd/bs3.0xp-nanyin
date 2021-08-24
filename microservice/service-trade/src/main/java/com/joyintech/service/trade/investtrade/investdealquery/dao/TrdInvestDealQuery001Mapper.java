@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQueryPdfDto;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.framework.select.SuggestDto;
@@ -165,4 +166,11 @@ public interface TrdInvestDealQuery001Mapper {
      * @since 1.0
      */
     BigDecimal selectInvestRateByProject(AssetTransferExport001Dto dto);
+
+	/**
+	 * 查询导出pdf数据 add by zengchengfa
+	 * @param param
+	 * @return
+	 */
+	List<TrdInvestDealQueryPdfDto> selectExportPdfList(Map<String,Object> param);
 }

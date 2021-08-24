@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.trade.bond.dto.TrdBondInvestTradePdfDto;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
 import org.apache.ibatis.annotations.Param;
@@ -310,4 +311,10 @@ public interface TrdBondInvestTradeMapper {
 	BigDecimal selectMatchNum(@Param("fedealno") String fedealno,@Param("entrustId") String entrustId);
 	 List<PtlPortfolio> queryPortfolioIdByFedealno(@Param("loginUserName") String loginUserName, @Param("fedealno") String fedealno);
 
+    /**
+     * 查询导出pdf数据 add by zengchengfa
+     * @param param
+     * @return
+     */
+    List<TrdBondInvestTradePdfDto> selectExportPdf(Map<String, Object> param);
 }

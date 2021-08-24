@@ -1431,7 +1431,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     代偿期类型_到期(DictCode.代偿期类型,"02","到期"),
 
     减值数据来源_手工(DictCode.减值数据来源,"01","手工"),
-    减值数据来源_中债_wind接入(DictCode.减值数据来源,"02","中债/wind接入"),
+    减值数据来源_wind接入(DictCode.减值数据来源,"02","wind"),
+    减值数据来源_中债接入(DictCode.减值数据来源,"03","中债"),
+    减值数据来源_模型(DictCode.减值数据来源,"04","模型"),
 
     //20210803 by yuzj end
     ;

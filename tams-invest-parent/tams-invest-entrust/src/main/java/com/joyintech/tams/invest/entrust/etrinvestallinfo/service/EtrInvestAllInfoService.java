@@ -13,6 +13,11 @@ package com.joyintech.tams.invest.entrust.etrinvestallinfo.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
+import com.joyintech.tams.invest.entrust.etrinvestallinfo.dto.EtrAllInfoExportPdfDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -38,6 +43,12 @@ import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
  */
 @Service
 public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInfoDto> {
+
+    /**
+     * add by zengchengfa 20210803导出pdf共通
+     */
+    @Autowired
+    private CommonExportPdfService commonExportPdfService;
 
     /**
      * 获取组合代码的联想文本框 <功能详细描述>
@@ -159,4 +170,46 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
 		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/selectExportPB", param,
 				EtrInvestAllInfoDto.class);
 	}
+
+    /**
+     * 导出pdf数据 add by zengchengfa 20210730
+     * @param param
+     * @return
+     */
+	public List<EtrAllInfoExportPdfDto> selectExportPdf(Map param){
+	    return restTemplate.postForList(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/selectExportPdf", param,
+                EtrAllInfoExportPdfDto.class);
+    }
+
+    /**
+     * 导出pdf add by zengchengfa 20210730
+     * @param pageId 画面id
+     * @param param 参数
+     * @return
+     */
+    public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
+        param.put("userId", SecurityUtil.getLoginUser().getUserName());
+        List<EtrAllInfoExportPdfDto> datas = selectExportPdf(param);
+        String assetType = param.get("assetType")==null?"":param.get("assetType").toString();
+        return commonExportPdfService.exportPdf(pageId,getConfigFile(assetType),datas);
+    }
+
+    /**
+     * 获取配置文件绝对路径 add by zengchengfa 20210730
+     * @param assetType 资产类型
+     * @return
+     */
+    public String getConfigFile(String assetType){
+        String configFile ;
+        String basePath = this.getClass().getClassLoader().getResource("com/joyintech/tams/invest/entrust/etrinvestallinfo/conf/").toString();
+        if(DictCodeList.平安资产类型_债券.getValue().equalsIgnoreCase(assetType)){
+            configFile = basePath + "export_conf_pdf_bond.xml";
+        }else if(DictCodeList.平安资产类型_质押式回购.getValue().equalsIgnoreCase(assetType)){
+            configFile = basePath + "export_conf_pdf_rep.xml";
+        }else{
+            configFile = basePath + "export_conf_pdf_other.xml";
+        }
+        return configFile;
+    }
 }

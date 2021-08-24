@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
+import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradePdfDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.constant.GlobalConstant;
@@ -31,6 +35,12 @@ import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 
 @Service
 public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInvestTradeDto> {
+
+    /**
+     * add by zengchengfa 20210803导出pdf共通
+     */
+    @Autowired
+    private CommonExportPdfService commonExportPdfService;
 
     /**
      * 检索债券信息
@@ -108,5 +118,66 @@ public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInv
         return restTemplate.postForList(
                 ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getEntrustId", map,
                 SuggestDto.class);
+    }
+
+    /**
+     * 导出pdf数据 add by zengchengfa 20210803
+     * @param param
+     * @return
+     */
+    public List<TrdBondInvestTradePdfDto> selectExportPdf(Map param){
+        return restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/selectExportPdf",
+                param,TrdBondInvestTradePdfDto.class);
+    }
+
+    /**
+     * 导出pdf add by zengchengfa 20210803
+     * @param pageId 画面id
+     * @param param 参数
+     * @return
+     */
+    public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
+        List<TrdBondInvestTradePdfDto> datas = selectExportPdf(param);
+        if(!StringUtil.isEmptyList(datas)){
+            //汇总交易金额
+            TrdBondInvestTradePdfDto dto = new TrdBondInvestTradePdfDto();
+            dto.setPortfolioId("合计");
+            if(pageId.equalsIgnoreCase("TrdBondInvestTradeEx001")){
+                //场内交易
+                BigDecimal entrustAmtSum = datas.stream().map(TrdBondInvestTradePdfDto::getEntrustAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal entrustNumSum = datas.stream().map(TrdBondInvestTradePdfDto::getEntrustNum).reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal shareAmtSum = datas.stream().map(TrdBondInvestTradePdfDto::getShareAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal tradeAmtSum = datas.stream().map(TrdBondInvestTradePdfDto::getTradeAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                dto.setEntrustNum(entrustNumSum);
+                dto.setEntrustAmt(entrustAmtSum);
+                dto.setShareAmt(shareAmtSum);
+                dto.setTradeAmt(tradeAmtSum);
+            }else{
+                BigDecimal fpriceAmt = datas.stream().map(TrdBondInvestTradePdfDto::getFpriceAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal shareAmt = datas.stream().map(TrdBondInvestTradePdfDto::getShareAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal tradeAmt = datas.stream().map(TrdBondInvestTradePdfDto::getTradeAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal intAmt = datas.stream().map(TrdBondInvestTradePdfDto::getIntAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                dto.setFpriceAmt(fpriceAmt);
+                dto.setShareAmt(shareAmt);
+                dto.setTradeAmt(tradeAmt);
+                dto.setIntAmt(intAmt);
+            }
+            datas.add(dto);
+        }
+        return commonExportPdfService.exportPdf(pageId,getConfigFile(pageId),datas);
+    }
+
+    /**
+     * 获取配置文件绝对路径 add by zengchengfa 20210803
+     * @return
+     */
+    public String getConfigFile(String pageId){
+        String basePath = this.getClass().getClassLoader().getResource("com/joyintech/tams/invest/trade/bond/conf/").toString();
+        if(pageId.equalsIgnoreCase("TrdBondInvestTradeEx001")){
+            //场内
+            return basePath + "export_conf_pdf002.xml";
+        }else{
+            return basePath + "export_conf_pdf001.xml";
+        }
     }
 }

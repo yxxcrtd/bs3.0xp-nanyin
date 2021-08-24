@@ -261,6 +261,15 @@ public class EtrInvestAllInfo001Controller extends BaseController {
                                   + FileNameUtil.getFileExtName(outFile),
              outFile, true);
     }
-    
+
+    /**
+     * 导出pdf add by zengchengfa 20210730
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("exportPdf")
+    public ResponseEntity<byte[]> exportPdf(){
+        return etrInvestAllInfoService.exportPdf(this.getPageId(),RequestUtil.getPageParam());
+    }
     
 }

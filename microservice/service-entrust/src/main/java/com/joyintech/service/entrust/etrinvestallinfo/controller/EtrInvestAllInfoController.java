@@ -13,6 +13,7 @@ package com.joyintech.service.entrust.etrinvestallinfo.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoExportPdfDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -104,6 +105,19 @@ public class EtrInvestAllInfoController {
     public List<EtrInvestAllInfoDto> selectExportPB(@RequestBody Map<String, Object> param) 
         throws Exception {
     	List<EtrInvestAllInfoDto> result = etrInvestAllInfoService.selectExportPB( param);
+        return result;
+    }
+
+    /**
+     * 查询导出pdf数据 add by zengchengfa 20210730
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("selectExportPdf")
+    public List<EtrInvestAllInfoExportPdfDto> selectExportPdf(@RequestBody Map<String, Object> param)
+            throws Exception {
+        List<EtrInvestAllInfoExportPdfDto> result = etrInvestAllInfoService.selectExportPdf(param);
         return result;
     }
 }

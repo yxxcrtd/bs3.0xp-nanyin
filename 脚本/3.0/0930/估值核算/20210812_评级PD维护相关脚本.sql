@@ -1,5 +1,5 @@
 --评级PD配置表新增评级PD类型字段
-alter table MOD_GRADE_PD_CONFIG add PD_CONFIG_TYPE VARCHAR2(2);
+alter table MOD_GRADE_PD_CONFIG add PD_CONFIG_TYPE VARCHAR2(50) default '01' not null;
 comment on column MOD_GRADE_PD_CONFIG.PD_CONFIG_TYPE is '评级pd类型 （01债券、其他债权、02回购、03存款）';
 
 -- 更新评级PD配置 = 债券、其他债权评级PD配置

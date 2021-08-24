@@ -364,6 +364,9 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
         entity.setpTradeId(null);
         entity.setTradeId(dto.getBusiNo());
         entity.setRemark(dto.getRemark());
+        // ZGZGST-1339: 设置业务类型,fuyongsheng 20210824 add start
+        entity.setBusiType(dto.getBusiType());
+        // ZGZGST-1339: 设置业务类型,fuyongsheng 20210824 add end
         return entity;
     }
     /**

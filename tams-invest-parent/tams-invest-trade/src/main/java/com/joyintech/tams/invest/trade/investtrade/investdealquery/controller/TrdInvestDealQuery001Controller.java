@@ -285,4 +285,14 @@ public class TrdInvestDealQuery001Controller extends BaseController{
         TrdDealQueryDto dto = JsonUtils.json2Object((String)param.get("dtoStr"),TrdDealQueryDto.class);
         return trdInvestDealQuery001Service.batchExportExcel(dto);
     }
+
+	/**
+	 * 导出pdf add by zengchengfa 20210803
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("exportPdf")
+	public ResponseEntity<byte[]> exportPdf(){
+		return trdInvestDealQuery001Service.exportPdf(this.getPageId(),RequestUtil.getPageParam());
+	}
 }

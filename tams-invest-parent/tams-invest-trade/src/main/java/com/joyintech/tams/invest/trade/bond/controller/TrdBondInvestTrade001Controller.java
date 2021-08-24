@@ -325,4 +325,14 @@ public class TrdBondInvestTrade001Controller extends BaseController {
                 DictCodeList.委托状态_已完成.getValue(), DictCodeList.委托状态_已关闭.getValue()));
         return trdBondInvestTrade001Service.getEntrustIdByType(map);
     }
+
+    /**
+     * 导出pdf add by zengchengfa 20210803
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("exportPdf")
+    public ResponseEntity<byte[]> exportPdf(){
+        return trdBondInvestTrade001Service.exportPdf(this.getPageId(),RequestUtil.getPageParam());
+    }
 }

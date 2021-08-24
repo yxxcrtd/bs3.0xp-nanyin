@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.trade.trdrepotrade.dto.*;
 import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
-import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeDto;
-import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeExportMailDto;
-import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeReferenceDto;
 import com.joyintech.service.trade.trdrepotrade.service.TrdRepoTradeService;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.InterfTradRepoasst;
@@ -343,5 +340,18 @@ public class TrdRepoTradeController {
     @RequestMapping("getMatchpledgeBondInfo")
     public List<InterfTradRepoasstDto> getMatchpledgeBondInfo(@RequestBody Map<String,Object> map){
         return trdRepoTradeService.getMatchpledgeBondInfo(map);
+    }
+
+    /**
+     * 查询导出pdf数据 add by zengchengfa 20210730
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("selectExportPdf")
+    public List<TrdRepoTradeExportPdfDto> selectExportPdf(@RequestBody Map<String, Object> param)
+            throws Exception {
+        List<TrdRepoTradeExportPdfDto> result = trdRepoTradeService.selectExportPdf( param);
+        return result;
     }
 }

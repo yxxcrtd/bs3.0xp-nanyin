@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQueryPdfDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -328,4 +329,16 @@ public class TrdInvestDealQuery001Controller {
     public BigDecimal selectInvestRateByProject(@RequestBody AssetTransferExport001Dto dto) {
         return trdInvestDealQuery001Service.selectInvestRateByProject(dto);
     } 
+    /**
+     * 查询导出pdf数据 add by zengchengfa 20210730
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("selectExportPdfList")
+    public List<TrdInvestDealQueryPdfDto> selectExportPdfList(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return trdInvestDealQuery001Service.selectExportPdfList( param);
+    }
+
 }

@@ -95,8 +95,9 @@ public class EtrNetCashPositionDealService extends EtrCashPositionBaseService {
                 entrustCommonDto.getEtrEntrust().setChlId(StringUtil.EMPTY);
             }
             // add by etliu 20210421 权益类资产相关代码合并 end
-
-            if (DictCodeList.交易方向_申购.getValue().equals(ps)) {
+            // ZGZGST-1274 增加交易方向_买入条件, fuyongsheng 20210824 edit start
+            if (DictCodeList.交易方向_申购.getValue().equals(ps) || DictCodeList.交易方向_买入.getValue().equals(ps)) {
+                // ZGZGST-1274 增加交易方向_买入条件, fuyongsheng 20210824 edit end
                 // 委托生成的现金流水
                 EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDtoFromEtr(
                     entrustCommonDto);
@@ -108,7 +109,9 @@ public class EtrNetCashPositionDealService extends EtrCashPositionBaseService {
                 etrCashPositionFlowDto.setAcctId(acctId);
                 etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
             }
-            else if (DictCodeList.交易方向_赎回.getValue().equals(ps)) {
+            // ZGZGST-1274 增加交易方向_卖出条件, fuyongsheng 20210824 edit start
+            else if (DictCodeList.交易方向_赎回.getValue().equals(ps) || DictCodeList.交易方向_卖出.getValue().equals(ps)) {
+                // ZGZGST-1274 增加交易方向_卖出条件, fuyongsheng 20210824 edit end
                 // 委托生成的持仓流水
                 EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(
                     entrustCommonDto);
@@ -145,9 +148,9 @@ public class EtrNetCashPositionDealService extends EtrCashPositionBaseService {
 
         // 委托已完成额度
         BigDecimal etrFinish = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
-
-        if (DictCodeList.交易方向_申购.getValue().equals(ps)) {
-
+        // ZGZGST-1274 增加交易方向_买入条件, fuyongsheng 20210824 edit start
+        if (DictCodeList.交易方向_申购.getValue().equals(ps) || DictCodeList.交易方向_买入.getValue().equals(ps)) {
+        // ZGZGST-1274 增加交易方向_买入条件, fuyongsheng 20210824 edit end
             // 可用现金 关闭日增加剩余委托本金金额
             EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDtoFromEtr(
                 entrustCommonDto);
@@ -162,7 +165,9 @@ public class EtrNetCashPositionDealService extends EtrCashPositionBaseService {
             etrCashPositionFlowDto.setOffsetId(etrEntrust.getEntrustId());
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
         }
-        else if (DictCodeList.交易方向_赎回.getValue().equals(ps)) {
+        // ZGZGST-1274 增加交易方向_卖出条件, fuyongsheng 20210824 edit start
+        else if (DictCodeList.交易方向_赎回.getValue().equals(ps) || DictCodeList.交易方向_卖出.getValue().equals(ps)) {
+            // ZGZGST-1274 增加交易方向_卖出条件, fuyongsheng 20210824 edit end
             // 1.直投
             // 可用持仓(组合):关闭日增加剩余委托份额
             EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(

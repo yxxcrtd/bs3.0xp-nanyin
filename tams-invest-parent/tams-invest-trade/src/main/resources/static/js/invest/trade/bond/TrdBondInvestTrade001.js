@@ -110,7 +110,30 @@
     var exportExcel = function(){
         Joyin.exportExcel('export', getPageParams());
     };
-  
+
+    /**
+     * 导出pdf add by zengchengfa 20210803
+     */
+    var exportPdf = function() {
+        if(table!=null && table!=''){
+            var selArr = table.getAllCheckedRows();
+            // 列表中未勾选
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            var paramObj = getPageParams();
+            //勾选导出
+            var selectedItem = [];
+            $.each(table.getAllCheckedRows() ,function (i, item) {
+                selectedItem.push(item.totleTradeId);
+            });
+            paramObj.selectedItem = selectedItem.join(',');
+            Joyin.exportExcel('exportPdf', paramObj);
+        }else{
+            Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+        }
+    };
 //    /**
 //     * 绑定编辑事件
 //     */
@@ -308,6 +331,11 @@
 //                    WorkFlow.doDeleteList(basePath + 'invest/trade/bond/TrdBondInvestTrade001/delete', object, "TrdBondInvestTrade001_btn_revoke", "TrdBondInvestTrade001");
 //                });
 //            });
+        });
+
+        //add by zengchengfa 20210803 pdf导出
+        $('#'+ pageId +'_btn_export_pdf').click(function() {
+            exportPdf();
         });
     });
 }());
