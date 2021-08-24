@@ -1471,4 +1471,65 @@
 			SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP}
 		where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
 	</update>
+
+	<update id="updateByDatZipCodeAndProdId"
+			parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+		update PBC_PRD_BASEINFO_SUB_DAT
+		set PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
+			ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+			PBC_PROD_TYPE = #{pbcProdType,jdbcType=CHAR},
+			PROD_NAME = #{prodName,jdbcType=VARCHAR},
+			PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
+			PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+			PROD_ID = #{prodId,jdbcType=VARCHAR},
+			RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+			CASH_PRIN_CCY = #{cashPrinCcy,jdbcType=VARCHAR},
+			CASH_PROF_CCY = #{cashProfCcy,jdbcType=VARCHAR},
+			CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR},
+			RAISE_TYPE = #{raiseType,jdbcType=CHAR},
+			MANAGE_TYPE = #{manageType,jdbcType=CHAR},
+			FIDUCIARY_DUTY = #{fiduciaryDuty,jdbcType=VARCHAR},
+			CONT_MODE = #{contMode,jdbcType=VARCHAR},
+			OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+			IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+			BUSI_MODEL = #{busiModel,jdbcType=CHAR},
+			INCOME_GUARAN_IDENT = #{incomeGuaranIdent,jdbcType=CHAR},
+			PRIN_GUARAN_IDENT = #{prinGuaranIdent,jdbcType=CHAR},
+			HIGH_YIELD_ISSUE = #{highYieldIssue,jdbcType=DECIMAL},
+			LOW_YIELD_ISSUE = #{lowYieldIssue,jdbcType=DECIMAL},
+			RAISE_VDATE = #{raiseVdate,jdbcType=TIMESTAMP},
+			RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+			TERM_RIGHT_FLAG = #{termRightFlag,jdbcType=CHAR},
+			CUS_REDEEM_FLAG = #{cusRedeemFlag,jdbcType=CHAR},
+			CREDIT_FLAG = #{creditFlag,jdbcType=CHAR},
+			CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+			CREDIT_MODE = #{creditMode,jdbcType=VARCHAR},
+			IN_DEP_NAME = #{inDepName,jdbcType=VARCHAR},
+			IN_DEP_CODE = #{inDepCode,jdbcType=VARCHAR},
+			OUT_DEP_CTRY = #{outDepCtry,jdbcType=VARCHAR},
+			OUT_DEP_NAME = #{outDepName,jdbcType=VARCHAR},
+			VDATE = #{vdate,jdbcType=TIMESTAMP},
+			MDATE = #{mdate,jdbcType=TIMESTAMP},
+			ACCOUNT_ID = #{accountId,jdbcType=VARCHAR},
+			IS_CONSTRACTE = #{isConstracte,jdbcType=CHAR},
+			TRANSFER_TYPE = #{transferType,jdbcType=CHAR},
+			IDENTI_FLAG = #{identiFlag,jdbcType=CHAR},
+			SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+			IS_MARKET_FUND = #{isMarketFund,jdbcType=VARCHAR},
+			SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+			SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+			SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+			STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+			PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+			SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+			STATUS = #{status,jdbcType=VARCHAR},
+			CREATE_USER = #{createUser,jdbcType=VARCHAR},
+			ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+			CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+			CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+		where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
+			and PROD_ID = #{prodId,jdbcType=VARCHAR}
+	</update>
 </mapper>

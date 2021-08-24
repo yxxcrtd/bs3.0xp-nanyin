@@ -35,7 +35,7 @@ public interface PbcSendZipDatFileMapper {
 
     PbcSendZipDatFile selectByUUIDAndType(@Param("reportuuid") String reportuuid, @Param("reporttype") String reporttype);
 
-    PbcSendZipDatFile selectByDatZipCode(@Param("datZipCode")String datZipCode, @Param("datZipType")String datZipType);
+    PbcSendZipDatFile selectByDatZipCode(@Param("datZipCode")String datZipCode, @Param("datZipType")String datZipType,@Param("reportOrgName") String reportOrgName);
 
     int updateByZipCode(PbcSendZipDatFile record);
 
