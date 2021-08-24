@@ -971,8 +971,8 @@ SELECT F.FINPROD_NAME,
 		    THEN '02'
 		    WHEN t.STOCK_TYPE = '其他'
 		    THEN '99'
-		  END stocktype,
-		  sd.item_code industrynSecond,
+		  ELSE t.STOCK_TYPE END stocktype,
+		  nvl(sd.item_code,t.INDUSTRY_N) as industrynSecond,
 		  sl.linked_item_code industryn,
 		  t.INDUSTRY_S industrys,
 		  t.ENTERPRISE_TYPE3 enterprisetype3,
