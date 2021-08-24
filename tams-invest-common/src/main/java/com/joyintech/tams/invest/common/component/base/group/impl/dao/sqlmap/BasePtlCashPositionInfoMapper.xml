@@ -27,6 +27,9 @@
             <if test="chlFinprodId != null and chlFinprodId != ''">
                 AND ( fp.FINPROD_MARKET_ID = #{chlFinprodId,jdbcType=VARCHAR} or pcpf.CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR} )
             </if>
+            <if test="portfolioId != null and portfolioId != ''">
+                and pcpf.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+            </if>
             <if test="ccy != null and ccy != ''">
                 and pcpf.CCY = #{ccy,jdbcType=VARCHAR}
             </if>
