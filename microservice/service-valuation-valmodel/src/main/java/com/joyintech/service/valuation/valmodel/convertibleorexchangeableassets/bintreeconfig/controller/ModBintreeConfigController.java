@@ -1,9 +1,9 @@
 
 package com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.controller;
 
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.service.ModBintreeConfigService;
@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import com.joyintech.framework.annotation.DTXTransaction;
-import com.joyintech.framework.grid.Page;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 二叉树模型参数配置
@@ -121,6 +121,13 @@ public class ModBintreeConfigController {
     @ResponseBody
     public List<StockQuotationDto> getStockQuotation(@RequestBody StockQuotationDto assetInfoDto){
         return modBintreeConfigService.getStockQuotation(assetInfoDto);
+    }
+
+    @RequestMapping("/getMarketId/{page}/{length}")
+    @ResponseBody
+    Page<SelectOptionDto> getMarketId(@RequestBody Map<String, Object> param,
+                                      @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+        return modBintreeConfigService.getMarketId(page, length,  param);
     }
 
 }

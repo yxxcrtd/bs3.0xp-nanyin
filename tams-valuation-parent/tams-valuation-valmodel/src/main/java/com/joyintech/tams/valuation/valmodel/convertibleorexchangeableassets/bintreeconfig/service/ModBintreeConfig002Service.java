@@ -102,7 +102,7 @@ public class ModBintreeConfig002Service extends CommonExportService<ModBintreeCo
    }
    public Page<SelectOptionDto> getMarketId(Map<String, Object> parameters) {
 	   Page<SelectOptionDto> pageList = restTemplate.postForPage(
-				ServiceApplication.CUSTOMER_INTERF_NAME + "/interf/ModelCallOnInvest/getMarketId", parameters,
+				ServiceApplication.VAL_MODEL_SERVICE_NAME + "/ModBintreeConfig/getMarketId", parameters,
 				SelectOptionDto.class);
 		return pageList;
 

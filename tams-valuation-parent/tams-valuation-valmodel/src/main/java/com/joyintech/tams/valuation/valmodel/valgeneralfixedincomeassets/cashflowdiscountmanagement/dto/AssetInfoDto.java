@@ -63,12 +63,24 @@ public class AssetInfoDto {
 	 * 资产五级分类
 	 */
 	private String type12;
+	/**资产一级分类**/
+	private String type1;
+	/**资产二级分类**/
+	private String type2;
+	/**资产三级分类**/
+	private String type3;
+	/**估值核算-证券品种**/
+	private String type18;
 	/*一到五级分类List 查询时传参用 begin*/
 	private List<String> type8List;
 	private List<String> type9List;
 	private List<String> type10List;
 	private List<String> type11List;
 	private List<String> type12List;
+	private List<String> type1List;
+	private List<String> type2List;
+	private List<String> type3List;
+	private List<String> type18List;
 	/*一到五级分类List 查询时传参用 end*/
 	private String search;
 	private String initValue;
@@ -192,4 +204,68 @@ public class AssetInfoDto {
     public void setIsRateAdjust(String isRateAdjust) {
         this.isRateAdjust = isRateAdjust;
     }
+
+	public String getType1() {
+		return type1;
+	}
+
+	public void setType1(String type1) {
+		this.type1 = type1;
+	}
+
+	public String getType2() {
+		return type2;
+	}
+
+	public void setType2(String type2) {
+		this.type2 = type2;
+	}
+
+	public String getType3() {
+		return type3;
+	}
+
+	public void setType3(String type3) {
+		this.type3 = type3;
+	}
+
+	public String getType18() {
+		return type18;
+	}
+
+	public void setType18(String type18) {
+		this.type18 = type18;
+	}
+
+	public List<String> getType1List() {
+		return type1List;
+	}
+
+	public void setType1List(List<String> type1List) {
+		this.type1List = type1List;
+	}
+
+	public List<String> getType2List() {
+		return type2List;
+	}
+
+	public void setType2List(List<String> type2List) {
+		this.type2List = type2List;
+	}
+
+	public List<String> getType3List() {
+		return type3List;
+	}
+
+	public void setType3List(List<String> type3List) {
+		this.type3List = type3List;
+	}
+
+	public List<String> getType18List() {
+		return type18List;
+	}
+
+	public void setType18List(List<String> type18List) {
+		this.type18List = type18List;
+	}
 }
