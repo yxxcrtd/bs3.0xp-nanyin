@@ -10,6 +10,7 @@
  
 package com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,9 +172,21 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
      * @see
      * @since 1.0
      */
-    public List<CeAssetGroupManagement002Dto> selectAssetInfo(Map<String, Object> param)
+    public Page<CeAssetGroupManagement002Dto> selectAssetInfo(Map<String, Object> param,int page,int length)
         throws Exception {
-        return ceAssetGroupManagementMapper.selectAssetInfo(param);
+        Page<CeAssetGroupManagement001Dto> page0 = super.queryForPage(page,length,() -> ceAssetGroupManagementMapper.selectAssetInfo(param));
+        List<CeAssetGroupManagement002Dto> listObj = new ArrayList<>();
+        for(CeAssetGroupManagement001Dto dto:page0.getRoot()){
+            CeAssetGroupManagement002Dto dtoObj = new CeAssetGroupManagement002Dto();
+            dtoObj.setFinprodId(dto.getFinprodId());
+            dtoObj.setFinprodName(dto.getFinprodName());
+            listObj.add(dtoObj);
+        }
+        Page<CeAssetGroupManagement002Dto> page1 = new Page<>();
+        page1.setRoot(listObj);
+        page1.setTotal(page0.getTotal());
+        page1.setRecords(page0.getRecords());
+        return page1;
     }
 
     /**

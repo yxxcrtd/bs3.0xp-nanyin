@@ -180,6 +180,7 @@
             temp.assetAvailablePosition  = item.assetAvailablePosition;
             temp.proAvailableCash  = item.proAvailableCash;
             temp.fileArray = item.fileArray;
+            temp.invAim = item.invAim;
             temp.counterId = item.counterId;
             temp.invManagerId=item.invManagerId;
             var etrInvestPersonInfo = {};

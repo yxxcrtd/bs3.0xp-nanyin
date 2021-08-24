@@ -39,7 +39,7 @@
             {field:'finProdName', title: 'ModStockDivitrateConfig001.finProdName',sortable:false}
             ,{field:'secDetailTypeModelStr', title: 'ModStockDivitrateConfig001.secTypeModel',sortable:false}
             ,{field:'secTypeModelStr', title: 'ModStockDivitrateConfig001.secDetailTypeModel',sortable:false,visible: false}
-            ,{field:'stockIntarte', width:200, title: 'ModStockDivitrateConfig001.stockIntarte',type:'number',sortable:false}
+            ,{field:'stockIntarte', width:200, title: 'ModStockDivitrateConfig001.stockIntarte', type:'number',digit:4, sortable:false}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:150}
         ],
     });

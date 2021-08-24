@@ -57,7 +57,7 @@
 			AND (FPA.IS_ISSUE_ASSET IS NULL OR FPA.IS_ISSUE_ASSET = 'N')
 		</where>
 	</select>
-	<select id="selectAssetInfo" resultType="com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.dto.CeAssetGroupManagement002Dto">
+	<select id="selectAssetInfo" resultType="com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.dto.CeAssetGroupManagement001Dto">
 		select
 			fp.FINPROD_ID   finprodId,
 			fp.FINPROD_NAME finprodName

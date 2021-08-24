@@ -85,6 +85,12 @@
         <if test="finprodId!=null and finprodId != ''">
             AND  FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
+        <if test="effDateCon!=null and effDateCon != ''">
+            AND EFF_DATE = to_date(#{effDateCon,jdbcType=VARCHAR},'yyyy-MM-dd')
+        </if>
+        <if test="seqNoCon!=null and seqNoCon != ''">
+            AND  SEQNO != #{seqNoCon,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <select id="getCashFlowDiscountList"  resultType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.CashFlowDiscount001Dto">

@@ -71,6 +71,7 @@ public class RiskPremiumAdjConf002Controller extends BaseController {
         super.setSelectOptionToModel(model, DictCode.评级结果);
         super.setSelectOptionToModel(model, DictCode.评级来源_模型);
         super.setSelectOptionToModel(model, DictCode.资产类型);
+        super.setSelectOptionToModel(model, DictCode.证券品种);
         return super.init(model);
     }
 

@@ -115,7 +115,7 @@ public class ModStockDivitrateConfigInfoDto extends BaseEntity implements Proces
 		return SysDataUtil.getNameFromDataDict(DictCode.资产分类, this.getSecDetailTypeModel());
 	}
 
-	@Amount(fieldName = "ModStockDivitrateConfig001.stockIntarte", maxIntBit = 30, groups = {ValidateGroupEdit.class})
+	@Amount(fieldName = "ModStockDivitrateConfig001.stockIntarte", maxIntBit = 30, maxDecBit= 4, groups = {ValidateGroupEdit.class})
 	@NotEmpty(fieldName = "ModStockDivitrateConfig001.stockIntarte", groups = {ValidateGroupEdit.class})
 	public BigDecimal getStockIntarte() {
 		return stockIntarte;

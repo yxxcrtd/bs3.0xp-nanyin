@@ -71,7 +71,7 @@ public interface CeAssetGroupManagementMapper {
      * @see
      * @since 1.0
      */
-    List<CeAssetGroupManagement002Dto> selectAssetInfo(Map<String, Object> param);
+    List<CeAssetGroupManagement001Dto> selectAssetInfo(Map<String, Object> param);
 
     /**
      * <一句话功能简述>

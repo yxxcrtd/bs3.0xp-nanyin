@@ -19,8 +19,8 @@
 		</if>
 		<if test="status == null or status == ''">
 			case WFL.TRADE_STATUS
-			when '03'  
-			then #{validStatus_03} 
+			when '03'
+			then #{validStatus_03}
 			else #{validStatus_02}
 			end
 			as tradeStatus,
@@ -233,7 +233,7 @@
 			LEFT JOIN PTL_PORTFOLIO PP ON WFLDEAL.PORTFOLIO_ID = PP.PORTFOLIO_ID
 		<where>
 			PP.INVEST_YESORNO = 'Y'
-			and (not (wfl.is_cancel = 'N' and wfl.is_swap_transaction='Y'))
+			and (not (wfl.is_cancel = 'N' and wfl.is_swap_transaction IS not NULL and wfl.is_swap_transaction='Y'))
 			<if test="userId != null and userId != ''">
 				AND (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
 				OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))

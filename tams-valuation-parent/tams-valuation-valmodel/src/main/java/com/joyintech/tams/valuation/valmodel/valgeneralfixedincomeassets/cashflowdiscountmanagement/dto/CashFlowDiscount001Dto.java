@@ -127,6 +127,16 @@ public class CashFlowDiscount001Dto extends BaseEntity implements ProcessEntity{
      * 失效日期字符
      */
     private String invalidDateStr;
+
+    /**
+     * 检验生效时间条件
+     */
+    private String effDateCon;
+
+    /**
+     * 检验生效时间序列
+     */
+    private String seqNoCon;
     /** modify by yanya on 20210821 按需求增加、是否兜底评级、兜底评级、生失效时间 end**/
 
 
@@ -255,7 +265,8 @@ public class CashFlowDiscount001Dto extends BaseEntity implements ProcessEntity{
     }
 
     public String getSecTypeModelStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.资产类型, this.getSecTypeModel());
+        //return SysDataUtil.getNameFromDataDict(DictCode.资产类型, this.getSecTypeModel());
+        return SysDataUtil.getNameFromDataDict(DictCode.证券品种, this.getSecTypeModel());
     }
 
     public String getSecDetailTypeModelStr() {
@@ -353,5 +364,21 @@ public class CashFlowDiscount001Dto extends BaseEntity implements ProcessEntity{
 
     public void setInvalidDateStr(String invalidDateStr) {
         this.invalidDateStr = invalidDateStr;
+    }
+
+    public String getEffDateCon() {
+        return effDateCon;
+    }
+
+    public void setEffDateCon(String effDateCon) {
+        this.effDateCon = effDateCon;
+    }
+
+    public String getSeqNoCon() {
+        return seqNoCon;
+    }
+
+    public void setSeqNoCon(String seqNoCon) {
+        this.seqNoCon = seqNoCon;
     }
 }
