@@ -229,7 +229,117 @@
             obj.callback($this);
         return $this;
     }
+    /**
+     * 根据传入的数据，设置画面元素
+     */
+        //add by chenjiaxing 持仓页面点击未带出净价 start
+    var setEntrust001PageItems001 = function(param) {
+        setPageItemsFlag = true;
+        if(param) {
+            if(param.entrustType) {
+                linkTradePlat(param.entrustType, false);
+            }
+            if(param.entrustId) {
+                $("#entrustId_" + currentTab).val(param.entrustId).trigger('change');
+            }
+            if(param.entrustStatus) {
+                $("#entrustStatus_" + currentTab).val(param.entrustStatus).trigger('change');
+            }
+            if(param.portfolioId) {
+                $("#portfolioId_" + currentTab).textSelect('setValue', param.portfolioId);
+            }
+            if(param.acctNo) {
+                $("#acctNo_" + currentTab).textSelect('setValue', param.acctNo);
+            }
+            if(param.secId) {
+                $("#secId_" + currentTab).textSelect('setValue', param.secId);
+            }
+            /*if(param.finprodType2) {
+                $("#finprodType2_" + currentTab).val(param.finprodType2).trigger('change');
+            }*/
+            if(param.ps) {
+                $("#ps_" + currentTab).textSelect('setValue', param.ps);
+            }
+            if(param.tradeMarket) {
+                $("#tradeMarket_" + currentTab).val(param.tradeMarket).trigger('change');
+            }
+            if(param.dataSource) {
+                $("#dataSource_" + currentTab).val(param.dataSource).trigger('change');
+            }
+            if(param.priceModel) {
+                $("#priceModel_" + currentTab).val(param.priceModel).trigger('change',true);
+            }
+            if(param.declaType) {
+                $("#declaType_" + currentTab).val(param.declaType).trigger('change',true);
+            }
+            if(param.calMode) {
+                $("input[name=calculateField_" + currentTab + "][value='"+ param.calMode +"']").attr("checked",true);
+                layui.form.render(); //更新
+                calculateFieldChange();
+            }
+            // 需要根据金融产品类型设置不同的价格
+            if(param.price) {
+                if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && isStandardPs(param.ps)) {
+                     $("#price_" + currentTab).val(param.price).trigger('blur').trigger('change');
+                }
+                else {
+                    $("#entrustPrice_" + currentTab).val(param.price).trigger('blur').trigger('change');
+                }
+            }
+            if(param.calMode && param.calMode == SEC_CALC_MODE_02 && param.fprice) {
+                $("#fprice_" + currentTab).val(param.fprice).trigger('blur').trigger('change');
+            }
+            if(param.calMode && param.calMode == SEC_CALC_MODE_03 && param.yield) {
+                $("#yield_" + currentTab).val(param.yield).trigger('blur').trigger('change');
+            }
+            if(param.entrustPrice) {
+                if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && isStandardPs(param.ps)) {
+                    $("#price_" + currentTab).val(param.entrustPrice).trigger('blur').trigger('change');
+                }
+                else {
+                    $("#entrustPrice_" + currentTab).val(param.entrustPrice).trigger('blur').trigger('change');
+                }
+            }
 
+            if(param.entrustAmt) {
+                $("#entrustAmt_" + currentTab).val(param.entrustAmt).trigger('blur').trigger('change');
+            }
+
+            //打开开关
+            setPageItemsFlag = false;
+            if(param.targetType) {
+                $("#targetType_" + currentTab).val(param.targetType).trigger('change');
+            }
+
+            if(param.entrustNum) {
+                $("#entrustNum_" + currentTab).val(param.entrustNum).trigger('blur').trigger('change');
+            }
+            if(param.invAim) {
+                $("#invAim_" + currentTab).val(param.invAim).trigger('change');
+            }
+            if(param.counterId) {
+                $("#counterId_" + currentTab).textSelect('setValue', param.counterId);
+            }
+            if(param.seatId) {
+                $("#seatId_" + currentTab).val(param.seatId).trigger('change');
+            }
+            if(param.agreeOnId) {
+                $("#agreeOnId_" + currentTab).val(param.agreeOnId).trigger('change');
+            }
+            if(param.counterOrg) {
+                $("#counterOrg_" + currentTab).val(param.counterOrg).trigger('change');
+            }
+            if(param.counterTrader) {
+                $("#counterTrader_" + currentTab).val(param.counterTrader).trigger('change');
+            }
+            if(param.trader) {
+                $("#trader_" + currentTab).val(param.trader).trigger('change');
+            }
+        }
+        //计算价格和收益率
+        calcPriceAndYield();
+    }
+    //add by chenjiaxing 持仓页面点击未带出净价 end
     /**
      * 根据传入的数据，设置画面元素
      */
@@ -2170,7 +2280,7 @@
      */
     var dbclickRefresh002 = function(data){
         //设置
-        setEntrust001PageItems(data);
+        setEntrust001PageItems001(data);
         //清空指令编号,设置指令记录操作类型
         $("#entrustId_" + currentTab).val('').trigger('change');
         optType = ENTRUST_RECORD_NEW;
