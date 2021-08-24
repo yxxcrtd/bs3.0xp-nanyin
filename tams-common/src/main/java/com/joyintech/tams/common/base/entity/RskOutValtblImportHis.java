@@ -21,6 +21,17 @@ public class RskOutValtblImportHis extends RskOutValtblImportHisKey {
     /**定时任务跑估值穿透状态*/
     private String timedTaskStatus;
 
+    /**详情*/
+    private String resultInfo;
+
+    public String getResultInfo() {
+        return resultInfo;
+    }
+
+    public void setResultInfo(String resultInfo) {
+        this.resultInfo = resultInfo;
+    }
+
     public String getFilePath() {
         return filePath;
     }

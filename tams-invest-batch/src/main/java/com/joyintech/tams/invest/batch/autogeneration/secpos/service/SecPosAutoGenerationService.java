@@ -281,7 +281,7 @@ public class SecPosAutoGenerationService {
                     //成本收益率计算
                     item.setCostRate(calculationCostRate(item.getFinprodId(), DateUtil.format(batchDate), item.getPortfolioId(), item.getIsPerne()));
 
-                    if (item.getIsRight().equals(DictCodeList.是否_是.getValue())) {
+                    if (StringUtil.equals(item.getIsRight(),DictCodeList.是否_是.getValue())) {
                         List<FinExercisePlan> finExercisePlanList =new ArrayList<FinExercisePlan>();
                         if(item.getExDate() !=null && item.getExDate() !=""){
                             finExercisePlanList = calculationSurplusExercise(item.getFinprodId(), DateUtil.format(batchDate), DictCodeListExt1.金融产品类型_投管用_债券.getValue(), "", item.getExDate());

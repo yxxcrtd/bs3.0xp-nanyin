@@ -128,6 +128,8 @@ var QueryFunc=function(){
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",false);
                 $("#issueAmt").attr("disabled",false);
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
+                $("#svrBussRepPlacementInfoDto_targetType1").prop('required', true);
+                $("#targetAmt").prop('required', true);
                 // var parms={assetuuid:$("#assetUuid").val()}
                 // Joyin.ajaxJson(
                 //     basePath + "chb/assetinfodetail/AssetInfoDetail002/getValue",parms,
@@ -140,6 +142,8 @@ var QueryFunc=function(){
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",true);
                 $("#issueAmt").attr("disabled",true);
                 $("#issueAmt").val('');
+                $("#svrBussRepPlacementInfoDto_targetType1").prop('required', false);
+                $("#targetAmt").prop('required', false);
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
@@ -467,7 +471,6 @@ var QueryFunc=function(){
         }
 
 
-
         //隐藏所有中债报送信息
         $(".businessDeptClass").hide();
         init();
@@ -494,8 +497,6 @@ var QueryFunc=function(){
         $('#assetName').change(function(){
             assetVal();
         });
-
-
     });
 }());
 

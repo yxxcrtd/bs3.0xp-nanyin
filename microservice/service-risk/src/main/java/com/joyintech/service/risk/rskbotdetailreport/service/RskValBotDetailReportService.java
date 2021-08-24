@@ -54,7 +54,7 @@ public class RskValBotDetailReportService extends BaseService<RskValBotDetailRep
             //对部分数据进行处理
             calDetailList(result);
             //按照资产二级分类升序排序
-            result = result.stream().sorted(Comparator.comparing(RskValBotDetailReportDto::getAssettype2)).collect(Collectors.toList());
+            //result = result.stream().sorted(Comparator.comparing(RskValBotDetailReportDto::getAssettype2)).collect(Collectors.toList());
             pg.setRoot(result);
             pg.setRecords(result.size());
             Double totle = ArithmeticUtil.divide(new BigDecimal(result.size()),new BigDecimal(length)).doubleValue();
@@ -75,7 +75,15 @@ public class RskValBotDetailReportService extends BaseService<RskValBotDetailRep
                 ||"1108".equals(x.getAssettype2())
                 ||"1902".equals(x.getAssettype2())){
                 x.sethColumn(null);
+                x.setiColumn(null);
             }
+            //add by yjp ZGBSEI-292 20210817 估值表内应收利息/股利：其他负债和回购显示为空 start
+            if("2000".equals(x.getAssettype2())
+                    ||"1108".equals(x.getAssettype2())
+                    ||"1902".equals(x.getAssettype2())){
+                x.setkColumn(null);
+            }
+            //add by yjp ZGBSEI-292 20210817 估值表内应收利息/股利：其他负债和回购显示为空 end
             //最新债项评级
             x.setpColumn(SysDataUtil.getNameFromDataDict(DictCode.评级结果, x.getpColumn()));
             //最新主体评级
@@ -114,6 +122,20 @@ public class RskValBotDetailReportService extends BaseService<RskValBotDetailRep
                 if (singleRule.getPropertyName().contains("合计")) {
                     continue;
                 }
+                //add by yjp  ZGBSEI-286  20210817 start
+                if (singleRule.getPropertyCode().contains("AMT3_1_1") || singleRule.getPropertyCode().contains("AMT3_1_2")
+                        ||singleRule.getPropertyCode().contains("AMT3_1_3")
+                        ||singleRule.getPropertyCode().contains("AMT3_2_1") ||singleRule.getPropertyCode().contains("AMT3_2_2")
+                        ||singleRule.getPropertyCode().contains("AMT3_2_3") ||singleRule.getPropertyCode().contains("AMT3_2_4")
+                        ||singleRule.getPropertyCode().contains("AMT3_2_5") ||singleRule.getPropertyCode().contains("AMT3_2_6")
+                        ||singleRule.getPropertyCode().contains("AMT3_3_1") ||singleRule.getPropertyCode().contains("AMT3_3_2")
+                        ||singleRule.getPropertyCode().contains("AMT3_3_3") ||singleRule.getPropertyCode().contains("AMT3_3_4")
+                        ||singleRule.getPropertyCode().contains("AMT3_3_5") ||singleRule.getPropertyCode().contains("AMT3_3_6")
+                        ||singleRule.getPropertyCode().contains("AMT3_3_7") ||singleRule.getPropertyCode().contains("AMT3_3_8")
+                        ||singleRule.getPropertyCode().contains("AMT3_3_9")) {
+                    continue;
+                }
+                //add by yjp  ZGBSEI-286  20210817 end
                 // 根据配置规则代码匹配资产头寸中相应属性
                 if (!StringUtil.isEmptyList(singleRule.getRuleCodeList())
                         && !StringUtil.isEmptyList(singleRule.getRuleValueList())) {

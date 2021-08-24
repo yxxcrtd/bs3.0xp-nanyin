@@ -32,6 +32,20 @@
 				return getSearchParams();
 			}
 		},
+		//add by yjp ZGBSEI-188增加双击查看 20210811 start
+		/**
+		 * 双击查看
+		 */
+		dblclick: function (table, data) {
+			Joyin.dialog(JoyinUtil.getLabel("FinStockInfo002.title"),
+				basePath + "invest/risk/assetinfodetail/AssetInfoDetailRisk002/init",
+				"99%", "99%", {
+					pageModel: PAGE_MODEL_REFERENCE,
+					assetUuid: data.assetUuid,
+					dataStatus:data.dataStatus
+				});
+		},
+		//add by yjp ZGBSEI-188增加双击查看 20210811 end
 		rowno:false,
 		cols:[
 			{ field: 'assetUuid',width:0,sortField:'',visible:false},

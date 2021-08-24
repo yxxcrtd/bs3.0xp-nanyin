@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.batch.valbatchimport.common.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,15 +19,22 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.dao.ChbDataCheckCommonMapper;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.invest.batch.susprdfutureopenplangen.relyingonresources.DateCalService;
-import com.joyintech.tams.invest.batch.valbatchimport.common.constant.FundDateType;
+import com.joyintech.tams.invest.batch.valbatchimport.common.dao.AssetCommonMapper;
+import com.joyintech.tams.invest.batch.valbatchimport.common.dao.MstCustomerNatureMapper;
 import com.joyintech.tams.invest.batch.valbatchimport.common.dto.*;
+import com.joyintech.tams.invest.batch.valbatchimport.dto.RskValtblAssetSubDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,11 +61,8 @@ import com.joyintech.tams.common.base.entity.FinProductTypeConfig;
 import com.joyintech.tams.common.base.entity.FinProductValuation;
 import com.joyintech.tams.common.base.entity.FinRateInfo;
 import com.joyintech.tams.common.base.entity.FinStdsecConverseRadio;
-import com.joyintech.tams.common.base.entity.InfCmoneymarketfscarryoverm;
 import com.joyintech.tams.common.base.entity.InterfBondMarketInfo;
 import com.joyintech.tams.common.base.entity.InterfCbonddescription;
-import com.joyintech.tams.common.base.entity.InterfCbondindustrywind;
-import com.joyintech.tams.common.base.entity.InterfCbondspecialconditions;
 import com.joyintech.tams.common.base.entity.InterfCmfunddescrip;
 import com.joyintech.tams.common.base.entity.InterfCmfundnav;
 import com.joyintech.tams.common.base.entity.InterfFMarketInfo;
@@ -80,7 +85,6 @@ import com.joyintech.tams.common.base.entity.RepAssetBond;
 import com.joyintech.tams.common.base.entity.RepAssetDept;
 import com.joyintech.tams.common.base.entity.RepAssetEquity;
 import com.joyintech.tams.common.base.entity.RepFund;
-import com.joyintech.tams.component.business.common.dto.InterfStockInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -94,8 +98,6 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationInputParaDto;
-import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationOutputDto;
-import com.joyintech.tams.invest.common.util.xmlrelation.XmlRelationUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -111,11 +113,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Service
 public class CommonAutoCouponService extends BaseService{
 
-//    @Autowired
-//    private CommonBusinessService commonBusinessService;
-//
-//    @Autowired
-//    private BaseGetBusinessId bussGetBussinessIdService;
 
     @Autowired(required = false)
     private BaseGetBussinessId baseGetBussinessId;
@@ -125,14 +122,26 @@ public class CommonAutoCouponService extends BaseService{
     @Autowired
     private MstCustomerInfoAddMapper mstCustomerInfoAddMapper;
 
+    @Autowired
+    private MstCustomerNatureMapper mstCustomerNatureMapper;
+
+    @Autowired
+    private AssetCommonMapper assetCommonMapper;
+
+    @Autowired
+    private ChbDataCheckService chbDataCheckService;
+
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+
+    @Autowired
+    private ChbDataCheckCommonMapper chbDataCheckCommonMapper;
+
     /**
      * 付息计划，开放计划，利率重置，申购计划，赎回计划计算用和日期关联的Service
      */
     @Autowired
     private DateCalService dateCalService;
-
-    @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     /**
      * 获取wind资产信息(债券)
@@ -171,19 +180,6 @@ public class CommonAutoCouponService extends BaseService{
     }
 
     /**
-     * WIND_中国债券特殊条款
-     * <功能详细描述>
-     * @param sInfoWindcode
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public InterfCbondspecialconditions selectInterfCbondspecialconditions(String sInfoWindcode){
-        return restTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectInterfCbondspecialconditions?sInfoWindcode="+sInfoWindcode,
-                InterfCbondspecialconditions.class);
-    }
-
-    /**
      * WIND_浮息债报价表
      * <功能详细描述>
      * @param sInfoWindcode
@@ -194,19 +190,6 @@ public class CommonAutoCouponService extends BaseService{
     public List<InterfFloatcouprate> selectInterfFloatingcouponsrate(String sInfoWindcode){
         return restTemplate.getForList(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectInterfFloatingcouponsrate?sInfoWindcode="+sInfoWindcode,
                 InterfFloatcouprate.class);
-    }
-
-    /**
-     * Wind 债券分类板块
-     * <功能详细描述>
-     * @param sInfoWindcode
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public InterfCbondindustrywind selectInterfCbondindustrywind(String sInfoWindcode){
-        return restTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectInterfCbondindustrywind?sInfoWindcode=" + sInfoWindcode,
-                InterfCbondindustrywind.class);
     }
 
     /**
@@ -267,18 +250,6 @@ public class CommonAutoCouponService extends BaseService{
     }
 
     /**
-     * 获取中国货币市场基金份额结转方式
-     * <功能详细描述>
-     * @param fInfoWindcode
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public InfCmoneymarketfscarryoverm selectWindFundMoneymarketfscarryoverm(String fInfoWindcode){
-        return restTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectWindFundMoneymarketfscarryoverm?fInfoWindcode="+fInfoWindcode,
-                InfCmoneymarketfscarryoverm.class);
-    }
-    /**
      * 自动加券(债券)保存
      * <功能详细描述>
      * @param dto
@@ -336,10 +307,9 @@ public class CommonAutoCouponService extends BaseService{
                     return null;
                 }
                 //交易日历
-                List<MstCalendarInfo> mstCalendarInfoList =  getMstCalendarInfo();
+                List<MstCalendarInfo> mstCalendarInfoList =  assetCommonMapper.getMstCalendarInfo();
                 //new标的类金融产品
                 FinProduct finProduct = new FinProduct();
-                XmlRelationInputParaDto inputParaDto = new XmlRelationInputParaDto();
                 String finprodId = getFinProdId(interfPayhsrcsecinfo.getSecid(), BussinessDictCodeList.金融产品类型_投管用_债券.getValue(),StringUtil.EMPTY);
                 finProduct.setFinprodId(finprodId);
                 finProduct.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
@@ -347,9 +317,6 @@ public class CommonAutoCouponService extends BaseService{
                 finProduct.setFinprodName(interfPayhsrcsecinfo.getSecfullname());
                 finProduct.setProfitType(DictCodeList.收益类型_收益型.getValue());
                 /**--息票品种modify 2019-04-15 start--**/
-//              inputParaDto.setDictCode(BussinessDictCode.wind息票品种.getValue());
-//              inputParaDto.setItemCode(interfPayhsrcsecinfo.getCouponspecies());
-//              finProduct.setCouponSpecies(windCovCom(inputParaDto));
                 finProduct.setCouponSpecies(interfPayhsrcsecinfo.getCouponspecies());
                 /**--息票品种modify 2019-04-15 end--**/
                 finProduct.setFinprodMarketId(interfPayhsrcsecinfo.getSecid());
@@ -389,19 +356,6 @@ public class CommonAutoCouponService extends BaseService{
                     }
                 }
 
-                //资产支持证券:默认非保  其他债券类型默认保本
-                /*if(BussinessDictCodeList.债券一级分类_资产支持证券.getValue().equals(interfPayhsrcsecinfo.getPbocsectype())){
-                    finProduct.setCapiIncomeFeature(DictCodeListExt1.本金收益特征_非保本.getValue());//保本标志
-                }else{
-                    finProduct.setCapiIncomeFeature(DictCodeList.产品收益标识_保证收益.getValue());
-                }*/
-//                if(null!=interfPayhsrcsecinfo && null!=interfPayhsrcsecinfo.getIssuetype()){
-//                    if(interfPayhsrcsecinfo.getIssuetype().toString().startsWith("43901")){
-//                        finProduct.setIssueType(BussinessDictCodeList.发行方式_公开发行.getValue());
-//                    }else{
-//                        finProduct.setIssueType(BussinessDictCodeList.发行方式_非公开发行.getValue());
-//                    }
-//                }
                 finProduct.setIssueType(interfPayhsrcsecinfo.getIssuetype());//发行方式
                 /*--发行方式--*/
                 finProduct.setVdate(interfPayhsrcsecinfo.getVdate());
@@ -415,8 +369,6 @@ public class CommonAutoCouponService extends BaseService{
                 // finProduct.setIsSus(interfPayhsrcsecinfo.getIssus());//是否永续
                 /**--add by shenchen 2019-04-10--*/
                 /**--add by shenchen 2019-04-10--*/
-//                if(StringUtil.equals(interfPayhsrcsecinfo.getIsredemption(), BussinessDictCodeList.是否_是.getValue())
-//                    ||StringUtil.equals(interfPayhsrcsecinfo.getIsprecash(), BussinessDictCodeList.是否_是.getValue())){
                 if(StringUtil.equals(interfPayhsrcsecinfo.getCalloption(), DictCodeList.是否_是.getValue())
                         ||StringUtil.equals(interfPayhsrcsecinfo.getPutoption(), DictCodeList.是否_是.getValue())){
                     /**--add by shenchen 2019-04-10--*/
@@ -461,8 +413,6 @@ public class CommonAutoCouponService extends BaseService{
                 //new金融产品分类
                 FinProductType finProductType = new FinProductType();
                 /**--add by shenchen 2019-04-10--*/
-                //finProductType.setType4(interfCbondindustrywind.getsInfoIndustrycode());//债券分类板块注释
-                //finProductType.setType5(interfCbondindustrywind.getsInfoIndustrycode2());
                 finProductType.setType4(interfPayhsrcsecinfo.getSectype());//取债券资料表系统债券类型
                 finProductType.setType5(interfPayhsrcsecinfo.getSectype2());//取债券资料表系统债券类型2
                 finProductType.setType6(interfPayhsrcsecinfo.getSectype());//取债券资料表系统债券类型
@@ -526,8 +476,6 @@ public class CommonAutoCouponService extends BaseService{
                     finCashCalcRule.setBaseType(BussinessDictCodeList.基数类型_存续本金.getValue());
                     finCashCalcRule.setBaseDateType(BussinessDictCodeList.基数日期类型_当日.getValue());
                     /**--modify by shenchen 2019-04-19--**/
-                    //              inputParaDto.setDictCode(BussinessDictCode.wind计息基础.getValue());
-                    //              inputParaDto.setItemCode(interfPayhsrcsecinfo.getRatebasic());
                     finCashCalcRule.setBasis(interfPayhsrcsecinfo.getRatebasic());
                     finCashCalcRule.setYield(ArithmeticUtil.divide(interfFloatingcouponsrate.getRate(), new BigDecimal(100)));
                     if(DateUtil.compareDate(interfFloatingcouponsrate.getChangeDt(), interfPayhsrcsecinfo.getVdate())==0){
@@ -577,10 +525,6 @@ public class CommonAutoCouponService extends BaseService{
                 finRateInfo.setCoefficient(interfPayhsrcsecinfo.getCoefficient());
                 finRateInfo.setSpreadRate(interfPayhsrcsecinfo.getSpreadrate8());
                 // 一体化对应etliu start
-//                finRateInfo.setRateMax(interfPayhsrcsecinfo.getToprate());
-//                finRateInfo.setRateMin(interfPayhsrcsecinfo.getBottomrate());
-//                finRateInfo.setIndexId(interfPayhsrcsecinfo.getRatecode());
-//                finRateInfo.setIndexSource(DictCodeList.行情类型_利率.getValue());
                 finRateInfo.setHighestRate(interfPayhsrcsecinfo.getToprate());
                 finRateInfo.setLowestRate(interfPayhsrcsecinfo.getBottomrate());
                 finRateInfo.setBenchmarkId(interfPayhsrcsecinfo.getRatecode());
@@ -600,48 +544,12 @@ public class CommonAutoCouponService extends BaseService{
                 finCashPayRule.setCashId(finCashInfoInterest.getCashId());
                 finCashPayRule.setEffDate(interfPayhsrcsecinfo.getVdate());
                 finCashPayRule.setPayCycleVal(Long.valueOf(1));
-                finCashPayRule.setPayCycle(interfPayhsrcsecinfo.getPaycycle());
-                /*--自动加券 支付频率不再用判断 modify by shenchen 2019-04-10--*/
-//                if(interfPayhsrcsecinfo.getInterestfrequency()==1){
-//                    // 一体化对应etliu start
-////                    finCashPayRule.setPayCycle(DictCodeList.支付频率_付息频率_年付.getValue());
-//                    finCashPayRule.setPayCycle(DictCodeList.频率_年.getValue());
-//                 // 一体化对应etliu end
-//                }else if(interfPayhsrcsecinfo.getInterestfrequency()==2){
-//                    // 一体化对应etliu start
-////                    finCashPayRule.setPayCycle(DictCodeList.支付频率_付息频率_半年付.getValue());
-//                    finCashPayRule.setPayCycle(DictCodeList.频率_半年.getValue());
-//                 // 一体化对应etliu end
-//                }else if(interfPayhsrcsecinfo.getInterestfrequency()==4){
-//                    // 一体化对应etliu start
-////                    finCashPayRule.setPayCycle(DictCodeList.支付频率_付息频率_季付.getValue());
-//                    finCashPayRule.setPayCycle(DictCodeList.频率_季.getValue());
-//                 // 一体化对应etliu end
-//                }else if(interfPayhsrcsecinfo.getInterestfrequency()==12){
-//                    // 一体化对应etliu start
-////                    finCashPayRule.setPayCycle(DictCodeList.支付频率_付息频率_月付.getValue());
-//                    finCashPayRule.setPayCycle(DictCodeList.频率_月.getValue());
-//                 // 一体化对应etliu end
-//                }else if(StringUtil.equals(interfPayhsrcsecinfo.getCouponspecies(), "DIS")
-//                    ||StringUtil.equals(interfPayhsrcsecinfo.getCouponspecies(), "IAM")
-//                    ||StringUtil.equals(interfPayhsrcsecinfo.getCouponspecies(), "ZCO")){
-//                    // 一体化对应etliu start
-////                        finCashPayRule.setPayCycle(DictCodeList.支付频率_付息频率_到期支付.getValue());
-//                    finCashPayRule.setPayCycle(DictCodeList.频率_到期一次.getValue());
-//                     // 一体化对应etliu end
-//                }
                 finCashPayRule.setPayCycle(interfPayhsrcsecinfo.getPaycycle());//支付频率
                 /*--自动加券 支付频率不再用判断 modify by shenchen 2019-04-10--*/
                 finCashPayRule.setEndTdayRule(DictCodeList.营业日准则_不调整.getValue());
-//              inputParaDto.setDictCode(BussinessDictCode.wind营业日准则.getValue());
-//              inputParaDto.setItemCode(interfPayhsrcsecinfo.getWorkdayrule());
-//              finCashPayRule.setPayTdayRule(windCovCom(inputParaDto));
                 finCashPayRule.setPayTdayRule(interfPayhsrcsecinfo.getWorkdayrule());
                 /**--息票品种modify 2019-04-15 end--**/
                 /**--推算方式modify 2019-04-15 start--**/
-//              inputParaDto.setDictCode(BussinessDictCode.wind推算方式.getValue());
-//              inputParaDto.setItemCode(interfPayhsrcsecinfo.getSchecalrule());
-//              finCashPayRule.setCalcRule(windCovCom(inputParaDto));
                 finCashPayRule.setCalcRule(interfPayhsrcsecinfo.getSchecalrule());
 
                 /**--推算方式modify 2019-04-15 end--**/
@@ -714,7 +622,6 @@ public class CommonAutoCouponService extends BaseService{
                         finCashPlan.setPayType(BussinessDictCodeList.分红方式_现金分红.getValue());
                         finCashPlanList.add(finCashPlan);
                     }else if("04".equals(interfPayhsrcsecschedule.getSchedutype()) || "01".equals(interfPayhsrcsecschedule.getSchedutype())){
-//                    	if(null!=interfPayhsrcsecschedule.getPrinamtpay()&&interfPayhsrcsecschedule.getPrinamtpay().compareTo(BigDecimal.ZERO)>0){
                         FinCashPlan finCashPlan = new FinCashPlan();
                         //如果资讯_债券付息计划数据Entity.实际付息结束日 = 资讯_债券基本信息数据Entity.到期日，则为到期还本
                         finCashPlan.setCashId(finCashInfoInterest.getCashId());
@@ -740,10 +647,6 @@ public class CommonAutoCouponService extends BaseService{
                         finCashPlan.setPayDateUnadjust(interfPayhsrcsecschedule.getInterestpayday());
                         finCashPlan.setMdate(interfPayhsrcsecschedule.getInterestendday());
                         finCashPlan.setPayDate(interfPayhsrcsecschedule.getInterestpayday());
-                        /**mdify by shenchen 2019-04-23**/
-                        //finCashPlan.setIntPrinAmt(interfPayhsrcsecschedule.getPrinamtpay());
-                        /**mdify by shenchen 2019-04-23**/
-                        //finCashPlan.setFrequency(Long.valueOf(interfPayhsrcsecinfo.getInterestfrequency()));接口表无年付息次数字段
                         finCashPlan.setCashUnitType(BussinessDictCodeList.现金流单位_百元法.getValue());
                         finCashPlan.setFinprodId(finprodId);
                         finCashPlan.setFinprodType2(BussinessDictCodeList.金融产品类型_投管用_债券.getValue());
@@ -751,7 +654,6 @@ public class CommonAutoCouponService extends BaseService{
                         finCashPlan.setPayType(BussinessDictCodeList.分红方式_现金分红.getValue());
                         finCashPlan.setRangeYield(interfPayhsrcsecschedule.getCouponrate());
                         finCashPlanList.add(finCashPlan);
-//                    	}
                     }
 
                 }
@@ -762,9 +664,6 @@ public class CommonAutoCouponService extends BaseService{
                     FinExercisePlan finExercisePlan = new FinExercisePlan();
                     finExercisePlan.setCashId(finCashInfoPrincipal.getCashId());
                     /**--modify 2019-04-17 start--**/
-//                  inputParaDto.setDictCode(BussinessDictCode.wind行权方式.getValue());
-//                  inputParaDto.setItemCode(payhsrcsecoption.getOptiontype());
-//                  finExercisePlan.setExerciseType(windCovCom(inputParaDto));
                     finExercisePlan.setExerciseType(payhsrcsecoption.getOptiontype());
                     finExercisePlan.setExerciseStatus(DictCodeList.行权状态_未行权.getValue());
                     /**--modify 2019-04-17 end--**/
@@ -789,13 +688,10 @@ public class CommonAutoCouponService extends BaseService{
                         finExercisePlan.setActExerciseDate(optionpayday);//实际行权日
                     }
 
-                    //finExercisePlan.setExerciseDate(theoryoptionpayday);//行权信息表理论行权日
                     // TISHKBS-1382
                     finExercisePlan.setExerciseDate(payhsrcsecoption.getTheoryoptionpayday());//行权信息表理论行权日
 
                     finExercisePlan.setExercisePrice(payhsrcsecoption.getOptionprice());
-                    /**--现行权条款取行权信息表行权条款 add by shenchen 2019-04-11--**/
-                    //finExercisePlan.setExerciseRemark(interfCbondspecialconditions.getbInfoContent());//中国债券特殊条款注释
                     finExercisePlan.setExerciseRemark(payhsrcsecoption.getOptionclause());//行权信息表行权条款
                     /**--现行权条款取行权信息表行权条款 add by shenchen 2019-04-11--**/
                     finExercisePlan.setFinprodId(finprodId);
@@ -815,11 +711,9 @@ public class CommonAutoCouponService extends BaseService{
                         mstBondCreditRating.setoCode(interfPayhsrcsecrating.getSecid());//债券ID
                         mstBondCreditRating.setGradeOrgId(interfPayhsrcsecrating.getRatingorg());//评级机构
                         mstBondCreditRating.setGradeDate(interfPayhsrcsecrating.getPubdate());//评级日期取发布日期
-                        //mstBondCreditRating.setIsrecommand(interfPayhsrcsecrating.getIsrecommand());//是否推荐
                         mstBondCreditRating.setoType(interfPayhsrcsecrating.getRatingtype());//评级类型
                         mstBondCreditRating.setShortLongTerm(interfPayhsrcsecrating.getRatingsubtype());//长期短期
                         mstBondCreditRating.setGradeResult(interfPayhsrcsecrating.getRating());//评级结果
-                        //mstBondCreditRating.setSecIssueId(getIssuer(interfPayhsrcsecinfo.getIssuershort(), "IS_ISSUER"));//标的类金融产品发行人
                         mstBondCreditRating.setInputType(BussinessDictCodeList.录入方式_接口导入.getValue());//录入方式
                         mstBondCreditRatingList.add(mstBondCreditRating);
                     }
@@ -849,10 +743,8 @@ public class CommonAutoCouponService extends BaseService{
                 repAssetDept.setFinprodMarketId(secid);//债券代码
                 repAssetDept.setRepFinprodName(interfPayhsrcsecinfo.getSecname());//债券名称
                 repAssetDept.setRepIssuePartyId("C10816");//发行机构代码(参数值)
-                //repAssetDept.setRepAssetType(exchangeType(interfPayhsrcsecinfo.getChbsectype2()));//资产负债类别
                 repAssetDept.setRepAssetType(interfPayhsrcsecinfo.getAssetClass());
                 repAssetDept.setRepCcy(interfPayhsrcsecinfo.getCcy());//币种
-                //repAssetBond.setRepSectype(repSectype);具体类别
                 repAssetBond.setRepSectype(interfPayhsrcsecinfo.getConcreteClass());//具体类别 add by lpl 2019-12-20
                 try {
                     repAssetDept.setRepStatusDate(sdf.parse(DateUtil.getSysDate()));//数据日期
@@ -866,20 +758,12 @@ public class CommonAutoCouponService extends BaseService{
                 repAssetBond.setRepPartyType2(interfPayhsrcsecinfo.getIssuerEconomicType());//机构类型按经济类型分
                 repAssetBond.setRepPartyType3(interfPayhsrcsecinfo.getIssuerTechnologyType());//机构类型按技术领域分
                 repAssetBond.setRepIndustry(interfPayhsrcsecinfo.getIssuerInstitutions());//发行机构所属行业
-                // repAssetBond.setRepIndustryLevel2(interfPayhsrcsecinfo.getIndustry2());//发行机构所属行业二级分类
-                // add by caiqun 20200915 TISHKBS-864 通过底层估值表导入的债券，加券的数据不全、不正确，导致交易异常  start
                 if(null!=mstCustomerInfoAddList && mstCustomerInfoAddList.size()!=0){
                     for(MstCustomerInfoAdd mstCustomerInfoAdd : mstCustomerInfoAddList){
-	                		/*repAssetBond.setRepPartyType1(mstCustomerInfoAdd.getPartyType1());//机构类型按规模分
-	                		repAssetBond.setRepPartyType2(mstCustomerInfoAdd.getPartyType2());//机构类型按经济类型分
-	                		repAssetBond.setRepPartyType3(mstCustomerInfoAdd.getPartyType3());//机构类型按技术领域分
-	                		repAssetBond.setRepIndustry(mstCustomerInfoAdd.getIndustry());//发行机构所属行业
-	                		repAssetBond.setRepIndustryLevel2(mstCustomerInfoAdd.getIndustry2());//发行机构所属行业二级分类*/
                         repAssetBond.setRepIndustryLevel2(mstCustomerInfoAdd.getIndustry2());//发行机构所属行业二级分类
                     }
                 }else{
                     repAssetBond.setRepIndustryLevel2(interfPayhsrcsecinfo.getIssuerinstitutionssecond());//发行机构所属行业二级分类
-                    //repAssetBond.setRepIndustryLevel2(interfPayhsrcsecinfo.getRepIndustryLevel2());
                 }
                 // add by caiqun 20200915 TISHKBS-864 通过底层估值表导入的债券，加券的数据不全、不正确，导致交易异常  end
                 baseFinProductBaseInfoDto.setRepAssetBond(repAssetBond);//存中债报送界面机构类型等字段
@@ -1032,24 +916,19 @@ public class CommonAutoCouponService extends BaseService{
         List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoList = new ArrayList<BaseFinProductBaseInfoDto>();
         if(null!=dto.getfInfoWindcodeList()&&!dto.getfInfoWindcodeList().isEmpty()){
             //交易日历
-            List<MstCalendarInfo> mstCalendarInfoList =  getMstCalendarInfo();
+            List<MstCalendarInfo> mstCalendarInfoList =  assetCommonMapper.getMstCalendarInfo();
             Long branch =StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE))?0:Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
             for(String fInfoWindcode:dto.getfInfoWindcodeList()){
                 XmlRelationInputParaDto inputParaDto = new XmlRelationInputParaDto();
                 BaseFinProductBaseInfoDto baseFinProductBaseInfoDto = new BaseFinProductBaseInfoDto();
                 //基金基本信息
                 /**--add by shenchen 2019-04-11 基金基本资料实体类更换--*/
-                //InfChinamutualfunddescription infChinamutualfunddescription = selectWindFundAssetByfInfoWindcode(fInfoWindcode);
                 InterfCmfunddescrip infChinamutualfunddescription = selectWindFundAssetByfInfoWindcode(fInfoWindcode);
                 /**--add by shenchen 2019-04-11 基金基本资料实体类更换--*/
                 //查询结果为空
                 if (!StringUtil.isNotEmpty(infChinamutualfunddescription)) {
                     return null;
                 }
-                /**--基金加券新设计注释 add by shenchen 2019-04-11--*/
-                //中国货币市场基金份额结转方式
-                //InfCmoneymarketfscarryoverm infCmoneymarketfscarryoverm =  selectWindFundMoneymarketfscarryoverm(fInfoWindcode);
-                /**--基金加券新设计注释 add by shenchen 2019-04-11--*/
                 //new标的类金融产品
                 FinProduct finProduct = new FinProduct();
                 String finprodId = getFinProdId(fInfoWindcode, DictCodeListExt1.金融产品类型_投管用_基金.getValue(),StringUtil.EMPTY);
@@ -1062,9 +941,6 @@ public class CommonAutoCouponService extends BaseService{
                 }else{
                     finProduct.setProfitType(DictCodeList.收益类型_净值型.getValue());
                 }
-                /**--modify by shenchen 2019-04-11*/
-                //finProduct.setFinprodMarketId(infChinamutualfunddescription.getfInfoWindcode());
-                //finProduct.setCcy(infChinamutualfunddescription.getCrnyCode());
                 finProduct.setFinprodMarketId(infChinamutualfunddescription.getfInfoCode());
                 finProduct.setCcy(infChinamutualfunddescription.getCcy());//币种
                 /**--modify by shenchen 2019-04-11*/
@@ -1073,12 +949,7 @@ public class CommonAutoCouponService extends BaseService{
                 }else{
                     finProduct.setBlnArea(DictCodeList.境内外_境外.getValue());
                 }
-                /**--modify by shenchen 2019-04-11*/
-//              inputParaDto.setDictCode(DictCode.交易场所_WIND.getValue());
-//              inputParaDto.setItemCode(infChinamutualfunddescription.getfInfoExchmarket());
-//              finProduct.setTradeMarket(windCovCom(inputParaDto));
                 finProduct.setTradeMarket(infChinamutualfunddescription.getfInfoExchmarket());
-                /**--modify by shenchen 2019-04-11*/
                 //2019年5月27日  法定节假日
                 if (StringUtil.equals(BussinessDictCodeList.交易场所_场外.getValue(),infChinamutualfunddescription.getfInfoExchmarket())) {
                     finProduct.setCalendarId("01");//银行间
@@ -1090,16 +961,12 @@ public class CommonAutoCouponService extends BaseService{
                 for(MstCalendarInfo mstCalendarInfo : mstCalendarInfoList){
                     inputParaDto.setDictCode(DictCode.交易场所_WIND.getValue());
                     inputParaDto.setItemCode("SH");
-//                  if(StringUtil.equals(mstCalendarInfo.getOtherId(),windCovCom(inputParaDto))){
                     //第三方日历编号等于上交所
                     if(StringUtil.equals(mstCalendarInfo.getOtherId(),"02")){
                         finProduct.setCalendarId(mstCalendarInfo.getCalendarId());
                         break;
                     }
                 }
-                /**--管理人 modify 2019-04-11 --*/
-                //finProduct.setManager(getIssuer(infChinamutualfunddescription.getfInfoCorpFundmanagementcomp()));
-                //finProduct.setIssuer(getIssuer(infChinamutualfunddescription.getfInfoCorpFundmanagementcomp()));
                 finProduct.setManager(getIssuer(infChinamutualfunddescription.getfInfoCorpFundmanagementid(), "IS_ASSTE_MANAGER"));
                 finProduct.setIssuer(getIssuer(infChinamutualfunddescription.getfInfoCorpFundmanagementid(), "IS_ISSUER"));
                 /**--管理人 modify 2019-04-11 --*/
@@ -1132,16 +999,7 @@ public class CommonAutoCouponService extends BaseService{
                 //new标的类金融产品附属
                 FinProductAdd finProductAdd = new FinProductAdd();
                 finProductAdd.setFinprodId(finprodId);
-                /*--modify by shenchen 2019-04-11 INTERF_CMFUNDDESCRIP表无此字段--*/
-                //finProductAdd.setWindId(infChinamutualfunddescription.getObjectId());
-                /*--modify by shenchen 2019-04-11 INTERF_CMFUNDDESCRIP表无此字段--*/
                 finProductAdd.setIsAutoUpdate(DictCodeList.是否_是.getValue());
-                /**--是否按日复利 modify by shenchen 2019-04-11--*/
-//                if(StringUtil.equals(infCmoneymarketfscarryoverm.getfInfoIncomescarryoverm(), "1")){
-//                    finProductAdd.setIsCompoundInt(DictCodeList.是否_是.getValue());
-//                }else{
-//                    finProductAdd.setIsCompoundInt(DictCodeList.是否_否.getValue());
-//                }
                 if (BussinessDictCodeList.收益结转频率_按月结转.getValue().equals(infChinamutualfunddescription.getPaycycle())) {
                     finProductAdd.setIsCompoundInt(infChinamutualfunddescription.getIsCompoundInt());
                 }
@@ -1159,9 +1017,6 @@ public class CommonAutoCouponService extends BaseService{
                         finProductAdd.setRedSpeed(Long.valueOf(redSpeed[1]));
                     }
                 }
-                /**--是否按日复利 modify by shenchen 2019-04-11--*/
-
-
                 finProductAdd.setTrmFundAbbr(infChinamutualfunddescription.getTrmFundAbbr());
                 finProductAdd.setTrmFundType(infChinamutualfunddescription.getTrmFundType());
                 finProductAdd.setPurRedId(infChinamutualfunddescription.getPurRedId());
@@ -1204,25 +1059,7 @@ public class CommonAutoCouponService extends BaseService{
                 baseFinProductBaseInfoDto.setFinProductAdd(finProductAdd);
                 //new金融产品分类
                 FinProductType finProductType = new FinProductType();
-                /**--分类4，分类5取基金基本资料表基本类型，基本类型2 modify 2019-04-11 start--*/
-//                if(StringUtil.equals(infChinamutualfunddescription.getfInfoFirstinvesttype(),"货币市场型")){
-//                    finProductType.setType4(DictCodeList.基金类资产类型_货币基金.getValue());
-//                }else{
-//                    finProductType.setType4(DictCodeList.基金类资产类型_非货币基金.getValue());
-//                    if(StringUtil.equals(infChinamutualfunddescription.getfInfoFirstinvesttype(),"股票型")){
-//                        finProductType.setType5(DictCodeList.基金类资产二级类型_股票基金.getValue());
-//                    }else if(StringUtil.equals(infChinamutualfunddescription.getfInfoFirstinvesttype(),"混合型")){
-//                        finProductType.setType5(DictCodeList.基金类资产二级类型_混合基金.getValue());
-//                    }else if(StringUtil.equals(infChinamutualfunddescription.getfInfoFirstinvesttype(),"保本型")){
-//                        finProductType.setType5(DictCodeList.基金类资产二级类型_保本基金.getValue());
-//                    }else if(StringUtil.equals(infChinamutualfunddescription.getfInfoFirstinvesttype(),"FOF")
-//                        ||StringUtil.equals(infChinamutualfunddescription.getfInfoFirstinvesttype(),"商品型")
-//                        ||StringUtil.equals(infChinamutualfunddescription.getfInfoFirstinvesttype(),"QDII")){
-//                        finProductType.setType5(DictCodeList.基金类资产二级类型_其他公募基金.getValue());
-//                    }else if(StringUtil.equals(infChinamutualfunddescription.getfInfoFirstinvesttype(),"债券型")){
-//                        finProductType.setType5(DictCodeList.基金类资产二级类型_债券基金.getValue());
-//                    }
-//                }
+
                 finProductType.setType4(infChinamutualfunddescription.getfInfoType());//基本类型
                 finProductType.setType6(infChinamutualfunddescription.getfInfoType());//基本类型
 
@@ -1230,13 +1067,7 @@ public class CommonAutoCouponService extends BaseService{
                 finProductTypeConfig.setInputValue1(BussinessDictCodeList.平安资产类型_基金.getValue());
                 finProductTypeConfig.setInputValue2(infChinamutualfunddescription.getfInfoType());
                 finProductTypeConfig.setInputValue3(infChinamutualfunddescription.getfInfoType2());
-//                if (StringUtil.equals(BussinessDictCodeList.基金类资产类型_非货币基金.getValue(),infChinamutualfunddescription.getfInfoType())
-//                        && StringUtil.equals(BussinessDictCodeList.基金类资产二级类型_债券基金.getValue(), infChinamutualfunddescription.getfInfoType2())
-//                && (StringUtil.equals(CacheUtil.getSysParam("IS_SHOW_TYPE"), "01") ||
-//                        StringUtil.isEmpty(CacheUtil.getSysParam("IS_SHOW_TYPE")))){
-//                    finProductTypeConfig.setInputValue2(StringUtil.EMPTY);
-//                    finProductTypeConfig.setInputValue3(StringUtil.EMPTY);
-//                }
+//
                 finProductTypeConfig = restTemplate.postForObject(ServiceApplication.ASSET_SERVICE_NAME + "/AssetCommon/getAssetThreeType",
                         finProductTypeConfig, FinProductTypeConfig.class);
 
@@ -1266,46 +1097,19 @@ public class CommonAutoCouponService extends BaseService{
                 List<FinCashPayRule> finCashPayRuleList = new ArrayList<FinCashPayRule>();
                 FinCashPayRule  finCashPayRule = new FinCashPayRule();
                 finCashPayRule.setCashId(finCashInfoInterest.getCashId());
-                /**--支付规则生效日 modify 2019-04-11--*/
-//              finCashPayRule.setEffDate(DateUtil.parse(infChinamutualfunddescription.getfInfoMaturitydate()));
                 finCashPayRule.setEffDate(DateUtil.parse(infChinamutualfunddescription.getfInfoSetupdate()));//资讯_基本资料成立日期
-                /**--支付规则生效日 modify 2019-04-11--*/
                 finCashPayRule.setPayCycleVal(Long.valueOf(1));
-                /**--支付频率 直接取基金基本资料分红频率 modify 2019-04-11--*/
-//                if(StringUtil.equals(infCmoneymarketfscarryoverm.getfInfoIncomescarryoverdtcode(), FundDateType.每日.getValue())){
-//                 // 一体化对应etliu start
-////                    finCashPayRule.setPayCycle(DictCodeList.支付频率_付息频率_日付.getValue());
-//                    finCashPayRule.setPayCycle(DictCodeList.频率_日.getValue());
-//                 // 一体化对应etliu end
-//                }else{
-//                 // 一体化对应etliu start
-////                    finCashPayRule.setPayCycle(DictCodeList.支付频率_付息频率_月付.getValue());
-//                    finCashPayRule.setPayCycle(DictCodeList.频率_月.getValue());
-//                 // 一体化对应etliu end
-//                }
                 finCashPayRule.setPayCycle(infChinamutualfunddescription.getPaycycle());//基金基本资料分红频率
-                /**--支付频率 直接取基金基本资料分红频率 modify 2019-04-11--*/
 
-                /**------日期类型  modify  2019-04-11 start----*/
-                FundDateType[] fundDateTypeArr = FundDateType.values();
-//                for(FundDateType fundDateType : fundDateTypeArr){
-//                    if(StringUtil.equals(infCmoneymarketfscarryoverm.getfInfoIncomescarryoverdtcode(), fundDateType.getValue())){
-//                        finCashPayRule.setDayValue(fundDateType.getDayValue());
-//                        finCashPayRule.setDayType(fundDateType.getDayType());
-//                    }
-//                }
                 finCashPayRule.setDayValue(String.valueOf(infChinamutualfunddescription.getDayvalue()));//取基金基本资料分红日
                 finCashPayRule.setDayType(DictCodeListExt1.日期类型_几号.getValue());//数据字典表.日期类型.几号
-                /**------日期类型  modify  2019-04-11 end-----*/
                 finCashPayRule.setFinprodId(finprodId);
                 finCashPayRule.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_基金.getValue());
                 finCashPayRule.setBranch(branch);
-//                finCashPayRule.setPayType(BussinessDictCodeList.分红方式_红利再投.getValue());
                 finCashPayRule.setPayType(infChinamutualfunddescription.getPaytype());
                 finCashPayRuleList.add(finCashPayRule);
                 baseFinProductBaseInfoDto.setFinCashPayRuleList(finCashPayRuleList);
 
-                /**--增加基金报送信息 add by shenchen 2019-04-11 start--*/
                 //new基金报送信息entity
                 RepFund repfund = new RepFund();
                 RepAssetDept repAssetDept = new RepAssetDept();
@@ -1324,7 +1128,6 @@ public class CommonAutoCouponService extends BaseService{
                 repAssetDept.setRepIssuePartyId("C10816");//发行机构代码(参数值)
                 repAssetDept.setRepAssetType(exchangeFundType(infChinamutualfunddescription.getfInfoType(),infChinamutualfunddescription.getfInfoType2()));//资产负债类别
                 repAssetDept.setRepCcy(infChinamutualfunddescription.getCcy());//币种
-                //repAssetBond.setRepSectype(repSectype);具体类别
                 try {
                     repAssetDept.setRepStatusDate(sdf.parse(DateUtil.getSysDate()));//数据日期
                 } catch (ParseException e) {
@@ -1375,7 +1178,6 @@ public class CommonAutoCouponService extends BaseService{
 
                 baseFinProductBaseInfoDto.setRepAssetDept(repAssetDept);//存中债报送界面资产负债类别
                 baseFinProductBaseInfoDto.setRepfund(repfund);
-                /**--增加基金报送信息 add by shenchen 2019-04-11 end--*/
                 baseFinProductBaseInfoList.add(baseFinProductBaseInfoDto);
 
             }
@@ -1408,18 +1210,6 @@ public class CommonAutoCouponService extends BaseService{
     }
 
     /**
-     * 日历信息
-     * <功能详细描述>
-     * @return
-     * @see
-     * @since 1.0
-     */
-    private List<MstCalendarInfo> getMstCalendarInfo(){
-        return restTemplate.getForList(ServiceApplication.BASICDATA_SERVICE_NAME
-                + "/MstMarketCalendarInfo/getMstCalendarInfo",MstCalendarInfo.class);
-    }
-
-    /**
      * 根据外部代码1获取客户代码
      * <功能详细描述>
      * @param linkId1
@@ -1429,8 +1219,21 @@ public class CommonAutoCouponService extends BaseService{
      * @since 1.0
      */
     private String getIssuer(String linkId1, String type){
-        return restTemplate.getForObject(ServiceApplication.BASICDATA_SERVICE_NAME
-                + "/MstCustomerNature/getIssuer?linkId1="+linkId1 + "&type=" + type,String.class);
+        // 入库
+        String customerId = mstCustomerNatureMapper.getIssuer(linkId1);
+        // 更新属性
+        if (StringUtil.isNotEmpty(customerId)) {
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("customerId", customerId);
+            MstCustomerNatureDto dto = mstCustomerNatureMapper.selectByPrimaryKey(param);
+            if (StringUtil.isNotEmpty(dto)) {
+                // IS_ISSUER 发行人
+                dto.setIsIssuer(DictCodeList.是否_是.getValue());
+                mstCustomerNatureMapper.updateByPrimaryKey(dto);
+            }
+        }
+
+        return customerId;
     }
 
     /**
@@ -1442,8 +1245,19 @@ public class CommonAutoCouponService extends BaseService{
      * @since 1.0
      */
     private String getIssuer(InterfPayhsrcsecinfoDto interfPayhsrcsecinfo){
-        String customerId = restTemplate.getForObject(ServiceApplication.BASICDATA_SERVICE_NAME
-                + "/MstCustomerNature/getIssuer?linkId1="+interfPayhsrcsecinfo.getIssuershort() + "&type=" + "IS_ISSUER",String.class);
+        // 入库
+        String customerId = mstCustomerNatureMapper.getIssuer(interfPayhsrcsecinfo.getIssuershort());
+        // 更新属性
+        if (StringUtil.isNotEmpty(customerId)) {
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("customerId", customerId);
+            MstCustomerNatureDto dto = mstCustomerNatureMapper.selectByPrimaryKey(param);
+            if (StringUtil.isNotEmpty(dto)) {
+                // IS_ISSUER 发行人
+                dto.setIsIssuer(DictCodeList.是否_是.getValue());
+                mstCustomerNatureMapper.updateByPrimaryKey(dto);
+            }
+        }
         if (StringUtil.isNotEmpty(customerId)) {
         }else{
             BussinessCodeParameter param = new BussinessCodeParameter();
@@ -1460,14 +1274,7 @@ public class CommonAutoCouponService extends BaseService{
             /* 发行人加券后客户类型默认：市场机构 add by liuwei 20201118 end */
 
             mstCustomerInfoAdd.setCustomerId(customerId);
-            //发行人所属行业一二级分类
-//            String industry = interfPayhsrcsecinfo.getIndustry();
-//            if (industry != null && industry.length() == 1) {
-//                industry = "0" + industry;
-//            }
-//            mstCustomerInfoAdd.setIndustry(industry);
-//            mstCustomerInfoAdd.setIndustry2(interfPayhsrcsecinfo.getChecktypecode());
-//            mstCustomerInfoAdd.setIsListedCompany(interfPayhsrcsecinfo.getIsListed());
+
             //客户信息表插入数据
             mstCustomerInfoMapper.insert(mstCustomerInfo);
             mstCustomerInfoAddMapper.insert(mstCustomerInfoAdd);
@@ -1701,7 +1508,12 @@ public class CommonAutoCouponService extends BaseService{
         // 20201210 债券自动加券bug修正 wangwei end
 
         //校验债券中债报送数据，不符合的债券，不进行加券
-        InterfPayhsrcsecinfoDto newInterfPayhsrcsecinfoDto=checkBondRepData(dto);
+        InterfPayhsrcsecinfoDto newInterfPayhsrcsecinfoDto= null;
+        try {
+            newInterfPayhsrcsecinfoDto = checkBondRepData(dto);
+        } catch (IllegalAccessException e) {
+          throw new  BusinessException(e);
+        }
         if(!StringUtil.isEmptyList(newInterfPayhsrcsecinfoDto.getBaseFinProductBaseInfoList())){
             autoBondCouponSave(dto);
             //债券自动加券
@@ -1886,18 +1698,6 @@ public class CommonAutoCouponService extends BaseService{
     }
 
     /**
-     * 查询万德接口表中债券所有的利率信息
-     * 徽商个性化：add by zhouqiang
-     * @param finCashCalcRule
-     * @return
-     */
-    public List<FinCashCalcRule> getFinCashCalcRule(FinCashCalcRule finCashCalcRule) {
-        return simpleRestTemplate.postForList(
-                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/getFinCashCalcRule" ,finCashCalcRule,
-                FinCashCalcRule.class);
-    }
-
-    /**
      * 自动加券(股票)
      * <功能详细描述>
      * @param dto
@@ -2049,7 +1849,7 @@ public class CommonAutoCouponService extends BaseService{
      * @since 1.0
      */
     public InterfStockInfoDto selectWindStockAssetByStockCode(String stockCode){
-        return simpleRestTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectWindStockAssetByStockCode?stockCode="+stockCode,
+        return restTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectWindStockAssetByStockCode?stockCode="+stockCode,
                 InterfStockInfoDto.class);
     }
 
@@ -2061,7 +1861,7 @@ public class CommonAutoCouponService extends BaseService{
      * @see
      * @since 1.0
      */
-    public InterfPayhsrcsecinfoDto checkBondRepData(InterfPayhsrcsecinfoDto dto){
+    public InterfPayhsrcsecinfoDto checkBondRepData(InterfPayhsrcsecinfoDto dto) throws IllegalAccessException {
         InterfPayhsrcsecinfoDto interfPayhsrcsecinfoDtoNew=new InterfPayhsrcsecinfoDto();
         List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoList=new ArrayList<BaseFinProductBaseInfoDto>();
         List<String> errorAssetInfo=new ArrayList<>();
@@ -2095,13 +1895,32 @@ public class CommonAutoCouponService extends BaseService{
                 bondTargetDto.setMdate(baseInfoDto1.getFinProduct().getMdate());
                 bondTargetDto.setRegistOrg(baseInfoDto1.getRepAssetBond().getRepRegistOrg());
                 List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-                resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, bondTargetDto, "FinBondTargetAsset002Interf", bondTargetDto.getRepAssetType(), ValidMessage.class);
-                //中债校验通过
+                Map<String, String> map = new HashMap();
+                try {
+                    Object object =  ChbDataCheckCommonUtil.repTypeHandle(bondTargetDto,null,"FinBondTargetAsset002",chbDataCheckCommonMapper);
+                    resultList = chbDataCheckService.chbCheckCommon(resultList, ChbDataCheckCommonUtil.convertEntityToMap(object,map,null), "FinBondTargetAsset002Interf", "batch");
+                } catch (InvocationTargetException e) {
+                    throw  new BusinessException(e);
+                } catch (NoSuchMethodException e) {
+                    throw  new BusinessException(e);
+                } catch (InstantiationException e) {
+                    throw  new BusinessException(e);
+                }
+
                 if(StringUtil.isEmptyList(resultList)){
                     baseFinProductBaseInfoList.add(baseInfoDto1);
                 }else{
                     //中债校验不通过的数据
-                    errorAssetInfo.add("债券代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+"，"+"债券名称："+baseInfoDto1.getFinProduct().getFinprodAbbr());
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+                    sb.append(GlobalConstant.HTML_NEWLINE + "债券代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("债券名称："+baseInfoDto1.getFinProduct().getFinprodAbbr()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+                    errorAssetInfo.add(sb.toString());
                 }
             }
             interfPayhsrcsecinfoDtoNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
@@ -2164,13 +1983,34 @@ public class CommonAutoCouponService extends BaseService{
                 finFundTargetDto.setFinprodName(baseInfoDto1.getFinProduct().getFinprodName());
                 finFundTargetDto.setBussRepFundInfoDto(bussRepFundInfoDto);
                 List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-                resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, finFundTargetDto, "FinFundTarget002Interf", null, ValidMessage.class);
+                Map<String, String> map = new HashMap();
+                try {
+                    Object object =  ChbDataCheckCommonUtil.repTypeHandle(finFundTargetDto,null,"FinFundTarget002",chbDataCheckCommonMapper);
+                    resultList = chbDataCheckService.chbCheckCommon(resultList, ChbDataCheckCommonUtil.convertEntityToMap(object,map,null), "FinBondTargetAsset002Interf", "batch");
+                } catch (InvocationTargetException e) {
+                    throw  new BusinessException(e);
+                } catch (NoSuchMethodException e) {
+                    throw  new BusinessException(e);
+                } catch (InstantiationException e) {
+                    throw  new BusinessException(e);
+                } catch (IllegalAccessException e) {
+                    throw  new BusinessException(e);
+                }
                 //中债校验通过
                 if(StringUtil.isEmptyList(resultList)){
                     baseFinProductBaseInfoList.add(baseInfoDto1);
                 }else{
                     //中债校验不通过的数据
-                    errorAssetInfo.add("基金代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+"，"+"基金名称："+baseInfoDto1.getFinProduct().getFinprodAbbr());
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+                    sb.append(GlobalConstant.HTML_NEWLINE + "基金代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("基金名称："+baseInfoDto1.getFinProduct().getFinprodAbbr() + GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+                    errorAssetInfo.add(sb.toString());
                 }
             }
             infChinamutualfunddescriptionNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
@@ -2209,13 +2049,35 @@ public class CommonAutoCouponService extends BaseService{
                 finStockInfoDto.setFinprodMarketId(baseInfoDto1.getFinProduct().getFinprodMarketId());
                 finStockInfoDto.setFinprodName(baseInfoDto1.getFinProduct().getFinprodName());
                 List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-                resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, finStockInfoDto, "FinStockInfo002Interf", null, ValidMessage.class);
+                Map<String, String> map = new HashMap();
+                try {
+                    Object object =  ChbDataCheckCommonUtil.repTypeHandle(finStockInfoDto,null,"FinStockInfo002",chbDataCheckCommonMapper);
+                    resultList = chbDataCheckService.chbCheckCommon(resultList, ChbDataCheckCommonUtil.convertEntityToMap(object,map,null), "FinBondTargetAsset002Interf", "batch");
+                } catch (InvocationTargetException e) {
+                    throw  new BusinessException(e);
+                } catch (NoSuchMethodException e) {
+                    throw  new BusinessException(e);
+                } catch (InstantiationException e) {
+                    throw  new BusinessException(e);
+                } catch (IllegalAccessException e) {
+                    throw  new BusinessException(e);
+                }
                 //中债校验通过
                 if(StringUtil.isEmptyList(resultList)){
                     baseFinProductBaseInfoList.add(baseInfoDto1);
                 }else{
                     //中债校验不通过的数据
-                    errorAssetInfo.add("股票代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+"，"+"股票名称："+baseInfoDto1.getFinProduct().getFinprodAbbr());
+                    StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
+
+                    sb.append(GlobalConstant.HTML_NEWLINE + "股票代码："+baseInfoDto1.getFinProduct().getFinprodMarketId()+ GlobalConstant.HTML_NEWLINE);
+                    sb.append("股票名称："+baseInfoDto1.getFinProduct().getFinprodAbbr() + GlobalConstant.HTML_NEWLINE);
+                    sb.append("校验未通过原因：");
+                    resultList.forEach(item->{
+                        sb.append(GlobalConstant.HTML_NEWLINE +item.getMessage() + "。");
+                    });
+                    //换行使展示整齐
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+                    errorAssetInfo.add(sb.toString());
                 }
             }
             interfStockInfoDtoNew.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
@@ -2329,5 +2191,15 @@ public class CommonAutoCouponService extends BaseService{
             return baseGetBussinessId.buildBussinessCode(parameter);
         }
         return IDGenerator.generate();
+    }
+
+    /**
+     * 根据估值表中回购数据生成对应的回购信息，存入表fin_trade_product、fin_product_type
+     * @param entity2
+     */
+    public void createRepoInfo(RskValtblAssetSubDto entity2){
+        restTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/createRepoInfo",
+                entity2,Integer.class);
     }
 }

@@ -286,6 +286,11 @@
 			MAX(VAL_DATE) VAL_DATE
 			FROM
 			RSK_VALTBL_ASSET_SUB
+			<where>
+				<if test="cdate != null and cdate != ''">
+					VAL_DATE =  TO_DATE(#{cdate},'YYYY-MM-DD')
+				</if>
+			</where>
 			GROUP BY
 			PTL_ID
 			) TT2 ON T1.VAL_DATE = TT2.VAL_DATE
@@ -295,6 +300,9 @@
 		where T1.SUB_CODE IN ('1002','1021','1031','120401','120402','120403','3003')
 		<if test="portfolioId != null and portfolioId != ''">
 			AND T1.PTL_ID = #{portfolioId,jdbcType=VARCHAR}
+		</if>
+		<if test="cdate != null and cdate != ''">
+			and T1.VAL_DATE =  TO_DATE(#{cdate},'YYYY-MM-DD')
 		</if>
 		GROUP BY T1.VAL_DATE,
 		T1.PTL_ID,

@@ -513,12 +513,13 @@
          ),
          /*查询底层剩余现金*/
         cash as (
-            select sum(psv.MARKET_VALUE) MARKET_VALUE,
+            select sum(NVL(psv.MARKET_VALUE,0)) MARKET_VALUE,
+                sum(NVL(psv.TDY_INTINCEXP,0))  TDY_INTINCEXP,
                 psv.PORTFOLIO_ID portfolioId
             from PTL_SEC_PIERCE_VALUTION psv
             WHERE
                 psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
-                AND psv.FINPROD_ID like 'REMAININGCASH_%'
+                AND psv.FINPROD_ID like 'REMAININGCASH%'
                 GROUP BY psv.PORTFOLIO_ID
         ),
          assetHold as (
@@ -628,7 +629,7 @@
 								</foreach>
 							 </if>
 							 <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-	                         AND psv.DSC_COST_AMT>0
+	                         AND psv.DSC_COST_AMT &lt; > 0
                     ) A
                 left join(
                            select psv.CDATE as cdate,psv.PORTFOLIO_ID as portfolioId,
@@ -960,9 +961,9 @@
             S.portfolioName portfolioName,
             #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
             S.marketValue marketValue,
-            S.dscCostAmt dscCostAmt,
+            NULL dscCostAmt,
             null shareAmt,
-            NULL tdyIntincexp,
+            S.tdyIntincexp tdyIntincexp,
             NULL tdyAmtRation,
             NULL ystAmtRation,
             NULL monthAmtRation,
@@ -974,36 +975,27 @@
             NULL ystTdyIntincexp
             FROM(
             SELECT
-            psv.cdate cdate,
-            psv.portfolio_Id portfolioId,
-            pp.portfolio_Name portfolioName,
-            #{cash} finprodType2,#{cash} type5, NULL finprodMarketId,NULL finprodAbbr,
-            pcp.amount + NVL(CH.MARKET_VALUE,0) marketValue,
-            pcp.amount + NVL(CH.MARKET_VALUE,0) dscCostAmt,
-            null shareAmt,
-            NULL tdyIntincexp,
-            NULL tdyAmtRation,
-            NULL ystAmtRation,
-            NULL monthAmtRation,
-            NULL yearAmtRation,
-            NULL ystAmtRationTemp,
-            NULL monthAmtRationExTemp,
-            NULL yearAmtRationTemp,
-            NULL ystMarketValue,
-            NULL ystTdyIntincexp
-             ,pcp.acct_id
+                psv.cdate cdate,
+                psv.portfolio_Id portfolioId,
+                pp.portfolio_Name portfolioName,
+                NVL(psv.MARKET_VALUE,0) marketValue,
+                NVL(psv.TDY_INTINCEXP,NULL) tdyIntincexp
             FROM PTL_SEC_PIERCE_VALUTION psv
-            LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
-            LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-            LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
-            LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
-            left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
-            LEFT JOIN cash CH on psv.PORTFOLIO_ID = CH.portfolioId
+            LEFT JOIN FIN_PRODUCT
+            ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
+            LEFT JOIN FIN_PRODUCT_ADD
+            ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+            LEFT JOIN PTL_PORTFOLIO pp
+            ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+            LEFT JOIN FIN_PRODUCT_TYPE fpt
+            ON fpt.FINPROD_ID = psv.FINPROD_ID
+            AND fpt.TYPE_8 IS NOT NULL
             WHERE
             psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
-            and pcp.portfolio_Id is not NULL
+            AND psv.FINPROD_ID like 'REMAININGCASH%'
+            and pp.portfolio_Id is not NULL
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-                AND pcp.PORTFOLIO_ID IN
+                AND pp.PORTFOLIO_ID IN
                 <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
@@ -1022,28 +1014,31 @@
                 </foreach>
             </if>
             <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-            GROUP BY
-            psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount + NVL(CH.MARKET_VALUE,0),pcp.acct_id
+            GROUP BY psv.cdate, psv.portfolio_Id, pp.portfolio_Name, psv.TDY_INTINCEXP,
+            psv.MARKET_VALUE
             ) S
             LEFT JOIN (
-            SELECT
-            psv.cdate cdate,
-            psv.portfolio_Id portfolioId,
-            pcp.amount marketValue,
-            pcp.amount dscCostAmt
-            ,pcp.acct_id
-            FROM PTL_SEC_PIERCE_VALUTION psv
-            LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
-            LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-            LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
-            LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
-            left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
-            inner join tempA E on E.portfolioId=psv.PORTFOLIO_ID
-            WHERE
-            psv.CDATE=E.maxCdate
-            and pcp.portfolio_Id is not NULL
+            SELECT psv.cdate cdate,
+                psv.portfolio_Id portfolioId,
+                psv.MARKET_VALUE marketValue,
+                psv.MARKET_VALUE dscCostAmt
+                FROM PTL_SEC_PIERCE_VALUTION psv
+                LEFT JOIN FIN_PRODUCT
+                ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
+                LEFT JOIN FIN_PRODUCT_ADD
+                ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+                LEFT JOIN PTL_PORTFOLIO pp
+                ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                LEFT JOIN FIN_PRODUCT_TYPE fpt
+                ON fpt.FINPROD_ID = psv.FINPROD_ID
+                AND fpt.TYPE_8   IS NOT NULL
+                INNER JOIN tempA E
+                ON E.portfolioId                  =psv.PORTFOLIO_ID
+            WHERE psv.CDATE                   =E.maxCdate
+            and pp.portfolio_Id is not NULL
+            AND psv.FINPROD_ID like 'REMAININGCASH%'
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-                AND pcp.PORTFOLIO_ID IN
+                AND pp.PORTFOLIO_ID IN
                 <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
@@ -1062,9 +1057,8 @@
                 </foreach>
             </if>
             <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-            GROUP BY
-            psv.cdate,psv.portfolio_Id,pcp.amount,pcp.acct_id
-            ) SS ON S.portfolioId = SS.portfolioId and S.acct_id=SS.acct_id
+            GROUP BY psv.cdate, psv.portfolio_Id, psv.MARKET_VALUE
+            ) SS ON S.portfolioId = SS.portfolioId
           )
 	</sql>
 
@@ -1860,16 +1854,16 @@
                 row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_two order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_three order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_four order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three ,atd.custom_asset_type_four order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                row_number() over(partition by atd.portfolio_id,atd.custom_asset_type_five order by atd.cdate desc) row_number
+                row_number() over(partition by atd.portfolio_id,atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three ,atd.custom_asset_type_four,atd.custom_asset_type_five order by atd.cdate desc) row_number
             </if>
         </if>
         <if test="displayType != null and displayType != '' and displayType=='02'">
@@ -1878,16 +1872,16 @@
                 row_number() over(partition by  atd.pinan_asset_type order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='02'">
-                row_number() over(partition by atd.custom_asset_type_two order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='03'">
-                row_number() over(partition by atd.custom_asset_type_three order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='04'">
-                row_number() over(partition by atd.custom_asset_type_four order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three,atd.custom_asset_type_four order by atd.cdate desc) row_number
             </if>
             <if test="searchCondition != null and searchCondition != '' and searchCondition=='05'">
-                row_number() over(partition by atd.custom_asset_type_five order by atd.cdate desc) row_number
+                row_number() over(partition by atd.pinan_asset_type,atd.custom_asset_type_two,atd.custom_asset_type_three,atd.custom_asset_type_four,atd.custom_asset_type_five order by atd.cdate desc) row_number
             </if>
         </if>
         from ASSET_TARGET_DB atd
@@ -2252,10 +2246,15 @@
                 )
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
-                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
-                    #{item}
-                </foreach>
+                AND (atd.FINPROD_MARKET_ID IN
+                        <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                            #{item}
+                        </foreach>
+                    OR RAI.ASSET_CODE IN
+                        <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                            #{item}
+                        </foreach>
+                    )
             </if>
             <if test="pass != null and pass != '' and pass == '02'.toString()">
                 and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
@@ -2331,10 +2330,15 @@
                 )
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
+                AND (atd.FINPROD_MARKET_ID IN
                 <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
             <if test="pass != null and pass != '' and pass == '02'.toString()">
                 and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
@@ -2459,10 +2463,15 @@
                 )
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
+                AND (atd.FINPROD_MARKET_ID IN
                 <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
 
             <if test="pass != null and pass != '' and pass == '02'.toString()">
@@ -2640,10 +2649,15 @@
                 </foreach>
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
+                AND (atd.FINPROD_MARKET_ID IN
                 <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
 
             <if test="pass != null and pass != '' and pass == '02'.toString()">
@@ -2722,10 +2736,15 @@
 
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
-                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close=")">
+                AND (atd.FINPROD_MARKET_ID IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
 
             <if test="pass != null and pass != '' and pass == '02'.toString()">
@@ -2903,10 +2922,15 @@
 
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
-                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close=")">
+                AND (atd.FINPROD_MARKET_ID IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
 
             <if test="pass != null and pass != '' and pass == '02'.toString()">
@@ -3053,10 +3077,15 @@
 
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
-                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close=")">
+                AND (atd.FINPROD_MARKET_ID IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
 
             <if test="pass != null and pass != '' and pass == '02'.toString()">
@@ -3258,41 +3287,40 @@
 
     <!-- 剩余现金明细-->
     <select id="selectRemain" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis003Dto">
-        SELECT
-        P.PORTFOLIO_ID  AS portfolioId,
-        '01' hasChildren,
-        'SYXJ' pinanAssetType,
-        decode(A.SUBJECT_NO,'120401',nvl(A.COST,0),'120402',nvl(A.COST,0),'120403',nvl(A.COST,0),0) AS tdyIntincexp,
-        decode(A.SUBJECT_NO,'1002',nvl(A.COST,0),'1021',nvl(A.COST,0),'1031',nvl(A.COST,0),0) AS posValue
-        FROM PTL_PORTFOLIO P
-        INNER JOIN BOK_VAL_TABLE_DATA A ON ('F16_'||P.PORTFOLIO_ID = A.BOOKSET_ID OR P.PORTFOLIO_ID = A.BOOKSET_ID)
-        <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
-            inner join data_auth_notify_inst dani
-            on dani.BUSINESS_ID =P.PORTFOLIO_ID
-            and dani.data_type='PTL01'
-            and dani.model_type = '02'
-            and dani.institution_code
-            <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
-                     open="in ("  close=")">
-                #{item}
-            </foreach>
+        <if test="pass != null and pass != '' and pass != '02'.toString() ">
+            SELECT
+            P.PORTFOLIO_ID  AS portfolioId,
+            '01' hasChildren,
+            'SYXJ' pinanAssetType,
+            decode(A.SUBJECT_NO,'120401',nvl(A.COST,0),'120402',nvl(A.COST,0),'120403',nvl(A.COST,0),0) AS tdyIntincexp,
+            decode(A.SUBJECT_NO,'1002',nvl(A.COST,0),'1021',nvl(A.COST,0),'1031',nvl(A.COST,0),0) AS posValue
+            FROM PTL_PORTFOLIO P
+            INNER JOIN BOK_VAL_TABLE_DATA A ON ('F16_'||P.PORTFOLIO_ID = A.BOOKSET_ID OR P.PORTFOLIO_ID = A.BOOKSET_ID)
+            <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+                inner join data_auth_notify_inst dani
+                on dani.BUSINESS_ID =P.PORTFOLIO_ID
+                and dani.data_type='PTL01'
+                and dani.model_type = '02'
+                and dani.institution_code
+                <foreach collection="resourcesTreeInstCodeList" item="item" separator=","
+                         open="in ("  close=")">
+                    #{item}
+                </foreach>
+            </if>
+            WHERE
+            A.val_DATE = to_date(#{searchDate},'yyyy-mm-dd')
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                AND PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+            </if>
+            AND A.DETAIL_DIST = '01'
+            AND DECODE (A.FSUBJECT_ID, NULL, 'root', DECODE (A.FSUBJECT_ID, ' ', 'root', A.FSUBJECT_ID)) = 'root'
+            and A.SUBJECT_NO in ('120401','1002','120402','1021','120403','1031')
         </if>
-        WHERE
-        A.val_DATE = to_date(#{searchDate},'yyyy-mm-dd')
-        <if test="portfolioIdList != null and portfolioIdList.size()>0">
-            AND PORTFOLIO_ID IN
-            <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-                #{item}
-            </foreach>
-        </if>
-        AND A.DETAIL_DIST = '01'
-        AND DECODE (A.FSUBJECT_ID, NULL, 'root', DECODE (A.FSUBJECT_ID, ' ', 'root', A.FSUBJECT_ID)) = 'root'
-        and A.SUBJECT_NO in ('120401','1002','120402','1021','120403','1031')
-
-        <if test="pass != null and pass != null and pass == '02'.toString() ">
+        <if test="pass != null and pass != '' and pass == '02'.toString() ">
             /* 穿透后剩余现金数据查询*/
-            UNION ALL
-
             SELECT
             A.PORTFOLIO_ID AS portfolioId,
             '01' hasChildren,
@@ -3319,7 +3347,7 @@
                     #{item}
                 </foreach>
             </if>
-            AND A.FINPROD_ID like 'REMAININGCASH_BJ%'
+            AND A.FINPROD_ID like 'REMAININGCASH%'
         </if>
     </select>
 
@@ -3349,6 +3377,6 @@
                 #{item}
             </foreach>
         </if>
-        AND A.FINPROD_ID like 'REMAININGCASH_BJ%'
+        AND A.FINPROD_ID like 'REMAININGCASH%'
     </select>
 </mapper>

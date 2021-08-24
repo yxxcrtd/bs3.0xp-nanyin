@@ -2,7 +2,7 @@ package com.joyintech.service.chb.common.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,12 @@ public class ChbDataCheckController {
     public List<ValidMessage> chbDataCheck(@RequestBody Map entity, @RequestParam(value = "pageId", required = false) String pageId, @RequestParam(value = "repType", required = false) String repType) {
         String className = (String)entity.get("entityClass");
         try {
-            return chbDataCheckCommonUtil.chbCheckCommon(null, JSONObject.parseObject(JSONObject.toJSONString(entity), Class.forName(className)), pageId, repType, ValidMessage.class);
+            if (StringUtil.equals(repType,"batch")){
+                repType = null;
+                return chbDataCheckCommonUtil.chbCheckCommon(null, entity.get("batchMap"), pageId, repType, ValidMessage.class);
+            } else{
+                return chbDataCheckCommonUtil.chbCheckCommon(null, JSONObject.parseObject(JSONObject.toJSONString(entity), Class.forName(className)), pageId, repType, ValidMessage.class);
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

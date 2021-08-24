@@ -100,8 +100,8 @@ public class RskValAssetCode001Controller extends BaseController{
         if(StringUtil.isNotEmpty(this.getParam("assetSubMapId"))){
             param.put("id", this.getParam("assetSubMapId"));
         }
-        if(param.containsKey("id")){
-            return rskValAssetCode001Service.findPageDtl(param);
+        if(param.containsKey("id") && StringUtil.isNotEmpty(param.get("id"))){
+                return rskValAssetCode001Service.findPageDtl(param);
         }
         return new Page<RskValtblAssetSubMapDtlDto>();
     }
