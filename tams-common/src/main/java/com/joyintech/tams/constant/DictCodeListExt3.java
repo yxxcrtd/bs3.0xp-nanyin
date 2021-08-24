@@ -1436,6 +1436,11 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     减值数据来源_模型(DictCode.减值数据来源,"04","模型"),
 
     //20210803 by yuzj end
+    //modify by yanya on 20210824 增值税资产分类_股票
+    增值税资产分类_股票_上海股票(DictCode.增值税资产分类,"L01","上海股票"),
+    增值税资产分类_股票_深圳股票(DictCode.增值税资产分类,"L02","深圳股票"),
+    增值税资产分类_股票_沪港通(DictCode.增值税资产分类,"L03","沪港通"),
+    增值税资产分类_股票_深港通(DictCode.增值税资产分类,"L04","深港通")
     ;
     /**
      * 对应于数据字典code

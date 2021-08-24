@@ -139,4 +139,13 @@ public class ValAssetCommonController extends BaseController {
         wr.setJoyinMessages(joyinMessages);
         return wr;
     }
+
+    @ResponseBody
+    @RequestMapping("/getCustomerName")
+    public Page<SelectOptionDto> getCustomerName(){
+        Map<String,Object> map = RequestUtil.getPageParam();
+        map.put("param", map.get("search"));
+        Page<SelectOptionDto> temp = assetCommonService.getCustomerName(map);
+        return temp;
+    }
 }
