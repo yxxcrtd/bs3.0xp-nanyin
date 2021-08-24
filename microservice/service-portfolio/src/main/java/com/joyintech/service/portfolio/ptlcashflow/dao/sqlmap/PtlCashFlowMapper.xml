@@ -94,8 +94,8 @@
 	  	FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F01,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F06,jdbcType=VARCHAR},
 	  	#{FINPROD_TYPE_TG_F07,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F37,jdbcType=VARCHAR})
 		<if test="param != null and param != ''">
-		AND (FINPROD_MARKET_ID LIKE CONCAT(#{param,jdbcType=VARCHAR},'%')
-		OR FINPROD_ABBR LIKE CONCAT(#{param,jdbcType=VARCHAR},'%'))
+		AND (FINPROD_MARKET_ID LIKE CONCAT('%',CONCAT(#{param,jdbcType=VARCHAR},'%'))
+		OR FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{param,jdbcType=VARCHAR},'%')))
 		</if>
 	  </where>
 	  </select>
@@ -151,6 +151,10 @@
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F06">
 						AND T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR}
 					</when>
+					<when test="finprodType2 == PINAN_ASSET_TYPE_F09">
+						AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
+						AND PROFIT_TYPE = #{PROFIT_TYPE_03,jdbcType=VARCHAR}
+					</when>
 					<!-- add by etliu 20210421 权益类资产相关代码合并 start -->
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F19">
 						AND T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F37,jdbcType=VARCHAR}
@@ -204,6 +208,9 @@
 	   				and T5.PROFIT_TYPE = #{PROFIT_TYPE_01,jdbcType=VARCHAR}) then #{PINAN_ASSET_TYPE_F04,jdbcType=VARCHAR}
 	   			when (T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
 	   				and T5.PROFIT_TYPE = #{PROFIT_TYPE_02,jdbcType=VARCHAR}) then #{PINAN_ASSET_TYPE_F03,jdbcType=VARCHAR}
+
+		        when (T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
+		            and T5.PROFIT_TYPE = #{PROFIT_TYPE_03,jdbcType=VARCHAR}) then #{PINAN_ASSET_TYPE_F09,jdbcType=VARCHAR}
 	   			when T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F07,jdbcType=VARCHAR} then #{PINAN_ASSET_TYPE_F05,jdbcType=VARCHAR}
 	   			when T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR} then #{PINAN_ASSET_TYPE_F06,jdbcType=VARCHAR}
 		   		<!-- add by etliu 20210421 权益类资产相关代码合并 start -->
@@ -279,15 +286,15 @@
 				<when test="finprodType2 == PINAN_ASSET_TYPE_F06">
 				AND T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR}
 				</when>
+				<when test="finprodType2 == PINAN_ASSET_TYPE_F09">
+					AND T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
+				</when>
 				<!-- add by etliu 20210421 权益类资产相关代码合并 start -->
 				<when test="finprodType2 == PINAN_ASSET_TYPE_F19">
 					AND T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F37,jdbcType=VARCHAR}
 				</when>
 				<!-- add by etliu 20210421 权益类资产相关代码合并 end -->
 			</choose>
-			</if>
-			<if test="finprodId != null and finprodId != ''">
-			AND T1.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
 			</if>
 			<if test="customCashType != null and customCashType != ''">
 			AND T4.CUSTOM_CASH_TYPE = #{customCashType,jdbcType=VARCHAR}
@@ -297,6 +304,10 @@
 			</if>
 			<if test="status != null and status.equals(validStatus_03)">
 				AND T1.TRADE_STATUS =#{validStatus_03} AND T1.IS_CANCEL != 'Y'
+			</if>
+			<if test="finprodId != null and finprodId !='' ">
+				AND T5.FINPROD_ID
+				LIKE concat(concat('%',#{finprodId,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="status == null or status == ''">
 				AND T1.IS_CANCEL != 'Y'
@@ -330,9 +341,11 @@
 			   and T5.PROFIT_TYPE = #{PROFIT_TYPE_02,jdbcType=VARCHAR}) then #{PINAN_ASSET_TYPE_F03,jdbcType=VARCHAR}
 			   when T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F07,jdbcType=VARCHAR} then #{PINAN_ASSET_TYPE_F05,jdbcType=VARCHAR}
 			   when T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR} then #{PINAN_ASSET_TYPE_F06,jdbcType=VARCHAR}
+			   when (T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
+			   and T5.PROFIT_TYPE = #{PROFIT_TYPE_03,jdbcType=VARCHAR}) then #{PINAN_ASSET_TYPE_F09,jdbcType=VARCHAR}
 			   else ''
 			   end  as finprodType2,
-			   T5.FINPROD_MARKET_ID AS finprodMarketId,
+			   T5.FINPROD_ID AS finprodId,
 			   T5.FINPROD_ABBR AS finprodAbbr,
 			   T4.CUSTOM_CASH_TYPE AS customCashType,
 			   T1.F_TRADE_ID AS fTradeId,
@@ -391,6 +404,10 @@
 						   <when test="finprodType2 == PINAN_ASSET_TYPE_F06">
 							   AND T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR}
 						   </when>
+						   <when test="finprodType2 == PINAN_ASSET_TYPE_F09">
+							   AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
+							   AND PROFIT_TYPE = #{PROFIT_TYPE_03,jdbcType=VARCHAR}
+						   </when>
 						   <!-- add by etliu 20210421 权益类资产相关代码合并 start -->
 						   <when test="finprodType2 == PINAN_ASSET_TYPE_F19">
 							   AND T5.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F37,jdbcType=VARCHAR}
@@ -398,11 +415,12 @@
 						   <!-- add by etliu 20210421 权益类资产相关代码合并 end -->
 					   </choose>
 				   </if>
-				   <if test="finprodId != null and finprodId != ''">
-					   AND T1.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-				   </if>
 				   <if test="customCashType != null and customCashType != ''">
 					   AND T4.CUSTOM_CASH_TYPE = #{customCashType,jdbcType=VARCHAR}
+				   </if>
+				   <if test="finprodId != null and finprodId !='' ">
+					   AND T5.FINPROD_ID
+					   LIKE concat(concat('%',#{finprodId,jdbcType=VARCHAR}),'%')
 				   </if>
 				   <if test="startDate != null and startDate != ''">
 					   AND T1.SETTLE_DATE BETWEEN TO_DATE(#{startDate},'YYYY-MM-DD')  AND TO_DATE(#{endDate},'YYYY-MM-DD')
@@ -474,6 +492,10 @@
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F03">
 					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
 					AND PROFIT_TYPE = #{PROFIT_TYPE_02,jdbcType=VARCHAR}
+					</when>
+					<when test="finprodType2 == PINAN_ASSET_TYPE_F09">
+					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
+					AND PROFIT_TYPE = #{PROFIT_TYPE_03,jdbcType=VARCHAR}
 					</when>
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F05">
 					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F07,jdbcType=VARCHAR}

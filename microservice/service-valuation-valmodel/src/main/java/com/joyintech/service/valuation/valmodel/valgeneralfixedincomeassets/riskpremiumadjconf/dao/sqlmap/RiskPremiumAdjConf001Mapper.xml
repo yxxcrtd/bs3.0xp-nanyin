@@ -16,7 +16,13 @@
 		A.B_FULLPRICE bFullprice,
 		A.B_QTY bQty,
 		A.MOD_METHOD modMethod
+		<!-- modify by yanya on 20210823 增加曲线名称、曲线日期查询 start-->
+		,A.CURVE_CODE curveCode,
+		NVL(m.CURVE_NAME, A.CURVE_CODE) curveName,
+		A.CURVE_DATE curveDate
+		<!-- modify by yanya on 20210823 增加曲线名称、曲线日期查询 end-->
         FROM MOD_RISK_PREMIUM A
+        left join MOD_CURVE_MAPPING m on A.CURVE_CODE = m.CURVE_CODE
         WHERE 1=1
 		<if test="assetId!=null and !''.equals(assetId.trim())">
 			AND A.FINPROD_ID in
@@ -47,7 +53,13 @@
 		A.B_FULLPRICE bFullprice,
 		A.B_QTY bQty,
 		A.MOD_METHOD modMethod
+		<!-- modify by yanya on 20210823 增加曲线名称、曲线日期查询 start-->
+		,A.CURVE_CODE curveCode,
+		NVL(m.CURVE_NAME, A.CURVE_CODE) curveName,
+		A.CURVE_DATE curveDate
+		<!-- modify by yanya on 20210823 增加曲线名称、曲线日期查询 end-->
         FROM MOD_RISK_PREMIUM A
+		left join MOD_CURVE_MAPPING m on A.CURVE_CODE = m.CURVE_CODE
         WHERE A.SEQNO = #{seqNo}
 	</select>
 
@@ -57,8 +69,10 @@
 		FROM FIN_PRODUCT A
 		INNER JOIN FIN_PRODUCT_TYPE B
 		ON A.FINPROD_ID = B.FINPROD_ID
-		WHERE A.FINPROD_TYPE2 IN ('F01','F18')
-		AND B.TYPE_11 NOT IN ('011','013','023')
+		WHERE B.TYPE_18 in ('01','13')
+		/** modify by yanya on 20210823 增加类型的判定修改，按照估值侧类型调整**/
+		<!--
+		AND (B.TYPE_11 is null or B.TYPE_11 NOT IN ('011','013','023'))
 		AND NOT EXISTS (
 		SELECT 1 FROM FIN_PRODUCT C
 		WHERE C.IS_SUS = 'Y'
@@ -69,9 +83,29 @@
 		)
 		AND C.FINPROD_ID = A.FINPROD_ID
 		)
+		-->
+		AND (
+            B.TYPE_1 is null or B.TYPE_1 not in ('028', '029', '033') /** 剔除优先股、可转债、可交债**/
+        )
+        /** 剔除剔除不含权的永续债**/
+        AND (
+            A.IS_SUS = 'N' OR A.IS_RIGHT = 'Y'
+        )
 		<if test="search != null and search != ''">
 			and (A.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
 			or A.FINPROD_ABBR like concat(concat('%',#{search}),'%'))
 		</if>
+        <if test="initValue != null and initValue != ''">
+            AND A.FINPROD_ID = #{initValue,jdbcType=VARCHAR}
+        </if>
 	</select>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf002Dto" >
+		update MOD_RISK_PREMIUM
+		set SPREAD_ADJ = #{spreadAdj,jdbcType=DECIMAL},
+			UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+		where SEQNO = #{seqno,jdbcType=VARCHAR}
+	</update>
+
 </mapper>

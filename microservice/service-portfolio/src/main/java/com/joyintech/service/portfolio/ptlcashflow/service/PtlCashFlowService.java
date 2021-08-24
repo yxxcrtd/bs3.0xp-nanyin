@@ -246,10 +246,12 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         param.put("PINAN_ASSET_TYPE_F02", DictCodeList.平安资产类型_基金.getValue());
         param.put("PINAN_ASSET_TYPE_F04", DictCodeList.平安资产类型_计划类资产_净值型.getValue());
         param.put("PINAN_ASSET_TYPE_F03", DictCodeList.平安资产类型_计划类资产_利率型.getValue());
+        param.put("PINAN_ASSET_TYPE_F09", DictCodeList.平安资产类型_计划类资产_货币型.getValue());
         param.put("PINAN_ASSET_TYPE_F05", DictCodeList.平安资产类型_存款.getValue());
         param.put("PINAN_ASSET_TYPE_F06", DictCodeList.平安资产类型_项目类资产.getValue());
         param.put("PROFIT_TYPE_01", DictCodeList.收益类型_净值型.getValue());
         param.put("PROFIT_TYPE_02", DictCodeList.收益类型_收益型.getValue());
+        param.put("PROFIT_TYPE_03", DictCodeList.收益类型_货币型.getValue());
         param.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         param.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
     }

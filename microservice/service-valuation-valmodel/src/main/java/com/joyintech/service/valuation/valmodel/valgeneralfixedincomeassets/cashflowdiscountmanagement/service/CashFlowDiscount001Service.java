@@ -60,15 +60,15 @@ public class CashFlowDiscount001Service extends BaseService<CashFlowDiscount001D
             }
             //老的数据设置失效时间，新的增加
             else {
+                oldDto.setUpdateUser(dto.getUpdateUser());
+                oldDto.setUpdateTime(dto.getUpdateTime());
                 if(DateUtil.compareDate(dto.getEffDate(), oldDto.getEffDate()) > 0) {
-                    oldDto.setUpdateUser(dto.getUpdateUser());
-                    oldDto.setUpdateTime(dto.getUpdateTime());
                     oldDto.setInvalidDate(dto.getEffDate());
-                    mapper.update(oldDto);
                 }
                 else {
-                    dto.setInvalidDate(oldDto.getEffDate());
+                    oldDto.setInvalidDate(oldDto.getEffDate());
                 }
+                mapper.update(oldDto);
                 dto.setSeqNo(IDGenerator.generate());
                 mapper.insert(dto);
             }

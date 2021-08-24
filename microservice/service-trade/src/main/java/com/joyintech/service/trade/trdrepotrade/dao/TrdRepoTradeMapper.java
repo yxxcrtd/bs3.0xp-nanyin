@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeExportPdfDto;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
 import org.apache.ibatis.annotations.Param;
@@ -212,4 +213,11 @@ public interface TrdRepoTradeMapper {
     InterfOpicsTradRepo selectInterfOpicsTradRepo(@Param("fTradeId") String fTradeId);
 
     List<InterfTradRepoasstDto> getMatchpledgeBondInfo(Map<String,Object> map);
+
+    /**
+     * 查询导出pdf数据 add by zengchengfa
+     * @param param
+     * @return
+     */
+    List<TrdRepoTradeExportPdfDto > selectExportPdf(Map<String, Object> param);
 }

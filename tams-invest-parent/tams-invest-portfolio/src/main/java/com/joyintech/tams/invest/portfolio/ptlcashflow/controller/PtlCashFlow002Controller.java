@@ -270,6 +270,9 @@ public class PtlCashFlow002Controller extends BaseController{
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
+        // ZGZGST-1339: 设置业务类型,fuyongsheng 20210824 add start
+        dto.setBusiType(DictCodeList.共通业务类型_自定义现金流.getValue());
+        // ZGZGST-1339: 设置业务类型,fuyongsheng 20210824 add end
         if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
             String branch = CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE);
             dto.setBranch(Long.parseLong(branch));

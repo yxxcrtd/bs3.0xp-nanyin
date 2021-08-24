@@ -506,17 +506,19 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
             else {
                 dto.setEntrustAmt(null);
             }
+            // 投资目的
+            dto.setInvAim(rowData.get(8).toString().trim().split(":")[0]);
             // 获取备注
-            dto.setRemark(rowData.get(9).toString().trim());
+            dto.setRemark(rowData.get(10).toString().trim());
             // 获取交易对手
-            dto.setCounterId(rowData.get(10).toString().trim());
+            dto.setCounterId(rowData.get(11).toString().trim());
             // 获取交易对手名称
-            dto.setCounterIdName(getCounterName(rowData.get(10).toString().trim()));
+            dto.setCounterIdName(getCounterName(rowData.get(11).toString().trim()));
             // 投资经理
             dto.setEtrInvestPersonInfo(new EtrInvestPersonInfoDto());
             dto.getEtrInvestPersonInfo().setInvManagerId(dto.getCreateUser());
             // 获取交易对手
-            dto.getEtrInvestPersonInfo().setCounterId(rowData.get(10).toString().trim());
+            dto.getEtrInvestPersonInfo().setCounterId(rowData.get(11).toString().trim());
             // 投资处室
             dto.getEtrInvestPersonInfo().setRoom(dto.getCreateDept());
             // 根据市场代码查出联动值
@@ -716,10 +718,14 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
                             "ETR_E_0030", getMessage("EtrPlanAssetR002.ps"), lineNo));
                     }
                 }
+                // 投资目的非空
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsBlank(rowData.get(8).toString(),
+                                "EtrInvestBondInfo002.invAim", lineNo));
                 // 通道
-                if (StringUtil.isNotBlank(rowData.get(8).toString())) {
+                if (StringUtil.isNotBlank(rowData.get(9).toString())) {
                     Map<String, Object> param = new HashMap<>();
-                    param.put("initValue", rowData.get(8).toString());
+                    param.put("initValue", rowData.get(9).toString());
                     param.put("page", 1);
                     param.put("length", 20);
                     Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
@@ -732,14 +738,14 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
                 }
                 // 交易对手
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(10).toString(),
+                    etrCommonService.checkIsBlank(rowData.get(11).toString(),
                     		 "EtrPlanAssetN003.counterId", lineNo));
-                if (StringUtil.isNotBlank(rowData.get(10).toString())) {
+                if (StringUtil.isNotBlank(rowData.get(11).toString())) {
                     if (StringUtil.equals(s2[0], DictCodeList.交易方向_赎回.getValue())
                         || StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())
                         || StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
                         Map<String, Object> map = new HashMap<>();
-                        map.put("search", rowData.get(10).toString());
+                        map.put("search", rowData.get(11).toString());
                         map.put("page", 1);
                         map.put("length", 20);
                         map.put("counterType", DictCodeListExt1.交易对手类型_市场机构.getValue());

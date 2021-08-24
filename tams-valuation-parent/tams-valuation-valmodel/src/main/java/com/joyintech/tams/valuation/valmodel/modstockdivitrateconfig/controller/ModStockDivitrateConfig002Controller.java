@@ -79,6 +79,7 @@ public class ModStockDivitrateConfig002Controller extends BaseController{
         }
         this.setSelectOptionToModel(model, DictCode.资产类型);
         this.setSelectOptionToModel(model, DictCode.资产分类);
+        this.setSelectOptionToModel(model, DictCode.证券品种);
         return super.init(model);
     }
 	

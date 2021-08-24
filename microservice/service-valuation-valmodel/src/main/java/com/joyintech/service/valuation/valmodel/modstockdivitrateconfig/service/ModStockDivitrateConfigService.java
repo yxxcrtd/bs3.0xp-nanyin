@@ -1,20 +1,19 @@
 package com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.service;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
 import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dao.ModStockDivitrateConfigMapper;
+import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModAseetMappingDto;
 import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.grid.Page;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 预期股息增长率配置查询service
@@ -108,6 +107,18 @@ public class ModStockDivitrateConfigService extends BaseService<ModStockDivitrat
 	public Page<SelectOptionDto> getAssetCodeList(Map<String, Object> map,int page, int length) {
 		return this.queryForPageForSelectReturn(page, length,()->modStockDivitrateConfigMapper.selectAssetCodeList(map));
 	}
-	
+
+	/**
+	 * 新建校验唯一资产代码
+	 */
+	public ModAseetMappingDto selectAssetNoClassify(Map<String, Object> param) {
+		List<ModAseetMappingDto> list = modStockDivitrateConfigMapper.selectAssetNoClassify(param);
+		if(StringUtil.isEmptyList(list)) {
+			return new ModAseetMappingDto();
+		}
+		else {
+			return list.get(0);
+		}
+	}
 	
 }

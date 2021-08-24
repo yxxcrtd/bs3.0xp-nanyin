@@ -7,9 +7,9 @@ values ('ASSET_MANAGEMENT_001_004_008', 'COM', null, 'ASSET_MANAGEMENT_001_004',
 DELETE FROM SYS_PAGE where PAGE_ID = 'ComTradeOpponent001';
 DELETE FROM SYS_PAGE where PAGE_ID = 'ComTradeOpponent002';
 insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ComTradeOpponent001', 'COM', '/common/basicdata/comtradeopponent/ComTradeOpponent001', 'common/basicdata/comtradeopponent/ComTradeOpponent001', 'ASSET_MANAGEMENT_001_004_008', null, null, '02', '02', '交易对手管理', 'system', null, '24-5月 -19 12.00.00.000000 上午', 'system', '24-5月 -19 12.00.00.000000 上午');
+values ('ComTradeOpponent001', 'COM', '/valuation/basicdata/comtradeopponent/ComTradeOpponent001', 'valuation/basicdata/comtradeopponent/ComTradeOpponent001', 'ASSET_MANAGEMENT_001_004_008', null, null, '02', '02', '交易对手管理', 'system', null, '24-5月 -19 12.00.00.000000 上午', 'system', '24-5月 -19 12.00.00.000000 上午');
 insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ComTradeOpponent002', 'COM', '/common/basicdata/comtradeopponent/ComTradeOpponent002', 'common/basicdata/comtradeopponent/ComTradeOpponent002', null, null, null, '02', '01', '交易对手管理', 'system', null, '10-12月-19 06.04.21.000000 下午', 'system', '10-12月-19 06.04.21.000000 下午');
+values ('ComTradeOpponent002', 'COM', '/valuation/basicdata/comtradeopponent/ComTradeOpponent002', 'valuation/basicdata/comtradeopponent/ComTradeOpponent002', null, null, null, '02', '01', '交易对手管理', 'system', null, '10-12月-19 06.04.21.000000 下午', 'system', '10-12月-19 06.04.21.000000 下午');
 
 DELETE FROM SYS_PAGE_DICTLIST where PAGE_ID = 'ComTradeOpponent001';
 DELETE FROM SYS_PAGE_DICTLIST where PAGE_ID = 'ComTradeOpponent002';

@@ -108,6 +108,21 @@ public class RiskPremiumAdjConf002Dto extends BaseEntity implements ProcessEntit
      */
     private String pageModel;
 
+    /**
+     * 曲线代码
+     */
+    private String curveCode;
+
+    /**
+     * 曲线名称
+     */
+    private String curveName;
+
+    /**
+     * 曲线日期
+     */
+    private Date curveDate;
+
     public String getSeqno() {
         return seqno;
     }
@@ -233,5 +248,29 @@ public class RiskPremiumAdjConf002Dto extends BaseEntity implements ProcessEntit
 
     public void setPageModel(String pageModel) {
         this.pageModel = pageModel;
+    }
+
+    public String getCurveCode() {
+        return curveCode;
+    }
+
+    public void setCurveCode(String curveCode) {
+        this.curveCode = curveCode;
+    }
+
+    public String getCurveName() {
+        return curveName;
+    }
+
+    public void setCurveName(String curveName) {
+        this.curveName = curveName;
+    }
+
+    public Date getCurveDate() {
+        return curveDate;
+    }
+
+    public void setCurveDate(Date curveDate) {
+        this.curveDate = curveDate;
     }
 }

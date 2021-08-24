@@ -90,6 +90,14 @@
                                data-th-value="${entity?.restNetValue}" class="layui-input form-input text-number" data-fixtype="2">
                     </div>
                 </div>
+                <div class="layui-form-item" id="cShares_div">
+                    <label class="layui-form-label form-lable mst-lable"
+                           data-th-text="#{ComCoinFundQuotationInfo002.cShares}">总份额</label>
+                    <div class="layui-input-inline input-inline">
+                        <input id="cShares" name="cShares" type="text" placeholder="请输入内容" data-textrange="2"
+                               data-th-value="${entity?.cShares}" class="layui-input form-input text-number" data-fixtype="2">
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label form-lable mst-lable"
                            data-th-text="#{ComCoinFundQuotationInfo001.fundManager}">基金管理人</label>

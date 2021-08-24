@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -85,9 +86,10 @@ public class CeAssetGroupManagement003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public List<CeAssetGroupManagement002Dto> findPage() {
+    public Page<CeAssetGroupManagement002Dto> findPage() {
         String workflowId = this.getParam("workflowId");
         if (StringUtil.isNotEmpty(workflowId)) {
+            Page<CeAssetGroupManagement002Dto> page = new Page<>();
             CeAssetGroupManagement002Dto ceAssetGroupManagement002Dto = ceAssetGroupManagement003Service.getBussinessEntityByWorkflowId(
                 workflowId);
             List<CeAssetGroupManagement002Dto> selectedItem = ceAssetGroupManagement002Dto.getSelectedItem();
@@ -95,21 +97,23 @@ public class CeAssetGroupManagement003Controller extends BaseController {
             if (StringUtil.equals(this.getParam("pageModel"),
                 GlobalConstant.DETAIL_PAGE_MODEL_EDIT)
                 && this.getParam("elementIdForLog").contains("search")) {
-                List<CeAssetGroupManagement002Dto> selectAssetInfo = ceAssetGroupManagement003Service.selectAssetInfo(RequestUtil.getPageParam());
-                return selectAssetInfo;
+                return ceAssetGroupManagement003Service.selectAssetInfo(RequestUtil.getPageParam());
             }
             //判断selectedItem是否为空，不为空则为提交的数据，为空则为删除的数据
             if (StringUtil.isEmptyList(selectedItem)) {
                 List<CeAssetGroupManagement002Dto> list = new ArrayList<>();
                 list.add(ceAssetGroupManagement002Dto);
-                return list;
+                page.setRoot(list);
+                return page;
             }
-            return selectedItem;
+            page.setRoot(selectedItem);
+            return page;
         }
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         //通过系列代码查询系列下已有的资产明细
         List<CeAssetGroupManagement002Dto> list = ceAssetGroupManagement003Service.getExistAssetBySeqno(param);
-        List<CeAssetGroupManagement002Dto> selectAssetInfo = ceAssetGroupManagement003Service.selectAssetInfo(param);
+        Page<CeAssetGroupManagement002Dto> page = ceAssetGroupManagement003Service.selectAssetInfo(param);
+        List<CeAssetGroupManagement002Dto> selectAssetInfo = page.getRoot();
         //过滤系列已存在的资产
         for (int i = selectAssetInfo.size()-1; i>=0; i--) {
             for (int j = 0; j < list.size(); j++ ) {
@@ -122,7 +126,7 @@ public class CeAssetGroupManagement003Controller extends BaseController {
                 }
             }
         }
-        return selectAssetInfo;
+        return page;
     }
     /**
      * <一句话功能简述> 查询资产代码联想框

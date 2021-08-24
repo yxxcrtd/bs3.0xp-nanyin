@@ -2,40 +2,44 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='BTCPONEZQJYKZBUY';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('BTCPONEZQJYKZBUY','不同产品同一交易日证券反向交易控制(买)','N','','jjpei','99999',sysdate,'jjpei',sysdate,'','','N','', 'String','DATABASE', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('BTCPONEZQJYKZBUY','不同产品同一交易日证券反向交易控制(买)','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','N','String', '','DATABASE', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='BTCPONEZQJYKZBUY';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BTCPONEZQJYKZBUY','01', 'SQL','SELECT 1 FROM DUAL', '','N','jjpei','99999',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BTCPONEZQJYKZBUY','01', 'SQL','SELECT 1 FROM DUAL', '','N','ysfu','C001',sysdate,'ysfu',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BTCPONEZQJYKZBUY','02', 'SQL','SELECT 1 FROM DUAL', '','N','jjpei','99999',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BTCPONEZQJYKZBUY','02', 'SQL','SELECT 1 FROM DUAL', '','N','ysfu','C001',sysdate,'ysfu',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BTCPONEZQJYKZBUY','03', 'SQL','SELECT 1 FROM DUAL', '','N','jjpei','99999',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BTCPONEZQJYKZBUY','03', 'SQL','SELECT 1 FROM DUAL', '','N','ysfu','C001',sysdate,'ysfu',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BTCPONEZQJYKZBUY','04', 'SQL','SELECT 1 FROM DUAL', '','N','jjpei','99999',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BTCPONEZQJYKZBUY','04', 'SQL','SELECT 1 FROM DUAL', '','N','ysfu','C001',sysdate,'ysfu',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BTCPONEZQJYKZBUY','05', 'SQL','SELECT 1 FROM DUAL', '','N','jjpei','99999',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BTCPONEZQJYKZBUY','05', 'SQL','SELECT 1 FROM DUAL', '','N','ysfu','C001',sysdate,'ysfu',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
 V_CONTENT_01_02_03 CLOB := 'SELECT DISTINCT nvl(MAX(RVALUE),0) RVALUE FROM (SELECT t2.UNIT_CPRICE RVALUE
            FROM TRD_PRODUCT_DEAL_ADD t1
            INNER JOIN TRD_PRODUCT_DEAL t2
-           ON t1.TRADE_ID=t2.TRADE_ID AND t2.TRADE_STATUS != ''03'' AND NVL(t2.IS_CANCEL,''N'') =''N''
+           ON t1.TRADE_ID=t2.TRADE_ID AND t2.TRADE_STATUS=''01''AND NVL(t2.IS_CANCEL,''N'') =''N''
            INNER JOIN FIN_PRODUCT m
            ON  m.FINPROD_ID=t2.FINPROD_ID
-           WHERE t2.PS IN  (''T01'',''T46'',''T47'',''T48'')
-           AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
+           WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
            AND t1.PORTFOLIO_ID IN ${portfolioCode} and t2.FINPROD_ID=${assetCode} and t2.TRADE_DATE=date''${valDate}''
 UNION all
   SELECT UNIT_CPRICE AS RVALUE
         FROM( SELECT t1.PORTFOLIO_ID , m.FINPROD_ID , t2.UNIT_CPRICE
                 FROM TRD_PRODUCT_DEAL_ADD t1
                 INNER JOIN TRD_PRODUCT_DEAL t2
-                ON t1.TRADE_ID=t2.TRADE_ID  AND t2.TRADE_STATUS != ''03'' AND NVL(t2.IS_CANCEL,''N'') =''N''
+                ON t1.TRADE_ID=t2.TRADE_ID  AND t2.TRADE_STATUS=''01''AND NVL(t2.IS_CANCEL,''N'') =''N''
                 INNER JOIN FIN_PRODUCT m
                 ON  m.FINPROD_ID=t2.FINPROD_ID
-                WHERE t2.PS IN  (''T01'',''T46'',''T47'',''T48'')
-                AND m.FINPROD_TYPE2 IN (''F01'',''F10'')
+                WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
         AND t2.TRADE_DATE = DATE''${valDate}'' and t2.FINPROD_ID=${assetCode}) s1,
     ( select t1.PORTFOLIO_ID,t1.PTL_BAG_ID from RSK_PORTFOLIO_PACKAGE_DTL t1
     inner join PTL_PORTFOLIO t2 on t1.PORTFOLIO_ID=t2.PORTFOLIO_ID and t2.MDATE>date''${valDate}'')
@@ -44,24 +48,28 @@ UNION all
   SELECT t2.UNIT_CPRICE RVALUE
            FROM WFL_TRD_PRODUCT_DEAL_ADD t1
            INNER JOIN WFL_TRD_PRODUCT_DEAL t2
-           ON t1.TRADE_ID=t2.TRADE_ID AND t2.TRADE_STATUS != ''03'' AND NVL(t2.IS_CANCEL,''N'') =''N''
+           ON t1.TRADE_ID=t2.TRADE_ID AND t2.TRADE_STATUS=''01''AND NVL(t2.IS_CANCEL,''N'') =''N''
            INNER JOIN SYS_WFL_BUSINESS_LIST swbl on t2.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
            INNER JOIN FIN_PRODUCT m
            ON  m.FINPROD_ID=t2.FINPROD_ID
-           WHERE t2.PS IN  (''T01'',''T46'',''T47'',''T48'')
-           AND m.FINPROD_TYPE2 IN (''F01'', ''F10'')
+           WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
            AND t1.PORTFOLIO_ID IN ${portfolioCode} and t2.FINPROD_ID=${assetCode} and t2.TRADE_DATE=date''${valDate}''
 UNION all
   SELECT UNIT_CPRICE AS RVALUE
         FROM( SELECT t1.PORTFOLIO_ID , m.FINPROD_ID , t2.UNIT_CPRICE
                 FROM WFL_TRD_PRODUCT_DEAL_ADD t1
                 INNER JOIN WFL_TRD_PRODUCT_DEAL t2
-                ON t1.TRADE_ID=t2.TRADE_ID  AND t2.TRADE_STATUS != ''03'' AND NVL(t2.IS_CANCEL,''N'') =''N''
+                ON t1.TRADE_ID=t2.TRADE_ID  AND t2.TRADE_STATUS=''01''AND NVL(t2.IS_CANCEL,''N'') =''N''
         INNER JOIN SYS_WFL_BUSINESS_LIST swbl on t2.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
                 INNER JOIN FIN_PRODUCT m
                 ON  m.FINPROD_ID=t2.FINPROD_ID
-                WHERE t2.PS IN  (''T01'',''T46'',''T47'',''T48'')
-                AND m.FINPROD_TYPE2 IN (''F01'',''F10'')
+                WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
         AND t2.TRADE_DATE = DATE''${valDate}'' and t2.FINPROD_ID=${assetCode}) s1,
     ( select t1.PORTFOLIO_ID,t1.PTL_BAG_ID from RSK_PORTFOLIO_PACKAGE_DTL t1
     inner join PTL_PORTFOLIO t2 on t1.PORTFOLIO_ID=t2.PORTFOLIO_ID and t2.MDATE>date''${valDate}'')
@@ -78,10 +86,12 @@ FROM (SELECT B.FINPROD_ID, A.FINPROD_NAME,A.MAX_BUY,B.MIN_SELL
           ON t1.TRADE_ID=t2.TRADE_ID
           INNER JOIN FIN_PRODUCT m
           ON  m.FINPROD_ID=t2.FINPROD_ID
-          WHERE t2.PS IN (''T01'',''T46'',''T47'',''T48'')
-          AND t2.TRADE_STATUS!=''03''
+          WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
+          AND t2.TRADE_STATUS=''01''
                     AND NVL(t2.IS_CANCEL,''N'') =''N''
-          AND m.FINPROD_TYPE2 IN (''F01'',''F10'')
           AND t1.PORTFOLIO_ID IN ${portfolioCode}
           AND t2.TRADE_DATE = DATE''${valDate}''
           UNION ALL
@@ -91,10 +101,12 @@ FROM (SELECT B.FINPROD_ID, A.FINPROD_NAME,A.MAX_BUY,B.MIN_SELL
           ON t1.TRADE_ID=t2.TRADE_ID
           INNER JOIN FIN_PRODUCT m
           ON  m.FINPROD_ID=t2.FINPROD_ID
-          WHERE t2.PS IN (''T01'',''T46'',''T47'',''T48'')
-          AND t2.TRADE_STATUS!=''03''
+          WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
+          AND t2.TRADE_STATUS=''01''
                     AND NVL(t2.IS_CANCEL,''N'') =''N''
-          AND m.FINPROD_TYPE2 IN (''F01'',''F10'')
           AND t1.PORTFOLIO_ID IN ${portfolioCode}
           AND t2.TRADE_DATE = DATE''${valDate}''
           UNION ALL
@@ -102,12 +114,14 @@ FROM (SELECT B.FINPROD_ID, A.FINPROD_NAME,A.MAX_BUY,B.MIN_SELL
           FROM WFL_TRD_PRODUCT_DEAL_ADD t1
           INNER JOIN WFL_TRD_PRODUCT_DEAL t2
           ON t1.TRADE_ID=t2.TRADE_ID
-          AND t2.TRADE_STATUS != ''03''
+          AND t2.TRADE_STATUS=''01''
           INNER JOIN SYS_WFL_BUSINESS_LIST swbl on t2.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
           INNER JOIN FIN_PRODUCT m
           ON  m.FINPROD_ID=t2.FINPROD_ID
-          WHERE t2.PS IN (''T01'',''T46'',''T47'',''T48'')
-          AND m.FINPROD_TYPE2 IN (''F01'',''F10'')
+          WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
           AND t1.PORTFOLIO_ID IN ${portfolioCode}
           AND t2.TRADE_DATE = DATE''${valDate}'')
                 GROUP BY FINPROD_ID , FINPROD_NAME) A
@@ -119,10 +133,12 @@ FROM (SELECT B.FINPROD_ID, A.FINPROD_NAME,A.MAX_BUY,B.MIN_SELL
             ON t1.TRADE_ID=t2.TRADE_ID
             INNER JOIN FIN_PRODUCT m
             ON m.FINPROD_ID=t2.FINPROD_ID
-            WHERE  t2.PS IN (''T02'',''T03'')
-            AND t2.TRADE_STATUS!=''03''
+            WHERE   (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
+            AND t2.TRADE_STATUS=''01''
                         AND NVL(t2.IS_CANCEL,''N'') =''N''
-            AND m.FINPROD_TYPE2 IN (''F01'',''F10'')
             AND t1.PORTFOLIO_ID IN ${portfolioCode}
             AND t2.TRADE_DATE = DATE''${valDate}''
             UNION ALL
@@ -132,10 +148,12 @@ FROM (SELECT B.FINPROD_ID, A.FINPROD_NAME,A.MAX_BUY,B.MIN_SELL
             ON t1.TRADE_ID=t2.TRADE_ID
             INNER JOIN FIN_PRODUCT m
             ON m.FINPROD_ID=t2.FINPROD_ID
-            WHERE  t2.PS IN (''T02'',''T03'')
-            AND t2.TRADE_STATUS!=''03''
+            WHERE  (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
+            AND t2.TRADE_STATUS=''01''
                         AND NVL(t2.IS_CANCEL,''N'') =''N''
-            AND m.FINPROD_TYPE2 IN (''F01'',''F10'')
             AND t1.PORTFOLIO_ID IN ${portfolioCode}
             AND t2.TRADE_DATE = DATE''${valDate}''
             UNION ALL
@@ -143,12 +161,14 @@ FROM (SELECT B.FINPROD_ID, A.FINPROD_NAME,A.MAX_BUY,B.MIN_SELL
             FROM WFL_TRD_PRODUCT_DEAL_ADD t1
             INNER JOIN WFL_TRD_PRODUCT_DEAL t2
             ON t1.TRADE_ID=t2.TRADE_ID
-            AND t2.TRADE_STATUS != ''03''
+            AND t2.TRADE_STATUS=''01''
               INNER JOIN SYS_WFL_BUSINESS_LIST swbl on t2.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
             INNER JOIN FIN_PRODUCT m
             ON m.FINPROD_ID=t2.FINPROD_ID
-            WHERE  t2.PS IN (''T02'',''T03'')
-            AND m.FINPROD_TYPE2 IN (''F01'',''F10'')
+            WHERE  (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
             AND t1.PORTFOLIO_ID IN ${portfolioCode}
             AND t2.TRADE_DATE = DATE''${valDate}'')
                 GROUP BY FINPROD_ID ,FINPROD_NAME) B
@@ -165,10 +185,12 @@ FROM (SELECT B.FINPROD_ID, A.FINPROD_NAME,A.MAX_BUY,B.MIN_SELL
                 ON t1.TRADE_ID=t2.TRADE_ID
                 INNER JOIN FIN_PRODUCT m
                 ON  m.FINPROD_ID=t2.FINPROD_ID
-                WHERE t2.PS IN (''T01'',''T46'',''T47'',''T48'')
-        AND t2.TRADE_STATUS!=''03''
+                WHERE (
+          (t2.PS IN (''T01'',''T46'',''T47'',''T48'',''T04'',''T50'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F10'')
+          )
+        AND t2.TRADE_STATUS=''01''
                 AND NVL(t2.IS_CANCEL,''N'') =''N''
-                AND m.FINPROD_TYPE2 IN (''F01'',''F10'')
                 AND t1.PORTFOLIO_ID IN ${portfolioCode}
         AND t2.TRADE_DATE = DATE''${valDate}''
                 GROUP BY t2.FINPROD_ID , m.FINPROD_NAME) A
@@ -179,10 +201,12 @@ FROM (SELECT B.FINPROD_ID, A.FINPROD_NAME,A.MAX_BUY,B.MIN_SELL
                 ON t1.TRADE_ID=t2.TRADE_ID
                 INNER JOIN FIN_PRODUCT m
                 ON m.FINPROD_ID=t2.FINPROD_ID
-                WHERE  t2.PS IN (''T02'',''T03'')
-        AND t2.TRADE_STATUS!=''03''
+                WHERE   (
+          (t2.PS IN (''T02'',''T03'') AND m.FINPROD_TYPE2 IN (''F01'',''F32'',''F10''))OR
+          (t2.PS =''T49''AND m.FINPROD_TYPE2 =''F01'')
+          )
+        AND t2.TRADE_STATUS=''01''
                 AND NVL(t2.IS_CANCEL,''N'') =''N''
-                AND m.FINPROD_TYPE2 IN (''F01'',''F10'')
                 AND t1.PORTFOLIO_ID IN ${portfolioCode}
         AND t2.TRADE_DATE = DATE''${valDate}''
                 GROUP BY t2.FINPROD_ID , m.FINPROD_NAME) B

@@ -23,14 +23,17 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
 import com.joyintech.tams.invest.trade.investtrade.investdealquery.dto.AssetTransferExport001Dto;
 import com.joyintech.tams.invest.trade.investtrade.investdealquery.dto.TrdDealQueryDto;
 import com.joyintech.tams.invest.trade.investtrade.investdealquery.dto.TrdInvestDealQuery001Dto;
+import com.joyintech.tams.invest.trade.investtrade.investdealquery.dto.TrdInvestDealQueryPdfDto;
 import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,6 +62,11 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
     
     
     private Logger logger = LoggerFactory.getLogger(TrdInvestDealQuery001Service.class);
+	/**
+	 * add by zengchengfa 20210803 导出pdf共通
+	 */
+	@Autowired
+	private CommonExportPdfService commonExportPdfService;
     
     /**
 	 * 根据有效状态的不同的查询
@@ -799,4 +807,40 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
                 + "/TrdInvestDealQuery001/selectInvestRateByProject",dto,BigDecimal.class);
 	    }
+
+		/**
+		 * 导出pdf数据 add by zengchengfa 20210803
+		 * @param param
+		 * @return
+		 */
+		public List<TrdInvestDealQueryPdfDto> selectExportPdfList(Map param) {
+			return restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdInvestDealQuery001/selectExportPdfList",
+					param, TrdInvestDealQueryPdfDto.class);
+		}
+
+		/**
+		 * 导出pdf add by zengchengfa 20210803
+		 * @param pageId 画面id
+		 * @param param 参数
+		 * @return
+		 */
+		public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
+			List<TrdInvestDealQueryPdfDto> datas = selectExportPdfList(param);
+			//汇总交易金额
+			BigDecimal sumAmt = datas.stream().map(TrdInvestDealQueryPdfDto::getTradeAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+			TrdInvestDealQueryPdfDto dto = new TrdInvestDealQueryPdfDto();
+			dto.setPortfolioId("合计");
+			dto.setTradeAmt(sumAmt);
+			datas.add(dto);
+			return commonExportPdfService.exportPdf(pageId,getConfigFile(),datas);
+		}
+
+		/**
+		 * 获取配置文件绝对路径 add by zengchengfa 20210803
+		 * @return
+		 */
+		public String getConfigFile(){
+			String basePath = this.getClass().getClassLoader().getResource("com/joyintech/tams/invest/trade/investtrade/investdealquery/conf/").toString();
+			return basePath + "export_conf_pdf.xml";
+		}
 }

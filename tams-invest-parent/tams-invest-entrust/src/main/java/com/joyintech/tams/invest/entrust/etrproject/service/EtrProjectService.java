@@ -477,23 +477,25 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
             dto.setEntrustAmt(BigDecimal.valueOf(Double.valueOf(data.get(6).toString().trim())));
             //本金金额
             dto.setPrinAmt(BigDecimal.valueOf(Double.valueOf(data.get(7).toString())));
+            //投资目的
+            dto.setInvAim(data.get(8).toString().trim().split(":")[0]);
             //交易对手
-            dto.setCounterId(data.get(8).toString().trim());
-            String counterName = getCounterName(data.get(8).toString().trim());
+            dto.setCounterId(data.get(9).toString().trim());
+            String counterName = getCounterName(data.get(9).toString().trim());
             dto.setCounterIdName(counterName);
             //获取投资经理
             dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
             //所属部门
             dto.setRoom(LoginUserUtil.getDeptCode());
             //清算速度
-            dto.setSettleSpeed(data.get(9).toString());
+            dto.setSettleSpeed(data.get(10).toString());
             //分割清算速度
-            String ss = data.get(9).toString().trim();
+            String ss = data.get(10).toString().trim();
             dto.setSettleSpeed(ss.split(":")[1]);
             //净投资收益率
-            dto.setInvestRate(BigDecimal.valueOf(Double.valueOf(data.get(10).toString())));
+            dto.setInvestRate(BigDecimal.valueOf(Double.valueOf(data.get(11).toString())));
             //备注
-            dto.setRemark(data.get(11).toString());
+            dto.setRemark(data.get(12).toString());
             //根据资产代码获取联动信息
             Map<String, Object> map = new HashMap<String,Object>();
             map.put("initValue", data.get(4).toString());
@@ -627,13 +629,18 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
                     //委托金额
                     confirmMsg= checkIsDouble(confirmMsg,lineNo,rowData.get(6).toString(),"EtrProject002.entrustAmt");
+                    //本金金额
+                    confirmMsg = checkIsDouble(confirmMsg, lineNo, rowData.get(7).toString(), "EtrProject003.prinAmt");
+                    //投资目的
+                    message = etrCommonService.checkIsBlank(rowData.get(8).toString(), "EtrInvestBondInfo002.invAim", lineNo);
+                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
                     //交易对手
-                    message = etrCommonService.checkIsBlank(rowData.get(8).toString(), "EtrProject003.counterId", lineNo);
+                    message = etrCommonService.checkIsBlank(rowData.get(9).toString(), "EtrProject003.counterId", lineNo);
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
                     //交易对手输入格式是否正确check
-                    if (StringUtil.isNotBlank(rowData.get(8).toString())) {
+                    if (StringUtil.isNotBlank(rowData.get(9).toString())) {
                         Map<String, Object> map = new HashMap<>();
-                        map.put("initValue", rowData.get(8).toString());
+                        map.put("initValue", rowData.get(9).toString());
                         map.put("page", 1);
                         map.put("length", 20);
                         map.put("counterType", null);
@@ -646,11 +653,11 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
                         }
                     }
                     //交易方向为买入的时候对交易对手的check
-                    if (StringUtil.isNotBlank(rowData.get(8).toString())) {
+                    if (StringUtil.isNotBlank(rowData.get(9).toString())) {
                         String[] s2 = rowData.get(5).toString().split(":");
                         if (StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())) {
                             Map<String, Object> map = new HashMap<>();
-                            map.put("initValue", rowData.get(8).toString());
+                            map.put("initValue", rowData.get(9).toString());
                             map.put("page", 1);
                             map.put("length", 20);
                             map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
@@ -662,13 +669,11 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
 
                         }
                     }
-                    //本金金额
-                    confirmMsg = checkIsDouble(confirmMsg, lineNo, rowData.get(7).toString(), "EtrProject003.prinAmt");
                     //清算速度
-                    message = etrCommonService.checkIsBlank(rowData.get(9).toString(), "EtrProject003.settleSpeed", lineNo);
+                    message = etrCommonService.checkIsBlank(rowData.get(10).toString(), "EtrProject003.settleSpeed", lineNo);
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
                     //净投资收益率
-                    confirmMsg = checkIsDouble(confirmMsg, lineNo, rowData.get(10).toString(), "EtrProject003.investRate");
+                    confirmMsg = checkIsDouble(confirmMsg, lineNo, rowData.get(11).toString(), "EtrProject003.investRate");
                 }
                 if (StringUtil.isBlank(confirmMsg)) {
                     jsonArrays.add(rowData);

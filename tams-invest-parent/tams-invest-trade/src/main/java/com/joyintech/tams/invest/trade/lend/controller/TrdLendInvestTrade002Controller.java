@@ -99,9 +99,9 @@ public class TrdLendInvestTrade002Controller extends BaseController {
                 }
             }
             // 拆借交易，流程中页面展示利率 = 真实值 * 100
-            if (StringUtil.isNotEmpty(dto.getFinTradeProduct()) && StringUtil.isNotEmpty(dto.getFinTradeProduct().getIntRate())){
-                dto.getFinTradeProduct().setIntRate(dto.getFinTradeProduct().getIntRate().multiply(new BigDecimal(100)));
-            }
+//            if (StringUtil.isNotEmpty(dto.getFinTradeProduct()) && StringUtil.isNotEmpty(dto.getFinTradeProduct().getIntRate())){
+//                dto.getFinTradeProduct().setIntRate(dto.getFinTradeProduct().getIntRate().multiply(new BigDecimal(100)));
+//            }
             model.addAttribute("workflowId",workflowId);
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
             if (StringUtil.isBlank(dto.getTradeId())) {

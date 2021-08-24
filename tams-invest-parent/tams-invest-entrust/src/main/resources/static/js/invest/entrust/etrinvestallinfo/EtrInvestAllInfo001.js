@@ -459,6 +459,45 @@
     };
 
     /**
+     * 导出pdf add by zengchengfa 20210730
+     */
+    var exportPdf = function(){
+        if(table!=null && table!=''){
+            var selArr = table.getAllCheckedRows();
+            // 列表中未勾选
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            //勾选导出
+            var param = searchform();
+            var selectedItem = [];
+            var assetType = '';
+            var isError = false;
+            $.each(table.getAllCheckedRows() ,function (i, item) {
+                if(assetType == ''){
+                    assetType = item.assetType;
+                }else {
+                    if(item.assetType != assetType){
+                        isError = true;
+                        return;
+                    }
+                }
+                selectedItem.push(item.entrustId);
+            });
+            if(isError){
+                JoyinUtil.showMessage("选择的指令非同一资产类型，无法打印，请重新选择！","error");
+                return;
+            }
+            param.selectedItem = selectedItem.join(',');
+            param.assetType = assetType;
+            Joyin.exportExcel(basePath+"invest/entrust/etrinvestallinfo/EtrInvestAllInfo001/exportPdf", param);
+        }else{
+            Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+        }
+    };
+
+    /**
      * 编辑按钮事件
      */
     $(function () {
@@ -479,6 +518,13 @@
          */
         $('#EtrInvestAllInfo001_btn_pb_export').click(function() {
         	exportPBExcel();
+        });
+
+        /**
+         * 导出pdf按钮 add by zengchengfa 20210730
+         */
+        $('#EtrInvestAllInfo001_btn_pdf_export').click(function() {
+            exportPdf();
         });
     });
 }());

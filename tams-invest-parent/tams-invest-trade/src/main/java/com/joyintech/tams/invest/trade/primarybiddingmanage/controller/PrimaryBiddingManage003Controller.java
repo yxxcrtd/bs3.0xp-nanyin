@@ -77,7 +77,7 @@ public class PrimaryBiddingManage003Controller extends BaseController {
 
          } else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(bidId)){
         	 entity=primaryBiddingManage003.getBussinessEntityByBidId(bidId);
-             entity.setAllBidPrinAmt(new BigDecimal(map.get("allBidPrinAmt").toString()));
+             entity.setAllBidPrinAmt(ArithmeticUtil.multiply(new BigDecimal(map.get("allBidPrinAmt").toString()),new BigDecimal(10000)));
              // 委托的场合
              EtrInvestInfoDto etrInvestInfoDto = tradeCommonService.findEtrInfo(entity.getEntrustId());
              if (etrInvestInfoDto != null) {
@@ -123,6 +123,9 @@ public class PrimaryBiddingManage003Controller extends BaseController {
          if(entity.getWinPrinAmt() != null) {
              entity.setWinPrinAmt(entity.getWinPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
          }
+        if(entity.getAllBidPrinAmt() != null) {
+            entity.setAllBidPrinAmt(entity.getAllBidPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+        }
          List<BidOrderBidPriceDto> BidOrderBidPriceDtoList = entity.getBidOrderBidPriceList();
          for (BidOrderBidPriceDto dto : BidOrderBidPriceDtoList) {
              if(dto.getBidPrinAmt() != null) {

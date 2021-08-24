@@ -57,7 +57,7 @@ public class ModStockConfigInfoService extends CommonExportService<ModStockDivit
      */
     public ModAseetMappingDto findModAseetMappingByOutput(Map<String, Object> map) {
         return restTemplate.postForObject(ServiceApplication.VAL_MODEL_SERVICE_NAME
-                                          + "/Modelvaluation/findModAseetMappingByFiveClass",map, ModAseetMappingDto.class);
+                                          + "/ModStockDivitrateConfigInfo/selectAssetNoClassify",map, ModAseetMappingDto.class);
     }
 	@Override
 	public void doComplete(ModStockDivitrateConfigInfoDto entity, OperationType operationType) {

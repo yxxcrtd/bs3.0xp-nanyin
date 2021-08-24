@@ -13,6 +13,7 @@ package com.joyintech.service.entrust.etrinvestallinfo.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoExportPdfDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -146,5 +147,20 @@ public class EtrInvestAllInfoService extends BaseService<EtrInvestAllInfoDto> {
         etrInvestAllInfoMapper.updateExportPB(param);
         return etrInvestAllInfoMapper.selectExportPB(param);
     }
-    
+
+    /**
+     * 查询导出pdf数据 add by zengchengfa
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public List<EtrInvestAllInfoExportPdfDto> selectExportPdf(Map<String, Object> param) throws Exception{
+        if (StringUtil.isNotEmpty(param.get("selectedItem"))){
+            List<String> selectedItem = StringUtil.splitToList(",",(String)param.get("selectedItem"));
+            if(selectedItem.size() > 0){
+                param.put("etrList",selectedItem);
+            }
+        }
+        return etrInvestAllInfoMapper.selectExportPdf(param);
+    }
 }
