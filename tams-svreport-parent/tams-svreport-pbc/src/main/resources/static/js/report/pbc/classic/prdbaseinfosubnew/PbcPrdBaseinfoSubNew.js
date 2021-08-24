@@ -380,7 +380,7 @@ $(function () {
             if (isHaveData) {
                 Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function () {
                     //页面添加滚动条
-                    layui.layer.open({type: 3});
+                    // layui.layer.open({type: 3});
                     Joyin.ajaxJson('doManul', param, function () {
                         table.load();
                         layui.layer.closeAll();

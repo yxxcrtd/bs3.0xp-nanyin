@@ -1,40 +1,31 @@
 package com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
-import com.joyintech.system.constant.SystemGlobalConstant;
-import com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate002Dto;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.service.PbcPrdBaseinfoSubNewMService;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.service.PbcPrdBaseinfoSubNew001Service;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.service.PbcPrdBaseinfoSubNewMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
-
-import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
@@ -142,6 +133,16 @@ public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("doManul")
 	public AjaxResult manul(@RequestBody Map<String,Object> map) {
+
+
+		map.put("submitFeedbackStatusExp","02,04,06");
+		List<PbcPrdBaseinfoSubNew> dtoList = pbcPrdRaiseSub001Service.searchByExcel(map);
+		for(PbcPrdBaseinfoSubNew sub:dtoList){
+			if(StringUtil.isEmpty(sub.getPbcPoolCode())){
+				return new AjaxResult("请先维护人行产品代码后，再进行手工处理。",MessageType.错误消息);
+			}
+		}
+
 	    pbcPrdBaseinfoSubMService.updateSumStaus(map);
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
 	}
