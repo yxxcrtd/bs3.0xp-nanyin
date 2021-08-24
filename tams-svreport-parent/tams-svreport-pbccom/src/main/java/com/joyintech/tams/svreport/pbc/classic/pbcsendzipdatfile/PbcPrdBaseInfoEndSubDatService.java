@@ -85,14 +85,7 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
         }
         List<PbcProdAssetpoolCode> pbcProdAssetpoolCodes = new ArrayList<>();
         if(CollectionUtil.isNotEmpty(innerProdIds)){
-            //数据权限模式（01：银行模式，02：联社模式）
-            String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
-            if("02".equals(authorityType)){
-                String orgCode = SecurityUtil.getLoginUser().getOrgCode();
-                pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds,StrUtil.isEmpty(orgCode) ? null : orgCode);
-            }else{
-                pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds,null);
-            }
+            pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds);
         }
         for (PbcPrdBaseinfoEndSubDatDiff pbcPrdBaseinfoSubDat : listDetail) {
             String prodId = pbcPrdBaseinfoSubDat.getProdId();
