@@ -153,6 +153,12 @@ public class NewPbcMonthReportService {
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("statusVdate", statusVdate);
             paramMap.put("datZipType", "MI");
+            //数据权限模式（01：银行模式，02：联社模式）
+            String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
+            if("02".equals(authorityType)){
+                //机构
+                paramMap.put("reportOrgName",SecurityUtil.getLoginUser().getOrgCode());
+            }
             List<PbcSendZipDatFile> pbcSendZipDatFiles = pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(paramMap);
             Set<String> sets = new HashSet<>();
             for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
@@ -176,6 +182,7 @@ public class NewPbcMonthReportService {
                     }
                 }
                 if(CollectionUtil.isNotEmpty(validMessageList)){
+                    //do not ask me why,god know it!
                     ajaxResult.setData("CONFIRM_MSG");
                     ajaxResult.setErrorList(validMessageList);
                     ajaxResult.setMessageType(MessageType.确认消息);
@@ -222,13 +229,18 @@ public class NewPbcMonthReportService {
             Map<String,Object> paramMap = new HashMap<>();
             paramMap.put("statusVdate",statusVdate);
             paramMap.put("datZipType","MI");
+            //数据权限模式（01：银行模式，02：联社模式）
+            String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
+            logger.info("数据权限模式:{}",authorityType);
+            String orgCode = SecurityUtil.getLoginUser().getOrgCode();
+            if("02".equals(authorityType)){
+                //机构
+                paramMap.put("reportOrgName",orgCode);
+            }
             List<PbcSendZipDatFile> pbcSendZipDatFiles = pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(paramMap);
             ReportDealParamDto paramDto = new ReportDealParamDto();
-            String orgCode = SecurityUtil.getLoginUser().getOrgCode();
             paramDto.setOrgCode(orgCode);
             paramDto.setStatusVdate(statusVdate);
-            /*String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
-            paramDto.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);*/
             Set<String> noUpdateReport = new HashSet<>();
             if(CollectionUtil.isNotEmpty(pbcSendZipDatFiles)){
                 for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
@@ -253,6 +265,7 @@ public class NewPbcMonthReportService {
                 if(noUpdateReport.contains(sheetName)){
                     continue;
                 }
+                //use cache,god knows me!
                 if(allNewPbcMonthReportsMap.containsKey(sheetName)){
                     errorList.addAll(allNewPbcMonthReportsMap.get(sheetName).dealExcelData(paramDto));
                 }else{

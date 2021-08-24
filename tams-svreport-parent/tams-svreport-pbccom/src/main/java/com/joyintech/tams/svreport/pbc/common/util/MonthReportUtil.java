@@ -37,6 +37,8 @@ public class MonthReportUtil {
             String group = reportGroup.group();
             Field[] declaredFields = clazz.getDeclaredFields();
             Constructor<T> declaredConstructor = clazz.getDeclaredConstructor();
+            //get the enum for report ,it is very important,so  you must know what is  PbcReportEnums!
+            //if you want change the way to analyse the report excel,giving up is the best choice you can make！
             List<PbcReportEnums> propertiesByType = PbcReportEnums.getPropertiesByType(reportType, group);
             if(CollectionUtil.isNotEmpty(propertiesByType)){
                 for (PbcReportEnums pbcReportEnums : propertiesByType) {

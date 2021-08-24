@@ -462,6 +462,9 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 						profit, rateMap, exchangeSource);
 				customAmtCny = ChbCcyConvertUtil.exchangeMoney(ccy, DictCodeListExt1.币种_中债_人民币.getValue(),
 						arg0.getMdate(), customAmt, rateMap, exchangeSource);
+			}else{
+				//新人行要求折人民币不为空,设置为与人民币相同
+				customAmtCny = customAmt;
 			}
 			// 兑付客户收益
 			sub.setCustomProfit(customAmt);
