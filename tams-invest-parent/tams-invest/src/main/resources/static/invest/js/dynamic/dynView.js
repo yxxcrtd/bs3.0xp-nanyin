@@ -7,11 +7,12 @@
  * 行情展示页面id以pageId开头    例：<div id="EtrIbBondinfoHq_view_contain">
  * suffix后缀表示年、%等, value表示字段英文名称，label表示字段中文名称
  */
-function DynamicView (pageId, dynId, callback){
+function DynamicView (pageId, dynId, callback, options){
     const o={};
     o.pageid = pageId;
     o.dynId = dynId;
     o.callback=callback; // 回调方法，存在则不执行默认展示方法，可以继续选择性调用
+    o.options=options;
     o.all=[];  // 选择list
     o.checkedList=[]; // checklist
     o.result={};    // 行情结果对象
@@ -24,7 +25,8 @@ function DynamicView (pageId, dynId, callback){
 
         if(true){
             let url = basePath + 'invest/entrust/EtrCommonController/selectByDynId';
-            Joyin.ajaxJson(url, {"dynId":o.dynId}, function (datajson) {
+            var level = o.options?o.options:'user';
+            Joyin.ajaxJson(url, {"dynId":o.dynId, "level":level}, function (datajson) {
                 o.all=datajson.all;
                 // 构造多选框
                 const _pageContain = $("#"+o.pageid+"_checkbox_contain");
@@ -127,7 +129,8 @@ function DynamicView (pageId, dynId, callback){
                 });
                 if (checkedlist.length > 0){
                     let url = basePath + 'invest/entrust/EtrCommonController/updateByParam';
-                    let params = {"dynId":dynId, "checked":checkedlist.join(",")};
+                    var level = o.options?o.options:'user';
+                    let params = {"dynId":dynId, "level":level, "checked":checkedlist.join(",")};
                     Joyin.ajaxJson(url, params, function (datajson) {
                         $("#"+o.pageid+"_checkbox_background").hide();
                         if(o.callback){

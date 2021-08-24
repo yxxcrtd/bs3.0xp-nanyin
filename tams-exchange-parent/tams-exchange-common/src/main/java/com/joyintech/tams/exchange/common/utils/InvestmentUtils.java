@@ -16,7 +16,7 @@ public class InvestmentUtils {
             }
             return false;
         } else {
-            return instruction.equals(InvestmentUtils.getInstructionBs(order.getAssetType(), order.getEntrustBs()));
+            return instruction.getPs().equals(InvestmentUtils.getInstructionBs(order.getAssetType(), order.getEntrustBs()));
         }
     }
 

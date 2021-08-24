@@ -384,15 +384,13 @@ public class TradeMsgProcessor {
             // 可用额度
             if (instruction.getEntrustAmt().doubleValue() > 0) {
                 // 金额指令全部以净价处理， 需要重新计算指令金额冻结
-                if (!InvestmentAssetType1.NEGOTIATED_REPO.value.equals(instruction.getAssetType1())) {
-                    entrustBalance = bondHelper.calculateBalanceForInstruction(orderInterface, entrustBalance);
-                }
-                if (TradeUtils.lessThan(instruction.getEntrustAmt(), TradeUtils.add(instruction.getEntrustLeftAmt(), instruction.getFrozenQuantity(), entrustBalance, 2))) {
+                BigDecimal instructionBalance = bondHelper.calculateBalanceForInstruction(orderInterface.getEntrustProp(), orderInterface.getAssetType(), orderInterface.getEntrustPrice(), orderInterface.getEntrustVolume(), entrustBalance);
+                if (TradeUtils.lessThan(instruction.getEntrustAmt(), TradeUtils.add(instruction.getEntrustLeftAmt(), instruction.getFrozenQuantity(), instructionBalance, 2))) {
                     orderInterface.setErrorCode(ErrorCode.INSTRUCTIONS_BALANCE_ERROR.value);
                     orderInterface.setErrorMsg(ErrorCode.INSTRUCTIONS_BALANCE_ERROR.errorMsg);
                     return false;
                 }
-                instruction.setFrozenQuantity(TradeUtils.add(instruction.getFrozenQuantity(), entrustBalance, 2));
+                instruction.setFrozenQuantity(TradeUtils.add(instruction.getFrozenQuantity(), instructionBalance, 2));
                 messageSenderService.pushProgressToMQ(instruction);
                 logger.info("frozen instruction EntrustAmt {} FrozenQuantity {} EntrustLeftAmt {}", instruction.getEntrustAmt(), instruction.getFrozenQuantity(), instruction.getEntrustLeftAmt());
             }
@@ -591,7 +589,8 @@ public class TradeMsgProcessor {
         logger.info("processEntrustRsp instruction {}", JsonUtils.getJsonFromObject(instruction));
         if (entrust.getErrorCode() == ErrorCode.SUCCESS.value) {
             entrustDb.setBrokerEntrustId(entrust.getBrokerEntrustId());
-            entrustDb.setEntrustStatus(EntrustStatus.REPORTED.value);
+            // 可能存在主推消息已经回来改变了委托状态，取两个委托状态中较大的一个
+            entrustDb.setEntrustStatus(Math.max(EntrustStatus.REPORTED.value, entrustDb.getEntrustStatus()));
             if (!Strings.isNullOrEmpty(entrust.getReportNo())) {
                 entrustDb.setReportNo(entrust.getReportNo());
             }

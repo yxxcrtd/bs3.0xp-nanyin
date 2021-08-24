@@ -629,7 +629,7 @@ public class InvestmentManagement extends BaseService {
         pageParam.put("fpriceAmt", TradeUtils.multiply(fullPrice, volume, 2));
         String url = ServiceApplication.TRADE_SERVICE_NAME + TradeServiceURL.fpriceAmt;
         try {
-            logger.info("根据净价查询全价：入参 pageParam {} url {}", JsonUtils.getJsonFromObject(pageParam), url);
+            logger.info("根据全价查询净价：入参 pageParam {} url {}", JsonUtils.getJsonFromObject(pageParam), url);
             ExpireIncomeRateRet result;
             if (isSingle) {
                 result = simpleRestTemplate.postForObject(url, pageParam, ExpireIncomeRateRet.class);
@@ -639,12 +639,39 @@ public class InvestmentManagement extends BaseService {
             if (ExchangeConstant.HTTP_STATUS_CODE_OK.equals(result.getStatuCode())) {
                 return TradeUtils.getBigDecimal(result.getData().getUnitCprice(), round);
             } else {
-                logger.info("净价转换全价接口调用失败：errorMsg {}", JsonUtils.getJsonFromObject(result.getErrorList()));
+                logger.info("全价转换净价接口调用失败：errorMsg {}", JsonUtils.getJsonFromObject(result.getErrorList()));
                 return fullPrice;
             }
         } catch (Exception e) {
-            logger.info("根据净价查询全价时，投管接口调用失败 {}", e);
+            logger.info("根据全价查询净价时，投管接口调用失败 {}", e);
             return fullPrice;
+        }
+    }
+
+    /**
+     * 根据净价价获取全价,调用投管接口查询
+     *
+     * @param entrustPrice 净价
+     * @param volume       数量
+     * @param instruction  指令
+     * @return entrustPrice
+     */
+    public BigDecimal queryFullPriceByEntrustPriceFromInvest(BigDecimal entrustPrice, long volume, Instruction instruction, int round) {
+        try {
+            Map<String, Object> pageParam = getExpireOrFullPriceOrEntrustPriceParam(volume, instruction);
+            pageParam.put("unitCprice", entrustPrice);
+            String url = ServiceApplication.TRADE_SERVICE_NAME + TradeServiceURL.unitCprice;
+            logger.info("调用微服务根据净价获取全价,到期收益率, url {} pageParam {}", url, JsonUtils.getJsonFromObject(pageParam));
+            ExpireIncomeRateRet result = sendReqExpireIncomeRate(pageParam, url);
+            if (ExchangeConstant.HTTP_STATUS_CODE_OK.equals(result.getStatuCode())) {
+                return TradeUtils.getBigDecimal(result.getData().getUnitFprice(), round);
+            } else {
+                logger.info("净价转换全价接口调用失败：errorMsg {}", JsonUtils.getJsonFromObject(result.getErrorList()));
+                return entrustPrice;
+            }
+        } catch (Exception e) {
+            logger.info("根据全价查询净价时，投管接口调用失败 {}", e);
+            return entrustPrice;
         }
     }
 

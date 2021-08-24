@@ -272,7 +272,7 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
 
     /**
      * 指令业务类型
-     *
+     *        
      * @author swwan
      * @date 2020/12/2
      */
@@ -282,7 +282,7 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
 
     /**
      * 申赎方式
-     *
+     *        
      * @author swwan
      * @date 2020/12/2
      */

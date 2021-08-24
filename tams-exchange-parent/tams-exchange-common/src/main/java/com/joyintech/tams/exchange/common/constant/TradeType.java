@@ -21,4 +21,8 @@ public enum TradeType {
                 || tradeType == TradeType.INNER_CANCEL.value
                 || tradeType == TradeType.CANCEL_INVALID.value;
     }
+
+    public static boolean isInvalid(int tradeType) {
+        return INVALID.value == tradeType || INNER_CANCEL.value == tradeType || CANCEL_INVALID.value == tradeType;
+    }
 }

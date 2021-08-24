@@ -31,9 +31,15 @@ public class ServerExtendInfo implements Serializable {
     private String userProductInfo;//期货账户客户端信息
 
     private String opEntrustWay; //委托方式
+    /**
+     * ufx主推消息订阅主题名
+     */
+    private String entrustTopicName;//委托主题名称
+    private String tradeTopicName;//成交主题名称
     private String ufxTradeClientName; //ufx配置文件交易节点
     private String ufxSubClientName; //ufx配置文件订阅节点
     private String ufxBrokerType; //ufx 券商类型
+
 
     public String getOppositeLiaisonTel() {
         return oppositeLiaisonTel;
@@ -206,16 +212,22 @@ public class ServerExtendInfo implements Serializable {
                 Objects.equals(szSendQName, that.szSendQName) &&
                 Objects.equals(szServerName, that.szServerName) &&
                 Objects.equals(szReceiveQName, that.szReceiveQName) &&
+                Objects.equals(oppositeLiaisonTel, that.oppositeLiaisonTel) &&
+                Objects.equals(liaisonTel, that.liaisonTel) &&
+                Objects.equals(authCode, that.authCode) &&
+                Objects.equals(appId, that.appId) &&
+                Objects.equals(userProductInfo, that.userProductInfo) &&
+                Objects.equals(opEntrustWay, that.opEntrustWay) &&
+                Objects.equals(entrustTopicName, that.entrustTopicName) &&
+                Objects.equals(tradeTopicName, that.tradeTopicName) &&
                 Objects.equals(ufxTradeClientName, that.ufxTradeClientName) &&
-                Objects.equals(ufxSubClientName, that.ufxSubClientName);
+                Objects.equals(ufxSubClientName, that.ufxSubClientName) &&
+                Objects.equals(ufxBrokerType, that.ufxBrokerType);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(brockerId, brockerName, szAddress, nPort, szAddressBack, nPortBack, orderUnit,
-                netPriceReturn, specialBuss, agentType, nProtocal, szSendQName, szServerName, szReceiveQName,
-                opEntrustWay, ufxTradeClientName, ufxSubClientName);
+        return Objects.hash(brockerId, brockerName, szAddress, nPort, szAddressBack, nPortBack, orderUnit, netPriceReturn, specialBuss, agentType, nProtocal, szSendQName, szServerName, szReceiveQName, oppositeLiaisonTel, liaisonTel, authCode, appId, userProductInfo, opEntrustWay, entrustTopicName, tradeTopicName, ufxTradeClientName, ufxSubClientName, ufxBrokerType);
     }
 
     @Override
@@ -256,5 +268,21 @@ public class ServerExtendInfo implements Serializable {
 
     public void setUfxBrokerType(String ufxBrokerType) {
         this.ufxBrokerType = ufxBrokerType;
+    }
+
+    public String getEntrustTopicName() {
+        return entrustTopicName;
+    }
+
+    public void setEntrustTopicName(String entrustTopicName) {
+        this.entrustTopicName = entrustTopicName;
+    }
+
+    public String getTradeTopicName() {
+        return tradeTopicName;
+    }
+
+    public void setTradeTopicName(String tradeTopicName) {
+        this.tradeTopicName = tradeTopicName;
     }
 }

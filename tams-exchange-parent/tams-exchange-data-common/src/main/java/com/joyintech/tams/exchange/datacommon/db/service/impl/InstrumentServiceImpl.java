@@ -31,6 +31,7 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
     private FuturesInstrumentService futuresInstrumentService;
 
     private Map<String, Map<String, Instrument>> marketMap = new ConcurrentHashMap<>();
+    private Map<String, Map<String, Instrument>> assetTypeMap = new ConcurrentHashMap<>();
     private Map<String, MinPrice> minPriceMap = new ConcurrentHashMap<>();
     private Map<String, MinTrdUnitLimit> minTrdUnitLimitMap = new ConcurrentHashMap<>();
     // 缓存合约下价差、交易上下限数据 --- 仅查询时缓存
@@ -50,6 +51,7 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
     public void clearCache() {
         memory_cache.clear();
         marketMap.clear();
+        assetTypeMap.clear();
     }
 
     @Override
@@ -69,6 +71,12 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
             marketMap.put(instrument.getMarket(), map);
         }
         map.put(instrument.getInnerCode(), instrument);
+        Map<String, Instrument> assetMap = assetTypeMap.get(instrument.getAssetType());
+        if (Objects.isNull(assetMap)) {
+            assetMap = new ConcurrentHashMap<>();
+            assetTypeMap.put(instrument.getAssetType(), assetMap);
+        }
+        assetMap.put(instrument.getInnerCode(), instrument);
     }
 
     @Override
@@ -195,6 +203,11 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
         } else {
             return new MinPriceAndMinTrdUnitLimitBean(stockCode, ErrorCode.REQ_PARAMETER_STOCK_CODE_ERROR.value, ErrorCode.REQ_PARAMETER_STOCK_CODE_ERROR.errorMsg);
         }
+    }
+
+    @Override
+    public List<Instrument> queryByAssetType(String assetType) {
+        return new ArrayList<>(assetTypeMap.getOrDefault(assetType, new ConcurrentHashMap<>()).values());
     }
 
     private String createKey(String tradePlat, String market, Instrument instrument, int type, String instructionPs) {

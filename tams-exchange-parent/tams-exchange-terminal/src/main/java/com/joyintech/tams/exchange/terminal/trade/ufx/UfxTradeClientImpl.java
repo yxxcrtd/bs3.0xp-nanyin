@@ -28,7 +28,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class UfxTradeClientImpl implements ITradeRequest {
-    private static final Logger logger = LoggerFactory.getLogger(UfxTradeClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(UfxTradeClientImpl.class);
 
     private Map<String, Account> serverAccountMap = Maps.newConcurrentMap();//accountId-Account
     private Map<String, Account> financeAccountMap = Maps.newConcurrentMap();//financeAccount-Account
@@ -42,6 +42,11 @@ public class UfxTradeClientImpl implements ITradeRequest {
     private ITerminalMsgNotify iTerminalMsgNotify;
     private UfxTradeHandler ufxTradeHandler;
     private TradeResponseImpl ufxTradeResponse;
+
+    public String getAccountIdByFinanceAccount(String financeAccount) {
+        Account account = financeAccountMap.get(financeAccount);
+        return Objects.nonNull(account) ? account.getId() : null;
+    }
 
     public Account getAccountById(String id) {
         return serverAccountMap.get(id);
@@ -109,7 +114,13 @@ public class UfxTradeClientImpl implements ITradeRequest {
         this.ufxTradeApi.setUfxTradeClient(this);
         this.ufxTradeApi.setUfxTradeResponse(ufxTradeResponse);
         UfxTradeCallBack.setUfxTradeHandler(serverExtendInfoMap.hashCode(), this.ufxTradeHandler);
+        // 消息主推
+        UfxMD ufxMD = new UfxMD(serverExtendInfoMap.getTradeTopicName(), serverExtendInfoMap.getEntrustTopicName(), String.valueOf(serverExtendInfoMap.hashCode()));
+        this.ufxTradeHandler.setUfxMD(ufxMD);
+        UfxMCHandler ufxMCHandler = new UfxMCHandler(ufxTradeApi, ufxTradeResponse);
+        UfxMCCallBack.setUfxMCHandler(String.valueOf(serverExtendInfoMap.hashCode()), ufxMCHandler);
         try {
+            ufxMD.init();
             String serverName = serverExtendInfoMap.getSzServerName();
             logger.info("ufx server name: {}", serverName);
             this.ufxTradeApi.init(serverExtendInfoMap.getUfxTradeClientName(), serverExtendInfoMap.hashCode(),
@@ -310,6 +321,7 @@ public class UfxTradeClientImpl implements ITradeRequest {
         }
         try {
             accountEntrustMap.put(cancelEntrustBean.getCancelId(), cancelEntrustBean.getAccountId());
+            entrustMap.put(cancelEntrustBean.getCancelId(), cancelEntrustBean);
             ufxTradeApi.ReqCancelOrder(requestId, cancelEntrustBean, loginInfo, account.getPwd());
         } catch (Exception e) {
             logger.error("cancelEntrust failed. reason:{}", e.getMessage());
@@ -821,5 +833,4 @@ public class UfxTradeClientImpl implements ITradeRequest {
     public void setTradeStatus(String accountId, AccountLoginStatus status) {
         ufxTradeApi.setStatus(accountId, status);
     }
-
 }

@@ -5,8 +5,8 @@ if (!window.UserName) {
     /**
      * ltt CHYFJY2  tj  qq1  xbb1  test24
      */
-    window.UserName = 'CYF03';
-    window.RealName = 'CYF03';
+    window.UserName = 'chendi';
+    window.RealName = 'chendi';
 }
 
 window.ServiceBaseUrl = 'http://192.168.90.105:8080/tams/joyin';

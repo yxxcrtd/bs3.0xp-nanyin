@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 //@Component
 public class WDClient extends QuoteClient {
@@ -72,7 +71,7 @@ public class WDClient extends QuoteClient {
                 login();
                 Thread.sleep(3000);
             } catch (Exception e) {
-                logger.error("init error",e);
+                logger.error("init error:{}",e);
             }
         }
     }

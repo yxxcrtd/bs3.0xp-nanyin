@@ -36,7 +36,7 @@ public class KCBPTradeClient implements ITradeRequest {
     @Autowired
     private KCBPRegisterConfig kcbpRegisterConfig;
 
-    @Value("${agent.query.count}")
+    @Value("${agent.query.count:2}")
     private int kcbpTradeCount;
 
     @Autowired

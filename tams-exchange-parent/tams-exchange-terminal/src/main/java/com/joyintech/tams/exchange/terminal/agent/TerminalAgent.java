@@ -636,7 +636,6 @@ public class TerminalAgent extends Agent implements ITerminalMsgHandler, ITermin
             }
             // 当第一笔数据过来时，就开始查询柜台成交
             if (pageNum == 1) {
-                iTradeRequest.setTradeStatus(accountId, AccountLoginStatus.TRADE_REISSUING);
                 brokerReissueStatusMap.put(tradeKey, BrokerReissueStatus.BROKER_REISSUING_START);
                 iTradeRequest.reqReissueTrade(accountId, requestId);
             }
@@ -664,6 +663,10 @@ public class TerminalAgent extends Agent implements ITerminalMsgHandler, ITermin
     }
 
     public void compareReissueTrade(String accountId, List<Trade> tradeList, ITradeRequest iTradeRequest) {
+        // 成交比对时， 判断委托是否比对完成
+        int status = iTradeRequest.getStatus(accountId);
+        boolean reissueEntrustSuccess = status == AccountLoginStatus.ENTRUST_REISSUING_SUCCESS.value;
+        iTradeRequest.setTradeStatus(accountId, AccountLoginStatus.TRADE_REISSUING);
         Map<String, ReissueTradeBean> reissueTradeBeanAccountMap = this.reissueTradeBeanMap.get(accountId);
         logger.info("开始比对成交信息 accountId {} tradeListByBroker {} reissueTradeBeanMapCache {} reissueTradeBeanAccountMap {}", accountId, tradeList.size(), reissueTradeBeanMap.size(), reissueTradeBeanAccountMap.size());
         tradeList.forEach(trade -> {
@@ -672,7 +675,7 @@ public class TerminalAgent extends Agent implements ITerminalMsgHandler, ITermin
                 onTrade(trade);
             }
         });
-        updateTradeStatus(accountId, iTradeRequest, AccountLoginStatus.ENTRUST_REISSUING_SUCCESS, AccountLoginStatus.TRADE_REISSUING_SUCCESS);
+        updateTradeStatus(accountId, iTradeRequest, reissueEntrustSuccess ? AccountLoginStatus.TRADE_REISSUING : AccountLoginStatus.ENTRUST_REISSUING_SUCCESS, AccountLoginStatus.TRADE_REISSUING_SUCCESS);
     }
 
     private void updateTradeStatus(String accountId, ITradeRequest iTradeRequest, AccountLoginStatus beforeReissuingSuccess, AccountLoginStatus afterReissuingSuccess) {

@@ -28,6 +28,7 @@ import com.joyintech.tams.exchange.terminal.trade.ufx.builder.BaseUfxDataSetBuil
 import com.joyintech.tams.exchange.terminal.trade.ufx.builder.UfxDataSetBuilderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,8 +49,6 @@ public class UfxTradeApi {
 
     private Map<String, Integer> status = Maps.newConcurrentMap();
 
-//    private List<ReissueEntrustBean> reissueEntrustBeanList = new ArrayList<>();
-//    private List<ReissueTradeBean> reissueTradeBeanList = new ArrayList<>();
 
     public void setStatus(String accountId, AccountLoginStatus status) {
         logger.info("account {} status set to: {}", accountId, status.msg);
@@ -123,7 +122,7 @@ public class UfxTradeApi {
      * @Author: MAXX
      * @Date: 2020/3/17
      */
-    public List<ClientStkacct> ReqClientStkacct(String password, Integer branch_no, String client_id, String user_token) throws Exception {
+    public List<ClientStkacct> ReqClientStkacct(String password, Integer branch_no, String client_id, String fundAccount, String user_token) throws Exception {
         logger.info("ReqClientStkacct data :password:{}, branch_no:{} ,client_id:{} ,user_token:{},op_station:{}", password, branch_no, client_id, user_token, op_station);
         // 往event中添加dataset
         IDataset dataset = DatasetService.getDefaultInstance().getDataset();
@@ -136,12 +135,14 @@ public class UfxTradeApi {
         dataset.addColumn("password", IDataset.DS_BYTE_ARRAY);//密码
         dataset.addColumn("password_type");//密码类别
         dataset.addColumn("user_token");//用户口令
+        dataset.addColumn("fund_account");//资金账户
         dataset.appendRow();
         dataset.updateString("op_branch_no", "");//操作分支机构打入值1
         dataset.updateString("op_entrust_way", builder.getOp_entrust_way());
         dataset.updateString("op_station", op_station);
         dataset.updateString("branch_no", branch_no.toString());
         dataset.updateString("client_id", client_id);
+        dataset.updateString("fund_account", fundAccount);
         byte[] out = new byte[7];
         CryptUtil.HsPwdEncode(password.getBytes(), out);
         dataset.updateByteArray("password", out);
@@ -1085,9 +1086,9 @@ public class UfxTradeApi {
         dataset.updateString("request_num", "1000");
         String funcCode = "332704";
         IEvent event = builder.genSyncEvent(funcCode, dataset);
-        unPack(event, funcCode); //入参解包，同时打印发送包参数信息
         IEvent rsp = client.sendReceive(event);//发送包
         if (rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
+            unPack(event, funcCode); //入参解包，同时打印发送包参数信息
             logger.warn("queryIntegratedOrder failed ErrorNo:{}，reason:{}", rsp.getErrorNo(), rsp.getErrorInfo());
             return new ArrayList<>();
         }
@@ -1192,9 +1193,9 @@ public class UfxTradeApi {
         dataset.updateString("query_type", "0");
         dataset.updateString("user_token", loginInfo.getUserToken());
         IEvent event = builder.genSyncEvent("332705", dataset);
-        unPack(event, event.getServiceId()); //入参解包，同时打印发送包参数信息
         IEvent rsp = client.sendReceive(event);//发送包
         if (rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
+            unPack(event, event.getServiceId()); //入参解包，同时打印发送包参数信息
             logger.warn("qryProtocolBack_Trade failed ErrorNo:{}，reason:{}", rsp.getErrorNo(), rsp.getErrorInfo());
             return new ArrayList<>();
         }
@@ -1231,7 +1232,7 @@ public class UfxTradeApi {
     public List<Trade> qryTrade(LoginInfo loginInfo, String password, String accountId, boolean reissueFlag) throws Exception {
         // 往event中添加dataset
         IDataset dataset = DatasetService.getDefaultInstance().getDataset();
-        dataset.addColumn("user_token");//用户口令
+//        dataset.addColumn("user_token");//用户口令
         dataset.addColumn("op_branch_no");//操作分支机构
         dataset.addColumn("op_entrust_way");//委托方式
         dataset.addColumn("op_station");//站点地址
@@ -1239,6 +1240,7 @@ public class UfxTradeApi {
         dataset.addColumn("client_id");//客户编号
         dataset.addColumn("fund_account");//资产账户
         dataset.addColumn("password");//密码
+        dataset.addColumn("password_type");//密码类别
         PositionStr positionStr = positionStrMap.get(loginInfo.getFundAccount());
         if (!Objects.isNull(positionStr) && !Objects.isNull(positionStr.getTradePositionStr())) {
             dataset.addColumn("position_str");//定位串
@@ -1248,16 +1250,18 @@ public class UfxTradeApi {
         dataset.addColumn("query_type");//查询类别
         dataset.addColumn("query_mode");//查询模式
         dataset.appendRow();
-        dataset.updateString("user_token", loginInfo.getUserToken());
+//        dataset.updateString("user_token", loginInfo.getUserToken());
         dataset.updateString("op_branch_no", "");
         dataset.updateString("op_entrust_way", builder.getOp_entrust_way());
         dataset.updateString("op_station", op_station);
         dataset.updateInt("branch_no", loginInfo.getBranchNo());
         dataset.updateString("client_id", loginInfo.getClientId());
         dataset.updateString("fund_account", loginInfo.getFundAccount());
-        byte[] out = new byte[7];
-        CryptUtil.HsPwdEncode(password.getBytes(), out);
-        dataset.updateByteArray("password", out);
+//        byte[] out = new byte[7];
+//        CryptUtil.HsPwdEncode(password.getBytes(), out);
+//        dataset.updateByteArray("password", out);
+        dataset.updateString("password", password);
+        dataset.updateString("password_type", "2");
         if (!Objects.isNull(positionStr) && !Objects.isNull(positionStr.getTradePositionStr())) {
             dataset.updateString("position_str", positionStr.getTradePositionStr());
         }
@@ -1266,10 +1270,11 @@ public class UfxTradeApi {
         dataset.updateString("query_type", "0");
         dataset.updateString("query_mode", "0");
         IEvent event = builder.genSyncEvent("333102", dataset);
-        unPack(event, event.getServiceId());
         IEvent rsp = client.sendReceive(event);//发送包
         if (rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
-            logger.warn("qryTrade failed ErrorNo:{}，reason:{}", rsp.getErrorNo(), rsp.getErrorInfo());
+            //查询失败时打印相关入参和失败信息
+            unPack(event, event.getServiceId());
+            logger.warn("qryTrade failed ErrorNo:{}，reason:{} -- return result {}", rsp.getErrorNo(), rsp.getErrorInfo(), UfxTradeCallBack.getResult(rsp).toString());
             return new ArrayList<>();
         }
         List<Trade> list = UfxConverter.parseQueryTradeMsg(rsp, accountId);
@@ -1290,7 +1295,16 @@ public class UfxTradeApi {
                     logger.info("qryTrade 委托已发送，不重复发送:{}", trade.getBrokerTradeId());
                     return;
                 }
-                ufxTradeClient.onTrade(trade);
+                // 废单成交将成交转换为委托推送 -- 返回废单原因
+                if (TradeType.isInvalid(trade.getTradeType())) {
+                    Entrust entrust = new Entrust();
+                    BeanUtils.copyProperties(trade, entrust);
+                    entrust.setId(trade.getEntrustId());
+                    entrust.setEntrustStatus(EntrustStatus.INVALID.value);
+                    logger.info("废单成交转换为委托通知  trade：[{}]  entrust: [{}]", JsonUtils.getJsonFromObject(trade), JsonUtils.getJsonFromObject(entrust));
+                } else {
+                    ufxTradeClient.onTrade(trade);
+                }
             });
         }
         return list;
@@ -1339,9 +1353,9 @@ public class UfxTradeApi {
         }
         dataset.updateString("request_num", "1000");
         IEvent event = builder.genSyncEvent("333101", dataset);
-        unPack(event, event.getServiceId()); //入参解包，同时打印发送包参数信息
         IEvent rsp = client.sendReceive(event);//发送包
         if (rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
+            unPack(event, event.getServiceId()); //入参解包，同时打印发送包参数信息
             logger.warn("qryOrder failed ErrorNo:{}，reason:{}", rsp.getErrorNo(), rsp.getErrorInfo());
             return new ArrayList<>();
         }
@@ -2191,6 +2205,10 @@ public class UfxTradeApi {
 
     public void setUfxTradeClient(UfxTradeClientImpl ufxTradeClient) {
         this.ufxTradeClient = ufxTradeClient;
+    }
+
+    public UfxTradeClientImpl getUfxTradeClient() {
+        return ufxTradeClient;
     }
 
     public void setSenderId(long senderId) {

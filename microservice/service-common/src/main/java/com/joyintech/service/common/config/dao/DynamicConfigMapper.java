@@ -14,5 +14,10 @@ public interface DynamicConfigMapper {
     int updateByParam(Map<String, Object> param);
 
     List<SelectOptionDto> selectPage(Map<String, Object> param);
-    
+
+    List<Map> selectUserDynByDynId(Map<String, Object> param);
+
+    Integer updateUserDynByParam(Map<String, Object> param);
+
+    Integer insertUserDyn(Map<String, Object> param);
 }

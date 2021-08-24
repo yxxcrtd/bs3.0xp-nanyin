@@ -20,12 +20,12 @@ import java.util.Objects;
 public class ExchangeCounterService extends BaseService {
     private Logger logger = LoggerFactory.getLogger(ExchangeCounterService.class);
 
-    /***
+    /*** 
      * @Description: 交易对手席位信息查询
      * @Param: [params]
      * @return: com.joyintech.tams.exchange.common.bean.ResultBean
      * @Author: MAXX
-     * @Date: 2020/9/30
+     * @Date: 2020/9/30 
      */
     public ResultBean queryCounterSeatInfo(Map<String, Object> params) {
         logger.info("queryCounterSeatInfo params:{}", params);
@@ -38,12 +38,12 @@ public class ExchangeCounterService extends BaseService {
         }
     }
 
-    /***
+    /*** 
      * @Description: 查询交易对手信息
      * @Param: [params]
      * @return: com.joyintech.tams.exchange.common.bean.ResultBean
      * @Author: MAXX
-     * @Date: 2020/10/27
+     * @Date: 2020/10/27 
      */
     public ResultBean queryCounterPartyInfo(Map<String, Object> params) {
         logger.info("queryCounterPartyInfo params:{}", params);
@@ -56,12 +56,12 @@ public class ExchangeCounterService extends BaseService {
         }
     }
 
-    /***
+    /*** 
      * @Description: 查询交易对手交易员信息
      * @Param: [params]
      * @return: com.joyintech.tams.exchange.common.bean.ResultBean
      * @Author: MAXX
-     * @Date: 2020/9/30
+     * @Date: 2020/9/30 
      */
     public ResultBean queryCounterTraderInfo(Map<String, Object> params) {
         logger.info("queryCounterTraderInfo params:{}", params);

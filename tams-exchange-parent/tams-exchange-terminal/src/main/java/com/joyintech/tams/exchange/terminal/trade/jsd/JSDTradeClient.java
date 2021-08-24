@@ -32,11 +32,11 @@ import java.util.Set;
 public class JSDTradeClient implements ITradeRequest {
     private static final Logger logger = LoggerFactory.getLogger(JSDTradeClient.class);
 
-    @Value("${agent.query.count}")
+    @Value("${agent.query.count:2}")
     private int tradeCount;//查询次数
-    @Value("${jsd.connectTimeout}")
+    @Value("${jsd.connectTimeout:10000}")
     private int connectTimeout;
-    @Value("${netty.reconnect.delay}")
+    @Value("${netty.reconnect.delay:2}")
     private int delay;
     private ITerminalMsgNotify iTerminalMsgNotify;
     @Autowired

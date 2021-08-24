@@ -30,4 +30,9 @@ public enum AgentType {
         }
         return null;
     }
+
+    // 区分债券柜台， 成交为净价成交柜台
+    public static boolean isNetPriceTrade(String agentType) {
+        return KINGDOM_KCBP.value.equals(agentType) || KD_GATEWAY.value.equals(agentType) || JSD.value.equals(agentType);
+    }
 }
