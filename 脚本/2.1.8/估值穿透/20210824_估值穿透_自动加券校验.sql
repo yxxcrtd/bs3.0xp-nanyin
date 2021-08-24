@@ -7,3 +7,5 @@ delete from  chb_datacheck_condition_inv where checkruleid='90da2a6d-b448-4486-9
 delete from chb_datacheck_rule_inv where checkruleid='f032c148-e29d-412e-a829-1ffaf6d70e71' and page_id='FinBondTargetAsset002' and status='D';
 delete from  chb_datacheck_condition_inv where checkruleid='f032c148-e29d-412e-a829-1ffaf6d70e71';
 update chb_datacheck_rule_inv set checkmethod='inDatadict',objvalue='YES_NO' where checkruleid='884807E5-DF75-D920-E050-107F010077FD' and page_id='FinStockInfo002' and status='D';
+delete from chb_datacheck_rule_inv where checkruleid in ('145f8481-b011-4a85-a778-80594045d3ee','1e194cb5-4e03-4115-bdc5-df05520fea4a','b9bd2a58-a6cd-4490-b2cc-990b0f767925','a801d56a-aab3-45a6-8da2-cb4c55452fae') and page_id='FinBondTargetAsset002' and status='D';
+delete from  chb_datacheck_condition_inv where checkruleid in ('145f8481-b011-4a85-a778-80594045d3ee','1e194cb5-4e03-4115-bdc5-df05520fea4a','b9bd2a58-a6cd-4490-b2cc-990b0f767925','a801d56a-aab3-45a6-8da2-cb4c55452fae');
