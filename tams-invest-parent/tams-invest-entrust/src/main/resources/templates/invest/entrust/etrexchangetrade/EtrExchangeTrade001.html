@@ -375,14 +375,23 @@
                         <span id="entrustAmtUnit_jj" class="input-right-show">元</span>
                     </div>
                 </div>
+                <!--add by chenjiaxing 添加投资目的字段 start-->
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.invAim}">投资目的</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="invAim_jj" name="invAim" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result='${INV_AIM}' allowClear="true" th:initValue="${entity?.invAim}" required></select>
+                    </div>
+                </div>
+                <!--add by chenjiaxing 添加投资目的字段 end-->
+            </div>
+            <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.vdate}">开始日期</label>
                     <div class="layui-input-inline input-inline">
                         <input required class="layui-input form-input input-dateSelect" id="vdate_jj" name="vdate" placeholder="请选择时间" data-th-value="${iPlatformDate}" disabled="disabled">
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.mdate}">结束日期</label>
                     <div class="layui-input-inline input-inline">
@@ -596,6 +605,15 @@
                         <span class="input-right-show">元</span>
                     </div>
                 </div>
+                <!--add by chenjiaxing 添加投资目的字段 start-->
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.invAim}">投资目的</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="invAim_dz" name="invAim" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result='${INV_AIM}' allowClear="true" th:initValue="${entity?.invAim}" required></select>
+                    </div>
+                </div>
+                <!--add by chenjiaxing 添加投资目的字段 end-->
                 <div class="form-inline-wrap" id="counterId_div_dz">
                     <label class="layui-form-label" data-th-utext="#{EtrExchangeTrade001.counterId}">交易对手</label>
                     <div class="layui-input-inline input-inline">
@@ -604,6 +622,8 @@
                         </select>
                     </div>
                 </div>
+            </div>
+            <div class="layui-form-item">
                 <div class="form-inline-wrap" id="seatId_div_dz">
                     <label class="layui-form-label" data-th-text="#{EtrExchangeTrade001.seatId}">席位号</label>
                     <div class="layui-input-inline input-inline">
@@ -612,8 +632,6 @@
                                data-th-value="${entity?.seatId}" data-th-data-effectivefieldsalias='|{"code":"#{MstSeatInfo001.seatId}"}|'>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
                 <div class="form-inline-wrap" id="agreeOnId_div_dz">
                     <label class="layui-form-label" data-th-text="#{EtrExchangeTrade001.agreeOnId}">约定号</label>
                     <div class="layui-input-inline input-inline">
@@ -628,6 +646,8 @@
                                data-th-value='${iPlatformDate}' disabled="disabled">
                     </div>
                 </div>
+            </div>
+            <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.mdate}">结束日期</label>
                     <div class="layui-input-inline input-inline">
@@ -635,6 +655,7 @@
                                data-th-value='${iPlatformDate}' disabled="disabled">
                     </div>
                 </div>
+            </div>
             </div>
         </form>
     </div>
@@ -853,6 +874,15 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <!--add by chenjiaxing 添加投资目的字段 start-->
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.invAim}">投资目的</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="invAim_dz" name="invAim" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result='${INV_AIM}' allowClear="true" th:initValue="${entity?.invAim}" required></select>
+                    </div>
+                </div>
+                <!--add by chenjiaxing 添加投资目的字段 end-->
                 <div class="form-inline-wrap" id="counterId_div_gd">
                     <label class="layui-form-label" data-th-utext="#{EtrExchangeTrade001.counterId}">交易对手</label>
                     <div class="layui-input-inline input-inline">
@@ -870,6 +900,8 @@
                         <!-- 限制输入长度：oninput="if(value.length>5) value=value.slice(0,5)" -->
                     </div>
                 </div>
+            </div>
+            <div class="layui-form-item">
                 <div class="form-inline-wrap" id="counterTrader_div_gd">
                     <label class="layui-form-label" data-th-utext="#{EtrExchangeTrade001.counterTrader}">对手方交易员</label>
                     <div class="layui-input-inline input-inline">
@@ -878,8 +910,6 @@
                                data-parentids="counterId_gd" data-th-value="${entity?.counterTrader}" data-th-data-effectivefieldsalias='|{"code":"#{EtrExchangeTrade001.counterTrader}"}|'>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
                 <div class="form-inline-wrap" id="trader_div_gd">
                     <label class="layui-form-label" data-th-utext="#{EtrExchangeTrade001.traders}">本方交易员</label>
                     <div class="layui-input-inline input-inline">
@@ -895,6 +925,8 @@
                                data-th-value="${entity?.agreeOnId}" maxlength=6>
                     </div>
                 </div>
+            </div>
+            <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.vdate}">开始日期</label>
                     <div class="layui-input-inline input-inline">
@@ -902,8 +934,6 @@
                                data-th-value='${iPlatformDate}' disabled="disabled">
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.mdate}">结束日期</label>
                     <div class="layui-input-inline input-inline">

@@ -1,0 +1,16 @@
+delete from SYS_PAGE_DICTLIST where PAGE_ID = 'EtrExchangeTrade001' and DICT_ID = 'INV_AIM';
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME,
+                                            DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+                                            UPDATE_TIME, INSTITUTION_CODE)
+VALUES ('EtrExchangeTrade001', '999999', 'INV_AIM', 'AC', null, null, 'admin', null,
+        systimestamp, 'admin',systimestamp, null);
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME,
+                                            DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+                                            UPDATE_TIME, INSTITUTION_CODE)
+VALUES ('EtrExchangeTrade001', '999999', 'INV_AIM', 'FVTPL', null, null, 'admin', null,
+        systimestamp, 'admin',systimestamp, null);
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME,
+                                            DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+                                            UPDATE_TIME, INSTITUTION_CODE)
+VALUES ('EtrExchangeTrade001', '999999', 'INV_AIM', 'FVOCl', null, null, 'admin', null,
+        systimestamp, 'admin',systimestamp, null);
