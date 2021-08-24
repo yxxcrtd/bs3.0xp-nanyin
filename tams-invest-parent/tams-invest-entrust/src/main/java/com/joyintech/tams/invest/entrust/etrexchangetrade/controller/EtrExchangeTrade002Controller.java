@@ -10,8 +10,11 @@
  
 package com.joyintech.tams.invest.entrust.etrexchangetrade.controller;
 
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectDto;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
@@ -85,7 +88,16 @@ public class EtrExchangeTrade002Controller extends BaseController{
             }
         }
         model.addAttribute("etrExchange_posTable_refresh_period", etrExchange_posTable_refresh_period);
-        
+        /*add by chenjiaxing 更改交易方向枚举值 start*/
+        SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.交易方向, null);
+        for(int i = 0 ; i < selectDto1.getOptions().size() ; i++){
+            if(StringUtil.equals(selectDto1.getOptions().get(i).getId(),"T03")){
+                selectDto1.getOptions().get(i).setText("债回售");
+            }
+        }
+        List<SelectOptionDto> optionsGradeResult = selectDto1.getOptions();
+        model.addAttribute("PS_ETR", JsonUtils.objectArray2Json(optionsGradeResult.toArray()));
+        /*add by chenjiaxing 更改交易方向枚举值 end*/
         return super.init(model);
     }
     
