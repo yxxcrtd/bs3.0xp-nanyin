@@ -23,7 +23,7 @@ public interface PbcProdAssetpoolCodeMapper {
 
     int updateByPrimaryKey(PbcProdAssetpoolCode record);
 
-    List<PbcProdAssetpoolCode> selectByInsideProdList(@Param("list") List<String> list,@Param("orgCode")String orgCode);
+    List<PbcProdAssetpoolCode> selectByInsideProdList(@Param("list") List<String> list);
 
     int batchInsertPbcCode(List<PbcProdAssetpoolCode> list);
 }

@@ -415,15 +415,7 @@ public class PbcZipDataFileService {
 
 		List<PbcProdAssetpoolCode> pbcProdAssetpoolCodes = new ArrayList<>();
 		if(CollectionUtil.isNotEmpty(innerProdIds)){
-			//数据权限模式（01：银行模式，02：联社模式）
-			String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
-			if("02".equals(authorityType)){
-				String orgCode = SecurityUtil.getLoginUser().getOrgCode();
-				pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds,StrUtil.isEmpty(orgCode) ? null : orgCode);
-			}else{
-				pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds,null);
-			}
-
+			pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds);
 		}
 		List<PbcPrdBaseinfoSubDat> pbcPrdBaseinfoSubDatsNew = new ArrayList<>();
 		List<String> innerProdIdsNew = new ArrayList<>();
@@ -604,8 +596,7 @@ public class PbcZipDataFileService {
 		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
 			String creditFlag = subDat.getCreditFlag();
 			if(StrUtil.isNotEmpty(creditFlag) && "1".equals(creditFlag)){
-				//组装数据
-				LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+
 
 				//增信机构类型
 				String creditType = subDat.getCreditType();
@@ -613,6 +604,8 @@ public class PbcZipDataFileService {
 					String[] split = creditType.split(",");
 					if(split.length > 0){
 						for (int i = 0;i < split.length; i++) {
+							//组装数据
+							LinkedHashMap<String,String> data = new LinkedHashMap<String,String>();
 							//序号
 							data.put("number","3");
 							//产品代码
@@ -621,6 +614,8 @@ public class PbcZipDataFileService {
 							dataList.add(data);
 						}
 					}else{
+						//组装数据
+						LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 						//序号
 						data.put("number","3");
 						//产品代码
@@ -629,6 +624,8 @@ public class PbcZipDataFileService {
 						dataList.add(data);
 					}
 				}else{
+					//组装数据
+					LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
 					//序号
 					data.put("number","3");
 					//产品代码
@@ -697,14 +694,7 @@ public class PbcZipDataFileService {
 		}
 		List<PbcProdAssetpoolCode> pbcProdAssetpoolCodes = new ArrayList<>();
 		if(CollectionUtil.isNotEmpty(innerProdIds)){
-			//数据权限模式（01：银行模式，02：联社模式）
-			String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
-			if("02".equals(authorityType)){
-				String orgCode = SecurityUtil.getLoginUser().getOrgCode();
-				pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds,StrUtil.isEmpty(orgCode) ? null : orgCode);
-			}else{
-				pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds,null);
-			}
+			pbcProdAssetpoolCodes = pbcProdAssetpoolCodeMapper.selectByInsideProdList(innerProdIds);
 		}
 		Map<String,String> innerProdIdMapping = new HashMap<>();
 		List<PbcPrdBaseinfoEndSubDat> pbcPrdBaseinfoSubDatsNew = new ArrayList<>();
