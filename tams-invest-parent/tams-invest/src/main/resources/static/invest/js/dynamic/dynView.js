@@ -12,7 +12,7 @@ function DynamicView (pageId, dynId, callback, options){
     o.pageid = pageId;
     o.dynId = dynId;
     o.callback=callback; // 回调方法，存在则不执行默认展示方法，可以继续选择性调用
-    o.options=options;
+    o.options=options; // 可设置level等级，system或user级别
     o.all=[];  // 选择list
     o.checkedList=[]; // checklist
     o.result={};    // 行情结果对象
@@ -25,7 +25,7 @@ function DynamicView (pageId, dynId, callback, options){
 
         if(true){
             let url = basePath + 'invest/entrust/EtrCommonController/selectByDynId';
-            var level = o.options?o.options:'user';
+            var level = o.options?o.options.level:'user';
             Joyin.ajaxJson(url, {"dynId":o.dynId, "level":level}, function (datajson) {
                 o.all=datajson.all;
                 // 构造多选框
@@ -46,7 +46,14 @@ function DynamicView (pageId, dynId, callback, options){
                 if(m != null){
                     o.itemfun(_pageContain, m);
                 }
-
+                
+                $.each(o.all, function (i, m) {
+                    // 要求必选的选择项控制
+                    if (m.isMust === 'TRUE'){
+                        $("input[value='"+m.value+"']").attr("checked","checked").attr("disabled",true);
+                    }
+                })
+                
                 // 对构造的多选项赋值
                 let chs = datajson.checked;
                 if(chs){
@@ -129,7 +136,7 @@ function DynamicView (pageId, dynId, callback, options){
                 });
                 if (checkedlist.length > 0){
                     let url = basePath + 'invest/entrust/EtrCommonController/updateByParam';
-                    var level = o.options?o.options:'user';
+                    var level = o.options?o.options.level:'user';
                     let params = {"dynId":dynId, "level":level, "checked":checkedlist.join(",")};
                     Joyin.ajaxJson(url, params, function (datajson) {
                         $("#"+o.pageid+"_checkbox_background").hide();
