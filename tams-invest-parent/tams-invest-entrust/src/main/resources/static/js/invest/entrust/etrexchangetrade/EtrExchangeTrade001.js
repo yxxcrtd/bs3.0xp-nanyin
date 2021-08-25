@@ -1305,6 +1305,14 @@
             return;
         }
         var finprodType2 = $("#finprodType2_" + currentTab).val();
+        //add by chenjiaxing 投资目的去除*号
+        if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
+            ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)){
+            $("#invAim_"+currentTab).removeAttr("required");
+        }else{
+            $("#invAim_"+currentTab).attr("required", true);
+        }
+        //add by chenjiaxing 投资目的去除*号
         // if  交易平台 = 数据字典.交易平台.大宗交易平台
         if(currentTab == 'dz') {
             // if 画面.金融产品类型（投管）= 数据字典.金融产品类型（投管）.债券质押式回购(不属于数据字典范围，仅仅判断用)

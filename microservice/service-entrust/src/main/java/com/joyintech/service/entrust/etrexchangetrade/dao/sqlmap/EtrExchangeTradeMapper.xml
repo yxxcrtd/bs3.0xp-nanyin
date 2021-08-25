@@ -23,7 +23,7 @@
         ,T2.SEC_ACCT_ID
         ,SSAI.SEC_ACCT_NAME
         ,T2.DEAL_CUR_ACCT as dealCurAcct
-        ,SSAI2.SEC_ACCT_NAME as dealCurAcctName
+        ,c1.acctName as dealCurAcctName
         ,T1.PRICE_MODEL
         ,T2.DEAL_MODE as declaType
         ,CASE WHEN T1.PS IN (#{PS_T68}, #{PS_T69}, #{PS_03}, #{PS_04}) THEN T1.PRICE * 100 ELSE
@@ -86,6 +86,9 @@
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = T7.FINPROD_ID
         LEFT JOIN STL_SEC_ACCT_INFO SSAI ON T2.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
         LEFT JOIN STL_SEC_ACCT_INFO SSAI2 ON T2.DEAL_CUR_ACCT = SSAI2.TRD_ACCT_ID
+        left join (select distinct ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName
+        from STL_CAPACCT_INFO) c1
+        on SSAI2.TRD_ACCT_ID = c1.acctNo1 and SSAI2.TRD_ACCT_CCY = c1.ccy
         where T1.TRADE_MARKET in ('03','04')
         AND T2.ASSET_TYPE NOT IN ('F17')
         <if test="sysDate !=null and !sysDate.equals('')">
@@ -123,7 +126,7 @@
         ,T2.SEC_ACCT_ID
         ,SSAI.SEC_ACCT_NAME
         ,T2.DEAL_CUR_ACCT
-        ,SSAI2.SEC_ACCT_NAME as dealCurAcctName
+        ,c1.acctName as dealCurAcctName
         ,T1.PRICE_MODEL
         ,T2.DEAL_MODE as declaType
         ,CASE WHEN T1.PS IN (#{PS_T68}, #{PS_T69}, #{PS_03}, #{PS_04}) THEN T1.PRICE * 100 ELSE T1.PRICE END price
@@ -166,6 +169,9 @@
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = T7.FINPROD_ID
         LEFT JOIN STL_SEC_ACCT_INFO SSAI ON T2.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
         LEFT JOIN STL_SEC_ACCT_INFO SSAI2 ON T2.DEAL_CUR_ACCT = SSAI2.TRD_ACCT_ID
+        left join (select distinct ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName
+        from STL_CAPACCT_INFO) c1
+        on SSAI2.TRD_ACCT_ID = c1.acctNo1 and SSAI2.TRD_ACCT_CCY = c1.ccy
         where T1.TRADE_MARKET in ('03','04')
         AND T2.ASSET_TYPE NOT IN ('F17')
         <if test="sysDate !=null and !sysDate.equals('')">
