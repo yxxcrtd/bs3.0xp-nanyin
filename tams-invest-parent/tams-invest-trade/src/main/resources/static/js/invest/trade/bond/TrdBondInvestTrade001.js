@@ -74,7 +74,7 @@
                 }
         	}
         	,{field:'finprodName', sortField:'FINPROD_NAME',width:140, title: 'TrdBondInvestTrade001.finprodName'}
-        	,{field:'chlFinprodId', sortField:'CHL_NAME',width:140, title: 'TrdBondInvestTrade001.chlFinprodId'}
+        	// ,{field:'chlFinprodId', sortField:'CHL_NAME',width:140, title: 'TrdBondInvestTrade001.chlFinprodId'}
         	,{field:'psText', sortField:'ps',width:100, title: 'TrdBondInvestTrade001.ps'}
         	,{field:'tradeMarketText', sortField:'',width:130, title: 'TrdBondInvestTrade001.tradeMarket'}
         	,{field:'tradeMarketModeText',sortField:'TRADE_MARKET_MODE', width:120, title: 'TrdBondInvestTrade001.tradeMarketMode'}
