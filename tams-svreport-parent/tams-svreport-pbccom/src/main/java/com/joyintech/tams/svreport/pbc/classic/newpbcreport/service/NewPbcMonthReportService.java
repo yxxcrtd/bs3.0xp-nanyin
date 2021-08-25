@@ -242,21 +242,16 @@ public class NewPbcMonthReportService {
             paramDto.setOrgCode(orgCode);
             paramDto.setStatusVdate(statusVdate);
             Set<String> noUpdateReport = new HashSet<>();
+            Map<String,PbcSendZipDatFile> map = new HashMap<>();
             if(CollectionUtil.isNotEmpty(pbcSendZipDatFiles)){
                 for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
                     if(pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_接口报送.getValue())
                      || pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_手工处理.getValue())){
                         noUpdateReport.add(getSheetName(pbcSendZipDatFile.getDatZipDatType()));
                     }
+                    map.put(getSheetName(pbcSendZipDatFile.getDatZipDatType()),pbcSendZipDatFile);
                 }
-                PbcSendZipDatFile pbcSendZipDatFile = pbcSendZipDatFiles.get(0);
-                paramDto.setReportUUID(pbcSendZipDatFile.getReportuuid());
-                paramDto.setDatZipCode(pbcSendZipDatFile.getDatZipCode());
-                paramDto.setHasRecord(true);
-            }else{
-                paramDto.setReportUUID(UUID.randomUUID().toString());
-                paramDto.setDatZipCode(PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_统计模板数据.getValue(),DateUtil.parse(statusVdate1, com.joyintech.framework.util.DateUtil.DEFAULT_DATE_FORMAT_EN),1,orgCode));
-                paramDto.setHasRecord(false);
+
             }
             while(sheetIterator.hasNext()){
                 HSSFSheet sheet = (HSSFSheet)sheetIterator.next();
@@ -264,6 +259,16 @@ public class NewPbcMonthReportService {
                 String sheetName = sheet.getSheetName();
                 if(noUpdateReport.contains(sheetName)){
                     continue;
+                }
+                if(map.containsKey(sheetName)){
+                    PbcSendZipDatFile sendZipDatFile = map.get(sheetName);
+                    paramDto.setReportUUID(sendZipDatFile.getReportuuid());
+                    paramDto.setDatZipCode(sendZipDatFile.getDatZipCode());
+                    paramDto.setHasRecord(true);
+                }else{
+                    paramDto.setReportUUID(UUID.randomUUID().toString());
+                    paramDto.setDatZipCode(PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_统计模板数据.getValue(),DateUtil.parse(statusVdate1, com.joyintech.framework.util.DateUtil.DEFAULT_DATE_FORMAT_EN),1,orgCode));
+                    paramDto.setHasRecord(false);
                 }
                 //use cache,god knows me!
                 if(allNewPbcMonthReportsMap.containsKey(sheetName)){

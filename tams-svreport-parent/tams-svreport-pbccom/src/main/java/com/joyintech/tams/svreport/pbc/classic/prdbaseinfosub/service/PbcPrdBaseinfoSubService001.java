@@ -59,6 +59,9 @@ import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubC
 import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubErrorCheck;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+
+import static java.util.stream.Collectors.toList;
+
 /**
  * 	产品基本信息service
  * @author liuyu
@@ -113,6 +116,21 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 		dealResult(page);
 		return page;
 		
+	}
+
+
+	public List<PbcPrdBaseinfoSub> searchByExcel(Map<String, Object> searchParam) {
+		deaSearchParam(searchParam);
+		List<PbcPrdBaseinfoSub> reportList = pbcPrdBaseinfoSubMapper.searchPage(searchParam);
+		//数据去除多法人字段
+		reportList = reportList.stream().map(item -> {
+			item.setBelongInstitutionCode(null);
+			return item;
+		}).collect(toList());
+		dealResult(reportList);
+
+		return reportList;
+
 	}
 
 

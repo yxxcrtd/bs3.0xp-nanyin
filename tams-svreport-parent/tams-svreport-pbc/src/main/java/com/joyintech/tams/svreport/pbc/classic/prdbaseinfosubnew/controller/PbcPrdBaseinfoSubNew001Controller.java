@@ -134,12 +134,13 @@ public class PbcPrdBaseinfoSubNew001Controller extends BaseController {
 	@RequestMapping("doManul")
 	public AjaxResult manul(@RequestBody Map<String,Object> map) {
 
-
-		map.put("submitFeedbackStatusExp","02,04,06");
-		List<PbcPrdBaseinfoSubNew> dtoList = pbcPrdRaiseSub001Service.searchByExcel(map);
-		for(PbcPrdBaseinfoSubNew sub:dtoList){
-			if(StringUtil.isEmpty(sub.getPbcPoolCode())){
-				return new AjaxResult("请先维护人行产品代码后，再进行手工处理。",MessageType.错误消息);
+		if("01".equals(map.get("isall"))){
+			map.put("submitFeedbackStatusExp","02,04,06");
+			List<PbcPrdBaseinfoSubNew> dtoList = pbcPrdRaiseSub001Service.searchByExcel(map);
+			for(PbcPrdBaseinfoSubNew sub:dtoList){
+				if(StringUtil.isEmpty(sub.getPbcPoolCode())){
+					return new AjaxResult("请先维护人行产品代码后，再进行手工处理。",MessageType.错误消息);
+				}
 			}
 		}
 
