@@ -61,6 +61,8 @@ $(function () {
                     resultArrlist.splice($.inArray(selectValue, resultArrlist), 1);// 移除数组中指定元素
                 }
             }
+            parm.resultlist=resultArrlist.join(",");
+            $('#tree').reloadTree(parm);
          }
          else
         {
@@ -81,6 +83,8 @@ $(function () {
                         resultArrlist.push(nodes[i].id);
                     }
             }
+            parm.resultlist=resultArrlist.join(",");
+            $('#tree').reloadTree(parm);
         }
 
          else if(nodes.length==0)
