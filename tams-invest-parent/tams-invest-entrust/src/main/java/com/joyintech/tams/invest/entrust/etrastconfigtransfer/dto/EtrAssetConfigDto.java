@@ -20,6 +20,10 @@ public class EtrAssetConfigDto extends EtrEntrust {
     private static final long serialVersionUID = 9222570679406156110L;
 
     /**
+     * 所选产品规模
+     */
+    private BigDecimal tdyAssetNetvalue;
+    /**
      * 金融产品简称
      */
     private String finprodAbbr;
@@ -301,6 +305,12 @@ public class EtrAssetConfigDto extends EtrEntrust {
         return SysDataUtil.getNameFromDataDict(DictCode.WIND一级分类_含债券一级分类等,this.getType6());
     }
 
+    public BigDecimal getTdyAssetNetvalue() {
+        return tdyAssetNetvalue;
+    }
 
+    public void setTdyAssetNetvalue(BigDecimal tdyAssetNetvalue) {
+        this.tdyAssetNetvalue = tdyAssetNetvalue;
+    }
 }
 

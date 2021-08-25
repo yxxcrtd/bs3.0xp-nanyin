@@ -114,6 +114,7 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
                 desDto.setEntrustNum(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getTdyAssetNetvalue(), new BigDecimal(9)), retDto.getPrice(), 6));
                 desDto.setRadio(new BigDecimal(0.09));
             }
+            desDto.setTdyAssetNetvalue(item.getTdyAssetNetvalue());
             retList.add(desDto);
         });
         return retList;
@@ -139,6 +140,7 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
             desItem.setIndexId(String.valueOf(序号*2));
             desItem.setPs(DictCodeList.交易方向_卖出.getValue());
             desItem.setPortfolioId(paramDto.getPortfolioId());
+            desItem.setSecAcctId(paramDto.getSecAcctId());
             jsonArrays.add(assembleCommonDataByTMK(desItem));
         });
         Map<String,Object> retMap=new HashMap<>();

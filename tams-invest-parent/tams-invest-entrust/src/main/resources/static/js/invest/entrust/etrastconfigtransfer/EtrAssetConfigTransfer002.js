@@ -65,7 +65,8 @@ var correctData;
             {field: 'type6Str', title: 'EtrAssetConfigTransfer002.bondType', width: 120},
             {field: 'acctName', title: 'EtrAssetConfigTransfer002.trader',width:140},
             {field: 'rate', title: 'EtrAssetConfigTransfer002.yield',type: 'number',textrange:2,width:90},
-            {field: 'amount', title: 'EtrAssetConfigTransfer002.positionAmount',width:120}
+            {field: 'amount', title: 'EtrAssetConfigTransfer002.positionAmount',width:120},
+            {field: 'secAcctId', visiable:false},
         ]
     });
 
@@ -93,8 +94,18 @@ var correctData;
             {field: 'invAim', title: 'EtrAssetConfigTransfer002.invAim', width: 100,edit:true,editOption:{type:'select',formatoption:true,showField: 'text',result: INV_AIM}},
             {field: 'yield', title: 'EtrAssetConfigTransfer002.periodYield',type: 'number',textrange:2,width: 130},
             {field: 'entrustNum', title: 'EtrAssetConfigTransfer002.outputNum',type: 'number',textrange:2,width:100,edit:true},
-            {field: 'radio', title: 'EtrAssetConfigTransfer002.radio',type: 'number',textrange:4, width:120}
-        ]
+            {field: 'radio', title: 'EtrAssetConfigTransfer002.radio',type: 'number',textrange:4, width:120},
+            {field: 'tdyAssetNetvalue', visible: false}
+        ],
+        editCell: function (value, data, field, cell, column) {
+            if (field == "entrustNum") {
+                var rowData = {};
+                if(data.entrustNum&&data.tdyAssetNetvalue&&data.netCprice){
+                    rowData.radio = JoyinMath.doDiv(JoyinMath.doMul(JoyinMath.doDiv(data.entrustNum,100,6),data.netCprice,2),data.tdyAssetNetvalue,2);
+                    trialTable.renderRow(data.LAY_TABLE_INDEX, rowData);
+                }
+            }
+        }
     });
 
     /**
@@ -116,7 +127,8 @@ var correctData;
                 var amount = Number(filterdatas[i].amount);
                 for (var j in datas) {
                     if (datas[j].finprodId !== '' && datas[j].finprodId !== undefined && datas[j].finprodId == filterdatas[i].finprodId) {
-                        if(!datas[j].entrustNum){
+                        object.secAcctId = filterdatas[i].secAcctId;
+                        if(!datas[j].entrustNum){datas[j]
                             Joyin.error("资产："+datas[j].finprodId+"在试算一览表中的转出数量不能为空！");
                             return;
                         }
