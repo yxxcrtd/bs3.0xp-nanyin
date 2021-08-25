@@ -665,7 +665,7 @@ public class PbcReportProd001Sub005Service extends PbcReportProdTotalService  {
     				String ccy,BigDecimal value,Map<String, BigDecimal> rateMap,Date generateDate,String source){
     	//汇总数据计算
     	setDetailValue2(dto.get(code),ccy,/*pos.getRedamt()*/value,rateMap,generateDate,source);
-    	//部门数据计算
+    	//部门数据计算--非联社模式此部分.不会获得数据
     	if(null!=deptDto&&null!=deptDto.get(code)){
     		setDetailValue2(deptDto.get(code),ccy,/*pos.getRedamt()*/value,rateMap,generateDate,source);
     	}

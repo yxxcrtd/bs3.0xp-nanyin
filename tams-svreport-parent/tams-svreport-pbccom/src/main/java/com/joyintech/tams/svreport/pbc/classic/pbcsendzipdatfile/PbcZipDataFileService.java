@@ -461,7 +461,7 @@ public class PbcZipDataFileService {
 						if(StrUtil.isNotEmpty(subDat.getIssuePartyId())){
 							SysInstRegBankCode001Dto sysInstRegBankCode001Dto = sysInstRegBankCode001Mapper.selectRegistBankCode(subDat.getIssuePartyId());
 							logger.info("查询的机构代码信息为:{}",sysInstRegBankCode001Dto == null ? "" : sysInstRegBankCode001Dto.getRegistBankCode());
-							if(StrUtil.isNotEmpty(sysInstRegBankCode001Dto.getRegistBankCode())){
+							if(sysInstRegBankCode001Dto != null && StrUtil.isNotEmpty(sysInstRegBankCode001Dto.getRegistBankCode())){
 								String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(sysInstRegBankCode001Dto.getRegistBankCode(), subDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, subDat.getVdate());
 								if(StrUtil.isNotEmpty(pbcProdIdExternal)){
 									subDat.setPbcProdId(pbcProdIdExternal);
@@ -478,6 +478,17 @@ public class PbcZipDataFileService {
 									}
 									return datDownloadDto;
 								}
+							}else{
+								ValidMessage message = new ValidMessage();
+								message.setMessage("发行机构代码" + subDat.getIssuePartyId() + "未匹配到登记银行代码！");
+								List<ValidMessage> validMessages = datDownloadDto.getValidMessages();
+								if(CollectionUtils.isNotEmpty(validMessages)){
+									validMessages.addAll(Collections.singletonList(message));
+									datDownloadDto.setValidMessages(validMessages);
+								}else{
+									datDownloadDto.setValidMessages(Collections.singletonList(message));
+								}
+								return datDownloadDto;
 							}
 						}
 						innerProdIdsNew.add(subDat.getProdId());

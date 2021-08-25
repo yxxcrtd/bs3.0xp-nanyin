@@ -18,6 +18,7 @@ import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBasei
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
+import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,7 +138,23 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
             int i=0;
             for(String single:creditModes){
                 i++;
-                creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.新人行增信机构类型,single);
+                String name = "";
+                if(PbcDictCodeEnums.增信机构类型_住户.getCode().equals(single)){
+                    name = PbcDictCodeEnums.增信机构类型_住户.getName();
+                }
+                if(PbcDictCodeEnums.增信机构类型_商品及金融衍生品类.getCode().equals(single)){
+                    name = PbcDictCodeEnums.增信机构类型_商品及金融衍生品类.getName();
+                }
+                if(PbcDictCodeEnums.增信机构类型_境外.getCode().equals(single)){
+                    name = PbcDictCodeEnums.增信机构类型_境外.getName();
+                }
+                if(PbcDictCodeEnums.增信机构类型_权益类.getCode().equals(single)){
+                    name = PbcDictCodeEnums.增信机构类型_权益类.getName();
+                }
+                if(PbcDictCodeEnums.增信机构类型_混合类.getCode().equals(single)){
+                    name = PbcDictCodeEnums.增信机构类型_混合类.getName();
+                }
+                creditMode=creditMode + name;
                 if(i<creditModes.length){
                     creditMode=creditMode+GlobalConstant.COMMA;
                 }
