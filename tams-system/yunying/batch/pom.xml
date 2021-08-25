@@ -146,7 +146,7 @@
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-core</artifactId>
-			<version>0.0.4</version>
+			<version>0.0.4-MergeAndAddContents</version>
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
@@ -177,7 +177,7 @@
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-data</artifactId>
-			<version>0.0.4</version>
+			<version>0.0.4-MergeAndAddContents</version>
 		</dependency>
 		<!--<dependency>
 			<groupId>com.joyintech</groupId>

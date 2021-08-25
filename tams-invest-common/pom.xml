@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
-		<version>0.0.4</version>
+		<version>0.0.4-MergeAndAddContents</version>
 	</parent>
 
 	<dependencies>
@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-redis</artifactId>
-			<version>0.0.4</version>
+			<version>0.0.4-MergeAndAddContents</version>
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
