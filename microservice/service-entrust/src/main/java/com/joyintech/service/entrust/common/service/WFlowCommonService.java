@@ -28,7 +28,7 @@ public class WFlowCommonService {
      * @param dto
      */
     public static void doInsertFlow(String operateType, BaseEtrInvestInfoDto dto){
-        if ("submit".equals(operateType) || DictCodeList.流程状态_新建.getValue().equals(operateType)) {
+        if ("submit".equals(operateType)) {
             if(StringUtil.isEmpty(dto.getWorkFlowId())){
                 throw new RuntimeException("WorkFlowId初始化不能为空!");
             }

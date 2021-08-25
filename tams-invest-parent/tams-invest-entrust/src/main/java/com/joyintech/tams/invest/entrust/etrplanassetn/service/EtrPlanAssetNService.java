@@ -214,7 +214,10 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
      */
      @Override
      public void doInsert(EtrPlanAssetNDto dto, OperationType type){
-         dto.setOperateType(type.toString());
+         // OperationType枚举值与dto的operateType不同,后续逻辑使用的是dto的operateType,所以不能覆盖
+         // ZGZGST-1464:fuyongsheng 20210825 delete start
+         // dto.setOperateType(type.toString());
+         // ZGZGST-1464:fuyongsheng 20210825 delete end
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/doInsert",dto,
              Integer.class);
