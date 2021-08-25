@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='DYZCGM';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DYZCGM','单一资产规模','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DYZCGM','单一资产规模','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='DYZCGM';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZCGM','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZCGM','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZCGM','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZCGM','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZCGM','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZCGM','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZCGM','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZCGM','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZCGM','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZCGM','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -301,13 +301,17 @@ INSERT INTO RSK_EVENT_PARA_REL VALUES('DYZCGM','EVENT_ID_DYZCGM_04','03','-','am
 
 ----单一资产规模-买入预占
 DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_DYZCGM_05';
-INSERT INTO RSK_EVENT VALUES ('EVENT_ID_DYZCGM_05','单一资产规模-买入预占','Y','','jq','',sysdate,'jyy004',sysdate);
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_DYZCGM_05','单一资产规模-买入预占','Y','','jq','',sysdate,'cdj',sysdate);
          
  
 DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_DYZCGM_05';
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_05','assetType','4742b4c7131347de9ae6e234ff286aa7','','F07,F08,F10','NO','','','','jyy004','001',SYSDATE,'cdsp',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_05','eventType','4742b4c7131347de9ae6e234ff286aa7','','0','IN','','','','jyy004','001',SYSDATE,'cdsp',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_05','ps','4742b4c7131347de9ae6e234ff286aa7','','T01,T04,T20,T46,T47,T48,T52','IN','','','','jyy004','001',SYSDATE,'cdsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_05','assetType','1fbf599d18784a7c8da94f24cf2308e7','','F07,F08,F10','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_05','ps','1fbf599d18784a7c8da94f24cf2308e7','','T01','=','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_05','eventType','1fbf599d18784a7c8da94f24cf2308e7','','0','=','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_05','assetType2','1fbf599d18784a7c8da94f24cf2308e7','','02,04','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_05','assetType','fd1bed84d61d43a6893a3b028ab053af','','F07,F08,F10','NO','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_05','eventType','fd1bed84d61d43a6893a3b028ab053af','','0','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_05','ps','fd1bed84d61d43a6893a3b028ab053af','','T01,T04,T20,T46,T47,T48,T52','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
 
 DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_DYZCGM_05';
 INSERT INTO RSK_EVENT_PARA_REL VALUES('DYZCGM','EVENT_ID_DYZCGM_05','02','+','amount','','system','jsadjflsajfsdkl',SYSDATE,'system',SYSDATE,'','');
