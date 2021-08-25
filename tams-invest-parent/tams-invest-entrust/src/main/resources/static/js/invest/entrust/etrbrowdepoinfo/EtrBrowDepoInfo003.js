@@ -54,7 +54,7 @@
         , {field: 'ccy', title: 'EtrBondFirstLBidding002.ccy', width: 150, visible: false, sortable: false}
         , {field: 'chlIdName', title: 'invest.channelId', width: 150, sortable: false}
         , {field: 'remark', title: 'EtrBrowDepoInfo001.remark', width: 150, sortable: false}
-        , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
+        , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'assetAvailablePosition', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
         , {
             field: 'operation1', title: 'SysCommon.operation', render: function (data, type, row, meta) {
