@@ -400,5 +400,17 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
     public void setSecAcctName(String secAcctName) {
         this.secAcctName = secAcctName;
     }
+    /**
+     * 交易货币账户名称
+     */
+    private String dealCurAcctName;
+
+    public String getDealCurAcctName() {
+        return dealCurAcctName;
+    }
+
+    public void setDealCurAcctName(String dealCurAcctName) {
+        this.dealCurAcctName = dealCurAcctName;
+    }
     //add by chenjiaxing 20210824 end
 }

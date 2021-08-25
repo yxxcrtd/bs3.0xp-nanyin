@@ -14,6 +14,7 @@
         ,T5.PORTFOLIO_ID
         ,T5.PORTFOLIO_NAME
         ,T1.FINPROD_ID
+        ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS FINPROD_ABBR
         ,T1.FINPROD_TYPE2
         ,T1.TRADE_MARKET
@@ -21,7 +22,8 @@
         ,T1.PS
         ,T2.SEC_ACCT_ID
         ,SSAI.SEC_ACCT_NAME
-        ,T2.DEAL_CUR_ACCT
+        ,T2.DEAL_CUR_ACCT as dealCurAcct
+        ,SSAI2.SEC_ACCT_NAME as dealCurAcctName
         ,T1.PRICE_MODEL
         ,T2.DEAL_MODE as declaType
         ,CASE WHEN T1.PS IN (#{PS_T68}, #{PS_T69}, #{PS_03}, #{PS_04}) THEN T1.PRICE * 100 ELSE
@@ -83,6 +85,7 @@
         T7.FINPROD_ID = T1.FINPROD_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = T7.FINPROD_ID
         LEFT JOIN STL_SEC_ACCT_INFO SSAI ON T2.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
+        LEFT JOIN STL_SEC_ACCT_INFO SSAI2 ON T2.DEAL_CUR_ACCT = SSAI2.TRD_ACCT_ID
         where T1.TRADE_MARKET in ('03','04')
         AND T2.ASSET_TYPE NOT IN ('F17')
         <if test="sysDate !=null and !sysDate.equals('')">
@@ -111,6 +114,7 @@
         ,T5.PORTFOLIO_ID
         ,T5.PORTFOLIO_NAME
         ,T1.FINPROD_ID
+        ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS FINPROD_ABBR
         ,T1.FINPROD_TYPE2
         ,T1.TRADE_MARKET
@@ -119,6 +123,7 @@
         ,T2.SEC_ACCT_ID
         ,SSAI.SEC_ACCT_NAME
         ,T2.DEAL_CUR_ACCT
+        ,SSAI2.SEC_ACCT_NAME as dealCurAcctName
         ,T1.PRICE_MODEL
         ,T2.DEAL_MODE as declaType
         ,CASE WHEN T1.PS IN (#{PS_T68}, #{PS_T69}, #{PS_03}, #{PS_04}) THEN T1.PRICE * 100 ELSE T1.PRICE END price
@@ -160,6 +165,7 @@
         T7.FINPROD_ID = T1.FINPROD_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = T7.FINPROD_ID
         LEFT JOIN STL_SEC_ACCT_INFO SSAI ON T2.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
+        LEFT JOIN STL_SEC_ACCT_INFO SSAI2 ON T2.DEAL_CUR_ACCT = SSAI2.TRD_ACCT_ID
         where T1.TRADE_MARKET in ('03','04')
         AND T2.ASSET_TYPE NOT IN ('F17')
         <if test="sysDate !=null and !sysDate.equals('')">
@@ -188,7 +194,7 @@
             AND T1.PS = #{ps,jdbcType=VARCHAR}
         </if>
         <if test="secId != null and secId !=''">
-            AND T1.FINPROD_ID = #{secId,jdbcType=VARCHAR}
+            AND T1.FINPROD_MARKET_ID = #{secId,jdbcType=VARCHAR}
         </if>
         <if test="finprodType2 != null and finprodType2 !=''">
             AND T1.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}

@@ -870,7 +870,7 @@
         /**
          * 委托查询对话导出按钮点击事件
          */
-        $('#cfetsRepoDealQuotedPrice001_wtdh_export').click(function () {
+        $('#CfetsRepoDealQuotedPr002_btn_export').click(function () {
             exportExcel('wtcxdh');
         });
 
