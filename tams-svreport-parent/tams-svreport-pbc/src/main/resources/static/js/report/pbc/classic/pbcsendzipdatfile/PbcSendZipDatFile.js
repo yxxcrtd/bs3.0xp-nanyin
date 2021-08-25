@@ -27,7 +27,7 @@ $(function() {
             }
         },
         cols:[
-            { title: "压缩包名称", field: 'datZipCode',width:200,sortable:false},
+            { title: "压缩包名称", field: 'datZipCode',width:250,sortable:false},
             { title: '压缩包放置路径',field:'datZipPath',width:150,sortable:false},
             { title: "报送类型", field: 'datZipTypeStr',width:100, type: 'datetime',sortable:false},
             { title: "报送明细类型", field: 'datZipDatTypeStr',width:150,sortable:false},
@@ -97,7 +97,9 @@ $(function() {
         Joyin.confirm("请确认是否要导入数据？", function() {
            Joyin.uploadFile(function(fileName) {
                 Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/checkBaseInfoSubDat', {fileName: fileName}, function() {
-                    Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/importBaseInfoSubDat', {fileName: fileName});
+                    Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/importBaseInfoSubDat', {fileName: fileName},function() {
+                        table.reload();
+                    });
                 });
             },function() {
                 table.reload();
@@ -109,7 +111,9 @@ $(function() {
         Joyin.confirm("请确认是否要导入数据？", function() {
             Joyin.uploadFile(function(fileName) {
                 Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/checkMonthReport', {fileName: fileName}, function() {
-                    Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/importMonthReport', {fileName: fileName});
+                    Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/importMonthReport', {fileName: fileName},function() {
+                        table.reload();
+                    });
                 });
             },function() {
                 table.reload();

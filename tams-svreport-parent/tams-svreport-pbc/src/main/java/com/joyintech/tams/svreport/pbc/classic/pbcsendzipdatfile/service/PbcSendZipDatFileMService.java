@@ -105,8 +105,8 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 						builder.append("是否继续?");
 						ajaxResult.setMessage(builder.toString());
 					}
-					ajaxResult.setMessageType(MessageType.确认消息);
-					ajaxResult.setStatuCode(HttpStatus.OK.value());
+					ajaxResult.setMessageType(MessageType.错误消息);
+					ajaxResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 					return ajaxResult;
 				}
 				return commonAjaxResult;
