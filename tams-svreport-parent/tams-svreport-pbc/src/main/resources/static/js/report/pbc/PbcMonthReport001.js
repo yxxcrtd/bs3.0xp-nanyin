@@ -475,7 +475,7 @@ $(function () {
                 }
             }
 
-            Joyin.confirm("请确认是否要手工处理选中记录？", function () {
+            Joyin.confirm("请确认是否要手工处理选中相同报告期的记录？", function () {
                 layui.layer.open({type: 3});
                 Joyin.ajaxJson('doManual', {keyList: JSON.stringify(rows)}, function () {
                     table.load();
@@ -583,7 +583,7 @@ $(function () {
                 }
             }
             ;
-            Joyin.confirm("请确认是否要取消手工处理选中记录？", function () {
+            Joyin.confirm("请确认是否要取消手工处理选中相同报告期的记录？", function () {
                 layui.layer.open({type: 3});
                 Joyin.ajaxJson('cancelMannul', {keyList: JSON.stringify(manArr)}, function () {
                     table.load();

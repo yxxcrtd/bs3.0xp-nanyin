@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -399,6 +400,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             // 手工处理只处理未报送的
             if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())){
                 reportList.add(m);
+
             }
         }
  		
@@ -439,9 +441,6 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 
  			return;
  		}
-
- 	
-
  		List<PbcMonthReport> newDataList = new ArrayList<PbcMonthReport>();
  		newDataList.addAll(investList);
 
@@ -455,6 +454,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             pbcMonthReportMapper.deleteLastSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
  			pbcMonthReportMapper.updateInterfSubmitAndSeqBatch(sendStatus,
                  newDataList.subList(0, maxDataCountOneTime),null);
+			pbcMonthReportMapper.updateDoMannultSendZipDatFile(newDataList.subList(0, maxDataCountOneTime));
  			newDataList.subList(0, maxDataCountOneTime).clear();
  			logger.info("单次更新登记表end===");
  		}
@@ -466,7 +466,9 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             //删除正式表已报送数据
             pbcMonthReportMapper.deleteLastSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
  			pbcMonthReportMapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList,null);
- 			logger.info("单次更新登记表end===");
+			pbcMonthReportMapper.updateDoMannultSendZipDatFile(newDataList);
+
+			logger.info("单次更新登记表end===");
  		}
  	}
 

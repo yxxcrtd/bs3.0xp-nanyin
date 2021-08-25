@@ -479,23 +479,32 @@
 
 
     <update id="updateDoMannultSendZipDatFile" parameterType="java.util.Map">
-        update PBC_SEND_ZIP_DAT_FILE set ZIP_SEND_STATUS = '03',DAT_ZIP_STATUS = '03'
+        update PBC_SEND_ZIP_DAT_FILE set
+        ZIP_SEND_STATUS = '03',
+        DAT_ZIP_STATUS = '01',
+        SUBMIT_TIME = SYSDATE,
+        RETURN_ZIP_SEND_STATUS = '03'
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                REPORTUUID = #{regist.reportuuid,jdbcType=VARCHAR}
-                AND DAT_ZIP_TYPE = 'MIT'
-                AND STATUS_VDATE =#{regist.statusDate,jdbcType=VARCHAR}
+                DAT_ZIP_TYPE = 'MI'
+                AND STATUS_VDATE =#{regist.termid,jdbcType=VARCHAR}
+                and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
             </foreach>
         </where>
     </update>
 
     <update id="updateCancelMannultSendZipDatFile" parameterType="java.util.Map">
-        update PBC_SEND_ZIP_DAT_FILE set ZIP_SEND_STATUS = '01',DAT_ZIP_STATUS = '01'
+        update PBC_SEND_ZIP_DAT_FILE set
+        ZIP_SEND_STATUS = '01',
+        SUBMIT_TIME = null,
+        RETURN_ZIP_SEND_STATUS = null,
+        DAT_ZIP_PATH = null
+
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                REPORTUUID = #{regist.reportuuid,jdbcType=VARCHAR}
-                AND DAT_ZIP_TYPE = 'MIT'
-                AND STATUS_VDATE =#{regist.statusDate,jdbcType=VARCHAR}
+                DAT_ZIP_TYPE = 'MI'
+                AND STATUS_VDATE =#{regist.termid,jdbcType=VARCHAR}
+                and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
             </foreach>
         </where>
     </update>
@@ -533,20 +542,24 @@
             <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
         </set>
         <where>
-            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+            <!--<foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
                 sub.REPORTUUID = #{regist.reportuuid,jdbcType=CHAR}
+            </foreach>-->
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                sub.TERMID = #{regist.termid,jdbcType=CHAR}
             </foreach>
         </where>
     </update>
 
     <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
         delete from PBC_REPORT
-        where
-        REPORTUUID in
-        <foreach collection="list" item="item" open="(" close=")" separator=",">
-            #{item.reportuuid,jdbcType=CHAR}
-        </foreach>
-        and SEND_STATUS in ('02','03')
+        <where>
+            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+                TERMID = #{dto.termid}
+                and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
+            </foreach>
+            and SEND_STATUS in ('02','03')
+        </where>
     </delete>
     <update id="cancelMannultRegist" parameterType="java.util.Map">
         update PBC_REPORT
@@ -558,7 +571,8 @@
         </set>
         <where>
             <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
-                REPORTUUID = #{dto.reportuuid}
+                TERMID = #{dto.termid}
+                and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
             </foreach>
         </where>
     </update>
@@ -646,10 +660,10 @@
         from PBC_REPORT
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN ("
+            <foreach collection="registList" item="regist" open="and (TERMID,nvl(ORG_CODE,'')) IN ("
                      separator="UNION all" close=")">
                 select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+                #{regist.orgCode,jdbcType=VARCHAR}
                 from dual
             </foreach>
         </if>
@@ -659,10 +673,10 @@
         delete from PBC_REPORT
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN ("
+            <foreach collection="registList" item="regist" open="and (TERMID,nvl(ORG_CODE,'')) IN ("
                      separator="UNION all" close=")">
                 select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+                nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
                 from dual
             </foreach>
         </if>
@@ -708,10 +722,10 @@
         from PBC_REPORT_HIS his
         <where>
             <if test="registList !=null and registList.size()>0">
-                <foreach collection="registList" item="regist" open="(TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN ("
+                <foreach collection="registList" item="regist" open="and (TERMID,nvl(ORG_CODE,'')) IN ("
                          separator="UNION all" close=")">
                     select #{regist.termid,jdbcType=VARCHAR},
-                    #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+                    nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
                     from dual
                 </foreach>
             </if>
@@ -723,10 +737,10 @@
         delete from PBC_REPORT_HIS
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN ("
+            <foreach collection="registList" item="regist" open="and (TERMID,nvl(ORG_CODE,'')) IN ("
                      separator="UNION all" close=")">
                 select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+                nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
                 from dual
             </foreach>
         </if>
@@ -739,10 +753,11 @@
         from PBC_REPORT_HIS
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN ("
+
+            <foreach collection="registList" item="regist" open="and (TERMID,nvl(ORG_CODE,'')) IN ("
                      separator="UNION all" close=")">
                 select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+                nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
                 from dual
             </foreach>
         </if>
