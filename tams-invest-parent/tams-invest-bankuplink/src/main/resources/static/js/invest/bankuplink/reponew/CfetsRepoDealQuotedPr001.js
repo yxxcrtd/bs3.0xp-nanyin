@@ -278,12 +278,12 @@
             , {field: 'bondCode', width: 150, title: '债券代码'}
             , {field: 'bondAbbrName', width: 150, title: '债券简称'}
             // 可质押券面总额
-            , {field: 'posStrdPrinAmt', width: 150, title: '持仓券面总额', type: 'number', sortable: false}
+            , {field: 'posStrdPrinAmtTo', width: 200, title: '持仓券面总额/万元', type: 'number', sortable: false}
             //质押券汇总券面总额
-            , {field: 'pledStrdPrinAmt', width: 150, title: '质押券券面总额', type: 'number', sortable: false}
+            , {field: 'pledStrdPrinAmtTo', width: 200, title: '质押券券面总额/万元', type: 'number', sortable: false}
             //折算比例%
             , {field: 'pledgeRate', width: 150, title: '折算比例%', type: 'number'}
-            , {field: 'gradeResultStr', width: 150, title: '债项评级'}
+            , {field: 'gradeResultStr', width: 150, title: '债项评级',sortable: 'gradeResult'}
             , {field: 'mdate', width: 150, type: 'date', title: '到期日'}
             , {field: 'repRegistOrgStr', width: 150, title: '登记托管机构', type: 'text'}
             , {field: 'lastPeriod', width: 150, title: '剩余期限', type: 'number', sortable: false}
