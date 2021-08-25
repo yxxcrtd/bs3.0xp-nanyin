@@ -1,0 +1,2 @@
+insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('PdDefaultManager001', 'RSK', '/model/impairment/pddefaultmanager/pdfactorconfig/PdDefaultManager001', 'lossmodel/pddefaultmanager/pdfactorconfig/PdDefaultManager001', null, null, null, '02', '01', 'PD违约概率管理', 'system', null, '05-AUG-21 03.09.00.000000 PM', 'system', '05-AUG-21 03.09.00.000000 PM');
