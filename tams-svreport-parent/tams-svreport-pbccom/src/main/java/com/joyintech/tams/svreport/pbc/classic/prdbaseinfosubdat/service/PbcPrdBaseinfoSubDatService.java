@@ -30,6 +30,7 @@ import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBasei
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDto;
 import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -359,7 +360,12 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 //发行机构代码
                 String issuePartyId = rowsData.get(row++);
                 if(checkIsNotEmpty(issuePartyId,rowNumber,"发行机构代码",errorMessage)){
-                    dto.setIssuePartyId(issuePartyId);
+                    String pbcBankCode = CommonUtil.selectPbcBankCode(null);
+                    if(StrUtil.isNotEmpty(pbcBankCode) && pbcBankCode.equals(issuePartyId)){
+                        dto.setIssuePartyId(issuePartyId);
+                    }else{
+                        errorMessage.add(new ExcelValidDto("发行机构代码",String.valueOf(rowNumber),"第"+rowNumber+"行:发行机构代码与系统内机构代码不一致！"));
+                    }
                 }
                 //产品名称
                 String prodName = rowsData.get(row++);
@@ -523,9 +529,9 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                         if(split.length > 0){
                             for (int j = 0;j<split.length;j++) {
                                 if(j == split.length - 1){
-                                    builder.append(PbcDictCodeEnums.getCodeByName(creditType));
+                                    builder.append(PbcDictCodeEnums.getCodeByName(split[j]));
                                 }else{
-                                    builder.append(PbcDictCodeEnums.getCodeByName(creditType)).append(",");
+                                    builder.append(PbcDictCodeEnums.getCodeByName(split[j])).append(",");
                                 }
                             }
                         }else{
