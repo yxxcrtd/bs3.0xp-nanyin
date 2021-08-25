@@ -18,6 +18,8 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * 资产减值管理
  * @author xutong
@@ -56,6 +58,22 @@ public class AssetImpairmentKpmgManagement002Controller extends BaseController {
 	@PostMapping(value = "doComplete/{action}")
 	public void doComplete(@RequestBody AssetImpairmentKpmgManagement002Dto dto, @PathVariable("action") String action) {
 		assetImpairmentKpmgManagement002Service.doComplete(dto, OperationType.valueOf(action));
+	}
+
+
+	/**
+	 * 获取流程初始操作类型
+	 *
+	 * @param param 画面参数
+	 * @return 产品代码：下拉框
+	 * @throws Exception
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("getFirstActionType")
+	public String getFirstActionType(@RequestBody Map<String, Object> param) throws Exception {
+		String workflowId = (String)param.get("workflowId");
+		return assetImpairmentKpmgManagement002Service.getFirstActionType(workflowId);
 	}
 
 

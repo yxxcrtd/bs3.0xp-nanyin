@@ -7,7 +7,7 @@ $(function () {
         var object = $.serializeToObject('#searchForm');
         object.pageModel = pageModel;
         object.operateType = operateType;
-        object.dataSource = '02';
+        object.dataSource = '01';
         if(object.preProspectivePd){
             var preProspectivePd = object.preProspectivePd/100;
             preProspectivePd = preProspectivePd.toFixed(6);

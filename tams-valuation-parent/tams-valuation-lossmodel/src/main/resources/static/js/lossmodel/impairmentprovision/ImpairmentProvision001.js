@@ -36,7 +36,7 @@ $(function () {
             ,{title: '前瞻后减值计算比例',sortable: false, colspan: 8}
             ,{title: '前瞻后资产余额',sortable: false, colspan: 4}
             ,{title: '前瞻前减值金额',sortable: false, colspan: 4}
-            ,{title: '前瞻前减值计算比例',sortable: false, colspan: 8}
+            ,{title: '前瞻前减值计算比例',sortable: false, colspan: 4}
             ,{title: '债项数',sortable: false, colspan: 4}
         ],[
             {field:'eclP1', type:"number", digit:4,sortable: false, title: '阶段一',width:100}
@@ -60,13 +60,13 @@ $(function () {
             ,{field:'perEclP3', type:"number", digit:4,sortable: false, title: '阶段三',width:100}
             ,{field:'perEclSum', type:"number", digit:4,sortable: false, title: '合计',width:100}
             ,{field:'perDecRatioP1Fmt', type:"text", sortable: false, title: '阶段一',width:100}
-            ,{field:'perDecRatioP1', type:"number", digit:4,sortable: false, title: '阶段一',width:100, visible:false}
+            ,{field:'perDecRatioP1', type:"number", digit:4,sortable: false, title: '阶段一',width:100}
             ,{field:'perDecRatioP2Fmt', type:"text", sortable: false, title: '阶段二',width:100}
-            ,{field:'perDecRatioP2', type:"number", digit:4,sortable: false, title: '阶段二',width:100, visible:false}
+            ,{field:'perDecRatioP2', type:"number", digit:4,sortable: false, title: '阶段二',width:100}
             ,{field:'perDecRatioP3Fmt', type:"text", sortable: false, title: '阶段三',width:100}
-            ,{field:'perDecRatioP3', type:"number", digit:4,sortable: false, title: '阶段三',width:100, visible:false}
+            ,{field:'perDecRatioP3', type:"number", digit:4,sortable: false, title: '阶段三',width:100}
             ,{field:'perDecRatioSumFmt', type:"text", sortable: false, title: '合计',width:100}
-            ,{field:'perDecRatioSum', type:"number", digit:4,sortable: false, title: '合计',width:100, visible:false}
+            ,{field:'perDecRatioSum', type:"number", digit:4,sortable: false, title: '合计',width:100}
             ,{field:'bondCountP1', type:"number", digit:4,sortable: false, title: '阶段一',width:100}
             ,{field:'bondCountP2', type:"number", digit:4,sortable: false, title: '阶段二',width:100}
             ,{field:'bondCountP3', type:"number", digit:4,sortable: false, title: '阶段三',width:100}
