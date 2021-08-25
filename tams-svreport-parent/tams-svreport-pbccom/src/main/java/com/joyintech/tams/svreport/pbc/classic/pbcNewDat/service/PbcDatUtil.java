@@ -122,9 +122,13 @@ public class PbcDatUtil {
 			/***2.1、查询取出最大的编号**/
 			if(null!=zipDataList&&zipDataList.size()>0){
                 datFile = zipDataList.get(0);
-                zipCode =datFile.getDatZipCode();
+				zipCode =datFile.getDatZipCode();
 				//上面取出的.最大的压缩编号的.3位置顺序号
 				num = Integer.parseInt(zipCode.substring(zipCode.length() - 3, zipCode.length()));
+				if(DictCodeListExt3.zip包状态_已使用.getValue().equals(datFile.getDatZipStatus())){
+					num++;
+					zipCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
+				}
 			}else{
                 zipCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
                 //批处理直接获取当前最大的编号...直接++   旧包中未报送会被删除数据后改成已报送或者直接删除
