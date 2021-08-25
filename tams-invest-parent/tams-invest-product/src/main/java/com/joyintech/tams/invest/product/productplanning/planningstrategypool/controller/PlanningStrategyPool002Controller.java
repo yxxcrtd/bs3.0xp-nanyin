@@ -34,6 +34,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.product.productplanning.planningstrategypool.dto.PlanningStrategyPool001Dto;
 import com.joyintech.tams.invest.product.productplanning.planningstrategypool.dto.PlanningStrategyPoolDetailDto;
@@ -156,7 +157,7 @@ public class PlanningStrategyPool002Controller extends BaseController {
 		if (!StringUtil.isNotEmpty(dto.getStrategyId())) {
 			// 调用[详细设计-业务编号共通.xlsx]取得交易编号
 			BussinessCodeParameter parameter = new BussinessCodeParameter();
-			parameter.setCommonBusinessType(DictCodeList.共通业务类型_规划策略池维护);
+			parameter.setCommonBusinessType(DictCodeListExt1.共通业务类型_规划策略池维护);
 			// 组合策略代码
 			String strategyId = baseGetBussinessId.buildBussinessCode(parameter);
 			dto.setStrategyId(strategyId);
@@ -166,7 +167,7 @@ public class PlanningStrategyPool002Controller extends BaseController {
 		params.setPageId("PlanningStrategyPool002");
 		params.setElementId(this.getParam(GlobalConstant.ELEMENT_ID));
 		params.setBusinessCode(item -> item.getStrategyId());
-		params.setBusinessType(DictCodeList.共通业务类型_规划策略池维护.getValue());
+		params.setBusinessType(DictCodeListExt1.共通业务类型_规划策略池维护.getValue());
 		params.setComment(
 				entity -> this.getMessage("PlanningStrategyPool001.strategyId") + "(" + entity.getStrategyId() + ")");
 		processParameter.setWorkFlowParameter(params);
