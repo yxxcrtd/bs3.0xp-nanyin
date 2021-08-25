@@ -567,3 +567,25 @@
     }).trigger('change');
     draftInit = false;
 }());
+//资产分类联动带入产品投资类型
+$("#type11,#type10,#type12").on("change", function () {
+    var three = $("#type10").val();
+    var four = $("#type11").val();
+    var five = $("#type12").val();
+    if (three == '23' || four == '032'|| five == '032') {
+        $('#investNature').val('01').trigger('change');
+        /*var tradeMarket = $('#tradeMarket').val();
+        if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
+            $("#commissionAmt").prop("disabled", true).val(0).trigger('blur').trigger('change');
+        }
+        else {
+            $("#commissionAmt").prop("disabled", false).val(commissionAmt).trigger('blur').trigger('change');
+        }*/
+    }
+    if (three == '24' || four == '033'|| five == '033') {
+        $('#investNature').val('01').trigger('change');
+    }
+    if (three == '25' || four == '034'|| five == '034') {
+        $('#investNature').val('02').trigger('change');
+    }
+});

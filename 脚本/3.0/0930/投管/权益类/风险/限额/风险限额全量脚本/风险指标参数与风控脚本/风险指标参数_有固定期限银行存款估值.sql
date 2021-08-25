@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='GDQXCKGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GDQXCKGZ','有固定期限银行存款估值','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GDQXCKGZ','有固定期限银行存款估值','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='GDQXCKGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GDQXCKGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GDQXCKGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GDQXCKGZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GDQXCKGZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GDQXCKGZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GDQXCKGZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GDQXCKGZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GDQXCKGZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GDQXCKGZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GDQXCKGZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -63,7 +63,7 @@ V_CONTENT_04 CLOB := 'SELECT SUM(TRADE_AMT) as RVALUE FROM (
     -- 是否可提前支取条件
     AND (FPA.IS_INADVANCE IS NULL OR FPA.IS_INADVANCE = ''N'')
     AND PRD.FINPROD_TYPE2 = ''F07'' AND PRD.MDATE IS NOT NULL AND FPT.TYPE_6 != ''D03''
-    AND n.PS IN (''T01'', ''T02'', ''T22'', ''T23'', ''T25'', ''T26'' ''T38'')
+    AND n.PS IN (''T01'', ''T02'', ''T22'', ''T23'', ''T25'', ''T26'',''T38'')
   UNION ALL
     SELECT
         nvl(sum(decode(n.PS, ''T01'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
@@ -84,7 +84,7 @@ V_CONTENT_04 CLOB := 'SELECT SUM(TRADE_AMT) as RVALUE FROM (
     -- 是否可提前支取条件
     AND (FPA.IS_INADVANCE IS NULL OR FPA.IS_INADVANCE = ''N'')
     AND PRD.FINPROD_TYPE2 = ''F07'' AND PRD.MDATE IS NOT NULL AND FPT.TYPE_6 != ''D03''
-    AND n.PS IN (''T01'', ''T02'', ''T22'', ''T23'', ''T25'', ''T26'' ''T38'')
+    AND n.PS IN (''T01'', ''T02'', ''T22'', ''T23'', ''T25'', ''T26'',''T38'')
   UNION ALL
     SELECT
        nvl(sum(decode(n.PS, ''T02'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0) AS TRADE_AMT

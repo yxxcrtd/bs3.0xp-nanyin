@@ -1211,6 +1211,7 @@ public class TradeCommonService extends BaseService {
             if (DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())
+                    || DictCodeListExt2.交易方向_配股.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeListExt2.交易方向_转换赎回申请.getValue().equals(creditLinesInputDto.getPs())){
                 return true;
             }
@@ -1223,6 +1224,7 @@ public class TradeCommonService extends BaseService {
                         || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())
+                        || DictCodeListExt2.交易方向_配股.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_赎回确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_转换申请.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_转换确认.getValue().equals(creditLinesInputDto.getPs())){
@@ -1247,6 +1249,7 @@ public class TradeCommonService extends BaseService {
             if (DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs())
+                    || DictCodeListExt2.交易方向_配股.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())){
                 return true;
             }
@@ -1255,6 +1258,7 @@ public class TradeCommonService extends BaseService {
             if (DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())
+                    || DictCodeListExt2.交易方向_配股.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeListExt2.交易方向_转换赎回申请.getValue().equals(creditLinesInputDto.getPs())){
                 return true;
             }

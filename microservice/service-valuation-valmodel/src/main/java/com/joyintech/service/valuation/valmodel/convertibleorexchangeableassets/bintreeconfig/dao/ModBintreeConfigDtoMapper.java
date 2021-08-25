@@ -1,12 +1,12 @@
 package com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dao;
 
-import java.util.List;
-import java.util.Map;
-
-
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
+
+import java.util.List;
+import java.util.Map;
 
 
 public interface ModBintreeConfigDtoMapper {
@@ -32,4 +32,6 @@ public interface ModBintreeConfigDtoMapper {
     List<AssetInfoDto> selectAssetNoClassify(AssetInfoDto assetInfoDto);
 
     List<StockQuotationDto> getStockQuotation(StockQuotationDto assetInfoDto);
+
+    List<SelectOptionDto> getMarketId(Map<String, Object> map);
 }

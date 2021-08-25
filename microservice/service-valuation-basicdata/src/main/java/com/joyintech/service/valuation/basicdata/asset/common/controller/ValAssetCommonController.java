@@ -118,4 +118,18 @@ public class ValAssetCommonController {
         param.put("IS_ASSTE_MANAGER", DictCodeList.是否_是.getValue());
         return assetCommonService.getCustomer(page, length, param);
     }
+
+    /**
+     * 市场机构
+     *
+     * @param param 过滤参数
+     * @return 下拉框列表
+     * @throws Exception
+     */
+    @RequestMapping("getCustomerName/{page}/{length}")
+    public Page<SelectOptionDto> getCustomerName(@RequestBody Map<String, Object> param,
+                                           @PathVariable("page") int page,
+                                           @PathVariable("length") int length) {
+        return assetCommonService.getCustomerName(page, length, param);
+    }
 }

@@ -84,47 +84,47 @@ V_CONTENT_04 CLOB := 'select sum(amount) AS amount from
      END amount
     from TRD_PRODUCT_DEAL_ADD m
     inner join TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID
-    where m.PORTFOLIO_ID in ${portfolioCode}  and 
-    n.TRADE_DATE=date''${valDate}'' 
+    where m.PORTFOLIO_ID in ${portfolioCode}  and
+    n.TRADE_DATE=date''${valDate}''
     AND  n.PS IN (''C1'', ''C2'', ''C3'', ''C4'', ''C5'', ''C6'', ''C7'', ''C9'', ''C10'', ''C14'', ''C15'', ''C16'', ''C17'',''C18'', ''C19'',''C20'',''T98'',''T99'')
     AND n.TRADE_STATUS = ''01''
     AND n.IS_CANCEL = ''N''
 
      union ALL
     --2.回购交易
-    select 
+    select
      CASE  WHEN n.PS =''T01'' THEN NVL(n.TRADE_AMT,0)
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END amount
      from TRD_PRODUCT_DEAL_ADD m
     inner join TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.FINPROD_TYPE2 in (''F02'',''F08'',''F25'',''F04'')
-    where  m.PORTFOLIO_ID in ${portfolioCode} and 
+    where  m.PORTFOLIO_ID in ${portfolioCode} and
     n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''T07'',''T54'',''T55'',''T56'')
     AND n.TRADE_STATUS = ''01''
     AND n.IS_CANCEL = ''N''
 
     union all
   --3.日间交易表（场内交易：回购）
-    select 
-     CASE  WHEN n.PS =''T01'' THEN NVL(n.TRADE_AMT,0)
+    select
+     CASE  WHEN n.PS IN(''T01'',''03'') THEN NVL(n.TRADE_AMT,0)
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END amount
     from TRD_PRODUCT_TEMP_DEAL_ADD m
     inner join TRD_PRODUCT_TEMP_DEAL n on m.TRADE_ID=n.TRADE_ID and n.FINPROD_TYPE2 in (''F02'',''F08'',''F25'',''F04'')
-    where  m.PORTFOLIO_ID in ${portfolioCode} and 
-    n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''T07'',''T22'',''T23'',''T54'',''T55'',''T56'',''T93'',''T95'',''T96'')
+    where  m.PORTFOLIO_ID in ${portfolioCode} and
+    n.TRADE_DATE=date''${valDate}'' and n.PS in (''03'',''T01'',''T07'',''T22'',''T23'',''T54'',''T55'',''T56'',''T93'',''T95'',''T96'')
     AND n.TRADE_STATUS = ''01''
     AND n.IS_CANCEL = ''N''
 
      union ALL
   --4.回购交易流程表
-    select 
+    select
      NVL(n.TRADE_AMT,0) amount
      from WFL_TRD_PRODUCT_DEAL_ADD m
     inner join WFL_TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.FINPROD_TYPE2 in (''F02'',''F08'',''F25'',''F04'')
     INNER JOIN SYS_WFL_BUSINESS_LIST swbl on n.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
-    where  m.PORTFOLIO_ID in ${portfolioCode} and 
-    n.TRADE_DATE=date''${valDate}'' and n.PS =''T01''
+    where  m.PORTFOLIO_ID in ${portfolioCode} and
+    n.TRADE_DATE=date''${valDate}'' and n.PS IN(''T01'',''03'')
     AND n.TRADE_STATUS = ''01''
     AND n.IS_CANCEL = ''N''
   )';

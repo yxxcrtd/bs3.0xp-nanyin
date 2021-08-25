@@ -37,8 +37,9 @@ $(function(){
 				{ title: "可比公司", field: 'compOrgname',sortField:'COMP_ORG',align:'center',width:200},
 				{ title: "可比公司股票代码", field: 'compStockid',sortField:'COMP_STOCKID',align:'center',width:150},
 				{ title: "市场乘数方法", field: 'marketMultiStr',sortField:'MARKET_MULTI',align:'center',width:200},
-				{ title: "可比公司市净率", field: 'compPB',sortable:false,type:'number',align:'center',width:160},
-				{ title: "可比公司市盈率", field: 'compPE',sortable:false,type:'number',align:'center',width:160},
+				/** modify by yanya on 20210824 根据新需求去除：可比公司市净率、可比公司市盈率**/
+				//{ title: "可比公司市净率", field: 'compPB',sortable:false,type:'number',align:'center',width:160},
+				//{ title: "可比公司市盈率", field: 'compPE',sortable:false,type:'number',align:'center',width:160},
 				{ title: "标的公司每股收益", field: 'finprodProit',sortField:'FINPROD_PROIT',type:'number',align:'center',width:180},
 				{ title: "标的公司每股净资产", field: 'finprodNetasset',sortField:'FINPROD_NETASSET',type:'number',align:'center',width:200},
 				{ title: "连续股息率", field: 'smoothsection',sortField:'SMOOTHSECTION',type:'number',align:'center',width:100},

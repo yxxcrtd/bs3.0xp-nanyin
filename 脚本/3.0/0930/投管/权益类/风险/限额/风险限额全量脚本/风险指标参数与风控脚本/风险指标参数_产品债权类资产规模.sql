@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='CPZCLZCGM';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('CPZCLZCGM','产品债权类资产规模','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('CPZCLZCGM','产品债权类资产规模','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='CPZCLZCGM';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPZCLZCGM','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPZCLZCGM','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPZCLZCGM','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPZCLZCGM','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPZCLZCGM','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPZCLZCGM','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPZCLZCGM','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPZCLZCGM','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPZCLZCGM','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('CPZCLZCGM','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -175,7 +175,7 @@ union ALL
     union ALL
   --2.3日间交易表（逆回购、拆出）
     select
-     SUM(CASE  WHEN n.PS IN(''T01'',''T04'',''T52'',''T25'',''T64'') THEN NVL(n.TRADE_AMT,0)
+     SUM(CASE  WHEN n.PS IN(''T01'',''04'',''T04'',''T52'',''T25'',''T64'') THEN NVL(n.TRADE_AMT,0)
                WHEN n.PS =''T49'' THEN NVL(n.SHARE_AMT,0)
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END) TRADE_AMT
@@ -184,7 +184,7 @@ union ALL
     LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD n1 ON n.TRADE_ID =n1.TRADE_ID
     where n1.PORTFOLIO_ID in ${portfolioCode} and 
     n.TRADE_DATE=date''${valDate}'' 
-    AND n.PS IN (''T01'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'', ''T49'',''T64'',''T63'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'')
+    AND n.PS IN (''T01'',''04'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'', ''T49'',''T64'',''T63'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'')
     AND n.TRADE_STATUS = ''01''
     AND n.IS_CANCEL = ''N''
   union ALL
@@ -236,7 +236,7 @@ union ALL
     INNER JOIN FIN_TRADE_PRODUCT t2 on t2.FINPROD_ID=n.FINPROD_ID and t2.FINPROD_TYPE2 in (''F03'',''F05'',''F09'') AND t2.BRANCH=0
     where m.PORTFOLIO_ID in ${portfolioCode} and 
     n.TRADE_DATE=date''${valDate}'' 
-    AND n.PS=''T01''
+    AND n.PS IN(''T01'',''04''）
    AND n.IS_CANCEL = ''N''
   UNION ALL
   --4.1内部卖出流程中交易表（标的类资产，投资性质=债权类）

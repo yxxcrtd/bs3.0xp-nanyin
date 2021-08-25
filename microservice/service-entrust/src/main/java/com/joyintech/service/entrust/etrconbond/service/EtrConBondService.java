@@ -522,6 +522,9 @@ public class EtrConBondService extends BaseService{
             if (StringUtil.isNotEmpty(dto.getPurchBondTotal())) {
                 etrEntrust.setEntrustNum(dto.getPurchBondTotal().divide(new BigDecimal(100)));
             }
+            if(null==etrEntrust.getVdate()&&null!=etrEntrust.getEntrustDate()){
+                etrEntrust.setVdate(etrEntrust.getEntrustDate());
+            }
             entity.setEtrEntrust(etrEntrust);
 
             // etrEntrustAdd

@@ -512,4 +512,15 @@ public class ValAssetCommonService extends BaseService {
                         + "/ValAssetCommon/getFinanceProductTaxClass", finProductClass,
                 String.class);
     }
+
+    /**
+     * 市场机构联想框
+     * @param map
+     * @return
+     */
+    public Page<SelectOptionDto> getCustomerName(Map<String, Object> map) {
+        return restTemplate.postForPage(ServiceApplication.VALUATION_BASICDATA_SERVICE_NAME
+                        + "/ValAssetCommon/getCustomerName", map,
+                SelectOptionDto.class);
+    }
 }
