@@ -9,6 +9,7 @@
  */
 package com.joyintech.service.trade.common.dao;
 
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -27,4 +28,12 @@ public interface TrdAvailableCashQueryMapper {
     Map<String, Object> getFinAvaPosition(Map<String, Object> map);
 
     BigDecimal getSecPosition(Map<String, Object> map);
+    /**
+     * 查询资产可用持仓
+     *
+     * @param positionQueryDto PtlSecPositionFlowDto
+     * @return: java.math.BigDecimal
+     * @date: 2021/8/25
+     */
+    BigDecimal getFinAvaPositionFlow(PtlSecPositionFlowDto positionQueryDto);
 }

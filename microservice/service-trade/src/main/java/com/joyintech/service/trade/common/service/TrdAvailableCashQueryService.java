@@ -222,7 +222,17 @@ public class TrdAvailableCashQueryService {
      */
     public Map<String, Object> getFinAvaPosition(Map<String, Object> map) {
         map.put("hodingType03", DictCodeList.持仓类型_实际.getValue());
-        return trdAvailableCashQueryMapper.getFinAvaPosition(map);
+        Map<String, Object> resultMap=trdAvailableCashQueryMapper.getFinAvaPosition(map);
+        if(StringUtil.isNotEmpty(map.get("isContainWfl")) && StringUtil.equals(map.get("isContainWfl").toString(),DictCodeListExt1.是或否_是.getValue())){
+            PtlSecPositionFlowDto dto = new PtlSecPositionFlowDto();
+            dto.setCdate(DateUtil.parse((String)map.get("tradeDate")));
+            dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+            dto.setCcy((String) map.get("ccy"));
+            dto.setFinprodId((String) map.get("finprodId"));
+            BigDecimal 可用持仓 = trdAvailableCashQueryMapper.getFinAvaPositionFlow(dto);
+            resultMap.put("POSITIONFLOW", 可用持仓);
+        }
+        return resultMap;
     }
 
     /**
