@@ -1,0 +1,7 @@
+delete from SYS_PAGE where PAGE_ID = 'RskSupervisionIndividuation007';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RskSupervisionIndividuation007', 'RSK', '/invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation007', 'invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation007', null, null, null, '02', '02', '新增自定义条件', 'system', null, TIMESTAMP '2020-09-01 17:22:56', 'system', TIMESTAMP '2020-09-01 17:22:56');
+
+
+delete from SYS_PAGE_DICTLIST where PAGE_ID = 'RskSupervisionIndividuation007';
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RskSupervisionIndividuation007', '999999', 'PARA_DISPLAY_TYPE', 'PLUGIN', null, null, 'admin', null, TIMESTAMP '2020-09-01 17:32:37', 'admin', TIMESTAMP '2020-09-01 17:32:37');
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RskSupervisionIndividuation007', '999999', 'PARA_DISPLAY_TYPE', 'SQL', null, null, 'admin', null, TIMESTAMP '2020-09-01 17:32:37', 'admin', TIMESTAMP '2020-09-01 17:32:37');
