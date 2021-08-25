@@ -7,6 +7,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.common.config.dao.DynamicConfigMapper;
+import groovy.json.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,11 +44,8 @@ public class DynamicConfigService extends BaseService {
         String userName = LoginUserUtil.getUserName();
         String dynId = map.get("dynId") + "";
         
-        if (StringUtil.equals("role", map.get("level"))){
-            // 暂无
-            return null;
-        }else if (StringUtil.equals("system", map.get("level"))){
-            // 默认system级别
+        if (StringUtil.equals("system", map.get("level"))){
+            // system级别
             List<Map> list = dynamicConfigMapper.selectByDynId(dynId);
             String jsonStr = "";
             if (list != null && list.size() == 1){
@@ -55,6 +53,7 @@ public class DynamicConfigService extends BaseService {
             }
             return jsonStr;
         }else{
+            // 默认用户级别
             map.put("userName", userName);
             List<Map> list = dynamicConfigMapper.selectUserDynByDynId(map);
             String jsonStr = "";
@@ -63,8 +62,12 @@ public class DynamicConfigService extends BaseService {
                 String allStr = selectByDynId(dynId);
                 if (StringUtil.isNotEmpty(allStr)){
                     Map m = JsonUtils.json2Object(allStr, HashMap.class);
-                    m.put("checked", jsonStr);
-                    return JsonUtils.object2Json(m);
+                    if (StringUtil.contains(jsonStr, "{")){
+                        m.put("checked", JsonUtils.json2Object(jsonStr, Map.class));
+                    }else {
+                        m.put("checked", jsonStr);
+                    }
+                    return StringEscapeUtils.unescapeJavaScript(JsonUtils.object2Json(m));
                 }
             }else { // 数据库不存在，则返回模板表数据
                 jsonStr = selectByDynId(dynId);
@@ -80,10 +83,15 @@ public class DynamicConfigService extends BaseService {
      */
     public Integer updateByParam(Map<String, Object> param) {
         if (param != null){
+            Object checked = param.get("checked");
+            if (!(checked instanceof String)) {
+                param.put("checked", JsonUtils.object2Json(checked));
+            }
+            
             String dynId = param.get("dynId") + "";
             if (StringUtil.isNotEmpty(dynId)){
                 if (StringUtil.equals("system", param.get("level"))){
-                    // system级别
+                    // system级别：更新DYN_CONFIG_INFO表
                     String jsonStr = selectByDynId(dynId);
                     if (StringUtil.isNotEmpty(jsonStr)){
                         Map m = JsonUtils.json2Object(jsonStr, HashMap.class);
@@ -92,6 +100,7 @@ public class DynamicConfigService extends BaseService {
                         return dynamicConfigMapper.updateByParam(param);
                     }
                 }else{
+                    // 默认用户级别：更新或插入DYN_CONFIG_INFO_USER表
                     String userName = LoginUserUtil.getUserName();
                     param.put("userName", userName);
                     List<Map> list = dynamicConfigMapper.selectUserDynByDynId(param);

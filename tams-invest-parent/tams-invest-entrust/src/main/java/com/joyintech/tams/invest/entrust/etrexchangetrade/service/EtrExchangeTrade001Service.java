@@ -152,9 +152,14 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
             doDeleteFlow(entity.getWorkflowId());
             // 重新insert
             doInsertFlow(entity);
-            //产品化_所有投资指令预占需求_场内交易  add by zhangpei 20201128 start
-            doInsetOrUpdateForEtrPositionHold(entity);
-            //产品化_所有投资指令预占需求_场内交易  add by zhangpei 20201128 end
+            //add by zznn 20210824 start
+            //保存不需要处理头寸
+			if(!StringUtil.equals(entity.getOperateType(),"save")){
+				//产品化_所有投资指令预占需求_场内交易  add by zhangpei 20201128 start
+				doInsetOrUpdateForEtrPositionHold(entity);
+				//产品化_所有投资指令预占需求_场内交易  add by zhangpei 20201128 end
+			}
+			//add by zznn 20210824 start
             ProcessMark newEntity;
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrExchangeTrade001Dto.class, true);

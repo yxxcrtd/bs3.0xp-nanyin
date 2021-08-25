@@ -37,8 +37,9 @@ $(function(){
 				{ title: "可比公司", field: 'compOrgname',sortField:'COMP_ORG',align:'center',width:200},
 				{ title: "可比公司股票代码", field: 'compStockid',sortField:'COMP_STOCKID',align:'center',width:150},
 				{ title: "市场乘数方法", field: 'marketMultiStr',sortField:'MARKET_MULTI',align:'center',width:200},
-				{ title: "可比公司市净率", field: 'compPB',sortable:false,type:'number',align:'center',width:160},
-				{ title: "可比公司市盈率", field: 'compPE',sortable:false,type:'number',align:'center',width:160},
+				/** modify by yanya on 20210824 根据新需求去除：可比公司市净率、可比公司市盈率**/
+				//{ title: "可比公司市净率", field: 'compPB',sortable:false,type:'number',align:'center',width:160},
+				//{ title: "可比公司市盈率", field: 'compPE',sortable:false,type:'number',align:'center',width:160},
 				{ title: "标的公司每股收益", field: 'finprodProit',sortField:'FINPROD_PROIT',type:'number',align:'center',width:180},
 				{ title: "标的公司每股净资产", field: 'finprodNetasset',sortField:'FINPROD_NETASSET',type:'number',align:'center',width:200},
 				{ title: "连续股息率", field: 'smoothsection',sortField:'SMOOTHSECTION',type:'number',align:'center',width:100},
@@ -60,6 +61,38 @@ $(function(){
 	$('#ModBintreeConfig001_btn_search').click(function(){
 		table.load();
 	})
+	/**
+	 * 新建
+	 */
+	$('#ModBintreeConfig001_btn_add').click(function() {
+		Joyin.dialog("二叉树模型参数配置新建",
+			"/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002/init",
+			"90%", "100%", {pageModel:PAGE_MODEL_NEW},function(){
+				table.reload();
+			});
+	});
+
+	/**
+	 *删除
+	 */
+	$('#ModBintreeConfig001_btn_delete').click(function() {
+		if( table != null && table != ''){
+			var selArr = table.getAllCheckedRows();
+		}
+		if (!selArr || selArr.length == 0) {
+			Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+			return;
+		}
+		var object = {selectedItem: selArr, operateType:"delete"};
+		//modify by yany on 20210823 删除检查
+		Joyin.ajaxJson(basePath + 'valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001/check', object, function(result) {
+			Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
+				WorkFlow.doDeleteList('/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001/delete', object, "ModBintreeConfig001_btn_delete", "ModBintreeConfig002", function () {
+					table.reload();//删除事件请求及回调函数
+				});
+			});
+		});
+	});
 //	/**
 //     * 新建
 //     */

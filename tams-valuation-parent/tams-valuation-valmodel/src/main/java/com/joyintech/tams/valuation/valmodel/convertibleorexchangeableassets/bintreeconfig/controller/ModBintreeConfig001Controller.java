@@ -18,9 +18,12 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.service.ModBintreeConfig001Service;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.service.ModBintreeConfig002Service;
@@ -38,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +61,9 @@ public class ModBintreeConfig001Controller extends BaseController {
     private ModBintreeConfig001Service modBintreeConfig001Service;
     @Autowired
 	private ModBintreeConfig002Service modBintreeConfig002Service;
+    @Autowired
+    MstWorkflowCommonService mstWorkflowCommonService;
+
     
     @Override
     @RequestMapping(PAGE_INIT)
@@ -90,7 +97,7 @@ public class ModBintreeConfig001Controller extends BaseController {
         }
         ProcessParameter<ModBintreeConfigDto> processParameter = new ProcessParameter<ModBintreeConfigDto>();
         WorkFlowParameter<ModBintreeConfigDto> params = new WorkFlowParameter<ModBintreeConfigDto>();
-        params.setPageId("Specialassets002");
+        params.setPageId("ModBintreeConfig002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getFinprodId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_二叉树模型参数配置.getValue());
@@ -104,6 +111,27 @@ public class ModBintreeConfig001Controller extends BaseController {
             dto.getSelectedItem().toArray(
                 new ModBintreeConfigDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
+    }
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody ModBintreeConfigDto dto, BindingResult result) {
+        ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+        for(ModBintreeConfigDto entity : dto.getSelectedItem()) {
+            WflValidInputParameter parameter = new WflValidInputParameter();
+            parameter.setPageId("ModBintreeConfig002");
+            parameter.setBusinessDataPk1(entity.getFinprodId());
+            parameter.setWorkflowId(entity.getWorkflowId());
+            boolean isInWfl = mstWorkflowCommonService.isInWflProcess(parameter);
+            if (isInWfl) {
+                errorList.add(new ValidMessage(getMessage("REPORT_COMMON_E_0021", "资产代码", entity.getFinprodId())));
+            }
+        }
+        if(!StringUtil.isEmptyList(errorList)) {
+            AjaxResult ar = new AjaxResult();
+            ar.setErrorList(errorList);
+            return ar;
+        }
+        return commonCheck(result, dto.getOperateType());
     }
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()

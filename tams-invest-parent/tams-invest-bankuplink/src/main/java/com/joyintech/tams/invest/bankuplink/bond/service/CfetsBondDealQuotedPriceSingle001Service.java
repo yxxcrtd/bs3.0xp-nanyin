@@ -250,10 +250,11 @@ public class CfetsBondDealQuotedPriceSingle001Service extends BaseService<CfetsB
         }
         // add by etliu 20210108 end
 
-        cfetsBondDealDialogueQuoteDto = restTemplate.postForObject(
-            ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/calcAmt",
-            cfetsBondDealDialogueQuoteDto, CfetsBondDealDialogueQuoteDto.class);
-
+        if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getPrice())) {
+            cfetsBondDealDialogueQuoteDto = restTemplate.postForObject(
+                    ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/calcAmt",
+                    cfetsBondDealDialogueQuoteDto, CfetsBondDealDialogueQuoteDto.class);
+        }
         ajaxResult.setData(cfetsBondDealDialogueQuoteDto);
 
         return ajaxResult;
