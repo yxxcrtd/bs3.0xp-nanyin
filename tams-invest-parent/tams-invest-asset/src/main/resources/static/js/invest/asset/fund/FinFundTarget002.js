@@ -68,11 +68,11 @@
 		}else {
 			object.finprodMarketId = object.finprodMarketId + AssetCommon.setTradeMarketId(object.finprodMarketId);
 		}
-        if ($('#capiIncomeFeature').next().find("em").text() === '是') {
-            object.capiIncomeFeature = 'Y';
-        } else {
-            object.capiIncomeFeature = 'N';
-        }
+        // if ($('#capiIncomeFeature').next().find("em").text() === '是') {
+        //     object.capiIncomeFeature = 'Y';
+        // } else {
+        //     object.capiIncomeFeature = 'N';
+        // }
         /*if(file != null){
         	object.fileName = file[0].srcName;
         	object.revealFileId = file[0].fileNo;
