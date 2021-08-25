@@ -732,7 +732,11 @@ public class TrdBondInvestTrade002Controller extends BaseController {
                 //净价与估价净价不一致
                 if(StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit")){
                     if(dto.getGjunitCprice() != null && dto.getGjunitCprice().compareTo(dto.getUnitCprice()) !=0){
-                        confirmMsg += getMessage("净价与估价净价不一致，是否确认提交？");
+                        if(StringUtil.equals(dto.getInvAim(),DictCodeListExt1.投资目的_摊余成本类.getValue())){
+                            confirmMsg += getMessage("净价与摊余净价不一致，是否确认提交？");
+                        }else{
+                            confirmMsg += getMessage("净价与估价净价不一致，是否确认提交？");
+                        }
                     }
                 }
             }

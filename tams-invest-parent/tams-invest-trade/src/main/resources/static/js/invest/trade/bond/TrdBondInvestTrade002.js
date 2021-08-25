@@ -1790,6 +1790,15 @@ var table;
     $("#gjunitCprice").on("change", function () {
         if($("#gjunitCprice").val()){
             $('#gjUnitPriceDiv').show();
+            if($("#invAim").val() && $("#invAim").val() =='AC'){
+                $("#tyCprice").show();
+                $("#gjCprice").hide();
+                $("#tyCprice").text("摊余净价");
+            }else{
+                $("#gjCprice").show();
+                $("#tyCprice").hide();
+                $("#gjCprice").text("估价净价");
+            }
         }else{
             $('#gjUnitPriceDiv').hide();
         }
@@ -1975,6 +1984,15 @@ var table;
         $('#bussTrdTransfenpei_div').hide();
         if($("#gjunitCprice").val()){
             $('#gjUnitPriceDiv').show();
+            if($("#invAim").val() && $("#invAim").val() =='AC'){
+                $("#tyCprice").show();
+                $("#gjCprice").hide();
+                $("#tyCprice").text("摊余净价");
+            }else{
+                $("#gjCprice").show();
+                $("#tyCprice").hide();
+                $("#gjCprice").text("估价净价");
+            }
         }else{
             $('#gjUnitPriceDiv').hide();
         }
@@ -3227,7 +3245,8 @@ var table;
     
     // 内部交易则根据产品类型自动带出相应的净价
     var changeUnitCprice = function() {
-    	if ($("#ps").val() == PS_T02 && $("#pageModel").val()=='0') {
+        debugger;
+    	if ($("#ps").val() == PS_T02 && ($("#pageModel").val()=='0' ||$("#pageModel").val()=='1')) {
     		// 交易对手为内部交易时查询债权市值净价及摊销净价
     		if ($("#trdInvestPersonInfo_counterId").val()
     				&& $("#trdInvestPersonInfo_counterId").select2('data')[0].object=='N') {
@@ -3260,7 +3279,11 @@ var table;
     					}
     				});
     			} 
-    		} 
+    		} else{
+                $("#unitCprice").val('').trigger("change");
+                $("#gjunitCprice").val('').trigger("change");
+                $('#gjUnitPriceDiv').hide();
+    		}
     	} 
     }
 	// 显示净价信息查看及回显  吉林银行产品化需求  2019.12.2 马琳琳 end //
