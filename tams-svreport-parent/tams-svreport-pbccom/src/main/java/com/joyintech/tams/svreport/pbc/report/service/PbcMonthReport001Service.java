@@ -526,10 +526,15 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
         List<File> sourceFiles = new ArrayList<>();
     	@SuppressWarnings("unchecked")
         List<PbcMonthReport> dataList =  (List<PbcMonthReport>) selectParam.get("reportList");
-    	// 不选报表导出全部
-    	if (CollectionUtils.isEmpty(dataList)){
-    	    dataList = searchByCondition(selectParam);
-    	}
+		Set<String> termList = new HashSet<>();
+
+		for(int i =0 ;i < dataList.size();i++){
+			termList.add(dataList.get(i).getTermid());
+		}
+		selectParam.put("termidList",termList);
+
+		// 不选报表导出全部
+		dataList = searchByCondition(selectParam);
     	Map<String, List<PbcMonthReport>> dataParam = new HashMap<String, List<PbcMonthReport>>();
     	// 单选导出
     	for (int i =0 ;i < dataList.size();i++){
