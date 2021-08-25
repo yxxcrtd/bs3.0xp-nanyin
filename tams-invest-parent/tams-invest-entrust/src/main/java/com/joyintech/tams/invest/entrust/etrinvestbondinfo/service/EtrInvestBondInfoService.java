@@ -1406,8 +1406,8 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                 Map<String, Object> posMap = this.getAssetAvailablePosition(param);
                 if (posMap != null) {
                     etrInvestBondInfoDto.setAssetAvailablePosition(
-                        posMap.get("position") == null ? BigDecimal.ZERO : new BigDecimal(
-                            posMap.get("position").toString()));
+                        posMap.get("position") == null ? BigDecimal.ZERO : new BigDecimal(100).multiply(new BigDecimal(
+                            posMap.get("position").toString())));
                 }
                 // 本方券券面总额
                 etrInvestBondInfoDto.setEntrustOwnNum(etrInvestBondInfoDto.getEntrustNum());
