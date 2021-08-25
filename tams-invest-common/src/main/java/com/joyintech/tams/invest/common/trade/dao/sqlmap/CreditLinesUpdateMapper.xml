@@ -857,5 +857,7 @@
 			CREDIT_USING_AST
 		where
 			TRADE_ID=#{bTradeId}
+		and
+		      STATUS='01'
 	</select>
 </mapper>
