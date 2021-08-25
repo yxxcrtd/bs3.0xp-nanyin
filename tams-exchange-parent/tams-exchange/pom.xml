@@ -1,55 +1,64 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.joyintech</groupId>
-    <artifactId>tams-exchange-parent</artifactId>
-    <version>2.1.2</version>
-  </parent>
-  <artifactId>tams-exchange</artifactId>
-  <packaging>jar</packaging>
-  	
-  <dependencies>
-	  <dependency>
-		  <groupId>com.joyintech</groupId>
-		  <artifactId>joyintech-system</artifactId>
-	  </dependency>
-	  <dependency>
-		  <artifactId>tams-exchange-common</artifactId>
-		  <groupId>com.joyintech</groupId>
-		  <version>2.1.2</version>
-	  </dependency>
-	  <dependency>
-		  <artifactId>tams-exchange-data-common</artifactId>
-		  <groupId>com.joyintech</groupId>
-		  <version>2.1.2</version>
-	  </dependency>
-	  <dependency>
-		  <groupId>com.joyintech</groupId>
-		  <artifactId>disruptor</artifactId>
-		  <version>3.3.7</version>
-	  </dependency>
-	  <dependency>
-		  <groupId>org.springframework.boot</groupId>
-		  <artifactId>spring-boot-starter-tomcat</artifactId>
-		  <scope>runtime</scope>
-	  </dependency>
-  </dependencies>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.joyintech</groupId>
+		<artifactId>tams-exchange-parent</artifactId>
+		<version>2.1.2</version>
+	</parent>
+	<artifactId>tams-exchange</artifactId>
+	<packaging>jar</packaging>
+	<version>2.1.2</version>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>joyintech-system</artifactId>
+		</dependency>
+		<dependency>
+			<artifactId>tams-exchange-common</artifactId>
+			<groupId>com.joyintech</groupId>
+			<version>2.1.2</version>
+		</dependency>
+		<dependency>
+			<artifactId>tams-exchange-data-common</artifactId>
+			<groupId>com.joyintech</groupId>
+			<version>2.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>3.3.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
 
 	<properties>
 		<hibernate.version>5.3.6.Final</hibernate.version>
 	</properties>
 	<build>
-        <finalName>tams-exchange</finalName>
-        <!-- 打包源代码插件 -->
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
+		<finalName>tams-exchange</finalName>
+		<!-- 打包源代码插件 -->
+		<plugins>
+			<!-- 一体化时需注释，独立打包时可以放开 -->
+			<!--			<plugin>-->
+			<!--				<groupId>org.springframework.boot</groupId>-->
+			<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+			<!--				<configuration>-->
+			<!--					&lt;!&ndash;for war&ndash;&gt;-->
+			<!--					&lt;!&ndash; <mainClass>org.springframework.boot.loader.WarLauncher</mainClass>&ndash;&gt;-->
+			<!--					&lt;!&ndash; <addResources>true</addResources>&ndash;&gt;-->
+			<!--					&lt;!&ndash; <classifier>exec</classifier> &ndash;&gt;-->
+			<!--					<fork>true</fork> &lt;!&ndash; 如果没有该项配置，devtools不会起作用，即应用不会restart&ndash;&gt;-->
+			<!--				</configuration>-->
+			<!--			</plugin>-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
 				<configuration>
 					<attach>true</attach>
 				</configuration>
@@ -90,51 +99,4 @@
 			</resource>
 		</resources>
 	</build>
-  
-
-<!--  <build>-->
-<!--		<finalName>tams-exchange</finalName>-->
-<!--		<plugins>-->
-<!--			<plugin>-->
-<!--				<groupId>org.springframework.boot</groupId>-->
-<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
-
-<!--			</plugin>-->
-<!--		&lt;!&ndash; 打包源代码插件 &ndash;&gt;-->
-<!--            &lt;!&ndash;<plugin>-->
-<!--               <groupId>org.apache.maven.plugins</groupId>-->
-<!--               <artifactId>maven-source-plugin</artifactId>-->
-<!--               <version>2.4</version>-->
-<!--               <configuration>-->
-<!--                  <attach>true</attach>-->
-<!--               </configuration>-->
-<!--               <executions>-->
-<!--                  <execution>-->
-<!--                     <phase>compile</phase>-->
-<!--                     <goals>-->
-<!--                        <goal>jar</goal>-->
-<!--                     </goals>-->
-<!--                  </execution>-->
-<!--               </executions>-->
-<!--            </plugin>-->
-<!--			<plugin>-->
-<!--				<groupId>org.springframework.boot</groupId>-->
-<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--				<configuration>-->
-<!--			&lt;!&ndash; 		<mainClass>org.springframework.boot.loader.WarLauncher</mainClass>-->
-<!--					<addResources>true</addResources> &ndash;&gt;-->
-<!--					<classifier>exec</classifier>-->
-<!--					<fork>true</fork>-->
-<!--				</configuration>-->
-<!--			</plugin>-->
-<!--			<plugin>-->
-<!--				<groupId>org.apache.maven.plugins</groupId>-->
-<!--				<artifactId>maven-surefire-plugin</artifactId>-->
-<!--				<configuration>-->
-<!--					<skip>true</skip>-->
-<!--					<testFailureIgnore>true</testFailureIgnore>-->
-<!--				</configuration>-->
-<!--			</plugin>&ndash;&gt;-->
-<!--		</plugins>-->
-<!--	</build>-->
 </project>
