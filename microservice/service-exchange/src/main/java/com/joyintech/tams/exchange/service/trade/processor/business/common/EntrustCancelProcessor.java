@@ -12,6 +12,7 @@ import com.joyintech.tams.exchange.service.trade.processor.MessageSenderService;
 import com.joyintech.tams.exchange.service.trade.processor.TradeHelper;
 import com.joyintech.tams.exchange.service.trade.processor.account.AccountPositionHelper;
 import com.joyintech.tams.exchange.service.trade.processor.algorithm.AlgorithmHelper;
+import com.joyintech.tams.exchange.service.trade.processor.business.bond.BondHelper;
 import com.joyintech.tams.exchange.service.trade.processor.constants.Constants;
 import com.joyintech.tams.exchange.service.trade.processor.others.SplitOrderHelper;
 import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgent;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 
 @Component
@@ -64,6 +65,8 @@ public class EntrustCancelProcessor {
     private SplitOrderHelper splitOrderHelper;
     @Autowired
     private AlgorithmHelper algorithmHelper;
+    @Autowired
+    private BondHelper bondHelper;
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -177,10 +180,10 @@ public class EntrustCancelProcessor {
     }
 
     public void unFrozenEntrustAndInstructionAndPosition(EntrustInterface entrust, long unFrozenVolume, BigDecimal unFrozenBalance, Instruction instruction, boolean release) {
-        unFrozenEntrustAndInstructionAndPosition(entrust, unFrozenVolume, unFrozenBalance, instruction, release, false);
+        unFrozenEntrustAndInstructionAndPosition(entrust, unFrozenVolume, unFrozenBalance, null, instruction, release, false);
     }
 
-    public void unFrozenEntrustAndInstructionAndPosition(EntrustInterface entrust, long unFrozenVolume, BigDecimal unFrozenBalance, Instruction instruction, boolean release, boolean isFromTrade) {
+    public void unFrozenEntrustAndInstructionAndPosition(EntrustInterface entrust, long unFrozenVolume, BigDecimal unFrozenBalance, BigDecimal unFrozenBalanceInstructionTrade, Instruction instruction, boolean release, boolean isFromTrade) {
         if (Objects.nonNull(entrust)) {
             if (TradeUtils.isFrozenVolume(entrust.getEntrustProp(), entrust.getEntrustBs(), entrust.getAssetType())) {
                 if (entrust.getFrozenVolume() > 0)
@@ -217,7 +220,13 @@ public class EntrustCancelProcessor {
                 if (instruction.getEntrustNum() > 0) {
                     instruction.setFrozenQuantity(BigDecimal.valueOf(instruction.getFrozenQuantity().longValue() - unFrozenVolume));
                 } else if (instruction.getEntrustAmt().doubleValue() > 0) {
-                    instruction.setFrozenQuantity(TradeUtils.subtract(instruction.getFrozenQuantity(), unFrozenBalance, 2));
+                    if (instruction.getFrozenQuantity().doubleValue() > 0) {
+                        // 金额指令全部以净价处理， 需要重新计算指令金额冻结
+                        unFrozenBalance = bondHelper.calculateBalanceForInstruction(entrust.getEntrustProp(), entrust.getAssetType(), entrust.getEntrustPrice(), unFrozenVolume, unFrozenBalance);
+                        instruction.setFrozenQuantity(TradeUtils.subtract(instruction.getFrozenQuantity(), (unFrozenBalanceInstructionTrade == null && !isFromTrade) ? unFrozenBalance : unFrozenBalanceInstructionTrade, 2));
+                    } else {
+                        instruction.setFrozenQuantity(BigDecimal.valueOf(0.00));
+                    }
                 }
             }
             messageSenderService.pushProgressToMQ(instruction);
@@ -225,7 +234,7 @@ public class EntrustCancelProcessor {
             logger.info("解冻指令信息成功，指令委托数量为：{} 指令委托金额为：{} 指令已完成数量或者金额为：{} 指令冻结为：{}", instruction.getEntrustNum(), instruction.getEntrustAmt(), instruction.getEntrustLeftAmt(), instruction.getFrozenQuantity());
             //解冻时释放风控
             if (release && !EntrustUtils.isIntentionEntrust(entrust.getEntrustProp())) {
-                investRiskManagement.riskControlRelease(Arrays.asList(entrust), instruction);
+                investRiskManagement.riskControlRelease(Collections.singletonList(entrust), instruction);
             }
         }
     }

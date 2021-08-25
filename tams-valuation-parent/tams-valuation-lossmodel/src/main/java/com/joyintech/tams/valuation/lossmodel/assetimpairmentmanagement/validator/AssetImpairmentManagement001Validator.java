@@ -68,7 +68,7 @@ public class AssetImpairmentManagement001Validator implements BeanValidator{
                 validParam1.setWorkflowId(dto.getWorkflowId());
                 validParam1.setPageId(processMark1.getPageId());
 
-                validParam1.setBusinessDataPk2(entity.getBussNo());
+//                validParam1.setBusinessDataPk2(entity.getBussNo());
                 validParam1.setBusinessDataPk3(entity.getDecDateFmt());
                 if (mstWorkflowCommonService.isInWflProcess(validParam1)) {
                     // 流程存在情况

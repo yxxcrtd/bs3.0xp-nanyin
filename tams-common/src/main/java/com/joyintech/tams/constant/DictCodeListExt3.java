@@ -1431,9 +1431,16 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     代偿期类型_到期(DictCode.代偿期类型,"02","到期"),
 
     减值数据来源_手工(DictCode.减值数据来源,"01","手工"),
-    减值数据来源_中债_wind接入(DictCode.减值数据来源,"02","中债/wind接入"),
+    减值数据来源_wind接入(DictCode.减值数据来源,"02","wind"),
+    减值数据来源_中债接入(DictCode.减值数据来源,"03","中债"),
+    减值数据来源_模型(DictCode.减值数据来源,"04","模型"),
 
     //20210803 by yuzj end
+    //modify by yanya on 20210824 增值税资产分类_股票
+    增值税资产分类_股票_上海股票(DictCode.增值税资产分类,"L01","上海股票"),
+    增值税资产分类_股票_深圳股票(DictCode.增值税资产分类,"L02","深圳股票"),
+    增值税资产分类_股票_沪港通(DictCode.增值税资产分类,"L03","沪港通"),
+    增值税资产分类_股票_深港通(DictCode.增值税资产分类,"L04","深港通")
     ;
     /**
      * 对应于数据字典code

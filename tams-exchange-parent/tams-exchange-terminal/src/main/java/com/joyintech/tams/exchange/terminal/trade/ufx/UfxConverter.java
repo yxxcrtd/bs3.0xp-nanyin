@@ -7,10 +7,8 @@ import com.hundsun.t2sdk.interfaces.share.event.IEvent;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.db.domain.*;
-import com.joyintech.tams.exchange.common.utils.CbptransTypeUtils;
-import com.joyintech.tams.exchange.common.utils.EntrustUtils;
-import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
-import com.joyintech.tams.exchange.common.utils.TradeUtils;
+import com.joyintech.tams.exchange.common.utils.*;
+import com.joyintech.tams.exchange.terminal.trade.ufx.constant.TradeConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +98,6 @@ public class UfxConverter {
      * @Date: 2020/3/25 
      */
     public static List<Trade> parseQueryTradeMsg(IEvent rsp, String accountId) {
-        logger.info("qryTrade callback {} ,ErrorInfo:{}", UfxTradeCallBack.getResult(rsp).toString(), rsp.getErrorInfo());
         IDatasets result = rsp.getEventDatas();
         IDataset ds = result.getDataset(0);
         List<Trade> list = new ArrayList<Trade>();
@@ -108,8 +105,9 @@ public class UfxConverter {
         while (ds.hasNext()) {
             ds.next();
             int real_status = ds.getInt("real_status");//处理标志
+            String real_type = ds.getString("real_type");
             logger.info("real_status:{} ,brokerEntrustId:{},real_type:{},entrust_no:{},business_id:{})",
-                    real_status, ds.getString("entrust_no"), ds.getString("real_type"), ds.getString("entrust_no"), ds.getString("business_id"));
+                    real_status, ds.getString("entrust_no"), real_type, ds.getString("entrust_no"), ds.getString("business_id"));
             Trade trade = new Trade();
             trade.setPositionStr(ds.getString("position_str"));
             trade.setAccountId(accountId);
@@ -126,24 +124,12 @@ public class UfxConverter {
             trade.setTradedPrice(BigDecimal.valueOf(ds.getDouble("business_price")));
             String businessAmount = ds.getString("business_amount");
             double business_amount = Double.parseDouble(businessAmount);
-            trade.setTradedVolume((long) business_amount);
+            //撤单成交成交数量小于0
+            trade.setTradedVolume((long) (business_amount < 0 ? -business_amount : business_amount));
             trade.setTradeTime(ds.getString("business_time"));
-            if (real_status != 0 && real_status != 4) {
-                trade.setBrokerTradeId(ds.getString("entrust_no"));
-                if (2 == ds.getInt("real_type")) {
-                    trade.setTradeType(TradeType.CANCEL_INVALID.value);
-                } else if (0 == ds.getInt("real_type")) {
-                    trade.setTradeType(TradeType.INVALID.value);
-                }
-            } else {
-                trade.setBrokerTradeId(ds.getString("business_id"));
-                if (2 == ds.getInt("real_type")) {
-                    trade.setTradeType(TradeType.CANCEL.value);
-                } else if (0 == ds.getInt("real_type")) {
-                    trade.setTradeType(TradeType.NORMAL.value);
-                }
-            }
+            convertTradeTypeAndBrokerTradeId(ds, real_status, real_type, trade);
             trade.setBrokerEntrustId(ds.getString("entrust_no"));
+            trade.setErrorMsg(ErrorMsgUtils.subErrorMsg(ds.getString("cancel_info")));
             trade.setTradedBalance(BigDecimal.valueOf(ds.getDouble("business_balance")));
             trade.setStockName(ds.getString("stock_name"));
             trade.setEntrustProp(ds.getString("entrust_prop"));
@@ -151,6 +137,24 @@ public class UfxConverter {
             list.add(trade);
         }
         return list;
+    }
+
+    private static void convertTradeTypeAndBrokerTradeId(IDataset ds, int real_status, String real_type, Trade trade) {
+        if (real_status != TradeConstant.realStatusTrade && real_status != TradeConstant.realStatusConfirm) {
+            trade.setBrokerTradeId(ds.getString("entrust_no"));
+            if (TradeConstant.realTypeCancel.equals(real_type)) {
+                trade.setTradeType(TradeType.CANCEL_INVALID.value);
+            } else if (TradeConstant.realTypeTrade.equals(real_type)) {
+                trade.setTradeType(TradeType.INVALID.value);
+            }
+        } else {
+            trade.setBrokerTradeId(ds.getString("business_id"));
+            if (TradeConstant.realTypeCancel.equals(real_type)) {
+                trade.setTradeType(TradeType.CANCEL.value);
+            } else if (TradeConstant.realTypeTrade.equals(real_type)) {
+                trade.setTradeType(TradeType.NORMAL.value);
+            }
+        }
     }
 
     /*** 
@@ -504,7 +508,7 @@ public class UfxConverter {
             } catch (Exception e) {
                 logger.error("entrustStatus:{}", e.getMessage());
             }
-            entrust.setErrorMsg(ds.getString("cancel_info"));
+            entrust.setErrorMsg(ErrorMsgUtils.subErrorMsg(ds.getString("cancel_info")));
             String withdrawAmount = ds.getString("withdraw_amount", null);
             if (!Strings.isNullOrEmpty(withdrawAmount)) {
                 double withdraw_amount = Double.parseDouble(withdrawAmount);
@@ -564,9 +568,13 @@ public class UfxConverter {
         entrust.setEntrustType(ds.getString("entrust_type"));
         String entrust_status = ds.getString("entrust_status");
         getEntrustStatusByUfx(entrust_status, entrust);
-        entrust.setFinanceAccount(ds.getString("fund_account"));
+        String fundAccount = ds.getString("fund_account");
+        entrust.setFinanceAccount(fundAccount);
+        entrust.setAccountId(tradeApi.getUfxTradeClient().getAccountIdByFinanceAccount(fundAccount));
+        entrust.setErrorMsg(ErrorMsgUtils.subErrorMsg(ds.getString("cancel_info")));
         entrust.setEntrustProp(ds.getString("entrust_prop"));
         entrust.setReportTime(ds.getString("report_time"));
+        entrust.setReportNo(ds.getString("report_no"));
         return entrust;
     }
 
@@ -577,33 +585,18 @@ public class UfxConverter {
      * @Author: MAXX
      * @Date: 2020/4/7
      */
-    public static Trade dealReturn(IDataset ds, UfxTradeApi tradeApi) {
+    public static Trade dealReturn(IDataset ds, int realStatus, String realType, UfxTradeApi tradeApi) {
         Trade trade = new Trade();
         trade.setEntrustId(ds.getString("entrust_reference"));
         trade.setTradingDay(ds.getString("init_date"));
-        trade.setFinanceAccount(ds.getString("fund_account"));
-        int real_status = ds.getInt("real_status");
-        logger.info("real_status:{} ,brokerEntrustId:{},real_type:{},entrust_no:{},business_id:{})",
-                real_status, ds.getString("entrust_no"), ds.getString("real_type"), ds.getString("entrust_no"), ds.getString("business_id"));
-        if (real_status != 0 && real_status != 4) {
-            if (2 == ds.getInt("real_type")) {
-                trade.setTradeType(TradeType.CANCEL_INVALID.value);
-                trade.setBrokerEntrustId(ds.getString("withdraw_no"));
-                trade.setBrokerTradeId(ds.getString("withdraw_no"));
-            } else if (0 == ds.getInt("real_type")) {
-                trade.setTradeType(TradeType.INVALID.value);
-                trade.setBrokerEntrustId(ds.getString("entrust_no"));
-                trade.setBrokerTradeId(ds.getString("entrust_no"));
-            }
-        } else {
-            trade.setBrokerTradeId(ds.getString("business_no"));
-            if (2 == ds.getInt("real_type")) {
-                trade.setTradeType(TradeType.CANCEL.value);
-                trade.setBrokerEntrustId(ds.getString("withdraw_no"));
-            } else if (0 == ds.getInt("real_type")) {
-                trade.setTradeType(TradeType.NORMAL.value);
-                trade.setBrokerEntrustId(ds.getString("entrust_no"));
-            }
+        String fundAccount = ds.getString("fund_account");
+        trade.setFinanceAccount(fundAccount);
+        trade.setAccountId(tradeApi.getUfxTradeClient().getAccountIdByFinanceAccount(fundAccount));
+        convertTradeTypeAndBrokerTradeId(ds, realStatus, realType, trade);
+        // 成交撤单主推时。成交的委托编号 对应 撤单号
+        trade.setBrokerEntrustId(ds.getString("entrust_no"));
+        if (TradeConstant.realTypeCancel.equals(realType)) {
+            trade.setBrokerEntrustId(ds.getString("withdraw_no"));
         }
         String exchangeType = ds.getString("exchange_type");
         if (ExchangeType.SH.value.equals(exchangeType)) {
@@ -615,7 +608,7 @@ public class UfxConverter {
         trade.setEntrustBs(ds.getString("entrust_bs"));
         String businessAmount = ds.getString("business_amount");
         double business_amount = Double.parseDouble(businessAmount);
-        trade.setTradedVolume((long) business_amount);
+        trade.setTradedVolume((long) (business_amount < 0 ? -business_amount : business_amount));
         trade.setTradedPrice(BigDecimal.valueOf(ds.getDouble("business_price")));
         trade.setTradeTime(ds.getString("business_time"));
         trade.setEntrustType(ds.getString("entrust_type"));
@@ -630,10 +623,10 @@ public class UfxConverter {
         businessIdSet.add(ds.getString("business_id"));
         positionStr.setBusinessIdSet(businessIdSet);
         tradeApi.putPositionStrMap(ds.getString("fund_account"), positionStr);
-        //trade.setBrokerTradeId(ds.getString("business_id"));
         trade.setTradedBalance(BigDecimal.valueOf(ds.getDouble("business_balance")));
         trade.setStockName(ds.getString("stock_name"));
         trade.setEntrustProp(ds.getString("entrust_prop"));
+        trade.setReportNo(ds.getString("report_no"));
         return trade;
     }
 
@@ -998,7 +991,7 @@ public class UfxConverter {
             } catch (Exception e) {
                 logger.error("entrustStatus:{}", e.getMessage());
             }
-            entrust.setErrorMsg(ds.getString("cancel_info"));
+            entrust.setErrorMsg(ErrorMsgUtils.subErrorMsg(ds.getString("cancel_info")));
             String withdrawAmount = ds.getString("withdraw_amount", null);
             if (!Strings.isNullOrEmpty(withdrawAmount)) {
                 double withdraw_amount = Double.parseDouble(withdrawAmount);

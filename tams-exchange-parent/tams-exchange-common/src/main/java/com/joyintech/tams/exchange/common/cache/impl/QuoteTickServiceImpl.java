@@ -1,17 +1,14 @@
 package com.joyintech.tams.exchange.common.cache.impl;
 
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.joyintech.tams.exchange.common.bean.TickByte;
-import com.joyintech.tams.exchange.common.proto.QuoteProto;
-import com.joyintech.tams.exchange.common.proto.serializer.TickBeanSerializer;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import com.joyintech.tams.exchange.common.cache.config.QuoteServiceNodeConfig;
+import com.joyintech.tams.exchange.common.proto.QuoteProto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +20,22 @@ public class QuoteTickServiceImpl extends RedisCacheServiceImpl<String, TickByte
 
     private Map<String, QuoteProto.TickBean> tickMap = Maps.newConcurrentMap();
 
+    @Autowired
+    private QuoteServiceNodeConfig quoteServiceNodeConfig;
+
+    @Override
+    protected void setKeyField(TickByte tickByte) {
+        if (Objects.nonNull(className)) return;
+        className = getClassNameByConf(null);
+    }
+
+    private String getClassNameByConf(String serviceNodeName) {
+        return TickByte.class.getName() + "_" + (Strings.isNullOrEmpty(serviceNodeName) ? quoteServiceNodeConfig.getServiceNodeName() : serviceNodeName);
+    }
+
     @Override
     public void coverCache(boolean fromRedis) {
-        className = QuoteProto.TickBean.class.getName();
+        className = getClassNameByConf(null);
         clearCache();
         Map<String, TickByte> byteMap = new HashMap<>();
         getMapFromRedis(className, byteMap);
@@ -96,6 +106,11 @@ public class QuoteTickServiceImpl extends RedisCacheServiceImpl<String, TickByte
             }
         });
         return tickBeanMap;
+    }
+
+    @Override
+    public void setClassName(String serviceNodeName) {
+        className = getClassNameByConf(serviceNodeName);
     }
 
     @Override

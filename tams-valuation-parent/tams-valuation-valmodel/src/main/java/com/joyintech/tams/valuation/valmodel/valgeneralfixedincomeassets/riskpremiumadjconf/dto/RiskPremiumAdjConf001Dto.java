@@ -137,8 +137,10 @@ public class RiskPremiumAdjConf001Dto extends BaseEntity {
     }
 
     public String getSecTypeModelFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.资产类型, secTypeModel))?
-                SysDataUtil.getNameFromDataDict(DictCode.资产类型, secTypeModel):secTypeModel;
+//        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.资产类型, secTypeModel))?
+//                SysDataUtil.getNameFromDataDict(DictCode.资产类型, secTypeModel):secTypeModel;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.证券品种, secTypeModel))?
+                SysDataUtil.getNameFromDataDict(DictCode.证券品种, secTypeModel):secTypeModel;
     }
 
     public void setSecTypeModel(String secTypeModel) {

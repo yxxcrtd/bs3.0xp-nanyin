@@ -569,7 +569,30 @@ $(function(){
             Joyin.exportExcel(basePath + "invest/trade/investtrade/investdealquery/TrdInvestDealQuery001/batchExportExcel",{dtoStr:JSON.stringify(param)});
         }); 
     };
-    
+
+	/**
+	 * 导出pdf add by zengchengfa 20210803
+	 */
+	var exportPdf = function() {
+		if(table!=null && table!=''){
+			var selArr = table.getAllCheckedRows();
+			// 列表中未勾选
+			if (!selArr || selArr.length == 0) {
+				Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+				return;
+			}
+			var paramObj = getPageParams();
+			//勾选导出
+			var selectedItem = [];
+			$.each(table.getAllCheckedRows() ,function (i, item) {
+				selectedItem.push(item.tradeId);
+			});
+			paramObj.selectedItem = selectedItem.join(',');
+			Joyin.exportExcel('exportPdf', paramObj);
+		}else{
+			Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+		}
+	};
     /**
      * 画面加载完成
      */
@@ -598,6 +621,11 @@ $(function(){
         $('#TrdInvestDealQuery001_btn_batchExport').click(function() {
             newBatchExportExcel();
         });
+
+        //add by zengchengfa 20210803 pdf导出
+    		$('#TrdInvestDealQuery001_btn_pdfExport').click(function() {
+    			exportPdf();
+    		});
     });
     
 }());

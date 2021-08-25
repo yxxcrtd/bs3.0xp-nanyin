@@ -278,12 +278,12 @@
             , {field: 'bondCode', width: 150, title: '债券代码'}
             , {field: 'bondAbbrName', width: 150, title: '债券简称'}
             // 可质押券面总额
-            , {field: 'posStrdPrinAmt', width: 150, title: '持仓券面总额', type: 'number', sortable: false}
+            , {field: 'posStrdPrinAmtTo', width: 200, title: '持仓券面总额(万元)', type: 'number', sortable: false}
             //质押券汇总券面总额
-            , {field: 'pledStrdPrinAmt', width: 150, title: '质押券券面总额', type: 'number', sortable: false}
+            , {field: 'pledStrdPrinAmtTo', width: 200, title: '质押券券面总额(万元)', type: 'number', sortable: false}
             //折算比例%
             , {field: 'pledgeRate', width: 150, title: '折算比例%', type: 'number'}
-            , {field: 'gradeResultStr', width: 150, title: '债项评级'}
+            , {field: 'gradeResultStr', width: 150, title: '债项评级',sortable: 'gradeResult'}
             , {field: 'mdate', width: 150, type: 'date', title: '到期日'}
             , {field: 'repRegistOrgStr', width: 150, title: '登记托管机构', type: 'text'}
             , {field: 'lastPeriod', width: 150, title: '剩余期限', type: 'number', sortable: false}
@@ -371,8 +371,8 @@
             , {field: 'cpTraderName', width: 120, title: 'CfetsRepoDealQuotedPrice001.dayOffer.table.dealCounterId'}
             , {
                 field: 'fpriceAmt',
-                width: 135,
-                title: 'CfetsRepoDealQuotedPrice001.dayOffer.table.fpriceAmt',
+                width: 160,
+                title: '交易金额(万元)',
                 type: "money"
             }
             , {field: 'term', width: 90, title: '回购期限'}
@@ -393,7 +393,7 @@
             , {
                 field: 'prin',
                 width: 135,
-                title: '券面总计(万)',
+                title: '券面总计(万元)',
                 type: "money"
             }
             , {
@@ -870,7 +870,7 @@
         /**
          * 委托查询对话导出按钮点击事件
          */
-        $('#cfetsRepoDealQuotedPrice001_wtdh_export').click(function () {
+        $('#CfetsRepoDealQuotedPr002_btn_export').click(function () {
             exportExcel('wtcxdh');
         });
 

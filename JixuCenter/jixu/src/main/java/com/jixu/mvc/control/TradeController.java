@@ -87,7 +87,7 @@ import com.orm.obj.TranCollateral;
 import com.orm.obj.TranFeeDef;
 import com.orm.obj.TranSum;
 
-@Controller
+@Controller("JixuTradeController")
 public class TradeController extends ExceptionControl{
 	
 	@Resource(name="tradeService")

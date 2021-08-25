@@ -43,6 +43,7 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class CommonManagement extends BaseService {
@@ -172,24 +173,27 @@ public class CommonManagement extends BaseService {
         }
     }
 
-    public ResultBean queryInstrument(String market, List<String> stockCodeList) {
+    public ResultBean queryInstrument(String market, String assetType, String keyword) {
         List<Instrument> instrumentList;
-        if (Objects.nonNull(stockCodeList) && stockCodeList.size() > 0) {
-            instrumentList = new ArrayList<>();
-            stockCodeList.forEach(code -> {
-                Instrument instrument = instrumentService.findById(code);
-                if (Objects.nonNull(instrument))
-                    instrumentList.add(instrument);
-                else {
-                    logger.info("queryInstrumentById is null stockCode is [{}]", code);
-                }
-            });
-        } else if (!Strings.isNullOrEmpty(market)) {
-            instrumentList = instrumentService.queryByMarket(market);
-        } else {
-            return new ResultBean(ErrorCode.REQ_PARAMETER_ERROR);
+        if (!Strings.isNullOrEmpty(assetType)) {
+            instrumentList = instrumentService.queryByAssetType(assetType);
+            return new ResultBean(ErrorCode.SUCCESS, filterInstrumentByKeyword(instrumentList, keyword));
         }
-        return new ResultBean(ErrorCode.SUCCESS, instrumentList);
+        if (!Strings.isNullOrEmpty(market)) {
+            instrumentList = instrumentService.queryByMarket(market);
+            return new ResultBean(ErrorCode.SUCCESS, filterInstrumentByKeyword(instrumentList, keyword));
+        }
+        instrumentList = instrumentService.findAll();
+        return new ResultBean(ErrorCode.REQ_PARAMETER_ERROR, filterInstrumentByKeyword(instrumentList, keyword));
+    }
+
+    private List<Instrument> filterInstrumentByKeyword(List<Instrument> instrumentList, String keyword) {
+        if (Strings.isNullOrEmpty(keyword)) return instrumentList;
+        List<Instrument> instruments = instrumentList.stream().filter(instrument -> {
+            if (instrument.getInnerCode().contains(keyword)) return true;
+            else return instrument.getStockName().contains(keyword);
+        }).collect(Collectors.toList());
+        return instruments.size() > 10 ? instruments.subList(0, 10) : instruments;
     }
 
     public ResultBean queryFuturesInstrument(String stockCode) {

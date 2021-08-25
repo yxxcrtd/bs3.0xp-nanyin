@@ -1,0 +1,3 @@
+DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='FinPlanNetAsset002' AND ELEMENT_ID = 'bussFinRecomment';
+insert into SYS_ELEMENT_CONTROL (PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
+values ('FinPlanNetAsset002','bussFinRecomment','bussFinRecommentDto','资产推荐方及费率信息','02','02','02',null);

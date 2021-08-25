@@ -18,8 +18,8 @@ public class ExchangeCommonService extends BaseService {
         return restTemplate.getForObject(ServiceApplication.EXCHANGE_SERVICE_NAME + TradeServiceURL.prefix + TradeServiceURL.queryFairCode + param, ResultBean.class);
     }
 
-    public ResultBean queryInstrument(String param, HttpEntity<List<String>> body) {
-        return restTemplate.postForObject(ServiceApplication.EXCHANGE_SERVICE_NAME + TradeServiceURL.prefix + TradeServiceURL.queryInstrument + param, body, ResultBean.class);
+    public ResultBean queryInstrument(String param) {
+        return restTemplate.getForObject(ServiceApplication.EXCHANGE_SERVICE_NAME + TradeServiceURL.prefix + TradeServiceURL.queryInstrument + param, ResultBean.class);
     }
 
     public ResultBean queryFuturesInstrument(String param, HttpEntity<List<String>> body) {

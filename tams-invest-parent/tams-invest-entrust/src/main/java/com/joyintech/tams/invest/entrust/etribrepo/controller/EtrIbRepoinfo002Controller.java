@@ -283,7 +283,7 @@ public class EtrIbRepoinfo002Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-
+        dto.setAssetType1(DictCodeList.回购类型_质押式回购.getValue());
         //设置默认的投资经理
         dto.setInvManagerId(LoginUserUtil.getUserName());
 

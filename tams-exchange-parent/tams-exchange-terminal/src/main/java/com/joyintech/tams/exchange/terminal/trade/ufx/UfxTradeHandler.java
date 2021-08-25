@@ -3,7 +3,6 @@ package com.joyintech.tams.exchange.terminal.trade.ufx;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.hundsun.t2sdk.common.share.dataset.DatasetService;
 import com.hundsun.t2sdk.interfaces.share.dataset.IDataset;
 import com.hundsun.t2sdk.interfaces.share.dataset.IDatasets;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
@@ -12,8 +11,10 @@ import com.joyintech.tams.exchange.common.constant.EntrustStatus;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.Prefixion;
 import com.joyintech.tams.exchange.common.db.domain.*;
+import com.joyintech.tams.exchange.common.utils.ErrorMsgUtils;
 import com.joyintech.tams.exchange.terminal.constant.AccountLoginStatus;
 import com.joyintech.tams.exchange.terminal.trade.TradeResponseImpl;
+import com.joyintech.tams.exchange.terminal.trade.ufx.log.util.UfxLogPrintUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ public class UfxTradeHandler {
     private UfxTradeApi ufxTradeApi;
     private TradeResponseImpl ufxTradeResponse;
     private UfxTradeClientImpl ufxTradeClient;
+    private UfxMD ufxMD;
 
     public TradeResponseImpl getUfxTradeResponse() {
         return ufxTradeResponse;
@@ -60,15 +62,15 @@ public class UfxTradeHandler {
         }
         LoginInfo loginInfo = UfxConverter.parseLoginMsg(ds, fundAccount);
         try {
-            List<ClientStkacct> clientStkacctList = ufxTradeApi.ReqClientStkacct(account.getPwd(), loginInfo.getBranchNo(), loginInfo.getClientId(), loginInfo.getUserToken());
+            List<ClientStkacct> clientStkacctList = ufxTradeApi.ReqClientStkacct(account.getPwd(), loginInfo.getBranchNo(), loginInfo.getClientId(), fundAccount, loginInfo.getUserToken());
             if (clientStkacctList != null) {
                 logger.info("clientStkacctList:{}", JSON.toJSONString(clientStkacctList).toString());
                 loginInfo.setClientStkacctList(clientStkacctList);
             }
             loginInfoMap.put(fundAccount, loginInfo);
-            //TODO::登录成功后，订阅委托成交主推
-            //ufxTradeHandler.ufxMD.ReqSubTradeReturn(loginInfo.getFundAccount(), loginInfo.getBranchNo());//订阅-成交主推-证券成交回报
-            // ufxTradeHandler.ufxMD.ReqSubOrderReturn(loginInfo.getFundAccount(), loginInfo.getBranchNo()); //订阅-成交主推-证券委托回报
+            //登录成功后，订阅委托成交主推
+            ufxMD.reqSubTradeReturn(loginInfo.getFundAccount(), loginInfo.getBranchNo());//订阅-成交主推-证券成交回报
+            ufxMD.reqSubOrderReturn(loginInfo.getFundAccount(), loginInfo.getBranchNo()); //订阅-成交主推-证券委托回报
             ResultBean resultBean = new ResultBean(ErrorCode.SUCCESS.value, "ufx reqLogin SUCCESS");
             resultBean.setData(account);
             ufxTradeResponse.resLogin(resultBean, account.getId());
@@ -89,8 +91,7 @@ public class UfxTradeHandler {
     public void onOrderAck(IDatasets result, int errorCode, String errorInfo, String id) {
         IDataset ds = result.getDataset(0);
         id = Prefixion.ENTRUST_PREFIXION.value + id;
-        logger.info("onOrderAck result:  - errorCode: {} id:{}", errorCode, id);
-        DatasetService.printDataset(ds);
+        logger.info("onOrderAck result:  {}", UfxLogPrintUtils.logDatasetInfo(ds));
         Entrust entrust = new Entrust();
         entrust.setId(id);
         entrust.setAccountId(ufxTradeClient.getAccountIdByEntrustId(id));
@@ -98,7 +99,7 @@ public class UfxTradeHandler {
             logger.warn("onOrderAck failed reason:{}", ds.getString("error_info"));
             entrust.setErrorCode(errorCode);
             entrust.setEntrustStatus(EntrustStatus.INVALID.value);
-            entrust.setErrorMsg(ds.getString("error_info"));
+            entrust.setErrorMsg(ErrorMsgUtils.subErrorMsg(ds.getString("error_info")));
             ufxTradeResponse.resEntrust(entrust);
             return;
         }
@@ -115,10 +116,14 @@ public class UfxTradeHandler {
      */
     public void onCancelOrder(IDatasets result, int errorCode, String errorInfo, String id) {
         IDataset ds = result.getDataset(0);
+        logger.info("onCancelOrder result: {}", UfxLogPrintUtils.logDatasetInfo(ds));
         id = Prefixion.ENTRUST_PREFIXION.value + id;
-        logger.info("onCancelOrder result:  - errorCode: {}  id:{}", errorCode, id);
-        DatasetService.printDataset(ds);
-        CancelEntrustBean cancelEntrustBean = new CancelEntrustBean();
+        CancelEntrustBean cancelEntrustBean = ufxTradeClient.getEntrustByCancelId(id);
+        if (Objects.isNull(cancelEntrustBean)) {
+            cancelEntrustBean = new CancelEntrustBean();
+            cancelEntrustBean.setId(id);
+            logger.error("未找到撤单委托缓存信息，请确认原因  cancelId:{}", id);
+        }
         cancelEntrustBean.setAgentType(AgentType.UFX.value);
         cancelEntrustBean.setCancelId(id);
         cancelEntrustBean.setAccountId(ufxTradeClient.getAccountIdByEntrustId(id));
@@ -126,7 +131,7 @@ public class UfxTradeHandler {
             logger.warn("onCancelOrder failed reason:{}", ds.getString("error_info"));
             cancelEntrustBean.setErrorCode(errorCode);
             cancelEntrustBean.setEntrustStatus(EntrustStatus.INVALID.value);
-            cancelEntrustBean.setErrorMsg(ds.getString("error_info"));
+            cancelEntrustBean.setErrorMsg(ErrorMsgUtils.subErrorMsg(ds.getString("error_info")));
             ufxTradeResponse.resCancelEntrust(cancelEntrustBean);
             return;
         }
@@ -158,14 +163,13 @@ public class UfxTradeHandler {
     public void onIntegratedEntrust(IDatasets result, int errorCode, String errorInfo, String id) {
         IDataset ds = result.getDataset(0);
         id = Prefixion.INTEGRATEDENTRUST_PREFIXION.value + id;
-        logger.info("onIntegratedEntrust reback :  id:{} ", id);
-        DatasetService.printDataset(ds);
+        logger.info("onIntegratedEntrust result:  {}", UfxLogPrintUtils.logDatasetInfo(ds));
         IntegratedEntrust integratedEntrust = new IntegratedEntrust();
         integratedEntrust.setId(id);
         integratedEntrust.setAccountId(ufxTradeClient.getAccountIdByEntrustId(id));
         if (errorCode != ErrorCode.SUCCESS.value) {
             integratedEntrust.setEntrustStatus(EntrustStatus.INVALID.value);
-            integratedEntrust.setErrorMsg(ds.getString("error_info"));
+            integratedEntrust.setErrorMsg(ErrorMsgUtils.subErrorMsg(ds.getString("error_info")));
             integratedEntrust.setErrorCode(errorCode);
             logger.warn("integratedEntrust failed ErrorNo:{}，reason:{}", errorCode, ds.getString("error_info"));
             ufxTradeResponse.resIntegratedEntrust(integratedEntrust);
@@ -188,17 +192,21 @@ public class UfxTradeHandler {
      */
     public void onCancelIntegratedEntrust(IDatasets result, int errorCode, String errorInfo, String id) {
         IDataset ds = result.getDataset(0);
-        CancelEntrustBean cancelEntrustBean = new CancelEntrustBean();
+        logger.info("onCancelIntegratedEntrust result:  {}", UfxLogPrintUtils.logDatasetInfo(ds));
         id = Prefixion.INTEGRATEDENTRUST_PREFIXION.value + id;
+        CancelEntrustBean cancelEntrustBean = ufxTradeClient.getEntrustByCancelId(id);
+        if (Objects.isNull(cancelEntrustBean)) {
+            cancelEntrustBean = new CancelEntrustBean();
+            cancelEntrustBean.setId(id);
+            logger.error("未找到综合委托撤单委托缓存信息，请确认原因  cancelId:{}", id);
+        }
         cancelEntrustBean.setCancelId(id);
-        cancelEntrustBean = ufxTradeClient.getEntrustByCancelId(id);
         cancelEntrustBean.setAgentType(AgentType.UFX.value);
-        logger.info("cancelIntegratedEntrust reback : ");
-        DatasetService.printDataset(ds);
+        cancelEntrustBean.setAccountId(ufxTradeClient.getAccountIdByEntrustId(id));
         if (errorCode != ErrorCode.SUCCESS.value) {
             logger.warn("cancelIntegratedEntrust failed ErrorNo:{}，reason:{}", errorCode, ds.getString("error_info"));
             cancelEntrustBean.setEntrustStatus(EntrustStatus.INVALID.value);
-            cancelEntrustBean.setErrorMsg(ds.getString("error_info"));
+            cancelEntrustBean.setErrorMsg(ErrorMsgUtils.subErrorMsg(ds.getString("error_info")));
             cancelEntrustBean.setErrorCode(errorCode);
             ufxTradeResponse.resCancelIntegratedEntrust(cancelEntrustBean);
             return;
@@ -218,4 +226,13 @@ public class UfxTradeHandler {
     public void setUfxTradeApi(UfxTradeApi ufxTradeApi) {
         this.ufxTradeApi = ufxTradeApi;
     }
+
+    public UfxMD getUfxMD() {
+        return ufxMD;
+    }
+
+    public void setUfxMD(UfxMD ufxMD) {
+        this.ufxMD = ufxMD;
+    }
+
 }

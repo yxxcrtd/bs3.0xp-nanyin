@@ -27,31 +27,31 @@ public class TcpClientConfig {
     @Value("${agent.servers}")
     private String servers;
 
-    @Value("${netty.thread.num.worker}")
+    @Value("${netty.thread.num.worker:2}")
     private int workerNum;
 
-    @Value("${netty.timeout}")
+    @Value("${netty.timeout:10000}")
     private int timeout;
 
-    @Value("${netty.idle.read}")
+    @Value("${netty.idle.read:20}")
     private int readIdleSecond;
 
-    @Value("${netty.idle.write}")
+    @Value("${netty.idle.write:10}")
     private int writeIdleSecond;
 
-    @Value("${netty.idle.all}")
+    @Value("${netty.idle.all:0}")
     private int allIdleSecond;
 
-    @Value("${netty.buffer.recv}")
+    @Value("${netty.buffer.recv:4194304}")
     private int nettyRecvBufferSize;
 
-    @Value("${netty.buffer.send}")
+    @Value("${netty.buffer.send:4194304}")
     private int nettySendBufferSize;
 
-    @Value("${netty.buffer.write.high}")
+    @Value("${netty.buffer.write.high:524288}")
     private int nettyWriteBufferHighKB;
 
-    @Value("${netty.buffer.write.low}")
+    @Value("${netty.buffer.write.low:32768}")
     private int nettyWriteBufferLowKB;
 
     @Bean(name = "serverBootstrap")

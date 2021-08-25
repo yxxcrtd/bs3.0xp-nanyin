@@ -139,7 +139,10 @@
     /**
      * 画面加载完成
      */
+    var dynview;
     $(function() {
+        dynview = new DynamicView("CfetsRepoDealQuotedPrHq", "CfetsRepoDealQuotedPrHq_dyn");
+        dynview.init();
     });
 
 }());

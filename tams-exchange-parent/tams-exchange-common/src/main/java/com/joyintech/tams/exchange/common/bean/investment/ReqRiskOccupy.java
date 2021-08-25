@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.common.bean.investment;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 风控实占请求bean
@@ -61,6 +62,11 @@ public class ReqRiskOccupy {
      * 资产代码（有资产代码必填）
      */
     private String assetCode;
+
+    /**
+     * 抵押券资产代码
+     */
+    private List<String> pledgeAssetCodeList;
 
     /**
      * 系统资产大类(没有资产代码必填)
@@ -258,6 +264,14 @@ public class ReqRiskOccupy {
 
     public void setAssetCode(String assetCode) {
         this.assetCode = assetCode;
+    }
+
+    public List<String> getPledgeAssetCodeList() {
+        return pledgeAssetCodeList;
+    }
+
+    public void setPledgeAssetCodeList(List<String> pledgeAssetCodeList) {
+        this.pledgeAssetCodeList = pledgeAssetCodeList;
     }
 
     public String getAssetType() {

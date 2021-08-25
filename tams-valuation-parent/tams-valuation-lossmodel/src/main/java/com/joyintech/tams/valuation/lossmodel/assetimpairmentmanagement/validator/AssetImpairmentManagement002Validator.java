@@ -57,21 +57,20 @@ public class AssetImpairmentManagement002Validator implements BeanValidator{
             validParam1.setWorkflowId(dto.getWorkflowId());
             validParam1.setPageId(processMark1.getPageId());
 
-            validParam1.setBusinessDataPk2(dto.getBussNo());
             validParam1.setBusinessDataPk3(dto.getDecDateFmt());
             if(!"".equals(validParam1.getBusinessDataPk2()) && !"".equals(validParam1.getBusinessDataPk3())){
                 if (mstWorkflowCommonService.isInWflProcess(validParam1)) {
                     // 流程存在情况
-                    resultList.add(new ValidMessage(getMessage("COMMON_E_0021", "标识", dto.getBussNo() + ":" + dto.getDecDateFmt())));
+                    resultList.add(new ValidMessage(getMessage("COMMON_E_0021", "标识", dto.getAssetId() + ":" + dto.getDecDateFmt())));
                     return resultList;
                 }
             }
 
             if(GlobalConstant.DETAIL_PAGE_MODEL_NEW.equals(dto.getPageModel())){
-                if(dto.getProdId() != null && dto.getBussNo() != null && dto.getDecDate() != null){
+                if(dto.getProdId() != null && dto.getAssetId() != null && dto.getDecDate() != null){
                     int count = assetImpairmentManagement002Service.findDuplicateData(dto);
                     if(count > 0){
-                        resultList.add(new ValidMessage("[" + dto.getProdId() + "]产品的编号为[" + dto.getBussNo() + "]的交易在[" +DateUtil.format(dto.getDecDate(),"yyyy-MM-dd") + "]已存在减值数据，不可重复提交！"));
+                        resultList.add(new ValidMessage("[" + dto.getProdId() + "]产品的编号为[" + dto.getAssetId() + "]的交易在[" +DateUtil.format(dto.getDecDate(),"yyyy-MM-dd") + "]已存在减值数据，不可重复提交！"));
                     }
                 }
             }

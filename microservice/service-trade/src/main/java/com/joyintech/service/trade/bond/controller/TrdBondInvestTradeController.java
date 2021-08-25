@@ -18,6 +18,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.service.trade.bond.dto.TrdBondInvestTradePdfDto;
 import com.joyintech.service.trade.bond.service.TrdBondCalcService;
 import com.joyintech.tams.invest.common.dto.period.trdfundduration.TrdFundDurationCommonDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -611,5 +612,18 @@ public class TrdBondInvestTradeController {
                 JSON.toJSONString(map), TrdBondInvestTradeDto.class);
         inputDto.setCalculateField("yield");
         return trdBondCalcService.calculateData(inputDto);
+    }
+
+    /**
+     * 查询导出pdf数据 add by zengchengfa 20210730
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("selectExportPdf")
+    public List<TrdBondInvestTradePdfDto> selectExportPdf(@RequestBody Map<String, Object> param)
+            throws Exception {
+        List<TrdBondInvestTradePdfDto > result = trdBondInvestTradeService.selectExportPdf( param);
+        return result;
     }
 }

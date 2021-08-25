@@ -2,7 +2,10 @@ $(function() {
     var editFlag = true;
     var init=function() {
         if(pageModel!=PAGE_MODEL_NEW){
+            $("#finprodId").attr('disabled',true);
             $("#indentifyMark").attr('disabled',true);
+            $("#stockBordsttus").attr('disabled',true);
+            $("#curveCode").attr('disabled',true);
             $("#prdRegistCode").attr('disabled',true);
             $("#ccy").attr('disabled',true);
             $("#holdDate").attr('disabled',true);
@@ -130,5 +133,14 @@ $(function() {
 		$('#ModBintreeConfig002_btn_submit').click(function() {
 			doSubmit();
 		});
+        $('#finprodId').change(function(){
+            if ($('#finprodId').val() != '') {//香港联合交易所
+                $('#finprodName').val($('#finprodId').select2('data')[0].text);
+                $('#stockId').val($('#finprodId').select2('data')[0].object);
+            }else{
+                $('#finprodName').val("");
+                $('#stockId').val("");
+            }
+        });
     }());
 }());

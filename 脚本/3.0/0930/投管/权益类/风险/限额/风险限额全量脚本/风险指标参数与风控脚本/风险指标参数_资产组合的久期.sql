@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='ZCZHJQ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZCZHJQ','资产组合的久期','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZCZHJQ','资产组合的久期','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='ZCZHJQ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCZHJQ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCZHJQ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCZHJQ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCZHJQ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCZHJQ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCZHJQ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCZHJQ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCZHJQ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCZHJQ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCZHJQ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -189,7 +189,7 @@ SELECT NVL(SUM(
     INNER JOIN ASSETJQ JQ ON JQ.FINPROD_ID = PSV.FINPROD_ID
     LEFT JOIN FIN_PRODUCT_TYPE FPT ON FPT.FINPROD_ID = JQ.FINPROD_ID
     WHERE PSV.PORTFOLIO_ID IN  ${portfolioCode} AND PSV.CDATE = DATE''${valDate}''   - 1 
- AND ((PSP.SUB_CODE IS NULL AND FPT.TYPE_8 IN (''F04'',''F09'')) OR FPT.TYPE_8 NOT IN (''F04'',''F09''))
+ AND ((PSV.SUB_CODE IS NULL AND FPT.TYPE_8 IN (''F04'',''F09'')) OR FPT.TYPE_8 NOT IN (''F04'',''F09''))
   UNION ALL
     SELECT T2.TRADE_AMT AS JIAQUANGUIZE, T2.FINPROD_ID,T2.REMAINPERIOD FROM (
         SELECT
@@ -298,7 +298,7 @@ SELECT NVL(SUM(
     WHERE 
        N.PS IN (''C1'', ''C2'',''C3'',''C4'',''C6'',''C5'',''C20'',''C17'',''C18'',''C14'',''C15'',''C7'',''C9'') 
        AND  M.PORTFOLIO_ID IN  ${portfolioCode}  AND N.TRADE_DATE=DATE''${valDate}'' GROUP BY M.PORTFOLIO_ID
- GROUP BY M.PORTFOLIO_ID
+
 )) DATATWO';
 
 ----事后(日终)
@@ -469,7 +469,7 @@ SELECT NVL(sum(CASE WHEN targetData.remainPeriod is null then 0 else NVL(targetD
     INNER JOIN ASSETJQ JQ ON JQ.FINPROD_ID = PSV.FINPROD_ID
     LEFT JOIN FIN_PRODUCT_TYPE FPT ON FPT.FINPROD_ID = JQ.FINPROD_ID
     WHERE PSV.PORTFOLIO_ID in  ${portfolioCode} and PSV.CDATE = DATE''${valDate}'' 
- AND ((PSP.SUB_CODE IS NULL AND FPT.TYPE_8 IN (''F04'',''F09'')) OR FPT.TYPE_8 NOT IN (''F04'',''F09''))
+ AND ((PSV.SUB_CODE IS NULL AND FPT.TYPE_8 IN (''F04'',''F09'')) OR FPT.TYPE_8 NOT IN (''F04'',''F09''))
   UNION ALL
     SELECT 0 as remainPeriod, A.ACCT_ID AS FINPROD_ID, A.AMOUNT as jiaQuanGuiZe
     FROM PTL_CASH_POSITION A

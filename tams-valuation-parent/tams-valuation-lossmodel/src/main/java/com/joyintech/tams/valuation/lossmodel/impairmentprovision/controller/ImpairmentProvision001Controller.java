@@ -4,6 +4,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
@@ -42,6 +43,16 @@ public class ImpairmentProvision001Controller extends BaseController {
         Date sysDate = DateUtil.platDateFromCache();
         String morenDate = DateUtil.format(sysDate);
         model.addAttribute("sysDate", morenDate);
+
+        // 获取 债券类型 数据字典
+        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.债券类型, null);
+        List<SelectOptionDto> options = selectDto.getOptions();
+        // 获取 计划类资产类型 数据字典
+        selectDto = this.getSelectDataFromDataDic(DictCode.计划类资产类型, null);
+        options.addAll(selectDto.getOptions());
+        // 2个数据字典的全部放入一个下拉框中
+        model.addAttribute("busiType", JsonUtils.objectArray2Json(options.toArray()));
+
         return super.init(model);
     }
 

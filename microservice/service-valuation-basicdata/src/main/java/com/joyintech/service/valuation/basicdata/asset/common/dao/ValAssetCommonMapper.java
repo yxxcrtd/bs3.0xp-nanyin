@@ -72,4 +72,12 @@ public interface ValAssetCommonMapper {
      * @since 1.0
      */
     public String getFinanceProductTaxClass(FinProductClass finProductClass);
+
+    /**
+     * 获取市场机构
+     * @param param
+     * @return
+     */
+    List<SelectOptionDto> getCustomerName(Map<String, Object> param);
+
 }

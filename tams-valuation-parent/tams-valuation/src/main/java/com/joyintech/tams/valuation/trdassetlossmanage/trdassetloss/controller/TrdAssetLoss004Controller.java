@@ -166,8 +166,6 @@ public class TrdAssetLoss004Controller extends BaseController {
                 String tradeId = interfCommonService != null ? interfCommonService.getTradeid("TEDLOSS", dto.getValDate(), "A") : IDGenerator.generate();
                 dto.setTradeId(tradeId);
             }
-            //新建、修改录入，存“01 手工”;导入：存“02 中债/wind接入”
-            dto.setLossInputPattern(DictCodeListExt3.减值数据来源_中债_wind接入.getValue());
         }
 
         ProcessParameter<TrdAssetLoss001Dto> processParameter = new ProcessParameter<TrdAssetLoss001Dto>();

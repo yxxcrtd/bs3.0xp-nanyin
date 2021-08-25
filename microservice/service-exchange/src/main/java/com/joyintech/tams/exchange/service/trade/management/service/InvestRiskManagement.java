@@ -233,6 +233,11 @@ public class InvestRiskManagement extends BaseService {
                     reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
                     reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
                     reqRiskOccupy.setAmount(((IntegratedEntrust) entrust).getEntrustBalance());
+                    //要求填入抵押券代码
+                    List<String> pledgeAssetCodeList = new ArrayList<>();
+                    pledgeAssetCodeList.add(entrust.getStockCode());
+                    reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
+
                     //投管要求协议回购这里传入起息日,到期日
                     reqRiskOccupy.setVdate(formatter.format(dateFormat.parse(((IntegratedEntrust) entrust).getFirstSettleDate())));
                     reqRiskOccupy.setMdate(formatter.format(dateFormat.parse(((IntegratedEntrust) entrust).getBackDate())));
@@ -335,6 +340,10 @@ public class InvestRiskManagement extends BaseService {
                         }
                         reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
                         reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                        //要求填入抵押券代码
+                        List<String> pledgeAssetCodeList = new ArrayList<>();
+                        pledgeAssetCodeList.add(order.getStockCode());
+                        reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
                         //投管要求协议回购这里传入起息日,到期日
                         try {
                             reqRiskOccupy.setVdate(formatter.format(dateFormat.parse(((IntegratedEntrust) order).getFirstSettleDate())));

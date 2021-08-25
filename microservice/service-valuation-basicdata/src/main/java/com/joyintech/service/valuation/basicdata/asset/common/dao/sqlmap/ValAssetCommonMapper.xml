@@ -201,4 +201,23 @@
 		    GROUP BY A.TAX_CLASS
 		) T WHERE ROWNUM = 1
 	</select>
+
+	<select id="getCustomerName" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+			CUSTOMER_ID id,
+			CUSTOMER_NAME text
+		from MST_CUSTOMER_INFO
+		<where>
+			<if test="search != null and search != ''">
+				and (CUSTOMER_ID like concat(concat('%',#{search}),'%')
+				or CUSTOMER_NAME like concat(concat('%',#{search}),'%'))
+			</if>
+			<if test="initValue != null and initValue != ''">
+				and CUSTOMER_ID = #{initValue}
+			</if>
+			<if test="isIssuer != null and isIssuer != ''">
+				and IS_ISSUER = #{isIssuer}
+			</if>
+		</where>
+	</select>
 </mapper>

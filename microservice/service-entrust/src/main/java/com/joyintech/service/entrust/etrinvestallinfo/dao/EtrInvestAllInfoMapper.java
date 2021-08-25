@@ -13,6 +13,7 @@ package com.joyintech.service.entrust.etrinvestallinfo.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoExportPdfDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -91,4 +92,11 @@ public interface EtrInvestAllInfoMapper {
      * @since 1.0
      */
     int updateExportPB(Map<String, Object> param);
+
+    /**
+     * 查询导出pdf数据 add by zengchengfa
+     * @param param
+     * @return
+     */
+    List<EtrInvestAllInfoExportPdfDto> selectExportPdf(Map<String, Object> param);
 }

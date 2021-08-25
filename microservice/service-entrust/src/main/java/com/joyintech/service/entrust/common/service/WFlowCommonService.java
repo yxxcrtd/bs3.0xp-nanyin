@@ -2,6 +2,7 @@ package com.joyintech.service.entrust.common.service;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
@@ -27,7 +28,7 @@ public class WFlowCommonService {
      * @param dto
      */
     public static void doInsertFlow(String operateType, BaseEtrInvestInfoDto dto){
-        if ("submit".equals(operateType)) {
+        if ("submit".equals(operateType) || DictCodeList.流程状态_新建.getValue().equals(operateType)) {
             if(StringUtil.isEmpty(dto.getWorkFlowId())){
                 throw new RuntimeException("WorkFlowId初始化不能为空!");
             }

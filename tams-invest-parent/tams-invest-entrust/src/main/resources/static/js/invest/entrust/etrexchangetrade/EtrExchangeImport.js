@@ -117,6 +117,7 @@
     var cols = [
           {field: 'seqNo', title: 'EtrBrowDepoInfo003.indexId', width: 70, sortable: false}
         , {field: 'portfolioId', title: 'EtrBrowDepoInfo001.portfolioId', width: 120, sortable: false}
+        , {field: 'acctNo', title: 'EtrExchangeTrade001.acctNo2', width: 150, sortable: false}
         , {field: 'stockId', title: 'EtrBrowDepoInfo001.finprodId', width: 150, sortable: false}
         , {field: 'psStr', title: 'EtrExchangeTrade001.ps', width: 150, sortable: false}
         , {field: 'priceModelStr', title: 'EtrExchangeTrade003.priceModel',sortable : false, width: 120,edit: false}
@@ -132,7 +133,7 @@
         , {field: 'fprice', title: 'EtrExchangeTrade001.fprice', width:100, type:'number', digit : 3, sortable: false}
         , {field: 'yield', title: 'EtrExchangeImport.yield', width:100, type:'number', digit : 6, sortable: false}
         , {field: 'entrustNum', title: 'EtrExchangeTrade001.entrustNum', width: 120, type:'number', digit : 0, sortable: false}
-        , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt', width: 120, type:'number',sortable: false}
+        , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt2', width: 120, type:'number',sortable: false}
         , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//持仓成本

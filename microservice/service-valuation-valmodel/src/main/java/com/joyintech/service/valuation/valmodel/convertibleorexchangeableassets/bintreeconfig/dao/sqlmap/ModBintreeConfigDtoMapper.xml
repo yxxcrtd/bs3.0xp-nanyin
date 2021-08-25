@@ -287,6 +287,36 @@
     <if test="initValue != null and initValue != ''">
       and (fp.FINPROD_ABBR=#{initValue} or fp.FINPROD_ID =#{initValue})
     </if>
+    <!-- modify by yanya on 20210824 增加按照估值侧的类型进行查询的条件:type1、type2、type3、type18 start-->
+    <if test="type1List != null and type1List.size()>0 ">
+      AND fpt.TYPE_1 IN(
+      <foreach item="item" index="index" collection="type1List" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+    <if test="type2List != null and type2List.size()>0 ">
+      AND fpt.TYPE_2 IN(
+      <foreach item="item" index="index" collection="type2List" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+    <if test="type3List != null and type3List.size()>0 ">
+      AND fpt.TYPE_3 IN(
+      <foreach item="item" index="index" collection="type3List" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+    <if test="type18List != null and type18List.size()>0 ">
+      AND fpt.TYPE_18 IN(
+      <foreach item="item" index="index" collection="type18List" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+    <!-- modify by yanya on 20210824 增加按照估值侧的类型进行查询的条件:type1、type2、type3、type18 end-->
     <if test="type8List != null and type8List.size()>0 ">
       AND fpt.TYPE_8 IN(
       <foreach item="item" index="index" collection="type8List" separator=",">
@@ -338,6 +368,36 @@
         #{item}
       </foreach>
       )
+    </if>
+  </select>
+
+  <select id="getMarketId" resultType="com.joyintech.framework.select.SelectOptionDto" >
+    SELECT
+        CUSTOMER_ID id,
+        CUSTOMER_NAME text
+    FROM MST_CUSTOMER_INFO
+    WHERE 1=1
+      <if test="search != null and search != ''">
+        and (CUSTOMER_ID like concat(concat('%',#{search}),'%')
+        or CUSTOMER_NAME like concat(concat('%',#{search}),'%'))
+      </if>
+      <if test="initValue != null and initValue != ''">
+        and (CUSTOMER_ID=#{initValue} or CUSTOMER_NAME =#{initValue})
+      </if>
+  </select>
+
+  <select id="getCurveCode" resultType="com.joyintech.framework.select.SelectOptionDto" >
+    SELECT
+      CURVE_CODE id,
+      CURVE_NAME text
+    FROM MOD_CURVE_MAPPING
+    WHERE 1=1
+    <if test="search != null and search != ''">
+      and (CURVE_CODE like concat(concat('%',#{search}),'%')
+      or CURVE_NAME like concat(concat('%',#{search}),'%'))
+    </if>
+    <if test="initValue != null and initValue != ''">
+      and (CURVE_CODE=#{initValue} or CURVE_NAME =#{initValue})
     </if>
   </select>
 </mapper>

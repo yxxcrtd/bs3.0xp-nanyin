@@ -8,6 +8,7 @@ $(function() {
     var getSearchParams = function() {
     	var portfolioIdTemp = $('#portfolioId').val();
         var portfolioId= null;
+        var finprodMarketId = $('#finprodMarketId').val();
         if(portfolioIdTemp != null)
             portfolioId=portfolioIdTemp.join(",");
         return {
@@ -17,7 +18,7 @@ $(function() {
             endDate:$('#settleDate').endDate(),
             ps: $('#ps').val(),//收支方向
             finprodType2: $('#finprodType2').val(),//资产类型
-            finprodId: $('#finprodMarketId_hidden').val(),//资产代码
+            finprodId: $('#finprodMarketId').val(),//资产代码
             customCashType:$("#customCashType").val()//业务类型
             ,status: $("#status").val()
         }

@@ -308,6 +308,12 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/doInsert",dto,
              Integer.class);
      }
+
+    @Override
+    public void doBack(EtrInvestBondInfoDto entity) {
+
+    }
+
     /**
      *
      * 删除投资委托
@@ -1282,10 +1288,12 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
             // 行权收益率（%）
             if (StringUtil.isNotBlank(rowData.get(10).toString())) {
                 etrInvestBondInfoDto.setExerYield(new BigDecimal(rowData.get(10).toString()));
+                etrInvestBondInfoDto.setExerYield(etrInvestBondInfoDto.getExerYield().setScale(2,RoundingMode.HALF_UP));
             }
             // 到期收益率（%）
             if (StringUtil.isNotBlank(rowData.get(11).toString())) {
                 etrInvestBondInfoDto.setMatureYield(new BigDecimal(rowData.get(11).toString()));
+                etrInvestBondInfoDto.setMatureYield(etrInvestBondInfoDto.getMatureYield().setScale(2,RoundingMode.HALF_UP));
             }
             // 最低成交金额
             if (StringUtil.isNotBlank(rowData.get(12).toString())) {
@@ -1439,6 +1447,7 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                         this.calcAmt(temp);
                         etrInvestBondInfoDto.setFpriceAmt(temp.getUnitFprice());
                         etrInvestBondInfoDto.setMatureYield(temp.getMatureYield());
+                        etrInvestBondInfoDto.setMatureYield(etrInvestBondInfoDto.getMatureYield().setScale(2,RoundingMode.HALF_UP));
                     }
                 }
                 catch (Exception e) {

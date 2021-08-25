@@ -312,10 +312,16 @@ function hideLeftTopPanel(){
     $("div.left_bottom_panel").each(function(i,v){
         $(v).css("display","none");
     });
+    $("div.top_panel").each(function(i,v){
+        $(v).css("display","none");
+    });
 }
 
 function showLeftTopPanel(){
     $("div.left_bottom_panel").each(function(i,v){
+        $(v).css("display","inline");
+    });
+    $("div.top_panel").each(function(i,v){
         $(v).css("display","inline");
     });
 }
@@ -359,17 +365,32 @@ var importEtr = function() {
 $(function() {
 
 	var init = function() {
-        Split(["#top_panel_dev", "#bottom_panel_dev"], {
-            sizes: [48, 44],
-            minSize: 100,
-            direction: "vertical"
-        });
 
-        Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
-            sizes: [25, 75],
-            minSize: [200, 700],
-            direction: "horizontal"
-        });
+        if(pageModel==PAGE_MODEL_NEW){
+            Split(["#top_panel_dev", "#bottom_panel_dev"], {
+                sizes: [48, 44],
+                minSize: 100,
+                direction: "vertical"
+            });
+
+            Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
+                sizes: [25, 75],
+                minSize: [200, 700],
+                direction: "horizontal"
+            });
+        }else{
+            Split(["#top_panel_dev", "#bottom_panel_dev"], {
+                sizes: [0, 90],
+                minSize: 0,
+                direction: "vertical"
+            });
+
+            Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
+                sizes: [0, 100],
+                minSize: [0, 0],
+                direction: "horizontal"
+            });
+        }
 	}
 	
 	init();

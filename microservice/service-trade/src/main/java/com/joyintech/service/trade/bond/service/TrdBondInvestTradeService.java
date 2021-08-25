@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.service.trade.bond.dto.TrdBondInvestTradePdfDto;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
@@ -1034,4 +1035,21 @@ public class TrdBondInvestTradeService extends BaseService {
 		String fTradeId = (String) map.get("fTradeId");
 		return trdBondInvestTradeMapper.selectInterfTradSecdeal(fTradeId);
 	}
+
+    /**
+     * 查询导出pdf数据 add by zengchengfa
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public List<TrdBondInvestTradePdfDto> selectExportPdf(Map<String, Object> param) throws Exception{
+        if (StringUtil.isNotEmpty(param.get("selectedItem"))){
+            List<String> selectedItem = StringUtil.splitToList(",",(String)param.get("selectedItem"));
+            if(selectedItem.size() > 0){
+                param.put("tradeIdList",selectedItem);
+            }
+        }
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+        return trdBondInvestTradeMapper.selectExportPdf(param);
+    }
 }

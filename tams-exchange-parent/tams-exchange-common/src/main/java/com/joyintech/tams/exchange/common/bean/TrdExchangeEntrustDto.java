@@ -24,8 +24,6 @@ public class TrdExchangeEntrustDto extends BaseEntity implements ProcessEntity {
 
     private OrderPlaceBean orderPlaceBean;
 
-    private String portfolioId;
-
     /**
      * 操作类型
      */
@@ -75,14 +73,6 @@ public class TrdExchangeEntrustDto extends BaseEntity implements ProcessEntity {
      * 提交标识
      */
     private String submit;
-
-    public String getPortfolioId() {
-        return portfolioId;
-    }
-
-    public void setPortfolioId(String portfolioId) {
-        this.portfolioId = portfolioId;
-    }
 
     @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getEventId() {

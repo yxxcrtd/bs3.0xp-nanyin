@@ -95,4 +95,13 @@
 			</if>
 		</where>
 	</select>
+
+	<select id="qryPortfolioIdInfo" resultType="com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry">
+		SELECT
+		PP.*
+		FROM ptl_portfolio pp
+		WHERE  pp.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+	</select>
+
+
 </mapper>

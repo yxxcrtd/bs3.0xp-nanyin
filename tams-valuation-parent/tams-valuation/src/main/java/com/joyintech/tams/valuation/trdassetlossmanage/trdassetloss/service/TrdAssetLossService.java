@@ -384,6 +384,9 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                     trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("新建减值流水的初始确认日与初始确认截止日的区间，不能包含相同资产、相同行情日、相同代偿期的有效流水的初始确认日到截止日区间!!"));
                 }
             }
+            //新建、修改录入，存“01 手工”;导入：存“02 wind接入”   03 中债接入  04模型
+            trdAssetLoss001Dto.setLossInputPattern(DictCodeListExt3.减值数据来源_wind接入.getValue());
+
             trdAssetLoss001DtoList.add(trdAssetLoss001Dto);
         }
         for (int i = 0; i < trdAssetLoss001DtoList.size(); i++) {
@@ -594,6 +597,8 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                     trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("新建减值流水的初始确认日与初始确认截止日的区间，不能包含相同资产、相同行情日、相同代偿期的有效流水的初始确认日到截止日区间!"));
                 }
             }
+            //新建、修改录入，存“01 手工”;导入：存“02 wind接入”   03 中债接入  04模型
+            trdAssetLoss001Dto.setLossInputPattern(DictCodeListExt3.减值数据来源_中债接入.getValue());
             trdAssetLoss001DtoEclList.add(trdAssetLoss001Dto);
         }
         for (int i = 0; i < trdAssetLoss001DtoEclList.size(); i++) {

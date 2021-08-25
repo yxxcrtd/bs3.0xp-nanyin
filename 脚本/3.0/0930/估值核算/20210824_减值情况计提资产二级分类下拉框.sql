@@ -1,0 +1,19 @@
+--减值情况计提查询页资产二级分类下拉框
+delete from sys_page_dictlist where PAGE_ID='ImpairmentProvision001' and DICT_ID='PLANNED_TYPE';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ImpairmentProvision001', '999999', 'PLANNED_TYPE', '01', '非标债权', null, 'system', null, '10-JUN-21 03.16.12.000000 PM', 'system', '10-JUN-21 03.16.12.000000 PM', null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ImpairmentProvision001', '999999', 'PLANNED_TYPE', '02', '结构化证券', null, 'system', null, '10-JUN-21 03.16.12.000000 PM', 'system', '10-JUN-21 03.16.12.000000 PM', null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ImpairmentProvision001', '999999', 'PLANNED_TYPE', '03', '股票定向增发', null, 'system', null, '10-JUN-21 03.16.12.000000 PM', 'system', '10-JUN-21 03.16.12.000000 PM', null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ImpairmentProvision001', '999999', 'PLANNED_TYPE', '04', '股票质押式回购', null, 'system', null, '10-JUN-21 03.16.12.000000 PM', 'system', '10-JUN-21 03.16.12.000000 PM', null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ImpairmentProvision001', '999999', 'PLANNED_TYPE', '05', '信贷资产流转项目', null, 'system', null, '10-JUN-21 03.16.12.000000 PM', 'system', '10-JUN-21 03.16.12.000000 PM', null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ImpairmentProvision001', '999999', 'PLANNED_TYPE', '06', '券商收益凭证', null, 'system', null, '10-JUN-21 03.16.12.000000 PM', 'system', '10-JUN-21 03.16.12.000000 PM', null);

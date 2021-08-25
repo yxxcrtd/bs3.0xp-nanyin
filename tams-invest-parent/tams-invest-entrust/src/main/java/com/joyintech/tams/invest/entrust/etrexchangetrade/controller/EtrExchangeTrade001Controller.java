@@ -808,7 +808,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
 	    dto.setCreateTime(new Date());// 创建时间
 		ProcessParameter<EtrExchangeTrade001Dto> processParameter = new ProcessParameter<EtrExchangeTrade001Dto>();
 		WorkFlowParameter<EtrExchangeTrade001Dto> params = etrExchangeTrade001Service.getWorkFlowParameter(dto);
-		params.setPageId("EtrExchangeTrade001");
+		params.setPageId("EtrExchangeTradeMain");
 		params.setElementId(dto.getElementId());
 		params.setBusinessType(businessType);
 		params.setBusinessCode(dto.getEntrustId());

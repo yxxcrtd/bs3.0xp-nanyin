@@ -286,9 +286,9 @@ public class RiskUtil {
 			expMap=dealParamMinMax(fixParamList,expArr,expMap,RiskUtil.MAX);
 		}
 		//无禁止线不出指标end
-		if(cond.indexOf("<")>-1||cond.indexOf("<=")>-1){
-			expMap=dealParamMinMax(fixParamList,expArr,expMap,RiskUtil.MIN);
-		}
+//		if(cond.indexOf("<")>-1||cond.indexOf("<=")>-1){
+//			expMap=dealParamMinMax(fixParamList,expArr,expMap,RiskUtil.MIN);
+//		}
 		for (Map.Entry<String, String> entry : expMap.entrySet()) {
 			expArr[0]=expArr[0].replaceAll(entry.getKey()+RiskUtil.paramSuff,entry.getValue()+RiskUtil.paramSuff);
 		}

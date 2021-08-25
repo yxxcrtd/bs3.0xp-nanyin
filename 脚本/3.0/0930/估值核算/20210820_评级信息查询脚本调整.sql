@@ -6,7 +6,7 @@ values ('ASSET_MANAGEMENT_001_003_019', 'COM', null, 'ASSET_MANAGEMENT_001_003',
 
 DELETE FROM SYS_PAGE where PAGE_ID = 'ComMarketManagement';
 insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ComMarketManagement', 'COM', '/common/basicdata/commarketmanagement/ComMarketManagement', 'common/basicdata/commarketmanagement/ComMarketManagement', 'ASSET_MANAGEMENT_001_003_019', null, null, '02', '01', '评级信息查询', 'system', null, '10-10月-19 12.00.00.000000 上午', 'system', '10-10月-19 12.00.00.000000 上午');
+values ('ComMarketManagement', 'COM', '/valuation/basicdata/commarketmanagement/ComMarketManagement', 'valuation/basicdata/commarketmanagement/ComMarketManagement', 'ASSET_MANAGEMENT_001_003_019', null, null, '02', '01', '评级信息查询', 'system', null, '10-10月-19 12.00.00.000000 上午', 'system', '10-10月-19 12.00.00.000000 上午');
 
 DELETE FROM SYS_PAGE_ELEMENT where PAGE_ID = 'ComMarketManagement';
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG)

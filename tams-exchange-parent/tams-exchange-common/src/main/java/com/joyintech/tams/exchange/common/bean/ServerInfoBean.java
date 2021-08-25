@@ -17,6 +17,15 @@ public class ServerInfoBean {
 
     private String userProductInfo;//期货账户客户端信息
     private String opEntrustWay; //委托方式
+    /**
+     * ufx主推消息订阅主题名
+     */
+    private String entrustTopicName;//委托主题名称
+    private String tradeTopicName;//成交主题名称
+
+    private String ufxTradeClientName; //ufx配置文件交易节点
+    private String ufxSubClientName; //ufx配置文件订阅节点
+    private String ufxBrokerType; //ufx 券商类型
 
     public String getOppositeLiaisonTel() {
         return oppositeLiaisonTel;
@@ -104,5 +113,45 @@ public class ServerInfoBean {
 
     public void setOpEntrustWay(String opEntrustWay) {
         this.opEntrustWay = opEntrustWay;
+    }
+
+    public String getEntrustTopicName() {
+        return entrustTopicName;
+    }
+
+    public void setEntrustTopicName(String entrustTopicName) {
+        this.entrustTopicName = entrustTopicName;
+    }
+
+    public String getTradeTopicName() {
+        return tradeTopicName;
+    }
+
+    public void setTradeTopicName(String tradeTopicName) {
+        this.tradeTopicName = tradeTopicName;
+    }
+
+    public String getUfxTradeClientName() {
+        return ufxTradeClientName;
+    }
+
+    public void setUfxTradeClientName(String ufxTradeClientName) {
+        this.ufxTradeClientName = ufxTradeClientName;
+    }
+
+    public String getUfxSubClientName() {
+        return ufxSubClientName;
+    }
+
+    public void setUfxSubClientName(String ufxSubClientName) {
+        this.ufxSubClientName = ufxSubClientName;
+    }
+
+    public String getUfxBrokerType() {
+        return ufxBrokerType;
+    }
+
+    public void setUfxBrokerType(String ufxBrokerType) {
+        this.ufxBrokerType = ufxBrokerType;
     }
 }

@@ -41,7 +41,7 @@ public class LoginJob {
     private InvestmentManagement investmentManagement;
     @Autowired
     private TradeAgentManager tradeAgentManager;
-    @Value("${terminal.default}")
+    @Value("${terminal.default:default}")
     private String defaultTerminal;
 
 

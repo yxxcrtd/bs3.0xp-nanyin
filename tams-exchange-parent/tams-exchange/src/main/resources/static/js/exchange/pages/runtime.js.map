@@ -1,1 +1,5 @@
-{"version":3,"file":"pages/runtime.js","sources":["webpack:///pages/runtime.js"],"mappings":"AAAA","sourceRoot":""}
+```json
+{
+"version": 3, "file":"pages/runtime.js", "sources":["webpack:///pages/runtime.js"], "mappings": "AAAA", "sourceRoot": ""
+}
+```

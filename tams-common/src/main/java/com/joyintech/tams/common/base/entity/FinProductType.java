@@ -62,6 +62,36 @@ public class FinProductType extends FinProductTypeKey {
     private String type12;
 
     /**
+     * 风险资产分类1
+     */
+    private String type13;
+
+    /**
+     * 风险资产分类2
+     */
+    private String type14;
+
+    /**
+     * 风险资产分类3
+     */
+    private String type15;
+
+    /**
+     * 风险资产分类4
+     */
+    private String type16;
+
+    /**
+     * 风险资产分类5
+     */
+    private String type17;
+
+    /**
+     * 估值核算-证券品种
+     */
+    private String type18;
+
+    /**
      * 取得 分类1
      * @return 分类1
      */
@@ -251,5 +281,101 @@ public class FinProductType extends FinProductTypeKey {
      */
     public void setType12(String type12) {
         this.type12 = type12 == null ? null : type12.trim();
+    }
+
+    /**
+     * 取得 风险资产分类1
+     * @return 风险资产分类1
+     */
+    public String getType13() {
+        return type13;
+    }
+
+    /**
+     * 设置 风险资产分类1
+     * @param type13 风险资产分类1
+     */
+    public void setType13(String type13) {
+        this.type13 = type13 == null ? null : type13.trim();
+    }
+
+    /**
+     * 取得 风险资产分类2
+     * @return 风险资产分类2
+     */
+    public String getType14() {
+        return type14;
+    }
+
+    /**
+     * 设置 风险资产分类2
+     * @param type14 风险资产分类2
+     */
+    public void setType14(String type14) {
+        this.type14 = type14 == null ? null : type14.trim();
+    }
+
+    /**
+     * 取得 风险资产分类3
+     * @return 风险资产分类3
+     */
+    public String getType15() {
+        return type15;
+    }
+
+    /**
+     * 设置 风险资产分类3
+     * @param type15 风险资产分类3
+     */
+    public void setType15(String type15) {
+        this.type15 = type15 == null ? null : type15.trim();
+    }
+
+    /**
+     * 取得 风险资产分类4
+     * @return 风险资产分类4
+     */
+    public String getType16() {
+        return type16;
+    }
+
+    /**
+     * 设置 风险资产分类4
+     * @param type16 风险资产分类4
+     */
+    public void setType16(String type16) {
+        this.type16 = type16 == null ? null : type16.trim();
+    }
+
+    /**
+     * 取得 风险资产分类5
+     * @return 风险资产分类5
+     */
+    public String getType17() {
+        return type17;
+    }
+
+    /**
+     * 设置 风险资产分类5
+     * @param type17 风险资产分类5
+     */
+    public void setType17(String type17) {
+        this.type17 = type17 == null ? null : type17.trim();
+    }
+
+    /**
+     * 取得 估值核算-证券品种
+     * @return 估值核算-证券品种
+     */
+    public String getType18() {
+        return type18;
+    }
+
+    /**
+     * 设置 估值核算-证券品种
+     * @param type18 估值核算-证券品种
+     */
+    public void setType18(String type18) {
+        this.type18 = type18 == null ? null : type18.trim();
     }
 }

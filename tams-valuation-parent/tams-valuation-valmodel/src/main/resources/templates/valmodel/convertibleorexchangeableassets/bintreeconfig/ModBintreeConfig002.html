@@ -14,10 +14,15 @@
 				<div class="layui-inline layui-col-md6">
 					<label class="layui-form-label form-lable">资产代码</label>
 					<div class="layui-input-inline input-inline">
-						<input type="text" id="finprodId" name="finprodId" disabled="true"
+						<!--<input type="text" id="finprodId" name="finprodId"
 							class="layui-input form-input" placeholder="请输入内容"
 							data-th-placeholder="#{SysCommon.placeholder}"
-							data-th-value="${entity?.finprodId}" required/>
+							data-th-value="${entity?.finprodId}" required/>-->
+						<select id="finprodId" name="finprodId"
+								class="layui-input form-input input-select" allowClear="true"
+								data-th-placeholder="#{SysCommon.placeholder}"
+								data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001/getFinprodIdForBintree}"
+								data-th-initvalue="${entity?.finprodId}"></select>
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
@@ -36,7 +41,7 @@
 					<label class="layui-form-label form-lable">标的公司上市状态</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" id="stockBordsttus" name="stockBordsttus"
-							disabled="true" class="layui-input form-input input-select"
+							   class="layui-input form-input input-select"
 							placeholder="请输入内容"
 							data-th-placeholder="#{SysCommon.placeholder}"
 							data-th-value="${entity?.stockBordsttus}"
@@ -73,7 +78,7 @@
 						<select id="compStockid" name="compStockid"
 							class="tabJump layui-input form-input input-select" allowClear="true"
 							data-th-placeholder="#{SysCommon.placeholder}" 
-							data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001/getFinprodIdForBintree}"
+							data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001/getFinprodIdForBintree(IS_GP=${YES_OR_NO_Y})}"
 							data-th-initvalue="${entity?.compStockid}"></select>
 					</div>
 				</div>
@@ -144,12 +149,20 @@
 				<div class="layui-inline layui-col-md6">
 					<label class="layui-form-label form-lable">无风险利率曲线名称</label>
 					<div class="layui-input-inline input-inline">
-						<input type="text" id="curveCode" name="curveCode"
+						<!--<input type="text" id="curveCode" name="curveCode"
 							disabled="true" class="layui-input form-input input-select"
 							placeholder="请输入内容"
 							data-th-placeholder="#{SysCommon.placeholder}"
 							data-th-value="${entity?.curveCode}"
-							data-th-data-result='${CURVE_CODE}' required/>
+							data-th-data-result='${CURVE_CODE}' required/>-->
+						<select type="text" id="curveCode"
+								data-th-initvalue='${entity?.curveCode}' name="curveCode"
+								formatoption="true"
+								class="layui-input form-input input-select"
+								data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002/getCurveCode}"
+								placeholder="请输入内容"
+								data-th-placeholder="#{SysCommon.placeholder}">
+						</select>
 					</div>
 				</div>
 			</div>

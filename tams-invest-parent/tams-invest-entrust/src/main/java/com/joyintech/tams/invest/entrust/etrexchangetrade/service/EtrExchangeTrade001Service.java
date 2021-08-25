@@ -152,9 +152,14 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
             doDeleteFlow(entity.getWorkflowId());
             // 重新insert
             doInsertFlow(entity);
-            //产品化_所有投资指令预占需求_场内交易  add by zhangpei 20201128 start
-            doInsetOrUpdateForEtrPositionHold(entity);
-            //产品化_所有投资指令预占需求_场内交易  add by zhangpei 20201128 end
+            //add by zznn 20210824 start
+            //保存不需要处理头寸
+			if(!StringUtil.equals(entity.getOperateType(),"save")){
+				//产品化_所有投资指令预占需求_场内交易  add by zhangpei 20201128 start
+				doInsetOrUpdateForEtrPositionHold(entity);
+				//产品化_所有投资指令预占需求_场内交易  add by zhangpei 20201128 end
+			}
+			//add by zznn 20210824 start
             ProcessMark newEntity;
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrExchangeTrade001Dto.class, true);
@@ -2775,6 +2780,9 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
             Map<String, Object> param = new HashMap<>();
             param.put("portfolioId", etrExchangeTrade001Dto.getPortfolioId());
             param.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
+            //add by chenjiaxing 20210824 指令当日可用现金不对 start
+			param.put("acctId", etrExchangeTrade001Dto.getAcctNo());
+			//add by chenjiaxing 20210824 指令当日可用现金不对 end
              BigDecimal cashAvailable = this.selectAccAvailableCash(param);
             // 指令可用现金
             if (cashAvailable != null) {

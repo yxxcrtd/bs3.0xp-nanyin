@@ -82,7 +82,7 @@ eureka:
     serviceUrl:
       defaultZone: http://47.108.58.49:2222/eureka/ #http://192.168.70.210:1111/eureka/ #http://joyin.gaoyusoft.com:2222/eureka/
   instance:
-    hostname: 192.168.30.95
+    hostname: localhost
     #prefer-ip-address: true
     #instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 #分布式事务配置
@@ -127,7 +127,7 @@ eureka:
     serviceUrl:
       defaultZone: http://192.168.70.210:1111/eureka/
   instance:
-    hostname: 192.168.30.95
+    hostname: localhost
     #prefer-ip-address: true
     #instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 #分布式事务配置
@@ -172,7 +172,7 @@ eureka:
     serviceUrl:
       defaultZone: http://47.108.58.49:2222/eureka/ #http://192.168.70.210:1111/eureka/ #http://192.168.90.118:1111/eureka/ #http://192.168.70.210:1111/eureka/
   instance:
-    hostname: 192.168.30.95
+    hostname: localhost
     #prefer-ip-address: true
     #instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 #分布式事务配置

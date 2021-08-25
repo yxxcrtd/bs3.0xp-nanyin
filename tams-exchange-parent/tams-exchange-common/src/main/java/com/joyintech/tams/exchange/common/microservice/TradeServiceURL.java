@@ -149,11 +149,4 @@ public class TradeServiceURL {
     public static String getMinTrdUnitLimit = "/InterfSysTrdConfig/getMinTrdUnitLimit";//最小交易单位、交易上下限数据查询
 
     public static String getPtlAuthInfo = "/ptlmanagementinfo/getPtlAuthInfo";//组合权限查询
-
-    public static String startReviewEntrustWorkflow = "/TrdExchangeWorkflow/reviewEntrust";//发起复核流程
-    public static String startReviewIntegratedEntrustWorkflow = "/TrdExchangeWorkflow/reviewIntegratedEntrust";//发起复核流程
-
-    public static String startRevokeEntrustWorkflow = "/TrdExchangeWorkflow/revokeEntrust";//发起撤审流程
-    public static String startRevokeIntegratedEntrustWorkflow = "/TrdExchangeWorkflow/revokeIntegratedEntrust";//发起撤审流程
-    public static String doRevokeWorkflow = "/TrdExchangeWorkflow/doRevoke";//作废流程
 }

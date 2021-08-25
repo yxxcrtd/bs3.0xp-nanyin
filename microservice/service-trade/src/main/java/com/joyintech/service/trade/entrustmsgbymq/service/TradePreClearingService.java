@@ -406,6 +406,15 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
      * @param infContractDetailfile
      */
     public void trdStaSec(InfContractDetailfile infContractDetailfile) {
+        // add by etliu 20210825 start
+        // 标准券入出库的成交数据有两笔，一笔是质押券的，一笔是标准券的，需要把标准券的那条过滤掉
+        // 根据指令编号查投资指令，
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
+        if (etrEntrust != null && !StringUtil.equals(infContractDetailfile.getFinprodMarketId(), etrEntrust.getStockId())) {
+            return;
+        }
+        // add by etliu 20210825 end
+
         //标准券入出库DTO封装
         TrdTempStasecFlow trdTempStasecFlow =new TrdTempStasecFlow();
         //入出库编号--自动生成

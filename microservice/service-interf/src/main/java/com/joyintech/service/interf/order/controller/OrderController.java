@@ -30,7 +30,7 @@ import com.joyintech.service.interf.order.dto.CusdepOrderDto;
  * @see OrderController
  * @since 1.0
  */
-@RestController
+@RestController("InterfOrderController")
 public class OrderController extends BaseController<CusdepOrderDto> {
 
     /**

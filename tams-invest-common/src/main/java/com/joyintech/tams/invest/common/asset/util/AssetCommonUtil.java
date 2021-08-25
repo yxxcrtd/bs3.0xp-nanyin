@@ -147,6 +147,23 @@ public class AssetCommonUtil {
     }
 
     /**
+     * 获取组合信息，可自定义获取标的里各字段
+     * @param func
+     * @param finProdId
+     * @param <R>
+     * @return
+     */
+    public static <R> R getPortfolioInfo(String portfolioId,Function<AssetGenerateEntry,R> func){
+        AssetGenerateEntry astEntry=assetGenerateMapper.qryPortfolioIdInfo(portfolioId);
+        R r=null;
+        if(StringUtil.isNotEmpty(astEntry)){
+            r=func.apply(astEntry);
+        }
+        return r;
+    }
+
+
+    /**
      * 获取标的面值,未获取到默认100
      * @param key
      * @return

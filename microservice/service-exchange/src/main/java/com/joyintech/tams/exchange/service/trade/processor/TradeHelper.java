@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.service.trade.processor;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.investment.ReqRiskTrigger;
 import com.joyintech.tams.exchange.common.bean.investment.RiskOccupyBean;
@@ -114,6 +115,10 @@ public class TradeHelper {
     private Map<String, String> entrustMap = new ConcurrentHashMap<>();
 
     private Map<String, List<Trade>> tradeMap = new ConcurrentHashMap<>();
+
+    // 记录主推消息先于委托回报回来的主推委托信息
+    private Map<String, EntrustInterface> entrustNotifyMap = Maps.newConcurrentMap();
+
     @Autowired
     private TransactionHelper transactionHelper;
 
@@ -121,11 +126,21 @@ public class TradeHelper {
         return tradeMap;
     }
 
+    public EntrustInterface getEntrustNotifyByAccountIdAndBrokerEntrustId(String key) {
+        return entrustNotifyMap.get(key);
+    }
+
+    public void setEntrustNotifyMap(String key, EntrustInterface entrustInterface) {
+        this.entrustNotifyMap.put(key, entrustInterface);
+    }
+
     public void clearTradeAndEntrustCache() {
-        logger.info("tradeHelper clear trade cache, size:{}", tradeMap.size());
+        logger.info("tradeHelper clear tradeMap cache, size:{}", tradeMap.size());
         tradeMap.clear();
-        logger.info("tradeHelper clear trade cache, size:{}", entrustMap.size());
+        logger.info("tradeHelper clear entrustMap cache, size:{}", entrustMap.size());
         entrustMap.clear();
+        logger.info("tradeHelper clear entrustNotifyMap cache, size:{}", entrustNotifyMap.size());
+        entrustNotifyMap.clear();
     }
 
     @PostConstruct

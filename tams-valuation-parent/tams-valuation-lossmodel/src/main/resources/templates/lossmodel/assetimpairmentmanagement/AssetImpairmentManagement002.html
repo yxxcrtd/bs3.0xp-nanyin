@@ -32,7 +32,7 @@
                     <div class="layui-input-inline input-inline">
                         <select type="text" id="prodName1" name="prodName1"
                                 class="layui-input form-input input-select"
-                                data-th-data-url="@{/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002/getProdIdForImpairment}"
+                                data-th-data-url="@{/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001/getProdIdByLossResult}"
                                 data-th-placeholder="#{SysCommon.placeholder}" required="required"
                                 data-th-initvalue="${entity?.prodId}">
                         </select>
@@ -53,7 +53,7 @@
                     <div class="layui-input-inline input-inline">
                         <select type="text" id="assetName1" name="assetName1"
                                 class="layui-input form-input input-select"
-                                data-th-data-url="@{/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002/getFinprodIdForImpairment}"
+                                data-th-data-url="@{/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001/getFinprodIdByLossResult}"
                                 data-th-placeholder="#{SysCommon.placeholder}" required="required"
                                 data-th-initvalue="${entity?.assetId}">
                         </select>
@@ -76,7 +76,7 @@
                     <div class="layui-input-inline input-inline">
                         <select id="assetType" name="assetType" disabled="disabled"
                                 class="layui-input form-input input-select"
-                                data-th-data-result='${CUSTOM_ASSET_TYPE_FIVE}' allowClear="true"
+                                data-th-data-result='${SEC_TYPE}' allowClear="true"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                 formatoption="true" required="required"
                                 data-th-initvalue="${entity?.assetType}">
@@ -100,7 +100,7 @@
                             <select type="text" id="bussNo" name="bussNo"
                                     class="layui-input form-input input-select"
                                     parentIds="prodId,assetId"
-                                    data-th-data-url="@{/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002/getBusiNoForImpairment}"
+                                    data-th-data-url="@{/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001/getBusiNumByLossResult}"
                                     data-th-placeholder="#{SysCommon.placeholder}"
                                     formatoption="false" required="required"
                                     data-th-initvalue="${entity?.bussNo}">

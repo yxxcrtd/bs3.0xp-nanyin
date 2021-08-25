@@ -299,23 +299,24 @@ public class TradeCallbackHelper {
         }
         // 处理拆单委托订单
         splitOrderHelper.handleSplitOrderByTrade(entrust, tradeRecord.getTradedVolume(), newTrade, unFrozenBalance, tradeRecord);
+        BigDecimal unFrozenBalanceInstruction = null;
         if (Objects.nonNull(instruction)) {
             if (instruction.getEntrustNum() > 0) {
                 instruction.setEntrustLeftAmt(BigDecimal.valueOf(instruction.getEntrustLeftAmt().longValue() + tradeRecord.getTradedVolume()));
             } else {
                 //可能存在金额指令的委托不是冻结金额的，传入成交金额  ----  对于债券， 现在指令为净价，需要单独处理
-                if (!IntegratedEntrustUtils.isProtocolBack(entrust.getEntrustProp())) {
-                    unFrozenBalance = bondHelper.handleTradePriceByFullPrice(tradeRecord, entrust.getIsFullPrice(), instruction);
-                } else {
-                    unFrozenBalance = tradeRecord.getTradedBalance();
+                unFrozenBalanceInstruction = bondHelper.handleTradePriceByFullPrice(tradeRecord, entrust.getIsFullPrice(), instruction);
+                instruction.setEntrustLeftAmt(TradeUtils.add(instruction.getEntrustLeftAmt(), unFrozenBalanceInstruction, 2));
+                //解冻金额判断，最后一笔需要释放所有解冻
+                if (instruction.getEntrustLeftAmt().doubleValue() >= instruction.getEntrustAmt().doubleValue()) {
+                    unFrozenBalanceInstruction = instruction.getFrozenQuantity();
                 }
-                instruction.setEntrustLeftAmt(TradeUtils.add(instruction.getEntrustLeftAmt(), unFrozenBalance, 2));
             }
             logger.info("when trade repair instruction EntrustNum {},EntrustAmt {}, EntrustLeftAmt {}, FrozenQuantity {}", instruction.getEntrustNum(), instruction.getEntrustAmt(), instruction.getEntrustLeftAmt(), instruction.getFrozenQuantity());
         }
         //成交后处理持仓
         accountPositionHelper.handlePositionByTrade(entrust, tradeRecord.getTradeType(), tradeRecord.getTradedVolume());
         //解冻
-        entrustCancelProcessor.unFrozenEntrustAndInstructionAndPosition(entrust, tradeRecord.getTradedVolume(), unFrozenBalance, instruction, false, true);
+        entrustCancelProcessor.unFrozenEntrustAndInstructionAndPosition(entrust, tradeRecord.getTradedVolume(), unFrozenBalance, unFrozenBalanceInstruction, instruction, false, true);
     }
 }

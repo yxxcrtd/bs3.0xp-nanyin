@@ -1,9 +1,9 @@
 --资产大类评级配置表添加评级机构类型字段
-alter table MOD_ASSET_GRADE_SPECIAL_CONFIG add GRADE_ORG_TYPE VARCHAR2(50);
+alter table MOD_ASSET_GRADE_SPECIAL_CONFIG add GRADE_ORG_TYPE VARCHAR2(50) default '02' not null;
 comment on column MOD_ASSET_GRADE_SPECIAL_CONFIG.GRADE_ORG_TYPE is '评级机构类型';
 
 --特殊资产评级配置表添加评级机构类型字段
-alter table MOD_ASSET_GRADE_CONFIG add GRADE_ORG_TYPE VARCHAR2(50);
+alter table MOD_ASSET_GRADE_CONFIG add GRADE_ORG_TYPE VARCHAR2(50) default '02' not null;
 comment on column MOD_ASSET_GRADE_CONFIG.GRADE_ORG_TYPE is '评级机构类型';
 
 --资产评级配置菜单

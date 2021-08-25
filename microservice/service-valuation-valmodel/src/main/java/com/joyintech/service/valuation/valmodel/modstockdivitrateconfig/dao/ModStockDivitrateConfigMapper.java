@@ -1,12 +1,12 @@
 package com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
+import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModAseetMappingDto;
 import com.joyintech.service.valuation.valmodel.modstockdivitrateconfig.dto.ModStockDivitrateConfigInfoDto;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 
 @Repository
@@ -25,4 +25,6 @@ public interface ModStockDivitrateConfigMapper {
 	int checkByFinprodId(Map<String, Object> param);
 
 	List<SelectOptionDto> selectAssetCodeList(Map<String, Object> map);
+
+	List<ModAseetMappingDto> selectAssetNoClassify(Map<String, Object> map);
 }

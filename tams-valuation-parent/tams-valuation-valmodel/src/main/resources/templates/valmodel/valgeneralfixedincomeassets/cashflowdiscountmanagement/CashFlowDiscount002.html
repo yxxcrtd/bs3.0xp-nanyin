@@ -27,7 +27,7 @@
                     <label class="layui-form-label form-lable">资产类型</label>
                     <div class="layui-input-inline input-inline">
                         <select id="secTypeModel" name="secTypeModel" searchable="false" type="text"
-                                data-th-data-result='${MODEL_SEC_TYPE}'
+                                data-th-data-result='${SEC_TYPE}'
                                 data-th-initValue="${entity?.secTypeModel}"
                                 class="layui-input form-input input-select" placeholder="请选择" required>
                         </select>
@@ -158,8 +158,8 @@
 		var MODEL_MAIN_GRADE_TYPE = /*[[${MODEL_MAIN_GRADE_TYPE}]]*/;
 		var MODEL_SEC_DETAIL_TYPE = /*[[${MODEL_SEC_DETAIL_TYPE}]]*/;
 	</script>
-    <script data-th-src="@{/js/component/common/util.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/valuation/common.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/valmodel/common/util.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002.js}" type="text/javascript"></script>
 </div>
 </body>

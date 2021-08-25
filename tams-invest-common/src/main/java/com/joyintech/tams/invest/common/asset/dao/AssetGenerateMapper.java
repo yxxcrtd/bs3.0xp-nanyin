@@ -59,4 +59,7 @@ public interface AssetGenerateMapper {
 	 * @return
 	 */
 	List<Map> getStlAccount(Map<String,Object> paramMap);
+
+
+	AssetGenerateEntry qryPortfolioIdInfo(String portfolioId);
 }

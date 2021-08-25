@@ -70,8 +70,11 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
      */
     public Map selectPortfolioInfo(Map<String, Object> paramMap) {
         paramMap.put(KEY_ARRAY[0],DateUtil.format(DateUtil.platDateFromCache()));
-        AssetGenerateEntry astEntry=AssetCommonUtil.getAssetInfoDb(DictCodeListExt1.金融产品类型_投管用_理财产品.getValue()+ GlobalConstant.UNDER_LINE+ (StringUtil.isNotEmpty(paramMap.get(KEY_ARRAY[1]))?paramMap.get(KEY_ARRAY[1]).toString():null), obj->obj);
+//        AssetGenerateEntry astEntry=AssetCommonUtil.getAssetInfoDb(DictCodeListExt1.金融产品类型_投管用_理财产品.getValue()+ GlobalConstant.UNDER_LINE+ (StringUtil.isNotEmpty(paramMap.get(KEY_ARRAY[1]))?paramMap.get(KEY_ARRAY[1]).toString():null), obj->obj);
+//        Map astMap=null!=astEntry?BeanUtil.object2Map(astEntry):new HashMap<>();
+        AssetGenerateEntry astEntry=AssetCommonUtil.getPortfolioInfo(paramMap.get(KEY_ARRAY[1]).toString(), obj->obj);
         Map astMap=null!=astEntry?BeanUtil.object2Map(astEntry):new HashMap<>();
+
         List<BigDecimal> 产品规模List=AssetCommonUtil.getAstNetVal(Arrays.asList(paramMap.get(KEY_ARRAY[1]).toString()),DateUtil.platDateFromCache(),null,item->(BigDecimal)item.get(AssetCommonUtil.产品净资产));
         astMap.put(AssetCommonUtil.产品净资产,!StringUtil.isEmptyList(产品规模List)?产品规模List.get(0):null);
         return astMap;
