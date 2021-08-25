@@ -79,13 +79,13 @@ public class WFlowCommonService {
      * @param entrustId
      */
     public static void doBackFlow(String workflowId, String entrustId){
-
-        deleteFlow(workflowId);
-        
         if (baseEtrCashPositionCommService != null) {
             // 持仓关闭
             baseEtrCashPositionCommService.entrustCloseExecute(entrustId);
         }
+        // ZGZGST-1472:先持仓关闭再删除流程记录 fuyongsheng 20210825 edit start
+        deleteFlow(workflowId);
+        // ZGZGST-1472 fuyongsheng 20210825 edit end
     }
     
     public static void doCompleteFlow(String workflowId){
