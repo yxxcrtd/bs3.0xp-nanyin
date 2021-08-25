@@ -19,7 +19,9 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.CreditTagInfo;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.service.ModBintreeConfig002Service;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +76,13 @@ public class ModBintreeConfig002Controller extends BaseController {
         	 model.addAttribute("SEQNO", this.getParam("seqno"));
              model.addAttribute(GlobalConstant.ENTITY, CreditTagInfo);
          }
+         else {
+             ModBintreeConfigDto creditTagInfo = new ModBintreeConfigDto();
+             creditTagInfo.setSmoothsection(new BigDecimal("0.00"));
+             creditTagInfo.setBintreeStep(new BigDecimal("100"));
+             model.addAttribute(GlobalConstant.ENTITY, creditTagInfo);
+         }
+        model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         return super.init(model);
     }
     /**
@@ -101,6 +111,13 @@ public class ModBintreeConfig002Controller extends BaseController {
     public Page<SelectOptionDto> getMarketId(@RequestParam Map<String, Object> params) {
       
         return modBintreeConfig002Service.getMarketId(params);
+    }
+
+    @ResponseBody
+    @RequestMapping("getCurveCode")
+    public Page<SelectOptionDto> getCurveCode(@RequestParam Map<String, Object> params) {
+
+        return modBintreeConfig002Service.getCurveCode(params);
     }
     /**
      * 保存

@@ -130,4 +130,30 @@ public class ModBintreeConfigController {
         return modBintreeConfigService.getMarketId(page, length,  param);
     }
 
+    /**
+     * 曲线代码
+     * @param param
+     * @param page
+     * @param length
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/getCurveCode/{page}/{length}")
+    @ResponseBody
+    Page<SelectOptionDto> getCurveCode(@RequestBody Map<String, Object> param,
+                                      @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+        return modBintreeConfigService.getCurveCode(page, length,  param);
+    }
+
+    /**
+     * 根据资产代码查询
+     * @param dto
+     * @return
+     */
+    @RequestMapping("/selectByFinprodId")
+    @ResponseBody
+    ModBintreeConfigDto selectByFinprodId(@RequestBody ModBintreeConfigDto dto) throws Exception {
+        return modBintreeConfigService.selectByFinprodId(dto);
+    }
+
 }

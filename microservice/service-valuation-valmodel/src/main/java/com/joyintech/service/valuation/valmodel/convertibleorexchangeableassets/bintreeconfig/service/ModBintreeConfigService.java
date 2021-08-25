@@ -65,6 +65,9 @@ public class ModBintreeConfigService extends BaseService<ModBintreeConfigDto> {
     public ModBintreeConfigDto queryDtoBySeqno(String seqno){
     	return modBintreeConfigDtoMapper.selectByPrimaryKey(seqno);
     }
+	public ModBintreeConfigDto selectByFinprodId(ModBintreeConfigDto dto){
+		return modBintreeConfigDtoMapper.selectByFinprodId(dto.getFinprodId());
+	}
     public void insert(ModBintreeConfigDto dto){
     	modBintreeConfigDtoMapper.insert(dto);
     }
@@ -137,6 +140,10 @@ public class ModBintreeConfigService extends BaseService<ModBintreeConfigDto> {
 			throws Exception {
 		return super.queryForPageForSelectReturn(page, length, () -> modBintreeConfigDtoMapper.getMarketId(param));
 	}
-    		
+
+	public Page<SelectOptionDto> getCurveCode(int page, int length, Map<String, Object> param)
+			throws Exception {
+		return super.queryForPageForSelectReturn(page, length, () -> modBintreeConfigDtoMapper.getCurveCode(param));
+	}
    
 }

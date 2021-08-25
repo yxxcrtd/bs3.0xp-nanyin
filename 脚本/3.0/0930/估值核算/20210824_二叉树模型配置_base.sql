@@ -15,3 +15,9 @@ update sys_menu set remark = '二叉树模型参数配置' where menu_id = 'VALUATION_001
 
 
 update sys_page set page_url = '/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002' where page_id = 'ModBintreeConfig002';
+
+delete from sys_wfl_business_module where page_id ='ModBintreeConfig002' and ELEMENT_ID in ('ModBintreeConfig001_btn_delete');
+
+
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('ModBintreeConfig002', 'ModBintreeConfig001_btn_delete', 'oneApproval', 'system', null, sysDate, 'system', sysDate, 'ALL', '02');
