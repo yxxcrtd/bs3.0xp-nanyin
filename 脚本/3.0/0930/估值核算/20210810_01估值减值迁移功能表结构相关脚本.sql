@@ -453,6 +453,7 @@ create index MOD_BATCH_LOGS1
     on MOD_BATCH_LOGS (BATCH_EXEC_SEQNO, TASK_ID, FINPROD_ID);
 
 -- 批处理服务器信息配置表
+drop table SYS_BATCH_SERVER_INFO;
 create table SYS_BATCH_SERVER_INFO
 (
     SEQ_NO         VARCHAR2(32)      not null
@@ -1263,6 +1264,7 @@ create index "Index_MOD_CURVE_RESULT10" on MOD_CURVE_RESULT (
 );
 
 --标准评级映射表
+drop table MOD_STANDARD_GRADE_MAPPING;
 create table MOD_STANDARD_GRADE_MAPPING
 (
    SEQ_NO               VARCHAR2(50)         not null,
@@ -1595,14 +1597,7 @@ drop index MOD_CURVE_RESULT_DETAIL_INDEX;
 create index MOD_CURVE_RESULT_DETAIL_INDEX on MOD_CURVE_RESULT_DETAIL (FINPROD_ID, CDATE);
 
 
---减值模型-数据表必填项修改及索引创建
-alter table MOD_ASEET_MAPPING modify input1 not null;
-alter table MOD_ASEET_MAPPING modify input2 not null;
-alter table MOD_ASEET_MAPPING modify output1 not null;
-alter table MOD_ASEET_MAPPING modify output2 not null;
-alter table MOD_ASEET_MAPPING modify output3 not null;
-alter table MOD_ASEET_MAPPING modify output4 not null;
-alter table MOD_ASEET_MAPPING modify output5 not null;
+
 
 drop index MOD_ASEET_MAPPING_INDEX1;
 drop index MOD_ASEET_MAPPING_INDEX2;
@@ -1625,8 +1620,8 @@ alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify finprod_name not null;
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify grade_org_id not null;
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify o_type not null;
 
-drop index MOD_ASSET_GRADE_SPECIAL_CONFIG_INDEX;
-create index MOD_ASSET_GRADE_SPECIAL_CONFIG_INDEX on MOD_ASSET_GRADE_SPECIAL_CONFIG (FINPROD_ID);
+drop index MOD_SPECIAL_CONFIG_INDEX;
+create index MOD_SPECIAL_CONFIG_INDEX on MOD_ASSET_GRADE_SPECIAL_CONFIG (FINPROD_ID);
 
 alter table MOD_GRADE_PD_CONFIG modify vouch_year not null;
 alter table MOD_GRADE_PD_CONFIG modify grade_result not null;
