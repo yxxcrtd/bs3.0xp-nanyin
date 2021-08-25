@@ -67,7 +67,7 @@
 <select id="getAssetCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT 
 		       FINPROD_MARKET_ID id,
-               FINPROD_MARKET_ID text
+				FINPROD_ABBR text
 		FROM 
 		       FIN_PRODUCT 
 		WHERE  
