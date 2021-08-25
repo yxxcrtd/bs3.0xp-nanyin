@@ -65,4 +65,18 @@ public class AssetImpairmentKpmgManagement002Service extends CommonExportService
             assetLossResultKpmgMapper.deleteByPrimaryKey(entity.getSeqNo());
         }
     }
+
+
+    /**
+     * 获取流程初始操作类型
+     *
+     * @param
+     * @return 产品代码：下拉框
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    public String getFirstActionType(String workflowId){
+        return assetLossResultKpmgMapper.getFirstActionType(workflowId);
+    }
 }

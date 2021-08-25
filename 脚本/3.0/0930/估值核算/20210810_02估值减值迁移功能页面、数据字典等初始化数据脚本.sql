@@ -850,7 +850,7 @@ insert into sys_page_dictlist values('InsideOutsideGrade001','999999','GRADE_PAR
 --内外部评级映射管理
 DELETE FROM sys_menu WHERE PAGE_ID = 'InsideOutsideGrade001';
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSET_MANAGEMENT_001_003_020', 'VAL', null, 'ASSET_MANAGEMENT_001_003', 'InsideOutsideGrade001', 20, '2', '评级关系映射', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+values ('VALUATION_001_011_011', 'VAL', null, 'VALUATION_001_011', 'InsideOutsideGrade001', 11, '2', '评级关系映射管理', 'system', null, sysdate, 'system',sysdate);
 
 DELETE FROM sys_page WHERE PAGE_ID = 'InsideOutsideGrade001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)

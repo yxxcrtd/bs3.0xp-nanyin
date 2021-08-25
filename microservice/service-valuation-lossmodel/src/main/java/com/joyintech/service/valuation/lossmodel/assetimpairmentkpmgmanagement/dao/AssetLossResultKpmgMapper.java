@@ -18,4 +18,5 @@ public interface AssetLossResultKpmgMapper {
     int updateByPrimaryKeySelective(AssetLossResultKpmg record);
 
     int updateByPrimaryKey(AssetLossResultKpmg record);
+    String getFirstActionType(String workflowId);
 }
