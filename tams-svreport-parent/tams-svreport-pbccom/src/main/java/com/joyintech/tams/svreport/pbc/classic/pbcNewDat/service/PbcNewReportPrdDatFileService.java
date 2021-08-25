@@ -144,6 +144,7 @@ public class PbcNewReportPrdDatFileService {
 						report = pbcCodeList.get(pbcCode);
 					}else {
 						BeanUtil.copyPropertiesIgnoreNull(report,pbcCodeList.values().toArray()[0]);
+						report.setReportuuid(IDGenerator.generate(36));
 						report.setReporttype(pbcCode);
 					}
 					//月报生成
