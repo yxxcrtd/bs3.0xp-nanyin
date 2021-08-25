@@ -107,7 +107,7 @@ public class CfetsRepoDealQuotedPr001Controller extends BaseController{
     @RequestMapping(value = "/initHq")
     public String initHq(Model model){
         model.addAttribute("MarketInfoInterf_BaseUrl", MarketInfoInterf_cmdsUrl);
-        return "/invest/bankuplink/reponew/CfetsRepoDealQuotedPrHq";
+        return "invest/bankuplink/reponew/CfetsRepoDealQuotedPrHq";
     }
 
     /**
