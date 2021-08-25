@@ -385,4 +385,19 @@
         and (CUSTOMER_ID=#{initValue} or CUSTOMER_NAME =#{initValue})
       </if>
   </select>
+
+  <select id="getCurveCode" resultType="com.joyintech.framework.select.SelectOptionDto" >
+    SELECT
+      CURVE_CODE id,
+      CURVE_NAME text
+    FROM MOD_CURVE_MAPPING
+    WHERE 1=1
+    <if test="search != null and search != ''">
+      and (CURVE_CODE like concat(concat('%',#{search}),'%')
+      or CURVE_NAME like concat(concat('%',#{search}),'%'))
+    </if>
+    <if test="initValue != null and initValue != ''">
+      and (CURVE_CODE=#{initValue} or CURVE_NAME =#{initValue})
+    </if>
+  </select>
 </mapper>

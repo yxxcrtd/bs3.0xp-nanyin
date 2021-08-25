@@ -34,4 +34,6 @@ public interface ModBintreeConfigDtoMapper {
     List<StockQuotationDto> getStockQuotation(StockQuotationDto assetInfoDto);
 
     List<SelectOptionDto> getMarketId(Map<String, Object> map);
+
+    List<SelectOptionDto> getCurveCode(Map<String, Object> map);
 }

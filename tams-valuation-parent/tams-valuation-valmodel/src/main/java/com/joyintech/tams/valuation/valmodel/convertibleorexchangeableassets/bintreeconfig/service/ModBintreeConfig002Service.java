@@ -100,6 +100,12 @@ public class ModBintreeConfig002Service extends CommonExportService<ModBintreeCo
 
 		return resultList;
    }
+
+    /**
+     * 查询机构
+     * @param parameters
+     * @return
+     */
    public Page<SelectOptionDto> getMarketId(Map<String, Object> parameters) {
 	   Page<SelectOptionDto> pageList = restTemplate.postForPage(
 				ServiceApplication.VAL_MODEL_SERVICE_NAME + "/ModBintreeConfig/getMarketId", parameters,
@@ -107,5 +113,28 @@ public class ModBintreeConfig002Service extends CommonExportService<ModBintreeCo
 		return pageList;
 
   }
-    
+
+    /**
+     * 查询曲线
+     * @param parameters
+     * @return
+     */
+    public Page<SelectOptionDto> getCurveCode(Map<String, Object> parameters) {
+        Page<SelectOptionDto> pageList = restTemplate.postForPage(
+                ServiceApplication.VAL_MODEL_SERVICE_NAME + "/ModBintreeConfig/getCurveCode", parameters,
+                SelectOptionDto.class);
+        return pageList;
+
+    }
+
+    /**
+     * 根据资产代码查询
+     * @param dto
+     * @return
+     */
+    public ModBintreeConfigDto selectByFinprodId(ModBintreeConfigDto dto) {
+        return restTemplate.postForObject(
+                ServiceApplication.VAL_MODEL_SERVICE_NAME + "/ModBintreeConfig/selectByFinprodId",
+                dto, ModBintreeConfigDto.class);
+    }
 }
