@@ -1857,6 +1857,11 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 
 
 	//add by meifaxin 20210713  end
+	
+	// 从DictCodeList.java移过来，超过65535的限制了 start
+    共通业务类型_手动释放头寸(DictCode.共通业务类型,"MR1","手动释放头寸"),
+    共通业务类型_规划策略池维护(DictCode.共通业务类型, "PRDPLAN06", "规划策略池维护"),
+	// 从DictCodeList.java移过来，超过65535的限制了 end
 	;
 
     /**
