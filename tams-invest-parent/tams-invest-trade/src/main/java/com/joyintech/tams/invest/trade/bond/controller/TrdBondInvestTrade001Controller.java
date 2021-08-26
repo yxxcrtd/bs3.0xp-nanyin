@@ -284,6 +284,9 @@ public class TrdBondInvestTrade001Controller extends BaseController {
                 inputDto.setBussTrdTransferOrder(bussTrdTransferOrderDtoList);
             }
         }
+        if(StringUtil.equals(inputDto.getTradeMarketMode(),DictCodeListExt1.交易市场_一级市场.getValue())){
+            inputDto.setBondFirstSign("01");
+        }
         inputDto.setTotleTradeId(totleTradeId + "R");
         inputDto.setFinprodType2("F01");
         inputDto.setOperateType(operateType);

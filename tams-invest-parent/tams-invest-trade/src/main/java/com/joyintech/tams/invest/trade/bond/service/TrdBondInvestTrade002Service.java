@@ -1111,6 +1111,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             trdProductDeal.setUpdateTime(finProductTradeDto.getUpdateTime());
             trdProductDeal.setUpdateUser(finProductTradeDto.getUpdateUser());
 
+            //          一级投标信息不为空
+            if(StringUtil.isNotEmpty(entity.getBondFirstSign())){
+                baseTradeProductDealDto.setBondFirstSign(entity.getBondFirstSign());
+            }
             String tradeId = trdProductDeal.getTradeId();
             trdProductDeal.setTradeId(entity.getTotleTradeId()); // 让生成的组合流水的tradeId是汇总表的值
             baseTradeProductDealCommService.execute(finProductTradeDto);
