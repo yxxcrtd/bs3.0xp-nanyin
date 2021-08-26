@@ -269,11 +269,10 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 					entities.forEach(item -> {
 						ProPeoplebankcodeManagement001Dto record = new ProPeoplebankcodeManagement001Dto();
 						BeanUtil.copyPropertiesIgnoreNull(record, item);
-						record.setOrgCode(null);
+						record.setOrgCode(CommonUtil.getOrgCode());
 						record.setCreateUser(CommonUtil.getUserName());
 						record.setCreateDept(null);
 						record.setCreateTime(new Date());
-						record.setCreateDept(null);
 						record.setUpdateUser(CommonUtil.getUserName());
 						record.setUpdateTime(new Date());
 						record.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
