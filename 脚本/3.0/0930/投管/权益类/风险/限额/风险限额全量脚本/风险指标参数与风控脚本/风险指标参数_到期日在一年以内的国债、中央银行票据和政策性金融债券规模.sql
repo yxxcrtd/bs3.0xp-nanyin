@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='XJGZZYYHPJZCXJRZQGM';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('XJGZZYYHPJZCXJRZQGM','到期日在一年以内的国债、中央银行票据和政策性金融债券规模','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('XJGZZYYHPJZCXJRZQGM','到期日在一年以内的国债、中央银行票据和政策性金融债券规模','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='XJGZZYYHPJZCXJRZQGM';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGZZYYHPJZCXJRZQGM','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -37,24 +37,7 @@ V_CONTENT_01_02_03 CLOB := 'select y1.PORTFOLIO_ID as RKEY,sum(TRADE_AMT)  as RV
   ) y1 group by y1.PORTFOLIO_ID';
 
 ----事后(日间)
-V_CONTENT_04 CLOB := 'select y1.PORTFOLIO_ID as RKEY,sum(TRADE_AMT)  as RVALUE from
-  (
-    select m.PORTFOLIO_ID,NVL(SUM(NVL(m.MARKET_VALUE,0)+nvl(m.TDY_INTINCEXP, 0)),0) as  TRADE_AMT from PTL_SEC_PIERCE_VALUTION m
-    INNER JOIN FIN_PRODUCT n on m.FINPROD_ID=n.FINPROD_ID and n.FINPROD_TYPE2 =''F01'' and n.MDATE>=date''${valDate}'' and n.MDATE<=add_months(date''${valDate}'', 12)
-    inner join FIN_PRODUCT_TYPE t3 on n.FINPROD_ID=t3.FINPROD_ID and (t3.TYPE_6 in (''B01'',''B03'') or (t3.TYPE_6=''B05'' AND t3.TYPE_7=''01''))  and t3.TYPE_8 =''F01''
-    where  m.CDATE=date''${valDate}''-1  AND m.PORTFOLIO_ID!=m.FINPROD_ID group by m.PORTFOLIO_ID
-
-    union all
-     select t.PTL_BAG_ID as RKEY,
-     ( select NVL(SUM(NVL(m.MARKET_VALUE,0)+nvl(m.TDY_INTINCEXP, 0)),0) as  TRADE_AMT from PTL_SEC_PIERCE_VALUTION m
-    INNER JOIN FIN_PRODUCT n on m.FINPROD_ID=n.FINPROD_ID and n.FINPROD_TYPE2 =''F01'' and n.MDATE>=date''${valDate}'' and n.MDATE<=add_months(date''${valDate}'', 12)
-    inner join FIN_PRODUCT_TYPE t3 on n.FINPROD_ID=t3.FINPROD_ID and (t3.TYPE_6 in (''B01'',''B03'') or (t3.TYPE_6=''B05'' AND t3.TYPE_7=''01''))  and t3.TYPE_8 =''F01''
-    where  m.CDATE=date''${valDate}''-1  AND m.PORTFOLIO_ID!=m.FINPROD_ID AND
-    m.PORTFOLIO_ID in (   select t1.PORTFOLIO_ID from RSK_PORTFOLIO_PACKAGE_DTL t1  inner join PTL_PORTFOLIO t2 on t1.PORTFOLIO_ID=t2.PORTFOLIO_ID and t2.MDATE>date''${valDate}'' where t1.PTL_BAG_ID=t.PTL_BAG_ID)
-     )
-     from RSK_PORTFOLIO_PACKAGE t
-
-  ) y1 group by y1.PORTFOLIO_IDselect sum(TRADE_AMT) as tradeAmt from
+V_CONTENT_04 CLOB := 'select sum(TRADE_AMT) as tradeAmt from
   (
     select NVL(SUM(NVL(m.MARKET_VALUE,0)+nvl(m.TDY_INTINCEXP, 0)),0) as  TRADE_AMT from PTL_SEC_PIERCE_VALUTION m
     INNER JOIN FIN_PRODUCT n on m.FINPROD_ID=n.FINPROD_ID and n.FINPROD_TYPE2 =''F01'' and n.MDATE>=sysdate and n.MDATE<=add_months(sysdate, 12)
