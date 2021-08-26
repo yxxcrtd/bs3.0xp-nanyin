@@ -292,7 +292,10 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
      */
      @Override
      public void doInsert(EtrInvestBondInfoDto dto, OperationType type){
-         dto.setOperateType(type.toString());
+         // OperationType枚举值与dto的operateType不同,后续逻辑使用的是dto的operateType,所以不能覆盖
+         // ZGZGST-1502:fuyongsheng 20210825 delete start
+         // dto.setOperateType(type.toString());
+         // ZGZGST-1502:fuyongsheng 20210825 delete end
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/doInsert",dto,
              Integer.class);
@@ -311,7 +314,11 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
 
     @Override
     public void doBack(EtrInvestBondInfoDto entity) {
-
+        // ZGZGST-1557:退回工作流 fuyongsheng add start
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/doBack", entity,
+                Integer.class);
+        // ZGZGST-1557:退回工作流 fuyongsheng add end
     }
 
     /**
