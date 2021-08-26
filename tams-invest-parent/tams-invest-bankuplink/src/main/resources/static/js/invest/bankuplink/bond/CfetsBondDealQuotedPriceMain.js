@@ -1044,7 +1044,7 @@
     	 * 当日报价radio点击事件
     	 */
     	$("[name=dayOfferStatus]").click(function(){
-    	    fetsBondDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
+//          fetsBondDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
     		dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
         });
 
