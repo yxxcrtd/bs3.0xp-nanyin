@@ -1086,6 +1086,10 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(object instanceof EtrRepoDto){
             EtrRepoDto inputDto = (EtrRepoDto) object;
             if (StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue(),inputDto.getPs())){
+                //逆回购无券  不占授信
+                if(StringUtil.isEmpty(inputDto.getFinprodId())){
+                    return null;
+                }
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
@@ -1123,6 +1127,10 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(object instanceof EtrIbRepoinfo002Dto){
             EtrIbRepoinfo002Dto inputDto = (EtrIbRepoinfo002Dto) object;
             if (StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue(),inputDto.getPs())){
+                //逆回购无券  不占授信
+                if(StringUtil.isEmpty(inputDto.getFinprodId())){
+                    return null;
+                }
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
