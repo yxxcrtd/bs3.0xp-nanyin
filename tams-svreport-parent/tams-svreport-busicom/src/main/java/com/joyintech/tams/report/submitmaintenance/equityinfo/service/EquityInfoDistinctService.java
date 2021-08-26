@@ -653,6 +653,9 @@ public class EquityInfoDistinctService {
 											+(single.getPersonalIdentifyType()==null?"":single.getPersonalIdentifyType())+GlobalConstant.UNDER_LINE+(single.getInstitutionIdentifyType()==null?"":single.getInstitutionIdentifyType())
 											+GlobalConstant.UNDER_LINE+(single.getOtherIdentifyName()==null?"":single.getOtherIdentifyName())));
 			logger.info("resultListAll数据转换成Map结束");
+			// 释放集合，防止内存溢出开始
+			resultListAll.clear();
+			// 释放集合，防止内存溢出结束
 			logger.info("循环keys取存在于kes中的未报送数据开始");
 			for(String key:keys){
 //        			String key= single.getBankCode()==null?"":single.getBankCode()+GlobalConstant.UNDER_LINE +single.getIdentifyNumber()==null?"":single.getIdentifyNumber()
