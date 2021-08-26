@@ -317,6 +317,26 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 			} catch (IOException e) {
 			}
 		}
+		// 报送类型
+		String datZipType = (String) param.get("datZipType");
+		// 报送状态
+		String zipSendStatus = (String) param.get("zipSendStatus");
+		// 反馈状态
+		String returnZipSendStatus = (String) param.get("returnZipSendStatus");
+
+		// 将数据状态当做多选下拉框处理
+		if (StringUtil.isNotBlank(datZipType)) {
+			param.put("datZipTypeList", StringUtil.splitToList(GlobalConstant.COMMA, datZipType));
+		}
+		// 将报送状态当做多选下拉框处理
+		if (StringUtil.isNotBlank(zipSendStatus)) {
+			param.put("zipSendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, zipSendStatus));
+		}
+		// 将反馈状态当做多选下拉框处理
+		if (StringUtil.isNotBlank(returnZipSendStatus)) {
+			param.put("returnZipSendStatusList",
+					StringUtil.splitToList(GlobalConstant.COMMA, returnZipSendStatus));
+		}
 		//数据权限模式（01：银行模式，02：联社模式）
 		String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
 		if("02".equals(authorityType)){

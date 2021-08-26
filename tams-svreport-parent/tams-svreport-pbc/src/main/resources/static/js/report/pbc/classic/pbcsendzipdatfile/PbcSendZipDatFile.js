@@ -130,7 +130,8 @@ $(function() {
                 arr.push(selArr[i].datZipCode);
             }
             var data = JSON.stringify(arr);
-            var param = {result:data};
+            var param = getSearchParams();
+            param.result = data;
             Joyin.ajaxSync(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/createZipFile', param, function(result) {
                 var msg = result.message;
                 /*if(msg != null && msg != ''){
@@ -141,6 +142,7 @@ $(function() {
                 } else {
                     param.result =result.data;
                     Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
+                    table.reload();
                 }
 
             });
