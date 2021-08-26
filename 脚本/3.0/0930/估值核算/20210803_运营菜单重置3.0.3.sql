@@ -1,5 +1,4 @@
 DELETE FROM SYS_MENU;
-
 insert into SYS_MENU values ('ACCOUTING_001','VAL','icon-daily-operate','','','11','1','核算管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ACCOUTING_001_001','VAL','','ACCOUTING_001','','1','1','账套管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ACCOUTING_001_001_001','VAL','','ACCOUTING_001_001','ValAssetBook001','1','1','账套管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
@@ -44,7 +43,7 @@ insert into SYS_MENU values ('ASSET_MANAGEMENT_001_002_004','VAL','','ASSET_MANA
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_002_005','VAL','','ASSET_MANAGEMENT_001_002','ValLoanMarkquery001','6','2','拆借类资产','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_002_006','VAL','','ASSET_MANAGEMENT_001_002','ValRepurchaseAssetQuery001','7','2','回购类资产','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_002_008','VAL','','ASSET_MANAGEMENT_001_002','FinOptionTarget001','8','2','期权标的信息','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('ASSET_MANAGEMENT_001_002_007','VAL','','ASSET_MANAGEMENT_001_002','','9','2','债权类资产-待开发','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('ASSET_MANAGEMENT_001_002_007','VAL','','ASSET_MANAGEMENT_001_002','ValProfitproject001','9','2','债权类资产-待开发','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_003','MST','','ASSET_MANAGEMENT_001','','3','2','行情数据','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_003_001','MST','','ASSET_MANAGEMENT_001_003','ComBondMarketInfo001','1','2','债券市场行情','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_003_002','MST','','ASSET_MANAGEMENT_001_003','ComFundMarketInfo001','2','2','基金市场行情','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
