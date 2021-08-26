@@ -630,7 +630,7 @@ public class AssetLiabilityStatementQuery001Service extends CommonExportService<
 		Date reportDate = analyseBalanceDate(dto, AssetLiabilityStatementUtil.ENDING_BALANCE);
 		List<AssetLiabilityStatementQuery001Dto> assetList = new ArrayList<AssetLiabilityStatementQuery001Dto>();
 		String prefix = "";
-		if (DictCodeListExt1.报表维度_单账套.getValue().equals(dto.getReportDimen())) {
+		if (StringUtil.equals(dto.getReportDimen(),"1")) {
 			assetList = findAssetsStatement(dto);
 			prefix = dto.getBooksetId();
 		} else {
