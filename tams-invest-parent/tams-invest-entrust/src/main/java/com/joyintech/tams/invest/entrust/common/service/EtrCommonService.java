@@ -809,6 +809,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
                     creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
                 }
+                //界面上的券面总额单位是万元，换算为元
+                inputDto.setEntrustNum(inputDto.getEntrustNum().multiply(new BigDecimal(10000)));
                 creditLinesInputDto.setTradeAmt(inputDto.getEntrustNum());
                 if (inputDto.getEntrustNum() != null){
                     creditLinesInputDto.setShareAmt(inputDto.getEntrustNum().divide(new BigDecimal(100), RoundingMode.HALF_UP));
