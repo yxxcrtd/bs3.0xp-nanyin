@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='KZKJZQJYQJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('KZKJZQJYQJ','可转可交债券交易全价','N','','190001','zjls',sysdate,'190043',sysdate,'','','N','', 'String','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('KZKJZQJYQJ','可转可交债券交易全价','N','','cdj','C001',sysdate,'cdj',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='KZKJZQJYQJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYQJ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','190001','zjls',sysdate,'190043',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYQJ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYQJ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','190001','zjls',sysdate,'190043',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYQJ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYQJ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','190001','zjls',sysdate,'190043',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYQJ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYQJ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','whmcp','99999',sysdate,'whmcp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYQJ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYQJ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','whmcp','99999',sysdate,'whmcp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYQJ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占

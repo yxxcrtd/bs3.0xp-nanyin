@@ -97,18 +97,20 @@
         EPT.EXERCISE_DATE exerciseDate,
         FP.TRADE_MARKET tradeMarket,
         FPT.TYPE_6 TYPE6,
-        DECODE(FP.TRADE_MARKET,#{TRADE_PLACE_01},PCT.ACCT_NAME,PAT.ACCT_NAME) acctName ,
+        (SELECT MAX(SEC_ACCT_NAME) FROM STL_SEC_ACCT_INFO WHERE STL_SEC_ACCT_INFO.SEC_ACCT_ID = PSP.SEC_ACCT_ID) acctName ,
         RT.RATE ,
-        PSP.AMOUNT
+        PSP.AMOUNT,
+        PSP.SEC_ACCT_ID secAcctId
         FROM (
             SELECT
             PORTFOLIO_ID,
             FINPROD_ID,
-            NVL(SUM(AMOUNT),0)*100 AMOUNT
+            NVL(SUM(AMOUNT),0)*100 AMOUNT,
+            SEC_ACCT_ID
             FROM PTL_SEC_POSITION
             WHERE PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} AND CDATE = DATE'${valDate}'
             AND HODING_TYPE IN ${POSITION_TYPE_030506}
-            GROUP BY PORTFOLIO_ID, FINPROD_ID
+            GROUP BY PORTFOLIO_ID, FINPROD_ID,SEC_ACCT_ID
             having SUM(AMOUNT)>0
         ) PSP
         INNER JOIN FIN_PRODUCT FP ON PSP.FINPROD_ID=FP.FINPROD_ID AND FP.FINPROD_TYPE2 =#{finprodType,jdbcType=VARCHAR}

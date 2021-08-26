@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='LLZDBJYJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('LLZDBJYJJ','利率债单笔交易净价','N','','admin','2222222',sysdate,'jjpei',sysdate,'','','N','', 'String','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('LLZDBJYJJ','利率债单笔交易净价','N','','cdj','C001',sysdate,'cdj',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='LLZDBJYJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','qq1','2222222',sysdate,'qq1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','qq1','2222222',sysdate,'qq1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','qq1','2222222',sysdate,'qq1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','qq1','2222222',sysdate,'qq1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','qq1','2222222',sysdate,'qq1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -47,8 +47,7 @@ V_CONTENT_05 CLOB := 'SELECT DISTINCT n.UNIT_CPRICE as RVALUE ,n.FINPROD_ID RKEY
   inner join TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.FINPROD_TYPE2 =''F01'' AND n.PS IN (''T01'',''T02'',''T03'')
   INNER JOIN FIN_PRODUCT_TYPE s ON s.FINPROD_ID=n.FINPROD_ID AND s.BRANCH=0  AND (s.TYPE_6 IN (''B12'', ''B01'', ''B02'', ''B03'') OR
        (s.TYPE_4 = ''B05'' AND s.TYPE_5 = ''01''))
-  where  m.PORTFOLIO_ID in ${portfolioCode}  and n.TRADE_DATE=date''${valDate}''
-';
+  where  m.PORTFOLIO_ID in ${portfolioCode}  and n.TRADE_DATE=date''${valDate}''';
 BEGIN
     UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_01_02_03 WHERE PARA_CODE = 'LLZDBJYJJ' and PARA_GRANULARITY in('01','02','03');
 

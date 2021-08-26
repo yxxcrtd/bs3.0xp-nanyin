@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='DZZQB18QMZE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DZZQB18QMZE','单只理财直融工具持仓券面总额','N','','jjpei','001',sysdate,'jjpei',sysdate,'','','Y','', 'String','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DZZQB18QMZE','单只理财直融工具持仓券面总额','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='DZZQB18QMZE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZZQB18QMZE','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','jjpei','001',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZZQB18QMZE','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZZQB18QMZE','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','jjpei','001',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZZQB18QMZE','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZZQB18QMZE','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','jjpei','001',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZZQB18QMZE','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZZQB18QMZE','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','jjpei','001',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZZQB18QMZE','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZZQB18QMZE','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','jjpei','001',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZZQB18QMZE','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占

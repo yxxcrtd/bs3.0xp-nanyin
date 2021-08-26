@@ -9,7 +9,7 @@
             <Cell order="5" name="组合名称">portfolioName</Cell>
             <Cell order="6" name="标的资产代码">finprodIdShow</Cell>
             <Cell order="7" name="标的资产名称">finprodNAME</Cell>
-            <Cell order="8" name="合作资产">chlFinprodId</Cell>
+<!--            <Cell order="8" name="合作资产">chlFinprodId</Cell>-->
             <Cell order="9" name="交易场所">tradeMarketStr</Cell>
             <Cell order="10" name="交易方向">psStr</Cell>
             <Cell order="11" name="交易日期">tradeDateStr</Cell>

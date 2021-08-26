@@ -151,27 +151,27 @@ public class CeAssetValidator implements BeanValidator{
                                 getMessage("BUSS_COM_E_0004", getMessage("CeAsset002.approveMdate"),getMessage("CeAsset002.approveVdate"))));
                     }
                 }
-                if(StringUtil.isNotEmpty(dto.getCustomerId()) && needCheckFirstLendingInterval(dto.getCustomerId())){
-                    // 首次开贷区间校验
-                    if(!StringUtil.isNotEmpty(dto.getCreditVdate())){
-                        resultList.add(new ValidMessage("firstLendingInterval",
-                                getMessage("BUSS_COM_E_0038", getMessage("CeAsset002.firstLendingInterval"))));
-                    }
-                    if(StringUtil.isNotEmpty(dto.getVdate()) && StringUtil.isNotEmpty(dto.getCreditVdate())){
-                        // 区间开始日≥生效日
-                        if(DateUtil.compareDate(dto.getVdate(), dto.getCreditVdate()) == 1){
-                            resultList.add(new ValidMessage("firstLendingInterval",
-                                    getMessage("BUSS_COM_E_0004", getMessage("CeAsset002.firstLendingIntervalVdate"),getMessage("CeAsset002.vdate"))));
-                        }
-                    }
-                    if(StringUtil.isNotEmpty(dto.getMdate()) && StringUtil.isNotEmpty(dto.getCreditMdate())){
-                        // 区间结束日≤到期日
-                        if(DateUtil.compareDate(dto.getMdate(), dto.getCreditMdate()) == -1){
-                            resultList.add(new ValidMessage("firstLendingInterval",
-                                    getMessage("BUSS_COM_E_0003", getMessage("CeAsset002.firstLendingIntervalMdate"),getMessage("CeAsset002.mdate"))));
-                        }
-                    }
-                }
+//                if(StringUtil.isNotEmpty(dto.getCustomerId()) && needCheckFirstLendingInterval(dto.getCustomerId())){
+//                    // 首次开贷区间校验
+//                    if(!StringUtil.isNotEmpty(dto.getCreditVdate())){
+//                        resultList.add(new ValidMessage("firstLendingInterval",
+//                                getMessage("BUSS_COM_E_0038", getMessage("CeAsset002.firstLendingInterval"))));
+//                    }
+//                    if(StringUtil.isNotEmpty(dto.getVdate()) && StringUtil.isNotEmpty(dto.getCreditVdate())){
+//                        // 区间开始日≥生效日
+//                        if(DateUtil.compareDate(dto.getVdate(), dto.getCreditVdate()) == 1){
+//                            resultList.add(new ValidMessage("firstLendingInterval",
+//                                    getMessage("BUSS_COM_E_0004", getMessage("CeAsset002.firstLendingIntervalVdate"),getMessage("CeAsset002.vdate"))));
+//                        }
+//                    }
+//                    if(StringUtil.isNotEmpty(dto.getMdate()) && StringUtil.isNotEmpty(dto.getCreditMdate())){
+//                        // 区间结束日≤到期日
+//                        if(DateUtil.compareDate(dto.getMdate(), dto.getCreditMdate()) == -1){
+//                            resultList.add(new ValidMessage("firstLendingInterval",
+//                                    getMessage("BUSS_COM_E_0003", getMessage("CeAsset002.firstLendingIntervalMdate"),getMessage("CeAsset002.mdate"))));
+//                        }
+//                    }
+//                }
 
             }
         }

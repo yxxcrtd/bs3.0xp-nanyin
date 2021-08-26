@@ -16,6 +16,7 @@ import com.joyintech.calculation.shell.YieldByPriceCalculator;
 import com.joyintech.calculation.shell.param.SecInfoModel;
 import com.joyintech.calculation.shell.param.YieldPriceInParameter;
 import com.joyintech.calculation.shell.param.YieldPriceOutParameter;
+import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.ArithmeticUtil;

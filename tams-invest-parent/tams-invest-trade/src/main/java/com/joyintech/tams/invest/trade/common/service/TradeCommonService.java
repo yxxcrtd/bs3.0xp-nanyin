@@ -510,7 +510,7 @@ public class TradeCommonService extends BaseService {
             creditLinesInputDto.setEntrustId(inputDto.getEntrustId());
             creditLinesInputDto.setTradeAmt(inputDto.getWinPrinAmt());
             creditLinesInputDto.setTradeId(inputDto.getBidId());
-            creditLinesInputDto.setTradeDate(inputDto.getPayDate());
+            creditLinesInputDto.setTradeDate(inputDto.getBidDate());
             creditLinesInputDto.setFinprodType2(DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue());
             creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
             creditLinesInputDto.setTradeStatus(status);

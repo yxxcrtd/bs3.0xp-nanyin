@@ -809,6 +809,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
                     creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
                 }
+                //界面上的券面总额单位是万元，换算为元
+                inputDto.setEntrustNum(inputDto.getEntrustNum().multiply(new BigDecimal(10000)));
                 creditLinesInputDto.setTradeAmt(inputDto.getEntrustNum());
                 if (inputDto.getEntrustNum() != null){
                     creditLinesInputDto.setShareAmt(inputDto.getEntrustNum().divide(new BigDecimal(100), RoundingMode.HALF_UP));
@@ -1086,6 +1088,10 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(object instanceof EtrRepoDto){
             EtrRepoDto inputDto = (EtrRepoDto) object;
             if (StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue(),inputDto.getPs())){
+                //逆回购无券  不占授信
+                if(StringUtil.isEmpty(inputDto.getFinprodId())){
+                    return null;
+                }
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
@@ -1123,6 +1129,10 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(object instanceof EtrIbRepoinfo002Dto){
             EtrIbRepoinfo002Dto inputDto = (EtrIbRepoinfo002Dto) object;
             if (StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue(),inputDto.getPs())){
+                //逆回购无券  不占授信
+                if(StringUtil.isEmpty(inputDto.getFinprodId())){
+                    return null;
+                }
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());

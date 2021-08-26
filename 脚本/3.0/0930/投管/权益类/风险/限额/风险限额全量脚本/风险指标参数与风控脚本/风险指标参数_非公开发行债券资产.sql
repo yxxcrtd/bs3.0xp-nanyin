@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='FGKFXZQZC';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('FGKFXZQZC','非公开发行债券资产','N','','jjpei','2222222',sysdate,'jjpei',sysdate,'','','Y','', 'String','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('FGKFXZQZC','非公开发行债券资产','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='FGKFXZQZC';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FGKFXZQZC','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','Y','jjpei','2222222',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FGKFXZQZC','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','Y','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FGKFXZQZC','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','Y','jjpei','2222222',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FGKFXZQZC','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','Y','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FGKFXZQZC','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','Y','jjpei','2222222',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FGKFXZQZC','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','Y','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FGKFXZQZC','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','Y','jjpei','2222222',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FGKFXZQZC','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','Y','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FGKFXZQZC','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','Y','jjpei','2222222',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FGKFXZQZC','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','Y','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占

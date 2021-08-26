@@ -121,8 +121,11 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
     	wflTrdProductDeal.setFinprodId(dto.getFinprodId());
     	wflTrdProductDeal.setWorkflowStatus("A");
     	wflTrdProductDealMapper.insertSelective(wflTrdProductDeal);
-    	
-        dto.setOperateType(type.toString());
+
+        // OperationType枚举值与dto的operateType不同,后续逻辑使用的是dto的operateType,所以不能覆盖
+        // ZGZGST-1479:fuyongsheng 20210825 delete start
+        // dto.setOperateType(type.toString());
+        // ZGZGST-1479:fuyongsheng 20210825 delete end
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doInsert", dto,
             Integer.class);

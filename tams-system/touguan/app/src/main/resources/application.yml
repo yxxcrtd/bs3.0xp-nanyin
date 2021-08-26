@@ -15,7 +15,7 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: allinone
+    active: dev
   application:
     name: tams-server
     dfstype: 2
@@ -344,7 +344,8 @@ shiro:
     /invest/trade/bond/TrdBondInvestTrade002/secAutoTrade,/invest/trade/trdrepotrade/TrdRepoTrade002/repoAutoTrade,/cstp/match/*,/CfetsQuotedCommon/**,
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
     /TrdExchangeWorkflow/**,/invest/trade/bond/TrdBondInvestTrade002/**,/invest/trade/trdrepotrade/TrdRepoTrade002/**,/invest/trade/forwex/TrdForwexInvestTrade002/**,/invest/trade/api/**,/commonPosition/**,
-    /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**
+    /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
+    /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
@@ -425,6 +426,12 @@ trade:
     risk:
       alive: 5000
       capacity: 128
+quote:
+  enable: true
+  node: #行情节点信息配置
+    name: tong_shen #行情源名称配置 tong_shen 通神  guo_jin 国金
+    weight: 1 #节点权重配置， 数值越大，优先级越高
+    interval: 50000 #节点token更新频率
 
 position:
   flag: false #是否控制账户持仓，true控制，false不控制
@@ -463,7 +470,7 @@ shiro:
     /invest/trade/bond/TrdBondInvestTrade002/secAutoTrade,/invest/trade/trdrepotrade/TrdRepoTrade002/repoAutoTrade,/cstp/match/*,/CfetsQuotedCommon/**,
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
     /TrdExchangeWorkflow/**,/invest/trade/bond/TrdBondInvestTrade002/**,/invest/trade/trdrepotrade/TrdRepoTrade002/**,/invest/trade/forwex/TrdForwexInvestTrade002/**,/invest/trade/api/**,/commonPosition/**,
-    /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId
+    /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
@@ -485,7 +492,7 @@ wind:
     username: BS30INIT_DEV
     password: BS30INIT_DEV
 log:
-  path: D:/home/tams/logs/tams/touguan
+  path: F:/home/tams/logs/tams/touguan
   level: debug
 eureka:
   client:
@@ -544,6 +551,14 @@ trade:
     risk:
       alive: 5000
       capacity: 128
+
+quote:
+  enable: true
+  node: #行情节点信息配置
+    name: tong_shen #行情源名称配置 tong_shen 通神  guo_jin 国金
+    weight: 1 #节点权重配置， 数值越大，优先级越高
+    interval: 50000 #节点token更新频率
+
 
 position:
   flag: false #是否控制账户持仓，true控制，false不控制

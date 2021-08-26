@@ -1,0 +1,3 @@
+DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='TrdBondInvestTradeEx001' AND ELEMENT_ID = 'chlFinprodId_div';
+insert into SYS_ELEMENT_CONTROL (PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
+values ('TrdBondInvestTradeEx001','chlFinprodId_div','chlFinprodId','合作资产','02','02','02',null);

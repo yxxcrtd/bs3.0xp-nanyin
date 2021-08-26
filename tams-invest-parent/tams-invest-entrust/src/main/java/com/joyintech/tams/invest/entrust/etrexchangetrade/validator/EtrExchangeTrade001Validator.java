@@ -93,9 +93,14 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 			if (!StringUtil.isNotEmpty(dto.getAcctNo())) {
 				errorList.add(new ValidMessage("acctNo", this.getMessage("ETR_ERROR_0020")));
 			}
-			if (!StringUtil.isNotEmpty(dto.getInvAim())) {
+			if (!StringUtil.isNotEmpty(dto.getInvAim()) && !dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())
+					&&  !dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+				errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
+			}else if (!StringUtil.isNotEmpty(dto.getInvAim()) && !dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())
+					&&  !dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
 				errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
 			}
+
 			if (!StringUtil.isNotEmpty(dto.getStockId())&&!StringUtil.isNotEmpty(dto.getFinprodId())) {
 				errorList.add(new ValidMessage("stockId", this.getMessage("ETR_ERROR_0016")));
 			}
@@ -264,7 +269,7 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				dto.setAccAvailableCash(etrExchangeTrade001Service.selectAccAvailableCash(param));
 				if (StringUtil.isNotEmpty(dto.getAccAvailableCash()) && StringUtil.isNotEmpty(dto.getEntrustAmt())) {
 					if (dto.getAccAvailableCash().compareTo(dto.getEntrustAmt()) == -1) {
-						errorList.add(new ValidMessage("accAvailableCash", this.getMessage("ETR_ERROR_0019")));
+						errorList.add(new ValidMessage("accAvailableCash", this.getMessage("ETR_ERROR_0019",dto.getPortfolioId())));
 					}
 				}
 			}

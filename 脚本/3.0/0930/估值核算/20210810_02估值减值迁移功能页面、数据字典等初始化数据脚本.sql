@@ -243,6 +243,7 @@ values ('ASSETGRADECONFIGINIT076', '07', '03', null, null, 'system', null, '16-A
 commit;
 
 --MOD_ASSET_MAPPING数据初始化脚本
+delete from MOD_ASEET_MAPPING;
 insert into MOD_ASEET_MAPPING(SEQ_NO,MAPPING_TYPE,input1,input2,output1,output2,output3,output4 ,output5,create_user,create_dept ,create_time,update_user,update_time) VALUES(sys_guid(),'01','F01','001','F01','01','01','001','001','system',' ',to_date('2021/7/1', 'yyyy/mm/dd'),'system',to_date('2021/7/1', 'yyyy/mm/dd'));
 insert into MOD_ASEET_MAPPING(SEQ_NO,MAPPING_TYPE,input1,input2,output1,output2,output3,output4 ,output5,create_user,create_dept ,create_time,update_user,update_time) VALUES(sys_guid(),'01','F01','002','F01','01','02','002','002','system',' ',to_date('2021/7/1', 'yyyy/mm/dd'),'system',to_date('2021/7/1', 'yyyy/mm/dd'));
 insert into MOD_ASEET_MAPPING(SEQ_NO,MAPPING_TYPE,input1,input2,output1,output2,output3,output4 ,output5,create_user,create_dept ,create_time,update_user,update_time) VALUES(sys_guid(),'01','F01','003','F01','02','03','003','003','system',' ',to_date('2021/7/1', 'yyyy/mm/dd'),'system',to_date('2021/7/1', 'yyyy/mm/dd'));
@@ -348,7 +349,7 @@ insert into MOD_ASEET_MAPPING(SEQ_NO,MAPPING_TYPE,input1,input2,output1,output2,
 
 
 -- PD违约概率管理页面
-delete from sys_page t where t.PAGE_ID='PdDefaultManager001';
+delete from sys_menu t where t.PAGE_ID='PdDefaultManager001';
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('VALUATION_001_011_004', 'VAL', null, 'VALUATION_001_011', 'PdDefaultManager001', 3, '2', 'PD违约概率管理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
@@ -417,11 +418,11 @@ values ('PdFactorWeightConfig003', 'PdFactorWeightConfig003_btn_submit', 'oneApp
 
 --前瞻因子维护配置流程BusinessType
 delete from sys_datadict_list t where t.DICT_CODE='COMMON_BUSINESS_TYPE' and t.ITEM_CODE='PDFACTOR';
-insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_RSKUE, ORDER_NO, DEFAULT_RSKUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('COMMON_BUSINESS_TYPE', 'PDFACTOR', '前瞻因子维护', 1221, '0', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
 
 delete from sys_datadict_list t where t.DICT_CODE='COMMON_BUSINESS_TYPE' and t.ITEM_CODE='PDWEIGHT';
-insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_RSKUE, ORDER_NO, DEFAULT_RSKUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('COMMON_BUSINESS_TYPE', 'PDWEIGHT', '前瞻因子权重配置', 1222, '0', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
 commit;
 
@@ -765,12 +766,12 @@ insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER
 values ('RISK_MANAGEMENT_001_013_012', 'RSK', null, 'RISK_MANAGEMENT_001_013', 'AssetImpairmentManagement001', 12, '02', '资产减值管理', 'system', null, SYSDATE, 'system', SYSDATE);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'AssetImpairmentManagement001';
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetImpairmentManagement001', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001', 'model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001', 'RISK_MANAGEMENT_001_013_012', null, null, '02', '02', '资产减值管理', 'system', null, SYSDATE, 'system', SYSDATE);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('AssetImpairmentManagement001', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement001', null, null, null, '02', '02', '资产减值管理', 'system', null, '25-AUG-21 06.51.23.000000 PM', 'system', '25-AUG-21 06.51.23.000000 PM');
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'AssetImpairmentManagement002';
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetImpairmentManagement002', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', 'model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', NULL, null, null, '02', '01', '资产减值新建', 'system', null, SYSDATE, 'system', SYSDATE);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('AssetImpairmentManagement002', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement002', null, null, null, '02', '01', '资产减值新建', 'system', null, '25-AUG-21 06.51.33.000000 PM', 'system', '25-AUG-21 06.51.33.000000 PM');
 
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AssetImpairmentManagement002';
 Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('AssetImpairmentManagement002','AssetImpairmentManagement002_btn_save','oneApproval','system',null,SYSDATE,'system',SYSDATE);
@@ -881,6 +882,7 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('MODEL_STANDARD_GRADE_RESULT','18','D','18','0','system','',to_date('2021/6/15', 'yyyy/mm/dd'), 'system',to_date('2021/6/15', 'yyyy/mm/dd'));
 
 -- 流程按钮添加begin
+delete from  sys_wfl_business_module where  PAGE_ID='InsideOutsideGrade002';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('InsideOutsideGrade002', 'ValInsideOutsideGrade002_btn_submit', 'noneApproval', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
 
@@ -889,7 +891,7 @@ values ('InsideOutsideGrade002', 'ValInsideOutsideGrade001_btn_delete', 'noneApp
 
 -- 流程按钮添加end
 -- 内外部评级映射管理配置的业务类型begin
-insert into sys_datadict_list values('COMMON_BUSINESS_TYPE','MOD09','内外部评级映射管理',1225,0,'system','',sysdate,'system',sysdate);
+insert into sys_datadict_list values('COMMON_BUSINESS_TYPE','MOD03','内外部评级映射管理',1225,0,'system','',sysdate,'system',sysdate);
 
 --评级PD维护页面
 delete from sys_page t where t.PAGE_ID='ModGradePdConfig001';
@@ -925,8 +927,8 @@ values ('COMMON_BUSINESS_TYPE', 'MOD07', '评级PD维护', 1224, '0', 'system', 
 --配置代办事项业务类型end--
 
 --MOD_CURVE_MAPPING初始化脚本
-insert into MOD_CURVE_MAPPING(SEQ_NO,CURVE_GROUP_CODE,CURVE_GROUP_NAME,CURVE_TYPE,CURVE_CODE,CURVE_NAME,GRADE_RESULT,GRADE_RESULT_NAME,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1','01','中债国债曲线','SP','1231','中债国债收益率曲线','','','system','',to_date('2021/6/16', 'yyyy/mm/dd'), 'system',to_date('2021/6/16', 'yyyy/mm/dd'));
-insert into MOD_CURVE_MAPPING(SEQ_NO,CURVE_GROUP_CODE,CURVE_GROUP_NAME,CURVE_TYPE,CURVE_CODE,CURVE_NAME,GRADE_RESULT,GRADE_RESULT_NAME,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('2','01','中债国债曲线','MA','1232','中债国债收益率曲线','','','system','',to_date('2021/6/17', 'yyyy/mm/dd'), 'system',to_date('2021/6/17', 'yyyy/mm/dd'));
+insert into MOD_CURVE_MAPPING(SEQ_NO,CURVE_GROUP_CODE,CURVE_GROUP_NAME,CURVE_TYPE,CURVE_CODE,CURVE_NAME,GRADE_RESULT,GRADE_RESULT_NAME,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1','01','中债国债曲线','SP','1231','中债国债收益率曲线','02','','system','',to_date('2021/6/16', 'yyyy/mm/dd'), 'system',to_date('2021/6/16', 'yyyy/mm/dd'));
+insert into MOD_CURVE_MAPPING(SEQ_NO,CURVE_GROUP_CODE,CURVE_GROUP_NAME,CURVE_TYPE,CURVE_CODE,CURVE_NAME,GRADE_RESULT,GRADE_RESULT_NAME,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('2','01','中债国债曲线','MA','1232','中债国债收益率曲线','02','','system','',to_date('2021/6/17', 'yyyy/mm/dd'), 'system',to_date('2021/6/17', 'yyyy/mm/dd'));
 insert into MOD_CURVE_MAPPING(SEQ_NO,CURVE_GROUP_CODE,CURVE_GROUP_NAME,CURVE_TYPE,CURVE_CODE,CURVE_NAME,GRADE_RESULT,GRADE_RESULT_NAME,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('3','02','中债企业债曲线','SP','1901','中债企业债收益率曲线(A)','08','A','system','',to_date('2021/6/18', 'yyyy/mm/dd'), 'system',to_date('2021/6/18', 'yyyy/mm/dd'));
 insert into MOD_CURVE_MAPPING(SEQ_NO,CURVE_GROUP_CODE,CURVE_GROUP_NAME,CURVE_TYPE,CURVE_CODE,CURVE_NAME,GRADE_RESULT,GRADE_RESULT_NAME,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('4','02','中债企业债曲线','MA','1902','中债企业债收益率曲线(A)','08','A','system','',to_date('2021/6/19', 'yyyy/mm/dd'), 'system',to_date('2021/6/19', 'yyyy/mm/dd'));
 insert into MOD_CURVE_MAPPING(SEQ_NO,CURVE_GROUP_CODE,CURVE_GROUP_NAME,CURVE_TYPE,CURVE_CODE,CURVE_NAME,GRADE_RESULT,GRADE_RESULT_NAME,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('5','02','中债企业债曲线','SP','2221','中债企业债收益率曲线(B)','20','B','system','',to_date('2021/6/20', 'yyyy/mm/dd'), 'system',to_date('2021/6/20', 'yyyy/mm/dd'));
@@ -1003,13 +1005,13 @@ values ('COMMON_BUSINESS_TYPE', 'MOD08', '特殊资产LGD维护', 1300, '0', 'sy
 --现金流折现模型曲线配置菜单和页面
 delete from sys_menu where PAGE_ID = 'CashFlowDiscount001';
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_009_004', 'VAL', null, 'VALUATION_001_009', 'CashFlowDiscount001', 4, '2', '现金流折现模型曲线配置', 'system', null, '05-AUG-21 10.05.34.000000 AM', 'system', '05-AUG-21 10.05.34.000000 AM');
+values ('VALUATION_001_010_001', 'VAL', null, 'VALUATION_001_010', 'CashFlowDiscount001', 1, '2', '贴现法曲线配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
-delete from sys_menu where PAGE_ID = 'CashFlowDiscount001';
+delete from sys_page where PAGE_ID = 'CashFlowDiscount001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('CashFlowDiscount001', 'VAL', '/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001', 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001', 'VALUATION_001_009_004', null, null, '02', '01', '现金流折现模型曲线配置', 'system', null, '05-AUG-21 04.20.44.000000 PM', 'system', '05-AUG-21 04.20.44.000000 PM');
 
-delete from sys_menu where PAGE_ID = 'CashFlowDiscount002';
+delete from sys_page where PAGE_ID = 'CashFlowDiscount002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('CashFlowDiscount002', 'VAL', '/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002', 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002', null, null, null, '02', '01', '现金流折现模型曲线配置新建', 'system', null, '05-AUG-21 06.37.18.000000 PM', 'system', '05-AUG-21 06.37.18.000000 PM');
 
@@ -1028,10 +1030,12 @@ values ('CashFlowDiscount002', 'ValCashFlowDiscount002_btn_submit', 'oneApproval
 
 -- 现金流折现模型曲线配置的业务类型begin
 delete from sys_datadict_list where dict_code='COMMON_BUSINESS_TYPE' and item_code='MOD06';
-insert into sys_datadict_list values('COMMON_BUSINESS_TYPE','MOD06','现金流折现模型曲线配置',1224,0,'system','',sysdate,'system',sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('COMMON_BUSINESS_TYPE', 'MOD06', '现金流折现模型曲线配置', 1224, '0', 'system', null, '05-AUG-21 03.43.56.000000 PM', 'system', '05-AUG-21 03.43.56.000000 PM', null);
 -- end
 
 -- 曲线族枚举begin
+delete  from SYS_DATADICT where dict_code='CURVE_GROUP';
 insert into SYS_DATADICT values ('CURVE_GROUP','MOD','曲线族','CURVEGROUP','02','system','',to_date('2019/06/24', 'yyyy/mm/dd'), 'system',to_date('2019/06/24', 'yyyy/mm/dd'));
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('CURVE_GROUP','01','中债国债曲线','1','1','system','',to_date('2021/6/15', 'yyyy/mm/dd'), 'system',to_date('2021/6/15', 'yyyy/mm/dd'));
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('CURVE_GROUP','02','中债企业债曲线','2','1','system','',to_date('2021/6/15', 'yyyy/mm/dd'), 'system',to_date('2021/6/15', 'yyyy/mm/dd'));
@@ -1039,19 +1043,22 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 -- end
 
 --平滑区间枚举begin
+delete from SYS_DATADICT where dict_code='SMOOTHSECTION';
 insert into SYS_DATADICT values ('SMOOTHSECTION','MOD','平滑区间','SMOOTHSECTION','02','system','',to_date('2019/06/24', 'yyyy/mm/dd'), 'system',to_date('2019/06/24', 'yyyy/mm/dd'));
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SMOOTHSECTION','01','1个月','1','2','system','',to_date('2021/6/15', 'yyyy/mm/dd'), 'system',to_date('2021/6/15', 'yyyy/mm/dd'));
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SMOOTHSECTION','02','3个月','2','2','system','',to_date('2021/6/15', 'yyyy/mm/dd'), 'system',to_date('2021/6/15', 'yyyy/mm/dd'));
 --end
 
 -- 映射类型_模型枚举begin
+delete from SYS_DATADICT_LIST  where dict_code='MODEL_MAPPING_TYPE';
 insert into SYS_DATADICT values ('MODEL_MAPPING_TYPE','MOD','映射类型_模型','MODEL_MAPPING_TYPE','02','system','',to_date('2019/06/24', 'yyyy/mm/dd'), 'system',to_date('2019/06/24', 'yyyy/mm/dd'));
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('MODEL_MAPPING_TYPE','01','资产分类映射','1','1','system','',to_date('2021/6/15', 'yyyy/mm/dd'), 'system',to_date('2021/6/15', 'yyyy/mm/dd'));
 --end
 
 -- 资产大类评级配置的业务类型begin
 delete from sys_datadict_list where dict_code='COMMON_BUSINESS_TYPE' and item_code = 'MOD01';
-insert into sys_datadict_list values('COMMON_BUSINESS_TYPE','MOD01','资产大类评级配置',1223,0,'system','',sysdate,'system',sysdate);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('COMMON_BUSINESS_TYPE', 'MOD01', '资产大类评级配置', 32, '0', 'system', null, '10-JUN-20 08.05.26.000000 PM', 'system', '10-JUN-20 08.05.26.000000 PM', null);
 -- end
 
 -- 资产分类评级配置枚举begin
@@ -1105,7 +1112,6 @@ values ('Specialassets001', 'RSK', '/model/impairment/assetratingallocation/spec
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('Specialassets002', 'RSK', '/model/impairment/assetratingallocation/specialassets/Specialassets002', 'lossmodel/assetratingallocation/specialassets/Specialassets002', null, null, null, '02', '01', '特殊资产评级配置新建', 'system', null, '05-AUG-21 03.07.29.000000 PM', 'system', '05-AUG-21 03.07.29.000000 PM');
-Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('Specialassets002','RSK','/model/impairment/assetratingallocation/specialassets/Specialassets002','model/impairment/assetratingallocation/specialassets/Specialassets002',null,null,null,'02','01','特殊资产评级配置新建','system',null,sysdate,'system',sysdate);
 
 
 delete from SYS_PAGE where PAGE_ID in('LossGivenDefaultManage001','LossGivenDefaultMaintain001','LossGivenDefaultMaintain002');

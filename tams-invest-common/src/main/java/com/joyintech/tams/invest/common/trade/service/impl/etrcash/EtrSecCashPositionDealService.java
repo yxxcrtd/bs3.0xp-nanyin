@@ -807,6 +807,11 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             finProductTradeDto.getTrdProductDeal().getCcy(), finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),
                 finProductTradeDto.getTrdProductDeal().getCounterId(),
             etrCashPositionFlowDto);
+        //一级债券 组合托管户 交割现金
+        if(StringUtil.isNotEmpty(finProductTradeDto.getBondFirstSign())){
+            账号 = EtrCommonCashPositionDealService.select组合托管户(finProductTradeDto.getTrdProductDealAdd().getPortfolioId()
+                    , finProductTradeDto.getTrdProductDeal().getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue());
+        }
         // 设置账号
         etrCashPositionFlowDto.setAcctId(账号);
         // 交易生效
@@ -832,6 +837,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
 //                if(StringUtil.isNotEmpty(finProductTradeDto.getBondFirstSign())){
 //                	etrPositionHoldDto.getPtlCashPositionFlows().add(gen一级市场冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量));
 //                }else{
+
                         etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量,finProductTradeDto.getTrdProductDeal().getSettleDate(), finProductTradeDto.getTrdProductDeal().getTradeMarket(),finProductTradeDto.getBondFirstSign()));
 //                }
                 }

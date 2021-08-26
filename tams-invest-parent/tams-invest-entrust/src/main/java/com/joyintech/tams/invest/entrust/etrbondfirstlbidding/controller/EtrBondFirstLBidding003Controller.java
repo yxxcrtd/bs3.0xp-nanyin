@@ -203,7 +203,7 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
 
         ProcessParameter<EtrBondFirstLBiddingDto> processParameter = new ProcessParameter<EtrBondFirstLBiddingDto>();
         WorkFlowParameter<EtrBondFirstLBiddingDto> params = new WorkFlowParameter<EtrBondFirstLBiddingDto>();
-        params.setPageId(this.getPageId());
+        params.setPageId("EtrBondFirstLBidding002");
         params.setElementId(dtoList.get(0).getElementId());
         params.setBusinessCode(EtrBondFirstLBiddingDto::getEntrustId);
         params.setBusinessType(BussinessDictCodeList.共同业务类型_债券一级投标委托.getValue());

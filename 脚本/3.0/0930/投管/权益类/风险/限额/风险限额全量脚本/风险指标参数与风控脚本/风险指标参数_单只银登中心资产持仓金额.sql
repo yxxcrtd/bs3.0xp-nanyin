@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='DZYDZXQMZE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DZYDZXQMZE','单只银登中心资产持仓金额','N','','zhangrui1','001',sysdate,'zhangrui1',sysdate,'','','Y','', 'String','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DZYDZXQMZE','单只银登中心资产持仓金额','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='DZYDZXQMZE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZYDZXQMZE','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','zhangrui1','001',sysdate,'zhangrui1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZYDZXQMZE','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZYDZXQMZE','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','zhangrui1','001',sysdate,'zhangrui1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZYDZXQMZE','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZYDZXQMZE','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','zhangrui1','001',sysdate,'zhangrui1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZYDZXQMZE','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZYDZXQMZE','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','zhangrui1','001',sysdate,'zhangrui1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZYDZXQMZE','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZYDZXQMZE','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','zhangrui1','001',sysdate,'zhangrui1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DZYDZXQMZE','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占

@@ -468,13 +468,15 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             String invAim = rowData.get(6).toString().trim();
             dto.setInvAim(invAim.split(":")[0]);
             //交易对手
-            dto.setCounterId(rowData.get(7).toString().trim());
-            String counterName = getCounterName(rowData.get(7).toString().trim());
-            dto.setCounterIdName(counterName);
+            selectOptionDto = getCounterInfo(rowData.get(7).toString());
+            dto.setCounterId(selectOptionDto == null ? "":selectOptionDto.getId());
+            dto.setCounterIdName(selectOptionDto == null ? "":selectOptionDto.getText());
             dto.setBidPrice(rowData.get(8).toString().trim());
             dto.setBidPrinAmt(BigDecimal.valueOf(Double.valueOf(rowData.get(9).toString().trim())));
             dto.setDealAmount(BigDecimal.valueOf(Double.valueOf(rowData.get(10).toString().trim())));
-            dto.setMainConsignee(rowData.get(11).toString().trim());
+            // 主承销商
+            selectOptionDto = getMainConsigneeInfo(rowData.get(11).toString().trim());
+            dto.setMainConsignee(selectOptionDto == null ? "":selectOptionDto.getId());
             //指令可用现金
             Map<String, Object> param = new HashMap<>();
             param.put("finprodId", jsonObject.get("finprodId").toString());
@@ -500,6 +502,49 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             etrBondFirstLBiddingDtoList.add(dto);
         }
         return etrBondFirstLBiddingDtoList;
+    }
+
+    /**
+     * 查询交易对手信息
+     *
+     * @return
+     */
+    private SelectOptionDto getCounterInfo(String initValue) {
+        SelectOptionDto selectOptionDto = null;
+        if(StringUtil.isNotEmpty(initValue)){
+            Map<String, Object> map = new HashMap<>();
+            map.put("initValue", initValue);
+            map.put("page", 1);
+            map.put("length", 20);
+            map.put("counterType", null);
+            Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
+                    map, SelectOptionDto.class);
+            if (!selectOptionDtoPage.getRoot().isEmpty()) {
+                selectOptionDto = selectOptionDtoPage.getRoot().get(0);
+            }
+        }
+        return selectOptionDto;
+    }
+
+    /**
+     * 查询主承销商信息
+     *
+     * @return
+     */
+    private SelectOptionDto getMainConsigneeInfo(String initValue) {
+        SelectOptionDto selectOptionDto = null;
+        if(StringUtil.isNotEmpty(initValue)){
+            Map<String, Object> map = new HashMap<>();
+            map.put("initValue", initValue);
+            map.put("page", 1);
+            map.put("length", 20);
+            Page<SelectOptionDto> selectOptionDtoPage = getMainConsignee(map);
+            if (!selectOptionDtoPage.getRoot().isEmpty()) {
+                selectOptionDto = selectOptionDtoPage.getRoot().get(0);
+            }
+        }
+        return selectOptionDto;
     }
 
     /**

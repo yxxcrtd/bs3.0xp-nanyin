@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='GLFDBJYJESX';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GLFDBJYJESX','关联方单笔交易金额上限','N','','system','',sysdate,'system',sysdate,'','','N','', 'String','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GLFDBJYJESX','关联方单笔交易金额上限','N','','cdj','C001',sysdate,'cdj',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='GLFDBJYJESX';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GLFDBJYJESX','01', 'SQL','SELECT 1 FROM DUAL', 'relatedParty','N','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GLFDBJYJESX','01', 'SQL','SELECT 1 FROM DUAL', 'relatedParty','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GLFDBJYJESX','02', 'SQL','SELECT 1 FROM DUAL', 'relatedParty','N','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GLFDBJYJESX','02', 'SQL','SELECT 1 FROM DUAL', 'relatedParty','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GLFDBJYJESX','03', 'SQL','SELECT 1 FROM DUAL', 'relatedParty','N','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GLFDBJYJESX','03', 'SQL','SELECT 1 FROM DUAL', 'relatedParty','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GLFDBJYJESX','04', 'SQL','SELECT 1 FROM DUAL', 'relatedParty','N','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GLFDBJYJESX','04', 'SQL','SELECT 1 FROM DUAL', 'relatedParty','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GLFDBJYJESX','05', 'SQL','SELECT 1 FROM DUAL', 'relatedParty','N','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GLFDBJYJESX','05', 'SQL','SELECT 1 FROM DUAL', 'relatedParty','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占

@@ -319,9 +319,15 @@
                 function (result) {
                     Joyin.confirm(result.data, function () {
                         if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeImport/save', allDto, "EtrExchangeImport_btn_save",'EtrExchangeImport');
+                            WorkFlow.doSaveList(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeImport/save', allDto, "EtrExchangeImport_btn_save",'EtrExchangeImport', function () {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
                         } else {
-                            WorkFlow.doSubmitList(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeImport/save', allDto, "EtrExchangeImport_btn_submit",'EtrExchangeImport');
+                            WorkFlow.doSubmitList(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeImport/save', allDto, "EtrExchangeImport_btn_submit",'EtrExchangeImport', function () {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
                         }
                     });
                 });

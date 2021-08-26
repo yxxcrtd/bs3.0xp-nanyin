@@ -12,18 +12,18 @@ SELECT ''Y'' ID ,''存放他行'' TEXT FROM DUAL
 UNION all
 SELECT ''Y'' ID ,''非标债权'' TEXT FROM DUAL
 UNION all
-SELECT ''N'' ID ,''其它资产'' TEXT FROM DUAL','dzw','001',sysdate,'dzw',sysdate,'','','N','', 'String','REDIS', 'N||否');
+SELECT ''N'' ID ,''其它资产'' TEXT FROM DUAL','cdj','C001',sysdate,'cdj',sysdate,'','','N','String', '','REDIS', 'N||否');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='ZHKTZZCXZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHKTZZCXZ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','dzw','001',sysdate,'dzw',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHKTZZCXZ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHKTZZCXZ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','dzw','001',sysdate,'dzw',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHKTZZCXZ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHKTZZCXZ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','dzw','001',sysdate,'dzw',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHKTZZCXZ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHKTZZCXZ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','dzw','001',sysdate,'dzw',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHKTZZCXZ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHKTZZCXZ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','dzw','001',sysdate,'dzw',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZHKTZZCXZ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占

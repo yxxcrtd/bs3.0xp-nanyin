@@ -840,7 +840,7 @@
     	 * 委托指令radio点击事件
     	 */
     	$("[name=entrustStatus]").click(function(){
-    	    fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+    	    // fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
     		entrustOrderTable.table ? entrustOrderTable.reload() : entrustOrderTable.load();
         });
     	/**

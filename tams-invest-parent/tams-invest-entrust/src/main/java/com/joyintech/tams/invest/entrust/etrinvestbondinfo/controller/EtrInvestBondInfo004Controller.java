@@ -203,8 +203,9 @@ public class EtrInvestBondInfo004Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody List<EtrInvestBondInfoDto> dtoList, BindingResult br)
+    public AjaxResult save(@RequestBody EtrInvestBondInfoDto dto2, BindingResult br)
             throws Exception {
+        List<EtrInvestBondInfoDto> dtoList = dto2.getSelectedItem();
     	for(EtrInvestBondInfoDto dto : dtoList) {
         	if(dto.getEntrustNum()!=null) {
         		dto.setEntrustNum(dto.getEntrustNum().multiply(new BigDecimal(10000)));//万元转成元
@@ -231,7 +232,7 @@ public class EtrInvestBondInfo004Controller extends BaseController {
                         param) : IDGenerator.generate();
                 dto.setEntrustId(code);
             }
-            dto.setWorkflowParameter("new|||1|EtrRepo003|EtrRepo003_btn_submit|true");
+//            dto.setWorkflowParameter("new|||1|EtrRepo003|EtrRepo003_btn_submit|true");
         }
         //多组合风险试算结果处理
         for(EtrInvestBondInfoDto dto: dtoList) {
