@@ -68,3 +68,12 @@ values ('MODEL_MAIN_GRADE_TYPE', '07', 'SEC_TYPE', '07', 'system', null, '21-OCT
 
 insert into SYS_DATADICT_LIST_LINK (ROWID, DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('MODEL_MAIN_GRADE_TYPE', '08', 'SEC_TYPE', '09', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+
+--资产减值管理sys_page修改
+DELETE FROM SYS_PAGE WHERE PAGE_ID = 'AssetImpairmentManagement001';
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('AssetImpairmentManagement001', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement001', null, null, null, '02', '02', '资产减值管理', 'system', null, '25-AUG-21 06.51.23.000000 PM', 'system', '25-AUG-21 06.51.23.000000 PM');
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID = 'AssetImpairmentManagement002';
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('AssetImpairmentManagement002', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement002', null, null, null, '02', '01', '资产减值新建', 'system', null, '25-AUG-21 06.51.33.000000 PM', 'system', '25-AUG-21 06.51.33.000000 PM');
