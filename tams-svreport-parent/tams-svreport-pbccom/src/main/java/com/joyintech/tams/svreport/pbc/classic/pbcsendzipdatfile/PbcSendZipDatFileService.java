@@ -310,12 +310,13 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 	 * @return 压缩文件之地
 	 */
 	public AjaxResult createZipFile(Map<String, Object> param) {
-		param.put("zipSendStatus",DictCodeListExt2.报送状态_未报送.getValue());
 		if(StringUtil.isNotEmpty(param.get("result"))){
 			try {
 				param.put("seqnoList",JsonUtils.json2List(param.get("result").toString(),String.class));
 			} catch (IOException e) {
 			}
+		}else{
+			param.put("zipSendStatus",DictCodeListExt2.报送状态_未报送.getValue());
 		}
 		// 报送类型
 		String datZipType = (String) param.get("datZipType");
