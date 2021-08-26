@@ -80,7 +80,7 @@
                 }
             }
             , {field: 'portfolioName', width:180, sortField:'portfolioName', title: 'TrdRepoTrade001.colModel.portfolioName'}
-            , {field: 'chlFinprodId', width:180, sortField:'chlFinprodId', title: 'TrdRepoTrade001.colModel.chlFinprodId'}
+            // , {field: 'chlFinprodId', width:180, sortField:'chlFinprodId', title: 'TrdRepoTrade001.colModel.chlFinprodId'}
             , {field: 'tradeMarket', width:180, sortField:'tradeMarket', title: 'TrdRepoTrade001.colModel.tradeMarket'}
             , {field: 'bondName', width:180, sortable:false, title: 'TrdRepoTrade001.colModel.bondName'}
             , {field: 'repoTypeText', width:120, sortField:'repoType', title: 'TrdRepoTrade001.colModel.repoType'}
