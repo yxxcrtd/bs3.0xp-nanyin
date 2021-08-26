@@ -30,7 +30,7 @@ import com.joyintech.framework.util.StringUtil;
  * @see FileCommonController
  * @since 1.0
  */
-@Controller
+@Controller(value="FileCommon001Controller")
 @RequestMapping("/component/core/FileCommon")
 public class FileCommonController extends BaseController{
 
