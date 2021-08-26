@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='FBZCJE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('FBZCJE','非标资产金额','N','','jjpei','2222222',sysdate,'jjpei',sysdate,'','','Y','', 'String','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('FBZCJE','非标资产金额','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='FBZCJE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FBZCJE','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FBZCJE','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FBZCJE','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FBZCJE','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FBZCJE','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FBZCJE','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FBZCJE','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FBZCJE','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FBZCJE','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','jjpei','2222222',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('FBZCJE','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
