@@ -14,6 +14,7 @@ import com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportCompanyDetailDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
 import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
+import com.joyintech.tams.svreport.pbc.common.service.PbcDatPriviewService;
 import com.joyintech.tams.svreport.pbc.common.service.PbcExportService;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
@@ -36,7 +37,7 @@ import java.util.Map;
  */
 @Service
 @TemplateName(PbcDatTemplateName.PBC_DAT_REPORT_2_5)
-public class PbcReportCompanyBondDatService extends PbcExportService {
+public class PbcReportCompanyBondDatService extends PbcDatPriviewService {
 
 	@SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(getClass());

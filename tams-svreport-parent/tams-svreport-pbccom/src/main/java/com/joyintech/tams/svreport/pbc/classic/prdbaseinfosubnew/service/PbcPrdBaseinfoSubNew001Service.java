@@ -359,7 +359,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				List<String> outDepCtrys=StringUtil.splitToList(GlobalConstant.COMMA, result.getOutDepCtry());
 				result.setOutDepCtry("");
 				for(String outDepCtry : outDepCtrys){
-					result.setOutDepCtry(result.getOutDepCtry()+","+SvrDataUtil.getNameFromDataDict(DictCode.所属国家或地区, outDepCtry));
+					result.setOutDepCtry(result.getOutDepCtry()+","+ outDepCtry);
 				}
 				result.setOutDepCtry(result.getOutDepCtry().substring(1));
 			}
