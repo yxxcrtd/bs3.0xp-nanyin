@@ -1439,8 +1439,7 @@
         SUBMIT_TIME = NULL,
         RETURN_ZIP_SEND_STATUS=NULL,
         DAT_ZIP_STATUS = #{zipStatus,jdbcType=CHAR},
-        ZIP_DOWNLOAD_TIME = null,
-        DAT_ZIP_PATH = null
+        ZIP_DOWNLOAD_TIME = null
         WHERE  EXISTS(
               SELECT 1 FROM PBC_PRD_BASEINFO_SUB_DAT SD WHERE F.DAT_ZIP_CODE = SD.DAT_ZIP_CODE AND SD.SEND_STATUS = #{sendStatus,jdbcType=CHAR}
               UNION ALL
