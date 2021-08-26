@@ -766,12 +766,12 @@ insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER
 values ('RISK_MANAGEMENT_001_013_012', 'RSK', null, 'RISK_MANAGEMENT_001_013', 'AssetImpairmentManagement001', 12, '02', '资产减值管理', 'system', null, SYSDATE, 'system', SYSDATE);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'AssetImpairmentManagement001';
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetImpairmentManagement001', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001', 'model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001', 'RISK_MANAGEMENT_001_013_012', null, null, '02', '02', '资产减值管理', 'system', null, SYSDATE, 'system', SYSDATE);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('AssetImpairmentManagement001', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement001', null, null, null, '02', '02', '资产减值管理', 'system', null, '25-AUG-21 06.51.23.000000 PM', 'system', '25-AUG-21 06.51.23.000000 PM');
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'AssetImpairmentManagement002';
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetImpairmentManagement002', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', 'model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', NULL, null, null, '02', '01', '资产减值新建', 'system', null, SYSDATE, 'system', SYSDATE);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('AssetImpairmentManagement002', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement002', null, null, null, '02', '01', '资产减值新建', 'system', null, '25-AUG-21 06.51.33.000000 PM', 'system', '25-AUG-21 06.51.33.000000 PM');
 
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AssetImpairmentManagement002';
 Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('AssetImpairmentManagement002','AssetImpairmentManagement002_btn_save','oneApproval','system',null,SYSDATE,'system',SYSDATE);
