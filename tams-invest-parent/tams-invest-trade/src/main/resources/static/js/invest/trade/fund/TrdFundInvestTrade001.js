@@ -98,7 +98,7 @@
                 return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
             },sortField:"orderPortfolioId"}
             ,{field:'portfolioName', width:'12%', title: 'TrdFundInvestTrade001.portfolioName',sortField:"PORTFOLIO_NAME"}
-            ,{field:'chlFinprodId', width:'12%', title: 'TrdFundInvestTrade001.chlFinprodId',sortField:"chlFinprodId"}
+            // ,{field:'chlFinprodId', width:'12%', title: 'TrdFundInvestTrade001.chlFinprodId',sortField:"chlFinprodId"}
             ,{field:'finprodMarketId', width:'12%', title: 'TrdFundInvestTrade001.finprodId',
                 render : function(data, type, row, meta) {
                     return "<a  class='pro-link finprodIdLink' style='cursor: pointer;'>"+data+"</ a>";
