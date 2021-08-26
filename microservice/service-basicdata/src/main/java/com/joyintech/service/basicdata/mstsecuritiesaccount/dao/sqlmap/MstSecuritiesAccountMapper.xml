@@ -243,7 +243,7 @@ with ZYSHG as
                 t.TYPE_7,
                 t.IS_NET_SETT
   from (
-    <if test="tradePlat != null and tradePlat != '' and tradePlat = '02'.toString()">
+    <if test="tradePlat != null and tradePlat != '' and tradePlat.equals('02')">
         select t.oth_code  as finprod_market_id,
                    t.oth_code || '|' || v.finprod_abbr || decode(t.oth_type,#{FINPROD_OTH_CODE_TYPE_05},'配债',#{FINPROD_OTH_CODE_TYPE_06},'配股') as finprod_name,
                    t.oth_type oth_code_type,
@@ -291,17 +291,17 @@ with ZYSHG as
             and (b.TRADE_PLAT like concat('%',concat(#{tradePlat},'%')) and a.finprod_type2 = 'F01') or a.finprod_type2 != 'F01'
         </if>
         <choose>
-            <when test="tradePlat != null and tradePlat != '' and tradePlat == '04'.toString()">
+            <when test="tradePlat != null and tradePlat != '' and tradePlat.equals('04')">
                and a.finprod_type2 in (#{FINPROD_TYPE_TG_F01}, #{FINPROD_TYPE_TG_F06}, #{FINPROD_TYPE_TG_F10}) <!-- 债券 、股票 、基金 -->
             </when>
-            <when test="tradePlat != null and tradePlat != '' and tradePlat == '02'.toString()">
+            <when test="tradePlat != null and tradePlat != '' and tradePlat.equals('02')">
                and a.finprod_type2 in (#{FINPROD_TYPE_TG_F01}, #{FINPROD_TYPE_TG_F06}, #{FINPROD_TYPE_TG_F10}) <!-- 债券 、股票 、基金 -->
             </when>
             <otherwise>
               and a.finprod_type2 in (#{FINPROD_TYPE_TG_F01})<!--  债券 -->
             </otherwise>
         </choose>
-    <if test="tradePlat != null and tradePlat != '' and (tradePlat == '04'.toString() or tradePlat == '02'.toString())">
+    <if test="tradePlat != null and tradePlat != '' and (tradePlat.equals('04') or tradePlat.equals('02'))">
         union
         select distinct a.item_code as finprod_market_id,
                 a.item_code  || '|' || a.item_value as finprod_name,
