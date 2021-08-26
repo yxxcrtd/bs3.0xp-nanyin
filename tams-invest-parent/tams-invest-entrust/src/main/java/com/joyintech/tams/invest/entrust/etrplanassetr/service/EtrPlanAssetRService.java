@@ -311,7 +311,7 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
      */
      @Override
      public void doInsert(EtrPlanAssetRDto dto, OperationType type){
-         dto.setOperateType(type.toString());
+         //dto.setOperateType(type.toString());
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetR/doInsert",dto,
              Integer.class);
