@@ -35,6 +35,7 @@ public class MonthReportUtil {
         ReportGroup reportGroup = AnnotationUtils.findAnnotation(clazz, ReportGroup.class);
         if(reportGroup != null){
             String group = reportGroup.group();
+            boolean divide = reportGroup.isDivide();
             Field[] declaredFields = clazz.getDeclaredFields();
             Constructor<T> declaredConstructor = clazz.getDeclaredConstructor();
             //get the enum for report ,it is very important,so  you must know what is  PbcReportEnums!
@@ -49,11 +50,11 @@ public class MonthReportUtil {
                         ExcelCell excelCell = AnnotationUtils.findAnnotation(declaredField, ExcelCell.class);
                         if(excelCell != null){
                             if(StrUtil.isNotEmpty(excelCell.fixedValue())){
-                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,excelCell.fixedValue(),clazz);
+                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,excelCell.fixedValue(),clazz,divide);
                             }else if(excelCell.isPropertyCode()){
-                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,pbcReportEnums.getPropertyCode(),clazz);
+                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,pbcReportEnums.getPropertyCode(),clazz,divide);
                             }else if(excelCell.isReportType()){
-                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,reportType,clazz);
+                                setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,reportType,clazz,divide);
                             }else{
                                 //列号
                                 int columnNumber = excelCell.columnNumber();
@@ -62,7 +63,7 @@ public class MonthReportUtil {
                                     HSSFCell cell = row.getCell(columnNumber);
                                     cell.setCellType(CellType.STRING);
                                     String stringCellValue = cell.getStringCellValue();
-                                    setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,stringCellValue,clazz);
+                                    setEntityValue(declaredField.getName(),declaredField.getType(),newInstance,stringCellValue,clazz,divide);
                                 }
                             }
 
@@ -75,33 +76,38 @@ public class MonthReportUtil {
         return instanceList;
     }
 
-    private static Object checkValueType(Class<?> reqType, Object value){
+    private static Object checkValueType(Class<?> reqType, Object value,boolean isDivide){
         if(value != null && !"".equals(value.toString())){
             if(reqType.equals(String.class)){
                 return value;
             }else if(reqType.equals(Long.class)){
                 long parseLong = Long.parseLong(value.toString());
-                return parseLong * 10000L;
+                return parseLong;
             }else if(reqType.equals(long.class)){
                 long parseLong = Long.parseLong(value.toString());
-                return parseLong * 10000L;
+                return parseLong;
             }else{
                 if(reqType == BigDecimal.class){
-                    BigDecimal multiply = new BigDecimal(value.toString()).multiply(new BigDecimal(10000));
-                    return multiply;
+                    if(isDivide){
+                        BigDecimal multiply = new BigDecimal(value.toString()).multiply(new BigDecimal(10000));
+                        return multiply;
+                    }else{
+                        return new BigDecimal(value.toString());
+                    }
+
                 }
             }
         }
         return null;
     }
 
-    private static void setEntityValue(String feildName,Class<?> fieldType,Object newInstance,String value,Class<?> tClass) throws Exception {
+    private static void setEntityValue(String feildName,Class<?> fieldType,Object newInstance,String value,Class<?> tClass,boolean isDivide) throws Exception {
         if(StrUtil.isNotEmpty(value)){
             //获取请求实体中set方法
             String setMethod = buildSetMethod(feildName);
             Method method = tClass.getMethod(setMethod, fieldType);
             //执行请求实体中set方法设置请求参数值
-            method.invoke(newInstance,checkValueType(fieldType,value));
+            method.invoke(newInstance,checkValueType(fieldType,value,isDivide));
         }
     }
 

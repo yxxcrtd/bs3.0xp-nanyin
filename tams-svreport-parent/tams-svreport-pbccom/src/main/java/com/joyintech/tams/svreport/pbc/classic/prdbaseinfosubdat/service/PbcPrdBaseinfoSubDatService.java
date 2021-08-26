@@ -276,6 +276,11 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 if(CollectionUtil.isNotEmpty(prdList)){
                     for (PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat : prdList) {
                         pbcPrdBaseinfoSubDat.setRegistSeqno(UUID.randomUUID().toString());
+                        pbcPrdBaseinfoSubDat.setOrgCode(orgCode);
+                        pbcPrdBaseinfoSubDat.setCreateUser(SecurityUtil.getLoginUser().getUserName());
+                        pbcPrdBaseinfoSubDat.setCreateTime(new Date());
+                        pbcPrdBaseinfoSubDat.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+                        pbcPrdBaseinfoSubDat.setUpdateTime(new Date());
                         pbcPrdBaseinfoSubDatMapper.insert(pbcPrdBaseinfoSubDat);
                     }
                 }

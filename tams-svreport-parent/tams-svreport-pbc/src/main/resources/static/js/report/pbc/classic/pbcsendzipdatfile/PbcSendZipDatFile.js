@@ -109,7 +109,7 @@ $(function() {
     // 导入统计模板数据
     $('#PbcSendZipDatFile_btn_staticTemplateImport').click(function() {
         Joyin.confirm("请确认是否要导入数据？", function() {
-            Joyin.uploadFile(function(fileName) {
+            Joyin.uploadFile({pageId:"PbcSendZipDatFile02"},function(fileName) {
                 Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/checkMonthReport', {fileName: fileName}, function() {
                     Joyin.ajax(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/importMonthReport', {fileName: fileName},function() {
                         table.reload();
@@ -130,7 +130,8 @@ $(function() {
                 arr.push(selArr[i].datZipCode);
             }
             var data = JSON.stringify(arr);
-            var param = {result:data};
+            var param = getSearchParams();
+            param.result = data;
             Joyin.ajaxSync(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/createZipFile', param, function(result) {
                 var msg = result.message;
                 /*if(msg != null && msg != ''){
@@ -141,6 +142,7 @@ $(function() {
                 } else {
                     param.result =result.data;
                     Joyin.exportExcel(basePath + 'pbc/pbcsendzipdatfile/PbcSendZipDatFile/download', param);
+                    table.reload();
                 }
 
             });
