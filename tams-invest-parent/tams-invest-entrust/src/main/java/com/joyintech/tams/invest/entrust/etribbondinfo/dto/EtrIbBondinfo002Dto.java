@@ -1059,4 +1059,14 @@ public class EtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntity {
     public void setDeviationDegree(BigDecimal deviationDegree) {
         this.deviationDegree = deviationDegree;
     }
+
+    /**
+     * 获取 tradeMarketName
+     *
+     * @return tradeMarketName.
+     */
+    public String getInvAimName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.投资目的, super.getInvAim());
+    }
+
 }
