@@ -80,6 +80,7 @@
         , {field: 'minAmt', title: 'EtrInvestBondInfo004.minAmt', type: 'number', width: 150, sortable: false, visible: false}
         , {field: 'settleSpreed', width: 150, visible: false}
         , {field: 'settleSpreedName', title: 'EtrInvestBondInfo004.settleSpreed', width: 150, sortable: false}
+        , {field: 'invAim', width: 150, visible: false}
         , {field: 'invAimName', title: 'EtrInvestBondInfo004.invAim', width: 150, sortable: false}
         , {field: 'tradeMarketName', title: 'EtrInvestBondInfo004.tradeMarket', width: 150, sortable: false, visible: false}
         , {field: 'tradePlatName', title: 'EtrInvestBondInfo004.tradePlat', width: 150, sortable: false, visible: false}
