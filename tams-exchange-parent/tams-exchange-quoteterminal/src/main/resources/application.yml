@@ -40,9 +40,12 @@ ctp:
 quote:
   enable: true
   node: #行情节点信息配置
-    name: tong_shen1 #行情源名称配置 tong_shen 通神  guo_jin 国金
+    name: tong_shen #行情源名称配置 tong_shen 通神  guo_jin 国金
     weight: 1 #节点权重配置， 数值越大，优先级越高
     interval: 50000 #节点token更新频率
+test:
+  quote: false  #测试环境配置false，生产环境配置true
+
 
 sse:
   binary:

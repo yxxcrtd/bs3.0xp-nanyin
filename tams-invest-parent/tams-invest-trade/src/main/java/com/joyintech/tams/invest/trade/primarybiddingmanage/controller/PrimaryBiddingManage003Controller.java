@@ -288,8 +288,8 @@ public class PrimaryBiddingManage003Controller extends BaseController {
                         :inputDto.getWinPrinAmt().doubleValue() - totalPLATPrice.doubleValue();
                 }
                 //该标位最终结果
-//                BigDecimal resultPrinAmt = new BigDecimal(theWinPrinAmt).setScale(2,BigDecimal.ROUND_HALF_UP);
-                BigDecimal resultPrinAmt = BigDecimal.valueOf(Math.round(theWinPrinAmt / 100.0) * 100.0);
+                BigDecimal resultPrinAmt = new BigDecimal(theWinPrinAmt).setScale(2,BigDecimal.ROUND_HALF_UP);
+//                BigDecimal resultPrinAmt = BigDecimal.valueOf(Math.round(theWinPrinAmt / 100.0) * 100.0);
 
                 dto.setTheWinPrinAmt(resultPrinAmt);
                 dto.setWinPrice(dto.getBidPrice());

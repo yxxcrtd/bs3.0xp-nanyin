@@ -25,7 +25,7 @@
         ,{field:'bidPrinAmt',  title: '投标券面总额/万元'}
         ,{field:'winPrice',  title: '中标标位（%）'}
         ,{field:'theWinPrinAmt',  title: '理论中标券面总额/万元'}
-        ,{field:'winPrinAmt',  title: '实际中标券面总额/万元',edit: true,type: 'number',render: function (data, type, row, meta) {
+        ,{field:'winPrinAmt', digit:4, title: '实际中标券面总额/万元',edit: true,type: 'number',render: function (data, type, row, meta) {
                 if(null==data||''==data.toString()) {
                     return row.theWinPrinAmt;
                 }else {
