@@ -269,7 +269,7 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				dto.setAccAvailableCash(etrExchangeTrade001Service.selectAccAvailableCash(param));
 				if (StringUtil.isNotEmpty(dto.getAccAvailableCash()) && StringUtil.isNotEmpty(dto.getEntrustAmt())) {
 					if (dto.getAccAvailableCash().compareTo(dto.getEntrustAmt()) == -1) {
-						errorList.add(new ValidMessage("accAvailableCash", this.getMessage("ETR_ERROR_0019")));
+						errorList.add(new ValidMessage("accAvailableCash", this.getMessage("ETR_ERROR_0019",dto.getPortfolioId())));
 					}
 				}
 			}
