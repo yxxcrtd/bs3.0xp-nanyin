@@ -1865,6 +1865,15 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		// 当组合下只绑定一个资金账户时无需输入
 		Map<String, Object> param = new HashMap<>();
 		param.put("portfolioId", t.getPortfolioId());
+		//add by cehnjiaxing 导入联动券商账户时查询交易场所 20210826 start
+		String tradeMarket = t.getFinprodId();
+		String[] arr = StringUtil.split(tradeMarket, ".");
+		if(StringUtil.equals(arr[1],"SH")){
+			param.put("tradeMarket", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+		}else if(StringUtil.equals(arr[1],"SZ")){
+			param.put("tradeMarket", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+		}
+		//add by cehnjiaxing 导入联动券商账户时查询交易场所 20210826 end
 		List<SelectOptionDto> ptlSecAcctList = getPtlSecAcctInfo(param);
 		if(StringUtil.isEmptyList(ptlSecAcctList)){
 			return getMessage("ETR_E_0037", t.getPortfolioId(), Integer.valueOf(t.getSeqNo())+1);
