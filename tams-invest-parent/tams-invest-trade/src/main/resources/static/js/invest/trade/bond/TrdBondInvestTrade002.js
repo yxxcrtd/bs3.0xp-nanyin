@@ -318,7 +318,8 @@ var table;
             var currentCalcParam = getCalcParam();
             for ( var key in currentCalcParam) {
                 //---update by jjpei 20190731---排除riskMathFlag----
-                if (key == 'selectValue'||key=='riskMathFlag' || key=='remark') {
+                if (key == 'selectValue' || key == 'riskMathFlag' || key == 'remark' || key == 'isPayWithTrade'
+                    || key == 'exchangeIsPayWithTrade' || key == 'settleIsPayWithTrade' || key == 'stampDutyIsPayWithTrade') {
                     continue;
                 }
                 //---update by jjpei 20190731---排除riskMathFlag----
@@ -655,6 +656,10 @@ var table;
                 			disabled: false
                 		});
                 	}
+                    if($('#tradeMarket').val() === '05'){
+                        $('#tradePlat').prop("disabled",true);
+                        checkAndAssign("#tradePlat", SHARES_TRADE_PLATFORM_99, false);
+                    }
                     break;
             }
         }
@@ -713,6 +718,15 @@ var table;
             }*/
         } else {
             // $("#commissionAmt").prop("disabled", false).val(commissionAmt).trigger('blur').trigger('change');
+            //编辑模式或者新建模式下交易市场为二级市场时影响资产代码，对应资产不能为发行标的
+            if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT){
+                if ($('#finprodId').val != null && $('#finprodId').val != ''){
+                    var data = $('#finprodId').select2('data')[0].object;
+                    if (data && data.isIssueAsset == 'Y' && $("#tradeMarketMode").val() == '02'){
+                        $('#finprodId').val('').trigger("change");
+                    }
+                }
+            }
             if ($("#entrustId").val()) {
                 $("#ps").attr("disabled", true);
             }else if ($("#fTradeId").val()){
@@ -1371,6 +1385,7 @@ var table;
      */
     $("#invAim").on("change", function () {
         updateCash();
+        priceInitByInCpy();
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 start //
         if (IS_SHOW_CPRICE == 'Y') {
         	changeUnitCprice();
@@ -1576,7 +1591,9 @@ var table;
         if ($("#yield_calc").val()) {
             paramObj.yield = $("#yield_calc").val();
         }
-
+        if($("#tradeMarketCash").val() == 0 ||$("#tradeMarketCash").val() == 0.00){
+            paramObj.tradeMarketCash = null;
+        }
         // 行权计算时用数据库中的理论行权日 add by renping 20191105 start
         if(paramObj.finprodId && ($("#ps").val() == PS_T03 || $("#ps").val() == PS_T39)) {
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getExerciseDate'), paramObj, function (result) {
@@ -1890,7 +1907,7 @@ var table;
             	}
             	if ((!$("#secManageAcctId").val() || typeof $("#secManageAcctId").val() == 'undefined')
                		 && (!$("#chlId").val() || typeof $("#chlId").val() == 'undefined') && !formTodoList){
-               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券托管户或者通道']));
+               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券托管户或者合作资产']));
                		return null;
                	}
                 var list;
@@ -2177,7 +2194,42 @@ var table;
             }
         });
     };
-
+    /**
+     *
+     * 若委托开始日和指令结束日均等于平台日期时：
+     * a．若投资目的选择摊余成本类，净价默认带出该债券平台日期前一估值日的摊销净价，可修改；
+     */
+    var priceInitByInCpy = function () {
+        // // 委托开始日
+        // var vdate = $("#vdate").val();
+        // // 委托终止日
+        // var mdate = $("#mdate").val();
+        // // 投资目的
+        var invAim = $("#invAim").val();
+        // // 委托开始日或指令结束日不等于平台日期时
+        // if (new Date(platDate).DateDiff('d', vdate) !== 0
+        //     || new Date(platDate).DateDiff('d', mdate) !== 0) {
+        //     return;
+        // }
+        var portfolioId = $('#portfolioId').val();
+        var finprodId = $('#finprodId').val();
+        if (portfolioId && finprodId) {
+            var data = {
+                sysdate: platDate,
+                portfolioId: portfolioId,
+                finprodId:finprodId
+            }
+            //投资目的选择摊余成本
+            if (invAim == 'AC') {
+                Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getLastNetAmortizationPrice', data,
+                    function (result) {
+                        if(result.data){
+                            $('#unitCprice').val(result.data).trigger('blur').trigger('change');
+                        }
+                    });
+            }
+        }
+    }
     /**
      * 币种change事件
      */
@@ -2224,7 +2276,7 @@ var table;
                 } else if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
                     // 选择【上海证券交易所】或【深圳证券交易所】时，
                     // 1)交易平台可自主选择;
-                    if($("#entrustId").val() != ''){
+                    if(/*$("#entrustId").val() != ''*/$('#tradeMarketMode').val()===SHARES_TRADE_MARKET_01){
                         $("#tradePlat").attr("disabled", true);
                     }else{
                         $("#tradePlat").attr("disabled", false);
@@ -2268,7 +2320,7 @@ var table;
                     // 1)交易平台可自主选择;
                     // 1)交易平台默认为其它，可改
                     checkAndAssign("#tradePlat", SHARES_TRADE_PLATFORM_99, false);
-                    if($("#entrustId").val() != ''){
+                    if($("#entrustId").val() != ''||tradeMarket === '05'){
                         $("#tradePlat").attr("disabled", true);
                     }else{
                         $("#tradePlat").attr("disabled", false);

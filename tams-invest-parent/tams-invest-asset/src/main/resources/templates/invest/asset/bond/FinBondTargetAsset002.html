@@ -27,6 +27,10 @@
 					data-th-value="${entity?.hapCreditAmt}" style="display: none">
 				<input type="text" id="creditFlag" name="creditFlag" style="display: none"
 					data-th-value="${entity?.creditFlag}">
+            <input type="text" id="isAllowModify" name="isAllowModify" style="display: none"
+                   data-th-value="${isAllowModify}">
+            <input type="text" id="appearMarketId" name="appearMarketId" style="display: none"
+                   data-th-value="${entity?.appearMarketId}">
 				<div class="pro-module-wrapper pro-module-base step" title="基本信息">
 					<div class="pro-module-wrap">
 						<div class="pro-module">
@@ -41,7 +45,7 @@
 											data-th-text="#{FinBondTargetAsset002.finprodId}">资产代码</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" id="finprodMarketId"
-												name="finprodMarketId" maxlength="18"
+												name="finprodMarketId" maxlength="15"
 												data-th-value="${entity?.finprodMarketId}"
 												class="layui-input form-input" placeholder="请输入内容"
 												style="width: 85%!important; display: inline-block;"
@@ -59,7 +63,7 @@
 											<input type="text" name="finprodName"
 												data-th-value="${entity?.finprodName}"
 												class="layui-input form-input" placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}" >
+												data-th-placeholder="#{SysCommon.placeholder}" required>
 										</div>
 									</div>
 									<div class="form-inline-wrap">
@@ -438,115 +442,79 @@
                                         <input type="text" required name="faceValue" data-th-value="${entity?.faceValue?:100}" class="layui-input form-input text-number" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" >
                                     </div>
                                 </div>
-                               </div>
-                               <div class="layui-form-item">
-									<div class=" form-inline-wrap" id="pflshDiv">
-										<label class="layui-form-label form-label-wrap"
-											data-th-text="#{FinBondTargetAsset002.pflsh}">批复号</label>
-										<div class="layui-input-inline input-inline">
-											<select type="text"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}" id="pflsh"
-												maxlength="30" name="pflsh" parentIds="pfhId"
-												data-th-initvalue="${entity?.pflsh}" formatoption="false"
-												data-th-data-url="@{/invest/asset/common/getPflshList}">
-											</select>
-										</div>
-									</div>
-									<div class=" form-inline-wrap" id="actualCreditProvidDiv">
-										<label class="layui-form-label form-label-wrap"
-											data-th-text="#{FinBondTargetAsset002.actualCreditProvid}">实际授信主体</label>
-										<div class="layui-input-inline input-inline">
-											<select type="text"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												id="actualCreditProvid" maxlength="30"
-												name="actualCreditProvid"
-												data-th-initvalue="${entity?.actualCreditProvid}"
-												data-th-data-url="@{/invest/asset/common/getActualCreditProvid}">
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="layui-form-item">
-									<div class=" form-inline-wrap">
-										<label class="layui-form-label form-label-wrap"
-											data-th-text="#{FinBondTargetAsset002.sustainableRemark}">特殊条款</label>
-										<div class="layui-input-inline input-inline">
-											<input type="text" name="sustainableRemark"
-												data-th-value="${entity?.sustainableRemark}"
-												class="layui-input form-input" placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}">
-										</div>
-									</div>
-									<div class="form-inline-wrap">
-										<label class="layui-form-label form-label-wrap"
-											   data-th-text="#{FinBondTargetAsset002.isCityBond}">是否城投债</label>
-										<div class="layui-input-inline input-inline">
-											<input type="checkbox" id="isCityBond" name="isCityBond" lay-filter="isCityBond"
-												   lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
-												   data-th-checked="${YES_OR_NO_Y} ==${entity?.isCityBond}">
-										</div>
-									</div>
-									<div class="form-inline-wrap" id="cityBondLevDiv">
-										<label class="layui-form-label form-label-wrap"
-											   data-th-text="#{FinBondTargetAsset002.cityBondLev}">城投债级别</label>
-										<div class="layui-input-inline input-inline">
-											<select name="cityBondLev" id="cityBondLev"
-													class="layui-input form-input input-select"
-													placeholder="请输入内容"
-													data-th-placeholder="#{SysCommon.placeholder}" required
-													data-th-data-result="${CITY_BOND_LEV}"
-													th:initValue="*{entity?.cityBondLev}">
-											</select>
-										</div>
-									</div>
-								</div>
-
-								<div class="layui-form-item">
-									<div class="form-inline-wrap" id="isPpb_div">
-										<label class="layui-form-label form-label-wrap"
-											   data-th-text="#{FinBondTargetAsset002.isPpb}">是否私募债</label>
-										<div class="layui-input-inline input-inline">
-											<input type="checkbox" id="isPPB" name="isPPB" lay-filter="isPPB"
-												   lay-skin="switch" data-th-value="${YES}" lay-text="是|否" required
-												   data-th-checked="${YES_OR_NO_Y} ==${entity?.isPPB}">
-										</div>
-									</div>
-									<div class="form-inline-wrap" id="isNetPrice_div">
-										<label class="layui-form-label form-label-wrap">是否净价交易</label>
-										<div class="layui-input-inline input-inline">
-											<input type="checkbox" id="isNetprice" name="isNetprice" lay-filter="isNetprice"
-												   lay-skin="switch" data-th-value="${YES}" lay-text="是|否" required
-												   data-th-checked="${YES_OR_NO_Y} ==${entity?.isNetprice}">
-										</div>
-									</div>
-									<input type="hidden" id="isNetSett" name="isNetSett"
-										   data-th-value='${entity?.isNetSett}'>
-									<div class="form-inline-wrap" id="isApproveMarket_div">
-										<label class="layui-form-label form-label-wrap">允许交易的平台</label>
-										<div class="layui-input-inline input-inline">
-											<select name="tradePlat" id="tradePlat"
-													class="layui-input form-input input-select" allowClear="true" formatoption="true"
-													data-th-placeholder="#{SysCommon.placeholder}" required
-													data-th-data-result="${SHARES_TRADE_PLATFORM}"
-													multiple="multiple"
-													th:initValue="${entity?.tradePlat}">
-											</select>
-										</div>
-									</div>
-								</div>
-
-
-        	                    <!-- 新增担保人 add by renping 20190930 start -->
-								<div class="layui-form-item">
-								    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap"
-                                               data-th-text="#{FinBondTargetAsset002.sponsor}">担保人</label>
-                                        <div class="layui-input-inline input-inline">
-                                            <select type="text" id="sponsor" name="sponsor"
+                                <!--/div>
+                                <div class="layui-form-item"!-->
+                                <div class=" form-inline-wrap" id="pflshDiv">
+                                    <label class="layui-form-label form-label-wrap"
+                                           data-th-text="#{FinBondTargetAsset002.pflsh}">批复号</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select type="text"
+                                                class="layui-input form-input input-select"
+                                                placeholder="请输入内容"
+                                                data-th-placeholder="#{SysCommon.placeholder}" id="pflsh"
+                                                maxlength="30" name="pflsh" parentIds="pfhId"
+                                                data-th-initvalue="${entity?.pflsh}" formatoption="false"
+                                                data-th-data-url="@{/invest/asset/common/getPflshList}">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class=" form-inline-wrap" id="actualCreditProvidDiv" style="margin-top: 6px;">
+                                    <label class="layui-form-label form-label-wrap"
+                                           data-th-text="#{FinBondTargetAsset002.actualCreditProvid}">实际授信主体</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select type="text"
+                                                class="layui-input form-input input-select"
+                                                placeholder="请输入内容"
+                                                data-th-placeholder="#{SysCommon.placeholder}"
+                                                id="actualCreditProvid" maxlength="30"
+                                                name="actualCreditProvid"
+                                                data-th-initvalue="${entity?.actualCreditProvid}"
+                                                data-th-data-url="@{/invest/asset/common/getActualCreditProvid}">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class=" form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap"
+                                           data-th-text="#{FinBondTargetAsset002.sustainableRemark}">特殊条款</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" name="sustainableRemark"
+                                               data-th-value="${entity?.sustainableRemark}"
+                                               class="layui-input form-input" placeholder="请输入内容"
+                                               data-th-placeholder="#{SysCommon.placeholder}">
+                                    </div>
+                                </div>
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap"
+                                           data-th-text="#{FinBondTargetAsset002.isCityBond}">是否城投债</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="checkbox" id="isCityBond" name="isCityBond" lay-filter="isCityBond"
+                                               lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+                                               data-th-checked="${YES_OR_NO_Y} ==${entity?.isCityBond}">
+                                    </div>
+                                </div>
+                                <div class="form-inline-wrap" id="cityBondLevDiv">
+                                    <label class="layui-form-label form-label-wrap"
+                                           data-th-text="#{FinBondTargetAsset002.cityBondLev}">城投债级别</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select name="cityBondLev" id="cityBondLev"
+                                                class="layui-input form-input input-select"
+                                                placeholder="请输入内容"
+                                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                                data-th-data-result="${CITY_BOND_LEV}"
+                                                th:initValue="*{entity?.cityBondLev}">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 新增担保人 add by renping 20190930 start -->
+                            <div class="layui-form-item">
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap"
+                                           data-th-text="#{FinBondTargetAsset002.sponsor}">担保人</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select type="text" id="sponsor" name="sponsor"
                                                 class="layui-input form-input input-select"
                                                 data-th-data-url="@{/invest/asset/project/FinProjectTargetAsset002/getGuarantee}"
                                                 formatoption="true" allowClear="true"

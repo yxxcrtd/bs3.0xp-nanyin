@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.trade.trdrepotrade.validator;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -61,6 +62,10 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
     
 	@Autowired
 	private TradeCommonService tradeCommonService;
+    /**
+     * 白名单校验正则表达式
+     */
+    private static final String whitePattern = "^[\\u4e00-\\u9fa5\\ue815-\\ue864\\uff01-\\uff5e\\uffe0-\\uffe5\\u3000-\\u3003\\u3005-\\u3017\\u301d-\\u301e\\u2010\\u2013-\\u2016\\u2018-\\u2019\\u201c-\\u201d\\u2025-\\u2026\\u2030\\u2032-\\u2033\\u2035\\u203b\\u00b7\\u0030-\\u0039\\u0041-\\u005a\\u0061-\\u007a\\u2160-\\u216b\\u0020-\\u0026\\u0028-\\u007B\\u007D\\u007E]{0,}$";
 
     /**
      * {@inheritDoc}
@@ -420,6 +425,10 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
             }
         }
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end
+        if (null!=inputDto.getRemark() && !inputDto.getRemark().matches(whitePattern)){
+            ValidMessage validMessage = new ValidMessage("",getMessage("备注必须填写白名单中的文字"));
+            errorList.add(validMessage);
+        }
         return errorList;
     }
 }

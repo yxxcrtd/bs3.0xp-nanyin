@@ -1,8 +1,14 @@
 package com.joyintech.tams.invest.common.trade.service.impl;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.BidOrderBidPrice;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -53,7 +59,7 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
 
     @Override
     public CommonResult executeEtrCashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型,
-                                               boolean needNegative,String ieFlag,String isOverdueDeal) {
+                                               boolean needNegative,String ieFlag,String isOverdueDeal,String 交易流程状态) {
         // 资产类型
         String finprodType = finProductTradeDto.getTrdProductDeal().getFinprodType2();
         // 处理结果
@@ -76,8 +82,12 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
         }
 
         if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券.getValue())
-                && !(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_申购确认.getValue())
-                ||StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))
+                && !(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())
+                || StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))
+                // add by jiangpeng on 20210416 start
+                // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                && !StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsSLDeal())
+            // add by jiangpeng on 20210416 end
         ) {
             EtrSecCashPositionDealService.deal债券CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
@@ -96,7 +106,11 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             EtrProjectCashPositionDealService.deal项目类资产CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())
-                 || StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())) {
+                || StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())
+                // add by jiangpeng on 20210421 start
+                // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                || StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsSLDeal())) {
+            // add by jiangpeng on 20210421 end
             EtrSecLendCashPositionDealService.deal债券借贷CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
@@ -419,11 +433,13 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
 
     /**
      * 产品端影响实时现金共通方法
+     * // modify by jiangpeng on 20210429 start
+     * // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
      * 
      * @param cashInputDto
      * @return
      */
-    public CommonResult productEtrCashPosition(PortfolioCashPositionsFlowInputDto cashInputDto) {
+    public CommonResult productEtrCashPosition(PortfolioCashPositionsFlowInputDto cashInputDto,String positionType) {
         String ps = cashInputDto.getTrdProductDeal().getPs();
 
         List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
@@ -444,29 +460,40 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 DictCodeListExt1.资金账户类型_产品托管户.getValue());
             ret.setAcctId(acctId);
             ret.setOrderId(stlPayOrdersDto.getOrderId());
+            // modify by jiangpeng on 20210429 start
+            // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+            boolean flag = false;// 用于判断指令现金流水是否需要入库
 
-            if (StringUtil.equals(ps, DictCodeList.交易方向_产品认购.getValue())
-                || StringUtil.equals(ps, DictCodeList.交易方向_产品申购.getValue())) {
+            if ((StringUtil.equals(ps, DictCodeList.交易方向_产品认购.getValue())
+                    || StringUtil.equals(ps, DictCodeList.交易方向_产品申购.getValue()))
+                    && StringUtil.equals(DictCodeList.持仓类型_实际.getValue(), positionType)) {//流程生效,撤销调用
                 ret.setAmount(stlPayOrdersDto.getSettleAmt());
-            }
-            else if (StringUtil.equals(ps, DictCodeList.交易方向_产品赎回.getValue())
-        			|| StringUtil.equals(ps, DictCodeList.交易方向_产品到期.getValue())
-                     || StringUtil.equals(ps, DictCodeList.交易方向_产品现金分红.getValue())) {
+                flag = true;
+            } else if ((StringUtil.equals(ps, DictCodeList.交易方向_产品赎回.getValue())
+                    || StringUtil.equals(ps, DictCodeList.交易方向_产品到期.getValue())
+                    || StringUtil.equals(ps, DictCodeList.交易方向_产品现金分红.getValue())
+                    || StringUtil.equals(ps, DictCodeList.交易方向_产品提前赎回.getValue())
+                    || StringUtil.equals(ps, DictCodeList.交易方向_提前终止.getValue()))  //交易方向判断增加提前终止的判断
+                    && (StringUtil.equals(DictCodeList.持仓类型_可用.getValue(), positionType) || cashInputDto.getNeedNegative())) {//流程中,撤销调用
                 ret.setAmount(stlPayOrdersDto.getSettleAmt().negate());
+                flag = true;
             }
             if(cashInputDto.getNeedNegative()){//确定是撤销交易，交易金额取反
-                ret.setAmount(stlPayOrdersDto.getSettleAmt().negate());
+                ret.setAmount(ret.getAmount().negate());// 指令金额取反会对本身就需要取反的赎回等交易产生干扰,故交易金额取反
             }
-            
-            if(ret.getAmount()!=null && cashInputDto.getNeedNegative() && (StringUtil.equals(ps, DictCodeList.交易方向_产品赎回.getValue())
+
+            /*if(ret.getAmount()!=null && cashInputDto.getNeedNegative() && (StringUtil.equals(ps, DictCodeList.交易方向_产品赎回.getValue())
             		|| StringUtil.equals(ps, DictCodeList.交易方向_产品到期.getValue())
     				|| StringUtil.equals(ps, DictCodeList.交易方向_产品现金分红.getValue()))){//fixed BSTOZ-858bug
             	ret.setAmount(ret.getAmount().negate());//赎回撤销交易金额取反  add by zhouxiuping at 2019/10/31
-            }
+            }*/// 上面已对撤销的交易金额取反,此处注释
             
             // 添加现金流水到目标dto
-            etrPositionHoldDto.getPtlCashPositionFlows().add(ret);
+            if(flag) {
+                etrPositionHoldDto.getPtlCashPositionFlows().add(ret);
+            }
         });
+        // modify by jiangpeng on 20210429 end
         // 维护入库流水及持仓
         EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
         return new CommonResult(CommonResult.SUCCED, "处理完成");

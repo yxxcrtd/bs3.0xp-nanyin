@@ -238,16 +238,26 @@ $(function() {
                 var tradeAmt = $('#tradeAmt').val();
                 if(unitCprice != null && unitCprice != '' && shareAmt){
                 	if(ps == ps_T19){
-                		$('#tradeAmt').val(shareAmt*unitCprice).attr('disabled',false).trigger('blur');
+                		if(pageModel != PAGE_MODEL_REFERENCE){
+                            var isDisabled = $("#tradeAmt").prop("disabled");
+                            var isDisabled1 = $("#shareAmt").prop("disabled");
+                            if(!isDisabled && isDisabled1){
+                                $('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
+                                $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
+                            }
+                		}
                 	}
                 	else{
-                		$('#tradeAmt').val(shareAmt*unitCprice).attr('disabled',true).trigger('blur');
+                		if(pageModel != PAGE_MODEL_REFERENCE){
+                		$('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
+                		}
+                        $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
                 	}
-                    $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
                     $('#feeAmtRedem').change();
                 }else if(unitCprice != null && unitCprice != '' && unitCprice != 0 && tradeAmt){
-
+                	if(pageModel != PAGE_MODEL_REFERENCE){
                     $('#shareAmt').val(tradeAmt/unitCprice).trigger('blur');
+                	}
                 }
             }
         });
@@ -309,12 +319,16 @@ $(function() {
             //     $('#tradeAmt').val(Number(tradeAmt)-Number(feeAmtRedem)).trigger('blur');
             // }
             var isDisabled = $("#tradeAmt").prop("disabled");
-
-            if(isDisabled){
+            var isDisabled1 = $("#shareAmt").prop("disabled");
+            if(isDisabled && !isDisabled1){
                 // 如果金额不允许编辑 则影响的是份额
+            	if(pageModel != PAGE_MODEL_REFERENCE){
                 $('#shareAmt').val(JoyinMath.doDiv(JoyinMath.doAdd(tradeAmt,feeAmtRedem,2) ,unitCprice,2)  ).trigger('change');
+            	}
             }else{
+            	if(pageModel != PAGE_MODEL_REFERENCE){
                 $('#tradeAmt').val(Number(tradeAmt)-Number(feeAmtRedem)).trigger('blur');
+            	}
             }
         });
         /**
@@ -359,7 +373,8 @@ $(function() {
             if($('#ps').val() == ps_T19 || $('#ps').val() == ps_T24 ){
                 var unitCprice = $('#unitCprice').val();
                 var shareAmt = $('#shareAmt').val();
-                if(unitCprice && shareAmt){
+                var isDisabled = $("#tradeAmt").prop("disabled");
+                if(unitCprice && shareAmt && !isDisabled){
                     $('#tradeAmt').val(unitCprice*shareAmt).trigger('blur');
                 }
             }
@@ -403,6 +418,9 @@ $(function() {
                         ,'deal':data
                     };
                 });
+                if (formTodoList) {
+                    window.BussTrdTransferOrder['bussTrdTransferOrder'].saveCalcCondition();
+                }
 //                if(entrustId != ''){
 //                    if(etrEntrust){
 //                        window.TrdInvestPersonInfo002['trdInvestPersonInfo'].setEntrust(function () {

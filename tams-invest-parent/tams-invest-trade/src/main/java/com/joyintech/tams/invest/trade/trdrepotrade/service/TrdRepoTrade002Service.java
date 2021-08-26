@@ -47,6 +47,8 @@ import com.joyintech.tams.invest.common.cstp.service.CstpCommonService;
 import com.joyintech.tams.invest.common.dto.*;
 import com.joyintech.tams.invest.common.dto.common.*;
 import com.joyintech.tams.invest.common.dto.cstp.*;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
@@ -59,12 +61,14 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.invest.interf.dto.CreditAmtSelDto;
 import com.joyintech.tams.invest.interf.service.InterfComponentService;
 import com.joyintech.tams.invest.interf.service.InterfComponentService.OrderCaller;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
+import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
@@ -72,6 +76,8 @@ import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -83,8 +89,14 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
+
 @Service
 public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> implements BaseProcessService<TrdRepoTrade002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdRepoTrade002Service.class);
 
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
@@ -99,6 +111,9 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
 
     @Autowired
     private FinTradeProductMapper finTradeProductMapper;
+
+    @Autowired
+    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
 
     /**
      * 附件上传类
@@ -234,6 +249,9 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
 
     @Autowired
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+	
+    private final static String SJXY = "SJXY";//深交所协议回购期限品种
+	
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。
      * {@inheritDoc}
@@ -345,6 +363,12 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
         if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
             // 构造Entity
             this.prepareEntity(entity);
+            if (StringUtils.equals(DictCodeList.回购类型_质押式协议回购.getValue(), entity.getRepoType())
+                    && StringUtils.equals(DictCodeList.交易流通场所_深圳证券交易所.getValue(), entity.getTradeMarket())
+                    && StringUtils.equals("04", entity.getPs())) {
+                entity.getFinTradeProduct().setTermType(SJXY);
+                entity.getTrdProductDealAdd().setTermType(SJXY);
+            }
 
             // 7.1登录各业务表，包括金融产品交易、金融产品附属、划款指令及附件信息
             // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表
@@ -660,7 +684,15 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
 //            bussCommonMapperDelegateService.insertBatch(WflStlPayOrdersMapper.class, wflStlPayOrders);
             wflStlPayOrdersMapper.insertSelective(wflStlPayOrders);
         }
-
+        // add by jiangpeng on 20210413 ZGBSS-1393 start
+        //【质押式回购自动到期-估值表】【质押式回购自动到期-估值表】0301zy03，2021-03-01，估值表中资产的成本、数量都不对。
+        if (StringUtils.equals(DictCodeList.回购类型_质押式协议回购.getValue(), entity.getRepoType())
+                && StringUtils.equals(DictCodeList.交易流通场所_深圳证券交易所.getValue(), entity.getTradeMarket())
+                && StringUtils.equals("04", entity.getPs())
+                && entity.getFinTradeProduct() != null) {
+            entity.getFinTradeProduct().setTermType(SJXY);
+        }
+        // add by jiangpeng on 20210413 ZGBSS-1393 end
         finTradeProductMapper.insertSelective(entity.getFinTradeProduct());
 
         // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水
@@ -1275,6 +1307,17 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                 finProductTradeDto.getBaseTradeProductDealDtos().forEach(finProductTrade -> {
                     finProductTrade.setActPortfolioId(entity.getActPortfolioId());
                 });
+            }
+            // 查询质押券信息
+            if(entity.getBussRepoSec()!=null) {
+                finProductTradeDto.setBussRepoSec(entity.getBussRepoSec());
+            }else {
+                Map<String, Object> initSearchParam = new HashMap<>();
+                initSearchParam.put("portfolioId", entity.getPortfolioId());
+                initSearchParam.put("ps", entity.getPs());
+                initSearchParam.put("bizCode", entity.getTradeId());
+                initSearchParam.put("SEC_ACCT_ID", entity.getSecAcctId() != null ? entity.getSecAcctId() : entity.getChlId());
+                finProductTradeDto.setBussRepoSec(bussRepoSecService.selectBussRepoSec(initSearchParam));
             }
             // 调用业务组件.【金融产品交易共通.交易产品接口】, insert
             // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水
@@ -2428,7 +2471,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                     interfComponentService.sendMurexRequest(OrderCaller.REPO002, sendData);
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
@@ -2769,6 +2812,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
         if (null != entity.getTradeId() && !StringUtil.isNotEmpty(entity.getRevokeReason())){
             riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
         }
+        doBackUpdateEtrPosition(entity);
     }
 
     @Override
@@ -3453,6 +3497,26 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
         }
 
         return occr;
+    }
+
+    /**
+     * 委托竞价式正回购退回时,标准券持仓更新
+     * @param entity
+     */
+    private void doBackUpdateEtrPosition(TrdRepoTrade002Dto entity) {
+        if (StringUtil.isNotEmpty(entity.getEntrustId())
+                && StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_正回购.getValue())
+                && StringUtil.equals(entity.getRepoType(), DictCodeList.回购类型_质押式竞价回购.getValue())) {
+            // 指令持仓和现金流水处理
+            List<EtrSecPositionFlowDto> etrFlows = baseAssetCashPositionCommMapper.selectAllEtrPosition(entity.getTradeId());
+            if (etrFlows != null) {
+                etrFlows.forEach(
+                        etrSecPositionFlowDto -> etrSecPositionFlowDto.setSeqno(getSeqNo()));
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                etrPositionHoldDto.setPtlSecPositionFlows(etrFlows);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+            }
+        }
     }
 
 }

@@ -11,8 +11,12 @@
 package com.joyintech.tams.invest.risk.valtblimport.dto;
 
 import java.util.List;
+import java.util.Queue;
 
+import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
 import com.joyintech.tams.common.base.entity.RskValtblAssetSub;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 
 /**
  *  估值表资产科目代码DTO
@@ -65,6 +69,30 @@ public class RskValtblAssetSubDto extends RskValtblAssetSub implements Comparabl
      */
     private boolean isUpdatebotAssetMap;
     
+    /**
+     * 债券市场代码
+     */
+    private String marketId;
+    /**
+     * 是否关联上内部科目
+     */
+    private String isMatch;
+
+    public String getIsMatch() {
+        return isMatch;
+    }
+
+    public void setIsMatch(String isMatch) {
+        this.isMatch = isMatch;
+    }
+    /**
+     * 是否关联上内部科目
+     */
+    private String isMatchStr;
+
+    public String getIsMatchStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.是否,isMatch);
+    }
     public ValType getValType() {
         return valType;
     }
@@ -180,7 +208,14 @@ public class RskValtblAssetSubDto extends RskValtblAssetSub implements Comparabl
     public void setUpdatebotAssetMap(boolean isUpdatebotAssetMap) {
         this.isUpdatebotAssetMap = isUpdatebotAssetMap;
     }
-    /**
+    
+    public String getMarketId() {
+		return marketId;
+	}
+	public void setMarketId(String marketId) {
+		this.marketId = marketId;
+	}
+	/**
      * {@inheritDoc}
      */
     @Override
@@ -192,4 +227,13 @@ public class RskValtblAssetSubDto extends RskValtblAssetSub implements Comparabl
         }
     }
 
+ 	private Queue<RskOutValtblImportHis> importHisQueue;
+
+    public Queue<RskOutValtblImportHis> getImportHisQueue() {
+        return importHisQueue;
+    }
+
+    public void setImportHisQueue(Queue<RskOutValtblImportHis> importHisQueue) {
+        this.importHisQueue = importHisQueue;
+    }
 }

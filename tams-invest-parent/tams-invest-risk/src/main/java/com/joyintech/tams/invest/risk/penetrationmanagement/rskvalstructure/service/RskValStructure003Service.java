@@ -14,6 +14,7 @@ import com.joyintech.tams.invest.common.util.ExcelUtilForRisk;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -37,7 +38,7 @@ public class RskValStructure003Service extends CommonExportService<RskValStructu
      * @see
      * @since 1.0
      */
-    public int insert(RskValStructureDto dto) throws Exception {
+    public int insert(RskValStructureDto dto)  {
         dto.setSrcColIndex(String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter())));
         return restTemplate.postForObject(
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure003/insert",
@@ -51,8 +52,15 @@ public class RskValStructure003Service extends CommonExportService<RskValStructu
      * @see
      * @since 1.0
      */
-    public int update(RskValStructureDto dto) throws Exception {
-        dto.setSrcColIndex(String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter())));
+    public int update(RskValStructureDto dto) {
+    	String srcColIndex = "";
+    	if(StringUtil.isNotEmpty(dto.getSrcColIndex())&&dto.getSrcColIndex().matches("^[\\d]+$")) {
+    		srcColIndex = dto.getSrcColIndex();
+    	}
+    	else {
+    		srcColIndex = String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter()));	
+    	}
+    	dto.setSrcColIndex(srcColIndex);
         return restTemplate.postForObject(
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure003/update",
             dto,Integer.class);

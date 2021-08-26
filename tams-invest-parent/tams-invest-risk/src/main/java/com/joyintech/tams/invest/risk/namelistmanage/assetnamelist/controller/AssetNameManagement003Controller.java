@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.service.Asset
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.service.AssetNameManagementService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -86,7 +90,23 @@ public class AssetNameManagement003Controller extends BaseController {
         }//来自于代办
         else if(!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)){
             //根据工作流与留痕处理提供的共通方法获取业务实体
-            RskAccessListDto rskAccessListDto = assetNameManagementService.getBussinessEntityByWorkflowId(workflowId);
+            RskAccessListDto rskAccessListDto = assetNameManagementService.getBussinessEntityByWorkflowId(workflowId); 
+            if (StringUtil.isNotEmpty(rskAccessListDto.getRskAccessListDetailList())
+                && StringUtil.equals(DictCodeList.数据状态_删除中, rskAccessListDto.getStatus())) {  
+                Map<String, Object> selectParam = new HashMap<String, Object>();
+                selectParam.put("listId", rskAccessListDto.getListId()); 
+                selectParam.put("workflowId",workflowId);
+                List<RskAccessListDetailDto> detailPage = assetNameManagementService.selectAssetListDetail(selectParam);
+                List<RskAccessListDetailDto> detailList = new ArrayList<>();
+                detailPage.stream().forEach(item->{
+                    item.setOperatePs("01");
+                    detailList.add(item);
+                });
+                rskAccessListDto.setRskAccessListDetailList(detailList);
+            } 
+            if (CollectionUtils.isEmpty(rskAccessListDto.getRskAccessListDetailList())) {
+               
+            } 
             //设置到model中
             model.addAttribute("entity", rskAccessListDto);
             model.addAttribute("listName",rskAccessListDto.getListName());
@@ -110,8 +130,7 @@ public class AssetNameManagement003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskAccessListDetailDto> selectAll()
-        throws Exception {
+    public Page<RskAccessListDetailDto> selectAll() throws IOException {
         Page<RskAccessListDetailDto> page = assetNameManagementService.selectForDetailPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -146,8 +165,7 @@ public class AssetNameManagement003Controller extends BaseController {
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

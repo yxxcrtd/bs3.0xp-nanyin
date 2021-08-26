@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.common.trade.service.impl.etrcash;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCodeList;
@@ -16,10 +17,12 @@ import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static com.joyintech.tams.invest.common.constant.BussinessConstant.XN_STANDARD_BOND_PRODID;
@@ -32,6 +35,7 @@ import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCom
  * @create: 2019-10-12 15:06
  **/
 @Service
+@Lazy(false)
 public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
 
     static BigDecimal 债券面值 = new BigDecimal(100);
@@ -236,8 +240,15 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
 
             if (StringUtil.isNotEmpty(entrustId)) {
                 // 有委托时，冲销委托时影响的质押券信息，重新以交易的质押券来影响持仓
-                etrPositionHoldDto.getPtlSecPositionFlows().addAll(EtrCommonCashPositionDealService.findNegateSecFlowByEntrustId(entrustId, finProductTradeDto.getTrdProductDeal().getTradeId()));
-                etrPositionHoldDto.getPtlSecPositionFlows().addAll(生成质押券的实时头寸(finProductTradeDto, !etrPositionHoldDto.isNeedNegative(), new ArrayList<>()));
+                if(!etrPositionHoldDto.isNeedNegative()) {
+                    etrPositionHoldDto.getPtlSecPositionFlows().addAll(EtrCommonCashPositionDealService.findNegateSecFlowByEntrustId(entrustId, finProductTradeDto.getTrdProductDeal().getTradeId()));
+                    etrPositionHoldDto.getPtlSecPositionFlows().addAll(生成质押券的实时头寸(finProductTradeDto, !etrPositionHoldDto.isNeedNegative(), new ArrayList<>()));
+                }else{
+                    // 撤销时直接冲销
+                    etrPositionHoldDto.getPtlSecPositionFlows().addAll(
+                            EtrCommonCashPositionDealService.findNegateSecFlowByEntrustId(
+                                    finProductTradeDto.getTrdProductDeal().getTradeId(), finProductTradeDto.getTrdProductDeal().getTradeId()));
+                }
             }
         }
         // 交易提交
@@ -247,7 +258,17 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
 //                etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(交易券面总额, 债券面值, 2).negate());
                 // 添加持仓流水到目标dto
 //                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
-                etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto, !etrPositionHoldDto.isNeedNegative()));
+                // 写入质押品的组合持仓流水-债券
+                List<EtrSecPositionFlowDto> ptlSecPositionFlowList = ptlSecPositionFlowLogic(finProductTradeDto, !etrPositionHoldDto.isNeedNegative());
+                if( etrPositionHoldDto.isNeedNegative()){
+                    for(EtrSecPositionFlowDto temp :ptlSecPositionFlowList){
+                        temp.setAmount(temp.getAmount().negate());
+                    }
+                }
+                etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowList);
+                // 写入质押品的组合持仓流水-质押式回购
+                etrSecPositionFlowDto.setAmount(交易券面总额);
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             }
         }
     }
@@ -349,8 +370,8 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         // 通道性质
         String chlType = StringUtil.isEmpty(chlId) ? null : EtrCommonCashPositionDealService.queryChlType(chlId);
         // 交易提交
-        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
-            if (StringUtil.isEmpty(entrustId)) { // 无委托
+        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || finProductTradeDto.isBatch()) {
+//            if (StringUtil.isEmpty(entrustId)) { // 无委托
                 // 持仓流水dto处理 交割日增加交易券面总额/债券面值
 //                etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(交易券面总额, 债券面值, 2));
                 // 添加持仓流水到目标dto
@@ -375,14 +396,45 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                         etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);
                     });
                 }
-            }
+//            }
         }
         // 交易生效 
         //modify by mashukai 20210326 ZGBSS-633 质押式银行间正回购到期交易生效后，质押持仓未释放 start
-        if (DictCodeList.持仓类型_实际.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+        if (DictCodeList.持仓类型_实际.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || finProductTradeDto.isBatch()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
                 //到期日每只券增加交易质押券面总额/100
                 etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto, false));
+            } else { // 委托
+                List<EtrSecPositionFlowDto> etrSecPositionFlowDtos = Lists.newArrayList();
+                if (!etrPositionHoldDto.isNeedNegative()) {
+                    //到期日每只券增加交易质押券面总额/100
+                    // 冲销首期交易数据
+                    etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto, false));
+                    // 查找委托时的指令持仓,用于冲销
+                    etrSecPositionFlowDtos = EtrCommonCashPositionDealService.selectAllPositionByTotle(entrustId);
+                } else {
+                    // 原始交易编号
+                    String orginTradeId = finProductTradeDto.getTrdProductDeal().getTradeId();
+                    orginTradeId = orginTradeId.substring(0, orginTradeId.lastIndexOf("R"));
+                    // 撤销时,查找原始交易指令持仓流水,用于冲销
+                    etrSecPositionFlowDtos = EtrCommonCashPositionDealService.selectAllPositionByTotle(orginTradeId);
+                }
+                etrSecPositionFlowDtos.forEach(item -> {
+                    item.setSeqno(getSeqNo());
+                    //生效日
+                    item.setCdate(finProductTradeDto.getTrdProductDeal().getTradeDate());
+                    item.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    item.setTradeId(finProductTradeDto.getTrdProductDeal().getTradeId());
+                    item.setPortfolioId(finProductTradeDto.getTrdProductDealAdd().getPortfolioId());
+                    item.setBranch(0l);
+                    item.setCreateTime(new Date());
+                    item.setUpdateTime(new Date());
+                    // 金额取反 (撤销时,金额在其他地方取反,此处不用取反)
+                    if (!etrPositionHoldDto.isNeedNegative()) {
+                        item.setAmount(item.getAmount().negate());
+                    }
+                });
+                etrPositionHoldDto.getPtlSecPositionFlows().addAll(etrSecPositionFlowDtos);
             }
         }
         //modify by mashukai 20210326 ZGBSS-633 质押式银行间正回购到期交易生效后，质押持仓未释放 end
@@ -398,8 +450,9 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
     private static void deal_银行间_逆回购到期(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型,
                                        EtrPositionHoldDto etrPositionHoldDto, List<StlPayOrdersDto> stlPayOrdersDtos) {
         // 交易生成的持仓流水
-        // EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
-        // finProductTradeDto);
+        EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+         finProductTradeDto);
+        BigDecimal prinAmt = finProductTradeDto.getTrdProductDeal().getPrinAmt();
         // 交易生成的现金流水
         EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
             finProductTradeDto);
@@ -445,7 +498,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
             }
         }
         // 交易提交
-        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()||finProductTradeDto.isBatch()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
                 if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
                     stlPayOrdersDtos.forEach(stlPayOrdersDto -> {
@@ -469,6 +522,10 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
     
                     });
                 }
+                //资产持仓流水减少券面总额
+                etrSecPositionFlowDto.setAmount(prinAmt.negate());
+                // 添加现金流水到目标dto
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             }
         }
     }
@@ -808,8 +865,12 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
     private static void deal_交易所_逆回购到期(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型,
                                        EtrPositionHoldDto etrPositionHoldDto, List<StlPayOrdersDto> stlPayOrdersDtos) {
         // 交易生成的持仓流水
-        // EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
-        // finProductTradeDto);
+        EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                finProductTradeDto);
+        // 交易日金额
+        BigDecimal tradeAmt = finProductTradeDto.getTrdProductDeal().getTradeAmt();
+        // 交易本金
+        BigDecimal prinAmt = finProductTradeDto.getTrdProductDeal().getPrinAmt();
         // 交易生成的现金流水
         EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
             finProductTradeDto);
@@ -885,6 +946,12 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
                 });
             }
+            if(StringUtil.isEmpty(finProductTradeDto.getEntrustId())) { // 无委托
+                // 现金流水dto处理 交割日减少(交易金额-交易券面总额*委托全价/债券面值）
+                etrSecPositionFlowDto.setAmount(prinAmt.negate());
+                // 添加现金流水到目标dto
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+            }
         }
     }
 
@@ -923,7 +990,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         // 通道性质
          String chlType = StringUtil.isEmpty(chlId) ? null : EtrCommonCashPositionDealService.queryChlType(chlId);
         // 交易生效
-        if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
+        if (DictCodeList.持仓类型_实际.equals(持仓类型)|| etrPositionHoldDto.isNeedNegative()) {//modify by jiangpeng on 20210406 ZGBSS-1403 质押式竞价正回购撤销流程生效后，实时资产头寸查询中指令可用持仓未减少 start
             // 有委托 or 无委托 统一处理
             // 现金流水dto处理 交割日减少(交易金额-交易券面总额*委托全价/债券面值）
             etrCashPositionFlowDto.setAmount(交易日金额);
@@ -958,15 +1025,16 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         }
         // 交易提交
         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
-            if (StringUtil.isEmpty(entrustId)) { // 无委托
+//            if (StringUtil.isEmpty(entrustId)) { // modify by jiangpeng on 20210617 TISHKBS-2296 委托指令生效后不更新标准券持仓,交易录单提交时再更新
                 // 标准券
                 EtrSecPositionFlowDto etrSecPositionFlowDtoTemp = new EtrSecPositionFlowDto();
                 BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDtoTemp, etrSecPositionFlowDto);
+                etrSecPositionFlowDtoTemp.setSeqno(getSeqNo());
                 etrSecPositionFlowDtoTemp.setAmount(ArithmeticUtil.divide(交易券面总额, 债券面值, 2).negate());
                 etrSecPositionFlowDtoTemp.setFinprodId(XN_STANDARD_BOND_PRODID);
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoTemp);
                 // 添加持仓流水到目标dto
-            }
+//            }
         }
         //add by jiangpeng on 20210406 ZGBSS-1403 质押式竞价正回购撤销流程生效后，实时资产头寸查询中指令可用持仓未减少 start
         if (etrPositionHoldDto.isNeedNegative()) {
@@ -1027,7 +1095,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                         etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
                     });
                 }
-                etrSecPositionFlowDto.setAmount(tradeAmt.negate());//到期持仓减少
+                etrSecPositionFlowDto.setAmount(prinAmt.negate());//到期持仓减少
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             }
         }
@@ -1037,6 +1105,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 // 标准券
                 EtrSecPositionFlowDto etrSecPositionFlowDtoTemp = new EtrSecPositionFlowDto();
                 BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDtoTemp, etrSecPositionFlowDto);
+                etrSecPositionFlowDtoTemp.setSeqno(getSeqNo());
                 etrSecPositionFlowDtoTemp.setAmount(ArithmeticUtil.divide(prinAmt, 债券面值, 2));
                 etrSecPositionFlowDtoTemp.setFinprodId(XN_STANDARD_BOND_PRODID);
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoTemp);

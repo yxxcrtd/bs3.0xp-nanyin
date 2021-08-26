@@ -10,29 +10,17 @@
  
 package com.joyintech.service.risk.stresstestmanage.marketrisksstresstest.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.security.SecurityUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
-import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.service.risk.conf.DataSourceType;
 import com.joyintech.service.risk.stresstestmanage.flowrisksstresstest.dto.FlowRiskStressTest001Dto;
 import com.joyintech.service.risk.stresstestmanage.marketriskscenemanage.dao.MarketRiskSceneManage002Mapper;
-import com.joyintech.service.risk.stresstestmanage.marketriskscenemanage.dto.MarketRiskSceneManage002Dto;
 import com.joyintech.service.risk.stresstestmanage.marketrisksstresstest.dao.MarketRiskStressTestMapper;
 import com.joyintech.service.risk.stresstestmanage.marketrisksstresstest.dto.MarketRiskStressTest001Dto;
 import com.joyintech.tams.common.base.dao.SttStressIndicatorMapper;
@@ -44,7 +32,13 @@ import com.joyintech.tams.common.base.entity.SttStressScene;
 import com.joyintech.tams.common.base.entity.SttStressTest;
 import com.joyintech.tams.common.base.entity.SttTestObj;
 import com.joyintech.tams.constant.DictCodeListRsk;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 〈一句话功能简述〉
@@ -56,6 +50,10 @@ import com.joyintech.tams.systemtools.interf.IPlatformDate;
  */
 @Service
 public class MarketRiskStressTestService extends BaseService<FlowRiskStressTest001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MarketRiskStressTestService.class);
     
     @Autowired
     private MarketRiskStressTestMapper marketRiskStressTestMapper;
@@ -143,14 +141,13 @@ public class MarketRiskStressTestService extends BaseService<FlowRiskStressTest0
             endDate = dft.parse(dft.format(date.getTime()));
         }
         catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         int count = marketRiskStressTestMapper.queryStrTesCount();
         //压力测试表
         SttStressTest streTesEnt = new SttStressTest();
-        String username= SecurityUtil.getLoginUser().getUserName();
+        String username=LoginUserUtil.getUserName();
         String testId =username+"-"+(dft.format(sysDate))+"-"+count+ IDGenerator.generate(5).substring(0, 8);
         //压测代码
         streTesEnt.setTestId(testId);

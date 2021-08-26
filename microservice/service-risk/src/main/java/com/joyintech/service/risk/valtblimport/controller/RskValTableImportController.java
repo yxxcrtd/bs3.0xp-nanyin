@@ -143,5 +143,20 @@ public class RskValTableImportController {
     public List<ValTableImpRiskDto> queryImpRiskInfo(@RequestBody RskValtblAssetSubDto dto){
     	return rskValTableImportService.queryImpRiskInfo(dto);
     }
+	
+    /**
+     * 根据估值表中回购数据生成对应的回购信息，存入表fin_trade_product、fin_product_type
+     * <功能详细描述>
+     * @param paramMap
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("createRepoInfo")
+    public void createRepoInfo(@RequestBody RskValtblAssetSubDto entity2){
+        rskValTableImportService.createRepoInfo(entity2);
+    }
     
 }

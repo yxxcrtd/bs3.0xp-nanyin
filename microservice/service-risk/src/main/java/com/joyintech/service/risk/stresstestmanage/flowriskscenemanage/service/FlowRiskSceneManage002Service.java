@@ -9,20 +9,7 @@
  */
 package com.joyintech.service.risk.stresstestmanage.flowriskscenemanage.service;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.security.SecurityUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -30,28 +17,23 @@ import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.risk.conf.DataSourceType;
-import com.joyintech.service.risk.stresstestmanage.flowriskflowassets.dto.FlowRiskFlowAssetsDto;
 import com.joyintech.service.risk.stresstestmanage.flowriskscenemanage.dao.FlowRiskFactroManage002Mapper;
 import com.joyintech.service.risk.stresstestmanage.flowriskscenemanage.dto.FlowRiskSceneManage001Dto;
 import com.joyintech.service.risk.stresstestmanage.flowriskscenemanage.dto.FlowRiskSceneManage002Dto;
-import com.joyintech.tams.common.base.dao.SttFactorTipsMapper;
-import com.joyintech.tams.common.base.dao.SttSceneFactorMapper;
-import com.joyintech.tams.common.base.dao.SttSceneFtrtipsMapper;
-import com.joyintech.tams.common.base.dao.SttSceneLmhMapper;
-import com.joyintech.tams.common.base.dao.SttSceneMapper;
-import com.joyintech.tams.common.base.dao.SttSceneSuitMapper;
-import com.joyintech.tams.common.base.dao.SttSceneTipsMapper;
-import com.joyintech.tams.common.base.entity.SttFactorTips;
-import com.joyintech.tams.common.base.entity.SttScene;
-import com.joyintech.tams.common.base.entity.SttSceneFactor;
-import com.joyintech.tams.common.base.entity.SttSceneFtrtips;
-import com.joyintech.tams.common.base.entity.SttSceneLmh;
-import com.joyintech.tams.common.base.entity.SttSceneSuit;
-import com.joyintech.tams.common.base.entity.SttSceneTips;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListRsk;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 流动性风险-情景新建数据服务层-Service
@@ -277,7 +259,7 @@ public class FlowRiskSceneManage002Service extends BaseService<FlowRiskSceneMana
 //    @DataSource(DataSourceType.STRESSTEST)
     public void insert(FlowRiskSceneManage002Dto dto) {
 //        DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
-        String username= SecurityUtil.getLoginUser().getUserName();
+        String username=LoginUserUtil.getUserName();
         SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
         Date sysDate = iPlatformDate.getSysDate();
         //情景表新增

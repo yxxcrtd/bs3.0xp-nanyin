@@ -26,6 +26,7 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -65,6 +66,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.cstp.service.CstpCommonService;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
@@ -110,6 +112,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -321,6 +324,12 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Autowired
     private PtlCashPositionFlowMapper ptlCashPositionFlowMapper;
+	
+    private FileAttachmentProcess fileAttachmentProcess;
+
+    // 交易份额小数保留位数
+    private int decimalPlaces_4 = 4;
+	
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。 {@inheritDoc}
      */
@@ -405,7 +414,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             // 交易本金 = 画面.净价总额
             deal本方.setPrinAmt(ArithmeticUtil.subtract(dto.getOwnFpriceAmt(), dto.getOwnIntAmt()));
             // 交易份额 = 画面.券面总额/100
-            deal本方.setShareAmt(ArithmeticUtil.divide(dto.getOwnTradeAmt(), new BigDecimal(100), 2, RoundingMode.HALF_UP));
+            deal本方.setShareAmt(ArithmeticUtil.divide(dto.getOwnTradeAmt(), new BigDecimal(100), decimalPlaces_4, RoundingMode.HALF_UP));
             deal本方.setIntAmt(dto.getOwnIntAmt());
             deal本方.setFpriceAmt(dto.getOwnFpriceAmt());
             //占比 = 本方券面总额/(本方券面总额+融入券总额)
@@ -450,7 +459,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             // 交易本金 = 画面.净价总额
             deal融入.setPrinAmt(ArithmeticUtil.subtract(dto.getIntegrateFpriceAmt(), dto.getIntegrateIntAmt()));
             // 交易份额 = 画面.券面总额/100
-            deal融入.setShareAmt(ArithmeticUtil.divide(dto.getIntegrateTradeAmt(), new BigDecimal(100), 2, RoundingMode.HALF_UP));
+            deal融入.setShareAmt(ArithmeticUtil.divide(dto.getIntegrateTradeAmt(), new BigDecimal(100), decimalPlaces_4, RoundingMode.HALF_UP));
             deal融入.setIntAmt(dto.getIntegrateIntAmt());
             deal融入.setFpriceAmt(dto.getIntegrateFpriceAmt());
             deal融入.setFeeAmt(ArithmeticUtil.subtract(dto.getFeeAmt(), deal本方 == null ? null : deal本方.getFeeAmt()));
@@ -509,7 +518,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
     public void setDealData(TrdBondInvestTradeDto dto) {
         // 券面总额
         dto.setTotalFaceValue(dto.getTradeAmt());
-
+        // add by jiangpeng on 20210622 自动加券的债券id没有"F01_"的前缀 TISHKBS-2200
+        if (dto.getFinprodId().indexOf("F01_") != 0) {
+            dto.setFinprodId("F01_" + dto.getFinprodId());
+        }
+        // add by jiangpeng on 20210622 自动加券的债券id没有"F01_"的前缀 TISHKBS-2200
         // 金融产品交易Entity 构造开始----------------------------------------------------------
         // 业务类型
         // 自动生成反向交易 chenzhili start
@@ -525,7 +538,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         // 交易本金 = 画面.净价总额
         dto.setPrinAmt(dto.getCpriceAmt());
         // 交易份额 = 画面.券面总额/100
-        dto.setShareAmt(ArithmeticUtil.divide(dto.getTotalFaceValue(), new BigDecimal(100), 4, RoundingMode.HALF_UP));
+        dto.setShareAmt(ArithmeticUtil.divide(dto.getTotalFaceValue(), new BigDecimal(100), decimalPlaces_4, RoundingMode.HALF_UP));
         // modified by wangguoxian 费用设置 20190801 start
         // 交易金额 = 画面.交易金额
         dto.setTradeAmt(dto.getTradeAmtAndFee());
@@ -737,7 +750,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
      */
     private void handleBussFlowData(TrdBondInvestTradeDto entity) {
         // 多组合交易时对附件进行处理
-        setDzhUploadFileList(entity);
+        //setDzhUploadFileList(entity);
 
         if (!StringUtil.equals("submit", entity.getOperateType())) {
             return;
@@ -779,7 +792,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
             trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             inputDto.setTrdProductDeal(trdProductDeal);
-            AllTradeCommonUtil.handleBeforeTradeComplete(inputDto, false);
+            AllTradeCommonUtil.handleBeforeTradeComplete(inputDto, true);
             // 调用授信共同 sjj end
 
             // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水
@@ -1338,12 +1351,12 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
     }
 
-    public List<TrdBondInvestTradeDto> getDtoList(TrdBondInvestTradeDto dto) throws Exception{
+    public List<TrdBondInvestTradeDto> getDtoList(TrdBondInvestTradeDto dto) throws InvocationTargetException, IllegalAccessException {
     	List<TrdBondInvestTradeDto> dtoList = new ArrayList<>();
     	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();
     	List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();
@@ -1382,6 +1395,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 				else {
 					tempDto.setTotleTradeId(IDGenerator.generate());
 				}
+                // 将附件和当前业务对象绑定（更新附件的业务代码）
+                fileAttachmentProcess.updateBussinessNo(
+                        dto.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                                Collectors.toList()),
+                        tempDto.getTotleTradeId());
     			dtoList.add(tempDto);
     		}
     		
@@ -1452,7 +1470,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         			debtbaseinfo.setCreateDept(LoginUserUtil.getDeptCode());
         			debtbaseinfo.setUpdateUser(LoginUserUtil.getUserName());
         			//判断交易对手表中是否存在
-        			int flag=trdFinProductDealTotalMapper.selectCounterName(debtbaseinfo.getCounterName().toString());
+        			int flag=trdFinProductDealTotalMapper.selectCounterName(debtbaseinfo.getCounterName());
         			if(flag == 0){
             			trdFinProductDealTotalMapper.insertDebtBaseInfo(debtbaseinfo);
         			}
@@ -2714,10 +2732,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 // || StringUtil.equals(DictCodeList.息票品种_零息.getValue(), secInfoModelDto.getBondsType())) {
                 // add by 张年 20190909 start
                 // 行权-回售 行权-赎回 交割日不加1
-                //sjj modify 20201111 与需求确认行权-回售同卖出逻辑
-//                if (!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue()) &&
-                  if(!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_赎回.getValue())) {
-                        tempSettleDate = DateUtil.addDay(tempSettleDate, 1);
+                if (!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())
+                        && !StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_赎回.getValue())) {
+                    tempSettleDate = DateUtil.addDay(tempSettleDate, 1);
                 }
                 // add by 张年 20190909 end
                 // }
@@ -2749,8 +2766,40 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
             // 交易所债券特殊处理start----------------------------------------------------------------
             AccurIntCalOutParameter out = null;
-            // 如果交易场所为上交所、深交所的情况
-            if (isJiaoYiSuo) {
+            if(DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue().equals(dto.getWindtypeone())){
+                // 付息计划截止日对应的利息
+                Map<String, BigDecimal> intMap = new HashMap<>();
+                if(DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue().equals(dto.getWindtypeone())){
+                    // 理论计息截止日
+                    if(null != intSchList && !intSchList.isEmpty()){
+                        for (FinCashPlanDto intSche : intSchList) {
+                            intMap.put(toLocalDate(intSche.getMdateTerm()).toString(), intSche.getIntAmt());
+                        }
+                    }
+                    // 实际计息截止日
+                    if (null != invScheduleList && !invScheduleList.isEmpty()) {
+                        for (SecIntSchedule intSche : invScheduleList) {
+                            intMap.put(intSche.getActualCutoffDate().toString(), intSche.getAmount());
+                        }
+                    }
+                }
+                if (intMap.containsKey(accurIntCalInParameter.getCalDate().toString())
+                        && !((Variety.贴现.equals(secInfoModel.getBondsType())) || Variety.零息.equals(secInfoModel.getBondsType()))) {
+                    out = new AccurIntCalOutParameter();
+                    out.setInterest(
+                            intMap.get(accurIntCalInParameter.getCalDate().toString()).multiply(new BigDecimal("100")).divide(
+                                    curSecAmt, 12, RoundingMode.HALF_UP));
+                    accurIntCalInParameter.setCalDate(accurIntCalInParameter.getCalDate());
+                    AccurIntForSecheduleCalculator calculator2 = CalculatorFactory.createAccurIntForSecheduleCalculator();
+                    if (accurIntCalInParameter.getPaperIrResetList() != null
+                            && accurIntCalInParameter.getPaperIrResetList().size() > 1) {
+                        accurIntCalInParameter.getSecInfoModel().setIntRateType(IntRateType.浮动利率);
+                    }
+                    out = calculator2.calculate(accurIntCalInParameter);
+                }
+            }
+            // 如果交易场所为上交所、深交所的情况，且
+            if (isJiaoYiSuo && out == null && !StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
                 // 付息债、贴现债、零息债，交割日+1
                 // if (StringUtil.equals(DictCodeList.息票品种_附息.getValue(), secInfoModelDto.getBondsType())
                 // || StringUtil.equals(DictCodeList.息票品种_贴现.getValue(), secInfoModelDto.getBondsType())
@@ -2963,7 +3012,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         if (dto.getYield() != null) {
@@ -3045,7 +3094,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         // --------add by 裴家俊 2019/03/28 费用查询----end---
     }
@@ -3466,7 +3515,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                             interfComponentService.sendMurexRequest(OrderCaller.BOND001, sendData);
                         }
                         catch (Exception e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                     }
                 }
@@ -3550,7 +3599,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         // --------add by 裴家俊 2019/03/28 费用查询----end---
     }
@@ -3639,6 +3688,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
     }
 
     public BigDecimal getTongDaoCash(Map<String, Object> param) {
+        param.put("platDate",iPlatformDate.getSysDate());
         BigDecimal bigDecimal = restTemplate.postForObject(
             ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getTongDaoCash", param, BigDecimal.class);
         return bigDecimal;
@@ -4651,5 +4701,35 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
     public List<TrdTradeFeeDetail>  getAllFeeByFTradeId(Map<String, Object> map) {
         return restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getAllFeeByFTradeId",
                 map, TrdTradeFeeDetail.class);
+    }
+	
+    /**
+     * 根据资产代码查询是否是上市标的
+     *
+     * @param finprodId
+     * @return 是否是上市标的，大于0则为是
+     * @see
+     * @since 1.0
+     */
+    public int selectIssueAsset(String finprodId){
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/TrdBondMarketTrade/selectIssueAsset?finprodId="+finprodId,
+                Integer.class);
+    }
+
+    /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    public BigDecimal getLastNetAmortizationPrice(Map<String, Object> paramMap) {
+        if (StringUtil.isEmpty((String) paramMap.get("sysdate"))) {
+            paramMap.put("sysdate", iPlatformDate.getSysDateStr());
+        }
+        String sysdate = (String) paramMap.get("sysdate");
+        paramMap.put("sysdate", DateUtil.addDay(sysdate, -1));
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getLastNetAmortizationPrice", paramMap,
+                BigDecimal.class);
     }
 }

@@ -22,34 +22,69 @@ $(function () {
         isMulti: true,
         cols: [
             [
-                {title: '组合资产科目', colspan: 3}//资管计划资产科目
-                ,{title: '系统资产对象', colspan: 4}//系统资产对象
-                ,{field:'operation', title: 'SysCommon.operation', type:'action', rowspan: 2,
+                {field:'ptlId', title: 'RskValtblPrtBotasset001.ptlId',visible:false}//组合代码   
+                ,{field:'assetSource', title: 'RskValtblPrtBotasset001.assetSource',visible:false}//资产来源 
+                ,{field:'subClass', title: 'RskValtblPrtBotasset001.subClass',visible:false,sortField:'SUB_CLASS'}//科目类型
+                ,{field:'tradeMarketName', title: 'RskValtblPrtBotasset001.tradeMarket',sortField:'TRADE_MARKET',visible:false}//市场代码
+                ,{field:'tradeMarket', title: 'RskValtblPrtBotasset001.tradeMarket',visible:false}//交易场所
+                ,{field:'tblMarketId', title: '估值表科目对应的交易场所',visible:false}//估值表科目对应的交易场所
+                ,{title: '组合资产科目', colspan: 3}//资管计划资产科目
+                ,{title: '系统资产对象', colspan: 3}//系统资产对象
+               /* ,{field:'operation', title: 'SysCommon.operation', type:'action', rowspan: 2,
                     render:function (data, type, row, meta) {
-                        if(row.finprodId==''||typeof row.finprodId == 'undefined'){
-                            return '<i class="btn layui-icon edit" title="编辑">&#xe642;</i>';
-                        }else{
-                            return '<i class="btn layui-icon edit" title="编辑">&#xe642;</i><i class="btn iconfont icon-browse_fill" title="应用"></i>';
-                        }
-                    }
-                }
+                  	if (row.flg != '01') {
+                    		return "";
+                    	}else if(row.finprodId==''||typeof row.finprodId == 'undefined'){
+                    		if(purviewElements.indexOf('_edit')!=-1){
+                                return '<i class="btn layui-icon edit" title="编辑">&#xe642;</i>';
+                            }
+                    		return "";
+                    	}else{
+                    		var btn='';
+                    		if(purviewElements.indexOf('_edit')!=-1){	
+                                btn+= '<i class="btn layui-icon edit" title="编辑">&#xe642;</i>';
+                            }
+                    		if(purviewElements.indexOf('_batch')!=-1){	
+                                btn+= '<i class="btn iconfont icon-browse_fill" title="应用"></i>';
+                            }
+                                return btn;
+                            }
+                  		}
+                    }*/
+                
             ],
             [
-                 {field:'ptlId', title: 'RskValtblPrtBotasset001.ptlId',visible:false}//组合代码   
-                 ,{field:'assetSource', title: 'RskValtblPrtBotasset001.assetSource',visible:false}//资产来源 
-                 ,{field:'subCode', title: 'RskValtblPrtBotasset001.subCode',sortField:'SUB_CODE'}//科目代码
-                ,{field:'subClass', title: 'RskValtblPrtBotasset001.subClass',visible:false,sortField:'SUB_CLASS'}//科目类型
+                 {field:'subCode', title: 'RskValtblPrtBotasset001.subCode',sortField:'SUB_CODE'}//科目代码 
                 ,{field:'subClassName', title: 'RskValtblPrtBotasset001.subClass',sortField:'SUB_CLASS'}//科目类型
                 ,{field:'subName', title: 'RskValtblPrtBotasset001.subName',sortField:'SUB_NAME'}//科目名称
                 /*,{field:'assetType', title: '资产类型'}//资产类型
-*/                ,{field:'finprodId', title: 'RskValtblPrtBotasset001.finprodId',sortField:'FINPROD_ID'}//资产代码
+*/              ,{field:'finprodId', title: 'RskValtblPrtBotasset001.finprodId',sortField:'FINPROD_ID'}//资产代码
                 ,{field:'finprodAbbr', title: 'RskValtblPrtBotasset001.finprodAbbr',sortField:'FINPROD_ABBR'}//资产简称
                 ,{field:'finprodMarketId', title: 'RskValtblPrtBotasset001.finprodMarketId',sortField:'FINPROD_MARKET_ID'}//市场代码
-                ,{field:'tradeMarketName', title: 'RskValtblPrtBotasset001.tradeMarket',sortField:'TRADE_MARKET',visible:false}//市场代码
-                ,{field:'tradeMarket', title: 'RskValtblPrtBotasset001.tradeMarket',visible:false}//交易场所
-        ]]
+               ,{
+                    field: 'operation', title: 'SysCommon.operation', type: 'action',
+                    render: function (data, type, row, meta) {
+                        if (row.finprodId == '' || typeof row.finprodId == 'undefined') {
+
+                        } else {
+                            return '<i class="btn delt " style="font-size: 12px;" title="取消映射">取消映射</i>';
+                        }
+                    }
+                }
+           ]]
     });
-    
+     /**
+       * 绑定取消映射事件
+      */
+         table.bind('click', '.delt', function(data, index) {
+             Joyin.confirm("请确认是否要取消映射?",function() {
+                 Joyin.ajaxJson(basePath + 'invest/risk/penetrationmanagement/rskValtblPrtBotasset/RskValtblPrtBotasset004/cancelApplyMapForSubject',data,function () {
+                     table.reload();
+                     loadTreeSource();
+                     $("#finprodId").val('').trigger('change');
+                 });
+             });
+         });
     /**
      * 绑定应用事件
      */
@@ -65,7 +100,8 @@ $(function () {
                                     subClass: typeof data.subClass =='undefined'?'':data.subClass,
                                     finprodId:data.finprodId,//金融产品代码
                                     finprodMarketId:data.finprodMarketId,//市场代码
-                                    assetSource:data.assetSource
+                                    assetSource:data.assetSource,
+                                    tblMarketId:data.tblMarketId//估值表科目对应的交易场所
                                     },function(){
                                         table.reload();//回调函数，表格刷新
                                     });     
@@ -86,6 +122,7 @@ $(function () {
                                     subClass: typeof data.subClass =='undefined'?'':data.subClass,
                                     finprodId:data.finprodId,//金融产品代码
                                     finprodMarketId:data.finprodMarketId//市场代码
+                                    ,tblMarketId: typeof data.tblMarketId == 'undefined'? '':data.tblMarketId//估值表科目对应的交易场所
                                     },function(){
                                         table.reload();//回调函数，表格刷新
                                     });     
@@ -131,5 +168,18 @@ $(function () {
         })
         
         $('#RskValtblPrtBotasset001_btn_export').click(exportExcel);
+        //批量确认应用 S
+        $("#batchMatchAndAppication").click(function () {
+            var ptlId = $("#ptlId").val();
+            if(!ptlId ||ptlId==''){
+                Joyin.alert("请选择组合！",2);
+                return;
+            }
+            Joyin.dialog(JoyinUtil.getLabel('估值表底层资产批量映射'), '../RskValtblPrtBotasset004/init', '90%', '80%',{
+                ptlId:$("#ptlId").val(),
+                ptlName:$('#ptlId').select2('data')[0].text
+            });
+        });
+        //批量确认应用 E
     })
 });

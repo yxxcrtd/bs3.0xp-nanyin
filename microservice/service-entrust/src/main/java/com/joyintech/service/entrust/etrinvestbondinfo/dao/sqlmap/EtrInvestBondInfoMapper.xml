@@ -4,7 +4,20 @@
 	namespace="com.joyintech.service.entrust.etrinvestbondinfo.dao.EtrInvestBondInfoMapper">
 	<select id="selectForPage"
 		resultType="com.joyintech.service.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto">
-					SELECT
+			<if test="finprodId != null and finprodId != ''">
+				WITH TEMP AS (
+				SELECT DISTINCT
+					FP2.FINPROD_ID,
+					FP.FINPROD_MARKET_ID
+				FROM FIN_PRODUCT FP
+				LEFT JOIN FIN_PRODUCT_ADD FPA
+					ON FPA.APPEAR_MARKET_ID = FP.FINPROD_MARKET_ID
+				LEFT JOIN FIN_PRODUCT FP2 ON FPA.FINPROD_ID = FP2.FINPROD_ID
+				WHERE FP.FINPROD_ID LIKE CONCAT('%', CONCAT(#{finprodId}, '%'))
+					AND FP.FINPROD_TYPE2 = #{bond}
+				)
+			</if>
+			SELECT
 				T1.ENTRUST_ID		 entrustId,
 			    T1.ENTRUST_STATUS    entrustStatus,
 				T8.REAL_NAME    	 invManagerId,
@@ -52,6 +65,9 @@
 			    FIN_PRODUCT_TYPE T4
 			ON
 			    T4.FINPROD_ID = T3.FINPROD_ID
+			<if test="finprodId != null and finprodId != ''">
+				LEFT JOIN TEMP tp ON T1.FINPROD_ID = tp.FINPROD_ID
+			</if>
 			LEFT JOIN
 			    (
 			        SELECT
@@ -106,7 +122,9 @@
 		</if>
 		<if test="finprodId != null and !finprodId.equals('')">
 			AND (T3.FINPROD_MARKET_ID like concat('%',concat(#{finprodId},'%')) 
-				or T3.FINPROD_ABBR like concat('%',concat(#{finprodId},'%')))
+				or T3.FINPROD_ABBR like concat('%',concat(#{finprodId},'%'))
+				OR tp.FINPROD_MARKET_ID = #{finprodId}
+				)
 		</if>
 		<if test="tradeMarket != null and !tradeMarket.equals('')">
 			AND T1.TRADE_MARKET=#{tradeMarket}
@@ -278,6 +296,53 @@
         </association>
     </resultMap>
 	<select id="getfinprodIdForAdd" resultMap="finprodIdMap">
+        <if test="(pageId == 'EtrInvestBondInfo002' or pageId == 'EtrInvestBondInfo003') and tradeMarketMode != '02'.toString()">
+            SELECT
+            T1.FINPROD_MARKET_ID id,
+            <!--下拉框值为代码+简称 modified by lishuping 20191017 start-->
+            T1.FINPROD_ABBR text,
+            <!--下拉框值为代码+简称 modified by lishuping 20191017 end-->
+            T1.FINPROD_NAME,
+            T1.FINPROD_ID,
+            T1.CALENDAR_ID,
+            T1.TRADE_MARKET,
+            T1.IS_RIGHT,
+            <!-- type4改为type9~11	王贵奇2019/7/27 开始 -->
+            <!-- T2.TYPE_4, -->
+            T2.TYPE_9,
+            T2.TYPE_10,
+            T2.TYPE_11,
+            <!-- type4改为type9~11	王贵奇2019/7/27 结束 -->
+            T1.VDATE,
+            T1.MDATE,
+			FPA.IS_ISSUE_ASSET,
+            T1.CCY
+            FROM
+            FIN_PRODUCT T1
+            LEFT JOIN
+            FIN_PRODUCT_ADD FPA
+            ON T1.FINPROD_ID = FPA.FINPROD_ID
+            LEFT JOIN
+            FIN_PRODUCT_TYPE T2
+            ON T1.FINPROD_ID = T2.FINPROD_ID
+            <where>
+                T1.FINPROD_TYPE2 = #{assestType}
+                <if test="initValue != null and !initValue.equals('')">
+                    and T1.FINPROD_MARKET_ID = #{initValue}
+                </if>
+                <if test="tradeMarket != null and !tradeMarket.equals('')">
+                    and T1.TRADE_MARKET = #{tradeMarket}
+                </if>
+                <if test="search != null and !search.equals('')">
+                    and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+                    or T1.FINPROD_NAME like concat('%',concat(#{search},'%')))
+                </if>
+                AND FPA.IS_ISSUE_ASSET = 'Y'
+                AND FPA.APPEAR_MARKET_ID IS NULL
+            </where>
+
+            union ALL    
+        </if>
 		SELECT
 		T1.FINPROD_MARKET_ID id,
 		<!--下拉框值为代码+简称 modified by lishuping 20191017 start-->
@@ -296,6 +361,7 @@
 		<!-- type4改为type9~11	王贵奇2019/7/27 结束 -->
 		T1.VDATE,
 		T1.MDATE,
+		FPA.IS_ISSUE_ASSET,
 		T1.CCY
 		FROM
 		FIN_PRODUCT T1
@@ -340,6 +406,7 @@ SELECT interf.SECID id,
        null,
 	   null,
 	   null,
+       null,
        null,
        null,
        null,
@@ -538,6 +605,32 @@ SELECT interf.SECID id,
 		WHERE ROWNUM =1
 	</select>
 
+	<select id="getLastPriceByPara" resultType="java.math.BigDecimal">
+		SELECT NETPRICE
+		FROM
+			(SELECT NETPRICE
+	      	FROM MST_BOND_VALUATION_INFO
+	      	WHERE
+	      		SEC_ID = #{finprodMarketId}
+	      	AND
+	        	VALUE_DATE = TO_DATE(#{sysdate},'yyyy-mm-dd')
+	      	ORDER BY VALUE_DATE DESC)
+		WHERE ROWNUM =1
+	</select>
+
+	<select id="getLastDSCPriceByPara" resultType="java.math.BigDecimal">
+		select DSC_CLEAN_PRICE_B
+		FROM fin_product fp
+		left join ptl_sec_valution psv on fp.FINPROD_ID = psv.FINPROD_ID
+		where psv.cdate = TO_DATE(#{sysdate},'yyyy-mm-dd')
+		and psv.PORTFOLIO_ID = #{portfolioId}
+		and fp.FINPROD_MARKET_ID = #{finprodMarketId}
+		and psv.INV_AIM = #{invAim}
+		<if test="chlId != null and chlId != ''">
+			AND SEC_ACCT_ID = #{chlId}
+		</if>
+	</select>
+
     <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
     	<if test="zhilingtype == null or zhilingtype == '01'">
 	        SELECT distinct
@@ -592,4 +685,49 @@ SELECT interf.SECID id,
 	       </where>
         </if>
     </select>
+    
+    
+    <select id="getStdPosition" parameterType = "java.util.Map" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(NVL(PSPF.AMOUNT, 0)) AMOUNT
+        FROM
+            TRD_STASEC_FLOW tsf
+        LEFT JOIN
+            TRD_STASEC_FLOW_DETAIL tsfd
+        ON
+            tsfd.SEQNO = tsf.SEQNO
+        AND tsfd.BRANCH = '0'
+        LEFT JOIN
+            PTL_SEC_POSITION_FLOW PSPF
+        ON
+            TSF.SEQNO = PSPF.TRADE_ID
+        AND PSPF.FINPROD_ID = tsfd.FINPROD_ID
+        AND TSF.PORTFOLIO_ID = PSPF.PORTFOLIO_ID
+        AND TSF.SEC_ACCT_ID = PSPF.SEC_ACCT_ID
+        AND TSF.CDATE = PSPF.CDATE
+        WHERE
+            tsf.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+		AND PSPF.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		AND PSPF.SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+		AND PSPF.INV_AIM = #{invAim,jdbcType=VARCHAR}			
+        AND tsf.CDATE &lt;= TO_DATE(#{sysDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+		and (TSF.ps = '01' or not exists (select 1 from PTL_SEC_POSITION_FLOW pspf where TSF.SEQNO = PSPF.TRADE_ID and pspf.hoding_type='13'))
+    	
+    </select>
+
+	<select id="getBondVDate" parameterType = "java.lang.String" resultType="java.util.Date">
+		SELECT Distinct VDATE FROM FIN_PRODUCT where FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getLastNetAmortizationPrice" resultType="java.math.BigDecimal">
+		SELECT DECODE(POS_AMT,0,0,TDY_COST_AMT/POS_AMT) FROM (
+			SELECT TDY_COST_AMT,POS_AMT,DECODE(POS_AMT,0,0,TDY_COST_AMT/POS_AMT)
+			FROM  BOK_STAT_DET_POSIITON  BSDP
+			JOIN FIN_PRODUCT FP ON FP.FINPROD_ID = BSDP.BOOKSET_ID
+			WHERE FP.FINPROD_MARKET_ID = #{portfolioId}
+			AND BUSI_ID = #{finprodId}
+			AND BSDP.BOOK_DATE &lt;= TO_DATE(#{sysdate},'yyyy-mm-dd')
+			ORDER BY BSDP.BOOK_DATE DESC
+		)WHERE ROWNUM =1
+	</select>
 </mapper>

@@ -66,7 +66,7 @@ public class TradeRdsCommonAop {
     
     // add by zhangrui1 20200509 批量接口逻辑 start
     public static final List<String> 批量接口相关交易方向 = Arrays.asList(DictCodeListExt1.交易方向_债转股.getValue(),
-            DictCodeListExt2.交易方向_转换申请.getValue(),DictCodeListExt2.交易方向_转换赎回申请.getValue());
+            DictCodeListExt2.交易方向_转换申请.getValue(),DictCodeListExt2.交易方向_转换赎回申请.getValue(), DictCodeList.交易方向_上市流通);
     // add by zhangrui1 20200509 批量接口逻辑 end
     /**
      * 日志
@@ -178,7 +178,12 @@ public class TradeRdsCommonAop {
     }
     // add by zhangrui1 批量调用接口 end
 
-    private List<String> 通道费=Arrays.asList("ChannelFeePay002Service");
+    /**
+     * 忽略service
+     * modify by jiangpeng on 20210511 ZGBSSE-351
+     * 【标准券管理】标准券入库交易审核报错
+     */
+    private List<String> ignoreList=Arrays.asList("ChannelFeePay002Service","TrdStandardBond002Service");
     /*@Pointcut("execution(* com.joyintech.workflow.engine.service.ProcessStartService.start(..))")
     protected void startPoint() {
 
@@ -388,8 +393,8 @@ public class TradeRdsCommonAop {
     }
 
     private void revokeBackRiskCommon(Map<String,Object> mapTrd,String infCode,JoinPoint joinPoint) throws BusinessException {
-        //通道费支付去除
-        if(通道费.contains(joinPoint.getTarget().getClass().getSimpleName())){
+        //通道费支付去除 标准券入库 modify by jiangpeng on 20210511 ZGBSSE-351
+        if(ignoreList.contains(joinPoint.getTarget().getClass().getSimpleName())){
             return;
         }
         setEachAstType(mapTrd,joinPoint);

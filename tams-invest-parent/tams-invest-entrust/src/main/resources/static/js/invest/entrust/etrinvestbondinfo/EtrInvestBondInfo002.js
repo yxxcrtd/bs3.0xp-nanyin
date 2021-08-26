@@ -21,7 +21,8 @@
             tradeAmount: entrustNum,
             assetType: fintype,
             isEnabled: '01',
-            assetCode: $('#finprodIdhid').val()
+            assetCode: $('#finprodIdhid').val(),
+            priceModel: $('#priceModel').val()
         }
         obj.counterId = $('#etrInvestPersonInfo_counterId').val();
         var object = {
@@ -240,6 +241,69 @@
             }
         }
     }
+    /**
+     * 11.交易对手选择内部投资组合时：
+     * 若委托开始日和指令结束日均等于平台日期时：
+     * a．若投资目的选择摊余成本类，净价默认带出该债券平台日期前一估值日的摊销净价，可修改；
+     * b. 若投资目的选择公允价值计入其他综合收益或公允价值计入当期损益，净价默认带出该债券平台日期前一估值日的估价净价（取市场行情），可修改
+     */
+    var priceInitByInCpy = function () {
+        // 清空净价
+        $('#price').val('').trigger('blur').trigger('change');
+        // 委托开始日
+        var vdate = $("#vdate").val();
+        // 委托终止日
+        var mdate = $("#mdate").val();
+        // 投资目的
+        var invAim = $("#invAim").val();
+        // 交易对手
+        var counterType;
+        if ($('#etrInvestPersonInfo_counterId').select2('data') && $('#etrInvestPersonInfo_counterId').select2('data')[0]) {
+            counterType = $('#etrInvestPersonInfo_counterId').select2('data')[0].object;
+        }
+        // 委托开始日或指令结束日不等于平台日期时
+        if (new Date(sysDate).DateDiff('d', vdate) !== 0
+            || new Date(sysDate).DateDiff('d', mdate) !== 0) {
+            return;
+        }
+        // 交易对手没有选择内部投资组合
+        if (counterType !== 'N') {
+            return;
+        }
+        var finprodMarketId = $('#finprodId').val();
+        if (finprodMarketId) {
+            var data;
+            // 摊余成本类
+            if (invAim === 'AC') {
+                var portfolioId = $('#portfolioId').val();
+                if (portfolioId) {
+                    data = {
+                        sysdate: sysDate,
+                        finprodMarketId: finprodMarketId,
+                        invAim: invAim,
+                        portfolioId: portfolioId,
+                        chlId: $('#chlFinprodId').val()
+                    }
+                } else {
+                    return;
+                }
+            } else {
+                // 其他综合收益或公允价值计入当期损益
+                data = {
+                    sysdate: sysDate,
+                    finprodMarketId: finprodMarketId,
+                    invAim: invAim
+                }
+            }
+            //投资目的选择公允价值计入其他综合收益或公允价值计入当期损益
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getLastPriceByPara', data,
+                function (result) {
+                    if (result.data) {
+                        $('#price').val(result.data).trigger('blur').trigger('change');
+                    }
+                });
+        }
+    }
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
@@ -288,8 +352,6 @@
 					entrustNum = JoyinMath.doMul(entrustNum, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元或不转换
                     //配置单位 edit by yeming 20210721 end
                     object.entrustNum = String(entrustNum);
-                } else {
-                    return;
                 }
             }
             if (typeof FileCommon != "undefined") {
@@ -467,6 +529,16 @@
          */
         $('#tradeMarketMode').change(function () {
             var tradeMarketMode = $('#tradeMarketMode').val();
+            
+            if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT && $('#tradeMarketMode').val() == SHARES_TRADE_MARKET_02){
+                if ($('#finprodId').val != null && $('#finprodId').val != ''){
+                    var data = $('#finprodId').select2('data')[0].object;
+                    if (data && data.isIssueAsset == 'Y' && $("#tradeMarketMode").val() == SHARES_TRADE_MARKET_02){
+                        $('#finprodId').val('').trigger("change");
+                    }
+                }
+            }
+            
             if (tradeMarketMode == oneMarket) {
                 $('#ps').prop('disabled', true).val(T01).trigger('change');
             } else {
@@ -483,6 +555,9 @@
          * 交易方向
          */
         $('#ps').change(function () {
+                if(pageModel !== PAGE_MODEL_NEW && pageModel !== PAGE_MODEL_EDIT){
+                    return;
+                }
         	//交易对手和对手交易员清空 add by yzg 20200120 start
         	if(!initFlag && (pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT)){
         		$('#etrInvestPersonInfo_counterId').val('').trigger('change');
@@ -745,6 +820,8 @@
             }
             getSecManageAvailableCash();
         });
+        // 交易对手
+        $('#etrInvestPersonInfo_counterId').change(priceInitByInCpy());
 
         /**
          * 证券托管户
@@ -765,6 +842,7 @@
          */
         $("#invAim").on("change", function () {
             getPtlSecPositionInfo();
+            priceInitByInCpy();
         });
         // 一体化对应etliu end
         $.fn.updateChosenArr = function updateChosenArr(obj) {
@@ -801,7 +879,7 @@
             if (ps == T01 && ccy && portfolioId && vdate) {
                 getPtlCashPositionInfo();
             }
-
+            priceInitByInCpy();
             if ($('#price').val()) {
                 calData('price');
             }
@@ -812,6 +890,7 @@
          */
         $('#mdate').change(function () {
             checkFinMdate();
+            priceInitByInCpy();
             if ($('#price').val()) {
                 calData('price');
             }
@@ -860,6 +939,7 @@
             }else{
             	$('#settleSpreed').attr('disabled', false);
             }
+            priceInitByInCpy();
         });
         // by 赵东东 20200227 end
         /**
@@ -1129,7 +1209,7 @@
                         if (isInit || pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) {
                             break;
                         }
-                        if ($("#entrustId").val() != '') {
+                        if ($("#entrustId").val() != ''||tradeMarket === '05') {
                             $('#tradePlat').prop("disabled", true);
                         }
                         break;
@@ -1190,6 +1270,10 @@
                             $tradePlat.updateChosenArr({
                                 disabled: false
                             });
+                        }
+                        if($('#tradeMarket').val() === '05'){
+                            $('#tradePlat').val(SHARES_TRADE_PLATFORM_99).trigger('change').trigger('blur');;
+                            $('#tradePlat').prop("disabled",true);
                         }
                         break;
                 }

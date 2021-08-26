@@ -10,41 +10,35 @@
  
 package com.joyintech.tams.invest.risk.valtblimport.service;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.Date;
 
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListRsk;
-import com.joyintech.tams.invest.common.client.ClientData;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.service.InvestInterfCommService;
-import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
-import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
-import com.joyintech.tams.invest.risk.valtblimport.filtertools.filter.Filter;
-
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.ValtblImportDateTraceMapper;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.risk.valtblimport.dto.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.RskValtblSubject;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -53,18 +47,23 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExcelUtil;
 import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.component.business.common.dto.InfChinamutualfunddescriptionDto;
 import com.joyintech.tams.component.business.common.dto.InterfPayhsrcsecinfoDto;
+import com.joyintech.tams.component.business.common.dto.InterfStockInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonAutoCouponService;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.constant.PageFieldToInterfFactory;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListRsk;
+import com.joyintech.tams.invest.common.client.ClientData;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto;
@@ -76,16 +75,10 @@ import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.dto.
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.service.RskValStructureService;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.dto.RskValSumnameDto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.service.RskValSumname001Service;
-import com.joyintech.tams.invest.risk.valtblimport.dto.ColumnMapEntry;
 import com.joyintech.tams.invest.risk.valtblimport.dto.PreOccupActualDetailDto;
 import com.joyintech.tams.invest.risk.valtblimport.dto.PreOccupationChangeDto;
-import com.joyintech.tams.invest.risk.valtblimport.dto.RskValTableImportParamDto;
-import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAssetSubDto;
-import com.joyintech.tams.invest.risk.valtblimport.dto.SubCodeEntry;
-import com.joyintech.tams.invest.risk.valtblimport.dto.SumNameCodeEntry;
-import com.joyintech.tams.invest.risk.valtblimport.dto.ValDataType;
 import com.joyintech.tams.invest.risk.valtblimport.dto.ValTableImpRiskDto;
-import com.joyintech.tams.invest.risk.valtblimport.dto.ValType;
+import com.joyintech.tams.invest.risk.valtblimport.filtertools.filter.Filter;
 
 /**
  *  估值表导入
@@ -97,9 +90,10 @@ import com.joyintech.tams.invest.risk.valtblimport.dto.ValType;
  */
 @Service
 public class RskValTableImportService extends CommonExportService<RskValtblAssetSubDto>{
-
-
-    private static String REGEX_CHINESE = "[\u4e00-\u9fa5]";// 中文正则
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskValTableImportService.class);
 
     /**
      * 指标结构映射
@@ -124,47 +118,135 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     
     @Autowired
     private CommonAutoCouponService commonAutoCouponService;
-
-    /**
-     * 接口共通组件
-     */
     @Autowired
-    private InvestInterfCommService investInterfCommService;
-    
+    private RskValTableImportCommonService rskValTableImportCommonService;
     /**
      * 底层资产映射
      */
     @Autowired
     private RskValtblPrtBotassetService rskValtblPrtBotassetService;
+    @Autowired
+    private ValtblImportDateTraceMapper valtblImportDateTraceMapper;
+	
     /**
      * 风险服务
      */
     @Autowired
     private InterfRiskRdsService interfRiskRdsService;
+	
+    /**
+     * 债券
+     */
+    public static final String KEY_ZQ_STR = "1103";
+    /**
+     * 基金
+     */
+    public static final String KEY_JJ_STR = "1105";
+    /**
+     * 股票
+     */
+    public static final String KEY_GP_STR = "1102";
+    /**
+     * 非标
+     */
+    public static final String KEY_FB_STR = "1701";
+    /**
+     * 项目类
+     */
+    public static final String KEY_LLXFB_STR = "1901";
+    /**
+     * 存款类
+     */
+    public static final String KEY_CKL_STR = "1003";
+    /**
+     * 逆回购
+     */
+    public static final String KEY_NHGB_STR = "1202";
+    /**
+     * 逆回购利息
+     */
+    public static final String KEY_NHGI_STR = "120410";
+    /**
+     * 正回购
+     */
+    public static final String KEY_ZHGB_STR = "2202";
+    /**
+     * 正回购利息
+     */
+    public static final String KEY_ZHGI_STR = "2231";
+    /**
+     * 期权
+     */
+    public static final String KEY_QQ_STR = "3103";
+    /**
+     * 期货
+     */
+    public static final String KEY_QH_STR = "3102";
 
-    public void insert(RskValtblAssetSubDto dto) throws ParseException {
+
+
+    /**
+     * 利息
+     */
+    public static final String KEY_INT_STR = "1204";
+    public List<String> insert(RskValtblAssetSubDto dto) throws ParseException {
+    	
+    	//存放加券过程中，中债要素check不通过的资产信息--徽商代码移植0602
+    	List<String> errorInfoList=new ArrayList<String>();
+    	
         RskValtblPrtBotassetMapDto rskValtblPrtBotassetMapDto = new RskValtblPrtBotassetMapDto();
         InterfPayhsrcsecinfoDto interfPayhsrcsecinfoDto = new InterfPayhsrcsecinfoDto();
-        InfChinamutualfunddescriptionDto infChinamutualfunddescriptionDto = new InfChinamutualfunddescriptionDto();
+        InfChinamutualfunddescriptionDto infChinamutualfunddescriptionDto = new InfChinamutualfunddescriptionDto();        
+        //股票--徽商代码移植0602
+        InterfStockInfoDto interfStockInfoDto=new InterfStockInfoDto();
+        
         //是否自动加券
         boolean isAutoCoupon = false;
         List<String> isAutoCouponBondSecidList = new ArrayList<String>();
-        List<String> isAutoCouponFundfInfoWindcodeList = new ArrayList<String>();
+        List<String> isAutoCouponFundfInfoWindcodeList = new ArrayList<String>();        
+        //要加券的股票--徽商代码移植0602
+        List<String> isAutoCouponStockfInfoWindcodeList = new ArrayList<String>();
+                
         //查找底层资产映射表
         List<RskValtblPrtBotassetMapDto> botAssetMapList = rskValtblPrtBotassetService.selectBotAssetMapByPtlId(dto.getPtlId());
+        //查找标的金融产品信息
+        List<FinProduct> finProductList = selectAllAsset();
         List<String> subNameList = new ArrayList<String>();
         Map<String,Object> paramMap = new HashMap<String,Object>();
         dto.getSelectedItem().forEach(item->{
+            if (StringUtil.isEmpty(item.getSubName())) {
+                item.setSubName(StringUtil.EMPTY);
+            }
             subNameList.add(item.getSubName());
         });
         paramMap.put("windNameList",subNameList);
-        //查找标的金融产品信息
-        List<FinProduct> finProductList = selectAllAsset(paramMap);
         //查找wind债券信息
         List<InterfPayhsrcsecinfoDto>  interfPayhsrcsecinfoList  = commonAutoCouponService.selectWindBondAsset(paramMap);
         //查找wind基金信息
         List<InfChinamutualfunddescriptionDto> infChinamutualfunddescriptionList = commonAutoCouponService.selectWindFundAsset(paramMap);
+        //查找wind股票信息--徽商代码移植0602
+        List<InterfStockInfoDto> interfStockInfoList=commonAutoCouponService.selectWindStockAsset(paramMap);
+        
+
+        Map<String,String> paraMap =new HashMap<String,String>();
+        for(RskValtblAssetSubDto rskValtblAssetSubDtoTemp: dto.getSelectedItem()){
+            if(rskValtblAssetSubDtoTemp.getSubCode().length() ==8){
+                if(paraMap.get(rskValtblAssetSubDtoTemp.getSubCode()) ==null){
+                    paraMap.put(rskValtblAssetSubDtoTemp.getSubCode(),rskValtblAssetSubDtoTemp.getSubName());
+                }else{
+                    continue;
+                }
+            }
+        }
+
         for(RskValtblAssetSubDto entity:dto.getSelectedItem()){
+            String actMarketCode = null;
+            String subCode=entity.getSubCode();
+            String subName=entity.getSubName();
+            if(StringUtil.equals(entity.getValType().getDesc(), ValType.ASSET.getDesc())
+                   && StringUtil.isNotEmpty(entity.getIsMatch()) && StringUtil.equals(entity.getIsMatch(),DictCodeListExt1.是否_否.getValue())){
+               continue;
+            }
             boolean flag = true;
             //新增底层资产
             boolean isAddSubBotMap = true;
@@ -173,7 +255,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
             //第一步 匹配底层资产映射表
             if(null!=botAssetMapList&&!botAssetMapList.isEmpty()){
                 for(RskValtblPrtBotassetMapDto entityRskValtblPrtBotassetMap:botAssetMapList){
-                    if(StringUtil.equals(entity.getSubCode(), entityRskValtblPrtBotassetMap.getSubCode())){
+                    if(StringUtil.equals(subCode, entityRskValtblPrtBotassetMap.getSubCode())){
                         isAddSubBotMap= false;
                         if(StringUtil.isNotEmpty(entityRskValtblPrtBotassetMap.getFinprodId())){
                             flag = false;
@@ -193,11 +275,68 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
             if(isUpdateSubBotMap){
                 entity.setUpdatebotAssetMap(true);
             }
+            // add by QuJianZhong 区分债券交易场所 20200501 start　
+            if (subCode.contains("SH") ||
+                    subCode.contains("SZ") ||
+                    subCode.contains("CY")
+                    || subCode.contains("OF")//场外基金
+                    || subCode.contains("OTC")//大部分行场外基金后缀都是OTC
+
+            ) {
+                if(subCode.contains("OTC")){
+                    actMarketCode = subCode.substring(subCode.length() - 3);
+                }else{
+                    actMarketCode = subCode.substring(subCode.length() - 2);
+                }
+                actMarketCode = actMarketCode.replace("CY", "IB");
+                actMarketCode = actMarketCode.replace("OTC", "OF");
+            } else  if(subName.contains("上交所")||
+                    subName.contains("深交所")||
+                    subName.contains("银行间")){
+                if (subName.contains("上交所")) {
+                    actMarketCode = "SH";
+                }
+                if (subName.contains("深交所")) {
+                    actMarketCode = "SZ";
+                }
+                if (subName.contains("银行间")) {
+                    actMarketCode = "IB";
+                }
+            }else {
+                //根据估值表底层资产映射获取债券的交易场所，适用于四级科目无法区分
+                if(subCode.length() >8){
+                    String subNamesub = paraMap.get(subCode.substring(0,8));
+                    if (subNamesub.contains("上交所")) {
+                        actMarketCode = "SH";
+                    }
+                    if (subNamesub.contains("深交所")) {
+                        actMarketCode = "SZ";
+                    }
+                    if (subNamesub.contains("银行间")) {
+                        actMarketCode = "IB";
+                    }
+                }
+            }
+
+            if (StringUtil.isNotEmpty(actMarketCode)) {
+                entity.setMarketId(actMarketCode);
+            }
+            // add by QuJianZhong 区分债券交易场所 20200501 end
             //第二部  匹配标的金融产品信息
-            if(flag&&null!=finProductList&&!finProductList.isEmpty()){
-                for(FinProduct entityFinProduct:finProductList){
-                    if(StringUtil.equals(entity.getSubName(), entityFinProduct.getFinprodName())
-                        ||StringUtil.equals(entity.getSubName(), entityFinProduct.getFinprodAbbr())){
+            if(flag&&null!=finProductList&&!finProductList.isEmpty()) {
+                for (FinProduct entityFinProduct : finProductList) {
+                    //匹配标的金融产品信息的交易场所add by lilan  20200528
+                    String tradeMarket=null;
+                    if(entityFinProduct.getFinprodId().length()>2){
+                        tradeMarket = entityFinProduct.getFinprodId().substring(entityFinProduct.getFinprodId().length() - 2);
+                    }
+
+                    if ((StringUtil.equals(subName, entityFinProduct.getFinprodName())
+                            || StringUtil.equals(subName, entityFinProduct.getFinprodAbbr()))
+                            && (StringUtil.equals(actMarketCode, tradeMarket) ||
+                            // add by jiangpeng on 20201221 非债券资产 //add by hxy on 20210803 债券可能是QD债券，去掉非债券资产的判断
+                            (StringUtil.isEmpty(actMarketCode) && StringUtil.isNotEmpty(entityFinProduct.getFinprodType2())))
+                            && subCode.length() > 8) {/*非四级科目对应行，都不能有资产代码*/
                         flag = false;
                         entity.setAssetSource(DictCodeListExt1.估值资产来源_系统内.getValue());
                         entity.setFinprodId(entityFinProduct.getFinprodId());
@@ -209,17 +348,26 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
             if(flag){
                 if(StringUtil.equals(entity.getValType().getDesc(), ValType.ASSET.getDesc())){
                     //添加利息匹配1204
-                    if(StringUtil.equals(entity.getSubCode().substring(0, 4),"1103")
-                       ||StringUtil.equals(entity.getSubCode().substring(0, 4),"1204")){
+                    if(StringUtil.equals(subCode.substring(0, 4),KEY_ZQ_STR)
+                       ||StringUtil.equals(subCode.substring(0, 4),KEY_INT_STR)){
                         if(null!=interfPayhsrcsecinfoList&&!interfPayhsrcsecinfoList.isEmpty()){
                             for(InterfPayhsrcsecinfoDto entityInterfPayhsrcsecinfo:interfPayhsrcsecinfoList){
-                                if(StringUtil.equals(entity.getSubName(), entityInterfPayhsrcsecinfo.getSecname())
-                                    ||StringUtil.equals(entity.getSubName(), entityInterfPayhsrcsecinfo.getSecfullname())){
+                                if(StringUtil.equals(subName, entityInterfPayhsrcsecinfo.getSecname())
+                                    ||StringUtil.equals(subName, entityInterfPayhsrcsecinfo.getSecfullname())){
+                                	
+                                	// add by QuJianZhong 区分债券交易场所 20200501 start
+                                	String currentMarketCode = entityInterfPayhsrcsecinfo.getSecid().substring(entityInterfPayhsrcsecinfo.getSecid().indexOf(".") + 1);
+                                	if (!StringUtil.equals(actMarketCode, currentMarketCode)) {
+                                		// 当前接口表债券市场代码与估值表不同，则继续寻找
+                                		continue;
+                                	}
+                                	// add by QuJianZhong 区分债券交易场所 20200501 end
+                                	
                                     flag = false;
-                                    isAutoCoupon = true;
                                     //避免重复加券
-                                    if(StringUtil.equals(entity.getSubCode().substring(0, 4),"1103")){
-                                        isAutoCouponBondSecidList.add(entityInterfPayhsrcsecinfo.getSecid());
+                                    if(StringUtil.equals(subCode.substring(0, 4),KEY_ZQ_STR)){
+                                    	isAutoCoupon = true;
+                                    	isAutoCouponBondSecidList.add(entityInterfPayhsrcsecinfo.getSecid());
                                     }
                                     entity.setAssetSource(DictCodeListExt1.估值资产来源_WIND债券.getValue());
                                     entity.setFinprodId(entityInterfPayhsrcsecinfo.getFinprodId());
@@ -228,59 +376,137 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                                 }
                             }
                         }
-                    }else if(StringUtil.equals(entity.getSubCode().substring(0, 4),"1105")){
+                    }else if(StringUtil.equals(subCode.substring(0, 4),KEY_JJ_STR)){
                         if(null!=infChinamutualfunddescriptionList&&!infChinamutualfunddescriptionList.isEmpty()){
                             for(InfChinamutualfunddescriptionDto entityinfChinamutualfunddescription:infChinamutualfunddescriptionList){
-                                if(StringUtil.equals(entity.getSubName(), entityinfChinamutualfunddescription.getfInfoName())
-                                   ||StringUtil.equals(entity.getSubName(), entityinfChinamutualfunddescription.getfInfoFullname())){
+                                if(StringUtil.equals(subName, entityinfChinamutualfunddescription.getfInfoName())
+                                   ||StringUtil.equals(subName, entityinfChinamutualfunddescription.getfInfoFullname())){
                                     flag = false;
                                     isAutoCoupon = true;
                                     isAutoCouponFundfInfoWindcodeList.add(entityinfChinamutualfunddescription.getfInfoWindcode());
                                     entity.setAssetSource(DictCodeListExt1.估值资产来源_WIND基金.getValue());
-                                    entity.setFinprodId(entityinfChinamutualfunddescription.getObjectId());
+                                    //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  start
+                                    entity.setFinprodId(entityinfChinamutualfunddescription.getFinprodId());
+                                    //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  end
                                     entity.setFinprodMarketId(entityinfChinamutualfunddescription.getfInfoWindcode());
                                     break;
                                 }
                             }
                         }
+                      //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  start
+                    }else if(StringUtil.equals(subCode.substring(0, 4),KEY_GP_STR)){
+                    	if(null!=interfStockInfoList&&!interfStockInfoList.isEmpty()){
+                            for(InterfStockInfoDto entityInterfStockInfoDto:interfStockInfoList){
+                                if(StringUtil.equals(subName, entityInterfStockInfoDto.getAssetname())){
+                                	flag = false;
+                                    isAutoCoupon = true;
+                                    isAutoCouponStockfInfoWindcodeList.add(entityInterfStockInfoDto.getAssetcode());
+                                    entity.setAssetSource(DictCodeListExt1.估值资产来源_WIND股票.getValue());
+                                    entity.setFinprodId(entityInterfStockInfoDto.getFinprodId());
+                                    entity.setFinprodMarketId(entityInterfStockInfoDto.getAssetcode());
+                                    break;
+                                }
+                            }
+                        }
                     }
+                   //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  end
                 }
             }
             
         }
         botAssetMapList.clear();
-        interfPayhsrcsecinfoDto.setSecidList(isAutoCouponBondSecidList);
-        infChinamutualfunddescriptionDto.setfInfoWindcodeList(isAutoCouponFundfInfoWindcodeList);
+        
         isAutoCouponBondSecidList = isAutoCouponBondSecidList.stream().distinct().collect(Collectors.toList());
         isAutoCouponFundfInfoWindcodeList = isAutoCouponFundfInfoWindcodeList.stream().distinct().collect(Collectors.toList());
-        //add by zhangnian 20200427 start
+        isAutoCouponStockfInfoWindcodeList = isAutoCouponStockfInfoWindcodeList.stream().distinct().collect(Collectors.toList());
+        
         interfPayhsrcsecinfoDto.setSecidList(isAutoCouponBondSecidList);
         infChinamutualfunddescriptionDto.setfInfoWindcodeList(isAutoCouponFundfInfoWindcodeList);
-        //add by zhangnian 20200427 end
+        interfStockInfoDto.setStockCodeList(isAutoCouponStockfInfoWindcodeList);
+        
         //自动加券
-        /*if(isAutoCoupon){
+        if(isAutoCoupon){
+        	 //调用债券自动加券方法
             interfPayhsrcsecinfoDto = commonAutoCouponService.autoBondCoupon(interfPayhsrcsecinfoDto);
+            if(null != interfPayhsrcsecinfoDto  && null != interfPayhsrcsecinfoDto.getErrorBondList()) {
+            	errorInfoList.addAll(interfPayhsrcsecinfoDto.getErrorBondList());
+            }
+            
+            //调用基金自动加券方法
             infChinamutualfunddescriptionDto = commonAutoCouponService.autoFundCoupon(infChinamutualfunddescriptionDto);
-        }*/
+            if(null != infChinamutualfunddescriptionDto  && null != infChinamutualfunddescriptionDto.getErrorFundList()) {
+            	errorInfoList.addAll(infChinamutualfunddescriptionDto.getErrorFundList());
+            }
+            
+            //调用股票自动加券方法
+            interfStockInfoDto=commonAutoCouponService.autoStockCoupon(interfStockInfoDto);
+            if(null != interfStockInfoDto  && null != interfStockInfoDto.getErrorStockList()) {
+            	errorInfoList.addAll(interfStockInfoDto.getErrorStockList());
+            }
+        }
         for(RskValtblAssetSubDto entity2:dto.getSelectedItem()){
+            if(StringUtil.equals(entity2.getValType().getDesc(), ValType.ASSET.getDesc())
+                    && StringUtil.isNotEmpty(entity2.getIsMatch()) && StringUtil.equals(entity2.getIsMatch(),DictCodeListExt1.是否_否.getValue())){
+                continue;
+            }
             //导入方式
             entity2.setImpMode(dto.getImpMode());
             if(entity2.isWritebotAssetMap()||entity2.isUpdatebotAssetMap()){
                 if(StringUtil.equals(entity2.getValType().getDesc(), ValType.ASSET.getDesc())){
                     RskValtblPrtBotassetMapDto rskValtblPrtBotassetMapDto2 = new RskValtblPrtBotassetMapDto();
                     if(StringUtil.isNotEmpty(entity2.getSubCode())&&entity2.getSubCode().length()>8){
-                        if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1103")){
+                        if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_ZQ_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_债券.getValue());
-                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1105")){
+                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_JJ_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_基金.getValue());
-                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1102")){
+                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_GP_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_股票.getValue());
-                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1701")){
+                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_FB_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_非标.getValue());
-                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1901")){
+                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_LLXFB_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_项目类.getValue());
-                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1003")){
+                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_CKL_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_存款类.getValue());
+                        }else if (StringUtil.equals(entity2.getSubCode().substring(0, 4), KEY_NHGB_STR)) {
+                            rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_逆回购.getValue());
+                            String code=StringUtil.substring(entity2.getSubCode(),0,8);
+                            String finprodType= null;
+                            if(StringUtil.equals(code,"12020101") || StringUtil.equals(code,"12020201") || StringUtil.equals(code,"12020301")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();
+                            }else if(StringUtil.equals(code,"12020102") || StringUtil.equals(code,"12020202") || StringUtil.equals(code,"12020302")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue();
+                            }
+                            String termType = rskValTableImportCommonService.getTermTypeFromStr(entity2.getSubCode(), entity2.getSubName());
+                            if(termType != null) {
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(termType));
+                            } else {
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(entity2.getSubCode().substring(8, entity2.getSubCode().length())));
+                            }
+                            //在fin_trade_product、fin_product_type生成相关数据，风险需要用到
+                            createRepoInfo(entity2);
+                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_ZHGB_STR)){
+                            rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_正回购.getValue());
+                            String code=entity2.getSubCode().substring(0, 8);
+                            String finprodType= null;
+                            if(StringUtil.equals(code,"22020101") || StringUtil.equals(code,"22020201") || StringUtil.equals(code,"22020301")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue();
+                            }else if(StringUtil.equals(code,"22020102") || StringUtil.equals(code,"22020202") || StringUtil.equals(code,"22020302")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue();
+                            }
+                            String termType = rskValTableImportCommonService.getTermTypeFromStr(entity2.getSubCode(), entity2.getSubName());
+                            if(termType != null) {
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(termType));
+                            } else {
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(entity2.getSubCode().substring(8, entity2.getSubCode().length())));
+                            }
+                            //在fin_trade_product、fin_product_type生成相关数据，风险需要用到
+                            createRepoInfo(entity2);
+                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_ZHGI_STR)){
+                            rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_正回购.getValue());
+                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 6),KEY_NHGI_STR)){
+                            rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_逆回购.getValue());
+                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_QQ_STR) || StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_QH_STR)){
+                            rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_衍生品.getValue());
                         }else{
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_其他.getValue());
                         }
@@ -308,11 +534,24 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                                 }
                             }
                         }
+                        if(StringUtil.equals(entity2.getAssetSource(), DictCodeListExt1.估值资产来源_WIND股票.getValue())){                     	
+                        	if(null!=interfStockInfoDto.getBaseFinProductBaseInfoList()
+                               &&!interfStockInfoDto.getBaseFinProductBaseInfoList().isEmpty()){
+                        		for(BaseFinProductBaseInfoDto baseFinProductBaseInfoDto:interfStockInfoDto.getBaseFinProductBaseInfoList()){
+                                    if(StringUtil.equals(entity2.getFinprodMarketId(), baseFinProductBaseInfoDto.getFinProduct().getFinprodMarketId())){
+		                        		rskValtblPrtBotassetMapDto2.setFinprodId(baseFinProductBaseInfoDto.getFinProduct().getFinprodId());
+		                                entity2.setFinprodId(baseFinProductBaseInfoDto.getFinProduct().getFinprodId());
+		                                entity2.setAssetSource(DictCodeListExt1.估值资产来源_系统内.getValue());
+                                    }
+                        		}
+                        	}
+                        }
                         rskValtblPrtBotassetMapDto2.setSubCode(entity2.getSubCode());
                         rskValtblPrtBotassetMapDto2.setSubName(entity2.getSubName());
                         rskValtblPrtBotassetMapDto2.setPtlId(dto.getPtlId());
                         rskValtblPrtBotassetMapDto2.setFinprodId(entity2.getFinprodId());
                         rskValtblPrtBotassetMapDto2.setAssetSource(entity2.getAssetSource());
+                        rskValtblPrtBotassetMapDto2.setTblMarketId(entity2.getMarketId());
                         if(entity2.isWritebotAssetMap()){
                             rskValtblPrtBotassetMapDto2.setIsAdd(DictCodeList.是否_是.getValue());
                         }
@@ -325,32 +564,26 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         //write映射表
         writebotAssetMap(rskValtblPrtBotassetMapDto);
         //保存估值表
+
         saveValTbl(dto);
-        // 调用接口发送数据 add by yufei 20200818 start
-        doSendInterf(dto);
-        // 调用接口发送数据 add by yufei 20200818 end
-        
+		
         //上农商个性化_估值表导入预占实占变更  add by zhangpei 20201224 start
         preOccupationChange(dto);
         //上农商个性化_估值表导入预占实占变更  add by zhangpei 20201224 end
+		
+        //处理成功的文件入库估值表导入日期记录表
+        if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
+            ValtblImportDateTrace dateDto = new ValtblImportDateTrace();
+            dateDto.setUuid(IDGenerator.generate());
+            dateDto.setImpdate(DateUtil.parse(DateUtil.getSysDate()));
+            dateDto.setPortfolioId(dto.getPtlId());
+            dateDto.setValdate(dto.getValDate());
+            dateDto.setCreateDept((LoginUserUtil.getInstCode()!= null && LoginUserUtil.getInstCode().size()>0) ? LoginUserUtil.getInstCode().get(0):null);
+            valtblImportDateTraceMapper.insert(dateDto);
+        }
+        return errorInfoList;
     }
-
-    /**
-     * 调用接口发送数据
-     * @param dto 数据
-     */
-    private void doSendInterf(RskValtblAssetSubDto dto) {
-        //目标资产科目
-        List<RskValtblSubject> rskValtblSubjectList= rskValAssetCode003Service.selecctRskValtblSubjectCodeList("01");
-        //目标汇总科目
-        List<RskValtblSubject> rskValtblSubjectList2= rskValAssetCode003Service.selecctRskValtblSubjectCodeList("02");
-        Map<String, Object> invMap = JsonUtils.object2Map(dto);
-        invMap.put("pageId", "RofvBottomOriginValuationJ004");
-        invMap.put("rskValtblSubjectList",rskValtblSubjectList);
-        invMap.put("rskValtblSubjectList2",rskValtblSubjectList2);
-        investInterfCommService.doInvestInterf(invMap);
-    }
-
+    
     /**
      * 写入底层映射表
      * <功能详细描述>
@@ -382,10 +615,16 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
      * @see
      * @since 1.0
      */
-    public List<FinProduct> selectAllAsset(Map<String,Object> param){
-        return restTemplate.postForList(
-            ServiceApplication.ASSET_SERVICE_NAME + "/AssetCommon/selectAllAsset",param,
+    public List<FinProduct> selectAllAsset(){
+         List<FinProduct> list=restTemplate.getForList(
+            ServiceApplication.ASSET_SERVICE_NAME + "/AssetCommon/selectAllAsset",
             FinProduct.class);
+         //资产维护界面维护的资产
+        List<FinProduct> list1=restTemplate.getForList(
+                ServiceApplication.RISK_SERVICE_NAME + "/RskValRelateImport/selectAllAsset",
+                FinProduct.class);
+        list.addAll(list1);
+        return list;
     }
     /**
      * 估值表预览
@@ -396,7 +635,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
      * @see
      * @since 1.0
      */
-   public List<RskValtblAssetSubDto> viewValTable(RskValTableImportParamDto dto) throws Exception{
+   public List<RskValtblAssetSubDto> viewValTable(RskValTableImportParamDto dto) throws ClassNotFoundException, FileNotFoundException, InstantiationException, IllegalAccessException {
        Map<String, Object> paramMap = new HashMap<String, Object>();
        List<RskValtblAssetSubDto> valList = new LinkedList<RskValtblAssetSubDto>();
        List<RskValtblAssetSubDto> valHand_oneList = new LinkedList<RskValtblAssetSubDto>();
@@ -413,6 +652,8 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
        Map<String,ColumnMapEntry> vtstructureMap = new HashMap<String, ColumnMapEntry>();
        Map<String,SubCodeEntry> vtaccountMap = new HashMap<String, SubCodeEntry>();
        Map<String,SumNameCodeEntry> vtsumaccountMap = new HashMap<String, SumNameCodeEntry>();
+       //构造目标科目代码汇总科目Map
+       Map<String,SumNameCodeEntry> vtsumCodeMap = new HashMap<String, SumNameCodeEntry>();
        //构造结构映射map
        for(RskValStructureDto rskValStructureDto:rskValStructureList){
            ColumnMapEntry vtstructEntry = new ColumnMapEntry();
@@ -442,6 +683,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                }
            }
            vtsumaccountMap.put(vtsumaccountDto.getSumName(), entry);
+           vtsumCodeMap.put(entry.getSumCode(),entry);
        }
        paramMap.put("start_row", dto.getStartRow());
        paramMap.put("subjectCodeCol", dto.getSubjectCodeCol());
@@ -449,12 +691,18 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
        paramMap.put("vtstructureMap", vtstructureMap);
        paramMap.put("vtaccountMap", vtaccountMap);
        paramMap.put("vtsumaccountMap", vtsumaccountMap);
+       // 处理没有币种列的情况，全部设置为CNY
+       boolean isExistCcyCol = vtstructureMap.values().stream().noneMatch((e) -> e.getValIndex().equals(ValIndex.CCY));
+       paramMap.put("isExistCcyCol", isExistCcyCol);
        //处理excel数据 
        if (StringUtil.isNotEmpty(dto.getValTableFileName())) {
            /*List<List<String>> dataList = ExcelUtil.build(FileNameUtil.getUploadFilePath(dto.getValTableFileName()),
                null).readToList(0,Integer.parseInt(dto.getStartRow())-1, Integer.parseInt(dto.getStartRow())-2);*/
            //框架遇到空行 不读取  估值表比较特殊 资产与汇总科目中间有空格 需要重写
            List<List<String>> dataList = readExcelUtil(dto);
+           if (StringUtil.isEmptyList(dataList)) {
+               return null;
+           }
            for(List<String> list : dataList){
                //处理excel------估值表
                RskValtblAssetSubDto val = handExcelListForVal(list,paramMap);
@@ -466,10 +714,115 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            }
            //处理valList---取出映射表配置的科目代码及底层资产
            List<RskValtblAssetSubDto> handval_List = handValList(valList, vtaccountMap);
+           //处理handval_List---为null的数值赋0
+           dealHandValList(handval_List);
            //底层---一级汇总
-           valHand_oneList = sum_handValList(handval_List, vtaccountMap,rskValtblSubjectList);
+           valHand_oneList = sum_handValList(handval_List, vtaccountMap,rskValtblSubjectList, vtsumCodeMap);
+           // 一二三级科目的币种,汇率设为空
+           for (RskValtblAssetSubDto handledDto : valHand_oneList) {
+               if (handledDto.getSubCode().length() <= 8) {
+                   handledDto.setCcy(null);
+                   handledDto.setExchangeRate(null);
+               }
+           }
+           //多条科目需汇总（不同投资目的可生成多条信息）
+           Map<String,Integer> indexMap = new HashMap<>();
+           int i=0;
+           while(i<valHand_oneList.size()) {
+        	   RskValtblAssetSubDto processDto = valHand_oneList.get(i);
+        	   if(indexMap.containsKey(processDto.getSubCode())) {
+        		   RskValtblAssetSubDto sumDto = valHand_oneList.get(indexMap.get(processDto.getSubCode()));
+        		   //1.汇总计算
+        		   summary(sumDto,processDto);
+        		   //2.移除
+        		   valHand_oneList.remove(i);
+        	   }
+        	   else {
+        		   indexMap.put(processDto.getSubCode(), i++);
+        	   }
+           }
        }
+
+       valHand_oneList.sort(Comparator.comparing(RskValtblAssetSubDto::getIsMatch,Comparator.nullsLast(String::compareTo)).thenComparing(RskValtblAssetSubDto::getValType).thenComparing(RskValtblAssetSubDto::getSubCode));
+
        return valHand_oneList;
+   }
+    /**
+     * 为数值型字段赋初始值
+     *
+     * @param handval_list
+     * @return
+     */
+    private void dealHandValList(List<RskValtblAssetSubDto> handval_list) {
+        BigDecimal security_cost = BigDecimal.ZERO;
+        BigDecimal ctnwr = BigDecimal.ZERO;
+        BigDecimal smv = BigDecimal.ZERO;
+        BigDecimal mcr = BigDecimal.ZERO;
+        BigDecimal securityCostOri = BigDecimal.ZERO;
+        BigDecimal smvOri = BigDecimal.ZERO;
+        BigDecimal valueAddedOri = BigDecimal.ZERO;
+        BigDecimal valueAdded = BigDecimal.ZERO;
+        for (RskValtblAssetSubDto dto : handval_list) {
+            if (ValType.SUM.equals(dto.getValType())) {
+                continue;
+            }
+            if (Objects.isNull(dto.getSecurityCost())) {
+                dto.setSecurityCost(BigDecimal.ZERO);
+            }
+            if (Objects.isNull(dto.getCtnwr())) {
+                dto.setCtnwr(BigDecimal.ZERO);
+            }
+            if (Objects.isNull(dto.getSmv())) {
+                dto.setSmv(BigDecimal.ZERO);
+            }
+            if (Objects.isNull(dto.getMcr())) {
+                dto.setMcr(BigDecimal.ZERO);
+            }
+            if (Objects.isNull(dto.getSecurityCostOri())) {
+                dto.setSecurityCostOri(BigDecimal.ZERO);
+            }
+            if (Objects.isNull(dto.getSmvOri())) {
+                dto.setSmvOri(BigDecimal.ZERO);
+            }
+            if (Objects.isNull(dto.getValueAdded())) {
+                dto.setValueAdded(BigDecimal.ZERO);
+            }
+            if (Objects.isNull(dto.getValueAddedOri())) {
+                dto.setValueAddedOri(BigDecimal.ZERO);
+            }
+        }
+    }
+   private void summary(RskValtblAssetSubDto sumDto,RskValtblAssetSubDto processDto) {
+	   //证券数量 securityQuantity 
+	   sumDto.setSecurityQuantity(processAdd(sumDto.getSecurityQuantity(),processDto.getSecurityQuantity()));
+	   //单位成本 unitCost 汇总处理待确认
+	   //证券成本 securityCost
+	   sumDto.setSecurityCost(processAdd(sumDto.getSecurityCost(),processDto.getSecurityCost()));
+	   //成本占净值比 ctnwr
+	   sumDto.setCtnwr(processAdd(sumDto.getCtnwr(),processDto.getCtnwr()));
+	   //行情收市价 mcp 汇总处理待确认
+	   //证券市值  smv
+	   sumDto.setSmv(processAdd(sumDto.getSmv(),processDto.getSmv()));
+	   //市值占净值比 mcr
+	   sumDto.setMcr(processAdd(sumDto.getMcr(),processDto.getMcr()));
+	   //估值增值 valueAdded
+	   sumDto.setValueAdded(processAdd(sumDto.getValueAdded(),processDto.getValueAdded()));
+	   //停牌信息 equityInfo
+	   //权益信息 valType
+       //成本（原币）
+       sumDto.setSecurityCostOri(processAdd(sumDto.getSecurityCostOri(), processDto.getSecurityCostOri()));
+       //市值（原币）
+       sumDto.setSmvOri(processAdd(sumDto.getSmvOri(), processDto.getSmvOri()));
+       //估值增值（原币）
+       sumDto.setValueAddedOri(processAdd(sumDto.getValueAddedOri(), processDto.getValueAddedOri()));
+       //汇率
+   }
+   
+   private BigDecimal processAdd(BigDecimal num1,BigDecimal num2) {
+	   if(num1==null&&num2==null) {
+		   return null;
+	   }
+	   return ArithmeticUtil.doAdd(num1,num2);
    }
    
    /**
@@ -477,23 +830,32 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * 底层向上汇总--共通
     * <功能详细描述>
     * @param valList
-    * @param vtaccountMap
     * @param vtcountSubList
     * @param level 03(三级) 02(二级) 01(一级)
     * @return
     * @see
     * @since 1.0
     */
-   private List<RskValtblAssetSubDto> commonHandleSum(List<RskValtblAssetSubDto> valList,List<RskValtblSubject>  vtcountSubList,String level){
+   private List<RskValtblAssetSubDto> commonHandleSum(List<RskValtblAssetSubDto> valList,List<RskValtblSubject>  vtcountSubList,String level,Map<String,SumNameCodeEntry> vtsumCodeMap){
        List<RskValtblAssetSubDto> resultList = new LinkedList<RskValtblAssetSubDto>();
        Map<String,String> tempmap = new HashMap<String,String>();
        for(RskValtblAssetSubDto por:valList){
+           //过滤估值表汇总科目映射
+           if(vtsumCodeMap.containsKey(por.getSubCode())){
+               continue;
+           }
            String subSubjcode = StringUtil.EMPTY;
+           String ccy = por.getCcy();
+           BigDecimal exchangeRate = por.getExchangeRate();
            RskValtblAssetSubDto tempporDto = new RskValtblAssetSubDto();
                BigDecimal security_cost=BigDecimal.ZERO;
                BigDecimal ctnwr=BigDecimal.ZERO;
                BigDecimal smv=BigDecimal.ZERO;
                BigDecimal mcr=BigDecimal.ZERO;
+               BigDecimal securityCostOri = BigDecimal.ZERO;
+               BigDecimal smvOri = BigDecimal.ZERO;
+               BigDecimal valueAddedOri = BigDecimal.ZERO;
+               BigDecimal valueAdded = BigDecimal.ZERO;
                boolean flag=false;
                if(StringUtil.equals("03", level)){
                    if(por.getSubCode().length()>=8){
@@ -521,7 +883,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                        if(StringUtil.equals(por_all.getAllowSum(), "N")){
                            continue;
                        }else{
-                           if(flag==false){
+                           if(!flag){
                                for(RskValtblSubject dto:vtcountSubList){
                                    if(dto.getSubCode().equals(subSubjcode)){
                                        flag=true;
@@ -533,6 +895,18 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                                if((StringUtil.equals("03", level)&&(por_all.getSubCode().length()>=8))
                                    ||(StringUtil.equals("02", level)&&(por_all.getSubCode().length()==8||por_all.getSubCode().length()==6))
                                    ||(StringUtil.equals("01", level)&&((por_all.getSubCode().length()==6||por_all.getSubCode().length()==4)))){
+                                   if (por_all.getSecurityCostOri() != null) {
+                                       securityCostOri = ArithmeticUtil.doAdd(securityCostOri, por_all.getSecurityCostOri());
+                                   }
+                                   if (por_all.getSmvOri() != null) {
+                                       smvOri = ArithmeticUtil.doAdd(smvOri, por_all.getSmvOri());
+                                   }
+                                   if (por_all.getValueAddedOri() != null) {
+                                       valueAddedOri = ArithmeticUtil.doAdd(valueAddedOri, por_all.getValueAddedOri());
+                                   }
+                                   if (por_all.getValueAdded() != null) {
+                                       valueAdded = ArithmeticUtil.doAdd(valueAdded, por_all.getValueAdded());
+                                   }
                                    if(por_all.getSecurityCost()!=null){
                                        security_cost = ArithmeticUtil.doAdd(security_cost,por_all.getSecurityCost());
                                    }
@@ -549,15 +923,22 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                            }
                        }
                    }
-                   if(flag==false){
+                   if(!flag){
                        tempporDto.setSubName(por.getSubName());
                    }
                    tempporDto.setValType(ValType.ASSET);
                    tempporDto.setSubCode(subSubjcode);
-                   tempporDto.setSecurityCost(security_cost.setScale(2, BigDecimal.ROUND_HALF_UP));
+                   tempporDto.setSecurityCost(security_cost.setScale(8, BigDecimal.ROUND_HALF_UP));
                    tempporDto.setCtnwr(ctnwr.setScale(8, BigDecimal.ROUND_HALF_UP));
-                   tempporDto.setSmv(smv.setScale(2, BigDecimal.ROUND_HALF_UP));
+                   tempporDto.setSmv(smv.setScale(8, BigDecimal.ROUND_HALF_UP));
                    tempporDto.setMcr(mcr.setScale(8, BigDecimal.ROUND_HALF_UP));
+                   tempporDto.setIsMatch(por.getIsMatch());
+                   tempporDto.setSecurityCostOri(securityCostOri.setScale(8, BigDecimal.ROUND_HALF_UP));
+                   tempporDto.setSmvOri(smvOri.setScale(8, BigDecimal.ROUND_HALF_UP));
+                   tempporDto.setValueAddedOri(valueAddedOri.setScale(8, BigDecimal.ROUND_HALF_UP));
+                   tempporDto.setValueAdded(valueAdded.setScale(8, BigDecimal.ROUND_HALF_UP));
+                   tempporDto.setExchangeRate(exchangeRate);
+                   tempporDto.setCcy(ccy);
                    resultList.add(tempporDto);
                }
        }
@@ -579,215 +960,15 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @see
     * @since 1.0
     */
-   private List<RskValtblAssetSubDto> sum_handValList(List<RskValtblAssetSubDto> valList,Map<String,SubCodeEntry> vtaccountMap,List<RskValtblSubject>  vtcountSubList){
+   private List<RskValtblAssetSubDto> sum_handValList(List<RskValtblAssetSubDto> valList,Map<String,SubCodeEntry> vtaccountMap,List<RskValtblSubject>  vtcountSubList,Map<String,SumNameCodeEntry> vtsumCodeMap){
        try{
-           List<RskValtblAssetSubDto> valHand_threeList = commonHandleSum(valList,vtcountSubList,"03");
-           List<RskValtblAssetSubDto> valHand_twoList = commonHandleSum(valHand_threeList,vtcountSubList,"02");
-           List<RskValtblAssetSubDto> valHand_oneList = commonHandleSum(valHand_twoList,vtcountSubList,"01");
+           List<RskValtblAssetSubDto> valHand_threeList = commonHandleSum(valList,vtcountSubList,"03",vtsumCodeMap);
+           List<RskValtblAssetSubDto> valHand_twoList = commonHandleSum(valHand_threeList,vtcountSubList,"02",vtsumCodeMap);
+           List<RskValtblAssetSubDto> valHand_oneList = commonHandleSum(valHand_twoList,vtcountSubList,"01",vtsumCodeMap);
            Collections.sort(valHand_oneList);
            return valHand_oneList;
-           //底层---三级汇总
-           /*Map<String,String> tempmap = new HashMap<String,String>();
-           Map<String,String> tempmaptwo = new HashMap<String,String>();
-           Map<String,String> tempmapthree = new HashMap<String,String>();
-           for(RskValtblAssetSubDto por_three:valList){
-               RskValtblAssetSubDto tempporDto = new RskValtblAssetSubDto();
-                   BigDecimal security_cost=BigDecimal.ZERO;
-                   BigDecimal ctnwr=BigDecimal.ZERO;
-                   BigDecimal smv=BigDecimal.ZERO;
-                   BigDecimal mcr=BigDecimal.ZERO;
-                   boolean flag=false;
-                   if(por_three.getSubCode().length()>=8){
-                       String sub_subjcode=por_three.getSubCode().substring(0, 8);
-                       if(tempmap.containsKey(sub_subjcode)){
-                           continue;
-                       }
-                       tempmap.put(sub_subjcode, sub_subjcode);
-                       for(RskValtblAssetSubDto por_all:valList){
-                           if(por_all.getAllowSum()==null){
-                               por_all.setAllowSum("Y");
-                           }
-                           if(por_all.getAllowSum().equals("N")){
-                               continue;
-                           }else{
-                               if(flag==false){
-                                   for(RskValtblSubject dto:vtcountSubList){
-                                       if(dto.getSubCode().equals(sub_subjcode)){
-                                           flag=true;
-                                           tempporDto.setSubName(dto.getSubName());
-                                       }
-                                   }
-                               }
-                               if(por_all.getSubCode().startsWith(sub_subjcode)&&
-                                       por_all.getSubCode().length()>=8){
-                                   if(por_all.getCost()!=null){
-                                       security_cost = ArithmeticUtil.doAdd(security_cost,por_all.getCost());
-                                   }
-                                   if(por_all.getCtnwr()!=null){
-                                       ctnwr = ArithmeticUtil.doAdd(ctnwr,por_all.getCtnwr());
-                                   }
-                                   if(por_all.getSmv()!=null){
-                                       smv = ArithmeticUtil.doAdd(smv,por_all.getSmv());
-                                   }
-                                   if(por_all.getMcr()!=null){
-                                       mcr = ArithmeticUtil.doAdd(mcr,por_all.getMcr());
-                                   }
-                               }
-                           }
-                       }
-                       if(flag==false){
-                           tempporDto.setSubName("");
-                       }
-                       tempporDto.setValType(ValType.ASSET);
-                       tempporDto.setSubCode(sub_subjcode);
-                       tempporDto.setCost(security_cost);
-                       tempporDto.setCtnwr(ctnwr);
-                       tempporDto.setSmv(smv);
-                       tempporDto.setMcr(mcr);
-                       valHand_threeList.add(tempporDto);
-                   }
-           }
-           //移除重复的科目代码数据
-           for(RskValtblAssetSubDto por_three:valList){
-               if(!tempmap.containsKey(por_three.getSubCode())){
-                   valHand_threeList.add(por_three);
-               }
-           }
-           //二级--三级汇总
-           for(RskValtblAssetSubDto por_two:valHand_threeList){
-               RskValtblAssetSubDto tempporDto = new RskValtblAssetSubDto();
-               BigDecimal security_cost=BigDecimal.ZERO;
-               BigDecimal ctnwr=BigDecimal.ZERO;
-               BigDecimal smv=BigDecimal.ZERO;
-               BigDecimal mcr=BigDecimal.ZERO;
-               boolean flag=false;
-               if(por_two.getSubCode().length()==8||por_two.getSubCode().length()==6){
-                   String sub_subjcode=por_two.getSubCode().substring(0, 6);
-                   if(tempmaptwo.containsKey(sub_subjcode)){
-                       continue;
-                   }
-                   tempmaptwo.put(sub_subjcode, sub_subjcode);
-                   for(RskValtblAssetSubDto por_all:valHand_threeList){
-                       if(por_all.getAllowSum()==null){
-                           por_all.setAllowSum("Y");
-                       }
-                       if(por_all.getAllowSum().equals("N")){
-                           continue;
-                       }else{
-                           if(flag==false){
-                               for(RskValtblSubject dto:vtcountSubList){
-                                   if(dto.getSubCode().equals(sub_subjcode)){
-                                       flag=true;
-                                       tempporDto.setSubName(dto.getSubName());
-                                   }
-                               }
-                           }
-                           if(por_all.getSubCode().startsWith(sub_subjcode)){
-                                   if(por_all.getSubCode().length()==8||por_all.getSubCode().length()==6){
-                                       if(por_all.getCost()!=null){
-                                           security_cost = ArithmeticUtil.doAdd(security_cost,por_all.getCost());
-                                       }
-                                       if(por_all.getCtnwr()!=null){
-                                           ctnwr = ArithmeticUtil.doAdd(ctnwr,por_all.getCtnwr());
-                                       }
-                                       if(por_all.getSmv()!=null){
-                                           smv = ArithmeticUtil.doAdd(smv,por_all.getSmv());
-                                       }
-                                       if(por_all.getMcr()!=null){
-                                           mcr = ArithmeticUtil.doAdd(mcr,por_all.getMcr());
-                                       }
-                           }
-                           }
-                           }
-                   }
-                   if(flag==false){
-                       tempporDto.setSubName("");
-                   }
-                   tempporDto.setValType(ValType.ASSET);
-                   tempporDto.setSubCode(sub_subjcode);
-                   tempporDto.setCost(security_cost);
-                   tempporDto.setCtnwr(ctnwr);
-                   tempporDto.setSmv(smv);
-                   tempporDto.setMcr(mcr);
-                   valHand_twoList.add(tempporDto);
-               }
-           }
-           //移除重复的科目代码数据
-           for(RskValtblAssetSubDto por_three:valHand_threeList){
-               if(!tempmaptwo.containsKey(por_three.getSubCode())){
-                   valHand_twoList.add(por_three);
-               }
-           }
-           //一级汇总
-           for(RskValtblAssetSubDto por_two:valHand_twoList){
-               RskValtblAssetSubDto tempporDto = new RskValtblAssetSubDto();
-               BigDecimal security_cost=BigDecimal.ZERO;
-               BigDecimal ctnwr=BigDecimal.ZERO;
-               BigDecimal smv=BigDecimal.ZERO;
-               BigDecimal mcr=BigDecimal.ZERO;
-               boolean flag=false;
-               if(por_two.getSubCode().length()==6||por_two.getSubCode().length()==4){
-                   String sub_subjcode=por_two.getSubCode().substring(0, 4);
-                   if(tempmapthree.containsKey(sub_subjcode)){
-                       continue;
-                   }
-                   tempmapthree.put(sub_subjcode, sub_subjcode);
-                   for(RskValtblAssetSubDto por_all:valHand_twoList){
-                       if(por_all.getAllowSum()==null){
-                           por_all.setAllowSum("Y");
-                       }
-                       if(por_all.getAllowSum().equals("N")){
-                           continue;
-                       }else{
-                           if(flag==false){
-                               for(RskValtblSubject dto:vtcountSubList){
-                                   if(dto.getSubCode().equals(sub_subjcode)){
-                                       flag=true;
-                                       tempporDto.setSubName(dto.getSubName());
-                                   }
-                               }
-                           }
-                           if(por_all.getSubCode().startsWith(sub_subjcode)){
-                               if(por_all.getSubCode().length()==6||por_all.getSubCode().length()==4){
-                                   if(por_all.getCost()!=null){
-                                       security_cost = ArithmeticUtil.doAdd(security_cost,por_all.getCost());
-                                   }
-                                   if(por_all.getCtnwr()!=null){
-                                       ctnwr = ArithmeticUtil.doAdd(ctnwr,por_all.getCtnwr());
-                                   }
-                                   if(por_all.getSmv()!=null){
-                                       smv = ArithmeticUtil.doAdd(smv,por_all.getSmv());
-                                   }
-                                   if(por_all.getMcr()!=null){
-                                       mcr = ArithmeticUtil.doAdd(mcr,por_all.getMcr());
-                                   }
-                           }
-                           }
-                       }
-                   }
-                   if(flag==false){
-                       tempporDto.setSubName("");
-                   }
-                   tempporDto.setValType(ValType.ASSET);
-                   tempporDto.setSubCode(sub_subjcode);
-                   tempporDto.setCost(security_cost);
-                   tempporDto.setCtnwr(ctnwr);
-                   tempporDto.setSmv(smv);
-                   tempporDto.setMcr(mcr);
-                   valHand_oneList.add(tempporDto);
-               }
-           }
-           //移除重复的科目代码数据
-           for(RskValtblAssetSubDto por_three:valHand_twoList){
-               if(!tempmapthree.containsKey(por_three.getSubCode())){
-                   valHand_oneList.add(por_three);
-               }
-           }
-           //排序
-           Collections.sort(valHand_oneList);
-           return valHand_oneList;*/
        }catch(Exception e){
-           e.printStackTrace();
+           logger.error(e.getMessage(),e);
        }
        return null;
    }
@@ -806,11 +987,15 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
        List<RskValtblAssetSubDto> one_handval_List = new LinkedList<RskValtblAssetSubDto>();
        List<RskValtblAssetSubDto> two_handval_List = new LinkedList<RskValtblAssetSubDto>();
        List<RskValtblAssetSubDto> sum_val_List = new LinkedList<RskValtblAssetSubDto>();
+       List<RskValtblAssetSubDto> unMatchList = new LinkedList<RskValtblAssetSubDto>();//统计未匹配的在画面红字展示
+       String TAX_SECTION_BEGIN = CacheUtil.getSysParam("TAX_SECTION_BEGIN");
+       List<String> fplist=StringUtil.splitToList(",", CacheUtil.getSysParam("GP_VALUATION_APPRECIATION_SUBJECTS"));
        for(RskValtblAssetSubDto handval:valList){
+           handval.setIsMatch(DictCodeListExt1.是否_是.getValue());
            if(handval.getValType().equals(ValType.SUM)){
                sum_val_List.add(handval);
            }
-           String subjCode = handval.getSubCode();
+           String subjCode = handval.getSubCode(); 
            if(vtaccountMap.containsKey(subjCode)){
                if(vtaccountMap.get(subjCode)!=null){
                    //允许汇总 Y N
@@ -818,27 +1003,53 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                    one_handval_List.add(handval);
                }
            }else{
+               boolean isMatch = false;//add by lpf 统计未匹配的
                for(int i=subjCode.length();i>0;i--){
                    String beforSub = subjCode.substring(0, i);
                    if(vtaccountMap.containsKey(beforSub)){
                        one_handval_List.add(handval);
+                       isMatch = true;
                        break;
                    }
                }
+               //统计未匹配的红字展示
+               //“1” “3”开头或者 ”2“开头回购融入
+               if(!handval.getSubName().contains("估值增值") && !(fplist.contains(handval.getSubCode()))){
+                       if (!isMatch && handval.getValType() == ValType.ASSET  && (!(handval.getSubCode().substring(0, 1).equals(TAX_SECTION_BEGIN)))) {
+                           handval.setIsMatch(DictCodeListExt1.是否_否.getValue());
+                           unMatchList.add(handval);
+                       }else if(!isMatch && handval.getValType() == ValType.ASSET && (handval.getSubCode().substring(0, 1).equals(TAX_SECTION_BEGIN))
+                               && ((handval.getSubCode().length() >= 4 && (handval.getSubCode().substring(0, 4).equals("2202") || handval.getSubCode().substring(0, 4).equals("2701")))
+                               ||(handval.getSubCode().length() >= 6 && handval.getSubCode().substring(0, 6).equals("223101")))){
+                           handval.setIsMatch(DictCodeListExt1.是否_否.getValue());
+                           unMatchList.add(handval);
+                       }
+               }
+               //统计未匹配的红字展示
            }
        }
        //保留叶子节点
        for(RskValtblAssetSubDto one_handval:one_handval_List){
            int i=0;
            for(RskValtblAssetSubDto two_handval:one_handval_List){
-           if(two_handval.getSubCode().startsWith(one_handval.getSubCode())
-                   &&two_handval.getSubCode().length()>one_handval.getSubCode().length()){
-               i++;
-               break;
-           }
+               if(two_handval.getSubCode().startsWith(one_handval.getSubCode())
+                       &&two_handval.getSubCode().length()>one_handval.getSubCode().length()){
+                   i++;
+                   break;
+               }
            }
            if(i==0){
                two_handval_List.add(one_handval);
+           }
+       }
+       // 去除未映射List 子节点已映射的
+       for(RskValtblAssetSubDto dto :two_handval_List){
+           Iterator<RskValtblAssetSubDto> it = unMatchList.iterator();
+           while (it.hasNext()){
+               RskValtblAssetSubDto dtoit = it.next();
+               if(dto.getSubCode().startsWith(dtoit.getSubCode())){
+                   it.remove();
+               }
            }
        }
        //资产科目代码替换成标准科目代码
@@ -862,11 +1073,22 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                        break;
                    }
                }
+           }  
+       }
+       // 特殊处理100201科目 & 120401科目
+       for(RskValtblAssetSubDto two_handval:two_handval_List) {
+           String subjCode = two_handval.getSubCode();
+           if (subjCode.startsWith("100201") && !"100201".equals(subjCode)) {
+               subjCode = "100201" + SysDataUtil.getNameFromDataDict(DictCode.估值币种映射, two_handval.getCcy());
+           } else if (subjCode.startsWith("120401") && !"120401".equals(subjCode)) {
+               subjCode = "120401" + SysDataUtil.getNameFromDataDict(DictCode.估值币种映射, two_handval.getCcy());
            }
+           two_handval.setSubCode(subjCode);
        }
        valList.clear();
        valList.addAll(sum_val_List);
        valList.addAll(two_handval_List);
+       valList.addAll(unMatchList);//统计未匹配的
        return valList;
    }
    
@@ -887,18 +1109,15 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            subjCode = list.get(subjCodeColIdx);
        }
        if(StringUtil.isEmpty(subjCode)){return null;}else{
-           subjCode.replaceAll(" ", "");
+           subjCode.replaceAll(Pattern.quote(" "), "");
            //add by 张年  2019/07/30
            //科目代码统一去点、去横杠
-           subjCode = subjCode.replaceAll(" ", "").replace(".","").replace("-","");}
+           subjCode = subjCode.replaceAll(Pattern.quote(" "), "").replace(".","").replace("-","");}
           //add by 张年  2019/07/30
        //根据科目代码列 判断是资产科目还是汇总科目
        if(subjCode.length() >= 4) {
            try {
                Integer.valueOf(subjCode.substring(0, 4));
-               //资产科目去掉中文
-               //上农商估计表资产科目有中文  导致科目代码长度过长
-               subjCode = subjCode.replaceAll(REGEX_CHINESE,"");
                val.setValType(ValType.ASSET);
            } catch(NumberFormatException e) {
                val.setValType(ValType.SUM);
@@ -975,24 +1194,24 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            case SUM:
                if(ValDataType.NULL == (sumNameCodeEntry==null?null:sumNameCodeEntry.getNextColType())) break;
                Double cellNum = null;
-               if(StringUtil.isNotEmpty(subjName)){
+               if(StringUtil.isNotEmpty(subjName) && subjName.trim().length()!=0){
                    subjName = subjName.replaceAll(",", "");
-                   if(ValDataType.STRING == sumNameCodeEntry.getNextColType()){
+                   if(sumNameCodeEntry != null && ValDataType.STRING == sumNameCodeEntry.getNextColType()){
                        cellNum = null;
                    }else{
                        if(subjName.contains("%")){
                            subjName = subjName.replaceAll("%", "");
-                           cellNum = (BigDecimal.valueOf(Double.valueOf(subjName)/100)).setScale(6,   BigDecimal.ROUND_HALF_UP).doubleValue();
+                           cellNum = (BigDecimal.valueOf(Double.valueOf(subjName)/100)).setScale(8,   BigDecimal.ROUND_HALF_UP).doubleValue();
                        }else{
-                           cellNum = (BigDecimal.valueOf(Double.valueOf(subjName))).setScale(6,   BigDecimal.ROUND_HALF_UP).doubleValue();
+                           cellNum = (BigDecimal.valueOf(Double.valueOf(subjName))).setScale(8,   BigDecimal.ROUND_HALF_UP).doubleValue();
                        }
                    }
                }else{
                    cellNum = null;
                }
-               if(cellNum != null) {
+               if(cellNum != null && sumNameCodeEntry != null) {
                    if(ValDataType.PERCENT == sumNameCodeEntry.getNextColType()) {
-                       cellNum = (BigDecimal.valueOf(cellNum/100)).setScale(6,   BigDecimal.ROUND_HALF_UP).doubleValue();
+                       cellNum = (BigDecimal.valueOf(cellNum/100)).setScale(8,   BigDecimal.ROUND_HALF_UP).doubleValue();
                    }
                    val.setSecurityCost(BigDecimal.valueOf(cellNum));
                }
@@ -1009,14 +1228,16 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
        String cellVlaue = StringUtil.EMPTY;
        BigDecimal cellNum = null;
        String cellStr = StringUtil.EMPTY;
+       Map<String,ColumnMapEntry> vtstructureMap = new HashMap<String, ColumnMapEntry>();
+       vtstructureMap = (Map<String, ColumnMapEntry>) paramMap.get("vtstructureMap");
        for(int i=0;i<list.size();i++){
            cellVlaue = list.get(i);
            cellStr = cellVlaue.replaceAll(" ", "");
            try{
-               Map<String,ColumnMapEntry> vtstructureMap = new HashMap<String, ColumnMapEntry>();
-               vtstructureMap = (Map<String, ColumnMapEntry>) paramMap.get("vtstructureMap");
                ColumnMapEntry colMapEntry = vtstructureMap.get(Integer.toString(i+1));
-               if(colMapEntry == null) continue;
+               if(colMapEntry == null) {
+                   continue;
+               }
                if(StringUtil.isNotEmpty(cellStr)){
                    cellStr = cellStr.replaceAll(",", "");
                    if(ValDataType.STRING == colMapEntry.getDataType()){
@@ -1024,16 +1245,16 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                    }else{
                        if(cellVlaue.contains("%")){
                            cellStr = cellStr.replaceAll("%", "");
-                           cellNum = (BigDecimal.valueOf(Double.valueOf(cellStr)/100)).setScale(6,   BigDecimal.ROUND_HALF_UP);
+                           cellNum = (BigDecimal.valueOf(Double.valueOf(cellStr)/100)).setScale(8,   BigDecimal.ROUND_HALF_UP);
                        }else{
-                           cellNum = (BigDecimal.valueOf(Double.valueOf(cellStr))).setScale(6,   BigDecimal.ROUND_HALF_UP);
+                           cellNum = (BigDecimal.valueOf(Double.valueOf(cellStr))).setScale(8,   BigDecimal.ROUND_HALF_UP);
                        }
                    }
                }else{
                    cellNum = null;
                }
                if(ValDataType.PERCENT == colMapEntry.getDataType()) {
-                   cellNum = cellNum == null ? null : (cellNum.divide(new BigDecimal(100))).setScale(6,   BigDecimal.ROUND_HALF_UP);
+                   cellNum = cellNum == null ? null : (cellNum.divide(new BigDecimal(100))).setScale(8,   BigDecimal.ROUND_HALF_UP);
                }
                switch(colMapEntry.getValIndex()) {
                    case QUANTITY:
@@ -1067,12 +1288,43 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                    case SUSPENSION_INFO:
                        val.setSuspensionInfo(cellStr);
                        break;
+                   case EQUITY_INFO:
+                       val.setEquityInfo(cellStr);
+                       break;
+                   case COST_ORI:
+                       if (cellNum != null) {
+                           if (val.getSecurityCostOri() == null) {
+                               val.setSecurityCostOri(cellNum);
+                           }
+                       }
+                       break;
+                   case SMV_ORI:
+                       if (cellNum != null) {
+                           val.setSmvOri(cellNum);
+                       }
+                       break;
+                   case VAL_INC_ORI:
+                       if (cellNum != null) {
+                           val.setValueAddedOri(cellNum);
+                       }
+                       break;
+                   case CCY:
+                       val.setCcy(cellStr);
+                       break;
+                   case EXCHANGE_RATE:
+                       if (cellNum != null) {
+                           val.setExchangeRate(cellNum);
+                       }
+                       break;
                    default:
                        break;
                }
            }catch(Exception e){
-               e.printStackTrace();
+               logger.error(e.getMessage(),e);
            }
+       }
+       if ((Boolean) paramMap.get("isExistCcyCol")) {
+           val.setCcy(DictCodeList.币种_人民币_CNY.getValue());
        }
    }
    
@@ -1085,10 +1337,13 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @see
     * @since 1.0
     */
-	private List<List<String>> readExcelUtil(RskValTableImportParamDto dto) throws Exception {
+	private List<List<String>> readExcelUtil(RskValTableImportParamDto dto) throws FileNotFoundException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 		List<List<String>> resultList = new ArrayList<List<String>>();
 		Workbook wb = ExcelUtil.loadWorkbook(dto.getValTableFileName(), null, null);
-		// ---modify by 裴家俊 20190514---start---------
+        if (Objects.isNull(wb)) {
+            return null;
+        }
+        // ---modify by 裴家俊 20190514---start---------
 		Filter filter = null;
 		if (StringUtil.isNotEmpty(dto.getFilterId())) {
 			if (dto.getFilterId().startsWith(BussinessConstant.VALUATION_FILTER_MERGECOL)) {
@@ -1129,7 +1384,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @since 1.0
     */
    private List<List<String>> readToList(int sheetIndex, int skipRows, int titleRow,Workbook wb)
-       throws Exception {
+        {
        List<List<String>> ls = new ArrayList<List<String>>();
        if (null != wb) {
            Sheet sh = wb.getSheetAt(sheetIndex);
@@ -1234,13 +1489,24 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @since 1.0
     */
    public Page<SelectOptionDto> getGroupIdInfo(Map<String, Object> param)
-       throws Exception {
+         {
        param.put("loginUserName", SecurityUtil.getLoginUser().getUserName());
        param.put("portfolioType", DictCodeListExt1.组合类型_委外组合.getValue());
        return restTemplate.postForPage(
            ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/getGroupIdInfo", param,
            SelectOptionDto.class);
    }
+
+    /**
+     * 根据估值表中回购数据生成对应的回购信息，存入表fin_trade_product、fin_product_type
+     * @param entity2
+     */
+    private void createRepoInfo(RskValtblAssetSubDto entity2){
+        restTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/createRepoInfo",
+                entity2,Integer.class);
+    }
+   
    /**
     * 上农商个性化_估值表导入 
     * 预占实占变更 
@@ -1525,6 +1791,4 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
          }
     }
 	
-    
-    
 }

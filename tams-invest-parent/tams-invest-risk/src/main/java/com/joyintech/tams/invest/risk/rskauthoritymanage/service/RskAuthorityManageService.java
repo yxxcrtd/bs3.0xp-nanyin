@@ -10,14 +10,6 @@
  
 package com.joyintech.tams.invest.risk.rskauthoritymanage.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -31,12 +23,20 @@ import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.risk.rskauthoritymanage.dto.RskAuthorityManageDto;
-import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉
@@ -49,6 +49,11 @@ import com.joyintech.workflow.engine.constant.OperationType;
 @Service
 public class RskAuthorityManageService  extends CommonExportService<RskAuthorityManageDto>
     implements BaseProcessService<RskAuthorityManageDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskAuthorityManageService.class);
+
     /**
      * rskAuthorityManageService
      */
@@ -115,7 +120,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param parameters
+     * @param pageParam
      * @return
      * @see
      * @since 1.0
@@ -130,7 +135,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param e
+     * @param dto
      * @return
      * @see
      * @since 1.0
@@ -143,16 +148,25 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
 
     /**
      * 检查是否有流程中的资产交易数据
-     * @param e
+     * @param rsklist
      * @return
      * @see
      * @since 1.0
      */
-    public int selectAssetTrade() {
+    public int selectAssetTrade(List<RskAuthorityManageDto> rsklist) {
+    	int rsknum =0;
         Map<String, Object> param = new HashMap<String, Object>();
-        return restTemplate.postForObject(
-            ServiceApplication.RISK_SERVICE_NAME + "/RskAuthorityManage/selectAssetTrade",
-            param, Integer.class);
+        if(rsklist!=null && rsklist.size()>0){
+            for (RskAuthorityManageDto e : rsklist) {
+            	param.put("ASSET_TYPE", e.getAssetType());
+            	param.put("ASSET_SEC_TYPE", e.getAssetSecType());
+                param.put("RISK_TYPE", DictCodeListExt2.配置类型_授权分类_校验用.getValue());
+            	rsknum +=  restTemplate.postForObject(
+            	            ServiceApplication.RISK_SERVICE_NAME + "/RskAuthorityManage/selectAssetTrade",
+            	            param, Integer.class);
+            }
+        }
+        return rsknum;
     }
 
     /**
@@ -219,7 +233,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }
@@ -268,7 +282,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param userName
+     * @param map
      * @return
      * @see
      * @since 1.0

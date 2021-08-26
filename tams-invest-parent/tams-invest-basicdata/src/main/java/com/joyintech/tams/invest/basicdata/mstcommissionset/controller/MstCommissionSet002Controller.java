@@ -25,6 +25,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -157,8 +158,7 @@ public class MstCommissionSet002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getSecAcctName")
-    public List<SelectOptionDto> getInstitutionName()
-        throws Exception {
+    public List<SelectOptionDto> getInstitutionName() {
         Map<String, Object> map = new HashMap<String, Object>();
         String param = super.getRequest().getParameter("search");
         map.put("secAcctId", param);
@@ -187,13 +187,12 @@ public class MstCommissionSet002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstCommissionSetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstCommissionSetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -234,8 +233,7 @@ public class MstCommissionSet002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<TrdFeeConfigDetail> selectAll()
-            throws Exception {
+    public Page<TrdFeeConfigDetail> selectAll() {
         Page<TrdFeeConfigDetail> page = mstCommissionSetService.select(
                 RequestUtil.getPageParam());
         return page;

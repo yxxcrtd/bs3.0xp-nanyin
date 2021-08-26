@@ -162,15 +162,20 @@ public class PtlManagementInfo001Validator implements BeanValidator{
             List<String> acctList = new ArrayList<String>();
             //资金账户账号
             for(FundAccountInfoDto fundDto : dto.getFundAccountInfoDto()){
-                acctList.add(fundDto.getAcctNo());
+                if(StringUtil.isNotEmpty(fundDto.getAcctNo())) {
+                    acctList.add(fundDto.getAcctNo());
+                }
             }
             //证券账户账号
             for(SecuritiesAccountInfoDto secDto : dto.getSecuritiesAccountInfoDto()){
-                acctList.add(secDto.getTrdAcctId());
+                if(StringUtil.isNotEmpty(secDto.getTrdAcctId())) {
+                    acctList.add(secDto.getTrdAcctId());
+                }
             }
             param.put("busiAcctNoList", acctList);
             param.put("F28", DictCodeListExt1.金融产品类型_投管用_通道.getValue());
-            if(ptlManagementInfo001Service.getReAcct(param) > 0){
+            if (!StringUtil.isEmptyList(acctList) && acctList.size() > 0// add by jiangpeng on 20210422 TISHKBS-1688 账户为空时不提示
+                    && ptlManagementInfo001Service.getReAcct(param) > 0) {
                 errorList.add(new ValidMessage("资金账户已被合作资产使用,请重新选择资金账户"));
             }
             //add by 马数凯 20210202 新增校验，组合新建页面资金账户不能是通道所使过的资金账户 end
@@ -182,7 +187,9 @@ public class PtlManagementInfo001Validator implements BeanValidator{
         if(dto.getFundAccountInfoDto() == null || dto.getFundAccountInfoDto().isEmpty()){
             if(dto.getOperateType() != null && (StringUtil.equals(dto.getOperateType(),"save") ||
                     StringUtil.equals(dto.getOperateType(),"submit"))){
-                errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("FW_E_0006",getMessage("PtlManagementInfo001.funInfo"))));
+                // modify by jiangpeng on 20210422 start TISHKBS-1688 存在产品创建时未申请托管户的情况
+//                errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("FW_E_0006",getMessage("PtlManagementInfo001.funInfo"))));
+                // modify by jiangpeng on 20210422 end
             }
         }else{
             boolean hasSecManageAcct = false;
@@ -198,36 +205,37 @@ public class PtlManagementInfo001Validator implements BeanValidator{
                 String nextId = nextDto.getAcctNo();
                 set.add(nextId);
             }
-
-            //check 同一账户类型 资金账户重复问题 add by lijie2 20200724 start
-            if(acctTypeSet.size() < dto.getFundAccountInfoDto().size()){//说明同一类型账户存在多个；
-                for(String acctType  : acctTypeSet){
-                    List<FundAccountInfoDto> fundAccountInfoList = dto.getFundAccountInfoDto().stream().filter(a -> (a.getAcctType() + a.getCcy()).equals(acctType)).collect(Collectors.toList());
-                    if(null != fundAccountInfoList && fundAccountInfoList.size() > 1){//筛选同一类型账户
-                        for(FundAccountInfoDto unit : fundAccountInfoList){//判断资金账户是否重复
-                            List<FundAccountInfoDto> ar = fundAccountInfoList.stream().filter(a -> a.getAcctNo().equals(unit.getAcctNo())).collect(Collectors.toList());
-                            if(null != ar && ar.size() > 1){
-                                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0006",getMessage("FundAccountInfo.acctNo"),ar.get(0).getAcctNo())));
-                            }
-                        }
-                    }
-                }
-            }
-            //check 同一账户类型 资金账户重复问题 add by lijie2 20200724 end
-
             //判断资金账户类型是否重复 因为产品端新建可以添加多个券商资金账户，所以校验放开 yjm 20190926
             /*if(acctTypeSet.size() < dto.getFundAccountInfoDto().size()){
                 errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0006",getMessage("FundAccountInfo.acctType"))));
             }*/
             //账户信息不能重复
             //update by leipeng 现状：产品要素界面挂资金账户，不同的账户类型挂了同一个资金账户，组合审批时，提示资金账户重复                                    期望：如果不同的账户类型挂了同一个资金账户，在建产品要素的时候提示资金账户重复，不要在组合审批的时候提示
-            /*if(set.size() < dto.getFundAccountInfoDto().size()){
-                errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("BUSS_COM_E_0006",getMessage("PtlManagementInfo001.funInfo"),getMessage("FundAccountInfo.acctNo"))));
-            }*/
-            //必须存在托管账户
-            if(!hasSecManageAcct){
-                errorList.add(new ValidMessage(getMessage("PtlManagementInfo001.selectAcct")));
+            //针对募集户和兑付户，可能是同一个资金账户，放开限制
+            if(set.size() < dto.getFundAccountInfoDto().size()){
+                //针对募集户和兑付户，可能是同一个资金账户，这时,dto.getFundAccountInfoDto().size()数量需要减1
+                int size=dto.getFundAccountInfoDto().size();
+                List<String> list = new ArrayList<>();
+                for(FundAccountInfoDto item:dto.getFundAccountInfoDto()){
+                    if(StringUtil.isNotEmpty(item.getAcctType()) && (item.getAcctType().equals("B14") || item.getAcctType().equals("B15")) && StringUtil.isNotEmpty(item.getAcctNo())){
+                        if(list.contains(item.getAcctNo())){
+                            size=size-1;
+                        }else{
+                            list.add(item.getAcctNo());
+                        }
+                    }
+                }
+                if(set.size() <size){
+                    //errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("BUSS_COM_E_0006",getMessage("PtlManagementInfo001.funInfo"),getMessage("FundAccountInfo.acctNo"))));
+                    errorList.add(new ValidMessage("资金账户信息中除募集户和兑付户资金账户账号之间允许重复外，其他资金账户账号数据不能重复。"));
+                }
             }
+            // modify by jiangpeng on 20210422 start TISHKBS-1688 存在产品创建时未申请托管户的情况,故取消组合创建时校验托管户
+            //必须存在托管账户
+//            if(!hasSecManageAcct){
+//                errorList.add(new ValidMessage(getMessage("PtlManagementInfo001.selectAcct")));
+//            }
+            // modify by jiangpeng on 20210422 end
         }
     }
 

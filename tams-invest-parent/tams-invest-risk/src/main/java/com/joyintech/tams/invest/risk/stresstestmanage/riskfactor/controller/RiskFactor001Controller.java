@@ -14,8 +14,9 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.risk.stresstestmanage.flowriskscenemanage.dto.FlowRiskFactroRManageDto;
@@ -26,6 +27,7 @@ import com.joyintech.tams.invest.risk.stresstestmanage.riskfactor.service.RiskFa
 import com.joyintech.tams.invest.risk.stresstestmanage.riskfactor.service.RiskFactor002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -84,7 +89,7 @@ public class RiskFactor001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findOnePage")
     public Page<RiskFactor001Dto> selectForPage()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         return service.selectAll(map);
     }
@@ -95,7 +100,7 @@ public class RiskFactor001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selectRiskFactorMap")
     public List<SelectOptionDto> selectRiskFactorMap(@RequestParam Map<String, Object> param)
-        throws Exception {
+         {
 
         return service.selectRiskFactorMap(param);
     }
@@ -105,7 +110,7 @@ public class RiskFactor001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selectRiskFactorMap2")
     public List<SelectOptionDto> selectRiskFactorMap2(@RequestParam Map<String, Object> param)
-            throws Exception {
+             {
 
         return service.selectRiskFactorMap2(param);
     }
@@ -115,7 +120,7 @@ public class RiskFactor001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selectRiskFactorType1")
     public List<SelectOptionDto> selectRiskFactorMapType1(@RequestParam Map<String, Object> param)
-        throws Exception {
+         {
 
         return service.selectRiskFactorMapType1(param);
 
@@ -126,7 +131,7 @@ public class RiskFactor001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selectRiskFactorType2")
     public List<SelectOptionDto> selectRiskFactorMapType2()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
 
         return service.selectRiskFactorMapType2(map);
@@ -182,10 +187,24 @@ public class RiskFactor001Controller extends BaseController {
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
-        return service.export(this.getPageId(),
-                RequestUtil.getParameters(getRequest()));
+    public ResponseEntity<byte[]> export() throws IOException {
+        String datas = this.getParam("datas");
+        if(datas==null) {
+            return service.export(this.getPageId(),
+                    RequestUtil.getParameters(getRequest()));
+        }
+
+        List<RiskFactor001Dto> param1 = JsonUtils.json2List(datas, RiskFactor001Dto.class);
+        File outFile =  service.makeFile(
+                "/com/joyintech/tams/invest/risk/stresstestmanage/riskfactor/conf/RiskFactor001_config.xml",
+                param1);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
 
     }
     /**
@@ -196,8 +215,7 @@ public class RiskFactor001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(OPERATE_TYPE_SUBMIT)
-    public AjaxResult delete(@RequestBody @Validated RiskFactor001Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult delete(@RequestBody @Validated RiskFactor001Dto dto, BindingResult br) throws WorkFlowException {
 
         if (br.hasErrors()) {
             return new AjaxResult(br);

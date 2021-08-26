@@ -13,11 +13,13 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.system.sysdate.controller.SysDate001Controller;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.risk.customerrelationtree.agencynegativeinf.dto.AgencyNegativeInf001Dto;
 import com.joyintech.tams.invest.risk.customerrelationtree.agencynegativeinf.service.AgencyNegativeInf001Service;
 import org.apache.commons.lang3.StringUtils;
@@ -55,7 +57,16 @@ public class AgencyNegativeInf001Controller extends BaseController {
     @Override
     public String init(Model model) {
         setSelectOptionToModel(model, DictCode.客户性质);   //对象类型
-        model.addAttribute("queryDate", new SimpleDateFormat("yyyy-MM-dd").format(platformDate.getSysDate()));  //平台日
+        Map<String, Object> map = RequestUtil.getPageParam();
+        if(StringUtil.isNotEmpty(map.get("remType")) && StringUtil.equals(BussinessDictCodeList.提醒类型_小分类_舆情提醒.getValue(), map.get("remType"))){
+            model.addAttribute("orgId", map.get("orgId"));
+            model.addAttribute("remType", map.get("remType"));
+            if(StringUtil.isNotEmpty(map.getOrDefault("quaryDate","").toString())){
+                model.addAttribute("queryDate",DateUtil.addDay(map.get("quaryDate").toString(),0));
+            }
+        }else{
+            model.addAttribute("queryDate", new SimpleDateFormat("yyyy-MM-dd").format(platformDate.getSysDate()));  //平台日
+        }
         return super.init(model);
     }
 
@@ -66,7 +77,7 @@ public class AgencyNegativeInf001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/findPage")
-    public Page<AgencyNegativeInf001Dto> selectForPage() throws Exception {
+    public Page<AgencyNegativeInf001Dto> selectForPage() {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         String objTypes = map.get("objTypes").toString();
         if(objTypes != null && objTypes.length()>0){
