@@ -55,7 +55,6 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/component/asset/FinInterestFactor")
-@SubPageId("FinInterestFactor")
 public class FinInterestFactorController extends BaseController{
 
     /**
