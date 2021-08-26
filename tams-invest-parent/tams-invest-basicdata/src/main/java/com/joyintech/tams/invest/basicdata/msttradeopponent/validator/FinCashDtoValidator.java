@@ -21,7 +21,7 @@ import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.FinCashDto;
  * @since 1.0
  */
 @Transactional
-@Component(value="FinCashDto001Validator")
+@Component
 public class FinCashDtoValidator implements BeanValidator {
 
     /**
