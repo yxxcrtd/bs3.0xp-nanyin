@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -399,6 +400,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             // 手工处理只处理未报送的
             if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())){
                 reportList.add(m);
+
             }
         }
  		
@@ -439,9 +441,6 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 
  			return;
  		}
-
- 	
-
  		List<PbcMonthReport> newDataList = new ArrayList<PbcMonthReport>();
  		newDataList.addAll(investList);
 
@@ -455,6 +454,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             pbcMonthReportMapper.deleteLastSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
  			pbcMonthReportMapper.updateInterfSubmitAndSeqBatch(sendStatus,
                  newDataList.subList(0, maxDataCountOneTime),null);
+			pbcMonthReportMapper.updateDoMannultSendZipDatFile(newDataList.subList(0, maxDataCountOneTime));
  			newDataList.subList(0, maxDataCountOneTime).clear();
  			logger.info("单次更新登记表end===");
  		}
@@ -466,7 +466,9 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             //删除正式表已报送数据
             pbcMonthReportMapper.deleteLastSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
  			pbcMonthReportMapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList,null);
- 			logger.info("单次更新登记表end===");
+			pbcMonthReportMapper.updateDoMannultSendZipDatFile(newDataList);
+
+			logger.info("单次更新登记表end===");
  		}
  	}
 
@@ -524,10 +526,15 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
         List<File> sourceFiles = new ArrayList<>();
     	@SuppressWarnings("unchecked")
         List<PbcMonthReport> dataList =  (List<PbcMonthReport>) selectParam.get("reportList");
-    	// 不选报表导出全部
-    	if (CollectionUtils.isEmpty(dataList)){
-    	    dataList = searchByCondition(selectParam);
-    	}
+		Set<String> termList = new HashSet<>();
+
+		for(int i =0 ;i < dataList.size();i++){
+			termList.add(dataList.get(i).getTermid());
+		}
+		selectParam.put("termidList",termList);
+
+		// 不选报表导出全部
+		dataList = searchByCondition(selectParam);
     	Map<String, List<PbcMonthReport>> dataParam = new HashMap<String, List<PbcMonthReport>>();
     	// 单选导出
     	for (int i =0 ;i < dataList.size();i++){
@@ -598,7 +605,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 			}
 			PbcMonthReport pbcReport = (PbcMonthReport) data.get("report");
 			//生成文件
-			String fileName = DateUtil.format(new Date(), "yyyyMMdd")+"-"+f2.format(count)+"-"+pbcReport.getSocialCreditCode()+"-"+pbcReport.getReportOrgName() +".xls";
+			String fileName = DateUtil.format(DateUtil.getLastDay(new Date()), "yyyyMMdd")+"-"+f2.format(count)+"-"+pbcReport.getSocialCreditCode()+"-"+pbcReport.getReportOrgName() +".xls";
 //			File depositfile = PbcExcelUtil.createFile(data, "PbcReport", fileName);
 			File depositfile = TisUtil.createFile(PbcExcelUtil.convertMapKey2String(data), "pbc/PbcReport", fileName);
 			// 删除多余的sheet页

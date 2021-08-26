@@ -66,7 +66,7 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 		if (!CollectionUtils.isEmpty(listDetail)){
 			for(PbcReportProdDatDto detail : listDetail){
 				dealAreaDateListForDiff(detail);
-				dealAreaDateListForExport(detail);
+				dealAreaDateListForExport(detail,reporttype);
 				dealProdData(detail,isShowZero);
 				data.put(detail.getPropertyCode(), JsonUtils.object2Map(detail));
 			}
@@ -151,44 +151,46 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 	 * @return
 	 * PbcReportAssetDebtDetailDto
 	 */
-	public void dealAreaDateListForExport(PbcReportProdDatDto detail) {
+	public void dealAreaDateListForExport(PbcReportProdDatDto detail,String type) {
 		BigDecimal tenthousand = new BigDecimal(10000);
-		// 人民币
-		if(detail.getCny() != null){
-			detail.setCny(detail.getCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//外币
-//		if(detail.getForeignCcy() != null){
-//			detail.setForeignCcy(detail.getForeignCcy().divide(tenthousand));
-//		}
-		//美元折人民币
-		if(detail.getUsdToCny() != null){
-			detail.setUsdToCny(detail.getUsdToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//欧元折人民币
-		if(detail.getEurToCny() != null){
-			detail.setEurToCny(detail.getEurToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//英镑折人民币
-		if(detail.getGbpToCny() != null){
-			detail.setGbpToCny(detail.getGbpToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//日元折人民币
-		if(detail.getJpyToCny() != null){
-			detail.setJpyToCny(detail.getJpyToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//其他币种(外币)折人民币
-		if(detail.getOthToCny() != null){
-			detail.setOthToCny(detail.getOthToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//合计
-		if(detail.getTotal() != null){
-			detail.setTotal(detail.getTotal().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//只数
-		if(detail.getProdcounts() != null){
-			BigDecimal divide = new BigDecimal(detail.getProdcounts()).divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP);
-			detail.setProdcounts(divide.longValue());
+		if(!"1_3".equals(type)){
+			// 人民币
+			if(detail.getCny() != null){
+				detail.setCny(detail.getCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//外币
+			//		if(detail.getForeignCcy() != null){
+			//			detail.setForeignCcy(detail.getForeignCcy().divide(tenthousand));
+			//		}
+			//美元折人民币
+			if(detail.getUsdToCny() != null){
+				detail.setUsdToCny(detail.getUsdToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//欧元折人民币
+			if(detail.getEurToCny() != null){
+				detail.setEurToCny(detail.getEurToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//英镑折人民币
+			if(detail.getGbpToCny() != null){
+				detail.setGbpToCny(detail.getGbpToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//日元折人民币
+			if(detail.getJpyToCny() != null){
+				detail.setJpyToCny(detail.getJpyToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//其他币种(外币)折人民币
+			if(detail.getOthToCny() != null){
+				detail.setOthToCny(detail.getOthToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//合计
+			if(detail.getTotal() != null){
+				detail.setTotal(detail.getTotal().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//只数
+			/*if(detail.getProdcounts() != null){
+				BigDecimal divide = new BigDecimal(detail.getProdcounts()).divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP);
+				detail.setProdcounts(divide.longValue());
+			}*/
 		}
 
 	}
