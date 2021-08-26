@@ -45,14 +45,15 @@ $(function () {
             {field:'finprodAbbr', title: '资产名称', sort: true},
             {field:'assetTypeFt', title: '资产类型', sortField:'assetTypeCode',sort: true},
             {field:'assetTypeCode', title: '资产类型', sort: true,visible:false},
-            {field:'vdate1', title: '起息日',sort: true},
-            {field:'mdate1', title: '到期日',sort: true},
+            {field:'vdate1', title: '成立日',sort: true},
+            {field:'mdate1', title: '终止日',sort: true},
             {field:'profitTypeFt', title: '收益类型', sortField:'profitTypeCode',sort: true},
             {field:'profitTypeCode', title: '收益类型', sort: true,visible:false},
-            {field:'currentquotation', title: '当前报价(%)', sort: true},
-            {field:'basic', title: '计息基础',sort: true},
-            {field:'issuer', title: '发行人',sort: true}
-           // {fixed : 'right', title : '操作', align : 'center',type : 'action', buttons : [ 'edit' ] }
+            {field:'manager', title: '管理人', sort: true},
+            {field:'dataSource', title: '数据来源',sort: true},
+            {field:'updateUser',title:'更新人',sort: true},
+            {field:'updateTime',title:'更新时间',sort: true},
+            {field:'operation', title: '操作', type:'action', buttons: ['edit', 'delt']}
         ] 
     });
     
@@ -95,7 +96,14 @@ $(function () {
         $('#ValPlannedassetquery001_btn_search').click(function() {
             table.load();
         });
-        
+                //新建计划类资产
+                $('#ValPlannedassetquery001_btn_add').click(function() {
+                    Joyin.dialog(JoyinUtil.getLabel("计划类资产新建"),
+                        basePath + "valuation/assets/plan/ValPlannedassetquery002/init",
+                        "98%", "98%",{pageModel:PAGE_MODEL_NEW},function(){
+                         table.reload();
+                        });
+                });
         $('#ValPlannedassetquery001_btn_export').click(function() {
             exportExcel();
         });

@@ -57,6 +57,8 @@ $(function() {
             ,{field:'closePriceAdj',width:200, title: 'ComSharePrice001.closePriceAdj',type:'number', digit:3, sortField:'close_price_adj'}
             ,{field:'factorAdj',width:200, title: 'ComSharePrice001.factorAdj',type:'number', digit:3, sortField:'factor_adj'}
             ,{field:'tradeStatusStr',width:200, title: 'ComSharePrice001.tradeStatus', sortField:'trade_status'}
+            ,{field:'pe',width:200, title: '市盈率', sortField:'pe'}
+            ,{field:'pb',width:200, title: '市净率', sortField:'pb'}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
             ]
     });

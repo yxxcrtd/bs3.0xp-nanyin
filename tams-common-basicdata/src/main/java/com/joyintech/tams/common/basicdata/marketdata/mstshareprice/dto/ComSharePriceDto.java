@@ -40,7 +40,11 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  */
 @ValidLogic(targetClass = ComSharePriceValidator.class, groups = {ValidateGroupEdit.class,ValidateGroupDelete.class})
 public class ComSharePriceDto extends MstSharePrice implements ITableRow,ProcessEntity{
-    /**
+	/**
+	 *
+	 */
+	private String finprodAbbr;
+	/**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 5143537191208289654L;
@@ -319,11 +323,6 @@ public class ComSharePriceDto extends MstSharePrice implements ITableRow,Process
 		return super.getTradeStatus();
 	}
 
-	@Override
-	@NotEmpty(fieldName = "ComSharePrice001.finprodAbbr", groups = {ValidateGroupEdit.class})
-	public String getFinprodAbbr() {
-		return super.getFinprodAbbr();
-	}
 
 	/**
 	 * 取得 币种
@@ -332,5 +331,14 @@ public class ComSharePriceDto extends MstSharePrice implements ITableRow,Process
 	public String getCcyStr() {
 		return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
 	}
+	/**
+	 *
+	 */
+	public String getFinprodAbbr() {
+		return finprodAbbr;
+	}
 
+	public void setFinprodAbbr(String finprodAbbr) {
+		this.finprodAbbr = finprodAbbr;
+	}
 }

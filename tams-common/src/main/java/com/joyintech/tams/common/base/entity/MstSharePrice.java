@@ -6,16 +6,6 @@ import java.math.BigDecimal;
 
 public class MstSharePrice extends MstSharePriceKey {
     /**
-     * 资产简称
-     */
-	private String finprodAbbr;
-	
-	/**
-     * 币种
-     */
-    private String ccy;
-
-    /**
      * 前收盘价
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -44,6 +34,21 @@ public class MstSharePrice extends MstSharePriceKey {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal closePrice;
+
+    /**
+     * 交易状态
+     */
+    private String tradeStatus;
+
+    /**
+     * 录入方式
+     */
+    private String inputType;
+
+    /**
+     * 币种
+     */
+    private String ccy;
 
     /**
      * 当日总股本
@@ -127,30 +132,16 @@ public class MstSharePrice extends MstSharePriceKey {
     private BigDecimal factorAdj;
 
     /**
-     * 交易状态
+     * 市盈率
      */
-    private String tradeStatus;
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal pe;
 
     /**
-     * 录入方式
+     * 市净率
      */
-    private String inputType;
-
-    /**
-     * 取得 币种
-     * @return 币种
-     */
-    public String getCcy() {
-        return ccy;
-    }
-
-    /**
-     * 设置 币种
-     * @param ccy 币种
-     */
-    public void setCcy(String ccy) {
-        this.ccy = ccy == null ? null : ccy.trim();
-    }
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal pb;
 
     /**
      * 取得 前收盘价
@@ -230,6 +221,54 @@ public class MstSharePrice extends MstSharePriceKey {
      */
     public void setClosePrice(BigDecimal closePrice) {
         this.closePrice = closePrice;
+    }
+
+    /**
+     * 取得 交易状态
+     * @return 交易状态
+     */
+    public String getTradeStatus() {
+        return tradeStatus;
+    }
+
+    /**
+     * 设置 交易状态
+     * @param tradeStatus 交易状态
+     */
+    public void setTradeStatus(String tradeStatus) {
+        this.tradeStatus = tradeStatus == null ? null : tradeStatus.trim();
+    }
+
+    /**
+     * 取得 录入方式
+     * @return 录入方式
+     */
+    public String getInputType() {
+        return inputType;
+    }
+
+    /**
+     * 设置 录入方式
+     * @param inputType 录入方式
+     */
+    public void setInputType(String inputType) {
+        this.inputType = inputType == null ? null : inputType.trim();
+    }
+
+    /**
+     * 取得 币种
+     * @return 币种
+     */
+    public String getCcy() {
+        return ccy;
+    }
+
+    /**
+     * 设置 币种
+     * @param ccy 币种
+     */
+    public void setCcy(String ccy) {
+        this.ccy = ccy == null ? null : ccy.trim();
     }
 
     /**
@@ -453,42 +492,34 @@ public class MstSharePrice extends MstSharePriceKey {
     }
 
     /**
-     * 取得 交易状态
-     * @return 交易状态
+     * 取得 市盈率
+     * @return 市盈率
      */
-    public String getTradeStatus() {
-        return tradeStatus;
+    public BigDecimal getPe() {
+        return pe;
     }
 
     /**
-     * 设置 交易状态
-     * @param tradeStatus 交易状态
+     * 设置 市盈率
+     * @param pe 市盈率
      */
-    public void setTradeStatus(String tradeStatus) {
-        this.tradeStatus = tradeStatus == null ? null : tradeStatus.trim();
+    public void setPe(BigDecimal pe) {
+        this.pe = pe;
     }
 
     /**
-     * 取得 录入方式
-     * @return 录入方式
+     * 取得 市净率
+     * @return 市净率
      */
-    public String getInputType() {
-        return inputType;
+    public BigDecimal getPb() {
+        return pb;
     }
 
     /**
-     * 设置 录入方式
-     * @param inputType 录入方式
+     * 设置 市净率
+     * @param pb 市净率
      */
-    public void setInputType(String inputType) {
-        this.inputType = inputType == null ? null : inputType.trim();
+    public void setPb(BigDecimal pb) {
+        this.pb = pb;
     }
-
-	public String getFinprodAbbr() {
-		return finprodAbbr;
-	}
-
-	public void setFinprodAbbr(String finprodAbbr) {
-		this.finprodAbbr = finprodAbbr;
-	}
 }

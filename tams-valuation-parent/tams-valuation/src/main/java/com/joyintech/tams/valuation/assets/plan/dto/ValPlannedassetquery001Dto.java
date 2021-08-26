@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：估值核算系统V1.0
  */
- 
+
 package com.joyintech.tams.valuation.assets.plan.dto;
 
 import com.joyintech.framework.util.StringUtil;
@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 
 /**
  * 计划类资产查询dto
- * 
+ *
  * @author zhangzhao
  * @version 1.0 2018年7月20日
  * @see ValPlannedassetquery001Dto
@@ -32,7 +32,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 1L;
-   
+
     /**
      * 资产类型
      */
@@ -44,7 +44,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     /**
      * 起息日
      */
-    private String vdate1; 
+    private String vdate1;
     /**
      * 到期日
      */
@@ -118,17 +118,17 @@ public class ValPlannedassetquery001Dto extends FinProduct{
      * 当前报价
      */
     private BigDecimal currentquotation;
-   
+
     /**
      * 计息基础   
      */
     private String basic;
-    
+
     /**
      * 当前利率
      */
     private String rate;
-   
+
     /**
      * 发行价
      */
@@ -248,7 +248,36 @@ public class ValPlannedassetquery001Dto extends FinProduct{
      * 是否其他债券 显示名称
      */
     private String isQtzqFmt;
-    
+
+    public Long getRedSpeed() {
+        return redSpeed;
+    }
+
+    public void setRedSpeed(Long redSpeed) {
+        this.redSpeed = redSpeed;
+    }
+
+    /**
+     * 赎回确认速度
+     */
+    private Long redSpeed;
+    /**
+     * 数据来源
+     */
+    private String datasourceType;
+
+    public String getPurSpeed() {
+        return purSpeed;
+    }
+
+    public void setPurSpeed(String purSpeed) {
+        this.purSpeed = purSpeed;
+    }
+
+    /**
+     * 申购确认速度，如果资产只有一个确认速度，则存该字段
+     */
+    private String purSpeed;
     /**
      * 获取 price
      * @return price.
@@ -271,7 +300,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     public String getTradingplace() {
         return tradingplace;
     }
-  
+
     /**
      * 设置 tradingplace
      * @param tradingplace tradingplace
@@ -279,7 +308,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     public void setTradingplace(String tradingplace) {
         this.tradingplace = tradingplace;
     }
-      
+
     /**
      * 获取 rate
      * @return rate.
@@ -287,7 +316,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     public String getRate() {
         return rate;
     }
-    
+
     /**
      * 设置 rate
      * @param rate rate
@@ -295,8 +324,8 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     public void setRate(String rate) {
         this.rate = rate;
     }
-    
-     /**
+
+    /**
      * 获取 inttype
      * @return inttype.
      */
@@ -305,7 +334,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     }
 
 
-    
+
     /**
      * 设置 inttype
      * @param inttype inttype
@@ -315,7 +344,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     }
 
 
-    
+
     /**
      * 获取 ratetype
      * @return ratetype.
@@ -325,7 +354,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     }
 
 
-    
+
     /**
      * 设置 ratetype
      * @param ratetype ratetype
@@ -343,7 +372,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     }
 
 
-    
+
     /**
      * 设置 vdate1
      * @param vdate1 vdate1
@@ -353,7 +382,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     }
 
 
-    
+
     /**
      * 获取 mdate1
      * @return mdate1.
@@ -363,7 +392,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     }
 
 
-    
+
     /**
      * 设置 mdate1
      * @param mdate1 mdate1
@@ -373,7 +402,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     }
 
 
-    
+
     /**
      * 获取 calcrule
      * @return calcrule.
@@ -383,7 +412,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     }
 
 
-    
+
     /**
      * 设置 calcrule
      * @param calcrule calcrule
@@ -393,7 +422,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     }
 
 
-    
+
     /**
      * 获取 ratestr
      * @return ratestr.
@@ -403,7 +432,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     }
 
 
-    
+
     /**
      * 设置 ratestr
      * @param ratestr ratestr
@@ -427,7 +456,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     public void setSumprice(BigDecimal sumprice) {
         this.sumprice = sumprice;
     }
-    
+
 
     /**
      * 获取 tradingtime
@@ -452,7 +481,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return dqshj;
     }
 
-    
+
     /**
      * 设置 dqshj
      * @param dqshj dqshj
@@ -461,7 +490,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.dqshj = dqshj;
     }
 
-    
+
 //    /**
 //     * 获取 yyrzz
 //     * @return yyrzz.
@@ -470,7 +499,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
 //        return yyrzz;
 //    }
 //
-//    
+//
 //    /**
 //     * 设置 yyrzz
 //     * @param yyrzz yyrzz
@@ -479,7 +508,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
 //        this.yyrzz = yyrzz;
 //    }
 
-    
+
     /**
      * 获取 paycycle
      * @return paycycle.
@@ -488,7 +517,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return paycycle;
     }
 
-    
+
     /**
      * 设置 paycycle
      * @param paycycle paycycle
@@ -497,7 +526,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.paycycle = paycycle;
     }
 
-    
+
     /**
      * 获取 fpayDate
      * @return fpayDate.
@@ -506,7 +535,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return fpayDate;
     }
 
-    
+
     /**
      * 设置 fpayDate
      * @param fpayDate fpayDate
@@ -515,7 +544,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.fpayDate = fpayDate;
     }
 
-    
+
     /**
      * 获取 basic
      * @return basic.
@@ -524,7 +553,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return basic;
     }
 
-    
+
     /**
      * 设置 basic
      * @param basic basic
@@ -533,19 +562,19 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.basic = basic;
     }
 
-    
+
     /**
      * 获取 assetType
      * @return assetType.
      */
     public String getAssetTypeFt() {
 //    	return SysDataUtil.getNameFromDataDict(DictCode.计划类资产类型, this.assetType);
-    	
+
         return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.计划类资产类型, assetType))?
-            SysDataUtil.getNameFromDataDict(DictCode.计划类资产类型, assetType):assetType;
+                SysDataUtil.getNameFromDataDict(DictCode.计划类资产类型, assetType):assetType;
     }
 
-    
+
     /**
      * 设置 assetType
      * @param assetType assetType
@@ -554,19 +583,19 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.assetType = assetType;
     }
 
-    
+
     /**
      * 获取 profitType
      * @return profitType.
      */
     public String getProfitTypeFt() {
 //        return SysDataUtil.getNameFromDataDict(DictCode.收益类型, this.profitType);
-        
+
         return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.收益类型, this.profitType))?
-            SysDataUtil.getNameFromDataDict(DictCode.收益类型, this.profitType):this.profitType;
+                SysDataUtil.getNameFromDataDict(DictCode.收益类型, this.profitType):this.profitType;
     }
 
-    
+
     /**
      * 设置 profitType
      * @param profitType profitType
@@ -577,7 +606,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
 
 
 
-    
+
     /**
      * 获取 currentquotation
      * @return currentquotation.
@@ -586,7 +615,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return currentquotation;
     }
 
-    
+
     /**
      * 设置 currentquotation
      * @param currentquotation currentquotation
@@ -603,7 +632,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return compoundint;
     }
 
-    
+
     /**
      * 设置 compoundint
      * @param compoundint compoundint
@@ -612,7 +641,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.compoundint = compoundint;
     }
 
-    
+
     /**
      * 获取 priproflag
      * @return priproflag.
@@ -621,7 +650,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return priproflag;
     }
 
-    
+
     /**
      * 设置 priproflag
      * @param priproflag priproflag
@@ -630,7 +659,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.priproflag = priproflag;
     }
 
-    
+
     /**
      * 获取 raisetype
      * @return raisetype.
@@ -639,7 +668,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return raisetype;
     }
 
-    
+
     /**
      * 设置 raisetype
      * @param raisetype raisetype
@@ -648,7 +677,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.raisetype = raisetype;
     }
 
-    
+
     /**
      * 获取 opmarketid
      * @return opmarketid.
@@ -657,7 +686,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return opmarketid;
     }
 
-    
+
     /**
      * 设置 opmarketid
      * @param opmarketid opmarketid
@@ -666,7 +695,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.opmarketid = opmarketid;
     }
 
-    
+
     /**
      * 获取 isNonstandard
      * @return isNonstandard.
@@ -675,7 +704,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return isNonstandard;
     }
 
-    
+
     /**
      * 设置 isNonstandard
      * @param isNonstandard isNonstandard
@@ -684,7 +713,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.isNonstandard = isNonstandard;
     }
 
-    
+
     /**
      * 获取 isExpectedprofit
      * @return isExpectedprofit.
@@ -693,7 +722,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return isExpectedprofit;
     }
 
-    
+
     /**
      * 设置 isExpectedprofit
      * @param isExpectedprofit isExpectedprofit
@@ -702,8 +731,8 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.isExpectedprofit = isExpectedprofit;
     }
 
-    
-    
+
+
     /**
      * 获取 susYorN
      * @return susYorN.
@@ -712,7 +741,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return susYorN;
     }
 
-    
+
     /**
      * 设置 susYorN
      * @param susYorN susYorN
@@ -729,7 +758,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return retype;
     }
 
-    
+
     /**
      * 设置 retype
      * @param retype retype
@@ -738,7 +767,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.retype = retype;
     }
 
-    
+
     /**
      * 获取 jxyyrzz
      * @return jxyyrzz.
@@ -747,7 +776,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return jxyyrzz;
     }
 
-    
+
     /**
      * 设置 jxyyrzz
      * @param jxyyrzz jxyyrzz
@@ -756,7 +785,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.jxyyrzz = jxyyrzz;
     }
 
-    
+
 //    /**
 //     * 获取 fxyyrzz
 //     * @return fxyyrzz.
@@ -765,7 +794,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
 //        return fxyyrzz;
 //    }
 //
-//    
+//
 //    /**
 //     * 设置 fxyyrzz
 //     * @param fxyyrzz fxyyrzz
@@ -774,8 +803,8 @@ public class ValPlannedassetquery001Dto extends FinProduct{
 //        this.fxyyrzz = fxyyrzz;
 //    }
 
-    
-    
+
+
     /**
      * 获取 fxpayDate
      * @return fxpayDate.
@@ -784,24 +813,24 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return fxpayDate;
     }
 
-    
+
     public String getEndTdayRule() {
-		return endTdayRule;
-	}
+        return endTdayRule;
+    }
 
-	public void setEndTdayRule(String endTdayRule) {
-		this.endTdayRule = endTdayRule;
-	}
+    public void setEndTdayRule(String endTdayRule) {
+        this.endTdayRule = endTdayRule;
+    }
 
-	public String getPayTdayRule() {
-		return payTdayRule;
-	}
+    public String getPayTdayRule() {
+        return payTdayRule;
+    }
 
-	public void setPayTdayRule(String payTdayRule) {
-		this.payTdayRule = payTdayRule;
-	}
+    public void setPayTdayRule(String payTdayRule) {
+        this.payTdayRule = payTdayRule;
+    }
 
-	/**
+    /**
      * 设置 fxpayDate
      * @param fxpayDate fxpayDate
      */
@@ -809,8 +838,8 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.fxpayDate = fxpayDate;
     }
 
- 
-    
+
+
     /**
      * 获取 fhpayDate
      * @return fhpayDate.
@@ -819,7 +848,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return fhpayDate;
     }
 
-    
+
     /**
      * 设置 fhpayDate
      * @param fhpayDate fhpayDate
@@ -836,7 +865,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return profitTypeCode;
     }
 
-    
+
     /**
      * 设置 profitTypeCode
      * @param profitTypeCode profitTypeCode
@@ -851,12 +880,12 @@ public class ValPlannedassetquery001Dto extends FinProduct{
      */
     public String getCcyNameFt() {
 //        return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getCcy());
-        
+
         return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.币种, this.getCcy()))?
-            SysDataUtil.getNameFromDataDict(DictCode.币种, this.getCcy()):this.getCcy();
+                SysDataUtil.getNameFromDataDict(DictCode.币种, this.getCcy()):this.getCcy();
     }
 
-    
+
     /**
      * 设置 ccyName
      * @param ccyName ccyName
@@ -865,7 +894,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.ccyName = ccyName;
     }
 
-    
+
     /**
      * 获取 blnAreaName
      * @return blnAreaName.
@@ -873,10 +902,10 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     public String getBlnAreaNameFt() {
 //        return SysDataUtil.getNameFromDataDict(DictCode.境内外, this.getBlnArea());
         return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.境内外, this.getBlnArea()))?
-            SysDataUtil.getNameFromDataDict(DictCode.境内外, this.getBlnArea()):this.getBlnArea();
+                SysDataUtil.getNameFromDataDict(DictCode.境内外, this.getBlnArea()):this.getBlnArea();
     }
 
-    
+
     /**
      * 设置 blnAreaName
      * @param blnAreaName blnAreaName
@@ -885,7 +914,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.blnAreaName = blnAreaName;
     }
 
-    
+
     /**
      * 获取 transactiontype
      * @return transactiontype.
@@ -894,7 +923,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return transactiontype;
     }
 
-    
+
     /**
      * 设置 transactiontype
      * @param transactiontype transactiontype
@@ -903,7 +932,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.transactiontype = transactiontype;
     }
 
-    
+
     /**
      * 获取 efdate
      * @return efdate.
@@ -912,7 +941,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return efdate;
     }
 
-    
+
     /**
      * 设置 efdate
      * @param efdate efdate
@@ -921,7 +950,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.efdate = efdate;
     }
 
-    
+
     /**
      * 获取 rate2
      * @return rate2.
@@ -930,7 +959,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return rate2;
     }
 
-    
+
     /**
      * 设置 rate2
      * @param rate2 rate2
@@ -947,7 +976,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return jxdatestr;
     }
 
-    
+
     /**
      * 设置 jxdatestr
      * @param jxdatestr jxdatestr
@@ -956,7 +985,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.jxdatestr = jxdatestr;
     }
 
-    
+
     /**
      * 获取 jxdateend
      * @return jxdateend.
@@ -965,7 +994,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return jxdateend;
     }
 
-    
+
     /**
      * 设置 jxdateend
      * @param jxdateend jxdateend
@@ -974,7 +1003,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.jxdateend = jxdateend;
     }
 
-    
+
     /**
      * 获取 paydate
      * @return paydate.
@@ -983,7 +1012,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return paydate;
     }
 
-    
+
     /**
      * 设置 paydate
      * @param paydate paydate
@@ -992,8 +1021,8 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.paydate = paydate;
     }
 
-    
-    
+
+
     /**
      * 获取 byrate
      * @return byrate.
@@ -1002,7 +1031,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return byrate;
     }
 
-    
+
     /**
      * 设置 byrate
      * @param byrate byrate
@@ -1011,7 +1040,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.byrate = byrate;
     }
 
-    
+
     /**
      * 获取 jsdatestr
      * @return jsdatestr.
@@ -1020,7 +1049,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return jsdatestr;
     }
 
-    
+
     /**
      * 设置 jsdatestr
      * @param jsdatestr jsdatestr
@@ -1037,7 +1066,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return jsdateend;
     }
 
-    
+
     /**
      * 设置 jsdateend
      * @param jsdateend jsdateend
@@ -1046,7 +1075,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.jsdateend = jsdateend;
     }
 
-    
+
     /**
      * 获取 tqrmon
      * @return tqrmon.
@@ -1055,7 +1084,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return tqrmon;
     }
 
-    
+
     /**
      * 设置 tqrmon
      * @param tqrmon tqrmon
@@ -1064,7 +1093,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.tqrmon = tqrmon;
     }
 
-    
+
     /**
      * 获取 aqrmon
      * @return aqrmon.
@@ -1073,7 +1102,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return aqrmon;
     }
 
-    
+
     /**
      * 设置 aqrmon
      * @param aqrmon aqrmon
@@ -1082,7 +1111,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.aqrmon = aqrmon;
     }
 
-    
+
     /**
      * 获取 israte
      * @return israte.
@@ -1090,10 +1119,10 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     public String getIsrateFt() {
 //        return SysDataUtil.getNameFromDataDict(DictCode.是否, israte);
         return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.是否, israte))?
-            SysDataUtil.getNameFromDataDict(DictCode.是否, israte):israte;
+                SysDataUtil.getNameFromDataDict(DictCode.是否, israte):israte;
     }
 
-    
+
     /**
      * 设置 israte
      * @param israte israte
@@ -1102,7 +1131,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.israte = israte;
     }
 
-    
+
     /**
      * 获取 yjrte
      * @return yjrte.
@@ -1111,7 +1140,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return yjrte;
     }
 
-    
+
     /**
      * 设置 yjrte
      * @param yjrte yjrte
@@ -1120,7 +1149,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.yjrte = yjrte;
     }
 
-    
+
     /**
      * 获取 assetTypeCode
      * @return assetTypeCode.
@@ -1129,7 +1158,7 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         return assetTypeCode;
     }
 
-    
+
     /**
      * 设置 assetTypeCode
      * @param assetTypeCode assetTypeCode
@@ -1138,31 +1167,31 @@ public class ValPlannedassetquery001Dto extends FinProduct{
         this.assetTypeCode = assetTypeCode;
     }
 
-    
+
     /**
      * 获取 serialversionuid
      * @return serialversionuid.
      */
 
-	public String getAssetType() {
-		return assetType;
-	}
+    public String getAssetType() {
+        return assetType;
+    }
 
-	public String getProfitType() {
-		return profitType;
-	}
+    public String getProfitType() {
+        return profitType;
+    }
 
-	public String getCcyName() {
-		return ccyName;
-	}
+    public String getCcyName() {
+        return ccyName;
+    }
 
-	public String getBlnAreaName() {
-		return blnAreaName;
-	}
+    public String getBlnAreaName() {
+        return blnAreaName;
+    }
 
-	public String getIsrate() {
-		return israte;
-	}
+    public String getIsrate() {
+        return israte;
+    }
 
     public String getIsQtzq() {
         return isQtzq;
@@ -1185,5 +1214,5 @@ public class ValPlannedassetquery001Dto extends FinProduct{
     public void setIsQtzqFmt(String isQtzqFmt) {
         this.isQtzqFmt = isQtzqFmt;
     }
-  
+
 }

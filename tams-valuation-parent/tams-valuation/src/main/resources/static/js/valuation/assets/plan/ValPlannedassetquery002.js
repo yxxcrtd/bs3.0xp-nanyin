@@ -1,5 +1,16 @@
 $(function () {
-  
+       /**
+         * 资产类型改变，画面联动
+         */
+      var typeChange = function(){
+       if( $("#profitType").val() == '03') {
+          $("#div6").show();
+          table4.load();
+          }else{
+          $("#div6").hide();
+          }
+      }
+
     var profitTypeCode = '02';
     if(profitTypeCode.indexOf(initprofitType)>=0){
         $("#div1").show();
