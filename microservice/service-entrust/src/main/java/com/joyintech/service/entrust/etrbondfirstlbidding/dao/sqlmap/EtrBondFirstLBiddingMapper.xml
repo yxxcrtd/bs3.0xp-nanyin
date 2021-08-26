@@ -646,6 +646,11 @@
 			AND( CUSTOMER_NAME LIKE CONCAT(CONCAT('%',#{search}),'%')
 			OR CUSTOMER_ABBR LIKE CONCAT(CONCAT('%',#{search}),'%'))
 		</if>
+		<if test="initValue !=null and initValue !=''">
+			AND( CUSTOMER_NAME LIKE CONCAT(CONCAT('%',#{initValue}),'%')
+			OR CUSTOMER_ABBR LIKE CONCAT(CONCAT('%',#{initValue}),'%')
+			OR CUSTOMER_ID LIKE CONCAT(CONCAT('%',#{initValue}),'%'))
+		</if>
 	</select>
 
 	<!--场内债券一级指令 导入时  获取交易对手名称-->
