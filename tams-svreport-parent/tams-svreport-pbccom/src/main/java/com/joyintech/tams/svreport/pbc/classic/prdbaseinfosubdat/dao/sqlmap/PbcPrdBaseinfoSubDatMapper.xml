@@ -1392,9 +1392,61 @@
 
 	<select id="queryPbcPrdBaseInfoByDatZipCode" resultType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto"
 			parameterType="java.lang.String">
-		select
-			rownum as rowIndex,
-		 dat.*,
+		select rownum as rowIndex,<include refid="Base_Column_List" />,
+		pbcProdIdPrd,
+		issuePartyIdPrd,
+		pbcProdTypePrd,
+		ivstorientationPrd,
+		prodNamePrd,
+		prodBrandPrd,
+		prodStagePrd,
+		prodIdPrd,
+		subProdIdPrd,
+		raiseCcyPrd,
+		cashPrinCcyPrd,
+		cashProfCcyPrd,
+		customerTypePrd,
+		raiseTypePrd,
+		manageTypePrd,
+		fiduciaryDutyPrd,
+		contModePrd,
+		operateModePrd,
+		busiModelPrd,
+		incomeGuaranIdentPrd,
+		prinGuaranIdentPrd,
+		highYieldIssuePrd,
+		lowYieldIssuePrd,
+		raiseVdatePrd,
+		raiseEnddatePrd,
+		termRightFlagPrd,
+		cusRedeemFlagPrd,
+		creditFlagPrd,
+		creditTypePrd,
+		creditModePrd,
+		inDepNamePrd,
+		inDepCodePrd,
+		outDepCtryPrd,
+		outDepNamePrd,
+		vdatePrd,
+		mdatePrd,
+		isConstractePrd,
+		transferTypePrd,
+		identiFlagPrd,
+		sendStatusPrd,
+		submitTimePrd,
+		submitFeedbackStatusPrd,
+		sumitSeqPrd,
+		statusDatePrd,
+		isMarketFundPrd,
+		pbcSubmitDeadlinePrd,
+		submitDeadlinePrd,
+		statusPrd,
+		createUserPrd,
+		orgCodePrd,
+		createDeptPrd,
+		createTimePrd
+		from (select
+		dat.*,
 		prd.pbc_prod_id pbcProdIdPrd,
 		prd.ISSUE_PARTY_ID issuePartyIdPrd,
 		prd.PBC_PROD_TYPE pbcProdTypePrd,
@@ -1446,12 +1498,11 @@
 		prd.CREATE_USER createUserPrd,
 		prd.ORG_CODE orgCodePrd,
 		prd.CREATE_DEPT createDeptPrd,
-		prd.CREATE_TIME createTimePrd,
-		prd.IS_MARKET_FUND isMarketFundPrd
+		prd.CREATE_TIME createTimePrd
 		from PBC_PRD_BASEINFO_SUB_DAT dat
-		left join PBC_PRD_BASEINFO_SUB_NEW  prd on dat.prod_id=prd.prod_id  and  prd.status = '01'
+		left join PBC_PRD_BASEINFO_SUB_NEW  prd on dat.prod_id=prd.prod_id
 		where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
-       order  by dat.PROD_ID asc
+		order  by dat.PROD_ID asc)
 	</select>
 
 	<select id="selectByDatZipCode" resultMap="BaseResultMap">

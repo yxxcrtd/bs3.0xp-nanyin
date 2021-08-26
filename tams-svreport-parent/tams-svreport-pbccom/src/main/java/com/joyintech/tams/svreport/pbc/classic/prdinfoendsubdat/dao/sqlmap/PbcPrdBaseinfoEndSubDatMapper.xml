@@ -1000,9 +1000,21 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
 
     <select id="queryPbcPrdBaseInfoEndByDatZipCode" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDatDiff"
             parameterType="java.lang.String">
-        select
-            rownum as rowIndex,
-            dat.PBC_PROD_ID,
+        select    rownum as rowIndex,PBC_PROD_ID,
+                 PROD_ID,
+                 MDATE,
+                 CUS_YEAR_YIELD,
+                 ccy,
+                 CUSTOM_PROFIT,
+                 CUSTOM_PROFIT_CNY,
+                 pbcProdIdPrd,
+                 mdatePrd,
+                 cusYearYieldPrd,
+                 ccyPrd,
+                 customProfitPrd,
+                 customProfitCnyPrd
+           from (
+           select   dat.PBC_PROD_ID,
             dat.PROD_ID,
             dat.MDATE,
             dat.CUS_YEAR_YIELD,
@@ -1018,7 +1030,7 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
         from PBC_PRD_BASEINFO_END_SUB_DAT dat
             left join PBC_PRD_BASEINFO_END_SUB_NEW  prd on dat.prod_id=prd.prod_id and prd.status = '01'
         where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
-        order  by dat.PROD_ID asc
+        order  by dat.PROD_ID asc)
     </select>
 
     <select id="selectByDatZipCode" resultMap="BaseResultMap">
