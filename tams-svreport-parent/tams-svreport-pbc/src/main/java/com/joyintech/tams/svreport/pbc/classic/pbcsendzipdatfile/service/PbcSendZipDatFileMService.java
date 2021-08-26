@@ -102,7 +102,6 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 						for (ValidMessage message : errorList) {
 							builder.append(message.getMessage()).append("<br>");
 						}
-						builder.append("是否继续?");
 						ajaxResult.setMessage(builder.toString());
 					}
 					ajaxResult.setMessageType(MessageType.错误消息);
@@ -124,7 +123,6 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 						for (ValidMessage message : errorList) {
 							builder.append(message.getMessage()).append("<br>");
 						}
-						builder.append("是否继续?");
 						ajaxResult.setMessage(builder.toString());
 					}
 					ajaxResult.setMessageType(MessageType.确认消息);

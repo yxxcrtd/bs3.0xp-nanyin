@@ -222,10 +222,10 @@ public class PbcZipDataFileService {
 				if(CollectionUtil.isEmpty(errorList)){
 					if(!DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType) ||
 							!DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
-						PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,datType,reportuuid,DictCodeListExt2.人行报送类型_产品信息.getValue());
+						PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH"),date,datType,reportuuid,DictCodeListExt2.人行报送类型_产品信息.getValue());
 						zipDatFileList.add(zipDatFile);
 					}else{
-						PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date,pbcSendZipDatFile.getDatZipType(),reportuuid,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+						PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH"),date,pbcSendZipDatFile.getDatZipType(),reportuuid,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
 						baseZipDatFileList.add(zipDatFile);
 
 					}
