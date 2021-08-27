@@ -93,4 +93,19 @@ public class ModStageParaConfigInfoController {
     public List<ModStageParaConfigInfoDto> selectForExport(@RequestBody Map<String, Object> map) {
         return modStageParaConfigInfoService.selectForExport(map);
     }
+
+
+    /**
+     * @Description:批量启用/停用
+     * @auther: yuzj
+     * @date: 2021/8/26
+     * @param:
+     * @return:
+     */
+    @Transactional
+    @PostMapping("setStageParaSwitch")
+    public Integer setStageParaSwitch(@RequestBody Map<String, Object> map) throws Exception {
+        modStageParaConfigInfoService.setStageParaSwitch(map);
+        return 1;
+    }
 }

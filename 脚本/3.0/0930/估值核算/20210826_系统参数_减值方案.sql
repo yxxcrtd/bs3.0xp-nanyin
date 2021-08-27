@@ -12,8 +12,7 @@ insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT
 values ('AssetImpairmentManagement002', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement002', null, null, null, '02', '01', '资产减值新建', 'system', null, '25-AUG-21 06.51.33.000000 PM', 'system', '25-AUG-21 06.51.33.000000 PM');
 
 
---数据字典评级类型全量更新（因删除了发行人修改了存借款机构、交易对手）
-delete from SYS_DATADICT_LIST where DICT_CODE='MODEL_MAIN_GRADE_TYPE';
+--数据字典评级类型全量更新MODEL_MAIN_GRADE_TYPE
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('MODEL_MAIN_GRADE_TYPE', '01', '主体', 1, '0', 'system', null, '25-AUG-21 07.28.35.000000 PM', 'system', '25-AUG-21 07.28.35.000000 PM', null);
 
@@ -33,10 +32,14 @@ insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('MODEL_MAIN_GRADE_TYPE', '06', '较低值', 6, '0', 'system', null, '25-AUG-21 07.28.35.000000 PM', 'system', '25-AUG-21 07.28.35.000000 PM', null);
 
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('MODEL_MAIN_GRADE_TYPE', '07', '存借款机构', 6, '0', 'system', null, '15-JUN-21 12.00.00.000000 AM', 'system', '15-JUN-21 12.00.00.000000 AM', null);
+values ('MODEL_MAIN_GRADE_TYPE', '07', '存借款机构', 7, '0', 'system', null, '15-JUN-21 12.00.00.000000 AM', 'system', '15-JUN-21 12.00.00.000000 AM', null);
 
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('MODEL_MAIN_GRADE_TYPE', '08', '交易对手', 6, '0', 'system', null, '15-JUN-21 12.00.00.000000 AM', 'system', '15-JUN-21 12.00.00.000000 AM', null);
+values ('MODEL_MAIN_GRADE_TYPE', '08', '交易对手', 8, '0', 'system', null, '15-JUN-21 12.00.00.000000 AM', 'system', '15-JUN-21 12.00.00.000000 AM', null);
+
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('MODEL_MAIN_GRADE_TYPE', '09', '发行人', 9, '0', 'system', null, '15-JUN-21 12.00.00.000000 AM', 'system', '15-JUN-21 12.00.00.000000 AM', null);
+
 --证券品种联动评级类型配置（因删除了发行人修改了存借款机构、交易对手）
 delete from SYS_DATADICT_LIST_LINK  where dict_code='MODEL_MAIN_GRADE_TYPE' and linked_dict_code='SEC_TYPE';
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -77,3 +80,11 @@ values ('AssetImpairmentManagement001', 'RSK', '/model/impairment/assetimpairmen
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'AssetImpairmentManagement002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('AssetImpairmentManagement002', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement002', null, null, null, '02', '01', '资产减值新建', 'system', null, '25-AUG-21 06.51.33.000000 PM', 'system', '25-AUG-21 06.51.33.000000 PM');
+
+--评级机构数据字典数据调整
+delete from sys_datadict_list where dict_code='GRADE_PARTY' and item_code in ('32','98','99');
+delete from  sys_page_dictlist  where page_id='InsideOutsideGrade001' and dict_id='GRADE_PARTY'  and dict_item_val in ('32','98','99');
+
+--减值阶段参数管理表添加启用/停用字段
+ALTER TABLE MOD_STAGE_PARA ADD STATUS VARCHAR2(50) DEFAULT('Y') NOT NULL;
+COMMENT ON COLUMN MOD_STAGE_PARA.STATUS IS '启用状态(01启用/02停用)' ;

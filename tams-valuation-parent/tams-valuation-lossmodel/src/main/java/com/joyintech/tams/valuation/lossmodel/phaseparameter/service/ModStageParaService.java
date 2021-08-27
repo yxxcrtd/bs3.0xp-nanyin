@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.gradepdconfig.dto.ModGradePdConfigDto;
 import com.joyintech.tams.valuation.lossmodel.phaseparameter.dto.ModStageParaDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,6 +73,15 @@ public class ModStageParaService extends CommonExportService<ModStageParaDto> im
 		return restTemplate.postForList(
                 ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/ModStageParaConfigInfo/selectForExport", paraMap,
                 ModStageParaDto.class);
+	}
+
+	/**
+	 * 批量启用/停用
+	 * @return
+	 */
+	public Integer setStageParaSwitch(Map<String,Object> params){
+		return  restTemplate.postForObject(
+				ServiceApplication.LOSS_MODEL_SERVICE_NAME+ "/ModStageParaConfigInfo/setStageParaSwitch",params, Integer.class);
 	}
 	
 	

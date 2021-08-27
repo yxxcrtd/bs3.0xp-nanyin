@@ -70,6 +70,19 @@ public class ModStageParaConfigInfoService extends BaseService<ModStageParaConfi
 	public List<ModStageParaConfigInfoDto> selectForExport(Map<String, Object> map) {
 		return modStageParaConfigInfoMapper.selectForPage(map);
 	}
+
+
+    /**
+     * @Description:批量启用/停用
+     * @auther: yuzj
+     * @date: 2021/8/26
+     * @param:
+     * @return:
+     */
+    public void setStageParaSwitch(Map<String, Object> map){
+		modStageParaConfigInfoMapper.setStageParaSwitch(map);
+	}
+
 	
 	
 	

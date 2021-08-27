@@ -22,4 +22,6 @@ public interface ModStageParaConfigInfoMapper {
     ModStageParaConfigInfoDto selectByStageAndElements(Map<String, Object> map);
     
     int updateByPrimaryKey(ModStageParaConfigInfoDto record);
+
+    void setStageParaSwitch(Map<String, Object> map);
 }

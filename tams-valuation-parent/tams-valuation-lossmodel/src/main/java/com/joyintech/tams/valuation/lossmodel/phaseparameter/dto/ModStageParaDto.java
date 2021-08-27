@@ -2,6 +2,7 @@ package com.joyintech.tams.valuation.lossmodel.phaseparameter.dto;
 
 import java.util.List;
 
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCode;
 import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.pdfactorconfig.dto.PdFactorConfigDto;
@@ -38,6 +39,10 @@ public class ModStageParaDto extends BaseEntity implements ITableRow, ProcessEnt
 	 */
 	private String elements;
 	/**
+	 * 启用/停用状态
+	 */
+	private String useStatus;
+	/**
 	 * 要素值
 	 */
 	private String elementsValue;
@@ -72,7 +77,7 @@ public class ModStageParaDto extends BaseEntity implements ITableRow, ProcessEnt
     /**
      * 选中的数据
      */
-    private transient List<PdFactorConfigDto> selectedItem;
+    private transient List<ModStageParaDto> selectedItem;
 
 	public String getSeqno() {
 		return seqno;
@@ -81,8 +86,19 @@ public class ModStageParaDto extends BaseEntity implements ITableRow, ProcessEnt
 	public void setSeqno(String seqno) {
 		this.seqno = seqno;
 	}
-	
-	
+
+	@NotEmpty(fieldName = "ModStagePara001.status", groups = {ValidateGroupEdit.class})
+	public String getUseStatus() {
+		return useStatus;
+	}
+
+	public void setUseStatus(String useStatus) {
+		this.useStatus = useStatus;
+	}
+
+
+
+
 	@PrimaryKey(Field.PK_1)
 	@NotEmpty(fieldName = "ModStagePara001.stageOfAeest", groups = {ValidateGroupEdit.class})
 	public String getStageOfAeest() {
@@ -173,11 +189,11 @@ public class ModStageParaDto extends BaseEntity implements ITableRow, ProcessEnt
 		this.pageModel = pageModel;
 	}
 
-	public List<PdFactorConfigDto> getSelectedItem() {
+	public List<ModStageParaDto> getSelectedItem() {
 		return selectedItem;
 	}
 
-	public void setSelectedItem(List<PdFactorConfigDto> selectedItem) {
+	public void setSelectedItem(List<ModStageParaDto> selectedItem) {
 		this.selectedItem = selectedItem;
 	}
 
@@ -204,7 +220,9 @@ public class ModStageParaDto extends BaseEntity implements ITableRow, ProcessEnt
 	public void setSelectRskValue(String selectRskValue) {
 		this.selectRskValue = selectRskValue;
 	}
-	
-    
+
+	public String getUseStatusStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.使用状态, this.getUseStatus());
+	}
     
 }

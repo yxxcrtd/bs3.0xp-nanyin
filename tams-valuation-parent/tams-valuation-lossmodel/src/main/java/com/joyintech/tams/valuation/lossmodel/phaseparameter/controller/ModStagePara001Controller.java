@@ -3,26 +3,31 @@ package com.joyintech.tams.valuation.lossmodel.phaseparameter.controller;
 import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.gradepdconfig.dto.ModGradePdConfigDto;
+import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.pdfactorconfig.dto.PdFactorConfigDto;
 import com.joyintech.tams.valuation.lossmodel.phaseparameter.dto.ModStageParaDto;
 import com.joyintech.tams.valuation.lossmodel.phaseparameter.service.ModStageParaService;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 
@@ -96,5 +101,38 @@ public class ModStagePara001Controller extends BaseController{
         Map<String, Object> paraMap = RequestUtil.getPageParam();
         return paraMap;
     }
+
+
+    /**
+     * @Description:工作流，处理数据
+     * @auther: yuzj
+     * @date: 2021/7/1
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("setStageParaSwitch")
+    public AjaxResult setStageParaSwitch(@RequestBody ModStageParaDto dto)
+            throws Exception {
+        Map<String,Object> params=new HashMap<String,Object>();
+        List<ModStageParaDto> selectedItem = dto.getSelectedItem();
+        List<String> seqnoList = new ArrayList<>();
+        for(ModStageParaDto modStageParaDto:selectedItem){
+            seqnoList.add(modStageParaDto.getSeqno());
+        }
+        params.put("seqnoList",seqnoList);
+        params.put("operateType",dto.getOperateType());
+        String msg="";
+        if(seqnoList.size()>0 && StringUtil.isNotEmpty(dto.getOperateType())){
+            modStageParaService.setStageParaSwitch(params);
+            msg="操作成功";
+        }else{
+            msg="其他错误";
+        }
+        return new AjaxResult(msg);
+    }
+
+
+
 	
 }

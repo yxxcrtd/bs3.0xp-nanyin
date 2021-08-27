@@ -25,8 +25,21 @@ public class ModStageParaConfigInfoDto extends BaseEntity{
 	 * 要素值
 	 */
 	private String elementsValue;
-	
-	
+
+	/**
+	 * 启用/停用状态
+	 */
+	private String  useStatus;
+
+
+	public String getUseStatus() {
+		return useStatus;
+	}
+
+	public void setUseStatus(String useStatus) {
+		this.useStatus = useStatus;
+	}
+
 	public String getSeqno() {
 		return seqno;
 	}
