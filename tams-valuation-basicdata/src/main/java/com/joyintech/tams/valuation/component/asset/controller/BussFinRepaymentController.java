@@ -122,8 +122,13 @@ public class BussFinRepaymentController extends BaseController{
             // 根据主键获取业务实体--付息信息
             BussFinRepaymentDto bussFinRepaymentDto = new BussFinRepaymentDto();
             if(null!=finPayInterestStdInfoService){
+                /** 查询支付规则根据资产类型去查找 modify by yanya on 20210826**/
+                String finprodType = this.getParam("int_asset_type");
+                if(StringUtil.isEmpty(finprodType)) {
+                    finprodType = DictCodeListExt1.现金流业务类型_金融产品.getValue();
+                }
                 FinPayInterestStdInfoDto finPayInterestStdInfoDto = finPayInterestStdInfoService.getFinPayInterestStdInfoByProductId(
-                    finprodId, vdate, DictCodeListExt1.现金流二级类型_本金.getValue(), DictCodeListExt1.现金流业务类型_金融产品.getValue());
+                    finprodId, vdate, DictCodeListExt1.现金流二级类型_本金.getValue(), finprodType);
                 if(null!=finPayInterestStdInfoDto){
                     bussFinRepaymentDto.setPayCycle(finPayInterestStdInfoDto.getPayCycle());
                     bussFinRepaymentDto.setRemark(finPayInterestStdInfoDto.getRemark());
@@ -159,8 +164,15 @@ public class BussFinRepaymentController extends BaseController{
         // 一体化对应etliu end
         if (selectDto != null && !StringUtil.isEmptyList(selectDto.getOptions())) {
             List<SelectOptionDto> options = selectDto.getOptions();
+            List<SelectOptionDto> optionsNew = new ArrayList<>();
             for (int index = options.size() - 1; index >= 0; index-- ) {
                 SelectOptionDto option = options.get(index);
+                if(StringUtil.equals(option.getId(), DictCodeList.频率_到期一次.getValue())
+                        ||StringUtil.equals(option.getId(), DictCodeList.频率_不规则.getValue())
+                ) {
+                    optionsNew.add(option);
+                }
+
              // 一体化对应etliu start
 //                if(StringUtil.equals(option.getId(), DictCodeList.支付频率_付息频率_到期支付.getValue())
 //                    ||StringUtil.equals(option.getId(), DictCodeList.支付频率_付息频率_年付.getValue())
@@ -171,20 +183,20 @@ public class BussFinRepaymentController extends BaseController{
 //                    ||StringUtil.equals(option.getId(), DictCodeList.支付频率_付息频率_日付.getValue())
 //                    ||StringUtil.equals(option.getId(), DictCodeList.支付频率_付息频率_申购同频.getValue())
 //                    ||StringUtil.equals(option.getId(), DictCodeList.支付频率_付息频率_不规则.getValue())){
-                if(StringUtil.equals(option.getId(), DictCodeList.频率_年.getValue())
-                    ||StringUtil.equals(option.getId(), DictCodeList.频率_半年.getValue())
-                    ||StringUtil.equals(option.getId(), DictCodeList.频率_季.getValue())
-                    ||StringUtil.equals(option.getId(), DictCodeList.频率_月.getValue())
-                    ||StringUtil.equals(option.getId(), DictCodeList.频率_周.getValue())
-                    ||StringUtil.equals(option.getId(), DictCodeList.频率_日.getValue())
-                    ||StringUtil.equals(option.getId(), DictCodeList.频率_不规则.getValue())
-                    ||StringUtil.equals(option.getId(), DictCodeList.频率_按批复要求的项目进度还本.getValue())
-                    ||StringUtil.equals(option.getId(), DictCodeListExt2.频率_双周.getValue())){
-              // 一体化对应etliu end
-                    options.remove(option);
-                }
+//                if(StringUtil.equals(option.getId(), DictCodeList.频率_年.getValue())
+//                    ||StringUtil.equals(option.getId(), DictCodeList.频率_半年.getValue())
+//                    ||StringUtil.equals(option.getId(), DictCodeList.频率_季.getValue())
+//                    ||StringUtil.equals(option.getId(), DictCodeList.频率_月.getValue())
+//                    ||StringUtil.equals(option.getId(), DictCodeList.频率_周.getValue())
+//                    ||StringUtil.equals(option.getId(), DictCodeList.频率_日.getValue())
+//                    ||StringUtil.equals(option.getId(), DictCodeList.频率_不规则.getValue())
+//                    ||StringUtil.equals(option.getId(), DictCodeList.频率_按批复要求的项目进度还本.getValue())
+//                    ||StringUtil.equals(option.getId(), DictCodeListExt2.频率_双周.getValue())){
+//              // 一体化对应etliu end
+//                    options.remove(option);
+//                }
             }
-            return JsonUtils.objectArray2Json(options.toArray());
+            return JsonUtils.objectArray2Json(optionsNew.toArray());
         }
         return null;
     }
