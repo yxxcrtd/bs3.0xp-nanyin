@@ -226,6 +226,8 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
             if(CollectionUtil.isNotEmpty(baseinfoSubDatsNoSendUpdate)){
                 for (PbcPrdBaseinfoSubDat subDat : baseinfoSubDatsNoSendUpdate) {
                     subDat.setRegistSeqno(UUID.randomUUID().toString());
+                    subDat.setProfitType("03");
+                    subDat.setBusiModel("3");
                     pbcPrdBaseinfoSubDatMapper.updateByDatZipCodeAndProdId(subDat);
                 }
             }
@@ -276,6 +278,9 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 if(CollectionUtil.isNotEmpty(prdList)){
                     for (PbcPrdBaseinfoSubDat pbcPrdBaseinfoSubDat : prdList) {
                         pbcPrdBaseinfoSubDat.setRegistSeqno(UUID.randomUUID().toString());
+                        //默认为非保本
+                        pbcPrdBaseinfoSubDat.setProfitType("03");
+                        pbcPrdBaseinfoSubDat.setBusiModel("3");
                         pbcPrdBaseinfoSubDat.setOrgCode(orgCode);
                         pbcPrdBaseinfoSubDat.setCreateUser(SecurityUtil.getLoginUser().getUserName());
                         pbcPrdBaseinfoSubDat.setCreateTime(new Date());

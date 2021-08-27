@@ -231,8 +231,8 @@ public class PbcDatUtil {
 
 			//同组数据优先处理
 			if(null!=samePrd){
+				//计算总数避免出现刚好塞满一个包之后生成一个空包
 				for(Map.Entry<String,Map<String,Object>> dto : samePrd.entrySet()){
-					count +=buildResult(resultMap,(PbcPrdBaseinfoSubDat)dto.getValue().get("prod"),(PbcPrdBaseinfoEndSubDat)dto.getValue().get("end"),zipFileCode,DateUtil.format(date),codeCount);
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
 						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
@@ -243,12 +243,14 @@ public class PbcDatUtil {
 						num++;
 						zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 					}
+					count +=buildResult(resultMap,(PbcPrdBaseinfoSubDat)dto.getValue().get("prod"),(PbcPrdBaseinfoEndSubDat)dto.getValue().get("end"),zipFileCode,DateUtil.format(date),codeCount);
+
 				}
 			}
 			//产品基本信息
 			if(null!=prodDatList){
+				//计算总数避免出现刚好塞满一个包之后生成一个空包
 				for(Map.Entry<String,PbcPrdBaseinfoSubDat> dto : prodDatList.entrySet()){
-					count +=buildResult(resultMap,(PbcPrdBaseinfoSubDat)dto.getValue(),null,zipFileCode,DateUtil.format(date),codeCount);
 					//重置数据并且重新生成zipFileCode
 					if(count>=maxsize){
 						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
@@ -259,14 +261,15 @@ public class PbcDatUtil {
 						num++;
 						zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 					}
+					count +=buildResult(resultMap,(PbcPrdBaseinfoSubDat)dto.getValue(),null,zipFileCode,DateUtil.format(date),codeCount);
 				}
 			}
 
 			//产品终止信息遍历
 			if(null!=prodEndDatList){
+				//计算总数避免出现刚好塞满一个包之后满了导致生成一个空包
 				for(Map.Entry<String,PbcPrdBaseinfoEndSubDat> dto : prodEndDatList.entrySet()){
-					count +=buildResult(resultMap,null,(PbcPrdBaseinfoEndSubDat)dto.getValue(),zipFileCode,DateUtil.format(date),codeCount);
-					//重置数据并且重新生成zipFileCode
+					//重置数据并且重新生成zipFileCode,
 					if(count>=maxsize){
 						reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,true,codeCount);
 						//重置相关数据
@@ -276,6 +279,8 @@ public class PbcDatUtil {
 						num++;
 						zipFileCode = genZipCode(DictCodeListExt2.人行报送类型_产品信息.getValue(),date,num,OrgCode);
 					}
+					count +=buildResult(resultMap,null,(PbcPrdBaseinfoEndSubDat)dto.getValue(),zipFileCode,DateUtil.format(date),codeCount);
+
 				}
 			}
 			reBuildDat(count,num,zipFileCode,date,OrgCode,resultMap,false,codeCount);

@@ -211,8 +211,8 @@ public class PbcPrdBaseinfoEndSubDatDiff extends BaseEntity {
     private Date mdatePrd;
     private String cusYearYieldPrd;
     private String ccyPrd;
-    private String customProfitPrd;
-    private String customProfitCnyPrd;
+    private BigDecimal customProfitPrd;
+    private BigDecimal customProfitCnyPrd;
     private String mdate01Prd;
 
     private Integer pbcProdIdDiff=0;
@@ -809,19 +809,19 @@ public class PbcPrdBaseinfoEndSubDatDiff extends BaseEntity {
         this.ccyPrd = ccyPrd;
     }
 
-    public String getCustomProfitPrd() {
+    public BigDecimal getCustomProfitPrd() {
         return customProfitPrd;
     }
 
-    public void setCustomProfitPrd(String customProfitPrd) {
+    public void setCustomProfitPrd(BigDecimal customProfitPrd) {
         this.customProfitPrd = customProfitPrd;
     }
 
-    public String getCustomProfitCnyPrd() {
+    public BigDecimal getCustomProfitCnyPrd() {
         return customProfitCnyPrd;
     }
 
-    public void setCustomProfitCnyPrd(String customProfitCnyPrd) {
+    public void setCustomProfitCnyPrd(BigDecimal customProfitCnyPrd) {
         this.customProfitCnyPrd = customProfitCnyPrd;
     }
 
