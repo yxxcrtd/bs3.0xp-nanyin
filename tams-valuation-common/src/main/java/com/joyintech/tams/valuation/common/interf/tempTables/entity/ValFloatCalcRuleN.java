@@ -261,26 +261,4 @@ public class ValFloatCalcRuleN extends BaseEntity {
         this.calRule = calRule == null ? null : calRule.trim();
     }
 
-    /**
-     * 计费基数
-     */
-    private String chargeBasis;
-
-    /**
-     * 取得 计费基数
-     *
-     * @return 计费基数
-     */
-    public String getChargeBasis() {
-        return chargeBasis;
-    }
-
-    /**
-     * 设置 计费基数
-     *
-     * @param chargeBasis 计费基数
-     */
-    public void setChargeBasis(String chargeBasis) {
-        this.chargeBasis = chargeBasis == null ? null : chargeBasis.trim();
-    }
 }

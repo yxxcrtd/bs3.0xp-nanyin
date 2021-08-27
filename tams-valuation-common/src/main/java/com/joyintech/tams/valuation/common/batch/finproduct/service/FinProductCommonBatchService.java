@@ -18,6 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.*;
+import com.joyintech.tams.valuation.common.dao.BaseCommonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -27,39 +32,10 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.BokFinProductValuationParaMapper;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.BokFinProductValuationPara;
-import com.joyintech.tams.common.base.entity.BokFinProductValuationParaKey;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.MstIntRateInfo;
-import com.joyintech.tams.common.base.entity.MstShareLqratio;
-import com.joyintech.tams.common.base.entity.MstSharePrice;
-import com.joyintech.tams.common.base.entity.MstValFx;
-import com.joyintech.tams.common.base.entity.MstValIrs;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.valuation.common.batch.finproduct.dao.FinProductCommonMapper;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.CurrencyMarketDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.FinCashPlanDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.FinCashPlanEx;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.FinProductValuationDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.InvAimDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.MarketPriceDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.PledgeInfoDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.SchemeDetailDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetCashCalcRule;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetCashPayRule;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetCashPlan;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinClawbackCalcRule;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinProduct;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetPerfRewardAccrsche;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetPerfRewardCalRule;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetPerfRewardCalRuleDetail;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetPerfRewardRule;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.TradeInfoDto;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
@@ -80,6 +56,9 @@ public class FinProductCommonBatchService {
      */
     @Autowired
     private FinProductCommonMapper finProductCommonMapper;
+
+    @Autowired
+    private BaseCommonMapper commonMapper;
 
     @Autowired
     private BokFinProductValuationParaMapper bokFinProductValuationParaKeyMapper;
