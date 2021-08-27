@@ -262,13 +262,26 @@ public class EtribBondInfo003Controller extends BaseController {
             return errorRs;
         }
 
-        // 可用现金软校验
-        for(EtribBondInfo003Dto dto: dtoList) {
+
+        for(int i = 0; i< dtoList.size(); i++) {
+            EtribBondInfo003Dto dto = dtoList.get(0);
             if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
                     && dto.getProAvailableCash() != null) {
                 if (dto.getEntrustNum().compareTo(dto.getProAvailableCash()) == 1) {
                     AjaxResult ar = new AjaxResult();
-                    ar.setData(this.getMessage("TRD_C_0002"));
+                    ar.setData(this.getMessage("TRD_C_0002") + "(第"+(i+1)+"行)。");
+                    return ar;
+                }
+            }
+            if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH),
+                    DictCodeListExt1.是或否_是.getValue())
+                    && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
+                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_赎回.getValue())
+                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue()))
+                    && dto.getAssetAvailablePosition() != null) {
+                if (dto.getEntrustNum().compareTo(dto.getAssetAvailablePosition()) > 0) {
+                    AjaxResult ar = new AjaxResult();
+                    ar.setData(this.getMessage("ETR_BOND_002")+ "(第"+(i+1)+"行)。");
                     return ar;
                 }
             }

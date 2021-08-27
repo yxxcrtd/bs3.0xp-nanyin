@@ -687,6 +687,9 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
             if(iPlatformDate != null){
                 etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             }
+            if(null!=etrEntrust.getEntrustNum()){
+                etrEntrust.setEntrustNum(ArithmeticUtil.divide(etrEntrust.getEntrustNum(),new BigDecimal(100),2));
+            }
             entity.setEtrEntrust(etrEntrust);
 
             // etrEntrustAdd

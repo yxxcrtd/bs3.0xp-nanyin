@@ -1007,7 +1007,7 @@ public class PeriodCommonService extends BaseService {
                     BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                     creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
                     creditLinesInputDto.setTradeAmt(inputDto.getPrinAmt());
-                    creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
+                    creditLinesInputDto.setFinprodId("");
                     creditLinesInputDto.setTgBusiType(DictCodeList.平安资产类型_拆借.getValue());
                     creditLinesInputDto.setPsPayment(inputDto.getPingAnCodeSin());
                     creditLinesInputDto.setTradeId(inputDto.getBusiCode());

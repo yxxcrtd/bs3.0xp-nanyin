@@ -413,9 +413,12 @@ $(function() {
         if($('#type18').val() == SEC_TYPE_13){
             $('#lxDiv').hide();
             $('#zqDiv').show();
+            $('#issuerDiv').hide();
+            $('#issuer').val("").trigger("change");
         }else{
             $('#lxDiv').show();
             $('#zqDiv').hide();
+            $('#issuerDiv').show();
         }
         $("#transMode").val(ACCOUNT_SPEED_01);
         var itemFwd = [];
