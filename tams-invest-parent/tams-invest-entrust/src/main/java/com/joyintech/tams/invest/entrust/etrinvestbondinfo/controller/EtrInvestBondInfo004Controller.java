@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.codec.binary.StringUtils;
@@ -220,6 +221,8 @@ public class EtrInvestBondInfo004Controller extends BaseController {
             	dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().multiply(new BigDecimal(10000)));
             }
         }
+        EntrustRdsCommonAop.riskListToChildren(dto2.getRiskTrialRetDto(), dtoList,
+                (dto, list) -> dto.setRiskTrialRetDto(list));
         AjaxResult ajaxResult = this.check(dtoList, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;
