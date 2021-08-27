@@ -679,7 +679,7 @@ $(function() {
     		   Joyin.ajax('batchExportAnddoManual', 
       					{key: JSON.stringify(param),
       					busiConfirmDate: $('#holdDate').startDate()+' - '+$('#holdDate').endDate(),// 业务确认日期
-      					selectedBatchGroup: '3084,3072',// 批处理id
+      					selectedBatchGroup: '3076,3072',// 批处理id
       	                selectedProductGroup: '',
       	                startDate: new Date(),
       	                endDate: new Date(),
@@ -703,7 +703,7 @@ $(function() {
    				Joyin.ajax('batchExport', 
    					{key: JSON.stringify(param),
    					busiConfirmDate: $('#holdDate').startDate()+' - '+$('#holdDate').endDate(),// 业务确认日期
-   					selectedBatchGroup: '3084',// 批处理id
+   					selectedBatchGroup: '3076',// 批处理id
    	                selectedProductGroup: '',
    	                startDate: new Date(),
    	                endDate: new Date(),

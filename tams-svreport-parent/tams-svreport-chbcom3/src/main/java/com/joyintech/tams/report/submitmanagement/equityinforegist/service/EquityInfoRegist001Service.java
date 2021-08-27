@@ -343,7 +343,9 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
         List<EquityInfoRegist001Dto> data = null;
 //    	Page<EquityInfoRegist001Dto> page = null;
         String exportMethodFlg = (String)pageParam.get("export_method_flg");
+        Page<EquityInfoRegist001Dto> pageList = new Page<EquityInfoRegist001Dto>();
         if (StringUtil.equals(exportMethodFlg, "export")) {
+        	//20210827 画面未选择数据的情况下，走批处理导出，不会走这里
             data =  restTemplate.postForList(
                     SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryForEquityInfoRegistPage",pageParam,
                     EquityInfoRegist001Dto.class);
@@ -351,15 +353,12 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
             List<EquityInfoRegist001Dto> eList = (List<EquityInfoRegist001Dto>) pageParam.get("listParm");
             int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
     	    int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
-            Page<EquityInfoRegist001Dto> pageList = super.queryForPage(
+            pageList = super.queryForPage(
             		pagenum,legth,()->equityInfoRegist001Mapper.queryExportListByKeys(eList));
 
-            data =  restTemplate.postForList(
-                    SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryExportListByKeys",eList,
-                    EquityInfoRegist001Dto.class);
         }
         com.joyintech.framework.grid.Page<EquityInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<EquityInfoRegist001Dto>();
-        page.setRoot(data);
+        page.setRoot(pageList.getRoot());
 //        page.setTotal(data.size());
         return  page;
     }

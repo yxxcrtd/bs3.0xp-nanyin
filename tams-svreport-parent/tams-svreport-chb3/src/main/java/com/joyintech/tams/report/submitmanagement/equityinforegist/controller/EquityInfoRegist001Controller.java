@@ -202,6 +202,7 @@ public class EquityInfoRegist001Controller extends BaseController {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         if(StringUtil.isNotEmpty((String) pageParam.get("keyList"))){
             pageParam.put("export_method_flg", "exportSelect");
+            pageParam.put("listParm", pageParam.get("keyList"));
         }else{
             pageParam.put("export_method_flg", "export");
         }
