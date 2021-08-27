@@ -716,6 +716,15 @@
                    if(callback) {
                        callback(results,cluflag);
                    }
+
+                   //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 start
+                   if(IS_RISKMATH_SOFTCONTROL == '01'){
+                       if(forbidFlag){
+                           Joyin.alert("存在违规指标，请注意",3);
+                       }
+                   }
+                   //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 end
+
                }, true);
            },true);
        }else{
@@ -791,6 +800,14 @@
                     if(callback) {
                         callback(result,cluflag);
                     }
+                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 start
+                    if(IS_RISKMATH_SOFTCONTROL == '01'){
+                        if(forbidFlag){
+                            Joyin.alert("存在违规指标，请注意",3);
+                        }
+                    }
+                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 end
+
                 },true);
             },true);
         // del 批量试算 by zhangrui1 start
@@ -847,7 +864,7 @@
 //            var paramConterId=["etrInvestPersonInfo.counterId","bussEtrInvestPersonInfoDto.counterId","trdInvestPersonInfo.counterId","trdInvestPersonInfo002Dto.counterId"];
 //            var counterType=findCounterType(paramConterId);
 //            if(counterType != 'N'){
-                Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),2);
+                Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),3);
                 return ;
 //            }            
         }
@@ -856,7 +873,10 @@
 //            if(!$('#riskTrialSpan').html() || $('#riskTrialSpan').html() ==''){
 //                Joyin.alert(JoyinUtil.getLabel('BaseRiskMathComm.riskCheck')+mes,2);
 //                return;
-//            }else 
+//            }else
+            if(IS_RISKMATH_SOFTCONTROL == '01'){
+                return '';
+            }
             if($('#riskTrialSpan').html() == JoyinUtil.getLabel('BaseRiskMathComm.violation') && risk_math_switch=='Y'){
                 //判断是否符合分控场景
                 /*if(checkDiffSubmitScene()) {
