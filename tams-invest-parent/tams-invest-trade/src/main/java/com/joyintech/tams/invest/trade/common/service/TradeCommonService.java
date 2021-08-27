@@ -616,7 +616,8 @@ public class TradeCommonService extends BaseService {
         // 基金
         if (object instanceof TrdFundInvestTradeDto){
             TrdFundInvestTradeDto inputDto = (TrdFundInvestTradeDto)object;
-            if (StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())){
+            if (StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())
+                    ||StringUtil.equals(DictCodeList.交易方向_认购.getValue(),inputDto.getPs())){
                 creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
