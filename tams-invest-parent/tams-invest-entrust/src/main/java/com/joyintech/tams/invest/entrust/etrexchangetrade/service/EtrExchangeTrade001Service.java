@@ -1672,6 +1672,11 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			checkElement(dzImportDto,promptMsg,null,obj-> {
 				return etrCommonService.checkIsBlank(dzImportDto.getPriceModel(), "EtrExchangeTrade001.priceModel", lineNo);
 			});
+			//add by chenjiaixng 添加指令价格非空校验 20210827 start
+			checkElement(dzImportDto,promptMsg,null,obj-> {
+				return etrCommonService.checkIsBlank(dzImportDto.getEntrustPrice() == null ? "" :dzImportDto.getEntrustPrice().toString(), "EtrExchangeTrade003.price", lineNo);
+			});
+			//add by chenjiaixng 添加指令价格非空校验 20210827 end
 			// 指令价格,全价价格,收益率
 			checkElement(dzImportDto,promptMsg,item->{
 				//若是债券计算三者(净价全价收益率)字段联动结果
@@ -1877,7 +1882,12 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		List<SelectOptionDto> ptlSecAcctList = getPtlSecAcctInfo(param);
 		if(StringUtil.isEmptyList(ptlSecAcctList)){
 			return getMessage("ETR_E_0037", t.getPortfolioId(), Integer.valueOf(t.getSeqNo())+1);
-		}else{
+		}//add by chenjiaxing 添加券商账户的校验，导入组合有多个券商账户是，券商账户字段必填 start
+		else if(ptlSecAcctList.size() > 1 && StringUtil.isEmpty(t.getAcctNo())){
+			return getMessage("ETR_E_0041", t.getPortfolioId(), Integer.valueOf(t.getSeqNo())+1);
+		}
+		//add by chenjiaxing 添加券商账户的校验，导入组合有多个券商账户是，券商账户字段必填 end
+		else{
 			if(StringUtil.isEmpty(t.getAcctNo())||ptlSecAcctList.size()==1){
 				t.setAcctNo(ptlSecAcctList.get(0).getId());
 			}else if(!ptlSecAcctList.stream().anyMatch(e->StringUtil.equals(e.getId(),t.getAcctNo()))&&ptlSecAcctList.size()>1){
@@ -1993,7 +2003,6 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                 // 委托结束日日期格式check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
-
                 /**** 委托开始日与终止日必须是平台日 ***/
                 if (StringUtil.isBlank(confirmMsg)) {
                     confirmMsg = etrCommonService.checkIsPlateDate(rowData.get(11), rowData.get(12),
@@ -2103,7 +2112,13 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                                         getMessage("ETR_E_0017", getMessage("EtrExchangeTrade001.acctNo"), lineNo));
                             }
-                        }
+                            //add by chenjiaixng 添加多券商资金账户时，资金账号代码必填校验 20210827 start
+                        }else{
+							if(ptlSecAcctList.size() > 1) {
+								confirmMsg = etrCommonService.StringAddByBr(confirmMsg, this.getMessage("ETR_ERROR_0061", lineNo));
+							}
+						}
+						//add by chenjiaixng 添加多券商资金账户时，资金账号代码必填校验 20210827 end
                     } else {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, this.getMessage("ETR_ERROR_0037", lineNo));
                     }
@@ -2161,7 +2176,6 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                     // 清空confirmMsg
                     confirmMsg = "";
                 }
-
                 if (StringUtils.isNotEmpty(unit.getPs())) {
                     //非债券买卖，check价格
                     if (StringUtils.equals(unit.getPriceModel(), DictCodeListExt2.价格模式_市价指令.getValue())) {
