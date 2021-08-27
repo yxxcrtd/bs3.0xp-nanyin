@@ -53,7 +53,7 @@ public class PbcPrdBaseinfoEndSubDatController {
      */
     @ResponseBody
     @RequestMapping("importBaseInfoSubDat")
-    public List<ExcelValidDto> importBaseInfoSubDat(@RequestBody Map<String,Object> param) {
-        return pbcPrdBaseinfoEndSubDatService.importBaseInfoSubDat(param);
+    public List<ExcelValidDto> importBaseInfoSubDat(String fileName) {
+        return pbcPrdBaseinfoEndSubDatService.importBaseInfoSubDat(fileName);
     }
 }
