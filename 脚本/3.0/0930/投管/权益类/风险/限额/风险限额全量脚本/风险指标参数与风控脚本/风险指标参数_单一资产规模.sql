@@ -169,6 +169,7 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,t.FINPROD_ID as ASSETCODE, t2.F
      select
       nvl(sum(decode(n.PS,''T01'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       +nvl(sum(decode(n.PS,''T04'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      +nvl(sum(decode(n.PS,''04'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       +nvl(sum(decode(n.PS,''T52'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       -nvl(sum(decode(n.PS,''T02'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       -nvl(sum(decode(n.PS,''T03'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
@@ -187,7 +188,7 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,t.FINPROD_ID as ASSETCODE, t2.F
        LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD n1 ON n.TRADE_ID =n1.TRADE_ID
       where n1.PORTFOLIO_ID in ${portfolioCode} and  n.TRADE_DATE = date''${valDate}''
       and ((t3.FINPROD_TYPE2 is null and t2.FINPROD_TYPE is not null) or (t3.FINPROD_TYPE2 not in (''F02'',''F04'',''F08'',''F11'',''F12'',''F13'',''F14'',''F15'',''F25'',''F29'',''F30'') AND t3.BRANCH=0))
-      and n.PS in (''T01'',''T02'',''T03'',''T04'',''T19'',''T07'',''T08'',''T09'',''T11'',''T52'',''T38'',''T22'',''T23'',''T39'') group by n.FINPROD_ID, t2.FINPROD_NAME
+      and n.PS in (''T01'',''04'',''T02'',''T03'',''T04'',''T19'',''T07'',''T08'',''T09'',''T11'',''T52'',''T38'',''T22'',''T23'',''T39'') group by n.FINPROD_ID, t2.FINPROD_NAME
     union ALL
        select
      nvl(sum(decode(n.PS,''T01'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)

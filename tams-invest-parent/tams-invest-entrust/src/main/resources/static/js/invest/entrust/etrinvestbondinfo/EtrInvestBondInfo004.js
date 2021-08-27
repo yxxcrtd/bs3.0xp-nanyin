@@ -153,6 +153,20 @@
             Joyin.alert("委托列表至少有一条数据！", 2);
             return false;
         }
+        var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+            if(BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if(!s && s != ''){
+                    return;
+                }
+                var checkData = {};
+                checkData.data= getriskdata();
+                if (window.BaseRiskMathComm.isCalcConditionChanged(checkData)){
+                    return;
+                }
+            }
+        }
         /**
          * 获取列表参数
          */

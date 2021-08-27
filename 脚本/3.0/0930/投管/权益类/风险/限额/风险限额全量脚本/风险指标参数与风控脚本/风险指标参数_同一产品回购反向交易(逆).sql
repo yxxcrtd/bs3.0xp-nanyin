@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='TYCPHGFXJYREVERSE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('TYCPHGFXJYREVERSE','同一产品回购反向交易(逆)','N','','wp','C001',sysdate,'wp',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('TYCPHGFXJYREVERSE','同一产品回购反向交易(逆)','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='TYCPHGFXJYREVERSE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPHGFXJYREVERSE','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode,counterId','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPHGFXJYREVERSE','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode,counterId','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPHGFXJYREVERSE','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode,counterId','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPHGFXJYREVERSE','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode,counterId','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPHGFXJYREVERSE','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode,counterId','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPHGFXJYREVERSE','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode,counterId','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPHGFXJYREVERSE','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode,counterId','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPHGFXJYREVERSE','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode,counterId','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPHGFXJYREVERSE','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode,counterId','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('TYCPHGFXJYREVERSE','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode,counterId','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -30,7 +30,7 @@ FROM(SELECT DISTINCT M.PORTFOLIO_ID,M.FINPROD_ID, M.TRADE_DATE, M.TERM_TYPE, M.C
                 ON A.FINPROD_ID = C.FINPROD_ID
                 WHERE A.FINPROD_TYPE2 IN (''F02'')
                 AND A.PS =''T01''
-        AND A.TRADE_STATUS!=''03''
+        AND A.TRADE_STATUS=''01''
                 AND NVL(A.IS_CANCEL,''N'') =''N''
         UNION ALL
         SELECT A.TRADE_DATE, C.TERM_TYPE,C.COUNTER_ID,B.PORTFOLIO_ID,A.FINPROD_ID
@@ -40,15 +40,15 @@ FROM(SELECT DISTINCT M.PORTFOLIO_ID,M.FINPROD_ID, M.TRADE_DATE, M.TERM_TYPE, M.C
                 INNER JOIN FIN_TRADE_PRODUCT C
                 ON A.FINPROD_ID = C.FINPROD_ID
                 WHERE A.FINPROD_TYPE2 IN (''F02'')
-                AND A.PS =''T01''
-        AND A.TRADE_STATUS!=''03''
+                AND A.PS IN(''04'',''T01'')
+        AND A.TRADE_STATUS=''01''
                 AND NVL(A.IS_CANCEL,''N'') =''N''
         UNION ALL
         SELECT A.TRADE_DATE,C.TERM_TYPE,C.COUNTER_ID, B.PORTFOLIO_ID, A.FINPROD_ID
                 FROM WFL_TRD_PRODUCT_DEAL A
                 INNER JOIN WFL_TRD_PRODUCT_DEAL_ADD B
                 ON A.TRADE_ID = B.TRADE_ID
-        AND A.TRADE_STATUS != ''03''
+        AND A.TRADE_STATUS=''01''
                 INNER JOIN FIN_TRADE_PRODUCT C
                 ON A.FINPROD_ID = C.FINPROD_ID
                 WHERE A.FINPROD_TYPE2 IN (''F02'')
@@ -62,7 +62,7 @@ FROM(SELECT DISTINCT M.PORTFOLIO_ID,M.FINPROD_ID, M.TRADE_DATE, M.TERM_TYPE, M.C
                 ON A.FINPROD_ID = C.FINPROD_ID
                 WHERE A.FINPROD_TYPE2 IN (''F03'')
                 AND A.PS=''T01''
-        AND A.TRADE_STATUS!=''03''
+        AND A.TRADE_STATUS=''01''
                 AND NVL(A.IS_CANCEL,''N'') =''N''
         UNION ALL
         SELECT A.TRADE_DATE, C.TERM_TYPE,C.COUNTER_ID,B.PORTFOLIO_ID, A.FINPROD_ID
@@ -72,15 +72,15 @@ FROM(SELECT DISTINCT M.PORTFOLIO_ID,M.FINPROD_ID, M.TRADE_DATE, M.TERM_TYPE, M.C
                 INNER JOIN FIN_TRADE_PRODUCT C
                 ON A.FINPROD_ID = C.FINPROD_ID
                 WHERE A.FINPROD_TYPE2 IN (''F03'')
-                AND A.PS=''T01''
-        AND A.TRADE_STATUS!=''03''
+                AND A.PS IN(''04'',''T01'')
+        AND A.TRADE_STATUS=''01''
                 AND NVL(A.IS_CANCEL,''N'') =''N''
         UNION ALL
         SELECT A.TRADE_DATE, C.TERM_TYPE, C.COUNTER_ID, B.PORTFOLIO_ID,A.FINPROD_ID
                 FROM WFL_TRD_PRODUCT_DEAL A
                 INNER JOIN WFL_TRD_PRODUCT_DEAL_ADD B
                 ON  A.TRADE_ID = B.TRADE_ID
-        AND A.TRADE_STATUS != ''03''
+        AND A.TRADE_STATUS=''01''
                 INNER JOIN  FIN_TRADE_PRODUCT C
                 ON A.FINPROD_ID = C.FINPROD_ID
                 WHERE A.FINPROD_TYPE2 IN (''F03'')

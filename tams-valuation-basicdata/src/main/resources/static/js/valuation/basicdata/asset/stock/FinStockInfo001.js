@@ -37,23 +37,23 @@
          */
 cols: [
             {field:'finprodId',  title: 'FinStockInfo001.finprodId',visible:false},//金融产品代码
-            {field:'finprodMarketId',  title: 'FinStockInfo001.finprodMarketId',sortField:"finprodMarketId"}  //资产代码
-            ,{field:'finprodAbbr',  title: 'FinStockInfo001.finprodAbbr',sortField:"finprodAbbr"} //资产名称
-        ,{field:'tradeMarketAbbr',  title: 'FinStockInfo001.fintradeMarket',sortField:"tradeMarket"} //交易场所
-        ,{field:'boardName',  title: 'FinStockInfo001.board',sortField:"board"}//上市板
-            ,{field:'customerName',  title: 'FinStockInfo001.customerName',sortField:"customerName"}//公司名称
-        ,{field:'vdate',  title: 'FinStockInfo001.IpoDate',type:'date'}//上市日期
-            ,{field:'sShares',  title: 'FinStockInfo001.allStock',sortField:"sShares"} //总股本
-            ,{field:'cShares',  title: 'FinStockInfo001.currentCapital',sortField:"cShares"} //流通股本
-        ,{field:'shOrZhName',  title: 'FinStockInfo001.shOrZh',sortField:"shOrZh"}//是否沪港通或深港通
-        ,{field:'isMarginFinprodName',title:'FinStockInfo001.isMarginFinprod',sortField:"isMarginFinprod"}//是否沪港通或深港通
-       // ,{field:'ccy',  title: 'FinStockInfo001.ccy', sortField:'ccy'}//币种
+            {field:'finprodMarketId',  width:130, title: 'FinStockInfo001.finprodMarketId',sortField:"finprodMarketId"}  //资产代码
+            ,{field:'finprodAbbr',  width:180, title: 'FinStockInfo001.finprodAbbr',sortField:"finprodAbbr"} //资产名称
+            ,{field:'tradeMarketAbbr',  width:150, title: 'FinStockInfo001.fintradeMarket',sortField:"tradeMarket"} //交易场所
+            ,{field:'boardName',  width:120, title: 'FinStockInfo001.board',sortField:"board"}//上市板
+            ,{field:'customerName',  width:180, title: 'FinStockInfo001.customerName',sortField:"customerName"}//公司名称
+            ,{field:'vdate',  width:120, title: 'FinStockInfo001.IpoDate',type:'date'}//上市日期
+            ,{field:'sShares',  width:120, title: 'FinStockInfo001.allStock',sortField:"sShares"} //总股本
+            ,{field:'cShares',  width:120, title: 'FinStockInfo001.currentCapital',sortField:"cShares"} //流通股本
+            ,{field:'shOrZhName',  width:150, title: 'FinStockInfo001.shOrZh',sortField:"shOrZh"}//是否沪港通或深港通
+            ,{field:'isMarginFinprodName',width:150, title:'FinStockInfo001.isMarginFinprod',sortField:"isMarginFinprod"}//是否沪港通或深港通
+            // ,{field:'ccy',  title: 'FinStockInfo001.ccy', sortField:'ccy'}//币种
             ,{field:'ccyAbbr', sortField:"ccy",width:150, title: 'FinStockInfo001.ccy'}//币种
-        ,{field:'operation', title: 'SysCommon.operation', type:'action', width:120,buttons: [
+            ,{field:'operation', title: 'SysCommon.operation', type:'action', width:120,buttons: [
                     {text: '&#xe642;',clas: 'edit',title: '编辑'},
                     {clas: 'iconfont icon-copy',title: '复制'},
                     {text: '&#xe640;',clas: 'delt',title: '删除'}]}        //编辑和删除事件
-         ]
+        ]
 
     });
     /**

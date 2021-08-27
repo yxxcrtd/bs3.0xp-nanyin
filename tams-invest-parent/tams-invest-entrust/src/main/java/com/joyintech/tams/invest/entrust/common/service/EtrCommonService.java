@@ -836,7 +836,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
                 creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
                 creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-                creditLinesInputDto.setTradeDate(inputDto.getVdate());
+                creditLinesInputDto.setTradeDate(inputDto.getEntrustDate());
                 creditLinesInputDto.setTradeStatus(status);
                 creditLinesInputDto.setPs(DictCodeList.交易方向_申购.getValue());
                 if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
@@ -999,7 +999,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(object instanceof  EtrFundDto){
             EtrFundDto inputDto = (EtrFundDto) object;
             if (StringUtil.equals(DictCodeListExt2.交易方向_转换申请.getValue(),inputDto.getPs())
-                || StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())){
+                || StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())
+                || StringUtil.equals(DictCodeList.交易方向_认购.getValue(),inputDto.getPs())){
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());

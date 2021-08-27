@@ -25,7 +25,9 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.service.riskrdsinf.event.rsk007.service.Rsk007Service;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +39,6 @@ import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.redis.common.entity.IValue;
 import com.joyintech.redis.common.entity.Value;
 import com.joyintech.redis.common.util.JoyinRedisUtil;
@@ -2448,10 +2445,30 @@ public abstract class EventBaseService<V> extends InfBaseService<V> {
         	});
         }*/
         if (CommonUtil.isType(rskStatus, BussinessDictCodeListRds.指标状态_禁止) && !"Y".equals(ignoreStatus)) {
-            setRtnCode(response, InfDictCodeList.信息码_提示.getValue(), 3);
-            setRtnMsg(response, "风险指标违规");
-            // 无视违规则返回0
-            return isIgnoreFoul(mapData) ? 0 : 1;
+//            setRtnCode(response, InfDictCodeList.信息码_提示.getValue(), 3);
+//            setRtnMsg(response, "风险指标违规");
+//            // 无视违规则返回0
+//            return isIgnoreFoul(mapData) ? 0 : 1;
+
+            boolean result = isIgnoreFoul(mapData);
+            if (result) {
+                return 0;
+            }
+
+            //增加软控硬控开关 add by jqq 20201216 start
+            String institutionCode = "";
+            if(MultilevelDataAuthorityUtil.isEnabled()){
+                institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+            }
+            String isSoft = CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode);
+            if("02".equals(isSoft)){//硬控
+                setRtnCode(response, InfDictCodeList.信息码_提示.getValue(), 3);
+                setRtnMsg(response, "风险指标违规");
+                return 1;
+            }else{
+                return 0;
+            }
+            //增加软控硬控开关 add by jqq 20201216 end
         }
         if (CommonUtil.isType(rskStatus, BussinessDictCodeListRds.指标状态_异常_除0)) {
             //----update by zxjjpei 20200320 暂处理为返回0 start----

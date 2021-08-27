@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='DQR5RNQTJRGJGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DQR5RNQTJRGJGZ','5个交易日到期的其他金融工具估值','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DQR5RNQTJRGJGZ','5个交易日到期的其他金融工具估值','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='DQR5RNQTJRGJGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DQR5RNQTJRGJGZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -148,7 +148,7 @@ SELECT SUM(TRADE_AMT) RVALUE FROM (
   UNION ALL
   --2.日间交易表（场内交易）
     SELECT
-     CASE  WHEN n.PS IN(''T01'',''T04'',''T52'',''T25'') THEN NVL(n.TRADE_AMT,0)
+     CASE  WHEN n.PS IN(''T01'',''04'',''T04'',''T52'',''T25'') THEN NVL(n.TRADE_AMT,0)
                WHEN n.PS =''T49'' THEN NVL(-1*n.SHARE_AMT*100,0)
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END TRADE_AMT
@@ -162,7 +162,7 @@ SELECT SUM(TRADE_AMT) RVALUE FROM (
     WHERE m.PORTFOLIO_ID IN ${portfolioCode} AND 
     n.TRADE_DATE = DATE''${valDate}''
     AND t2.FINPROD_ID NOT IN (SELECT FINPROD_ID FROM FDLVBOND UNION ALL SELECT FINPROD_ID FROM AABOND)
-    AND n.PS IN (''T01'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'', ''T49'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'')
+    AND n.PS IN (''T01'',''04'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'', ''T49'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'')
     AND n.TRADE_STATUS = ''01''
    AND n.IS_CANCEL = ''N''
 

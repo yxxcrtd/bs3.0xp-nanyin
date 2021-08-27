@@ -415,7 +415,7 @@
             }
             //卖出时显示通道费
             if(ps&&(ps == T02)){
-            	$("#channelFee_div").show();
+            	// $("#channelFee_div").show();
             }else{
             	$("#channelFee_div").hide();
             	$("#channelFee").val("");
@@ -590,6 +590,11 @@
                 if(counterId.select2('data')[0].object == 'N' && $('#ps').val() == T01){
                     if (!$("#turnInvAim").val()) {
                         Joyin.error("请选择转仓投资目的")
+                        return;
+                    }
+                }else{
+                    if ($("#turnInvAim").val()) {
+                        Joyin.error("转仓投资目的应置空")
                         return;
                     }
                 }

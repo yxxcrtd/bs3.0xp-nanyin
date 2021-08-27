@@ -20,12 +20,12 @@
             A.PROFIT_TYPE profitType,
             <!-- add by 张普裕 2019/9/29 将查询结果从id值改成name  start-->
             <!--  A.ISSUER issuer, -->
-            T2.CUSTOMER_NAME issuer,
+            T1.CUSTOMER_NAME issuer,
             <!-- add by 张普裕 2019/9/29 将查询结果从id值改成name  end -->
             A.CALENDAR_ID calendarId,
             <!-- add by 张普裕 2019/9/29 将查询结果从id值改成name  start-->
             <!-- A.TRUSTEE_ID trusteeId, -->
-            T1.CUSTOMER_NAME trusteeId,
+            T2.CUSTOMER_NAME trusteeId,
             <!-- add by 张普裕 2019/9/29 将查询结果从id值改成name  end-->
             T.CUSTOMER_NAME manager,
             A.ISSUE_AMT issueAmt,
@@ -49,7 +49,9 @@
             ,B.TYPE_18 type18
             ,C.IS_QTZQ isQtzq
             ,T8.BASIS basis
-            ,T.CUSTOMER_NAME financier
+            ,T3.CUSTOMER_NAME financier
+            ,A.update_time as updateTime
+            ,A.update_user as updateUser
         FROM
             FIN_PRODUCT A
         inner join FIN_PRODUCT_TYPE B on A.FINPROD_ID = B.FINPROD_ID
