@@ -5,32 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class FinProductAdd extends BaseEntity {
-
-    /**
-     * 期货合约标的
-     */
-    private String futuresContractId;
-
-    /**
-     * 最后交易日
-     */
-    private Date lastTradeDate;
-
-    /**
-     * 最后交割日
-     */
-    private Date lastSettleDate;
-
-    /**
-     * 交割方式
-     */
-    private String deliveryMethod;
-
     /**
      * 金融产品代码
      */
@@ -354,44 +332,6 @@ public class FinProductAdd extends BaseEntity {
      * 是否纳入净额结算 Y:是 N:否
      */
     private String isNetSett;
-	
-	/**
-	 * 是否发行标的
-	 */
-	private String isIssueAsset;
-
-	/**
-	 * 上市代码
-	 */
-	private String appearMarketId;
-
-	/**
-	 * 获取是否发行标的
-	 */
-	public String getIsIssueAsset() {
-		return isIssueAsset;
-	}
-
-	/**
-	 * 设置是否发行标的
-	 */
-	public void setIsIssueAsset(String isIssueAsset) {
-		this.isIssueAsset = isIssueAsset;
-	}
-
-	/**
-	 * 获取上市代码
-	 */
-	public String getAppearMarketId() {
-		return appearMarketId;
-	}
-
-	/**
-	 * 设置上市代码
-	 */
-	public void setAppearMarketId(String appearMarketId) {
-		this.appearMarketId = appearMarketId;
-	}
 
     /**
      * 是否私募债 Y:是 N:否
@@ -414,22 +354,14 @@ public class FinProductAdd extends BaseEntity {
     private String dataSource;
 
     /**
-     * 最小买卖单位
+     * 是否含有利率调整权 'N'-否，'Y'-是
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal minSaleUnit;
+    private String isRateAdjust;
+
     /**
-     * 分红方式
+     * 风险五级分类
      */
-    private String bonusType;
-    /**
-     * 当日回转交易
-     */
-    private String tdyRevTrans;
-    /**
-     * 上市日期
-     */
-    private Date listingDate;
+    private String bondRiskType;
 
     /**
      * 增信措施
@@ -440,6 +372,73 @@ public class FinProductAdd extends BaseEntity {
      * 基金经理姓名
      */
     private String fundMangerName;
+
+    /**
+     * 允许的分红方式(多个用逗号隔开)
+     */
+    private String bonusType;
+
+    /**
+     * 当日回转交易
+     */
+    private String tdyRevTrans;
+
+    /**
+     * 上市日期
+     */
+    private Date listingDate;
+
+    /**
+     * 最小买卖单位
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal minSaleUnit;
+
+    /**
+     * 期货合约标的
+     */
+    private String futuresContractId;
+
+    /**
+     * 最后交易日
+     */
+    private Date lastTradeDate;
+
+    /**
+     * 最后交割日
+     */
+    private Date lastSettleDate;
+
+    /**
+     * 交割方式
+     */
+    private String deliveryMethod;
+
+    /**
+     * 合约乘数
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal contractMultiplier;
+
+    /**
+     * 是否包含有效抵质押物
+     */
+    private String isEffPledge;
+
+    /**
+     * 是否发行标的
+     */
+    private String isIssueAsset;
+
+    /**
+     * 上市代码
+     */
+    private String appearMarketId;
+
+    /**
+     * null
+     */
+    private String windCode;
 
     /**
      * 取得 金融产品代码
@@ -1533,43 +1532,35 @@ public class FinProductAdd extends BaseEntity {
     }
 
     /**
-     * 取得 最小买卖单位
-     * @return 最小买卖单位
+     * 取得 是否含有利率调整权 'N'-否，'Y'-是
+     * @return 是否含有利率调整权 'N'-否，'Y'-是
      */
-    public BigDecimal getMinSaleUnit() {
-        return minSaleUnit;
+    public String getIsRateAdjust() {
+        return isRateAdjust;
     }
 
     /**
-     * 设置 最小买卖单位
-     * @param minSaleUnit 最小买卖单位
+     * 设置 是否含有利率调整权 'N'-否，'Y'-是
+     * @param isRateAdjust 是否含有利率调整权 'N'-否，'Y'-是
      */
-    public void setMinSaleUnit(BigDecimal minSaleUnit) {
-        this.minSaleUnit = minSaleUnit;
+    public void setIsRateAdjust(String isRateAdjust) {
+        this.isRateAdjust = isRateAdjust == null ? null : isRateAdjust.trim();
     }
 
-    public String getBonusType() {
-        return bonusType;
+    /**
+     * 取得 风险五级分类
+     * @return 风险五级分类
+     */
+    public String getBondRiskType() {
+        return bondRiskType;
     }
 
-    public void setBonusType(String bonusType) {
-        this.bonusType = bonusType;
-    }
-
-    public String getTdyRevTrans() {
-        return tdyRevTrans;
-    }
-
-    public void setTdyRevTrans(String tdyRevTrans) {
-        this.tdyRevTrans = tdyRevTrans;
-    }
-
-    public Date getListingDate() {
-        return listingDate;
-    }
-
-    public void setListingDate(Date listingDate) {
-        this.listingDate = listingDate;
+    /**
+     * 设置 风险五级分类
+     * @param bondRiskType 风险五级分类
+     */
+    public void setBondRiskType(String bondRiskType) {
+        this.bondRiskType = bondRiskType == null ? null : bondRiskType.trim();
     }
 
     /**
@@ -1585,7 +1576,7 @@ public class FinProductAdd extends BaseEntity {
      * @param creditEnhanceMeasure 增信措施
      */
     public void setCreditEnhanceMeasure(String creditEnhanceMeasure) {
-        this.creditEnhanceMeasure = creditEnhanceMeasure;
+        this.creditEnhanceMeasure = creditEnhanceMeasure == null ? null : creditEnhanceMeasure.trim();
     }
 
     /**
@@ -1601,7 +1592,72 @@ public class FinProductAdd extends BaseEntity {
      * @param fundMangerName 基金经理姓名
      */
     public void setFundMangerName(String fundMangerName) {
-        this.fundMangerName = fundMangerName;
+        this.fundMangerName = fundMangerName == null ? null : fundMangerName.trim();
+    }
+
+    /**
+     * 取得 允许的分红方式(多个用逗号隔开)
+     * @return 允许的分红方式(多个用逗号隔开)
+     */
+    public String getBonusType() {
+        return bonusType;
+    }
+
+    /**
+     * 设置 允许的分红方式(多个用逗号隔开)
+     * @param bonusType 允许的分红方式(多个用逗号隔开)
+     */
+    public void setBonusType(String bonusType) {
+        this.bonusType = bonusType == null ? null : bonusType.trim();
+    }
+
+    /**
+     * 取得 当日回转交易
+     * @return 当日回转交易
+     */
+    public String getTdyRevTrans() {
+        return tdyRevTrans;
+    }
+
+    /**
+     * 设置 当日回转交易
+     * @param tdyRevTrans 当日回转交易
+     */
+    public void setTdyRevTrans(String tdyRevTrans) {
+        this.tdyRevTrans = tdyRevTrans == null ? null : tdyRevTrans.trim();
+    }
+
+    /**
+     * 取得 上市日期
+     * @return 上市日期
+     */
+    public Date getListingDate() {
+        return listingDate;
+    }
+
+    /**
+     * 设置 上市日期
+     * @param listingDate 上市日期
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setListingDate(Date listingDate) {
+        this.listingDate = listingDate;
+    }
+
+    /**
+     * 取得 最小买卖单位
+     * @return 最小买卖单位
+     */
+    public BigDecimal getMinSaleUnit() {
+        return minSaleUnit;
+    }
+
+    /**
+     * 设置 最小买卖单位
+     * @param minSaleUnit 最小买卖单位
+     */
+    public void setMinSaleUnit(BigDecimal minSaleUnit) {
+        this.minSaleUnit = minSaleUnit;
     }
 
     /**
@@ -1668,5 +1724,85 @@ public class FinProductAdd extends BaseEntity {
      */
     public void setDeliveryMethod(String deliveryMethod) {
         this.deliveryMethod = deliveryMethod == null ? null : deliveryMethod.trim();
+    }
+
+    /**
+     * 取得 合约乘数
+     * @return 合约乘数
+     */
+    public BigDecimal getContractMultiplier() {
+        return contractMultiplier;
+    }
+
+    /**
+     * 设置 合约乘数
+     * @param contractMultiplier 合约乘数
+     */
+    public void setContractMultiplier(BigDecimal contractMultiplier) {
+        this.contractMultiplier = contractMultiplier;
+    }
+
+    /**
+     * 取得 是否包含有效抵质押物
+     * @return 是否包含有效抵质押物
+     */
+    public String getIsEffPledge() {
+        return isEffPledge;
+    }
+
+    /**
+     * 设置 是否包含有效抵质押物
+     * @param isEffPledge 是否包含有效抵质押物
+     */
+    public void setIsEffPledge(String isEffPledge) {
+        this.isEffPledge = isEffPledge == null ? null : isEffPledge.trim();
+    }
+
+    /**
+     * 取得 是否发行标的
+     * @return 是否发行标的
+     */
+    public String getIsIssueAsset() {
+        return isIssueAsset;
+    }
+
+    /**
+     * 设置 是否发行标的
+     * @param isIssueAsset 是否发行标的
+     */
+    public void setIsIssueAsset(String isIssueAsset) {
+        this.isIssueAsset = isIssueAsset == null ? null : isIssueAsset.trim();
+    }
+
+    /**
+     * 取得 上市代码
+     * @return 上市代码
+     */
+    public String getAppearMarketId() {
+        return appearMarketId;
+    }
+
+    /**
+     * 设置 上市代码
+     * @param appearMarketId 上市代码
+     */
+    public void setAppearMarketId(String appearMarketId) {
+        this.appearMarketId = appearMarketId == null ? null : appearMarketId.trim();
+    }
+
+    /**
+     * 取得 null
+     * @return null
+     */
+    public String getWindCode() {
+        return windCode;
+    }
+
+    /**
+     * 设置 null
+     * @param windCode null
+     */
+    public void setWindCode(String windCode) {
+        this.windCode = windCode == null ? null : windCode.trim();
     }
 }

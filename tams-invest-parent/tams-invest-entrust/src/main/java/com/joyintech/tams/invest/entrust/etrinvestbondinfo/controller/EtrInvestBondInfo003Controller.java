@@ -338,7 +338,15 @@ public class EtrInvestBondInfo003Controller extends BaseController {
             if (StringUtil.isNotEmpty(dto.getEntrustId())) {
                 dataList.add(dto);
             }
-        	dto.setWorkflowParameter("new|||1|EtrInvestBondInfo003|EtrInvestBondInfo003_btn_submit|true"); 
+        	dto.setWorkflowParameter("new|||1|EtrInvestBondInfo003|EtrInvestBondInfo003_btn_submit|true");
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_0.getValue())) {
+                dto.setSettleSpreed("0");
+            }
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_1.getValue())) {
+                dto.setSettleSpreed("1");
+            }
         }
         if (StringUtil.equals(BussinessConstant.SUBMIT, dtoList.get(0).getOperateType())) {
             AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(

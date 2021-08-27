@@ -645,6 +645,12 @@ public class EtrFundService extends BaseService<EtrFundDto> {
                 BigDecimal cashT1 = basePtlCashPositionInfoService.queryUsableCashPosition(dto2);
                 result.put("cashT1", cashT1);
             }
+            // ZGZGST-1552:增加资金账户可用现金查询 fuyongsheng 20210827 add start
+            acctTypeList.clear();
+            acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+            BigDecimal cashT4 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto);
+            result.put("cashT4", cashT4);
+            // ZGZGST-1552:增加资金账户可用现金查询 fuyongsheng 20210827 add end
             return result;
         }
         else {

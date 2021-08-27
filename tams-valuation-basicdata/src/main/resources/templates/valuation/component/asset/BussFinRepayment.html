@@ -15,7 +15,7 @@
                             </select>
                         </div>
                     </div>
-                     <div class="form-inline-wrap">
+                     <div class="form-inline-wrap" th:id="|${entityName}_remark_div|">
                         <label class="layui-form-label form-label-wrap" data-th-text="#{BussFinRepayment.remark}">还款周期说明</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" th:id="|${entityName}_remark|" th:name="|${entityName}.remark|"   th:value="${entity?.remark}"

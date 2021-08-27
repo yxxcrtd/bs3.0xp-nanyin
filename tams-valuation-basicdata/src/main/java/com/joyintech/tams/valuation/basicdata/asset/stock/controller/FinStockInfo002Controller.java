@@ -312,10 +312,12 @@ public class FinStockInfo002Controller extends BaseController {
         }
         else {
             if(StringUtil.equals("03", tradeMarket)) {
-                tradeMarket = "04";
-            } if(StringUtil.equals("04", tradeMarket)) {
-                tradeMarket = "05";
-            } else {
+                tradeMarket = "SH";
+            }
+            else if(StringUtil.equals("04", tradeMarket)) {
+                tradeMarket = "SZ";
+            }
+            else {
                 tradeMarket = "13";
             }
         }

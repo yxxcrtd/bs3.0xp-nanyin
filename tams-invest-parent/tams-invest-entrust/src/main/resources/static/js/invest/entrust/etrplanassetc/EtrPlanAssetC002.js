@@ -114,7 +114,6 @@
         $('#entrustAmt').change();
         $('#entrustNum').change();
 
-
     }
     /**
      * 画星星
@@ -245,7 +244,9 @@
                     $('#carryAmt_div').hide();
                     $('#entrustAmt_div2').hide();
                     $('#entrustNum_div2').hide();
-                    $('#etrInvestPersonInfo_counterId').attr('required',false);
+                    // ZGZGST-1428 交易对手必填 fuyongsheng 202108271501 edit start
+                    $('#etrInvestPersonInfo_counterId').attr('required',true);
+                    // ZGZGST-1428 交易对手必填 fuyongsheng 202108271501 edit end
                     $('#carryAmt').val('');
                 }else if(ps == T06){
                     $('#proAvailableCash_div').hide();
@@ -261,7 +262,9 @@
                     $('#carryAmt_div').hide();
                     $('#entrustAmt_div2').hide();
                     $('#entrustNum_div2').hide();
-                    $('#etrInvestPersonInfo_counterId').attr('required',false);
+                    // ZGZGST-1428 交易对手必填 fuyongsheng 202108271501 edit start
+                    $('#etrInvestPersonInfo_counterId').attr('required',true);
+                    // ZGZGST-1428 交易对手必填 fuyongsheng 202108271501 edit end
                     $('#carryAmt').val('');
                 }else if(ps == T01){
                 	$('#proAvailableCash_div').show();
