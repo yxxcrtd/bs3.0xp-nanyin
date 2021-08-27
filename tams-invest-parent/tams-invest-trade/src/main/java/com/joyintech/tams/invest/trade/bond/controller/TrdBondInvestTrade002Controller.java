@@ -87,7 +87,8 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @Controller
 @PageId("TrdBondInvestTrade002")
 @RequestMapping("/invest/trade/bond/TrdBondInvestTrade002")
-public class TrdBondInvestTrade002Controller extends BaseController {
+public class
+TrdBondInvestTrade002Controller extends BaseController {
 	@Autowired
 	private TradeCommonService tradeCommonService;
     /**

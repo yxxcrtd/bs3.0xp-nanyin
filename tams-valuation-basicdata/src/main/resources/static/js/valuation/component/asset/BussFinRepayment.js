@@ -167,21 +167,21 @@
                 type : 'date'
             }, {
                 field : 'mdate',
-                title : 'BussFinRepayment.mdate',
+                title : 'BussFinRepayment.mdate2',
                 width : 200,
                 edit : true,
                 sortable : false,
                 type : 'date'
             }, {
                 field : 'payDate',
-                title : 'BussFinRepayment.payDateOther',
+                title : 'BussFinRepayment.payDate',
                 width : 200,
                 edit : false,
                 sortable : false,
                 type : 'date'
             }, {
                 field : 'prinAmt',
-                title : 'BussFinRepayment.prinAmtOther',
+                title : 'BussFinRepayment.prinAmt2',
                 width : 200,
                 edit : true,
                 sortable : false,
@@ -706,11 +706,12 @@
                 getElementById('btn_confirm').hide(); 
                 //add by wm 去除项目类资产还本计划确认按钮 end 2019-08-31
             }
+            getElementById('remark','div').hide();
         }else{
             getElementById('content','div').hide();
         }
         //项目类资产和计划类利率型资产不展示是否还本不带息 add by zhouxiuping at 2019.12.12 at begin
-        if(COMMON_BUSINESS_TYPE==COMMON_BUSINESS_TYPE_F03){
+        if(COMMON_BUSINESS_TYPE==COMMON_BUSINESS_TYPE_F03 || INT_ASSET_TYPE==FINPROD_TYPE_F17){
             getElementById('isPayInt','div').show();
         }else{
             getElementById('isPayInt','div').hide();
