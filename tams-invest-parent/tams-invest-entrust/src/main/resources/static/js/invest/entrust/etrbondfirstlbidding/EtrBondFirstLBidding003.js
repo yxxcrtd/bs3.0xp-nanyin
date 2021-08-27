@@ -6,6 +6,7 @@
     var getriskdata = function () {
         var etrBondFirstLBiddingDtoList = $.serializeToObject('#searchForm').etrBondFirstLBiddingDtoList;
         if (etrBondFirstLBiddingDtoList.length > 0) {
+            var objects = new Array();
             for ( var index in etrBondFirstLBiddingDtoList) {
                 var item = etrBondFirstLBiddingDtoList[index];
                 var trdProductDeal = {};
@@ -34,8 +35,9 @@
                     assetCode: ['finprodId', 'EtrBondFirstLBidding002.finprodId'],
                     data: obj
                 }
+                objects.push(object);
             }
-            return object;
+            return objects;
         }
     }
 
@@ -252,17 +254,34 @@
          * 风险试算
          */
         $('#EtrBondFirstLBidding003_btn_riskcal').click(function () {
-		        	var object = $.serializeToObject('#searchForm', true);
-		            object.entrustId = $('#entrustId').val();
-		            object.entrustStatus = $('#entrustStatus').val();
-		            object.finvdate = $('#finvdate').val();
-		            object.finmdate = $('#finmdate').val();
-		            var initParam = getriskdata();
-		            $("#riskMathFlag").val("02");
-		            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', initParam, function (resultresult) {
-		                window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F01',object,getriskdata());
-		            });
-		
-		        });
-		    })
-		}());
+            // 风险试算修改 add by yufei 20200826 start
+            // var object = $.serializeToObject('#searchForm', true);
+            // object.entrustId = $('#entrustId').val();
+            // object.entrustStatus = $('#entrustStatus').val();
+            // object.finvdate = $('#finvdate').val();
+            // object.finmdate = $('#finmdate').val();
+            // var initParam = getriskdata();
+            // $("#riskMathFlag").val("02");
+            var object = $.serializeToObject('#searchForm').etrBondFirstLBiddingDtoList;
+            var checkParam = {};
+            checkParam.data = getriskdata();
+            var param = [];
+            if (checkParam.data.length > 0) {
+                for(var index in checkParam.data){
+                    var item = checkParam.data[index];
+                    item.data.ps = etrPs;
+                    item.data.portfolioId = object[index].portfolioId;
+                    item.data.finprodId = object[index].finprodId;
+                    item.data.assetCode = object[index].finprodId;
+                    item.data.entrustAmt = item.data.tradeAmount;
+                    item.data.counterId = item.data.counterId;
+                    param.push(item.data);
+                }
+            }
+            // Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', initParam, function (resultresult) {
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F01',param,checkParam);
+            // });
+            // 风险试算修改 add by yufei 20200826 end
+        });
+    })
+}());
