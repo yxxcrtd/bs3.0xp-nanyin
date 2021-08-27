@@ -41,7 +41,6 @@ import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.RequestUtil;
@@ -52,6 +51,7 @@ import com.joyintech.system.batch.batchstart.service.SysBatchStart001Service;
 import com.joyintech.tams.common.base.dao.ChbBatchParaMapper;
 import com.joyintech.tams.common.base.entity.ChbBatchPara;
 import com.joyintech.tams.common.base.entity.ChbSubmitStatus;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -350,7 +350,18 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
                     SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryForEquityInfoRegistPage",pageParam,
                     EquityInfoRegist001Dto.class);
         }  else {
-            List<EquityInfoRegist001Dto> eList = (List<EquityInfoRegist001Dto>) pageParam.get("listParm");
+        	List<EquityInfoRegist001Dto> eList = new ArrayList<EquityInfoRegist001Dto>();
+        	List<String> keys = StringUtil.splitToList(GlobalConstant.COMMA, (String)pageParam.get("expKeys"));
+        	EquityInfoRegist001Dto equityInfoRegist001Dto = null;
+            for (String string : keys) {
+                equityInfoRegist001Dto = new EquityInfoRegist001Dto();
+                String[] key=StringUtil.split(string, "|");
+                equityInfoRegist001Dto.setBankCode(key[0]);
+                equityInfoRegist001Dto.setIndentifyMark(key[1]);
+                equityInfoRegist001Dto.setSubmitStatus(key[2]);
+                eList.add(equityInfoRegist001Dto);
+            }          	       
+            
             int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
     	    int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
             pageList = super.queryForPage(
