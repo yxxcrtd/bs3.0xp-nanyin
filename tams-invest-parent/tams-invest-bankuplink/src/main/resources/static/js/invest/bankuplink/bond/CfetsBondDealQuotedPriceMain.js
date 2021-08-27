@@ -783,7 +783,7 @@
          * 当日报价查询弹出框查询
          */
         $('#CfetsBondDealQuotedPrice001_CSTPSelect_btn_realseach').click(function() {
-            fetsBondDealQuotedPrice001_CSTPSelect_loading = layui.layer.open({type:3});
+            // fetsBondDealQuotedPrice001_CSTPSelect_loading = layui.layer.open({type:3});
             tableBondCstp.table ? tableBondCstp.reload() : tableBondCstp.load();
             $("#CSTPselectorConditionFilter001").hide();
         });
@@ -809,7 +809,7 @@
          * 当日报价手动刷新
          */
         $('#CfetsBondDealQuotedPrice001_CSTPSelect_secah').click(function() {
-            fetsBondDealQuotedPrice001_CSTPSelect_loading = layui.layer.open({type:3});
+            // fetsBondDealQuotedPrice001_CSTPSelect_loading = layui.layer.open({type:3});
             tableBondCstp.table ? tableBondCstp.reload() : tableBondCstp.load();
         });
 
@@ -833,7 +833,7 @@
     	 * 委托指令放大镜点击事件
     	 */
     	$('#CfetsBondDealQuotedPrice001_entrustOrder_search').click(function(){
-    	    fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+    	    // fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
     		entrustOrderTable.table ? entrustOrderTable.reload() : entrustOrderTable.load();
         });
     	/**
@@ -871,7 +871,7 @@
     	 * 委托指令查询弹出框查询
     	 */
     	$('#CfetsBondDealQuotedPrice001_entrustOrder_btn_realseach').click(function() {
-    		fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+    		// fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
     		entrustOrderTable.table ? entrustOrderTable.reload() : entrustOrderTable.load();
     		$("#selectorConditionFilter001").hide();
         });
@@ -915,7 +915,7 @@
     	 * 当日报价查询弹出框查询
     	 */
     	$('#CfetsBondDealQuotedPrice001_dayOffer_btn_realseach').click(function() {
-    		fetsBondDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
+    		// fetsBondDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
     		dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
     		$("#dayOfferSelectorConditionFilter001").hide();
         });
@@ -944,7 +944,7 @@
     	 * 当日报价手动刷新
     	 */
     	$('#CfetsBondDealQuotedPrice001_dayOffer_secah').click(function() {
-    		fetsBondDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
+    		// fetsBondDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
     		dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
         });
 
@@ -1037,7 +1037,7 @@
     	 * 当日报价放大镜点击事件
     	 */
     	$('#CfetsBondDealQuotedPrice001_dayOffer_search').click(function(){
-    	    fetsBondDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
+    	    // fetsBondDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
     		dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
         });
     	/**

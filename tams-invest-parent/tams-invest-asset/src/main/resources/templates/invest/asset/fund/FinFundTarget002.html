@@ -429,7 +429,7 @@
 									<label class="layui-form-label form-lable"
 										   data-th-text="#{FinFundTarget002.trmFundType}">交易所基金类型 </label>
 									<div class="layui-input-inline input-inline">
-										<select type="text" id="trmFundType" name="trmFundType"
+										<select type="text" id="trmFundType_id" name="trmFundType"
 												class="layui-input form-input input-select" placeholder=""
 												data-th-placeholder="#{SysCommon.placeholder}"
 												data-th-initValue="${entity?.trmFundType}"
@@ -502,7 +502,7 @@
 									<label class="layui-form-label form-lable"
 										   data-th-text="#{FinFundTarget002.etfType}">ETF类型</label>
 									<div class="layui-input-inline input-inline">
-										<select type="text" id="etfType" name="etfType" disabled="disabled"
+										<select type="text" id="etfType_id" name="etfType" disabled="disabled"
 												class="layui-input form-input input-select" placeholder=""
 												data-th-placeholder="#{SysCommon.placeholder}"
 												data-th-initValue="${entity?.etfType}"
@@ -621,8 +621,8 @@
 					</div>
 				</div>
 			</div>
+		</div>
 	</form>
-</div>
 </div>
 <div layout:fragment="script">
 	<script th:inline="javascript" type="text/javascript">
