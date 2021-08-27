@@ -836,7 +836,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
                 creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
                 creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-                creditLinesInputDto.setTradeDate(inputDto.getVdate());
+                creditLinesInputDto.setTradeDate(inputDto.getEntrustDate());
                 creditLinesInputDto.setTradeStatus(status);
                 creditLinesInputDto.setPs(DictCodeList.交易方向_申购.getValue());
                 if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
