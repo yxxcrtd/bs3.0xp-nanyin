@@ -8262,6 +8262,7 @@ public class PbcMonthAssetReportService  extends BaseService{
 		        	//多级法人改造，add 20200620 hxy end 当机构不为空时，去查询机构登记银行代码管理中的登记银行代码
 	        	}
 	        	pbcReport.setReportuuid(uuid);
+                pbcReport.setOrgCode(deptCode);
 	            // 插入主表数据
 	            pbcMonthReportMapper.insert(pbcReport);  
 
