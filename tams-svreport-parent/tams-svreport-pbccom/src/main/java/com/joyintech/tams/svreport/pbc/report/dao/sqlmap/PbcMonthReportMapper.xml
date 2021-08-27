@@ -467,6 +467,9 @@
             <if test="updateTime != null and updateTime != ''">
                 and to_char(UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
             </if>
+            <if test="orgCode != null and orgCode != ''">
+                and ORG_CODE = #{orgCode}
+            </if>
             <!-- 多法人改造 传入createDept，部门有值则查询加上此判断，无值表示总行部门，可以查所有数据 ADD BY WUJIAN 20200310  START  -->
             <!-- 	         <if test="createDept != null and createDept !=''"> -->
             <!-- 	  			 and CREATE_DEPT = #{createDept,jdbcType=VARCHAR} -->
@@ -495,7 +498,9 @@
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
                 DAT_ZIP_TYPE = 'MI'
                 AND STATUS_VDATE =#{regist.termid,jdbcType=VARCHAR}
-                and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </where>
     </update>
@@ -506,12 +511,13 @@
         SUBMIT_TIME = null,
         RETURN_ZIP_SEND_STATUS = null,
         DAT_ZIP_PATH = null
-
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
                 DAT_ZIP_TYPE = 'MI'
                 AND STATUS_VDATE =#{regist.termid,jdbcType=VARCHAR}
-                and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </where>
     </update>
@@ -563,7 +569,9 @@
         <where>
             <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
                 TERMID = #{dto.termid}
-                and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
+                <if test="null!=dto.orgCode and dto.orgCode != ''">
+                    and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
             and SEND_STATUS in ('02','03')
         </where>
@@ -579,7 +587,10 @@
         <where>
             <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
                 TERMID = #{dto.termid}
-                and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
+                <if test="null!=dto.orgCode and dto.orgCode != ''">
+                    and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
+                </if>
+
             </foreach>
         </where>
     </update>
@@ -667,12 +678,13 @@
         from PBC_REPORT
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,nvl(ORG_CODE,'')) IN ("
-                     separator="UNION all" close=")">
-                select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.orgCode,jdbcType=VARCHAR}
-                from dual
+            <foreach collection="registList" item="regist" open=" and (" close=")" separator=") or (">
+                TERMID = #{regist.termid}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
+
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
     </insert>
@@ -680,11 +692,11 @@
         delete from PBC_REPORT
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,nvl(ORG_CODE,'')) IN ("
-                     separator="UNION all" close=")">
-                select #{regist.termid,jdbcType=VARCHAR},
-                nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
-                from dual
+            <foreach collection="registList" item="regist" open="  AND(" close=")" separator=") or (">
+                TERMID = #{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
@@ -729,11 +741,11 @@
         from PBC_REPORT_HIS his
         <where>
             <if test="registList !=null and registList.size()>0">
-                <foreach collection="registList" item="regist" open="and (TERMID,nvl(ORG_CODE,'')) IN ("
-                         separator="UNION all" close=")">
-                    select #{regist.termid,jdbcType=VARCHAR},
-                    nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
-                    from dual
+                <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                    TERMID = #{regist.termid,jdbcType=VARCHAR}
+                    <if test="null!=regist.orgCode and regist.orgCode != ''">
+                        and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                    </if>
                 </foreach>
             </if>
         </where>
@@ -744,11 +756,11 @@
         delete from PBC_REPORT_HIS
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,nvl(ORG_CODE,'')) IN ("
-                     separator="UNION all" close=")">
-                select #{regist.termid,jdbcType=VARCHAR},
-                nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
-                from dual
+            <foreach collection="registList" item="regist" open=" AND (" close=")" separator=") or (">
+                 TERMID = #{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
@@ -760,12 +772,11 @@
         from PBC_REPORT_HIS
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-
-            <foreach collection="registList" item="regist" open="and (TERMID,nvl(ORG_CODE,'')) IN ("
-                     separator="UNION all" close=")">
-                select #{regist.termid,jdbcType=VARCHAR},
-                nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
-                from dual
+            <foreach collection="registList" item="regist" open=" AND(" close=")" separator=") or (">
+                 TERMID = #{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->

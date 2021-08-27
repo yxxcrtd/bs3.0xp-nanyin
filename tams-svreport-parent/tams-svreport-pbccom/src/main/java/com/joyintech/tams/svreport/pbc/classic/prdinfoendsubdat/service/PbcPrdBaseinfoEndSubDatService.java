@@ -141,9 +141,9 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
 
     }
 
-    public List<ExcelValidDto> importBaseInfoSubDat(Map<String,Object> param){
+    public List<ExcelValidDto> importBaseInfoSubDat(String fileName){
         List<ExcelValidDto> errorList = new ArrayList<>();
-        List<List<String>> dataList =(List<List<String>>) param.get("dataList");
+        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
         if(!StringUtil.isEmptyList(dataList)){
             List<PbcPrdBaseinfoEndSubDto> pbcPrdBaseinfoEndSubDtos = new ArrayList<>();
             //将excel中的行数据转换为实体
@@ -451,7 +451,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
      */
     private boolean checkDate(String date) {
         boolean flag = true;
-        if(!DateUtil.isDateStr(date, DateUtil.DEFAULT_DATE_FORMAT_EN)){
+        if(!DateUtil.isDateStr(date, DateUtil.DEFAULT_DATE_FORMAT_EN,DateUtil.DEFAULT_ANOTHER_FORMAT)){
             flag = false;
         }else{
             date = date.replace("-", "").replace("/", "");
