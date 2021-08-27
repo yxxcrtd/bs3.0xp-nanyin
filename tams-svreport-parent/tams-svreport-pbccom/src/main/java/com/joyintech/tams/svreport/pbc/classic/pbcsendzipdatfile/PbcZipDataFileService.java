@@ -1016,6 +1016,7 @@ public class PbcZipDataFileService {
 			PbcMonthReport report = new PbcMonthReport();
 			report.setTermid(statusVdate);
 			report.setOrgCode(CommonUtil.getOrgCode());
+			reportList.add(report);
 			pbcMonthReport001Service.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), reportList);
 			//更新报表
 			pbcMonthReportMapper.updatePbcReportSendInfo(DictCodeListExt2.报送状态_手工处理.getValue(), date, DictCodeListExt2.人行报送反馈状态_人行通过.getValue(), datFileList);
