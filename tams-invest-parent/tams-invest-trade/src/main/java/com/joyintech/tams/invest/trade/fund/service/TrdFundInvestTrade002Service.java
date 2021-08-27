@@ -426,7 +426,7 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
             // 实时申赎货币基金赎回申请生效后，自动生成赎回确认和赎回到账交易，金额为份额*0.01，单位净值0.01；
             dto.setTradeAmt(ArithmeticUtil.multiply(dto.getShareAmt(), BigDecimal.valueOf(0.01)));
         }
-        dto.setUnitCprice(BigDecimal.valueOf(0.01));
+        dto.setUnitCprice(BigDecimal.valueOf(1));
         dto.setbTradeId(dto.getTradeId());
         if (baseGetBusinessId != null) {
             BussinessCodeParameter codeParameter = new BussinessCodeParameter();
