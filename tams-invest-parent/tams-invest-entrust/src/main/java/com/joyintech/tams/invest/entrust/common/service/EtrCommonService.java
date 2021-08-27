@@ -999,7 +999,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(object instanceof  EtrFundDto){
             EtrFundDto inputDto = (EtrFundDto) object;
             if (StringUtil.equals(DictCodeListExt2.交易方向_转换申请.getValue(),inputDto.getPs())
-                || StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())){
+                || StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())
+                || StringUtil.equals(DictCodeList.交易方向_认购.getValue(),inputDto.getPs())){
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
