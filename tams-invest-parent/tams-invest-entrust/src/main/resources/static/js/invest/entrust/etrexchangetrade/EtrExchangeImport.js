@@ -176,6 +176,7 @@
                 url: JoyinUtil.getRealPath('/invest/entrust/etrexchangetrade/EtrExchangeTrade001/selectCounterIdByCounterType')
             }
         }
+        , {field: 'invAim', title: 'EtrAssetConfigTransfer002.invAim', width: 100,edit:true,editOption:{type:'select',formatoption:true,showField: 'text',result: INV_AIM}}
         , {field: 'seatId', title: 'EtrExchangeTrade001.seatId', width: 120, sortable: false}
         , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
@@ -204,12 +205,14 @@
         }
         , {field: 'fprice', title: 'EtrExchangeTrade001.fprice', width:100, type:'number', digit : 3, sortable: false}
         , {field: 'yield', title: 'EtrExchangeImport.yield', width:100, type:'number', digit : 6, sortable: false}
+        , {field: 'targetTypeStr', title: 'EtrExchangeTrade001.targetType', width:100, sortable: false}
         , {field: 'entrustNum', title: 'EtrExchangeTrade001.entrustNum', width: 120, type:'number', digit : 0, sortable: false}
         , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt', width: 120, type:'number',sortable: false}
         , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
         , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false}
         , {field: 'counterTrader', title: 'EtrExchangeTrade001.counterTrader', width: 120, sortable: false}
+        , {field: 'invAim', title: 'EtrAssetConfigTransfer002.invAim', width: 100,edit:true,editOption:{type:'select',formatoption:true,showField: 'text',result: INV_AIM}}
         , {field: 'trader', title: 'EtrExchangeTrade001.traders', width: 120, sortable: false}
         , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
