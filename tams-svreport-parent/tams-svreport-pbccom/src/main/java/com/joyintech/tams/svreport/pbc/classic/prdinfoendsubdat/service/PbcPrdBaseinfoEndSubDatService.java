@@ -451,7 +451,7 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
      */
     private boolean checkDate(String date) {
         boolean flag = true;
-        if(!DateUtil.isDateStr(date, DateUtil.DEFAULT_DATE_FORMAT_EN)){
+        if(!DateUtil.isDateStr(date, DateUtil.DEFAULT_DATE_FORMAT_EN,DateUtil.DEFAULT_ANOTHER_FORMAT)){
             flag = false;
         }else{
             date = date.replace("-", "").replace("/", "");
