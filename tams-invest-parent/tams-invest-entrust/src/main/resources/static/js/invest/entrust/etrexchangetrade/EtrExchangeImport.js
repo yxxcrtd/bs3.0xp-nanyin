@@ -274,16 +274,16 @@
      */
     function saveOrSubmit(operateType) {
         // add by zhangrui1 start
-//        var s;
-//        if(BaseRiskMathComm) {
-//            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-//            if(!s && s != ''){
-//                return;
-//            }
-//            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
-//                return;
-//            }
-//        }
+       var s;
+       if(BaseRiskMathComm) {
+           s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+           if(!s && s != ''){
+               return;
+           }
+           if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+               return;
+           }
+       }
         // add by zhangrui1 end
         //校验数据  校验表格
         var tableData = table.getAllRows();
