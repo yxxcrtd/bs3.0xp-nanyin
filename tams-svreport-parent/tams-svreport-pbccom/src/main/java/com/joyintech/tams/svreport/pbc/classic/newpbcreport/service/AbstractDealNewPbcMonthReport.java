@@ -125,21 +125,29 @@ public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthR
         sendZipDatFile.setContact(contact);
         //制表日期
         try {
-            String reportDate = getCellValue(paramDto.getHssfSheet(), baseMap.get(REPORT_DATE),true);
+            /*String reportDate = getCellValue(paramDto.getHssfSheet(), baseMap.get(REPORT_DATE),true);
             if(StrUtil.isNotEmpty(reportDate)){
                 DateTime dateTime = DateUtil.parse(reportDate, "yyyy-MM-dd");
                 sendZipDatFile.setReportDate(dateTime);
-            }
+            }*/
+            //制表日期取系统时间,以前是取导入表格中的制表日期
+            sendZipDatFile.setReportDate(new Date());
         }catch (Exception e){
             throw new Exception(sheetName()+"制表日期格式不正确!正确格式为:yyyy-MM-dd");
         }
         //数据日期
         try {
+            /*
             String dataDate = getCellValue(paramDto.getHssfSheet(), baseMap.get(DATA_DATE),true);
             if(StrUtil.isNotEmpty(dataDate)){
                 DateTime dateTime = DateUtil.parse(dataDate, "yyyy-MM-dd");
                 sendZipDatFile.setEnddate(dateTime);
-            }
+            }*/
+            //以前是取导入表格中的制表日期
+            String statusVdate = paramDto.getStatusVdate();
+            DateTime dateTime = DateUtil.parse(statusVdate, "yyyyMM");
+            DateTime endOfMonth = DateUtil.endOfMonth(dateTime);
+            sendZipDatFile.setEnddate(endOfMonth);
         }catch (Exception e){
             throw new Exception(sheetName()+"数据日期格式不正确!正确格式为:yyyy-MM-dd");
         }
