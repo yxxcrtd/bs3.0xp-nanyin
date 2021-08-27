@@ -370,7 +370,7 @@
                         })
                 }else{
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice002"),
-                        basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPricesingle001/init", "99%", "99%", {
+                        basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/init", "99%", "99%", {
                             pageModel : PAGE_MODEL_REFERENCE, quoteId : data.quoteId, quotaPageModel : 'new'
                         }, function(){
                             // 刷新当日报价
