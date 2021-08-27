@@ -556,9 +556,6 @@ $(function() {
                     $("#riskMathFlag").val("02");
                     }
                 }
-                $('#trdInvestPersonInfo_counterTrader').attr('required',true);
-              //修改bug BSTOT-512 联系方式必填 add by wangcheng 20200115 
-                $('#trdInvestPersonInfo_contactInfo').attr('required',true);
             	star();
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                     var data = {};
