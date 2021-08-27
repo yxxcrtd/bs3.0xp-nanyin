@@ -90,7 +90,7 @@
 													data-th-data-result='${CUSTOM_ASSET_TYPE_THREE}' allowClear="true" formatoption="true"></select>
 										</div>
 									</div>
-									<div class="form-inline-wrap" id="selector5" style="display: none">
+									<div class="form-inline-wrap" id="selector5">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdFundInvestTrade001.type11}">资产四级类型</label>
 										<div class="layui-input-inline input-inline">
 											<select type="text" id="type11" name="type11" class="layui-input form-input input-select hidden"
@@ -195,19 +195,23 @@
 									</div>
 								</div>
 								<!-- 通道交易 新增 强成西 2019/03/26 end -->
-								<div id="Buy" class="layui-form-item">
-									<div class="form-inline-wrap">
+								<div class="layui-form-item">
+									<div class="form-inline-wrap" id="Buy1">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdDepositInvestTrade002.accAvailableCashT}">组合T日可用现金</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" id="accAvailableCashT" name="accAvailableCashT" class="layui-input form-input text-number" th:value="${entity?.accAvailableCashT}" disabled="true">
 										</div>
 									</div>
-									<div class="form-inline-wrap">
+								</div>
+								<div class="layui-form-item">
+									<div class="form-inline-wrap" id="Buy2">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdDepositInvestTrade002.accAvailableCashT1}">组合T+1日可用现金</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" id="accAvailableCashT1" name="accAvailableCashT1" class="layui-input form-input text-number" th:value="${entity?.accAvailableCashT1}" disabled="true">
 										</div>
 									</div>
+								</div>
+								<div class="layui-form-item">
 									<div class="form-inline-wrap" style="display: none">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdDepositInvestTrade002.accAvailableCash}">托管户剩余现金</label>
 										<div class="layui-input-inline input-inline">
@@ -227,8 +231,8 @@
                                     </div>
                                 </div>
 								<!-- 通道交易 新增 强成西 2019/03/26 end -->
-								<div class="layui-form-item" id="Sale">
-									<div class="form-inline-wrap">
+								<div class="layui-form-item" >
+									<div class="form-inline-wrap" id="Sale">
 										<label class="layui-form-label form-label-wrap"  data-th-text="#{TrdDepositInvestTrade002.bottomAssetAmount}">资产可用持仓</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" id="bottomAssetAmount" name="bottomAssetAmount" class="layui-input form-input text-number" th:value="${entity?.bottomAssetAmount}" disabled="true">
