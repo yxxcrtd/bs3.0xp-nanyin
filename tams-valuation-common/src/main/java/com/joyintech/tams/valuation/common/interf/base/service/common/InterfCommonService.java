@@ -176,8 +176,14 @@ public class InterfCommonService {
         BokBookset valBokBookset = (BokBookset)booksetInfoMap.get(
             InterfCommonConstant.账套信息查询_账套信息);
         // 账套配置
-        List<BokBooksetExt> listValBokBooksetExt = (List<BokBooksetExt>)booksetInfoMap.get(
-            InterfCommonConstant.账套信息查询_账套配置);
+        //判断账套是否已经有历史账套参数配置，若有，则不取账套模板中的，取自账套本身　modify by hxy 20210827
+        List<BokBooksetExt> listValBokBooksetExt = mapper.selectBooksetExtByBooksetId(dto.getFinprodId());
+        if(StringUtil.isEmptyList(listValBokBooksetExt)){
+            listValBokBooksetExt= (List<BokBooksetExt>)booksetInfoMap.get(
+                    InterfCommonConstant.账套信息查询_账套配置);
+        }
+        /*List<BokBooksetExt> listValBokBooksetExt = (List<BokBooksetExt>)booksetInfoMap.get(
+            InterfCommonConstant.账套信息查询_账套配置);*/
         
         // 2.2.1 账套表(BOK_BOOKSET)
         BokBookset resValBokBookset = new BokBookset();
