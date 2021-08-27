@@ -1305,6 +1305,11 @@
             return;
         }
         var finprodType2 = $("#finprodType2_" + currentTab).val();
+        //add by chenjiaxing 资产代码清除是投资方向联动为空 start 20210826
+        if(!finprodType2){
+            $("#ps_" + currentTab).val('').trigger('change');
+        }
+        //add by chenjiaxing 资产代码清除是投资方向联动为空 end 20210826
         //add by chenjiaxing 投资目的去除*号
         if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
             ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)){
@@ -1316,14 +1321,19 @@
         // if  交易平台 = 数据字典.交易平台.大宗交易平台
         if(currentTab == 'dz') {
             // if 画面.金融产品类型（投管）= 数据字典.金融产品类型（投管）.债券质押式回购(不属于数据字典范围，仅仅判断用)
-            if(!finprodType2 || finprodType2 == FINPROD_TYPE_TG_ZYSHG) {
+            if(finprodType2 == FINPROD_TYPE_TG_ZYSHG) {
                 $("#ps_" + currentTab).updateChosenArr({
                     item: [PS_03, PS_04],
                     chosen: $("#ps_" + currentTab).val(),
                     disabled: false
                 });
-            }
-            else {
+            }else if(!finprodType2) {
+                $("#ps_" + currentTab).updateChosenArr({
+                    item: [PS_T01, PS_T02,PS_03, PS_04],
+                    chosen: $("#ps_" + currentTab).val(),
+                    disabled: false
+                });
+            } else {
                 $("#ps_" + currentTab).updateChosenArr({
                     item: [PS_T01, PS_T02],
                     chosen: $("#ps_" + currentTab).val(),
@@ -1353,13 +1363,21 @@
                 setExtPs();
             }
             // 画面.金融产品类型（投管）为空或者为质押式回购
-            else {
+            //add by chenjiaxing 更改金融产品为空时的枚举值 start
+            else if(!finprodType2) {
+                $("#ps_" + currentTab).updateChosenArr({
+                    item: [PS_03, PS_04,PS_T01, PS_T02,, PS_T03, PS_T04, PS_T46, PS_T49],
+                    chosen: $("#ps_" + currentTab).val(),
+                    disabled: false
+                });
+            }else{
                 $("#ps_" + currentTab).updateChosenArr({
                     item: [PS_03, PS_04],
                     chosen: $("#ps_" + currentTab).val(),
                     disabled: false
                 });
             }
+            //add by chenjiaxing 更改金融产品为空时的枚举值 end
         }
         else {
             $("#ps_" + currentTab).trigger('change');
@@ -1491,9 +1509,18 @@
         if (portfolioId != null && portfolioId != '') {
             Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/findSecAmountInfo', param, function (result) {
                 if (result) {
-                    document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万元';
-                    document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万元';
-                    document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+                    //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 start
+                    var finprodType2 = $("#finprodType2_" + currentTab).val();
+                    if((currentTab == 'dz' || currentTab == 'gs')&& finprodType2 == FINPROD_TYPE_TG_F06){
+                        document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'份';
+                        document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'份';
+                        document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+                    }else{
+                        document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万元';
+                        document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万元';
+                        document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+                    }
+                    //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 end
                 }
             }, false);
         }
@@ -1516,6 +1543,8 @@
             var param = {
                 portfolioId : portfolioId,
                 acctNo : acctNo,
+                acctId : acctNo,
+                ccy : 'CNY',
                 secAcctId : secAcctId,
                 finprodId : finprodId,
                 ps : ps,
@@ -1524,7 +1553,14 @@
             };
             Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/calCanBuyAmount', param, function (result) {
                 if (result) {
-                    document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万元';
+                    //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 start
+                    var finprodType2 = $("#finprodType2_" + currentTab).val();
+                    if((currentTab == 'dz' || currentTab == 'gs')&& finprodType2 == FINPROD_TYPE_TG_F06){
+                        document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'份';
+                    }else{
+                        document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万元';
+                    }
+                    //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 end
                 }
             }, false);
         }
@@ -1892,8 +1928,7 @@
                         disabled: true,
                         isNotTrigger:true
                     });
-                }
-                else {
+                }else {
                     // 画面.价格模式  = 数据字典.价格模式.限价指令，数据字典.价格模式.市价指令
                     $("#priceModel_" + currentTab).updateChosenArr({
                         item: [PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
@@ -1912,6 +1947,16 @@
                     disabled: true,
                     isNotTrigger:true
                 });
+                //add by chenjiaxing 更改资产为空时的价格模式枚举值 start
+            }else if(!finprodType2) {
+                // 画面.价格模式  = 数据字典.价格模式.限价指令，数据字典.价格模式.市价指令
+                $("#priceModel_" + currentTab).updateChosenArr({
+                    item: [PRICE_MODEL_PRM01,PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
+                    chosen: $("#priceModel_" + currentTab).val(),
+                    disabled: false,
+                    isNotTrigger:true
+                });
+                //add by chenjiaxing 更改资产为空时的价格模式枚举值 end
             }
                 // else if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.质押式回购
             /*            else if(finprodType2 == FINPROD_TYPE_TG_ZYSHG || finprodType2 == FINPROD_TYPE_TG_F02 || finprodType2 == FINPROD_TYPE_TG_F03) {
@@ -2980,6 +3025,7 @@
 
 
     $(function() {
+        debugger;
         //按tab键定位按钮事件
         var inp=$(".input-control").val();
         $(document).bind('keydown', function (e) {
