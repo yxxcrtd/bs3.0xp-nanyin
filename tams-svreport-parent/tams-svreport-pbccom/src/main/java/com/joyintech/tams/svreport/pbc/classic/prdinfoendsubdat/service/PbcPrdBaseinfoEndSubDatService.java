@@ -141,9 +141,9 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
 
     }
 
-    public List<ExcelValidDto> importBaseInfoSubDat(Map<String,Object> param){
+    public List<ExcelValidDto> importBaseInfoSubDat(String fileName){
         List<ExcelValidDto> errorList = new ArrayList<>();
-        List<List<String>> dataList =(List<List<String>>) param.get("dataList");
+        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
         if(!StringUtil.isEmptyList(dataList)){
             List<PbcPrdBaseinfoEndSubDto> pbcPrdBaseinfoEndSubDtos = new ArrayList<>();
             //将excel中的行数据转换为实体
