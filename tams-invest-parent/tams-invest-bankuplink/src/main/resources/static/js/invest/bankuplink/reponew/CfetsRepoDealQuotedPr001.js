@@ -947,11 +947,11 @@
             var object = row;
             object.operation = "CfetsRepoDealQuotedPrice001.reply";
             //多组合标识或者本方询价方为回复方 均跳转多组合界面
-            var url = 'invest/bankuplink/repo/CfetsRepoDealQuotedPr002/init';
+            var url = 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/init';
             if(object.isDzh=='Y'||object.quoteRoleType == quoteRoleTypeReply){
                 var entrustIds = getEtrReByQuoteId(object);
                 object.entrustId = entrustIds;
-                url = 'invest/bankuplink/repo/CfetsRepoDealQuotedPr003/init';
+                url = 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr003/init';
             }
             Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/checkEdit', object, function(result) {
                 if (result.data){

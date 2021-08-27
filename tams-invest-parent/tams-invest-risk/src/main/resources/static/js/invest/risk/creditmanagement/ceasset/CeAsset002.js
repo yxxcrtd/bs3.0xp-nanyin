@@ -61,8 +61,10 @@
         }
         if(data&&(data.finprodType2 == 'F01'||data.finprodType2 == 'F32')){
             $('#creditPrice').attr("disabled",false);
+            $('#creditPriceDiv').show();
         }else{
             $('#creditPrice').val("").attr("disabled",true);
+            $('#creditPriceDiv').hide();
         }
         // 页面展示控制
         initElements();
