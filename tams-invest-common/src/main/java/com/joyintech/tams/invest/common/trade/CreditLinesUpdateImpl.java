@@ -1062,6 +1062,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     // 重置额度管理表剩余可用额度
                     reCalcuUsedAmt(creditLine,inputDto,resetAmt.negate());
                     if (StringUtil.equals(item.getCreditOccureType(),DictCodeListRsk.授信占用类别_预占.getValue())){
+                        item.setShareAmt(前置交易剩余占用额度);
                         item.setNewAmount(前置交易剩余占用额度);
                         if (occupy || StringUtil.equals(creditLine.getIsLoopAmt(), DictCodeList.是否_是.getValue())){
                             item.setAmount(前置交易剩余占用额度);
@@ -1093,6 +1094,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     reCalcuUsedAmt(creditLine,inputDto,resetAmt.negate());
                     if (StringUtil.equals(item.getCreditOccureType(),DictCodeListRsk.授信占用类别_预占.getValue())){
                         item.setNewAmount(前置交易剩余占用额度);
+                        item.setShareAmt(前置交易剩余占用额度);
                         if (occupy || StringUtil.equals(creditLine.getIsLoopAmt(), DictCodeList.是否_是.getValue())){
                             item.setAmount(前置交易剩余占用额度);
                         }
