@@ -161,6 +161,8 @@ $(function(){
 	            }
 	        })
 		}
+		//ZGBSEI-394  新人行产品基本信息登记页面，统计模板登记页面，产品终止信息登记页面，导出待修复按钮点击后，去掉是否手工处理的提示 LEIPENG
+		isHaveData = false;
 		if (isHaveData){
 			var rows = table.getAllCheckedRows();
 	        if(rows.length === 0) {
