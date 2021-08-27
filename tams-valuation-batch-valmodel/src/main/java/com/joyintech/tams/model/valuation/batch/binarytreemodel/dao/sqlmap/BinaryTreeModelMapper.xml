@@ -377,7 +377,27 @@ where
 	           A.INT_AMT INT_AMT,
 	           A.CASH_AMT CASH_AMT,
 	           A.INT_PRIN_AMT INT_PRIN_AMT
-	      FROM VW_MOD_CASH_FLOW_PLAN A
+	      FROM <!--VW_MOD_CASH_FLOW_PLAN-->
+	       (select A.FINPROD_ID                          AS FINPROD_ID,
+               B.FINPROD_TYPE2                       AS FINPROD_TYPE2,
+               A.CASH_ID                             AS CASH_ID,
+               A.CASH_TYPE_2                         AS CASH_TYPE_2,
+               B.VDATE_UNADJUST                      AS VDATE_UNADJUST,
+               B.MDATE_UNADJUST                      AS MDATE_UNADJUST,
+               B.VDATE                               AS VDATE,
+               B.MDATE                               AS MDATE,
+               B.PAY_DATE                            AS PAY_DATE,
+               B.PRIN_AMT                            AS PRIN_AMT,
+               B.INT_AMT                             AS INT_AMT,
+               B.CASH_AMT                            AS CASH_AMT,
+               B.INT_PRIN_AMT                        AS INT_PRIN_AMT,
+               B.IS_PAY_INT                          AS IS_PAY_INT
+          FROM FIN_CASH_INFO A
+         INNER JOIN FIN_CASH_PLAN B
+            ON A.CASH_ID = B.CASH_ID
+         WHERE B.FINPROD_TYPE2 IN （ 'F01', 'F18' ）
+           and A.BRANCH = 0
+         order by A.FINPROD_ID, A.CASH_TYPE_2, B.VDATE)A
 	     WHERE A.FINPROD_ID= #{finprodId,jdbcType=VARCHAR}
 	     ORDER BY A.MDATE
 	</select>

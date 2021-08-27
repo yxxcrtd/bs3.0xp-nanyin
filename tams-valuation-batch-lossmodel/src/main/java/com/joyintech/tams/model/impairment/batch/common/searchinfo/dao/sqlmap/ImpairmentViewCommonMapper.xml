@@ -167,8 +167,15 @@ from
 		and c.CDATE = #{searchDate, jdbcType=DATE} and c.INV_AIM = #{INV_AIM_AC}
 	left join (
 		select ASSET_CODE,SEC_RESULT from
-			(select  ASSET_CODE,SEC_RESULT,rank() over (partition by ASSET_CODE order by EFFECT_DATE desc) rk from VW_MOD_RISK_FIVE_LEEVEL)
-		where rk = 1
+			( select * from ( select  ASSET_CODE,SEC_RESULT,rank() over (partition by ASSET_CODE order by EFFECT_DATE desc) rk from
+		<!--VW_MOD_RISK_FIVE_LEEVEL-->
+		(SELECT A.ASSET_CODE   AS ASSET_CODE,
+		A.EFFECT_DATE         AS EFFECT_DATE,
+		A.SEC_RESULT          AS SEC_RESULT
+		FROM RSK_FIVECLASS_MAINTAIN A
+		where A.ASSET_TYPE_TG IN ('F01', 'F18')
+		))
+		where rk = 1)
 	) d on d.ASSET_CODE = a.FINPROD_MARKET_ID
 where
 	1=1

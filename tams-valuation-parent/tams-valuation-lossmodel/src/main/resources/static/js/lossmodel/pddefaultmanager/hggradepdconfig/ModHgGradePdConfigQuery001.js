@@ -10,15 +10,20 @@ $(function () {
         flag2 = true;
     }
 
-    layui.use('laydate', function(){
-        var laydate = layui.laydate;
-        $(this).removeAttr("lay-key");
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#vouchYear',//指定元素
-            type: 'year'
-        });
+    // 绑定按钮事件
+    $("#vouchYear").click(function(event){
+        event.stopPropagation();// 阻止事件冒泡
     });
+    showYear();
+
+    function showYear() {
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#vouchYear',
+            type: 'year',
+            format: 'yyyy'
+        });
+    }
 
 
     /**

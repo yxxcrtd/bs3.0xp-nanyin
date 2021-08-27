@@ -1,10 +1,9 @@
 package com.joyintech.tams.model.valuation.batch.incomemethodmodel.processor;
 
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
-import com.joyintech.framework.base.entity.SysBatchgrpExecInfo;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ProductAssetsIncomeMethodReaderDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ProductAssetsIncomeMethodResultDto;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.service.ProductAssetsIncomeMethodService;
+import com.joyintech.tams.model.valuation.batch.incomemethodmodel.service.ProductAssetsIncomeMethodProcessService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -26,7 +25,7 @@ public class ProductAssetsIncomeMethodProcessor extends BaseProcessor<ProductAss
      *  收益法估值批处理Service
      */
     @Autowired
-    private ProductAssetsIncomeMethodService productAssetsIncomeMethodService;
+    private ProductAssetsIncomeMethodProcessService productAssetsIncomeMethodProcessService;
 
     /**
      * 处理dto reader -> result
@@ -36,7 +35,7 @@ public class ProductAssetsIncomeMethodProcessor extends BaseProcessor<ProductAss
      */
     @Override
     public ProductAssetsIncomeMethodResultDto process(ProductAssetsIncomeMethodReaderDto item) throws Exception {
-        return productAssetsIncomeMethodService.convertResultFromReader(item,getParams(),stepExecution);
+        return productAssetsIncomeMethodProcessService.convertResultFromReader(item,getParams(),stepExecution);
     }
 
     @Override
