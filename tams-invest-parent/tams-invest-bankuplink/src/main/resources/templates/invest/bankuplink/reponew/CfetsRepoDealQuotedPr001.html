@@ -270,9 +270,11 @@
                                     <div class="layui-input-inline input-inline">
                                         <select type="text" id="ouPartyId" name="ouPartyId"
                                                 class="layui-input form-input input-select"
-                                                placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
-                                                data-th-data-result='${PS}' allowClear="true"
-                                                formatoption="true"></select>
+                                                placeholder="请输入内容"
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideList}"
+                                                allowClear="true" formatoption="true">
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3">
@@ -280,9 +282,9 @@
                                     <div class="layui-input-inline input-inline">
                                         <select type="text" id="counterId" name="counterId"
                                                 class="layui-input form-input input-select"
-                                                placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
-                                                data-th-data-result='${PS}' allowClear="true"
-                                                formatoption="true"></select>
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}"
+                                                allowClear="true" formatoption="true"></select>
                                     </div>
                                 </div>
                                 <div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3">
@@ -290,9 +292,9 @@
                                     <div class="layui-input-inline input-inline">
                                         <select type="text" id="duishoufangjigou_wtdh" name="duishoufangjigou_wtdh"
                                                 class="layui-input form-input input-select"
-                                                placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
-                                                data-th-data-result='${PS}' allowClear="true"
-                                                formatoption="true"></select>
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}"
+                                                allowClear="true" formatoption="true"></select>
                                     </div>
                                 </div>
                             </div>
