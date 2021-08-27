@@ -44,7 +44,7 @@
     var init = function(){
         showAll();
         //债券、存款类资产hide自定义说明
-        if(INT_ASSET_TYPE==FINPROD_TYPE_F07||INT_ASSET_TYPE==FINPROD_TYPE_F01 || INT_ASSET_TYPE==FINPROD_TYPE_F21){
+        if(INT_ASSET_TYPE==FINPROD_TYPE_F07||INT_ASSET_TYPE==FINPROD_TYPE_F01 || INT_ASSET_TYPE==FINPROD_TYPE_F21 ||INT_ASSET_TYPE==FINPROD_TYPE_F17){
             getElementById('remark','div').hide();
         }
     }
@@ -232,14 +232,14 @@
             type : 'date'
         }, {
             field : 'mdate',
-            title : 'FinPayInterestStdInfo.mdate',
+            title : 'FinPayInterestStdInfo.mdateUnadjust',
             sortable : true,
             width : 200,
             edit : true,
             type : 'date'
         }, {
             field : 'payDate',
-            title : 'FinPayInterestStdInfo.payDate',
+            title : 'FinPayInterestStdInfo.payDateUnadjust',
             sortable : true,
             width : 200,
             edit : false,
@@ -251,17 +251,19 @@
             width : 150,
             edit : false,
             type : 'number',
-            digit:2
+            digit:2,
+            visible : false
         }, {
             field : 'intPrinAmt',
             title : 'FinPayInterestStdInfo.prinAmt',
             sortable : false,
             width : 150,
             edit : false,
-            type : 'number'
+            type : 'number',
+            visible : false
         }, {
             field : 'intAmt',
-            title : 'FinPayInterestStdInfo.intAmt',
+            title : 'FinPayInterestStdInfo.intAmt2',
             sortable : false,
             width : 200,
             edit : true,
@@ -744,12 +746,13 @@
             }
         }
         param.iscallbackPayByRepay = iscallbackPayByRepay;
+        /** modify by yanya on 20210826 去除推荐方**/
         //项目类资产通道费率
-        if(INT_ASSET_TYPE==FINPROD_TYPE_F17){
-            if(BussParticipantInfo){
-                param.bussParticipantInfoDtoList =  BussParticipantInfo.getAllRows();
-            }
-        }
+        // if(INT_ASSET_TYPE==FINPROD_TYPE_F17){
+            // if(BussParticipantInfo){
+            //     param.bussParticipantInfoDtoList =  BussParticipantInfo.getAllRows();
+            // }
+        // }
         //付息计划维护标志 INT_ASSET_TYPE_PAYINTEREST
         param.adjPlanFlag = INT_ASSET_TYPE_PAYINTEREST;
         _.each(param.invScheduleList, function(item) {
@@ -846,7 +849,7 @@
                 msgArray.push(msg);errorClassArray.push(vdate);
             }
             if(newParam.mdate==''||typeof newParam.mdate == 'undefined'){
-                msg = JoyinUtil.getMessage('COMMON_E_0057',JoyinUtil.getLabel("FinPayInterestStdInfo.asset.mdate2"));
+                msg = JoyinUtil.getMessage('COMMON_E_0057',JoyinUtil.getLabel("FinPayInterestStdInfo.asset.mdate"));
                 msgArray.push(msg);errorClassArray.push(mdate);
             }
             if(newParam.calendarId==''||typeof newParam.calendarId == 'undefined'){
@@ -858,7 +861,7 @@
                 msgArray.push(msg);errorClassArray.push(getElementById('payTdayRule'));
             }
             if(newParam.issueAmt==''||typeof newParam.issueAmt == 'undefined'){
-                msg = JoyinUtil.getMessage('COMMON_E_0057',JoyinUtil.getLabel("FinPayInterestStdInfo.asset.issueAmt2"));
+                msg = JoyinUtil.getMessage('COMMON_E_0057',JoyinUtil.getLabel("FinPayInterestStdInfo.asset.issueAmt3"));
                 msgArray.push(msg);errorClassArray.push(issueAmt);
             }
             if(BigNumber($('#referRate'))<=0){
