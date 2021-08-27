@@ -264,9 +264,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 				Object   filedValue=null;
+				String fieldName = "";
 				//get[源属性1]()   取得报表的对应单元的数值
 				try {
 					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
 					//设置对象的访问权限，保证对private的属性的访问
 					field.setAccessible(true);
 					filedValue= field.get(sub);
@@ -283,7 +285,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", dealDataBaseForDat(filedValue));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
 			}
 		}
@@ -302,9 +304,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 				Object   filedValue=null;
+				String fieldName = "";
 				//get[源属性1]()   取得报表的对应单元的数值
 				try {
 					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
 					//设置对象的访问权限，保证对private的属性的访问
 					field.setAccessible(true);
 					filedValue= field.get(sub);
@@ -321,7 +325,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", dealDataBaseForDat(filedValue));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
 			}
 		}
@@ -340,9 +344,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 				Object   filedValue=null;
+				String fieldName = "";
 				//get[源属性1]()   取得报表的对应单元的数值
 				try {
 					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
 					//设置对象的访问权限，保证对private的属性的访问
 					field.setAccessible(true);
 					filedValue= field.get(sub);
@@ -359,7 +365,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", sub.getIssuePartyId());
 				data.put("prodVariety", sub.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", dealDataBaseForDat(filedValue));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
 			}
 		}
@@ -378,9 +384,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 				Object   filedValue=null;
+				String fieldName = "";
 				//get[源属性1]()   取得报表的对应单元的数值
 				try {
 					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
 					//设置对象的访问权限，保证对private的属性的访问
 					field.setAccessible(true);
 					filedValue= field.get(sub);
@@ -397,7 +405,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", sub.getIssuePartyId());
 				data.put("prodVariety", sub.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", dealDataBaseForDat(filedValue));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
 			}
 		}
@@ -470,7 +478,13 @@ public class PbcZipDataFileService {
 							SysInstRegBankCode001Dto sysInstRegBankCode001Dto = sysInstRegBankCode001Mapper.selectRegistBankCode(subDat.getIssuePartyId());
 							logger.info("查询的机构代码信息为:{}",sysInstRegBankCode001Dto == null ? "" : sysInstRegBankCode001Dto.getRegistBankCode());
 							if(sysInstRegBankCode001Dto != null && StrUtil.isNotEmpty(sysInstRegBankCode001Dto.getRegistBankCode())){
-								String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(sysInstRegBankCode001Dto.getRegistBankCode(), subDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, subDat.getVdate());
+								String prodProfitType = "03";
+								if(subDat.getBusiModel() == null || !"3".equals(subDat.getBusiModel())){
+									prodProfitType = "other";
+								}
+								String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(sysInstRegBankCode001Dto.getRegistBankCode(),
+										prodProfitType, PBC_PROD_BASEINFO_SEQCODE,
+										subDat.getVdate());
 								if(StrUtil.isNotEmpty(pbcProdIdExternal)){
 									subDat.setPbcProdId(pbcProdIdExternal);
 									innerProdIdMapping.put(prodId, pbcProdIdExternal);
@@ -776,9 +790,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 					Object   filedValue=null;
+				    String fieldName = "";
 					//get[源属性1]()   取得报表的对应单元的数值
 					try {
 						Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+						fieldName = field.getName();
 						//设置对象的访问权限，保证对private的属性的访问
 						field.setAccessible(true);
 						filedValue= field.get(sub);
@@ -795,7 +811,7 @@ public class PbcZipDataFileService {
 					data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 					data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 					data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-					data.put("filedValue", dealDataBaseForDat(filedValue));
+					data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 					dataList.add(data);
 			}
 		}
@@ -819,9 +835,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 				Object   filedValue=null;
+				String fieldName = "";
 				//get[源属性1]()   取得报表的对应单元的数值
 				try {
 					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
 					//设置对象的访问权限，保证对private的属性的访问
 					field.setAccessible(true);
 					filedValue= field.get(sub);
@@ -838,7 +856,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", dealDataBaseForDat(filedValue));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
 			}
 		}
@@ -1081,13 +1099,25 @@ public class PbcZipDataFileService {
 		}
 	}
     //取出来的数据库值除以10000成真实的值
-	public String dealDataBaseForDat(Object data) {
+	public String dealDataBaseForDat(Object data,String feildName,String reportType) {
+		//1_3为只数统计表，不需要除以10000
+		if("1_3".equals(reportType)){
+			return data == null ? null : data.toString();
+		}
+		//1_5只数，不需要除以10000
+		if("1_5".equals(reportType) && feildName.equals("prodcounts")){
+			return data == null ? null : data.toString();
+		}
+		//1_6只数，不需要除以10000
+		if("1_6".equals(reportType) && feildName.equals("prodcounts")){
+			return data == null ? null : data.toString();
+		}
 		BigDecimal bigDecimal = new BigDecimal(data.toString());
 		BigDecimal tenthousand = new BigDecimal(10000);
 		if (data != null) {
 			bigDecimal = bigDecimal.divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP);
 		}
-		return bigDecimal.toString();
+		return bigDecimal.stripTrailingZeros().toPlainString();
 	}
 
 

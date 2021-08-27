@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -127,7 +128,7 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
         if (!StringUtil.equals(result.getPbcProdId(),result.getPbcProdIdPrd())){
             result.setPbcProdIdDiff(1);
         }
-        if (!StringUtil.equals(result.getMdate(),result.getMdatePrd())){
+        if (compareDate(result.getMdate(),result.getMdatePrd())){
             result.setMdateDiff(1);
         }
         if (!StringUtil.equals(result.getCusYearYield(),result.getCusYearYieldPrd())){
@@ -136,11 +137,13 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
         if (!StringUtil.equals(result.getCcy(),result.getCcyPrd())){
             result.setCcyDiff(1);
         }
-        if (!StringUtil.equals(result.getCustomProfit(),result.getCustomProfitPrd())){
+        if (compareBigDecimal(result.getCustomProfit(),result.getCustomProfitPrd())){
             result.setCustomProfitDiff(1);
         }
-        if (!StringUtil.equals(result.getCustomProfitCny(),result.getCustomProfitCnyPrd())){
+        if (compareBigDecimal(result.getCustomProfitCny(),result.getCustomProfitCnyPrd())){
             result.setCustomProfitCnyDiff(1);
         }
     }
+
+
 }
