@@ -114,8 +114,13 @@ public class ValProfitprojectValidator implements BeanValidator {
                     errorList.add(new ValidMessage(getMessage("风险五级分类不能为空!")));
                 }
                 if(StringUtil.equals(DictCodeListExt1.证券品种_其他债权类.getValue(), dto.getType18())) {
-                    if (StringUtil.isEmpty(dto.getBondRiskType())) {
+                    if (StringUtil.isEmpty(dto.getFinancier())) {
                         errorList.add(new ValidMessage(getMessage("融资人不能为空!")));
+                    }
+                }
+                else if(StringUtil.equals(DictCodeListExt1.证券品种_计划类资产_收益型.getValue(), dto.getType18())) {
+                    if (StringUtil.isEmpty(dto.getIssuer())) {
+                        errorList.add(new ValidMessage(getMessage("发行人不能为空!")));
                     }
                 }
 

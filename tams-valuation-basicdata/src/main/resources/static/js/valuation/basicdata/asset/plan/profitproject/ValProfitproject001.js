@@ -59,8 +59,8 @@ $(function() {
             ,{field:'mdate',width:150, title: 'ValProfitproject001.mDate',type:'date'}
             ,{field:'profitTypeStr',sortField:"profitType",width:150,title: 'ValProfitproject001.profitType'}
             ,{field:'basisStr',sortField:"basis",width:150,title: 'ValProfitproject001.basis'}
-            ,{field:'issuer',width:150, sortField:"issuer",title: '发行人'}
-            ,{field:'financier',width:150, sortField:"financier",title: '融资人'}
+            ,{field:'issuer',width:160, sortField:"issuer",title: '发行人'}
+            ,{field:'financier',width:160, sortField:"financier",title: '融资人'}
             ,{field:'dataSourceStr', width:150 ,sortField:"dataSource",title: 'ValProfitproject001.dataSource'}
             ,{field:'updateUser', width:150 ,sortField:"updateUser",title: 'ValProfitproject001.updateUser'}
             ,{field:'updateTime', width:150 ,sortField:"updateTime",title: 'ValProfitproject001.updateTime',type:'date'}
