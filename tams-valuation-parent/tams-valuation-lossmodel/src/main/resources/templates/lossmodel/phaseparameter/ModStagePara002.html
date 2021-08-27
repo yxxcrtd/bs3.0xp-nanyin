@@ -6,7 +6,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <form class="layui-form joyin-form-wrap pro-module-form " id="submitForm">
+    <form class="layui-form joyin-form-wrap pro-module-form "  id="submitForm">
         <div class="layui-form-item" style="display: none;">
         	<input type="text" id="seqno" name="seqno" class="layui-input form-input"
                            data-th-value="${entity?.seqno}">
@@ -43,7 +43,7 @@
             <label class="layui-form-label form-lable mst-lable">要素</label>
 			<div class="layui-input-inline input-inline">
 				<select type="text" id="elements" name="elements"
-					required="required" 
+					required="required"
 					data-th-data-result='${MODEL_DEC_ELEMENT}'
 					data-th-initValue="${entity?.elements}"
 					class="layui-input form-input input-select" allowClear="true"
@@ -51,6 +51,9 @@
 					data-th-placeholder="#{SysCommon.placeholder}"></select>
 			</div>
         </div>
+
+
+
         <div class="layui-form-item" id="inputType" style="display:none;">
             <label class="layui-form-label form-lable mst-lable">参数值</label>
 			<div class="layui-input-inline input-inline">
@@ -82,10 +85,23 @@
 					data-th-placeholder="#{SysCommon.placeholder}"></select>
 			</div>
         </div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label form-lable mst-lable">启用状态</label>
+			<div class="layui-input-inline input-inline">
+				<select id="useStatus" name="useStatus"
+						class="layui-input form-input input-select"
+						data-th-data-result='${USE_STATUS}'
+						placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+						required="required"
+						data-th-initvalue="${entity?.useStatus}">
+				</select>
+			</div>
+		</div>
+
         <div class="layui-row" style="margin: 50px;">
             <div class="text-center">
-                <button type="button" class="layui-btn btn-submit" id="ModStagePara002_btn_submit">提交
-                </button>
+                <button type="button" class="layui-btn btn-submit" id="ModStagePara002_btn_submit">提交</button>
                 <a type="button" class="layui-btn btn-cancel" id="ModStagePara002_btn_cancel">取消</a>
             </div>
         </div>

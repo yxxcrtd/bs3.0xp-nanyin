@@ -5,7 +5,9 @@ $(function () {
 	
     //判断是提交或是保存
     function saveOrSubmit(operateType) {
+    	debugger;
         var object = $.serializeToObject('#submitForm', true);
+		object.status=$('#status').val();
         object.pageModel = pageModel;
         object.operateType = operateType;
         //获取资产代码联想文本框的hidcode金融产品代码

@@ -13,11 +13,11 @@ $(function () {
         data:detailList != null ? detailList : [],
         searchOnInit:true,
         checkbox: false,
-        height:'180px',
+        height:'330px',
         cols:[
               {field:'gradeResult',title: '外部评级',sortable:false, edit:true, editOption:{type:'select',formatoption:true,result: MAIN_GRADE_RESULT}} // initValue:ACCT_TYPE_A05
              ,{field:'gradeStandardResult',title: '内部评级',edit:true,sortable:false,editOption:{type:'select',formatoption:true,result: MODEL_STANDARD_GRADE_RESULT}} // ,initValue:IS_OPEN_01
-             ,{field:'operation', title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['delt']}
+             ,{field:'operation', title: 'SysCommon.operation',sortable:false,style:'text-align:left;', type:'action', buttons: ['delt']}
          ],
          addbtn:true,
          editCell: function (value, row, field, cell, column) {

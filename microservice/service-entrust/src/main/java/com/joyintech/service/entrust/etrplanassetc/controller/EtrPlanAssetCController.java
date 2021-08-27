@@ -191,7 +191,7 @@ public class EtrPlanAssetCController  {
     @DTXTransaction
     @PostMapping("doInsert")
     public void doInsert(@RequestBody EtrPlanAssetCDto dto){
-        WFlowCommonService.doInsertFlow(dto.getOperateType(), null);
+        WFlowCommonService.doInsertFlow(dto.getOperateType(), etrPlanAssetCService.initBaseDto(dto));
         
         etrPlanAssetCService.doInsert(dto, dto.getOperateType());
     }

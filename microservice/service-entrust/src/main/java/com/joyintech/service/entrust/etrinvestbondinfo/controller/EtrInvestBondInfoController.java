@@ -203,6 +203,10 @@ public class EtrInvestBondInfoController {
     @DTXTransaction
     @PostMapping("doComplete")
     public void doComplete(@RequestBody EtrInvestBondInfoDto dto) throws IllegalAccessException, InvocationTargetException{
+        // ZGZGST-1596:删除工作流数据 fuyongsheng add start
+        WFlowCommonService.deleteFlow(dto.getWorkflowId());
+        // ZGZGST-1596:删除工作流数据 fuyongsheng add end
+
         etrInvestBondInfoService.doComplete(dto, dto.getOperateType());
     }
 
