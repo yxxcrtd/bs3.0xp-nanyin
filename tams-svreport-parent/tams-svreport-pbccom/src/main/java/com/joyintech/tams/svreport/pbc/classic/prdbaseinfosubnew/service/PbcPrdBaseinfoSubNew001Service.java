@@ -694,7 +694,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 						checkResult.add(exc);
 					} else {
 						ExcelValidDto exc=new ExcelValidDto();
-						exc.setValidKey("产品代码:"+repmap.get(key).getPbcProdId());
+						exc.setValidKey("产品代码:"+repmap.get(key).getProdId());
 						exc.setCheckResult("01");
 						checkResult.add(exc);
 					}
