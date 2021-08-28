@@ -58,7 +58,7 @@ public class RskSupervisionIndicatorController {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<RskSupervisionIndicator002Dto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskSupervisionIndicatorService.selectForPage(page, length, param);
     }
 
@@ -119,7 +119,7 @@ public class RskSupervisionIndicatorController {
     @Transactional
 	@DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody RskSupervisionIndicator002Dto dto) throws Exception {
+    public void insert(@RequestBody RskSupervisionIndicator002Dto dto) {
     	rskSupervisionIndicatorService.insert(dto);
     }
     
@@ -132,7 +132,7 @@ public class RskSupervisionIndicatorController {
     @Transactional
 	@DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody RskSupervisionIndicator002Dto dto) throws Exception {
+    public void update(@RequestBody RskSupervisionIndicator002Dto dto) {
     	rskSupervisionIndicatorService.update(dto);
     }
     
@@ -144,7 +144,7 @@ public class RskSupervisionIndicatorController {
     @Transactional
 	@DTXTransaction
     @PostMapping("updateIsEnabled")
-    public void updateIsEnabled(@RequestBody List<RskSupervisionIndicator002Dto> listEntity) throws Exception {
+    public void updateIsEnabled(@RequestBody List<RskSupervisionIndicator002Dto> listEntity) {
     	for(RskSupervisionIndicator002Dto dto:listEntity){
     	 	rskSupervisionIndicatorService.updateIsEnabled(dto);
     	}
@@ -215,7 +215,7 @@ public class RskSupervisionIndicatorController {
     @Transactional
 	@DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody RskSupervisionIndicator002Dto dto) throws Exception {
+    public int delete(@RequestBody RskSupervisionIndicator002Dto dto) {
         return rskSupervisionIndicatorService.delete(dto);
     }
 }

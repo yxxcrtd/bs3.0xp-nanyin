@@ -155,11 +155,11 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
 			}
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
         return null;
     }
-    private String transferWarnFoul(String value,String indCellType) throws Exception{
+    private String transferWarnFoul(String value,String indCellType) throws IOException {
 		String wg=StringUtil.EMPTY;
 		ObjectMapper mapper = new ObjectMapper();
 		Map<?, ?>  detailJson= mapper.readValue(value, Map.class);

@@ -9,6 +9,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.riskredis.quota.superviseindicator.service.RskSupervisionIndicator002Service;
 import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.*;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -235,8 +236,7 @@ public class RskSupervisionIndividuation001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) RskSupervisionIndividuationDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) RskSupervisionIndividuationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

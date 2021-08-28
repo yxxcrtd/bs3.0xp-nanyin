@@ -120,7 +120,7 @@ public class RiskTrialDayTimeWriterService extends BaseService{
      * @param resultList
      * @param mapParam
      */
-    public  void dealTrialIndicatorDb(  List<RiskTrialDayTimeResult> resultList,Map<String, Object> mapParam) throws Exception {
+    public  void dealTrialIndicatorDb(  List<RiskTrialDayTimeResult> resultList,Map<String, Object> mapParam){
         logger.info("--------->插入监控指标数据开始");
         //查询当天前一天所有指标的连续违规天数
         List<RiskTrialRetDto> curRiskTrialList=riskTrialCommMapper.getRiskTrialRetInfo(mapParam.get(Const.SUP_FREQUENCY).toString(), DateUtil.addDay(DateUtil.format((Date)mapParam.get(BatchConstant.PLATE_DATE)),-1));
@@ -198,7 +198,7 @@ public class RiskTrialDayTimeWriterService extends BaseService{
                 supervisionCalcSvc.deletePointSupervisionValue(dealDto);
                 supervisionCalcSvc.addPointSupervisionValue(dealDto);
             }catch (Exception e){
-                Exception re=new Exception("组合代码："+dealDto.getPortfolioId()+ GlobalConstant.COMMA+"指标代码："+dealDto.getIndId()+";"+e.getMessage(),e);
+                IllegalArgumentException re=new IllegalArgumentException("组合代码："+dealDto.getPortfolioId()+ GlobalConstant.COMMA+"指标代码："+dealDto.getIndId()+GlobalConstant.分号+e.getMessage(),e);
                 throw re;
             }
         }
