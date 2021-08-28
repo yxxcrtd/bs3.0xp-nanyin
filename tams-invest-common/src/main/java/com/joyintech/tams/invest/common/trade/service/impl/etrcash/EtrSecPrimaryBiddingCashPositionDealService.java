@@ -95,7 +95,12 @@ public class EtrSecPrimaryBiddingCashPositionDealService extends EtrCashPosition
 			PtlCashPositionFlowDto PtlCashPositionFlowDto = new PtlCashPositionFlowDto();
 			BeanUtil.copyPropertiesIgnoreNull(PtlCashPositionFlowDto,etrCashPositionFlowDtoFrozen);
 			PtlCashPositionFlowDto.setSeqno(IDGenerator.generate());
-			PtlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+			PtlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+			basePtlCashPositionInfoServiceImpl.insertCashPositionFlow(PtlCashPositionFlowDto);
+			//在缴款日生成一条负金额数据，用于解除冻结
+			PtlCashPositionFlowDto.setSeqno(IDGenerator.generate());
+			PtlCashPositionFlowDto.setCdate(bidPriceDto.getPayDate());
+			PtlCashPositionFlowDto.setAmount(PtlCashPositionFlowDto.getAmount().negate());
 			basePtlCashPositionInfoServiceImpl.insertCashPositionFlow(PtlCashPositionFlowDto);
 		}
 		/**add by sunhui 20210719 重庆银行：中标结果维护，【是否头寸冻结】为是时，冻结组合可用现金   end**/

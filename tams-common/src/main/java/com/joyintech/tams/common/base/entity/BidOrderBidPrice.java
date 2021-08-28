@@ -3,6 +3,7 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class BidOrderBidPrice extends BidOrderBidPriceKey {
     /**
@@ -146,4 +147,15 @@ public class BidOrderBidPrice extends BidOrderBidPriceKey {
         this.isFrozenPosition = isFrozenPosition;
     }
     /**add by sunhui 20210719 重庆银行：中标结果维护，对应明细中，增加【是否头寸冻结】字段   end**/
+
+    //中标结果维护中缴款日
+    private Date payDate;
+
+    public Date getPayDate() {
+        return payDate;
+    }
+
+    public void setPayDate(Date payDate) {
+        this.payDate = payDate;
+    }
 }
