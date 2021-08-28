@@ -98,13 +98,13 @@
 	 -->
 	 <select id="getSecIdOption" 
 	 resultType="com.joyintech.framework.select.SuggestDto">
-	 	SELECT 
+	 	SELECT
 	 		distinct
 	 		BOND.SEC_ID AS code,
 	 		FIN.FINPROD_ABBR AS shortName
 	 	FROM
-	 		FIN_PRODUCT FIN 
-			left join 
+	 		FIN_PRODUCT FIN
+		    inner join
 			MST_BOND_VALUATION_INFO BOND
 	 	ON 
 	 		FIN.FINPROD_MARKET_ID = BOND.SEC_ID 
@@ -113,8 +113,10 @@
 		 <!--FIN.FINPROD_TYPE = #{FINPROD_TYPE_F01}-->
 		 FIN.FINPROD_TYPE = #{FINPROD_TYPE_F01}
 		 <if test="secId !=null and secId !=''">
-			 and BOND.SEC_ID like concat('%',concat(#{secId,jdbcType=VARCHAR},'%'))
-   </if>
+			 and (BOND.SEC_ID like concat('%',concat(#{secId,jdbcType=VARCHAR},'%'))
+			 	or FIN.FINPROD_ABBR like concat('%',concat(#{secId,jdbcType=VARCHAR},'%'))
+			 )
+		 </if>
 
 </select>
 <!--
@@ -160,11 +162,9 @@
 				<!--FIN.FINPROD_TYPE2 = #{FINPROD_TYPE_F01}-->
 				FIN.FINPROD_TYPE = #{FINPROD_TYPE_F01}
 				<if test="finprodAbbr !=null and finprodAbbr !=''">
-					and FIN.FINPROD_ABBR LIKE CONCAT(#{finprodAbbr,jdbcType=VARCHAR},'%')
+					and FIN.FINPROD_ABBR like concat('%',concat(#{finprodAbbr,jdbcType=VARCHAR},'%'))
 				</if>
 </where>
-
-
 
 </select>
 	    <!-- 
@@ -268,32 +268,32 @@
 	        </association> -->
 	    </resultMap>
 
-         <select id="getFinprodAbbrOption" resultMap="finprodIdMap">
-         SELECT
-                 distinct
-               FIN.FINPROD_MARKET_ID AS id,
-               FIN.FINPROD_MARKET_ID AS text,
-               FIN.FINPROD_ABBR AS object
-           FROM
-               FIN_PRODUCT  FIN
-           where
-			 <!-- modify by yanya on 20210207 产品类型接口接入时，不接入finprod_type2,此处过滤条件用估值自身类型-->
-			 <!-- FIN.FINPROD_TYPE2 = #{FINPROD_TYPE_F01}-->
-			 FIN.FINPROD_TYPE = #{FINPROD_TYPE_F01}
-           <if test="search !=null and search !=''">
-                 AND (FINPROD_MARKET_ID like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
-                 OR FINPROD_ABBR like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
-                 OR FINPROD_NAME like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
-                 )
-          </if>
-          <if test="initValue !=null and initValue !=''">
-                 AND (FINPROD_MARKET_ID like concat(concat('%', #{initValue,jdbcType=VARCHAR}),'%')
-                 OR FINPROD_ABBR like concat(concat('%', #{initValue,jdbcType=VARCHAR}),'%')
-                 OR FINPROD_NAME like concat(concat('%', #{initValue,jdbcType=VARCHAR}),'%')
-                 )
-          </if>
+	<select id="getFinprodAbbrOption" resultMap="finprodIdMap">
+		SELECT
+		distinct
+		FIN.FINPROD_MARKET_ID AS id,
+		FIN.FINPROD_MARKET_ID object,
+		FIN.FINPROD_ABBR AS text
+		FROM
+		FIN_PRODUCT  FIN
+		where
+		<!-- modify by yanya on 20210207 产品类型接口接入时，不接入finprod_type2,此处过滤条件用估值自身类型-->
+		<!-- FIN.FINPROD_TYPE2 = #{FINPROD_TYPE_F01}-->
+		FIN.FINPROD_TYPE = #{FINPROD_TYPE_F01}
+		<if test="search !=null and search !=''">
+			AND (FIN.FINPROD_MARKET_ID like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
+			OR FIN.FINPROD_ABBR like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
+			OR FIN.FINPROD_NAME like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
+			)
+		</if>
+		<if test="initValue !=null and initValue !=''">
+			AND (FIN.FINPROD_MARKET_ID like concat(concat('%', #{initValue,jdbcType=VARCHAR}),'%')
+			OR FIN.FINPROD_ABBR like concat(concat('%', #{initValue,jdbcType=VARCHAR}),'%')
+			OR FIN.FINPROD_NAME like concat(concat('%', #{initValue,jdbcType=VARCHAR}),'%')
+			)
+		</if>
 
-         </select>
+	</select>
 
 		<!--  债券估值行情导入   -->
 	 	<insert id="mergeInfoList"  parameterType="com.joyintech.service.basicdata.marketdata.mstbondquotationinfo.dto.ComBondQuotationInfoDto">
