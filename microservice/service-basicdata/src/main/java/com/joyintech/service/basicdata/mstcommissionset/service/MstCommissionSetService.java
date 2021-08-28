@@ -222,5 +222,9 @@ public class MstCommissionSetService extends BaseService<MstCommissionSetDto>{
 	public List<SelectOptionDto> getMstCustomerInfo(Map<String, Object> param) {
 		return mstCommissionSetMapper.getMstCustomerInfo(param);
 	}
-    
+
+	public List<TrdFeeConfigDetail> findTable(Map<String, Object> param) {
+//		Page<TrdFeeConfigDetail> resutList= super.queryForPage(page, length, () -> mstCommissionSetMapper.findTable(param));
+		return mstCommissionSetMapper.findTable(param);
+	}
 }

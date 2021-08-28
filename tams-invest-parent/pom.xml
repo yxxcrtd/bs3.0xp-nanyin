@@ -119,35 +119,20 @@
             <artifactId>tams-invest-interf</artifactId>
             <version>1.0.0</version>
         </dependency>
-           <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-      <version>2.5.0</version>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger-ui</artifactId>
-      <version>2.5.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>18.0</version>
-    </dependency>
+<!--           <dependency>-->
+<!--      <groupId>io.springfox</groupId>-->
+<!--      <artifactId>springfox-swagger2</artifactId>-->
+<!--      <version>2.5.0</version>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>io.springfox</groupId>-->
+<!--      <artifactId>springfox-swagger-ui</artifactId>-->
+<!--      <version>2.5.0</version>-->
+<!--    </dependency>-->
+		<dependency>
+		  <groupId>com.google.guava</groupId>
+		  <artifactId>guava</artifactId>
+		  <version>18.0</version>
+		</dependency>
 	</dependencies>
-	<modules>
-		<module>tams-invest</module>
-		<module>tams-invest-asset</module>
-		<module>tams-invest-basicdata</module>
-		<module>tams-invest-document</module>
-		<module>tams-invest-entrust</module>
-		<module>tams-invest-period</module>
-		<module>tams-invest-portfolio</module>
-		<module>tams-invest-product</module>
-		<module>tams-invest-report</module>
-		<module>tams-invest-risk</module>
-		<module>tams-invest-riskredis</module>
-		<module>tams-invest-settle</module>
-		<module>tams-invest-trade</module>
-	</modules>
 </project>

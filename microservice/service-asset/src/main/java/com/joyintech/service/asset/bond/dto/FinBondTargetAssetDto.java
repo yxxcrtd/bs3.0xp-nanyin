@@ -277,25 +277,6 @@ public class FinBondTargetAssetDto extends FinProduct{
     }
 	
     /**
-     * 上市代码
-     */
-    public String appearMarketId;
-
-    /**
-     * 获取上市代码
-     */
-    public String getAppearMarketId() {
-        return appearMarketId;
-    }
-
-    /**
-     * 设置上市代码
-     */
-    public void setAppearMarketId(String appearMarketId) {
-        this.appearMarketId = appearMarketId;
-    }
-	
-    /**
      * 是否净价交易
      */
     private String isNetprice;

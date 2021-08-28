@@ -84,7 +84,7 @@ public class ProductRdsCommonAop extends AopBaseService<InterfRiskRdsDto> {
         completePeriodCommon(joinPoint,interfRiskRdsDto,(param,entry)-> {
             try {
                 return interfRiskRdsService.sendRiskRdsData(param, entry);
-            } catch (IOException e) {
+            } catch (Exception e) {
                logger.error(e.getMessage(),e);
                throw new IOException();
             }

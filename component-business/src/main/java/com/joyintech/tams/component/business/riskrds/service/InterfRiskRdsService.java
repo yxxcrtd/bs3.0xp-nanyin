@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.component.business.riskrds.service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -129,7 +130,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     @Autowired
     private DateCalService dateCalService;
 
-    public ClientData sendRiskRdsDataCommon(Map<String, Object> dataMap,V v) throws Exception {
+    public ClientData sendRiskRdsDataCommon(Map<String, Object> dataMap,V v)  throws IOException, InstantiationException {
         // add by zhangrui1 增加批量接口调用逻辑 start
         String infCode = v.getInfCode();
         boolean isInnerTrd =checkInnerCounter(dataMap);
@@ -339,7 +340,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    public <T> ClientData sendRiskRdsData(T t,V v) throws Exception {
+    public <T> ClientData sendRiskRdsData(T t,V v)  throws IOException, InstantiationException {
         logger.info("==========后端交易或委托类转换接口:{} start==========",v.getEventType()+v.getInfCode());
         Map<String,Object> dataMap=JsonUtils.object2Map(t);
         ClientData returnCli = this.sendRiskRdsDataCommon(dataMap,v);
@@ -584,7 +585,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    public AjaxResult checkRiskRds(V v,String eventType,String infCode,String assetType,IInfRds<V> iInfRds) throws Exception {
+    public AjaxResult checkRiskRds(V v,String eventType,String infCode,String assetType,IInfRds<V> iInfRds)  throws IOException, InstantiationException {
         ClientData returnCli=execRiskRds(v,eventType,infCode,assetType,iInfRds);
         if (StringUtil.isNotEmpty(returnCli)) {
             if(StringUtil.isNotEmpty(returnCli.getHead())){
@@ -841,7 +842,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @see
      * @since 1.0
      */
-    public List<Map<String, Object>> prepareEtrExchangeRiskListEntity(Map<String, Object> dataMap, V v) throws Exception {
+    public List<Map<String, Object>> prepareEtrExchangeRiskListEntity(Map<String, Object> dataMap, V v){
         List<Map<String, Object>> result = new ArrayList<>();
         String ps = (String) dataMap.get(InterfUtil.ps);
         if (CommonUtil.isType(ps, DictCodeListExt1.交易方向_债转股)) {
@@ -970,7 +971,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         return result;  
     }
 
-    public List<Map<String, Object>> prepareRiskListEntity(Map<String, Object> dataMap, V v) throws Exception {
+    public List<Map<String, Object>> prepareRiskListEntity(Map<String, Object> dataMap, V v)  throws IOException, InstantiationException {
         List<Map<String, Object>> result = new ArrayList<>();
         String ps = (String) dataMap.get(InterfUtil.ps);
         if (CommonUtil.isType(ps, DictCodeListExt1.交易方向_债转股)) {
@@ -1281,7 +1282,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    public InterfRiskRdsDto prepareRiskEntity(Map<String, Object> dataMap,V v) throws Exception {
+    public InterfRiskRdsDto prepareRiskEntity(Map<String, Object> dataMap,V v)  throws IOException, InstantiationException {
         if(StringUtil.isNotEmpty(dataMap.get(InterfUtil.finprodId))&&!StringUtil.isNotEmpty(v.getAssetType())){
             Map<String, IAssetInfo> mapAsset = assetInfoSrc.getMapFromRedis(RedisKeyEnum.资产基本信息.key(), Arrays.asList(dataMap.get(InterfUtil.finprodId).toString()));
             for(IAssetInfo iAst:mapAsset.values()){
@@ -1312,10 +1313,15 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    private InterfRiskRdsDto entrustEntityDev(Map<String, Object> dataMap,V v) throws Exception {
+    private InterfRiskRdsDto entrustEntityDev(Map<String, Object> dataMap,V v) throws IOException, InstantiationException {
         //定义返回实体
         InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
-        EntrustBaseDto finDto=(EntrustBaseDto)JsonUtils.map2entity(dataMap,EntrustBaseDto.class);
+        EntrustBaseDto finDto= null;
+        try {
+            finDto = (EntrustBaseDto)JsonUtils.map2entity(dataMap,EntrustBaseDto.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("数据转换异常");
+        }
         infRiskRdsDto.setEventId(finDto.getEntrustId());
         infRiskRdsDto.setEventDate( DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_DATE_FORMAT_EN));
         //设置母组合代码和子组合代码
@@ -1600,10 +1606,15 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @see
      * @since 1.0
      */
-    private InterfRiskRdsDto entrustExchangeEntityDev(Map<String, Object> dataMap,V v) throws Exception {
+    private InterfRiskRdsDto entrustExchangeEntityDev(Map<String, Object> dataMap,V v) {
         //定义返回实体
         InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
-        EntrustBaseDto finDto=(EntrustBaseDto)JsonUtils.map2entity(dataMap,EntrustBaseDto.class);
+        EntrustBaseDto finDto = null;
+        try {
+            finDto = (EntrustBaseDto)JsonUtils.map2entity(dataMap,EntrustBaseDto.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("数据转换异常");
+        }
         infRiskRdsDto.setEventId(finDto.getEntrustId());
         infRiskRdsDto.setEventDate( DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_DATE_FORMAT_EN));
         //设置母组合代码和子组合代码
@@ -1741,10 +1752,15 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    private InterfRiskRdsDto tradeEntityDev(Map<String, Object> dataMap,V v) throws Exception {
+    private InterfRiskRdsDto tradeEntityDev(Map<String, Object> dataMap,V v)  throws IOException, InstantiationException {
         //定义返回实体
         InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
-        TradeBaseDto finDto=(TradeBaseDto)JsonUtils.map2entity(dataMap,TradeBaseDto.class);
+        TradeBaseDto finDto= null;
+        try {
+            finDto = (TradeBaseDto)JsonUtils.map2entity(dataMap,TradeBaseDto.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("数据转换异常");
+        }
         finDto.setTotleTradeId(removeLasStr(finDto.getTotleTradeId()));
         finDto.setTradeId(removeLasStr(finDto.getTradeId()));
         infRiskRdsDto.setEventId(StringUtil.isNotEmpty(finDto.getTotleTradeId())?finDto.getTotleTradeId():StringUtil.isNotEmpty(finDto.getTradeId())?finDto.getTradeId():finDto.getBusiCode());
@@ -2000,10 +2016,15 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    private InterfRiskRdsDto periodEntityDev(Map<String, Object> dataMap,V v) throws Exception {
+    private InterfRiskRdsDto periodEntityDev(Map<String, Object> dataMap,V v)  throws IOException {
         //定义返回实体
         InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
-        TradeBaseDto finDto=(TradeBaseDto)JsonUtils.map2entity(dataMap,TradeBaseDto.class);
+        TradeBaseDto finDto= null;
+        try {
+            finDto = (TradeBaseDto) JsonUtils.map2entity(dataMap,TradeBaseDto.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("数据转换异常");
+        }
         finDto.setBusiCode(removeLasStr(finDto.getBusiCode()));
         finDto.setTotleTradeId(removeLasStr(finDto.getTotleTradeId()));
         infRiskRdsDto.setEventDate(StringUtil.isNotEmpty(finDto.getmDate())?finDto.getmDate():DateUtil.format(finDto.getMdate(),DateUtil.DEFAULT_DATE_FORMAT_EN));

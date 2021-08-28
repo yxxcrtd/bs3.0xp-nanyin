@@ -14,6 +14,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
@@ -32,7 +33,6 @@ import com.joyintech.tams.common.base.entity.SttStressScene;
 import com.joyintech.tams.common.base.entity.SttStressTest;
 import com.joyintech.tams.common.base.entity.SttTestObj;
 import com.joyintech.tams.constant.DictCodeListRsk;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

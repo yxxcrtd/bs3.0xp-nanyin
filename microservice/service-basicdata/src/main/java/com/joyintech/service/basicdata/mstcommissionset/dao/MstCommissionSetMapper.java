@@ -52,4 +52,6 @@ public interface MstCommissionSetMapper {
     //add by hudongyang
 	List<TrdFeeConfigDetail> getTrdFeeConfigDetailList(Map<String, Object> pageParam);
 	List<SelectOptionDto> getMstCustomerInfo(Map<String, Object> map);
+
+	List<TrdFeeConfigDetail> findTable(Map<String, Object> param);
 }

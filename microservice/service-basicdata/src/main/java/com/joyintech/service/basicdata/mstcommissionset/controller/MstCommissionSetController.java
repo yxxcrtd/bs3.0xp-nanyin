@@ -8,6 +8,7 @@ package com.joyintech.service.basicdata.mstcommissionset.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -133,6 +134,7 @@ public class MstCommissionSetController {
     @PostMapping("findTable")
     public List<TrdFeeConfigDetail> findTable(@RequestBody Map<String, Object> param) {
         return mstCommissionSetService.findTable(param);
+    }
     /**
      * add by hudongyang
      * @param param

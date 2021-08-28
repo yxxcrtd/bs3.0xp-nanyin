@@ -87,9 +87,6 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
             restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSubmit",
                     input, Long.class);
         }
-        catch (Exception e) {
-            logger.error(e.getMessage(),e);
-        }
     }
 
     /**

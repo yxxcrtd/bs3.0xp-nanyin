@@ -78,10 +78,13 @@
 			<groupId>org.eweb4j</groupId>
 			<artifactId>fel</artifactId>
 			<version>0.8</version>
+		</dependency>
+		<dependency>
 			<groupId>com.joyintech.component</groupId>
 			<artifactId>msg-generate-1.0.1</artifactId>
 			<version>1.0.0</version>
-			<scope>compile</scope>		</dependency>
+			<scope>compile</scope>
+		</dependency>
 
 <!--		<dependency>-->
 <!--			<groupId>com.joyintech.component</groupId>-->

@@ -45,6 +45,7 @@
         <module>tams-exchange-parent</module>
 
         <!-- 批处理  -->
+        <module>tams-batch-common</module>
         <module>tams-disclosure-batch</module>
         <module>tams-valuation-batch</module>
         <module>tams-settle-batch</module>

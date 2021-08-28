@@ -160,6 +160,11 @@ public class BaseTradeProductDealDto {
      * 是否走工作流（结算下行过来的数据没有流程中的记录）
      */
     private boolean isNotWorkflow;
+
+    /**
+     * 申购方式(可转债交易字段)
+     */
+    private String purchModle;
     
     // add by etliu 20210128 start
     /**
@@ -516,6 +521,14 @@ public class BaseTradeProductDealDto {
 		this.trdTradeFeeDetail = trdTradeFeeDetail;
 	}
 
+    public String getPurchModle() {
+        return purchModle;
+    }
+
+    public void setPurchModle(String purchModle) {
+        this.purchModle = purchModle;
+    }
+
     public TrdDealTotalAdd getTrdDealTotalAdd() {
         return trdDealTotalAdd;
     }
@@ -579,4 +592,36 @@ public class BaseTradeProductDealDto {
 	public void setNotWorkflow(boolean isNotWorkflow) {
 		this.isNotWorkflow = isNotWorkflow;
 	}
+    /**
+     * 是否现金交割
+     */
+    private String isCashPay;
+    /**
+     * 是否现金交割
+     */
+    public String getIsCashPay() {
+        return isCashPay;
+    }
+    /**
+     * 是否现金交割
+     */
+    public void setIsCashPay(String isCashPay) {
+        this.isCashPay = isCashPay;
+    }
+    /**
+     * 是否借贷交易
+     */
+    private String isSLDeal;
+    /**
+     * 是否借贷交易
+     */
+    public String getIsSLDeal() {
+        return isSLDeal;
+    }
+    /**
+     * 是否借贷交易
+     */
+    public void setIsSLDeal(String isSLDeal) {
+        this.isSLDeal = isSLDeal;
+    }
 }

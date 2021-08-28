@@ -94,4 +94,14 @@ public class InterfUser implements User {
     public String getOrgCode() {
         return null;
     }
+
+    @Override
+    public String getIbuTrader() {
+        return null;
+    }
+
+    @Override
+    public void setIbuTrader(String s) {
+
+    }
 }

@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
+import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.BussTrdPositionDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
@@ -112,6 +113,9 @@ public class TradeProductDealCommService {
      */
     @Autowired
     private WflTrdProductDealOthMapper wflTrdProductDealOthMapper;
+
+    @Autowired
+    private TrdCommonBaseMapper trdCommonBaseMapper;
 
     /**
      *
