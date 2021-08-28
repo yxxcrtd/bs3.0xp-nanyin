@@ -631,7 +631,7 @@ $(function(){
 //                    	exportAndDoManual(param);
 //                    }
 //                });
-        		Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0020"), function() {
+//        		Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0020"), function() {
                 	var param = getPageParams();
                     param.status='01,02';
                     param.flag = "0";
@@ -649,7 +649,7 @@ $(function(){
                         	});    
                         }
                     });
-                });
+//                });
         }else{
         	//有勾选数据
         	//先判断勾选的数据有没有包含有删除状态的数据

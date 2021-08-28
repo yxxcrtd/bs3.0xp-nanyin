@@ -586,7 +586,7 @@ $(function() {
 //                       	exportAndDoManual(param);
 //                       }
 //                   });
-           		Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0020"), function() {
+//           		Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0020"), function() {
                    	var param = getSearchParams();
                        param.status='01,02';
                        param.flag = "0";
@@ -604,7 +604,7 @@ $(function() {
                         	   });
                            }
                        });
-                   });
+//                   });
            }else{
            	//有勾选数据
            	//先判断勾选的数据有没有包含有删除状态的数据
@@ -624,7 +624,7 @@ $(function() {
              		}
              	}
              	 for(var i=0;i<expArr.length;i++){
-             		 if(expArr[i].status =="02"||expArr[i].submitStatus!="01"){
+             		 if(expArr[i].statusCode =="02"||expArr[i].sendStatusCode != "01"){
                         //若勾选数据中含有数据状态为“修改”或报送状态不为“未报送”的数据时
                    	 //赋值showTip为true，给出提示框
                    	 showTip=true;
