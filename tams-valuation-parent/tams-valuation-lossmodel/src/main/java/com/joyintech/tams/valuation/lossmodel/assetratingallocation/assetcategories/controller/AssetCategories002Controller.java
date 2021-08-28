@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcatego
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -22,6 +23,7 @@ import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
 import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcategories.dto.AssetCategories002Dto;
+import com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcategories.service.AssetCategories001Service;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcategories.service.AssetCategories002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -58,6 +60,13 @@ public class AssetCategories002Controller extends BaseController {
      */
     @Autowired
     private AssetCategories002Service valAssetBook002Service;
+
+    /**
+     * ValAssetBook002Service
+     */
+    @Autowired
+    private AssetCategories001Service assetCategories001Service;
+
 
     /**
      * 流程组件
@@ -179,5 +188,26 @@ public class AssetCategories002Controller extends BaseController {
             return ajaxResult;
         }
         return commonCheck(result, dto.getOperateType());
+    }
+
+    /**
+     * 联动：资产代码找到证券品种 - 获得评级类型
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("getGradeType")
+    public List<SelectOptionDto> getGradeType() throws Exception {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        String secType  = (String)param.get("assetType");
+        List<SelectOptionDto> selectOptionList = new ArrayList<>();
+        if(StringUtil.isNotEmpty(secType)){
+            param.put("dict_code_parent", DictCode.证券品种.getValue());
+            param.put("dict_code_child", DictCode.评级类型_减值.getValue());
+            param.put("item_code_parent", secType);
+            selectOptionList =assetCategories001Service.getLinkSelectOption(param);
+        }
+        return selectOptionList;
     }
 }
