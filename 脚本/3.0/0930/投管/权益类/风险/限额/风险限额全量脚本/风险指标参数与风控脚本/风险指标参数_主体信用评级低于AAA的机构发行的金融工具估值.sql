@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='ZTPJDYAAAJGJRGJGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZTPJDYAAAJGJRGJGZ','主体信用评级低于AAA的机构发行的金融工具估值','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZTPJDYAAAJGJRGJGZ','主体信用评级低于AAA的机构发行的金融工具估值','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='ZTPJDYAAAJGJRGJGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJDYAAAJGJRGJGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJDYAAAJGJRGJGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJDYAAAJGJRGJGZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJDYAAAJGJRGJGZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJDYAAAJGJRGJGZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJDYAAAJGJRGJGZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJDYAAAJGJRGJGZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJDYAAAJGJRGJGZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJDYAAAJGJRGJGZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZTPJDYAAAJGJRGJGZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -194,7 +194,7 @@ V_CONTENT_04 CLOB := 'WITH finTemp AS (select FINPROD_ID ,case  FINPROD_TYPE2 WH
                 ELSE null end as ISSUER from  FIN_PRODUCT)
 SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
     SELECT
-        SUM(NVL(VAL.MARKET_VALUE ,0)) TRADE_AMT
+        SUM(NVL(VAL.MARKET_VALUE ,0)+NVL(VAL.TDY_INTINCEXP,0)) TRADE_AMT
     FROM PTL_SEC_PIERCE_VALUTION VAL
     INNER JOIN finTemp PRD ON VAL.FINPROD_ID = PRD.FINPROD_ID
     INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID
@@ -203,7 +203,7 @@ SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
   UNION ALL
     --1.交易表
     SELECT
-     CASE  WHEN n.PS IN(''T01'',''T04'',''T52'',''T25'',''T64'') THEN NVL(n.TRADE_AMT,0)
+     CASE  WHEN n.PS IN(''T01'',''04'',''T04'',''T52'',''T25'',''T64'') THEN NVL(n.TRADE_AMT,0)
   WHEN n.PS =''T49'' THEN NVL(-1*n.SHARE_AMT*100,0)
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END TRADE_AMT
@@ -213,7 +213,7 @@ SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
     INNER JOIN FIN_PRODUCT_TYPE t3 ON n.FINPROD_ID = t3.FINPROD_ID AND t3.BRANCH = 0
     left JOIN MST_BOND_CREDIT_RATING RT ON RT.O_CODE = t2.ISSUER AND RT.O_TYPE = ''01''
     WHERE m.PORTFOLIO_ID IN  ${portfolioCode} AND n.TRADE_DATE = DATE''${valDate}''AND (RT.GRADE_RESULT NOT IN (''01'',''02'') OR RT.GRADE_RESULT IS null)
-    AND  n.PS IN (''T01'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'',''T49'',''T64'',''T63'')
+    AND  n.PS IN (''T01'',''04'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'',''T49'',''T64'',''T63'')
     AND n.TRADE_STATUS = ''01''
     AND n.IS_CANCEL = ''N''
   UNION ALL
@@ -278,7 +278,7 @@ SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
    AND T.FINPROD_TYPE2 = ''F01''
    AND T.TRADE_STATUS = ''01''
    AND T.IS_CANCEL = ''N''
-   AND T.TRADE_DATE = date''2021-05-14''
+   AND T.TRADE_DATE = date''${valDate}''
    AND NOT EXISTS (
       -- 没有后续申购确认交易
       SELECT 1 FROM TRD_PRODUCT_DEAL TRD WHERE T3.TOTLE_TRADE_ID = TRD.B_TRADE_ID AND TRD.TRADE_STATUS = ''01'' AND TRD.IS_CANCEL = ''N''
@@ -301,7 +301,7 @@ SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
    AND T.FINPROD_TYPE2 = ''F01''
    AND T.TRADE_STATUS = ''01''
    AND T.IS_CANCEL = ''N''
-   AND T.TRADE_DATE = date''2021-05-14''
+   AND T.TRADE_DATE = date''${valDate}''
 union all
  --7.可转债网下申购：有申购确认交易
 SELECT NVL(T.prin_amt, 0) TRADE_AMT
@@ -326,7 +326,7 @@ INNER JOIN finTemp T4 ON T4.FINPROD_ID = T.FINPROD_ID
    AND T.PS = ''T05''
    AND T.TRADE_STATUS = ''01''
    AND T.IS_CANCEL = ''N''
-   AND T.TRADE_DATE = date''2021-05-14''
+   AND T.TRADE_DATE = date''${valDate}''
    AND T.FINPROD_TYPE2 = ''F01''
   union all 
 --9.债转股（股票）
@@ -340,7 +340,7 @@ SELECT nvl(T.SHARE_AMT*100*-1,0) TRADE_AMT
    AND T.FINPROD_TYPE2 = ''F01''
    AND T.TRADE_STATUS = ''01''
    AND T.IS_CANCEL = ''N''
-   AND T.TRADE_DATE = date''2021-05-14''
+   AND T.TRADE_DATE = date''${valDate}''
    union all
   SELECT nvl(T.prin_amt,0) TRADE_AMT
   FROM TRD_FIN_PRODUCT_BARTER T 
@@ -353,8 +353,8 @@ SELECT nvl(T.SHARE_AMT*100*-1,0) TRADE_AMT
    AND T.FINPROD_TYPE = ''F10''
    AND T3.TRADE_STATUS = ''01''
    AND T3.IS_CANCEL = ''N''
-   AND T3.TRADE_DATE = date''2021-05-14''
-  
+   AND T3.TRADE_DATE = date''${valDate}''
+
 )';
 
 ----事后(日终)

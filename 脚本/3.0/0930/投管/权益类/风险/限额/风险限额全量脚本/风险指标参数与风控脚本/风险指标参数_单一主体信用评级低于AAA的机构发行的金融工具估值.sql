@@ -2,24 +2,25 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='DYZTPJDYAAAJGJRGJGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DYZTPJDYAAAJGJRGJGZ','单一主体信用评级低于AAA的机构发行的金融工具估值','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DYZTPJDYAAAJGJRGJGZ','单一主体信用评级低于AAA的机构发行的金融工具估值','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='DYZTPJDYAAAJGJRGJGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZTPJDYAAAJGJRGJGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZTPJDYAAAJGJRGJGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZTPJDYAAAJGJRGJGZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZTPJDYAAAJGJRGJGZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZTPJDYAAAJGJRGJGZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZTPJDYAAAJGJRGJGZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZTPJDYAAAJGJRGJGZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZTPJDYAAAJGJRGJGZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZTPJDYAAAJGJRGJGZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYZTPJDYAAAJGJRGJGZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,issuerCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
 V_CONTENT_01_02_03 CLOB := 'WITH finTemp AS (select FINPROD_ID ,case  FINPROD_TYPE2 WHEN  ''F01'' THEN ISSUER
                 WHEN ''F06'' THEN manager
-                WHEN ''F07'' THEN ISSUER 
+                WHEN ''F07'' THEN ISSUER
+				WHEN ''F10'' THEN ISSUER				
                 WHEN ''F18'' THEN financier
                 WHEN ''F17'' THEN manager
                 WHEN ''F32'' THEN ISSUER
@@ -68,6 +69,7 @@ group by T1.PORTFOLIO_ID,T2.ISSUER)group by RKEY';
 V_CONTENT_04 CLOB := 'WITH finTemp AS (select FINPROD_ID ,case  FINPROD_TYPE2 WHEN  ''F01'' THEN ISSUER
                 WHEN ''F06'' THEN manager
                 WHEN ''F07'' THEN ISSUER 
+                WHEN ''F10'' THEN ISSUER
                 WHEN ''F18'' THEN financier
                 WHEN ''F17'' THEN manager
                 WHEN ''F32'' THEN ISSUER
@@ -191,6 +193,7 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,T2.ISSUER RKEY,CST.CUSTOMER_NAM
     SELECT
         nvl(sum(decode(n.PS, ''T01'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
       + nvl(sum(decode(n.PS, ''T04'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
+      + nvl(sum(decode(n.PS, ''04'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
       + nvl(sum(decode(n.PS, ''T52'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
       - nvl(sum(decode(n.PS, ''T02'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
       - nvl(sum(decode(n.PS, ''T03'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
@@ -211,7 +214,7 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,T2.ISSUER RKEY,CST.CUSTOMER_NAM
     left JOIN MST_BOND_CREDIT_RATING RT ON RT.O_CODE = t2.ISSUER AND RT.O_TYPE = ''01''
     LEFT JOIN MST_CUSTOMER_INFO CST ON t2.ISSUER = CST.CUSTOMER_ID
     WHERE m.PORTFOLIO_ID IN ${portfolioCode} AND n.TRADE_DATE = DATE''${valDate}'' AND (RT.GRADE_RESULT NOT IN (''01'',''02'') OR RT.GRADE_RESULT IS null)
-    AND n.PS IN (''T01'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T08'', ''T09'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T54'')
+    AND n.PS IN (''T01'',''04'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T08'', ''T09'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T54'')
     GROUP BY t2.ISSUER,CST.CUSTOMER_NAME
   UNION ALL
     SELECT
@@ -250,6 +253,7 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,T2.ISSUER RKEY,CST.CUSTOMER_NAM
 V_CONTENT_05 CLOB := 'WITH finTemp AS (select FINPROD_ID ,case  FINPROD_TYPE2 WHEN  ''F01'' THEN ISSUER
                 WHEN ''F06'' THEN manager
                 WHEN ''F07'' THEN ISSUER
+				WHEN ''F10'' THEN ISSUER
                 WHEN ''F18'' THEN financier
                 WHEN ''F17'' THEN manager
                 WHEN ''F32'' THEN ISSUER
