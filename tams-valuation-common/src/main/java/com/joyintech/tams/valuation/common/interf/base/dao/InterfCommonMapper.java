@@ -352,4 +352,11 @@ public interface InterfCommonMapper {
      * @return
      */
     int deleteBokDealAccountingDetailBatch(@Param("list") List<String> list);
+
+    /**
+     * 查询证券品种
+     * @param finProductClass
+     * @return
+     */
+    public String getFinanceProductSecType(FinProductClass finProductClass);
 }

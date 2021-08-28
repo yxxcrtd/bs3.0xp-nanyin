@@ -669,4 +669,7 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
 		this.settleSpeed = settleSpeed;
 	}
 
+    public String getTargetTypeStr() {
+        return  SysDataUtil.getNameFromDataDict(DictCode.目标类型, this.getTargetType());
+    }
 }

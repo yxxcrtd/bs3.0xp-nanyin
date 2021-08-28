@@ -436,6 +436,11 @@ public class FinProductAdd extends BaseEntity {
     private String appearMarketId;
 
     /**
+     * null
+     */
+    private String windCode;
+
+    /**
      * 取得 金融产品代码
      * @return 金融产品代码
      */
@@ -1783,5 +1788,21 @@ public class FinProductAdd extends BaseEntity {
      */
     public void setAppearMarketId(String appearMarketId) {
         this.appearMarketId = appearMarketId == null ? null : appearMarketId.trim();
+    }
+
+    /**
+     * 取得 null
+     * @return null
+     */
+    public String getWindCode() {
+        return windCode;
+    }
+
+    /**
+     * 设置 null
+     * @param windCode null
+     */
+    public void setWindCode(String windCode) {
+        this.windCode = windCode == null ? null : windCode.trim();
     }
 }

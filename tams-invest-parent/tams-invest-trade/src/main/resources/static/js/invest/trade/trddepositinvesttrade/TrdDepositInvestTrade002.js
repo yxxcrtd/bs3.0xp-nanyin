@@ -561,8 +561,10 @@
     };
     var psChange = function(){
         var ps = $('#ps').val();
+        debugger;
         if(ps !== buy){
-            $('#Buy').css('display','none');
+            $('#Buy1').css('display','none');
+            $('#Buy2').css('display','none');
             // <!-- 通道交易 新增 强成西 2019/03/26 start -->
             $('.channel_cash').css('display','none');
             // <!-- 通道交易 新增 强成西 2019/03/26 end -->
@@ -580,7 +582,8 @@
                 $("#intAmt").attr('disabled',true).trigger("change");
             }
         }else{
-            $('#Buy').css('display','');
+            $('#Buy1').css('display','');
+            $('#Buy2').css('display','');
             // <!-- 通道交易 新增 强成西 2019/03/26 start -->
             $('.channel_cash').css('display','');
             // <!-- 通道交易 新增 强成西 2019/03/26 end -->

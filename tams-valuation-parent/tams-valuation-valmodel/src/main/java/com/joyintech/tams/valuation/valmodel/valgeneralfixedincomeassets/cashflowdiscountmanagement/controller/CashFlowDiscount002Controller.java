@@ -89,6 +89,7 @@ public class CashFlowDiscount002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.评级结果);
         model.addAttribute("YES",DictCodeList.是否_是.getValue());
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
+        model.addAttribute("SMOOTHSECTION_02", DictCodeListExt3.平滑区间_3个月.getValue());
         this.setSelectOptionToModel(model, DictCode.证券品种);
         if(!StringUtil.isNotEmpty(dto.getIsSmooth())){
             /** modify by yanya on 20210821 调整是否平滑区间默认值为否**/

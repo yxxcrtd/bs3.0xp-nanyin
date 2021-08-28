@@ -344,5 +344,11 @@ public class TempConstant {
      */
     public static final String 债券行权交易="ValSecExecDeal";
 
+    /**
+     * 股票基础信息
+     * add by yanya on 20210827
+     */
+    public static final String 股票基础信息="ValStockBaseInfo";
+
 }
 

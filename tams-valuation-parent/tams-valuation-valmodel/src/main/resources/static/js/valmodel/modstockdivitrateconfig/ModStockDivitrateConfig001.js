@@ -12,7 +12,7 @@
     };
     //新建
     function showDialog() {
-        Joyin.dialog('预期股息增长率配置新建', basePath +'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/init', '50%', '75%');
+        Joyin.dialog('永续固收模型配置新建', basePath +'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/init', '50%', '75%');
     }
     
     /**
@@ -28,16 +28,16 @@
         },
         dblclick:function(table, data) {
             Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                    JoyinUtil.getRealPath("valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/init"),
-                    "75%", "75%",{pageModel: PAGE_MODEL_REFERENCE,seqno: data.seqno},function(){table.reload();});
+                JoyinUtil.getRealPath("valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/init"),
+                "50%", "75%",{pageModel: PAGE_MODEL_REFERENCE,seqno: data.seqno},function(){table.reload();});
         },
-        
+
         cols:[
              
             {field: 'seqno', visible: false}
-            ,{field:'finprodId', title: 'ModStockDivitrateConfig001.finprodId',sortable:false},
-            {field:'finProdName', title: 'ModStockDivitrateConfig001.finProdName',sortable:false}
-            ,{field:'secDetailTypeModelStr', title: 'ModStockDivitrateConfig001.secTypeModel',sortable:false}
+            ,{field:'finprodId',  width:200, title: 'ModStockDivitrateConfig001.finprodId',sortable:false},
+            {field:'finProdName',  title: 'ModStockDivitrateConfig001.finProdName',sortable:false}
+            ,{field:'secDetailTypeModelStr',  width:200,title: 'ModStockDivitrateConfig001.secTypeModel',sortable:false}
             ,{field:'secTypeModelStr', title: 'ModStockDivitrateConfig001.secDetailTypeModel',sortable:false,visible: false}
             ,{field:'stockIntarte', width:200, title: 'ModStockDivitrateConfig001.stockIntarte', type:'number',digit:4, sortable:false}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:150}
@@ -55,7 +55,7 @@
         data.pageModel=PAGE_MODEL_EDIT;
         data.operateType='edit'
         Joyin.ajaxJson(basePath + 'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/check', data, function(result) {
-            Joyin.dialog('预期股息增长率配置编辑',
+            Joyin.dialog('永续固收模型配置编辑',
                     basePath + "valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/init",
                     "50%", "75%",data,
                     function(){table.reload();});

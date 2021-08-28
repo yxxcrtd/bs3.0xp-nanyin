@@ -169,6 +169,7 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,t.FINPROD_ID as ASSETCODE, t2.F
      select
       nvl(sum(decode(n.PS,''T01'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       +nvl(sum(decode(n.PS,''T04'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      +nvl(sum(decode(n.PS,''04'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       +nvl(sum(decode(n.PS,''T52'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       -nvl(sum(decode(n.PS,''T02'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       -nvl(sum(decode(n.PS,''T03'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
@@ -187,7 +188,7 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,t.FINPROD_ID as ASSETCODE, t2.F
        LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD n1 ON n.TRADE_ID =n1.TRADE_ID
       where n1.PORTFOLIO_ID in ${portfolioCode} and  n.TRADE_DATE = date''${valDate}''
       and ((t3.FINPROD_TYPE2 is null and t2.FINPROD_TYPE is not null) or (t3.FINPROD_TYPE2 not in (''F02'',''F04'',''F08'',''F11'',''F12'',''F13'',''F14'',''F15'',''F25'',''F29'',''F30'') AND t3.BRANCH=0))
-      and n.PS in (''T01'',''T02'',''T03'',''T04'',''T19'',''T07'',''T08'',''T09'',''T11'',''T52'',''T38'',''T22'',''T23'',''T39'') group by n.FINPROD_ID, t2.FINPROD_NAME
+      and n.PS in (''T01'',''04'',''T02'',''T03'',''T04'',''T19'',''T07'',''T08'',''T09'',''T11'',''T52'',''T38'',''T22'',''T23'',''T39'') group by n.FINPROD_ID, t2.FINPROD_NAME
     union ALL
        select
      nvl(sum(decode(n.PS,''T01'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
@@ -331,13 +332,17 @@ INSERT INTO RSK_EVENT_PARA_REL VALUES('DYZCGM','EVENT_ID_DYZCGM_06','03','-','am
 
 ----单一资产规模-买入实占
 DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_DYZCGM_07';
-INSERT INTO RSK_EVENT VALUES ('EVENT_ID_DYZCGM_07','单一资产规模-买入实占','Y','','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_DYZCGM_07','单一资产规模-买入实占','Y','','system','',sysdate,'cdj',sysdate);
          
  
 DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_DYZCGM_07';
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_07','assetType','bf256fa87a094948bb4fefef0c17c1d0','','F07,F08,F10','NO','','','','system','',SYSDATE,'system',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_07','eventType','bf256fa87a094948bb4fefef0c17c1d0','','1,2','IN','','','','system','',SYSDATE,'system',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_07','ps','bf256fa87a094948bb4fefef0c17c1d0','','T01,T04,T12,T20,T46,T47,T48,T52','IN','','','','system','',SYSDATE,'system',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_07','assetType','3b2e5608735344bbab65527e39ffe2cb','','F07,F08,F10','NO','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_07','ps','3b2e5608735344bbab65527e39ffe2cb','','T01,T04,T12,T20,T46,T47,T48,T52','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_07','eventType','3b2e5608735344bbab65527e39ffe2cb','','1,2','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_07','assetType','87cd6aa1a3ec4fd4a95ef1bb7e87eb8b','','F07,F08,F10','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_07','assetType2','87cd6aa1a3ec4fd4a95ef1bb7e87eb8b','','02,04','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_07','eventType','87cd6aa1a3ec4fd4a95ef1bb7e87eb8b','','1,2','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_07','ps','87cd6aa1a3ec4fd4a95ef1bb7e87eb8b','','T01','=','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
 
 DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_DYZCGM_07';
 INSERT INTO RSK_EVENT_PARA_REL VALUES('DYZCGM','EVENT_ID_DYZCGM_07','01','+','amount','','system','',SYSDATE,'system',SYSDATE,'','');

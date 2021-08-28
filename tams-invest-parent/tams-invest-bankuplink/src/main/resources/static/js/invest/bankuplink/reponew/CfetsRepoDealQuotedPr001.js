@@ -939,7 +939,40 @@
             }
 
         });
-
+        /**
+         * 当日报价失败信息
+         */
+        wtdhbjTable.bind('click','.CfetsRepoDealQuotedPrice001_dayOffer_fail', function(row) {
+            // 判断选择记录的状态
+            Joyin.ajax(basePath + 'invest/bankuplink/common/CfetsQuotedCommon/selectErrlog', {quoteId : row.quoteId}, function(result) {
+                if (result.data){
+                    Joyin.alert(result.data,2);
+                }
+            });
+        });
+        /**
+         * 当日报价回退
+         */
+        wtdhbjTable.bind('click','.CfetsRepoDealQuotedPrice001_dayOff_restore', function(row) {
+            var object = row;
+            object.operation = "CfetsRepoDealQuotedPrice001.dayOff.restore";
+            object.quotaPageModel = 'restoredayOff';
+            //多组合标识或者本方询价方为回复方 均跳转多组合界面
+            if(object.isDzh=='Y'||object.quoteRoleType == quoteRoleTypeReply){
+                var entrustIds = getEtrReByQuoteId(object);
+                object.entrustId = entrustIds;
+            }
+            Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/checkEdit', object, function(result) {
+                if (result.data){
+                    Joyin.confirm(JoyinUtil.getMessage("CFETS_COMMON_R_002"), function() {
+                        Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/restoreDayOff', object, function(result){
+                            // 刷新当日报价
+                            wtdhbjTable.table ? wtdhbjTable.reload() : wtdhbjTable.load();
+                        })
+                    })
+                }
+            });
+        });
         /**
          * 当日报价回复
          */
