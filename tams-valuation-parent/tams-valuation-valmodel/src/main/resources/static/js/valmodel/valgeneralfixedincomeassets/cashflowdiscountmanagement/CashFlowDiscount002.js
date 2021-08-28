@@ -87,9 +87,13 @@ $(function () {
     var isCityBondChange = function(){
             var isCityBondChange = $('#isSmooth')[0].checked;
             if (isCityBondChange) {
-                $("#smoothSectionDiv").show();
+                //$("#smoothSectionDiv").show();
+                $("#smoothSection").val(SMOOTHSECTION_02).trigger("change");
+                $("#smoothSection").attr("disabled", false);
             }else {
-                $("#smoothSectionDiv").hide();
+                //$("#smoothSectionDiv").hide();
+                $("#smoothSection").val('').trigger("change");
+                $("#smoothSection").attr("disabled", true);
             }
         };
 

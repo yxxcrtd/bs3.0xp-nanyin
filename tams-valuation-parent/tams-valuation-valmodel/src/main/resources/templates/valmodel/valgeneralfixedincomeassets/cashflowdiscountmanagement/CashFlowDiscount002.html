@@ -103,7 +103,7 @@
                         <select name="bottomGrade" id="bottomGrade"
                                 class="layui-input form-input input-select"
                                 placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${MAIN_GRADE_RESULT}"
                                 data-th-initValue="*{entity?.bottomGrade}">
                         </select>
@@ -123,7 +123,7 @@
                         <select name="smoothSection" id="smoothSection"
                                 class="layui-input form-input input-select"
                                 placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${SMOOTHSECTION}"
                                 data-th-initValue="*{entity?.smoothSection}">
                         </select>
@@ -155,8 +155,9 @@
 </div>
 <div layout:fragment="script">
     <script data-th-inline="javascript" type="text/javascript">
-		var MODEL_MAIN_GRADE_TYPE = /*[[${MODEL_MAIN_GRADE_TYPE}]]*/;
-		var MODEL_SEC_DETAIL_TYPE = /*[[${MODEL_SEC_DETAIL_TYPE}]]*/;
+		var MODEL_MAIN_GRADE_TYPE = /*[[${MODEL_MAIN_GRADE_TYPE}]]*/'';
+		var MODEL_SEC_DETAIL_TYPE = /*[[${MODEL_SEC_DETAIL_TYPE}]]*/'';
+        var SMOOTHSECTION_02 = /*[[${SMOOTHSECTION_02}]]*/'';
 	</script>
     <script data-th-src="@{/js/valuation/common.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/valmodel/common/util.js}" type="text/javascript"></script>
