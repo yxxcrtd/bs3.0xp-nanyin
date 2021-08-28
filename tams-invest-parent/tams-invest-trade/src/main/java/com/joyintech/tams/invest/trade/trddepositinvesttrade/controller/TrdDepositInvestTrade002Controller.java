@@ -507,12 +507,20 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
           //  paramMap.put("calendarId", dto.getCalendarId());
             paramMap.put("chlId", dto.getChlId());
             paramMap.put("finprodId", dto.getFinprodId());
+            //考虑流程中被占用,是的情况
+            paramMap.put("isContainWfl",DictCodeListExt1.是或否_是.getValue());
             //获得资产维度的持仓
             Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
 
             BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
             //融资金额
             BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
+            //流程中占用金额
+            BigDecimal positionFlow =null;
+            if(StringUtil.isNotEmpty(resultMap.get("POSITIONFLOW"))){
+                positionFlow=new BigDecimal((String) resultMap.get("POSITIONFLOW"));
+            }
+            position= ArithmeticUtil.doAdd(position,positionFlow);
             position = ArithmeticUtil.doAdd(position, dto.getPrinAmt());
             //资产 融资金额、发行金额
             if (issueAmt.compareTo(position) < 0) {
