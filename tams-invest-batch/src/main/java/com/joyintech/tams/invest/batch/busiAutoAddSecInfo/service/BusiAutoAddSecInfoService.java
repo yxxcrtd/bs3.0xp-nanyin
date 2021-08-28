@@ -24,7 +24,6 @@ import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddTradePr
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
 import com.joyintech.tams.invest.common.constant.ValDictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
