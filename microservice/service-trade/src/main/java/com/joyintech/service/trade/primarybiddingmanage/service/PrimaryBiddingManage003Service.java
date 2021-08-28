@@ -141,13 +141,13 @@ public class PrimaryBiddingManage003Service extends BaseService<BidOrderBidPrice
             }
             //add by xqh 调用债券一级投标中标结果维护（实时头寸）共通
             //dto转换
-            BaseTradeProductDealDto finProductTradeDto=new BaseTradeProductDealDto();
-            if(entity.getBidOrderBidPriceList()!=null && entity.getBidOrderBidPriceList().size()>0){
-                entity.getBidOrderBidPriceList().forEach(item->{
-                    //投标券面总额
-                    baseEtrCashPositionCommService.executeBidResultsMaintenanceExecute(item);
-                });
-            }
+//            BaseTradeProductDealDto finProductTradeDto=new BaseTradeProductDealDto();
+//            if(entity.getBidOrderBidPriceList()!=null && entity.getBidOrderBidPriceList().size()>0){
+//                entity.getBidOrderBidPriceList().forEach(item->{
+//                    //投标券面总额
+//                    baseEtrCashPositionCommService.executeBidResultsMaintenanceExecute(item);
+//                });
+//            }
 //            finProductTradeDto.getTrdProductDeal().setTradeDate(entity.getBidDate());
 //            finProductTradeDto.getTrdProductDeal().setCounterId(entity.getCounterId());
 //          object.bidId=entity.bidId;  投标编号

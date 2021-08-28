@@ -381,7 +381,7 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
         etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
         // 债券一级投标中标结果维护
         EtrSecPrimaryBiddingCashPositionDealService.中标结果维护(bidPriceDto, etrPositionHoldDto);
-        EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+//        EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);//中标结果维护指令可用持仓不变
         return new CommonResult(CommonResult.SUCCED, "处理完成");
     }
 
