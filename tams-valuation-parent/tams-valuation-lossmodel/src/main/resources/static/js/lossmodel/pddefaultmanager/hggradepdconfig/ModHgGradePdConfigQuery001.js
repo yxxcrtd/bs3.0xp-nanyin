@@ -1,14 +1,4 @@
 $(function () {
-    
-    var flag1 = false;
-    var flag2 = false;
-    if(hzSchemeSwitch == "01"){
-        flag1 = true;
-        flag2 = false;
-    }else{
-        flag1 = false;
-        flag2 = true;
-    }
 
     // 绑定按钮事件
     $("#vouchYear").click(function(event){
@@ -81,9 +71,6 @@ $(function () {
      * 画面加载完成
      */
     $(function() {
-        if(isInit){
-            table.load();
-        }
         // 绑定查询按钮事件
         $('#ModHgGradePdConfig001_btn_search').click(function() {
             table.load();

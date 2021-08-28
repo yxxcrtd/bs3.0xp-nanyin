@@ -38,7 +38,6 @@ $(function(){
 	})
 	  table.bind('click','.edit', function(row,index) {
             row.pageModel = PAGE_MODEL_EDIT;
-//            data.operateType = "edit";
                Joyin.dialog("LGD违约损失率修改",
                       "/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002/init",
                       "90%", "100%", row,function(){
@@ -49,37 +48,6 @@ $(function(){
 	$('#LossGivenDefaultMaintain001_btn_search').click(function(){
 		table.load();
 	})
-//	/**
-//     * 新建
-//     */
-//	$('#Specialassets_btn_add').click(function() {
-//        	openNew();
-//        });
-//    var openNew = function(){
-//        Joyin.dialog(JoyinUtil.getLabel("Specialassets002"),
-//        		JoyinUtil.getRealPath("/model/impairment/assetratingallocation/specialassets/Specialassets002/init"),
-//                "98%", "95%",{pageModel : PAGE_MODEL_NEW},function(){table.reload();}
-//                );
-//    };
-//    $('#Specialassets_btn_del').click(function() {
-//    	delRows();
-//    });
-//    var delRows = function () {
-//    	 if(table!=null && table!=''){
-//             var selArr = table.getAllCheckedRows();
-//         }
-//         if (!selArr || selArr.length == 0) {
-//             Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
-//             return;
-//         }
-//         var object = {selectedItem: selArr, operateType:"delete"};
-//             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-//                 WorkFlow.doDeleteList('/model/impairment/assetratingallocation/specialassets/Specialassets001/delete', object, "Specialassets001_btn_delete", "Specialassets002", function(){
-//                     table.reload();//删除事件请求及回调函数
-//                 });
-//             });
-//        
-//    };
 	// 导出按钮
 	$('#LossGivenDefaultMaintain_btn_chbexport').click(function(){
 		 var paramObj = getSearchParams();//请求参数json格式
