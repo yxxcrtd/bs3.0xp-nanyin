@@ -167,7 +167,7 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
             if (StringUtil.isNotBlank(rowData.get(13).toString())) {
                 etrInvestBondInfoDto.setInvAim(rowData.get(13).toString().split(":")[0]);
             }
-            // 到期收益率（%）
+            // 交易平台
             if (StringUtil.isNotBlank(rowData.get(14).toString())) {
                 etrInvestBondInfoDto.setTradeMarket(rowData.get(14).toString().split(":")[0]);
             }
