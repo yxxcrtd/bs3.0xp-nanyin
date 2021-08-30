@@ -524,7 +524,7 @@ public class ValBussRepAssetMngProdInfo extends BaseEntity {
      *
      * @return repIsCtrlBottom
      */
-    @NotEmpty(fieldName = "BussRepAssetMngProdInfo.repIsCtrlBottom",groups={ValidateGroupEdit.class})
+    /*@NotEmpty(fieldName = "BussRepAssetMngProdInfo.repIsCtrlBottom",groups={ValidateGroupEdit.class})*/
     public String getRepIsCtrlBottom() {
         if (needValid) {
             return repIsCtrlBottom;
