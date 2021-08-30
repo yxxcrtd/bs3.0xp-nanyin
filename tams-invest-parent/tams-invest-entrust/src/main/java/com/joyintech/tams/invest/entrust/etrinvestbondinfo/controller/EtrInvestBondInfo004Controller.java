@@ -220,6 +220,12 @@ public class EtrInvestBondInfo004Controller extends BaseController {
             if(dto.getEntrustIntegrateNum() != null) {
             	dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().multiply(new BigDecimal(10000)));
             }
+            if(StringUtil.equals(dto.getSettleSpreed(),DictCodeList.清算速度_T_0.getValue())){
+                dto.setSettleSpreed("0");
+            }
+            if(StringUtil.equals(dto.getSettleSpreed(),DictCodeList.清算速度_T_1.getValue())){
+                dto.setSettleSpreed("1");
+            }
         }
         EntrustRdsCommonAop.riskListToChildren(dto2.getRiskTrialRetDto(), dtoList,
                 (dto, list) -> dto.setRiskTrialRetDto(list));
