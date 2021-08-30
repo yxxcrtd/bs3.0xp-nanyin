@@ -3799,17 +3799,4 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 BigDecimal.class);
     }
 
-    /**
-     * 根据交易编号查询转仓方交易编号
-     *
-     * @param tradeId 被转仓方交易编号
-     * @return 转仓方交易编号
-     * @see
-     * @since 1.0
-     */
-    public String getTotalByReverseTradeId(String tradeId) {
-        return restTemplate.postForObject(
-                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getTotalByReverseTradeId/" + tradeId, null,
-                String.class);
-    }
 }
