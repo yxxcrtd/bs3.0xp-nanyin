@@ -7,7 +7,7 @@ import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.db.domain.EntrustHistory;
 import com.joyintech.tams.exchange.common.db.domain.EntrustHistoryExample;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
-import com.joyintech.tams.exchange.datacommon.db.mapper.EntrustHistoryMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.EntrustHistoryMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.EntrustHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,7 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.db.domain.TerminalMapping;
 import com.joyintech.tams.exchange.common.db.domain.TerminalMappingExample;
-import com.joyintech.tams.exchange.datacommon.db.mapper.TerminalMappingMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.TerminalMappingMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.TerminalMappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

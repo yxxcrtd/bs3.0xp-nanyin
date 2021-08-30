@@ -3,13 +3,12 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 import com.joyintech.tams.exchange.common.db.domain.PositionBean;
 import com.joyintech.tams.exchange.common.db.domain.PositionBeanExample;
 import com.joyintech.tams.exchange.datacommon.cache.impl.AsyncServiceImpl;
-import com.joyintech.tams.exchange.datacommon.db.mapper.IMybatisMapper;
-import com.joyintech.tams.exchange.datacommon.db.mapper.PositionBeanMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.IMybatisMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.PositionBeanMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.PositionBeanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;

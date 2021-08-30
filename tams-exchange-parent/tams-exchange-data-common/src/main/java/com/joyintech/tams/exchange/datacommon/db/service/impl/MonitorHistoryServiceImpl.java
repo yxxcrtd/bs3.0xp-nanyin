@@ -4,7 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.joyintech.tams.exchange.common.db.domain.MonitorHistory;
 import com.joyintech.tams.exchange.common.db.domain.MonitorHistoryExample;
-import com.joyintech.tams.exchange.datacommon.db.mapper.MonitorHistoryMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.MonitorHistoryMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.MonitorHistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

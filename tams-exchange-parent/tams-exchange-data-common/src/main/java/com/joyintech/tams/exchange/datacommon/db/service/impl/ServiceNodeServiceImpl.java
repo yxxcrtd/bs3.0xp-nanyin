@@ -2,7 +2,7 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
 import com.joyintech.tams.exchange.common.db.domain.ServiceNode;
 import com.joyintech.tams.exchange.common.db.domain.ServiceNodeExample;
-import com.joyintech.tams.exchange.datacommon.db.mapper.ServiceNodeMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.ServiceNodeMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.ServiceNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -7,7 +7,7 @@ import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.db.domain.TradeHistory;
 import com.joyintech.tams.exchange.common.db.domain.TradeHistoryExample;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
-import com.joyintech.tams.exchange.datacommon.db.mapper.TradeHistoryMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.TradeHistoryMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeHistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
