@@ -17,10 +17,46 @@
 		ORDER BY A.OUTPUT5
 	</select>
 
-	<select id="selectStockIntrateByFinprodId" resultType="java.lang.String">
-		SELECT STOCK_INTRATE as stockIntrate
+	<select id="selectStockIntrateByFinprodId" resultType="com.joyintech.tams.common.base.entity.ModStockdivitrateConfig">
+		SELECT
+			SEQNO,
+			FINPROD_ID,
+			FINPROD_NAME,
+			SEC_TYPE_MODEL,
+			SEC_DETAIL_TYPE_MODEL,
+			STOCK_INTRATE,
+			CREATE_USER,
+			CREATE_DEPT,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME
 		from  MOD_STOCKDIVITRATE_CONFIG
 		where FINPROD_ID=#{finprodId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectStockIntrateByFinprodIds" resultType="com.joyintech.tams.common.base.entity.ModStockdivitrateConfig">
+		SELECT
+			SEQNO,
+			FINPROD_ID,
+			FINPROD_NAME,
+			SEC_TYPE_MODEL,
+			SEC_DETAIL_TYPE_MODEL,
+			STOCK_INTRATE,
+			CREATE_USER,
+			CREATE_DEPT,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME
+		from  MOD_STOCKDIVITRATE_CONFIG
+		where 1=1
+		<if test="finprodIds != null and finprodIds.size>0">
+			<foreach collection="finprodIds" item="item" index="index" open="(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR FINPROD_ID in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</select>
 
 

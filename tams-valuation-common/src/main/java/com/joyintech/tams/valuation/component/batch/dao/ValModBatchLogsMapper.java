@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ModBatchLogsMapper {
+public interface ValModBatchLogsMapper {
     int countByExample(ModBatchLogsExample example);
 
     int deleteByExample(ModBatchLogsExample example);

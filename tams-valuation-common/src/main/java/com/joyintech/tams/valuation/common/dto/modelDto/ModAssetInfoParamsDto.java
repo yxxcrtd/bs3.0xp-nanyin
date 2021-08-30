@@ -13,12 +13,7 @@ public class ModAssetInfoParamsDto {
 	 * 金融产品代码集合
 	 */
 	private List<String> finprodIdList;
-	
-	/**
-	 * 资产五级分类集合
-	 */
-	private List<String> assetFiveList;
-	
+
 	/**
 	 * 查询日
 	 */
@@ -28,20 +23,12 @@ public class ModAssetInfoParamsDto {
 		return finprodIdList;
 	}
 
-	public List<String> getAssetFiveList() {
-		return assetFiveList;
-	}
-
 	public Date getSearchDate() {
 		return searchDate;
 	}
 
 	public void setFinprodIdList(List<String> finprodIdList) {
 		this.finprodIdList = finprodIdList;
-	}
-
-	public void setAssetFiveList(List<String> assetFiveList) {
-		this.assetFiveList = assetFiveList;
 	}
 
 	public void setSearchDate(Date searchDate) {

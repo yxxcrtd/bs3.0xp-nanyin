@@ -42,8 +42,6 @@ public class ProductAssetsIncomeMethodTask extends BatchBaseService{
     @Autowired
     private BatchBuilder<BaseReader<NeedOperateEntity>, BaseProcessor<NeedOperateEntity, NeedToWriteEntity>, BaseWriter<NeedToWriteEntity>> batchBuilder;
 
-
-
     /**
      * 收益法估值批处理Reader
      */

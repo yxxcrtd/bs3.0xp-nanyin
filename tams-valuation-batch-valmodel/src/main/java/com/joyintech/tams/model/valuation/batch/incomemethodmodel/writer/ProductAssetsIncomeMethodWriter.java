@@ -18,7 +18,7 @@ import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMeth
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ProductAssetsIncomeMethodResultDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ValBondValuationInfoResultDto;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.service.ProductAssetsIncomeMethodProcessService;
+import com.joyintech.tams.model.valuation.batch.incomemethodmodel.service.ProductAssetsIncomeMethodWriterService;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
@@ -50,7 +50,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
 	private IncomeMethodMapper incomeMethodMapper;
 
     @Autowired
-    private ProductAssetsIncomeMethodProcessService productAssetsIncomeMethodProcessService;
+    private ProductAssetsIncomeMethodWriterService productAssetsIncomeMethodWriterService;
 
     private StepExecution stepExecution;
 
@@ -116,7 +116,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
                 batchParam.setMsg("【收益法模型批处理】:执行批处理【" + resultDto.getFinprodId()+ "】成功结束！");
                 bBatchLogResultList.add(batchParam);
             }
-            productAssetsIncomeMethodProcessService.sendlogResults(bBatchLogResultList,stepExecution);
+            productAssetsIncomeMethodWriterService.sendlogResults(bBatchLogResultList,stepExecution);
             //=====记录成功日志=====end=====
 
 
@@ -131,7 +131,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
                 batchParam.setMsg("【收益法模型批处理】：计算错误");
                 bBatchLogResultList.add(batchParam);
             }
-            productAssetsIncomeMethodProcessService.sendlogResults(bBatchLogResultList,stepExecution);
+            productAssetsIncomeMethodWriterService.sendlogResults(bBatchLogResultList,stepExecution);
             //=====记录计算错误日志=====end=====
         }
 

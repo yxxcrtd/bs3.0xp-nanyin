@@ -1,10 +1,12 @@
 package com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao;
 
+import com.joyintech.tams.common.base.entity.ModStockdivitrateConfig;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ValBondValuationInfoResultDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +45,16 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    String selectStockIntrateByFinprodId(String finprodId);
+    ModStockdivitrateConfig selectStockIntrateByFinprodId(String finprodId);
+
+    /**
+     * @Description:根据产品id获取估值模型股息增长率配置中的预期股息增值率
+     * @auther: yuzj
+     * @date: 2021/7/6
+     * @param:
+     * @return:
+     */
+    List<ModStockdivitrateConfig> selectStockIntrateByFinprodIds(List<String> finprodIds);
 
     /**
      * @Description:资产定价数据查询

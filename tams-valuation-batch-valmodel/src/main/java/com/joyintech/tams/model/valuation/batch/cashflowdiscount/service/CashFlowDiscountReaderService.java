@@ -105,7 +105,7 @@ public class CashFlowDiscountReaderService {
             //调用资产基本信息查询_估值模型
             if(assetFives.size()>0){
                 ModAssetInfoParamsDto modAssetInfoParamsDto = new ModAssetInfoParamsDto();
-                modAssetInfoParamsDto.setAssetFiveList(assetFives);
+//                modAssetInfoParamsDto.setAssetFiveList(assetFives);
                 modAssetInfoParamsDto.setSearchDate(happenDate);
                 pendingModAssetInfo.addAll(modValuationCommonService.selectAssetInfo(modAssetInfoParamsDto));
             }
