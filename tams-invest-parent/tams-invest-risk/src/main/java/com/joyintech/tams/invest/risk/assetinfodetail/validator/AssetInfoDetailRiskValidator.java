@@ -10,14 +10,11 @@
  
 package com.joyintech.tams.invest.risk.assetinfodetail.validator;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.risk.assetinfodetail.dto.AssetInfoDetailRisk001Dto;
 import com.joyintech.tams.invest.risk.assetinfodetail.service.AssetInfoDetailRisk001Service;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,15 +26,16 @@ import java.util.List;
  * 〈功能详细描述〉
  * @author zhangnian
  * @version 1.0 2018年10月30日
- * @see FinDepositTargetValidator
+ * @see AssetInfoDetailRiskValidator
  * @since 1.0
  */
 @Component
 public class AssetInfoDetailRiskValidator implements BeanValidator{
 
 
-    @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+//    TODO
+//    @Autowired
+//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     /**
      * 资产要素service

@@ -1,8 +1,5 @@
 package com.joyintech.tams.invest.risk.assetinfodetail.util;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.component.svrreport.chb.chbcommoncheck.dao.ChbDataCheckCommonMapper;
-import com.joyintech.component.svrreport.chb.chbcommoncheck.dto.ChbCheckRule;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -18,12 +15,9 @@ import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.common.util.SysDataUtil;
 import com.joyintech.tams.invest.risk.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.invest.risk.assetinfodetail.dto.AssetInfoDetailRisk001Dto;
-import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussFinBondRepInfoRiskDto;
 import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussQDIISharesInfoRiskDto;
-import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepDepositInfoRiskDto;
 import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepEquityInfoRiskDto;
 import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepFinanciallInfoRiskDto;
-import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepPlacementInfoRiskDto;
 import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepQDIIBondInfoRiskDto;
 import com.joyintech.tams.invest.risk.assetinfodetail.service.AssetInfoDetailRisk001Service;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -51,11 +45,12 @@ public class AssetInfoDetailRiskUtil {
 
     static Map<String,String> rule = new HashMap<>();
 
-    @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
-
-    @Autowired
-    private ChbDataCheckCommonMapper chbDataCheckCommonMapper;
+//    TODO
+//    @Autowired
+//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+//
+//    @Autowired
+//    private ChbDataCheckCommonMapper chbDataCheckCommonMapper;
     
     /**
 	 * 资产要素service
@@ -148,12 +143,13 @@ public class AssetInfoDetailRiskUtil {
             dict.put("pbcAssetType2" + sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
         });
         rule = new HashMap<>();
-        List<ChbCheckRule> listRules = chbDataCheckCommonMapper.queryChbCheckRule("AssetInfoRegist002","1");
-        if (!StringUtil.isEmptyList(listRules)){
-            listRules.forEach(chbCheckRule -> {
-                rule.put(chbCheckRule.getSrcproperty() + GlobalConstant.UNDER_LINE + chbCheckRule.getCheckmethod(),chbCheckRule.getRemark());
-            });
-        }
+//        TODO
+//        List<ChbCheckRule> listRules = chbDataCheckCommonMapper.queryChbCheckRule("AssetInfoRegist002","1");
+//        if (!StringUtil.isEmptyList(listRules)){
+//            listRules.forEach(chbCheckRule -> {
+//                rule.put(chbCheckRule.getSrcproperty() + GlobalConstant.UNDER_LINE + chbCheckRule.getCheckmethod(),chbCheckRule.getRemark());
+//            });
+//        }
         for (int i = 0; i < dataList.size(); i++ ) {
             if ( i < 2 ){
                 continue;
@@ -332,7 +328,8 @@ public class AssetInfoDetailRiskUtil {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "第"+(i+1)+"行资产代码与第"+(j+1)+"行资产代码重复"));
                 }
             }
-            messages.addAll(chbDataCheckCommonUtil.chbCheckCommon(resultList, entity, "AssetInfoRegist002", entity.getAssetType2(), ValidMessage.class));
+//            TODO
+//            messages.addAll(chbDataCheckCommonUtil.chbCheckCommon(resultList, entity, "AssetInfoRegist002", entity.getAssetType2(), ValidMessage.class));
             if (!StringUtil.isEmptyList(messages)){
                 messages.forEach(validMessage -> {
                     if (StringUtil.isNotEmpty(validMessage.getMessage())){
