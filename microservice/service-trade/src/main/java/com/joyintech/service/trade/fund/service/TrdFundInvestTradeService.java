@@ -970,7 +970,8 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
                 wflPaTrdProductDealMapper.insert(wflPaTrdProductDeal);
                 // 划款指令
                 if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_申购.getValue())
-                        || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回到账.getValue())) {
+                        || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回到账.getValue())
+                ||StringUtil.equals(entity.getPs(),DictCodeList.交易方向_认购.getValue())) {
                     if (entity.getBussTrdTransferOrder() != null && entity.getBussTrdTransferOrder().size() > 0) {
                         WflStlPayOrders wflStlPayOrders = new WflStlPayOrders();
                         BeanUtil.copyPropertiesIgnoreNull(wflStlPayOrders, entity.getBussTrdTransferOrder().get(0));
