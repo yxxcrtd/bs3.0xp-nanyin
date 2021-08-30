@@ -1,7 +1,6 @@
 package com.joyintech.tams.model.valuation.batch.incomemethodmodel.listener;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
@@ -15,9 +14,9 @@ import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author 王波
@@ -54,15 +53,10 @@ public class ProductAssetsIncomeMethodListener implements JobExecutionListener {
         List<ModValBatchParams> params = modParamsService.selectAllParamsByDate(date);
         if (CollectionUtils.isNotEmpty(params)) {
             jobExecution.getExecutionContext().put(BATCH_PARAMS_KEY, params);
-            List<ModBatchLogs> list = new ArrayList<>(params.size());
-            for (ModValBatchParams param : params) {
-                ModBatchLogs log = new ModBatchLogs();
-                log.setSeqno(IDGenerator.generate());
-                log.setFinprodId(param.getFinprodId());
-                log.setBatchExecSeqno(param.getBatchExecSeqno());
-                log.setTaskId(taskId);
-                list.add(log);
-            }
+
+            List<ModBatchLogs> list = params.stream().map(x->{
+                return modLogsService.initLog(taskId,x.getBatchExecSeqno(),x.getFinprodId());
+            }).collect(Collectors.toList());
             modLogsService.saveBatch(list);
         }
     }

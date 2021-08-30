@@ -1,27 +1,14 @@
 package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.ModelDictCode;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.AssetImpairmentStageJudgeModelMapper;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.AssetImpairmentStageJudgeModelReaderEntity;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.AssetImpairmentStageJudgeModelResultDto;
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModStageParaDto;
-import com.joyintech.tams.model.impairment.batch.common.calculation.ImpairmentCalculationCommonService;
-import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ResultDto;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ModAssetGradeConfig;
-import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModRepayAndInterestDto;
@@ -149,7 +136,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
         List<ModRepayAndInterestDto> hbfxList = assetImpairmentStageJudgeModelMapper.assetImpairmentStageJudgeT2322List(resultProcess.getAssetId());
         if (hbfxList != null && hbfxList.size() > 0) {
             for (ModRepayAndInterestDto hbfxdto : hbfxList) {
-                if (hbfxdto.getDealSide().equals(ModelDictCodeList.交易方向_还本到账.getValue())) {
+                if (hbfxdto.getDealSide().equals(DictCodeList.交易方向_还本到账.getValue())) {
                     hbList.add(hbfxdto);
                 } else {
                     fxList.add(hbfxdto);

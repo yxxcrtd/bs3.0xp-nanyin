@@ -3,6 +3,7 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
@@ -39,7 +40,7 @@ public class ImpairmentDataLoadReaderStep2Service {
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("searchDate", platDate);
         para.put("process", ModelDictCodeList.模型_减值过程_数据加载.getValue());
-        para.put("ps", ModelDictCodeList.交易方向_买入.getValue());
+        para.put("ps", DictCodeList.交易方向_买入.getValue());
         para.put("batchExedetailSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
         //1、获取需要当天处理的初始数据列表
         List<ImpairmentDataLoadStep2ReaderDto> list = impairmentDataLoadMapper.selectModEclResultProcessForDeal(para);

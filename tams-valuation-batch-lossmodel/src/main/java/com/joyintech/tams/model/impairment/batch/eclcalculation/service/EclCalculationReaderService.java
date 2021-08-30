@@ -1,6 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.eclcalculation.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationReaderDto;
@@ -32,7 +33,7 @@ public class EclCalculationReaderService {
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("searchDate", platDate);
         para.put("process", ModelDictCodeList.模型_减值过程_PD计算.getValue());
-        para.put("ps", ModelDictCodeList.交易方向_买入.getValue());
+        para.put("ps", DictCodeList.交易方向_买入.getValue());
         para.put("batchExedetailSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
         //1.获取理需要处理的每一笔交易数据（计划做在数据加载批处理中）
         List<ModEclResultProcess> list = eclCalculationMapper.selectModEclResultProcessForDeal(para);

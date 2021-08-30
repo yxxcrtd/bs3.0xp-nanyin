@@ -101,7 +101,6 @@ public class AssetImpairmentStageJudgeModelReaderService {
      * @param finprodId
      * @return
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<ModCashFlowDto> getCashFlowPlanInfoByFinprodId(String finprodId){
         try{
             if(StringUtil.isEmpty(finprodId)){

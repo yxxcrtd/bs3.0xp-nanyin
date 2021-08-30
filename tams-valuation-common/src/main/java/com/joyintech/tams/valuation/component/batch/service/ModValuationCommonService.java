@@ -3,6 +3,7 @@ package com.joyintech.tams.valuation.component.batch.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.MstSharePrice;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
@@ -36,7 +37,6 @@ public class ModValuationCommonService extends BaseService {
 	 * @param paraMap
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<ModAssetInfoDto> selectAssetInfo(ModAssetInfoParamsDto paraMap){
 		try{
 			if(null == paraMap.getSearchDate()){
@@ -49,13 +49,29 @@ public class ModValuationCommonService extends BaseService {
 		}
 		return null;
 	}
-	
+	/**
+	 *  查询二叉树模型需要跑的资产信息
+	 * @param paraMap
+	 * @return
+	 */
+	public List<ModAssetInfoDto> selectBinaryTreeAssetInfo(ModAssetInfoParamsDto paraMap){
+		try{
+			if(null == paraMap.getSearchDate()){
+				logger.info("查询日不能为空！");
+				throw new Exception("查询日不能为空!");
+			}
+			return modAssetInfoMapper.selectBinaryTreeAssetInfo(paraMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	/**
 	 * 获取资产现金流计划集合
 	 * @param finprodId
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<ModCashFlowDto> getCashFlowPlanInfoByFinprodId(String finprodId){
 		try{
 			if(StringUtil.isEmpty(finprodId)){
@@ -74,7 +90,6 @@ public class ModValuationCommonService extends BaseService {
 	 * @param finprodId
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<ModCashFlowCalRuleDto>  getCashFlowCalRulesByFinprodId(String finprodId){
 		try {
 			if(StringUtil.isEmpty(finprodId)){
@@ -93,7 +108,6 @@ public class ModValuationCommonService extends BaseService {
 	 * @param finprodId
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<ModCashFlowPayRulesDto>  getCashFlowPayRulesByFinprodId(String finprodId){
 		try{
 			if(StringUtil.isEmpty(finprodId)){
@@ -112,8 +126,7 @@ public class ModValuationCommonService extends BaseService {
 	 * @param paraMap
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public List<ModStockMarketInfoDto> getStockMarketInfo(ModStockMarketParamsDto paraMap){
+	public List<MstSharePrice> getStockMarketInfo(ModStockMarketParamsDto paraMap){
 		try {
 			if(null == paraMap.getSearchDate()){
 				logger.info("查询日不能为空！");
@@ -130,8 +143,7 @@ public class ModValuationCommonService extends BaseService {
 	 * @param paraMap
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public List<ModStockMarketInfoDto> getStockMarketIntervalInfo(ModStockMarketParamsDto paraMap){
+	public List<MstSharePrice> getStockMarketIntervalInfo(ModStockMarketParamsDto paraMap){
 		try{
 			if(null == paraMap.getSearchDate()||null==paraMap.getStartDate()){
 				logger.info("查询开始日、查询结束日不能为空！");
@@ -148,7 +160,6 @@ public class ModValuationCommonService extends BaseService {
 	 * 获取评级信息
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ModRateDataDto getRateInfo(ModRateParamsDto dto) {
 		ModRateDataDto rateResult = null;
 		try{
@@ -194,7 +205,6 @@ public class ModValuationCommonService extends BaseService {
 	 * @param dto
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Map<String,List<ModYieldCurveInfoDto>> getCurveInfo(ModYeildCurveParamsDto dto){
 		try {
 			Map<String,List<ModYieldCurveInfoDto>> resultMap = new HashMap<String,List<ModYieldCurveInfoDto>>();
@@ -225,7 +235,6 @@ public class ModValuationCommonService extends BaseService {
 	 * @param dto
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Map<String,Map<Date,List<ModYieldCurveInfoDto>>> getYeildCurveIntervalinfo(ModYeildCurveParamsDto dto){
 		Map<String,Map<Date,List<ModYieldCurveInfoDto>>> resultMap = new HashMap<String,Map<Date,List<ModYieldCurveInfoDto>>>();
 		try {
@@ -252,4 +261,6 @@ public class ModValuationCommonService extends BaseService {
 		return resultMap;
 		
 	}
+
+
 }
