@@ -159,7 +159,7 @@ public class TradeRdsCommonAop {
         InterfRiskRdsService<InterfRiskRdsDto> service = getInterfRiskRdsService();
         // 执行预占
         AjaxResult ar = null;
-         /*       service.checkRiskRds(new InterfRiskRdsDto(),
+        service.checkRiskRds(new InterfRiskRdsDto(),
             BussinessDictCodeListRds.事件类型_投资交易.getValue(),
             BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue(), busiType,
             en -> service.sendRiskRdsListData(en, dtoList, map -> {
@@ -169,7 +169,7 @@ public class TradeRdsCommonAop {
                     map.put(PageFieldToInterfFactory.INF_COUNTERID,
                         etrInvestPersonInfo.getCounterId());
                 }
-            }));*/
+            }));
         // 判断结果，若正常则缓存数据，后面执行异常时使用缓存数据进行预占释放
         if (ar == null) {
             setLocalCache(dtoList);
@@ -696,7 +696,7 @@ public class TradeRdsCommonAop {
         }
         // 执行预占
         AjaxResult ar = null;
-               /* service.checkRiskRds(rdsDto,
+        service.checkRiskRds(rdsDto,
             BussinessDictCodeListRds.事件类型_投资委托.getValue(), infCode,
             busiType, en -> service.sendRiskRdsListData(en, dtoList, map -> {
                 // 个别处理
@@ -705,7 +705,7 @@ public class TradeRdsCommonAop {
                     map.put(PageFieldToInterfFactory.INF_COUNTERID,
                         etrInvestPersonInfo.getCounterId());
                 }
-            }));*/
+            }));
         // 判断结果，若正常则缓存数据，后面执行异常时使用缓存数据进行预占释放
         if (ar == null) {
             setLocalCache(dtoList);
