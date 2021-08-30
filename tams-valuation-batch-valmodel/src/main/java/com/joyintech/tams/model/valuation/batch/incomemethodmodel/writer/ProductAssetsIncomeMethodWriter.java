@@ -13,13 +13,12 @@ package com.joyintech.tams.model.valuation.batch.incomemethodmodel.writer;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.ModelDictCodeList;
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ProductAssetsIncomeMethodResultDto;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ValBondValuationInfoResultDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.service.ProductAssetsIncomeMethodWriterService;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -72,95 +71,93 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
     @Override
     public void write(List<? extends ProductAssetsIncomeMethodResultDto> items)
             throws Exception {
-        @SuppressWarnings("unchecked")
         Map<String,Object> mapParam = this.getParams();
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)mapParam.get("BATCH_INFO");
         String taskId =(String)mapParam.get("TASK_ID");
         List<ProductAssetsIncomeMethodResultDto> resultList = (List<ProductAssetsIncomeMethodResultDto>)items;
-        List<ValBondValuationInfoResultDto>   valuationResultList = new ArrayList<ValBondValuationInfoResultDto>();
-        List<AssetsMakePriceResultDto>   makePriceResultList = new ArrayList<AssetsMakePriceResultDto>();
-        List<ModValBatchLogResult> bBatchLogResultList = new ArrayList<>();
-        try {
-            if (!StringUtil.isEmptyList(resultList)) {
-                for (ProductAssetsIncomeMethodResultDto incomeMethodResultDto : resultList) {
-                    if(incomeMethodResultDto.getValBondValuationInfoResultDto() !=null){
-                        //改为批量处理
-                        valuationResultList.add(incomeMethodResultDto.getValBondValuationInfoResultDto());
-                    }
-                    if(incomeMethodResultDto.getAssetsMakePriceResultDto() !=null){
-                        //test-yu
-//                    incomeMethodResultDto.getAssetsMakePriceResultDto().setSecType("F18");
-//                    incomeMethodResultDto.getAssetsMakePriceResultDto().setSecDetailType("09");
-                        //改为批量处理
-                        makePriceResultList.add(incomeMethodResultDto.getAssetsMakePriceResultDto());
-                    }
+        List<ModCurveResult>   valuationResultList = new ArrayList<ModCurveResult>();
+        List<ModRiskPremium>   makePriceResultList = new ArrayList<ModRiskPremium>();
+        List<MstBondValuationInfo> mstBondValuationInfos = new ArrayList<MstBondValuationInfo>();
+
+
+        if (!StringUtil.isEmptyList(resultList)) {
+            for (ProductAssetsIncomeMethodResultDto incomeMethodResultDto : resultList) {
+                if(incomeMethodResultDto.getModCurveResult() !=null){
+                    valuationResultList.add(incomeMethodResultDto.getModCurveResult());
                 }
-            }
-            //债券估值行情批处理
-            if (valuationResultList != null && valuationResultList.size() > 0) {
-                deleteValuationResultPremium(valuationResultList);
-                insertValuationResultPremium(valuationResultList,batchExecuteInfo);
-            }
-            //资产定价批操作
-            if (makePriceResultList != null && makePriceResultList.size() > 0) {
-                deleteMakePriceResultPremium(makePriceResultList);
-                insertMakePriceResultPremium(makePriceResultList,batchExecuteInfo);
-            }
-            //=====记录成功日志=====start=====
-            for(ValBondValuationInfoResultDto resultDto:valuationResultList){
-                ModValBatchLogResult batchParam = new ModValBatchLogResult();
-                batchParam.setFinprodId(resultDto.getFinprodId());
-                batchParam.setTaskId(taskId);
-                batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.批处理执行结果_正常结束.getValue());
-                batchParam.setMsg("【收益法模型批处理】:执行批处理【" + resultDto.getFinprodId()+ "】成功结束！");
-                bBatchLogResultList.add(batchParam);
-            }
-            productAssetsIncomeMethodWriterService.sendlogResults(bBatchLogResultList,stepExecution);
-            //=====记录成功日志=====end=====
+                if(incomeMethodResultDto.getModRiskPremium() !=null){
+                    makePriceResultList.add(incomeMethodResultDto.getModRiskPremium());
+                }
+                if(incomeMethodResultDto.getMstBondValuationInfo() !=null){
+                    mstBondValuationInfos.add(incomeMethodResultDto.getMstBondValuationInfo());
+                }
 
-
-        } catch (Exception e) {
-            //=====记录计算错误日志=====start=====
-            for(ValBondValuationInfoResultDto resultDto:valuationResultList){
-                ModValBatchLogResult batchParam = new ModValBatchLogResult();
-                batchParam.setFinprodId(resultDto.getFinprodId());
-                batchParam.setTaskId(taskId);
-                batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.批处理执行结果_异常结束.getValue());//EXP 失败
-                batchParam.setMsg("【收益法模型批处理】：计算错误");
-                bBatchLogResultList.add(batchParam);
             }
-            productAssetsIncomeMethodWriterService.sendlogResults(bBatchLogResultList,stepExecution);
-            //=====记录计算错误日志=====end=====
         }
-
-
-
+        //估值结果
+        if (valuationResultList != null && valuationResultList.size() > 0) {
+            deleteValuationResultPremium(valuationResultList);
+            insertValuationResultPremium(valuationResultList);
+        }
+        //资产定价批操作
+        if (makePriceResultList != null && makePriceResultList.size() > 0) {
+            deleteMakePriceResultPremium(makePriceResultList);
+            insertMakePriceResultPremium(makePriceResultList);
+        }
+        //债券估值行情数据
+        if (mstBondValuationInfos != null && mstBondValuationInfos.size() > 0) {
+            deleteMstBondQuotationInfo(mstBondValuationInfos);
+            insertMstBondQuotationInfo(mstBondValuationInfos);
+        }
     }
 
+    /**
+     * 插入债券估值行情
+     * @param listMstBondQuotationInfoDto
+     */
+    private void insertMstBondQuotationInfo(List<MstBondValuationInfo> listMstBondQuotationInfoDto) {
+        if (listMstBondQuotationInfoDto == null || listMstBondQuotationInfoDto.isEmpty()) {
+            return;
+        }
+        // 定义一个固定大小插入存放集合
+        List<List<MstBondValuationInfo>> list = DataHandleUtil.splitList(listMstBondQuotationInfoDto);
+        for (List<MstBondValuationInfo> listInsert : list) {
+            if (CollectionUtils.isNotEmpty(listInsert)) {
+                incomeMethodMapper.insertMstBondValuationInfo(listInsert);
+            }
+        }
+    }
 
+    /**
+     * 删除债券估值行情
+     * @param listMstBondQuotationInfoDto
+     */
+    private void deleteMstBondQuotationInfo(List<MstBondValuationInfo> listMstBondQuotationInfoDto) {
+        if (listMstBondQuotationInfoDto == null || listMstBondQuotationInfoDto.isEmpty()) {
+            return;
+        }
+        // 定义一个固定大小插入存放集合
+        List<List<MstBondValuationInfo>> list = DataHandleUtil.splitList(listMstBondQuotationInfoDto);
+        for (List<MstBondValuationInfo> listInsert : list) {
+            if (CollectionUtils.isNotEmpty(listInsert)) {
+                incomeMethodMapper.deleteMstBondValuationInfo(listInsert);
+            }
+        }
+    }
 
 
     /**
      * 插入债券估值行情结果集
      * @param valuationResultList
      */
-    private void insertValuationResultPremium(List<ValBondValuationInfoResultDto> valuationResultList,SysBatchExecInfo batchExecuteInfo) {
+    private void insertValuationResultPremium(List<ModCurveResult> valuationResultList) {
         if (valuationResultList == null || valuationResultList.isEmpty()) {
             return;
         }
         List<ModValBatchParams> modValBatchParamsList = new ArrayList<>();
         // 定义一个固定大小插入存放集合
-        List<List<ValBondValuationInfoResultDto>> list = DataHandleUtil.splitList(valuationResultList);
-        for (List<ValBondValuationInfoResultDto> listInsert : list) {
-
-            // TODO 测试 ， 记得删除
-            for (ValBondValuationInfoResultDto dto : listInsert){
-                dto.setUpdateUser("test007");
-                dto.setCreateDept("test007");
-            }
-
+        List<List<ModCurveResult>> list = DataHandleUtil.splitList(valuationResultList);
+        for (List<ModCurveResult> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
                 incomeMethodMapper.insertValuationResultPremium(listInsert);
             }
@@ -172,13 +169,13 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
      * 删除债券估值行情结果集
      * @param listModRiskPremium
      */
-    private void deleteValuationResultPremium(List<ValBondValuationInfoResultDto> listModRiskPremium) {
+    private void deleteValuationResultPremium(List<ModCurveResult> listModRiskPremium) {
         if (listModRiskPremium == null || listModRiskPremium.isEmpty()) {
             return;
         }
         // 定义一个固定大小插入存放集合
-        List<List<ValBondValuationInfoResultDto>> list = DataHandleUtil.splitList(listModRiskPremium);
-        for (List<ValBondValuationInfoResultDto> listInsert : list) {
+        List<List<ModCurveResult>> list = DataHandleUtil.splitList(listModRiskPremium);
+        for (List<ModCurveResult> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
                 incomeMethodMapper.deleteValuationResultPremium(listInsert);
             }
@@ -190,7 +187,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
      * 插入资产定价结果集
      * @param makePriceResultList
      */
-    private void insertMakePriceResultPremium(List<AssetsMakePriceResultDto> makePriceResultList,SysBatchExecInfo batchExecuteInfo) {
+    private void insertMakePriceResultPremium(List<ModRiskPremium> makePriceResultList) {
 
         if (makePriceResultList == null || makePriceResultList.isEmpty()) {
             return;
@@ -198,15 +195,8 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
         //日志list
         List<ModValBatchParams> modValBatchParamsList = new ArrayList<>();
         // 定义一个固定大小插入存放集合
-        List<List<AssetsMakePriceResultDto>> list = DataHandleUtil.splitList(makePriceResultList);
-        for (List<AssetsMakePriceResultDto> listInsert : list) {
-
-            // TODO 测试 ， 记得删除
-            for (AssetsMakePriceResultDto dto : listInsert){
-                dto.setUpdateUser("test007");
-                dto.setCreateDept("test007");
-            }
-
+        List<List<ModRiskPremium>> list = DataHandleUtil.splitList(makePriceResultList);
+        for (List<ModRiskPremium> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
                 incomeMethodMapper.insertMakePriceResultPremium(listInsert);
             }
@@ -218,21 +208,16 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
      * 删除资产定价结果集
      * @param makePriceResultList
      */
-    private void deleteMakePriceResultPremium(List<AssetsMakePriceResultDto> makePriceResultList) {
+    private void deleteMakePriceResultPremium(List<ModRiskPremium> makePriceResultList) {
         if (makePriceResultList == null || makePriceResultList.isEmpty()) {
             return;
         }
         // 定义一个固定大小插入存放集合
-        List<List<AssetsMakePriceResultDto>> list = DataHandleUtil.splitList(makePriceResultList);
-        for (List<AssetsMakePriceResultDto> listInsert : list) {
+        List<List<ModRiskPremium>> list = DataHandleUtil.splitList(makePriceResultList);
+        for (List<ModRiskPremium> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
                 incomeMethodMapper.deleteMakePriceResultPremium(listInsert);
             }
         }
     }
-
-
-
-
-
 }

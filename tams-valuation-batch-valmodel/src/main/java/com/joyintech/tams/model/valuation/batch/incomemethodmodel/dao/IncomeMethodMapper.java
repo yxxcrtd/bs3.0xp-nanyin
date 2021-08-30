@@ -1,13 +1,12 @@
 package com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao;
 
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
 import com.joyintech.tams.common.base.entity.ModStockdivitrateConfig;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ValBondValuationInfoResultDto;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,9 +22,9 @@ public interface IncomeMethodMapper {
     * @Author: wangxuelei
     * @Date: 2020/1/6 0006
     **/
-    void insertBondValuation(ValBondValuationInfoResultDto dto);
+    void insertBondValuation(ModCurveResult dto);
 
-    void insertMakePrice(AssetsMakePriceResultDto dto);
+    void insertMakePrice(ModRiskPremium dto);
 
     /**
      * @Description:获取五级分类集合
@@ -63,7 +62,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    AssetsMakePriceResultDto selectAssetsMakePriceByFinprodId(@Param("finprodId")String finprodId,@Param("baseDateStr")String baseDateStr,@Param("valueModelMethod")String valueModelMethod);
+    ModRiskPremium selectAssetsMakePriceByFinprodId(@Param("finprodId")String finprodId,@Param("baseDateStr")String baseDateStr,@Param("valueModelMethod")String valueModelMethod);
 
     /**
      * @Description:根据条件删除债券估值行情表
@@ -72,7 +71,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    void deleteValuationInfoResult(ValBondValuationInfoResultDto valBondValuationInfoResultDto);
+    void deleteValuationInfoResult(ModCurveResult valBondValuationInfoResultDto);
     /**
      * @Description:债券估值行情表插入
      * @auther: yuzj
@@ -80,7 +79,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    void insertValuationInfoResult(ValBondValuationInfoResultDto valBondValuationInfoResultDto);
+    void insertValuationInfoResult(ModCurveResult valBondValuationInfoResultDto);
 
 
     /**
@@ -90,7 +89,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    void deleteMakePriceResult(AssetsMakePriceResultDto assetsMakePriceResultDto);
+    void deleteMakePriceResult(ModRiskPremium assetsMakePriceResultDto);
     /**
      * @Description:资产定价表插入
      * @auther: yuzj
@@ -98,7 +97,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    void insertMakePriceResult(AssetsMakePriceResultDto assetsMakePriceResultDto);
+    void insertMakePriceResult(ModRiskPremium assetsMakePriceResultDto);
     /**
      * @Description:批量插入债券估值行情表
      * @auther: yuzj
@@ -106,7 +105,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    int insertValuationResultPremium(@Param("valuationResultList")List<ValBondValuationInfoResultDto> valuationResultList);
+    int insertValuationResultPremium(@Param("valuationResultList")List<ModCurveResult> valuationResultList);
     /**
      * @Description:批量删除债券估值行情表
      * @auther: yuzj
@@ -114,7 +113,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    int deleteValuationResultPremium(@Param("valuationResultList")List<ValBondValuationInfoResultDto> valuationResultList);
+    int deleteValuationResultPremium(@Param("valuationResultList")List<ModCurveResult> valuationResultList);
 
     /**
      * @Description:批量插入资产定价表
@@ -123,7 +122,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    int insertMakePriceResultPremium(@Param("makePriceResultList")List<AssetsMakePriceResultDto> makePriceResultList);
+    int insertMakePriceResultPremium(@Param("makePriceResultList")List<ModRiskPremium> makePriceResultList);
     /**
      * @Description:批量删除资产定价表
      * @auther: yuzj
@@ -131,8 +130,10 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    int deleteMakePriceResultPremium(@Param("makePriceResultList")List<AssetsMakePriceResultDto> makePriceResultList);
-    
+    int deleteMakePriceResultPremium(@Param("makePriceResultList")List<ModRiskPremium> makePriceResultList);
 
 
+    void insertMstBondValuationInfo(List<MstBondValuationInfo> listInsert);
+
+    void deleteMstBondValuationInfo(List<MstBondValuationInfo> listInsert);
 }

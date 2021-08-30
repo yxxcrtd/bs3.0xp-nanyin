@@ -15,6 +15,8 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
 import com.joyintech.tams.common.base.entity.MstSharePrice;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -23,7 +25,6 @@ import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.BinaryTreeModelReaderEntity;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.BinaryTreeModelResultDto;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCurveResult;
 import com.joyintech.tams.model.valuation.batch.calculation.entity.KeyPointDto;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.calculator.TargetRateCalculator;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.inputparam.TargetRateInputParameter;
@@ -910,10 +911,10 @@ public class BinaryTreeModelProcessorService {
         }
         return binTree;
     }
+
     /**
      * 计算标的股票波动率
-     *
-     * @param entity
+     * @param listStock
      * @return
      */
     private BigDecimal calaStockVolatility(List<MstSharePrice> listStock) {

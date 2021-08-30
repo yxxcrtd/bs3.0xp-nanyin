@@ -7,8 +7,6 @@ import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.AssetL
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.FinProductProjectValuation;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.ValuationBatchSynDto;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ValBondValuationInfoResultDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

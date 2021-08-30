@@ -1,11 +1,13 @@
 package com.joyintech.tams.model.valuation.batch.binarytreemodel.dao;
 
+import com.joyintech.tams.common.base.entity.ModBintreeConfig;
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

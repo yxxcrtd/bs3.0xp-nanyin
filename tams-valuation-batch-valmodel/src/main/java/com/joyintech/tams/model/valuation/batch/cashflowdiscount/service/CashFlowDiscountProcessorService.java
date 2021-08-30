@@ -19,6 +19,8 @@ import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
 import com.joyintech.calculation.shell.param.SecInfoModel;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
@@ -282,7 +284,7 @@ public class CashFlowDiscountProcessorService {
 		return calCurveInfo;
 	}
 
-	private ModRiskPremium handleModRiskPremium(ModRiskPremium modRiskPremium,CashFlowDiscountReaderResult entity,Date calDate,BigDecimal price,Map<String,List<ModYieldCurveInfoDto>> calCurveInfoMap){
+	private ModRiskPremium handleModRiskPremium(ModRiskPremium modRiskPremium, CashFlowDiscountReaderResult entity, Date calDate, BigDecimal price, Map<String,List<ModYieldCurveInfoDto>> calCurveInfoMap){
 		//点差
 		BigDecimal spread = null;
 		//反算后现金流折现法计算参数

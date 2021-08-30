@@ -2,10 +2,8 @@ package com.joyintech.tams.model.valuation.batch.incomemethodmodel.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.tams.common.base.entity.ModStockdivitrateConfig;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModBintreeConfig;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ProductAssetsIncomeMethodReaderDto;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
@@ -13,12 +11,10 @@ import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,9 +29,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProductAssetsIncomeMethodReaderService {
-    private final String BATCH_LOG_RESULTS = "logResults";
-
-    private final String BATCH_PARAMS_KEY = "params";
 
     @Resource
     private IncomeMethodMapper incomeMethodMapper;

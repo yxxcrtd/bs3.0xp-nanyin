@@ -330,5 +330,43 @@
 
 
 
+    <delete id="deleteMstBondValuationInfo">
+        delete from MST_BOND_VALUATION_INFO where
+        <foreach collection="list" item="item" separator=" or " index="index">
+            (
+            SEC_ID = #{secId,jdbcType=VARCHAR}
+            and VALUE_DATE = #{valueDate,jdbcType=DATE}
+            and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </delete>
 
+    <insert id="insertMstBondValuationInfo">
+        insert into MST_BOND_VALUATION_INFO
+        (
+        SEC_ID, VALUE_DATE, VALUE_SOURCE,
+        LAST_PERIOD, PRICE, NETPRICE,
+        M_DURATION, M_CONVEXITY, BPVALUE,
+        SDURATION, SCNVXTY, INTEREST_DURATION,
+        INTEREST_CNVXTY, BPYIELD, INPUT_TYPE,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, MBPVALUE,
+        VAR, CVAR, MDURATION,
+        IMPLICIT_GRADE, IMPLICIT_HGRADE, NETVALUATION_EXERCISE,
+        NETVALUATION_RECOMMENDED
+        )
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{secId,jdbcType=VARCHAR}, #{valueDate,jdbcType=DATE}, #{valueSource,jdbcType=VARCHAR},
+            #{lastPeriod,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{netprice,jdbcType=DECIMAL},
+            #{mDuration,jdbcType=DECIMAL}, #{mConvexity,jdbcType=DECIMAL}, #{bpvalue,jdbcType=DECIMAL},
+            #{sduration,jdbcType=DECIMAL}, #{scnvxty,jdbcType=DECIMAL}, #{interestDuration,jdbcType=DECIMAL},
+            #{interestCnvxty,jdbcType=DECIMAL}, #{bpyield,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{mbpvalue,jdbcType=DECIMAL},
+            #{var,jdbcType=DECIMAL}, #{cvar,jdbcType=DECIMAL}, #{mduration,jdbcType=DECIMAL},
+            #{implicitGrade,jdbcType=VARCHAR}, #{implicitHgrade,jdbcType=VARCHAR}, #{netvaluationExercise,jdbcType=DECIMAL},
+            #{netvaluationRecommended,jdbcType=DECIMAL}
+        </foreach>
+    </insert>
 </mapper>

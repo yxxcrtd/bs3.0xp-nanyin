@@ -1,11 +1,11 @@
 package com.joyintech.tams.model.valuation.batch.binarytreemodel.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.BinaryTreeModelResultDto;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCurveResult;
 import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
