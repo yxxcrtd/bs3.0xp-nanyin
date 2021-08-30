@@ -2787,7 +2787,6 @@ select #{R7S1} as remType,
 	</select>
 
 	<!--分销缴款提醒 add by chenjiaxing 20210728 start-->
-<!--
 	<select id="searchCountR10S1" resultType="java.util.HashMap" >
 		select count(*) R10S1
 		from(select distinct a.assetCode assetCode,
@@ -3158,7 +3157,6 @@ select #{R7S1} as remType,
 		))
 
 	</select>
--->
 	<!--add by chenjiaixing 主动提醒改造 20210728 end-->
 
 	<select id="searchCountR3S5" resultType="java.util.HashMap">
