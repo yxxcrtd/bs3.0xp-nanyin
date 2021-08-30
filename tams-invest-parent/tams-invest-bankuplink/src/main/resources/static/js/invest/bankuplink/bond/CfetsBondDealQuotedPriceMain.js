@@ -1690,6 +1690,7 @@
             if (object) {
                 var riskdata = window.CfetsBondDealQuotedPriceMuti.getriskdata_Muti001(object);
                 var riskInterfUrl = basePath + "riskrds/interf/doInfBatchData/1/RSK002/F01";
+                object.cfetsBondDealQuoteDtoList = riskdata.data;
                 if (riskdata && riskInterfUrl) {
                     window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallbackMuti001);
                 }
@@ -1718,6 +1719,7 @@
             if (object) {
                 var riskdata = window.CfetsBondDealQuotedPriceMuti.getriskdata_Muti002(object);
                 var riskInterfUrl = basePath + "riskrds/interf/doInfBatchData/1/RSK002/F01";
+                object.cfetsBondDealQuoteDtoList = riskdata.data;
                 if (riskdata && riskInterfUrl) {
                     window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallbackMuti002);
                 }

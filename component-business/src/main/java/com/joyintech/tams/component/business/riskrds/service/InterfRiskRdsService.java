@@ -2471,6 +2471,17 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 retMap.add(dataReMap);
             });
         }
+        // add by etliu 20210830 start
+        // 现券多组合报价
+        else if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("cfetsBondDealQuoteDtoList"))){
+            ((List)dataMap.get("cfetsBondDealQuoteDtoList")).forEach(en->{
+                Map<String, Object> dataReMap = new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                retMap.add(dataReMap);
+            });
+        }
+        // add by etliu 20210830 end
         return retMap;
     }
 
