@@ -51,6 +51,8 @@ public class SecBaseInfoRecProcessorResult extends BaseEntity {
         /** 现金流利率信息表 add by yanya on 20210318 start**/
         this.setListValCashIntInfo(result.getListValCashIntInfo());
         /** 现金流利率信息表 add by yanya on 20210318 end**/
+        //modify by yanya on 20210829 增加转债信息
+        this.setListFinProductConvertible(result.getListFinProductConvertible());
            
     }
 
@@ -304,4 +306,16 @@ public class SecBaseInfoRecProcessorResult extends BaseEntity {
         this.listValCashIntInfo = listValCashIntInfo;
     }
     /** 现金流利率信息表 add by yanya on 20210318 end**/
+
+    //modify by yanya on 20210829 增加转债信息 start
+    List<FinProductConvertible> listFinProductConvertible = new ArrayList<FinProductConvertible>();
+
+    public List<FinProductConvertible> getListFinProductConvertible() {
+        return listFinProductConvertible;
+    }
+
+    public void setListFinProductConvertible(List<FinProductConvertible> listFinProductConvertible) {
+        this.listFinProductConvertible = listFinProductConvertible;
+    }
+    //modify by yanya on 20210829 增加转债信息 end
 }

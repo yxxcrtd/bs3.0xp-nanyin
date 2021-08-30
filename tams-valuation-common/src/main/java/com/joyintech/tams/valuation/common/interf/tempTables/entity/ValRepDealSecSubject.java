@@ -129,6 +129,11 @@ public class ValRepDealSecSubject extends BaseEntity {
      */
     private Date mpayDate;
 
+    /**
+     * 交易对手编码
+     */
+    private String counterId;
+
 
     /**
      * 取得 回购起息的交易编号
@@ -509,5 +514,20 @@ public class ValRepDealSecSubject extends BaseEntity {
     public void setBelongInstitutionCode(String belongInstitutionCode) {
         this.belongInstitutionCode = belongInstitutionCode;
     }
-    
+
+    /**
+     * 获取 counterId
+     * @return counterId.
+     */
+    public String getCounterId() {
+        return counterId;
+    }
+
+    /**
+     * 设置 counterId
+     * @param counterId counterId
+     */
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
+    }
 }

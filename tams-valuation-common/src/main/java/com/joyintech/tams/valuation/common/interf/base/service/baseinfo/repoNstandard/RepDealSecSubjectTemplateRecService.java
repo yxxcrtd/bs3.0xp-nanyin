@@ -236,7 +236,8 @@ public class RepDealSecSubjectTemplateRecService {
         
         // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
         valTradeFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        
+        //modify by yanya on 20210828 增加交易对手代码
+        valTradeFinProduct.setCounterId(dto.getCounterId());
         return valTradeFinProduct;
     }
 
@@ -271,6 +272,10 @@ public class RepDealSecSubjectTemplateRecService {
         
         // 分类3 = 调用共通方法查询税务分类
         valFinProductType.setType3(interfCommonService.getFinanceProductTaxClass(fdto));
+
+        // 分类18 = 调用共通方法查询证券品种 add by yanya on 20210828
+        valFinProductType.setType18(interfCommonService.getFinanceProductSecType(fdto));
+
         /**add by wujie on 20180822 end**/
         valFinProductType.setBranch(InterfCommonConstant.分支序号_默认);
         return valFinProductType;

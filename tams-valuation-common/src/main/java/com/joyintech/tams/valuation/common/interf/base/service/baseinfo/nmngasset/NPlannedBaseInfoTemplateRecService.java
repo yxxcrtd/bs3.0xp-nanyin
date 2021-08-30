@@ -214,6 +214,8 @@ public class NPlannedBaseInfoTemplateRecService {
         // 分类3 = 调用共通方法查询税务分类
         valFinProductType.setType3(interfCommonService.getFinanceProductTaxClass(fdto));
         /**add by wujie on 20180822 end**/
+        // 分类18 = 调用共通方法查询证券品种 add by yanya on 20210828
+        valFinProductType.setType18(interfCommonService.getFinanceProductSecType(fdto));
         
         valFinProductType.setBranch(InterfCommonConstant.分支序号_默认);
         return valFinProductType;

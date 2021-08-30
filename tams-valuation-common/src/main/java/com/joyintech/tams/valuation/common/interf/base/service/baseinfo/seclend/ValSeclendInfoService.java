@@ -228,6 +228,8 @@ public class ValSeclendInfoService {
         //资产类型
         fdto.setAssetType(dto.getFinprodType());
         finProductType.setType2(interfCommonService.getFinanceProductClass(fdto));
+        // 分类18 = 调用共通方法查询证券品种 add by yanya on 20210828
+        finProductType.setType18(interfCommonService.getFinanceProductSecType(fdto));
         /**add by wujie on 20181210 end**/
         finProductType.setBranch(InterfCommonConstant.分支序号_默认);
         return finProductType;
