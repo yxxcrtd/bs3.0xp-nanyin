@@ -14,17 +14,13 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeDto;
 import com.joyintech.tams.invest.trade.option.dto.TrdOptionTrade002Dto;
-import com.joyintech.tams.invest.trade.option.service.TrdOptionTrade001Service;
 import com.joyintech.tams.invest.trade.option.service.TrdOptionTrade002Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -172,7 +167,7 @@ public class TrdOptionTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdOptionTrade002Dto dto) throws IOException, InstantiationException, WorkFlowException {
+    AjaxResult save(@RequestBody TrdOptionTrade002Dto dto) throws Exception {
         if (StringUtil.isBlank(dto.getTotleTradeId())) {
             dto.setTotleTradeId(trdOptionTrade002Service.gen交易编号());
         }

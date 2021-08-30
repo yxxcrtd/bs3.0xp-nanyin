@@ -659,7 +659,7 @@ public class TrdRepoTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdRepoTrade002Dto dto) throws IOException, InstantiationException, WorkFlowException {
+    AjaxResult save(@RequestBody TrdRepoTrade002Dto dto) throws Exception {
         
         
         
