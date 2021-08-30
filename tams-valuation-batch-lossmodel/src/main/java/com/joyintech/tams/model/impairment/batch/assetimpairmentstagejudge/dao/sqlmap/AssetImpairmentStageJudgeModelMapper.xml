@@ -156,9 +156,8 @@
     <!-- 获取资产现金流计划集合  -->
     <select id="getCashFlowPlanInfoByFinprodId" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto">
 		SELECT A.FINPROD_ID FINPROD_ID,
-	           A.FINPROD_TYPE2 FINPROD_TYPE2,
 	           A.CASH_ID CASH_ID,
-	           A.CASH_TYPE_2 CASH_TYPE_2,
+	           B.CASH_TYPE_2 CASH_TYPE_2,
 	           A.VDATE_UNADJUST VDATE_UNADJUST,
 	           A.MDATE_UNADJUST MDATE_UNADJUST,
 	           A.VDATE VDATE,
