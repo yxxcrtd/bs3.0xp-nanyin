@@ -58,6 +58,6 @@ public class ValComponentConstant {
     /**
      * 减值方案系统参数
      */
-    public final static String LOSSTYPE = "LOSS_TYPE";
+    public final static String LOSSTYPE = "LOSS_TYPE";//01 毕马威；02 普华永道
 
 }
