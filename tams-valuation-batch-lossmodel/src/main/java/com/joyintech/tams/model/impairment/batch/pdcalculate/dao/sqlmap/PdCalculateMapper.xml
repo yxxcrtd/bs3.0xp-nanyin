@@ -10,11 +10,6 @@
             A.ASSET_ID AS assetId,
             A.ASSET_NAME AS assetName,
             A.MARKET_ID AS marketId,
-            A.TYPE_8 AS type8,
-            A.TYPE_9 AS type9,
-            A.TYPE_10 AS type10,
-            A.TYPE_11 AS type11,
-            A.TYPE_12 AS type12,
             A.MODEL_ASSET_TYPE AS modelAssetType,
             A.MODEL_ASSET_DETAIL_TYPE AS modelAssetDetailType,
             A.MDATE AS mdate,
@@ -66,7 +61,8 @@
             A.ISSUE_AMT AS issueAmt,
             A.COUPON_SPECIES AS couponSpecies,
             A.ISSUE_PRICE AS issuePrice,
-            A.VDATE AS vdate
+            A.VDATE AS vdate,
+			A.GRADE_ORG_TYPE AS gradeOrgType
 	</sql>
 
 
@@ -95,6 +91,7 @@
 		WHERE  to_char(A.DEC_DATE,'yyyy-MM-dd') = to_char(#{plateDate,jdbcType = DATE},'yyyy-MM-dd')
 		AND A.PS ='T01'
 		AND A.PROCESS='03'
+		AND A.EAD != 0 <!--EAD为0，说明资产已到期 -->
 		<if test="finprodIdList != null and finprodIdList.size > 0">
 			AND (A.ASSET_ID IN
 			<foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
@@ -132,7 +129,10 @@
         A.GRADE_RESULT=#{gradeResult,jdbcType=VARCHAR}
 		AND A.VOUCH_YEAR =
 		      (select max(B.vouch_year)  from MOD_GRADE_PD_CONFIG B
-		       where B.vouch_year  &lt;= #{yearNum,jdbcType=DECIMAL})
+		       where B.vouch_year  &lt;= #{yearNum,jdbcType=DECIMAL}
+		        and B.PD_CONFIG_TYPE = '01'
+		    	)
+		AND A.PD_CONFIG_TYPE = '01'
 		AND ROWNUM=1
 	</select>
 
@@ -176,7 +176,7 @@
 	<!-- 根据条件批量插入减值结果过程表 -->
 	<insert id="insertEclProcessResultPremium">
 		insert into MOD_ECL_RESULT_PROCESS (SEQNO,PROD_ID,PROD_NAME,PORTFOLIO_ID,ASSET_ID
-		,ASSET_NAME,MARKET_ID,TYPE_8,TYPE_9,TYPE_10,TYPE_11,TYPE_12
+		,ASSET_NAME,MARKET_ID
 		,MODEL_ASSET_TYPE,MODEL_ASSET_DETAIL_TYPE,MDATE,UPDATE_TIME
 		,FINANCIER,GRADE_ORG_ID,ISSUER,ACTUAL_CREDIT,SPONSOR,RISK_LEVEL_FIVE
 		,TRADE_ID,TRADE_DATE,PS,SHARE_AMT,YIELD,PAPER_RATE
@@ -187,14 +187,13 @@
 		,EAD,PRE_PROSPECTIVE_PD,PROSPECTIVE_PD,LGD,PRE_PROSPECTIVE_ECL
 		,PROSPECTIVE_ECL,PROCESS,CREATE_USER,CREATE_DEPT,CREATE_TIME
 		,UPDATE_USER,IS_CONTAIN_PLEDGE,TRADE_AMT,ISSUE_AMT
-		,COUPON_SPECIES,ISSUE_PRICE,VDATE
+		,COUPON_SPECIES,ISSUE_PRICE,VDATE,GRADE_ORG_TYPE
 		)
 		<foreach collection="eclProcessResultList" item="item" separator="from dual union all select" open="select * from (select "
 				 close="from dual)">
 			#{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
 			#{item.portfolioId,jdbcType=VARCHAR}, #{item.assetId,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR},
-			#{item.marketId,jdbcType=VARCHAR}, #{item.type8,jdbcType=VARCHAR}, #{item.type9,jdbcType=VARCHAR},
-			#{item.type10,jdbcType=VARCHAR}, #{item.type11,jdbcType=VARCHAR}, #{item.type12,jdbcType=VARCHAR},
+			#{item.marketId,jdbcType=VARCHAR},
 			#{item.modelAssetType,jdbcType=VARCHAR},#{item.modelAssetDetailType,jdbcType=VARCHAR},#{item.mdate,jdbcType=DATE},
 			#{item.updateTime,jdbcType=TIMESTAMP},#{item.financier,jdbcType=VARCHAR},#{item.gradeOrgId,jdbcType=VARCHAR},
 			#{item.issuer,jdbcType=VARCHAR},#{item.actualCredit,jdbcType=VARCHAR},#{item.sponsor,jdbcType=VARCHAR},
@@ -208,7 +207,8 @@
 			#{item.preProspectivePd,jdbcType=DECIMAL},#{item.prospectivePd,jdbcType=DECIMAL},#{item.lgd,jdbcType=DECIMAL},#{item.preProspectiveEcl,jdbcType=DECIMAL},
 			#{item.prospectiveEcl,jdbcType=DECIMAL},#{item.process,jdbcType=VARCHAR},#{item.createUser,jdbcType=VARCHAR},#{item.createDept,jdbcType=VARCHAR},
 			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.isContainPledge,jdbcType=VARCHAR},
-			#{item.tradeAmt,jdbcType=DECIMAL}, #{item.issueAmt,jdbcType=DECIMAL}, #{item.couponSpecies,jdbcType=VARCHAR}, #{item.issuePrice,jdbcType=DECIMAL}, #{item.vdate,jdbcType=DATE}
+			#{item.tradeAmt,jdbcType=DECIMAL}, #{item.issueAmt,jdbcType=DECIMAL}, #{item.couponSpecies,jdbcType=VARCHAR}, #{item.issuePrice,jdbcType=DECIMAL},
+			#{item.vdate,jdbcType=DATE},#{item.gradeOrgType,jdbcType=DECIMAL}
 		</foreach>
 	</insert>
 

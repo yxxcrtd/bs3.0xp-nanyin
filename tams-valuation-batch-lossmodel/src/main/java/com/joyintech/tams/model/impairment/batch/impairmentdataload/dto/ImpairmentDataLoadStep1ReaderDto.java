@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 二叉树模型-reader
+ * 减值模型数据加载-reader
  */
 public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
 
@@ -66,27 +66,7 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
      * 是否含有抵质押物
      */
     private String isLimits;
-    /**
-     * 资产一级分类
-     */
-    private String assetOne;
 
-    /**
-     * 资产二级分类
-     */
-    private String assetTwo;
-    /**
-     * 资产三级分类
-     */
-    private String assetThree;
-    /**
-     * 资产四级分类
-     */
-    private String assetFour;
-    /**
-     * 资产五级分类
-     */
-    private String assetFive;
     /**
      * 风险五级分类结果
      */
@@ -216,6 +196,11 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
     private String couponSpecies;
 
     /**
+     * 评级机构类型
+     */
+    private String gradeOrgType;
+
+    /**
      * 发行价
      */
     private BigDecimal issuePrice;
@@ -306,46 +291,6 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
 
     public void setIsLimits(String isLimits) {
         this.isLimits = isLimits;
-    }
-
-    public String getAssetOne() {
-        return assetOne;
-    }
-
-    public void setAssetOne(String assetOne) {
-        this.assetOne = assetOne;
-    }
-
-    public String getAssetTwo() {
-        return assetTwo;
-    }
-
-    public void setAssetTwo(String assetTwo) {
-        this.assetTwo = assetTwo;
-    }
-
-    public String getAssetThree() {
-        return assetThree;
-    }
-
-    public void setAssetThree(String assetThree) {
-        this.assetThree = assetThree;
-    }
-
-    public String getAssetFour() {
-        return assetFour;
-    }
-
-    public void setAssetFour(String assetFour) {
-        this.assetFour = assetFour;
-    }
-
-    public String getAssetFive() {
-        return assetFive;
-    }
-
-    public void setAssetFive(String assetFive) {
-        this.assetFive = assetFive;
     }
 
     public String getFirstResult() {
@@ -614,5 +559,21 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
 
     public void setActualCreditProvid(String actualCreditProvid) {
         this.actualCreditProvid = actualCreditProvid;
+    }
+
+    /**
+     * @return 评级机构类型
+     */
+    public String getGradeOrgType() {
+        return gradeOrgType;
+    }
+
+    /**
+     * 设置 评级机构类型
+     *
+     * @param gradeOrgType 评级机构类型
+     */
+    public void setGradeOrgType(String gradeOrgType) {
+        this.gradeOrgType = gradeOrgType;
     }
 }

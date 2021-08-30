@@ -13,8 +13,6 @@ import java.util.Map;
 @Repository
 public interface ImpairmentDataLoadMapper {
 
-	//获取评级信息映射
-	List<ModStandardGradeMapping> selectViewRatingInfoMapping(List<ViewRatingInfoDto> list);
 	//获取资产类型
 	List<ModAseetMapping> selectModAseetMapping(Map<String, Object> params);
 	//获取资产类型评级配置

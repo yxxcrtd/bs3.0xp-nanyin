@@ -7,6 +7,7 @@
         A.ELEMENTS_VALUE AS itemValue
         FROM MOD_STAGE_PARA A
         WHERE 1=1
+        AND A.STATUS = 'Y'
     </select>
 
     <select id="assetImpairmentStageJudgeList" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess">
@@ -17,11 +18,6 @@
             ASSET_ID AS assetId,
             ASSET_NAME AS assetName,
             MARKET_ID AS marketId,
-            TYPE_8 AS type8,
-            TYPE_9 AS type9,
-            TYPE_10 AS type10,
-            TYPE_11 AS type11,
-            TYPE_12 AS type12,
             MODEL_ASSET_TYPE AS modelAssetType,
             MODEL_ASSET_DETAIL_TYPE AS modelAssetDetailType,
             MDATE AS mdate,
@@ -73,11 +69,14 @@
             ISSUE_AMT AS issueAmt,
             COUPON_SPECIES AS couponSpecies,
             ISSUE_PRICE AS issuePrice,
-            VDATE AS vdate
+            VDATE AS vdate,
+            GRADE_ORG_TYPE AS gradeOrgType
         FROM MOD_ECL_RESULT_PROCESS A
         WHERE DEC_DATE = #{batchDate,jdbcType=DATE}
-        AND PROCESS = '01'
-        AND PS = 'T01'
+        AND PROCESS = #{process}
+        <if test="ps !=null and ps != ''">
+            AND PS = #{ps}
+        </if>
         <if test="finprodIdList != null and finprodIdList.size > 0">
             AND (ASSET_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
@@ -108,7 +107,7 @@
 
     <insert id="insertResult">
         insert into MOD_ECL_RESULT_PROCESS (SEQNO,PROD_ID,PROD_NAME,PORTFOLIO_ID,ASSET_ID
-        ,ASSET_NAME,MARKET_ID,TYPE_8,TYPE_9,TYPE_10,TYPE_11,TYPE_12
+        ,ASSET_NAME,MARKET_ID
         ,MODEL_ASSET_TYPE,MODEL_ASSET_DETAIL_TYPE,MDATE,UPDATE_TIME
         ,FINANCIER,GRADE_ORG_ID,ISSUER,ACTUAL_CREDIT,SPONSOR,RISK_LEVEL_FIVE
         ,TRADE_ID,TRADE_DATE,PS,SHARE_AMT,YIELD,PAPER_RATE
@@ -119,14 +118,13 @@
         ,EAD,PRE_PROSPECTIVE_PD,PROSPECTIVE_PD,LGD,PRE_PROSPECTIVE_ECL
         ,PROSPECTIVE_ECL,PROCESS,CREATE_USER,CREATE_DEPT,CREATE_TIME
         ,UPDATE_USER,IS_CONTAIN_PLEDGE,TRADE_AMT,ISSUE_AMT
-        ,COUPON_SPECIES,ISSUE_PRICE,VDATE
+        ,COUPON_SPECIES,ISSUE_PRICE,VDATE,GRADE_ORG_TYPE
         )
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close="from dual)">
             #{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
             #{item.portfolioId,jdbcType=VARCHAR}, #{item.assetId,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR},
-            #{item.marketId,jdbcType=VARCHAR}, #{item.type8,jdbcType=VARCHAR}, #{item.type9,jdbcType=VARCHAR},
-            #{item.type10,jdbcType=VARCHAR}, #{item.type11,jdbcType=VARCHAR}, #{item.type12,jdbcType=VARCHAR},
+            #{item.marketId,jdbcType=VARCHAR},
             #{item.modelAssetType,jdbcType=VARCHAR},#{item.modelAssetDetailType,jdbcType=VARCHAR},#{item.mdate,jdbcType=DATE},
             #{item.updateTime,jdbcType=TIMESTAMP},#{item.financier,jdbcType=VARCHAR},#{item.gradeOrgId,jdbcType=VARCHAR},
             #{item.issuer,jdbcType=VARCHAR},#{item.actualCredit,jdbcType=VARCHAR},#{item.sponsor,jdbcType=VARCHAR},
@@ -140,16 +138,17 @@
             #{item.preProspectivePd,jdbcType=DECIMAL},#{item.prospectivePd,jdbcType=DECIMAL},#{item.lgd,jdbcType=DECIMAL},#{item.preProspectiveEcl,jdbcType=DECIMAL},
             #{item.prospectiveEcl,jdbcType=DECIMAL},#{item.process,jdbcType=VARCHAR},#{item.createUser,jdbcType=VARCHAR},#{item.createDept,jdbcType=VARCHAR},
             #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.isContainPledge,jdbcType=VARCHAR},
-            #{item.tradeAmt,jdbcType=DECIMAL}, #{item.issueAmt,jdbcType=DECIMAL}, #{item.couponSpecies,jdbcType=VARCHAR}, #{item.issuePrice,jdbcType=DECIMAL}, #{item.vdate,jdbcType=DATE}
+            #{item.tradeAmt,jdbcType=DECIMAL}, #{item.issueAmt,jdbcType=DECIMAL}, #{item.couponSpecies,jdbcType=VARCHAR}, #{item.issuePrice,jdbcType=DECIMAL}, #{item.vdate,jdbcType=DATE},
+            #{item.gradeOrgType,jdbcType=DECIMAL}
         </foreach>
     </insert>
 
     <select id="assetImpairmentStageJudgeT2322List" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModRepayAndInterestDto">
         SELECT
-        PLAN_END_DATE AS planEndDate,
-        PS AS dealSide
-        FROM MOD_ECL_RESULT_PROCESS A
-        WHERE ASSET_ID = #{assetId,jdbcType=VARCHAR}
+        A.MDATE AS planEndDate,
+        A.PS AS dealSide
+        FROM TRD_PRODUCT_DEAL A
+        WHERE FINPROD_ID  = #{assetId,jdbcType=VARCHAR}
         AND IS_CLEAN = 'Y'
         AND PS IN('T23','T22')
     </select>
@@ -169,8 +168,11 @@
 	           A.INT_AMT INT_AMT,
 	           A.CASH_AMT CASH_AMT,
 	           A.INT_PRIN_AMT INT_PRIN_AMT
-	      FROM VW_MOD_CASH_FLOW_PLAN A
-	     WHERE A.FINPROD_ID= #{finprodId,jdbcType=VARCHAR}
-	     ORDER BY A.MDATE
+        FROM FIN_CASH_PLAN A
+		INNER JOIN FIN_CASH_INFO B
+		ON A.CASH_ID = B.CASH_ID
+		AND B.CASH_TYPE_2 = 'C02'
+        WHERE A.FINPROD_ID= #{finprodId,jdbcType=VARCHAR}
+        ORDER BY A.MDATE
 	</select>
 </mapper>

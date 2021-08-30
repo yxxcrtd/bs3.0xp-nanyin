@@ -9,11 +9,6 @@
 		<result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
 		<result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
 		<result column="MARKET_ID" property="marketId" jdbcType="VARCHAR" />
-		<result column="TYPE_8" property="type8" jdbcType="VARCHAR" />
-		<result column="TYPE_9" property="type9" jdbcType="VARCHAR" />
-		<result column="TYPE_10" property="type10" jdbcType="VARCHAR" />
-		<result column="TYPE_11" property="type11" jdbcType="VARCHAR" />
-		<result column="TYPE_12" property="type12" jdbcType="VARCHAR" />
 		<result column="MODEL_ASSET_TYPE" property="modelAssetType" jdbcType="VARCHAR" />
 		<result column="MODEL_ASSET_DETAIL_TYPE" property="modelAssetDetailType" jdbcType="VARCHAR" />
 		<result column="MDATE" property="mdate" jdbcType="DATE" />
@@ -69,8 +64,8 @@
 	</resultMap>
 	<sql id="Base_Column_List" >
         SEQNO SEQNO, PROD_ID PROD_ID, PROD_NAME PROD_NAME, PORTFOLIO_ID PORTFOLIO_ID, ASSET_ID ASSET_ID,
-        ASSET_NAME ASSET_NAME, MARKET_ID MARKET_ID, TYPE_8 TYPE_8, TYPE_9 TYPE_9, TYPE_10 TYPE_10,
-        TYPE_11 TYPE_11, TYPE_12 TYPE_12, MODEL_ASSET_TYPE MODEL_ASSET_TYPE, MODEL_ASSET_DETAIL_TYPE MODEL_ASSET_DETAIL_TYPE,
+        ASSET_NAME ASSET_NAME, MARKET_ID MARKET_ID,  MODEL_ASSET_TYPE MODEL_ASSET_TYPE,
+		MODEL_ASSET_DETAIL_TYPE MODEL_ASSET_DETAIL_TYPE,
         MDATE MDATE, UPDATE_TIME UPDATE_TIME, FINANCIER FINANCIER, GRADE_ORG_ID GRADE_ORG_ID,
         ISSUER ISSUER, ACTUAL_CREDIT ACTUAL_CREDIT, SPONSOR SPONSOR, RISK_LEVEL_FIVE RISK_LEVEL_FIVE,
         TRADE_ID TRADE_ID, TRADE_DATE TRADE_DATE, PS PS, SHARE_AMT SHARE_AMT, TRADE_AMT TRADE_AMT,
@@ -157,8 +152,7 @@
 	<insert id="insertBatchResult" >
         insert into MOD_ECL_RESULT_PROCESS (SEQNO, PROD_ID, PROD_NAME,
             PORTFOLIO_ID, ASSET_ID, ASSET_NAME,
-            MARKET_ID, TYPE_8, TYPE_9,
-            TYPE_10, TYPE_11, TYPE_12,
+            MARKET_ID,
             MODEL_ASSET_TYPE, MODEL_ASSET_DETAIL_TYPE,
             MDATE, UPDATE_TIME, FINANCIER,
             GRADE_ORG_ID, ISSUER, ACTUAL_CREDIT,
@@ -181,8 +175,7 @@
 				 close="from dual)">
             #{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
             #{item.portfolioId,jdbcType=VARCHAR}, #{item.assetId,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR},
-            #{item.marketId,jdbcType=VARCHAR}, #{item.type8,jdbcType=VARCHAR}, #{item.type9,jdbcType=VARCHAR},
-            #{item.type10,jdbcType=VARCHAR}, #{item.type11,jdbcType=VARCHAR}, #{item.type12,jdbcType=VARCHAR},
+            #{item.marketId,jdbcType=VARCHAR},
             #{item.modelAssetType,jdbcType=VARCHAR}, #{item.modelAssetDetailType,jdbcType=VARCHAR},
             #{item.mdate,jdbcType=DATE}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.financier,jdbcType=VARCHAR},
             #{item.gradeOrgId,jdbcType=VARCHAR}, #{item.issuer,jdbcType=VARCHAR}, #{item.actualCredit,jdbcType=VARCHAR},
@@ -227,21 +220,6 @@
 			</if>
 			<if test="marketId != null" >
 				MARKET_ID,
-			</if>
-			<if test="type8 != null" >
-				TYPE_8,
-			</if>
-			<if test="type9 != null" >
-				TYPE_9,
-			</if>
-			<if test="type10 != null" >
-				TYPE_10,
-			</if>
-			<if test="type11 != null" >
-				TYPE_11,
-			</if>
-			<if test="type12 != null" >
-				TYPE_12,
 			</if>
 			<if test="modelAssetType != null" >
 				MODEL_ASSET_TYPE,
@@ -421,21 +399,6 @@
 			</if>
 			<if test="marketId != null" >
 				#{marketId,jdbcType=VARCHAR},
-			</if>
-			<if test="type8 != null" >
-				#{type8,jdbcType=VARCHAR},
-			</if>
-			<if test="type9 != null" >
-				#{type9,jdbcType=VARCHAR},
-			</if>
-			<if test="type10 != null" >
-				#{type10,jdbcType=VARCHAR},
-			</if>
-			<if test="type11 != null" >
-				#{type11,jdbcType=VARCHAR},
-			</if>
-			<if test="type12 != null" >
-				#{type12,jdbcType=VARCHAR},
 			</if>
 			<if test="modelAssetType != null" >
 				#{modelAssetType,jdbcType=VARCHAR},

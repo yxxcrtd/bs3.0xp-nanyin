@@ -3,6 +3,7 @@ package com.joyintech.tams.valuation.component.batch.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.dao.ModAssetInfoMapper;
@@ -160,7 +161,7 @@ public class ModValuationCommonService extends BaseService {
 			paraMap.put("ocode", dto.getRateId());
 			paraMap.put("gradedate",dto.getSearchDate());
 			//证券品种 = 数据字典.证券品种_模型.债券
-			if(ModelDictCodeList.模型_证券品种_债券.getValue().equals(dto.getModSecType())) {
+			if(DictCodeListExt1.证券品种_债券.getValue().equals(dto.getModSecType())) {
 				paraMap.put("otype",ModelDictCodeList.模型_评级类型_债项评级.getValue());
 				paraMap.put("resource",ModelDictCodeList.模型_评级来源类型_外部.getValue());
 				rateResult = modAssetInfoMapper.selectRateDataByMap(paraMap);

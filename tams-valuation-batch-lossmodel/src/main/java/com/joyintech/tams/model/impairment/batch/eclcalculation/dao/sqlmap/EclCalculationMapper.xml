@@ -6,8 +6,7 @@
 select
 	a.SEQNO, a.PROD_ID, a.PROD_NAME,
 	a.PORTFOLIO_ID, a.ASSET_ID, a.ASSET_NAME,
-	a.MARKET_ID, a.TYPE_8, a.TYPE_9,
-	a.TYPE_10, a.TYPE_11, a.TYPE_12,
+	a.MARKET_ID,
 	a.MODEL_ASSET_TYPE, a.MODEL_ASSET_DETAIL_TYPE,
 	a.MDATE, a.UPDATE_TIME, a.FINANCIER,
 	a.GRADE_ORG_ID, a.ISSUER, a.ACTUAL_CREDIT,
@@ -25,7 +24,7 @@ select
 	a.PROSPECTIVE_ECL, a.ISSUE_AMT, a.VDATE,
 	a.COUPON_SPECIES, a.ISSUE_PRICE, a.PROCESS,
 	a.CREATE_USER, a.CREATE_DEPT, a.CREATE_TIME,
-	a.UPDATE_USER, a.IS_CONTAIN_PLEDGE
+	a.UPDATE_USER, a.IS_CONTAIN_PLEDGE,a.GRADE_ORG_TYPE
 from
 	MOD_ECL_RESULT_PROCESS a
 	inner join MOD_VAL_BATCH_PARAMS b on b.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo} and b.FINPROD_ID = a.ASSET_ID
@@ -73,24 +72,37 @@ from (
 	from
 		MOD_LGD_CONFIG b
 	where
-		b.ASSET_DETAIL_TYPE = (select c.INPUT2 from MOD_ASEET_MAPPING c
-			where c.MAPPING_TYPE = #{MODEL_MAPPING_TYPE_01} and c.OUTPUT1 = #{type8,jdbcType=VARCHAR} and c.OUTPUT5 = #{type12,jdbcType=VARCHAR})
-			and b.IS_CONTAIN_PLEDGE = #{isContainPledge,jdbcType=VARCHAR}
-) para order by para.orderNum asc
+		b.ASSET_DETAIL_TYPE = #{assetDetailType}
 	</select>
 
-	<select id="selectInput2" resultType="java.lang.String">
-select
-	a.INPUT2
-from
-	MOD_ASEET_MAPPING a
-where
-	a.MAPPING_TYPE = #{MODEL_MAPPING_TYPE_01} and
-	a.OUTPUT1 = #{type8,jdbcType=VARCHAR} and
-	a.OUTPUT2 = #{type9,jdbcType=VARCHAR} and
-	a.OUTPUT3 = #{type10,jdbcType=VARCHAR} and
-	a.OUTPUT4 = #{type11,jdbcType=VARCHAR} and
-	a.OUTPUT5 = #{type12,jdbcType=VARCHAR}
+	<select id="queryEclManage" resultType="com.joyintech.tams.common.base.entity.TrdAssetLoss">
+		SELECT
+			T.TRADE_ID,
+			T.SEC_ID,
+			T.STAGE,
+			T.PEROID,
+			T.VAL_DATE,
+			T.STR_DATE,
+			T.END_DATE,
+			T.LOSS_INPUT_TYPE,
+			T.LOSS_RATIO,
+			T.PD_VAULE,
+			T.LGD_VAULE,
+			T.ECL_VAULE,
+			T.FINPROD_ID,
+			T.PEROID_TYPE,
+			T.TERM_DESCRIBE
+		FROM TRD_ASSET_LOSS T
+		WHERE
+		    T.SEC_ID = #{assetId}
+		  	AND T.STATUS ='01'
+			AND T.VAL_DATE = #{platDate}
+			AND (
+			    T.PEROID_TYPE = #{peroidType}
+				OR (T.PEROID_TYPE IS NULL AND T.LOSS_INPUT_TYPE = #{inputType}
+			AND T.STR_DATE <![CDATA[<=]]> #{platDate}
+			AND T.END_DATE <![CDATA[>]]> #{platDate}
+		ORDER BY T.LOSS_INPUT_TYPE ASC
 	</select>
 
 	<insert id="insertModEclResult">

@@ -29,6 +29,11 @@ public class ModAssetGradeConfig extends BaseEntity {
     private String oType;
 
     /**
+     * 评级机构类型
+     */
+    private String pdConfigType;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -106,5 +111,21 @@ public class ModAssetGradeConfig extends BaseEntity {
      */
     public void setoType(String oType) {
         this.oType = oType == null ? null : oType.trim();
+    }
+
+    /**
+     * @return 评级机构类型
+     */
+    public String getPdConfigType() {
+        return pdConfigType;
+    }
+
+    /**
+     * 设置 评级机构类型
+     *
+     * @param pdConfigType 评级机构类型
+     */
+    public void setPdConfigType(String pdConfigType) {
+        this.pdConfigType = pdConfigType;
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EclCalculationReaderService {
@@ -36,10 +37,31 @@ public class EclCalculationReaderService {
         //1.获取理需要处理的每一笔交易数据（计划做在数据加载批处理中）
         List<ModEclResultProcess> list = eclCalculationMapper.selectModEclResultProcessForDeal(para);
         List<EclCalculationReaderDto> rstList = new ArrayList<>();
+        // 定义 变量.减值结果过程Map集合
+        Map<String, List<ModEclResultProcess>> modEclResultProcessMap = new HashMap<>();
         if (list != null && list.size() > 0) {
             for (ModEclResultProcess dto : list) {
+                // 定义 变量.key = 资产代码 + 账套代码
+                String key = dto.getAssetId() + "|" + dto.getProdId();
+                // map集合无key对应value值
+                if (modEclResultProcessMap.get(key) == null) {
+                    // 放入map集合中
+                    modEclResultProcessMap.put(key, Arrays.asList(dto));
+                }
+                else {
+                    // 获取对应value值
+                    List<ModEclResultProcess> listProcess = modEclResultProcessMap.get(key);
+                    // 增加dto
+                    listProcess.add(dto);
+                    // 更新Map
+                    modEclResultProcessMap.put(key, listProcess);
+                }
+            }
+            for (String key : modEclResultProcessMap.keySet()) {
                 EclCalculationReaderDto rstDto = new EclCalculationReaderDto();
-                rstDto.setModEclResultProcess(dto);
+                rstDto.setAssetId(key.split("|")[0]);
+                rstDto.setProdId(key.split("|")[1]);
+                rstDto.setModEclResultProcessList(modEclResultProcessMap.get(key));
                 rstList.add(rstDto);
             }
         }

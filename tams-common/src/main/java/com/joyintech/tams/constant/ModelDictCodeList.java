@@ -69,6 +69,9 @@ public enum ModelDictCodeList implements BaseDictCodeList {
     模型_评级类型_担保人(ModelDictCode.模型_评级类型,"04","担保人"),
     模型_评级类型_较高值(ModelDictCode.模型_评级类型,"05","较高值"),
     模型_评级类型_较低值(ModelDictCode.模型_评级类型,"06","较低值"),
+    模型_评级类型_存借款机构(ModelDictCode.模型_评级类型,"07","较低值"),
+    模型_评级类型_交易对手(ModelDictCode.模型_评级类型,"08","较低值"),
+    模型_评级类型_发行人(ModelDictCode.模型_评级类型,"09","发行人"),
     模型_评级来源类型_外部(ModelDictCode.模型_评级来源类型,"01","外部"),
     模型_评级来源类型_内部(ModelDictCode.模型_评级来源类型,"02","内部"),
     模型_评级来源类型_系统计算(ModelDictCode.模型_评级来源类型,"03","系统计算"),
@@ -296,8 +299,10 @@ public enum ModelDictCodeList implements BaseDictCodeList {
     //add by chufengjie I9改造：资产重分类 20210623 end
     /* add by xutong 20210608 I9 end */
     /* add by xutong 20210624 I9减值 start */
-    模型数据来源手工(ModelDictCode.模型数据来源,"02","手工"),
-    模型数据来源_模型(ModelDictCode.模型数据来源,"01","模型"),
+    模型数据来源_手工(ModelDictCode.模型数据来源,"01","手工"),
+    模型数据来源_WIND(ModelDictCode.模型数据来源,"02","wind"),
+    模型数据来源_中债(ModelDictCode.模型数据来源,"03","中债"),
+    模型数据来源_模型(ModelDictCode.模型数据来源,"04","模型"),
     /* add by xutong 20210624 I9减值 end */
     共通业务类型_资产重分类交易(ModelDictCode.共通业务类型,"TRD77","资产重分类交易"),
     共通业务类型_资产大类评级配置(ModelDictCode.共通业务类型,"MOD01","资产大类评级配置"),

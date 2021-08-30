@@ -34,10 +34,17 @@ public class EclCalculationWriter extends BaseWriter<EclCalculationResultDto> {
         List<ModEclResult> listModEclResult = new ArrayList<ModEclResult>();
         if (resultList != null && resultList.size() > 0) {
             for (EclCalculationResultDto dto : resultList) {
-                listModEclResultProcess.add(dto.getModEclResultProcess());
-                listModEclResult.add(dto.getModEclResult());
-                if (StringUtil.isNotEmpty(dto.getModConfigUseage().getSeqno())) {
-                    listModConfigUseage.add(dto.getModConfigUseage());
+                // 减值结果过程表
+                listModEclResultProcess.addAll(dto.getModEclResultProcessList());
+                // 减值配置使用情况表
+                listModEclResult.addAll(dto.getModEclResultList());
+                // 减值配置使用情况表
+                if (CollectionUtils.isNotEmpty(dto.getModConfigUseageList())) {
+                    for(ModConfigUseage item : dto.getModConfigUseageList()){
+                        if(StringUtil.isNotEmpty(item.getSeqno())){
+                            listModConfigUseage.add(item);
+                        }
+                    }
                 }
             }
             insertModConfigUseage(listModConfigUseage);

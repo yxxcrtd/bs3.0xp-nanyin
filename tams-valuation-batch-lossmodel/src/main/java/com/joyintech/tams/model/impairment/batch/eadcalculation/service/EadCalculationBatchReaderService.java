@@ -2,6 +2,8 @@ package com.joyintech.tams.model.impairment.batch.eadcalculation.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.base.entity.SysBatchTask;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dao.EadCalculationBatchMapper;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadCalculationReaderDto;
@@ -67,12 +69,13 @@ public class EadCalculationBatchReaderService {
             }
         }
         List<EadCalculationReaderDto> result = new ArrayList<EadCalculationReaderDto>();
-        param.put("PS_T01", ModelDictCodeList.交易方向_买入.getValue());
-        param.put("PS_T02", ModelDictCodeList.交易方向_卖出.getValue());
-        param.put("PS_T03", ModelDictCodeList.交易方向_行权_回售.getValue());
-        param.put("PS_T07", ModelDictCodeList.交易方向_到期.getValue());
-        param.put("PS_T08", ModelDictCodeList.交易方向_还本.getValue());
-        param.put("PS_T39", ModelDictCodeList.交易方向_行权_赎回.getValue());
+        param.put("PS_T01", DictCodeList.交易方向_买入.getValue());
+        param.put("PS_T02", DictCodeList.交易方向_卖出.getValue());
+        param.put("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
+        param.put("PS_T07", DictCodeList.交易方向_到期.getValue());
+        param.put("PS_T08", DictCodeList.交易方向_还本.getValue());
+        param.put("PS_T39", DictCodeList.交易方向_行权_赎回.getValue());
+        param.put("PS_T35", DictCodeList.交易方向_资产重分类.getValue());
 //        param.put("batchSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
         param.put("MODEL_DEC_PROCESS_01", ModelDictCodeList.模型_减值过程_数据加载.getValue());
         param.put("MODEL_DEC_PROCESS_02", ModelDictCodeList.模型_减值过程_减值阶段判断.getValue());
@@ -100,7 +103,7 @@ public class EadCalculationBatchReaderService {
                     tempDto.setVdate(k1.getValue().get(0).getVdate());
                     tempDto.setIssuePrice(isNullBigDecimal(k1.getValue().get(0).getIssuePrice()));
                     // 如果 证券品种为债券
-                    if(ModelDictCodeList.模型_证券品种_债券.getValue().equals(k1.getValue().get(0).getType8())){
+                    if(DictCodeListExt1.证券品种_债券.getValue().equals(k1.getValue().get(0).getModelAssetType())){
                         tempDto.setCouponSpecies(k1.getValue().get(0).getCouponSpecies());
                     }else{// 如果 证券品种为其他
                         tempDto.setCouponSpecies(ModelDictCodeList.息票品种_附息.getValue());
