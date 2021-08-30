@@ -465,9 +465,12 @@
                 let item = portfolioIdList[index];
                 let obj = getBaseRiskdata();
                 obj.portfolioCode = item.portfolioId;
+                obj.portfolioId = item.portfolioId;
+                obj.entrustId = item.entrustId;
                 if (item.avaNum) {
                     obj.tradeAmount = item.avaNum * 10000;
                 }
+                obj.fpriceAmt = obj.tradeAmount;
                 dataList.push(obj);
             }
         }else{
