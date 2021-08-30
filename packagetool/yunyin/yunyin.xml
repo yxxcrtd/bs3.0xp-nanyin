@@ -49,6 +49,8 @@
         <!-- 批处理 -->
 		<module>../../tams-disclosure-batch</module>
         <module>../../tams-valuation-batch</module>
+        <module>../../tams-valuation-batch-lossmodel</module>
+        <module>../../tams-valuation-batch-valmodel</module>
         <module>../../tams-svreport-batch</module>
         <module>../../tams-system/yunying/batch</module>
 
