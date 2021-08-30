@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModCurveResultDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModCurveResultDetail" >
+        <result column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="RESULT_SEQNO" property="resultSeqno" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="CASH_DATE" property="cashDate" jdbcType="DATE" />
+        <result column="PERIOD" property="period" jdbcType="DECIMAL" />
+        <result column="CASH_AMT" property="cashAmt" jdbcType="DECIMAL" />
+        <result column="DIS_RATE" property="disRate" jdbcType="DECIMAL" />
+        <result column="DIS_FACTOR" property="disFactor" jdbcType="DECIMAL" />
+        <result column="DIS_CASH_AMT" property="disCashAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModCurveResultDetail" >
+        insert into MOD_CURVE_RESULT_DETAIL (SEQNO, RESULT_SEQNO, FINPROD_ID, 
+            CDATE, CASH_DATE, PERIOD, 
+            CASH_AMT, DIS_RATE, DIS_FACTOR, 
+            DIS_CASH_AMT, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{resultSeqno,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
+            #{cdate,jdbcType=DATE}, #{cashDate,jdbcType=DATE}, #{period,jdbcType=DECIMAL}, 
+            #{cashAmt,jdbcType=DECIMAL}, #{disRate,jdbcType=DECIMAL}, #{disFactor,jdbcType=DECIMAL}, 
+            #{disCashAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModCurveResultDetail" >
+        insert into MOD_CURVE_RESULT_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="resultSeqno != null" >
+                RESULT_SEQNO,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="cashDate != null" >
+                CASH_DATE,
+            </if>
+            <if test="period != null" >
+                PERIOD,
+            </if>
+            <if test="cashAmt != null" >
+                CASH_AMT,
+            </if>
+            <if test="disRate != null" >
+                DIS_RATE,
+            </if>
+            <if test="disFactor != null" >
+                DIS_FACTOR,
+            </if>
+            <if test="disCashAmt != null" >
+                DIS_CASH_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="resultSeqno != null" >
+                #{resultSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="cashDate != null" >
+                #{cashDate,jdbcType=DATE},
+            </if>
+            <if test="period != null" >
+                #{period,jdbcType=DECIMAL},
+            </if>
+            <if test="cashAmt != null" >
+                #{cashAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="disRate != null" >
+                #{disRate,jdbcType=DECIMAL},
+            </if>
+            <if test="disFactor != null" >
+                #{disFactor,jdbcType=DECIMAL},
+            </if>
+            <if test="disCashAmt != null" >
+                #{disCashAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModCurveResultDetail" >
+        insert into MOD_CURVE_RESULT_DETAIL(SEQNO, RESULT_SEQNO, FINPROD_ID, CDATE, CASH_DATE, 
+        PERIOD, CASH_AMT, DIS_RATE, DIS_FACTOR, DIS_CASH_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SEQNO, RESULT_SEQNO, FINPROD_ID, CDATE, CASH_DATE, 
+            PERIOD, CASH_AMT, DIS_RATE, DIS_FACTOR, DIS_CASH_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MOD_CURVE_RESULT_DETAIL
+             where 1 = 1
+    </insert>
+</mapper>

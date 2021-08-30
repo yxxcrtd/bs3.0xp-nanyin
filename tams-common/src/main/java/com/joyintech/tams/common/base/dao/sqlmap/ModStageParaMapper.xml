@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModStageParaMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModStagePara" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="STAGE_OF_ASSET" property="stageOfAsset" jdbcType="VARCHAR" />
+        <result column="ABSOLUTE_OF_ELEMENTS" property="absoluteOfElements" jdbcType="VARCHAR" />
+        <result column="ELEMENTS" property="elements" jdbcType="VARCHAR" />
+        <result column="ELEMENTS_VALUE" property="elementsValue" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, STAGE_OF_ASSET STAGE_OF_ASSET, ABSOLUTE_OF_ELEMENTS ABSOLUTE_OF_ELEMENTS, 
+        ELEMENTS ELEMENTS, ELEMENTS_VALUE ELEMENTS_VALUE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATUS STATUS
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ModStageParaMapper.Base_Column_List" />
+        from MOD_STAGE_PARA
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ModStageParaMapper.Base_Column_List" />
+        from MOD_STAGE_PARA
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ModStageParaMapper.Base_Column_List" />
+        from MOD_STAGE_PARA
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from MOD_STAGE_PARA
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModStagePara" >
+        insert into MOD_STAGE_PARA (SEQNO, STAGE_OF_ASSET, ABSOLUTE_OF_ELEMENTS, 
+            ELEMENTS, ELEMENTS_VALUE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, STATUS)
+        values (#{seqno,jdbcType=VARCHAR}, #{stageOfAsset,jdbcType=VARCHAR}, #{absoluteOfElements,jdbcType=VARCHAR}, 
+            #{elements,jdbcType=VARCHAR}, #{elementsValue,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModStagePara" >
+        insert into MOD_STAGE_PARA
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="stageOfAsset != null" >
+                STAGE_OF_ASSET,
+            </if>
+            <if test="absoluteOfElements != null" >
+                ABSOLUTE_OF_ELEMENTS,
+            </if>
+            <if test="elements != null" >
+                ELEMENTS,
+            </if>
+            <if test="elementsValue != null" >
+                ELEMENTS_VALUE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="stageOfAsset != null" >
+                #{stageOfAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="absoluteOfElements != null" >
+                #{absoluteOfElements,jdbcType=VARCHAR},
+            </if>
+            <if test="elements != null" >
+                #{elements,jdbcType=VARCHAR},
+            </if>
+            <if test="elementsValue != null" >
+                #{elementsValue,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModStagePara" >
+        insert into MOD_STAGE_PARA(SEQNO, STAGE_OF_ASSET, ABSOLUTE_OF_ELEMENTS, ELEMENTS, 
+        ELEMENTS_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        STATUS)
+        select SEQNO, STAGE_OF_ASSET, ABSOLUTE_OF_ELEMENTS, ELEMENTS, 
+            ELEMENTS_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            #{status,jdbcType=VARCHAR} STATUS
+             from MOD_STAGE_PARA
+             where STATUS = 'E' and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ModStagePara" >
+        update MOD_STAGE_PARA
+        <set >
+            <if test="stageOfAsset != null" >
+                STAGE_OF_ASSET = #{stageOfAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="absoluteOfElements != null" >
+                ABSOLUTE_OF_ELEMENTS = #{absoluteOfElements,jdbcType=VARCHAR},
+            </if>
+            <if test="elements != null" >
+                ELEMENTS = #{elements,jdbcType=VARCHAR},
+            </if>
+            <if test="elementsValue != null" >
+                ELEMENTS_VALUE = #{elementsValue,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ModStagePara" >
+        update MOD_STAGE_PARA
+        set STAGE_OF_ASSET = #{stageOfAsset,jdbcType=VARCHAR},
+            ABSOLUTE_OF_ELEMENTS = #{absoluteOfElements,jdbcType=VARCHAR},
+            ELEMENTS = #{elements,jdbcType=VARCHAR},
+            ELEMENTS_VALUE = #{elementsValue,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>
