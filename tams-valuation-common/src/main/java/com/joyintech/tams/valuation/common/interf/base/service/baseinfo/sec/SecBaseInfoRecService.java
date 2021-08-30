@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.sec;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -79,6 +80,8 @@ public class SecBaseInfoRecService {
             result.setListValFinProductExt((List<FinProductAdd>)map.get("listValFinProductAdd"));
             //modify by yanya on 20210318 现金流利率信息list
             result.setListValCashIntInfo((List<FinRateInfo>)map.get("ValFinCashIntInfo"));
+            //modify by yanya on 20210829 增加转债信息
+            result.setListFinProductConvertible((List<FinProductConvertible>)map.get("listFinProductConvertible"));
         }
         // 添加日志
         result.setListValInterflog(returnResult.getValInterflog());
@@ -102,6 +105,8 @@ public class SecBaseInfoRecService {
         List<FinProductAdd> listValFinProductAdd = new ArrayList<FinProductAdd>();
         //modify by yanya on 20210318 增加现金流利率信息list
         List<FinRateInfo> listFinCashIntInfo = new ArrayList<FinRateInfo>();
+        //modify by yanya on 20210829 增加转债信息
+        List<FinProductConvertible> listFinProductConvertible = new ArrayList<FinProductConvertible>();
         for (ValSecBaseInfo item : listValSecBaseInfo) {
         	String benchmarkNo = null;
         	//接收 标的类金融产品 T1
@@ -117,6 +122,11 @@ public class SecBaseInfoRecService {
             listValFinProductAdd.add(this.getValFinProductAdd(item));
             //modify by yanya on 20210318 增加现金流利率信息list
             listFinCashIntInfo.add(this.getFinCashIntInfo(item, valCashCalcRule));
+            //modify by yanya on 20210829 增加转债信息
+            FinProductConvertible finProductConvertible = this.getValFinProductConvertible(item);
+            if(finProductConvertible != null) {
+                listFinProductConvertible.add(this.getValFinProductConvertible(item));
+            }
         }
         mapResult.put("listValFinProduct", listValFinProduct);
         mapResult.put("listValFinProductType", listValFinProductType);
@@ -125,7 +135,8 @@ public class SecBaseInfoRecService {
         mapResult.put("listValFinProductAdd", listValFinProductAdd);
         //modify by yanya on 20210318 增加现金流利率信息list
         mapResult.put("ValFinCashIntInfo", listFinCashIntInfo);
-
+        //modify by yanya on 20210829 增加转债信息
+        mapResult.put("listFinProductConvertible", listFinProductConvertible);
         return mapResult;
     }
 
@@ -216,6 +227,8 @@ public class SecBaseInfoRecService {
         result.setFinprodId(dto.getAssetId());
         //数据来源 = 常量.估值数据来源
         result.setDataSource(ValInterfCommonConstant.getValDataSource());
+        //modify by yanya on 20210828 增加风险五级分类
+        result.setBondRiskType(dto.getBondRiskType());
         return result;
     }
 
@@ -292,6 +305,8 @@ public class SecBaseInfoRecService {
         
         // 分类3 = 调用共通方法查询税务分类
         result.setType3(interfCommonService.getFinanceProductTaxClass(fdto));
+        // 分类18 = 调用共通方法查询证券品种 add by yanya on 20210828
+        result.setType18(interfCommonService.getFinanceProductSecType(fdto));
         /**add by wujie on 20180822 end**/
         result.setBranch(InterfCommonConstant.分支序号_默认);
         return result;
@@ -394,4 +409,26 @@ public class SecBaseInfoRecService {
 //        result.setIsInitial(DictCodeList.是否_是.getValue());
         return result;
     }
+
+    /**
+     * 获取转债信息
+     * @param dto
+     * @return
+     */
+    private FinProductConvertible getValFinProductConvertible(ValSecBaseInfo dto) {
+        //确认转股金融产品代码不为空、转股价格不为空
+        if(StringUtil.isNotEmpty(dto.getConFinprodId()) && StringUtil.isNotEmpty(dto.getConPrice())) {
+            FinProductConvertible result = new FinProductConvertible();
+            result.setFinprodId(dto.getAssetId());//金融产品代码
+            result.setConFinprodId(dto.getConFinprodId());//转股产品代码
+            result.setConPrice(dto.getConPrice());//转股价格
+            result.setResalePrice(dto.getResalePrice());//回售触发价
+            result.setRedeemPrice(dto.getRedeemPrice());//赎回触发价
+            return result;
+        }
+        else {
+            return null;
+        }
+    }
+
 }

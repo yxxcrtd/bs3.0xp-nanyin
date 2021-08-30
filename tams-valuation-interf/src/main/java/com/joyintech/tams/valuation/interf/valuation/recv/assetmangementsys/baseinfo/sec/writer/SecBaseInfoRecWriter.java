@@ -126,7 +126,10 @@ public class SecBaseInfoRecWriter extends InterfBaseWriter<BaseEntity>{
                     }
                     else if (listInsert.size() >= maxSqlNum) {
                         valFinProductBatchMapper.deleteBatch(listInsert);
+                        //modify by yanya on 20210828 增加转债信息的删除
+                        valFinProductBatchMapper.deleteConvertibleBatch(listInsert);
                         valFinProductBatchMapper.insertBatch(listInsert);
+
                         listInsert.clear();
                         listInsert.add(e);
                     }
@@ -134,6 +137,8 @@ public class SecBaseInfoRecWriter extends InterfBaseWriter<BaseEntity>{
                 // 如果循环结束，小于最大值
                 if (CollectionUtils.isNotEmpty(listInsert)) {
                     valFinProductBatchMapper.deleteBatch(listInsert);
+                    //modify by yanya on 20210828 增加转债信息的删除
+                    valFinProductBatchMapper.deleteConvertibleBatch(listInsert);
                     valFinProductBatchMapper.insertBatch(listInsert);
                 }
             }
@@ -162,6 +167,38 @@ public class SecBaseInfoRecWriter extends InterfBaseWriter<BaseEntity>{
                 }
             }
             /** 标的类金融产品扩展表 add by yanya on 20210318 end**/
+
+            //modify by yanya on 20210829 增加转债信息 start
+            List<FinProductConvertible> listFinProductConvertible = result.getListFinProductConvertible();
+            Map<String, FinProductConvertible> maplistFinProductConvertible = new HashMap<String, FinProductConvertible>();
+            List<FinProductConvertible> rstlistFinProductConvertible = new ArrayList<FinProductConvertible>();
+            for(FinProductConvertible obj :listFinProductConvertible){
+                if(maplistFinProductConvertible.get(obj.getFinprodId()) == null){
+                    rstlistFinProductConvertible.add(obj);
+                }
+                maplistFinProductConvertible.put(obj.getFinprodId(), obj);
+            }
+            // 入库
+            if (CollectionUtils.isNotEmpty(rstlistFinProductConvertible)) {
+                // 定义一个固定大小插入存放集合
+                List<FinProductConvertible> listInsert = new ArrayList<FinProductConvertible>();
+                for (FinProductConvertible e : rstlistFinProductConvertible) {
+                    // 小于最大值
+                    if (listInsert.size() < maxSqlNum) {
+                        listInsert.add(e);
+                    }
+                    else if (listInsert.size() >= maxSqlNum) {
+                        valFinProductBatchMapper.insertConvertibleBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                // 如果循环结束，小于最大值
+                if (CollectionUtils.isNotEmpty(listInsert)) {
+                    valFinProductBatchMapper.insertConvertibleBatch(listInsert);
+                }
+            }
+            //modify by yanya on 20210829 增加转债信息 end
             
             // 金融产品分类
             List<FinProductType> listValFinProductType = result.getListValFinProductType();
