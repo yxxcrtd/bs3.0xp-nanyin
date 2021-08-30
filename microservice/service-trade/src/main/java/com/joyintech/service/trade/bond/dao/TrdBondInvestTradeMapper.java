@@ -305,6 +305,4 @@ public interface TrdBondInvestTradeMapper {
     /* add by msk 新增查询通道划款交易 20201111 TISHKBS-1038 end */
 
     String getType7(TrdBondInvestTradeDto dto);
-
-    String getTotalByReverseTradeId(@Param("tradeId") String tradeId);
 }

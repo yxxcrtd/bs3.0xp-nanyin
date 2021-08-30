@@ -967,36 +967,14 @@ public class TrdBondInvestTradeService extends BaseService {
      */
     public SecCpriceInfoDto getCprice(Map<String, Object> map) {
         // 查询交易页面债券的市值净价和摊销净价
-        // 查询债券登记托管机构
-        FinProduct finProduct = finProductMapper.selectByPrimaryKey((String) map.get("finprodId"));
-        if (finProduct != null) {
-            if (StringUtil.equals(DictCodeList.登记托管机构_中债_中央国债登记结算有限责任公司.getValue(),
-                    finProduct.getRegistOrg())) {
-                map.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
-            }
-            else if (StringUtil.equals(DictCodeList.登记托管机构_中债_上海清算所.getValue(),
-                    finProduct.getRegistOrg())) {
-                map.put("VALUATION_SOURCE", DictCodeList.估值来源_上清所_SCH.getValue());
-            }
-            else if (StringUtil.equals(DictCodeList.登记托管机构_中债_中国证券登记结算有限责任公司.getValue(),
-                    finProduct.getRegistOrg())) {
-                map.put("VALUATION_SOURCE", DictCodeList.估值来源_中证登_CSD.getValue());
-            }
-            else {
-                map.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
-            }
-        }
-        else {
-            map.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
-        }
         SecCpriceInfoDto dto = trdBondInvestTradeMapper.getCprice(map);
-//        if (dto != null) {
-//            // 组合代码
-//            String counterId = (String) map.get("portfolioId");
-//            // 查询本方组合代码的收益类型
-//            String profitType = trdBondInvestTradeMapper.getProdProfitType(counterId);
-//            dto.setProfitType(profitType);
-//        }
+        if (dto != null) {
+            // 组合代码
+            String counterId = (String) map.get("portfolioId");
+            // 查询本方组合代码的收益类型
+            String profitType = trdBondInvestTradeMapper.getProdProfitType(counterId);
+            dto.setProfitType(profitType);
+        }
         return dto;
     }
  
@@ -1032,9 +1010,5 @@ public class TrdBondInvestTradeService extends BaseService {
     /* add by msk 新增查询通道划款交易 TISHKBS-1038 20201111 end */
     public String getType7(TrdBondInvestTradeDto dto) {
         return trdBondInvestTradeMapper.getType7(dto);
-    }
-
-    public String getTotalByReverseTradeId(String tradeId) {
-        return trdBondInvestTradeMapper.getTotalByReverseTradeId(tradeId);
     }
 }
