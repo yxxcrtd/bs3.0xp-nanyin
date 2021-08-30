@@ -5,7 +5,7 @@
 	<select id="getBatchLog" resultType="com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog">
 		select *
 		from chb_subinfo_batch_log
-		where deal_status = '04' and task_id='3084'
+		where deal_status = '04' and task_id='3076'
 	</select>
 
 	<select id="countExportNum" parameterType="map" resultType="int">

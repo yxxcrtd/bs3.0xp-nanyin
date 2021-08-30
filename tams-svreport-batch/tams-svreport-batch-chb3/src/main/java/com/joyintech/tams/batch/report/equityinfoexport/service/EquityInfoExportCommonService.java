@@ -163,7 +163,7 @@ public class EquityInfoExportCommonService extends CommonExportService<EquityInf
         File[] files = tmpPath.listFiles();
 
         String filePath = CacheUtil.getSysParam("access_exportfilepath") +
-        		CHB_EQU_SUB_NAME + GlobalConstant.UNDER_LINE  + DateUtil.getDateTimestamp().replaceAll(":", "") + ".zip";
+        		CHB_EQU_SUB_NAME + GlobalConstant.UNDER_LINE  + DateUtil.getDateTimestamp().replaceAll(":", "").replace(" ", "") + ".zip";
         File outFile = new File(filePath);
         try {
             ZipFileUtil.compressZip(outFile,true,files);
