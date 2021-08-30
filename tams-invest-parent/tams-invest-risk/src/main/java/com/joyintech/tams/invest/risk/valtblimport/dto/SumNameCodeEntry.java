@@ -1,7 +1,7 @@
 package com.joyintech.tams.invest.risk.valtblimport.dto;
 
 
-import com.csii.dc.client.util.StringUtil;
+import com.joyintech.framework.util.StringUtil;
 
 public class SumNameCodeEntry {
 

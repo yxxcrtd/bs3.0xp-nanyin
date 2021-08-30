@@ -10,30 +10,24 @@
  
 package com.joyintech.service.risk.rskValtblPrtBotasset.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.background.component.common.pack.common.util.BeanUtil;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.select.SelectOptionDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.tams.common.base.dao.RskValtblPrtBotassetMapMapper;
-import com.joyintech.tams.common.base.entity.RskValtblPrtBotassetMap;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.risk.rskValtblPrtBotasset.dao.RskValtblPrtBotassetMapper;
 import com.joyintech.service.risk.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto;
+import com.joyintech.tams.common.base.dao.RskValtblPrtBotassetMapMapper;
+import com.joyintech.tams.common.base.entity.RskValtblPrtBotassetMap;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 估值表底层资产映射
