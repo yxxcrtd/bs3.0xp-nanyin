@@ -209,11 +209,11 @@
 <!--			<version>0.0.1</version>-->
 <!--		</dependency>-->
 		<!-- 行情 -->
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>service-quote</artifactId>
-			<version>0.0.1</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.joyintech</groupId>-->
+<!--			<artifactId>service-quote</artifactId>-->
+<!--			<version>0.0.1</version>-->
+<!--		</dependency>-->
 		<!-- 公共基础数据 -->
 		<dependency>
 			<groupId>com.joyintech</groupId>
