@@ -573,6 +573,7 @@
                         dataList.push(result[i]);
                     }
                     dzhTable.reload({data: dataList});
+                    setBussRepoSecInput();
                 }
             });
         }
@@ -705,6 +706,7 @@
              * 对外公开的接口
              */
             parent.CfetsRepoDealQuotedPr001.getEtrInfoChange('cfetsRepoDealQuotedPre003');
+
         });
         /**
          * 委托代码
