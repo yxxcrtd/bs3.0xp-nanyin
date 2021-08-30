@@ -10,19 +10,13 @@
  
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinProductValuation;
-import com.joyintech.tams.common.base.entity.MstBondMarketInfo;
-import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
-import com.joyintech.tams.common.base.entity.MstFundMarketInfo;
-import com.joyintech.tams.common.base.entity.MstIntRateInfo;
-import com.joyintech.tams.common.base.entity.ValInterflog;
-import com.joyintech.framework.base.BaseEntity;
 
 /**
  * 〈一句话功能简述〉
@@ -242,5 +236,16 @@ public class HqInfoForInterfRecCommonResult extends BaseEntity{
         this.finExercisePlanList = finExercisePlanList;
     }
     /** add by dongjun on 20181011 title:债券行权计划 end**/
-    
+
+    /** add by yanya on 20210831 增加股票行情接口 start**/
+    List<MstSharePrice> valShareInfo = new ArrayList<>();
+
+    public List<MstSharePrice> getValShareInfo() {
+        return valShareInfo;
+    }
+
+    public void setValShareInfo(List<MstSharePrice> valShareInfo) {
+        this.valShareInfo = valShareInfo;
+    }
+    /** add by yanya on 20210831 增加股票行情接口 end**/
 }
