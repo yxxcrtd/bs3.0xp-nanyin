@@ -1,5 +1,6 @@
 package com.joyintech.tams.model.impairment.batch.eclcalculation.dao;
 
+import com.joyintech.tams.common.base.entity.TrdAssetLoss;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModEclResult;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModLgdConfig;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
@@ -17,8 +18,9 @@ public interface EclCalculationMapper {
 	int deleteModEclResult(Map<String, Object> params);
 	//查询LGD
 	List<ModLgdConfig> selectModLgdConfig(Map<String, Object> params);
-	//查询资产类型
-	String selectInput2(Map<String, Object> params);
+
+	//查询减值资产管理
+	List<TrdAssetLoss> queryEclManage(Map<String, Object> params);
 
 	int insertModEclResult(List<ModEclResult> list);
 }

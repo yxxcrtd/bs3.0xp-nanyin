@@ -14,6 +14,7 @@ import com.joyintech.framework.base.entity.SysBatchTask;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCode;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.common.utils.ArithmeticUtil1;
@@ -301,7 +302,7 @@ public class EadCalCulationBatchProcessorService {
                     // 增加应收未收金额计算方法：按前台计算方式计算（和需求确认了的）
                     // 定义应收金额
                     BigDecimal receivableAmt = BigDecimal.ZERO;
-                    if (ModelDictCodeList.模型_证券品种_项目类资产.getValue().equals(item.getModelAssetType())) {
+                    if (DictCodeListExt1.证券品种_其他债权类.getValue().equals(item.getModelAssetType())) {
                         //定义变量： 每百元应收金额  = 资产逾期交易.应收金额 / 资产发行规模 * 100
                         BigDecimal perhandrudAmt = BigDecimal.ZERO;
                         if (assetIntAmt.compareTo(BigDecimal.ZERO) != 0) {
@@ -370,7 +371,8 @@ public class EadCalCulationBatchProcessorService {
                     executionContext.put("ERRORS", errors);
                 }
                 BigDecimal tempRate;
-                if (ModelDictCodeList.模型_证券品种_债券.getValue().equals(itemIn.getType8())) {
+//                if (ModelDictCodeList.模型_证券品种_债券.getValue().equals(itemIn.getType8())) {
+                if (DictCodeListExt1.证券品种_债券.getValue().equals(itemIn.getModelAssetType())) {
                     tempRate = itemIn.getYield();
                 } else {// 如果 证券品种为其他
                     tempRate = itemIn.getPaperRate();

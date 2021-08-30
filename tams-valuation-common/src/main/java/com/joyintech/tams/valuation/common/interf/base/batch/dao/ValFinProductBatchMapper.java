@@ -10,9 +10,11 @@
  
 package com.joyintech.tams.valuation.common.interf.base.batch.dao;
 
-import java.util.List;
-import org.springframework.stereotype.Repository;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductConvertible;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ValFinProductBatchMapper {
@@ -26,4 +28,18 @@ public interface ValFinProductBatchMapper {
      * @since 1.0
      */
     int deleteBatch(List<FinProduct> list);
+
+    /**
+     * 转债信息
+     * @param list
+     * @return
+     */
+    int insertConvertibleBatch(List<FinProductConvertible> list);
+
+    /**
+     * 删除转债信息
+     * @param list
+     * @return
+     */
+    int deleteConvertibleBatch(List<FinProduct> list);
 }

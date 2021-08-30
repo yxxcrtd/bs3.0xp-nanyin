@@ -40,8 +40,10 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.validator.EtrInvestBondInfoValidator;
@@ -204,9 +206,9 @@ public class EtrInvestBondInfo004Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrInvestBondInfoDto dto2, BindingResult br)
+    public AjaxResult save(@RequestBody EtrInvestBondInfoDto allDto, BindingResult br)
             throws Exception {
-        List<EtrInvestBondInfoDto> dtoList = dto2.getSelectedItem();
+        List<EtrInvestBondInfoDto> dtoList = allDto.getSelectedItem();
     	for(EtrInvestBondInfoDto dto : dtoList) {
         	if(dto.getEntrustNum()!=null) {
         		dto.setEntrustNum(dto.getEntrustNum().multiply(new BigDecimal(10000)));//万元转成元
@@ -220,9 +222,13 @@ public class EtrInvestBondInfo004Controller extends BaseController {
             if(dto.getEntrustIntegrateNum() != null) {
             	dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().multiply(new BigDecimal(10000)));
             }
+            if(StringUtil.equals(dto.getSettleSpreed(),DictCodeList.清算速度_T_0.getValue())){
+                dto.setSettleSpreed("0");
+            }
+            if(StringUtil.equals(dto.getSettleSpreed(),DictCodeList.清算速度_T_1.getValue())){
+                dto.setSettleSpreed("1");
+            }
         }
-        EntrustRdsCommonAop.riskListToChildren(dto2.getRiskTrialRetDto(), dtoList,
-                (dto, list) -> dto.setRiskTrialRetDto(list));
         AjaxResult ajaxResult = this.check(dtoList, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;
@@ -237,23 +243,22 @@ public class EtrInvestBondInfo004Controller extends BaseController {
             }
 //            dto.setWorkflowParameter("new|||1|EtrRepo003|EtrRepo003_btn_submit|true");
         }
-        //多组合风险试算结果处理
-        for(EtrInvestBondInfoDto dto: dtoList) {
-            //多组合交易对风险试算处理逻辑
-            if(CollectionUtils.isNotEmpty(dto.getRiskTrialRetDto())){
-                List<RiskTrialRetDto> riskTrialRetlist = new ArrayList<>();
-                for (RiskTrialRetDto riskTrialRetDto:dto.getRiskTrialRetDto()) {
-                    if(StringUtils.equals(riskTrialRetDto.getPortfolioCode(),dto.getPortfolioId())){
-                        riskTrialRetlist.add(riskTrialRetDto);
-                    }
-                    List<String> list= interfRiskRdsService.queryPortfolioPackageDtlByBagId(riskTrialRetDto.getPortfolioCode());
-                    if (!CollectionUtils.isEmpty(list) && list.contains(dto.getPortfolioId())) {
-                        riskTrialRetlist.add(riskTrialRetDto);
-                    }
-                }
-                dto.setRiskTrialRetDto(riskTrialRetlist);
+
+        // ----------add by zhangrui1 20200704 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
+                DictCodeList.平安资产类型_债券.getValue(),
+                BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+                false, null);
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
             }
         }
+        // ----------add by zhangrui1 20200704 预占功能 end----------
+        // add by zhangrui1 批量提交设置风控指标明细 start
+        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
+                (dto, list) -> dto.setRiskTrialRetDto(list));
+        // add by zhangrui1 批量提交设置风控指标明细 end
         ProcessParameter<EtrInvestBondInfoDto> processParameter = new ProcessParameter<EtrInvestBondInfoDto>();
         WorkFlowParameter<EtrInvestBondInfoDto> params = new WorkFlowParameter<EtrInvestBondInfoDto>();
         params.setPageId("EtrInvestBondInfo002");

@@ -212,7 +212,7 @@ public class ValStockBaseRecService {
         result.setType2(interfCommonService.getFinanceProductClass(fdto));
         // 分类3 = 调用共通方法查询税务分类
         result.setType3(interfCommonService.getFinanceProductTaxClass(fdto));
-        // 分类3 = 调用共通方法查询证券品种
+        // 分类18 = 调用共通方法查询证券品种
         result.setType18(interfCommonService.getFinanceProductSecType(fdto));
         result.setBranch(InterfCommonConstant.分支序号_默认);
         return result;

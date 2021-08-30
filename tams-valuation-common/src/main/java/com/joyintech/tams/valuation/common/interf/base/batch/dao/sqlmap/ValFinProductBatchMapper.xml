@@ -119,4 +119,30 @@
 	           (#{item.finprodId,jdbcType=VARCHAR})
 	        </foreach>
     </delete>
+
+    <insert id="insertConvertibleBatch" parameterType="java.util.List" >
+        insert into FIN_PRODUCT_CONVERTIBLE (FINPROD_ID, CON_FINPROD_ID, CON_SHARE_ID,
+            CON_VDATE, CON_PRICE, RESALE_PRICE,
+            REDEEM_PRICE, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close=" from dual ) tmp">
+            #{item.finprodId,jdbcType=VARCHAR}, #{item.conFinprodId,jdbcType=VARCHAR}, #{item.conShareId,jdbcType=VARCHAR},
+            #{item.conVdate,jdbcType=DATE}, #{item.conPrice,jdbcType=DECIMAL}, #{item.resalePrice,jdbcType=DECIMAL},
+            #{item.redeemPrice,jdbcType=DECIMAL}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+    </insert>
+
+    <delete id="deleteConvertibleBatch" parameterType="java.util.List" >
+        delete from FIN_PRODUCT_CONVERTIBLE
+        where (FINPROD_ID) in
+        <foreach collection="list" item="item" index="index" separator="," open="("
+                 close=")">
+            <if test="(index % 1000) == 999">
+                (null) ) OR (FINPROD_ID) in (
+            </if>
+            (#{item.finprodId,jdbcType=VARCHAR})
+        </foreach>
+    </delete>
 </mapper>
