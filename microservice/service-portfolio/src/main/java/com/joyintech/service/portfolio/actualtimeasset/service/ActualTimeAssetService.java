@@ -1,6 +1,7 @@
 package com.joyintech.service.portfolio.actualtimeasset.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -132,6 +133,9 @@ public class ActualTimeAssetService extends BaseService<ActualTimeAssetDto> {
 				} else {
 					dto.setInstructionsAmount(dto.getActualPositionAmount());
 				}
+				// ZGZGST-1408: 市值=当前持仓数量*最近估值全价；当前持仓数量=券面总额/100 fuyongsheng 20210830 add start
+                dto.setMarketValue(null != dto.getMarketValue() ? dto.getMarketValue().divide(new BigDecimal(100),2, RoundingMode.HALF_UP) : null);
+                // ZGZGST-1408: 市值=当前持仓数量*最近估值全价；当前持仓数量=券面总额/100 fuyongsheng 20210830 add end
 			}
 		}
         
