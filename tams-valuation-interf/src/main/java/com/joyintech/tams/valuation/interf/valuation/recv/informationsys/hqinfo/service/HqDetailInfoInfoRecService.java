@@ -9,15 +9,6 @@
  
 package com.joyintech.tams.valuation.interf.valuation.recv.informationsys.hqinfo.service;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.common.interf.base.constant.DictCodeInterfList;
@@ -25,20 +16,18 @@ import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.HqInfoForInterfRecCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.HqBondMktInfoTemplateRecService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.HqBondValInfoTemplateRecService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.HqFundMktInfoTemplateRecService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.HqIntRateInfoTemplateRecService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.HqParFundInfoTemplateRecService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.HqPayhsrcsecoptionTemplateRecService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.OutsideCommitteeQuotationTemplateRecService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.StandardBondMarketInfoService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.StandardFondMarketValService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.StandardMarketBondPriceValService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.StandardRateResetService;
+import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.hqinfo.*;
 import com.joyintech.tams.valuation.interf.valuation.recv.informationsys.hqinfo.dto.HqDetailInfoProcessorResult;
 import com.joyintech.tams.valuation.interf.valuation.transdata.dao.ProtocolMapper;
 import com.joyintech.tams.valuation.interf.valuation.transdata.entity.ValRecvServerInfoEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
 /**
@@ -86,6 +75,10 @@ public class HqDetailInfoInfoRecService {
     private OutsideCommitteeQuotationTemplateRecService outsideCommitteeQuotationTemplateRecService;
     /** add by wangqidong on 20181101 title 委外行情 end**/
 
+    /** add by yanya on 20210831 增加股票行情接口 start**/
+    @Autowired
+    private ValStockQuotationRecService valStockQuotationRecService;
+    /** add by yanya on 20210831 增加股票行情接口 end**/
     /**
      * <一句话功能简述>
      * <功能 详细描述>
@@ -154,8 +147,11 @@ public class HqDetailInfoInfoRecService {
             rtnResult = hqPayhsrcsecoptionTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
         }
         /** add by dongjun on 20181011 title:债券行权计划 end**/
-        
-        /** add by wangqidong on 20181101 title 委外行情 start**/
+        /** add by yanya on 20210831 增加股票行情接口 start**/
+        else if (TempConstant.股票行情.equals(acctEntity.getDtoName())){
+            rtnResult = valStockQuotationRecService.execute(templateSourceFlgDTO, acctEntity);
+        }
+        /** add by yanya on 20210831 增加股票行情接口 end**/
         else if(TempConstant.委外行情.equals(acctEntity.getTmpEName())){            
             rtnResult = outsideCommitteeQuotationTemplateRecService.execute(templateSourceFlgDTO,acctEntity);
         }

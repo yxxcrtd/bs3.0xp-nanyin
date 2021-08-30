@@ -350,5 +350,11 @@ public class TempConstant {
      */
     public static final String 股票基础信息="ValStockBaseInfo";
 
+    /**
+     * 股票行情接口
+     * add by yanya on 20210831
+     */
+    public static final String 股票行情="ValStockQuotationInfo";
+
 }
 

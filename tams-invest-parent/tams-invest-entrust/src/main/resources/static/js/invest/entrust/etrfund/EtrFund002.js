@@ -425,37 +425,6 @@
         }
     }
 
-    $("#ccy").change(function(){
-        getProAvailableCash();
-        getProAvailableCash1();
-        getAssetAvailablePosition();
-    })
-    //基金类型
-    $("#assetType1").change(function(){
-        if($("#ps").val() == T04){
-            $("#pschange2").hide();
-        }
-        else if($("#assetType1").val() == F01 && ($('#finprodMarketId').val() != null || $('#finprodMarketId').val() != '') && ($("#ps").val() == T06 || $("#ps").val() == T65)){
-            $("#pschange2").hide();
-        }
-        else if($("#assetType1").val() == F02 && ($('#finprodMarketId').val() != null || $('#finprodMarketId').val() != '') && ($("#ps").val() == T06 || $("#ps").val() == T65)){
-            $("#pschange2").show();
-        }
-        else if($("#ps").val() == T01){
-            $("#pschange2").hide();
-        }
-        if($("#ps").val() == T04 || ($("#ps").val() == T06 || $("#ps").val() == T65)){
-            if($("#assetType1").val() != F02){
-                $('#finprodMarketId').removeAttr("required");
-                star();
-            }
-            else{
-                $('#finprodMarketId').attr("required",true);
-                star();
-            }
-        }
-    })
-
     //pschange
     function psChange(flag){
         if (!initFlag) {
@@ -634,44 +603,6 @@
         }
     }
     
-    //交易方向联动
-    $("#ps").change(function(){
-        psChange();
-    })
-
-    $("#changeToFinprodMarketId").change(function () {
-        if ($("#changeToFinprodMarketId").val() && $('#changeToFinprodMarketId').select2('data')[0].text) {
-            $("#changeToFinprodName").val($('#changeToFinprodMarketId').select2('data')[0].text);
-        } else {
-            $("#changeToFinprodName").val("")
-        }
-    })
-
-    $("#entrustNum").change(function(){
-        getEntrustAmt();
-    });
-    
-    //交易市场联动
-    $("#tradeMarket").change(function(){
-        /*//证券托管户，交易场所为交易所时必填
-        if($("#tradeMarket").val()&&($("#tradeMarket").val()==TRADE_PLACE_03||$("#tradeMarket").val()==TRADE_PLACE_04)){
-            $("#secAcctId").attr("required",true);
-        }else{
-            $("#secAcctId").removeAttr("required");
-        }*/
-        tradeMarketCashChange();
-        //交易市场变动  确认是否需要填写委托价格
-        getPrice();
-        //交易市场改别时，调用交易方向change事件，确认交易对手
-        if($("#ps").val()==T52||($("#ps").val() == T06 || $("#ps").val() == T65)||$("#ps").val()==T04){
-            if(!initFlag){
-                selectManeger();
-            }
-        }
-        star();
-    });
-    
-    
     function getPrice(){
         if(($("#ps").val()==T01 || $("#ps").val()==T02)&&($("#tradeMarket").val()==TRADE_PLACE_03||$("#tradeMarket").val()==TRADE_PLACE_04)
                 &&($('#bussEtrInvestPersonInfoDto_counterId').val()==JYDSJYS000000001||$('#bussEtrInvestPersonInfoDto_counterId').val()==JYDSJYS000000002)){
@@ -809,32 +740,6 @@
         $("#plat_price_div").hide();
     };
 
-    $('#secAcctId').on('change',function(){
-        if ($("#secAcctId").val()) {
-            $("#entrustTongdao").val('').prop("disabled", true).trigger("change");
-        }else {
-            $("#entrustTongdao").prop("disabled", false);
-        }
-        tradeMarketCashChange(true);
-    });
-
-    $("#entrustTongdao").on('change',function(){
-        if ($("#entrustTongdao").val()) {
-            $("#secAcctId").val('').trigger("change").prop("disabled", true);
-            if($("#ps").val()&&($("#ps").val()==T04||($("#ps").val() == T06 || $("#ps").val() == T65)||$("#ps").val()==T52)){
-                $("#bussEtrInvestPersonInfoDto_counterId").val("").attr('disabled',false).trigger('change');
-            }
-        } else {
-            $("#secAcctId").prop("disabled", false);
-        }
-        tradeMarketCashChange();
-        if($("#ps").val()&&($("#ps").val()==T52||($("#ps").val() == T06 || $("#ps").val() == T65)||$("#ps").val()==T04)){
-            selectManeger();
-        }
-        
-        
-    });
-
     /**
      * 查看资产详情事件
      */
@@ -858,6 +763,101 @@
      */
     $(function() {
         init();
+
+        $("#ccy").change(function(){
+            getProAvailableCash();
+            getProAvailableCash1();
+            getAssetAvailablePosition();
+        })
+        //基金类型
+        $("#assetType1").change(function(){
+            if($("#ps").val() == T04){
+                $("#pschange2").hide();
+            }
+            else if($("#assetType1").val() == F01 && ($('#finprodMarketId').val() != null || $('#finprodMarketId').val() != '') && ($("#ps").val() == T06 || $("#ps").val() == T65)){
+                $("#pschange2").hide();
+            }
+            else if($("#assetType1").val() == F02 && ($('#finprodMarketId').val() != null || $('#finprodMarketId').val() != '') && ($("#ps").val() == T06 || $("#ps").val() == T65)){
+                $("#pschange2").show();
+            }
+            else if($("#ps").val() == T01){
+                $("#pschange2").hide();
+            }
+            if($("#ps").val() == T04 || ($("#ps").val() == T06 || $("#ps").val() == T65)){
+                if($("#assetType1").val() != F02){
+                    $('#finprodMarketId').removeAttr("required");
+                    star();
+                }
+                else{
+                    $('#finprodMarketId').attr("required",true);
+                    star();
+                }
+            }
+        })
+
+        //交易方向联动
+        $("#ps").change(function(){
+            psChange();
+        })
+
+        $("#changeToFinprodMarketId").change(function () {
+            if ($("#changeToFinprodMarketId").val() && $('#changeToFinprodMarketId').select2('data')[0].text) {
+                $("#changeToFinprodName").val($('#changeToFinprodMarketId').select2('data')[0].text);
+            } else {
+                $("#changeToFinprodName").val("")
+            }
+        })
+
+        $("#entrustNum").change(function(){
+            getEntrustAmt();
+        });
+
+        //交易市场联动
+        $("#tradeMarket").change(function(){
+            /*//证券托管户，交易场所为交易所时必填
+            if($("#tradeMarket").val()&&($("#tradeMarket").val()==TRADE_PLACE_03||$("#tradeMarket").val()==TRADE_PLACE_04)){
+                $("#secAcctId").attr("required",true);
+            }else{
+                $("#secAcctId").removeAttr("required");
+            }*/
+            tradeMarketCashChange();
+            //交易市场变动  确认是否需要填写委托价格
+            getPrice();
+            //交易市场改别时，调用交易方向change事件，确认交易对手
+            if($("#ps").val()==T52||($("#ps").val() == T06 || $("#ps").val() == T65)||$("#ps").val()==T04){
+                if(!initFlag){
+                    selectManeger();
+                }
+            }
+            star();
+        });
+
+        $('#secAcctId').on('change',function(){
+            if ($("#secAcctId").val()) {
+                $("#entrustTongdao").val('').prop("disabled", true).trigger("change");
+            }else {
+                $("#entrustTongdao").prop("disabled", false);
+            }
+            tradeMarketCashChange(true);
+        });
+
+        $("#entrustTongdao").on('change',function(){
+            if ($("#entrustTongdao").val()) {
+                $("#secAcctId").val('').trigger("change").prop("disabled", true);
+                if($("#ps").val()&&($("#ps").val()==T04||($("#ps").val() == T06 || $("#ps").val() == T65)||$("#ps").val()==T52)){
+                    $("#bussEtrInvestPersonInfoDto_counterId").val("").attr('disabled',false).trigger('change');
+                }
+            } else {
+                $("#secAcctId").prop("disabled", false);
+            }
+            tradeMarketCashChange();
+            if($("#ps").val()&&($("#ps").val()==T52||($("#ps").val() == T06 || $("#ps").val() == T65)||$("#ps").val()==T04)){
+                selectManeger();
+            }
+
+
+        });
+
         /**
          * 保存
          */
