@@ -43,6 +43,8 @@
         <module>../../microservice/service-valuation</module>
         <module>../../microservice/service-valuation-basicdata</module>
 		<module>../../microservice/service-common-basicdata</module>
+        <module>../../microservice/service-common</module>
+        <module>../../microservice/service-quote</module>
 		<module>../../microservice/tams-service-container-yunyin</module>
 
         <!-- 批处理 -->
