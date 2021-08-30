@@ -1,15 +1,16 @@
 package com.joyintech.tams.invest.common.position.dao;
 
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.position.dto.PtlPositionFlowCfg;
 import com.joyintech.tams.invest.common.position.dto.PtlPositionScene;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public interface CommonPtlPositionMapper {
 	List<PtlPositionScene> getAllPtlPositionScene();
 
