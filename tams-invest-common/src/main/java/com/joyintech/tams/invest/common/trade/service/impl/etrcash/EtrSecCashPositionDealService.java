@@ -1116,7 +1116,9 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
         // add by zhangliang 20200902 交易所取委托信息里的全价 start
         if (StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_上海证券交易所.getValue())
     		||StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_深圳证券交易所.getValue()) ){
-        	return entrustCommonDto.getEtrEntrustAdd().getFullPrice();
+            if (entrustCommonDto.getEtrEntrustAdd().getFullPrice() != null) {
+                return entrustCommonDto.getEtrEntrustAdd().getFullPrice();
+            }
         }
         // add by zhangliang 20200902 交易所取委托信息里的全价 end
         if (StringUtil.equals(entrustCommonDto.getEtrEntrust().getPriceModel(), DictCodeListExt2.价格模式_指定价格.getValue())
