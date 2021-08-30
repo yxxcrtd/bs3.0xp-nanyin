@@ -377,7 +377,7 @@
 /*
             $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(result.totalPrinAmt).trigger('blur');
 */
-            $("#CfetsRepoDealQuotedPrice002_shareCtAmt").val(result.shareCtAmt).trigger('blur');
+/*            $("#CfetsRepoDealQuotedPrice002_shareCtAmt").val(result.shareCtAmt).trigger('blur');*/
         }
     	//多组合
     	if(getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice003'){
@@ -385,7 +385,7 @@
 /*
             $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(result.totalPrinAmt).trigger('blur');
 */
-            $("#CfetsRepoDealQuotedPrice002_shareCtAmt").val(result.shareCtAmt).trigger('blur');
+            /*$("#CfetsRepoDealQuotedPrice002_shareCtAmt").val(result.shareCtAmt).trigger('blur');*/
         }
     }
     /**
