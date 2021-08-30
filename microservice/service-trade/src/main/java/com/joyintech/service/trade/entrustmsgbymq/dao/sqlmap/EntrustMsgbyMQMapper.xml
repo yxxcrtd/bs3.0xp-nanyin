@@ -164,4 +164,18 @@
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
     </select>
+
+	<select id="selectFinProductOthCode" resultType="com.joyintech.tams.common.base.entity.FinProductOthCode">
+		SELECT
+			FINPROD_ID as finprodId,
+			BRANCH as branch,
+			OTH_TYPE as othCodeType,
+			OTH_CODE as othCode,
+			REMARK as remark
+		FROM
+			FIN_PRODUCT_OTH_CODE
+		WHERE
+			FINPROD_ID = #{finprodId,jdbcType=VARCHAR} AND
+			OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+	</select>
 </mapper>
