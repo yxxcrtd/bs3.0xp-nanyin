@@ -119,6 +119,7 @@ public class ActualTimeAssetService extends BaseService<ActualTimeAssetDto> {
 					) {
 				pageParam.put("finprodId", dto.getFinprodId());
 				pageParam.put("etrHodingTypeList", Arrays.asList(DictCodeListExt1.持仓类型_委托指令可用.getValue()));
+                pageParam.put("portfolioIdList",Arrays.asList(dto.getPortfolioId()));
 				//pageParam.put("secAcctId",dto.getSecAcctId());
 				ActualTimeAssetDto maxPositionDto = actualTimeAssetMapper.getTradePosition(pageParam);
 				if (StringUtil.equals(dto.getSecAcctId(), maxPositionDto.getSecAcctId())) {

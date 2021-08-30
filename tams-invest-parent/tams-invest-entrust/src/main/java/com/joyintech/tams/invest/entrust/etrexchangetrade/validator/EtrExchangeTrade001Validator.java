@@ -93,12 +93,14 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 			if (!StringUtil.isNotEmpty(dto.getAcctNo())) {
 				errorList.add(new ValidMessage("acctNo", this.getMessage("ETR_ERROR_0020")));
 			}
-			if (!StringUtil.isNotEmpty(dto.getInvAim()) && !dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())
-					&&  !dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
-				errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
-			}else if (!StringUtil.isNotEmpty(dto.getInvAim()) && !dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())
-					&&  !dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
-				errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
+			if(!StringUtil.isNotEmpty(dto.getInvAim())){
+				if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())){
+					if(dto.getTradePlat().equals(DictCodeList.交易平台_固定收益平台.getValue())){
+						errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
+					}
+				}else{
+					errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
+				}
 			}
 
 			if (!StringUtil.isNotEmpty(dto.getStockId())&&!StringUtil.isNotEmpty(dto.getFinprodId())) {

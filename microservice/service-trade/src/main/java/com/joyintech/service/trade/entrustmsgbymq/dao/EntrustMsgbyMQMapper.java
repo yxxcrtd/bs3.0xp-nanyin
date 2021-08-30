@@ -5,14 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.base.entity.FinDealPledge;
-import com.joyintech.tams.common.base.entity.FinDealPledgeKey;
-import com.joyintech.tams.common.base.entity.TrdProductTempDeal;
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
 
 @Repository
 public interface EntrustMsgbyMQMapper {
@@ -158,4 +155,6 @@ public interface EntrustMsgbyMQMapper {
     void updateTrdProductDeal(TrdProductTempDeal trdProductTempDeal);
 
 	FinDealPledge selectFinDealPledgeByPrimaryKey(FinDealPledgeKey finDealPledgeKey);
+
+    FinProductOthCode selectFinProductOthCode(Map<String, Object> map);
 }

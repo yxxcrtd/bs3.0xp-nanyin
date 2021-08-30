@@ -720,7 +720,7 @@
                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 start
                    if(IS_RISKMATH_SOFTCONTROL == '01'){
                        if(forbidFlag){
-                           Joyin.alert("存在违规指标，请注意",3);
+                           Joyin.alert("存在违规指标，请注意",2);
                        }
                    }
                    //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 end
@@ -803,7 +803,7 @@
                     //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 start
                     if(IS_RISKMATH_SOFTCONTROL == '01'){
                         if(forbidFlag){
-                            Joyin.alert("存在违规指标，请注意",3);
+                            Joyin.alert("存在违规指标，请注意",2);
                         }
                     }
                     //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 end
@@ -864,7 +864,7 @@
 //            var paramConterId=["etrInvestPersonInfo.counterId","bussEtrInvestPersonInfoDto.counterId","trdInvestPersonInfo.counterId","trdInvestPersonInfo002Dto.counterId"];
 //            var counterType=findCounterType(paramConterId);
 //            if(counterType != 'N'){
-                Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),3);
+                Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),2);
                 return ;
 //            }            
         }
