@@ -10,37 +10,17 @@
 
 package com.joyintech.tams.component.business.riskrds.service;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.ParseException;
-import java.util.*;
-import java.util.function.Consumer;
-
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.risktrialrds.util.Const;
-import org.apache.shiro.util.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
+import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.constant.PageFieldToInterfFactory;
@@ -66,7 +46,17 @@ import com.joyintech.tams.invest.common.redisinit.dto.IRiskRds;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IAssetInfo;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.AssetInfoRedisService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
-import com.joyintech.framework.constant.GlobalConstant;
+import org.apache.shiro.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * 接口组件Service
@@ -353,7 +343,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     public void doListCommon(V v, Map<String, Object> dataMap,
                              Map<String, String> portfolioIds, List<String> tradeIds,
                              List<Map<String, Object>> targetList)
-        throws Exception {
+        throws IOException, InstantiationException {
         String counterId = (String)CommonUtil.findValue(dataMap, "counterId");
         String ps = (String)CommonUtil.findValue(dataMap, "ps");
         boolean isInnerTrd = portfolioIds.containsKey(counterId);
@@ -474,7 +464,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      */
     public <T> ClientData sendRiskRdsListData(V v, Collection<T> tList,
                                               Consumer<Map<String, Object>> consumer)
-        throws Exception {
+        throws IOException, InstantiationException {
         logger.info("==========后端批量交易或批量委托类转换接口:{} {} start==========", v.getInfCode(),
             v.getEventType());
         if (CollectionUtils.isEmpty(tList)) {
@@ -586,7 +576,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    public AjaxResult checkRiskRds(V v,String eventType,String infCode,String assetType,IInfRds<V> iInfRds)  throws IOException, InstantiationException {
+    public AjaxResult checkRiskRds(V v,String eventType,String infCode,String assetType,IInfRds<V> iInfRds)  throws Exception {
         ClientData returnCli=execRiskRds(v,eventType,infCode,assetType,iInfRds);
         if (StringUtil.isNotEmpty(returnCli)) {
             if(StringUtil.isNotEmpty(returnCli.getHead())){
