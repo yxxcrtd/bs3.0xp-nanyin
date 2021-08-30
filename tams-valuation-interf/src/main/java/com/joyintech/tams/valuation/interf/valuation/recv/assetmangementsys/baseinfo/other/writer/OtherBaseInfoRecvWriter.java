@@ -18,6 +18,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.*;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.MstCounterParty;
 import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
 import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.other.entity.OtherBaseInfoForAssetProcessorResult;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
@@ -40,6 +41,12 @@ public class OtherBaseInfoRecvWriter extends InterfBaseWriter<BaseEntity> {
      */
     @Autowired
     private ValCustomerInfoBatchMapper valCustomerInfoBatchMapper;
+
+    /**
+     * 交易对手
+     */
+    @Autowired
+    private ValCounterPartyBatchMapper valCounterPartyBatchMapper;
 
     /**
      * 清算账户信息BatchMapper
@@ -110,7 +117,7 @@ public class OtherBaseInfoRecvWriter extends InterfBaseWriter<BaseEntity> {
     @Autowired
     private ValCustomerInfoAddBatchMapper valCustomerInfoAddBatchMapper;
     /** add by yanya on 20210831 增加客户信息附属表 end**/
-    
+
     @Value("${interf.properties.maxSqlNum}")
     private int maxSqlNum;
     
@@ -146,6 +153,36 @@ public class OtherBaseInfoRecvWriter extends InterfBaseWriter<BaseEntity> {
                     valCustomerInfoBatchMapper.insertBatch(listInsert);
                 }
             }
+
+
+
+            // 交易对手
+            List<MstCounterParty> listValCounterParty = result.getValCounterPartyList();
+            // 入库
+            if (CollectionUtils.isNotEmpty(listValCounterParty)) {
+
+                //定义一个固定大小插入存放集合
+                List<MstCounterParty> listInsert =  new ArrayList<MstCounterParty>();
+                for(MstCounterParty e :listValCounterParty){
+                    //小于最大值
+                    if(listInsert.size() < maxSqlNum){
+                        listInsert.add(e);
+                    }else if(listInsert.size() >= maxSqlNum){
+                        valCounterPartyBatchMapper.deleteBatch(listInsert);
+                        valCounterPartyBatchMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                //如果循环结束，小于最大值
+                if(CollectionUtils.isNotEmpty(listInsert)){
+                    valCounterPartyBatchMapper.deleteBatch(listInsert);
+                    valCounterPartyBatchMapper.insertBatch(listInsert);
+                }
+            }
+
+
+
 
             /** add by yanya on 20210831 增加客户信息附属表 start**/
             List<MstCustomerInfoAddWithBLOBs> listValCustomerInfoAdd = result.getValCustomerInfoAddList();

@@ -10,12 +10,13 @@
  
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.common.base.entity.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.MstCounterParty;
 
 public class OtherBaseInfoCommonResult extends BaseEntity {
 
@@ -27,7 +28,12 @@ public class OtherBaseInfoCommonResult extends BaseEntity {
      * 市场机构信息
      */
     private List<MstCustomerInfo> valCustomerInfoList = new ArrayList<MstCustomerInfo>();
-    
+
+    /**
+     * 交易对手
+     */
+    private List<MstCounterParty> valCounterPartyList = new ArrayList<MstCounterParty>();
+
     /**
      * 资金账户信息
      */
@@ -80,7 +86,14 @@ public class OtherBaseInfoCommonResult extends BaseEntity {
         this.valCustomerInfoList = valCustomerInfoList;
     }
 
-    
+    public List<MstCounterParty> getValCounterPartyList() {
+        return valCounterPartyList;
+    }
+
+    public void setValCounterPartyList(List<MstCounterParty> valCounterPartyList) {
+        this.valCounterPartyList = valCounterPartyList;
+    }
+
     /**
      * 获取 valMstCapacctInfoList
      * @return valMstCapacctInfoList.

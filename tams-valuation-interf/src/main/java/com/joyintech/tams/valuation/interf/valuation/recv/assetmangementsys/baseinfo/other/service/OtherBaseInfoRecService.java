@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.other.service;
 
 
+import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.other.ValCounterPartyInterfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,9 @@ public class OtherBaseInfoRecService {
      */
     @Autowired
     private ValHolidayInfoInterfService valHolidayInfoInterfService;
+
+    @Autowired
+    private ValCounterPartyInterfService valCounterPartyInterfService;
     
     /**
      * <一句话功能简述> <功能详细描述>
@@ -73,6 +77,9 @@ public class OtherBaseInfoRecService {
         }
         else if(TempConstant.节假日信息表.equals(acctEntity.getTmpEName())){
             result = valHolidayInfoInterfService.execute(templateSourceFlgDTO, acctEntity);
+        }
+        else if(TempConstant.交易对手.equals(acctEntity.getTmpEName())){
+            result = valCounterPartyInterfService.execute(templateSourceFlgDTO, acctEntity);
         }
         return new OtherBaseInfoForAssetProcessorResult(result);
     }
