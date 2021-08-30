@@ -11,17 +11,14 @@
 package com.joyintech.tams.batch.report.reportdatabackup.service;
 
 
-import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
 import com.joyintech.tams.batch.report.reportdatabackup.dao.ReportDataBackupMapper;
-import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,13 +145,13 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
         		logger.info("创建"+ tableName +"表结束！");
         	}
 			logger.info("插入chb_submit_status表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表开始！");
-			mapper.insertChbSubmitStatusDataEx(tableName,startDate,endDate);
+			mapper.insertChbSubmitStatusData(tableName,startDate,endDate);
 			logger.info("插入chb_submit_status表"+  startDate + "~" + endDate + "日数据归档至"+tableName+"表结束！");
 			//关闭并发，否则dml语句不可执行
 			mapper.loggingNoparallel(tableName_ori);
 			logger.info("删除chb_submit_status表" + startDate + "~" + endDate + "日数据开始！");
 			//状态表中有身份数据，不能删除分区，还是按照原逻辑delete
-			mapper.deleteChbSubmitStatusDataEx(startDate,endDate);
+			mapper.deleteChbSubmitStatusData(startDate,endDate);
 			logger.info("删除chb_submit_status表" + startDate + "~" + endDate + "日数据结束！");
     	}
     	else if(flag == 2){
@@ -165,7 +162,7 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
         		logger.info("创建"+ tableName +"表结束！");
         	}
 			logger.info("插入chb_investhold_info表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表开始！");
-			mapper.insertChbInvestHoldInfoDataEx(tableName,startDate,endDate);
+			mapper.insertChbInvestHoldInfoData(tableName,startDate,endDate);
 			logger.info("插入chb_investhold_info表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表结束！");
 			//下述直接删除分区
 //			logger.info("删除chb_investhold_info表" + startDate + "~" + endDate + "日数据开始！");
@@ -180,7 +177,7 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
         		logger.info("创建"+ tableName +"表结束！");
         	}
 			logger.info("插入chb_investhold_info_sub表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表开始！");
-			mapper.insertChbInvestHoldInfoSubDataEx(tableName,startDate,endDate);
+			mapper.insertChbInvestHoldInfoSubData(tableName,startDate,endDate);
 			logger.info("插入chb_investhold_info_sub表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表结束！");
 			//下述直接删除分区
 //			logger.info("删除chb_investhold_info_sub表" + startDate + "~" + endDate + "日数据开始！");
@@ -190,12 +187,12 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
 		else if(flag == 4){
 			if(StringUtil.isEmpty(reportDataBackup)){
 				logger.info("创建"+ tableName +"表开始！");
-				mapper.createChbInvestHoldInfoCheckEx(tableName);
+				mapper.createChbInvestHoldInfoCheck(tableName);
 				mapper.nologgingParrel(tableName);
 				logger.info("创建"+ tableName +"表结束！");
 			}
 			logger.info("插入chb_investhold_info_check表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表开始！");
-			mapper.insertChbInvestHoldInfoCheckDataEx(tableName,startDate,endDate);
+			mapper.insertChbInvestHoldInfoCheckData(tableName,startDate,endDate);
 			logger.info("插入chb_investhold_info_check表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表结束！");
 			//下述直接删除分区
 //			logger.info("删除chb_investhold_info_check表" + startDate + "~" + endDate + "日数据开始！");

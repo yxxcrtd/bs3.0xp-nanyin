@@ -1,182 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.batch.report.reportdatabackup.dao.ReportDataBackupMapper">
+	<select id="isExistBackupData" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM CHB_INVESTHOLD_INFO_SUB
+		WHERE SEND_STATUS = '01' and HOLD_DATE <![CDATA[<]]> to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+	</select>
+
 	<!-- 查询传入的表名是否存在-->
 	<select id="queryTableIsExist" parameterType="java.lang.String" resultType="java.lang.String">
-		select TABLE_NAME tableName from user_tables 
-		where table_name = #{tableName}
+		SELECT TABLE_NAME TABLENAME FROM USER_TABLES
+		WHERE TABLE_NAME = #{tableName}
 	</select>
-	<!-- 报送总表备份 -->
-	<update id="createChbInfoReport">
-        create table ${newTableName} as select * from CHB_INFO_REPORT  where 1=0
-    </update>
-    <!-- 插入 ChbInfoReport数据-->
-    <insert id="insertChbInfoReportData">
-    	insert into ${newTableName} 
-		select * from CHB_INFO_REPORT rep where rep.REPORT_NO in (
-    		select distinct REPORT_NO from CHB_SUBMIT_STATUS 
-    		left join CHB_INVESTHOLD_INFO_SUB
-    		on CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
-    		where CHB_INVESTHOLD_INFO_SUB.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    		and REPORT_NO is not null
-			)
-    </insert>
-    <!-- 插入 ChbInfoReport数据-->
-    <delete id="deleteChbInfoReportData">
-    	delete from CHB_INFO_REPORT rep where rep.REPORT_NO in (
-    		select distinct REPORT_NO from CHB_SUBMIT_STATUS 
-    		left join CHB_INVESTHOLD_INFO_SUB
-    		on CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
-    		where CHB_INVESTHOLD_INFO_SUB.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    		and REPORT_NO is not null
-			)
-    </delete>
-    <!-- 创建表备份ChbSubmitStatus -->
+
+	<!-- 创建表备份ChbSubmitStatus -->
 	<update id="createChbSubmitStatus">
-        create table ${newTableName} as select CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS  where 1=0
-    </update>
-    <!-- 插入 ChbSubmitStatus数据-->
-    <insert id="insertChbSubmitStatusData">
-    	insert into ${newTableName} 
-		select CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS 
-    		left join CHB_INVESTHOLD_INFO_SUB
-    		on CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
-    		where CHB_INVESTHOLD_INFO_SUB.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    </insert>
-    <!-- 插入 ChbSubmitStatus数据-->
-    <delete id="deleteChbSubmitStatusData">
-    	delete from CHB_SUBMIT_STATUS where CHB_SUBMIT_STATUS.SEQNO in(
-    		select SUMIT_SEQ from CHB_INVESTHOLD_INFO_SUB
-    		where HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    		)
-    </delete>
-    <!-- 创建表备份ChbInvestHoldInfo -->
-	<update id="createChbInvestHoldInfo">
-        create table ${newTableName} as select * from CHB_INVESTHOLD_INFO   where 1=0
-    </update>
-    <!-- 插入 ChbInvestHoldInfo数据-->
-    <insert id="insertChbInvestHoldInfoData">
-    	insert into ${newTableName} 
-		select info.* from CHB_INVESTHOLD_INFO info
-    		where info.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    </insert>
-    <!-- 插入 ChbInvestHoldInfo数据-->
-    <delete id="deleteChbInvestHoldInfoData">
-		delete from CHB_INVESTHOLD_INFO info 
-		where info.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    </delete>
-    <!-- 创建表备份ChbInvestHoldInfoSub -->
-	<update id="createChbInvestHoldInfoSub">
-        create table ${newTableName} as select * from  CHB_INVESTHOLD_INFO_SUB sub where 1=0
-    </update>
-    <!-- 插入 ChbInvestHoldInfoSub数据-->
-    <insert id="insertChbInvestHoldInfoSubData">
-    	insert into ${newTableName} 
-		select sub.* from  CHB_INVESTHOLD_INFO_SUB sub
-    		where sub.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    </insert>
-    <!-- 插入 ChbInvestHoldInfoSub数据-->
-    <delete id="deleteChbInvestHoldInfoSubData">
-		delete from  CHB_INVESTHOLD_INFO_SUB sub where 
-    		sub.HOLD_DATE = to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    </delete>
-    <select id="isExistBackupData" resultType="java.lang.Integer">
-    	select count(1) from CHB_INVESTHOLD_INFO_SUB 
-    	where SEND_STATUS = '01' and HOLD_DATE <![CDATA[<]]> to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    </select>
-    <!-- 获取所有需要归档的日期 -->
-    <select id="getDateByBackupData" resultType="java.util.Date">
-    	select distinct hold_date from CHB_INVESTHOLD_INFO_SUB 
-    	where SEND_STATUS in ('02','03') and HOLD_DATE <![CDATA[<]]> to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    	order by HOLD_DATE desc
-    </select>
-   <select id="getDateByBackupDataEx" resultType="map">
-     select min(hold_date)minDate,max(hold_date)maxDate from CHB_INVESTHOLD_INFO_SUB where HOLD_DATE <![CDATA[<]]> to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    </select>
-    <!-- 将未归档的数据移至临时表中 -->
-	<update id="insertChbSubmitStatusTemp">
-        insert into  ${newTableName} 
-         select CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS 
-    		left join CHB_INVESTHOLD_INFO_SUB
-    		on CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
-    		where CHB_INVESTHOLD_INFO_SUB.HOLD_DATE >= to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    </update>
-    <update id="truncateTable">
-        truncate table ${tableName}
-    </update>
-    <insert id="insertDataToOriTable">
-    	insert into ${newTableName} 
-		select * from  ${tempTableName} 
-    </insert>
-    <update id="dropTempTable">
-    	drop table ${newTableName};
-    </update>
-        <!-- 创建表备份createChbInvestHoldInfoTemp -->
-	<update id="insertChbInvestHoldInfoTemp">
-        insert into ${newTableName} 
-        select info.* from CHB_INVESTHOLD_INFO info
-    		where info.HOLD_DATE >= to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    </update>
-     <!-- 创建表备份ChbInvestHoldInfoSub -->
-	<update id="insertChbInvestHoldInfoSubTemp">
-        insert into ${newTableName} 
-        select sub.* from  CHB_INVESTHOLD_INFO_SUB sub
-    		where sub.HOLD_DATE >= to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-    </update>
-    <!-- add by zcw 增加处理分区逻辑 start -->
-	<!-- 删除表分区 -->
-	<insert id="deleteTablePartition">
-		ALTER TABLE ${tableName} DROP PARTITION FOR(date'${date}')
-    </insert>
-
-	<!-- 重建索引 -->
-	<update id="rebuildIndex" parameterType="string">
-        alter index ${indexName} rebuild online
-    </update>
-    
- <update id="gathertableStatistics" statementType="CALLABLE" parameterType="map">
-    {call  dbms_stats.gather_table_stats(ownname => #{tableOwner}, tabname => #{tableName} ,estimate_percent => 15, cascade => true) }
-</update>
-
-  <update id="gatherindexStatistics" statementType="CALLABLE" parameterType="map">
-    {call  dbms_stats.gather_index_stats(ownname => #{tableOwner},  indname => #{indexName}, estimate_percent => 15) }
-</update>
- 
-<update id="callChbInvesthold" parameterType= "map" statementType="CALLABLE">
-	{call chb_backup_hold_data(
-		#{p_minDate, jdbcType=VARCHAR, mode=IN},
-		#{p_maxDate, jdbcType=VARCHAR, mode=IN},
-		#{p_tableName, jdbcType=VARCHAR, mode=IN},
-		#{p_oriTableName, jdbcType=VARCHAR, mode=IN},
-		#{p_index, jdbcType=INTEGER, mode=IN} 
-		)
-	}	
-</update>
-
-
-	<insert id="nologgingParrel">
-		ALTER TABLE ${newTableName} NOLOGGING PARALLEL 8
-	</insert>
-
-	<insert id="loggingNoparallel">
-		ALTER TABLE ${newTableName} LOGGING NOPARALLEL
-	</insert>
-
-	<update id="createChbInvestHoldInfoCheckEx">
-		CREATE TABLE ${newTableName} AS SELECT * FROM  CHB_INVESTHOLD_INFO_CHECK sub where 1=0
+		CREATE TABLE ${newTableName} AS SELECT CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS  WHERE 1=0
 	</update>
-	
-		<select id="queryIndexName" resultType="java.lang.String">
-		SELECT
-		   DISTINCT T.INDEX_NAME
-		FROM USER_IND_COLUMNS T,USER_INDEXES I
-		WHERE T.INDEX_NAME = I.INDEX_NAME
-		AND T.TABLE_NAME = I.TABLE_NAME
-		AND T.TABLE_NAME = #{tableName,jdbcType=VARCHAR}
-	</select>
-	
-		<!-- 插入 ChbSubmitStatus数据-->
-	<insert id="insertChbSubmitStatusDataEx">
+
+	<!-- 插入 ChbSubmitStatus数据-->
+	<insert id="insertChbSubmitStatusData">
 		INSERT /*+ append */ INTO ${newTableName}
 		SELECT /*+ parallel(CHB_SUBMIT_STATUS,8) */ CHB_SUBMIT_STATUS.* FROM CHB_SUBMIT_STATUS
 		LEFT JOIN CHB_INVESTHOLD_INFO_SUB
@@ -186,7 +28,7 @@
 	</insert>
 
 	<!-- 插入 ChbSubmitStatus数据-->
-	<delete id="deleteChbSubmitStatusDataEx">
+	<delete id="deleteChbSubmitStatusData">
 		DELETE FROM CHB_SUBMIT_STATUS WHERE CHB_SUBMIT_STATUS.SEQNO IN(
 		SELECT SUMIT_SEQ FROM CHB_INVESTHOLD_INFO_SUB
 		WHERE CHB_INVESTHOLD_INFO_SUB.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
@@ -194,23 +36,65 @@
 		)
 	</delete>
 
+	<!-- 创建表备份ChbInvestHoldInfo -->
+	<update id="createChbInvestHoldInfo">
+		CREATE TABLE ${newTableName} AS SELECT * FROM CHB_INVESTHOLD_INFO  WHERE 1=0
+	</update>
 
 	<!-- 插入 ChbInvestHoldInfo数据-->
-	<insert id="insertChbInvestHoldInfoDataEx">
+	<insert id="insertChbInvestHoldInfoData">
 		INSERT /*+ append */ INTO ${newTableName}
 		SELECT /*+ parallel(INFO,8) */ INFO.* from CHB_INVESTHOLD_INFO INFO
 		WHERE info.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 	</insert>
 
+	<!-- 创建表备份ChbInvestHoldInfoSub -->
+	<update id="createChbInvestHoldInfoSub">
+		CREATE TABLE ${newTableName} AS SELECT * from  CHB_INVESTHOLD_INFO_SUB SUB WHERE 1=0
+	</update>
+
 	<!-- 插入 ChbInvestHoldInfoSub数据-->
-	<insert id="insertChbInvestHoldInfoSubDataEx">
+	<insert id="insertChbInvestHoldInfoSubData">
 		INSERT /*+ append */ INTO ${newTableName}
 		SELECT /*+ parallel(SUB,8) */ sub.* FROM  CHB_INVESTHOLD_INFO_SUB SUB
 		WHERE SUB.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 	</insert>
-	
-	
-	
+
+	<select id="getDateByBackupDataEx" resultType="map">
+		SELECT
+		  MIN(HOLD_DATE) MINDATE,
+		  MAX(HOLD_DATE) MAXDATE
+		FROM CHB_INVESTHOLD_INFO_SUB
+		where HOLD_DATE <![CDATA[<]]> to_date(#{dataBackupDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+	</select>
+	<insert id="nologgingParrel">
+		ALTER TABLE ${newTableName} NOLOGGING PARALLEL 8
+	</insert>
+
+	<insert id="loggingNoparallel">
+		ALTER TABLE ${newTableName} LOGGING NOPARALLEL
+	</insert>
+
+	<update id="createChbInvestHoldInfoCheck">
+		CREATE TABLE ${newTableName} AS SELECT * FROM  CHB_INVESTHOLD_INFO_CHECK sub where 1=0
+	</update>
+
+	<!-- 插入 ChbInvestHoldInfoSub数据-->
+	<insert id="insertChbInvestHoldInfoCheckData">
+		INSERT /*+ append */ INTO ${newTableName}
+		SELECT /*+ parallel(T,8) */ T.* FROM  CHB_INVESTHOLD_INFO_CHECK T
+		WHERE T.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+		AND T.OPERATE_STATUS ='02'
+	</insert>
+
+	<update id="gathertableStatistics" statementType="CALLABLE" parameterType="map">
+		{call  dbms_stats.gather_table_stats(ownname => #{tableOwner}, tabname => #{tableName} ,estimate_percent => 15, cascade => true) }
+	</update>
+
+	<update id="gatherindexStatistics" statementType="CALLABLE" parameterType="map">
+		{call  dbms_stats.gather_index_stats(ownname => #{tableOwner},  indname => #{indexName}, estimate_percent => 15) }
+	</update>
+
 	<select id="queryPartitions" resultType="java.lang.String">
 		SELECT
 		   PARTITION_NAME
@@ -226,14 +110,13 @@
 	<select id="dropPartition">
 		ALTER TABLE ${tableName} DROP PARTITION(${patitionName})
 	</select>
-	
-	
-		<insert id="insertChbInvestHoldInfoCheckDataEx">
-		INSERT /*+ append */ INTO ${newTableName}
-		SELECT /*+ parallel(T,8) */ T.* FROM  CHB_INVESTHOLD_INFO_CHECK T
-		WHERE T.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-		AND T.OPERATE_STATUS ='02'
-	</insert>
-	
-    <!-- add by zcw 增加处理分区逻辑 end -->
+
+	<select id="queryIndexName" resultType="java.lang.String">
+		SELECT
+		   DISTINCT T.INDEX_NAME
+		FROM USER_IND_COLUMNS T,USER_INDEXES I
+		WHERE T.INDEX_NAME = I.INDEX_NAME
+		AND T.TABLE_NAME = I.TABLE_NAME
+		AND T.TABLE_NAME = #{tableName,jdbcType=VARCHAR}
+	</select>
 </mapper>
