@@ -4,7 +4,7 @@
  
   <select id="selectPbcPrdBaseInfoSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto" 
  	parameterType="java.util.Date">
-	select r.PBC_PROD_ID prodid ,r.REGIST_SEQNO registseqno,
+	select r.PROD_ID prodid ,r.REGIST_SEQNO registseqno,
 	nvl(r.HIGH_YIELD_ISSUE,0) prodprofit1,nvl(r.LOW_YIELD_ISSUE,0) prodprofit2
 	from pbc_prd_baseinfo_sub r
 	where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)

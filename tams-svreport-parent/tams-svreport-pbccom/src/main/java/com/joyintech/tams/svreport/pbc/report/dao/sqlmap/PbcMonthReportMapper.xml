@@ -1017,7 +1017,8 @@
                 prod_variety        ,
                 person_liable       ,
                 contact             ,
-                report_date
+                report_date,
+                ENDDATE
         from PBC_REPORT
         where reporttype != 'ONEPRD_ASSET_DEBT'
         <foreach collection="list" item="item" open="and SEND_STATUS in (" separator="," close=")">
@@ -1040,7 +1041,8 @@
         prod_variety        ,
         person_liable       ,
         contact             ,
-        report_date
+        report_date,
+        ENDDATE
     </select>
 
     <select id="findProductByName" resultType="java.lang.String">

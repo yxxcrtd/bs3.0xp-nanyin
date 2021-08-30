@@ -112,7 +112,7 @@ public class PbcNewReportPrdDatFileService {
 				relOrgCode = CommonUtil.getYHGeneralBankCode();
 			}
 
-
+			int num = 0;
 			//2、以【1】取得期次为对象，进行循环处理
 			Map<String,List<PbcMonthReport>> termIdList = tmpMap.getValue().stream().collect(Collectors.groupingBy(PbcMonthReport::getTermid));
 
@@ -125,16 +125,14 @@ public class PbcNewReportPrdDatFileService {
 				//获取当前所有的zipCode倒叙查询获取第一个代表最后一位
 				List<PbcSendZipDatFile> zipDataList = pbcNewPrdDatFileMapper.getMaxZipCode(dataSearch);
 				String zipCode = "";
-				int num = 1;
 				if(null!=zipDataList&&zipDataList.size()>0) {
 					zipCode = zipDataList.get(0).getDatZipCode();
 					//上面取出的.最大的压缩编号的.3位置顺序号
 					num = Integer.parseInt(zipCode.substring(zipCode.length() - 3, zipCode.length()));
-					num++;
 				}
+				num++;
 				//2.1、zip包名获取  每个法人获取各自的数据
 				 zipCode = PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_统计模板数据.getValue(),genDate,num,relOrgCode);
-
 				/***由于联社模式的生成方式问题.无数据将无法生成对应的人行文件,但是dat需要生成,进行修改*/
 				Map<String,PbcMonthReport> pbcCodeList = trimMap.getValue().stream().collect(Collectors.toMap(PbcMonthReport::getReporttype, a -> a,(k1, k2)->k1));
 				//2.2、资管产品统计模板表数据处理
@@ -167,7 +165,7 @@ public class PbcNewReportPrdDatFileService {
 					zipFile.setProdVariety(report.getProdVariety());
 					zipFile.setPersonLiable(report.getPersonLiable());
 					zipFile.setContact(report.getContact());
-					zipFile.setReportDate(report.getReportDate());
+					zipFile.setReportDate(new Date());
 					zipFile.setEnddate(report.getEnddate());
 
 					zipFileList.add(zipFile);
