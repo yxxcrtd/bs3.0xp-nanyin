@@ -4,6 +4,7 @@ import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.BinaryTreeModelResultDto;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCurveResult;
+import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -26,10 +27,12 @@ public class BinaryTreeModelWriter extends BaseWriter<BinaryTreeModelResultDto> 
         List<BinaryTreeModelResultDto> resultList = (List<BinaryTreeModelResultDto>)items;
         List<ModCurveResult> listModCurveResult = new ArrayList<ModCurveResult>();
         List<ModRiskPremium> listModRiskPremium = new ArrayList<ModRiskPremium>();
+        List<MstBondQuotationInfoDto> listMstBondQuotationInfoDto = new ArrayList<MstBondQuotationInfoDto>();
         if (resultList != null && resultList.size() > 0) {
             for (BinaryTreeModelResultDto dto : resultList) {
                 listModCurveResult.add(dto.getModCurveResult());
                 listModRiskPremium.add(dto.getModRiskPremium());
+                listMstBondQuotationInfoDto.add(dto.getMstBondQuoTation());
             }
         }
 
@@ -41,6 +44,46 @@ public class BinaryTreeModelWriter extends BaseWriter<BinaryTreeModelResultDto> 
         if (listModRiskPremium != null && listModRiskPremium.size() > 0) {
             deleteModRiskPremium(listModRiskPremium);
             insertModRiskPremium(listModRiskPremium);
+        }
+        if (listMstBondQuotationInfoDto != null && listMstBondQuotationInfoDto.size() > 0) {
+            deleteMstBondQuotationInfo(listMstBondQuotationInfoDto);
+            insertMstBondQuotationInfo(listMstBondQuotationInfoDto);
+        }
+
+
+    }
+
+    /**
+     * 插入债券估值行情
+     * @param listMstBondQuotationInfoDto
+     */
+    private void insertMstBondQuotationInfo(List<MstBondQuotationInfoDto> listMstBondQuotationInfoDto) {
+        if (listMstBondQuotationInfoDto == null || listMstBondQuotationInfoDto.isEmpty()) {
+            return;
+        }
+        // 定义一个固定大小插入存放集合
+        List<List<MstBondQuotationInfoDto>> list = DataHandleUtil.splitList(listMstBondQuotationInfoDto);
+        for (List<MstBondQuotationInfoDto> listInsert : list) {
+            if (CollectionUtils.isNotEmpty(listInsert)) {
+                binaryTreeModelMapper.insertMstBondQuotationInfo(listInsert);
+            }
+        }
+    }
+
+    /**
+     * 删除债券估值行情
+     * @param listMstBondQuotationInfoDto
+     */
+    private void deleteMstBondQuotationInfo(List<MstBondQuotationInfoDto> listMstBondQuotationInfoDto) {
+        if (listMstBondQuotationInfoDto == null || listMstBondQuotationInfoDto.isEmpty()) {
+            return;
+        }
+        // 定义一个固定大小插入存放集合
+        List<List<MstBondQuotationInfoDto>> list = DataHandleUtil.splitList(listMstBondQuotationInfoDto);
+        for (List<MstBondQuotationInfoDto> listInsert : list) {
+            if (CollectionUtils.isNotEmpty(listInsert)) {
+                binaryTreeModelMapper.deleteMstBondQuotationInfo(listInsert);
+            }
         }
     }
 

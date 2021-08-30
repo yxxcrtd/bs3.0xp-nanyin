@@ -49,6 +49,24 @@ public class ModValuationCommonService extends BaseService {
 		}
 		return null;
 	}
+
+	/**
+	 *  获取资产信息集合
+	 * @param paraMap
+	 * @return
+	 */
+	public List<ModAssetInfoDto> selectIncomeMethodAssetInfo(ModAssetInfoParamsDto paraMap){
+		try{
+			if(null == paraMap.getSearchDate()){
+				logger.info("查询日不能为空！");
+				throw new Exception("查询日不能为空!");
+			}
+			return modAssetInfoMapper.selectAssetInfo(paraMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	/**
 	 *  查询二叉树模型需要跑的资产信息
 	 * @param paraMap

@@ -23,7 +23,7 @@ import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
-import com.joyintech.tams.valuation.component.batch.dao.ModBatchLogsMapper;
+import com.joyintech.tams.valuation.component.batch.dao.ValModBatchLogsMapper;
 import com.joyintech.tams.valuation.component.batch.dao.ModBatchParamsMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -64,7 +64,7 @@ public class ModBatchTaskService extends BaseService {
     private SysBatchgrpExecInfoMapper batchExecuteDetailMapper;
 
     @Autowired
-    private ModBatchLogsMapper modBatchLogsMapper;
+    private ValModBatchLogsMapper modBatchLogsMapper;
 
     public List<BatchTaskDto> getBatchTask(Map<String, Object> params) {
         return modBatchTaskMapper.getBatchTask(params);

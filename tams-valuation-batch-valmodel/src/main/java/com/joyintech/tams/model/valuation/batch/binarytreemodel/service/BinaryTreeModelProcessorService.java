@@ -28,6 +28,7 @@ import com.joyintech.tams.model.valuation.batch.calculation.entity.KeyPointDto;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.calculator.TargetRateCalculator;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.inputparam.TargetRateInputParameter;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.outparam.TargetRateOutputParameter;
+import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto;
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
@@ -78,8 +79,9 @@ public class BinaryTreeModelProcessorService {
         //初始化封装计算的资产估值结果
         ModCurveResult modCurveResult = new ModCurveResult();
         ModRiskPremium modRiskPremium = new ModRiskPremium();
-        result.setModCurveResult(modCurveResult);
-        result.setModRiskPremium(modRiskPremium);
+        MstBondQuotationInfoDto mstBondQuoTation = new MstBondQuotationInfoDto();
+//        result.setModCurveResult(modCurveResult);
+//        result.setModRiskPremium(modRiskPremium);
 
         //4.计算波动率
         //变量.股票收盘价序列列表 = 资产信息.股票行情
@@ -158,6 +160,22 @@ public class BinaryTreeModelProcessorService {
         modRiskPremium.setFinprodId(entity.getFinprodId());
         modRiskPremium.setFinprodName(entity.getFinprodAbbr());
         modRiskPremium.setModMethod(ModelDictCodeList.模型_估值模型名称_二叉树.getValue());
+
+
+        mstBondQuoTation.setSecId(entity.getFinprodMarketId()); //市场代码
+        mstBondQuoTation.setValueDate(platDate);//估值日
+        mstBondQuoTation.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
+        mstBondQuoTation.setPrice(valueAllPrice); //估值全价
+        mstBondQuoTation.setNetprice(valueNetPrice);//估值净价
+        mstBondQuoTation.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
+        mstBondQuoTation.setCreateUser("batch"); //
+        mstBondQuoTation.setUpdateUser("batch");
+        mstBondQuoTation.setCreateTime(DateUtil.now());
+        mstBondQuoTation.setUpdateTime(DateUtil.now());
+
+        result.setModCurveResult(modCurveResult);
+        result.setModRiskPremium(modRiskPremium);
+        result.setMstBondQuoTation(mstBondQuoTation);
         return result;
     }
 

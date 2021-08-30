@@ -5,7 +5,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
-import com.joyintech.tams.valuation.component.batch.dao.ModBatchLogsMapper;
+import com.joyintech.tams.valuation.component.batch.dao.ValModBatchLogsMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -37,7 +37,7 @@ public class ModLogsService {
     private SqlSessionTemplate sqlSessionTemplate;
 
     @Autowired
-    private ModBatchLogsMapper modBatchLogsMapper;
+    private ValModBatchLogsMapper modBatchLogsMapper;
 
     /**
      * 批量保存日志
@@ -46,7 +46,7 @@ public class ModLogsService {
     public void saveBatch(List<ModBatchLogs> logs) {
         SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
-            ModBatchLogsMapper mapper = sqlSession.getMapper(ModBatchLogsMapper.class);
+            ValModBatchLogsMapper mapper = sqlSession.getMapper(ValModBatchLogsMapper.class);
             int count = 0;
             for (ModBatchLogs log : logs) {
                 // 每1000条提交一次
