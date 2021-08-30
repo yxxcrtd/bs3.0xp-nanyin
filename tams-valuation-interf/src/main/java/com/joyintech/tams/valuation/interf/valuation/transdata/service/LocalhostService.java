@@ -93,6 +93,9 @@ public class LocalhostService {
                          files = SearchFilePath.searchFileByName(remotePath,fileName);
                      }
             	}
+            	else {
+                    files = SearchFilePath.searchFileByName(remotePath, fileNamePart.getTmpEName());
+                }
 //              List<File> files = SearchFilePath.searchFileByName(remotePath,fileNamePart.getTmpEName());
             	/**modify by wujie on 20181225 end**/
                 if (StringUtil.isEmptyList(files)) {

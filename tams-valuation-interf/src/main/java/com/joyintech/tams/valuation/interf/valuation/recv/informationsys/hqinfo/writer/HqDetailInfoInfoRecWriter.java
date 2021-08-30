@@ -10,39 +10,22 @@
 
 package com.joyintech.tams.valuation.interf.valuation.recv.informationsys.hqinfo.writer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.*;
+import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
+import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
+import com.joyintech.tams.valuation.interf.core.entity.InterfExecuteInfo;
+import com.joyintech.tams.valuation.interf.valuation.recv.informationsys.hqinfo.dto.HqDetailInfoProcessorResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinProductValuation;
-import com.joyintech.tams.common.base.entity.MstBondMarketInfo;
-import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
-import com.joyintech.tams.common.base.entity.MstFundMarketInfo;
-import com.joyintech.tams.common.base.entity.MstIntRateInfo;
-import com.joyintech.tams.common.base.entity.ValInterflog;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValBondMarketInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValBondValuationInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashCalcRuleBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValExercisePlanBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductValuationBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFundMarketInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValInterflogBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValMstIntRateInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
-import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
-import com.joyintech.tams.valuation.interf.core.entity.InterfExecuteInfo;
-import com.joyintech.tams.valuation.interf.valuation.recv.informationsys.hqinfo.dto.HqDetailInfoProcessorResult;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
   * 行情信息接口Writer
@@ -85,6 +68,11 @@ public class HqDetailInfoInfoRecWriter extends InterfBaseWriter<BaseEntity> {
      */
     @Autowired
     private ValInterflogBatchMapper valInterflogBatchMapper;
+
+    /** add by yanya on 20210831 增加股票行情接口 start**/
+    @Autowired
+    ValStockQuotationInfoMapper valStockQuotationInfoMapper;
+    /** add by yanya on 20210831 增加股票行情接口 end**/
     
     @Value("${interf.properties.maxSqlNum}")
     private int maxSqlNum;
@@ -271,7 +259,7 @@ public class HqDetailInfoInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                 }
             }
             /**add by wujie on 20180910 end**/
-            
+
             //债券估值
             List<MstBondValuationInfo> mstBondValuationInfoList = result.getListBondValuation();
             // 入库
@@ -296,7 +284,7 @@ public class HqDetailInfoInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                     valBondValuattionInfoBatchMapper.insertBatch(listInsert);
                 }
             }
-            
+
             
             // 日志
             List<ValInterflog> valInterflog = result.getListValInterflog();
@@ -372,6 +360,32 @@ public class HqDetailInfoInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                 }              
             }
             /** add by dongjun on 20181011 title:债券行权计划 end**/
+
+            /** add by yanya on 20210831 增加股票行情接口 end**/
+            List<MstSharePrice> valShareInfoList = result.getValShareInfo();
+            // 入库
+            if (CollectionUtils.isNotEmpty(valShareInfoList)) {
+                // 定义一个固定大小插入存放集合
+                List<MstSharePrice> listInsert = new ArrayList<MstSharePrice>();
+                for (MstSharePrice e : valShareInfoList) {
+                    // 小于最大值
+                    if (listInsert.size() < maxSqlNum) {
+                        listInsert.add(e);
+                    }
+                    else if (listInsert.size() >= maxSqlNum) {
+                        valStockQuotationInfoMapper.deleteBatch(listInsert);
+                        valStockQuotationInfoMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                // 如果循环结束，小于最大值
+                if (CollectionUtils.isNotEmpty(listInsert)) {
+                    valStockQuotationInfoMapper.deleteBatch(listInsert);
+                    valStockQuotationInfoMapper.insertBatch(listInsert);
+                }
+            }
+            /** add by yanya on 20210831 增加股票行情接口 end**/
         }
 
     }

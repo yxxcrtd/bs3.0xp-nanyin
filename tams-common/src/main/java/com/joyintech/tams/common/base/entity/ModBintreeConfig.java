@@ -1,9 +1,8 @@
-package com.joyintech.tams.model.impairment.batch.eadcalculation.dto;
+package com.joyintech.tams.common.base.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
-
 import java.math.BigDecimal;
 
 public class ModBintreeConfig extends BaseEntity {
@@ -55,31 +54,31 @@ public class ModBintreeConfig extends BaseEntity {
     /**
      * 标的公司每股收益
      */
-    @JsonSerialize(using= BigDecimalSerializer.class)
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal finprodProit;
 
     /**
      * 标的公司每股净资产
      */
-    @JsonSerialize(using= BigDecimalSerializer.class)
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal finprodNetasset;
 
     /**
      * 连续股息率
      */
-    @JsonSerialize(using= BigDecimalSerializer.class)
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal smoothsection;
 
     /**
      * 二叉树步数
      */
-    @JsonSerialize(using= BigDecimalSerializer.class)
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal bintreeStep;
 
     /**
      * 无风险曲线代码
      */
-    @JsonSerialize(using= BigDecimalSerializer.class)
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal curveCode;
 
     /**

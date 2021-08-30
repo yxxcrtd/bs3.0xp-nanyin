@@ -89,7 +89,7 @@
 		T1.CCY ccy,
 		T1.VDATE vdate,
 		T1.MDATE mdate,
-		T1.INV_MANAGER_ID invManagerId,
+		nvl(T1.INV_MANAGER_ID, T1.CREATE_USER) invManagerId,
 		T4.ASSET_TYPE assetType,
 		T4.BUSI_PS busiPs,
 		T1.entrust_Type entrustType,

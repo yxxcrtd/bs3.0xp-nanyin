@@ -191,10 +191,14 @@ V_CONTENT_04 CLOB := 'WITH finTemp AS (select FINPROD_ID ,case  FINPROD_TYPE2 WH
                 WHEN ''F17'' THEN manager
                 WHEN ''F32'' THEN ISSUER
                 WHEN ''F37'' THEN financier
-                ELSE null end as ISSUER from  FIN_PRODUCT)
+                ELSE null end as ISSUER from  FIN_PRODUCT
+    union all
+    SELECT FINPROD_ID,COUNTER_ID as ISSUER
+    FROM FIN_TRADE_PRODUCT
+    WHERE BRANCH=0 AND FINPROD_TYPE2 IN(''F03'',''F05''))
 SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
     SELECT
-        SUM(NVL(VAL.MARKET_VALUE ,0)+NVL(VAL.TDY_INTINCEXP,0)) TRADE_AMT
+        SUM(NVL(VAL.MARKET_VALUE ,0)) TRADE_AMT
     FROM PTL_SEC_PIERCE_VALUTION VAL
     INNER JOIN finTemp PRD ON VAL.FINPROD_ID = PRD.FINPROD_ID
     INNER JOIN FIN_PRODUCT_TYPE TYP ON TYP.FINPROD_ID = PRD.FINPROD_ID
@@ -203,7 +207,7 @@ SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
   UNION ALL
     --1.交易表
     SELECT
-     CASE  WHEN n.PS IN(''T01'',''04'',''T04'',''T52'',''T25'',''T64'') THEN NVL(n.TRADE_AMT,0)
+     CASE  WHEN n.PS IN(''T01'',''T04'',''T52'',''T25'',''T64'') THEN NVL(n.TRADE_AMT,0)
   WHEN n.PS =''T49'' THEN NVL(-1*n.SHARE_AMT*100,0)
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END TRADE_AMT
@@ -213,13 +217,13 @@ SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
     INNER JOIN FIN_PRODUCT_TYPE t3 ON n.FINPROD_ID = t3.FINPROD_ID AND t3.BRANCH = 0
     left JOIN MST_BOND_CREDIT_RATING RT ON RT.O_CODE = t2.ISSUER AND RT.O_TYPE = ''01''
     WHERE m.PORTFOLIO_ID IN  ${portfolioCode} AND n.TRADE_DATE = DATE''${valDate}''AND (RT.GRADE_RESULT NOT IN (''01'',''02'') OR RT.GRADE_RESULT IS null)
-    AND  n.PS IN (''T01'',''04'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'',''T49'',''T64'',''T63'')
+    AND  n.PS IN (''T01'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'',''T49'',''T64'',''T63'')
     AND n.TRADE_STATUS = ''01''
     AND n.IS_CANCEL = ''N''
   UNION ALL
     --2.日间交易表（场内交易）
     SELECT
-     CASE  WHEN n.PS IN(''T01'',''T04'',''T52'',''T25'',''T64'') THEN NVL(n.TRADE_AMT,0)
+     CASE  WHEN n.PS IN(''T01'',''04'',''T04'',''T52'',''T25'',''T64'') THEN NVL(n.TRADE_AMT,0)
   WHEN n.PS =''T49'' THEN NVL(-1*n.SHARE_AMT*100,0)
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END TRADE_AMT 
@@ -229,9 +233,10 @@ SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
     INNER JOIN FIN_PRODUCT_TYPE t3 ON n.FINPROD_ID = t3.FINPROD_ID AND t3.BRANCH = 0
     left JOIN MST_BOND_CREDIT_RATING RT ON RT.O_CODE = t2.ISSUER AND RT.O_TYPE = ''01''
     WHERE m.PORTFOLIO_ID IN  ${portfolioCode} AND n.TRADE_DATE = DATE''${valDate}''AND (RT.GRADE_RESULT NOT IN (''01'',''02'') OR RT.GRADE_RESULT IS null)
-    AND  n.PS IN (''T01'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'',''T49'',''T64'',''T63'')
+    AND  n.PS IN (''T01'',''04'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'',''T49'',''T64'',''T63'')
     AND n.TRADE_STATUS = ''01''
-   AND n.IS_CANCEL = ''N''
+    AND n.IS_CANCEL = ''N''
+    AND n.COUNTER_ID IS  NOT  NULL
   UNION ALL
   --3.交易流程表
     SELECT
@@ -278,7 +283,7 @@ SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
    AND T.FINPROD_TYPE2 = ''F01''
    AND T.TRADE_STATUS = ''01''
    AND T.IS_CANCEL = ''N''
-   AND T.TRADE_DATE = date''${valDate}''
+   AND T.TRADE_DATE = DATE''${valDate}''
    AND NOT EXISTS (
       -- 没有后续申购确认交易
       SELECT 1 FROM TRD_PRODUCT_DEAL TRD WHERE T3.TOTLE_TRADE_ID = TRD.B_TRADE_ID AND TRD.TRADE_STATUS = ''01'' AND TRD.IS_CANCEL = ''N''
@@ -301,7 +306,7 @@ SELECT SUM(NVL(TRADE_AMT,0)) as RVALUE FROM (
    AND T.FINPROD_TYPE2 = ''F01''
    AND T.TRADE_STATUS = ''01''
    AND T.IS_CANCEL = ''N''
-   AND T.TRADE_DATE = date''${valDate}''
+   AND T.TRADE_DATE = DATE''${valDate}''
 union all
  --7.可转债网下申购：有申购确认交易
 SELECT NVL(T.prin_amt, 0) TRADE_AMT
@@ -326,7 +331,7 @@ INNER JOIN finTemp T4 ON T4.FINPROD_ID = T.FINPROD_ID
    AND T.PS = ''T05''
    AND T.TRADE_STATUS = ''01''
    AND T.IS_CANCEL = ''N''
-   AND T.TRADE_DATE = date''${valDate}''
+   AND T.TRADE_DATE = DATE''${valDate}''
    AND T.FINPROD_TYPE2 = ''F01''
   union all 
 --9.债转股（股票）
@@ -340,7 +345,7 @@ SELECT nvl(T.SHARE_AMT*100*-1,0) TRADE_AMT
    AND T.FINPROD_TYPE2 = ''F01''
    AND T.TRADE_STATUS = ''01''
    AND T.IS_CANCEL = ''N''
-   AND T.TRADE_DATE = date''${valDate}''
+   AND T.TRADE_DATE = DATE''${valDate}''
    union all
   SELECT nvl(T.prin_amt,0) TRADE_AMT
   FROM TRD_FIN_PRODUCT_BARTER T 
@@ -353,8 +358,7 @@ SELECT nvl(T.SHARE_AMT*100*-1,0) TRADE_AMT
    AND T.FINPROD_TYPE = ''F10''
    AND T3.TRADE_STATUS = ''01''
    AND T3.IS_CANCEL = ''N''
-   AND T3.TRADE_DATE = date''${valDate}''
-
+   AND T3.TRADE_DATE = DATE''${valDate}''
 )';
 
 ----事后(日终)

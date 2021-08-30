@@ -46,6 +46,19 @@
         return window.CfetsBondDealQuotedPriceSingle002.reset();
     }
 
+    var saveRiskResultdata_Single001 = function(riskResultdata) {
+        window.CfetsBondDealQuotedPriceSingle001.saveRiskResultdata(riskResultdata);
+    }
+    var saveRiskResultdata_Single002 = function(riskResultdata) {
+        window.CfetsBondDealQuotedPriceSingle002.saveRiskResultdata(riskResultdata);
+    }
+    var saveCluflag_Single001 = function(cluflag) {
+        window.CfetsBondDealQuotedPriceSingle001.saveCluflag(cluflag);
+    }
+    var saveCluflag_Single002 = function(cluflag) {
+        window.CfetsBondDealQuotedPriceSingle002.saveCluflag(cluflag);
+    }
+
     parent.CfetsBondDealQuotedPriceSingle = {
         showDiv: showDiv,
         getriskdata_Single001: getriskdata_Single001,
@@ -53,7 +66,11 @@
         getSaveOrSubmitParams_Single001: getSaveOrSubmitParams_Single001,
         getSaveOrSubmitParams_Single002: getSaveOrSubmitParams_Single002,
         resetSingle001: resetSingle001,
-        resetSingle002: resetSingle002
+        resetSingle002: resetSingle002,
+        saveRiskResultdata_Single001: saveRiskResultdata_Single001,
+        saveRiskResultdata_Single002: saveRiskResultdata_Single002,
+        saveCluflag_Single001: saveCluflag_Single001,
+        saveCluflag_Single002: saveCluflag_Single002
     }
 
 }());

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModCurveMappingMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModCurveMapping" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="CURVE_GROUP_CODE" property="curveGroupCode" jdbcType="VARCHAR" />
+        <result column="CURVE_GROUP_NAME" property="curveGroupName" jdbcType="VARCHAR" />
+        <result column="CURVE_CODE" property="curveCode" jdbcType="VARCHAR" />
+        <result column="CURVE_TYPE" property="curveType" jdbcType="VARCHAR" />
+        <result column="CURVE_NAME" property="curveName" jdbcType="VARCHAR" />
+        <result column="GRADE_RESULT" property="gradeResult" jdbcType="VARCHAR" />
+        <result column="GRADE_RESULT_NAME" property="gradeResultName" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModCurveMapping" >
+        insert into MOD_CURVE_MAPPING (SEQ_NO, CURVE_GROUP_CODE, CURVE_GROUP_NAME, 
+            CURVE_CODE, CURVE_TYPE, CURVE_NAME, 
+            GRADE_RESULT, GRADE_RESULT_NAME, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{curveGroupCode,jdbcType=VARCHAR}, #{curveGroupName,jdbcType=VARCHAR}, 
+            #{curveCode,jdbcType=VARCHAR}, #{curveType,jdbcType=VARCHAR}, #{curveName,jdbcType=VARCHAR}, 
+            #{gradeResult,jdbcType=VARCHAR}, #{gradeResultName,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModCurveMapping" >
+        insert into MOD_CURVE_MAPPING
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="curveGroupCode != null" >
+                CURVE_GROUP_CODE,
+            </if>
+            <if test="curveGroupName != null" >
+                CURVE_GROUP_NAME,
+            </if>
+            <if test="curveCode != null" >
+                CURVE_CODE,
+            </if>
+            <if test="curveType != null" >
+                CURVE_TYPE,
+            </if>
+            <if test="curveName != null" >
+                CURVE_NAME,
+            </if>
+            <if test="gradeResult != null" >
+                GRADE_RESULT,
+            </if>
+            <if test="gradeResultName != null" >
+                GRADE_RESULT_NAME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="curveGroupCode != null" >
+                #{curveGroupCode,jdbcType=VARCHAR},
+            </if>
+            <if test="curveGroupName != null" >
+                #{curveGroupName,jdbcType=VARCHAR},
+            </if>
+            <if test="curveCode != null" >
+                #{curveCode,jdbcType=VARCHAR},
+            </if>
+            <if test="curveType != null" >
+                #{curveType,jdbcType=VARCHAR},
+            </if>
+            <if test="curveName != null" >
+                #{curveName,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeResult != null" >
+                #{gradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeResultName != null" >
+                #{gradeResultName,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModCurveMapping" >
+        insert into MOD_CURVE_MAPPING(SEQ_NO, CURVE_GROUP_CODE, CURVE_GROUP_NAME, CURVE_CODE, 
+        CURVE_TYPE, CURVE_NAME, GRADE_RESULT, GRADE_RESULT_NAME, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, CURVE_GROUP_CODE, CURVE_GROUP_NAME, CURVE_CODE, 
+            CURVE_TYPE, CURVE_NAME, GRADE_RESULT, GRADE_RESULT_NAME, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MOD_CURVE_MAPPING
+             where 1 = 1
+    </insert>
+</mapper>

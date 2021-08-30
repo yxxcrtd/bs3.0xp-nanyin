@@ -875,7 +875,7 @@
      * 成交发送
      */
     var sendDeal = function (object){
-    	WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_done", null, function(result){
+    	WorkFlow.doSubmitList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_done", null, function(result){
             var index = window.parent.layer.getFrameIndex(window.name);
             window.parent.layer.close(index);
         })
@@ -891,7 +891,7 @@
         Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/checkEdit', object, function(result) {
             if (result.data){
                 Joyin.confirm(JoyinUtil.getMessage("CFETS_COMMON_E_033"), function() {
-                    Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPr002/reject', object, function(result){
+                    Joyin.ajaxJson(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/reject', object, function(result){
                         var index = window.parent.layer.getFrameIndex(window.name);
                         window.parent.layer.close(index);
                     })
@@ -913,7 +913,7 @@
         Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {
             if (result.data){
                 Joyin.confirm(result.data, function() {
-                	WorkFlow.doSaveList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_save", null, function(result){
+                	WorkFlow.doSaveList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_save", null, function(result){
                         var index = window.parent.layer.getFrameIndex(window.name);
                         window.parent.layer.close(index);
                     })

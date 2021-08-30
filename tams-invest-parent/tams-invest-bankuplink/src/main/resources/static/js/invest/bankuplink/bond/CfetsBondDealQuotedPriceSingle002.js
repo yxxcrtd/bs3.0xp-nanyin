@@ -1,4 +1,7 @@
 (function(){
+    //试算结果
+    var riskResultdata;
+    var cluflag;
 
     var setQQDiv = function(selArr){
         $("#CfetsBondDealQuotedPriceSingle002_hidden_quotaPageModel").val('new');
@@ -29,8 +32,8 @@
                     $('#CfetsBondDealQuotedPriceSingle002_avaNum').val(result.avaNumStr).trigger('change');
                     $('#CfetsBondDealQuotedPriceSingle002_effDate').val(result.effDate);
                     $('#CfetsBondDealQuotedPriceSingle002_remark').val(result.remark);
-                    $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').val(result.data.settleSpreed).trigger('change');
-                    $('#CfetsBondDealQuotedPriceSingle002_secManageAcctId').textSelect('setValue',result.data.secManageAcctId);
+                    $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').val(result.settleSpreed).trigger('change');
+                    $('#CfetsBondDealQuotedPriceSingle002_secManageAcctId').textSelect('setValue',result.secManageAcctId);
 
                 }
             });
@@ -281,8 +284,36 @@
     });
 
     var getriskdata = function () {
-        return null;
+        var obj = {
+            tradeDirection: $("#CfetsBondDealQuotedPriceSingle002_ps").val(),
+            timePoint: MY_SUP_TIME_TYPE_02,
+            valDate: sysDate,
+            portfolioCode: $("#CfetsBondDealQuotedPriceSingle002_portfolioId").val(),
+            assetType: FINPROD_TYPE_F01,
+            isEnabled: "01",
+            assetCode: $("#CfetsBondDealQuotedPriceSingle002_finprodId").val()
+        };
+        if ($("#CfetsBondDealQuotedPriceSingle002_avaNum")) {
+            obj.tradeAmount = $("#CfetsBondDealQuotedPriceSingle002_avaNum").val() * 10000;
+        }
+
+        var object = {
+            tradeDirection: ["ps", "CfetsBondDealQuotedPriceSingle.ps"],
+            portfolioCode: ["portfolioId", "CfetsBondDealQuotedPriceSingle.portfolioId"],
+            tradeAmount: ["fpriceAmt", "CfetsBondDealQuotedPriceSingle.fprinceAmt"],
+            assetType: ["assetType", "CfetsBondDealQuotedPriceSingle.assetType"],
+            counterId: ["counterId", "CfetsBondDealQuotedPriceSingle.counterId"],
+            data: obj
+        };
+        return object;
     };
+
+    function saveRiskResultdata(paraRiskResultdata) {
+        riskResultdata = paraRiskResultdata;
+    }
+    function saveCluflag(paraCluflag) {
+        cluflag = paraCluflag;
+    }
 
     function getSaveOrSubmitParams(operateType) {
         var object = $.serializeToObject("#submitForm");
@@ -306,7 +337,21 @@
         setQQDiv: setQQDiv,
         getriskdata: getriskdata,
         getSaveOrSubmitParams: getSaveOrSubmitParams,
-        reset: reset
+        reset: reset,
+        riskResultdata: riskResultdata,
+        cluflag: cluflag,
+        saveRiskResultdata: saveRiskResultdata,
+        saveCluflag: saveCluflag
+    }
+    CfetsBondDealQuotedPriceSingle002 = {
+        setQQDiv: setQQDiv,
+        getriskdata: getriskdata,
+        getSaveOrSubmitParams: getSaveOrSubmitParams,
+        reset: reset,
+        riskResultdata: riskResultdata,
+        cluflag: cluflag,
+        saveRiskResultdata: saveRiskResultdata,
+        saveCluflag: saveCluflag
     }
 
 }());

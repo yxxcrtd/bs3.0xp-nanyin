@@ -348,14 +348,32 @@
 		}
 		refreshZqzyPositionsTable();// 加载表格
 		
-	}
+	};
+    //add by chenjiaxing 指令管理添加导出功能 start
+    /**
+     * 导出
+     */
+    var exportExcel = function () {
+        if (dateTable != null && dateTable != '') {
+            var selArr = dateTable.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas: datas,
+            });
+        }
+    };
+    //add by chenjiaxing 指令管理添加导出功能 end
     /**
 	 * 画面加载完成
 	 */
     $(function() {
         $('.zlgl-transfer-form #EtrExchangeTrade002_btn_filter').hide();
         $('.zlgl-transfer-form #EtrExchangeTrade002_btn_export').hide();
-        $('.zhiling-transfer-form #EtrExchangeTrade002_btn_export').hide();
     	// 切换到质押持仓，查询页面
         layui.use(['element', 'form'], function() {
             // 绑定交易平台TAB切换事件
@@ -379,7 +397,11 @@
         $('#EtrExchangeTrade002_zqzy_search_btn').click(function() {
         	refreshZqzyPositionsTable();// 加载表格
         });
-
+        //add by chenjiaxing 指令管理导出 start
+        $('.zhiling-transfer-form #EtrExchangeTrade002_btn_export').click(function() {
+            exportExcel();
+        });
+        //add by chenjiaxing 指令管理导出 end
         /**
          * radio事件
          */

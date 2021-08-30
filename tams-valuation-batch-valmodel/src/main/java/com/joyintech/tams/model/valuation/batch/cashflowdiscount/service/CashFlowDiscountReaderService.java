@@ -13,6 +13,8 @@ package com.joyintech.tams.model.valuation.batch.cashflowdiscount.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountReaderResult;
@@ -123,11 +125,11 @@ public class CashFlowDiscountReaderService {
                     return;
                 }
                 else{
-                    if(modCurveConfigAssetMap.containsKey(item.getAssetFive()+item.getFinprodId())){
-                        cashFlowDiscountReaderResult.setModCurveConfig(modCurveConfigAssetMap.get(item.getAssetFive()+item.getFinprodId()));
+                    if(modCurveConfigAssetMap.containsKey(item.getSecTypeDetail()+item.getFinprodId())){
+                        cashFlowDiscountReaderResult.setModCurveConfig(modCurveConfigAssetMap.get(item.getSecTypeDetail()+item.getFinprodId()));
                     }
-                    if(modCurveConfigMap.containsKey(item.getAssetFive())){
-                        cashFlowDiscountReaderResult.setModCurveConfig(modCurveConfigMap.get(item.getAssetFive()));
+                    if(modCurveConfigMap.containsKey(item.getSecTypeDetail())){
+                        cashFlowDiscountReaderResult.setModCurveConfig(modCurveConfigMap.get(item.getSecTypeDetail()));
                     }
                     //查找现金流计划信息
                     List<ModCashFlowDto> modCashFlows = modValuationCommonService.getCashFlowPlanInfoByFinprodId(item.getFinprodId());
@@ -139,9 +141,9 @@ public class CashFlowDiscountReaderService {
                     ModRateParamsDto modRateParamsDto = new ModRateParamsDto();
                     if(null!=cashFlowDiscountReaderResult.getModCurveConfig()){
                         modRateParamsDto.setModSecType(cashFlowDiscountReaderResult.getModCurveConfig().getSecTypeModel());
-                        if(StringUtil.equals(modRateParamsDto.getModSecType(),ModelDictCodeList.模型_证券品种_债券.getValue())){
+                        if(StringUtil.equals(modRateParamsDto.getModSecType(), DictCodeListExt1.证券品种_债券.getValue())){
                             modRateParamsDto.setRateId(item.getFinprodMarketId());
-                        }else if(StringUtil.equals(modRateParamsDto.getModSecType(),ModelDictCodeList.模型_证券品种_项目类资产.getValue())){
+                        }else if(StringUtil.equals(modRateParamsDto.getModSecType(), DictCodeListExt1.证券品种_其他债权类.getValue())){
                             modRateParamsDto.setRateId(item.getActualCreaditProvid());
                         }
                     }
@@ -151,13 +153,13 @@ public class CashFlowDiscountReaderService {
                     ModCurveConfig modCurveConfig = cashFlowDiscountReaderResult.getModCurveConfig();
                     Map<String,Object> paramCurveCode = new HashMap<>();
                     paramCurveCode.put("curveGroupCode",modCurveConfig.getCurveGroupCode());
-                    if(StringUtil.equals(modCurveConfig.getCurveType(),ModelDictCodeList.收益曲线类型_SP即期.getValue())){
+                    if(StringUtil.equals(modCurveConfig.getCurveType(),DictCodeList.收益率曲线类型_SP即期.getValue())){
                         paramCurveCode.put("curveType","SP");
-                    }else if(StringUtil.equals(modCurveConfig.getCurveType(),ModelDictCodeList.收益曲线类型_MA远期.getValue())){
+                    }else if(StringUtil.equals(modCurveConfig.getCurveType(),DictCodeList.收益率曲线类型_MA远期.getValue())){
                         paramCurveCode.put("curveType","MA");
-                    }else if(StringUtil.equals(modCurveConfig.getCurveType(),ModelDictCodeList.收益曲线类型_FS远期的即期.getValue())){
+                    }else if(StringUtil.equals(modCurveConfig.getCurveType(),DictCodeList.收益率曲线类型_FS远期的即期.getValue())){
                         paramCurveCode.put("curveType","FS");
-                    }else if(StringUtil.equals(modCurveConfig.getCurveType(),ModelDictCodeList.收益曲线类型_FM远期的到期.getValue())){
+                    }else if(StringUtil.equals(modCurveConfig.getCurveType(),DictCodeList.收益率曲线类型_FM远期的到期.getValue())){
                         paramCurveCode.put("curveType","FM");
                     }
                     if(null!=rateInfo){

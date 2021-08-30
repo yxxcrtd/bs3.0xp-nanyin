@@ -1677,6 +1677,23 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				return etrCommonService.checkIsBlank(dzImportDto.getEntrustPrice() == null ? "" :dzImportDto.getEntrustPrice().toString(), "EtrExchangeTrade003.price", lineNo);
 			});
 			//add by chenjiaixng 添加指令价格非空校验 20210827 end
+			//add by chenjiaxing 校验投资目的不能为空 start
+			if (!StringUtil.isNotEmpty(dzImportDto.getInvAim()) && StringUtils.isNotEmpty(dzImportDto.getFinprodType2())
+					&&  !dzImportDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())
+					&& StringUtil.equals(dzImportDto.getTradePlat(),DictCodeList.交易平台_大宗交易平台.getValue())) {
+				checkElement(dzImportDto,promptMsg,null,obj-> {
+					return etrCommonService.checkIsBlank(dzImportDto.getInvAim() == null ? "" :dzImportDto.getInvAim().toString(),
+							"EtrExchangeTrade001.invAim", lineNo);
+				});
+			}
+			if (!StringUtil.isNotEmpty(dzImportDto.getInvAim())
+					&&StringUtil.equals(dzImportDto.getTradePlat(),DictCodeList.交易平台_固定收益平台.getValue())) {
+				checkElement(dzImportDto,promptMsg,null,obj-> {
+					return etrCommonService.checkIsBlank(dzImportDto.getInvAim() == null ? "" :dzImportDto.getInvAim().toString(),
+							"EtrExchangeTrade001.invAim", lineNo);
+				});
+			}
+			//add by chenjiaxing 校验投资目的不能为空 end
 			// 指令价格,全价价格,收益率
 			checkElement(dzImportDto,promptMsg,item->{
 				//若是债券计算三者(净价全价收益率)字段联动结果
@@ -2019,7 +2036,6 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                     // 清空confirmMsg
                     confirmMsg = "";
                 }
-
                 // 组合为空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService
                         .checkIsBlank(rowData.get(1), "EtrExchangeTrade001.portfolioId", lineNo));
@@ -2140,6 +2156,23 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                         confirmMsg = "";
                     }
                 }
+				//add by chenjiaxing 校验投资目的不能为空 start
+				if (!StringUtil.isNotEmpty(rowData.get(13)) && StringUtils.isNotEmpty(unit.getFinprodType2())
+						&&  !unit.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+					confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService
+							.checkIsBlank(rowData.get(13), "EtrExchangeTrade001.invAim", lineNo));
+				}
+				if (StringUtil.isBlank(confirmMsg)) {
+					// 投资目的
+					String priceModel = convertToItemCode(DictCode.投资目的.getValue(), rowData.get(13));
+					unit.setInvAim(priceModel);
+				} else {
+					// 设置提示信息
+					promptMsg = confirmMsg;
+					// 清空confirmMsg
+					confirmMsg = "";
+				}
+				//add by chenjiaxing 校验投资目的不能为空 end
 
                 //check价格模式
                 if (StringUtils.isNotEmpty(unit.getPs())) {

@@ -8,7 +8,7 @@
         (
             select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr, type9, type10, type11, type12, type8, type7, type6,
                    actualPositionAmount, tradePositionAmount, instructionsAmount, pledgeAmount, preReductionAmount,
-                   marketPrice*actualPositionAmount marketValue
+                   nvl(marketPrice,decode(type8,'F01',100,1))*actualPositionAmount marketValue
             from
               (
 				select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr, type9, type10, type11, type12, type8, type7, type6,
@@ -221,8 +221,8 @@
 											END AS marketPrice,
 											CASE
 												WHEN fpt.TYPE_8 = 'F01' THEN mbvi.VALUE_DATE
-												WHEN fpt.TYPE_8 = 'F02' THEN frv.VAL_DATE
-												WHEN fpt.TYPE_8 = 'F02' THEN mfmi.VALUE_DATE
+												WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET = '09' THEN frv.VAL_DATE
+												WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET in ('03','04') THEN mfmi.VALUE_DATE
 												WHEN fpt.TYPE_8 = 'F04' THEN frv.VAL_DATE
 												WHEN fpt.TYPE_8 = 'F11' THEN msp.DEAL_DATE
 											END AS valueDate

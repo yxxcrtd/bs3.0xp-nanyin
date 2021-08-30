@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModAseetMappingMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModAseetMapping" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="MAPPING_TYPE" property="mappingType" jdbcType="VARCHAR" />
+        <result column="INPUT1" property="input1" jdbcType="VARCHAR" />
+        <result column="INPUT2" property="input2" jdbcType="VARCHAR" />
+        <result column="INPUT3" property="input3" jdbcType="VARCHAR" />
+        <result column="INPUT4" property="input4" jdbcType="VARCHAR" />
+        <result column="INPUT5" property="input5" jdbcType="VARCHAR" />
+        <result column="OUTPUT1" property="output1" jdbcType="VARCHAR" />
+        <result column="OUTPUT2" property="output2" jdbcType="VARCHAR" />
+        <result column="OUTPUT3" property="output3" jdbcType="VARCHAR" />
+        <result column="OUTPUT4" property="output4" jdbcType="VARCHAR" />
+        <result column="OUTPUT5" property="output5" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModAseetMapping" >
+        insert into MOD_ASEET_MAPPING (SEQ_NO, MAPPING_TYPE, INPUT1, 
+            INPUT2, INPUT3, INPUT4, 
+            INPUT5, OUTPUT1, OUTPUT2, 
+            OUTPUT3, OUTPUT4, OUTPUT5, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{mappingType,jdbcType=VARCHAR}, #{input1,jdbcType=VARCHAR}, 
+            #{input2,jdbcType=VARCHAR}, #{input3,jdbcType=VARCHAR}, #{input4,jdbcType=VARCHAR}, 
+            #{input5,jdbcType=VARCHAR}, #{output1,jdbcType=VARCHAR}, #{output2,jdbcType=VARCHAR}, 
+            #{output3,jdbcType=VARCHAR}, #{output4,jdbcType=VARCHAR}, #{output5,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModAseetMapping" >
+        insert into MOD_ASEET_MAPPING
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="mappingType != null" >
+                MAPPING_TYPE,
+            </if>
+            <if test="input1 != null" >
+                INPUT1,
+            </if>
+            <if test="input2 != null" >
+                INPUT2,
+            </if>
+            <if test="input3 != null" >
+                INPUT3,
+            </if>
+            <if test="input4 != null" >
+                INPUT4,
+            </if>
+            <if test="input5 != null" >
+                INPUT5,
+            </if>
+            <if test="output1 != null" >
+                OUTPUT1,
+            </if>
+            <if test="output2 != null" >
+                OUTPUT2,
+            </if>
+            <if test="output3 != null" >
+                OUTPUT3,
+            </if>
+            <if test="output4 != null" >
+                OUTPUT4,
+            </if>
+            <if test="output5 != null" >
+                OUTPUT5,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="mappingType != null" >
+                #{mappingType,jdbcType=VARCHAR},
+            </if>
+            <if test="input1 != null" >
+                #{input1,jdbcType=VARCHAR},
+            </if>
+            <if test="input2 != null" >
+                #{input2,jdbcType=VARCHAR},
+            </if>
+            <if test="input3 != null" >
+                #{input3,jdbcType=VARCHAR},
+            </if>
+            <if test="input4 != null" >
+                #{input4,jdbcType=VARCHAR},
+            </if>
+            <if test="input5 != null" >
+                #{input5,jdbcType=VARCHAR},
+            </if>
+            <if test="output1 != null" >
+                #{output1,jdbcType=VARCHAR},
+            </if>
+            <if test="output2 != null" >
+                #{output2,jdbcType=VARCHAR},
+            </if>
+            <if test="output3 != null" >
+                #{output3,jdbcType=VARCHAR},
+            </if>
+            <if test="output4 != null" >
+                #{output4,jdbcType=VARCHAR},
+            </if>
+            <if test="output5 != null" >
+                #{output5,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModAseetMapping" >
+        insert into MOD_ASEET_MAPPING(SEQ_NO, MAPPING_TYPE, INPUT1, INPUT2, INPUT3, INPUT4, 
+        INPUT5, OUTPUT1, OUTPUT2, OUTPUT3, OUTPUT4, OUTPUT5, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, MAPPING_TYPE, INPUT1, INPUT2, INPUT3, INPUT4, 
+            INPUT5, OUTPUT1, OUTPUT2, OUTPUT3, OUTPUT4, OUTPUT5, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MOD_ASEET_MAPPING
+             where 1 = 1
+    </insert>
+</mapper>

@@ -10,23 +10,14 @@
  
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.other.entity;
 
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.interf.base.dto.OtherBaseInfoCommonResult;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.valuation.common.interf.base.dto.OtherBaseInfoCommonResult;
-import com.joyintech.tams.common.base.entity.BokBooksetCapacctInfo;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.MstCalendarInfo;
-import com.joyintech.tams.common.base.entity.MstCustomerInfo;
-import com.joyintech.tams.common.base.entity.MstHoliday;
-import com.joyintech.tams.common.base.entity.MstTradeCalendar;
-import com.joyintech.tams.common.base.entity.StlCapacctInfo;
-import com.joyintech.tams.common.base.entity.StlFinProductAcct;
-import com.joyintech.tams.common.base.entity.ValInterflog;
 
 public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
 
@@ -92,6 +83,9 @@ public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
 		this.setFinProductTypeList(result.getFinProductTypeList());
 		this.setParamMap(result.getParamMap());
 		/**add by wujie on 20180814 end**/
+        /** add by yanya on 20210831 增加客户信息附属表 start**/
+        this.setValCustomerInfoAddList(result.getValCustomerInfoAddList());
+        /** add by yanya on 20210831 增加客户信息附属表 end**/
     }
     
     /**
@@ -262,4 +256,19 @@ public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
 	}
 	
 	/**add by wujie on 20180814 end**/
+
+    /**add by wujie on 20180814 end**/
+
+    /** add by yanya on 20210831 增加客户信息附属表 start**/
+    List<MstCustomerInfoAddWithBLOBs> valCustomerInfoAddList = new ArrayList<MstCustomerInfoAddWithBLOBs>();
+
+    public List<MstCustomerInfoAddWithBLOBs> getValCustomerInfoAddList() {
+        return valCustomerInfoAddList;
+    }
+
+    public void setValCustomerInfoAddList(List<MstCustomerInfoAddWithBLOBs> valCustomerInfoAddList) {
+        this.valCustomerInfoAddList = valCustomerInfoAddList;
+    }
+
+    /** add by yanya on 20210831 增加客户信息附属表 end**/
 }

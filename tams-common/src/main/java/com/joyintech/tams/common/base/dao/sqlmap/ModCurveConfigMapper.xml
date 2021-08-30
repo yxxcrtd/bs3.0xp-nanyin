@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModCurveConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModCurveConfig" >
+        <result column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="SEC_TYPE_MODEL" property="secTypeModel" jdbcType="VARCHAR" />
+        <result column="SEC_DETAIL_TYPE_MODEL" property="secDetailTypeModel" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+        <result column="CURVE_GROUP_CODE" property="curveGroupCode" jdbcType="VARCHAR" />
+        <result column="CURVE_TYPE" property="curveType" jdbcType="VARCHAR" />
+        <result column="ISSMOOTH" property="issmooth" jdbcType="VARCHAR" />
+        <result column="SMOOTHSECTION" property="smoothsection" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_BOTTOM_GRADE" property="isBottomGrade" jdbcType="VARCHAR" />
+        <result column="BOTTOM_GRADE" property="bottomGrade" jdbcType="VARCHAR" />
+        <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="INVALID_DATE" property="invalidDate" jdbcType="DATE" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModCurveConfig" >
+        insert into MOD_CURVE_CONFIG (SEQNO, SEC_TYPE_MODEL, SEC_DETAIL_TYPE_MODEL, 
+            FINPROD_ID, FINPROD_NAME, CURVE_GROUP_CODE, 
+            CURVE_TYPE, ISSMOOTH, SMOOTHSECTION, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, IS_BOTTOM_GRADE, 
+            BOTTOM_GRADE, EFF_DATE, INVALID_DATE
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{secTypeModel,jdbcType=VARCHAR}, #{secDetailTypeModel,jdbcType=VARCHAR}, 
+            #{finprodId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, #{curveGroupCode,jdbcType=VARCHAR}, 
+            #{curveType,jdbcType=VARCHAR}, #{issmooth,jdbcType=VARCHAR}, #{smoothsection,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{isBottomGrade,jdbcType=VARCHAR}, 
+            #{bottomGrade,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{invalidDate,jdbcType=DATE}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModCurveConfig" >
+        insert into MOD_CURVE_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="secTypeModel != null" >
+                SEC_TYPE_MODEL,
+            </if>
+            <if test="secDetailTypeModel != null" >
+                SEC_DETAIL_TYPE_MODEL,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME,
+            </if>
+            <if test="curveGroupCode != null" >
+                CURVE_GROUP_CODE,
+            </if>
+            <if test="curveType != null" >
+                CURVE_TYPE,
+            </if>
+            <if test="issmooth != null" >
+                ISSMOOTH,
+            </if>
+            <if test="smoothsection != null" >
+                SMOOTHSECTION,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="isBottomGrade != null" >
+                IS_BOTTOM_GRADE,
+            </if>
+            <if test="bottomGrade != null" >
+                BOTTOM_GRADE,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="invalidDate != null" >
+                INVALID_DATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="secTypeModel != null" >
+                #{secTypeModel,jdbcType=VARCHAR},
+            </if>
+            <if test="secDetailTypeModel != null" >
+                #{secDetailTypeModel,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="curveGroupCode != null" >
+                #{curveGroupCode,jdbcType=VARCHAR},
+            </if>
+            <if test="curveType != null" >
+                #{curveType,jdbcType=VARCHAR},
+            </if>
+            <if test="issmooth != null" >
+                #{issmooth,jdbcType=VARCHAR},
+            </if>
+            <if test="smoothsection != null" >
+                #{smoothsection,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isBottomGrade != null" >
+                #{isBottomGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="bottomGrade != null" >
+                #{bottomGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="invalidDate != null" >
+                #{invalidDate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModCurveConfig" >
+        insert into MOD_CURVE_CONFIG(SEQNO, SEC_TYPE_MODEL, SEC_DETAIL_TYPE_MODEL, FINPROD_ID, 
+        FINPROD_NAME, CURVE_GROUP_CODE, CURVE_TYPE, ISSMOOTH, SMOOTHSECTION, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BOTTOM_GRADE, BOTTOM_GRADE, 
+        EFF_DATE, INVALID_DATE)
+        select SEQNO, SEC_TYPE_MODEL, SEC_DETAIL_TYPE_MODEL, FINPROD_ID, 
+            FINPROD_NAME, CURVE_GROUP_CODE, CURVE_TYPE, ISSMOOTH, SMOOTHSECTION, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, IS_BOTTOM_GRADE, BOTTOM_GRADE, 
+            EFF_DATE, INVALID_DATE
+             from MOD_CURVE_CONFIG
+             where 1 = 1
+    </insert>
+</mapper>

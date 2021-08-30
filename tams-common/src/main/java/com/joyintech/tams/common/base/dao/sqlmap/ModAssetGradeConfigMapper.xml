@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModAssetGradeConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModAssetGradeConfig" >
+        <result column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="ASSET_DETAIL_TYPE" property="assetDetailType" jdbcType="VARCHAR" />
+        <result column="GRADE_ORG_ID" property="gradeOrgId" jdbcType="VARCHAR" />
+        <result column="O_TYPE" property="oType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="GRADE_ORG_TYPE" property="gradeOrgType" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModAssetGradeConfig" >
+        insert into MOD_ASSET_GRADE_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, 
+            GRADE_ORG_ID, O_TYPE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, GRADE_ORG_TYPE)
+        values (#{seqno,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, #{assetDetailType,jdbcType=VARCHAR}, 
+            #{gradeOrgId,jdbcType=VARCHAR}, #{oType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{gradeOrgType,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModAssetGradeConfig" >
+        insert into MOD_ASSET_GRADE_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE,
+            </if>
+            <if test="assetDetailType != null" >
+                ASSET_DETAIL_TYPE,
+            </if>
+            <if test="gradeOrgId != null" >
+                GRADE_ORG_ID,
+            </if>
+            <if test="oType != null" >
+                O_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="gradeOrgType != null" >
+                GRADE_ORG_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetDetailType != null" >
+                #{assetDetailType,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeOrgId != null" >
+                #{gradeOrgId,jdbcType=VARCHAR},
+            </if>
+            <if test="oType != null" >
+                #{oType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gradeOrgType != null" >
+                #{gradeOrgType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModAssetGradeConfig" >
+        insert into MOD_ASSET_GRADE_CONFIG(SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, GRADE_ORG_ID, 
+        O_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, GRADE_ORG_TYPE
+        )
+        select SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, GRADE_ORG_ID, 
+            O_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, GRADE_ORG_TYPE
+            
+             from MOD_ASSET_GRADE_CONFIG
+             where 1 = 1
+    </insert>
+</mapper>

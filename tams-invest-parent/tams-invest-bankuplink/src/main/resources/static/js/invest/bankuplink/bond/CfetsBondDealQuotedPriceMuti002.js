@@ -1,4 +1,7 @@
 (function(){
+    //试算结果
+    var riskResultdata;
+    var cluflag;
 
     var setQQDiv = function(entrustIdList){
         $("#CfetsBondDealQuotedPriceMuti002_hidden_quotaPageModel").val('new');
@@ -476,8 +479,53 @@
         $('#CfetsBondDealQuotedPriceMuti002_mySideTrader').val(mySideTraderInit).trigger('change');
     }
 
+    function getBaseRiskdata(item) {
+        var obj = {
+            tradeDirection: $('#CfetsBondDealQuotedPriceMuti002_ps').val(),
+            timePoint: MY_SUP_TIME_TYPE_02,
+            valDate: sysDate,
+            assetType: FINPROD_TYPE_F01,
+            isEnabled: '01',
+            assetCode: $('#CfetsBondDealQuotedPriceMuti002_finprodId').val()
+        }
+        obj.ps = $('#CfetsBondDealQuotedPriceMuti002_ps').val();
+
+        obj.ccy = 'CNY';
+        return obj;
+    }
     var getriskdata = function () {
-        return null;
+        let dataList = [];
+        let portfolioIdList = $.serializeToObject('#submitForm').cfetsBondDealRequestQuoteDtoList;
+        if (portfolioIdList.length > 0) {
+            for (var index in portfolioIdList) {
+                let item = portfolioIdList[index];
+                let obj = getBaseRiskdata();
+                obj.portfolioCode = item.portfolioId;
+                if (item.avaNum) {
+                    obj.tradeAmount = item.avaNum * 10000;
+                }
+                dataList.push(obj);
+            }
+        }else{
+            let obj = getBaseRiskdata();
+            obj.portfolioCode="";
+            if ($("#CfetsBondDealQuotedPriceMuti001_avaNum").val()) {
+                obj.tradeAmount = $("#CfetsBondDealQuotedPriceMuti002_avaNum").val() * 10000;
+            }
+            dataList.push(obj);
+        }
+
+        let checkParam = {
+            tradeDirection: ["ps", "CfetsBondDealQuotedPriceSingle.ps"],
+            portfolioCode: ["portfolioId", "CfetsBondDealQuotedPriceSingle.portfolioId"],
+            tradeAmount: ["tradeAmt", "CfetsBondDealQuotedPriceSingle.bondPrinamt"],
+            assetType: ["assetType", "CfetsBondDealQuotedPriceSingle.assetType"],
+            counterId: ["counterId", "CfetsBondDealQuotedPriceSingle.counterId"],
+            data: dataList
+        }
+        checkParam.price = ['price', 'CfetsBondDealQuotedPriceSingle.unitCprice'];
+        checkParam.ccy = ['ccy', '币种'];
+        return checkParam;
     };
 
     function getSaveOrSubmitParams(operateType) {
@@ -511,6 +559,13 @@
         $("#CfetsBondDealQuotedPriceMuti002_btn_revokeBtn").hide();
     }
 
+    function saveRiskResultdata(paraRiskResultdata) {
+        riskResultdata = paraRiskResultdata;
+    }
+    function saveCluflag(paraCluflag) {
+        cluflag = paraCluflag;
+    }
+
     window.CfetsBondDealQuotedPriceMuti002 = {
         disabledElementByDzh:disabledElementByDzh,
     };
@@ -519,6 +574,20 @@
         setQQDiv: setQQDiv,
         getriskdata: getriskdata,
         getSaveOrSubmitParams: getSaveOrSubmitParams,
-        reset: reset
+        reset: reset,
+        riskResultdata: riskResultdata,
+        cluflag: cluflag,
+        saveRiskResultdata: saveRiskResultdata,
+        saveCluflag: saveCluflag
+    }
+    CfetsBondDealQuotedPriceMuti002 = {
+        setQQDiv: setQQDiv,
+        getriskdata: getriskdata,
+        getSaveOrSubmitParams: getSaveOrSubmitParams,
+        reset: reset,
+        riskResultdata: riskResultdata,
+        cluflag: cluflag,
+        saveRiskResultdata: saveRiskResultdata,
+        saveCluflag: saveCluflag
     }
 }());

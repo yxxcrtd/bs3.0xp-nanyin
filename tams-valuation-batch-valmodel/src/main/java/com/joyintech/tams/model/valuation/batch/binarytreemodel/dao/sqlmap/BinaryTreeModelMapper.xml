@@ -3,35 +3,35 @@
 <mapper namespace="com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper">
 
     <select id="findModBintreeConfig" resultType="com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModBintreeConfig">
-select
-    SEQNO,
-    FINPROD_ID,
-    FINPROD_NAME,
-    STOCK_BORDSTTUS,
-    STOCK_ID,
-    COMP_ORG,
-    MARKET_MULTI,
-    COMP_ORGNAME,
-    COMP_STOCKID,
-    FINPROD_PROIT,
-    FINPROD_NETASSET,
-    SMOOTHSECTION,
-    BINTREE_STEP,
-    CURVE_CODE
-from
-    MOD_BINTREE_CONFIG
-where
-    1=1
-    <if test="finprodIds != null and finprodIds.size > 0">
-        AND (FINPROD_ID IN
-        <foreach collection="finprodIds" item="item" index="index" open="( " close=" )" separator=",">
-            <if test="(index % 998) == 0">
-                null) OR FINPROD_ID in (
+        select
+            SEQNO,
+            FINPROD_ID,
+            FINPROD_NAME,
+            STOCK_BORDSTTUS,
+            STOCK_ID,
+            COMP_ORG,
+            MARKET_MULTI,
+            COMP_ORGNAME,
+            COMP_STOCKID,
+            FINPROD_PROIT,
+            FINPROD_NETASSET,
+            SMOOTHSECTION,
+            BINTREE_STEP,
+            CURVE_CODE
+        from
+            MOD_BINTREE_CONFIG
+        where
+            1=1
+            <if test="finprodIds != null and finprodIds.size > 0">
+                AND (FINPROD_ID IN
+                <foreach collection="finprodIds" item="item" index="index" open="( " close=" )" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR FINPROD_ID in (
+                    </if>
+                    #{item}
+                </foreach>
+                )
             </if>
-            #{item}
-        </foreach>
-        )
-    </if>
     </select>
 
     <select id="findOutPut5" resultType="java.lang.String">

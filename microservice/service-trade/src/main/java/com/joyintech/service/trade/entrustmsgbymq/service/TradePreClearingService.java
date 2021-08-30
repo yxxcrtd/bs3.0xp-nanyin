@@ -410,7 +410,16 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // 标准券入出库的成交数据有两笔，一笔是质押券的，一笔是标准券的，需要把标准券的那条过滤掉
         // 根据指令编号查投资指令，
         EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
-        if (etrEntrust != null && !StringUtil.equals(infContractDetailfile.getFinprodMarketId(), etrEntrust.getStockId())) {
+        // 查询申报信息
+        Map<String, Object> map = new HashMap<>();
+        map.put("finprodId", etrEntrust.getFinprodId());
+        map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_质押代码.getValue());
+        FinProductOthCode finProductOthCode = entrustMsgbyMQMapper.selectFinProductOthCode(map);
+        String othCode = "";
+        if (finProductOthCode != null) {
+            othCode = finProductOthCode.getOthCode();
+        }
+        if (etrEntrust != null && !StringUtil.equals(othCode, StringUtil.substringBefore(infContractDetailfile.getFinprodMarketId(), "."))) {
             return;
         }
         // add by etliu 20210825 end
@@ -1235,7 +1244,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             finTradeProduct.setVdate(infContractDetailfile.getTradeDate());
             if(StringUtil.isNotEmpty(infContractDetailfile.getFinprodMarketId())) {
                 finTradeProduct.setTermType(infContractDetailfile.getFinprodMarketId());
-                long term = this.getTerm(finTradeProduct.getTradeMarket(),infContractDetailfile.getFinprodMarketId());
+                long term = this.getTerm(infContractDetailfile.getTradeMarket(),infContractDetailfile.getFinprodMarketId());
                 finTradeProduct.setTerm(term);
                 finTradeProduct.setMdate(DateUtil.addDay(finTradeProduct.getVdate(), Long.valueOf(term).intValue()));
             }

@@ -1,38 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.valuation.component.batch.dao.ModAssetInfoMapper">
+
+	<select id="selectBinaryTreeAssetInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
+		SELECT
+			A.FINPROD_ID FINPROD_ID,/**金融产品代码**/
+			A.FINPROD_ABBR FINPROD_ABBR,/**金融产品简称**/
+			A.FINPROD_MARKET_ID FINPROD_MARKET_ID,/**市场代码**/
+			A.VDATE VDATE,/**起息日**/
+			A.MDATE MDATE,/**到期日**/
+			C.CON_FINPROD_ID CON_FINPROD_ID,/**正股代码**/
+			C.CON_VDATE CON_VDATE,/**转股起息日**/
+			C.CON_PRICE CON_PRICE,/**转股价格**/
+			A.ISSUE_PRICE ISSUE_PRICE,/**发行价**/
+			D.TYPE_18 AS SEC_TYPE,/**证券品种**/
+			D.TYPE_1 AS SEC_TYPE_DETAIL /**证券细分类**/
+		FROM
+			FIN_PRODUCT A /**标的类金融产品表**/
+			LEFT JOIN FIN_PRODUCT_CONVERTIBLE C ON A.FINPROD_ID = C.FINPROD_ID/**转股信息表**/
+			INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
+		WHERE
+			1 = 1
+			AND D.TYPE_18 = '01' AND (D.TYPE_1 = '可转债' OR D.TYPE_1 = '优先股')
+			AND (
+			EXISTS (
+				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD' AND FINPROD_ID = A.FINPROD_ID
+			)
+			OR
+			EXISTS (
+				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_PRICE = 'MOD' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
+			)
+			)
+			<if test="finprodIdList != null and finprodIdList.size()>0 ">
+				AND A.FINPROD_ID IN(
+				<foreach item="item" index="index" collection="finprodIdList" separator=",">
+					#{item}
+				</foreach>
+				)
+			</if>
+			<if test="searchDate != null">
+				AND A.VDATE <![CDATA[ <= ]]> #{searchDate,jdbcType=DATE}/**起息日**/
+				AND A.MDATE <![CDATA[ >= ]]> #{searchDate,jdbcType=DATE}/**到期日**/
+			</if>
+	</select>
+
     <!-- 获取资产信息集合  -->
     <select id="selectAssetInfo"  parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
-		SELECT A.FINPROD_ID FINPROD_ID,
-		       A.FINPROD_ABBR FINPROD_ABBR,
-		       A.FINPROD_MARKET_ID FINPROD_MARKET_ID,
-		       A.VDATE VDATE,
-		       A.MDATE MDATE,
-		       A.ISSUER ISSUER,
-		       A.FINANCIER FINANCIER,
-		       A.SPONSOR SPONSOR,
-		       A.IS_SUS IS_SUS,
-		       A.IS_RIGHT IS_RIGHT,
-		       A.CON_FINPROD_ID CON_FINPROD_ID,
-		       A.CON_VDATE CON_VDATE,
-		       A.CON_PRICE CON_PRICE,
-		       A.COUPON_SPECIES COUPON_SPECIES,
-		       A.ACTUAL_CREDIT_PROVID ACTUAL_CREDIT_PROVID,
-		       A.ASSET_ONE ASSET_ONE,
-		       A.ASSET_TWO ASSET_TWO,
-		       A.ASSET_THREE ASSET_THREE,
-		       A.ASSET_FOUR ASSET_FOUR,
-		       A.ASSET_FIVE ASSET_FIVE,
-		       A.ISSUER_FIN_LICENCE ISSUER_FIN_LICENCE,
-		       A.FINANCIER_FIN_LICENCE FINANCIER_FIN_LICENCE,
-		       A.SPONSOR_FIN_LICENCE SPONSOR_FIN_LICENCE,
-		       A.ACTUAL_CREDIT_FIN_LICENCE ACTUAL_CREDIT_FIN_LICENCE,
-		       A.MODYORN MODYORN,
-		       A.ISSUE_PRICE ISSUE_PRICE,
-		       B.LAST_TRADE_IN_DATE LAST_TRADE_IN_DATE,
-		       B.LAST_TRADE_AVG_PRICE LAST_TRADE_AVG_PRICE,
-		       B.LAST_TRADE_NET_PRICE LAST_TRADE_NET_PRICE
-		  FROM
+		SELECT
+			A.FINPROD_ID FINPROD_ID,/**金融产品代码**/
+			A.FINPROD_ABBR FINPROD_ABBR,/**金融产品简称**/
+			A.FINPROD_MARKET_ID FINPROD_MARKET_ID,/**市场代码**/
+			A.VDATE VDATE,/**起息日**/
+			A.MDATE MDATE,/**到期日**/
+			--A.ISSUER ISSUER,/**发行人**/
+			--A.FINANCIER FINANCIER,/**融资人**/
+			--A.SPONSOR SPONSOR,/**担保人**/
+			--A.IS_SUS IS_SUS,/**是否永续**/
+			--A.IS_RIGHT IS_RIGHT,/**是否含权**/
+			C.CON_FINPROD_ID CON_FINPROD_ID,/**正股代码**/
+			C.CON_VDATE CON_VDATE,/**转股起息日**/
+			C.CON_PRICE CON_PRICE,/**转股价格**/
+			--A.COUPON_SPECIES COUPON_SPECIES,/**息票品种**/
+			CASE WHEN (E.FINPROD_ID IS NOT NULL OR F.SEC_DETAIL_TYPE IS NOT NULL OR G.SEC_TYPE IS NOT NULL)
+			THEN 'Y'
+			ELSE 'N'
+			END MODYORN ,/**是否模型法估值**/
+			A.ISSUE_PRICE ISSUE_PRICE/**,发行价**/
+			--A.ISSUE_AMT ISSUE_AMT/**发行规模**/
+		FROM
+			FIN_PRODUCT A /**标的类金融产品表**/
+			LEFT JOIN FIN_PRODUCT_ADD B ON A.FINPROD_ID = B.FINPROD_ID/**标的类金融产品附属表**/
+			LEFT JOIN FIN_PRODUCT_CONVERTIBLE C ON A.FINPROD_ID = C.FINPROD_ID/**转股信息表**/
+			INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
+			LEFT JOIN (
+				SELECT DISTINCT FINPROD_ID 	FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD'
+			) E ON A.FINPROD_ID = E.FINPROD_ID /**特殊资产估值方案明细表**/
+			LEFT JOIN  (
+				SELECT DISTINCT SEC_DETAIL_TYPE,SEC_TYPE FROM BOK_VAL_SCHEME_DETAIL group by SEC_TYPE,SEC_DETAIL_TYPE WHERE VALUATION_PRICE = 'MOD'AND  SEC_DETAIL_TYPE IS NOT NULL
+			) F ON  D.TYPE_1 = F.SEC_DETAIL_TYPE AND D.TYPE_18 = F.SEC_TYPE  /**估值方案明细表，资产细分类配置了模型法估值**/
+			LEFT JOIN  (
+				SELECT DISTINCT SEC_TYPE FROM BOK_VAL_SCHEME_DETAIL WHERE VALUATION_PRICE = 'MOD' AND  SEC_DETAIL_TYPE IS NULL
+			) G ON  D.TYPE_18 = G.SEC_TYPE  /**估值方案明细表,资产大类配置模型法估值**/
+		WHERE
+		1 = 1
+		AND M.CDATE = #{searchDate,jdbcType=DATE}
+		--AND A.MODYORN = 'Y'
+		<if test="finprodIdList != null and finprodIdList.size()>0 ">
+			AND A.FINPROD_ID IN(
+			<foreach item="item" index="index" collection="finprodIdList" separator=",">
+				#{item}
+			</foreach>
+			)
+		</if>
+		<if test="searchDate != null">
+			A.A.VDATE VDATE <![CDATA[<=]]> #{searchDate,jdbcType=DATE}/**起息日**/
+			A.MDATE MDATE,/**到期日**/
+			AND A.FINPROD_ID IN(
+			<foreach item="item" index="index" collection="finprodIdList" separator=",">
+				#{item}
+			</foreach>
+			)
+		</if>
+
 		(SELECT
 		A.FINPROD_ID                                        as FINPROD_ID,
 		A.FINPROD_ABBR                                      as FINPROD_ABBR,
@@ -152,7 +221,7 @@
 		AND A.TRADE_STATUS = '01'
 		AND A.FINPROD_TYPE2 IN ('F01', 'F18' )) C
 		              INNER JOIN (SELECT FINPROD_ID,
-		                                MAX(SETTLE_DATE) AS LAST_TRADE_IN_DATE 
+		                                MAX(SETTLE_DATE) AS LAST_TRADE_IN_DATE
 		                           FROM <!--VW_MOD_TRADE_INFO -->
 		                           (SELECT NVL(A.TOTLE_TRADE_ID,A.TRADE_ID)  AS TOTLE_TRADE_ID,         /*交易编号*/
 										A.FINPROD_ID                      AS FINPROD_ID,             /*金融产品代码*/
@@ -213,7 +282,7 @@
 					 WHERE A.FINPROD_ID = M.FINPROD_ID
 					   AND M.CDATE = #{searchDate,jdbcType=DATE}
 		           AND M.AMOUNT > 0)
-		   AND A.MODYORN = 'Y' 
+		   AND A.MODYORN = 'Y'
 		   <if test="finprodIdList != null and finprodIdList.size()>0 ">
 		   AND A.FINPROD_ID IN(
 		        <foreach item="item" index="index" collection="finprodIdList" separator=",">
@@ -288,131 +357,82 @@
 			)
 		</if>
 	</select>
+
 	<!-- 获取资产现金流计划集合  -->
 	<select id="getCashFlowPlanInfoByFinprodId" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto">
-		SELECT A.FINPROD_ID FINPROD_ID,
-	           A.FINPROD_TYPE2 FINPROD_TYPE2,
-	           A.CASH_ID CASH_ID,
-	           A.CASH_TYPE_2 CASH_TYPE_2,
-	           A.VDATE_UNADJUST VDATE_UNADJUST,
-	           A.MDATE_UNADJUST MDATE_UNADJUST,
-	           A.VDATE VDATE,
-	           A.MDATE MDATE,
-	           A.PAY_DATE PAY_DATE,
-	           A.PRIN_AMT PRIN_AMT,
-	           A.INT_AMT INT_AMT,
-	           A.CASH_AMT CASH_AMT,
-	           A.INT_PRIN_AMT INT_PRIN_AMT
-	      FROM <!--VW_MOD_CASH_FLOW_PLAN-->
-	       (select A.FINPROD_ID                          AS FINPROD_ID,
-				   B.FINPROD_TYPE2                       AS FINPROD_TYPE2,
-				   A.CASH_ID                             AS CASH_ID,
-				   A.CASH_TYPE_2                         AS CASH_TYPE_2,
-				   B.VDATE_UNADJUST                      AS VDATE_UNADJUST,
-				   B.MDATE_UNADJUST                      AS MDATE_UNADJUST,
-				   B.VDATE                               AS VDATE,
-				   B.MDATE                               AS MDATE,
-				   B.PAY_DATE                            AS PAY_DATE,
-				   B.PRIN_AMT                            AS PRIN_AMT,
-				   B.INT_AMT                             AS INT_AMT,
-				   B.CASH_AMT                            AS CASH_AMT,
-				   B.INT_PRIN_AMT                        AS INT_PRIN_AMT
-			  FROM FIN_CASH_INFO A
-			 INNER JOIN FIN_CASH_PLAN B
-				ON A.CASH_ID = B.CASH_ID
-			 WHERE B.FINPROD_TYPE2 IN （ 'F01', 'F18' ）
-			   and A.BRANCH = 0
-			 order by A.FINPROD_ID, A.CASH_TYPE_2, B.VDATE)A
-	     WHERE A.FINPROD_ID= #{finprodId,jdbcType=VARCHAR}
-	     ORDER BY A.MDATE 
+		SELECT
+            A.FINPROD_ID FINPROD_ID,
+            A.CASH_ID CASH_ID,
+            A.CASH_TYPE_2 CASH_TYPE_2,
+            B.VDATE_UNADJUST VDATE_UNADJUST,
+            B.MDATE_UNADJUST MDATE_UNADJUST,
+            B.VDATE VDATE,
+            B.MDATE MDATE,
+            B.PAY_DATE PAY_DATE,
+            B.PRIN_AMT PRIN_AMT,
+            B.INT_AMT INT_AMT,
+            B.CASH_AMT CASH_AMT,
+            B.INT_PRIN_AMT INT_PRIN_AMT
+	    FROM
+            FIN_CASH_INFO A
+            INNER JOIN FIN_CASH_PLAN B ON A.CASH_ID = B.CASH_ID
+	    WHERE
+	        1=1
+	        AND A.FINPROD_ID= #{finprodId,jdbcType=VARCHAR}
+	        AND A.BRANCH = 0
+	    ORDER BY B.MDATE
 	</select>
+
 	<!-- 现金流计算规则查询  -->
 	<select id="getCashFlowCalRulesByFinprodId" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowCalRuleDto">
-    	SELECT A.FINPROD_ID FINPROD_ID,
-	       A.FINPROD_TYPE2 FINPROD_TYPE2,
+    	SELECT
+    	   A.FINPROD_ID FINPROD_ID,
 	       A.CASH_ID CASH_ID,
 	       A.CASH_TYPE_2 CASH_TYPE_2,
-	       A.EFF_DATE EFF_DATE,
-	       A.BASIS BASIS,
-	       A.YIELD YIELD
-	  	FROM <!--VW_MOD_CASH_FLOW_CAL_RULES-->
-	  	(SELECT A.FINPROD_ID                               AS FINPROD_ID,
-				   B.FINPROD_TYPE2                            AS FINPROD_TYPE2,
-				   A.CASH_ID                                  AS CASH_ID,
-				   A.CASH_TYPE_2                              AS CASH_TYPE_2,
-				   B.EFF_DATE                                 AS EFF_DATE,
-				   B.BASIS                                    AS BASIS,
-				   B.YIELD                                    AS YIELD
-			  FROM FIN_CASH_INFO A
-			 INNER JOIN FIN_CASH_CALC_RULE B
-				ON A.CASH_ID = B.CASH_ID
-			 WHERE B.FINPROD_TYPE2 IN （ 'F01', 'F18' ）
-			   AND A.BRANCH = 0
-			   AND A.CASH_TYPE_2 = 'C02'
-			 ORDER BY A.FINPROD_ID, B.EFF_DATE DESC)A
-	    where A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-	    ORDER BY A.EFF_DATE DESC
+	       B.EFF_DATE EFF_DATE,
+	       B.BASIS BASIS,
+	       B.YIELD YIELD
+	  	FROM
+		    FIN_CASH_INFO A
+			INNER JOIN FIN_CASH_CALC_RULE B ON A.CASH_ID = B.CASH_ID
+	    where
+	        1=1
+	        AND A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+	        AND A.BRANCH = 0
+	        AND A.CASH_TYPE_2 = 'C02'
+	    ORDER BY B.EFF_DATE DESC
     </select>
     
     <!-- 现金流支付规则查询  -->
 	<select id="getCashFlowPayRulesByFinprodId" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowPayRulesDto">
     	SELECT A.FINPROD_ID FINPROD_ID,
-		       A.FINPROD_TYPE2 FINPROD_TYPE2,
 		       A.CASH_ID CASH_ID,
 		       A.CASH_TYPE_2 CASH_TYPE_2， 
-		       A.EFF_DATE EFF_DATE, 
-		       A.PAY_CYCLE PAY_CYCLE,
-		       A.CALC_RULE CALC_RULE,
-		       A.FIRST_PAY_DATE FIRST_PAY_DATE
-		  FROM <!--VW_MOD_CASH_FLOW_PAY_RULES-->
-		   (SELECT A.FINPROD_ID                               AS FINPROD_ID,
-				   B.FINPROD_TYPE2                            AS FINPROD_TYPE2,
-				   A.CASH_ID                                  AS CASH_ID,
-				   A.CASH_TYPE_2                              AS CASH_TYPE_2,
-				   B.EFF_DATE                                 AS EFF_DATE,
-				   B.BASIS                                    AS BASIS,
-				   B.YIELD                                    AS YIELD
-			  FROM FIN_CASH_INFO A
-			 INNER JOIN FIN_CASH_CALC_RULE B
-				ON A.CASH_ID = B.CASH_ID
-			 WHERE B.FINPROD_TYPE2 IN （ 'F01', 'F18' ）
-			   AND A.BRANCH = 0
+		       B.EFF_DATE EFF_DATE,
+		       B.PAY_CYCLE PAY_CYCLE,
+		       B.CALC_RULE CALC_RULE,
+		       B.FIRST_PAY_DATE FIRST_PAY_DATE
+		  FROM
+			  FIN_CASH_INFO A
+			 INNER JOIN FIN_CASH_PAY_RULE B ON A.CASH_ID = B.CASH_ID
+	    where A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} AND A.BRANCH = 0
 			   AND A.CASH_TYPE_2 = 'C02'
-			 ORDER BY A.FINPROD_ID, B.EFF_DATE DESC) A
-	    where A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-	    ORDER BY A.EFF_DATE DESC
+	    ORDER BY B.EFF_DATE DESC
     </select>
     <!-- 股票行情查询 -->
-    <select id="getStockMarketInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModStockMarketParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModStockMarketInfoDto">
+    <select id="getStockMarketInfo"  resultType="com.joyintech.tams.common.base.entity.MstSharePrice">
     	SELECT A.CON_FINPROD_ID CON_FINPROD_ID,
 		       A.FINPROD_MARKET_ID FINPROD_MARKET_ID,
 		       A.DEAL_DATE DEAL_DATE,
 		       A.CLOSE_PRICE CLOSE_PRICE,
 		       A.PB PB,
 		       A.PE PE
-		  FROM <!-- VW_MOD_STOCK_MARKET_INFO -->
-				(SELECT F.CON_FINPROD_ID                         AS CON_FINPROD_ID,
-				C.FINPROD_MARKET_ID                      AS FINPROD_MARKET_ID,
-				B.DEAL_DATE                              AS DEAL_DATE,
-				B.CLOSE_PRICE                            AS CLOSE_PRICE,
-				B.PB                                     AS PB,
-				B.PE                                     AS PE
-				FROM FIN_PRODUCT A
-				INNER JOIN FIN_PRODUCT_TYPE H
-				ON A.FINPROD_ID = H.FINPROD_ID
-				AND H.BRANCH = 0
-				INNER JOIN FIN_PRODUCT_CONVERTIBLE F
-				ON A.FINPROD_ID = F.FINPROD_ID
-				INNER JOIN FIN_PRODUCT C
-				ON C.FINPROD_ID = F.CON_FINPROD_ID
-				INNER JOIN MST_SHARE_PRICE B
-				ON C.FINPROD_MARKET_ID = B.SHARES_ID
-				WHERE A.FINPROD_TYPE2 IN （ 'F01' ）
-				AND H.TYPE_11 IN ('011', '013')
-				ORDER BY C.FINPROD_MARKET_ID, B.DEAL_DATE desc)A
-	    where 1=1 
+		  FROM
+			FIN_PRODUCT A
+			INNER JOIN  MST_SHARE_PRICE B ON A.FINPROD_MARKET_ID = B.SHARES_ID
+	    where 1=1
 	    <if test="stockIdList != null and stockIdList.size()>0 ">
-		   AND A.CON_FINPROD_ID IN(
+		   AND A.FINPROD_ID IN(
 		        <foreach item="item" index="index" collection="stockIdList" separator=",">
 						#{item}
 				</foreach>
@@ -420,12 +440,12 @@
 		</if>
 		<!-- 开始日期 -->
 		<if test="startDate != null">
-		  	AND A.DEAL_DATE >= #{startDate, jdbcType=DATE}
+		  	AND B.DEAL_DATE >= #{startDate, jdbcType=DATE}
 		</if>
 		<if test="searchDate != null">
-		 	and A.DEAL_DATE &lt;= #{searchDate, jdbcType=DATE}
+		 	and B.DEAL_DATE &lt;= #{searchDate, jdbcType=DATE}
 		</if>
-		ORDER BY A.DEAL_DATE
+		ORDER BY B.DEAL_DATE
     </select>
     <!-- 曲线行情查询   -->
     <select id="selectYieldCurveInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModYeildCurveParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModYieldCurveInfoDto">
@@ -434,53 +454,9 @@
 		        A.KEY_POINT KEY_POINT, 
 		        A.YIELD YIELD, 
 		        A.CURVE_TYPE CURVE_TYPE
-		FROM <!-- VW_MOD_YIELD_CURVE_INFO -->
-				(SELECT A.CURVE_DATE, A.CURVE_CODE, A.KEY_POINT, A.YIELD, A.CURVE_TYPE
-				FROM MST_YIELD_CURVE_INFO A
-				WHERE A.CURVE_CODE IN ('1231',
-				'1232',
-				'1901',
-				'1902',
-				'2221',
-				'2222',
-				'1851',
-				'1852',
-				'2171',
-				'2172',
-				'1251',
-				'1252',
-				'2211',
-				'2212',
-				'2191',
-				'2192',
-				'1441',
-				'1442',
-				'2251',
-				'2252',
-				'1261',
-				'1262',
-				'2201',
-				'2202',
-				'2231',
-				'2232',
-				'2241',
-				'2242',
-				'1911',
-				'1912',
-				'2331',
-				'2332',
-				'2311',
-				'2312',
-				'2161',
-				'2162',
-				'2321',
-				'2322',
-				'1331',
-				'1332',
-				'2301',
-				'2302')
-				order by A.CURVE_CODE, A.CURVE_DATE, A.KEY_POINT)A
-	    where 1=1 
+		FROM
+			MST_YIELD_CURVE_INFO A
+	    where 1=1
 	    <if test="yeildIdList != null and yeildIdList.size()>0 ">
 		   AND A.CURVE_CODE IN(
 		        <foreach item="item" index="index" collection="yeildIdList" separator=",">
@@ -495,7 +471,7 @@
 		<if test="searchDate != null">
 		 	and A.CURVE_DATE &lt;= #{searchDate, jdbcType=DATE}
 		</if>
-		ORDER BY A.CURVE_DATE
+		ORDER BY A.CURVE_DATE,A.KEY_POINT
     </select>
     
     <!-- 评级信息查询   -->

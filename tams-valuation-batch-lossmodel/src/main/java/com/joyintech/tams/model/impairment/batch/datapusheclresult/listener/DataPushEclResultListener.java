@@ -1,7 +1,6 @@
 package com.joyintech.tams.model.impairment.batch.datapusheclresult.listener;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
@@ -57,12 +56,7 @@ public class DataPushEclResultListener implements JobExecutionListener {
             jobExecution.getExecutionContext().put(BATCH_PARAMS_KEY, params);
             List<ModBatchLogs> list = new ArrayList<>(params.size());
             for (ModValBatchParams param : params) {
-                ModBatchLogs log = new ModBatchLogs();
-                log.setSeqno(IDGenerator.generate());
-                log.setFinprodId(param.getFinprodId());
-                log.setBatchExecSeqno(param.getBatchExecSeqno());
-                log.setTaskId(taskId);
-                list.add(log);
+                list.add(modLogsService.initLog(taskId,param.getBatchExecSeqno(),param.getFinprodId()));
             }
             modLogsService.saveBatch(list);
         }

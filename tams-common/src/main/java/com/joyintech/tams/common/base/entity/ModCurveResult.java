@@ -1,11 +1,10 @@
-package com.joyintech.tams.model.impairment.batch.eadcalculation.dto;
+package com.joyintech.tams.common.base.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -28,19 +27,19 @@ public class ModCurveResult extends BaseEntity {
     /**
      * 估值全价
      */
-    @JsonSerialize(using= BigDecimalSerializer.class)
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal fullPrice;
 
     /**
      * 估值净价
      */
-    @JsonSerialize(using= BigDecimalSerializer.class)
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal netPrice;
 
     /**
      * 交易点差
      */
-    @JsonSerialize(using= BigDecimalSerializer.class)
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal curveSpread;
 
     /**

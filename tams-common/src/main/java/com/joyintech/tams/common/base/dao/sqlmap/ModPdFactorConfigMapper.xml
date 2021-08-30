@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModPdFactorConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModPdFactorConfig" >
+        <result column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="VOUCH_YEAR" property="vouchYear" jdbcType="VARCHAR" />
+        <result column="VOUCH_QUARTER" property="vouchQuarter" jdbcType="VARCHAR" />
+        <result column="OPTIMISTIC_FACTOR" property="optimisticFactor" jdbcType="DECIMAL" />
+        <result column="BASIC_FACTOR" property="basicFactor" jdbcType="DECIMAL" />
+        <result column="PESSIMISM_FACTOR" property="pessimismFactor" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModPdFactorConfig" >
+        insert into MOD_PD_FACTOR_CONFIG (SEQNO, VOUCH_YEAR, VOUCH_QUARTER, 
+            OPTIMISTIC_FACTOR, BASIC_FACTOR, PESSIMISM_FACTOR, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqno,jdbcType=VARCHAR}, #{vouchYear,jdbcType=VARCHAR}, #{vouchQuarter,jdbcType=VARCHAR}, 
+            #{optimisticFactor,jdbcType=DECIMAL}, #{basicFactor,jdbcType=DECIMAL}, #{pessimismFactor,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModPdFactorConfig" >
+        insert into MOD_PD_FACTOR_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="vouchYear != null" >
+                VOUCH_YEAR,
+            </if>
+            <if test="vouchQuarter != null" >
+                VOUCH_QUARTER,
+            </if>
+            <if test="optimisticFactor != null" >
+                OPTIMISTIC_FACTOR,
+            </if>
+            <if test="basicFactor != null" >
+                BASIC_FACTOR,
+            </if>
+            <if test="pessimismFactor != null" >
+                PESSIMISM_FACTOR,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="vouchYear != null" >
+                #{vouchYear,jdbcType=VARCHAR},
+            </if>
+            <if test="vouchQuarter != null" >
+                #{vouchQuarter,jdbcType=VARCHAR},
+            </if>
+            <if test="optimisticFactor != null" >
+                #{optimisticFactor,jdbcType=DECIMAL},
+            </if>
+            <if test="basicFactor != null" >
+                #{basicFactor,jdbcType=DECIMAL},
+            </if>
+            <if test="pessimismFactor != null" >
+                #{pessimismFactor,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModPdFactorConfig" >
+        insert into MOD_PD_FACTOR_CONFIG(SEQNO, VOUCH_YEAR, VOUCH_QUARTER, OPTIMISTIC_FACTOR, 
+        BASIC_FACTOR, PESSIMISM_FACTOR, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select SEQNO, VOUCH_YEAR, VOUCH_QUARTER, OPTIMISTIC_FACTOR, 
+            BASIC_FACTOR, PESSIMISM_FACTOR, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MOD_PD_FACTOR_CONFIG
+             where 1 = 1
+    </insert>
+</mapper>

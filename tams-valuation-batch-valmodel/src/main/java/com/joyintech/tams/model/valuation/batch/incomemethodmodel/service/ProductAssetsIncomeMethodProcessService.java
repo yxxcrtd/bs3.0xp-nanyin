@@ -1,5 +1,4 @@
 package com.joyintech.tams.model.valuation.batch.incomemethodmodel.service;
-
 import com.joyintech.calculation.CalculatorFactory;
 import com.joyintech.calculation.bonds.PaperIrReset;
 import com.joyintech.calculation.bonds.SecIntSchedule;
@@ -14,24 +13,26 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.calculation.constant.GlobalConstant;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.*;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
+import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
  * @return:
  */
 @Service
-public class ProductAssetsIncomeMethodProcessService {
+public class ProductAssetsIncomeMethodService {
     private final String BATCH_LOG_RESULTS = "logResults";
 
     @Autowired
@@ -50,7 +51,83 @@ public class ProductAssetsIncomeMethodProcessService {
     //引入共通service
     @Autowired
     private ModValuationCommonService modValuationCommonService;
+    @Autowired
+    private ModParamsService modParamsService;
 
+    /**
+     * @Description:获取待处理资产信息List
+     * @auther: yuzj
+     * @date: 2021/7/5
+     * @param:
+     * @return:
+     */
+    public List<ProductAssetsIncomeMethodReaderDto> selectProductAssets(Map<String, Object> params){
+        Date plateDate = (Date)params.get("PLATE_DATE");//平台日
+        List<ProductAssetsIncomeMethodReaderDto> productAssetsIncomeMethodReaderDtoList = new ArrayList<ProductAssetsIncomeMethodReaderDto>();
+        List<ProductAssetsIncomeMethodReaderDto> preReaderDtoList = new ArrayList<ProductAssetsIncomeMethodReaderDto>();
+        //1.查询资产映射（返回资产分类五级分类集合）
+        List<String> fiveTypeList = new ArrayList<String>();
+        fiveTypeList = selectFiveTypeList();
+
+        //2.调用【资产基本信息查询-估值模型】方法查询有持仓的资产
+        preReaderDtoList = selectIncomeMethodDtoList(fiveTypeList,params);
+
+        //过滤（帅选出符合查询条件的资产信息集合）
+        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
+        List<ModValBatchParams> listBatch = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+        //1.读取需要进行处理的资产
+        //资产代码集合
+        List<String> finprodIdList = new ArrayList<String>();
+        if (listBatch != null && listBatch.size() > 0) {
+            for (ModValBatchParams params1 : listBatch) {
+                finprodIdList.add(params1.getFinprodId());
+            }
+        }
+
+        for(ProductAssetsIncomeMethodReaderDto preInComeDto: preReaderDtoList){
+            if(finprodIdList.contains(preInComeDto.getFinprodId())){
+                productAssetsIncomeMethodReaderDtoList.add(preInComeDto);
+            }
+        }
+
+        //3.设定资产其他相关信息-数据组装
+//        for(ProductAssetsIncomeMethodReaderDto inComeDto: productAssetsIncomeMethodReaderDtoList){
+        for(int i=0;i<productAssetsIncomeMethodReaderDtoList.size();i++){
+
+            // 该注释部分，可能是导致 优先股被过滤掉的原因
+//            if((GlobalConstant.YES.equals(productAssetsIncomeMethodReaderDtoList.get(i).getIsRight()) && GlobalConstant.YES.equals(productAssetsIncomeMethodReaderDtoList.get(i).getIsSus())
+//            && ModelDictCodeList.资产五级分类_优先股.equals(productAssetsIncomeMethodReaderDtoList.get(i).getAssetType5())) ||
+//                    !ModelDictCodeList.资产五级分类_优先股.equals(productAssetsIncomeMethodReaderDtoList.get(i).getAssetType5())
+//            )
+
+            String isSus = productAssetsIncomeMethodReaderDtoList.get(i).getIsSus();            // 是否永续
+            String assetType5 = productAssetsIncomeMethodReaderDtoList.get(i).getSecDetailType();  // 证券细分类
+            if((GlobalConstant.YES.equals(productAssetsIncomeMethodReaderDtoList.get(i).getIsRight()) && GlobalConstant.YES.equals(isSus) && !DictCodeList.债券类型_优先股.getValue().equals(assetType5))
+                || (GlobalConstant.NO.equals(isSus) && !DictCodeList.债券类型_优先股.getValue().equals(assetType5))
+            ){
+               //3.0过滤含权永续债
+                productAssetsIncomeMethodReaderDtoList.remove(i);
+                i--;
+            }else{
+                //3.1组装 预期股息增长率，调用【估值模型股息增长率配置】
+                String stockIntrate = incomeMethodMapper.selectStockIntrateByFinprodId(productAssetsIncomeMethodReaderDtoList.get(i).getFinprodId());
+                if(StringUtils.isNotEmpty(stockIntrate)){
+                    productAssetsIncomeMethodReaderDtoList.get(i).setStockIntarte(new BigDecimal(stockIntrate));
+                }
+                //3.2组装-资产现金流计划集合
+                productAssetsIncomeMethodReaderDtoList.get(i).setFinCashPlanDtoList(modValuationCommonService.getCashFlowPlanInfoByFinprodId(productAssetsIncomeMethodReaderDtoList.get(i).getFinprodId()));
+
+                //3.3组装-现金流计算规则集合
+                productAssetsIncomeMethodReaderDtoList.get(i).setFinCashCalcRuleDtoList(modValuationCommonService.getCashFlowCalRulesByFinprodId(productAssetsIncomeMethodReaderDtoList.get(i).getFinprodId()));
+
+                //3.4组装-现金流支付规则集合
+                List<ModCashFlowPayRulesDto> modCashFlowPayRulesList = modValuationCommonService.getCashFlowPayRulesByFinprodId(productAssetsIncomeMethodReaderDtoList.get(i).getFinprodId());
+                productAssetsIncomeMethodReaderDtoList.get(i).setModCashFlowPayRulesList(modCashFlowPayRulesList);
+
+            }
+        }
+        return productAssetsIncomeMethodReaderDtoList;
+    }
 
     /**
      * @Description:返回处理后的结果DTO
@@ -103,7 +180,7 @@ public class ProductAssetsIncomeMethodProcessService {
             if(item.getFinCashPlanDtoList()!=null && item.getFinCashPlanDtoList().size()>0){
                 //计算已还本面值
                 for (ModCashFlowDto modCashFlowDto : item.getFinCashPlanDtoList()) {
-                    if (modCashFlowDto.getCashType2().equals(ModelDictCodeList.现金流二级类型_本金.getValue())
+                    if (modCashFlowDto.getCashType2().equals(DictCodeListExt1.现金流二级类型_本金.getValue())
                             && modCashFlowDto.getMdate().getTime() <= plateDate.getTime()) {
                         varDto.setPaidPrice(ArithmeticUtil.doAdd(varDto.getPaidPrice(),modCashFlowDto.getPrinAmt()));
                     }
@@ -180,6 +257,23 @@ public class ProductAssetsIncomeMethodProcessService {
             BigDecimal deciRate3= ArithmeticUtil.doAdd(varDto.getValuationGovernmentDebtYield(),ArithmeticUtil.subtract(deciRate2,varDto.getBenchDateGovernmentDebtYield()));
             varDto.setYearDiscountRate(deciRate3);
 
+//            //估值全价计算
+//            //算法==>变量.估值全价 = 变量.当前面值*（1 + 变量.股息预期股息增长率）/ (变量.折现率 - 变量.股息预期股息增长率)
+//            //拆分算法，方便检查阅读
+//            //deciPrice1=变量.年股息*（1 + 变量.股息预期股息增长率）
+//            BigDecimal deciPrice1=ArithmeticUtil.multiply(varDto.getYearDividend(),ArithmeticUtil.doAdd(new BigDecimal("1"),varDto.getStockIntrate()));
+//            //deciPrice2=deciPrice1/ (变量.折现率 - 变量.股息预期股息增长率)
+//            BigDecimal deciPrice2= ArithmeticUtil.divide(deciPrice1,ArithmeticUtil.subtract(varDto.getYearDiscountRate(),varDto.getStockIntrate()),4);  ArithmeticUtil.subtract(varDto.getYearDiscountRate(),varDto.getStockIntrate());
+//            varDto.setFullprice(deciPrice2);
+//
+//            //计算估值净价bAnalNetCnbd
+//            //调用【算法包.计算百元面值的债券的利息-记账用】
+//            BigDecimal interest = getCalculate(item, plateDate).getInterest();
+////        //test-yu
+////        BigDecimal interest =new BigDecimal(0);
+//            varDto.setInterest(interest);
+//            varDto.setbAnalNetCnbd(ArithmeticUtil.subtract(varDto.getFullprice(),varDto.getInterest()));
+
             /**
              * 3.估值全价、净价计算
              * 变量.估值净价 = 变量.年股息*（1 + 变量.股息预期股息增长率）/ (变量.折现率 - 变量.股息预期股息增长率)
@@ -214,7 +308,7 @@ public class ProductAssetsIncomeMethodProcessService {
             //2封装资产定价DTO
             AssetsMakePriceResultDto mResultDto = new AssetsMakePriceResultDto();
             mResultDto.setSeqNo(IDGenerator.generate());
-            mResultDto.setSecType(ModelDictCodeList.模型_证券品种_债券.getValue());
+            mResultDto.setSecType(DictCodeListExt1.证券品种_债券.getValue());
             mResultDto.setSecDetailType(item.getSecDetailType());
             mResultDto.setFinprodId(item.getFinprodId());
             mResultDto.setFinprodName(item.getFinprodAbbr());
@@ -242,24 +336,100 @@ public class ProductAssetsIncomeMethodProcessService {
         return resultDto;
     }
 
+    /**
+     * @Description:根据数据字典.模型映射类型.资产分类+模型证券品种.债券+数据字典.模型证券品种细分类(部分值)
+     * 获取资产分类的五级分类集合 List<String>
+     * @auther: yuzj
+     * @date: 2021/7/7
+     * @param: 
+     * @return: 
+     */
+    public List<String> selectFiveTypeList(){
+        //待传参数 DictCode.资产类型;
+        List<String> assetsFiveTypeList = new ArrayList<String>();
+        //TODO 金茂东注释，待处理
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_他行发行的同业存单.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_国债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_地方政府债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_央票.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_政策性金融债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_政策性金融次级债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_铁道债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_金融债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_金融机构次级债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_企业债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_公司债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_交易所私募债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_短融.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_超短融.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_中票.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_银行间私募债.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_交易商协会ABN.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_银保监会主管ABS.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_证监会主管ABS.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_外国债券.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_理财直接融资工具.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_其他理财直接融资工具.getValue());
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_上市银行优先股.getValue()); // input2 上市银行优先股  =可在 基础数据资产信息映射关系表查
+//        assetsFiveTypeList.add(ModelDictCodeList.模型_证券细分类_非上市银行优先股.getValue()); // input2 非上市银行优先股 =可在 基础数据资产信息映射关系表查
+//        assetsFiveTypeList = incomeMethodMapper.selectFiveTypeList(ModelDictCodeList.模型_映射类型_资产分类映射.getValue(),
+//                ModelDictCodeList.模型_证券品种_债券.getValue(),assetsFiveTypeList);
+        return assetsFiveTypeList;
+    }
 
     /**
-     * @Description:保存上下文日志信息
+     * @Description:调用【资产基本信息查询-估值模型】方法查询有持仓的资产
      * @auther: yuzj
-     * @date: 2021/7/27
+     * @date: 2021/7/7
      * @param:
      * @return:
      */
-    public  void  sendlogResults(List<ModValBatchLogResult> bBatchLogResultList, StepExecution stepExecution){
-        if(CollectionUtils.isNotEmpty(bBatchLogResultList)){
-            if( stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS") !=null){
-                List<ModValBatchLogResult> oldLogResultList = (List<ModValBatchLogResult>)stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS");
-                oldLogResultList.addAll(bBatchLogResultList);
-                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,oldLogResultList);
-            }else{
-                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,bBatchLogResultList);
-            }
+    public List<ProductAssetsIncomeMethodReaderDto>  selectIncomeMethodDtoList(List<String> fiveTypeList, Map<String, Object> mapParam){
+        List<ProductAssetsIncomeMethodReaderDto> productAssetsIncomeMethodReaderDtoList = new ArrayList<ProductAssetsIncomeMethodReaderDto>();
+        //获取共同中的资产信息
+        ModAssetInfoParamsDto paraMap = new ModAssetInfoParamsDto();
+        Date plateDate = (Date)mapParam.get("PLATE_DATE");//平台日
+
+//        //test-yu
+//        fiveTypeList.add("085");
+
+        paraMap.setAssetFiveList(fiveTypeList);
+        paraMap.setSearchDate(plateDate);//查询日=平台日
+        List<ModAssetInfoDto> modAssetInfoDtoList = modValuationCommonService.selectAssetInfo(paraMap);
+        for(ModAssetInfoDto modAssetInfoDto:modAssetInfoDtoList){
+            ProductAssetsIncomeMethodReaderDto inDto = new ProductAssetsIncomeMethodReaderDto();
+            inDto.setFinprodId(modAssetInfoDto.getFinprodId());//产品代码
+            inDto.setFinprodAbbr(modAssetInfoDto.getFinprodAbbr());//产品简称
+            inDto.setFinprodMarketId(modAssetInfoDto.getFinprodMarketId());//市场代码
+            inDto.setVdate(modAssetInfoDto.getVdate());//起息日
+            inDto.setMdate(modAssetInfoDto.getMdate());//到期日
+            inDto.setIssuer(modAssetInfoDto.getIssuer());//发行人
+            inDto.setFinancie(modAssetInfoDto.getFinancier());//融资人
+            inDto.setSponsor(modAssetInfoDto.getSponsor());//担保人
+            inDto.setIsSus(modAssetInfoDto.getIsSus());//是否永续
+            inDto.setIsRight(modAssetInfoDto.getIsRight());//是否含权
+            inDto.setConShareId(modAssetInfoDto.getConFinprodId());//转股代码
+            inDto.setConvdate(modAssetInfoDto.getConVdate());//转股起始日
+            inDto.setPbondvalue(modAssetInfoDto.getConPrice());//转股价格
+            inDto.setActualCreditProvid(modAssetInfoDto.getActualCreaditProvid());//实际授信主体
+            modAssetInfoDto.setSecType(modAssetInfoDto.getSecType());
+            modAssetInfoDto.setSecTypeDetail(modAssetInfoDto.getSecTypeDetail());
+//            inDto.setAssetType1(modAssetInfoDto.getAssetOne());//资产一级分类
+//            inDto.setAssetType2(modAssetInfoDto.getAssetTwo());//资产二级分类
+//            inDto.setAssetType3(modAssetInfoDto.getAssetThree());//资产三级分类
+//            inDto.setAssetType4(modAssetInfoDto.getAssetFour());//资产四级分类
+//            inDto.setAssetType5(modAssetInfoDto.getAssetFive());//资产五级分类
+            inDto.setLatestTradeDate(modAssetInfoDto.getLastTradeInDate());//最近买入交易发生日
+            inDto.setLatestAverPrice(modAssetInfoDto.getLastTradeAvgPrice());//最近买入交易日交易均价
+            inDto.setIsFinLicenceIssuer(modAssetInfoDto.getIssueFinLicence());//发行人是否持有金融牌照
+            inDto.setIsFinLicenceFinancie(modAssetInfoDto.getFinancierFinLicence());//融资人是否持有金融牌照
+            inDto.setIsFinLicenceSponsor(modAssetInfoDto.getSponsorFinLicence());//担保人是否持有金融牌照
+            inDto.setIsFinLicenceActualCredit(modAssetInfoDto.getActualCreditFinLicence());//实际授信主体是否持有金融牌照
+            inDto.setIssuePrice(modAssetInfoDto.getIssuePrice());//发行价
+            inDto.setCouponSpecies(modAssetInfoDto.getCouponSpecies());//息票品种
+            productAssetsIncomeMethodReaderDtoList.add(inDto);
         }
+        return productAssetsIncomeMethodReaderDtoList;
     }
 
     public AccurIntCalOutParameter getCalculate(ProductAssetsIncomeMethodReaderDto entity, Date platDate) {
@@ -270,6 +440,7 @@ public class ProductAssetsIncomeMethodProcessService {
         AccurIntCalOutParameter output2 = calculator2.calculate(parameter);
         return output2;
     }
+
 
     /**
      * 算法包.计算百元面值的债券的利息-记账用传参封装
@@ -297,41 +468,41 @@ public class ProductAssetsIncomeMethodProcessService {
         secInfoModel.setIssuePrice(entity.getIssuePrice());
         // 债券类型（息票品种）
         Variety bondsType = null;
-        if (ModelDictCodeList.息票品种_贴现.getValue().equals(entity.getCouponSpecies())) {
+        if (DictCodeList.息票品种_贴现.getValue().equals(entity.getCouponSpecies())) {
             bondsType = Variety.贴现;
         }
-        else if (ModelDictCodeList.息票品种_零息.getValue().equals(entity.getCouponSpecies())) {
+        else if (DictCodeList.息票品种_零息.getValue().equals(entity.getCouponSpecies())) {
             bondsType = Variety.零息;
         }
-        else if (ModelDictCodeList.息票品种_附息.getValue().equals(entity.getCouponSpecies())) {
+        else if (DictCodeList.息票品种_附息.getValue().equals(entity.getCouponSpecies())) {
             bondsType = Variety.附息;
         }
-        else if (ModelDictCodeList.息票品种_利随本清.getValue().equals(entity.getCouponSpecies())) {
+        else if (DictCodeList.息票品种_利随本清.getValue().equals(entity.getCouponSpecies())) {
             bondsType = Variety.利随本清;
         }
         secInfoModel.setBondsType(bondsType);
         // 计息基础
         Basis basis = null;
         String basisString = entity.getFinCashCalcRuleDtoList().get(0).getBasis();
-        if (ModelDictCodeList.计息基础_A_360.getValue().equals(basisString)) {
+        if (DictCodeList.计息基础_A_360.getValue().equals(basisString)) {
             basis = Basis.A_360;
         }
-        else if (ModelDictCodeList.计息基础_A_365.getValue().equals(basisString)) {
+        else if (DictCodeList.计息基础_A_365.getValue().equals(basisString)) {
             basis = Basis.A_365;
         }
-        else if (ModelDictCodeList.计息基础_A_A_平均分配.getValue().equals(basisString)
-                || ModelDictCodeList.计息基础_A_A_按实际天数分配.getValue().equals(basisString)) {
+        else if (DictCodeList.计息基础_A_A_平均分配.getValue().equals(basisString)
+                || DictCodeList.计息基础_A_A_按实际天数分配.getValue().equals(basisString)) {
             basis = Basis.A_A;
         }
-        else if (ModelDictCodeList.计息基础_A_365F.getValue().equals(basisString)) {
+        else if (DictCodeList.计息基础_A_365F.getValue().equals(basisString)) {
             basis = Basis.A_365F;
         }
-        else if (ModelDictCodeList.计息基础_30_360.getValue().equals(basisString)) {
+        else if (DictCodeList.计息基础_30_360.getValue().equals(basisString)) {
             basis = Basis._30_360;
         }
-        else if (ModelDictCodeList.计息基础_30U_360.getValue().equals(basisString)) {
-            basis = Basis._30U_360;
-        }
+//        else if (DictCodeList.计息基础_30U_360.getValue().equals(basisString)) {
+//            basis = Basis._30U_360;
+//        }
 
         secInfoModel.setBasis(basis);
         // 利率类型
@@ -339,10 +510,10 @@ public class ProductAssetsIncomeMethodProcessService {
         secInfoModel.setIntRateType(intRateType);
         // 利息分配方式
         AllocationType allocationType = null;
-        if (ModelDictCodeList.计息基础_A_A_平均分配.getValue().equals(basisString)) {
+        if (DictCodeList.计息基础_A_A_平均分配.getValue().equals(basisString)) {
             allocationType = AllocationType.平均分配;
         }
-        else if (ModelDictCodeList.计息基础_A_A_按实际天数分配.getValue().equals(basisString)) {
+        else if (DictCodeList.计息基础_A_A_按实际天数分配.getValue().equals(basisString)) {
             allocationType = AllocationType.按实际天数分配;
         }
         else {
@@ -352,29 +523,29 @@ public class ProductAssetsIncomeMethodProcessService {
         // 付息计划推算方式
         SecIntSchCalMethod secIntSchCalMethod = null;
         String secIntSchCalMethodString = entity.getModCashFlowPayRulesList().get(0).getCalcRule();
-        if (ModelDictCodeList.推算方式_起息日向后.getValue().equals(secIntSchCalMethodString)) {
+        if (DictCodeList.推算方式_起息日向后.getValue().equals(secIntSchCalMethodString)) {
             secIntSchCalMethod = SecIntSchCalMethod.起息日向后;
         }
-        else if (ModelDictCodeList.推算方式_到期日向前.getValue().equals(secIntSchCalMethodString)) {
+        else if (DictCodeList.推算方式_到期日向前.getValue().equals(secIntSchCalMethodString)) {
             secIntSchCalMethod = SecIntSchCalMethod.到期日向前;
         }
-        else if (ModelDictCodeList.推算方式_首次支付日.getValue().equals(secIntSchCalMethodString)) {
+        else if (DictCodeList.推算方式_首次支付日.getValue().equals(secIntSchCalMethodString)) {
             secIntSchCalMethod = SecIntSchCalMethod.首次付息日;
         }
         secInfoModel.setCalMethod(secIntSchCalMethod);
         // 付息频率
         IntFrequency yearIntRate = null;
         String yearIntRateString = entity.getModCashFlowPayRulesList().get(0).getPayCycle();
-        if (ModelDictCodeList.频率_月.getValue().equals(yearIntRateString)) {
+        if (DictCodeList.频率_月.getValue().equals(yearIntRateString)) {
             yearIntRate = IntFrequency.月付;
         }
-        else if (ModelDictCodeList.频率_季.getValue().equals(yearIntRateString)) {
+        else if (DictCodeList.频率_季.getValue().equals(yearIntRateString)) {
             yearIntRate = IntFrequency.季付;
         }
-        else if (ModelDictCodeList.频率_年.getValue().equals(yearIntRateString)) {
+        else if (DictCodeList.频率_年.getValue().equals(yearIntRateString)) {
             yearIntRate = IntFrequency.年付;
         }
-        else if (ModelDictCodeList.频率_半年.getValue().equals(yearIntRateString)) {
+        else if (DictCodeList.频率_半年.getValue().equals(yearIntRateString)) {
             yearIntRate = IntFrequency.半年付;
         }
         else {
@@ -387,7 +558,7 @@ public class ProductAssetsIncomeMethodProcessService {
         List<SecIntSchedule> invScheduleList = new ArrayList<>();
         List<ModCashFlowDto> intSchList = new ArrayList<ModCashFlowDto>();
         for (ModCashFlowDto item : entity.getFinCashPlanDtoList()) {
-            if (StringUtil.equals(item.getCashType2(), ModelDictCodeList.现金流二级类型_利息.getValue())
+            if (StringUtil.equals(item.getCashType2(), DictCodeListExt1.现金流二级类型_利息.getValue())
                     && item.getVdateUnadjust() != null) {
                 SecIntSchedule schedule = new SecIntSchedule();
                 schedule.setTheoryStartDate(toLocalDate(item.getVdateUnadjust()));
@@ -426,30 +597,6 @@ public class ProductAssetsIncomeMethodProcessService {
         return parameter;
     }
 
-
-    /**
-     * 获取当前面值
-     * @param entity
-     * @param platDate
-     * @return
-     */
-    private BigDecimal getCurrentValue(ProductAssetsIncomeMethodReaderDto entity, Date platDate) {
-        BigDecimal currentValue = BigDecimal.valueOf(100);
-        //已还本面值
-        BigDecimal printValue = BigDecimal.ZERO;
-        for (ModCashFlowDto dto : entity.getFinCashPlanDtoList()){
-            //If 明细.现金流类型 = 数据字典.现金流类型.中间还本 or 到期还本 and 明细.调整后的计算结束日 <= 跑批日
-            if (StringUtil.equals(dto.getCashType2(), ModelDictCodeList.现金流二级类型_本金.getValue())
-                    && dto.getMdate().compareTo(platDate) <= 0) {
-                //变量.已还本面值 = 变量.已还本面值 + 明细.计划支付本金
-                printValue = ArithmeticUtil.doAdd(printValue, dto.getPrinAmt());
-            }
-        }
-        //变量.当前面值 = 变量.当前面值 - 变量.已还本面值
-        currentValue = ArithmeticUtil.subtract(currentValue, printValue);
-        return currentValue;
-    }
-
     /**
      * 转换数据
      *
@@ -465,6 +612,48 @@ public class ProductAssetsIncomeMethodProcessService {
         return null;
     }
 
+    /**
+     * 获取当前面值
+     * @param entity
+     * @param platDate
+     * @return
+     */
+    private BigDecimal getCurrentValue(ProductAssetsIncomeMethodReaderDto entity, Date platDate) {
+        BigDecimal currentValue = BigDecimal.valueOf(100);
+        //已还本面值
+        BigDecimal printValue = BigDecimal.ZERO;
+        for (ModCashFlowDto dto : entity.getFinCashPlanDtoList()){
+            //If 明细.现金流类型 = 数据字典.现金流类型.中间还本 or 到期还本 and 明细.调整后的计算结束日 <= 跑批日
+            if (StringUtil.equals(dto.getCashType2(), DictCodeListExt1.现金流二级类型_本金.getValue())
+                    && dto.getMdate().compareTo(platDate) <= 0) {
+                //变量.已还本面值 = 变量.已还本面值 + 明细.计划支付本金
+                printValue = ArithmeticUtil.doAdd(printValue, dto.getPrinAmt());
+            }
+        }
+        //变量.当前面值 = 变量.当前面值 - 变量.已还本面值
+        currentValue = ArithmeticUtil.subtract(currentValue, printValue);
+        return currentValue;
+    }
+
+
+    /**
+     * @Description:保存上下文日志信息
+     * @auther: yuzj
+     * @date: 2021/7/27
+     * @param:
+     * @return:
+     */
+    public  void  sendlogResults(List<ModValBatchLogResult> bBatchLogResultList, StepExecution stepExecution){
+        if(CollectionUtils.isNotEmpty(bBatchLogResultList)){
+            if( stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS") !=null){
+                List<ModValBatchLogResult> oldLogResultList = (List<ModValBatchLogResult>)stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS");
+                oldLogResultList.addAll(bBatchLogResultList);
+                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,oldLogResultList);
+            }else{
+                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,bBatchLogResultList);
+            }
+        }
+    }
 
 
 

@@ -3,42 +3,68 @@ package com.joyintech.tams.model.impairment.batch.eclcalculation.dto;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 
+import java.util.List;
+
 public class EclCalculationResultDto extends NeedToWriteEntity {
 
     /**
      * 减值配置使用情况表
      */
-    private ModConfigUseage modConfigUseage;
+    private List<ModConfigUseage> modConfigUseageList;
     /**
      * 减值结果过程表
      */
-    private ModEclResultProcess modEclResultProcess;
+    private List<ModEclResultProcess> modEclResultProcessList;
     /**
      * 资产减值结果表
      */
-    private ModEclResult modEclResult;
+    private List<ModEclResult> modEclResultList;
 
-    public ModConfigUseage getModConfigUseage() {
-        return modConfigUseage;
+    /**
+     * @return 减值配置使用情况表
+     */
+    public List<ModConfigUseage> getModConfigUseageList() {
+        return modConfigUseageList;
     }
 
-    public void setModConfigUseage(ModConfigUseage modConfigUseage) {
-        this.modConfigUseage = modConfigUseage;
+    /**
+     * 设置 减值配置使用情况表
+     *
+     * @param modConfigUseageList 减值配置使用情况表
+     */
+    public void setModConfigUseageList(List<ModConfigUseage> modConfigUseageList) {
+        this.modConfigUseageList = modConfigUseageList;
     }
 
-    public ModEclResultProcess getModEclResultProcess() {
-        return modEclResultProcess;
+    /**
+     * @return 减值结果过程表
+     */
+    public List<ModEclResultProcess> getModEclResultProcessList() {
+        return modEclResultProcessList;
     }
 
-    public void setModEclResultProcess(ModEclResultProcess modEclResultProcess) {
-        this.modEclResultProcess = modEclResultProcess;
+    /**
+     * 设置 减值结果过程表
+     *
+     * @param modEclResultProcessList 减值结果过程表
+     */
+    public void setModEclResultProcessList(List<ModEclResultProcess> modEclResultProcessList) {
+        this.modEclResultProcessList = modEclResultProcessList;
     }
 
-    public ModEclResult getModEclResult() {
-        return modEclResult;
+    /**
+     * @return 减值配置使用情况表
+     */
+    public List<ModEclResult> getModEclResultList() {
+        return modEclResultList;
     }
 
-    public void setModEclResult(ModEclResult modEclResult) {
-        this.modEclResult = modEclResult;
+    /**
+     * 设置 减值配置使用情况表
+     *
+     * @param modEclResultList 减值配置使用情况表
+     */
+    public void setModEclResultList(List<ModEclResult> modEclResultList) {
+        this.modEclResultList = modEclResultList;
     }
 }
