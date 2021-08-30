@@ -220,9 +220,10 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
 		String invAim = (String) param.get("invAim");//投资目的
 		String valuationMethod = (String) param.get("valuationMethod");//估值方法
 		if(StringUtils.isNotEmpty(invAim) && StringUtils.isNotEmpty(valuationMethod)
-				&& (ModelDictCodeList.投资目的_公允价值变动计入其他综合收益.getValue().equals(invAim)
+				&& (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(invAim)
 				&& DictCodeListExt1.估值方法_市值法.getValue().equals(valuationMethod)) ||
-				(ModelDictCodeList.投资目的_公允价值变动计入当期损益.getValue().equals(invAim) &&(DictCodeListExt1.估值方法_市值法.getValue().equals(valuationMethod) || DictCodeListExt1.估值方法_市值成本孰低法.getValue().equals(valuationMethod)))
+				(DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(invAim) &&(DictCodeListExt1.估值方法_市值法.getValue().equals(valuationMethod)
+						|| DictCodeListExt1.估值方法_市值成本孰低法.getValue().equals(valuationMethod)))
 		){
 			for (int i = 0; i < selectOptionDtoList.size(); i++) {
 				if (DictCodeList.估值市价_专家法.getValue().equals(selectOptionDtoList.get(i).getId())) {

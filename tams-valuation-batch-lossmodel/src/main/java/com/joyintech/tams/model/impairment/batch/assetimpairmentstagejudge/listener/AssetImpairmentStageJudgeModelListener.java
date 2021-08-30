@@ -1,7 +1,6 @@
 package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.listener;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
@@ -56,16 +55,12 @@ public class AssetImpairmentStageJudgeModelListener implements JobExecutionListe
         jobExecution.getExecutionContext().putString(TASKID_KEY, taskId);
         // 查询参数
         List<ModValBatchParams> params = modParamsService.selectAllParamsByDate(date);
+        //封装日志信息
         if (CollectionUtils.isNotEmpty(params)) {
             jobExecution.getExecutionContext().put(BATCH_PARAMS_KEY, params);
             List<ModBatchLogs> list = new ArrayList<>(params.size());
             for (ModValBatchParams param : params) {
-                ModBatchLogs log = new ModBatchLogs();
-                log.setSeqno(IDGenerator.generate());
-                log.setFinprodId(param.getFinprodId());
-                log.setBatchExecSeqno(param.getBatchExecSeqno());
-                log.setTaskId(taskId);
-                list.add(log);
+                list.add(modLogsService.initLog(taskId,param.getBatchExecSeqno(),param.getFinprodId()));
             }
             modLogsService.saveBatch(list);
         }

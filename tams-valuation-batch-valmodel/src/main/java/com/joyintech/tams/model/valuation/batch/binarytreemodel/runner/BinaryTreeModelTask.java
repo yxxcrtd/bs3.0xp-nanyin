@@ -21,6 +21,10 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * 二叉树模型计算批处理
+ */
 @Service("binaryTreeModelTask")
 @Scope("prototype")
 public class BinaryTreeModelTask extends BatchBaseService {

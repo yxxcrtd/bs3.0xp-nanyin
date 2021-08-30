@@ -1,5 +1,6 @@
 package com.joyintech.tams.valuation.component.batch.service;
 
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
@@ -71,6 +72,40 @@ public class ModLogsService {
         } finally {
             sqlSession.commit();
             sqlSession.close();
+        }
+    }
+    /**
+     *
+     * @param taskId
+     * @param batchExeDetailSeqno
+     * @param finprodId
+     */
+    public ModBatchLogs initLog(String taskId, String batchExeDetailSeqno, String finprodId){
+        ModBatchLogs log = new ModBatchLogs();
+        log.setSeqno(IDGenerator.generate());
+        log.setFinprodId(finprodId);
+        log.setBatchExecSeqno(batchExeDetailSeqno);
+        log.setTaskId(taskId);
+        return log;
+    }
+    /**
+     *
+     * @param taskId
+     * @param batchExeDetailSeqno
+     * @param finprodIds
+     */
+    public void batchInitLogs(String taskId, String batchExeDetailSeqno, List<String> finprodIds){
+        List<ModBatchLogs> listLog = new ArrayList<ModBatchLogs>();
+        if (CollectionUtils.isNotEmpty(finprodIds)) {
+            finprodIds.forEach((x) -> {
+                ModBatchLogs log = new ModBatchLogs();
+                log.setSeqno(IDGenerator.generate());
+                log.setFinprodId(x);
+                log.setBatchExecSeqno(batchExeDetailSeqno);
+                log.setTaskId(taskId);
+                listLog.add(log);
+            });
+            this.saveBatch(listLog);
         }
     }
 

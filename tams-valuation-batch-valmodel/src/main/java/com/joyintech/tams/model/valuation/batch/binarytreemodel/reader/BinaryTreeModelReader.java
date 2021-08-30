@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 二叉树模型计算批处理Reader
+ */
 @Service
 public class BinaryTreeModelReader extends BaseReader <BinaryTreeModelReaderEntity> implements StepExecutionListener {
-    /**
-     *  逾期资产结转批处理Service
-     */
+
     @Autowired
     private BinaryTreeModelReaderService binaryTreeModelReaderService;
 
@@ -33,7 +34,7 @@ public class BinaryTreeModelReader extends BaseReader <BinaryTreeModelReaderEnti
 
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
-        return null;
+        return stepExecution.getExitStatus();
     }
 
 }

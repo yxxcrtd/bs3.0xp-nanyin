@@ -36,6 +36,7 @@ public class ModAssetInfoDto extends BaseEntity {
      * 到期日
      */
     private Date mdate;
+
     /**
      * 发行人
      */
@@ -78,29 +79,33 @@ public class ModAssetInfoDto extends BaseEntity {
      * 实际授信主体
      */
     private String actualCreaditProvid;
-    /**
-     * 资产一级分类
-     */
-    private String assetOne;
-    
-    /**
-     * 资产二级分类
-     */
-    private String assetTwo;
-    /**
-     * 资产三级分类
-     */
-    private String assetThree;
-    /**
-     * 资产四级分类
-     */
-    private String assetFour;
-    /**
-     * 资产五级分类
-     */
-    private String assetFive;
-    
-   /**
+
+	/**
+	 * 证券品种
+	 */
+	private String secType;
+	/**
+	 * 证券细分类
+	 */
+    private String secTypeDetail;
+
+	public String getSecType() {
+		return secType;
+	}
+
+	public void setSecType(String secType) {
+		this.secType = secType;
+	}
+
+	public String getSecTypeDetail() {
+		return secTypeDetail;
+	}
+
+	public void setSecTypeDetail(String secTypeDetail) {
+		this.secTypeDetail = secTypeDetail;
+	}
+
+	/**
     * 发行人是否持有金融牌照
     */
     private String issueFinLicence;
@@ -214,26 +219,26 @@ public class ModAssetInfoDto extends BaseEntity {
 	public String getActualCreaditProvid() {
 		return actualCreaditProvid;
 	}
-
-	public String getAssetOne() {
-		return assetOne;
-	}
-
-	public String getAssetTwo() {
-		return assetTwo;
-	}
-
-	public String getAssetThree() {
-		return assetThree;
-	}
-
-	public String getAssetFour() {
-		return assetFour;
-	}
-
-	public String getAssetFive() {
-		return assetFive;
-	}
+//
+//	public String getAssetOne() {
+//		return assetOne;
+//	}
+//
+//	public String getAssetTwo() {
+//		return assetTwo;
+//	}
+//
+//	public String getAssetThree() {
+//		return assetThree;
+//	}
+//
+//	public String getAssetFour() {
+//		return assetFour;
+//	}
+//
+//	public String getAssetFive() {
+//		return assetFive;
+//	}
 
 	public String getIssueFinLicence() {
 		return issueFinLicence;
@@ -327,25 +332,25 @@ public class ModAssetInfoDto extends BaseEntity {
 		this.actualCreaditProvid = actualCreaditProvid;
 	}
 
-	public void setAssetOne(String assetOne) {
-		this.assetOne = assetOne;
-	}
-
-	public void setAssetTwo(String assetTwo) {
-		this.assetTwo = assetTwo;
-	}
-
-	public void setAssetThree(String assetThree) {
-		this.assetThree = assetThree;
-	}
-
-	public void setAssetFour(String assetFour) {
-		this.assetFour = assetFour;
-	}
-
-	public void setAssetFive(String assetFive) {
-		this.assetFive = assetFive;
-	}
+//	public void setAssetOne(String assetOne) {
+//		this.assetOne = assetOne;
+//	}
+//
+//	public void setAssetTwo(String assetTwo) {
+//		this.assetTwo = assetTwo;
+//	}
+//
+//	public void setAssetThree(String assetThree) {
+//		this.assetThree = assetThree;
+//	}
+//
+//	public void setAssetFour(String assetFour) {
+//		this.assetFour = assetFour;
+//	}
+//
+//	public void setAssetFive(String assetFive) {
+//		this.assetFive = assetFive;
+//	}
 
 	public void setIssueFinLicence(String issueFinLicence) {
 		this.issueFinLicence = issueFinLicence;

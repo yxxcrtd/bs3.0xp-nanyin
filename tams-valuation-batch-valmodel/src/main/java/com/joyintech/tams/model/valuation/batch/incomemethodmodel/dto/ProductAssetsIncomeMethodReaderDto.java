@@ -90,25 +90,37 @@ public class ProductAssetsIncomeMethodReaderDto extends NeedOperateEntity {
     private String actualCreditProvid;
 
     /**
-     * 资产一级分类
+     * 证券细分类
      */
-    private String assetType1;
-    /**
-     * 资产二级分类
-     */
-    private String assetType2;
-    /**
-     * 资产三级分类
-     */
-    private String assetType3;
-    /**
-     * 资产四级分类
-     */
-    private String assetType4;
-    /**
-     * 资产五级分类
-     */
-    private String assetType5;
+    private String secTypeDetail;
+
+    public String getSecTypeDetail() {
+        return secTypeDetail;
+    }
+
+    public void setSecTypeDetail(String secTypeDetail) {
+        this.secTypeDetail = secTypeDetail;
+    }
+//    /**
+//     * 资产一级分类
+//     */
+//    private String assetType1;
+//    /**
+//     * 资产二级分类
+//     */
+//    private String assetType2;
+//    /**
+//     * 资产三级分类
+//     */
+//    private String assetType3;
+//    /**
+//     * 资产四级分类
+//     */
+//    private String assetType4;
+//    /**
+//     * 资产五级分类
+//     */
+//    private String assetType5;
     /**
      * 最近买入交易发生日
      */
@@ -289,45 +301,45 @@ public class ProductAssetsIncomeMethodReaderDto extends NeedOperateEntity {
         this.actualCreditProvid = actualCreditProvid;
     }
 
-    public String getAssetType1() {
-        return assetType1;
-    }
-
-    public void setAssetType1(String assetType1) {
-        this.assetType1 = assetType1;
-    }
-
-    public String getAssetType2() {
-        return assetType2;
-    }
-
-    public void setAssetType2(String assetType2) {
-        this.assetType2 = assetType2;
-    }
-
-    public String getAssetType3() {
-        return assetType3;
-    }
-
-    public void setAssetType3(String assetType3) {
-        this.assetType3 = assetType3;
-    }
-
-    public String getAssetType4() {
-        return assetType4;
-    }
-
-    public void setAssetType4(String assetType4) {
-        this.assetType4 = assetType4;
-    }
-
-    public String getAssetType5() {
-        return assetType5;
-    }
-
-    public void setAssetType5(String assetType5) {
-        this.assetType5 = assetType5;
-    }
+//    public String getAssetType1() {
+//        return assetType1;
+//    }
+//
+//    public void setAssetType1(String assetType1) {
+//        this.assetType1 = assetType1;
+//    }
+//
+//    public String getAssetType2() {
+//        return assetType2;
+//    }
+//
+//    public void setAssetType2(String assetType2) {
+//        this.assetType2 = assetType2;
+//    }
+//
+//    public String getAssetType3() {
+//        return assetType3;
+//    }
+//
+//    public void setAssetType3(String assetType3) {
+//        this.assetType3 = assetType3;
+//    }
+//
+//    public String getAssetType4() {
+//        return assetType4;
+//    }
+//
+//    public void setAssetType4(String assetType4) {
+//        this.assetType4 = assetType4;
+//    }
+//
+//    public String getAssetType5() {
+//        return assetType5;
+//    }
+//
+//    public void setAssetType5(String assetType5) {
+//        this.assetType5 = assetType5;
+//    }
 
     public BigDecimal getIssuePrice() {
         return issuePrice;

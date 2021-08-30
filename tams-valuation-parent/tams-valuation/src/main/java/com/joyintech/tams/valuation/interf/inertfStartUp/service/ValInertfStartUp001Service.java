@@ -57,13 +57,13 @@ public class ValInertfStartUp001Service extends CommonExportService<ValInterfTas
     @Autowired
     private VasInterfCommonService service;
     
-    @Value("${interf.hostname}")
+    @Value("${valinterf.hostname}")
     private String hostName;
     
-    @Value("${interf.port}")
+    @Value("${valinterf.port}")
     private String port;
     
-    @Value("${interf.contextPath}")
+    @Value("${valinterf.contextPath}")
     private String contextPath;
 
 //    /**

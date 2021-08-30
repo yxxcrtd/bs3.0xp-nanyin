@@ -106,7 +106,7 @@ public class EadCalculationBatchReaderService {
                     if(DictCodeListExt1.证券品种_债券.getValue().equals(k1.getValue().get(0).getModelAssetType())){
                         tempDto.setCouponSpecies(k1.getValue().get(0).getCouponSpecies());
                     }else{// 如果 证券品种为其他
-                        tempDto.setCouponSpecies(ModelDictCodeList.息票品种_附息.getValue());
+                        tempDto.setCouponSpecies(DictCodeList.息票品种_附息.getValue());
                     }
                     tempDto.setTradeInList(k1.getValue());
                     if(!CollectionUtils.isEmpty(tradeOutMap)&& !CollectionUtils.isEmpty(tradeOutMap.get(k.getKey()))){

@@ -19,6 +19,8 @@ import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
 import com.joyintech.calculation.shell.param.SecInfoModel;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
 import com.joyintech.tams.model.valuation.batch.calculation.CalculatorFactory;
@@ -382,32 +384,32 @@ public class CashFlowDiscountProcessorService {
 		if(!StringUtil.isEmptyList(entity.getModCashFlowPayRules())){
 			ModCashFlowPayRulesDto modCashFlowPayRulesDto = entity.getModCashFlowPayRules().get(0);
 			//付息频率
-			if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),ModelDictCodeList.频率_月.getValue())){
+			if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),DictCodeList.频率_月.getValue())){
 				disCountInputParameter.setYearIntRate(IntFrequency.月付);
-			}else if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),ModelDictCodeList.频率_季.getValue())){
+			}else if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),DictCodeList.频率_季.getValue())){
 				disCountInputParameter.setYearIntRate(IntFrequency.季付);
-			}else if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),ModelDictCodeList.频率_半年.getValue())){
+			}else if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),DictCodeList.频率_半年.getValue())){
 				disCountInputParameter.setYearIntRate(IntFrequency.半年付);
 			}else{
 				disCountInputParameter.setYearIntRate(IntFrequency.年付);
 			}
 			//推算方式
-			if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),ModelDictCodeList.推算方式_起息日向后.getValue())){
+			if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),DictCodeList.推算方式_起息日向后.getValue())){
 				disCountInputParameter.setCalMethod(SecIntSchCalMethod.起息日向后);
-			}else if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),ModelDictCodeList.推算方式_到期日向前.getValue())){
+			}else if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),DictCodeList.推算方式_到期日向前.getValue())){
 				disCountInputParameter.setCalMethod(SecIntSchCalMethod.到期日向前);
-			}else if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),ModelDictCodeList.推算方式_首次支付日.getValue())){
+			}else if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),DictCodeList.推算方式_首次支付日.getValue())){
 				disCountInputParameter.setFirstPayDate(DateUtil.dateToLocal(modCashFlowPayRulesDto.getFirstPayDate()));
 				disCountInputParameter.setCalMethod(SecIntSchCalMethod.首次付息日);
 			}else{
 				disCountInputParameter.setCalMethod(SecIntSchCalMethod.起息日向后);
 			}
 			//息票品种
-			if(StringUtil.equals(entity.getCouponSpecies(),ModelDictCodeList.息票品种_零息.getValue())){
+			if(StringUtil.equals(entity.getCouponSpecies(),DictCodeList.息票品种_零息.getValue())){
 				disCountInputParameter.setVariety(Variety.零息);
-			}else if(StringUtil.equals(entity.getCouponSpecies(),ModelDictCodeList.息票品种_贴现.getValue())){
+			}else if(StringUtil.equals(entity.getCouponSpecies(),DictCodeList.息票品种_贴现.getValue())){
 				disCountInputParameter.setVariety(Variety.贴现);
-			}else if(StringUtil.equals(entity.getCouponSpecies(),ModelDictCodeList.息票品种_利随本清.getValue())){
+			}else if(StringUtil.equals(entity.getCouponSpecies(),DictCodeList.息票品种_利随本清.getValue())){
 				disCountInputParameter.setVariety(Variety.利随本清);
 			}else{
 				disCountInputParameter.setVariety(Variety.附息);
@@ -422,10 +424,10 @@ public class CashFlowDiscountProcessorService {
 					return;
 				}
 			});
-			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),ModelDictCodeList.计息基础_A_A_B_COUP.getValue())){
+			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),DictCodeList.计息基础_A_A_平均分配.getValue())){
 				disCountInputParameter.setBasis(Basis.A_A);
 			}
-			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),ModelDictCodeList.计息基础_A_A_B_DAY.getValue())){
+			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),DictCodeList.计息基础_A_A_按实际天数分配.getValue())){
 				disCountInputParameter.setBasis(Basis.A_A_D);
 			}
 		}
@@ -529,11 +531,11 @@ public class CashFlowDiscountProcessorService {
 		secInfoModel.setStartDate(DateUtil.dateToLocal(entity.getVdate()));
 		secInfoModel.setEndDate(DateUtil.dateToLocal(entity.getMdate()));
 		secInfoModel.setIssuePrice(entity.getIssuePrice());
-		 if(StringUtil.equals(entity.getCouponSpecies(),ModelDictCodeList.息票品种_零息.getValue())){
+		 if(StringUtil.equals(entity.getCouponSpecies(), DictCodeList.息票品种_零息.getValue())){
 			 secInfoModel.setBondsType(com.joyintech.calculation.bonds.constant.Variety.零息);
-		}else if(StringUtil.equals(entity.getCouponSpecies(),ModelDictCodeList.息票品种_贴现.getValue())){
+		}else if(StringUtil.equals(entity.getCouponSpecies(),DictCodeList.息票品种_贴现.getValue())){
 			 secInfoModel.setBondsType(com.joyintech.calculation.bonds.constant.Variety.贴现);
-		}else if(StringUtil.equals(entity.getCouponSpecies(),ModelDictCodeList.息票品种_利随本清.getValue())){
+		}else if(StringUtil.equals(entity.getCouponSpecies(),DictCodeList.息票品种_利随本清.getValue())){
 			 secInfoModel.setBondsType(com.joyintech.calculation.bonds.constant.Variety.利随本清);
 		}else {
 			secInfoModel.setBondsType(com.joyintech.calculation.bonds.constant.Variety.附息);
@@ -547,30 +549,30 @@ public class CashFlowDiscountProcessorService {
 					return;
 				}
 			});
-			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),ModelDictCodeList.计息基础_A_A_B_COUP.getValue())){
+			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),DictCodeList.计息基础_A_A_平均分配.getValue())){
 				secInfoModel.setBasis(com.joyintech.calculation.bonds.constant.Basis.A_A);
 			}
-			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),ModelDictCodeList.计息基础_A_A_B_DAY.getValue())){
+			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),DictCodeList.计息基础_A_A_按实际天数分配.getValue())){
 				secInfoModel.setBasis(com.joyintech.calculation.bonds.constant.Basis.A_A_D);
 			}
 		}
 		if(!StringUtil.isEmptyList(entity.getModCashFlowPayRules())){
 			ModCashFlowPayRulesDto modCashFlowPayRulesDto = entity.getModCashFlowPayRules().get(0);
 			//付息频率
-			if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),ModelDictCodeList.频率_月.getValue())){
+			if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),DictCodeList.频率_月.getValue())){
 				secInfoModel.setYearIntRate(com.joyintech.calculation.bonds.constant.IntFrequency.月付);
-			}else if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),ModelDictCodeList.频率_季.getValue())){
+			}else if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),DictCodeList.频率_季.getValue())){
 				secInfoModel.setYearIntRate(com.joyintech.calculation.bonds.constant.IntFrequency.季付);
-			}else if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),ModelDictCodeList.频率_半年.getValue())){
+			}else if(StringUtil.equals(modCashFlowPayRulesDto.getPayCycle(),DictCodeList.频率_半年.getValue())){
 				secInfoModel.setYearIntRate(com.joyintech.calculation.bonds.constant.IntFrequency.半年付);
 			}else{
 				secInfoModel.setYearIntRate(com.joyintech.calculation.bonds.constant.IntFrequency.年付);
 			}
-			if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),ModelDictCodeList.推算方式_起息日向后.getValue())){
+			if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),DictCodeList.推算方式_起息日向后.getValue())){
 				secInfoModel.setCalMethod(com.joyintech.calculation.bonds.constant.SecIntSchCalMethod.起息日向后);
-			}else if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),ModelDictCodeList.推算方式_到期日向前.getValue())){
+			}else if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),DictCodeList.推算方式_到期日向前.getValue())){
 				secInfoModel.setCalMethod(com.joyintech.calculation.bonds.constant.SecIntSchCalMethod.到期日向前);
-			}else if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),ModelDictCodeList.推算方式_首次支付日.getValue())){
+			}else if(StringUtil.equals(modCashFlowPayRulesDto.getCalcRule(),DictCodeList.推算方式_首次支付日.getValue())){
 				Date firstPayDate = modCashFlowPayRulesDto.getFirstPayDate();
 				if(null!= firstPayDate){
 					secInfoModel.setFirstPayDate(DateUtil.dateToLocal(firstPayDate));
@@ -590,10 +592,10 @@ public class CashFlowDiscountProcessorService {
 					return;
 				}
 			});
-			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),ModelDictCodeList.计息基础_A_A_B_COUP.getValue())){
+			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(),DictCodeList.计息基础_A_A_平均分配.getValue())){
 				secInfoModel.setBasis(com.joyintech.calculation.bonds.constant.Basis.A_A);
 			}
-			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(), ModelDictCodeList.计息基础_A_A_B_DAY.getValue())){
+			if(StringUtil.equals(modCashFlowCalRuleDto.getBasis(), DictCodeList.计息基础_A_A_按实际天数分配.getValue())){
 				secInfoModel.setBasis(com.joyintech.calculation.bonds.constant.Basis.A_A_D);
 			}
 		}
