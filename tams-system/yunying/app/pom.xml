@@ -27,7 +27,7 @@
 		<!-- 集成微服务端的代码 -->
 		<dependency>
 			<groupId>com.joyintech</groupId>
-			<artifactId>tams-service-container</artifactId>
+			<artifactId>tams-service-container-yunyin</artifactId>
 			<version>2.1.1</version>
 			<exclusions>
 				<exclusion>
