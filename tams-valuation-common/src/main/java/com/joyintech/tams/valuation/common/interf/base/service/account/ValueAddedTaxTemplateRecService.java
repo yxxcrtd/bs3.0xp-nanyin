@@ -33,7 +33,6 @@ import com.joyintech.tams.valuation.common.interf.base.dto.ValBooksetInfoDto;
 import com.joyintech.tams.valuation.common.interf.base.dto.ValueAddedTaxRecCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
-import com.joyintech.tams.valuation.common.interf.base.util.MD5Util;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValAddValueTax;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 

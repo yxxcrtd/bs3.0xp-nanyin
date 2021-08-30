@@ -744,6 +744,20 @@
                 </div>
             </li>
 
+            <li th:if="${isEjfr}">
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R9}">公共数据变更</h3>
+                <div class="layui-row layui-col-space20">
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
+                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R9S1}">数据修改</h3>
+                            <div class="bond-des">
+                                <a href="javascript:;" class="link-num click" id="R9S1" data-th-one="${R9}" data-th-two="${R9S1}" data-th-text="${result?.R9S1}">10000</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
             <li>
                 <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R10}">分销缴款提醒</h3>
                 <div class="layui-row layui-col-space20">
@@ -760,19 +774,29 @@
                     </div>
                 </div>
             </li>
-            <li th:if="${isEjfr}">
-                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R9}">公共数据变更</h3>
+
+            <li>
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R11}">债券上市流通</h3>
                 <div class="layui-row layui-col-space20">
                     <div class="layui-col-md4">
                         <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
-                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R9S1}">数据修改</h3>
+                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R11S1}">债券上市流通操作</h3>
                             <div class="bond-des">
-                                <a href="javascript:;" class="link-num click" id="R9S1" data-th-one="${R9}" data-th-two="${R9S1}" data-th-text="${result?.R9S1}">10000</a>
+                                <a href="javascript:;" class="link-num click" id="R11S1" data-th-one="${R11}" data-th-two="${R11S1}" data-th-text="${result?.R11S1}">10000</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
+                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R11S2}">资产要素登记修改</h3>
+                            <div class="bond-des">
+                                <a href="javascript:;" class="link-num click" id="R11S2" data-th-one="${R11}" data-th-two="${R11S2}" data-th-text="${result?.R11S2}">10000</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </li>
+
         </ul>
     </div>
 </div>

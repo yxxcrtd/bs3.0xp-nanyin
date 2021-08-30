@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
  * @remark 所有PLUGIN参数基类
  * @date 2020-07-15
  */
-//@Service("pluginClassDao")
 public abstract class PluginClass<V> {
 
 	//@Autowired

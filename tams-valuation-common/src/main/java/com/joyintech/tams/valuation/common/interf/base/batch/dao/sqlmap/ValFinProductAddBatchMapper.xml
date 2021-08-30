@@ -69,9 +69,9 @@
             #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
             #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.issueStatusRemark,jdbcType=VARCHAR},
             #{item.closeDays,jdbcType=DECIMAL}, #{item.faceValue,jdbcType=DECIMAL}, #{item.portfolioId,jdbcType=VARCHAR},
-            /** add by yanya on 20201222 �����Ƿ�����ծȯ�ֶ�**/
+            /** add by yanya on 20201222 增加是否其他债券字段**/
             #{item.isQtzq,jdbcType=VARCHAR},
-            /** add by yanya on 20210318 ����������Դ**/
+            /** add by yanya on 20210318 增加数据来源**/
             #{item.dataSource,jdbcType=VARCHAR},
             #{item.trmFundType,jdbcType=VARCHAR}
         </foreach>

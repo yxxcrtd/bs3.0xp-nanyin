@@ -172,7 +172,7 @@ public class EntrustRdsCommonAop {
     public static final <T> AjaxResult doListPreOccupy(List<T> dtoList, String busiType,
                                                        String infCode, boolean isSingleCounter,
                                                        BussEtrInvestPersonInfoDto etrInvestPersonInfo)
-        throws Exception {
+            throws Exception {
         if (!isNeedPreoccupy()) {
             return null;
         }
@@ -180,7 +180,7 @@ public class EntrustRdsCommonAop {
         InterfRiskRdsService<InterfRiskRdsDto> service = getInterfRiskRdsService();
         // 执行预占
         AjaxResult ar = null;
-        /*service.checkRiskRds(new InterfRiskRdsDto(),
+        /*        service.checkRiskRds(new InterfRiskRdsDto(),
             BussinessDictCodeListRds.事件类型_投资委托.getValue(), infCode,
             busiType, en -> service.sendRiskRdsListData(en, dtoList, map -> {
                 // 个别处理

@@ -26,7 +26,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BokBookdetailCurrent;
 import com.joyintech.tams.common.base.entity.BokDetailId;
 import com.joyintech.tams.valuation.common.dao.BookAccountCommonMapper;
-import com.joyintech.tams.valuation.common.interf.base.util.MD5Util;
 import com.joyintech.tams.valuation.common.utils.ValStringUtil;
 
 /**

@@ -273,12 +273,12 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     /**
      * 债券上市流通操作
      */
-    提醒类型_小分类_债券上市流通操作(BussinessDictCode.提醒类型_小分类,"R10S1","债券上市流通操作"),
+    提醒类型_小分类_债券上市流通操作(BussinessDictCode.提醒类型_小分类,"R11S1","债券上市流通操作"),
 
     /**
      * 资产要素登记修改
      */
-    提醒类型_小分类_资产要素登记修改(BussinessDictCode.提醒类型_小分类,"R10S2","资产要素登记修改"),
+    提醒类型_小分类_资产要素登记修改(BussinessDictCode.提醒类型_小分类,"R11S2","资产要素登记修改"),
 
     /**
      * 入库

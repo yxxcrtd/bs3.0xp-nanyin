@@ -39,7 +39,7 @@ import com.joyintech.tams.valuation.common.constants.DataIndexSequenceType;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.valuation.common.interf.base.util.MD5Util;
+
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import com.joyintech.tams.common.base.entity.BokBussDetsub;
 

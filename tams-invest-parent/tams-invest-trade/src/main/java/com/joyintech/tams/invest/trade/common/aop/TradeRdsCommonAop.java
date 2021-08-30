@@ -10,21 +10,6 @@
  
 package com.joyintech.tams.invest.trade.common.aop;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
-
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.*;
@@ -51,6 +36,20 @@ import com.joyintech.tams.invest.common.risktrialrds.RiskTrialComm;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.manualsettle.dto.ManualSettleDto;
 import com.joyintech.workflow.engine.constant.OperationType;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 
 /**
  * 交易撤销时调用风险逻辑aop
@@ -160,7 +159,7 @@ public class TradeRdsCommonAop {
         InterfRiskRdsService<InterfRiskRdsDto> service = getInterfRiskRdsService();
         // 执行预占
         AjaxResult ar = null;
-        /*service.checkRiskRds(new InterfRiskRdsDto(),
+         /*       service.checkRiskRds(new InterfRiskRdsDto(),
             BussinessDictCodeListRds.事件类型_投资交易.getValue(),
             BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue(), busiType,
             en -> service.sendRiskRdsListData(en, dtoList, map -> {
