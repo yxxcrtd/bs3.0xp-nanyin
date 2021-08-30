@@ -1,5 +1,7 @@
 (function(){
-
+    //试算结果
+    var riskResultdata;
+    var cluflag;
 
     var setDhDiv = function(entrustIdList){
         $("#CfetsBondDealQuotedPriceMuti001_hidden_quotaPageModel").val('new');
@@ -460,8 +462,14 @@
         setDhDiv: setDhDiv,
         getriskdata: getriskdata,
         getSaveOrSubmitParams: getSaveOrSubmitParams,
-        reset: reset
+        reset: reset,
+        riskResultdata: riskResultdata,
+        cluflag: cluflag
     }
+    CfetsBondDealQuotedPriceMuti001 = {
+        riskResultdata: riskResultdata,
+        cluflag: cluflag
+    };
 
     window.componentLoadCallback = function(isDone, pagePath, params) {
         if (isDone) {

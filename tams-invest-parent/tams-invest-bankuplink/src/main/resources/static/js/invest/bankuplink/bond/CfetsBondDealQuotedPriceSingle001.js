@@ -1,4 +1,7 @@
 (function(){
+    //试算结果
+    var riskResultdata;
+    var cluflag;
 
 
     var setDhDiv = function(selArr){
@@ -324,8 +327,35 @@
 
 
     var getriskdata = function () {
-        return null;
+        var obj = {
+            tradeDirection: $("#CfetsBondDealQuotedPriceSingle001_ps").val(),
+            timePoint: MY_SUP_TIME_TYPE_02,
+            valDate: sysDate,
+            portfolioCode: $("#CfetsBondDealQuotedPriceSingle001_portfolioId").val(),
+            tradeAmount: $("#CfetsBondDealQuotedPriceSingle001_fpriceAmt").val(),
+            assetType: FINPROD_TYPE_F01,
+            isEnabled: "01",
+            assetCode: $("#CfetsBondDealQuotedPriceSingle001_finprodId").val(),
+            counterId: $('#CfetsBondDealQuotedPriceSingle001_counterId').val()
+        };
+
+        var object = {
+            tradeDirection: ["ps", "CfetsBondDealQuotedPriceSingle.ps"],
+            portfolioCode: ["portfolioId", "CfetsBondDealQuotedPriceSingle.portfolioId"],
+            tradeAmount: ["fpriceAmt", "CfetsBondDealQuotedPriceSingle.fprinceAmt"],
+            assetType: ["assetType", "CfetsBondDealQuotedPriceSingle.assetType"],
+            counterId: ["counterId", "CfetsBondDealQuotedPriceSingle.counterId"],
+            data: obj
+        };
+        return object;
     };
+
+    function saveRiskResultdata(paraRiskResultdata) {
+        riskResultdata = paraRiskResultdata;
+    }
+    function saveCluflag(paraCluflag) {
+        cluflag = paraCluflag;
+    }
 
     function getSaveOrSubmitParams(operateType) {
         var object = $.serializeToObject("#submitForm");
@@ -340,8 +370,22 @@
         setDhDiv: setDhDiv,
         getriskdata: getriskdata,
         getSaveOrSubmitParams: getSaveOrSubmitParams,
-        reset: reset
+        reset: reset,
+        riskResultdata: riskResultdata,
+        cluflag: cluflag,
+        saveRiskResultdata: saveRiskResultdata,
+        saveCluflag: saveCluflag
     }
+    CfetsBondDealQuotedPriceSingle001 = {
+        setDhDiv: setDhDiv,
+        getriskdata: getriskdata,
+        getSaveOrSubmitParams: getSaveOrSubmitParams,
+        reset: reset,
+        riskResultdata: riskResultdata,
+        cluflag: cluflag,
+        saveRiskResultdata: saveRiskResultdata,
+        saveCluflag: saveCluflag
+    };
 
     window.componentLoadCallback = function(isDone, pagePath, params) {
         if (isDone) {
