@@ -229,6 +229,7 @@ public class TrdAvailableCashQueryService {
             dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
             dto.setCcy((String) map.get("ccy"));
             dto.setFinprodId((String) map.get("finprodId"));
+            //针对，计划类利率型资产买入时，在流程中不存表ptl_sec_position_flow，因此，流程中的持仓取自表wfl_trd_product_deal
             BigDecimal 可用持仓 = trdAvailableCashQueryMapper.getFinAvaPositionFlow(dto);
             resultMap.put("POSITIONFLOW", 可用持仓);
         }

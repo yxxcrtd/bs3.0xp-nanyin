@@ -42,12 +42,9 @@
     </select>
     <select id="getFinAvaPositionFlow" resultType="java.math.BigDecimal" >
         select
-        SUM(AMOUNT)
-        from PTL_SEC_POSITION_FLOW
-        where CDATE &lt;= #{cdate,jdbcType=DATE}
-        <if test="hodingType != null and hodingType != ''">
-            and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
-        </if>
+        SUM(share_amt)
+        from wfl_trd_product_deal
+        where trade_date &lt;= #{cdate,jdbcType=DATE}
         <if test="finprodId != null and finprodId != ''">
             and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
