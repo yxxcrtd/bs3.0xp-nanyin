@@ -45,6 +45,19 @@
         return window.CfetsBondDealQuotedPriceMuti002.reset();
     }
 
+    var saveRiskResultdata_Muti001 = function(riskResultdata) {
+        window.CfetsBondDealQuotedPriceMuti001.saveRiskResultdata(riskResultdata);
+    }
+    var saveRiskResultdata_Muti002 = function(riskResultdata) {
+        window.CfetsBondDealQuotedPriceMuti002.saveRiskResultdata(riskResultdata);
+    }
+    var saveCluflag_Muti001 = function(cluflag) {
+        window.CfetsBondDealQuotedPriceMuti001.saveCluflag(cluflag);
+    }
+    var saveCluflag_Muti002 = function(cluflag) {
+        window.CfetsBondDealQuotedPriceMuti002.saveCluflag(cluflag);
+    }
+
     parent.CfetsBondDealQuotedPriceMuti = {
         showDiv: showDiv,
         getriskdata_Muti001: getriskdata_Muti001,
@@ -52,7 +65,11 @@
         getSaveOrSubmitParams_Muti001: getSaveOrSubmitParams_Muti001,
         getSaveOrSubmitParams_Muti002: getSaveOrSubmitParams_Muti002,
         resetMuti001: resetMuti001,
-        resetMuti002: resetMuti002
+        resetMuti002: resetMuti002,
+        saveRiskResultdata_Muti001: saveRiskResultdata_Muti001,
+        saveRiskResultdata_Muti002: saveRiskResultdata_Muti002,
+        saveCluflag_Muti001: saveCluflag_Muti001,
+        saveCluflag_Muti002: saveCluflag_Muti002
     }
 
 }());

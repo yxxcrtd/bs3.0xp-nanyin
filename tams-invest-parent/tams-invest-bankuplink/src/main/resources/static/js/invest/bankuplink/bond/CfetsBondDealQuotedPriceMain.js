@@ -1626,6 +1626,9 @@
             }
         }
 
+        /**
+         * 单组合对话报价风险试算
+         */
         function  doRiskcalSingle001() {
             var object = window.CfetsBondDealQuotedPriceSingle.getSaveOrSubmitParams_Single001();
             if (object) {
@@ -1636,21 +1639,8 @@
                 }
             }
         }
-        function  doRiskcalSingle002() {
-            var object = window.CfetsBondDealQuotedPriceSingle.getSaveOrSubmitParams_Single002();
-            if (object) {
-                var riskdata = window.CfetsBondDealQuotedPriceSingle.getriskdata_Single002(object);
-                var riskInterfUrl = basePath + "riskrds/interf/doInfData/1/RSK002/F01";
-                if (riskdata && riskInterfUrl) {
-                    window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallbackSingle002);
-                }
-            }
-        }
         /**
-         * 风险试算的回调函数002
-         * @param object
-         * @param cluflag
-         * @returns
+         * 单组合对话报价风险试算回调
          */
         function riskMathRedisCallbackSingle001(object, paraCluflag) {
             window.CfetsBondDealQuotedPriceSingle.saveRiskResultdata_Single001(object);
@@ -1663,11 +1653,22 @@
             paramObj.cluflag = paraCluflag;
             Joyin.dialog("风险试算", "/component/common/BaseRiskMathCommDialog/init", "60%", "75%", paramObj);
         }
+
         /**
-         * 风险试算的回调函数002
-         * @param object
-         * @param paraCluflag
-         * @returns
+         * 单组合请求报价风险试算
+         */
+        function  doRiskcalSingle002() {
+            var object = window.CfetsBondDealQuotedPriceSingle.getSaveOrSubmitParams_Single002();
+            if (object) {
+                var riskdata = window.CfetsBondDealQuotedPriceSingle.getriskdata_Single002(object);
+                var riskInterfUrl = basePath + "riskrds/interf/doInfData/1/RSK002/F01";
+                if (riskdata && riskInterfUrl) {
+                    window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallbackSingle002);
+                }
+            }
+        }
+        /**
+         * 单组合请求报价风险试算回调
          */
         function riskMathRedisCallbackSingle002(object, paraCluflag) {
             window.CfetsBondDealQuotedPriceSingle.saveRiskResultdata_Single002(object);
@@ -1680,28 +1681,63 @@
             paramObj.cluflag = paraCluflag;
             Joyin.dialog("风险试算", "/component/common/BaseRiskMathCommDialog/init", "60%", "75%", paramObj);
         }
+
         /**
-         * 风险试算的回调函数002
-         * @param object
-         * @param cluflag
-         * @returns
+         * 多组合对话报价风险试算
          */
-        function riskMathRedisCallbackMuti001(object, cluflag) {
-            CfetsBondDealQuotedPriceMuti001.riskResultdata = object;
-            CfetsBondDealQuotedPriceMuti001.cluflag = cluflag;
-            Joyin.dialog("风险试算", "/component/common/BaseRiskMathCommDialog/init", "60%", "75%", null);
+        function  doRiskcalMuti001() {
+            var object = window.CfetsBondDealQuotedPriceMuti.getSaveOrSubmitParams_Muti001();
+            if (object) {
+                var riskdata = window.CfetsBondDealQuotedPriceMuti.getriskdata_Muti001(object);
+                var riskInterfUrl = basePath + "riskrds/interf/doInfBatchData/1/RSK002/F01";
+                if (riskdata && riskInterfUrl) {
+                    window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallbackMuti001);
+                }
+            }
         }
         /**
-         * 风险试算的回调函数002
-         * @param object
-         * @param cluflag
-         * @returns
+         * 多组合对话报价风险试算回调
          */
-        function riskMathRedisCallbackMuti002(object, cluflag) {
-            CfetsBondDealQuotedPriceMuti002.riskResultdata = object;
-            CfetsBondDealQuotedPriceMuti002.cluflag = cluflag;
-            Joyin.dialog("风险试算", "/component/common/BaseRiskMathCommDialog/init", "60%", "75%", null);
+        function riskMathRedisCallbackMuti001(object, paraCluflag) {
+            window.CfetsBondDealQuotedPriceMuti.saveRiskResultdata_Muti001(object);
+            window.CfetsBondDealQuotedPriceMuti.saveCluflag_Muti001(paraCluflag);
+
+            var paramObj = {};
+            if (object) {
+                paramObj.riskResultdata = JSON.stringify(object);
+            }
+            paramObj.cluflag = paraCluflag;
+            Joyin.dialog("风险试算", "/component/common/BaseRiskMathCommDialog/init", "60%", "75%", paramObj);
         }
+
+        /**
+         * 多组合请求报价风险试算
+         */
+        function  doRiskcalMuti002() {
+            var object = window.CfetsBondDealQuotedPriceMuti.getSaveOrSubmitParams_Muti002();
+            if (object) {
+                var riskdata = window.CfetsBondDealQuotedPriceMuti.getriskdata_Muti002(object);
+                var riskInterfUrl = basePath + "riskrds/interf/doInfBatchData/1/RSK002/F01";
+                if (riskdata && riskInterfUrl) {
+                    window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallbackMuti002);
+                }
+            }
+        }
+        /**
+         * 多组合请求报价风险试算回调
+         */
+        function riskMathRedisCallbackMuti002(object, paraCluflag) {
+            window.CfetsBondDealQuotedPriceMuti.saveRiskResultdata_Muti002(object);
+            window.CfetsBondDealQuotedPriceMuti.saveCluflag_Muti002(paraCluflag);
+
+            var paramObj = {};
+            if (object) {
+                paramObj.riskResultdata = JSON.stringify(object);
+            }
+            paramObj.cluflag = paraCluflag;
+            Joyin.dialog("风险试算", "/component/common/BaseRiskMathCommDialog/init", "60%", "75%", paramObj);
+        }
+
 
         /**
          * 保存和提交
