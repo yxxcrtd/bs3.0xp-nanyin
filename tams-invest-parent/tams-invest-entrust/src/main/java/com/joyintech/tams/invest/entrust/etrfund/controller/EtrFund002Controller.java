@@ -282,8 +282,7 @@ public class EtrFund002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrFundDto dto, BindingResult br) throws WorkFlowException {
-    public AjaxResult save(@RequestBody EtrFundDto dto, BindingResult br) throws Exception{ //保存时，去除字段校验 add by xxg 20210802
+   public AjaxResult save(@RequestBody EtrFundDto dto, BindingResult br) throws Exception{ //保存时，去除字段校验 add by xxg 20210802
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

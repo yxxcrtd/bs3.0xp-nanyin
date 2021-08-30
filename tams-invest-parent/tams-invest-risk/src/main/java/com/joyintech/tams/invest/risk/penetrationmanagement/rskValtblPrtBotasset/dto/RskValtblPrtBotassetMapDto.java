@@ -59,6 +59,12 @@ public class RskValtblPrtBotassetMapDto extends RskValtblPrtBotassetMap{
      * 是否新增
      */
     private String isAdd;
+
+    /**
+     * add by songyawei 20200629
+     * 控制操作按钮
+     */
+    private String flg;
     
     /**
      * <意义，目的和功能，以及可能被用到的地方>
@@ -239,5 +245,13 @@ public class RskValtblPrtBotassetMapDto extends RskValtblPrtBotassetMap{
 
     public String getSubClassName() {
         return SysDataUtil.getNameFromDataDict(DictCode.资产科目类型, this.getSubClass());
+    }
+
+    public String getFlg() {
+        return flg;
+    }
+
+    public void setFlg(String flg) {
+        this.flg = flg;
     }
 }

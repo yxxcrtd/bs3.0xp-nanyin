@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,7 +76,7 @@ public class EtrStockService extends CommonExportService<EtrStockDto> implements
     private EtrCommonService etrCommonService;
 
     @Autowired
-    private PlatformDateImpl platformDateImpl;
+    private IPlatformDate platformDateImpl;
 
     /**   
      * @title: EtrStockService

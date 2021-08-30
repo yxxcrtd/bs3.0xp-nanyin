@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseDictCodeList;
@@ -534,7 +535,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto) throws InvocationTargetException, IllegalAccessException, WorkFlowException, IOException, InstantiationException {
+    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto) throws Exception {
     	List<TrdBondInvestTradeDto> dtoList = new ArrayList<>();
     	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();//组合分配
     	List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();//划款指令

@@ -311,7 +311,7 @@ public class EtrInvestBondInfo003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody List<EtrInvestBondInfoDto> dtoList, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody List<EtrInvestBondInfoDto> dtoList, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

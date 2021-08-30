@@ -781,7 +781,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto) throws InvocationTargetException, IllegalAccessException, IOException, InstantiationException, WorkFlowException {
+    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto) throws Exception {
     	if(flag) {
 			if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());

@@ -198,7 +198,7 @@ public class RiskTrialDayTimeWriterService extends BaseService{
                 supervisionCalcSvc.deletePointSupervisionValue(dealDto);
                 supervisionCalcSvc.addPointSupervisionValue(dealDto);
             }catch (Exception e){
-                IllegalArgumentException re=new IllegalArgumentException("组合代码："+dealDto.getPortfolioId()+ GlobalConstant.COMMA+"指标代码："+dealDto.getIndId()+GlobalConstant.分号+e.getMessage(),e);
+                IllegalArgumentException re=new IllegalArgumentException("组合代码："+dealDto.getPortfolioId()+ GlobalConstant.COMMA+"指标代码："+dealDto.getIndId()+GlobalConstant.SEMICOLON+e.getMessage(),e);
                 throw re;
             }
         }

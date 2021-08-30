@@ -12,20 +12,35 @@ spring:
     cache: false
   #数据源配置
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
     initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
-    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    timeBetweenEvictionRunsMillis: 600000  # 默认是-1
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true   
+    logAbandoned: false
   activemq:
-    systemId: valuation_batch
     active: false
+    systemId: valuation_batch
+    brokerUrl: tcp://localhost:61616
+    user: system
+    password: manager
+    maximumRedeliveries: 10
+    initialRedeliveryDelay: 1
+    backOffMultiplier: 2
+    useExponentialBackOff: true
+    maximumRedeliveryDelay: -1
 #base数据源配置  
 base:
   datasource:
@@ -363,14 +378,14 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  sqldiruserName: CVR30INIT_DEV
-  sqldirpassword: CVR30INIT_DEV
+  sqldiruserName: CVR30INIT_TEST_MERGE
+  sqldirpassword: CVR30INIT_TEST_MERGE
   loadbalance: false
   micorservice:
     contextPath:
@@ -402,14 +417,14 @@ application:
 base:
   datasource:
     url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
 #interf数据源配置
 interf:  
    datasource:
     url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
 #日志路径配置
 log:
   path: /home/tams/logs/batch

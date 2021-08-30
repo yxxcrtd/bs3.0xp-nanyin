@@ -66,7 +66,7 @@ public class TradeRdsCommonAop {
     
     // add by zhangrui1 20200509 批量接口逻辑 start
     public static final List<String> 批量接口相关交易方向 = Arrays.asList(DictCodeListExt1.交易方向_债转股.getValue(),
-            DictCodeListExt2.交易方向_转换申请.getValue(),DictCodeListExt2.交易方向_转换赎回申请.getValue(), DictCodeList.交易方向_上市流通);
+            DictCodeListExt2.交易方向_转换申请.getValue(),DictCodeListExt2.交易方向_转换赎回申请.getValue());
     // add by zhangrui1 20200509 批量接口逻辑 end
     /**
      * 日志
@@ -159,7 +159,8 @@ public class TradeRdsCommonAop {
         // 接口组件Service
         InterfRiskRdsService<InterfRiskRdsDto> service = getInterfRiskRdsService();
         // 执行预占
-        AjaxResult ar = service.checkRiskRds(new InterfRiskRdsDto(),
+        AjaxResult ar = null;
+        /*service.checkRiskRds(new InterfRiskRdsDto(),
             BussinessDictCodeListRds.事件类型_投资交易.getValue(),
             BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue(), busiType,
             en -> service.sendRiskRdsListData(en, dtoList, map -> {
@@ -169,7 +170,7 @@ public class TradeRdsCommonAop {
                     map.put(PageFieldToInterfFactory.INF_COUNTERID,
                         etrInvestPersonInfo.getCounterId());
                 }
-            }));
+            }));*/
         // 判断结果，若正常则缓存数据，后面执行异常时使用缓存数据进行预占释放
         if (ar == null) {
             setLocalCache(dtoList);
@@ -695,7 +696,8 @@ public class TradeRdsCommonAop {
             busiType = DictCodeListExt2.平安资产类型_一级市场债.getValue();
         }
         // 执行预占
-        AjaxResult ar = service.checkRiskRds(rdsDto,
+        AjaxResult ar = null;
+               /* service.checkRiskRds(rdsDto,
             BussinessDictCodeListRds.事件类型_投资委托.getValue(), infCode,
             busiType, en -> service.sendRiskRdsListData(en, dtoList, map -> {
                 // 个别处理
@@ -704,7 +706,7 @@ public class TradeRdsCommonAop {
                     map.put(PageFieldToInterfFactory.INF_COUNTERID,
                         etrInvestPersonInfo.getCounterId());
                 }
-            }));
+            }));*/
         // 判断结果，若正常则缓存数据，后面执行异常时使用缓存数据进行预占释放
         if (ar == null) {
             setLocalCache(dtoList);

@@ -1198,7 +1198,7 @@ public class DeltRightCalAmortizationProcessorService {
 	                return ArithmeticUtil.multiply(basisOutput.getInterest(), targetCashCalcRuleDto.getYield());
 	            }
 			}
-        }
+        }}
         // 调用金额共通方法设置有效小数位
         calInterestBalanceNow = ArithmeticUtil.round(calInterestBalanceNow,NumberEnum.MONEY);
         return calInterestBalanceNow;

@@ -4,17 +4,18 @@ import com.joyintech.tams.invest.common.risktrialrds.dto.InvestTradeTrialInput;
 import com.joyintech.tams.invest.common.risktrialrds.dto.SystemParam;
 import com.joyintech.tams.invest.common.risktrialrds.reflect.duration.service.RiskManageCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author 裴家俊
  * @remark 所有PLUGIN参数基类
  * @date 2020-07-15
  */
-
+//@Service("pluginClassDao")
 public abstract class PluginClass<V> {
 
-	@Autowired
-	protected PluginClassRdsDao pluginClassDao;
+	//@Autowired
+	//protected PluginClassRdsDao pluginClassRdsDao;
 
 	@Autowired
 	protected RiskManageCommonService riskManageCommonService;

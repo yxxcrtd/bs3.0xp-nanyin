@@ -134,6 +134,16 @@ public class TrdBondExerciseProcessDto extends BaseEntity {
 
     private String revokeReason;
 
+    /**
+     * 理论应计利息
+     */
+    private BigDecimal intAmtTheory;
+
+    /**
+     * 实收利息总额
+     */
+    private BigDecimal intAmtReal;
+
     private TrdFinProductDealTotal trdFinProductDealTotal;
 
     private PaTrdFinProductDealTotal paTrdFinProductDealTotal;
@@ -773,5 +783,21 @@ public class TrdBondExerciseProcessDto extends BaseEntity {
      */
     public void setRevokeReason(String revokeReason) {
         this.revokeReason = revokeReason;
+    }
+
+    public BigDecimal getIntAmtTheory() {
+        return intAmtTheory;
+    }
+
+    public void setIntAmtTheory(BigDecimal intAmtTheory) {
+        this.intAmtTheory = intAmtTheory;
+    }
+
+    public BigDecimal getIntAmtReal() {
+        return intAmtReal;
+    }
+
+    public void setIntAmtReal(BigDecimal intAmtReal) {
+        this.intAmtReal = intAmtReal;
     }
 }

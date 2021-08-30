@@ -61,8 +61,6 @@ import com.joyintech.tams.invest.common.dto.common.TrdCommonParam;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonWflParam;
 import com.joyintech.tams.invest.common.product.dto.FinProductExpireBaseTrdDto;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
-import com.joyintech.tams.valuation.common.constants.BookConstant;
-import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -550,7 +548,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         // 定义传递参数
         // 若分支序号为空，则查询默认的分支序号
         if (searchDto.getBranch() == null) {
-            searchDto.setBranch(BookConstant.DEFALUT_BRANCH); // 默认分支号
+            searchDto.setBranch(0L); // 默认分支号
         }
         List<SubjectBalance> list = investFeePayMapper.queryCurrentLatestBalance(searchDto);
         return list;

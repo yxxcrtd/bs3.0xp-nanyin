@@ -265,7 +265,7 @@ public class EtrPlanAssetN002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrPlanAssetNDto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody EtrPlanAssetNDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -40,6 +40,7 @@ import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCode;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import com.joyintech.tams.valuation.common.dto.TrdFinProductBarterDto;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1884,12 +1885,13 @@ public class FinProductCommonService {
         return marketPriceDto;
     }
 
+    /*
      * 实物查询交易信息
      * @param tradeId
      * @return
      */
-    public TrdFinProductBarterDto selectTrdFinProductBarter(String tradeId) {
-        return finProductCommonMapper.selectTrdFinProductBarter(tradeId);
+    public TrdFinProductBarterDto selectTrdFinProductBarter(Map<String, Object> map) {
+        return finProductCommonMapper.selectTrdFinProductBarter(map);
     }
 
     /**

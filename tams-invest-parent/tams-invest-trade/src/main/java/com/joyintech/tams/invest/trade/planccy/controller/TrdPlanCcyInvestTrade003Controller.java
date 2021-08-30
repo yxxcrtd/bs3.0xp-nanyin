@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.trade.planccy.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -463,7 +464,7 @@ public class TrdPlanCcyInvestTrade003Controller extends BaseController {
 
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdPlanCcyInvestTradeConfirmDto dto, BindingResult br) throws WorkFlowException {
+    AjaxResult save(@RequestBody TrdPlanCcyInvestTradeConfirmDto dto, BindingResult br) throws WorkFlowException, IOException, InstantiationException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

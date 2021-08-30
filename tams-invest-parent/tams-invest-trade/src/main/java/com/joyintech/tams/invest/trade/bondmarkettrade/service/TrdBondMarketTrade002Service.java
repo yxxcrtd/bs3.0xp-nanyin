@@ -13,6 +13,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.FinalString;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
@@ -359,7 +360,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 //如果是通过投资，则组合换成通道的账套
                 FinProduct finProduct = finProductMapper.selectByPrimaryKey(ptlSecPositionFlowDto.getSecAcctId());
                 if(finProduct !=null && StringUtil.equals(finProduct.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_通道.getValue())){
-                    String TempPortfolioId = DictCodeListExt1.金融产品类型_投管用_理财产品.getValue()+FinalString.LAYERING_SPLIT+ptlSecPositionFlowDto.getPortfolioId();
+                    String TempPortfolioId = DictCodeListExt1.金融产品类型_投管用_理财产品.getValue()+ FinalString.LAYERING_SPLIT+ptlSecPositionFlowDto.getPortfolioId();
                     trdProductDealAdd.setPortfolioId(TempPortfolioId + FinalString.LAYERING_SPLIT+ptlSecPositionFlowDto.getSecAcctId());
                 }
                 trdProductDealAdd.setrFinprodId(dto.getFinprodId());

@@ -281,7 +281,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      * @see
      * @since 1.0
      */
-    public Long inSave(TrdStandardBondInDto dto) {
+    public Long inSave(TrdStandardBondInDto dto) throws Exception {
         Long saveCount = 0L;
         Date sysDate = platformDateImpl.getSysDate();
 
@@ -302,6 +302,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
             PtlSecPositionFlowDto resultDto;
             TrdStasecFlowDetail tsfd;
 
+            int tradeIdIndex = 0;
             Map<String, List<TrdStandardBondInDto>> dtoMap = dto.getPledgeBondList().stream().collect(JoyinCollectors.groupingBy(x -> x.getPortfolioId() + "," + x.getSecAcctId()));
             for (Map.Entry<String, List<TrdStandardBondInDto>> entry : dtoMap.entrySet()) {
                 BussinessCodeParameter parameter = new BussinessCodeParameter();

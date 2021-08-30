@@ -74,7 +74,7 @@ public class RskAuthorityManageValidator implements BeanValidator{
             }
             // 增加有资产交易在流程中的情况下，不准删除授权数据
             if (list != null && list.size() > 0) {
-                if (rskAuthorityManageService.selectAssetTrade() > 0) {
+                if (rskAuthorityManageService.selectAssetTrade(list) > 0) {
                     resultList.add(new ValidMessage(this.getMessage("RSK_E_0057")));
                 }
             }

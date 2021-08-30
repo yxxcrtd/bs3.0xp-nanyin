@@ -191,7 +191,7 @@ public class EtrPlanAssetR003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("save")
-	public AjaxResult save(@RequestBody EtrPlanAssetRDto allDto, BindingResult br) throws WorkFlowException {
+	public AjaxResult save(@RequestBody EtrPlanAssetRDto allDto, BindingResult br) throws Exception {
 		List<EtrPlanAssetRDto> dtoList = allDto.getSelectedItem();
 		AjaxResult ajaxResult = this.check(dtoList, br);
 		if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {

@@ -288,15 +288,15 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
 #    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 #    reportSqlldrDatabaseName: 127.0.0.1:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
 #  url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-  sqldiruserName: CVR30INIT_DEV
-  sqldirpassword: CVR30INIT_DEV
+  sqldiruserName: CVR30INIT_TEST_MERGE
+  sqldirpassword: CVR30INIT_TEST_MERGE
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -313,26 +313,26 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
 #    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
 #    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
 #    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
 #    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
 log:
   path: /home/tams/logs/tams
   level: debug

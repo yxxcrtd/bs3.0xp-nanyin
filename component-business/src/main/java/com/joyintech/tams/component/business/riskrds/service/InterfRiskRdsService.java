@@ -13,6 +13,7 @@ package com.joyintech.tams.component.business.riskrds.service;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -954,7 +955,12 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 }
                 infRiskRdsDto.setOneDay(CommonUtil.getBigDecimal(dataMap, "term",BigDecimal.ZERO).longValue());
                 if(CommonUtil.findValue(dataMap,"mdate") instanceof String) {
-                    infRiskRdsDto.setMdate(DateUtil.addDay(DateUtil.parseDate(String.valueOf(CommonUtil.findValue(dataMap,"mdate")),DateUtil.DEFAULT_DATE_FORMAT_EN),CommonUtil.getBigDecimal(dataMap, "term",BigDecimal.ZERO).intValue()));
+                    try {
+                        infRiskRdsDto.setMdate(DateUtil.addDay(DateUtil.parseDate(String.valueOf(CommonUtil.findValue(dataMap,"mdate")),DateUtil.DEFAULT_DATE_FORMAT_EN),CommonUtil.getBigDecimal(dataMap, "term",BigDecimal.ZERO).intValue()));
+                    }
+                    catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
                 else if(CommonUtil.findValue(dataMap,"mdate") instanceof Long){
                     infRiskRdsDto.setMdate(new Date((Long)CommonUtil.findValue(dataMap,"mdate")));

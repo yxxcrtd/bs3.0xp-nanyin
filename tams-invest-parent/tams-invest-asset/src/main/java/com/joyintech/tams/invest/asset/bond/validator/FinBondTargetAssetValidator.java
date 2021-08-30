@@ -26,7 +26,6 @@ import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRe
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.bond.dto.FinBondTargetAssetDto;
 import com.joyintech.tams.invest.asset.bond.service.FinBondTargetAssetService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

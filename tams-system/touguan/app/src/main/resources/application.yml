@@ -204,6 +204,7 @@ application:
   reportCbFeedBackHandleCountOneTime: 10000
   riskTestMaxCorePoolSize: 20
   riskTestmaxSubmitProductSize: 50
+  runOptimize: Y
 #  不使用服务注册中心,tams和tams-service-container分开部署的方式
 #  loadbalance: false
 #  micorservice:
@@ -325,13 +326,13 @@ spring:
     redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30INIT_TEST_MERGE
+    password: BS30INIT_TEST_MERGE
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  sqldiruserName: BS30INIT
-  sqldirpassword: BS30INIT
+  sqldiruserName: BS30INIT_TEST_MERGE
+  sqldirpassword: BS30INIT_TEST_MERGE
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -348,23 +349,23 @@ shiro:
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30INIT_TEST_MERGE
+    password: BS30INIT_TEST_MERGE
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30INIT_TEST_MERGE
+    password: BS30INIT_TEST_MERGE
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30INIT_TEST_MERGE
+    password: BS30INIT_TEST_MERGE
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30INIT_TEST_MERGE
+    password: BS30INIT_TEST_MERGE
 log:
   path: D:/home/tams/logs/tams/touguan
   level: debug

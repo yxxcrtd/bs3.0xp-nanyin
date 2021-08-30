@@ -124,7 +124,7 @@ public class TrdStandardBondController {
     @Transactional
     @DTXTransaction
     @RequestMapping("inSave")
-    public Long inSave(@RequestBody TrdStandardBondInDto dto) {
+    public Long inSave(@RequestBody TrdStandardBondInDto dto) throws Exception {
         return trdStandardBondService.inSave(dto);
     }
 

@@ -41,7 +41,7 @@ public interface TaxScheme005Mapper {
      * @see
      * @since 1.0
      */
-    List<SelectOptionDto> selectAsset(Map<String, Object> pageParam);
+    List<TaxScheme005Dto> selectAsset(Map<String, Object> pageParam);
 
     /**
      * 通过资产代码，获取资产信息

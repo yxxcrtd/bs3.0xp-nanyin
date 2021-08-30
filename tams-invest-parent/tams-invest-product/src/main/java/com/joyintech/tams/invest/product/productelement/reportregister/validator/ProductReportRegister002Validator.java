@@ -27,16 +27,6 @@ import com.joyintech.tams.invest.product.productelement.reportregister.dto.Produ
 import com.joyintech.tams.invest.product.productelement.reportregister.service.ProductReportRegister002Service;
 import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
-import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 产品收集删除修改验证

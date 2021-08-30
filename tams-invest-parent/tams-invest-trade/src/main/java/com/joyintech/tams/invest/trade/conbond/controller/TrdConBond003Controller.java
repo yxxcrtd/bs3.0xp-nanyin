@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.trade.conbond.controller;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -270,7 +271,7 @@ public class TrdConBond003Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdConBond003Dto dto) throws InvocationTargetException, IllegalAccessException, WorkFlowException {
+    AjaxResult save(@RequestBody TrdConBond003Dto dto) throws InvocationTargetException, IllegalAccessException, WorkFlowException, IOException,InstantiationException {
     	List<TrdConBond003Dto> dtoList = new ArrayList<>();
 		TrdConBond003Dto tempDto = new TrdConBond003Dto();
 		BeanUtil.copyProperties(tempDto, dto);

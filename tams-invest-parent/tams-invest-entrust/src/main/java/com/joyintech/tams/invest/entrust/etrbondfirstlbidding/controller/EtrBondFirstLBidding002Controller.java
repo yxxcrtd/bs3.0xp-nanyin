@@ -275,7 +275,7 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

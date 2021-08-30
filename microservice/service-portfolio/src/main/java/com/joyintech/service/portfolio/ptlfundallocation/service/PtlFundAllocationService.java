@@ -423,8 +423,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
 //                增加委托指令流水逻辑
                 basePtlCashPositionInfoService.insertCashPositionFlow(ptlCashPositionFlowDto);
                 ptlCash.add(ptlCashPositionFlowDto);
-                PtlCashPositionFlowDto ptlCashPositionFlowDto2 = new PtlCashPositionFlowDto();
-                BeanUtil.copyPropertiesIgnoreNull(ptlCashPositionFlowDto2, ptlCashPositionFlowDto);
+
                 BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
                 bussinessCodeParameter.setSeqNo("9999");
                 //指令持仓

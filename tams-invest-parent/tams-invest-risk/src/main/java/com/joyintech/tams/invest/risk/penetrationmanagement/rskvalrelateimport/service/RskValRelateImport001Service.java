@@ -28,9 +28,7 @@ import com.joyintech.tams.common.base.dao.ValtblImportHisTraceMapper;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
 import com.joyintech.tams.common.base.entity.RskOutValtblImportHisKey;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.dto.RskValtblAssetSubMapDtlDto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.service.RskValAssetCode001Service;
@@ -44,6 +42,7 @@ import com.joyintech.tams.invest.risk.valtblimport.dto.ZipFileAssetInfoDto;
 import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportCommonService;
 import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -90,6 +89,7 @@ public class RskValRelateImport001Service extends CommonExportService<RskValRela
     // 平台日期
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+
     @Autowired(required = false)
     private static final Logger logger = LoggerFactory.getLogger(RskValRelateImport001Service.class);
     /**

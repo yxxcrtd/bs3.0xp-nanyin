@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +73,7 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
     private BasRiskMathCommService basRiskMathCommService;
 
     @Autowired
-    private PlatformDateImpl platformDateImpl;
+    private IPlatformDate platformDateImpl;
 
     /**
      * 日期相关

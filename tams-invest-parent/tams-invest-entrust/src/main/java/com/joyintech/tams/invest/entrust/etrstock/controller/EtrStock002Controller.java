@@ -331,7 +331,7 @@ public class EtrStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrStockDto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody EtrStockDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

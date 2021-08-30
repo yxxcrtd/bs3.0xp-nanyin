@@ -16,6 +16,7 @@ import com.joyintech.service.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddi
 import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
 import com.joyintech.tams.common.base.entity.MstCounterParty;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;

@@ -271,6 +271,16 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     提醒类型_小分类_计划类净值型赎回确认(BussinessDictCode.提醒类型_小分类,"S17","计划类净值型赎回确认"),
 
     /**
+     * 债券上市流通操作
+     */
+    提醒类型_小分类_债券上市流通操作(BussinessDictCode.提醒类型_小分类,"R10S1","债券上市流通操作"),
+
+    /**
+     * 资产要素登记修改
+     */
+    提醒类型_小分类_资产要素登记修改(BussinessDictCode.提醒类型_小分类,"R10S2","资产要素登记修改"),
+
+    /**
      * 入库
      */
     出入库方向_入库(BussinessDictCode.出入库方向,"01","入库"),

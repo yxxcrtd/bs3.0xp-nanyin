@@ -174,7 +174,7 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto allDto, BindingResult br){
+    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto allDto, BindingResult br) throws Exception {
         AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;

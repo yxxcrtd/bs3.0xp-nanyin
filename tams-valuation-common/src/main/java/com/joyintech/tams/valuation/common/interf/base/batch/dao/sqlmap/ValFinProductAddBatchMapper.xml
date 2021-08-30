@@ -32,7 +32,6 @@
         <result column="CLOSE_DAYS" property="closeDays" jdbcType="DECIMAL" />
         <result column="FACE_VALUE" property="faceValue" jdbcType="DECIMAL" />
         <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
-        <!-- add by yanya on 20210318 Ôö¼ÓÊý¾ÝÀ´Ô´-->
         <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
     </resultMap>
       <sql id="Base_Column_List" >
@@ -70,9 +69,9 @@
             #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
             #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.issueStatusRemark,jdbcType=VARCHAR},
             #{item.closeDays,jdbcType=DECIMAL}, #{item.faceValue,jdbcType=DECIMAL}, #{item.portfolioId,jdbcType=VARCHAR},
-            /** add by yanya on 20201222 Ôö¼ÓÊÇ·ñÆäËûÕ®È¯×Ö¶Î**/
+            /** add by yanya on 20201222 ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Õ®È¯ï¿½Ö¶ï¿½**/
             #{item.isQtzq,jdbcType=VARCHAR},
-            /** add by yanya on 20210318 Ôö¼ÓÊý¾ÝÀ´Ô´**/
+            /** add by yanya on 20210318 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´**/
             #{item.dataSource,jdbcType=VARCHAR},
             #{item.trmFundType,jdbcType=VARCHAR}
         </foreach>

@@ -68,7 +68,7 @@ import com.joyintech.tams.invest.interf.service.InterfComponentService;
 import com.joyintech.tams.invest.interf.service.InterfComponentService.OrderCaller;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
-import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
+import com.joyintech.tams.invest.common.dto.cstp.*;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
@@ -243,9 +243,6 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
 
     @Autowired
     private CstpCommonService cstpCommonService;
-
-    @Autowired
-    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
 
     @Autowired
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;

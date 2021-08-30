@@ -223,7 +223,7 @@ public class EtrConBond002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrConBondDto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody EtrConBondDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

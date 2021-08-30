@@ -190,7 +190,7 @@ public class EtrProject003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrProjectDto allDto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody EtrProjectDto allDto, BindingResult br) throws Exception {
         AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;

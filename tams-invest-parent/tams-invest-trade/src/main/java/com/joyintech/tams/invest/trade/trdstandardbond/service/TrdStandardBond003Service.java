@@ -10,16 +10,28 @@
 package com.joyintech.tams.invest.trade.trdstandardbond.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper;
+import com.joyintech.tams.common.base.dao.TrdStasecFlowDetailMapper;
+import com.joyintech.tams.common.base.dao.TrdStasecFlowMapper;
+import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
+import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.trade.trdstandardbond.dto.TrdStandardBond003Dto;
+import com.joyintech.tools.collectors.JoyinCollectors;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -31,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +56,18 @@ public class TrdStandardBond003Service extends BaseService<TrdStandardBond003Dto
 
     @Autowired
     private IPlatformDate platformDateImpl;
+
+    @Autowired
+    private PtlSecPositionFlowMapper ptlSecPositionFlowMapper;
+
+    @Autowired
+    private TrdStasecFlowDetailMapper trdStasecFlowDetailMapper;
+
+    @Autowired
+    private BaseGetBussinessId baseGetBussinessId;
+
+    @Autowired
+    private TrdStasecFlowMapper trdStasecFlowMapper;
 
     /**
      * 工作流doInsert
@@ -171,5 +196,61 @@ public class TrdStandardBond003Service extends BaseService<TrdStandardBond003Dto
         pageParam.put("searchDate", platformDateImpl.getSysDateStr());
         return restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/selectOutListData",
                 pageParam, TrdStandardBond003Dto.class);
+    }
+
+    /**
+     * 根据保存的交易编号生成反向的交易流水
+     * @param entity
+     */
+    private void processOldFlow(TrdStandardBond003Dto entity) {
+        if(entity.getTradeIdList()!=null&&entity.getTradeIdList().size()>0) {
+            //1. 获取之前所有的流程中流水
+            List<PtlSecPositionFlow> secFlows = new ArrayList<>();
+            Map<String,Object> param = new HashMap<>();
+            param.put("holdingType", DictCodeListExt1.持仓类型_临时.getValue());
+            for(String tradeId:entity.getTradeIdList()) {
+                param.put("finprodId", tradeId);
+                secFlows.addAll(ptlSecPositionFlowMapper.selectSecFlow(param));
+                //删除质押信息
+                trdStasecFlowMapper.deleteByPrimaryKey(tradeId);
+                trdStasecFlowDetailMapper.deleteBySeq(tradeId);
+            }
+            //2. 流水金额反向
+            List<PtlSecPositionFlowDto> ptlSecPositionFlowDtos = new ArrayList<>();
+            for(PtlSecPositionFlow flow:secFlows) {
+                PtlSecPositionFlowDto dto = new PtlSecPositionFlowDto();
+                BeanUtils.copyProperties(flow, dto);
+                ptlSecPositionFlowDtos.add(dto);
+            }
+            //3. 提交处理
+            if(ptlSecPositionFlowDtos.size()>0) {
+                PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
+                ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlowDtos);
+                restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/common/ptlposition/insertPosition",
+                        ptlPositionHoldDto, Boolean.class);
+            }
+        }
+    }
+
+    /**
+     * 给实体类设置 tradeIdList
+     * @param entity
+     */
+    public void setTradeIdList(TrdStandardBond003Dto entity) {
+        List<String> tradeIdList = new ArrayList<>();
+        if (!StringUtil.isEmptyList(entity.getOutBondList())) {
+            //结果中根据"组合代码,产品代码"进行分组设置tradeId
+            //1. 获取所有分组
+            Map<String, List<TrdStandardBond003Dto>> dtoMap = entity.getOutBondList().stream().collect(JoyinCollectors.groupingBy(x -> x.getPortfolioId() + "," + x.getSecAcctId()));
+            //2. 根据分组，生成所有的tradeId
+            for(int i=0;i<dtoMap.keySet().size();i++) {
+                BussinessCodeParameter parameter = new BussinessCodeParameter();
+                parameter.setSeqNo("9999");
+                String seqNo = baseGetBussinessId.buildBussinessCode(parameter);
+                tradeIdList.add(seqNo);
+            }
+        }
+        //3. 设置 tradeIdList
+        entity.setTradeIdList(tradeIdList);
     }
 }

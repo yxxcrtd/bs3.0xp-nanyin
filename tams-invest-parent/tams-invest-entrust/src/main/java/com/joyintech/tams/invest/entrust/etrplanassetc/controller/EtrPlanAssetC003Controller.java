@@ -195,7 +195,7 @@ public class EtrPlanAssetC003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrPlanAssetCDto allDto, BindingResult br) {
+    public AjaxResult save(@RequestBody EtrPlanAssetCDto allDto, BindingResult br) throws Exception {
         List<EtrPlanAssetCDto> dtoList = allDto.getSelectedItem();
         AjaxResult ajaxResult = this.check(dtoList, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
