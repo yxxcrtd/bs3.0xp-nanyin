@@ -14,7 +14,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.disclosure.common.common.service.MstWorkflowCommonService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepNobleMetalInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepPlacementInfoDto;
@@ -24,8 +24,6 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 贵金属商品

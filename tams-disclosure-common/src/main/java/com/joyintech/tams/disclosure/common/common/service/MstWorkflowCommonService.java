@@ -10,19 +10,23 @@
  
 package com.joyintech.tams.disclosure.common.common.service;
 
-import java.util.List;
-
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.disclosure.common.common.dao.MstWorkflowCommonMapper;
+import com.joyintech.tams.disclosure.common.common.dto.WflValidInputParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.entity.ProcessMark;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.disclosure.common.common.dao.MstWorkflowCommonMapper;
-import com.joyintech.tams.disclosure.common.common.dto.WflValidInputParameter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 工作流共通Service
@@ -34,6 +38,8 @@ import com.joyintech.tams.disclosure.common.common.dto.WflValidInputParameter;
  */
 @Component
 public class MstWorkflowCommonService {
+
+    private static final Logger logger = LoggerFactory.getLogger(MstWorkflowCommonService.class);
 
     /**
      * 工作流CommonServicemapper
@@ -92,5 +98,28 @@ public class MstWorkflowCommonService {
     public String getBusinessEntityByWorkFlowId(String workFlowId,String beanName) {
         ProcessMark entity = mstWorkflowCommonMapper.getBusinessInfo(workFlowId);
         return entity.getBusinessData();
+    }
+
+    /**
+     * {@inheritDoc}  add by zhangquan 20200115
+     */
+    @SuppressWarnings("unchecked")
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    public <T> T getBusinessEntityByWorkFlowId(String workflowId, String beanName, Class<T> clazz) {
+        Map<String,Object> map= new HashMap<>();
+        map.put("workflowId", workflowId);
+        map.put("beanName", beanName);
+        // 获取业务entity
+        String temp = getBusinessEntityByWorkFlowId(workflowId, beanName);
+        Map<String,Object> all = JsonUtils.json2Object(temp,Map.class);
+        try {
+            if (all.get(beanName) != null){
+                return (T)JsonUtils.map2entity((Map<String,Object>)all.get(beanName), clazz);
+            }
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+        return null;
     }
 }

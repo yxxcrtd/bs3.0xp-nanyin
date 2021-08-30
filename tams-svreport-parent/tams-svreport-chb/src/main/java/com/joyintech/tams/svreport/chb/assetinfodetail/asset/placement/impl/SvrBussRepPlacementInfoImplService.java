@@ -4,7 +4,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.disclosure.common.common.service.MstWorkflowCommonService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepPlacementInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;

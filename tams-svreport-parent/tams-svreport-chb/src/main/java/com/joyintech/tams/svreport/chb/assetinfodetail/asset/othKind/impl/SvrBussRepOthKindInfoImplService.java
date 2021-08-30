@@ -11,20 +11,13 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.asset.othKind.impl;
 
 
-
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.BussAssetInfoService;
+import com.joyintech.tams.disclosure.common.common.service.MstWorkflowCommonService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
-import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepOthKindInfoDto;
-import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepOtherInfoDto;
-import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.slf4j.Logger;
@@ -32,8 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 〈一句话功能简述〉
