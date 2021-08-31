@@ -55,11 +55,16 @@ public class ProductAssetsIncomeMethodProcessorService {
     private ModParamsService modParamsService;
 
     /**
-     * @Description:返回处理后的结果DTO
-     * @auther: yuzj
-     * @date: 2021/7/5
-     * @param:
-     * @return:
+     * 执行收益法计算过程，最终产物为资产定价数据和估值行情数据
+     * 核心计算公式：FV = D0 (1 + g)/(r - g)
+     * FV - 资产价格；
+     * D0 - 年化股息，指当期股息；取票面利率计算的利息；
+     * g  - 预期股息增长率；通过手工维护；
+     * r  - 折现率：折现率=估值日国债最大期限即期收益率+(（D0*（1+g）/PV+g）-基准日国债最大期限即期收益率），其中PV为发行价格；
+     * @param item
+     * @param mapParam
+     * @param stepExecution
+     * @return
      */
     public ProductAssetsIncomeMethodResultDto convertResultFromReader(ProductAssetsIncomeMethodReaderDto item, Map<String, Object> mapParam,StepExecution stepExecution){
         ProductAssetsIncomeMethodResultDto resultDto = new ProductAssetsIncomeMethodResultDto();//从reader 返回结果result

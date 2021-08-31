@@ -24,7 +24,7 @@ import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.component.batch.dao.ValModBatchLogsMapper;
-import com.joyintech.tams.valuation.component.batch.dao.ModBatchParamsMapper;
+import com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -140,14 +140,11 @@ public class ModBatchTaskService extends BaseService {
     @Autowired
     private SqlSessionTemplate template;
 
-    @Autowired
-    private ModBatchParamsMapper modValBatchParamsMapper;
-
     public void insertBatchParams(List<ModValBatchParams> params) {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
-            ModBatchParamsMapper batchMapper = session.getMapper(ModBatchParamsMapper.class);
+            ModBatchParams2Mapper batchMapper = session.getMapper(ModBatchParams2Mapper.class);
             int size = params.size();
             for(int index = 0; index < size; index++){
                 batchMapper.insert(params.get(index));
