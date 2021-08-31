@@ -95,6 +95,10 @@
 		{call  dbms_stats.gather_index_stats(ownname => #{tableOwner},  indname => #{indexName}, estimate_percent => 15) }
 	</update>
 
+	<update id="rebuildIndex" parameterType="string">
+		ALTER INDEX ${indexName} REBUILD ONLINE
+	</update>
+
 	<select id="queryPartitions" resultType="java.lang.String">
 		SELECT
 		   PARTITION_NAME
@@ -103,7 +107,7 @@
 	</select>
 
 	<select id="isHaveData" resultType="java.lang.Integer">
-		SELECT 1 FROM ${tableName} partition (${patitionName})
+		SELECT COUNT(1) FROM ${tableName} partition (${patitionName})
 		WHERE HOLD_DATE BETWEEN to_date(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND to_date(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 	</select>
 
