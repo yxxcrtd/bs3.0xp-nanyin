@@ -261,7 +261,7 @@
                 left join FIN_PRODUCT fp ON fp.FINPROD_ID = ee.FINPROD_ID
                 left join MST_COUNTER_PARTY mcp on ee.counter_id = mcp.counter_id
                 left join Bid_Close_Status bcs on bcs.finprod_Id = ee.finprod_Id
-                where edb.rec_status = #{entruststatusyjs}
+                where edb.rec_status in ('03','04')
                 and ee.finprod_type2 = #{pinanassettypeyj}
                 and BO.BID_ID is not null
                 AND BO.is_win = #{bidstatusyzb}
